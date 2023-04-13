@@ -361,6 +361,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "type": "object",
       },
       "bulkMetricsSchema": {
+        "description": "A batch of metrics accumulated by Edge (or other compatible applications). Includes both application registrations as well usage metrics from clients",
         "properties": {
           "applications": {
             "items": {
@@ -375,14 +376,25 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "array",
           },
         },
+        "required": [
+          "applications",
+          "metrics",
+        ],
         "type": "object",
       },
       "bulkRegistrationSchema": {
+        "description": "An application registration. Defines the format POSTed by our server-side SDKs when they're starting up",
         "properties": {
           "appName": {
+            "description": "The name of the application that is evaluating toggles",
+            "example": "Ingress load balancer",
             "type": "string",
           },
           "connectVia": {
+            "description": "A list of applications this app registration has been registered through or empty",
+            "example": [
+              "unleash-edge",
+            ],
             "items": {
               "properties": {
                 "appName": {
@@ -401,21 +413,37 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "array",
           },
           "environment": {
+            "description": "Which environment the application is running in",
+            "example": "development",
             "type": "string",
           },
           "instanceId": {
+            "description": "A [(somewhat) unique identifier](https://docs.getunleash.io/reference/sdks/node#advanced-usage) for the application",
+            "example": "application-name-dacb1234",
             "type": "string",
           },
           "interval": {
+            "description": "How often (in seconds) the application refreshes its features",
+            "example": 10,
             "type": "number",
           },
           "sdkVersion": {
+            "description": "Typically <client>:<version>",
+            "example": "unleash-client-java:8.0.0",
+            "summary": "Version identifier for the SDK used",
             "type": "string",
           },
           "started": {
             "$ref": "#/components/schemas/dateSchema",
+            "description": "The application started at",
+            "example": "1952-03-11T12:00:00.000Z",
           },
           "strategies": {
+            "description": "Enabled [strategies](https://docs.getunleash.io/reference/activation-strategies) in the application",
+            "example": [
+              "standard",
+              "gradualRollout",
+            ],
             "items": {
               "type": "string",
             },
@@ -425,6 +453,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "required": [
           "appName",
           "instanceId",
+          "environment",
         ],
         "type": "object",
       },
@@ -604,36 +633,56 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "clientMetricsEnvSchema": {
         "additionalProperties": true,
+        "description": "Used for reporting feature evaluation results from SDKs",
         "properties": {
           "appName": {
+            "description": "The name of the application the SDK is being used in",
+            "example": "accounting",
             "type": "string",
           },
           "environment": {
+            "description": "Which environment the SDK is being used in",
+            "example": "development",
             "type": "string",
           },
           "featureName": {
+            "description": "Name of the feature checked by the SDK",
+            "example": "my.special.feature",
             "type": "string",
           },
           "no": {
+            "description": "How many times the toggle evaluated to false",
+            "example": 50,
             "type": "number",
           },
           "timestamp": {
             "$ref": "#/components/schemas/dateSchema",
+            "description": "The start of the time window these metrics are valid for. The window is 1 hour wide",
+            "example": "1926-05-08T12:00:00.000Z",
           },
           "variants": {
             "additionalProperties": {
               "minimum": 0,
               "type": "integer",
             },
+            "description": "How many times each variant was returned",
+            "example": {
+              "variantA": 15,
+              "variantB": 25,
+              "variantC": 5,
+            },
             "type": "object",
           },
           "yes": {
+            "description": "How many times the toggle evaluated to true",
+            "example": 974,
             "type": "number",
           },
         },
         "required": [
           "featureName",
           "appName",
+          "environment",
         ],
         "type": "object",
       },
@@ -968,22 +1017,35 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "edgeTokenSchema": {
         "additionalProperties": false,
+        "description": "A representation of a client token, limiting access to [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens) (used by serverside SDKs) or [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#front-end-tokens) (used by proxy SDKs)",
         "properties": {
           "projects": {
+            "description": "Since a token can have access to multiple projects, but that is represented with a \`[]\` in the token, this can be used to expand the []",
+            "example": [
+              "developerexperience",
+              "enterprisegrowth",
+            ],
             "items": {
               "type": "string",
             },
+            "summary": "A list of projects this token can access",
             "type": "array",
           },
           "token": {
+            "description": "[Unleash API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys) are comprised of three parts. <project(s)>:<environment>.randomcharacters",
+            "example": "*:development.5c806b5320c88cf27e81f3e9b97dab298a77d5879316e3c2d806206b",
+            "summary": "The actual token",
             "type": "string",
           },
           "type": {
+            "description": "Unleash supports three different types of API tokens ([ADMIN](https://docs.getunleash.io/reference/api-tokens-and-client-keys#admin-tokens), [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens), [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#front-end-tokens)). They all have varying access, so when validating a token it's important to know what kind you're dealing with",
             "enum": [
               "client",
               "admin",
               "frontend",
             ],
+            "example": "client",
+            "summary": "Type of token",
             "type": "string",
           },
         },
@@ -3812,6 +3874,28 @@ Stats are divided into current and previous **windows**.
         ],
         "type": "object",
       },
+      "tokenStringListSchema": {
+        "additionalProperties": true,
+        "description": "A list of unleash tokens to validate against known tokens",
+        "properties": {
+          "tokens": {
+            "description": "Tokens that we want to get access information about",
+            "example": [
+              "aproject:development.randomstring",
+              "[]:production.randomstring",
+            ],
+            "items": {
+              "type": "string",
+            },
+            "summary": "List of tokens",
+            "type": "array",
+          },
+        },
+        "required": [
+          "tokens",
+        ],
+        "type": "object",
+      },
       "tokenUserSchema": {
         "additionalProperties": false,
         "properties": {
@@ -4226,28 +4310,6 @@ Stats are divided into current and previous **windows**.
         },
         "type": "array",
       },
-      "validateEdgeTokensSchema": {
-        "additionalProperties": false,
-        "properties": {
-          "tokens": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/edgeTokenSchema",
-                },
-                {
-                  "type": "string",
-                },
-              ],
-            },
-            "type": "array",
-          },
-        },
-        "required": [
-          "tokens",
-        ],
-        "type": "object",
-      },
       "validatePasswordSchema": {
         "additionalProperties": false,
         "properties": {
@@ -4272,6 +4334,23 @@ Stats are divided into current and previous **windows**.
         "required": [
           "valid",
           "tagType",
+        ],
+        "type": "object",
+      },
+      "validatedEdgeTokensSchema": {
+        "additionalProperties": false,
+        "description": "A list of Unleash client tokens with what projects they can access included",
+        "properties": {
+          "tokens": {
+            "description": "Includes which projects the client tokens can access as well as the token itself",
+            "items": {
+              "$ref": "#/components/schemas/edgeTokenSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "tokens",
         ],
         "type": "object",
       },
@@ -9145,6 +9224,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/edge/metrics": {
       "post": {
+        "description": "This operation accepts batched metrics from Edge. Metrics will be inserted into Unleash's metrics storage",
         "operationId": "bulkMetrics",
         "requestBody": {
           "content": {
@@ -9161,7 +9241,17 @@ If the provided project does not exist, the list of events will be empty.",
           "202": {
             "description": "This response has no body.",
           },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "413": {
+            "description": "The body POSTed was too large. By default we only accept bodies of 100kB or less",
+          },
+          "415": {
+            "description": "The provided resource does not accept requests with this content-type",
+          },
         },
+        "summary": "Receive metrics from Edge",
         "tags": [
           "Edge",
         ],
@@ -9169,16 +9259,17 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/edge/validate": {
       "post": {
+        "description": "Accepts a list of tokens, and returns those that are valid with the projects they can access",
         "operationId": "getValidTokens",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/validateEdgeTokensSchema",
+                "$ref": "#/components/schemas/tokenStringListSchema",
               },
             },
           },
-          "description": "validateEdgeTokensSchema",
+          "description": "tokenStringListSchema",
           "required": true,
         },
         "responses": {
@@ -9186,13 +9277,23 @@ If the provided project does not exist, the list of events will be empty.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/validateEdgeTokensSchema",
+                  "$ref": "#/components/schemas/validatedEdgeTokensSchema",
                 },
               },
             },
-            "description": "validateEdgeTokensSchema",
+            "description": "validatedEdgeTokensSchema",
+          },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "413": {
+            "description": "The body POSTed was too large. By default we only accept bodies of 100kB or less",
+          },
+          "415": {
+            "description": "The provided resource does not accept requests with this content-type",
           },
         },
+        "summary": "Filter a list of tokens returning only the valid ones",
         "tags": [
           "Edge",
         ],

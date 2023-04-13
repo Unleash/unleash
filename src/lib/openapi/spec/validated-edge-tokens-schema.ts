@@ -1,8 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { edgeTokenSchema } from './edge-token-schema';
 
-export const validateEdgeTokensSchema = {
-    $id: '#/components/schemas/validateEdgeTokensSchema',
+export const validatedEdgeTokensSchema = {
+    $id: '#/components/schemas/validatedEdgeTokensSchema',
     type: 'object',
     additionalProperties: false,
     required: ['tokens'],
@@ -23,6 +23,6 @@ export const validateEdgeTokensSchema = {
     },
 } as const;
 
-export type ValidateEdgeTokensSchema = FromSchema<
-    typeof validateEdgeTokensSchema
+export type ValidatedEdgeTokensSchema = FromSchema<
+    typeof validatedEdgeTokensSchema
 >;

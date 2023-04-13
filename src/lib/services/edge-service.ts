@@ -3,7 +3,7 @@ import { Logger } from '../logger';
 import { IApiTokenStore } from '../types/stores/api-token-store';
 import { EdgeTokenSchema } from '../openapi/spec/edge-token-schema';
 import { constantTimeCompare } from '../util/constantTimeCompare';
-import { ValidateEdgeTokensSchema } from '../openapi/spec/validate-edge-tokens-schema';
+import { ValidateEdgeTokensSchema } from '../openapi/spec/validated-edge-tokens-schema';
 
 export default class EdgeService {
     private logger: Logger;

@@ -1,23 +1,24 @@
-import { edgeTokenSchema } from './edge-token-schema';
 import { FromSchema } from 'json-schema-to-ts';
 
 export const tokenStringListSchema = {
     $id: '#/components/schemas/tokenStringListSchema',
     type: 'object',
-    additionalProperties: false,
+    additionalProperties: true,
+    description: 'A list of unleash tokens to validate against known tokens',
     required: ['tokens'],
     properties: {
         tokens: {
-            description: 'Tokens used to authenticate against Unleash',
+            summary: 'List of tokens',
+            description: 'Tokens that we want to get access information about',
             type: 'array',
             items: { type: 'string' },
+            example: [
+                'aproject:development.randomstring',
+                '[]:production.randomstring',
+            ],
         },
     },
-    components: {
-        schemas: {
-            edgeTokenSchema,
-        },
-    },
+    components: {},
 } as const;
 
 export type TokenStringListSchema = FromSchema<typeof tokenStringListSchema>;

@@ -109,6 +109,7 @@ import {
     tagTypeSchema,
     tagTypesSchema,
     tagWithVersionSchema,
+    tokenStringListSchema,
     tokenUserSchema,
     uiConfigSchema,
     updateApiTokenSchema,
@@ -123,7 +124,7 @@ import {
     usersGroupsBaseSchema,
     usersSchema,
     usersSearchSchema,
-    validateEdgeTokensSchema,
+    validatedEdgeTokensSchema,
     validatePasswordSchema,
     validateTagTypeSchema,
     variantSchema,
@@ -133,7 +134,6 @@ import {
     importTogglesSchema,
     importTogglesValidateSchema,
     importTogglesValidateItemSchema,
-    tokenStringListSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -281,7 +281,7 @@ export const schemas = {
     usersGroupsBaseSchema,
     usersSchema,
     usersSearchSchema,
-    validateEdgeTokensSchema,
+    validatedEdgeTokensSchema,
     validatePasswordSchema,
     validateTagTypeSchema,
     variantSchema,

@@ -108,7 +108,7 @@ export * from './environments-project-schema';
 export * from './instance-admin-stats-schema';
 export * from './public-signup-tokens-schema';
 export * from './upsert-context-field-schema';
-export * from './validate-edge-tokens-schema';
+export * from './validated-edge-tokens-schema';
 export * from './client-features-query-schema';
 export * from './admin-features-query-schema';
 export * from './playground-constraint-schema';

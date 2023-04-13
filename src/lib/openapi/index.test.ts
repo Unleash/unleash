@@ -41,7 +41,7 @@ describe('createOpenApiSchema', () => {
             createOpenApiSchema({
                 unleashUrl: 'https://example.com',
                 baseUriPath: '',
-            }).servers[0].url,
+            }).servers![0].url,
         ).toEqual('https://example.com');
     });
 
@@ -50,7 +50,7 @@ describe('createOpenApiSchema', () => {
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/demo2',
                 baseUriPath: '/demo2',
-            }).servers[0].url,
+            }).servers![0].url,
         ).toEqual('https://example.com');
     });
 
@@ -59,7 +59,7 @@ describe('createOpenApiSchema', () => {
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/demo2',
                 baseUriPath: 'example',
-            }).servers[0].url,
+            }).servers![0].url,
         ).toEqual('https://example.com/demo2');
     });
 
@@ -68,13 +68,13 @@ describe('createOpenApiSchema', () => {
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/example/',
                 baseUriPath: 'example',
-            }).servers[0].url,
+            }).servers![0].url,
         ).toEqual('https://example.com');
         expect(
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/example/',
                 baseUriPath: '/example',
-            }).servers[0].url,
+            }).servers![0].url,
         ).toEqual('https://example.com');
     });
 });

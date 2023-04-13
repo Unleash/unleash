@@ -7,9 +7,9 @@ import { createResponseSchema } from '../../openapi/util/create-response-schema'
 import { IAuthRequest, RequestBody } from '../unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
-    validateEdgeTokensSchema,
-    ValidateEdgeTokensSchema,
-} from '../../openapi/spec/validate-edge-tokens-schema';
+    validatedEdgeTokensSchema,
+    ValidatedEdgeTokensSchema,
+} from '../../openapi/spec/validated-edge-tokens-schema';
 import ClientInstanceService from '../../services/client-metrics/instance-service';
 import EdgeService from '../../services/edge-service';
 import { OpenApiService } from '../../services/openapi-service';
@@ -70,7 +70,7 @@ export default class EdgeController extends Controller {
                     operationId: 'getValidTokens',
                     requestBody: createRequestSchema('tokenStringListSchema'),
                     responses: {
-                        200: createResponseSchema('validateEdgeTokensSchema'),
+                        200: createResponseSchema('validatedEdgeTokensSchema'),
                         ...getStandardResponses(400, 413, 415),
                     },
                 }),
@@ -100,13 +100,13 @@ export default class EdgeController extends Controller {
 
     async getValidTokens(
         req: RequestBody<TokenStringListSchema>,
-        res: Response<ValidateEdgeTokensSchema>,
+        res: Response<ValidatedEdgeTokensSchema>,
     ): Promise<void> {
         const tokens = await this.edgeService.getValidTokens(req.body.tokens);
-        this.openApiService.respondWithValidation<ValidateEdgeTokensSchema>(
+        this.openApiService.respondWithValidation<ValidatedEdgeTokensSchema>(
             200,
             res,
-            validateEdgeTokensSchema.$id,
+            validatedEdgeTokensSchema.$id,
             tokens,
         );
     }

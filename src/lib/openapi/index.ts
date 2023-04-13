@@ -171,9 +171,9 @@ interface UnleashSchemas {
     [name: string]: SchemaWithMandatoryFields;
 }
 
-type OpenAPIV3DocumentWithServers = Omit<OpenAPIV3.Document, 'servers'> & {
+interface OpenAPIV3DocumentWithServers extends OpenAPIV3.Document {
     servers: OpenAPIV3.ServerObject[];
-};
+}
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas: UnleashSchemas = {

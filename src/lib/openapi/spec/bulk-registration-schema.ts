@@ -9,7 +9,7 @@ export const bulkRegistrationSchema = {
         connectVia: {
             type: 'array',
             description:
-                'a list of applications this app registration has been registered through',
+                'A list of applications this app registration has been registered through or empty',
             items: {
                 type: 'object',
                 required: ['appName', 'instanceId'],

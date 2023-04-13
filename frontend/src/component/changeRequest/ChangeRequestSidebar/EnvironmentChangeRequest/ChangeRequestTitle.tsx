@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Box, Button, IconButton, styled } from '@mui/material';
+import { Box, Button, IconButton, styled, Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { IChangeRequest } from '../../changeRequest.types';
 import { Edit } from '@mui/icons-material';
@@ -8,7 +8,7 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 
-const StyledBox = styled(Box)(({ theme }) => ({
+const StyledBox = styled(Box)(() => ({
     display: 'flex',
     flexDirection: 'row',
     width: '100%',
@@ -16,10 +16,18 @@ const StyledBox = styled(Box)(({ theme }) => ({
     justifyContent: 'space-between',
 }));
 
-export const EnvironmentChangeRequestTitle: FC<{
+export const StyledHeader = styled(Typography)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: theme.spacing(1),
+    fontSize: theme.fontSizes.mainHeader,
+}));
+
+export const ChangeRequestTitle: FC<{
     environmentChangeRequest: IChangeRequest;
-}> = ({ environmentChangeRequest }) => {
-    const [title, setTitle] = useState(environmentChangeRequest.title);
+    title: string;
+    setTitle: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ environmentChangeRequest, title, setTitle, children }) => {
     const [isDisabled, setIsDisabled] = useState(true);
     const { updateTitle } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
@@ -46,13 +54,19 @@ export const EnvironmentChangeRequestTitle: FC<{
     };
     return (
         <StyledBox>
-            <Input
-                label="Change request title"
-                id="group-name"
-                value={title}
-                fullWidth
-                onChange={e => setTitle(e.target.value)}
-                disabled={isDisabled}
+            <ConditionallyRender
+                condition={isDisabled}
+                show={children}
+                elseShow={
+                    <Input
+                        label="Change request title"
+                        id="group-name"
+                        value={title}
+                        fullWidth
+                        onChange={e => setTitle(e.target.value)}
+                        disabled={isDisabled}
+                    />
+                }
             />
             <ConditionallyRender
                 condition={isDisabled}

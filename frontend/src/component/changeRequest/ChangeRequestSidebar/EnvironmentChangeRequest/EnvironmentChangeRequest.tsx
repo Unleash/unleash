@@ -21,7 +21,8 @@ import {
 import { CloudCircle } from '@mui/icons-material';
 import { AddCommentField } from '../../ChangeRequestOverview/ChangeRequestComments/AddCommentField';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
-import { EnvironmentChangeRequestTitle } from './EnvironmentChangeRequestTitle';
+import Input from 'component/common/Input/Input';
+import { ChangeRequestTitle } from './ChangeRequestTitle';
 
 const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
     onClick,
@@ -62,6 +63,7 @@ export const EnvironmentChangeRequest: FC<{
     const navigate = useNavigate();
     const [commentText, setCommentText] = useState('');
     const { user } = useAuthUser();
+    const [title, setTitle] = useState(environmentChangeRequest.title);
 
     return (
         <Box key={environmentChangeRequest.id}>
@@ -94,9 +96,20 @@ export const EnvironmentChangeRequest: FC<{
                     </Box>
                 </Box>
                 <Divider sx={{ my: 3 }} />
-                <EnvironmentChangeRequestTitle
+                <ChangeRequestTitle
                     environmentChangeRequest={environmentChangeRequest}
-                />
+                    title={title}
+                    setTitle={setTitle}
+                >
+                    <Input
+                        label="Change request title"
+                        id="group-name"
+                        fullWidth
+                        value={title}
+                        onChange={() => {}}
+                        disabled={true}
+                    />
+                </ChangeRequestTitle>
             </ChangeRequestHeader>
             <ChangeRequestContent>
                 <Typography variant="body2" color="text.secondary">

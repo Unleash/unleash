@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { FC, useState } from 'react';
 import { screen } from '@testing-library/react';
-import { EnvironmentChangeRequestTitle } from './EnvironmentChangeRequestTitle';
+import { ChangeRequestTitle } from './ChangeRequestTitle';
 import { ChangeRequestState } from '../../changeRequest.types';
 import userEvent from '@testing-library/user-event';
 import { testServerRoute, testServerSetup } from '../../../../utils/testServer';
@@ -32,14 +32,25 @@ testServerRoute(
 
 testServerRoute(server, '/api/admin/ui-config', {});
 
+const TestComponent: FC = () => {
+    const [title, setTitle] = useState(changeRequest.title);
+
+    return (
+        <ChangeRequestTitle
+            environmentChangeRequest={changeRequest}
+            title={title}
+            setTitle={setTitle}
+        >
+            <h1>{title}</h1>
+        </ChangeRequestTitle>
+    );
+};
+
 test('can edit and save title', async () => {
     const user = userEvent.setup();
-
     render(
         <UIProviderContainer>
-            <EnvironmentChangeRequestTitle
-                environmentChangeRequest={changeRequest}
-            />
+            <TestComponent />
         </UIProviderContainer>
     );
 
@@ -53,6 +64,6 @@ test('can edit and save title', async () => {
     const saveButton = await screen.findByText('Save');
     await user.click(saveButton);
 
-    const newTitle = await screen.findByDisplayValue('New title');
+    const newTitle = await screen.findByText('New title');
     expect(newTitle).toBeInTheDocument();
 });

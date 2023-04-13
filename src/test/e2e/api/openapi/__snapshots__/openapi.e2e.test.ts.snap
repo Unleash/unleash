@@ -1023,7 +1023,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "description": "A representation of a client token, limiting access to [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens) (used by serverside SDKs) or [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#front-end-tokens) (used by proxy SDKs)",
         "properties": {
           "projects": {
-            "description": "Since a token can have access to multiple projects, but that is represented with a \`[]\` in the token, this can be used to expand the []",
+            "description": "The list of projects this token has access to. If the token has access to specific projects they will be listed here. If the token has access to all projects it will be represented as [\`*\`]",
             "example": [
               "developerexperience",
               "enterprisegrowth",
@@ -1034,12 +1034,12 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "array",
           },
           "token": {
-            "description": "[Unleash API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys) are comprised of three parts. <project(s)>:<environment>.randomcharacters",
+            "description": "The actual token value. [Unleash API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys) are comprised of three parts. <project(s)>:<environment>.randomcharacters",
             "example": "*:development.5c806b5320c88cf27e81f3e9b97dab298a77d5879316e3c2d806206b",
             "type": "string",
           },
           "type": {
-            "description": "Unleash supports three different types of API tokens ([ADMIN](https://docs.getunleash.io/reference/api-tokens-and-client-keys#admin-tokens), [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens), [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#front-end-tokens)). They all have varying access, so when validating a token it's important to know what kind you're dealing with",
+            "description": "The [API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys#api-tokens)'s **type**. Unleash supports three different types of API tokens ([ADMIN](https://docs.getunleash.io/reference/api-tokens-and-client-keys#admin-tokens), [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens), [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#front-end-tokens)). They all have varying access, so when validating a token it's important to know what kind you're dealing with",
             "enum": [
               "client",
               "admin",
@@ -9244,13 +9244,13 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "The request data does not match what we expect.",
           },
           "413": {
-            "description": "The body POSTed was too large. By default we only accept bodies of 100kB or less",
+            "description": "The body request body is larger than what we accept. By default we only accept bodies of 100kB or less",
           },
           "415": {
-            "description": "The provided resource does not accept requests with this content-type",
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
           },
         },
-        "summary": "Receive metrics from Edge",
+        "summary": "Send metrics from Edge",
         "tags": [
           "Edge",
         ],
@@ -9258,7 +9258,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/edge/validate": {
       "post": {
-        "description": "Accepts a list of tokens, and returns those that are valid with the projects they can access",
+        "description": "This operation accepts a list of tokens to validate. Unleash will validate each token you provide. For each valid token you provide, Unleash will return the token along with its type and which projects it has access to.",
         "operationId": "getValidTokens",
         "requestBody": {
           "content": {
@@ -9286,13 +9286,13 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "The request data does not match what we expect.",
           },
           "413": {
-            "description": "The body POSTed was too large. By default we only accept bodies of 100kB or less",
+            "description": "The body request body is larger than what we accept. By default we only accept bodies of 100kB or less",
           },
           "415": {
-            "description": "The provided resource does not accept requests with this content-type",
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
           },
         },
-        "summary": "Filter a list of tokens returning only the valid ones",
+        "summary": "Check which tokens are valid",
         "tags": [
           "Edge",
         ],

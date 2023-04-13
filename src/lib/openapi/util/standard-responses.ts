@@ -25,9 +25,9 @@ const conflictResponse = {
         'The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.',
 } as const;
 
-const tooBigResponse = {
+const contentTooLargeResponse = {
     description:
-        'The body POSTed was too large. By default we only accept bodies of 100kB or less',
+        'The body request body is larger than what we accept. By default we only accept bodies of 100kB or less',
 } as const;
 
 const unsupportedMediaTypeResponse = {

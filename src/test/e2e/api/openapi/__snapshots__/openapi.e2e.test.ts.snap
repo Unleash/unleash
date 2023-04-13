@@ -1618,20 +1618,31 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "featureTagSchema": {
         "additionalProperties": false,
+        "description": "Describes a tag applied to a feature",
         "properties": {
           "featureName": {
+            "description": "The name of the feature this tag is applied to",
+            "example": "my-feature",
             "type": "string",
           },
           "tagType": {
+            "description": "The type of tag",
+            "example": "simple",
             "type": "string",
           },
           "tagValue": {
+            "description": "The value of the tag",
+            "example": "my-tag",
             "type": "string",
           },
           "type": {
+            "deprecated": true,
+            "description": "This field is deprecated and currently unused, use tagType instead",
             "type": "string",
           },
           "value": {
+            "deprecated": true,
+            "description": "This field is deprecated and currently unused, use tagValue instead",
             "type": "string",
           },
         },

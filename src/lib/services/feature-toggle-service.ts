@@ -354,7 +354,7 @@ class FeatureToggleService {
         return {
             id: featureStrategy.id,
             name: featureStrategy.strategyName,
-            title: featureStrategy.strategyTitle,
+            title: featureStrategy.title,
             constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
             segments: segments.map((segment) => segment.id) ?? [],
@@ -416,7 +416,7 @@ class FeatureToggleService {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
                     strategyName: strategyConfig.name,
-                    strategyTitle: strategyConfig.title,
+                    title: strategyConfig.title,
                     constraints: strategyConfig.constraints || [],
                     parameters: strategyConfig.parameters || {},
                     sortOrder: strategyConfig.sortOrder,

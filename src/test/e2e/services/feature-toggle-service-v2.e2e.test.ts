@@ -134,6 +134,7 @@ test('Should be able to get strategy by id', async () => {
         name: 'default',
         constraints: [],
         parameters: {},
+        title: null,
     };
     await service.createFeatureToggle(
         projectId,

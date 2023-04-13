@@ -1594,6 +1594,10 @@ exports[`should serve the OpenAPI spec 1`] = `
           "sortOrder": {
             "type": "number",
           },
+          "title": {
+            "nullable": true,
+            "type": "string",
+          },
         },
         "required": [
           "name",

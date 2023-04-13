@@ -14,6 +14,10 @@ export const featureStrategySchema = {
         name: {
             type: 'string',
         },
+        title: {
+            type: 'string',
+            nullable: true,
+        },
         featureName: {
             type: 'string',
         },

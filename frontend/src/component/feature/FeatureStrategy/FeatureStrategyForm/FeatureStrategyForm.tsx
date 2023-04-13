@@ -29,6 +29,7 @@ import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
+import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -216,6 +217,10 @@ export const FeatureStrategyForm = ({
                         projectId={projectId}
                     />
                 }
+            />
+            <ConditionallyRender
+                condition={Boolean(uiConfig.flags.strategyTitle)}
+                show={<FeatureStrategyTitle />}
             />
             <FeatureStrategyConstraints
                 projectId={feature.project}

@@ -40,8 +40,8 @@ const standardResponses = {
     403: forbiddenResponse,
     404: notFoundResponse,
     409: conflictResponse,
-    413: tooBigResponse,
-    415: wrongContentTypeResponse,
+    413: contentTooLargeResponse,
+    415: unsupportedMediaTypeResponse,
 } as const;
 
 type StandardResponses = typeof standardResponses;

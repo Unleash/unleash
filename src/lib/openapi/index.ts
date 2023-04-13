@@ -147,8 +147,36 @@ import { clientMetricsEnvSchema } from './spec/client-metrics-env-schema';
 import { updateTagsSchema } from './spec/update-tags-schema';
 import { batchStaleSchema } from './spec/batch-stale-schema';
 
+// Schemas must have an $id property on the form "#/components/schemas/mySchema".
+export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
+
+// Schemas must list all their $refs in `components`, including nested schemas.
+export type SchemaRef = typeof schemas[keyof typeof schemas]['components'];
+
+// JSON schema properties that should not be included in the OpenAPI spec.
+export interface JsonSchemaProps {
+    $id: string;
+    components: object;
+}
+
+type SchemaWithMandatoryFields = Partial<
+    Omit<
+        OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject,
+        '$id' | 'components'
+    >
+> &
+    JsonSchemaProps;
+
+interface UnleashSchemas {
+    [name: string]: SchemaWithMandatoryFields;
+}
+
+type OpenAPIV3DocumentWithServers = Omit<OpenAPIV3.Document, 'servers'> & {
+    servers: OpenAPIV3.ServerObject[];
+};
+
 // All schemas in `openapi/spec` should be listed here.
-export const schemas = {
+export const schemas: UnleashSchemas = {
     adminFeaturesQuerySchema,
     addonParameterSchema,
     addonSchema,
@@ -291,18 +319,6 @@ export const schemas = {
     importTogglesValidateItemSchema,
 };
 
-// Schemas must have an $id property on the form "#/components/schemas/mySchema".
-export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
-
-// Schemas must list all their $refs in `components`, including nested schemas.
-export type SchemaRef = typeof schemas[keyof typeof schemas]['components'];
-
-// JSON schema properties that should not be included in the OpenAPI spec.
-export interface JsonSchemaProps {
-    $id: string;
-    components: object;
-}
-
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.
 export const removeJsonSchemaProps = <T extends JsonSchemaProps>(
     schema: T,
@@ -328,7 +344,7 @@ export const createOpenApiSchema = ({
     unleashUrl,
     baseUriPath,
 }: Pick<IServerOption, 'unleashUrl' | 'baseUriPath'>): Omit<
-    OpenAPIV3.Document,
+    OpenAPIV3DocumentWithServers,
     'paths'
 > => {
     const url = findRootUrl(unleashUrl, baseUriPath);

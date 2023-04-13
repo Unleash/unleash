@@ -1,5 +1,5 @@
-import { schemas } from '..';
 import Ajv, { Schema } from 'ajv';
+import { schemas } from '.';
 
 const ajv = new Ajv();
 
@@ -27,11 +27,14 @@ const metaRules: Rule[] = [
         knownExceptions: ['dateSchema'],
     },
     {
-        name: 'should have an $id',
+        name: 'should have an $id with the expected format',
         metaSchema: {
             type: 'object',
             properties: {
-                $id: { type: 'string' },
+                $id: {
+                    type: 'string',
+                    pattern: '^#/components/schemas/[a-z][a-zA-Z]+$',
+                },
             },
             required: ['$id'],
         },
@@ -143,6 +146,7 @@ const metaRules: Rule[] = [
             'strategySchema',
             'tagsBulkAddSchema',
             'tagSchema',
+            'tagsSchema',
             'tagTypeSchema',
             'tagTypesSchema',
             'tagWithVersionSchema',

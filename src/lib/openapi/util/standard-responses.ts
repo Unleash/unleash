@@ -30,9 +30,8 @@ const tooBigResponse = {
         'The body POSTed was too large. By default we only accept bodies of 100kB or less',
 } as const;
 
-const wrongContentTypeResponse = {
-    description:
-        'The provided resource does not accept requests with this content-type',
+const unsupportedMediaTypeResponse = {
+    description: `The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.`,
 } as const;
 
 const standardResponses = {

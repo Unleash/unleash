@@ -217,7 +217,7 @@ test('updating an addon returns the new addon configuration', async () => {
         },
         events: [],
     };
-    await app.request.post('/api/admin/addons').send(config);
+    const { body } = await app.request.post('/api/admin/addons').send(config);
 
     const updatedConfig = {
         ...config,
@@ -226,7 +226,7 @@ test('updating an addon returns the new addon configuration', async () => {
     };
 
     return app.request
-        .put('/api/admin/addons')
+        .put(`/api/admin/addons/${body.id}`)
         .send(updatedConfig)
         .expect((res) => {
             expect(res.body).toMatchObject(updatedConfig);
@@ -244,18 +244,19 @@ describe('missing descriptions', () => {
     };
 
     test('creating an addon without a description, sets the description to `null`', async () => {
-        return app.request
+        const id = app.request
             .post('/api/admin/addons')
             .send(addonWithoutDescription)
             .expect((res) => {
                 expect(res.body.description).toBeUndefined();
-
-                return app.request
-                    .get(`/api/admin/addons/${res.body.id}`)
-                    .expect((getResponse) =>
-                        expect(getResponse.body.description).toBeNull(),
-                    );
+                return res.body.id;
             });
+
+        return app.request
+            .get(`/api/admin/addons/${id}`)
+            .expect((getResponse) =>
+                expect(getResponse.body.description).toBeNull(),
+            );
     });
 
     test('updating an addon without touching `description` keeps the original value', async () => {
@@ -273,20 +274,20 @@ describe('missing descriptions', () => {
     });
 
     test.each(['', null])(
-        'sending a description value of "%s", sets a `null` description to an empty string',
+        'sending a description value of "%s", sets a `null` sets the description to an empty string',
         async (description) => {
-            await app.request
+            const { body } = await app.request
                 .post('/api/admin/addons')
                 .send(addonWithoutDescription);
 
             return app.request
-                .put('/api/admin/addons')
+                .put(`/api/admin/addons/${body.id}`)
                 .send({
                     ...addonWithoutDescription,
                     description,
                 })
                 .expect((res) => {
-                    expect(res.body.description).toStrictEqual(description);
+                    expect(res.body.description).toStrictEqual('');
                 });
         },
     );

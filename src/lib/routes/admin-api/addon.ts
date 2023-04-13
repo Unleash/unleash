@@ -113,8 +113,9 @@ class AddonController extends Controller {
             middleware: [
                 openApiService.validPath({
                     summary: 'Update an addon',
-                    description:
-                        "Update the addon with a specific ID. Any fields in the update object will be updated. Properties that are not included in the update object will not be affected. To empty a property, pass a `null` as that property's value.",
+                    description: `Update the addon with a specific ID. Any fields in the update object will be updated. Properties that are not included in the update object will not be affected. To empty a property, pass \`null\` as that property's value.
+
+Note: passing \`null\` as a value for the description property will set it to an empty string.`,
                     tags: ['Addons'],
                     operationId: 'updateAddon',
                     requestBody: createRequestSchema('addonCreateUpdateSchema'),
@@ -178,13 +179,12 @@ class AddonController extends Controller {
     ): Promise<void> {
         const { id } = req.params;
         const createdBy = extractUsername(req);
+
         // because `description` is optional in the request DTO but required by
         // the update function, we need to provide a default empty string in
         // case it's missing.
-        // const data = { description: '', ...req.body };
-        const data = req.body;
+        const data = { description: '', ...req.body };
 
-        // @ts-ignore-error
         const addon = await this.addonService.updateAddon(id, data, createdBy);
 
         this.openApiService.respondWithValidation(

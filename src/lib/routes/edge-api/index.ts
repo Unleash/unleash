@@ -63,10 +63,9 @@ export default class EdgeController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Edge'],
-                    summary:
-                        'Accepts a list of tokens, returns tokens that are valid and which projects they can access',
+                    summary: 'Filter a list of tokens returning only the valid ones',
                     description:
-                        'Send a list of tokens, only returns the valid ones',
+                        'Accepts a list of tokens, and returns those that are valid with the projects they can access',
                     operationId: 'getValidTokens',
                     requestBody: createRequestSchema('tokenStringListSchema'),
                     responses: {

@@ -10,7 +10,7 @@ export const bulkRegistrationSchema = {
         connectVia: {
             type: 'array',
             description:
-                'A list of applications this app registration has been registered through or empty',
+                'A list of applications this app registration has been registered through. If connected directly to Unleash, this is an empty list. \n This can be used in later visualizations to tell how many levels of proxy or Edge instances our SDKs have connected through',
             items: {
                 type: 'object',
                 required: ['appName', 'instanceId'],
@@ -23,7 +23,9 @@ export const bulkRegistrationSchema = {
                     },
                 },
             },
-            example: ['unleash-edge'],
+            example: [
+                { appName: 'unleash-edge', instanceId: 'edge-pod-bghzv5' },
+            ],
         },
         appName: {
             description:
@@ -63,8 +65,8 @@ export const bulkRegistrationSchema = {
             },
         },
         sdkVersion: {
-            summary: 'Version identifier for the SDK used',
-            description: 'Typically <client>:<version>',
+            description:
+                'The version the sdk is running. Typically <client>:<version>',
             example: 'unleash-client-java:8.0.0',
             type: 'string',
         },

@@ -8,7 +8,6 @@ export const tokenStringListSchema = {
     required: ['tokens'],
     properties: {
         tokens: {
-            summary: 'List of tokens',
             description: 'Tokens that we want to get access information about',
             type: 'array',
             items: { type: 'string' },

@@ -391,9 +391,13 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "connectVia": {
-            "description": "A list of applications this app registration has been registered through or empty",
+            "description": "A list of applications this app registration has been registered through. If connected directly to Unleash, this is an empty list. 
+ This can be used in later visualizations to tell how many levels of proxy or Edge instances our SDKs have connected through",
             "example": [
-              "unleash-edge",
+              {
+                "appName": "unleash-edge",
+                "instanceId": "edge-pod-bghzv5",
+              },
             ],
             "items": {
               "properties": {
@@ -428,9 +432,8 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "number",
           },
           "sdkVersion": {
-            "description": "Typically <client>:<version>",
+            "description": "The version the sdk is running. Typically <client>:<version>",
             "example": "unleash-client-java:8.0.0",
-            "summary": "Version identifier for the SDK used",
             "type": "string",
           },
           "started": {
@@ -1028,13 +1031,11 @@ exports[`should serve the OpenAPI spec 1`] = `
             "items": {
               "type": "string",
             },
-            "summary": "A list of projects this token can access",
             "type": "array",
           },
           "token": {
             "description": "[Unleash API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys) are comprised of three parts. <project(s)>:<environment>.randomcharacters",
             "example": "*:development.5c806b5320c88cf27e81f3e9b97dab298a77d5879316e3c2d806206b",
-            "summary": "The actual token",
             "type": "string",
           },
           "type": {
@@ -1045,7 +1046,6 @@ exports[`should serve the OpenAPI spec 1`] = `
               "frontend",
             ],
             "example": "client",
-            "summary": "Type of token",
             "type": "string",
           },
         },
@@ -3887,7 +3887,6 @@ Stats are divided into current and previous **windows**.
             "items": {
               "type": "string",
             },
-            "summary": "List of tokens",
             "type": "array",
           },
         },

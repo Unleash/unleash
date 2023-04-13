@@ -9,7 +9,6 @@ export const validatedEdgeTokensSchema = {
     description: `A list of Unleash client tokens with what projects they can access included`,
     properties: {
         tokens: {
-            summary: 'A list of Unleash client tokens',
             description:
                 'Includes which projects the client tokens can access as well as the token itself',
             type: 'array',

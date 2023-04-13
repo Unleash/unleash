@@ -250,7 +250,7 @@ describe('missing descriptions', () => {
     };
 
     test('creating an addon without a description, sets the description to `null`', async () => {
-        const id = app.request
+        const { body } = await app.request
             .post('/api/admin/addons')
             .send(addonWithoutDescription)
             .expect((res) => {
@@ -259,10 +259,10 @@ describe('missing descriptions', () => {
             });
 
         return app.request
-            .get(`/api/admin/addons/${id}`)
-            .expect((getResponse) =>
-                expect(getResponse.body.description).toBeNull(),
-            );
+            .get(`/api/admin/addons/${body.id}`)
+            .expect((getResponse) => {
+                expect(getResponse.body.description).toBeNull();
+            });
     });
 
     test('updating an addon without touching `description` keeps the original value', async () => {

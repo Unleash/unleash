@@ -3,10 +3,10 @@ import { Box, Button, IconButton, styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { IChangeRequest } from '../../changeRequest.types';
 import { Edit } from '@mui/icons-material';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
-import { useChangeRequestApi } from '../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { formatUnknownError } from '../../../../utils/formatUnknownError';
-import useToast from '../../../../hooks/useToast';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import useToast from 'hooks/useToast';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',

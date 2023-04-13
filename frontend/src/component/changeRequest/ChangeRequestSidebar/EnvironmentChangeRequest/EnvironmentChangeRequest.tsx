@@ -32,6 +32,26 @@ const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
     </Button>
 );
 
+const ChangeRequestHeader = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(3, 3, 1, 3),
+    border: '2px solid',
+    borderColor: theme.palette.divider,
+    borderRadius: `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
+    borderBottom: 'none',
+    overflow: 'hidden',
+    backgroundColor: theme.palette.neutral.light,
+}));
+
+const ChangeRequestContent = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(0, 3, 3, 3),
+    border: '2px solid',
+    mb: 5,
+    borderColor: theme.palette.divider,
+    borderRadius: `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
+    borderTop: 'none',
+    overflow: 'hidden',
+}));
+
 export const EnvironmentChangeRequest: FC<{
     environmentChangeRequest: IChangeRequest;
     onClose: () => void;
@@ -45,18 +65,7 @@ export const EnvironmentChangeRequest: FC<{
 
     return (
         <Box key={environmentChangeRequest.id}>
-            <Box
-                sx={theme => ({
-                    padding: theme.spacing(3, 3, 1, 3),
-                    border: '2px solid',
-                    borderColor: theme => theme.palette.divider,
-                    borderRadius: theme =>
-                        `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
-                    borderBottom: 'none',
-                    overflow: 'hidden',
-                    backgroundColor: theme.palette.neutral.light,
-                })}
-            >
+            <ChangeRequestHeader>
                 <Box sx={{ display: 'flex', alignItems: 'end' }}>
                     <Box
                         sx={{
@@ -88,19 +97,8 @@ export const EnvironmentChangeRequest: FC<{
                 <EnvironmentChangeRequestTitle
                     environmentChangeRequest={environmentChangeRequest}
                 />
-            </Box>
-            <Box
-                sx={theme => ({
-                    padding: theme.spacing(0, 3, 3, 3),
-                    border: '2px solid',
-                    mb: 5,
-                    borderColor: theme => theme.palette.divider,
-                    borderRadius: theme =>
-                        `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
-                    borderTop: 'none',
-                    overflow: 'hidden',
-                })}
-            >
+            </ChangeRequestHeader>
+            <ChangeRequestContent>
                 <Typography variant="body2" color="text.secondary">
                     You request changes for these feature toggles:
                 </Typography>
@@ -176,7 +174,7 @@ export const EnvironmentChangeRequest: FC<{
                         }
                     />
                 </Box>
-            </Box>
+            </ChangeRequestContent>
         </Box>
     );
 };

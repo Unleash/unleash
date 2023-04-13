@@ -82,6 +82,7 @@ const flags = {
         false,
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
+    demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

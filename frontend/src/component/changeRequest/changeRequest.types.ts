@@ -5,6 +5,7 @@ import { IUser } from '../../interfaces/user';
 export interface IChangeRequest {
     id: number;
     state: ChangeRequestState;
+    title: string;
     project: string;
     environment: string;
     minApprovals: number;

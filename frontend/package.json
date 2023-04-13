@@ -52,6 +52,7 @@
     "@types/node": "17.0.18",
     "@types/react": "17.0.56",
     "@types/react-dom": "17.0.19",
+    "@types/react-linkify": "1.0.1",
     "@types/react-router-dom": "5.3.3",
     "@types/react-table": "7.7.14",
     "@types/react-test-renderer": "17.0.2",
@@ -108,7 +109,8 @@
     "vitest": "0.28.5",
     "whatwg-fetch": "3.6.2",
     "countries-and-timezones": "^3.4.0",
-    "date-fns-tz": "^2.0.0"
+    "date-fns-tz": "^2.0.0",
+    "react-linkify": "^1.0.0-alpha"
   },
   "optionalDependencies": {
     "orval": "^6.10.3"

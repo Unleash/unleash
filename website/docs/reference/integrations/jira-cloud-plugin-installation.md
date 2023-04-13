@@ -8,7 +8,7 @@ title: Jira Cloud Integration - Installation
 
 - [Jira **Cloud**](https://www.atlassian.com/software/jira)
 
-For Jira Data Center, [see the Jira Server plugin](/integrations/jira_server_plugin_installation)
+For Jira Data Center, check out the [Jira Server plugin](jira-server-plugin-installation.md)
 
 ### Unleash
 

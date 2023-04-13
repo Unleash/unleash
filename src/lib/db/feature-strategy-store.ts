@@ -589,7 +589,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             parameters: r.parameters,
             sortOrder: r.sort_order,
             id: r.strategy_id,
-            title: r.strategy_title,
+            title: r.strategy_title || '',
         };
         if (!includeId) {
             delete strategy.id;

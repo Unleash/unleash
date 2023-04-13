@@ -3657,35 +3657,50 @@ Stats are divided into current and previous **windows**.
         "additionalProperties": false,
         "properties": {
           "deprecated": {
+            "description": "",
+            "example": true,
             "type": "boolean",
           },
           "description": {
+            "description": "A short description for the strategy",
+            "example": "Gradual rollout to logged in users",
             "type": "string",
           },
           "displayName": {
+            "description": "A human friendly name for the strategy",
+            "example": "Gradual Rollout",
             "nullable": true,
             "type": "string",
           },
           "editable": {
+            "description": "Determines whether the strategy allows for editing",
+            "example": true,
             "type": "boolean",
           },
           "name": {
+            "description": "The name or type of the strategy",
+            "example": "flexibleRollout",
             "type": "string",
           },
           "parameters": {
+            "description": "A list of relevant parameters for each strategy",
             "items": {
               "additionalProperties": false,
               "properties": {
                 "description": {
+                  "example": "Gradual rollout to logged in users",
                   "type": "string",
                 },
                 "name": {
+                  "example": "percentage",
                   "type": "string",
                 },
                 "required": {
+                  "example": true,
                   "type": "boolean",
                 },
                 "type": {
+                  "example": "percentage",
                   "type": "string",
                 },
               },
@@ -3694,6 +3709,9 @@ Stats are divided into current and previous **windows**.
             "type": "array",
           },
           "title": {
+            "description": "An optional title for the strategy",
+            "example": "GradualRollout - Prod25",
+            "nullable": true,
             "type": "string",
           },
         },

@@ -26,4 +26,9 @@ test('strategySchema', () => {
     expect(
         validateSchema('#/components/schemas/strategySchema', {}),
     ).toMatchSnapshot();
+
+    const { title, ...noTitle } = { ...data };
+    expect(
+        validateSchema('#/components/schemas/strategySchema', noTitle),
+    ).toBeUndefined();
 });

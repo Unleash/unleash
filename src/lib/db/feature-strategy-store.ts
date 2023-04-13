@@ -10,20 +10,20 @@ import {
     IConstraint,
     IEnvironmentOverview,
     IFeatureOverview,
+    IFeatureStrategiesStore,
     IFeatureStrategy,
     IFeatureToggleClient,
+    IFlagResolver,
     IStrategyConfig,
     ITag,
-} from '../types/model';
-import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
-import { PartialDeep, PartialSome } from '../types/partial';
+    PartialDeep,
+    PartialSome,
+} from '../types';
 import FeatureToggleStore from './feature-toggle-store';
-import { ensureStringValue } from '../util/ensureStringValue';
-import { mapValues } from '../util/map-values';
-import { IFlagResolver } from '../types/experimental';
+import { ensureStringValue, mapValues } from '../util';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
-import Raw = Knex.Raw;
 import { Db } from './db';
+import Raw = Knex.Raw;
 
 const COLUMNS = [
     'id',
@@ -56,7 +56,7 @@ interface IFeatureStrategiesTable {
     feature_name: string;
     project_name: string;
     environment: string;
-    title?: string;
+    title?: string | null;
     strategy_name: string;
     parameters: object;
     constraints: string;
@@ -97,7 +97,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         parameters: input.parameters,
         constraints: JSON.stringify(input.constraints || []),
         created_at: input.createdAt,
-        sort_order: input.sortOrder,
+        sort_order: input.sortOrder || 9999,
     };
 }
 
@@ -384,8 +384,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         feature: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
     ) {
-        const strategy = feature.strategies.find(
-            (s) => s.id === row.strategy_id,
+        const strategy = feature.strategies?.find(
+            (s) => s?.id === row.strategy_id,
         );
         if (!strategy) {
             return;

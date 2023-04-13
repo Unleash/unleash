@@ -85,7 +85,7 @@ export default class EdgeController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Edge'],
-                    summary: 'Receive metrics from Edge',
+                    summary: 'Send metrics from Edge',
                     description: `This operation accepts batched metrics from Edge. Metrics will be inserted into Unleash's metrics storage`,
                     operationId: 'bulkMetrics',
                     requestBody: createRequestSchema('bulkMetricsSchema'),

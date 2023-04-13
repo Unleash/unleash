@@ -36,10 +36,10 @@ If you have an Unleash enterprise license you're welcome to reach out to us at s
 
 After the plugin has been installed, each project's settings page in Jira will have a menu entry link called "Unleash Project Settings" under the "Apps" menu section.
 
-![Jira Cloud - Project settings link](/img/jira_cloud_project_settings_link.png)
+![Jira Cloud - Project settings link](/img/jira-cloud-project-settings-link.png)
 
 Following that link takes you to the "Unleash Project Settings" configuration page. This is where you specify the connection details (Unleash server URL and access token) for the Unleash server to be used with this particular project.
 
-![Jira Cloud - Project settings](/img/jira_cloud_project_settings.png)
+![Jira Cloud - Project settings](/img/jira-cloud-project-settings.png)
 
-Once you have configured the connection for the Unleash server, your users should be ready to [use the Jira Cloud plugin](/integrations/jira_cloud_plugin_usage)
+Once you have configured the connection for the Unleash server, your users should be ready to [use the Jira Cloud plugin](jira-cloud-plugin-usage)

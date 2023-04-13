@@ -151,6 +151,29 @@ export const useChangeRequestApi = () => {
         }
     };
 
+    const updateTitle = async (
+        project: string,
+        changeRequestId: number,
+        title: string
+    ) => {
+        trackEvent('change_request', {
+            props: {
+                eventType: 'title updated',
+            },
+        });
+
+        const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/title`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify({ title }),
+        });
+        try {
+            await makeRequest(req.caller, req.id);
+        } catch (e) {
+            throw e;
+        }
+    };
+
     return {
         addChange,
         changeState,
@@ -158,6 +181,7 @@ export const useChangeRequestApi = () => {
         updateChangeRequestEnvironmentConfig,
         discardDraft,
         addComment,
+        updateTitle,
         errors,
         loading,
     };

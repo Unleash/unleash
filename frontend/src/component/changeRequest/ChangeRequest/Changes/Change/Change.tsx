@@ -71,13 +71,16 @@ export const Change: FC<{
     change: IChange;
     feature: IChangeRequestFeature;
 }> = ({ index, change, feature, changeRequest, discard }) => {
+    const lastIndex = feature.defaultChange
+        ? feature.changes.length + 1
+        : feature.changes.length;
     return (
         <StyledSingleChangeBox
             key={objectId(change)}
             $hasConflict={Boolean(change.conflict)}
             $isInConflictFeature={Boolean(feature.conflict)}
             $isAfterWarning={Boolean(feature.changes[index - 1]?.conflict)}
-            $isLast={index + 1 === feature.changes.length}
+            $isLast={index + 1 === lastIndex}
         >
             <ConditionallyRender
                 condition={Boolean(change.conflict) && !feature.conflict}

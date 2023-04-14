@@ -3,7 +3,7 @@ import { Logger } from '../logger';
 import { IApiTokenStore } from '../types/stores/api-token-store';
 import { EdgeTokenSchema } from '../openapi/spec/edge-token-schema';
 import { constantTimeCompare } from '../util/constantTimeCompare';
-import { ValidateEdgeTokensSchema } from '../openapi/spec/validated-edge-tokens-schema';
+import { ValidatedEdgeTokensSchema } from '../openapi/spec/validated-edge-tokens-schema';
 
 export default class EdgeService {
     private logger: Logger;
@@ -18,7 +18,7 @@ export default class EdgeService {
         this.apiTokenStore = apiTokenStore;
     }
 
-    async getValidTokens(tokens: string[]): Promise<ValidateEdgeTokensSchema> {
+    async getValidTokens(tokens: string[]): Promise<ValidatedEdgeTokensSchema> {
         const activeTokens = await this.apiTokenStore.getAllActive();
         const edgeTokens = tokens.reduce((result: EdgeTokenSchema[], token) => {
             const dbToken = activeTokens.find((activeToken) =>

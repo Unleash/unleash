@@ -49,7 +49,10 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                     variant="body2"
                                     color="text.secondary"
                                 >
-                                    Default strategy will be added
+                                    {feature.defaultChange.action ===
+                                    'addStrategy'
+                                        ? 'Default strategy will be added'
+                                        : 'Feature status will change'}
                                 </Typography>
                             }
                             index={feature.changes.length}

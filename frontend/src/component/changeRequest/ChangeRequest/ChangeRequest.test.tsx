@@ -1,9 +1,15 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { ChangeRequest } from './ChangeRequest';
-import { IChangeRequest } from '../changeRequest.types';
+import {
+    IChangeRequest,
+    IChangeRequestAddStrategy,
+    IChangeRequestEnabled,
+} from '../changeRequest.types';
 
-test('Display default strategy', async () => {
+const changeRequestWithDefaultChange = (
+    defaultChange: IChangeRequestEnabled | IChangeRequestAddStrategy
+) => {
     const changeRequest: IChangeRequest = {
         approvals: [],
         comments: [],
@@ -32,19 +38,7 @@ test('Display default strategy', async () => {
                         },
                     },
                 ],
-                defaultChange: {
-                    id: 0,
-                    action: 'addStrategy',
-                    payload: {
-                        name: 'flexibleRollout',
-                        constraints: [],
-                        parameters: {
-                            rollout: '100',
-                            stickiness: 'default',
-                            groupId: 'test123',
-                        },
-                    },
-                },
+                defaultChange,
             },
         ],
         id: 0,
@@ -54,12 +48,49 @@ test('Display default strategy', async () => {
         project: 'project',
         environment: 'production',
     };
+    return changeRequest;
+};
 
-    render(<ChangeRequest changeRequest={changeRequest} />);
+test('Display default add strategy', async () => {
+    render(
+        <ChangeRequest
+            changeRequest={changeRequestWithDefaultChange({
+                id: 0,
+                action: 'addStrategy',
+                payload: {
+                    name: 'flexibleRollout',
+                    constraints: [],
+                    parameters: {
+                        rollout: '100',
+                        stickiness: 'default',
+                        groupId: 'test123',
+                    },
+                },
+            })}
+        />
+    );
 
     expect(screen.getByText('Feature Toggle Name')).toBeInTheDocument();
     expect(screen.getByText('Enabled')).toBeInTheDocument();
     expect(
         screen.getByText('Default strategy will be added')
     ).toBeInTheDocument();
+});
+
+test('Display default disable feature', async () => {
+    render(
+        <ChangeRequest
+            changeRequest={changeRequestWithDefaultChange({
+                id: 0,
+                action: 'updateEnabled',
+                payload: {
+                    enabled: false,
+                },
+            })}
+        />
+    );
+
+    expect(screen.getByText('Feature Toggle Name')).toBeInTheDocument();
+    expect(screen.getByText('Disabled')).toBeInTheDocument();
+    expect(screen.getByText('Feature status will change')).toBeInTheDocument();
 });

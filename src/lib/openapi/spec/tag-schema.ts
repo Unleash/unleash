@@ -5,6 +5,7 @@ export const TAG_MAX_LENGTH = 50;
 export const tagSchema = {
     $id: '#/components/schemas/tagSchema',
     type: 'object',
+    description: 'Representation of a tag',
     additionalProperties: false,
     required: ['value', 'type'],
     properties: {
@@ -12,17 +13,17 @@ export const tagSchema = {
             type: 'string',
             minLength: TAG_MIN_LENGTH,
             maxLength: TAG_MAX_LENGTH,
+            description: 'The value of the tag',
+            example: 'a-tag-value',
         },
         type: {
             type: 'string',
             minLength: TAG_MIN_LENGTH,
             maxLength: TAG_MAX_LENGTH,
             default: 'simple',
+            description: 'The type of the tag',
+            example: 'simple',
         },
-    },
-    example: {
-        value: 'tag-value',
-        type: 'simple',
     },
     components: {},
 } as const;

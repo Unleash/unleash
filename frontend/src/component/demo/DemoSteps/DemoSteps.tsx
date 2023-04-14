@@ -146,7 +146,6 @@ export const DemoSteps = ({
             stepIndex={steps[topic]}
             callback={joyrideCallback}
             steps={topics[topic].steps}
-            disableScrollParentFix
             disableScrolling
             disableOverlayClose
             spotlightClicks

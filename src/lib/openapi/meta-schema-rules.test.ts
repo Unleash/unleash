@@ -14,6 +14,21 @@ type Rule = {
     knownExceptions?: string[];
 };
 
+/**
+ * These rules are applied to all schemas in the spec.
+ *
+ * The rules usually start as a meta schema, which is a schema that describes
+ * the shape of the OpenAPI schemas. Usually they look like this:
+ *
+ * <code>
+ * const metaSchema: Schema = {
+ *   type: 'object',
+ *   properties: {
+ *     // what we want to specify about the schema
+ *   }
+ * }
+ * </code>
+ */
 const metaRules: Rule[] = [
     {
         name: 'should have a type',
@@ -38,6 +53,155 @@ const metaRules: Rule[] = [
             },
             required: ['$id'],
         },
+    },
+    {
+        name: 'should have properties with descriptions',
+        match: (_, schema) => {
+            // only match schemas that have a properties field
+            return 'properties' in schema;
+        },
+        metaSchema: {
+            type: 'object',
+            // properties of the meta schema
+            properties: {
+                // the schema should have a field called properties
+                properties: {
+                    type: 'object', // properties of the schema should be an object
+                    additionalProperties: {
+                        // with the following shape
+                        type: 'object',
+                        properties: {
+                            description: { type: 'string' },
+                        },
+                        required: ['description'],
+                    },
+                },
+            },
+        },
+        knownExceptions: [
+            'addonParameterSchema',
+            'addonSchema',
+            'addonsSchema',
+            'addonTypeSchema',
+            'apiTokenSchema',
+            'apiTokensSchema',
+            'applicationSchema',
+            'applicationsSchema',
+            'batchFeaturesSchema',
+            'batchStaleSchema',
+            'bulkRegistrationSchema',
+            'bulkMetricsSchema',
+            'changePasswordSchema',
+            'clientApplicationSchema',
+            'clientFeatureSchema',
+            'clientFeaturesQuerySchema',
+            'clientFeaturesSchema',
+            'clientMetricsSchema',
+            'clientMetricsEnvSchema',
+            'cloneFeatureSchema',
+            'contextFieldSchema',
+            'createApiTokenSchema',
+            'createFeatureSchema',
+            'createFeatureStrategySchema',
+            'createInvitedUserSchema',
+            'createUserSchema',
+            'edgeTokenSchema',
+            'emailSchema',
+            'environmentsSchema',
+            'environmentsProjectSchema',
+            'eventSchema',
+            'eventsSchema',
+            'exportResultSchema',
+            'exportQuerySchema',
+            'featureEnvironmentMetricsSchema',
+            'featureEnvironmentSchema',
+            'featureEventsSchema',
+            'featureMetricsSchema',
+            'featureSchema',
+            'featuresSchema',
+            'featureStrategySchema',
+            'featureStrategySegmentSchema',
+            'featureTagSchema',
+            'featureTypeSchema',
+            'featureTypesSchema',
+            'featureUsageSchema',
+            'featureVariantsSchema',
+            'feedbackSchema',
+            'groupSchema',
+            'groupsSchema',
+            'groupUserModelSchema',
+            'healthCheckSchema',
+            'healthOverviewSchema',
+            'healthReportSchema',
+            'idSchema',
+            'instanceAdminStatsSchema',
+            'legalValueSchema',
+            'loginSchema',
+            'maintenanceSchema',
+            'toggleMaintenanceSchema',
+            'meSchema',
+            'nameSchema',
+            'overrideSchema',
+            'passwordSchema',
+            'patchSchema',
+            'patSchema',
+            'patsSchema',
+            'permissionSchema',
+            'playgroundFeatureSchema',
+            'playgroundRequestSchema',
+            'profileSchema',
+            'projectEnvironmentSchema',
+            'projectSchema',
+            'projectsSchema',
+            'proxyClientSchema',
+            'proxyFeatureSchema',
+            'proxyFeaturesSchema',
+            'publicSignupTokenSchema',
+            'publicSignupTokensSchema',
+            'publicSignupTokenUpdateSchema',
+            'pushVariantsSchema',
+            'resetPasswordSchema',
+            'requestsPerSecondSchema',
+            'requestsPerSecondSegmentedSchema',
+            'roleSchema',
+            'sdkContextSchema',
+            'searchEventsSchema',
+            'segmentSchema',
+            'setUiConfigSchema',
+            'splashSchema',
+            'stateSchema',
+            'strategiesSchema',
+            'strategySchema',
+            'tagsBulkAddSchema',
+            'tagSchema',
+            'tagsSchema',
+            'tagTypeSchema',
+            'tagTypesSchema',
+            'tagWithVersionSchema',
+            'tokenUserSchema',
+            'uiConfigSchema',
+            'updateApiTokenSchema',
+            'updateFeatureSchema',
+            'updateFeatureStrategySchema',
+            'updateTagTypeSchema',
+            'updateUserSchema',
+            'updateTagsSchema',
+            'upsertContextFieldSchema',
+            'upsertSegmentSchema',
+            'upsertStrategySchema',
+            'userSchema',
+            'usersGroupsBaseSchema',
+            'usersSchema',
+            'validateEdgeTokensSchema',
+            'validatePasswordSchema',
+            'validateTagTypeSchema',
+            'variantSchema',
+            'versionSchema',
+            'projectOverviewSchema',
+            'importTogglesSchema',
+            'importTogglesValidateSchema',
+            'importTogglesValidateItemSchema',
+        ],
     },
     {
         name: 'should have a description',

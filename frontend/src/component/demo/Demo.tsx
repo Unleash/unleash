@@ -19,45 +19,100 @@ import { Badge } from 'component/common/Badge/Badge';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEffect, useState } from 'react';
 
-const STEPS: Step[] = [
+interface ITutorialStep {
+    title: string;
+    steps: Step[];
+}
+
+const STEPS: ITutorialStep[] = [
     {
-        target: 'button[data-testid="IMPORT_BUTTON"]',
-        title: (
-            <Typography fontWeight="bold">
-                Enable/disable a feature toggle
-            </Typography>
-        ),
-        content: (
-            <>
-                <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    paddingBottom={2}
-                >
-                    The simplest way to use a feature toggle is to enable or
-                    disable it for everyone (on/off).
-                </Typography>
-                <Badge icon={<InfoOutlinedIcon />}>
-                    Look at the demo page when toggling!
-                </Badge>
-            </>
-        ),
-        disableBeacon: true,
+        title: 'Enable/disable a feature toggle',
+        steps: [
+            {
+                target: 'button[data-testid="IMPORT_BUTTON"]',
+                title: (
+                    <Typography fontWeight="bold">
+                        Enable/disable a feature toggle
+                    </Typography>
+                ),
+                content: (
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            The simplest way to use a feature toggle is to
+                            enable or disable it for everyone (on/off).
+                        </Typography>
+                        <Badge
+                            sx={{ marginTop: 2 }}
+                            icon={<InfoOutlinedIcon />}
+                        >
+                            Look at the demo page when toggling!
+                        </Badge>
+                    </>
+                ),
+                disableBeacon: true,
+            },
+        ],
     },
     {
-        target: 'a[href="https://slack.unleash.run"]',
-        content: (
-            <>
-                <Typography>
-                    The simplest way to use a feature toggle is to enable or
-                    disable it for everyone (on/off).
-                </Typography>
-                <Badge>Look at the demo page when toggling!</Badge>
-            </>
-        ),
-        title: 'Enable/disable a feature toggle',
+        title: 'Slack example',
+        steps: [
+            {
+                target: 'a[href="https://slack.unleash.run"]',
+                title: (
+                    <Typography fontWeight="bold">Join us on Slack!</Typography>
+                ),
+                content: (
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            Join our community in Slack. This is just an example
+                            and not part of the final guide.
+                        </Typography>
+                    </>
+                ),
+            },
+        ],
     },
 ];
+
+// const STEPS: Step[] = [
+//     {
+//         target: 'button[data-testid="IMPORT_BUTTON"]',
+//         title: (
+//             <Typography fontWeight="bold">
+//                 Enable/disable a feature toggle
+//             </Typography>
+//         ),
+//         content: (
+//             <>
+//                 <Typography
+//                     variant="body2"
+//                     color="text.secondary"
+//                     paddingBottom={2}
+//                 >
+//                     The simplest way to use a feature toggle is to enable or
+//                     disable it for everyone (on/off).
+//                 </Typography>
+//                 <Badge icon={<InfoOutlinedIcon />}>
+//                     Look at the demo page when toggling!
+//                 </Badge>
+//             </>
+//         ),
+//         disableBeacon: true,
+//     },
+//     {
+//         target: 'a[href="https://slack.unleash.run"]',
+//         content: (
+//             <>
+//                 <Typography>
+//                     The simplest way to use a feature toggle is to enable or
+//                     disable it for everyone (on/off).
+//                 </Typography>
+//                 <Badge>Look at the demo page when toggling!</Badge>
+//             </>
+//         ),
+//         title: 'Enable/disable a feature toggle',
+//     },
+// ];
 
 const StyledDiv = styled('div')(({ theme }) => ({
     position: 'absolute',
@@ -101,6 +156,7 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)(({ theme }) => ({
 export const Demo = () => {
     const theme = useTheme();
     const { uiConfig } = useUiConfig();
+    const [expanded, setExpanded] = useState(true);
     const [run, setRun] = useState(false);
     const [step, setStep] = useState(0);
 
@@ -143,6 +199,7 @@ export const Demo = () => {
             ([STATUS.FINISHED, STATUS.SKIPPED] as string[]).includes(status)
         ) {
             setRun(false);
+            setExpanded(false);
         }
     };
 
@@ -152,7 +209,11 @@ export const Demo = () => {
     // TODO: Finish accordion with steps
     return (
         <StyledDiv>
-            <StyledAccordion id="unleash-tutorial">
+            <StyledAccordion
+                id="unleash-tutorial"
+                expanded={expanded}
+                onChange={() => setExpanded(expanded => !expanded)}
+            >
                 <StyledAccordionSummary expandIcon={<StyledExpandMoreIcon />}>
                     <Typography>Unleash tutorial</Typography>
                 </StyledAccordionSummary>
@@ -163,7 +224,7 @@ export const Demo = () => {
                 run={run}
                 stepIndex={step}
                 callback={joyrideCallback}
-                steps={STEPS}
+                steps={STEPS.flatMap(step => step.steps)}
                 continuous
                 disableScrolling // Original scrolling is too janky, scrolling manually in callback
                 disableOverlayClose // TODO: Should we keep this?

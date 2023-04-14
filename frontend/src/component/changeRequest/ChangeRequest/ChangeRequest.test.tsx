@@ -33,6 +33,7 @@ test('Display default strategy', async () => {
                     },
                 ],
                 defaultChange: {
+                    id: 0,
                     action: 'addStrategy',
                     payload: {
                         name: 'flexibleRollout',

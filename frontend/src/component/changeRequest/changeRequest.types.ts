@@ -28,7 +28,7 @@ export interface IChangeRequestFeature {
     name: string;
     conflict?: string;
     changes: IChange[];
-    defaultChange?: Omit<IChangeRequestAddStrategy, 'id'>;
+    defaultChange?: IChangeRequestAddStrategy;
 }
 
 export interface IChangeRequestApproval {

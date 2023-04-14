@@ -68,7 +68,7 @@ export const Change: FC<{
     discard: ReactNode;
     index: number;
     changeRequest: IChangeRequest;
-    change: Omit<IChange, 'id'>;
+    change: IChange;
     feature: IChangeRequestFeature;
 }> = ({ index, change, feature, changeRequest, discard }) => {
     const lastIndex = feature.defaultChange

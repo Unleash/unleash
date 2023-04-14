@@ -5,7 +5,7 @@ import Joyride, {
     STATUS,
     TooltipRenderProps,
 } from 'react-joyride';
-import { Button, styled, useTheme } from '@mui/material';
+import { Button, Typography, styled, useTheme } from '@mui/material';
 import { ITutorialTopic } from '../Demo';
 import { useEffect } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -20,7 +20,11 @@ const StyledTooltip = styled('div')(({ theme }) => ({
 }));
 
 const StyledTooltipTitle = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
     marginBottom: theme.spacing(1),
+    flexWrap: 'wrap',
 }));
 
 const StyledTooltipActions = styled('div')(({ theme }) => ({
@@ -179,7 +183,22 @@ export const DemoSteps = ({
 
                 return (
                     <StyledTooltip {...tooltipProps}>
-                        <StyledTooltipTitle>{step.title}</StyledTooltipTitle>
+                        <StyledTooltipTitle>
+                            {step.title}
+                            <ConditionallyRender
+                                condition={topics[topic].steps.length > 1}
+                                show={
+                                    <Typography
+                                        variant="body2"
+                                        color="text.secondary"
+                                        flexShrink={0}
+                                    >
+                                        (step {steps[topic] + 1} of{' '}
+                                        {topics[topic].steps.length})
+                                    </Typography>
+                                }
+                            />
+                        </StyledTooltipTitle>
                         {step.content}
                         <StyledTooltipActions>
                             <Button variant="text" onClick={skip}>

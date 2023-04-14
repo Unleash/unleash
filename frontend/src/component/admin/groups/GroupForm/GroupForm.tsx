@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Box, Button, styled } from '@mui/material';
+import { Autocomplete, Box, Button, styled, TextField } from '@mui/material';
 import { UG_DESC_ID, UG_NAME_ID } from 'utils/testIds';
 import Input from 'component/common/Input/Input';
 import { IGroupUser } from 'interfaces/group';
@@ -10,6 +10,8 @@ import { ItemList } from 'component/common/ItemList/ItemList';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import { Link } from 'react-router-dom';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { IProjectRole } from 'interfaces/role';
+import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -63,15 +65,34 @@ const StyledDescriptionBlock = styled('div')(({ theme }) => ({
     },
 }));
 
+const StyledAutocompleteWrapper = styled('div')(({ theme }) => ({
+    '& > div:first-of-type': {
+        width: '100%',
+        maxWidth: theme.spacing(50),
+        marginBottom: theme.spacing(2),
+    },
+}));
+
+const StyledRoleOption = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    '& > span:last-of-type': {
+        fontSize: theme.fontSizes.smallerBody,
+        color: theme.palette.text.secondary,
+    },
+}));
+
 interface IGroupForm {
     name: string;
     description: string;
     mappingsSSO: string[];
     users: IGroupUser[];
+    rootRole: number | null;
     setName: (name: string) => void;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     setMappingsSSO: React.Dispatch<React.SetStateAction<string[]>>;
     setUsers: React.Dispatch<React.SetStateAction<IGroupUser[]>>;
+    setRootRole: React.Dispatch<React.SetStateAction<number | null>>;
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };
@@ -83,22 +104,43 @@ export const GroupForm: FC<IGroupForm> = ({
     description,
     mappingsSSO,
     users,
+    rootRole,
     setName,
     setDescription,
     setMappingsSSO,
     setUsers,
     handleSubmit,
     handleCancel,
+    setRootRole,
     errors,
     mode,
     children,
 }) => {
     const { config: oidcSettings } = useAuthSettings('oidc');
     const { config: samlSettings } = useAuthSettings('saml');
+    const { roles } = useUsers();
 
     const isGroupSyncingEnabled =
         (oidcSettings?.enabled && oidcSettings.enableGroupSyncing) ||
         (samlSettings?.enabled && samlSettings.enableGroupSyncing);
+
+    const roleIdToRole = (rootRoleId: number | null): IProjectRole | null => {
+        return (
+            roles.find((role: IProjectRole) => role.id === rootRoleId) || null
+        );
+    };
+
+    const renderRoleOption = (
+        props: React.HTMLAttributes<HTMLLIElement>,
+        option: IProjectRole
+    ) => (
+        <li {...props}>
+            <StyledRoleOption>
+                <span>{option.name}</span>
+                <span>{option.description}</span>
+            </StyledRoleOption>
+        </li>
+    );
 
     return (
         <StyledForm onSubmit={handleSubmit}>
@@ -146,9 +188,9 @@ export const GroupForm: FC<IGroupForm> = ({
                     elseShow={() => (
                         <StyledDescriptionBlock>
                             <Box sx={{ display: 'flex' }}>
-                                You can enable SSO groups syncronization if
+                                You can enable SSO groups synchronization if
                                 needed
-                                <HelpIcon tooltip="SSO groups syncronization allows SSO groups to be mapped to Unleash groups, so that user group membership is properly synchronized." />
+                                <HelpIcon tooltip="SSO groups synchronization allows SSO groups to be mapped to Unleash groups, so that user group membership is properly synchronized." />
                             </Box>
                             <Link data-loading to={`/admin/auth`}>
                                 <span data-loading>View SSO configuration</span>
@@ -156,6 +198,28 @@ export const GroupForm: FC<IGroupForm> = ({
                         </StyledDescriptionBlock>
                     )}
                 />
+                <StyledInputDescription>
+                    Do you want to associate a root role with this group?
+                </StyledInputDescription>
+                <StyledAutocompleteWrapper>
+                    <Autocomplete
+                        data-testid={'test'}
+                        size="small"
+                        openOnFocus
+                        value={roleIdToRole(rootRole)}
+                        onChange={(_, newValue) =>
+                            setRootRole(newValue?.id || null)
+                        }
+                        options={roles.filter(
+                            (role: IProjectRole) => role.name !== 'Viewer'
+                        )}
+                        renderOption={renderRoleOption}
+                        getOptionLabel={option => option.name}
+                        renderInput={params => (
+                            <TextField {...params} label="Role" />
+                        )}
+                    />
+                </StyledAutocompleteWrapper>
                 <ConditionallyRender
                     condition={mode === 'Create'}
                     show={

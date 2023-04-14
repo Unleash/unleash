@@ -126,15 +126,19 @@ export const ProjectAccessAssign = ({
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
 
+    console.log('Got me some groups');
+    console.log(groups);
+
     const options = [
         ...groups
             .filter(
                 (group: IGroup) =>
                     edit ||
-                    !accesses.some(
+                    (!accesses.some(
                         ({ entity: { id }, type }) =>
                             group.id === id && type === ENTITY_TYPE.GROUP
-                    )
+                    ) &&
+                        !group.rootRole)
             )
             .map((group: IGroup) => ({
                 id: group.id,

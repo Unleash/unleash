@@ -6,6 +6,7 @@ export interface IGroup {
     name: string;
     description?: string;
     mappingsSSO?: string[];
+    rootRole?: number;
     createdAt?: Date;
     userCount?: number;
     createdBy?: string;
@@ -58,6 +59,8 @@ export default class Group implements IGroup {
 
     name: string;
 
+    rootRole?: number;
+
     description: string;
 
     mappingsSSO: string[];
@@ -67,6 +70,7 @@ export default class Group implements IGroup {
         name,
         description,
         mappingsSSO,
+        rootRole,
         createdBy,
         createdAt,
     }: IGroup) {
@@ -78,6 +82,7 @@ export default class Group implements IGroup {
 
         this.id = id;
         this.name = name;
+        this.rootRole = rootRole;
         this.description = description;
         this.mappingsSSO = mappingsSSO;
         this.createdBy = createdBy;

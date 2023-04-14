@@ -28,6 +28,7 @@ const GROUP_COLUMNS = [
     'mappings_sso',
     'created_at',
     'created_by',
+    'root_role_id',
 ];
 
 const rowToGroup = (row) => {
@@ -41,6 +42,7 @@ const rowToGroup = (row) => {
         mappingsSSO: row.mappings_sso,
         createdAt: row.created_at,
         createdBy: row.created_by,
+        rootRole: row.root_role_id,
     });
 };
 
@@ -60,6 +62,7 @@ const groupToRow = (group: IStoreGroup) => ({
     name: group.name,
     description: group.description,
     mappings_sso: JSON.stringify(group.mappingsSSO),
+    root_role_id: group.rootRole,
 });
 
 export default class GroupStore implements IGroupStore {

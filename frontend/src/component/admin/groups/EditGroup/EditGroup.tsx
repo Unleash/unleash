@@ -55,6 +55,8 @@ export const EditGroup = ({
         setMappingsSSO,
         users,
         setUsers,
+        rootRole,
+        setRootRole,
         getGroupPayload,
         clearErrors,
         errors,
@@ -63,7 +65,8 @@ export const EditGroup = ({
         group?.name,
         group?.description,
         group?.mappingsSSO,
-        group?.users
+        group?.users,
+        group?.rootRole,
     );
 
     const { groups } = useGroups();
@@ -129,10 +132,12 @@ export const EditGroup = ({
                 description={description}
                 mappingsSSO={mappingsSSO}
                 users={users}
+                rootRole={rootRole}
                 setName={onSetName}
                 setDescription={setDescription}
                 setMappingsSSO={setMappingsSSO}
                 setUsers={setUsers}
+                setRootRole={setRootRole}
                 errors={errors}
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}

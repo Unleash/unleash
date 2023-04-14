@@ -3476,6 +3476,7 @@ Stats are divided into current and previous **windows**.
       },
       "segmentSchema": {
         "additionalProperties": false,
+        "description": "Represents a segment of users defined by a set of constraints.",
         "properties": {
           "constraints": {
             "description": "List of constraints that determine which users are part of the segment",
@@ -3485,13 +3486,18 @@ Stats are divided into current and previous **windows**.
             "type": "array",
           },
           "description": {
+            "description": "The description of the segment.",
+            "example": "Segment A description",
             "nullable": true,
             "type": "string",
           },
           "id": {
+            "description": "The segment's id.",
             "type": "number",
           },
           "name": {
+            "description": "The name of the segment.",
+            "example": "segment A",
             "type": "string",
           },
         },
@@ -4125,6 +4131,7 @@ Stats are divided into current and previous **windows**.
         "type": "object",
       },
       "upsertSegmentSchema": {
+        "description": "Represents a segment of users defined by a set of constraints.",
         "example": {
           "constraints": [
             {
@@ -4149,10 +4156,12 @@ Stats are divided into current and previous **windows**.
             "type": "array",
           },
           "description": {
+            "description": "The description of the segment.",
             "nullable": true,
             "type": "string",
           },
           "name": {
+            "description": "The name of the segment.",
             "type": "string",
           },
           "project": {

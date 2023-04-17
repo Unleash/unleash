@@ -179,7 +179,6 @@ Note: passing \`null\` as a value for the description property will set it to an
     ): Promise<void> {
         const { id } = req.params;
         const createdBy = extractUsername(req);
-
         const data = req.body;
 
         const addon = await this.addonService.updateAddon(id, data, createdBy);

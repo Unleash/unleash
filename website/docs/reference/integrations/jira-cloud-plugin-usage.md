@@ -44,10 +44,9 @@ If you already have an active change request for that project and that environme
 
 ![Jira Cloud - Modal opens for creating a new change request](/img/jira-cloud-change-request-dialog.png)
 
-Clicking the "Yes" button creates a 
-Change Request in Unleash, and a confirmation will be displayed in the dialog along with a link to the new Change Request.
+If you confirm that you would like to open a change request, then the plugin will create one for you and present a confirmation dialog.
 
-![Jira Cloud - Confirmation message for the change request just created](/img/jira-cloud-change-request-confirmation.png)
+<Figure caption="A dialog appears when the plugin creates a change request for you. The dialog contains a link directly to the newly created change request." img="/img/jira-cloud-change-request-confirmation.png" />
 
 When the Change Request has been reviewed and applied in Unleash, the toggle will show the requested state after the next refresh 
 of the issue and toggle status page.

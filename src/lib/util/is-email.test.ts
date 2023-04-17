@@ -33,7 +33,7 @@ test.each([
     'email123@domain.', // (missing top-level domain)
     'email@-domain.com', // (hyphen at the beginning of domain name)
     'email@domain.c', // (invalid top-level domain)
-    'email@.domain.com', // (missing username)
+    'email@.domain.com', // (missing subdomain name)
     'notanemail',
     'missing@symbol',
     '@missingusername.com',

@@ -38,7 +38,7 @@ Once you've connected at least one toggle to an issue, the Unleash plugin will l
 that toggle. If the current user is allowed to edit the issue, they can also enable or disable environments directly
 from Jira.
 
-![Jira Cloud - Overview of toggle status in Jira Issue](/img/jira-cloud-toggle-status.png)
+<Figure caption="A Jira Cloud issue with a connected toggle. The Unleash feature flags section now shows the connected toggles along with the toggle's environments. There are controls to enable or disable the toggle in the development and production environments" img="/img/jira-cloud-toggle-status.png" />
 
 ### Change Requests
 

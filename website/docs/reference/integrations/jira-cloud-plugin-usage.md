@@ -26,13 +26,11 @@ There are a few steps to connect a toggle:
 
 ![Jira Cloud: connect feature toggle form. The project selection dropdown contains all Unleash projects](/img/jira-cloud-select-project-expanded.png)
 
-allowing you then to either connect an existing toggle
+2. Use the "create new toggle" option to choose whether you want to add an existing toggle or create a new one.  
 
-![Jira Cloud - Dropdown to select existing toggle to connect](/img/jira-cloud-add-existing-toggle.png)
+<Figure caption="When you add an existing toggle, use the toggle name select list to choose from existing toggles in the selected Unleash project." img="/img/jira-cloud-add-existing-toggle.png" />
 
-or if you flip the switch that says "Create new toggle", allows you to create a new toggle
-
-![Jira Cloud - Switch that opens the form to create and connect a new toggle](/img/jira-cloud-add-new-toggle.png)
+<Figure caption="When you add a new toggle, you must give it a name and can choose to give it a description." img="/img/jira-cloud-add-new-toggle.png" />c
 
 ### Toggle status as part of Issue view
 

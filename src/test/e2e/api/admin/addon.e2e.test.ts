@@ -254,8 +254,7 @@ describe('missing descriptions', () => {
             .post('/api/admin/addons')
             .send(addonWithoutDescription)
             .expect((res) => {
-                expect(res.body.description).toBeUndefined();
-                return res.body.id;
+                expect(res.body.description).toBeNull();
             });
 
         return app.request

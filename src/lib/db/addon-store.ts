@@ -72,7 +72,7 @@ export default class AddonStore implements IAddonStore {
         stopTimer();
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const { id, created_at } = rows[0];
-        return { id, createdAt: created_at, ...addon };
+        return this.rowToAddon({ id, createdAt: created_at, ...addon });
     }
 
     async update(id: number, addon: IAddonDto): Promise<IAddon> {
@@ -116,7 +116,7 @@ export default class AddonStore implements IAddonStore {
             id: row.id,
             provider: row.provider,
             enabled: row.enabled,
-            description: row.description,
+            description: row.description ?? null,
             parameters: row.parameters,
             events: row.events,
             projects: row.projects || [],

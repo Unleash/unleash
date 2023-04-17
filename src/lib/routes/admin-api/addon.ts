@@ -180,10 +180,7 @@ Note: passing \`null\` as a value for the description property will set it to an
         const { id } = req.params;
         const createdBy = extractUsername(req);
 
-        // because `description` is optional in the request DTO but required by
-        // the update function, we need to provide a default empty string in
-        // case it's missing.
-        const data = { description: '', ...req.body };
+        const data = req.body;
 
         const addon = await this.addonService.updateAddon(id, data, createdBy);
 
@@ -199,7 +196,6 @@ Note: passing \`null\` as a value for the description property will set it to an
         req: IAuthRequest<AddonCreateUpdateSchema, any, any, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
-        // returns a Joi error if the parameters object is empty
         const createdBy = extractUsername(req);
         const data = req.body;
         const addon = await this.addonService.createAddon(data, createdBy);

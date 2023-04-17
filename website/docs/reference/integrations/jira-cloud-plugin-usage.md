@@ -34,7 +34,7 @@ There are a few steps to connect a toggle:
 
 ### Toggle status as part of Issue view
 
-Once you've connected at least one toggle to an issue, our plugin will list the current status of each environment for
+Once you've connected at least one toggle to an issue, the Unleash plugin will list the current status of each environment for
 that toggle. If the current user is allowed to edit the issue, they can also enable or disable environments directly
 from Jira.
 

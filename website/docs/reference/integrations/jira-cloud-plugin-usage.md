@@ -46,7 +46,6 @@ The plugin respects Unleash's [change requests](../change-requests.md). If chang
 
 If you already have an active change request for that project and that environment, the changes will be added to your existing change request.
 
-![Jira Cloud - Modal opens for creating a new change request](/img/jira-cloud-change-request-dialog.png)
 
 If you confirm that you would like to open a change request, then the plugin will create one for you and present a confirmation dialog.
 

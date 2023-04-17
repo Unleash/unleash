@@ -5011,6 +5011,9 @@ Stats are divided into current and previous **windows**.
           "403": {
             "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
+          "413": {
+            "description": "The body request body is larger than what we accept. By default we only accept bodies of 100kB or less",
+          },
           "415": {
             "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
           },
@@ -5129,6 +5132,9 @@ Note: passing \`null\` as a value for the description property will set it to an
           },
           "403": {
             "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "413": {
+            "description": "The body request body is larger than what we accept. By default we only accept bodies of 100kB or less",
           },
           "415": {
             "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",

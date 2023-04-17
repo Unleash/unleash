@@ -1,7 +1,7 @@
 import { VFC } from 'react';
-import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
-import { ChangeRequestState } from '../../changeRequest.types';
-import { ChangeRequestStatusBadge } from '../../ChangeRequestStatusBadge/ChangeRequestStatusBadge';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
+import { ChangeRequestStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 
 interface IChangeRequestStatusCellProps {
     value?: string | null; // FIXME: proper type

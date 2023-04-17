@@ -6,7 +6,7 @@ import {
     TableCell,
     TablePlaceholder,
 } from 'component/common/Table';
-import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
+import { SortingRule, useSortBy, useTable } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { styled, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
@@ -27,7 +27,6 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useStyles } from './ChangeRequestsTabs.styles';
 import { FeaturesCell } from './FeaturesCell';
-import { LinkCell } from '../../../common/Table/cells/LinkCell/LinkCell';
 
 export interface IChangeRequestTableProps {
     changeRequests: any[];

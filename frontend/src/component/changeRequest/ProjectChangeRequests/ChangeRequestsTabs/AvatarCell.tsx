@@ -1,5 +1,4 @@
-import { UserAvatar } from '../../../common/UserAvatar/UserAvatar';
-import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { styled, Typography } from '@mui/material';
 
 const StyledContainer = styled('div')(({ theme }) => ({

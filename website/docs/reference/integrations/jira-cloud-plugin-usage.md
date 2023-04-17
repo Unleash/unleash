@@ -57,7 +57,7 @@ of the issue and toggle status page.
 If a toggle is no longer relevant for your Jira Issue, you can disconnect it using the Disconnect toggle button (
 provided your user has edit rights on the issue)
 
-![Jira Cloud - Highlighting the button that disconnects a toggle](/img/jira-cloud-disconnect-toggle.png)
+![Jira Cloud: issue with a connected toggle. The 'disconnect toggle' button (highlighted) is displayed next to the toggle's name.](/img/jira-cloud-disconnect-toggle.png)
 
 The toggle will be disconnected immediately. However, the plugin will not delete the toggle from Unleash,
 so you can still reconnect your Jira issue to the same toggle using the "Connect to existing toggle" functionality

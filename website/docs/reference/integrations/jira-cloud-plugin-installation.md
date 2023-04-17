@@ -1,6 +1,7 @@
 ---
 title: Jira Cloud Integration - Installation
 ---
+import Figure from '@site/src/components/Figure/Figure.tsx'
 
 ## Prerequisites
 

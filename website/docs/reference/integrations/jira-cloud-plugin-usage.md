@@ -30,7 +30,7 @@ There are a few steps to connect a toggle:
 
 <Figure caption="When you add an existing toggle, use the toggle name select list to choose from existing toggles in the selected Unleash project." img="/img/jira-cloud-add-existing-toggle.png" />
 
-<Figure caption="When you add a new toggle, you must give it a name and can choose to give it a description." img="/img/jira-cloud-add-new-toggle.png" />c
+<Figure caption="When you add a new toggle, you must give it a name and can choose to give it a description." img="/img/jira-cloud-add-new-toggle.png" />
 
 ### Toggle status as part of Issue view
 

@@ -3,25 +3,26 @@ import { FromSchema } from 'json-schema-to-ts';
 export const addonParameterSchema = {
     $id: '#/components/schemas/addonParameterSchema',
     type: 'object',
+    additionalProperties: false,
     required: ['name', 'displayName', 'type', 'required', 'sensitive'],
-    description: 'Parameter definition for an addon. .... TODO',
+    description: 'An addon parameter definition.',
     properties: {
         name: {
             type: 'string',
             example: 'emojiIcon',
             description:
-                'The name of the parameter as it will be used in code.',
+                'The name of the parameter as it is used in code. References to this parameter should use this value.',
         },
         displayName: {
             type: 'string',
             example: 'Emoji Icon',
             description:
-                'The name of the parameter as it will be shown to the end user.',
+                'The name of the parameter as it is shown to the end user in the Admin UI.',
         },
         type: {
             type: 'string',
             description:
-                "The type of the parameter. TODO: what are these? Are they defined anywhere? What do they do? I found `text`, `url`, and `textfield`, but they don't seem to do much?",
+                'The type of the parameter. Corresponds roughly to [HTML `input` field types](https://developer.mozilla.org/docs/Web/HTML/Element/Input#input_types). Multi-line inut fields are indicated as `textfield` (equivalent to the HTML `textarea` tag).',
             example: 'text',
         },
         description: {
@@ -41,7 +42,7 @@ export const addonParameterSchema = {
             type: 'boolean',
             example: false,
             description:
-                'Whether this parameter is required or not. If a parameter is required, you must give it a value when you create the addon. If it is not required it can be left out. It may receive a default value in those cases..',
+                'Whether this parameter is required or not. If a parameter is required, you must give it a value when you create the addon. If it is not required it can be left out. It may receive a default value in those cases.',
         },
         sensitive: {
             type: 'boolean',

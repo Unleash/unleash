@@ -7,11 +7,22 @@ import { Step } from 'react-joyride';
 import { DemoTopics } from './DemoTopics/DemoTopics';
 import { DemoSteps } from './DemoSteps/DemoSteps';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { createLocalStorage } from 'utils/createLocalStorage';
 
 export interface ITutorialTopic {
     title: string;
     steps: Step[];
 }
+
+const defaultProgress = {
+    expanded: true,
+    run: false,
+    topic: 0,
+    steps: [0],
+};
+
+const { value: storedProgress, setValue: setStoredProgress } =
+    createLocalStorage('Tutorial:v1', defaultProgress);
 
 const TOPICS: ITutorialTopic[] = [
     {
@@ -166,16 +177,25 @@ const TOPICS: ITutorialTopic[] = [
 export const Demo = () => {
     const { uiConfig } = useUiConfig();
     const [loaded, setLoaded] = useState(false);
-    const [expanded, setExpanded] = useState(true);
-    const [run, setRun] = useState(false);
-    const [topic, setTopic] = useState(0);
-    const [steps, setSteps] = useState([0]);
+    const [expanded, setExpanded] = useState(storedProgress.expanded ?? true);
+    const [run, setRun] = useState(storedProgress.run ?? false);
+    const [topic, setTopic] = useState(storedProgress.topic ?? 0);
+    const [steps, setSteps] = useState(storedProgress.steps ?? [0]);
 
     useEffect(() => {
         setTimeout(() => {
             setLoaded(true);
         }, 1000);
     }, []);
+
+    useEffect(() => {
+        setStoredProgress({
+            expanded,
+            run,
+            topic,
+            steps,
+        });
+    }, [expanded, run, topic, steps]);
 
     if (!uiConfig.flags.demo) return null;
 

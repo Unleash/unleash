@@ -33,8 +33,6 @@ You will need a Jira admin user.
 
 If you have an Unleash enterprise license you're welcome to reach out to us at sales@getunleash.io for a free plugin license, otherwise you'll need to try the plugin for 30 days free or purchase a license through the marketplace.
 
-> More to be added here after we can have screenshots and guides of the installation procedure
-
 ## Configuring the plugin {#configure-plugin}
 
 After the plugin has been installed, each project's settings page in Jira will have a menu entry link called "Unleash Project Settings" under the "Apps" menu section.

@@ -37,7 +37,7 @@ export const addonSchema = {
         },
         parameters: {
             type: 'object',
-            additionalProperties: { type: 'string' },
+            additionalProperties: {},
             example: {
                 url: 'http://localhost:4242/webhook',
             },

@@ -78,9 +78,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "array",
           },
           "parameters": {
-            "additionalProperties": {
-              "type": "string",
-            },
+            "additionalProperties": {},
             "description": "Parameters for the addon provider. This object has different required and optional properties depending on the provider you choose. Consult the documentation for details.",
             "example": {
               "url": "http://localhost:4242/webhook",
@@ -208,9 +206,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "integer",
           },
           "parameters": {
-            "additionalProperties": {
-              "type": "string",
-            },
+            "additionalProperties": {},
             "description": "Parameters for the addon provider. This object has different required and optional properties depending on the provider you choose.",
             "example": {
               "url": "http://localhost:4242/webhook",

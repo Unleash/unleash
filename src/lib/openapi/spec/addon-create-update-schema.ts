@@ -30,7 +30,7 @@ The provider you choose for your addon dictates what properties the \`parameters
         },
         parameters: {
             type: 'object',
-            additionalProperties: { type: 'string' },
+            additionalProperties: {},
             example: {
                 url: 'http://localhost:4242/webhook',
             },

@@ -11,6 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: build (14.x) # temporary solution to trick branch protection rules
 
     strategy:
       matrix:

@@ -14,7 +14,8 @@ To use the plugin, you'll need to create an issue or use an existing one. Once t
 
 ### Connecting a toggle to an issue
 
-![Jira Cloud - Button that opens modal to connect toggles to Jira Issue](/img/jira-cloud-issue-button.png)
+<Figure caption="Once active, the Unleash plugin adds a button labeled 'connect toggle' to the issue." img="/img/jira-cloud-issue-button.png" />
+
 
 Clicking this button opens a dialog where you first select an Unleash Project to connect toggle from,
 

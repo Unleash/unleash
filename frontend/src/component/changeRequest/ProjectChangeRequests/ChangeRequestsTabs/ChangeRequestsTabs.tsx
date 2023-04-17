@@ -6,7 +6,7 @@ import {
     TableCell,
     TablePlaceholder,
 } from 'component/common/Table';
-import { SortingRule, useSortBy, useTable } from 'react-table';
+import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { styled, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
@@ -19,13 +19,15 @@ import { useSearch } from 'hooks/useSearch';
 import { useSearchParams } from 'react-router-dom';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { ChangeRequestStatusCell } from './ChangeRequestStatusCell/ChangeRequestStatusCell';
-import { AvatarCell } from './AvatarCell/AvatarCell';
-import { ChangeRequestTitleCell } from './ChangeRequestTitleCell/ChangeRequestTitleCell';
+import { ChangeRequestStatusCell } from './ChangeRequestStatusCell';
+import { AvatarCell } from './AvatarCell';
+import { ChangeRequestTitleCell } from './ChangeRequestTitleCell';
 import { TableBody, TableRow } from 'component/common/Table';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useStyles } from './ChangeRequestsTabs.styles';
+import { FeaturesCell } from './FeaturesCell';
+import { LinkCell } from '../../../common/Table/cells/LinkCell/LinkCell';
 
 export interface IChangeRequestTableProps {
     changeRequests: any[];
@@ -106,12 +108,21 @@ export const ChangeRequestsTabs = ({
                 Cell: ChangeRequestTitleCell,
             },
             {
+                id: 'Updated feature toggles',
+                Header: 'Updated feature toggles',
+                canSort: false,
+                accessor: 'features',
+                Cell: ({ value }: any) => {
+                    return <FeaturesCell project={projectId} value={value} />;
+                },
+            },
+            {
                 Header: 'By',
                 accessor: 'createdBy',
-                maxWidth: 100,
+                maxWidth: 180,
                 canSort: false,
                 Cell: AvatarCell,
-                align: 'center',
+                align: 'left',
             },
             {
                 Header: 'Submitted',
@@ -132,8 +143,7 @@ export const ChangeRequestsTabs = ({
                 Header: 'Status',
                 accessor: 'state',
                 searchable: true,
-                minWidth: 150,
-                width: 150,
+                maxWidth: '170px',
                 Cell: ChangeRequestStatusCell,
             },
         ],

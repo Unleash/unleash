@@ -8,7 +8,7 @@ export const addonTypeSchema = {
     additionalProperties: false,
     required: ['name', 'displayName', 'documentationUrl', 'description'],
     description:
-        'An addon provider definiton. Addon providers define ... TODO. Think of them as type definitions.',
+        'An addon provider. Defines a specific addon type and what the end user must configure when creating a new addon of that type.',
     properties: {
         name: {
             type: 'string',
@@ -25,18 +25,17 @@ export const addonTypeSchema = {
         documentationUrl: {
             type: 'string',
             description:
-                'A URL to where you can find more information about using this addon provider.',
+                'A URL to where you can find more information about using this addon type.',
             example: 'https://docs.getunleash.io/docs/addons/slack',
         },
         description: {
             type: 'string',
-            description: 'A description of the addon provider.',
+            description: 'A description of the addon type.',
             example: 'Allows Unleash to post updates to Slack.',
         },
         tagTypes: {
             type: 'array',
-            description:
-                "A list of tags that the addon provider uses. TODO: I don't know what this is.",
+            description: `A list of [Unleash tag types](https://docs.getunleash.io/reference/tags#tag-types) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created.`,
             example: [
                 {
                     name: 'slack',
@@ -46,7 +45,6 @@ export const addonTypeSchema = {
                 },
             ],
             items: {
-                // TODO: I think this might be ... wrong?
                 $ref: '#/components/schemas/tagTypeSchema',
             },
         },

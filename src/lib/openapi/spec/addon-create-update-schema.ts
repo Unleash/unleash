@@ -4,6 +4,8 @@ export const addonCreateUpdateSchema = {
     $id: '#/components/schemas/addonCreateUpdateSchema',
     type: 'object',
     required: ['provider', 'enabled', 'parameters', 'events'],
+    description:
+        'Data required to create or update an [Unleash addon](https://docs.getunleash.io/reference/addons) instance.',
     properties: {
         provider: {
             type: 'string',

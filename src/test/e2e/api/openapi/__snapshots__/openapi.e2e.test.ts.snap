@@ -45,6 +45,7 @@ exports[`should serve the OpenAPI spec 1`] = `
   "components": {
     "schemas": {
       "addonCreateUpdateSchema": {
+        "description": "Data required to create or update an [Unleash addon](https://docs.getunleash.io/reference/addons) instance.",
         "properties": {
           "description": {
             "description": "A description of the addon.",
@@ -166,6 +167,7 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "object",
       },
       "addonSchema": {
+        "description": "An [addon](https://docs.getunleash.io/reference/addons) instance description. Contains data about what kind of provider it uses, whether it's enabled or not, what events it listens for, and more.",
         "properties": {
           "description": {
             "description": "A description of the addon. \`null\` if no description exists.",

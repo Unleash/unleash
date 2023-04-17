@@ -40,7 +40,6 @@ process.nextTick(async () => {
                         responseTimeWithAppNameKillSwitch: false,
                         newProjectOverview: true,
                         bulkOperations: true,
-                        projectStatusApi: true,
                         projectScopedSegments: true,
                         projectScopedStickiness: true,
                         optimal304: true,

@@ -361,6 +361,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "type": "object",
       },
       "bulkMetricsSchema": {
+        "description": "A batch of metrics accumulated by Edge (or other compatible applications). Includes both application registrations as well usage metrics from clients",
         "properties": {
           "applications": {
             "items": {
@@ -375,14 +376,29 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "array",
           },
         },
+        "required": [
+          "applications",
+          "metrics",
+        ],
         "type": "object",
       },
       "bulkRegistrationSchema": {
+        "description": "An application registration. Defines the format POSTed by our server-side SDKs when they're starting up",
         "properties": {
           "appName": {
+            "description": "The name of the application that is evaluating toggles",
+            "example": "Ingress load balancer",
             "type": "string",
           },
           "connectVia": {
+            "description": "A list of applications this app registration has been registered through. If connected directly to Unleash, this is an empty list. 
+ This can be used in later visualizations to tell how many levels of proxy or Edge instances our SDKs have connected through",
+            "example": [
+              {
+                "appName": "unleash-edge",
+                "instanceId": "edge-pod-bghzv5",
+              },
+            ],
             "items": {
               "properties": {
                 "appName": {
@@ -401,21 +417,36 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "array",
           },
           "environment": {
+            "description": "Which environment the application is running in",
+            "example": "development",
             "type": "string",
           },
           "instanceId": {
+            "description": "A [(somewhat) unique identifier](https://docs.getunleash.io/reference/sdks/node#advanced-usage) for the application",
+            "example": "application-name-dacb1234",
             "type": "string",
           },
           "interval": {
+            "description": "How often (in seconds) the application refreshes its features",
+            "example": 10,
             "type": "number",
           },
           "sdkVersion": {
+            "description": "The version the sdk is running. Typically <client>:<version>",
+            "example": "unleash-client-java:8.0.0",
             "type": "string",
           },
           "started": {
             "$ref": "#/components/schemas/dateSchema",
+            "description": "The application started at",
+            "example": "1952-03-11T12:00:00.000Z",
           },
           "strategies": {
+            "description": "Enabled [strategies](https://docs.getunleash.io/reference/activation-strategies) in the application",
+            "example": [
+              "standard",
+              "gradualRollout",
+            ],
             "items": {
               "type": "string",
             },
@@ -425,6 +456,7 @@ exports[`should serve the OpenAPI spec 1`] = `
         "required": [
           "appName",
           "instanceId",
+          "environment",
         ],
         "type": "object",
       },
@@ -604,36 +636,56 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "clientMetricsEnvSchema": {
         "additionalProperties": true,
+        "description": "Used for reporting feature evaluation results from SDKs",
         "properties": {
           "appName": {
+            "description": "The name of the application the SDK is being used in",
+            "example": "accounting",
             "type": "string",
           },
           "environment": {
+            "description": "Which environment the SDK is being used in",
+            "example": "development",
             "type": "string",
           },
           "featureName": {
+            "description": "Name of the feature checked by the SDK",
+            "example": "my.special.feature",
             "type": "string",
           },
           "no": {
+            "description": "How many times the toggle evaluated to false",
+            "example": 50,
             "type": "number",
           },
           "timestamp": {
             "$ref": "#/components/schemas/dateSchema",
+            "description": "The start of the time window these metrics are valid for. The window is 1 hour wide",
+            "example": "1926-05-08T12:00:00.000Z",
           },
           "variants": {
             "additionalProperties": {
               "minimum": 0,
               "type": "integer",
             },
+            "description": "How many times each variant was returned",
+            "example": {
+              "variantA": 15,
+              "variantB": 25,
+              "variantC": 5,
+            },
             "type": "object",
           },
           "yes": {
+            "description": "How many times the toggle evaluated to true",
+            "example": 974,
             "type": "number",
           },
         },
         "required": [
           "featureName",
           "appName",
+          "environment",
         ],
         "type": "object",
       },
@@ -974,22 +1026,32 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "edgeTokenSchema": {
         "additionalProperties": false,
+        "description": "A representation of a client token, limiting access to [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens) (used by serverside SDKs) or [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#front-end-tokens) (used by proxy SDKs)",
         "properties": {
           "projects": {
+            "description": "The list of projects this token has access to. If the token has access to specific projects they will be listed here. If the token has access to all projects it will be represented as [\`*\`]",
+            "example": [
+              "developerexperience",
+              "enterprisegrowth",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "token": {
+            "description": "The actual token value. [Unleash API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys) are comprised of three parts. <project(s)>:<environment>.randomcharacters",
+            "example": "*:development.5c806b5320c88cf27e81f3e9b97dab298a77d5879316e3c2d806206b",
             "type": "string",
           },
           "type": {
+            "description": "The [API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys#api-tokens)'s **type**. Unleash supports three different types of API tokens ([ADMIN](https://docs.getunleash.io/reference/api-tokens-and-client-keys#admin-tokens), [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens), [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#front-end-tokens)). They all have varying access, so when validating a token it's important to know what kind you're dealing with",
             "enum": [
               "client",
               "admin",
               "frontend",
             ],
+            "example": "client",
             "type": "string",
           },
         },
@@ -1618,20 +1680,31 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "featureTagSchema": {
         "additionalProperties": false,
+        "description": "Describes a tag applied to a feature",
         "properties": {
           "featureName": {
+            "description": "The name of the feature this tag is applied to",
+            "example": "my-feature",
             "type": "string",
           },
           "tagType": {
+            "description": "The type of tag",
+            "example": "simple",
             "type": "string",
           },
           "tagValue": {
+            "description": "The value of the tag",
+            "example": "my-tag",
             "type": "string",
           },
           "type": {
+            "deprecated": true,
+            "description": "This field is deprecated and currently unused, use tagType instead",
             "type": "string",
           },
           "value": {
+            "deprecated": true,
+            "description": "This field is deprecated and currently unused, use tagValue instead",
             "type": "string",
           },
         },
@@ -3465,6 +3538,7 @@ Stats are divided into current and previous **windows**.
       },
       "segmentSchema": {
         "additionalProperties": false,
+        "description": "Represents a segment of users defined by a set of constraints.",
         "properties": {
           "constraints": {
             "description": "List of constraints that determine which users are part of the segment",
@@ -3474,13 +3548,18 @@ Stats are divided into current and previous **windows**.
             "type": "array",
           },
           "description": {
+            "description": "The description of the segment.",
+            "example": "Segment A description",
             "nullable": true,
             "type": "string",
           },
           "id": {
+            "description": "The segment's id.",
             "type": "number",
           },
           "name": {
+            "description": "The name of the segment.",
+            "example": "segment A",
             "type": "string",
           },
         },
@@ -3706,18 +3785,19 @@ Stats are divided into current and previous **windows**.
       },
       "tagSchema": {
         "additionalProperties": false,
-        "example": {
-          "type": "simple",
-          "value": "tag-value",
-        },
+        "description": "Representation of a tag",
         "properties": {
           "type": {
             "default": "simple",
+            "description": "The type of the tag",
+            "example": "simple",
             "maxLength": 50,
             "minLength": 2,
             "type": "string",
           },
           "value": {
+            "description": "The value of the tag",
+            "example": "a-tag-value",
             "maxLength": 50,
             "minLength": 2,
             "type": "string",
@@ -3785,8 +3865,10 @@ Stats are divided into current and previous **windows**.
       },
       "tagsBulkAddSchema": {
         "additionalProperties": false,
+        "description": "Represents tag changes to be applied to a list of features.",
         "properties": {
           "features": {
+            "description": "The list of features that will be affected by the tag changes.",
             "items": {
               "minLength": 1,
               "type": "string",
@@ -3795,6 +3877,7 @@ Stats are divided into current and previous **windows**.
           },
           "tags": {
             "$ref": "#/components/schemas/updateTagsSchema",
+            "description": "The tag changes to be applied to the features.",
           },
         },
         "required": [
@@ -3805,14 +3888,17 @@ Stats are divided into current and previous **windows**.
       },
       "tagsSchema": {
         "additionalProperties": false,
+        "description": "A list of tags with a version number",
         "properties": {
           "tags": {
+            "description": "A list of tags.",
             "items": {
               "$ref": "#/components/schemas/tagSchema",
             },
             "type": "array",
           },
           "version": {
+            "description": "The version of the schema used to model the tags.",
             "type": "integer",
           },
         },
@@ -3831,6 +3917,27 @@ Stats are divided into current and previous **windows**.
         },
         "required": [
           "enabled",
+        ],
+        "type": "object",
+      },
+      "tokenStringListSchema": {
+        "additionalProperties": true,
+        "description": "A list of unleash tokens to validate against known tokens",
+        "properties": {
+          "tokens": {
+            "description": "Tokens that we want to get access information about",
+            "example": [
+              "aproject:development.randomstring",
+              "[]:production.randomstring",
+            ],
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "tokens",
         ],
         "type": "object",
       },
@@ -4028,6 +4135,7 @@ Stats are divided into current and previous **windows**.
       },
       "updateTagsSchema": {
         "additionalProperties": false,
+        "description": "Represents a set of changes to tags of a feature.",
         "example": {
           "addedTags": [
             {
@@ -4044,12 +4152,14 @@ Stats are divided into current and previous **windows**.
         },
         "properties": {
           "addedTags": {
+            "description": "Tags to add to the feature.",
             "items": {
               "$ref": "#/components/schemas/tagSchema",
             },
             "type": "array",
           },
           "removedTags": {
+            "description": "Tags to remove from the feature.",
             "items": {
               "$ref": "#/components/schemas/tagSchema",
             },
@@ -4104,6 +4214,7 @@ Stats are divided into current and previous **windows**.
         "type": "object",
       },
       "upsertSegmentSchema": {
+        "description": "Represents a segment of users defined by a set of constraints.",
         "example": {
           "constraints": [
             {
@@ -4128,10 +4239,12 @@ Stats are divided into current and previous **windows**.
             "type": "array",
           },
           "description": {
+            "description": "The description of the segment.",
             "nullable": true,
             "type": "string",
           },
           "name": {
+            "description": "The name of the segment.",
             "type": "string",
           },
           "project": {
@@ -4279,28 +4392,6 @@ Stats are divided into current and previous **windows**.
         },
         "type": "array",
       },
-      "validateEdgeTokensSchema": {
-        "additionalProperties": false,
-        "properties": {
-          "tokens": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/edgeTokenSchema",
-                },
-                {
-                  "type": "string",
-                },
-              ],
-            },
-            "type": "array",
-          },
-        },
-        "required": [
-          "tokens",
-        ],
-        "type": "object",
-      },
       "validatePasswordSchema": {
         "additionalProperties": false,
         "properties": {
@@ -4325,6 +4416,23 @@ Stats are divided into current and previous **windows**.
         "required": [
           "valid",
           "tagType",
+        ],
+        "type": "object",
+      },
+      "validatedEdgeTokensSchema": {
+        "additionalProperties": false,
+        "description": "A object containing a list of valid Unleash tokens.",
+        "properties": {
+          "tokens": {
+            "description": "The list of Unleash token objects. Each object contains the token itself and some additional metadata.",
+            "items": {
+              "$ref": "#/components/schemas/edgeTokenSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "tokens",
         ],
         "type": "object",
       },
@@ -9236,6 +9344,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/edge/metrics": {
       "post": {
+        "description": "This operation accepts batched metrics from Edge. Metrics will be inserted into Unleash's metrics storage",
         "operationId": "bulkMetrics",
         "requestBody": {
           "content": {
@@ -9252,7 +9361,17 @@ If the provided project does not exist, the list of events will be empty.",
           "202": {
             "description": "This response has no body.",
           },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "413": {
+            "description": "The body request body is larger than what we accept. By default we only accept bodies of 100kB or less",
+          },
+          "415": {
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
+          },
         },
+        "summary": "Send metrics from Edge",
         "tags": [
           "Edge",
         ],
@@ -9260,16 +9379,17 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/edge/validate": {
       "post": {
+        "description": "This operation accepts a list of tokens to validate. Unleash will validate each token you provide. For each valid token you provide, Unleash will return the token along with its type and which projects it has access to.",
         "operationId": "getValidTokens",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/validateEdgeTokensSchema",
+                "$ref": "#/components/schemas/tokenStringListSchema",
               },
             },
           },
-          "description": "validateEdgeTokensSchema",
+          "description": "tokenStringListSchema",
           "required": true,
         },
         "responses": {
@@ -9277,13 +9397,23 @@ If the provided project does not exist, the list of events will be empty.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/validateEdgeTokensSchema",
+                  "$ref": "#/components/schemas/validatedEdgeTokensSchema",
                 },
               },
             },
-            "description": "validateEdgeTokensSchema",
+            "description": "validatedEdgeTokensSchema",
+          },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "413": {
+            "description": "The body request body is larger than what we accept. By default we only accept bodies of 100kB or less",
+          },
+          "415": {
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
           },
         },
+        "summary": "Check which tokens are valid",
         "tags": [
           "Edge",
         ],

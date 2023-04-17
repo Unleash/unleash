@@ -57,8 +57,7 @@ of the issue and toggle status page.
 
 ### Disconnecting toggle from Issue
 
-If a toggle is no longer relevant for your Jira Issue, you can disconnect it using the Disconnect toggle button (
-provided your user has edit rights on the issue)
+If a toggle is no longer relevant for your Jira Issue, you can disconnect it using the "disconnect toggle" button. This button is only available if your user has edit permissions for the Jira issue.
 
 ![Jira Cloud: issue with a connected toggle. The 'disconnect toggle' button (highlighted) is displayed next to the toggle's name.](/img/jira-cloud-disconnect-toggle.png)
 

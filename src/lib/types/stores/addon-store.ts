@@ -2,7 +2,7 @@ import { Store } from './store';
 
 export interface IAddonDto {
     provider: string;
-    description: string;
+    description?: string | null;
     enabled: boolean;
     parameters: Record<string, unknown>;
     projects?: string[];
@@ -13,6 +13,7 @@ export interface IAddonDto {
 export interface IAddon extends IAddonDto {
     id: number;
     createdAt: Date;
+    description: string | null;
 }
 
 export interface IAddonStore extends Store<IAddon, number> {

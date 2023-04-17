@@ -38,6 +38,29 @@ const TOPICS: ITutorialTopic[] = [
         ],
     },
     {
+        title: 'New feature toggle',
+        steps: [
+            {
+                target: 'button[data-testid="NAVIGATE_TO_CREATE_FEATURE"]',
+                title: (
+                    <Typography fontWeight="bold">
+                        Add a new feature toggle
+                    </Typography>
+                ),
+                content: (
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            You can use this button to add a new feature toggle.
+                            This is just an example and not part of the final
+                            guide.
+                        </Typography>
+                    </>
+                ),
+                disableBeacon: true,
+            },
+        ],
+    },
+    {
         title: 'Enable/disable a feature toggle',
         steps: [
             {

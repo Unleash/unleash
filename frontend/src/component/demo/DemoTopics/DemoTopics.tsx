@@ -53,10 +53,10 @@ const StyledExpandMoreIcon = styled(ExpandMore)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
 }));
 
-const StyledTitle = styled('div')(({ theme }) => ({
+const StyledTitle = styled('div')({
     display: 'flex',
     alignItems: 'center',
-}));
+});
 
 const StyledSubtitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -148,7 +148,7 @@ export const DemoTopics = ({
     setCurrentTopic,
     topics,
 }: IDemoTopicsProps) => {
-    const completedSteps = steps.reduce((acc, step) => acc + step, 0);
+    const completedSteps = steps.reduce((acc, step) => acc + (step || 0), 0);
     const totalSteps = topics.flatMap(({ steps }) => steps).length;
     const percentage = (completedSteps / totalSteps) * 100;
 

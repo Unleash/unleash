@@ -1,13 +1,13 @@
 import { useMemo, useState, VFC } from 'react';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import {
-    Table,
     SortableTableHeader,
     TableBody,
-    TableCell,
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
+import { TableCell } from 'component/common/Table/TableCell/TableCell';
+import { Table } from 'component/common/Table/Table/Table';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

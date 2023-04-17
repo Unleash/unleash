@@ -3,10 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Box, styled } from '@mui/material';
 import { Extension } from '@mui/icons-material';
 import {
-    Table,
     SortableTableHeader,
     TableBody,
-    TableCell,
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
@@ -31,6 +29,8 @@ import { StrategyEditButton } from './StrategyEditButton/StrategyEditButton';
 import { StrategyDeleteButton } from './StrategyDeleteButton/StrategyDeleteButton';
 import { Search } from 'component/common/Search/Search';
 import { Badge } from 'component/common/Badge/Badge';
+import { Table } from 'component/common/Table/Table/Table';
+import { TableCell } from 'component/common/Table/TableCell/TableCell';
 
 interface IDialogueMetaData {
     show: boolean;

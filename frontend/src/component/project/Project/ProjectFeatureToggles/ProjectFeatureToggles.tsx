@@ -30,7 +30,8 @@ import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/Fe
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { IProject } from 'interfaces/project';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/VirtualizedTable/VirtualizedTable';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import { createLocalStorage } from 'utils/createLocalStorage';

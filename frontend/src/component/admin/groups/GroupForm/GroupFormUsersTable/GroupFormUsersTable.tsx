@@ -6,7 +6,7 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { Delete } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { VirtualizedTable } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/VirtualizedTable/VirtualizedTable';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';

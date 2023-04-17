@@ -2,10 +2,8 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 import {
-    Table,
     SortableTableHeader,
     TableBody,
-    TableCell,
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
@@ -29,6 +27,8 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { sortTypes } from 'utils/sortTypes';
 import { AddTagTypeButton } from './AddTagTypeButton/AddTagTypeButton';
 import { Search } from 'component/common/Search/Search';
+import { TableCell } from 'component/common/Table/TableCell/TableCell';
+import { Table } from 'component/common/Table/Table/Table';
 
 export const TagTypeList = () => {
     const [deletion, setDeletion] = useState<{

@@ -1,5 +1,7 @@
 import { Typography, styled, useTheme } from '@mui/material';
-import { Table, TableBody, TableCell, TableRow } from 'component/common/Table';
+import { TableBody, TableRow } from 'component/common/Table';
+import { TableCell } from 'component/common/Table/TableCell/TableCell';
+import { Table } from 'component/common/Table/Table/Table';
 import { useMemo, VFC } from 'react';
 import { IFeatureVariant } from 'interfaces/featureToggle';
 import { calculateVariantWeight } from 'component/common/util';

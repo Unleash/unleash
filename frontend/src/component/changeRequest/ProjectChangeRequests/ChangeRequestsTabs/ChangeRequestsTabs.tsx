@@ -1,11 +1,8 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import {
-    SortableTableHeader,
-    Table,
-    TableCell,
-    TablePlaceholder,
-} from 'component/common/Table';
+import { SortableTableHeader, TablePlaceholder } from 'component/common/Table';
+import { TableCell } from 'component/common/Table/TableCell/TableCell';
+import { Table } from 'component/common/Table/Table/Table';
 import { SortingRule, useSortBy, useTable } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { styled, Tab, Tabs, useMediaQuery } from '@mui/material';

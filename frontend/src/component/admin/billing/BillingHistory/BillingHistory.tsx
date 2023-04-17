@@ -1,11 +1,11 @@
 import {
-    Table,
     SortableTableHeader,
     TableBody,
-    TableCell,
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
+import { TableCell } from 'component/common/Table/TableCell/TableCell';
+import { Table } from 'component/common/Table/Table/Table';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { useMemo, VFC } from 'react';

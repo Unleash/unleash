@@ -18,12 +18,9 @@ import { getEnabledEnvs } from './helpers';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useTable, useGlobalFilter } from 'react-table';
-import {
-    SortableTableHeader,
-    Table,
-    TableCell,
-    TablePlaceholder,
-} from 'component/common/Table';
+import { SortableTableHeader, TablePlaceholder } from 'component/common/Table';
+import { TableCell } from 'component/common/Table/TableCell/TableCell';
+import { Table } from 'component/common/Table/Table/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Search } from 'component/common/Search/Search';
 import { EnvironmentNameCell } from 'component/environments/EnvironmentTable/EnvironmentNameCell/EnvironmentNameCell';

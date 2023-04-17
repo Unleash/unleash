@@ -1,7 +1,9 @@
 import { styled, TableBody, TableRow } from '@mui/material';
 import { IProjectEnvironment } from 'interfaces/environments';
 import { useTable } from 'react-table';
-import { SortableTableHeader, Table, TableCell } from 'component/common/Table';
+import { SortableTableHeader } from 'component/common/Table';
+import { TableCell } from 'component/common/Table/TableCell/TableCell';
+import { Table } from 'component/common/Table/Table/Table';
 import { EnvironmentIconCell } from 'component/environments/EnvironmentTable/EnvironmentIconCell/EnvironmentIconCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useMemo } from 'react';

@@ -2,14 +2,13 @@ import { useMemo } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 
 import {
-    Table,
     SortableTableHeader,
     TableBody,
-    TableCell,
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
-
+import { TableCell } from 'component/common/Table/TableCell/TableCell';
+import { Table } from 'component/common/Table/Table/Table';
 import { useTable, useSortBy } from 'react-table';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

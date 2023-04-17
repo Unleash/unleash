@@ -3,11 +3,8 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { CreateEnvironmentButton } from 'component/environments/CreateEnvironmentButton/CreateEnvironmentButton';
 import { useTable, useGlobalFilter } from 'react-table';
-import {
-    SortableTableHeader,
-    Table,
-    TablePlaceholder,
-} from 'component/common/Table';
+import { SortableTableHeader, TablePlaceholder } from 'component/common/Table';
+import { Table } from 'component/common/Table/Table/Table';
 import { useCallback } from 'react';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Alert, styled, TableBody } from '@mui/material';

@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 import {
-    Table,
     SortableTableHeader,
     TableBody,
-    TableCell,
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
+import { TableCell } from 'component/common/Table/TableCell/TableCell';
+import { Table } from 'component/common/Table/Table/Table';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import useProjectRoles from 'hooks/api/getters/useProjectRoles/useProjectRoles';

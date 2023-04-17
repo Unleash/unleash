@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, VFC } from 'react';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
-import { VirtualizedTable, TablePlaceholder } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/VirtualizedTable/VirtualizedTable';
 import { styled, useMediaQuery, useTheme } from '@mui/material';
 import { Add, Delete, Edit } from '@mui/icons-material';
 import { sortTypes } from 'utils/sortTypes';

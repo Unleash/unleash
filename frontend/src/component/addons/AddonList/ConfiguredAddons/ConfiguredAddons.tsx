@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableRow } from 'component/common/Table';
+import { TableBody, TableRow } from 'component/common/Table';
 import { useMemo, useState, useCallback } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -16,6 +16,8 @@ import { SortableTableHeader, TablePlaceholder } from 'component/common/Table';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { AddonIcon } from '../AddonIcon/AddonIcon';
 import { ConfiguredAddonsActionsCell } from './ConfiguredAddonsActionCell/ConfiguredAddonsActionsCell';
+import { TableCell } from 'component/common/Table/TableCell/TableCell';
+import { Table } from 'component/common/Table/Table/Table';
 
 export const ConfiguredAddons = () => {
     const { refetchAddons, addons, loading } = useAddons();

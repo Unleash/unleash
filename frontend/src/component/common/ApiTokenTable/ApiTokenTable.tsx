@@ -6,11 +6,8 @@ import {
     TableBodyProps,
     HeaderGroup,
 } from 'react-table';
-import {
-    SortableTableHeader,
-    TableCell,
-    TablePlaceholder,
-} from 'component/common/Table';
+import { SortableTableHeader, TablePlaceholder } from 'component/common/Table';
+import { TableCell } from 'component/common/Table/TableCell/TableCell';
 import {
     Box,
     Table,

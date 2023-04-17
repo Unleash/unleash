@@ -66,7 +66,7 @@ test('should collect metrics for requests', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /http_request_duration_milliseconds{quantile="0\.99",path="somePath",method="GET",status="200",appName="undefined"}.*1337/,
+        /http_request_duration_milliseconds\{quantile="0\.99",path="somePath",method="GET",status="200",appName="undefined"\}.*1337/,
     );
 });
 
@@ -79,7 +79,7 @@ test('should collect metrics for updated toggles', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /feature_toggle_update_total{toggle="TestToggle",project="default",environment="default"} 1/,
+        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="default"\} 1/,
     );
 });
 
@@ -97,7 +97,7 @@ test('should collect metrics for client metric reports', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /feature_toggle_usage_total{toggle="TestToggle",active="true",appName="undefined"} 10\nfeature_toggle_usage_total{toggle="TestToggle",active="false",appName="undefined"} 5/,
+        /feature_toggle_usage_total\{toggle="TestToggle",active="true",appName="undefined"\} 10\nfeature_toggle_usage_total\{toggle="TestToggle",active="false",appName="undefined"\} 5/,
     );
 });
 
@@ -110,7 +110,7 @@ test('should collect metrics for db query timings', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /db_query_duration_seconds{quantile="0\.99",store="foo",action="bar"} 0.1337/,
+        /db_query_duration_seconds\{quantile="0\.99",store="foo",action="bar"\} 0.1337/,
     );
 });
 
@@ -119,7 +119,7 @@ test('should collect metrics for feature toggle size', async () => {
         setTimeout(done, 10);
     });
     const metrics = await prometheusRegister.metrics();
-    expect(metrics).toMatch(/feature_toggles_total{version="(.*)"} 0/);
+    expect(metrics).toMatch(/feature_toggles_total\{version="(.*)"\} 0/);
 });
 
 test('should collect metrics for feature toggle size', async () => {
@@ -127,7 +127,7 @@ test('should collect metrics for feature toggle size', async () => {
         setTimeout(done, 10);
     });
     const metrics = await prometheusRegister.metrics();
-    expect(metrics).toMatch(/client_apps_total{range="(.*)"} 0/);
+    expect(metrics).toMatch(/client_apps_total\{range="(.*)"\} 0/);
 });
 
 test('Should collect metrics for database', async () => {
@@ -163,10 +163,10 @@ test('Should collect metrics for client sdk versions', async () => {
         'client_sdk_versions',
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5"} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5"\} 3/,
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0"} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0"\} 3/,
     );
     eventStore.emit(CLIENT_REGISTER, {
         sdkVersion: 'unleash-client-node:3.2.5',
@@ -175,7 +175,7 @@ test('Should collect metrics for client sdk versions', async () => {
         'client_sdk_versions',
     );
     expect(newmetrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5"} 4/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5"\} 4/,
     );
 });
 

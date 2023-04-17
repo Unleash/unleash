@@ -666,24 +666,20 @@ export default class ProjectService {
     }
 
     async statusJob(): Promise<void> {
-        if (this.flagResolver.isEnabled('projectStatusApi')) {
-            const projects = await this.store.getAll();
+        const projects = await this.store.getAll();
 
-            const statusUpdates = await Promise.all(
-                projects.map((project) => this.getStatusUpdates(project.id)),
-            );
+        const statusUpdates = await Promise.all(
+            projects.map((project) => this.getStatusUpdates(project.id)),
+        );
 
-            await Promise.all(
-                statusUpdates.map((statusUpdate) => {
-                    return this.projectStatsStore.updateProjectStats(
-                        statusUpdate.projectId,
-                        statusUpdate.updates,
-                    );
-                }),
-            );
-        } else {
-            this.logger.info('Project status API is disabled');
-        }
+        await Promise.all(
+            statusUpdates.map((statusUpdate) => {
+                return this.projectStatsStore.updateProjectStats(
+                    statusUpdate.projectId,
+                    statusUpdate.updates,
+                );
+            }),
+        );
     }
 
     async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {

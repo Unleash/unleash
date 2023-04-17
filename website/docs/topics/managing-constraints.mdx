@@ -1,0 +1,55 @@
+---
+title: Managing constraints
+---
+
+:::info
+
+In this explanatory guide, we will discuss how best to deal with large and complex constraints, such as when you want to constrain a feature to a list of 150 user IDs.
+
+:::
+
+Unleash offers several ways to limit feature exposure to a specified audience, such as the [User IDs strategy](../reference/activation-strategies.md#userids), [strategy constraints](../reference/strategy-constraints.md), and [segments](../reference/segments.mdx). Each of these options make it easy to add some sort of user identifier to the list of users who should get access to a feature.
+
+Because of their availability and ease of use with smaller lists, it can be tempting to just keep adding identifiers to those lists. However, once you start approaching a hundred elements, we recommend that you find another way to manage these IDs. In fact, it's probably better to stop well before you get that far.
+
+The rest of this document explains why this is generally a bad idea and how we suggest you solve your problems instead. However, as always there **are** exceptional cases where this is the solution.
+
+How large is too large? How complex is too complex? It depends. However, smaller and simpler is generally better.
+
+## The cost of data
+
+First, let's talk a bit about Unleash's architecture: **Your Unleash instance** is where you define all your features, their strategies, and constraints (and a lot more). However, the Unleash instance itself does not do any of the feature evaluation[^1]. That responsibility is delegated to the Unleash SDKs (or [Edge](/generated/unleash-edge.md) / the [Unleash proxy](/generated/unleash-proxy.md)).
+
+For the SDKs (Edge/proxy included) to evaluate a feature, it needs to know everything about that feature in a specific environment. This includes all strategies and their constraints. This means that the Unleash instance must transmit all information about this feature (and all other features) as a response to an API call.
+
+As the number of elements in a constraint list (such as number of unique user IDs) grows, so does the size of the HTTP response from the Unleash instance. More data to transmit, means more bandwidth used and longer response times. More data to parse (on the SDK side) means more time spent processing and more data to store and look up on the client.
+
+To fetch feature configuration, Unleash SDKs run a polling loop in the background. With normal-sized configurations this isn't an issue, but as you add more and more complex constraints, this can eventually overload your network and slow down your SDK. And the more SDKs that connect to your Unleash instance, the worse the problem gets.
+
+In other words: it's not good.
+
+## Rethinking your options
+
+Okay, so putting all these IDs in Unleash isn't good. But how **do** you manage features for these 124 special cases you have?
+
+The first thing to think about would be whether you can group these special cases in some way. Maybe you already have an [Unleash context](../reference/unleash-context.md) field that covers the same amount of users. In that case, you can constrain on that instead. If you don't have a context field that matches these users, then you might need to create one.
+
+Further, if you have a lot of special cases and require complex constraint logic to model it correctly, this probably reflects some logic that is specific to your domain. It's also likely that this same logic is used elsewhere in your system external to Unleash. Modeling this logic in multiple places can quickly lead to breakage, and we recommend having a single source of truth for cases like this.
+
+Say, for instance that you have a VIP program where only your top 100 customers get access, and you want to use Unleash to manage access to these exclusive features. In that case, you probably have that list of 100 customers stored outside of Unleash (and if you don't, you definitely **should**: Unleash is **not** a data store). To solve this without using a constraint with 100 customer IDs, you could add a `cusomerType` field to the Unleash context, and only expose the features to users whose `customerType` is `VIP`.
+
+## The external storage trick
+
+Continuing the `customerType` example above, how would you resolve a user's `customerType` in your application?
+
+If you have customers, then you need to store those customers' data somewhere. This is usually in a database. In some cases, you might already have all the information you need available when you first get the customer information (when they log in). If that's the case, you should be able to take the necessary info and populate the Unleash context with it directly.
+
+But what if it's more ephemeral or what if it's not available together with the customer data directly? Maybe it's something that changes dynamically?
+
+An option is to set up an external data store that handles this information specifically. As an example, consider a [Redis](http://redis.com/) instance that has a list of VIP customers. You could have an application connect to it and receive the latest state of VIP customers whenever you check a feature with Unleash. For an example of this, check out the [Unleash and Redis](https://github.com/sighphyre/UnleashAndRedis) example.
+
+## Why doesn't Unleash support complex constraint setups out the box?
+
+The Unleash SDKs are designed to fast and unobtrusive. This means that resolving a large set of constraints at runtime results in one of two problems: either the SDK needs to resolve very large amounts of data, which can put pressure on your network or it needs to make a potentially slow network call to resolve the segment. Both of these are undesirable for the health of your application.
+
+[^1]: Well, except for in the case of the [front-end API](../reference/front-end-api.md). But even then, the size of the data to transmit matters.

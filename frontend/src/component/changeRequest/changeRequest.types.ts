@@ -28,6 +28,7 @@ export interface IChangeRequestFeature {
     name: string;
     conflict?: string;
     changes: IChange[];
+    defaultChange?: IChangeRequestAddStrategy | IChangeRequestEnabled;
 }
 
 export interface IChangeRequestApproval {

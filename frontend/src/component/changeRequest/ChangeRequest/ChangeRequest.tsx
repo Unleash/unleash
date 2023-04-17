@@ -1,5 +1,5 @@
 import React, { VFC } from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import type { IChangeRequest } from '../changeRequest.types';
 import { FeatureToggleChanges } from './Changes/FeatureToggleChanges';
 import { Change } from './Changes/Change/Change';
@@ -42,6 +42,25 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                             feature={feature}
                         />
                     ))}
+                    {feature.defaultChange ? (
+                        <Change
+                            discard={
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                >
+                                    {feature.defaultChange.action ===
+                                    'addStrategy'
+                                        ? 'Default strategy will be added'
+                                        : 'Feature status will change'}
+                                </Typography>
+                            }
+                            index={feature.changes.length}
+                            changeRequest={changeRequest}
+                            change={feature.defaultChange}
+                            feature={feature}
+                        />
+                    ) : null}
                 </FeatureToggleChanges>
             ))}
         </Box>

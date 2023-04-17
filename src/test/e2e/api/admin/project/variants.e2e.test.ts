@@ -490,7 +490,7 @@ test('PUTing an invalid variant throws 400 exception', async () => {
         .expect((res) => {
             expect(res.body.details).toHaveLength(1);
             expect(res.body.details[0].message).toMatch(
-                /.*weightType\" must be one of/,
+                /.*weightType" must be one of/,
             );
         });
 });
@@ -525,7 +525,7 @@ test('Invalid variant in PATCH also throws 400 exception', async () => {
         .expect((res) => {
             expect(res.body.details).toHaveLength(1);
             expect(res.body.details[0].message).toMatch(
-                /.*weight\" must be less than or equal to 1000/,
+                /.*weight" must be less than or equal to 1000/,
             );
         });
 });

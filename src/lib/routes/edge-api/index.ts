@@ -7,16 +7,20 @@ import { createResponseSchema } from '../../openapi/util/create-response-schema'
 import { IAuthRequest, RequestBody } from '../unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
-    validateEdgeTokensSchema,
-    ValidateEdgeTokensSchema,
-} from '../../openapi/spec/validate-edge-tokens-schema';
+    validatedEdgeTokensSchema,
+    ValidatedEdgeTokensSchema,
+} from '../../openapi/spec/validated-edge-tokens-schema';
 import ClientInstanceService from '../../services/client-metrics/instance-service';
 import EdgeService from '../../services/edge-service';
 import { OpenApiService } from '../../services/openapi-service';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import { BulkMetricsSchema } from '../../openapi/spec/bulk-metrics-schema';
 import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
 import { clientMetricsEnvBulkSchema } from '../../services/client-metrics/schema';
+import { TokenStringListSchema } from '../../openapi';
 
 export default class EdgeController extends Controller {
     private readonly logger: Logger;
@@ -59,12 +63,14 @@ export default class EdgeController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Edge'],
+                    summary: 'Check which tokens are valid',
+                    description:
+                        'This operation accepts a list of tokens to validate. Unleash will validate each token you provide. For each valid token you provide, Unleash will return the token along with its type and which projects it has access to.',
                     operationId: 'getValidTokens',
-                    requestBody: createRequestSchema(
-                        'validateEdgeTokensSchema',
-                    ),
+                    requestBody: createRequestSchema('tokenStringListSchema'),
                     responses: {
-                        200: createResponseSchema('validateEdgeTokensSchema'),
+                        200: createResponseSchema('validatedEdgeTokensSchema'),
+                        ...getStandardResponses(400, 413, 415),
                     },
                 }),
             ],
@@ -78,10 +84,13 @@ export default class EdgeController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Edge'],
+                    summary: 'Send metrics from Edge',
+                    description: `This operation accepts batched metrics from Edge. Metrics will be inserted into Unleash's metrics storage`,
                     operationId: 'bulkMetrics',
                     requestBody: createRequestSchema('bulkMetricsSchema'),
                     responses: {
                         202: emptyResponse,
+                        ...getStandardResponses(400, 413, 415),
                     },
                 }),
             ],
@@ -89,16 +98,14 @@ export default class EdgeController extends Controller {
     }
 
     async getValidTokens(
-        req: RequestBody<ValidateEdgeTokensSchema>,
-        res: Response<ValidateEdgeTokensSchema>,
+        req: RequestBody<TokenStringListSchema>,
+        res: Response<ValidatedEdgeTokensSchema>,
     ): Promise<void> {
-        const tokens = await this.edgeService.getValidTokens(
-            req.body.tokens as string[],
-        );
-        this.openApiService.respondWithValidation<ValidateEdgeTokensSchema>(
+        const tokens = await this.edgeService.getValidTokens(req.body.tokens);
+        this.openApiService.respondWithValidation<ValidatedEdgeTokensSchema>(
             200,
             res,
-            validateEdgeTokensSchema.$id,
+            validatedEdgeTokensSchema.$id,
             tokens,
         );
     }

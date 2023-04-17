@@ -97,7 +97,7 @@ Step by step:
 After logging in, click on *Projects* in the top toolbar, then New project. Give it an ID and name of choice (both can be the same), and save.
 Here, we are using `Demo-Intro` as name and projectID.
 
-![Image showing example of a completed 'New project' field in Unleash](/img/tutorial-appdemo-create-project.png)
+![Unleash's 'create project' form filled out with details for a project called "Demo-Intro"](/img/tutorial-appdemo-create-project.png)
 
 
 ### Create Feature Toggles
@@ -105,6 +105,7 @@ Here, we are using `Demo-Intro` as name and projectID.
 Now navigate to the new project page.
 
 Create four feature toggles with the following names:
+<!-- Capitalization scheme for new version of demo app -->
 
 - **demo-bankingDemo**
 - **demo-featured_app**
@@ -113,7 +114,7 @@ Create four feature toggles with the following names:
 
 For each toggle, use the **Kill-switch toggle type** and enable **Impression data**.
 
-![New feature toggle](/img/tutorial-appdemo-create-feature-toggle.png)
+![Unleash's 'create feature toggle' form filled out for a 'kill switch' toggle type](/img/tutorial-appdemo-create-feature-toggle.png)
 
 ### Assign to an Environment
 
@@ -200,7 +201,7 @@ The app is setup for three client side toggles, and one server side toggle. In t
 To prepare, open the Unleash project and the application UI side-by-side. 
 As we are using the *Development* environment, these are the UI toggles for the feature flags we will be using.
 
-![Project page](/img/tutorial-appdemo-projectpage.png)
+![Unleash's Project page for the "Demo-Intro" project, with the "development" environment highlighted](/img/tutorial-appdemo-projectpage.png)
 
 ## Client-side Feature Flags
 
@@ -208,7 +209,7 @@ As we are using the *Development* environment, these are the UI toggles for the 
 
 Enable the toggle for feature `demo-bankingDemo`. Notice how now a new *Banking* feature has been added to the sidebar underneath Analytics!
 
-![demo-bankingDemo](/img/tutorial-appdemo-demo-bankingDemo.png)
+![New "Banking" feature highlighted in demo app](/img/tutorial-appdemo-demo-bankingDemo.png)
 
 
 Click on `Banking` in the navigation menu. Notice how the feature is populated. Disable the flag - this now switches to a *Coming Soon* message.
@@ -223,7 +224,7 @@ It also showcases how quickly and effortlessly a feature can be rolled back if i
 In the UI, navigate to *Management -> E-Commerce -> Shop*. Enable the toggle for feature `demo-specialCustomer` . 
 Notice how cards are updated with *Special Access Granted* and a *Premium Customer* note appears at the top. <!-- Add Screenshot -->
 
-![demo-specialCustomer](/img/tutorial-appdemo-demo-specialCustomer.png)
+![In the demo app, cards are updated with "Special Access Granted" and "Premium Customer" notes](/img/tutorial-appdemo-demo-specialCustomer.png)
 
 :::tip Use Case
 This shows how a feature flag can be used to show a different page experience or behavior to a specific group of users; in this case, a group of customers that we want to allow the capability to purchase a product standard users cannot.
@@ -233,7 +234,7 @@ This shows how a feature flag can be used to show a different page experience or
 
 Navigate to *General -> Analytics* from the main demo app window. Enable the toggle for feature `demo-analyticsCards` . Note how a row of analytics cards now shows from above. 
 
-![demo-analyticsCards](/img/tutorial-appdemo-demo-analyticsCards.png)
+![Row of analytics cards appear in the demo app](/img/tutorial-appdemo-demo-analyticsCards.png)
 
 
 :::tip Use Case
@@ -252,7 +253,7 @@ In contrast to the client side flags, this one requires you to reload the browse
 
 Notice that we now see a *Featured App* card appear on the UI.
 
-![demo-featured_app](/img/tutorial-appdemo-demo-featured_app.png)
+![Demo app showing a "Featured App" card](/img/tutorial-appdemo-demo-featured_app.png)
 
 Disable it again, and it will no longer show on the next reload.
 

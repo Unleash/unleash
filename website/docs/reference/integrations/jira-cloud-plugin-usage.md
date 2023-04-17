@@ -38,11 +38,9 @@ from Jira.
 
 ### Change Requests
 
-When enabling or disabling a toggle, if Change Requests have been activated for the Unleash project and environment the toggle belongs to
+The plugin respects Unleash's [change requests](../change-requests.md). If change requests are turned on in the connected project and the selected environment, the plugin will ask whether you want to create a change request or not. 
 
-![Jira Cloud - A toggle for an environment has been clicked](/img/jira-cloud-change-request-clicked-toggle.png)
-
-a dialog will open to alert the user that a change request will have to be created.
+If you already have an active change request for that project and that environment, the changes will be added to your existing change request.
 
 ![Jira Cloud - Modal opens for creating a new change request](/img/jira-cloud-change-request-dialog.png)
 

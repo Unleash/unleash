@@ -82,6 +82,6 @@ There is no permission to create change requests: **Anyone can create change req
 
 The **skip change requests** permission allows users to bypass the change request flow. Users with this permission can change feature toggles directly (they are of course still limited by any other permissions they have). 
 
-The skip change requests permission was designed to make it possible to quickly and automatically turn something off in the event that a feature release didn't go as expected or was causing issues.
+The skip change requests permission was designed to make it possible to quickly turn something off in the event that a feature release didn't go as expected or was causing issues.
 
 The skip change requests permission does **not** grant any other permissions, so to be allowed to do things as enabling/disabling a toggle, the user will still need the explicit permissions to do that too.

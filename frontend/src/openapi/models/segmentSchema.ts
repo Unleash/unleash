@@ -9,5 +9,6 @@ export interface SegmentSchema {
     id: number;
     name?: string;
     description?: string | null;
+    /** List of constraints that determine which users are part of the segment */
     constraints: ConstraintSchema[];
 }

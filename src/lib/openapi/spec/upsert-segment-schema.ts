@@ -4,14 +4,18 @@ import { constraintSchema } from './constraint-schema';
 export const upsertSegmentSchema = {
     $id: '#/components/schemas/upsertSegmentSchema',
     type: 'object',
+    description:
+        'Represents a segment of users defined by a set of constraints.',
     required: ['name', 'constraints'],
     properties: {
         name: {
             type: 'string',
+            description: 'The name of the segment.',
         },
         description: {
             type: 'string',
             nullable: true,
+            description: 'The description of the segment.',
         },
         project: {
             type: 'string',

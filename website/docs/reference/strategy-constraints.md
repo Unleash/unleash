@@ -182,6 +182,12 @@ This value can still be negated as explained in [the section on negating values]
 
 ## Constraint limitations (or "how many user IDs can I add to a constraint") {#limitations}
 
+:::tip
+
+Explored the content in this subsection in more depth in [the topic guide on using Unleash with large constraints](../topics/large-and-complex-constraints.mdx).
+
+:::
+
 When using a constraint operator that accepts a list of values, it might be tempting to add a large number of values to that list. However, we advise you **not** to do that: Unleash is not a database, and is not intended to store large amounts of data. Instead you should try and find a different way to achieve what you want.
 
 For instance, instead of adding hundreds of user ids to the constraint value list, think about what properties those users share. Are they beta testers? Are they premium members? Are they employees?

@@ -20,6 +20,10 @@ const MASKED_VALUE = '*****';
 
 const WILDCARD_OPTION = '*';
 
+// The *actual* shape of the data we receive. The description field can't be
+// enforced now without it being breaking change.
+type ActualAddonDto = Omit<IAddonDto, 'description'> & { description?: string };
+
 interface ISensitiveParams {
     [key: string]: string[];
 }
@@ -187,7 +191,7 @@ export default class AddonService {
         return Promise.resolve();
     }
 
-    async createAddon(data: IAddonDto, userName: string): Promise<IAddon> {
+    async createAddon(data: ActualAddonDto, userName: string): Promise<IAddon> {
         const addonConfig = await addonSchema.validateAsync(data);
         try {
             await this.validateKnownProvider(addonConfig);
@@ -214,7 +218,7 @@ export default class AddonService {
 
     async updateAddon(
         id: number,
-        data: IAddonDto,
+        data: ActualAddonDto,
         userName: string,
     ): Promise<IAddon> {
         const addonConfig = await addonSchema.validateAsync(data);

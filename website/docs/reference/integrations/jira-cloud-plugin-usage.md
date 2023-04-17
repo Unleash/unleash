@@ -19,7 +19,7 @@ To use the plugin, you'll need to create an issue or use an existing one. Once t
 
 Clicking this button opens a dialog where you first select an Unleash Project to connect toggle from,
 
-![Jira Cloud - Dropdown to select Unleash project](/img/jira-cloud-select-project-expanded.png)
+![Jira Cloud: connect feature toggle form. The project selection dropdown contains all Unleash projects](/img/jira-cloud-select-project-expanded.png)
 
 allowing you then to either connect an existing toggle
 

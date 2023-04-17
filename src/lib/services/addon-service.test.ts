@@ -14,6 +14,7 @@ import AddonService from './addon-service';
 import { IAddonDto } from '../types/stores/addon-store';
 import SimpleAddon from './addon-service-test-simple-addon';
 import { IAddonProviders } from '../addons';
+import { BadDataError } from '../../lib/error';
 
 const MASKED_VALUE = '*****';
 
@@ -73,7 +74,7 @@ test('should not allow addon-config for unknown provider', async () => {
             },
             'test',
         );
-    }).rejects.toThrow(new TypeError('Unknown addon provider unknown'));
+    }).rejects.toThrow(BadDataError);
 });
 
 test('should trigger simple-addon eventHandler', async () => {
@@ -627,7 +628,7 @@ test('should reject addon config with missing required parameter when creating',
 
     await expect(async () =>
         addonService.createAddon(config, 'me@mail.com'),
-    ).rejects.toThrow(ValidationError);
+    ).rejects.toThrow(BadDataError);
 });
 
 test('should reject updating addon config with missing required parameter', async () => {

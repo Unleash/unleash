@@ -5,7 +5,8 @@ export const TAG_MAX_LENGTH = 50;
 export const tagSchema = {
     $id: '#/components/schemas/tagSchema',
     type: 'object',
-    description: 'Representation of a tag',
+    description:
+        'Representation of a [tag](https://docs.getunleash.io/reference/tags)',
     additionalProperties: false,
     required: ['value', 'type'],
     properties: {
@@ -21,7 +22,8 @@ export const tagSchema = {
             minLength: TAG_MIN_LENGTH,
             maxLength: TAG_MAX_LENGTH,
             default: 'simple',
-            description: 'The type of the tag',
+            description:
+                'The [type](https://docs.getunleash.io/reference/tags#tag-types) of the tag',
             example: 'simple',
         },
     },

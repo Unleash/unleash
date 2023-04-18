@@ -27,6 +27,7 @@ export interface IStrategyConfig {
     segments?: number[];
     parameters?: { [key: string]: string };
     sortOrder?: number;
+    title?: string | null;
 }
 export interface IFeatureStrategy {
     id: string;
@@ -39,6 +40,7 @@ export interface IFeatureStrategy {
     constraints: IConstraint[];
     createdAt?: Date;
     segments?: number[];
+    title?: string | null;
 }
 
 export interface FeatureToggleDTO {

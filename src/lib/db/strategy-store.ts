@@ -11,6 +11,7 @@ import {
 import { Db } from './db';
 
 const STRATEGY_COLUMNS = [
+    'title',
     'name',
     'description',
     'parameters',
@@ -21,6 +22,7 @@ const STRATEGY_COLUMNS = [
 const TABLE = 'strategies';
 
 interface IStrategyRow {
+    title: string;
     name: string;
     built_in: number;
     description: string;
@@ -109,6 +111,7 @@ export default class StrategyStore implements IStrategyStore {
             description: row.description,
             parameters: row.parameters,
             deprecated: row.deprecated,
+            title: row.title,
         };
     }
 
@@ -121,6 +124,7 @@ export default class StrategyStore implements IStrategyStore {
             description: row.description,
             parameters: row.parameters,
             deprecated: row.deprecated,
+            title: row.title,
         };
     }
 
@@ -130,6 +134,7 @@ export default class StrategyStore implements IStrategyStore {
             name: data.name,
             description: data.description,
             parameters: JSON.stringify(data.parameters),
+            title: data.title,
         };
     }
 
@@ -166,6 +171,7 @@ export default class StrategyStore implements IStrategyStore {
             built_in: data.builtIn ? 1 : 0,
             sort_order: data.sortOrder || 9999,
             display_name: data.displayName,
+            title: data.title,
         };
         await this.db(TABLE).insert(rowData).onConflict(['name']).merge();
     }

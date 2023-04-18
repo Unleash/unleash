@@ -15,7 +15,8 @@ export const featureTagSchema = {
         tagType: {
             type: 'string',
             example: 'simple',
-            description: 'The type of tag',
+            description:
+                'The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag',
         },
         tagValue: {
             type: 'string',
@@ -26,13 +27,13 @@ export const featureTagSchema = {
             deprecated: true,
             type: 'string',
             description:
-                'This field is deprecated and currently unused, use tagType instead',
+                'The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagType` property.',
         },
         value: {
             deprecated: true,
             type: 'string',
             description:
-                'This field is deprecated and currently unused, use tagValue instead',
+                'The value of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagValue` property.',
         },
     },
     components: {},

@@ -9,6 +9,7 @@ import { Button, Typography, styled, useTheme } from '@mui/material';
 import { ITutorialTopic } from '../Demo';
 import { useEffect } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const StyledTooltip = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -66,6 +67,8 @@ export const DemoSteps = ({
     topics,
 }: IDemoStepsProps) => {
     const theme = useTheme();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const skip = () => {
         setRun(false);
@@ -135,6 +138,14 @@ export const DemoSteps = ({
     };
 
     useEffect(() => {
+        if (topic === -1) return;
+        const currentTopic = topics[topic];
+        const currentStep = steps[topic];
+        const href = currentTopic.steps[currentStep].href;
+        if (href && location.pathname !== href) {
+            navigate(href);
+        }
+
         setRun(true);
     }, [topic, steps]);
 

@@ -22,7 +22,7 @@
   },
   "types": "./dist/lib/server-impl.d.ts",
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   },
   "license": "Apache-2.0",
   "main": "./dist/lib/server-impl.js",
@@ -139,7 +139,6 @@
     "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
     "unleash-client": "3.18.1",
-    "use-deep-compare-effect": "^1.8.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

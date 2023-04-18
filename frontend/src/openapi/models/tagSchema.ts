@@ -4,7 +4,12 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Representation of a tag
+ */
 export interface TagSchema {
+    /** The value of the tag */
     value: string;
+    /** The type of the tag */
     type: string;
 }

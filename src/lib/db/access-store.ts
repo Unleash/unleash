@@ -163,7 +163,8 @@ export class AccessStore implements IAccessStore {
                 )
                 .join(`${T.PERMISSIONS} as p`, 'p.id', 'rp.permission_id')
                 .whereNotNull('g.root_role_id')
-                .andWhere('gu.user_id', '=', userId);
+                .andWhere('gu.user_id', '=', userId)
+                .andWhere('p.type', '=', 'root');
         });
 
         const rows = await userPermissionQuery;

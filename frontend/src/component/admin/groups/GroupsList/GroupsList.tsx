@@ -18,6 +18,8 @@ import { Add } from '@mui/icons-material';
 import { NAVIGATE_TO_CREATE_GROUP } from 'utils/testIds';
 import { EditGroupUsers } from '../Group/EditGroupUsers/EditGroupUsers';
 import { RemoveGroup } from '../RemoveGroup/RemoveGroup';
+import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
+import { IProjectRole } from 'interfaces/role';
 
 type PageQueryType = Partial<Record<'search', string>>;
 
@@ -49,6 +51,7 @@ export const GroupsList: VFC = () => {
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || ''
     );
+    const { roles } = useUsers();
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -134,6 +137,9 @@ export const GroupsList: VFC = () => {
                         <Grid key={group.id} item xs={12} md={6}>
                             <GroupCard
                                 group={group}
+                                rootRoles={roles.filter(
+                                    (role: IProjectRole) => role.type === 'root'
+                                )}
                                 onEditUsers={onEditUsers}
                                 onRemoveGroup={onRemoveGroup}
                             />

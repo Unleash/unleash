@@ -16,6 +16,7 @@ export interface IGroupUser {
     groupId: number;
     userId: number;
     joinedAt: Date;
+    rootRoleId?: number;
     seenAt?: Date;
     createdBy?: string;
 }

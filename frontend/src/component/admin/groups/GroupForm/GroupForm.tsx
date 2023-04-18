@@ -207,8 +207,11 @@ export const GroupForm: FC<IGroupForm> = ({
                     show={
                         <>
                             <StyledInputDescription>
-                                Do you want to associate a root role with this
-                                group?
+                                <Box sx={{ display: 'flex' }}>
+                                    Do you want to associate a root role with
+                                    this group?
+                                    <HelpIcon tooltip="When you associate an Admin or Editor role with this group, users in this group will automatically inherit the role globally. Note that groups with a root role association cannot be assigned to projects." />
+                                </Box>
                             </StyledInputDescription>
                             <StyledAutocompleteWrapper>
                                 <Autocomplete

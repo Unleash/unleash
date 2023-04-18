@@ -55,6 +55,7 @@ const rowToGroupUser = (row) => {
         groupId: row.group_id,
         joinedAt: row.created_at,
         createdBy: row.created_by,
+        rootRoleId: row.root_role_id,
     };
 };
 
@@ -62,7 +63,7 @@ const groupToRow = (group: IStoreGroup) => ({
     name: group.name,
     description: group.description,
     mappings_sso: JSON.stringify(group.mappingsSSO),
-    root_role_id: group.rootRole,
+    root_role_id: group.rootRole || null,
 });
 
 export default class GroupStore implements IGroupStore {
@@ -127,9 +128,11 @@ export default class GroupStore implements IGroupStore {
                 'u.id as user_id',
                 'gu.created_at',
                 'gu.created_by',
+                'g.root_role_id',
             )
             .from(`${T.GROUP_USER} AS gu`)
             .join(`${T.USERS} AS u`, 'u.id', 'gu.user_id')
+            .join(`${T.GROUPS} AS g`, 'g.id', 'gu.group_id')
             .whereIn('gu.group_id', groupIds);
         return rows.map(rowToGroupUser);
     }

@@ -19,15 +19,6 @@ export const useGroupForm = (
     const [errors, setErrors] = useState({});
 
     const getGroupPayload = () => {
-        console.log('Actual payload', {
-            name,
-            description,
-            mappingsSSO,
-            users: users.map(({ id }) => ({
-                user: { id },
-            })),
-            rootRole: rootRole,
-        });
         return {
             name,
             description,
@@ -35,7 +26,7 @@ export const useGroupForm = (
             users: users.map(({ id }) => ({
                 user: { id },
             })),
-            rootRole: rootRole,
+            rootRole: rootRole || undefined,
         };
     };
 

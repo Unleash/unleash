@@ -6,6 +6,8 @@ import { GroupCardAvatars } from './GroupCardAvatars/GroupCardAvatars';
 import { Badge } from 'component/common/Badge/Badge';
 import { GroupCardActions } from './GroupCardActions/GroupCardActions';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
+import { IProjectRole } from 'interfaces/role';
+import { IProject } from 'interfaces/project';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
@@ -75,14 +77,24 @@ const ProjectBadgeContainer = styled('div')(({ theme }) => ({
     flexWrap: 'wrap',
 }));
 
+const InfoBadgeDescription = styled('span')(({ theme }) => ({
+    display: 'flex',
+    color: theme.palette.text.secondary,
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    fontSize: theme.fontSizes.smallBody,
+}));
+
 interface IGroupCardProps {
     group: IGroup;
+    rootRoles: IProjectRole[];
     onEditUsers: (group: IGroup) => void;
     onRemoveGroup: (group: IGroup) => void;
 }
 
 export const GroupCard = ({
     group,
+    rootRoles,
     onEditUsers,
     onRemoveGroup,
 }: IGroupCardProps) => {
@@ -101,6 +113,28 @@ export const GroupCard = ({
                             />
                         </StyledHeaderActions>
                     </StyledTitleRow>
+                    <ConditionallyRender
+                        condition={!!group.rootRole}
+                        show={
+                            <>
+                                <InfoBadgeDescription>
+                                    <p>Root role:</p>
+                                    <Badge
+                                        color="success"
+                                        icon={<TopicOutlinedIcon />}
+                                    >
+                                        {
+                                            rootRoles.find(
+                                                (role: IProjectRole) =>
+                                                    role.id === group.rootRole
+                                            )?.name
+                                        }
+                                    </Badge>
+                                </InfoBadgeDescription>
+                            </>
+                        }
+                    />
+
                     <StyledDescription>{group.description}</StyledDescription>
                     <StyledBottomRow>
                         <ConditionallyRender
@@ -143,7 +177,10 @@ export const GroupCard = ({
                                         arrow
                                         describeChild
                                     >
-                                        <Badge>Not used</Badge>
+                                        <ConditionallyRender
+                                            condition={!group.rootRole}
+                                            show={<Badge>Not used</Badge>}
+                                        />
                                     </Tooltip>
                                 }
                             />

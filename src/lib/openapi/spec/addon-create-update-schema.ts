@@ -10,7 +10,11 @@ export const addonCreateUpdateSchema = {
         provider: {
             type: 'string',
 
-            description: `The addon provider, such as "webhook" or "slack". The list of all providers supported can be found in the [addons reference documentation](https://docs.getunleash.io/reference/addons). This string is **case sensitive**. Supported options are:
+            description: `The addon provider, such as "webhook" or "slack". This string is **case sensitive** and maps to the provider's \`name\` property.
+
+The list of all supported providers and their parameters for a specific Unleash instance can be found by making a GET request to the \`api/admin/addons\` endpoint: the \`providers\` property of that response will contain all available providers.
+
+The default set of providers can be found in the [addons reference documentation](https://docs.getunleash.io/reference/addons). The default supported options are:
 - \`datadog\` for [Datadog](https://docs.getunleash.io/reference/addons/datadog)
 - \`slack\` for [Slack](https://docs.getunleash.io/reference/addons/slack)
 - \`teams\` for [Microsoft Teams](https://docs.getunleash.io/reference/addons/teams)

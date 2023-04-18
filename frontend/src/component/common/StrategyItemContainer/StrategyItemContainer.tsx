@@ -105,7 +105,9 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                     <StringTruncator
                         maxWidth="150"
                         maxLength={15}
-                        text={formatStrategyName(strategy.name)}
+                        text={formatStrategyName(
+                            strategy.title || strategy.name
+                        )}
                     />
                     <Box
                         sx={{

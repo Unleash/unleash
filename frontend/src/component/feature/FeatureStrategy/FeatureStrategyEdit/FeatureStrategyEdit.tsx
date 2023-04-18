@@ -189,6 +189,7 @@ export const createStrategyPayload = (
     segments: ISegment[]
 ): IFeatureStrategyPayload => ({
     name: strategy.name,
+    title: strategy.title,
     constraints: strategy.constraints ?? [],
     parameters: strategy.parameters ?? {},
     segments: segments.map(segment => segment.id),

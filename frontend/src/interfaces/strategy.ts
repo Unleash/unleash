@@ -20,6 +20,7 @@ export interface IFeatureStrategyParameters {
 export interface IFeatureStrategyPayload {
     id?: string;
     name?: string;
+    title?: string;
     constraints: IConstraint[];
     parameters: IFeatureStrategyParameters;
     segments?: number[];

@@ -1,0 +1,27 @@
+name: 'Dry run publish to npm'
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup to npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
+      - name: Dry run publish
+        run: |
+          yarn install --frozen-lockfile
+          yarn --cwd ./frontend install --frozen-lockfile
+          ls -l ./frontend
+          ls -l ./frontend/build
+          npm publish --dry-run

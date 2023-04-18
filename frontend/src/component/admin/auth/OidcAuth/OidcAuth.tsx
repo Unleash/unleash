@@ -1,8 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
-    Button, FormControl,
+    Button,
+    FormControl,
     FormControlLabel,
-    Grid, InputLabel, MenuItem, Select,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Select,
     Switch,
     TextField,
 } from '@mui/material';
@@ -249,8 +253,10 @@ export const OidcAuth = () => {
                     <Grid item md={5}>
                         <strong>ID Signing algorithm</strong>
                         <p>
-                            Which signing algorithm to use. <br /> Leave this alone unless you see errors that look like
-                            "unexpected JWT alg received, expected RS256, got: RS512" in your logs.
+                            Which signing algorithm to use. <br /> Leave this
+                            alone unless you see errors that look like
+                            "unexpected JWT alg received, expected RS256, got:
+                            RS512" in your logs.
                         </p>
                     </Grid>
                     <Grid item md={6}>
@@ -264,7 +270,12 @@ export const OidcAuth = () => {
                                 id="idTokenSigningAlgorithm"
                                 name="idTokenSigningAlgorithm"
                                 value={data.idTokenSigningAlgorithm || 'RS256'}
-                                onChange={(e) => setValue('idTokenSigningAlgorithm', e.target.value)}
+                                onChange={e =>
+                                    setValue(
+                                        'idTokenSigningAlgorithm',
+                                        e.target.value
+                                    )
+                                }
                             >
                                 {/*consider these from API or constants. */}
                                 <MenuItem value="RS256">RS256</MenuItem>
@@ -295,4 +306,3 @@ export const OidcAuth = () => {
         </PageContent>
     );
 };
-

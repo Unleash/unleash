@@ -98,7 +98,11 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "array",
           },
           "provider": {
-            "description": "The addon provider, such as "webhook" or "slack". The list of all providers supported can be found in the [addons reference documentation](https://docs.getunleash.io/reference/addons). This string is **case sensitive**. Supported options are:
+            "description": "The addon provider, such as "webhook" or "slack". This string is **case sensitive** and maps to the provider's \`name\` property.
+
+The list of all supported providers and their parameters for a specific Unleash instance can be found by making a GET request to the \`api/admin/addons\` endpoint: the \`providers\` property of that response will contain all available providers.
+
+The default set of providers can be found in the [addons reference documentation](https://docs.getunleash.io/reference/addons). The default supported options are:
 - \`datadog\` for [Datadog](https://docs.getunleash.io/reference/addons/datadog)
 - \`slack\` for [Slack](https://docs.getunleash.io/reference/addons/slack)
 - \`teams\` for [Microsoft Teams](https://docs.getunleash.io/reference/addons/teams)
@@ -138,7 +142,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "placeholder": {
-            "description": "The default value for this parameter. This value be used if no other value is provided.",
+            "description": "The default value for this parameter. This value is used if no other value is provided.",
             "example": ":unleash:",
             "type": "string",
           },
@@ -148,7 +152,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "boolean",
           },
           "sensitive": {
-            "description": "Indicates whether this parameter is **sensitive** or not. Unleash will not return sensitive parameters to API request. It will instead use a number of asterisks to indicate that a value is set, e.g. "******". The number of asterisks does not correlate to the parameter's value.",
+            "description": "Indicates whether this parameter is **sensitive** or not. Unleash will not return sensitive parameters to API requests. It will instead use a number of asterisks to indicate that a value is set, e.g. "******". The number of asterisks does not correlate to the parameter's value.",
             "example": false,
             "type": "boolean",
           },
@@ -217,7 +221,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "object",
           },
           "projects": {
-            "description": "The projects that this addon listens to events from. An empty list means listens to events from **all** projects.",
+            "description": "The projects that this addon listens to events from. An empty list means it listens to events from **all** projects.",
             "example": [
               "new-landing-project",
               "signups-v2",

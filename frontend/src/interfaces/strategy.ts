@@ -4,6 +4,7 @@ export interface IFeatureStrategy {
     id: string;
     strategyName?: string;
     name: string;
+    title?: string;
     constraints: IConstraint[];
     parameters: IFeatureStrategyParameters;
     featureName?: string;

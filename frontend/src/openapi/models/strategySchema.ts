@@ -5,11 +5,21 @@
  */
 import type { StrategySchemaParametersItem } from './strategySchemaParametersItem';
 
+/**
+ * The [activation strategy](https://docs.getunleash.io/reference/activation-strategies) schema
+ */
 export interface StrategySchema {
+    /** An optional title for the strategy */
+    title?: string | null;
+    /** The name or type of the strategy */
     name: string;
+    /** A human friendly name for the strategy */
     displayName: string | null;
+    /** A short description for the strategy */
     description: string;
+    /** Determines whether the strategy allows for editing */
     editable: boolean;
     deprecated: boolean;
+    /** A list of relevant parameters for each strategy */
     parameters: StrategySchemaParametersItem[];
 }

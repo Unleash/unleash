@@ -6,7 +6,7 @@
 import type { TagSchema } from './tagSchema';
 
 /**
- * Represents a set of changes to tags of a feature.
+ * Represents a set of changes to a feature's tags, such as adding or removing tags.
  */
 export interface UpdateTagsSchema {
     /** Tags to add to the feature. */

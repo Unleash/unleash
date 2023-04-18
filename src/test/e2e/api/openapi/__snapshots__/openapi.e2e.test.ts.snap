@@ -1811,6 +1811,10 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
+          "rootRole": {
+            "nullable": true,
+            "type": "number",
+          },
           "users": {
             "items": {
               "$ref": "#/components/schemas/groupUserModelSchema",

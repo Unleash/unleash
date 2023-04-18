@@ -7,7 +7,10 @@ import EnvironmentService from '../../../services/environment-service';
 import { UPDATE_PROJECT } from '../../../types/permissions';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema';
 import { ProjectEnvironmentSchema } from '../../../openapi/spec/project-environment-schema';
-import { emptyResponse } from '../../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../../openapi/util/standard-responses';
 
 const PREFIX = '/:projectId/environments';
 
@@ -45,7 +48,10 @@ export default class EnvironmentsController extends Controller {
                     requestBody: createRequestSchema(
                         'projectEnvironmentSchema',
                     ),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403),
+                    },
                 }),
             ],
         });
@@ -60,7 +66,10 @@ export default class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'removeEnvironmentFromProject',
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403),
+                    },
                 }),
             ],
         });

@@ -24,4 +24,4 @@ jobs:
           yarn --cwd ./frontend install --frozen-lockfile
           ls -l ./frontend
           ls -l ./frontend/build
-          npm publish --dry-run
+          npm publish --dry-run --ignore-scripts

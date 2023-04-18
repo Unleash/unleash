@@ -66,8 +66,10 @@
     "chartjs-adapter-date-fns": "3.0.0",
     "classnames": "2.3.2",
     "copy-to-clipboard": "3.3.3",
+    "countries-and-timezones": "^3.4.0",
     "cypress": "9.7.0",
     "date-fns": "2.29.3",
+    "date-fns-tz": "^2.0.0",
     "debounce": "1.2.1",
     "deep-diff": "1.0.2",
     "dequal": "2.0.3",
@@ -92,7 +94,9 @@
     "react-dropzone": "14.2.3",
     "react-error-boundary": "3.1.4",
     "react-hooks-global-state": "2.1.0",
+    "react-joyride": "^2.5.3",
     "react-markdown": "^8.0.4",
+    "react-linkify": "^1.0.0-alpha",
     "react-router-dom": "6.8.1",
     "react-table": "7.8.0",
     "react-test-renderer": "17.0.2",
@@ -107,10 +111,7 @@
     "vite-plugin-svgr": "2.4.0",
     "vite-tsconfig-paths": "4.0.5",
     "vitest": "0.28.5",
-    "whatwg-fetch": "3.6.2",
-    "countries-and-timezones": "^3.4.0",
-    "date-fns-tz": "^2.0.0",
-    "react-linkify": "^1.0.0-alpha"
+    "whatwg-fetch": "3.6.2"
   },
   "optionalDependencies": {
     "orval": "^6.10.3"

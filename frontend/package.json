@@ -4,7 +4,7 @@
   "private": true,
   "files": [
     "index.js",
-    "build/"
+    "build"
   ],
   "engines": {
     "node": ">=18"

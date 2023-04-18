@@ -24,9 +24,6 @@ jobs:
         run: |
           yarn install --frozen-lockfile
           yarn --cwd ./frontend install --frozen-lockfile
-          ls -l ./frontend
-          ls -l ./frontend/build
-          npm publish --dry-run
       - name: Publish to npm
         run: |
           LATEST=$(npm show unleash-server version)

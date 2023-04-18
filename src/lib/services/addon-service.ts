@@ -260,7 +260,11 @@ export default class AddonService {
 
         const p = this.addonProviders[config.provider];
         if (!p) {
-            throw new TypeError(`Unknown addon provider ${config.provider}`);
+            throw new ValidationError(
+                `Unknown addon provider ${config.provider}`,
+                [],
+                undefined,
+            );
         } else {
             return true;
         }

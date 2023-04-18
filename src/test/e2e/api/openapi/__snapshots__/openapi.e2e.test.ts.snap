@@ -9618,7 +9618,7 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Addons",
     },
     {
-      "description": "Configure the Unleash Admin UI.",
+      "description": "Configure the Unleash Admin UI. Why did you enable an experimental feature?",
       "name": "Admin UI",
     },
     {

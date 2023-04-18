@@ -56,7 +56,7 @@ export const addonSchema = {
         projects: {
             type: 'array',
             description:
-                'The projects that this addon listens to events from. An empty list means listens to events from **all** projects.',
+                'The projects that this addon listens to events from. An empty list means it listens to events from **all** projects.',
             example: ['new-landing-project', 'signups-v2'],
             items: {
                 type: 'string',

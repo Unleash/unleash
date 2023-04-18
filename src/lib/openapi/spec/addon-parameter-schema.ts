@@ -36,7 +36,7 @@ export const addonParameterSchema = {
             type: 'string',
             example: ':unleash:',
             description:
-                'The default value for this parameter. This value be used if no other value is provided.',
+                'The default value for this parameter. This value is used if no other value is provided.',
         },
         required: {
             type: 'boolean',
@@ -47,7 +47,7 @@ export const addonParameterSchema = {
         sensitive: {
             type: 'boolean',
             example: false,
-            description: `Indicates whether this parameter is **sensitive** or not. Unleash will not return sensitive parameters to API request. It will instead use a number of asterisks to indicate that a value is set, e.g. "******". The number of asterisks does not correlate to the parameter\'s value.`,
+            description: `Indicates whether this parameter is **sensitive** or not. Unleash will not return sensitive parameters to API requests. It will instead use a number of asterisks to indicate that a value is set, e.g. "******". The number of asterisks does not correlate to the parameter\'s value.`,
         },
     },
     components: {},

@@ -425,7 +425,11 @@ export default class ProjectService {
         const group = await this.groupService.getGroup(groupId);
         const project = await this.getProject(projectId);
         if (group.id == null)
-            throw new ValidationError('Unexpected empty group id');
+            throw new ValidationError(
+                'Unexpected empty group id',
+                [],
+                undefined,
+            );
 
         await this.accessService.addGroupToRole(
             group.id,

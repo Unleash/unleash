@@ -15,7 +15,7 @@ export interface FeatureSchema {
     type?: string;
     /** Detailed description of the feature */
     description?: string | null;
-    /** `true` if the feature is archived, otherwise `false`. */
+    /** `true` if the feature is archived */
     archived?: boolean;
     /** Name of the project the feature belongs to */
     project?: string;

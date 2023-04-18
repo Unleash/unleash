@@ -4,10 +4,24 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Describes a tag applied to a feature
+ */
 export interface FeatureTagSchema {
+    /** The name of the feature this tag is applied to */
     featureName: string;
+    /** The type of tag */
     tagType?: string;
+    /** The value of the tag */
     tagValue: string;
+    /**
+     * This field is deprecated and currently unused, use tagType instead
+     * @deprecated
+     */
     type?: string;
+    /**
+     * This field is deprecated and currently unused, use tagValue instead
+     * @deprecated
+     */
     value?: string;
 }

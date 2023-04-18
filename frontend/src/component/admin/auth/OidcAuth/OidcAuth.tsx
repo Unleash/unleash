@@ -1,8 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
     Button,
+    FormControl,
     FormControlLabel,
     Grid,
+    InputLabel,
+    MenuItem,
+    Select,
     Switch,
     TextField,
 } from '@mui/material';
@@ -30,6 +34,7 @@ const initialState = {
     discoverUrl: '',
     secret: '',
     acrValues: '',
+    idTokenSigningAlgorithm: 'RS256',
 };
 
 export const OidcAuth = () => {
@@ -244,7 +249,42 @@ export const OidcAuth = () => {
                     setValue={setValue}
                 />
                 <AutoCreateForm data={data} setValue={setValue} />
-
+                <Grid container spacing={3} mb={2}>
+                    <Grid item md={5}>
+                        <strong>ID Signing algorithm</strong>
+                        <p>
+                            Which signing algorithm to use. <br /> Leave this
+                            alone unless you see errors that look like
+                            "unexpected JWT alg received, expected RS256, got:
+                            RS512" in your logs.
+                        </p>
+                    </Grid>
+                    <Grid item md={6}>
+                        <FormControl style={{ minWidth: '200px' }}>
+                            <InputLabel id="defaultRootRole-label">
+                                Signing algorithm
+                            </InputLabel>
+                            <Select
+                                label="Signing algorithm"
+                                labelId="idTokenSigningAlgorithm-label"
+                                id="idTokenSigningAlgorithm"
+                                name="idTokenSigningAlgorithm"
+                                value={data.idTokenSigningAlgorithm || 'RS256'}
+                                onChange={e =>
+                                    setValue(
+                                        'idTokenSigningAlgorithm',
+                                        e.target.value
+                                    )
+                                }
+                            >
+                                {/*consider these from API or constants. */}
+                                <MenuItem value="RS256">RS256</MenuItem>
+                                <MenuItem value="RS384">RS384</MenuItem>
+                                <MenuItem value="RS512">RS512</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
                 <Grid container spacing={3}>
                     <Grid item md={12}>
                         <Button

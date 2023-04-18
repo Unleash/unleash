@@ -4,9 +4,11 @@
  * See `gen:api` script in package.json
  */
 import type { ChangeRequestEventSchema } from './changeRequestEventSchema';
+import type { ChangeRequestDefaultEventSchema } from './changeRequestDefaultEventSchema';
 
 export interface ChangeRequestFeatureSchema {
     name: string;
     conflict?: string;
     changes: ChangeRequestEventSchema[];
+    defaultChange?: ChangeRequestDefaultEventSchema;
 }

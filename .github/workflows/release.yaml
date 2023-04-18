@@ -20,7 +20,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
-      - name: install deps
+      - name: Build
         run: |
           yarn install --frozen-lockfile
           yarn --cwd ./frontend install --frozen-lockfile

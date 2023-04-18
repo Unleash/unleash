@@ -51,6 +51,7 @@ export interface IFlags {
     projectScopedSegments?: boolean;
     projectScopedStickiness?: boolean;
     personalAccessTokensKillSwitch?: boolean;
+    groupRootRoles?: boolean
 }
 
 export interface IVersionInfo {

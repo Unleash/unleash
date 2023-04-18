@@ -81,6 +81,10 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
         false,
     ),
+    groupRootRoles: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ROOT_ROLE_GROUPS,
+        false,
+    ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
 };
 

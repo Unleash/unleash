@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { IProjectRole } from 'interfaces/role';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -118,11 +119,14 @@ export const GroupForm: FC<IGroupForm> = ({
 }) => {
     const { config: oidcSettings } = useAuthSettings('oidc');
     const { config: samlSettings } = useAuthSettings('saml');
+    const { uiConfig } = useUiConfig();
     const { roles } = useUsers();
 
     const isGroupSyncingEnabled =
         (oidcSettings?.enabled && oidcSettings.enableGroupSyncing) ||
         (samlSettings?.enabled && samlSettings.enableGroupSyncing);
+
+    const groupRootRolesEnabled = Boolean(uiConfig.flags.groupRootRoles);
 
     const roleIdToRole = (rootRoleId: number | null): IProjectRole | null => {
         return (
@@ -198,28 +202,37 @@ export const GroupForm: FC<IGroupForm> = ({
                         </StyledDescriptionBlock>
                     )}
                 />
-                <StyledInputDescription>
-                    Do you want to associate a root role with this group?
-                </StyledInputDescription>
-                <StyledAutocompleteWrapper>
-                    <Autocomplete
-                        data-testid={'test'}
-                        size="small"
-                        openOnFocus
-                        value={roleIdToRole(rootRole)}
-                        onChange={(_, newValue) =>
-                            setRootRole(newValue?.id || null)
-                        }
-                        options={roles.filter(
-                            (role: IProjectRole) => role.name !== 'Viewer'
-                        )}
-                        renderOption={renderRoleOption}
-                        getOptionLabel={option => option.name}
-                        renderInput={params => (
-                            <TextField {...params} label="Role" />
-                        )}
-                    />
-                </StyledAutocompleteWrapper>
+                <ConditionallyRender
+                    condition={groupRootRolesEnabled}
+                    show={
+                        <>
+                            <StyledInputDescription>
+                                Do you want to associate a root role with this
+                                group?
+                            </StyledInputDescription>
+                            <StyledAutocompleteWrapper>
+                                <Autocomplete
+                                    data-testid={'test'}
+                                    size="small"
+                                    openOnFocus
+                                    value={roleIdToRole(rootRole)}
+                                    onChange={(_, newValue) =>
+                                        setRootRole(newValue?.id || null)
+                                    }
+                                    options={roles.filter(
+                                        (role: IProjectRole) =>
+                                            role.name !== 'Viewer'
+                                    )}
+                                    renderOption={renderRoleOption}
+                                    getOptionLabel={option => option.name}
+                                    renderInput={params => (
+                                        <TextField {...params} label="Role" />
+                                    )}
+                                />
+                            </StyledAutocompleteWrapper>
+                        </>
+                    }
+                />
                 <ConditionallyRender
                     condition={mode === 'Create'}
                     show={

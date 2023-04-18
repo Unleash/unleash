@@ -9,8 +9,12 @@ import { DemoSteps } from './DemoSteps/DemoSteps';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { createLocalStorage } from 'utils/createLocalStorage';
 
-interface ITutorialTopicStep extends Step {
+export interface ITutorialTopicStep extends Step {
     href?: string;
+    nextButton?: boolean;
+    backCloseModal?: boolean;
+    preventDefault?: boolean;
+    optional?: boolean;
 }
 
 export interface ITutorialTopic {
@@ -54,157 +58,175 @@ const TOPICS: ITutorialTopic[] = [
                         </Badge>
                     </>
                 ),
-                disableBeacon: true,
+                nextButton: true,
             },
         ],
     },
-    // {
-    //     title: 'Import',
-    //     steps: [
-    //         {
-    //             target: 'button[data-testid="IMPORT_BUTTON"]',
-    //             title: (
-    //                 <Typography fontWeight="bold">
-    //                     Import toggle configuration
-    //                 </Typography>
-    //             ),
-    //             content: (
-    //                 <>
-    //                     <Typography variant="body2" color="text.secondary">
-    //                         This is a cool feature that enables you to import
-    //                         your toggle configuration. This is just an example
-    //                         and not part of the final guide.
-    //                     </Typography>
-    //                 </>
-    //             ),
-    //             disableBeacon: true,
-    //         },
-    //     ],
-    // },
-    // {
-    //     title: 'New feature toggle',
-    //     steps: [
-    //         {
-    //             target: 'button[data-testid="NAVIGATE_TO_CREATE_FEATURE"]',
-    //             title: (
-    //                 <Typography fontWeight="bold">
-    //                     Add a new feature toggle
-    //                 </Typography>
-    //             ),
-    //             content: (
-    //                 <>
-    //                     <Typography variant="body2" color="text.secondary">
-    //                         You can use this button to add a new feature toggle.
-    //                         This is just an example and not part of the final
-    //                         guide.
-    //                     </Typography>
-    //                 </>
-    //             ),
-    //             disableBeacon: true,
-    //         },
-    //     ],
-    // },
-    // {
-    //     title: 'Enable/disable a feature toggle',
-    //     steps: [
-    //         {
-    //             target: '.MuiSwitch-sizeMedium',
-    //             title: (
-    //                 <Typography fontWeight="bold">
-    //                     Enable/disable a feature toggle
-    //                 </Typography>
-    //             ),
-    //             content: (
-    //                 <>
-    //                     <Typography variant="body2" color="text.secondary">
-    //                         The simplest way to use a feature toggle is to
-    //                         enable or disable it for everyone (on/off).
-    //                     </Typography>
-    //                     <Badge
-    //                         sx={{ marginTop: 2 }}
-    //                         icon={<InfoOutlinedIcon />}
-    //                     >
-    //                         Look at the demo page when toggling!
-    //                     </Badge>
-    //                 </>
-    //             ),
-    //             disableBeacon: true,
-    //         },
-    //     ],
-    // },
-    // {
-    //     title: 'Community',
-    //     steps: [
-    //         {
-    //             target: 'a[href="https://twitter.com/getunleash"]',
-    //             title: (
-    //                 <Typography fontWeight="bold">
-    //                     Follow us on Twitter!
-    //                 </Typography>
-    //             ),
-    //             content: (
-    //                 <>
-    //                     <Typography variant="body2" color="text.secondary">
-    //                         Following us on Twitter is one of the easiest ways
-    //                         of keeping up with us. This is just an example and
-    //                         not part of the final guide.
-    //                     </Typography>
-    //                 </>
-    //             ),
-    //             disableBeacon: true,
-    //         },
-    //         {
-    //             target: 'a[href="https://www.linkedin.com/company/getunleash"]',
-    //             title: (
-    //                 <Typography fontWeight="bold">
-    //                     Follow us on LinkedIn!
-    //                 </Typography>
-    //             ),
-    //             content: (
-    //                 <>
-    //                     <Typography variant="body2" color="text.secondary">
-    //                         You can also follow us LinkedIn. This is just an
-    //                         example and not part of the final guide.
-    //                     </Typography>
-    //                 </>
-    //             ),
-    //             disableBeacon: true,
-    //         },
-    //         {
-    //             target: 'a[href="https://github.com/Unleash/unleash"]',
-    //             title: (
-    //                 <Typography fontWeight="bold">
-    //                     Check out Unleash on GitHub!
-    //                 </Typography>
-    //             ),
-    //             content: (
-    //                 <>
-    //                     <Typography variant="body2" color="text.secondary">
-    //                         Unleash is open-source, check out the project on
-    //                         GitHub. This is just an example and not part of the
-    //                         final guide.
-    //                     </Typography>
-    //                 </>
-    //             ),
-    //             disableBeacon: true,
-    //         },
-    //         {
-    //             target: 'a[href="https://slack.unleash.run"]',
-    //             title: (
-    //                 <Typography fontWeight="bold">Join us on Slack!</Typography>
-    //             ),
-    //             content: (
-    //                 <>
-    //                     <Typography variant="body2" color="text.secondary">
-    //                         Join our community in Slack. This is just an example
-    //                         and not part of the final guide.
-    //                     </Typography>
-    //                 </>
-    //             ),
-    //             disableBeacon: true,
-    //         },
-    //     ],
-    // },
+    {
+        title: 'Enable for a specific user',
+        steps: [
+            {
+                href: '/projects/default',
+                target: 'a[href="/projects/default/features/demoApp.step2"]',
+                title: (
+                    <Typography fontWeight="bold">
+                        Enable for a specific user
+                    </Typography>
+                ),
+                content: (
+                    <Typography variant="body2" color="text.secondary">
+                        First, let's open the feature toggle configuration.
+                    </Typography>
+                ),
+                preventDefault: true,
+            },
+            {
+                href: '/projects/default/features/demoApp.step2',
+                target: 'div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_default"] button',
+                title: (
+                    <Typography fontWeight="bold">
+                        Enable for a specific user
+                    </Typography>
+                ),
+                content: (
+                    <Typography variant="body2" color="text.secondary">
+                        Add a new strategy to this environment by clicking this
+                        button.
+                    </Typography>
+                ),
+            },
+            {
+                target: 'a[href="/projects/default/features/demoApp.step2/strategies/create?environmentId=default&strategyName=userWithId"]',
+                title: (
+                    <Typography fontWeight="bold">
+                        Enable for a specific user
+                    </Typography>
+                ),
+                content: (
+                    <Typography variant="body2" color="text.secondary">
+                        Select the UserIDs strategy type.
+                    </Typography>
+                ),
+                backCloseModal: true,
+            },
+            {
+                target: '#input-add-items',
+                title: (
+                    <Typography fontWeight="bold">
+                        Enable for a specific user
+                    </Typography>
+                ),
+                content: (
+                    <Typography variant="body2" color="text.secondary">
+                        Enter the userID you see on the demo app.
+                    </Typography>
+                ),
+                nextButton: true,
+                backCloseModal: true,
+            },
+            {
+                target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
+                title: (
+                    <Typography fontWeight="bold">
+                        Enable for a specific user
+                    </Typography>
+                ),
+                content: (
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            Save your strategy to apply it.
+                        </Typography>
+                        <Badge
+                            sx={{ marginTop: 2 }}
+                            icon={<InfoOutlinedIcon />}
+                        >
+                            Look at the demo page after saving!
+                        </Badge>
+                    </>
+                ),
+            },
+            {
+                target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
+                title: (
+                    <Typography fontWeight="bold">
+                        Enable for a specific user
+                    </Typography>
+                ),
+                content: (
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            Confirm your changes.
+                        </Typography>
+                        <Badge
+                            sx={{ marginTop: 2 }}
+                            icon={<InfoOutlinedIcon />}
+                        >
+                            Look at the demo page after saving!
+                        </Badge>
+                    </>
+                ),
+                optional: true,
+            },
+        ],
+    },
+    {
+        title: 'Adjust gradual rollout',
+        steps: [
+            {
+                href: '/projects/default',
+                target: 'div[data-key="demoApp.step1-default"]',
+                title: (
+                    <Typography fontWeight="bold">
+                        Enable/disable a feature toggle
+                    </Typography>
+                ),
+                content: (
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            The simplest way to use a feature toggle is to
+                            enable or disable it for everyone (on/off).
+                        </Typography>
+                        <Badge
+                            sx={{ marginTop: 2 }}
+                            icon={<InfoOutlinedIcon />}
+                        >
+                            Look at the demo page when toggling!
+                        </Badge>
+                    </>
+                ),
+                nextButton: true,
+            },
+        ],
+    },
+    {
+        title: 'Adjust variants',
+        steps: [
+            {
+                href: '/projects/default',
+                target: 'div[data-key="demoApp.step1-default"]',
+                title: (
+                    <Typography fontWeight="bold">
+                        Enable/disable a feature toggle
+                    </Typography>
+                ),
+                content: (
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            The simplest way to use a feature toggle is to
+                            enable or disable it for everyone (on/off).
+                        </Typography>
+                        <Badge
+                            sx={{ marginTop: 2 }}
+                            icon={<InfoOutlinedIcon />}
+                        >
+                            Look at the demo page when toggling!
+                        </Badge>
+                    </>
+                ),
+                nextButton: true,
+            },
+        ],
+    },
 ];
 
 export const Demo = () => {

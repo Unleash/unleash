@@ -11,7 +11,9 @@
   "files": [
     "dist",
     "docs",
-    "frontend/build"
+    "frontend/build",
+    "frontend/index.js",
+    "frontend/package.json"
   ],
   "repository": {
     "type": "git",

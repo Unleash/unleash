@@ -79,10 +79,6 @@ const metaRules: Rule[] = [
             },
         },
         knownExceptions: [
-            'addonParameterSchema',
-            'addonSchema',
-            'addonsSchema',
-            'addonTypeSchema',
             'apiTokenSchema',
             'apiTokensSchema',
             'applicationSchema',
@@ -202,10 +198,6 @@ const metaRules: Rule[] = [
         },
         knownExceptions: [
             'adminFeaturesQuerySchema',
-            'addonParameterSchema',
-            'addonSchema',
-            'addonsSchema',
-            'addonTypeSchema',
             'apiTokenSchema',
             'apiTokensSchema',
             'applicationSchema',

@@ -15,6 +15,8 @@ import { InstanceStatus } from 'component/common/InstanceStatus/InstanceStatus';
 import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 import { MessageBanner } from 'component/common/MessageBanner/MessageBanner';
 
+window.global ||= window;
+
 ReactDOM.render(
     <UIProviderContainer>
         <AccessProvider>

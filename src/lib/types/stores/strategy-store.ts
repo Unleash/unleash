@@ -7,6 +7,7 @@ export interface IStrategy {
     parameters: object[];
     deprecated: boolean;
     displayName: string;
+    title?: string;
 }
 
 export interface IEditableStrategy {
@@ -14,6 +15,7 @@ export interface IEditableStrategy {
     description?: string;
     parameters: object;
     deprecated: boolean;
+    title?: string;
 }
 
 export interface IMinimalStrategy {
@@ -21,6 +23,7 @@ export interface IMinimalStrategy {
     description?: string;
     editable?: boolean;
     parameters?: any[];
+    title?: string;
 }
 
 export interface IStrategyImport {
@@ -31,6 +34,7 @@ export interface IStrategyImport {
     builtIn?: boolean;
     sortOrder?: number;
     displayName?: string;
+    title?: string;
 }
 
 export interface IMinimalStrategyRow {
@@ -38,6 +42,7 @@ export interface IMinimalStrategyRow {
     description?: string;
     editable?: boolean;
     parameters?: string;
+    title?: string;
 }
 
 export interface IStrategyStore extends Store<IStrategy, string> {

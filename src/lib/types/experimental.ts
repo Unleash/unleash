@@ -10,10 +10,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
     ),
-    projectStatusApi: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_STATUS_API,
-        false,
-    ),
     newProjectOverview: parseEnvVarBoolean(
         process.env.NEW_PROJECT_OVERVIEW,
         false,
@@ -67,7 +63,6 @@ const flags = {
         process.env.PROJECT_SCOPED_STICKINESS,
         false,
     ),
-    projectMode: parseEnvVarBoolean(process.env.PROJECT_MODE, false),
     personalAccessTokensKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_PAT_KILL_SWITCH,
         false,

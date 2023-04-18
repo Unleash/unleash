@@ -42,6 +42,7 @@ module.exports = {
             items: [
                 'topics/the-anatomy-of-unleash',
                 'topics/a-b-testing',
+                'topics/managing-constraints',
                 'topics/proxy-hosting',
             ],
         },
@@ -291,6 +292,10 @@ module.exports = {
                             'Jira Server': [
                                 'reference/integrations/jira-server-plugin-installation',
                                 'reference/integrations/jira-server-plugin-usage',
+                            ],
+                            'Jira Cloud': [
+                                'reference/integrations/jira-cloud-plugin-installation',
+                                'reference/integrations/jira-cloud-plugin-usage',
                             ],
                         },
                         ,

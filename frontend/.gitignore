@@ -41,7 +41,6 @@ typings/
 
 # Built
 dist
-build
 
 # IDE
 .idea/

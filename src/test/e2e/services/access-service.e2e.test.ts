@@ -1073,34 +1073,6 @@ test('Should allow user to take multiple group roles and have expected permissio
 test('Should allow user to take on root role through a group that has a root role defined', async () => {
     const groupStore = stores.groupStore;
 
-    const roles = await accessService.getRootRoles();
-    adminRole = roles.find((r) => r.name === RoleName.ADMIN);
-
-    const viewerUser = await createUserViewerAccess(
-        'Vanya Viewer',
-        'vv@getunleash.io',
-    );
-
-    const groupWithRootAdminRole = await groupStore.create({
-        name: 'ViewersWithRootAdminRole',
-        description: '',
-        rootRole: adminRole.id,
-    });
-
-    await groupStore.addUsersToGroup(
-        groupWithRootAdminRole.id!,
-        [{ user: viewerUser }],
-        'Admin',
-    );
-
-    expect(
-        await accessService.hasPermission(viewerUser, permissions.ADMIN),
-    ).toBe(true);
-});
-
-test('Should allow user to take on root role through a group that has a root role defined', async () => {
-    const groupStore = stores.groupStore;
-
     const viewerUser = await createUserViewerAccess(
         'Vincent Viewer',
         'vincent@getunleash.io',

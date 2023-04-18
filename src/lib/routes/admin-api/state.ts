@@ -64,6 +64,10 @@ class StateController extends Controller {
                 this.openApiService.validPath({
                     tags: ['Import/Export'],
                     operationId: 'import',
+                    deprecated: true,
+                    summary: 'Import state (deprecated)',
+                    description:
+                        'Imports state into the system. Deprecated in favor of /api/admin/features-batch/import',
                     responses: {
                         202: emptyResponse,
                     },
@@ -80,6 +84,10 @@ class StateController extends Controller {
                 this.openApiService.validPath({
                     tags: ['Import/Export'],
                     operationId: 'export',
+                    deprecated: true,
+                    summary: 'Export state (deprecated)',
+                    description:
+                        'Exports the current state of the system. Deprecated in favor of /api/admin/features-batch/export',
                     responses: {
                         200: createResponseSchema('stateSchema'),
                     },

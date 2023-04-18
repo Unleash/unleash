@@ -278,7 +278,6 @@ const metaRules: Rule[] = [
             'setUiConfigSchema',
             'sortOrderSchema',
             'splashSchema',
-            'stateSchema',
             'strategiesSchema',
             'tagTypeSchema',
             'tagTypesSchema',

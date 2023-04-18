@@ -9,6 +9,7 @@ import {
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PlaygroundStrategySchema } from 'openapi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IStrategyItemContainerProps {
     strategy: IFeatureStrategy | PlaygroundStrategySchema;
@@ -69,6 +70,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     style = {},
 }) => {
     const Icon = getFeatureStrategyIcon(strategy.name);
+    const { uiConfig } = useUiConfig();
 
     return (
         <Box sx={{ position: 'relative' }}>
@@ -106,7 +108,9 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                         maxWidth="150"
                         maxLength={15}
                         text={formatStrategyName(
-                            strategy.title || strategy.name
+                            uiConfig?.flags?.strategyTitle
+                                ? strategy.title || strategy.name
+                                : strategy.name
                         )}
                     />
                     <Box

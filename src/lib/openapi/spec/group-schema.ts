@@ -24,6 +24,10 @@ export const groupSchema = {
                 type: 'string',
             },
         },
+        rootRole: {
+            type: 'number',
+            nullable: true,
+        },
         createdBy: {
             type: 'string',
             nullable: true,

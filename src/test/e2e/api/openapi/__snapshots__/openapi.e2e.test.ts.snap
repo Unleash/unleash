@@ -1688,7 +1688,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "tagType": {
-            "description": "The type of tag",
+            "description": "The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag",
             "example": "simple",
             "type": "string",
           },
@@ -1699,12 +1699,12 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "type": {
             "deprecated": true,
-            "description": "This field is deprecated and currently unused, use tagType instead",
+            "description": "The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the \`tagType\` property.",
             "type": "string",
           },
           "value": {
             "deprecated": true,
-            "description": "This field is deprecated and currently unused, use tagValue instead",
+            "description": "The value of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the \`tagValue\` property.",
             "type": "string",
           },
         },
@@ -3785,11 +3785,11 @@ Stats are divided into current and previous **windows**.
       },
       "tagSchema": {
         "additionalProperties": false,
-        "description": "Representation of a tag",
+        "description": "Representation of a [tag](https://docs.getunleash.io/reference/tags)",
         "properties": {
           "type": {
             "default": "simple",
-            "description": "The type of the tag",
+            "description": "The [type](https://docs.getunleash.io/reference/tags#tag-types) of the tag",
             "example": "simple",
             "maxLength": 50,
             "minLength": 2,
@@ -4135,7 +4135,7 @@ Stats are divided into current and previous **windows**.
       },
       "updateTagsSchema": {
         "additionalProperties": false,
-        "description": "Represents a set of changes to tags of a feature.",
+        "description": "Represents a set of changes to a feature's tags, such as adding or removing tags.",
         "example": {
           "addedTags": [
             {

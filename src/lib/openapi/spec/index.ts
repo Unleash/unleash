@@ -9,6 +9,7 @@ export * from './role-schema';
 export * from './tags-schema';
 export * from './user-schema';
 export * from './addon-schema';
+export * from './addon-create-update-schema';
 export * from './email-schema';
 export * from './event-schema';
 export * from './group-schema';

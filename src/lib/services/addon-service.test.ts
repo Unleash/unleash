@@ -73,7 +73,7 @@ test('should not allow addon-config for unknown provider', async () => {
             },
             'test',
         );
-    }).rejects.toThrow(new TypeError('Unknown addon provider unknown'));
+    }).rejects.toThrow(ValidationError);
 });
 
 test('should trigger simple-addon eventHandler', async () => {

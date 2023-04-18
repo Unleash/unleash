@@ -4110,6 +4110,8 @@ Stats are divided into current and previous **windows**.
       },
       "stateSchema": {
         "additionalProperties": true,
+        "deprecated": true,
+        "description": "The state of the application used by export/import APIs which are deprecated in favor of the more fine grained /api/admin/export and /api/admin/import APIs",
         "properties": {
           "environments": {
             "items": {
@@ -8501,6 +8503,8 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/state/export": {
       "get": {
+        "deprecated": true,
+        "description": "Exports the current state of the system. Deprecated in favor of /api/admin/features-batch/export",
         "operationId": "export",
         "parameters": [
           {
@@ -8649,6 +8653,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "stateSchema",
           },
         },
+        "summary": "Export state (deprecated)",
         "tags": [
           "Import/Export",
         ],
@@ -8656,6 +8661,8 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/state/import": {
       "post": {
+        "deprecated": true,
+        "description": "Imports state into the system. Deprecated in favor of /api/admin/features-batch/import",
         "operationId": "import",
         "requestBody": {
           "content": {
@@ -8673,6 +8680,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "This response has no body.",
           },
         },
+        "summary": "Import state (deprecated)",
         "tags": [
           "Import/Export",
         ],

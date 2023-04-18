@@ -148,7 +148,7 @@ export class AccessStore implements IAccessStore {
 
         userPermissionQuery = userPermissionQuery.union((db) => {
             db.select(
-                this.db.raw('NULL as project'),
+                this.db.raw("'default' as project"),
                 'permission',
                 'environment',
                 'p.type',
@@ -163,8 +163,7 @@ export class AccessStore implements IAccessStore {
                 )
                 .join(`${T.PERMISSIONS} as p`, 'p.id', 'rp.permission_id')
                 .whereNotNull('g.root_role_id')
-                .andWhere('gu.user_id', '=', userId)
-                .andWhere('p.type', '=', 'root');
+                .andWhere('gu.user_id', '=', userId);
         });
 
         const rows = await userPermissionQuery;

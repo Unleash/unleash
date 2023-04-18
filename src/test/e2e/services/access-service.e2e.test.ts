@@ -1222,3 +1222,28 @@ test('Should add permissions to user when a group is given a root role after the
         await accessService.hasPermission(viewerUser, permissions.ADMIN),
     ).toBe(true);
 });
+
+test('Should give full project access to the default project to user in a group with an editor root role', async () => {
+    const projectName = 'default';
+
+    const groupStore = stores.groupStore;
+
+    const viewerUser = await createUserViewerAccess(
+        'Vee viewer',
+        'vee@getunleash.io',
+    );
+
+    const groupWithRootEditorRole = await groupStore.create({
+        name: 'GroupThatGrantsEditorRights',
+        description: '',
+        rootRole: editorRole.id,
+    });
+
+    await groupStore.addUsersToGroup(
+        groupWithRootEditorRole.id!,
+        [{ user: viewerUser }],
+        'Admin',
+    );
+
+    await hasFullProjectAccess(viewerUser, projectName, true);
+});

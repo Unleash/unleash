@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi, { ValidationError } from 'joi';
 import { IUser } from './user';
 
 export interface IGroup {
@@ -71,7 +71,7 @@ export default class Group implements IGroup {
         createdAt,
     }: IGroup) {
         if (!id) {
-            throw new TypeError('Id is required');
+            throw new ValidationError('Id is required', [], undefined);
         }
 
         Joi.assert(name, Joi.string(), 'Name');

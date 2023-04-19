@@ -26,6 +26,39 @@ export const TOPICS: ITutorialTopic[] = [
         steps: [
             {
                 href: '/projects/default',
+                target: 'body',
+                placement: 'center',
+                content: (
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            <a
+                                href="https://docs.getunleash.io/reference/feature-toggles"
+                                target="_blank"
+                            >
+                                Feature toggles
+                            </a>{' '}
+                            are the central concept of Unleash.
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ mt: 1 }}
+                        >
+                            Feature toggles are organized within{' '}
+                            <a
+                                href="https://docs.getunleash.io/reference/projects"
+                                target="_blank"
+                            >
+                                projects
+                            </a>
+                            .
+                        </Typography>
+                    </>
+                ),
+                nextButton: true,
+            },
+            {
+                href: '/projects/default',
                 target: 'div[data-key="demoApp.step1-default"]',
                 content: (
                     <>
@@ -48,6 +81,34 @@ export const TOPICS: ITutorialTopic[] = [
     {
         title: 'Enable for a specific user',
         steps: [
+            {
+                href: '/projects/default',
+                target: 'body',
+                placement: 'center',
+                content: (
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            <a
+                                href="https://docs.getunleash.io/reference/activation-strategies"
+                                target="_blank"
+                            >
+                                Activation strategies
+                            </a>{' '}
+                            give you more control over when a feature should be
+                            enabled.
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ mt: 1 }}
+                        >
+                            Let's try enabling a feature toggle only for a
+                            specific user.
+                        </Typography>
+                    </>
+                ),
+                nextButton: true,
+            },
             {
                 href: '/projects/default',
                 target: 'a[href="/projects/default/features/demoApp.step2"]',
@@ -138,6 +199,40 @@ export const TOPICS: ITutorialTopic[] = [
         steps: [
             {
                 href: '/projects/default',
+                target: 'body',
+                placement: 'center',
+                content: (
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            <a
+                                href="https://docs.getunleash.io/reference/activation-strategies#gradual-rollout"
+                                target="_blank"
+                            >
+                                Gradual rollout
+                            </a>{' '}
+                            is one of the available{' '}
+                            <a
+                                href="https://docs.getunleash.io/reference/activation-strategies"
+                                target="_blank"
+                            >
+                                activation strategies
+                            </a>
+                            .
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ mt: 1 }}
+                        >
+                            Let's try enabling a feature toggle only for a
+                            certain percentage of users.
+                        </Typography>
+                    </>
+                ),
+                nextButton: true,
+            },
+            {
+                href: '/projects/default',
                 target: 'a[href="/projects/default/features/demoApp.step3"]',
                 content: (
                     <Typography variant="body2" color="text.secondary">
@@ -214,6 +309,35 @@ export const TOPICS: ITutorialTopic[] = [
         title: 'Adjust variants',
         setup: variants,
         steps: [
+            {
+                href: '/projects/default',
+                target: 'body',
+                placement: 'center',
+                content: (
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            <a
+                                href="https://docs.getunleash.io/reference/feature-toggle-variants"
+                                target="_blank"
+                            >
+                                Feature toggle variants
+                            </a>{' '}
+                            allow you to define different values for a feature
+                            toggle. They can be used for A/B testing or
+                            segmenting your users.
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ mt: 1 }}
+                        >
+                            Let's try adding a variant to a feature toggle,
+                            along with an override so our user can see it.
+                        </Typography>
+                    </>
+                ),
+                nextButton: true,
+            },
             {
                 href: '/projects/default',
                 target: 'a[href="/projects/default/features/demoApp.step4"]',

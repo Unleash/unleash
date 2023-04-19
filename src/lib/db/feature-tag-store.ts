@@ -9,6 +9,7 @@ import {
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
 import { Db } from './db';
+import NotFoundError from '../error/notfound-error';
 
 const COLUMNS = ['feature_name', 'tag_type', 'tag_value'];
 const TABLE = 'feature_tag';
@@ -95,12 +96,27 @@ class FeatureTagStore implements IFeatureTagStore {
 
     async getAllTagsForFeature(featureName: string): Promise<ITag[]> {
         const stopTimer = this.timer('getAllForFeature');
-        const rows = await this.db
-            .select(COLUMNS)
-            .from<FeatureTagTable>(TABLE)
-            .where({ feature_name: featureName });
-        stopTimer();
-        return rows.map(this.featureTagRowToTag);
+        if (await this.featureExists(featureName)) {
+            const rows = await this.db
+                .select(COLUMNS)
+                .from<FeatureTagTable>(TABLE)
+                .where({ feature_name: featureName });
+            stopTimer();
+            return rows.map(this.featureTagRowToTag);
+        } else {
+            throw new NotFoundError(
+                `Could not find feature with name ${featureName}`,
+            );
+        }
+    }
+
+    async featureExists(featureName: string): Promise<boolean> {
+        const result = await this.db.raw(
+            'SELECT EXISTS (SELECT 1 FROM features WHERE name = ?) AS present',
+            [featureName],
+        );
+        const { present } = result.rows[0];
+        return present;
     }
 
     async getAllByFeatures(features: string[]): Promise<IFeatureTag[]> {
@@ -187,13 +203,10 @@ class FeatureTagStore implements IFeatureTagStore {
     }
 
     featureTagRowToTag(row: FeatureTagTable): ITag {
-        if (row) {
-            return {
-                value: row.tag_value,
-                type: row.tag_type,
-            };
-        }
-        return null;
+        return {
+            value: row.tag_value,
+            type: row.tag_type,
+        };
     }
 
     rowToFeatureAndTag(row: FeatureTagTable): IFeatureAndTag {

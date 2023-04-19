@@ -1,4 +1,4 @@
-export const formatBaseUri = (input: string): string => {
+export const formatBaseUri = (input: string | undefined): string => {
     if (!input) return '';
     const firstChar = input[0];
     const lastChar = input[input.length - 1];

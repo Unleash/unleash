@@ -4,8 +4,6 @@ import { ILegacyApiTokenCreate } from './models/api-token';
 import { IFlagResolver, IExperimentalOptions, IFlags } from './experimental';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
-export type EventHook = (eventName: string, data: object) => void;
-
 export interface ISSLOption {
     rejectUnauthorized: boolean;
     ca?: string;
@@ -112,7 +110,6 @@ export interface IUnleashOptions {
     enableOAS?: boolean;
     preHook?: Function;
     preRouterHook?: Function;
-    eventHook?: EventHook;
     enterpriseVersion?: string;
     disableLegacyFeaturesApi?: boolean;
     inlineSegmentConstraints?: boolean;
@@ -195,7 +192,6 @@ export interface IUnleashConfig {
     enableOAS: boolean;
     preHook?: Function;
     preRouterHook?: Function;
-    eventHook?: EventHook;
     enterpriseVersion?: string;
     eventBus: EventEmitter;
     disableLegacyFeaturesApi?: boolean;

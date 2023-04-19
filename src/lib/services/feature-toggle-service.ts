@@ -356,6 +356,7 @@ class FeatureToggleService {
             id: featureStrategy.id,
             name: featureStrategy.strategyName,
             title: featureStrategy.title,
+            enabled: featureStrategy.enabled,
             constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
             segments: segments.map((segment) => segment.id) ?? [],
@@ -418,6 +419,7 @@ class FeatureToggleService {
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
                     strategyName: strategyConfig.name,
                     title: strategyConfig.title,
+                    enabled: strategyConfig.enabled,
                     constraints: strategyConfig.constraints || [],
                     parameters: strategyConfig.parameters || {},
                     sortOrder: strategyConfig.sortOrder,
@@ -677,6 +679,8 @@ class FeatureToggleService {
                     name: strat.strategyName,
                     constraints: strat.constraints,
                     parameters: strat.parameters,
+                    title: strat.title,
+                    enabled: strat.enabled,
                     sortOrder: strat.sortOrder,
                     segments,
                 });
@@ -1013,6 +1017,7 @@ class FeatureToggleService {
             parameters: strategy.parameters,
             segments: [],
             title: strategy.title,
+            enabled: strategy.enabled,
         };
 
         if (segments && segments.length > 0) {

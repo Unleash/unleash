@@ -82,8 +82,9 @@ export default class UnleashClient {
             };
         }
 
-        const strategies = feature.strategies.map(
-            (strategySelector): PlaygroundStrategySchema => {
+        const strategies = feature.strategies
+            .filter((strategy) => strategy.enabled)
+            .map((strategySelector): PlaygroundStrategySchema => {
                 const getStrategy = () => {
                     // the application hostname strategy relies on external
                     // variables to calculate its result. As such, we can't
@@ -116,8 +117,7 @@ export default class UnleashClient {
                         segments,
                     ),
                 };
-            },
-        );
+            });
 
         // Feature evaluation
         const overallStrategyResult = () => {

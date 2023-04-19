@@ -13,6 +13,7 @@ export type SegmentForEvaluation = {
 export interface StrategyTransportInterface {
     name: string;
     title?: string;
+    enabled?: string;
     parameters: any;
     constraints: Constraint[];
     segments?: number[];

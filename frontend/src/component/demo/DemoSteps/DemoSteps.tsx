@@ -4,7 +4,7 @@ import Joyride, {
     TooltipRenderProps,
 } from 'react-joyride';
 import { Button, Typography, styled, useTheme } from '@mui/material';
-import { ITutorialTopic, ITutorialTopicStep } from '../Demo';
+import { ITutorialTopic, ITutorialTopicStep } from '../demo-topics';
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -155,7 +155,14 @@ export const DemoSteps = ({
     const onBack = (step: ITutorialTopicStep) => {
         if (step.backCloseModal) {
             (
-                document.querySelector('.MuiModal-backdrop') as HTMLDivElement
+                document.querySelector('.MuiModal-backdrop') as HTMLElement
+            )?.click();
+        }
+        if (step.backCollapseExpanded) {
+            (
+                document.querySelector(
+                    '.Mui-expanded[role="button"]'
+                ) as HTMLElement
             )?.click();
         }
         back();
@@ -226,7 +233,15 @@ export const DemoSteps = ({
             }) => (
                 <StyledTooltip {...tooltipProps}>
                     <StyledTooltipTitle>
-                        {step.title}
+                        <ConditionallyRender
+                            condition={Boolean(step.title)}
+                            show={step.title}
+                            elseShow={
+                                <Typography fontWeight="bold">
+                                    {topics[topic].title}
+                                </Typography>
+                            }
+                        />
                         <ConditionallyRender
                             condition={topics[topic].steps.length > 1}
                             show={

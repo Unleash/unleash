@@ -72,7 +72,7 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                         tooltipProps={{
                             title: 'Edit strategy',
                         }}
-                        data-strategy={strategy.name}
+                        data-edit-strategy={strategy.name}
                     >
                         <Edit />
                     </PermissionIconButton>

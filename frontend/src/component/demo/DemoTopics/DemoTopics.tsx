@@ -9,7 +9,7 @@ import {
     styled,
 } from '@mui/material';
 import { CheckCircle, CircleOutlined, ExpandMore } from '@mui/icons-material';
-import { ITutorialTopic } from '../Demo';
+import { ITutorialTopic } from '../demo-topics';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({

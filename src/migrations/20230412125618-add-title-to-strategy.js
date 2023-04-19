@@ -45,8 +45,6 @@ exports.up = function (db, callback) {
 exports.down = function (db, callback) {
     db.runSql(
         `
-          ALTER TABLE strategies DROP COLUMN IF EXISTS title;
-          ALTER TABLE feature_strategies DROP COLUMN IF EXISTS title;
           DROP VIEW features_view;
           CREATE VIEW features_view AS
           SELECT
@@ -78,6 +76,9 @@ exports.down = function (db, callback) {
                   and feature_strategies.environment = feature_environments.environment
                   LEFT JOIN environments ON feature_environments.environment = environments.name
                   LEFT JOIN feature_strategy_segment as fss ON fss.feature_strategy_id = feature_strategies.id;
+
+          ALTER TABLE strategies DROP COLUMN IF EXISTS title;
+          ALTER TABLE feature_strategies DROP COLUMN IF EXISTS title;
         `,
         callback,
     );

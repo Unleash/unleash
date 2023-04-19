@@ -213,50 +213,75 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "apiTokenSchema": {
         "additionalProperties": false,
+        "description": "An overview of an API token.",
         "properties": {
           "alias": {
+            "description": "Not actively used. Present as a legacy format for identifying older tokens",
+            "example": "some-alias",
             "nullable": true,
             "type": "string",
           },
           "createdAt": {
+            "description": "When the token was created.",
+            "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "environment": {
+            "description": "The environment the token has access to.",
+            "example": "development",
+            "nullable": true,
             "type": "string",
           },
           "expiresAt": {
+            "description": "The token's expiration date.",
+            "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "project": {
+            "description": "The project this token belongs to.",
+            "example": "developerexperience",
             "type": "string",
           },
           "projects": {
+            "description": "The list of projects this token has access to. If the token has access to specific projects they will be listed here. If the token has access to all projects it will be represented as [\`*\`]",
+            "example": [
+              "developerexperience",
+              "enterprisegrowth",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "secret": {
+            "description": "The token used for authentication.",
+            "example": "project:environment.xyzrandomstring",
             "type": "string",
           },
           "seenAt": {
+            "description": "When the token was last seen/used to authenticate with.",
+            "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "type": {
+            "description": "The type of API token",
             "enum": [
               "client",
               "admin",
               "frontend",
             ],
+            "example": "client",
             "type": "string",
           },
           "username": {
+            "description": "The name of the token",
+            "example": "some-user",
             "type": "string",
           },
         },
@@ -268,8 +293,10 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "apiTokensSchema": {
         "additionalProperties": false,
+        "description": "Contains a list of API tokens.",
         "properties": {
           "tokens": {
+            "description": "A list of API tokens.",
             "items": {
               "$ref": "#/components/schemas/apiTokenSchema",
             },
@@ -2000,6 +2027,7 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "healthOverviewSchema": {
         "additionalProperties": false,
+        "description": "An overview of a projects and it's health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)",
         "properties": {
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
@@ -2007,28 +2035,42 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "description": {
+            "description": "The project description",
+            "example": "The project for all things enterprisegrowth",
             "nullable": true,
             "type": "string",
           },
           "environments": {
+            "description": "An array containing the names of all the environments configured for the project.",
+            "example": [
+              "development",
+              "production",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "favorite": {
+            "description": "Indicates if the project has been favourited by the current user requesting the project health overview.",
+            "example": true,
             "type": "boolean",
           },
           "features": {
+            "description": "An array containing an overview of all the features of the project and their individual status",
             "items": {
               "$ref": "#/components/schemas/featureSchema",
             },
             "type": "array",
           },
           "health": {
+            "description": "The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project.",
+            "example": 95,
             "type": "number",
           },
           "members": {
+            "description": "The number of users/members in the project.",
+            "example": 5,
             "type": "number",
           },
           "mode": {
@@ -2041,6 +2083,8 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "name": {
+            "description": "Project name",
+            "example": "enterprisegrowth",
             "type": "string",
           },
           "stats": {
@@ -2048,11 +2092,15 @@ exports[`should serve the OpenAPI spec 1`] = `
             "description": "Project statistics",
           },
           "updatedAt": {
+            "description": "When the project was last updated.",
+            "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "version": {
+            "description": "The project overview version.",
+            "example": 1,
             "type": "number",
           },
         },
@@ -2064,8 +2112,11 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "healthReportSchema": {
         "additionalProperties": false,
+        "description": "A report of the current health of the requested project, with datapoints like counters of currently active, stale, and potentially stale feature toggles.",
         "properties": {
           "activeCount": {
+            "description": "The number of active feature toggles.",
+            "example": 2,
             "type": "number",
           },
           "defaultStickiness": {
@@ -2074,28 +2125,42 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "description": {
+            "description": "The project description",
+            "example": "The project for all things enterprisegrowth",
             "nullable": true,
             "type": "string",
           },
           "environments": {
+            "description": "An array containing the names of all the environments configured for the project.",
+            "example": [
+              "development",
+              "production",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "favorite": {
+            "description": "Indicates if the project has been favourited by the current user requesting the project health overview.",
+            "example": true,
             "type": "boolean",
           },
           "features": {
+            "description": "An array containing an overview of all the features of the project and their individual status",
             "items": {
               "$ref": "#/components/schemas/featureSchema",
             },
             "type": "array",
           },
           "health": {
+            "description": "The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project.",
+            "example": 95,
             "type": "number",
           },
           "members": {
+            "description": "The number of users/members in the project.",
+            "example": 5,
             "type": "number",
           },
           "mode": {
@@ -2108,12 +2173,18 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "name": {
+            "description": "Project name",
+            "example": "enterprisegrowth",
             "type": "string",
           },
           "potentiallyStaleCount": {
+            "description": "The number of potentially stale feature toggles.",
+            "example": 5,
             "type": "number",
           },
           "staleCount": {
+            "description": "The number of stale feature toggles.",
+            "example": 10,
             "type": "number",
           },
           "stats": {
@@ -2121,11 +2192,15 @@ exports[`should serve the OpenAPI spec 1`] = `
             "description": "Project statistics",
           },
           "updatedAt": {
+            "description": "When the project was last updated.",
+            "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "version": {
+            "description": "The project overview version.",
+            "example": 1,
             "type": "number",
           },
         },
@@ -2916,12 +2991,17 @@ exports[`should serve the OpenAPI spec 1`] = `
         "type": "object",
       },
       "projectEnvironmentSchema": {
-        "additionalProperties": false,
+        "description": "Add an environment to a project, optionally also sets if change requests are enabled for this environment on the project",
         "properties": {
           "changeRequestsEnabled": {
+            "description": "Should change requests be enabled or not for this environment on the project",
+            "example": true,
+            "nullable": true,
             "type": "boolean",
           },
           "environment": {
+            "description": "The environment to add to the project",
+            "example": "development",
             "type": "string",
           },
         },
@@ -6312,6 +6392,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects": {
       "get": {
+        "description": "This endpoint returns an list of all the projects in the Unleash instance.",
         "operationId": "getProjects",
         "responses": {
           "200": {
@@ -6324,7 +6405,14 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "projectsSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
+        "summary": "Get a list of all projects.",
         "tags": [
           "Projects",
         ],
@@ -6332,6 +6420,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}": {
       "get": {
+        "description": "This endpoint returns an overview of the specified projects.",
         "operationId": "getProjectOverview",
         "parameters": [
           {
@@ -6354,7 +6443,17 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "projectOverviewSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Get an overview of a project.",
         "tags": [
           "Projects",
         ],
@@ -6362,6 +6461,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/api-tokens": {
       "get": {
+        "description": "Returns the [project API tokens](https://docs.getunleash.io/how-to/how-to-create-project-api-tokens) that have been created for this project.",
         "operationId": "getProjectApiTokens",
         "parameters": [
           {
@@ -6384,12 +6484,20 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "apiTokensSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
+        "summary": "Get api tokens for project.",
         "tags": [
           "Projects",
         ],
       },
       "post": {
+        "description": "Endpoint that allows creation of [project API tokens](https://docs.getunleash.io/how-to/how-to-create-project-api-tokens) for the specified project.",
         "operationId": "createProjectApiToken",
         "parameters": [
           {
@@ -6435,7 +6543,14 @@ If the provided project does not exist, the list of events will be empty.",
           "400": {
             "description": "This response has no body.",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
+        "summary": "Create a project API token.",
         "tags": [
           "Projects",
         ],
@@ -6443,6 +6558,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/api-tokens/{token}": {
       "delete": {
+        "description": "Endpoint that allows deletion of a project API token.",
         "operationId": "deleteProjectApiToken",
         "parameters": [
           {
@@ -6466,7 +6582,14 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
+        "summary": "Delete a project API token.",
         "tags": [
           "Projects",
         ],
@@ -6546,6 +6669,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/environments": {
       "post": {
+        "description": "This endpoint adds the provided environment to the specified project, with optional support for enabling and disabling change requests for the environment and project.",
         "operationId": "addEnvironmentToProject",
         "parameters": [
           {
@@ -6572,7 +6696,17 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "409": {
+            "description": "The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.",
+          },
         },
+        "summary": "Add an environment to a project.",
         "tags": [
           "Projects",
         ],
@@ -6580,6 +6714,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/environments/{environment}": {
       "delete": {
+        "description": "This endpoint removes the provided environment to the specified project, with optional support for enabling and disabling change requests for the environment and project.",
         "operationId": "removeEnvironmentFromProject",
         "parameters": [
           {
@@ -6603,7 +6738,17 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "description": "This response has no body.",
           },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
+        "summary": "Remove a environment to a project.",
         "tags": [
           "Projects",
         ],
@@ -7896,6 +8041,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/health-report": {
       "get": {
+        "description": "This endpoint returns a health report for the specified project. This data is used for [the technical debt dashboard](https://docs.getunleash.io/reference/technical-debt#the-technical-debt-dashboard)",
         "operationId": "getProjectHealthReport",
         "parameters": [
           {
@@ -7918,7 +8064,17 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "healthReportSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Get a health report for a project.",
         "tags": [
           "Projects",
         ],

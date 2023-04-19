@@ -29,9 +29,10 @@ export const FeatureStrategyTitle: VFC<IFeatureStrategyTitleProps> = ({
             </Typography>
             <Input
                 label="Strategy title"
-                id="groupId-input"
+                id="title-input"
                 value={title}
                 onChange={e => setTitle(e.target.value)}
+                sx={{ width: '100%' }}
             />
         </Box>
     );

@@ -170,6 +170,7 @@ export const DemoSteps = ({
         if (href && location.pathname !== href) {
             navigate(href);
         }
+        currentTopic.setup?.();
 
         setTimeout(() => {
             setRun(true);

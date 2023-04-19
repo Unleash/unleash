@@ -8,6 +8,7 @@ import { DemoTopics } from './DemoTopics/DemoTopics';
 import { DemoSteps } from './DemoSteps/DemoSteps';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { createLocalStorage } from 'utils/createLocalStorage';
+import { gradualRollout } from './demo-setup';
 
 export interface ITutorialTopicStep extends Step {
     href?: string;
@@ -19,6 +20,7 @@ export interface ITutorialTopicStep extends Step {
 
 export interface ITutorialTopic {
     title: string;
+    setup?: () => void;
     steps: ITutorialTopicStep[];
 }
 
@@ -171,30 +173,22 @@ const TOPICS: ITutorialTopic[] = [
     },
     {
         title: 'Adjust gradual rollout',
+        setup: gradualRollout,
         steps: [
             {
                 href: '/projects/default',
-                target: 'div[data-key="demoApp.step1-default"]',
+                target: 'a[href="/projects/default/features/demoApp.step3"]',
                 title: (
                     <Typography fontWeight="bold">
                         Adjust gradual rollout
                     </Typography>
                 ),
                 content: (
-                    <>
-                        <Typography variant="body2" color="text.secondary">
-                            The simplest way to use a feature toggle is to
-                            enable or disable it for everyone (on/off).
-                        </Typography>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
-                            Look at the demo page when toggling!
-                        </Badge>
-                    </>
+                    <Typography variant="body2" color="text.secondary">
+                        First, let's open the feature toggle configuration.
+                    </Typography>
                 ),
-                nextButton: true,
+                preventDefault: true,
             },
         ],
     },

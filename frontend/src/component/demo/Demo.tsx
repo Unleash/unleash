@@ -177,7 +177,7 @@ const TOPICS: ITutorialTopic[] = [
                 target: 'div[data-key="demoApp.step1-default"]',
                 title: (
                     <Typography fontWeight="bold">
-                        Enable/disable a feature toggle
+                        Adjust gradual rollout
                     </Typography>
                 ),
                 content: (

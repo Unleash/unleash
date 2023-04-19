@@ -5,7 +5,7 @@ import Joyride, {
 } from 'react-joyride';
 import { Button, Typography, styled, useTheme } from '@mui/material';
 import { ITutorialTopic, ITutorialTopicStep } from '../Demo';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -67,8 +67,12 @@ export const DemoSteps = ({
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
+    const [flow, setFlow] = useState<'next' | 'back'>('next');
+
+    const abortController = new AbortController();
 
     const skip = () => {
+        abortController.abort();
         setTopic(-1);
         setExpanded(false);
     };
@@ -82,6 +86,7 @@ export const DemoSteps = ({
     };
 
     const back = () => {
+        setFlow('back');
         if (steps[topic] === 0) {
             const newTopic = topic - 1;
             setTopic(newTopic);
@@ -103,6 +108,7 @@ export const DemoSteps = ({
     };
 
     const next = (index = steps[topic]) => {
+        setFlow('next');
         setStep(topic, index + 1);
         if (index === topics[topic].steps.length - 1) {
             nextTopic();
@@ -131,14 +137,14 @@ export const DemoSteps = ({
                                 e.preventDefault();
                             }
                         },
-                        { once: true }
+                        { once: true, signal: abortController.signal }
                     );
                 }
             }
         }
 
         if (run && !document.querySelector(step.target as string)) {
-            if (step.optional) {
+            if (step.optional && flow === 'next') {
                 next();
             } else {
                 back();

@@ -20,13 +20,16 @@ export const Demo = () => {
     const { uiConfig } = useUiConfig();
     const [loaded, setLoaded] = useState(false);
     const [expanded, setExpanded] = useState(storedProgress.expanded ?? true);
-    const [run, setRun] = useState(storedProgress.run ?? false);
+    const [run, setRun] = useState(false);
     const [topic, setTopic] = useState(storedProgress.topic ?? 0);
     const [steps, setSteps] = useState(storedProgress.steps ?? [0]);
 
     useEffect(() => {
         setTimeout(() => {
             setLoaded(true);
+            if (storedProgress.run) {
+                setRun(true);
+            }
         }, 1000);
     }, []);
 

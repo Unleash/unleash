@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Badge } from 'component/common/Badge/Badge';
 import { Step } from 'react-joyride';
-import { gradualRollout } from './demo-setup';
+import { gradualRollout, variants } from './demo-setup';
 
 export interface ITutorialTopicStep extends Step {
     href?: string;
@@ -10,12 +10,13 @@ export interface ITutorialTopicStep extends Step {
     backCloseModal?: boolean;
     backCollapseExpanded?: boolean;
     preventDefault?: boolean;
+    anyClick?: boolean;
     optional?: boolean;
 }
 
 export interface ITutorialTopic {
     title: string;
-    setup?: () => void;
+    setup?: () => Promise<void>;
     steps: ITutorialTopicStep[];
 }
 
@@ -52,7 +53,8 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'a[href="/projects/default/features/demoApp.step2"]',
                 content: (
                     <Typography variant="body2" color="text.secondary">
-                        First, let's open the feature toggle configuration.
+                        First, let's open the feature toggle configuration for{' '}
+                        <Badge as="span">demoApp.step2</Badge>.
                     </Typography>
                 ),
                 preventDefault: true,
@@ -71,7 +73,8 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'a[href="/projects/default/features/demoApp.step2/strategies/create?environmentId=default&strategyName=userWithId"]',
                 content: (
                     <Typography variant="body2" color="text.secondary">
-                        Select the UserIDs strategy type.
+                        Select the <Badge as="span">UserIDs</Badge> strategy
+                        type.
                     </Typography>
                 ),
                 backCloseModal: true,
@@ -79,9 +82,17 @@ export const TOPICS: ITutorialTopic[] = [
             {
                 target: '#input-add-items',
                 content: (
-                    <Typography variant="body2" color="text.secondary">
-                        Enter the userID you see on the demo app.
-                    </Typography>
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            Enter your <Badge as="span">userId</Badge>.
+                        </Typography>
+                        <Badge
+                            sx={{ marginTop: 2 }}
+                            icon={<InfoOutlinedIcon />}
+                        >
+                            You can find your userId on the demo page.
+                        </Badge>
+                    </>
                 ),
                 nextButton: true,
                 backCloseModal: true,
@@ -130,7 +141,8 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'a[href="/projects/default/features/demoApp.step3"]',
                 content: (
                     <Typography variant="body2" color="text.secondary">
-                        First, let's open the feature toggle configuration.
+                        First, let's open the feature toggle configuration for{' '}
+                        <Badge as="span">demoApp.step3</Badge>.
                     </Typography>
                 ),
                 preventDefault: true,
@@ -200,25 +212,152 @@ export const TOPICS: ITutorialTopic[] = [
     },
     {
         title: 'Adjust variants',
+        setup: variants,
         steps: [
             {
                 href: '/projects/default',
-                target: 'div[data-key="demoApp.step1-default"]',
+                target: 'a[href="/projects/default/features/demoApp.step4"]',
+                content: (
+                    <Typography variant="body2" color="text.secondary">
+                        First, let's open the feature toggle configuration for{' '}
+                        <Badge as="span">demoApp.step4</Badge>.
+                    </Typography>
+                ),
+                preventDefault: true,
+            },
+            {
+                href: '/projects/default/features/demoApp.step4',
+                target: 'button[data-tab="Variants"]',
+                content: (
+                    <Typography variant="body2" color="text.secondary">
+                        Select the variants tab.
+                    </Typography>
+                ),
+            },
+            {
+                target: 'button[data-testid="EDIT_VARIANTS_BUTTON"]',
+                content: (
+                    <Typography variant="body2" color="text.secondary">
+                        Edit the existing variants.
+                    </Typography>
+                ),
+            },
+            {
+                target: 'button[data-testid="MODAL_ADD_VARIANT_BUTTON"]',
+                content: (
+                    <Typography variant="body2" color="text.secondary">
+                        Add a new variant to the list.
+                    </Typography>
+                ),
+                backCloseModal: true,
+            },
+            {
+                target: 'div[data-testid="variant_list"] > div:last-of-type input',
                 content: (
                     <>
                         <Typography variant="body2" color="text.secondary">
-                            The simplest way to use a feature toggle is to
-                            enable or disable it for everyone (on/off).
+                            Enter a new variant name.
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ mt: 1 }}
+                        >
+                            We recommend choosing a{' '}
+                            <a
+                                href="https://developer.mozilla.org/en-US/docs/Web/CSS/named-color"
+                                target="_blank"
+                            >
+                                color
+                            </a>
+                            .
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Example: <Badge as="span">aqua</Badge>.
+                        </Typography>
+                    </>
+                ),
+                backCloseModal: true,
+                nextButton: true,
+            },
+            {
+                target: 'div[data-testid="variant_list"] > div:last-of-type input[name="variant-payload-value"]',
+                content: (
+                    <Typography variant="body2" color="text.secondary">
+                        Enter the{' '}
+                        <a
+                            href="https://developer.mozilla.org/en-US/docs/Web/CSS/named-color"
+                            target="_blank"
+                        >
+                            color
+                        </a>{' '}
+                        you chose on the previous step as the payload.
+                    </Typography>
+                ),
+                nextButton: true,
+            },
+            {
+                target: 'div[data-testid="variant_list"] > div:last-of-type > div:last-of-type > button',
+                content: (
+                    <Typography variant="body2" color="text.secondary">
+                        Let's also add an override for our user.
+                    </Typography>
+                ),
+            },
+            {
+                target: 'div[data-testid="variant_list"] > div:last-of-type div[data-testid="context_field"]',
+                content: (
+                    <Typography variant="body2" color="text.secondary">
+                        Choose a context field.
+                    </Typography>
+                ),
+                anyClick: true,
+                backCloseModal: true,
+            },
+            {
+                target: 'li[data-testid="SELECT_ITEM_ID-userId"]',
+                content: (
+                    <Typography variant="body2" color="text.secondary">
+                        Select the <Badge as="span">userId</Badge> context
+                        field.
+                    </Typography>
+                ),
+                placement: 'right',
+                backCloseModal: true,
+            },
+            {
+                target: 'div[data-testid="variant_list"] > div:last-of-type input[name="values"]',
+                content: (
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            Enter your <Badge as="span">userId</Badge>.
                         </Typography>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
                         >
-                            Look at the demo page when toggling!
+                            You can find your userId on the demo page.
                         </Badge>
                     </>
                 ),
                 nextButton: true,
+                backCloseModal: true,
+            },
+            {
+                target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
+                content: (
+                    <>
+                        <Typography variant="body2" color="text.secondary">
+                            Save your variants to apply them.
+                        </Typography>
+                        <Badge
+                            sx={{ marginTop: 2 }}
+                            icon={<InfoOutlinedIcon />}
+                        >
+                            Look at the demo page after saving!
+                        </Badge>
+                    </>
+                ),
             },
         ],
     },

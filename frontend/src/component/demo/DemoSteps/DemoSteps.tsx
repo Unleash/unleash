@@ -129,16 +129,23 @@ export const DemoSteps = ({
                     block: 'center',
                 });
                 if (!step.nextButton) {
-                    el.addEventListener(
-                        'click',
-                        e => {
-                            next(index);
-                            if (step.preventDefault) {
-                                e.preventDefault();
-                            }
-                        },
-                        { once: true, signal: abortController.signal }
-                    );
+                    const clickHandler = (e: Event) => {
+                        abortController.abort();
+                        next(index);
+                        if (step.preventDefault) {
+                            e.preventDefault();
+                        }
+                    };
+
+                    if (step.anyClick) {
+                        window.addEventListener('click', clickHandler, {
+                            signal: abortController.signal,
+                        });
+                    } else {
+                        el.addEventListener('click', clickHandler, {
+                            signal: abortController.signal,
+                        });
+                    }
                 }
             }
         }

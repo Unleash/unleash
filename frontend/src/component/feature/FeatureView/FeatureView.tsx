@@ -225,6 +225,7 @@ export const FeatureView = () => {
                                 label={tab.title}
                                 value={tab.path}
                                 onClick={() => navigate(tab.path)}
+                                data-tab={tab.title}
                             />
                         ))}
                     </Tabs>

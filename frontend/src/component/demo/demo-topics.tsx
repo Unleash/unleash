@@ -377,7 +377,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
-                target: 'div[data-testid="variant_list"] > div:last-of-type input',
+                target: 'div[data-testid="VARIANT"]:last-of-type div[data-testid="VARIANT_NAME_INPUT"]',
                 content: (
                     <>
                         <Typography variant="body2" color="text.secondary">
@@ -406,7 +406,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                target: 'div[data-testid="variant_list"] > div:last-of-type input[name="variant-payload-value"]',
+                target: 'div[data-testid="VARIANT"]:last-of-type #variant-payload-value',
                 content: (
                     <Typography variant="body2" color="text.secondary">
                         Enter the{' '}
@@ -422,7 +422,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                target: 'div[data-testid="variant_list"] > div:last-of-type > div:last-of-type > button',
+                target: 'div[data-testid="VARIANT"]:last-of-type button[data-testid="VARIANT_ADD_OVERRIDE_BUTTON"]',
                 content: (
                     <Typography variant="body2" color="text.secondary">
                         Let's also add an override for our user.
@@ -430,7 +430,7 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
             },
             {
-                target: 'div[data-testid="variant_list"] > div:last-of-type div[data-testid="context_field"]',
+                target: 'div[data-testid="VARIANT"]:last-of-type #override-context-name',
                 content: (
                     <Typography variant="body2" color="text.secondary">
                         Choose a context field.
@@ -451,7 +451,7 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
-                target: 'div[data-testid="variant_list"] > div:last-of-type input[name="values"]',
+                target: 'div[data-testid="VARIANT"]:last-of-type div[data-testid="OVERRIDE_VALUES"]',
                 content: (
                     <>
                         <Typography variant="body2" color="text.secondary">

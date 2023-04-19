@@ -373,7 +373,7 @@ export const EnvironmentVariantsModal = ({
                             />
                         }
                     />
-                    <StyledVariantForms data-testid="variant_list">
+                    <StyledVariantForms>
                         {variantsEdit.map(variant => (
                             <VariantForm
                                 key={variant.id}

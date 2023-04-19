@@ -141,6 +141,7 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
                                         placeholder=""
                                         values={override.values}
                                         updateValues={updateValues(index)}
+                                        data-testid="OVERRIDE_VALUES"
                                     />
                                 }
                             />

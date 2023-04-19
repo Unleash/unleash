@@ -27,6 +27,7 @@ import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -47,6 +48,7 @@ export const FeatureStrategyEdit = () => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
+    const { trackEvent } = usePlausibleTracker();
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
 
@@ -100,6 +102,13 @@ export const FeatureStrategyEdit = () => {
             strategyId,
             payload
         );
+
+        trackEvent('strategyTitle', {
+            props: {
+                hasTitle: Boolean(strategy.title),
+                on: 'edit',
+            },
+        });
 
         await refetchSavedStrategySegments();
         setToastData({

@@ -8,6 +8,7 @@ import {
     emptyResponse,
     resourceCreatedResponseSchema,
 } from '../../../openapi';
+import { getStandardResponses } from '../../../openapi/util/standard-responses';
 import User from '../../../types/user';
 import {
     ADMIN,
@@ -81,8 +82,12 @@ export class ProjectApiTokenController extends Controller {
                 openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'getProjectApiTokens',
+                    summary: 'Get api tokens for project.',
+                    description:
+                        'Returns the [project API tokens](https://docs.getunleash.io/how-to/how-to-create-project-api-tokens) that have been created for this project.',
                     responses: {
                         200: createResponseSchema('apiTokensSchema'),
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -98,9 +103,13 @@ export class ProjectApiTokenController extends Controller {
                     tags: ['Projects'],
                     operationId: 'createProjectApiToken',
                     requestBody: createRequestSchema('createApiTokenSchema'),
+                    summary: 'Create a project API token.',
+                    description:
+                        'Endpoint that allows creation of [project API tokens](https://docs.getunleash.io/how-to/how-to-create-project-api-tokens) for the specified project.',
                     responses: {
                         201: resourceCreatedResponseSchema('apiTokenSchema'),
                         400: emptyResponse,
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -116,8 +125,12 @@ export class ProjectApiTokenController extends Controller {
                 openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'deleteProjectApiToken',
+                    summary: 'Delete a project API token.',
+                    description:
+                        'Endpoint that allows deletion of a project API token.',
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],

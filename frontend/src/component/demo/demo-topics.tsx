@@ -59,7 +59,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: '/projects/default',
-                target: 'div[data-key="demoApp.step1-default"]',
+                target: 'div[data-testid="TOGGLE-demoApp.step1-default"]',
                 content: (
                     <>
                         <Typography variant="body2" color="text.secondary">
@@ -254,7 +254,7 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
             },
             {
-                target: 'div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_default"].Mui-expanded a[data-edit-strategy="flexibleRollout"]',
+                target: 'div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_default"].Mui-expanded a[data-testid="STRATEGY_EDIT-flexibleRollout"]',
                 content: (
                     <Typography variant="body2" color="text.secondary">
                         Edit the existing gradual rollout strategy.
@@ -352,7 +352,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: '/projects/default/features/demoApp.step4',
-                target: 'button[data-tab="Variants"]',
+                target: 'button[data-testid="TAB-Variants"]',
                 content: (
                     <Typography variant="body2" color="text.secondary">
                         Select the variants tab.

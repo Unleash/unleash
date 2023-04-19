@@ -301,7 +301,7 @@ const loadEnvironmentEnableOverrides = () => {
 };
 
 const parseCspConfig = (
-    cspConfig: ICspDomainOptions | undefined,
+    cspConfig?: ICspDomainOptions,
 ): ICspDomainConfig | undefined => {
     if (!cspConfig) {
         return undefined;

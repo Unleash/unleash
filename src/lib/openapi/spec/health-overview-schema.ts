@@ -14,16 +14,23 @@ export const healthOverviewSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'name'],
+    description: `An overview of a projects and it's health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)`,
     properties: {
         version: {
             type: 'number',
+            description: 'The project overview version.',
+            example: 1,
         },
         name: {
             type: 'string',
+            description: 'Project name',
+            example: 'enterprisegrowth',
         },
         description: {
             type: 'string',
             nullable: true,
+            description: 'The project description',
+            example: 'The project for all things enterprisegrowth',
         },
         defaultStickiness: {
             type: 'string',
@@ -40,29 +47,44 @@ export const healthOverviewSchema = {
         },
         members: {
             type: 'number',
+            description: 'The number of users/members in the project.',
+            example: 5,
         },
         health: {
             type: 'number',
+            description:
+                'The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project.',
+            example: 95,
         },
         environments: {
             type: 'array',
             items: {
                 type: 'string',
             },
+            description:
+                'An array containing the names of all the environments configured for the project.',
+            example: ['development', 'production'],
         },
         features: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/featureSchema',
             },
+            description:
+                'An array containing an overview of all the features of the project and their individual status',
         },
         updatedAt: {
             type: 'string',
             format: 'date-time',
             nullable: true,
+            description: 'When the project was last updated.',
+            example: '2023-04-19T08:15:14.000Z',
         },
         favorite: {
             type: 'boolean',
+            description:
+                'Indicates if the project has been favourited by the current user requesting the project health overview.',
+            example: true,
         },
         stats: {
             $ref: '#/components/schemas/projectStatsSchema',

@@ -3297,6 +3297,11 @@ The provider you choose for your addon dictates what properties the \`parameters
             },
             "type": "array",
           },
+          "title": {
+            "description": "Description of the feature's purpose.",
+            "example": "Beta rollout",
+            "type": "string",
+          },
         },
         "required": [
           "id",

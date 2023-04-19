@@ -138,6 +138,7 @@ export const TOPICS: ITutorialTopic[] = [
                         type.
                     </Typography>
                 ),
+                placement: 'right',
                 backCloseModal: true,
             },
             {

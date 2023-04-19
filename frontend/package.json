@@ -4,10 +4,10 @@
   "private": true,
   "files": [
     "index.js",
-    "build/"
+    "build"
   ],
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   },
   "scripts": {
     "build": "vite build",
@@ -17,19 +17,19 @@
     "start:demo2": "UNLEASH_API=https://sandbox.getunleash.io/ UNLEASH_BASE_PATH=/demo2/ yarn run start",
     "start:enterprise": "UNLEASH_API=https://unleash.herokuapp.com VITE_TEST_REDIRECT=true yarn run start",
     "start:demo": "UNLEASH_BASE_PATH=/demo/ UNLEASH_API=https://app.unleash-hosted.com/ yarn run start",
-    "test": "tsc && vitest run",
-    "test:snapshot": "yarn test -u",
-    "test:watch": "vitest watch",
+    "test": "tsc && NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest run",
+    "test:snapshot": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn test -u",
+    "test:watch": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest watch",
     "lint": "eslint --fix ./src",
     "lint:check": "eslint ./src",
     "fmt": "prettier src --write --loglevel warn",
     "fmt:check": "prettier src --check",
     "ts:check": "tsc",
-    "e2e": "yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
-    "e2e:heroku": "yarn run cypress open --config baseUrl='https://unleash.herokuapp.com' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
-    "gen:api": "orval --config orval.config.js",
-    "gen:api:demo": "UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
-    "gen:api:sandbox": "UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
+    "e2e": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
+    "e2e:heroku": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn run cypress open --config baseUrl='https://unleash.herokuapp.com' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
+    "gen:api": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" orval --config orval.config.js",
+    "gen:api:demo": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
+    "gen:api:sandbox": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
     "prepare": "yarn run build"
   },
   "devDependencies": {
@@ -50,7 +50,7 @@
     "@types/lodash.clonedeep": "4.5.7",
     "@types/lodash.omit": "4.5.7",
     "@types/node": "17.0.18",
-    "@types/react": "17.0.56",
+    "@types/react": "17.0.57",
     "@types/react-dom": "17.0.19",
     "@types/react-linkify": "1.0.1",
     "@types/react-router-dom": "5.3.3",
@@ -66,8 +66,10 @@
     "chartjs-adapter-date-fns": "3.0.0",
     "classnames": "2.3.2",
     "copy-to-clipboard": "3.3.3",
+    "countries-and-timezones": "^3.4.0",
     "cypress": "9.7.0",
     "date-fns": "2.29.3",
+    "date-fns-tz": "^2.0.0",
     "debounce": "1.2.1",
     "deep-diff": "1.0.2",
     "dequal": "2.0.3",
@@ -92,7 +94,9 @@
     "react-dropzone": "14.2.3",
     "react-error-boundary": "3.1.4",
     "react-hooks-global-state": "2.1.0",
+    "react-joyride": "^2.5.3",
     "react-markdown": "^8.0.4",
+    "react-linkify": "^1.0.0-alpha",
     "react-router-dom": "6.8.1",
     "react-table": "7.8.0",
     "react-test-renderer": "17.0.2",
@@ -107,10 +111,7 @@
     "vite-plugin-svgr": "2.4.0",
     "vite-tsconfig-paths": "4.0.5",
     "vitest": "0.28.5",
-    "whatwg-fetch": "3.6.2",
-    "countries-and-timezones": "^3.4.0",
-    "date-fns-tz": "^2.0.0",
-    "react-linkify": "^1.0.0-alpha"
+    "whatwg-fetch": "3.6.2"
   },
   "optionalDependencies": {
     "orval": "^6.10.3"
@@ -119,7 +120,7 @@
     "@codemirror/state": "6.2.0",
     "@xmldom/xmldom": "^0.8.4",
     "json5": "^2.2.2",
-    "@types/react": "17.0.56",
+    "@types/react": "17.0.57",
     "@types/react-dom": "17.0.19"
   },
   "jest": {

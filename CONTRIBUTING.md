@@ -86,7 +86,7 @@ You'll need:
    ```bash
    docker run \
        -e POSTGRES_USER=unleash_user \
-       -e POSTGRES_PASSWORD=passord \
+       -e POSTGRES_PASSWORD=password \
        -e POSTGRES_DB=unleash \
        --name postgres \
        -p 5432:5432 \
@@ -119,7 +119,7 @@ You'll need:
 3. Start a Postgres database. Make sure to use the network you created in step 2.
 
 ```sh
-docker run -e POSTGRES_PASSWORD=passord \
+docker run -e POSTGRES_PASSWORD=password \
   -e POSTGRES_USER=unleash_user -e POSTGRES_DB=unleash \
   --network unleash --name postgres postgres
 ```
@@ -129,7 +129,7 @@ docker run -e POSTGRES_PASSWORD=passord \
 ```sh
 docker run -p 4242:4242 \
   -e DATABASE_HOST=postgres -e DATABASE_NAME=unleash \
-  -e DATABASE_USERNAME=unleash_user -e DATABASE_PASSWORD=passord \
+  -e DATABASE_USERNAME=unleash_user -e DATABASE_PASSWORD=password \
   -e DATABASE_SSL=false \
   --network unleash unleash:local
 ```

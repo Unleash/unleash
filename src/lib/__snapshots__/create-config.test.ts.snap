@@ -89,6 +89,7 @@ exports[`should create default config 1`] = `
       "projectScopedSegments": false,
       "projectScopedStickiness": false,
       "responseTimeWithAppNameKillSwitch": false,
+      "strategyTitle": false,
       "strictSchemaValidation": false,
     },
   },
@@ -116,6 +117,7 @@ exports[`should create default config 1`] = `
       "projectScopedSegments": false,
       "projectScopedStickiness": false,
       "responseTimeWithAppNameKillSwitch": false,
+      "strategyTitle": false,
       "strictSchemaValidation": false,
     },
     "externalResolver": {

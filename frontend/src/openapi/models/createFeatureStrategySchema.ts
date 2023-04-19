@@ -7,9 +7,15 @@ import type { ConstraintSchema } from './constraintSchema';
 import type { ParametersSchema } from './parametersSchema';
 
 export interface CreateFeatureStrategySchema {
+    /** The name or type of strategy */
     name: string;
+    /** A descriptive title for the strategy */
+    title?: string | null;
+    /** The order of the strategy in the list */
     sortOrder?: number;
+    /** A list of the constraints attached to the strategy */
     constraints?: ConstraintSchema[];
+    /** An object containing the parameters for the strategy */
     parameters?: ParametersSchema;
     /** Ids of segments to use for this strategy */
     segments?: number[];

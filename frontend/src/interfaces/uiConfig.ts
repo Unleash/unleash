@@ -52,6 +52,7 @@ export interface IFlags {
     projectScopedStickiness?: boolean;
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
+    strategyTitle?: boolean;
 }
 
 export interface IVersionInfo {

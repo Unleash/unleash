@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "4.23.0-beta.49",
+  "version": "4.23.0-beta.59",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -11,7 +11,10 @@
   "files": [
     "dist",
     "docs",
-    "frontend/build"
+    "frontend/build",
+    "frontend/build/*",
+    "frontend/index.js",
+    "frontend/package.json"
   ],
   "repository": {
     "type": "git",
@@ -22,7 +25,7 @@
   },
   "types": "./dist/lib/server-impl.d.ts",
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   },
   "license": "Apache-2.0",
   "main": "./dist/lib/server-impl.js",
@@ -113,7 +116,7 @@
     "joi": "^17.3.0",
     "js-sha256": "^0.9.0",
     "js-yaml": "^4.1.0",
-    "json-schema-to-ts": "2.6.0",
+    "json-schema-to-ts": "2.7.2",
     "json2csv": "^5.0.7",
     "knex": "^2.4.2",
     "log4js": "^6.0.0",
@@ -139,7 +142,6 @@
     "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
     "unleash-client": "3.18.1",
-    "use-deep-compare-effect": "^1.8.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

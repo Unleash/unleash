@@ -6182,6 +6182,12 @@ If the provided project does not exist, the list of events will be empty.",
           "401": {
             "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
           },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
         "summary": "Get all tags for a feature.",
         "tags": [

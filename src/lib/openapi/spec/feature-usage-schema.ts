@@ -14,13 +14,20 @@ export const featureUsageSchema = {
     ],
     properties: {
         version: {
-            type: 'number',
+            description: 'The version of this schema',
+            type: 'integer',
+            minimum: 1,
         },
         maturity: {
+            description:
+                'The maturity level of this API (alpha, beta, stable, deprecated)',
             type: 'string',
+            example: 'stable',
         },
         featureName: {
+            description: 'The name of the feature',
             type: 'string',
+            example: 'my.special.feature',
         },
         lastHourUsage: {
             type: 'array',
@@ -29,10 +36,12 @@ export const featureUsageSchema = {
             },
         },
         seenApplications: {
+            description: 'A list of applications seen using this feature',
             type: 'array',
             items: {
                 type: 'string',
             },
+            examples: ['accounting', 'billing', 'booking'],
         },
     },
     components: {

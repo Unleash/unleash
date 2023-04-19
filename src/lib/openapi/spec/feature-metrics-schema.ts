@@ -8,10 +8,15 @@ export const featureMetricsSchema = {
     required: ['version', 'maturity', 'data'],
     properties: {
         version: {
-            type: 'number',
+            description: 'The version of this schema',
+            type: 'integer',
+            minimum: 1,
         },
         maturity: {
+            description:
+                'The maturity level of this API (alpha, beta, stable, deprecated)',
             type: 'string',
+            example: 'stable',
         },
         data: {
             type: 'array',

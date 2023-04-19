@@ -45,12 +45,15 @@ export default class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'addEnvironmentToProject',
+                    summary: 'Add an environment to a project.',
+                    description:
+                        'This endpoint adds the provided environment to the specified project, with optional support for enabling and disabling change requests for the environment and project.',
                     requestBody: createRequestSchema(
                         'projectEnvironmentSchema',
                     ),
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(401, 403),
+                        ...getStandardResponses(401, 403, 409),
                     },
                 }),
             ],
@@ -66,9 +69,12 @@ export default class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'removeEnvironmentFromProject',
+                    summary: 'Remove a environment to a project.',
+                    description:
+                        'This endpoint removes the provided environment to the specified project, with optional support for enabling and disabling change requests for the environment and project.',
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(401, 403),
+                        ...getStandardResponses(400, 401, 403),
                     },
                 }),
             ],

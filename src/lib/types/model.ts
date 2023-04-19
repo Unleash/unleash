@@ -28,6 +28,7 @@ export interface IStrategyConfig {
     parameters?: { [key: string]: string };
     sortOrder?: number;
     title?: string | null;
+    enabled?: boolean;
 }
 export interface IFeatureStrategy {
     id: string;
@@ -41,6 +42,7 @@ export interface IFeatureStrategy {
     createdAt?: Date;
     segments?: number[];
     title?: string | null;
+    enabled?: boolean;
 }
 
 export interface FeatureToggleDTO {

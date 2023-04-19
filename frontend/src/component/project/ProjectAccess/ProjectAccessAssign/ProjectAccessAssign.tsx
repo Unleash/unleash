@@ -257,7 +257,7 @@ export const ProjectAccessAssign = ({
     };
 
     const createRootGroupWarning = (group?: IGroup): string | undefined => {
-        if (group && !group.rootRole) {
+        if (group && !!group.rootRole) {
             return 'This group has an Admin or Editor role associated with it. Groups with a root role association cannot be assigned to projects, and users in this group already have the role applied globally.';
         }
     };
@@ -367,7 +367,7 @@ export const ProjectAccessAssign = ({
                                     if (option.type === ENTITY_TYPE.GROUP) {
                                         const optionGroup =
                                             option.entity as IGroup;
-                                        return !optionGroup.rootRole;
+                                        return !!optionGroup.rootRole;
                                     }
                                     return false;
                                 }}

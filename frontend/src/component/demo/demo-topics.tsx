@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Typography, TypographyProps } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Badge } from 'component/common/Badge/Badge';
 import { Step } from 'react-joyride';
@@ -20,6 +20,10 @@ export interface ITutorialTopic {
     steps: ITutorialTopicStep[];
 }
 
+const Description = (props: TypographyProps) => (
+    <Typography variant="body2" color="text.secondary" {...props} />
+);
+
 export const TOPICS: ITutorialTopic[] = [
     {
         title: 'Enable/disable a feature toggle',
@@ -30,7 +34,7 @@ export const TOPICS: ITutorialTopic[] = [
                 placement: 'center',
                 content: (
                     <>
-                        <Typography variant="body2" color="text.secondary">
+                        <Description>
                             <a
                                 href="https://docs.getunleash.io/reference/feature-toggles"
                                 target="_blank"
@@ -38,12 +42,8 @@ export const TOPICS: ITutorialTopic[] = [
                                 Feature toggles
                             </a>{' '}
                             are the central concept of Unleash.
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ mt: 1 }}
-                        >
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
                             Feature toggles are organized within{' '}
                             <a
                                 href="https://docs.getunleash.io/reference/projects"
@@ -52,7 +52,7 @@ export const TOPICS: ITutorialTopic[] = [
                                 projects
                             </a>
                             .
-                        </Typography>
+                        </Description>
                     </>
                 ),
                 nextButton: true,
@@ -62,10 +62,10 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'div[data-testid="TOGGLE-demoApp.step1-default"]',
                 content: (
                     <>
-                        <Typography variant="body2" color="text.secondary">
+                        <Description>
                             The simplest way to use a feature toggle is to
                             enable or disable it for everyone (on/off).
-                        </Typography>
+                        </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
@@ -87,7 +87,7 @@ export const TOPICS: ITutorialTopic[] = [
                 placement: 'center',
                 content: (
                     <>
-                        <Typography variant="body2" color="text.secondary">
+                        <Description>
                             <a
                                 href="https://docs.getunleash.io/reference/activation-strategies"
                                 target="_blank"
@@ -96,15 +96,11 @@ export const TOPICS: ITutorialTopic[] = [
                             </a>{' '}
                             give you more control over when a feature should be
                             enabled.
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ mt: 1 }}
-                        >
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
                             Let's try enabling a feature toggle only for a
                             specific user.
-                        </Typography>
+                        </Description>
                     </>
                 ),
                 nextButton: true,
@@ -113,10 +109,10 @@ export const TOPICS: ITutorialTopic[] = [
                 href: '/projects/default',
                 target: 'a[href="/projects/default/features/demoApp.step2"]',
                 content: (
-                    <Typography variant="body2" color="text.secondary">
+                    <Description>
                         First, let's open the feature toggle configuration for{' '}
                         <Badge as="span">demoApp.step2</Badge>.
-                    </Typography>
+                    </Description>
                 ),
                 preventDefault: true,
             },
@@ -124,19 +120,19 @@ export const TOPICS: ITutorialTopic[] = [
                 href: '/projects/default/features/demoApp.step2',
                 target: 'div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_default"] button',
                 content: (
-                    <Typography variant="body2" color="text.secondary">
+                    <Description>
                         Add a new strategy to this environment by clicking this
                         button.
-                    </Typography>
+                    </Description>
                 ),
             },
             {
                 target: 'a[href="/projects/default/features/demoApp.step2/strategies/create?environmentId=default&strategyName=userWithId"]',
                 content: (
-                    <Typography variant="body2" color="text.secondary">
+                    <Description>
                         Select the <Badge as="span">UserIDs</Badge> strategy
                         type.
-                    </Typography>
+                    </Description>
                 ),
                 placement: 'right',
                 backCloseModal: true,
@@ -145,9 +141,9 @@ export const TOPICS: ITutorialTopic[] = [
                 target: '#input-add-items',
                 content: (
                     <>
-                        <Typography variant="body2" color="text.secondary">
+                        <Description>
                             Enter your <Badge as="span">userId</Badge>.
-                        </Typography>
+                        </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
@@ -163,9 +159,9 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
                 content: (
                     <>
-                        <Typography variant="body2" color="text.secondary">
+                        <Description>
                             Save your strategy to apply it.
-                        </Typography>
+                        </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
@@ -179,9 +175,7 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
                 content: (
                     <>
-                        <Typography variant="body2" color="text.secondary">
-                            Confirm your changes.
-                        </Typography>
+                        <Description>Confirm your changes.</Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
@@ -204,7 +198,7 @@ export const TOPICS: ITutorialTopic[] = [
                 placement: 'center',
                 content: (
                     <>
-                        <Typography variant="body2" color="text.secondary">
+                        <Description>
                             <a
                                 href="https://docs.getunleash.io/reference/activation-strategies#gradual-rollout"
                                 target="_blank"
@@ -219,15 +213,11 @@ export const TOPICS: ITutorialTopic[] = [
                                 activation strategies
                             </a>
                             .
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ mt: 1 }}
-                        >
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
                             Let's try enabling a feature toggle only for a
                             certain percentage of users.
-                        </Typography>
+                        </Description>
                     </>
                 ),
                 nextButton: true,
@@ -236,10 +226,10 @@ export const TOPICS: ITutorialTopic[] = [
                 href: '/projects/default',
                 target: 'a[href="/projects/default/features/demoApp.step3"]',
                 content: (
-                    <Typography variant="body2" color="text.secondary">
+                    <Description>
                         First, let's open the feature toggle configuration for{' '}
                         <Badge as="span">demoApp.step3</Badge>.
-                    </Typography>
+                    </Description>
                 ),
                 preventDefault: true,
             },
@@ -247,27 +237,25 @@ export const TOPICS: ITutorialTopic[] = [
                 href: '/projects/default/features/demoApp.step3',
                 target: 'div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_default"] .MuiAccordionSummary-expandIconWrapper',
                 content: (
-                    <Typography variant="body2" color="text.secondary">
+                    <Description>
                         Expand the environment card to see all the defined
                         strategies.
-                    </Typography>
+                    </Description>
                 ),
             },
             {
                 target: 'div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_default"].Mui-expanded a[data-testid="STRATEGY_EDIT-flexibleRollout"]',
                 content: (
-                    <Typography variant="body2" color="text.secondary">
+                    <Description>
                         Edit the existing gradual rollout strategy.
-                    </Typography>
+                    </Description>
                 ),
                 backCollapseExpanded: true,
             },
             {
                 target: 'span[data-testid="ROLLOUT_SLIDER_ID"]',
                 content: (
-                    <Typography variant="body2" color="text.secondary">
-                        Change the rollout percentage.
-                    </Typography>
+                    <Description>Change the rollout percentage.</Description>
                 ),
                 backCloseModal: true,
             },
@@ -275,9 +263,9 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
                 content: (
                     <>
-                        <Typography variant="body2" color="text.secondary">
+                        <Description>
                             Save your strategy to apply it.
-                        </Typography>
+                        </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
@@ -291,9 +279,7 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
                 content: (
                     <>
-                        <Typography variant="body2" color="text.secondary">
-                            Confirm your changes.
-                        </Typography>
+                        <Description>Confirm your changes.</Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
@@ -316,7 +302,7 @@ export const TOPICS: ITutorialTopic[] = [
                 placement: 'center',
                 content: (
                     <>
-                        <Typography variant="body2" color="text.secondary">
+                        <Description>
                             <a
                                 href="https://docs.getunleash.io/reference/feature-toggle-variants"
                                 target="_blank"
@@ -326,15 +312,11 @@ export const TOPICS: ITutorialTopic[] = [
                             allow you to define different values for a feature
                             toggle. They can be used for A/B testing or
                             segmenting your users.
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ mt: 1 }}
-                        >
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
                             Let's try adding a variant to a feature toggle,
                             along with an override so our user can see it.
-                        </Typography>
+                        </Description>
                     </>
                 ),
                 nextButton: true,
@@ -343,36 +325,26 @@ export const TOPICS: ITutorialTopic[] = [
                 href: '/projects/default',
                 target: 'a[href="/projects/default/features/demoApp.step4"]',
                 content: (
-                    <Typography variant="body2" color="text.secondary">
+                    <Description>
                         First, let's open the feature toggle configuration for{' '}
                         <Badge as="span">demoApp.step4</Badge>.
-                    </Typography>
+                    </Description>
                 ),
                 preventDefault: true,
             },
             {
                 href: '/projects/default/features/demoApp.step4',
                 target: 'button[data-testid="TAB-Variants"]',
-                content: (
-                    <Typography variant="body2" color="text.secondary">
-                        Select the variants tab.
-                    </Typography>
-                ),
+                content: <Description>Select the variants tab.</Description>,
             },
             {
                 target: 'button[data-testid="EDIT_VARIANTS_BUTTON"]',
-                content: (
-                    <Typography variant="body2" color="text.secondary">
-                        Edit the existing variants.
-                    </Typography>
-                ),
+                content: <Description>Edit the existing variants.</Description>,
             },
             {
                 target: 'button[data-testid="MODAL_ADD_VARIANT_BUTTON"]',
                 content: (
-                    <Typography variant="body2" color="text.secondary">
-                        Add a new variant to the list.
-                    </Typography>
+                    <Description>Add a new variant to the list.</Description>
                 ),
                 backCloseModal: true,
             },
@@ -380,14 +352,8 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'div[data-testid="VARIANT"]:last-of-type div[data-testid="VARIANT_NAME_INPUT"]',
                 content: (
                     <>
-                        <Typography variant="body2" color="text.secondary">
-                            Enter a new variant name.
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ mt: 1 }}
-                        >
+                        <Description>Enter a new variant name.</Description>
+                        <Description sx={{ mt: 1 }}>
                             We recommend choosing a{' '}
                             <a
                                 href="https://developer.mozilla.org/en-US/docs/Web/CSS/named-color"
@@ -396,10 +362,10 @@ export const TOPICS: ITutorialTopic[] = [
                                 color
                             </a>
                             .
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        </Description>
+                        <Description>
                             Example: <Badge as="span">aqua</Badge>.
-                        </Typography>
+                        </Description>
                     </>
                 ),
                 backCloseModal: true,
@@ -408,7 +374,7 @@ export const TOPICS: ITutorialTopic[] = [
             {
                 target: 'div[data-testid="VARIANT"]:last-of-type #variant-payload-value',
                 content: (
-                    <Typography variant="body2" color="text.secondary">
+                    <Description>
                         Enter the{' '}
                         <a
                             href="https://developer.mozilla.org/en-US/docs/Web/CSS/named-color"
@@ -417,35 +383,31 @@ export const TOPICS: ITutorialTopic[] = [
                             color
                         </a>{' '}
                         you chose on the previous step as the payload.
-                    </Typography>
+                    </Description>
                 ),
                 nextButton: true,
             },
             {
                 target: 'div[data-testid="VARIANT"]:last-of-type button[data-testid="VARIANT_ADD_OVERRIDE_BUTTON"]',
                 content: (
-                    <Typography variant="body2" color="text.secondary">
+                    <Description>
                         Let's also add an override for our user.
-                    </Typography>
+                    </Description>
                 ),
             },
             {
                 target: 'div[data-testid="VARIANT"]:last-of-type #override-context-name',
-                content: (
-                    <Typography variant="body2" color="text.secondary">
-                        Choose a context field.
-                    </Typography>
-                ),
+                content: <Description>Choose a context field.</Description>,
                 anyClick: true,
                 backCloseModal: true,
             },
             {
                 target: 'li[data-testid="SELECT_ITEM_ID-userId"]',
                 content: (
-                    <Typography variant="body2" color="text.secondary">
+                    <Description>
                         Select the <Badge as="span">userId</Badge> context
                         field.
-                    </Typography>
+                    </Description>
                 ),
                 placement: 'right',
                 backCloseModal: true,
@@ -454,9 +416,9 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'div[data-testid="VARIANT"]:last-of-type div[data-testid="OVERRIDE_VALUES"]',
                 content: (
                     <>
-                        <Typography variant="body2" color="text.secondary">
+                        <Description>
                             Enter your <Badge as="span">userId</Badge>.
-                        </Typography>
+                        </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
@@ -472,9 +434,9 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
                 content: (
                     <>
-                        <Typography variant="body2" color="text.secondary">
+                        <Description>
                             Save your variants to apply them.
-                        </Typography>
+                        </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}

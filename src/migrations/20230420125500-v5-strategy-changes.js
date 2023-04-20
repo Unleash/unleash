@@ -13,9 +13,9 @@ exports.up = function (db, callback) {
         update strategies set deprecated = true where name in ('userWithId');
         
         -- update strategy descriptions and sort order
-        update strategies set sort_order = 1, description = 'This strategy turns on / off for your entire userbase.' WHERE name = 'default';
+        update strategies set sort_order = 1, description = 'This strategy turns on / off for your entire userbase. Prefer using "Gradual rollout" strategy (100%=on, 0%=off).' WHERE name = 'default';
         update strategies set sort_order = 0 WHERE name = 'flexibleRollout';
-        update strategies set description = 'Prefer using "Gradual rollout" strategy with user id constraints. Enable the feature for a specific set of userIds.' WHERE name = 'userWithId';
+        update strategies set description = 'Enable the feature for a specific set of userIds. Prefer using "Gradual rollout" strategy with user id constraints.' WHERE name = 'userWithId';
         `,
         callback,
     );

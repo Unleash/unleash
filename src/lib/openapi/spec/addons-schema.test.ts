@@ -9,6 +9,8 @@ test('addonsSchema', () => {
                 events: ['some-event'],
                 enabled: true,
                 provider: 'some-name',
+                description: null,
+                id: 5,
             },
         ],
         providers: [

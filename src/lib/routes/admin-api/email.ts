@@ -41,7 +41,7 @@ export default class EmailController extends Controller {
         const { template } = req.params;
         const ctx = req.query;
         const data = await this.emailService.compileTemplate(
-            template,
+            sanitize(template),
             TemplateFormat.PLAIN,
             ctx,
         );

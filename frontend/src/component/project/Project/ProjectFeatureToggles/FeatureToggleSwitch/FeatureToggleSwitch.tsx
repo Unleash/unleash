@@ -5,7 +5,7 @@ import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/p
 import { useOptimisticUpdate } from './hooks/useOptimisticUpdate';
 import { flexRow } from 'themes/themeStyles';
 
-const StyledBoxContainer = styled(Box)(() => ({
+const StyledBoxContainer = styled(Box)<{ 'data-testid': string }>(() => ({
     mx: 'auto',
     ...flexRow,
 }));
@@ -40,9 +40,12 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
         );
     };
 
+    const key = `${featureName}-${environmentName}`;
+
     return (
         <StyledBoxContainer
-            key={`${featureName}-${environmentName}`} // Prevent animation when archiving rows
+            key={key} // Prevent animation when archiving rows
+            data-testid={`TOGGLE-${key}`}
         >
             <PermissionSwitch
                 checked={value}

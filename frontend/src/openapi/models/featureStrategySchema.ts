@@ -6,12 +6,23 @@
 import type { ConstraintSchema } from './constraintSchema';
 import type { ParametersSchema } from './parametersSchema';
 
+/**
+ * A singles activation strategy configuration schema for a feature
+ */
 export interface FeatureStrategySchema {
+    /** A uuid for the feature strategy */
     id?: string;
+    /** The name or type of strategy */
     name: string;
+    /** A descriptive title for the strategy */
+    title?: string | null;
+    /** The name or feature the strategy is attached to */
     featureName?: string;
+    /** The order of the strategy in the list */
     sortOrder?: number;
+    /** A list of segment ids attached to the strategy */
     segments?: number[];
+    /** A list of the constraints attached to the strategy */
     constraints?: ConstraintSchema[];
     parameters?: ParametersSchema;
 }

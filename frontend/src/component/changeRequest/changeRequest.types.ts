@@ -5,6 +5,7 @@ import { IUser } from '../../interfaces/user';
 export interface IChangeRequest {
     id: number;
     state: ChangeRequestState;
+    title: string;
     project: string;
     environment: string;
     minApprovals: number;
@@ -27,6 +28,7 @@ export interface IChangeRequestFeature {
     name: string;
     conflict?: string;
     changes: IChange[];
+    defaultChange?: IChangeRequestAddStrategy | IChangeRequestEnabled;
 }
 
 export interface IChangeRequestApproval {

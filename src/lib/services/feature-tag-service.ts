@@ -11,6 +11,7 @@ import {
 import { IEventStore } from '../types/stores/event-store';
 import { ITagStore } from '../types/stores/tag-store';
 import { ITag } from '../types/model';
+import { BadDataError, FOREIGN_KEY_VIOLATION } from '../../lib/error';
 
 class FeatureTagService {
     private tagStore: ITagStore;
@@ -129,12 +130,20 @@ class FeatureTagService {
             await this.tagStore.getTag(tag.type, tag.value);
         } catch (error) {
             if (error instanceof NotFoundError) {
-                await this.tagStore.createTag(tag);
-                await this.eventStore.store({
-                    type: TAG_CREATED,
-                    createdBy: userName,
-                    data: tag,
-                });
+                try {
+                    await this.tagStore.createTag(tag);
+                    await this.eventStore.store({
+                        type: TAG_CREATED,
+                        createdBy: userName,
+                        data: tag,
+                    });
+                } catch (err) {
+                    if (err.code === FOREIGN_KEY_VIOLATION) {
+                        throw new BadDataError(
+                            `Tag type '${tag.type}' does not exist`,
+                        );
+                    }
+                }
             }
         }
     }

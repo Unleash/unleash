@@ -2,7 +2,6 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEffect, useState } from 'react';
 import { DemoTopics } from './DemoTopics/DemoTopics';
 import { DemoSteps } from './DemoSteps/DemoSteps';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { TOPICS } from './demo-topics';
 import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome';
@@ -26,16 +25,9 @@ export const Demo = () => {
     );
     const [finishOpen, setFinishOpen] = useState(false);
 
-    const [loaded, setLoaded] = useState(false);
     const [expanded, setExpanded] = useState(storedProgress.expanded ?? true);
     const [topic, setTopic] = useState(storedProgress.topic ?? -1);
     const [steps, setSteps] = useState(storedProgress.steps ?? [0]);
-
-    useEffect(() => {
-        setTimeout(() => {
-            setLoaded(true);
-        }, 1000);
-    }, []);
 
     useEffect(() => {
         setStoredProgress({
@@ -105,19 +97,14 @@ export const Demo = () => {
                 topics={TOPICS}
                 onWelcome={() => setWelcomeOpen(true)}
             />
-            <ConditionallyRender
-                condition={loaded}
-                show={
-                    <DemoSteps
-                        setExpanded={setExpanded}
-                        steps={steps}
-                        setSteps={setSteps}
-                        topic={topic}
-                        setTopic={setTopic}
-                        topics={TOPICS}
-                        onFinish={onFinish}
-                    />
-                }
+            <DemoSteps
+                setExpanded={setExpanded}
+                steps={steps}
+                setSteps={setSteps}
+                topic={topic}
+                setTopic={setTopic}
+                topics={TOPICS}
+                onFinish={onFinish}
             />
         </>
     );

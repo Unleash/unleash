@@ -169,13 +169,13 @@ export const DemoSteps = ({
 
     const waitForLoad = (step: ITutorialTopicStep, tries = 0) => {
         setTimeout(() => {
-            if (document.querySelector(step.target as string) || tries > 10) {
+            if (document.querySelector(step.target as string)) {
                 setRun(true);
             } else {
-                if (flow !== 'next') {
-                    back();
-                } else if (step.optional) {
+                if (flow === 'next' && step.optional) {
                     next();
+                } else if (flow === 'back' || tries > 4) {
+                    back();
                 } else {
                     waitForLoad(step, tries + 1);
                 }

@@ -5,7 +5,7 @@ import { DemoSteps } from './DemoSteps/DemoSteps';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { TOPICS } from './demo-topics';
-import { DemoWelcomeDialog } from './DemoWelcomeDialog/DemoWelcomeDialog';
+import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome';
 
 const defaultProgress = {
     welcomeOpen: true,
@@ -50,7 +50,7 @@ export const Demo = () => {
 
     return (
         <>
-            <DemoWelcomeDialog
+            <DemoDialogWelcome
                 open={welcomeOpen}
                 onClose={() => {
                     setWelcomeOpen(false);

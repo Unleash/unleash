@@ -1,36 +1,8 @@
-import {
-    Button,
-    Dialog,
-    Divider,
-    IconButton,
-    Typography,
-    styled,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Button, Divider, Typography, styled } from '@mui/material';
 import qrImage from 'assets/img/demo_qr.png';
 import { formatAssetPath } from 'utils/formatPath';
 import { Launch } from '@mui/icons-material';
-
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialog-paper': {
-        borderRadius: theme.shape.borderRadiusExtraLarge,
-        maxWidth: theme.spacing(90),
-        padding: theme.spacing(7.5),
-        textAlign: 'center',
-    },
-}));
-
-const StyledCloseButton = styled(IconButton)(({ theme }) => ({
-    position: 'absolute',
-    right: theme.spacing(2),
-    top: theme.spacing(2),
-    color: theme.palette.neutral.main,
-}));
-
-const StyledHeader = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.largeHeader,
-    fontWeight: theme.fontWeight.bold,
-}));
+import { DemoDialog } from '../DemoDialog';
 
 const StyledDemoPane = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -73,22 +45,19 @@ const StyledStartButton = styled(Button)(({ theme }) => ({
     height: theme.spacing(7),
 }));
 
-interface IDemoWelcomeDialogProps {
+interface IDemoDialogWelcomeProps {
     open: boolean;
     onClose: () => void;
     onStart: () => void;
 }
 
-export const DemoWelcomeDialog = ({
+export const DemoDialogWelcome = ({
     open,
     onClose,
     onStart,
-}: IDemoWelcomeDialogProps) => (
-    <StyledDialog title="Explore Unleash" open={open} onClose={onClose}>
-        <StyledCloseButton aria-label="close" onClick={onClose}>
-            <CloseIcon />
-        </StyledCloseButton>
-        <StyledHeader>Explore Unleash</StyledHeader>
+}: IDemoDialogWelcomeProps) => (
+    <DemoDialog open={open} onClose={onClose}>
+        <DemoDialog.Header>Explore Unleash</DemoDialog.Header>
         <Typography color="textSecondary" sx={{ mt: 2 }}>
             You can explore Unleash on your own, however for the best experience
             it's recommended you follow our interactive tutorial. To get
@@ -120,5 +89,5 @@ export const DemoWelcomeDialog = ({
         >
             Start Unleash tutorial
         </StyledStartButton>
-    </StyledDialog>
+    </DemoDialog>
 );

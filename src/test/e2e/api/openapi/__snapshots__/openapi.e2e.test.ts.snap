@@ -2358,6 +2358,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "array",
           },
           "rootRole": {
+            "description": "A role id that is used as the root role for all users in this group. This can be either the id of the Editor or Admin role.",
             "nullable": true,
             "type": "number",
           },

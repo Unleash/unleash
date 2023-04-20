@@ -1,9 +1,9 @@
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
-import { InMemStorageProvider, FeatureEvaluator } from './feature-evaluator';
+import { FeatureEvaluator, InMemStorageProvider } from './feature-evaluator';
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
 import { Segment } from './feature-evaluator/strategy/strategy';
 import { ISegment } from 'lib/types/model';
-import { serializeDates } from '../../lib/types/serialize-dates';
+import { serializeDates } from '../types';
 import { Operator } from './feature-evaluator/constraint';
 import { FeatureInterface } from 'unleash-client/lib/feature';
 
@@ -22,27 +22,28 @@ export const mapFeaturesForClient = (
         variants: (feature.variants || []).map((variant) => ({
             overrides: [],
             ...variant,
-            payload: variant.payload && {
-                ...variant.payload,
-                type: variant.payload.type as unknown as PayloadType,
-            },
+            payload:
+                variant.payload &&
+                ({
+                    ...variant.payload,
+                    type: variant.payload.type as unknown as PayloadType,
+                } as any),
         })),
         project: feature.project,
         strategies: feature.strategies.map((strategy) => ({
             parameters: {},
             ...strategy,
             constraints:
-                strategy.constraints &&
-                strategy.constraints.map((constraint) => ({
+                strategy.constraints?.map((constraint) => ({
                     inverted: false,
                     values: [],
                     ...constraint,
                     operator: constraint.operator as unknown as Operator,
-                })),
+                })) ?? [],
         })),
     }));
 
-export const mapSegmentsForClient = (segments: ISegment[]): Segment[] =>
+export const mapSegmentsForClient = (segments?: ISegment[]): Segment[] =>
     serializeDates(segments) as Segment[];
 
 export type ClientInitOptions = {

@@ -75,7 +75,7 @@ export const Demo = () => {
                     });
                 }}
                 topics={TOPICS}
-                showWelcome={() => setWelcomeOpen(true)}
+                onShowWelcome={() => setWelcomeOpen(true)}
             />
             <ConditionallyRender
                 condition={active}

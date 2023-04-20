@@ -9,6 +9,7 @@ export const publicSignupTokenUpdateSchema = {
             type: 'string',
             description: `The token's expiration date.`,
             format: 'date-time',
+            example: '2023-04-11T15:46:56Z',
         },
         enabled: {
             description: `Whether the token is active or not.`,

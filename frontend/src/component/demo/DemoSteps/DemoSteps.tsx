@@ -70,46 +70,48 @@ export const DemoSteps = ({
 
     const abortController = new AbortController();
 
-    const skip = () => {
-        abortController.abort();
-        setTopic(-1);
-        setExpanded(false);
+    const setTopicStep = (topic: number, step?: number) => {
+        setRun(false);
+        setTopic(topic);
+        if (step !== undefined) {
+            setSteps(steps => {
+                const newSteps = [...steps];
+                newSteps[topic] = step;
+                return newSteps;
+            });
+        }
     };
 
-    const setStep = (topic: number, step: number) => {
-        setSteps(steps => {
-            const newSteps = [...steps];
-            newSteps[topic] = step;
-            return newSteps;
-        });
+    const skip = () => {
+        abortController.abort();
+        setTopicStep(-1);
+        setExpanded(false);
     };
 
     const back = () => {
         setFlow('back');
         if (steps[topic] === 0) {
             const newTopic = topic - 1;
-            setTopic(newTopic);
-            setStep(newTopic, topics[newTopic].steps.length - 1);
+            setTopicStep(newTopic, topics[newTopic].steps.length - 1);
         } else {
-            setStep(topic, steps[topic] - 1);
+            setTopicStep(topic, steps[topic] - 1);
         }
     };
 
     const nextTopic = () => {
         if (topic === topics.length - 1) {
-            setTopic(-1);
+            setTopicStep(-1);
             setExpanded(false);
             onFinish();
         } else {
             const newTopic = topic + 1;
-            setTopic(newTopic);
-            setStep(newTopic, 0);
+            setTopicStep(newTopic, 0);
         }
     };
 
     const next = (index = steps[topic]) => {
         setFlow('next');
-        setStep(topic, index + 1);
+        setTopicStep(topic, index + 1);
         if (index === topics[topic].steps.length - 1) {
             nextTopic();
         }
@@ -184,8 +186,6 @@ export const DemoSteps = ({
     };
 
     useEffect(() => {
-        setRun(false);
-
         if (topic === -1) return;
         const currentTopic = topics[topic];
         const currentStepIndex = steps[topic];

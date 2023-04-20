@@ -1106,7 +1106,7 @@ test('should not return all features', async () => {
         });
 });
 
-test('should evaluate disabled strategies too false when returning toggles', async () => {
+test('should NOT evaluate disabled strategies when returning toggles', async () => {
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await createFeatureToggle({
         name: 'enabledFeature',
@@ -1125,6 +1125,22 @@ test('should evaluate disabled strategies too false when returning toggles', asy
     });
     await createFeatureToggle({
         name: 'disabledFeature',
+        enabled: false,
+        strategies: [
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                disabled: true,
+                parameters: {
+                    rollout: '100',
+                    stickiness: 'default',
+                    groupId: 'some-new',
+                },
+            },
+        ],
+    });
+    await createFeatureToggle({
+        name: 'enabledFeature2',
         enabled: true,
         strategies: [
             {
@@ -1150,6 +1166,12 @@ test('should evaluate disabled strategies too false when returning toggles', asy
                 toggles: [
                     {
                         name: 'enabledFeature',
+                        enabled: true,
+                        impressionData: false,
+                        variant: { enabled: false, name: 'disabled' },
+                    },
+                    {
+                        name: 'enabledFeature2',
                         enabled: true,
                         impressionData: false,
                         variant: { enabled: false, name: 'disabled' },

@@ -2823,3 +2823,102 @@ test('Should batch stale features', async () => {
         .expect(200);
     expect(body.stale).toBeTruthy();
 });
+
+test('should return disabled strategies', async () => {
+    const toggle = { name: uuidv4(), impressionData: false };
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: toggle.name,
+        })
+        .expect(201);
+
+    const { body: strategyOne } = await app.request
+        .post(
+            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+            disabled: true,
+        })
+        .expect(200);
+
+    const { body: strategyTwo } = await app.request
+        .post(
+            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        )
+        .send({
+            name: 'gradualrollout',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200);
+
+    const { body: strategies } = await app.request.get(
+        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+    );
+
+    expect(strategies[0].id).toBe(strategyOne.id);
+    expect(strategies[0].disabled).toBe(strategyOne.disabled);
+    expect(strategies[1].id).toBe(strategyTwo.id);
+    expect(strategies[1].disabled).toBe(strategyTwo.disabled);
+});
+
+test('should disable strategies in place', async () => {
+    const toggle = { name: uuidv4(), impressionData: false };
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: toggle.name,
+        })
+        .expect(201);
+
+    const { body: strategyOne } = await app.request
+        .post(
+            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        )
+        .send({
+            name: 'flexibleRollout',
+            constraints: [],
+            parameters: {
+                rollout: '100',
+                stickiness: 'default',
+                groupId: 'some-new',
+            },
+        })
+        .expect(200);
+
+    const { body: strategies } = await app.request.get(
+        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+    );
+
+    expect(strategies[0].id).toBe(strategyOne.id);
+    expect(strategies[0].disabled).toBe(false);
+
+    const { body: updatedStrategyOne } = await app.request
+        .put(
+            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies/${strategyOne.id}`,
+        )
+        .send({
+            name: 'flexibleRollout',
+            constraints: [],
+            disabled: true,
+            parameters: {
+                rollout: '100',
+                stickiness: 'default',
+                groupId: 'some-new',
+            },
+        })
+        .expect(200);
+
+    const { body: updatedStrategies } = await app.request.get(
+        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+    );
+
+    expect(updatedStrategies[0].id).toBe(updatedStrategyOne.id);
+    expect(updatedStrategies[0].disabled).toBe(updatedStrategyOne.disabled);
+});

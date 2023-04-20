@@ -69,9 +69,9 @@ export default class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'removeEnvironmentFromProject',
-                    summary: 'Remove a environment to a project.',
+                    summary: 'Remove an environment from a project.',
                     description:
-                        'This endpoint removes the provided environment to the specified project, with optional support for enabling and disabling change requests for the environment and project.',
+                        'This endpoint removes the specified environment from the project.',
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(400, 401, 403),

@@ -70,7 +70,7 @@ export default class ProjectApi extends Controller {
                     operationId: 'getProjectOverview',
                     summary: 'Get an overview of a project.',
                     description:
-                        'This endpoint returns an overview of the specified projects.',
+                        'This endpoint returns an overview of the specified project.',
                     responses: {
                         200: createResponseSchema('projectOverviewSchema'),
                         ...getStandardResponses(401, 403, 404),

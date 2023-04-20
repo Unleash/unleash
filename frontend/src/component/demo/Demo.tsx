@@ -1,4 +1,3 @@
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEffect, useState } from 'react';
 import { DemoTopics } from './DemoTopics/DemoTopics';
 import { DemoSteps } from './DemoSteps/DemoSteps';
@@ -18,8 +17,6 @@ const { value: storedProgress, setValue: setStoredProgress } =
     createLocalStorage('Tutorial:v1', defaultProgress);
 
 export const Demo = () => {
-    const { uiConfig } = useUiConfig();
-
     const [welcomeOpen, setWelcomeOpen] = useState(
         storedProgress.welcomeOpen ?? true
     );
@@ -55,8 +52,6 @@ export const Demo = () => {
             setFinishOpen(true);
         }
     };
-
-    if (!uiConfig.flags.demo) return null;
 
     return (
         <>

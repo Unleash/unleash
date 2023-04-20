@@ -116,22 +116,20 @@ export const GroupCard = ({
                     <ConditionallyRender
                         condition={Boolean(group.rootRole)}
                         show={
-                            <>
-                                <InfoBadgeDescription>
-                                    <p>Root role:</p>
-                                    <Badge
-                                        color="success"
-                                        icon={<TopicOutlinedIcon />}
-                                    >
-                                        {
-                                            rootRoles.find(
-                                                (role: IProjectRole) =>
-                                                    role.id === group.rootRole
-                                            )?.name
-                                        }
-                                    </Badge>
-                                </InfoBadgeDescription>
-                            </>
+                            <InfoBadgeDescription>
+                                <p>Root role:</p>
+                                <Badge
+                                    color="success"
+                                    icon={<TopicOutlinedIcon />}
+                                >
+                                    {
+                                        rootRoles.find(
+                                            (role: IProjectRole) =>
+                                                role.id === group.rootRole
+                                        )?.name
+                                    }
+                                </Badge>
+                            </InfoBadgeDescription>
                         }
                     />
 

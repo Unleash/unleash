@@ -85,6 +85,10 @@ export const GroupsList: VFC = () => {
         setRemoveOpen(true);
     };
 
+    const getBindableRootRoles = () => {
+        return roles.filter((role: IProjectRole) => role.type === 'root');
+    };
+
     return (
         <PageContent
             isLoading={loading}
@@ -137,9 +141,7 @@ export const GroupsList: VFC = () => {
                         <Grid key={group.id} item xs={12} md={6}>
                             <GroupCard
                                 group={group}
-                                rootRoles={roles.filter(
-                                    (role: IProjectRole) => role.type === 'root'
-                                )}
+                                rootRoles={getBindableRootRoles()}
                                 onEditUsers={onEditUsers}
                                 onRemoveGroup={onRemoveGroup}
                             />

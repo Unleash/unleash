@@ -53,6 +53,7 @@ export interface IFlags {
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
     strategyTitle?: boolean;
+    groupRootRoles?: boolean;
 }
 
 export interface IVersionInfo {

@@ -21,6 +21,7 @@ export const publicSignupTokensSchema = {
                     enabled: false,
                     expiresAt: '2023-04-12T11:13:31.960Z',
                     createdAt: '2023-04-12T11:13:31.960Z',
+                    createdBy: 'someone',
                     users: null,
                     role: {
                         id: 3,

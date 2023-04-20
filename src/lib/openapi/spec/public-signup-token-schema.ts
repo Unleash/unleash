@@ -54,7 +54,7 @@ export const publicSignupTokenSchema = {
             example: '2023-04-12T11:13:31.960Z',
         },
         createdBy: {
-            description: "The creator's username or email",
+            description: "The creator's email or username",
             example: 'someone@example.com',
             type: 'string',
             nullable: true,

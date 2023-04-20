@@ -3743,7 +3743,7 @@ Stats are divided into current and previous **windows**.
             "type": "string",
           },
           "createdBy": {
-            "description": "The creator's username or email",
+            "description": "The creator's email or username",
             "example": "someone@example.com",
             "nullable": true,
             "type": "string",
@@ -3825,6 +3825,7 @@ Stats are divided into current and previous **windows**.
             "example": [
               {
                 "createdAt": "2023-04-12T11:13:31.960Z",
+                "createdBy": "someone",
                 "enabled": false,
                 "expiresAt": "2023-04-12T11:13:31.960Z",
                 "name": "Invite public viewers",

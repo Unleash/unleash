@@ -14,7 +14,7 @@ export const healthOverviewSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'name'],
-    description: `An overview of a projects and it's health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)`,
+    description: `An overview of a project and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)`,
     properties: {
         version: {
             type: 'number',

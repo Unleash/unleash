@@ -66,7 +66,7 @@ export const DemoSteps = ({
     const navigate = useNavigate();
     const location = useLocation();
     const [run, setRun] = useState(false);
-    const [flow, setFlow] = useState<'next' | 'back'>('next');
+    const [flow, setFlow] = useState<'next' | 'back' | 'load'>('load');
 
     const abortController = new AbortController();
 
@@ -172,9 +172,9 @@ export const DemoSteps = ({
             if (document.querySelector(step.target as string) || tries > 10) {
                 setRun(true);
             } else {
-                if (flow === 'back') {
+                if (flow !== 'next') {
                     back();
-                } else if (step.optional && flow === 'next') {
+                } else if (step.optional) {
                     next();
                 } else {
                     waitForLoad(step, tries + 1);

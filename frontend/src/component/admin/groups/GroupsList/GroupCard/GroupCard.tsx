@@ -114,7 +114,7 @@ export const GroupCard = ({
                         </StyledHeaderActions>
                     </StyledTitleRow>
                     <ConditionallyRender
-                        condition={!!group.rootRole}
+                        condition={Boolean(group.rootRole)}
                         show={
                             <>
                                 <InfoBadgeDescription>

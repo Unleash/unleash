@@ -12,9 +12,6 @@ export const publicSignupTokensSchema = {
         tokens: {
             type: 'array',
             description: 'An array of all the public signup tokens',
-            items: {
-                $ref: '#/components/schemas/publicSignupTokenSchema',
-            },
             example: [
                 {
                     secret: 'a3c84b25409ea8ca1782ef17f94a42fc',
@@ -31,6 +28,9 @@ export const publicSignupTokensSchema = {
                     },
                 },
             ],
+            items: {
+                $ref: '#/components/schemas/publicSignupTokenSchema',
+            },
         },
     },
     components: {

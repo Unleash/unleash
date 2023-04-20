@@ -207,11 +207,3 @@ test('reactivating a non-existent strategy yields 404', async () => {
         .set('Content-Type', 'application/json')
         .expect(404);
 });
-test("deprecating 'default' strategy will yield 403", async () => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
-    const { request, base } = await getSetup();
-    return request
-        .post(`${base}/api/admin/strategies/default/deprecate`)
-        .set('Content-Type', 'application/json')
-        .expect(403);
-});

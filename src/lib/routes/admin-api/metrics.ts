@@ -9,7 +9,11 @@ import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { ApplicationSchema } from '../../openapi/spec/application-schema';
 import { ApplicationsSchema } from '../../openapi/spec/applications-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
+import { CreateApplicationSchema } from '../../openapi/spec/create-application-schema';
 
 class MetricsController extends Controller {
     private logger: Logger;
@@ -45,8 +49,9 @@ class MetricsController extends Controller {
                     operationId: 'createApplication',
                     responses: {
                         202: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
                     },
-                    requestBody: createRequestSchema('applicationSchema'),
+                    requestBody: createRequestSchema('createApplicationSchema'),
                 }),
             ],
         });
@@ -62,6 +67,7 @@ class MetricsController extends Controller {
                     operationId: 'deleteApplication',
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -117,7 +123,7 @@ class MetricsController extends Controller {
     }
 
     async createApplication(
-        req: Request<{ appName: string }, unknown, ApplicationSchema>,
+        req: Request<{ appName: string }, unknown, CreateApplicationSchema>,
         res: Response,
     ): Promise<void> {
         const input = {

@@ -148,6 +148,7 @@ import { bulkMetricsSchema } from './spec/bulk-metrics-schema';
 import { clientMetricsEnvSchema } from './spec/client-metrics-env-schema';
 import { updateTagsSchema } from './spec/update-tags-schema';
 import { batchStaleSchema } from './spec/batch-stale-schema';
+import { createApplicationSchema } from './spec/create-application-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
@@ -205,6 +206,7 @@ export const schemas: UnleashSchemas = {
     contextFieldSchema,
     contextFieldsSchema,
     createApiTokenSchema,
+    createApplicationSchema,
     createFeatureSchema,
     createFeatureStrategySchema,
     createInvitedUserSchema,

@@ -1,9 +1,9 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const applicationSchema = {
-    $id: '#/components/schemas/applicationSchema',
+export const createApplicationSchema = {
+    $id: '#/components/schemas/createApplicationSchema',
     type: 'object',
-    additionalProperties: false,
+    additionalProperties: true,
     required: ['appName'],
     properties: {
         appName: {
@@ -26,11 +26,6 @@ export const applicationSchema = {
             },
             example: ['standard', 'gradualRollout', 'mySpecialCustomStrategy'],
         },
-        description: {
-            description:
-                'Extra information added about the application reporting the metrics. Only present if added via the Unleash Admin interface',
-            type: 'string',
-        },
         url: {
             description:
                 'A link to reference the application reporting the metrics. Could for instance be a GitHub link to the repository of the application',
@@ -47,14 +42,9 @@ export const applicationSchema = {
             type: 'string',
             example: 'https://github.com/favicon.ico',
         },
-        announced: {
-            description:
-                'Internal to Unleash to allow Unleash to know if the application has already been inserted in a previous batch.',
-            type: 'boolean',
-            example: false,
-        },
     },
-    components: {},
 } as const;
 
-export type ApplicationSchema = FromSchema<typeof applicationSchema>;
+export type CreateApplicationSchema = FromSchema<
+    typeof createApplicationSchema
+>;

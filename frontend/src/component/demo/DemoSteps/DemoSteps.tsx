@@ -50,6 +50,7 @@ interface IDemoStepsProps {
     topic: number;
     setTopic: React.Dispatch<React.SetStateAction<number>>;
     topics: ITutorialTopic[];
+    onFinish: () => void;
 }
 
 export const DemoSteps = ({
@@ -59,6 +60,7 @@ export const DemoSteps = ({
     topic,
     setTopic,
     topics,
+    onFinish,
 }: IDemoStepsProps) => {
     const theme = useTheme();
     const navigate = useNavigate();
@@ -97,6 +99,7 @@ export const DemoSteps = ({
         if (topic === topics.length - 1) {
             setTopic(-1);
             setExpanded(false);
+            onFinish();
         } else {
             const newTopic = topic + 1;
             setTopic(newTopic);

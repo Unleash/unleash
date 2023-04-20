@@ -6,6 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { TOPICS } from './demo-topics';
 import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome';
+import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish';
 
 const defaultProgress = {
     welcomeOpen: true,
@@ -20,9 +21,12 @@ const { value: storedProgress, setValue: setStoredProgress } =
 
 export const Demo = () => {
     const { uiConfig } = useUiConfig();
+
     const [welcomeOpen, setWelcomeOpen] = useState(
         storedProgress.welcomeOpen ?? true
     );
+    const [finishOpen, setFinishOpen] = useState(false);
+
     const [active, setActive] = useState(false);
     const [expanded, setExpanded] = useState(storedProgress.expanded ?? true);
     const [topic, setTopic] = useState(storedProgress.topic ?? 0);
@@ -46,6 +50,24 @@ export const Demo = () => {
         });
     }, [welcomeOpen, expanded, active, topic, steps]);
 
+    const onStart = () => {
+        setActive(true);
+        setTopic(0);
+        setSteps([0]);
+    };
+
+    const onFinish = () => {
+        const completedSteps = steps.reduce(
+            (acc, step) => acc + (step || 0),
+            1
+        );
+        const totalSteps = TOPICS.flatMap(({ steps }) => steps).length;
+
+        if (completedSteps === totalSteps) {
+            setFinishOpen(true);
+        }
+    };
+
     if (!uiConfig.flags.demo) return null;
 
     return (
@@ -58,7 +80,17 @@ export const Demo = () => {
                 }}
                 onStart={() => {
                     setWelcomeOpen(false);
-                    setActive(true);
+                    onStart();
+                }}
+            />
+            <DemoDialogFinish
+                open={finishOpen}
+                onClose={() => {
+                    setFinishOpen(false);
+                }}
+                onRestart={() => {
+                    setFinishOpen(false);
+                    onStart();
                 }}
             />
             <DemoTopics
@@ -75,7 +107,7 @@ export const Demo = () => {
                     });
                 }}
                 topics={TOPICS}
-                onShowWelcome={() => setWelcomeOpen(true)}
+                onWelcome={() => setWelcomeOpen(true)}
             />
             <ConditionallyRender
                 condition={active}
@@ -87,6 +119,7 @@ export const Demo = () => {
                         topic={topic}
                         setTopic={setTopic}
                         topics={TOPICS}
+                        onFinish={onFinish}
                     />
                 }
             />

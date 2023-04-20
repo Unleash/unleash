@@ -54,6 +54,7 @@ export const Demo = () => {
         setActive(true);
         setTopic(0);
         setSteps([0]);
+        setExpanded(true);
     };
 
     const onFinish = () => {

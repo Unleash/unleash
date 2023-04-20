@@ -1106,7 +1106,7 @@ test('should not return all features', async () => {
         });
 });
 
-test('should ONLY evaluate enabled strategies when returning toggles', async () => {
+test('should evaluate disabled strategies too false when returning toggles', async () => {
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await createFeatureToggle({
         name: 'enabledFeature',

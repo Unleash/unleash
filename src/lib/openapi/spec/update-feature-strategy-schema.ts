@@ -28,7 +28,7 @@ export const updateFeatureStrategySchema = {
             type: 'boolean',
             description:
                 'A toggle to disable the strategy. defaults to true. Disabled strategies are not evaluated or returned to the SDKs',
-            example: 'true',
+            example: false,
             nullable: true,
         },
         parameters: {

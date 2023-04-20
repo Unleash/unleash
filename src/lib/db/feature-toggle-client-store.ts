@@ -214,7 +214,7 @@ export default class FeatureToggleClientStore
         if (!includeDisabledStrategies) {
             // We should not send disabled strategies from the client API,
             // as this breaks the way SDKs evaluate the status of the feature.
-            FeatureToggleClientStore.removeDisabledStrategies(features);
+            return this.removeDisabledStrategies(features);
         }
 
         return features;
@@ -246,10 +246,17 @@ export default class FeatureToggleClientStore
         });
     }
 
-    private static removeDisabledStrategies(features: IFeatureToggleClient[]) {
+    private removeDisabledStrategies(
+        features: IFeatureToggleClient[],
+    ): IFeatureToggleClient[] {
+        const filtered: IFeatureToggleClient[] = [];
         features.forEach((feature) => {
-            feature.strategies.filter((strategy) => !strategy.disabled);
+            const filteredStrategies = feature.strategies.filter(
+                (strategy) => !strategy.disabled,
+            );
+            filtered.push({ ...feature, strategies: filteredStrategies });
         });
+        return filtered;
     }
 
     private isUnseenStrategyRow(

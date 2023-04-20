@@ -41,7 +41,6 @@ export const StickinessSelect = ({
         );
 
     const stickinessOptions = resolveStickinessOptions();
-
     return (
         <Select
             id="stickiness-select"

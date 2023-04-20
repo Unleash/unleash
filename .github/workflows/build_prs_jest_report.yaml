@@ -6,10 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: build (14.x) # temporary solution to trick branch protection rules
 
-    strategy:
-      matrix:
-        node-version: [14.x]
     services:
       # Label used to access the service container
       postgres:
@@ -27,12 +25,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.x
           cache: 'yarn'
-      - name: Tests on ${{ matrix.node-version }}
+      - name: Tests on 18.x
         id: coverage
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:

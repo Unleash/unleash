@@ -69,7 +69,10 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                         projectId={projectId}
                         component={Link}
                         to={editStrategyPath}
-                        tooltipProps={{ title: 'Edit strategy' }}
+                        tooltipProps={{
+                            title: 'Edit strategy',
+                        }}
+                        data-testid={`STRATEGY_EDIT-${strategy.name}`}
                     >
                         <Edit />
                     </PermissionIconButton>

@@ -6,7 +6,10 @@
 import type { BulkRegistrationSchema } from './bulkRegistrationSchema';
 import type { ClientMetricsEnvSchema } from './clientMetricsEnvSchema';
 
+/**
+ * A batch of metrics accumulated by Edge (or other compatible applications). Includes both application registrations as well usage metrics from clients
+ */
 export interface BulkMetricsSchema {
-    applications?: BulkRegistrationSchema[];
-    metrics?: ClientMetricsEnvSchema[];
+    applications: BulkRegistrationSchema[];
+    metrics: ClientMetricsEnvSchema[];
 }

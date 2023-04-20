@@ -1,4 +1,4 @@
-import { TextCell } from '../../../../common/Table/cells/TextCell/TextCell';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Link, styled, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useTheme } from '@mui/system';
@@ -20,7 +20,7 @@ export const ChangeRequestTitleCell = ({
     row: { original },
 }: IChangeRequestTitleCellProps) => {
     const projectId = useRequiredPathParam('projectId');
-    const { id, features: changes } = original;
+    const { id, title, features: changes } = original;
     const theme = useTheme();
     const path = `/projects/${projectId}/change-requests/${id}`;
 
@@ -31,11 +31,7 @@ export const ChangeRequestTitleCell = ({
     return (
         <TextCell sx={{ minWidth: '200px' }}>
             <StyledLink>
-                <Typography
-                    component={'span'}
-                    variant={'body2'}
-                    color={theme.palette.text.secondary}
-                >
+                <Typography variant={'body2'}>
                     <Link
                         component={RouterLink}
                         underline={'hover'}
@@ -48,9 +44,8 @@ export const ChangeRequestTitleCell = ({
                             },
                         })}
                     >
-                        Change request
+                        {title}
                     </Link>
-                    {`#${id}`}
                 </Typography>
             </StyledLink>
             <span>

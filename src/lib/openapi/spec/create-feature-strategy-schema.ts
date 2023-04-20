@@ -18,11 +18,11 @@ export const createFeatureStrategySchema = {
             description: 'A descriptive title for the strategy',
             example: 'Gradual Rollout 25-Prod',
         },
-        enabled: {
+        disabled: {
             type: 'boolean',
             description:
-                'A toggle to disable the strategy. defaults to true. Disabled strategies are not evaluated or returned to the SDKs',
-            example: 'true',
+                'A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs',
+            example: false,
             nullable: true,
         },
         sortOrder: {

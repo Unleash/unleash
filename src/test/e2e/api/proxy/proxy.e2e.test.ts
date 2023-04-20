@@ -1105,3 +1105,56 @@ test('should not return all features', async () => {
             });
         });
 });
+
+test('should ONLY evaluate enabled strategies when returning toggles', async () => {
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    await createFeatureToggle({
+        name: 'enabledFeature',
+        enabled: true,
+        strategies: [
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                parameters: {
+                    rollout: '100',
+                    stickiness: 'default',
+                    groupId: 'some-new',
+                },
+            },
+        ],
+    });
+    await createFeatureToggle({
+        name: 'disabledFeature',
+        enabled: true,
+        strategies: [
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                disabled: true,
+                parameters: {
+                    rollout: '100',
+                    stickiness: 'default',
+                    groupId: 'some-new',
+                },
+            },
+        ],
+    });
+
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body).toEqual({
+                toggles: [
+                    {
+                        name: 'enabledFeature',
+                        enabled: true,
+                        impressionData: false,
+                        variant: { enabled: false, name: 'disabled' },
+                    },
+                ],
+            });
+        });
+});

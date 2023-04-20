@@ -60,7 +60,15 @@ export const playgroundStrategySchema = {
     $id: '#/components/schemas/playgroundStrategySchema',
     type: 'object',
     additionalProperties: false,
-    required: ['id', 'name', 'result', 'segments', 'constraints', 'parameters'],
+    required: [
+        'id',
+        'name',
+        'result',
+        'segments',
+        'constraints',
+        'parameters',
+        'disabled',
+    ],
     properties: {
         name: {
             description: "The strategy's name.",
@@ -78,6 +86,13 @@ export const playgroundStrategySchema = {
         result: {
             description: `The strategy's evaluation result. If the strategy is a custom strategy that Unleash can't evaluate, \`evaluationStatus\` will be \`${playgroundStrategyEvaluation.unknownResult}\`. Otherwise, it will be \`true\` or \`false\``,
             ...strategyEvaluationResults,
+        },
+        disabled: {
+            type: 'boolean',
+            description:
+                "The strategy's status. Disabled strategies are not evaluated",
+            example: false,
+            nullable: true,
         },
         segments: {
             type: 'array',

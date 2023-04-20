@@ -2,15 +2,15 @@ import { Strategy } from './strategy';
 import { FeatureInterface } from './feature';
 import { RepositoryInterface } from './repository';
 import {
-    Variant,
     getDefaultVariant,
-    VariantDefinition,
     selectVariant,
+    Variant,
+    VariantDefinition,
 } from './variant';
 import { Context } from './context';
 import { SegmentForEvaluation } from './strategy/strategy';
 import { PlaygroundStrategySchema } from 'lib/openapi/spec/playground-strategy-schema';
-import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema';
+import { playgroundStrategyEvaluation } from '../../openapi';
 
 export type StrategyEvaluationResult = Pick<
     PlaygroundStrategySchema,
@@ -82,9 +82,8 @@ export default class UnleashClient {
             };
         }
 
-        const strategies = feature.strategies
-            .filter((strategy) => strategy.enabled)
-            .map((strategySelector): PlaygroundStrategySchema => {
+        const strategies = feature.strategies.map(
+            (strategySelector): PlaygroundStrategySchema => {
                 const getStrategy = () => {
                     // the application hostname strategy relies on external
                     // variables to calculate its result. As such, we can't
@@ -111,14 +110,17 @@ export default class UnleashClient {
                     id: strategySelector.id,
                     title: strategySelector.title,
                     parameters: strategySelector.parameters,
-                    ...strategy.isEnabledWithConstraints(
+                    disabled: strategySelector.disabled || null,
+                    ...strategy?.isEnabledWithConstraints(
                         strategySelector.parameters,
                         context,
                         strategySelector.constraints,
                         segments,
+                        strategySelector.disabled,
                     ),
                 };
-            });
+            },
+        );
 
         // Feature evaluation
         const overallStrategyResult = () => {

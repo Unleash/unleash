@@ -3,7 +3,7 @@
 exports.up = function (db, callback) {
     db.runSql(
         `
-          ALTER TABLE feature_strategies ADD COLUMN IF NOT EXISTS enabled BOOLEAN default true;
+          ALTER TABLE feature_strategies ADD COLUMN IF NOT EXISTS disabled BOOLEAN default false;
 
           CREATE OR REPLACE VIEW features_view AS
           SELECT
@@ -29,7 +29,7 @@ exports.up = function (db, callback) {
               feature_strategies.sort_order as sort_order,
               fss.segment_id as segments,
               feature_strategies.title as strategy_title,
-              feature_strategies.enabled as strategy_enabled
+              feature_strategies.disabled as strategy_disabled
           FROM
               features
                   LEFT JOIN feature_environments ON feature_environments.feature_name = features.name
@@ -78,7 +78,7 @@ exports.down = function (db, callback) {
                   LEFT JOIN environments ON feature_environments.environment = environments.name
                   LEFT JOIN feature_strategy_segment as fss ON fss.feature_strategy_id = feature_strategies.id;
 
-          ALTER TABLE feature_strategies DROP COLUMN IF EXISTS enabled;
+          ALTER TABLE feature_strategies DROP COLUMN IF EXISTS disabled;
         `,
         callback,
     );

@@ -44,8 +44,6 @@ const StyledTooltipPrimaryActions = styled('div')(({ theme }) => ({
 }));
 
 interface IDemoStepsProps {
-    run: boolean;
-    setRun: React.Dispatch<React.SetStateAction<boolean>>;
     setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
     steps: number[];
     setSteps: React.Dispatch<React.SetStateAction<number[]>>;
@@ -55,8 +53,6 @@ interface IDemoStepsProps {
 }
 
 export const DemoSteps = ({
-    run,
-    setRun,
     setExpanded,
     steps,
     setSteps,
@@ -67,6 +63,7 @@ export const DemoSteps = ({
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
+    const [run, setRun] = useState(false);
     const [flow, setFlow] = useState<'next' | 'back'>('next');
 
     const abortController = new AbortController();

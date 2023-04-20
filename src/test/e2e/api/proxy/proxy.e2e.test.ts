@@ -1140,6 +1140,32 @@ test('should NOT evaluate disabled strategies when returning toggles', async () 
         ],
     });
     await createFeatureToggle({
+        name: 'disabledFeature3',
+        enabled: true,
+        strategies: [
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                disabled: true,
+                parameters: {
+                    rollout: '100',
+                    stickiness: 'default',
+                    groupId: 'some-new',
+                },
+            },
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                disabled: false,
+                parameters: {
+                    rollout: '0',
+                    stickiness: 'default',
+                    groupId: 'some-new',
+                },
+            },
+        ],
+    });
+    await createFeatureToggle({
         name: 'enabledFeature2',
         enabled: true,
         strategies: [

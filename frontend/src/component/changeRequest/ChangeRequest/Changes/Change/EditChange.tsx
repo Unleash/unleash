@@ -14,10 +14,7 @@ import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import {
-    IChangeSchema,
-    useChangeRequestApi,
-} from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { comparisonModerator } from 'component/feature/FeatureStrategy/featureStrategy.utils';
 import {
     IChangeRequestAddStrategy,

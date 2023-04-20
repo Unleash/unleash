@@ -1,5 +1,6 @@
 import openapi, { IExpressOpenApi } from '@unleash/express-openapi';
 import { Express, RequestHandler, Response } from 'express';
+import { ErrorObject } from 'ajv';
 import { IUnleashConfig } from '../types/option';
 import {
     createOpenApiSchema,
@@ -11,6 +12,7 @@ import { ApiOperation } from '../openapi/util/api-operation';
 import { Logger } from '../logger';
 import { validateSchema } from '../openapi/validate';
 import { IFlagResolver } from '../types';
+import { statusCode, UnleashError } from '../error/api-error';
 
 export class OpenApiService {
     private readonly config: IUnleashConfig;
@@ -58,10 +60,40 @@ export class OpenApiService {
     useErrorHandler(app: Express): void {
         app.use((err, req, res, next) => {
             if (err && err.status && err.validationErrors) {
-                res.status(err.status).json({
-                    error: err.message,
-                    validation: err.validationErrors,
+                const requiredText = (validationError: ErrorObject) => {
+                    console.log('the error is:', validationError);
+
+                    // @ts-ignore-error it does exist
+                    return `The ${validationError.dataPath}.${validationError.params.missingProperty} property is required. It was not present on the data you sent.`;
+                };
+                const regularText = (validationError: ErrorObject) => {
+                    console.log('the error is:', validationError);
+                    const youSent = JSON.stringify(
+                        req.body[
+                            // @ts-ignore-error it does exist
+                            validationError.dataPath.substring('.body.'.length)
+                        ],
+                    );
+                    // @ts-ignore-error it does exist
+                    const propertyName = validationError.dataPath.substring(
+                        '.body.'.length,
+                    );
+                    return `The ${propertyName} property ${validationError.message}. You sent ${youSent}.`;
+                };
+
+                const description =
+                    err.validationErrors[0].keyword === 'required'
+                        ? requiredText(err.validationErrors[0])
+                        : regularText(err.validationErrors[0]);
+
+                const apiError = new UnleashError({
+                    type: 'BadRequestError',
+                    message:
+                        "The request payload you provided doesn't conform to the schema.",
+                    suggestion: description,
                 });
+
+                res.status(statusCode(apiError.name)).json(apiError);
             } else {
                 next(err);
             }

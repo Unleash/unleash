@@ -11,8 +11,7 @@ import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish
 const defaultProgress = {
     welcomeOpen: true,
     expanded: true,
-    active: false,
-    topic: 0,
+    topic: -1,
     steps: [0],
 };
 
@@ -27,31 +26,27 @@ export const Demo = () => {
     );
     const [finishOpen, setFinishOpen] = useState(false);
 
-    const [active, setActive] = useState(false);
+    const [loaded, setLoaded] = useState(false);
     const [expanded, setExpanded] = useState(storedProgress.expanded ?? true);
-    const [topic, setTopic] = useState(storedProgress.topic ?? 0);
+    const [topic, setTopic] = useState(storedProgress.topic ?? -1);
     const [steps, setSteps] = useState(storedProgress.steps ?? [0]);
 
     useEffect(() => {
-        if (storedProgress.active) {
-            setTimeout(() => {
-                setActive(true);
-            }, 1000);
-        }
+        setTimeout(() => {
+            setLoaded(true);
+        }, 1000);
     }, []);
 
     useEffect(() => {
         setStoredProgress({
             welcomeOpen,
             expanded,
-            active,
             topic,
             steps,
         });
-    }, [welcomeOpen, expanded, active, topic, steps]);
+    }, [welcomeOpen, expanded, topic, steps]);
 
     const onStart = () => {
-        setActive(true);
         setTopic(0);
         setSteps([0]);
         setExpanded(true);
@@ -111,7 +106,7 @@ export const Demo = () => {
                 onWelcome={() => setWelcomeOpen(true)}
             />
             <ConditionallyRender
-                condition={active}
+                condition={loaded}
                 show={
                     <DemoSteps
                         setExpanded={setExpanded}

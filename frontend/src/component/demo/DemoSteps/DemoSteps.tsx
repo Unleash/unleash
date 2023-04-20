@@ -149,14 +149,6 @@ export const DemoSteps = ({
                 }
             }
         }
-
-        if (run && !document.querySelector(step.target as string)) {
-            if (step.optional && flow === 'next') {
-                next();
-            } else {
-                back();
-            }
-        }
     };
 
     const onBack = (step: ITutorialTopicStep) => {
@@ -175,21 +167,40 @@ export const DemoSteps = ({
         back();
     };
 
+    const waitForLoad = (step: ITutorialTopicStep, tries = 0) => {
+        setTimeout(() => {
+            if (document.querySelector(step.target as string) || tries > 10) {
+                setRun(true);
+            } else {
+                if (flow === 'back') {
+                    back();
+                } else if (step.optional && flow === 'next') {
+                    next();
+                } else {
+                    waitForLoad(step, tries + 1);
+                }
+            }
+        }, 200);
+    };
+
     useEffect(() => {
         setRun(false);
+
         if (topic === -1) return;
         const currentTopic = topics[topic];
-        const currentStep = steps[topic];
-        const href = currentTopic.steps[currentStep]?.href;
-        if (href && location.pathname !== href) {
-            navigate(href);
-        }
-        currentTopic.setup?.();
+        const currentStepIndex = steps[topic];
+        const currentStep = currentTopic.steps[currentStepIndex];
+        if (!currentStep) return;
 
-        setTimeout(() => {
-            setRun(true);
-        }, 200);
+        if (currentStep.href && location.pathname !== currentStep.href) {
+            navigate(currentStep.href);
+        }
+        waitForLoad(currentStep);
     }, [topic, steps]);
+
+    useEffect(() => {
+        if (topic > -1) topics[topic].setup?.();
+    }, [topic]);
 
     if (topic === -1) return null;
 

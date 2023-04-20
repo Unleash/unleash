@@ -18,7 +18,7 @@ export const publicSignupTokensSchema = {
             example: [
                 {
                     secret: 'a3c84b25409ea8ca1782ef17f94a42fc',
-                    url: 'https://sandbox.getunleash.io/enterprise/new-user?invite=a3c84b25409ea8ca1782ef17f94a42fc',
+                    url: 'https://my_unleash_instance/new-user?invite=a3c84b25409ea8ca1782ef17f94a42fc',
                     name: 'Invite public viewers',
                     enabled: false,
                     expiresAt: '2023-04-12T11:13:31.960Z',
@@ -26,8 +26,8 @@ export const publicSignupTokensSchema = {
                     users: null,
                     role: {
                         id: 3,
-                        type: 'viewer',
-                        name: 'viewer',
+                        type: 'root',
+                        name: 'Viewer',
                     },
                 },
             ],

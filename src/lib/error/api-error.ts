@@ -1,30 +1,6 @@
 import { v4 as uuidV4 } from 'uuid';
 import { FromSchema } from 'json-schema-to-ts';
 
-// const UnleashApiErrorTypes = {
-//     ValidationError: 400,
-//     BadDataError: 400,
-//     BadRequestError: 400,
-//     OwaspValidationError: 400,
-//     PasswordUndefinedError: 400,
-//     MinimumOneEnvironmentError: 400,
-//     InvalidTokenError: 401,
-//     NoAccessError: 403,
-//     UsedTokenError: 403,
-//     InvalidOperationError: 403,
-//     IncompatibleProjectError: 403,
-//     OperationDeniedError: 403,
-//     NotFoundError: 404,
-//     NameExistsError: 409,
-//     FeatureHasTagError: 409,
-//     RoleInUseError: 400,
-//     ProjectWithoutOwnerError: 409,
-//     TypeError: 400,
-//     UnknownError: 400,
-//     // server errors; not the end user's fault
-//     InternalError: 500,
-// } as const;
-
 const UnleashApiErrorTypes = [
     'ValidationError',
     'BadDataError',
@@ -44,13 +20,61 @@ const UnleashApiErrorTypes = [
     'RoleInUseError',
     'ProjectWithoutOwnerError',
     'UnknownError',
+    'PasswordMismatch',
+    'DisabledError',
+
     // server errors; not the end user's fault
     'InternalError',
 ] as const;
 
 type UnleashApiErrorKind = typeof UnleashApiErrorTypes[number];
 
-const statusCode = (errorKind: UnleashApiErrorKind) => {};
+export const statusCode = (errorKind: UnleashApiErrorKind): number => {
+    switch (errorKind) {
+        case 'ValidationError':
+            return 400;
+        case 'BadDataError':
+            return 400;
+        case 'BadRequestError':
+            return 400;
+        case 'OwaspValidationError':
+            return 400;
+        case 'PasswordUndefinedError':
+            return 400;
+        case 'MinimumOneEnvironmentError':
+            return 400;
+        case 'InvalidTokenError':
+            return 401;
+        case 'NoAccessError':
+            return 403;
+        case 'UsedTokenError':
+            return 403;
+        case 'InvalidOperationError':
+            return 403;
+        case 'IncompatibleProjectError':
+            return 403;
+        case 'OperationDeniedError':
+            return 403;
+        case 'NotFoundError':
+            return 404;
+        case 'NameExistsError':
+            return 409;
+        case 'FeatureHasTagError':
+            return 409;
+        case 'RoleInUseError':
+            return 400;
+        case 'ProjectWithoutOwnerError':
+            return 409;
+        case 'UnknownError':
+            return 400;
+        case 'InternalError':
+            return 500;
+        case 'PasswordMismatch':
+            return 401;
+        case 'DisabledError':
+            return 422;
+    }
+};
 
 type UnleashErrorData = {
     type: UnleashApiErrorKind;
@@ -61,9 +85,13 @@ type UnleashErrorData = {
 
 export class UnleashError implements Error {
     id: string;
+
     suggestion: string;
+
     name: UnleashApiErrorKind;
+
     message: string;
+
     documentationLink: string | null;
 
     constructor({
@@ -151,7 +179,7 @@ export const apiErrorSchema = {
     components: {},
 } as const;
 
-export const fromLegacyError = (e: Error): ApiErrorSchema => {
+export const fromLegacyError = (e: Error): UnleashError => {
     const type = UnleashApiErrorTypes.includes(e.name as UnleashApiErrorKind)
         ? (e.name as UnleashApiErrorKind)
         : 'UnknownError';
@@ -160,7 +188,7 @@ export const fromLegacyError = (e: Error): ApiErrorSchema => {
         type,
         message: e.message,
         suggestion: 'Tell Unleash about this suggestion being missing',
-    }).serialize();
+    });
 };
 
 export type ApiErrorSchema = FromSchema<typeof apiErrorSchema>;

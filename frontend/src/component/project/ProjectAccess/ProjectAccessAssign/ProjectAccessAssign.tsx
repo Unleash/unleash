@@ -257,7 +257,7 @@ export const ProjectAccessAssign = ({
     };
 
     const createRootGroupWarning = (group?: IGroup): string | undefined => {
-        if (group && !!group.rootRole) {
+        if (group && Boolean(group.rootRole)) {
             return 'This group has an Admin or Editor role associated with it. Groups with a root role association cannot be assigned to projects, and users in this group already have the role applied globally.';
         }
     };

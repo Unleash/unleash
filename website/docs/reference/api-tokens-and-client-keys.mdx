@@ -21,7 +21,6 @@ This section describes what API tokens are. For information on how to create the
 Use API tokens to connect to the Unleash server API. API tokens come in four distinct types:
 
 -   [Admin tokens](#admin-tokens)
--   [Project level access tokens](#project-level-access-tokens)
 -   [Personal access tokens](#personal-access-tokens)
 -   [Client tokens](#client-tokens)
 -   [Front-end tokens](#front-end-tokens)
@@ -41,6 +40,20 @@ Admin, client and front-end tokens contain the following pieces of information:
 
 Personal access tokens follow their own special format, and only contain an optional description for the token and an expiry date.
 
+
+### API token visibility
+
+:::info project-level visibility
+
+Project-level visibility and access to API tokens was introduced in Unleash 4.22.
+
+:::
+
+By default, only admin users can create API tokens, and only admins can see their values.
+
+However, any [client](#client-tokens client tokens) and [front-end tokens](#front-end-tokens) that are applicable to a project, will also be visible to any members of that project that have the `READ_PROJECT_API_TOKEN` permission (all project members by default). 
+
+Similarly, any project members with the `CREATE_PROJECT_API_TOKEN` permission can also create client and front-end tokens for that specific project ([how to create project API tokens](../how-to/how-to-create-project-api-tokens.mdx)).
 ### Admin tokens
 
 **Admin tokens** grant _full read and write access_ to all resources in the Unleash server API. Admin tokens have access to all projects, all environments, and all global resources (find out more about [resources in the RBAC document](../reference/rbac.md#core-principles)).
@@ -57,15 +70,8 @@ Do **not** use admin tokens for:
 Support for scoped admin tokens with more fine-grained permissions is currently in the planning stage.
 
 
-### Project level access tokens
 
-All project members can see any `CLIENT` (server-side client token) and `FRONTEND` (client-side client token) respectively.
 
-Use personal access tokens to:
-
-- Provide more fine-grained permissions for automation than an admin token provides
-- Give access to all project members (or anyone with `READ_PROJECT_API_TOKEN` permission) to read the token
-- Give access to the project owner (or anyone with `CREATE_PROJECT_API_TOKEN` permission) to create a token,
 
 
 ### Personal access tokens

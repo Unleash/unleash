@@ -18,7 +18,11 @@ import { OpenApiService } from '../../services/openapi-service';
 import { AddonSchema, addonSchema } from '../../openapi/spec/addon-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import { AddonsSchema, addonsSchema } from '../../openapi/spec/addons-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
+import { AddonCreateUpdateSchema } from 'lib/openapi/spec/addon-create-update-schema';
 
 type AddonServices = Pick<IUnleashServices, 'addonService' | 'openApiService'>;
 
@@ -47,9 +51,13 @@ class AddonController extends Controller {
             handler: this.getAddons,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get all addons and providers',
+                    description:
+                        'Retrieve all addons and providers that are defined on this Unleash instance.',
                     tags: ['Addons'],
                     operationId: 'getAddons',
                     responses: {
+                        ...getStandardResponses(401),
                         200: createResponseSchema('addonsSchema'),
                     },
                 }),
@@ -63,10 +71,16 @@ class AddonController extends Controller {
             permission: CREATE_ADDON,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Create a new addon',
+                    description:
+                        'Create an addon instance. The addon must use one of the providers available on this Unleash instance.',
                     tags: ['Addons'],
                     operationId: 'createAddon',
-                    requestBody: createRequestSchema('addonSchema'),
-                    responses: { 200: createResponseSchema('addonSchema') },
+                    requestBody: createRequestSchema('addonCreateUpdateSchema'),
+                    responses: {
+                        200: createResponseSchema('addonSchema'),
+                        ...getStandardResponses(400, 401, 403, 413, 415),
+                    },
                 }),
             ],
         });
@@ -78,9 +92,15 @@ class AddonController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get a specific addon',
+                    description:
+                        'Retrieve information about the addon whose ID matches the ID in the request URL.',
                     tags: ['Addons'],
                     operationId: 'getAddon',
-                    responses: { 200: createResponseSchema('addonSchema') },
+                    responses: {
+                        200: createResponseSchema('addonSchema'),
+                        ...getStandardResponses(401),
+                    },
                 }),
             ],
         });
@@ -92,10 +112,17 @@ class AddonController extends Controller {
             permission: UPDATE_ADDON,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Update an addon',
+                    description: `Update the addon with a specific ID. Any fields in the update object will be updated. Properties that are not included in the update object will not be affected. To empty a property, pass \`null\` as that property's value.
+
+Note: passing \`null\` as a value for the description property will set it to an empty string.`,
                     tags: ['Addons'],
                     operationId: 'updateAddon',
-                    requestBody: createRequestSchema('addonSchema'),
-                    responses: { 200: createResponseSchema('addonSchema') },
+                    requestBody: createRequestSchema('addonCreateUpdateSchema'),
+                    responses: {
+                        200: createResponseSchema('addonSchema'),
+                        ...getStandardResponses(400, 401, 403, 413, 415),
+                    },
                 }),
             ],
         });
@@ -108,9 +135,15 @@ class AddonController extends Controller {
             permission: DELETE_ADDON,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Delete an addon',
+                    description:
+                        'Delete the addon specified by the ID in the request path.',
                     tags: ['Addons'],
                     operationId: 'deleteAddon',
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403),
+                    },
                 }),
             ],
         });
@@ -141,7 +174,7 @@ class AddonController extends Controller {
     }
 
     async updateAddon(
-        req: IAuthRequest<{ id: number }, any, any, any>,
+        req: IAuthRequest<{ id: number }, any, AddonCreateUpdateSchema, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
@@ -159,7 +192,7 @@ class AddonController extends Controller {
     }
 
     async createAddon(
-        req: IAuthRequest<AddonSchema, any, any, any>,
+        req: IAuthRequest<AddonCreateUpdateSchema, any, any, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const createdBy = extractUsername(req);

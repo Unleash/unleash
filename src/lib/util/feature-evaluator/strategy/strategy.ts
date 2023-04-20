@@ -12,6 +12,7 @@ export type SegmentForEvaluation = {
 
 export interface StrategyTransportInterface {
     name: string;
+    title?: string;
     parameters: any;
     constraints: Constraint[];
     segments?: number[];
@@ -62,7 +63,7 @@ export class Strategy {
             };
         }
 
-        const mappedConstraints = [];
+        const mappedConstraints: PlaygroundConstraintSchema[] = [];
         for (const constraint of constraints) {
             if (constraint) {
                 mappedConstraints.push({

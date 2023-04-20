@@ -12,6 +12,7 @@ import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender'
 type Color = 'info' | 'success' | 'warning' | 'error' | 'secondary' | 'neutral';
 
 interface IBadgeProps {
+    as?: React.ElementType;
     color?: Color;
     icon?: ReactElement;
     iconRight?: boolean;
@@ -69,6 +70,7 @@ const BadgeIcon = (color: Color, icon: ReactElement, iconRight = false) => (
 export const Badge: FC<IBadgeProps> = forwardRef(
     (
         {
+            as = 'div',
             color = 'neutral',
             icon,
             iconRight,
@@ -80,6 +82,7 @@ export const Badge: FC<IBadgeProps> = forwardRef(
         ref: ForwardedRef<HTMLDivElement>
     ) => (
         <StyledBadge
+            as={as}
             tabIndex={0}
             color={color}
             icon={icon}

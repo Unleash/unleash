@@ -38,7 +38,7 @@ const unleash = require('unleash-server');
 const unleashOptions = {
   db: {
     user: 'unleash_user',
-    password: 'passord',
+    password: 'password',
     host: 'localhost',
     port: 5432,
     database: 'unleash',
@@ -231,7 +231,7 @@ The available options are listed in the table below. Options can be specified ei
 | Property name | Environment variable | Default value | Description |
 | --- | --- | --- | --- |
 | `user` | `DATABASE_USERNAME` | `unleash_user` | The database username. |
-| `password` | `DATABASE_PASSWORD` | `passord` | The database password. |
+| `password` | `DATABASE_PASSWORD` | `password` | The database password. |
 | `host` | `DATABASE_HOST` | `localhost` | The database hostname. |
 | `port` | `DATABASE_PORT` | `5432` | The database port. |
 | `database` | `DATABASE_NAME` | `unleash` | The name of the database. |

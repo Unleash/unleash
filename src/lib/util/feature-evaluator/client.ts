@@ -108,6 +108,7 @@ export default class UnleashClient {
                 return {
                     name: strategySelector.name,
                     id: strategySelector.id,
+                    title: strategySelector.title,
                     parameters: strategySelector.parameters,
                     ...strategy.isEnabledWithConstraints(
                         strategySelector.parameters,

@@ -10,17 +10,17 @@
 export interface FeatureTagSchema {
     /** The name of the feature this tag is applied to */
     featureName: string;
-    /** The type of tag */
+    /** The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag */
     tagType?: string;
     /** The value of the tag */
     tagValue: string;
     /**
-     * This field is deprecated and currently unused, use tagType instead
+     * The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagType` property.
      * @deprecated
      */
     type?: string;
     /**
-     * This field is deprecated and currently unused, use tagValue instead
+     * The value of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagValue` property.
      * @deprecated
      */
     value?: string;

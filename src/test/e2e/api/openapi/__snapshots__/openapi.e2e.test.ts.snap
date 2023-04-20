@@ -2357,6 +2357,11 @@ The provider you choose for your addon dictates what properties the \`parameters
             },
             "type": "array",
           },
+          "rootRole": {
+            "description": "A role id that is used as the root role for all users in this group. This can be either the id of the Editor or Admin role.",
+            "nullable": true,
+            "type": "number",
+          },
           "users": {
             "items": {
               "$ref": "#/components/schemas/groupUserModelSchema",
@@ -3296,6 +3301,11 @@ The provider you choose for your addon dictates what properties the \`parameters
               "$ref": "#/components/schemas/playgroundSegmentSchema",
             },
             "type": "array",
+          },
+          "title": {
+            "description": "Description of the feature's purpose.",
+            "example": "Beta rollout",
+            "type": "string",
           },
         },
         "required": [
@@ -6181,6 +6191,12 @@ If the provided project does not exist, the list of events will be empty.",
           },
           "401": {
             "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
           },
         },
         "summary": "Get all tags for a feature.",

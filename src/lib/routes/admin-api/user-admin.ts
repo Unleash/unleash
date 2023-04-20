@@ -341,6 +341,7 @@ export default class UserAdminController extends Controller {
                 id: g.id,
                 name: g.name,
                 userCount: g.users.length,
+                rootRole: g.rootRole,
             } as IGroup;
         });
         this.openApiService.respondWithValidation(

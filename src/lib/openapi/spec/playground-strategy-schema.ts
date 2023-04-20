@@ -66,6 +66,11 @@ export const playgroundStrategySchema = {
             description: "The strategy's name.",
             type: 'string',
         },
+        title: {
+            type: 'string',
+            example: 'Beta rollout',
+            description: "Description of the feature's purpose.",
+        },
         id: {
             description: "The strategy's id.",
             type: 'string',

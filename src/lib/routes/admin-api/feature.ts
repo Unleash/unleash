@@ -120,7 +120,7 @@ class FeatureController extends Controller {
                     operationId: 'listTags',
                     responses: {
                         200: createResponseSchema('tagsSchema'),
-                        ...getStandardResponses(401),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],

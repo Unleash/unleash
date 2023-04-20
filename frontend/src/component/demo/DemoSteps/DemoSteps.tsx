@@ -1,14 +1,13 @@
 import Joyride, {
     ACTIONS,
     CallBackProps,
-    EVENTS,
-    STATUS,
     TooltipRenderProps,
 } from 'react-joyride';
 import { Button, Typography, styled, useTheme } from '@mui/material';
-import { ITutorialTopic } from '../Demo';
-import { useEffect } from 'react';
+import { ITutorialTopic, ITutorialTopicStep } from '../demo-topics';
+import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const StyledTooltip = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -45,8 +44,6 @@ const StyledTooltipPrimaryActions = styled('div')(({ theme }) => ({
 }));
 
 interface IDemoStepsProps {
-    run: boolean;
-    setRun: React.Dispatch<React.SetStateAction<boolean>>;
     setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
     steps: number[];
     setSteps: React.Dispatch<React.SetStateAction<number[]>>;
@@ -56,8 +53,6 @@ interface IDemoStepsProps {
 }
 
 export const DemoSteps = ({
-    run,
-    setRun,
     setExpanded,
     steps,
     setSteps,
@@ -66,34 +61,63 @@ export const DemoSteps = ({
     topics,
 }: IDemoStepsProps) => {
     const theme = useTheme();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [run, setRun] = useState(false);
+    const [flow, setFlow] = useState<'next' | 'back'>('next');
+
+    const abortController = new AbortController();
 
     const skip = () => {
-        setRun(false);
+        abortController.abort();
         setTopic(-1);
         setExpanded(false);
     };
 
+    const setStep = (topic: number, step: number) => {
+        setSteps(steps => {
+            const newSteps = [...steps];
+            newSteps[topic] = step;
+            return newSteps;
+        });
+    };
+
     const back = () => {
+        setFlow('back');
         if (steps[topic] === 0) {
-            setRun(false);
             const newTopic = topic - 1;
             setTopic(newTopic);
-            setSteps(steps => {
-                const newSteps = [...steps];
-                newSteps[newTopic] = topics[newTopic].steps.length - 1;
-                return newSteps;
-            });
+            setStep(newTopic, topics[newTopic].steps.length - 1);
         } else {
-            setSteps(steps => {
-                const newSteps = [...steps];
-                newSteps[topic] = steps[topic] - 1;
-                return newSteps;
-            });
+            setStep(topic, steps[topic] - 1);
         }
     };
 
-    const joyrideCallback = (data: CallBackProps) => {
-        const { action, index, status, type, step } = data;
+    const nextTopic = () => {
+        if (topic === topics.length - 1) {
+            setTopic(-1);
+            setExpanded(false);
+        } else {
+            const newTopic = topic + 1;
+            setTopic(newTopic);
+            setStep(newTopic, 0);
+        }
+    };
+
+    const next = (index = steps[topic]) => {
+        setFlow('next');
+        setStep(topic, index + 1);
+        if (index === topics[topic].steps.length - 1) {
+            nextTopic();
+        }
+    };
+
+    const joyrideCallback = (
+        data: CallBackProps & {
+            step: ITutorialTopicStep;
+        }
+    ) => {
+        const { action, index, step } = data;
 
         if (action === ACTIONS.UPDATE) {
             const el = document.querySelector(step.target as string);
@@ -101,54 +125,86 @@ export const DemoSteps = ({
                 el.scrollIntoView({
                     block: 'center',
                 });
+                if (!step.nextButton) {
+                    const clickHandler = (e: Event) => {
+                        abortController.abort();
+                        next(index);
+                        if (step.preventDefault) {
+                            e.preventDefault();
+                        }
+                    };
+
+                    if (step.anyClick) {
+                        window.addEventListener('click', clickHandler, {
+                            signal: abortController.signal,
+                        });
+                    } else {
+                        el.addEventListener('click', clickHandler, {
+                            signal: abortController.signal,
+                        });
+                    }
+                }
             }
         }
 
-        if (
-            ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND] as string[]).includes(
-                type
-            )
-        ) {
-            const newStep = index + (action === ACTIONS.PREV ? -1 : 1);
-            setSteps(steps => {
-                const newSteps = [...steps];
-                newSteps[topic] = newStep;
-                return newSteps;
-            });
-        } else if (
-            ([STATUS.FINISHED, STATUS.SKIPPED] as string[]).includes(status)
-        ) {
-            setRun(false);
-            if (topic === topics.length - 1) {
-                setTopic(-1);
-                setExpanded(false);
+        if (run && !document.querySelector(step.target as string)) {
+            if (step.optional && flow === 'next') {
+                next();
             } else {
-                const newTopic = topic + 1;
-                setTopic(newTopic);
-                setSteps(steps => {
-                    const newSteps = [...steps];
-                    newSteps[newTopic] = 0;
-                    return newSteps;
-                });
+                back();
             }
         }
     };
 
+    const onBack = (step: ITutorialTopicStep) => {
+        if (step.backCloseModal) {
+            (
+                document.querySelector('.MuiModal-backdrop') as HTMLElement
+            )?.click();
+        }
+        if (step.backCollapseExpanded) {
+            (
+                document.querySelector(
+                    '.Mui-expanded[role="button"]'
+                ) as HTMLElement
+            )?.click();
+        }
+        back();
+    };
+
     useEffect(() => {
-        setRun(true);
+        setRun(false);
+        if (topic === -1) return;
+        const currentTopic = topics[topic];
+        const currentStep = steps[topic];
+        const href = currentTopic.steps[currentStep]?.href;
+        if (href && location.pathname !== href) {
+            navigate(href);
+        }
+        currentTopic.setup?.();
+
+        setTimeout(() => {
+            setRun(true);
+        }, 200);
     }, [topic, steps]);
 
     if (topic === -1) return null;
+
+    const joyrideSteps = topics[topic].steps.map(step => ({
+        ...step,
+        disableBeacon: true,
+    }));
 
     return (
         <Joyride
             run={run}
             stepIndex={steps[topic]}
             callback={joyrideCallback}
-            steps={topics[topic].steps}
+            steps={joyrideSteps}
             disableScrolling
             disableOverlayClose
             spotlightClicks
+            spotlightPadding={0}
             floaterProps={{
                 disableAnimation: true,
                 styles: {
@@ -175,58 +231,71 @@ export const DemoSteps = ({
             }}
             tooltipComponent={({
                 step,
-                primaryProps,
                 tooltipProps,
-            }: TooltipRenderProps) => {
-                const { onClick } = primaryProps;
-
-                return (
-                    <StyledTooltip {...tooltipProps}>
-                        <StyledTooltipTitle>
-                            {step.title}
+            }: TooltipRenderProps & {
+                step: ITutorialTopicStep;
+            }) => (
+                <StyledTooltip {...tooltipProps}>
+                    <StyledTooltipTitle>
+                        <ConditionallyRender
+                            condition={Boolean(step.title)}
+                            show={step.title}
+                            elseShow={
+                                <Typography fontWeight="bold">
+                                    {topics[topic].title}
+                                </Typography>
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={topics[topic].steps.length > 1}
+                            show={
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    flexShrink={0}
+                                >
+                                    (step {steps[topic] + 1} of{' '}
+                                    {topics[topic].steps.length})
+                                </Typography>
+                            }
+                        />
+                    </StyledTooltipTitle>
+                    {step.content}
+                    <StyledTooltipActions>
+                        <Button variant="text" onClick={skip}>
+                            Skip
+                        </Button>
+                        <StyledTooltipPrimaryActions>
                             <ConditionallyRender
-                                condition={topics[topic].steps.length > 1}
+                                condition={topic > 0 || steps[topic] > 0}
                                 show={
-                                    <Typography
-                                        variant="body2"
-                                        color="text.secondary"
-                                        flexShrink={0}
+                                    <Button
+                                        variant="outlined"
+                                        onClick={() => onBack(step)}
                                     >
-                                        (step {steps[topic] + 1} of{' '}
-                                        {topics[topic].steps.length})
-                                    </Typography>
+                                        Back
+                                    </Button>
                                 }
                             />
-                        </StyledTooltipTitle>
-                        {step.content}
-                        <StyledTooltipActions>
-                            <Button variant="text" onClick={skip}>
-                                Skip
-                            </Button>
-                            <StyledTooltipPrimaryActions>
-                                <ConditionallyRender
-                                    condition={topic > 0 || steps[topic] > 0}
-                                    show={
-                                        <Button
-                                            variant="outlined"
-                                            onClick={back}
-                                        >
-                                            Back
-                                        </Button>
-                                    }
-                                />
-                                <Button onClick={onClick} variant="contained">
-                                    {topic === topics.length - 1 &&
-                                    steps[topic] ===
-                                        topics[topic].steps.length - 1
-                                        ? 'Finish'
-                                        : 'Next'}
-                                </Button>
-                            </StyledTooltipPrimaryActions>
-                        </StyledTooltipActions>
-                    </StyledTooltip>
-                );
-            }}
+                            <ConditionallyRender
+                                condition={Boolean(step.nextButton)}
+                                show={
+                                    <Button
+                                        onClick={() => next(steps[topic])}
+                                        variant="contained"
+                                    >
+                                        {topic === topics.length - 1 &&
+                                        steps[topic] ===
+                                            topics[topic].steps.length - 1
+                                            ? 'Finish'
+                                            : 'Next'}
+                                    </Button>
+                                }
+                            />
+                        </StyledTooltipPrimaryActions>
+                    </StyledTooltipActions>
+                </StyledTooltip>
+            )}
         />
     );
 };

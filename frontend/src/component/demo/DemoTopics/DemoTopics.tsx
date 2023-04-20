@@ -9,7 +9,7 @@ import {
     styled,
 } from '@mui/material';
 import { CheckCircle, CircleOutlined, ExpandMore } from '@mui/icons-material';
-import { ITutorialTopic } from '../Demo';
+import { ITutorialTopic } from '../demo-topics';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
@@ -138,6 +138,7 @@ interface IDemoTopicsProps {
     currentTopic: number;
     setCurrentTopic: (topic: number) => void;
     topics: ITutorialTopic[];
+    onShowWelcome: () => void;
 }
 
 export const DemoTopics = ({
@@ -147,6 +148,7 @@ export const DemoTopics = ({
     currentTopic,
     setCurrentTopic,
     topics,
+    onShowWelcome,
 }: IDemoTopicsProps) => {
     const completedSteps = steps.reduce((acc, step) => acc + (step || 0), 0);
     const totalSteps = topics.flatMap(({ steps }) => steps).length;
@@ -201,7 +203,7 @@ export const DemoTopics = ({
                         </StyledStep>
                     );
                 })}
-                <StyledButton variant="outlined">
+                <StyledButton variant="outlined" onClick={onShowWelcome}>
                     View demo link again
                 </StyledButton>
             </AccordionDetails>

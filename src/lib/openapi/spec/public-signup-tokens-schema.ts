@@ -15,6 +15,22 @@ export const publicSignupTokensSchema = {
             items: {
                 $ref: '#/components/schemas/publicSignupTokenSchema',
             },
+            example: [
+                {
+                    secret: 'a3c84b25409ea8ca1782ef17f94a42fc',
+                    url: 'https://sandbox.getunleash.io/enterprise/new-user?invite=a3c84b25409ea8ca1782ef17f94a42fc',
+                    name: 'Invite public viewers',
+                    enabled: false,
+                    expiresAt: '2023-04-12T11:13:31.960Z',
+                    createdAt: '2023-04-12T11:13:31.960Z',
+                    users: null,
+                    role: {
+                        id: 3,
+                        type: 'viewer',
+                        name: 'viewer',
+                    },
+                },
+            ],
         },
     },
     components: {

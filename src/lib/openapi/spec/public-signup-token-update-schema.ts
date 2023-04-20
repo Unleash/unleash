@@ -2,6 +2,8 @@ import { FromSchema } from 'json-schema-to-ts';
 
 export const publicSignupTokenUpdateSchema = {
     $id: '#/components/schemas/publicSignupTokenUpdateSchema',
+    description:
+        "Used by Unleash for updating a token's expiration date or, when deleting the invite link, it's status",
     type: 'object',
     additionalProperties: false,
     properties: {

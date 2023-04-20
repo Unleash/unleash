@@ -51,7 +51,7 @@ The configuration of a new Project is now available. the following input is avai
 | Project name       | The name of the Project.                                                                    |
 | Description        | A short description of the project                                                          |
 | Mode               | The project [collaboration mode](/reference/project-collaboration-mode.md)                  |
-| Default Stickiness | The default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy                                                                 |
+| Default Stickiness | The default stickiness for the project. This setting controls the default stickiness value for variants and for the gradual rollout strategy.                                                                 |
 
 ## Deleting an existing project {#deleting-an-existing-project}
 

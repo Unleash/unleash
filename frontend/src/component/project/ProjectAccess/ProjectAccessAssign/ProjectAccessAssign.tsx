@@ -367,7 +367,7 @@ export const ProjectAccessAssign = ({
                                     if (option.type === ENTITY_TYPE.GROUP) {
                                         const optionGroup =
                                             option.entity as IGroup;
-                                        return !!optionGroup.rootRole;
+                                        return Boolean(optionGroup.rootRole);
                                     }
                                     return false;
                                 }}

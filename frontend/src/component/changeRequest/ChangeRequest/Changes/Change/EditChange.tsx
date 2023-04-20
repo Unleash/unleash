@@ -2,24 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
-import {
-    IFeatureStrategy,
-    IFeatureStrategyPayload,
-    IStrategy,
-} from 'interfaces/strategy';
+import { IFeatureStrategy } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useFormErrors } from 'hooks/useFormErrors';
-import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import { sortStrategyParameters } from 'utils/sortStrategyParameters';
 import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { IFeatureToggle } from 'interfaces/featureToggle';
@@ -28,7 +18,6 @@ import {
     IChangeSchema,
     useChangeRequestApi,
 } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { comparisonModerator } from 'component/feature/FeatureStrategy/featureStrategy.utils';
 import {
     IChangeRequestAddStrategy,
@@ -74,8 +63,6 @@ export const EditChange = ({
     const errors = useFormErrors();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
-    const navigate = useNavigate();
-    const { addChange } = useChangeRequestApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
@@ -105,55 +92,6 @@ export const EditChange = ({
         }
     }, [feature]);
 
-    // const {
-    //     segments: savedStrategySegments,
-    //     refetchSegments: refetchSavedStrategySegments,
-    // } = useSegments(strategyId);
-
-    // useEffect(() => {
-    //     const savedStrategy = data?.environments
-    //         .flatMap(environment => environment.strategies)
-    //         .find(strategy => strategy.id === strategyId);
-    //     setStrategy(prev => ({ ...prev, ...savedStrategy }));
-    // }, [strategyId, data]);
-
-    // useEffect(() => {
-    //     // Fill in the selected segments once they've been fetched.
-    //     savedStrategySegments && setSegments(savedStrategySegments);
-    // }, [JSON.stringify(savedStrategySegments)]);
-
-    const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
-        // await updateStrategyOnFeature(
-        //     projectId,
-        //     featureId,
-        //     environmentId,
-        //     strategyId,
-        //     payload
-        // );
-        //
-        // await refetchSavedStrategySegments();
-        // setToastData({
-        //     title: 'Strategy updated',
-        //     type: 'success',
-        //     confetti: true,
-        // });
-    };
-
-    const onStrategyRequestEdit = async (payload: IFeatureStrategyPayload) => {
-        // await addChange(projectId, environmentId, {
-        //     action: 'updateStrategy',
-        //     feature: featureId,
-        //     payload: { ...payload, id: strategyId },
-        // });
-        // // FIXME: segments in change requests
-        // setToastData({
-        //     title: 'Change added to draft',
-        //     type: 'success',
-        //     confetti: true,
-        // });
-        // refetchChangeRequests();
-    };
-
     const onSubmit = async () => {
         try {
             await editChange(projectId, changeRequestId, change.id, {
@@ -163,6 +101,10 @@ export const EditChange = ({
             });
             setOpen(false);
             refetch?.();
+            setToastData({
+                title: 'Change updated',
+                type: 'success',
+            });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -178,7 +120,6 @@ export const EditChange = ({
         <SidebarModal
             open={open}
             onClose={() => {
-                console.log('close');
                 setOpen(false);
             }}
             label="Edit change"
@@ -195,9 +136,9 @@ export const EditChange = ({
                 formatApiCode={() =>
                     formatUpdateStrategyApiCode(
                         projectId,
-                        featureId,
-                        environment,
-                        strategyDefinition,
+                        changeRequestId,
+                        change.id,
+                        strategy,
                         unleashUrl
                     )
                 }
@@ -211,6 +152,9 @@ export const EditChange = ({
                     setSegments={setSegments}
                     environmentId={environment}
                     onSubmit={onSubmit}
+                    onCancel={() => {
+                        setOpen(false);
+                    }}
                     loading={false}
                     permission={UPDATE_FEATURE_STRATEGY}
                     errors={errors}
@@ -222,28 +166,10 @@ export const EditChange = ({
     );
 };
 
-export const formatFeaturePath = (
-    projectId: string,
-    featureId: string
-): string => {
-    return `/projects/${projectId}/features/${featureId}`;
-};
-
-export const formatEditStrategyPath = (
-    projectId: string,
-    featureId: string,
-    environmentId: string,
-    strategyId: string
-): string => {
-    const params = new URLSearchParams({ environmentId, strategyId });
-
-    return `/projects/${projectId}/features/${featureId}/strategies/edit?${params}`;
-};
-
 export const formatUpdateStrategyApiCode = (
     projectId: string,
-    featureId: string,
-    environmentId: string,
+    changeRequestId: number,
+    changeId: number,
     strategy: Partial<IFeatureStrategy>,
     unleashUrl?: string
 ): string => {
@@ -251,17 +177,7 @@ export const formatUpdateStrategyApiCode = (
         return '';
     }
 
-    // // Sort the strategy parameters payload so that they match
-    // // the order of the input fields in the form, for usability.
-    // const sortedStrategy = {
-    //     ...strategy,
-    //     parameters: sortStrategyParameters(
-    //         strategy.parameters ?? {},
-    //         strategyDefinition
-    //     ),
-    // };
-
-    const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategy.id}`;
+    const url = `${unleashUrl}/api/admin/projects/${projectId}/change-requests/${changeRequestId}/changes/${changeId}`;
     const payload = JSON.stringify(strategy, undefined, 2);
 
     return `curl --location --request PUT '${url}' \\

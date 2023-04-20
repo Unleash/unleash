@@ -83,7 +83,6 @@ export const ChangeActions: FC<{
 
     const onEdit = () => {
         setEditOpen(true);
-        handleClose();
     };
 
     const onDiscard = async () => {

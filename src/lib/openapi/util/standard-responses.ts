@@ -27,7 +27,7 @@ const conflictResponse = {
 
 const contentTooLargeResponse = {
     description:
-        'The body request body is larger than what we accept. By default we only accept bodies of 100kB or less',
+        'The request body is larger than what we accept. By default we only accept bodies of 100kB or less',
 } as const;
 
 const unsupportedMediaTypeResponse = {

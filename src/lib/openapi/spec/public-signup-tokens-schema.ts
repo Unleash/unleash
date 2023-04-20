@@ -6,6 +6,7 @@ import { publicSignupTokenSchema } from './public-signup-token-schema';
 export const publicSignupTokensSchema = {
     $id: '#/components/schemas/publicSignupTokensSchema',
     type: 'object',
+    description: 'A wrapper object containing all the public signup tokens',
     additionalProperties: false,
     required: ['tokens'],
     properties: {

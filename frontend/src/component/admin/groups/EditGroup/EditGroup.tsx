@@ -66,7 +66,7 @@ export const EditGroup = ({
         group?.description,
         group?.mappingsSSO,
         group?.users,
-        group?.rootRole,
+        group?.rootRole
     );
 
     const { groups } = useGroups();

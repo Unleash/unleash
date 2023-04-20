@@ -2,15 +2,15 @@ import { Strategy } from './strategy';
 import { FeatureInterface } from './feature';
 import { RepositoryInterface } from './repository';
 import {
-    getDefaultVariant,
-    selectVariant,
     Variant,
+    getDefaultVariant,
     VariantDefinition,
+    selectVariant,
 } from './variant';
 import { Context } from './context';
 import { SegmentForEvaluation } from './strategy/strategy';
 import { PlaygroundStrategySchema } from 'lib/openapi/spec/playground-strategy-schema';
-import { playgroundStrategyEvaluation } from '../../openapi';
+import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema';
 
 export type StrategyEvaluationResult = Pick<
     PlaygroundStrategySchema,
@@ -111,8 +111,7 @@ export default class UnleashClient {
                     title: strategySelector.title,
                     disabled: strategySelector.disabled || false,
                     parameters: strategySelector.parameters,
-                    disabled: strategySelector.disabled || null,
-                    ...strategy?.isEnabledWithConstraints(
+                    ...strategy.isEnabledWithConstraints(
                         strategySelector.parameters,
                         context,
                         strategySelector.constraints,

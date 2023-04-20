@@ -43,7 +43,7 @@ The UI shows the currently available projects. To create a new project, use the 
 
 The configuration of a new Project is now available. the following input is available to create the new Project.
 
-![A project creation form. The form fields are labeled "project ID", "name", "description", "mode" and "defaultStickiness". The "Create" button is highlighted.](/img/projects_save_new_project_v2.png)
+![A project creation form. The "Create" button is highlighted.](/img/projects_save_new_project_v2.png)
 
 | Item               | Description                                                                                 |
 |--------------------|---------------------------------------------------------------------------------------------|

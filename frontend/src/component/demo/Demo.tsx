@@ -5,10 +5,12 @@ import { DemoSteps } from './DemoSteps/DemoSteps';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { TOPICS } from './demo-topics';
+import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome';
 
 const defaultProgress = {
+    welcomeOpen: true,
     expanded: true,
-    run: false,
+    active: false,
     topic: 0,
     steps: [0],
 };
@@ -18,34 +20,47 @@ const { value: storedProgress, setValue: setStoredProgress } =
 
 export const Demo = () => {
     const { uiConfig } = useUiConfig();
-    const [loaded, setLoaded] = useState(false);
+    const [welcomeOpen, setWelcomeOpen] = useState(
+        storedProgress.welcomeOpen ?? true
+    );
+    const [active, setActive] = useState(false);
     const [expanded, setExpanded] = useState(storedProgress.expanded ?? true);
-    const [run, setRun] = useState(false);
     const [topic, setTopic] = useState(storedProgress.topic ?? 0);
     const [steps, setSteps] = useState(storedProgress.steps ?? [0]);
 
     useEffect(() => {
-        setTimeout(() => {
-            setLoaded(true);
-            if (storedProgress.run) {
-                setRun(true);
-            }
-        }, 1000);
+        if (storedProgress.active) {
+            setTimeout(() => {
+                setActive(true);
+            }, 1000);
+        }
     }, []);
 
     useEffect(() => {
         setStoredProgress({
+            welcomeOpen,
             expanded,
-            run,
+            active,
             topic,
             steps,
         });
-    }, [expanded, run, topic, steps]);
+    }, [welcomeOpen, expanded, active, topic, steps]);
 
     if (!uiConfig.flags.demo) return null;
 
     return (
         <>
+            <DemoDialogWelcome
+                open={welcomeOpen}
+                onClose={() => {
+                    setWelcomeOpen(false);
+                    setExpanded(false);
+                }}
+                onStart={() => {
+                    setWelcomeOpen(false);
+                    setActive(true);
+                }}
+            />
             <DemoTopics
                 expanded={expanded}
                 setExpanded={setExpanded}
@@ -60,13 +75,12 @@ export const Demo = () => {
                     });
                 }}
                 topics={TOPICS}
+                onShowWelcome={() => setWelcomeOpen(true)}
             />
             <ConditionallyRender
-                condition={loaded}
+                condition={active}
                 show={
                     <DemoSteps
-                        run={run}
-                        setRun={setRun}
                         setExpanded={setExpanded}
                         steps={steps}
                         setSteps={setSteps}

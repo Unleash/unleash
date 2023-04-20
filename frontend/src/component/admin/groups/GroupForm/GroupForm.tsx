@@ -215,7 +215,7 @@ export const GroupForm: FC<IGroupForm> = ({
                             </StyledInputDescription>
                             <StyledAutocompleteWrapper>
                                 <Autocomplete
-                                    data-testid={'test'}
+                                    data-testid="GROUP_ROOT_ROLE"
                                     size="small"
                                     openOnFocus
                                     value={roleIdToRole(rootRole)}

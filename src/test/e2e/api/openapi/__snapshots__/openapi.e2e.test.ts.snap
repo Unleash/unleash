@@ -2446,7 +2446,7 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "healthOverviewSchema": {
         "additionalProperties": false,
-        "description": "An overview of a projects and it's health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)",
+        "description": "An overview of a project and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)",
         "properties": {
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",

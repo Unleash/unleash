@@ -6906,7 +6906,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}": {
       "get": {
-        "description": "This endpoint returns an overview of the specified projects.",
+        "description": "This endpoint returns an overview of the specified project.",
         "operationId": "getProjectOverview",
         "parameters": [
           {
@@ -7200,7 +7200,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/environments/{environment}": {
       "delete": {
-        "description": "This endpoint removes the provided environment to the specified project, with optional support for enabling and disabling change requests for the environment and project.",
+        "description": "This endpoint removes the specified environment from the project.",
         "operationId": "removeEnvironmentFromProject",
         "parameters": [
           {
@@ -7234,7 +7234,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
         },
-        "summary": "Remove a environment to a project.",
+        "summary": "Remove an environment from a project.",
         "tags": [
           "Projects",
         ],

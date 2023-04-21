@@ -6,6 +6,8 @@ export const featureEnvironmentMetricsSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['environment', 'timestamp', 'yes', 'no'],
+    description:
+        'How many times `feautreName` was evaluated to `true` (yes) and `false` (no) for `appName` in `environmnet`',
     properties: {
         featureName: {
             description: 'The name of the feature',

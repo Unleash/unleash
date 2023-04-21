@@ -5,6 +5,8 @@ export const clientMetricsSchema = {
     $id: '#/components/schemas/clientMetricsSchema',
     type: 'object',
     required: ['appName', 'bucket'],
+    description:
+        'Client usage metrics, accumulated in buckets of hour by hour by default',
     properties: {
         appName: {
             description:
@@ -26,6 +28,8 @@ export const clientMetricsSchema = {
         bucket: {
             type: 'object',
             required: ['start', 'stop', 'toggles'],
+            description:
+                'Holds all metrics gathered over a window of time. Typically 1 hour wide',
             properties: {
                 start: {
                     $ref: '#/components/schemas/dateSchema',
@@ -41,6 +45,8 @@ export const clientMetricsSchema = {
                 },
                 toggles: {
                     type: 'object',
+                    description:
+                        'an object containing feature names with yes/no plus variant usage',
                     example: {
                         myCoolToggle: {
                             yes: 25,

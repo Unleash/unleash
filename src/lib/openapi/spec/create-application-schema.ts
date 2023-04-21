@@ -4,6 +4,7 @@ export const createApplicationSchema = {
     $id: '#/components/schemas/createApplicationSchema',
     type: 'object',
     additionalProperties: true,
+    description: 'Reported application information from Unleash SDKs',
     required: ['appName'],
     properties: {
         appName: {

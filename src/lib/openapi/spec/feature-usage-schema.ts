@@ -6,6 +6,8 @@ export const featureUsageSchema = {
     $id: '#/components/schemas/featureUsageSchema',
     type: 'object',
     additionalProperties: false,
+    description:
+        'How many applications have seen this feature toggle, as well as how this feature was evaluated the last hour',
     required: [
         'version',
         'maturity',
@@ -31,6 +33,8 @@ export const featureUsageSchema = {
             example: 'my.special.feature',
         },
         lastHourUsage: {
+            description:
+                'Last hour statistics. Accumulated per feature per environment. Contains counts for evaluations to true (yes) and to false (no)',
             type: 'array',
             items: {
                 $ref: '#/components/schemas/featureEnvironmentMetricsSchema',
@@ -42,7 +46,7 @@ export const featureUsageSchema = {
             items: {
                 type: 'string',
             },
-            examples: ['accounting', 'billing', 'booking'],
+            example: ['accounting', 'billing', 'booking'],
         },
     },
     components: {

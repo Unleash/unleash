@@ -11,12 +11,15 @@ export const bulkMetricsSchema = {
         'A batch of metrics accumulated by Edge (or other compatible applications). Includes both application registrations as well usage metrics from clients',
     properties: {
         applications: {
+            description: 'a list of applications registered by Unleash SDK',
             type: 'array',
             items: {
                 $ref: '#/components/schemas/bulkRegistrationSchema',
             },
         },
         metrics: {
+            description:
+                'a list of client usage metrics registered by downstream providers. (Typically Unleash Edge)',
             type: 'array',
             items: {
                 $ref: '#/components/schemas/clientMetricsEnvSchema',

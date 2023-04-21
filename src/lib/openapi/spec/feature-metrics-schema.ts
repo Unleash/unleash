@@ -7,6 +7,7 @@ export const featureMetricsSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'maturity', 'data'],
+    description: 'A batch of feature metrics',
     properties: {
         version: {
             description: 'The version of this schema',
@@ -20,6 +21,7 @@ export const featureMetricsSchema = {
             example: 'stable',
         },
         data: {
+            description: 'Metrics gathered per environment',
             type: 'array',
             items: {
                 $ref: '#/components/schemas/featureEnvironmentMetricsSchema',

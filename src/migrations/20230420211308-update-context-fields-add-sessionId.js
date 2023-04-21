@@ -7,7 +7,7 @@ exports.up = function (db, callback) {
 
             UPDATE context_fields
             SET stickiness = true
-                WHERE name LIKE 'userId';
+                WHERE name LIKE 'userId' AND stickiness is null;
         `,
         callback,
     );
@@ -20,7 +20,7 @@ exports.down = function (db, callback) {
             WHERE name LIKE 'sessionId';
 
             UPDATE context_fields
-            SET stickiness = false
+            SET stickiness = null
             WHERE name LIKE 'userId';
         `,
         callback,

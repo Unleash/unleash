@@ -45,6 +45,7 @@ export const publicSignupTokenSchema = {
         },
         expiresAt: {
             type: 'string',
+            description: 'The time when the token will expire.',
             format: 'date-time',
             example: '2023-04-12T11:13:31.960Z',
         },

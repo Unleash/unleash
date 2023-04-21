@@ -92,7 +92,7 @@ export const EditChange = ({
     const onSubmit = async () => {
         try {
             await editChange(projectId, changeRequestId, change.id, {
-                action: 'updateStrategy',
+                action: strategy.id ? 'updateStrategy' : 'addStrategy',
                 feature: featureId,
                 payload: { ...strategy, segments },
             });

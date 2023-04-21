@@ -60,8 +60,8 @@ export const DemoDialogWelcome = ({
         <DemoDialog.Header>Explore Unleash</DemoDialog.Header>
         <Typography color="textSecondary" sx={{ mt: 2 }}>
             You can explore Unleash on your own, however for the best experience
-            it's recommended you follow our interactive tutorial. To get
-            started, you will need to open the demo website below.
+            it's recommended you follow our interactive demo. To get started,
+            you will need to open the demo website below.
         </Typography>
         <StyledDemoPane>
             <StyledScanMessage>
@@ -87,7 +87,7 @@ export const DemoDialogWelcome = ({
             color="primary"
             onClick={onStart}
         >
-            Start Unleash tutorial
+            Try Unleash demo
         </StyledStartButton>
     </DemoDialog>
 );

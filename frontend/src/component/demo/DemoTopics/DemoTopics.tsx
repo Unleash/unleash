@@ -99,7 +99,7 @@ const StyledStep = styled('li', {
         ...(selected && {
             backgroundColor: theme.palette.secondary.light,
             fontWeight: theme.typography.fontWeightBold,
-            border: `1px solid ${theme.palette.primary.main}`,
+            outline: `1px solid ${theme.palette.primary.main}`,
         }),
         ...(completed && {
             backgroundColor: theme.palette.background.elevation1,
@@ -161,11 +161,11 @@ export const DemoTopics = ({
         >
             <StyledAccordionSummary>
                 <StyledTitle>
-                    <Typography fontWeight="bold">Unleash tutorial</Typography>
+                    <Typography fontWeight="bold">Unleash demo</Typography>
                     <StyledExpandMoreIcon className="expand-icon" />
                 </StyledTitle>
                 <StyledSubtitle>
-                    Complete all steps to finish tutorial
+                    Complete all steps to finish demo
                 </StyledSubtitle>
                 <StyledProgress>
                     <Typography variant="body2">
@@ -204,7 +204,7 @@ export const DemoTopics = ({
                     );
                 })}
                 <StyledButton variant="outlined" onClick={onWelcome}>
-                    View demo link again
+                    View demo page
                 </StyledButton>
             </AccordionDetails>
         </StyledAccordion>

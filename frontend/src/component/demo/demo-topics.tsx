@@ -111,7 +111,7 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <Description>
                         First, let's open the feature toggle configuration for{' '}
-                        <Badge as="span">demoApp.step2</Badge>.
+                        <Badge as="span">demoApp.step2</Badge>
                     </Description>
                 ),
                 preventDefault: true,
@@ -197,7 +197,7 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Enter your <Badge as="span">userId</Badge>.
+                            Enter your <Badge as="span">userId</Badge>
                         </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
@@ -294,7 +294,7 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <Description>
                         First, let's open the feature toggle configuration for{' '}
-                        <Badge as="span">demoApp.step3</Badge>.
+                        <Badge as="span">demoApp.step3</Badge>
                     </Description>
                 ),
                 preventDefault: true,
@@ -395,7 +395,7 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <Description>
                         First, let's open the feature toggle configuration for{' '}
-                        <Badge as="span">demoApp.step4</Badge>.
+                        <Badge as="span">demoApp.step4</Badge>
                     </Description>
                 ),
                 preventDefault: true,
@@ -432,7 +432,7 @@ export const TOPICS: ITutorialTopic[] = [
                             .
                         </Description>
                         <Description>
-                            Example: <Badge as="span">aqua</Badge>.
+                            Example: <Badge as="span">aqua</Badge>
                         </Description>
                     </>
                 ),
@@ -485,7 +485,7 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Enter your <Badge as="span">userId</Badge>.
+                            Enter your <Badge as="span">userId</Badge>
                         </Description>
                         <Badge
                             sx={{ marginTop: 2 }}

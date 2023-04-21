@@ -52,6 +52,7 @@ export const publicSignupTokenSchema = {
         createdAt: {
             type: 'string',
             format: 'date-time',
+            description: 'When the token was created.',
             example: '2023-04-12T11:13:31.960Z',
         },
         createdBy: {

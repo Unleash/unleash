@@ -64,6 +64,7 @@ const playgroundStrategy = (
         parameters,
         constraints: playgroundStrategyConstraints(),
         segments: fc.array(playgroundSegment()),
+        disabled: fc.boolean(),
     });
 
 const playgroundStrategies = (): Arbitrary<PlaygroundStrategySchema[]> =>

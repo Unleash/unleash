@@ -61,7 +61,6 @@ exports[`should create default config 1`] = `
     "_maxListeners": undefined,
     Symbol(kCapture): false,
   },
-  "eventHook": undefined,
   "experimental": {
     "externalResolver": {
       "isEnabled": [Function],
@@ -87,7 +86,6 @@ exports[`should create default config 1`] = `
       "optimal304Differ": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
-      "projectScopedSegments": false,
       "projectScopedStickiness": false,
       "responseTimeWithAppNameKillSwitch": false,
       "strategyTitle": false,
@@ -116,7 +114,6 @@ exports[`should create default config 1`] = `
       "optimal304Differ": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
-      "projectScopedSegments": false,
       "projectScopedStickiness": false,
       "responseTimeWithAppNameKillSwitch": false,
       "strategyTitle": false,

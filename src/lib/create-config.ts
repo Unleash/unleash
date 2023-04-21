@@ -45,13 +45,14 @@ import {
 import FlagResolver from './util/flag-resolver';
 import { validateOrigins } from './util/validateOrigin';
 
-const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
+const safeToUpper = (s?: string) => (s ? s.toUpperCase() : s);
 
 export function authTypeFromString(
     s?: string,
     defaultType: IAuthType = IAuthType.OPEN_SOURCE,
 ): IAuthType {
-    return IAuthType[safeToUpper(s)] || defaultType;
+    const upperS = safeToUpper(s);
+    return upperS && IAuthType[upperS] ? IAuthType[upperS] : defaultType;
 }
 
 function mergeAll<T>(objects: Partial<T>[]): T {
@@ -93,7 +94,7 @@ function loadClientCachingOptions(
 
     return mergeAll([
         defaultClientCachingOptions,
-        options.clientFeatureCaching,
+        options.clientFeatureCaching || {},
         envs,
     ]);
 }
@@ -249,7 +250,10 @@ const formatServerOptions = (
     };
 };
 
-const loadTokensFromString = (tokenString: String, tokenType: ApiTokenType) => {
+const loadTokensFromString = (
+    tokenString: String | undefined,
+    tokenType: ApiTokenType,
+) => {
     if (!tokenString) {
         return [];
     }
@@ -297,7 +301,7 @@ const loadEnvironmentEnableOverrides = () => {
 };
 
 const parseCspConfig = (
-    cspConfig: ICspDomainOptions,
+    cspConfig?: ICspDomainOptions,
 ): ICspDomainConfig | undefined => {
     if (!cspConfig) {
         return undefined;
@@ -366,12 +370,12 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         defaultDbOptions,
         dbPort(extraDbOptions),
         dbPort(fileDbOptions),
-        options.db,
+        options.db || {},
     ]);
 
     const session: ISessionOption = mergeAll([
         defaultSessionOption,
-        options.session,
+        options.session || {},
     ]);
 
     const logLevel =
@@ -381,12 +385,12 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const server: IServerOption = mergeAll([
         defaultServerOption,
-        formatServerOptions(options.server),
+        formatServerOptions(options.server) || {},
     ]);
 
     const versionCheck: IVersionOption = mergeAll([
         defaultVersionOption,
-        options.versionCheck,
+        options.versionCheck || {},
     ]);
 
     const initApiTokens = loadInitApiTokens();
@@ -403,7 +407,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const importSetting: IImportOption = mergeAll([
         defaultImport,
-        options.import,
+        options.import || {},
     ]);
 
     const experimental = loadExperimental(options);
@@ -411,7 +415,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const ui = loadUI(options);
 
-    const email: IEmailOption = mergeAll([defaultEmail, options.email]);
+    const email: IEmailOption = mergeAll([defaultEmail, options.email || {}]);
 
     let listen: IListeningPipe | IListeningHost;
     if (server.pipe) {
@@ -483,7 +487,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         disableLegacyFeaturesApi,
         preHook: options.preHook,
         preRouterHook: options.preRouterHook,
-        eventHook: options.eventHook,
         enterpriseVersion: options.enterpriseVersion,
         eventBus: new EventEmitter(),
         environmentEnableOverrides,

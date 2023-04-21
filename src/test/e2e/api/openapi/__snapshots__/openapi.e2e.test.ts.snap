@@ -1373,6 +1373,12 @@ The provider you choose for your addon dictates what properties the \`parameters
             },
             "type": "array",
           },
+          "disabled": {
+            "description": "A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs",
+            "example": false,
+            "nullable": true,
+            "type": "boolean",
+          },
           "name": {
             "description": "The name or type of strategy",
             "example": "flexibleRollout",
@@ -2088,6 +2094,12 @@ The provider you choose for your addon dictates what properties the \`parameters
               "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
+          },
+          "disabled": {
+            "description": "A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs",
+            "example": false,
+            "nullable": true,
+            "type": "boolean",
           },
           "featureName": {
             "description": "The name or feature the strategy is attached to",
@@ -3220,6 +3232,12 @@ The provider you choose for your addon dictates what properties the \`parameters
             },
             "type": "array",
           },
+          "disabled": {
+            "description": "The strategy's status. Disabled strategies are not evaluated",
+            "example": false,
+            "nullable": true,
+            "type": "boolean",
+          },
           "id": {
             "description": "The strategy's id.",
             "type": "string",
@@ -3315,6 +3333,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           "segments",
           "constraints",
           "parameters",
+          "disabled",
         ],
         "type": "object",
       },
@@ -4617,6 +4636,12 @@ Stats are divided into current and previous **windows**.
             },
             "type": "array",
           },
+          "disabled": {
+            "description": "A toggle to disable the strategy. defaults to true. Disabled strategies are not evaluated or returned to the SDKs",
+            "example": false,
+            "nullable": true,
+            "type": "boolean",
+          },
           "name": {
             "type": "string",
           },
@@ -4625,6 +4650,12 @@ Stats are divided into current and previous **windows**.
           },
           "sortOrder": {
             "type": "number",
+          },
+          "title": {
+            "description": "A descriptive title for the strategy",
+            "example": "Gradual Rollout 25-Prod",
+            "nullable": true,
+            "type": "string",
           },
         },
         "type": "object",

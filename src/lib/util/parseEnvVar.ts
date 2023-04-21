@@ -1,4 +1,10 @@
-export function parseEnvVarNumber(envVar: string, defaultVal: number): number {
+export function parseEnvVarNumber(
+    envVar: string | undefined,
+    defaultVal: number,
+): number {
+    if (!envVar) {
+        return defaultVal;
+    }
     const parsed = Number.parseInt(envVar, 10);
 
     if (Number.isNaN(parsed)) {

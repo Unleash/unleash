@@ -55,10 +55,6 @@ const flags = {
         process.env.UNLEASH_BULK_OPERATIONS,
         false,
     ),
-    projectScopedSegments: parseEnvVarBoolean(
-        process.env.PROJECT_SCOPED_SEGMENTS,
-        false,
-    ),
     projectScopedStickiness: parseEnvVarBoolean(
         process.env.PROJECT_SCOPED_STICKINESS,
         false,

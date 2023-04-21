@@ -709,6 +709,8 @@ describe('the playground service (e2e)', () => {
                                         expect.arrayContaining([
                                             {
                                                 ...strategy,
+                                                title: undefined,
+                                                disabled: false,
                                                 constraints:
                                                     strategy.constraints ?? [],
                                                 parameters:

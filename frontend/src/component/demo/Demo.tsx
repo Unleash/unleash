@@ -18,13 +18,19 @@ const { value: storedProgress, setValue: setStoredProgress } =
 
 export const Demo = () => {
     const [welcomeOpen, setWelcomeOpen] = useState(
-        storedProgress.welcomeOpen ?? true
+        storedProgress.welcomeOpen ?? defaultProgress.welcomeOpen
     );
     const [finishOpen, setFinishOpen] = useState(false);
 
-    const [expanded, setExpanded] = useState(storedProgress.expanded ?? true);
-    const [topic, setTopic] = useState(storedProgress.topic ?? defaultProgress.topic);
-    const [steps, setSteps] = useState(storedProgress.steps ?? [0]);
+    const [expanded, setExpanded] = useState(
+        storedProgress.expanded ?? defaultProgress.expanded
+    );
+    const [topic, setTopic] = useState(
+        storedProgress.topic ?? defaultProgress.topic
+    );
+    const [steps, setSteps] = useState(
+        storedProgress.steps ?? defaultProgress.steps
+    );
 
     useEffect(() => {
         setStoredProgress({

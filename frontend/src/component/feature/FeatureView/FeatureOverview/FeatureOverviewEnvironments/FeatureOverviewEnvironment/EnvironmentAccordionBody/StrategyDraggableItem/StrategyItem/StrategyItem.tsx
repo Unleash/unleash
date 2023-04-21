@@ -12,6 +12,7 @@ import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
+import { DisableEnableStrategy } from './DisableEnableStrategy/DisableEnableStrategy';
 
 interface IStrategyItemProps {
     environmentId: string;
@@ -76,6 +77,18 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                     >
                         <Edit />
                     </PermissionIconButton>
+                    <ConditionallyRender
+                        condition={false}
+                        // FIXME: flag
+                        show={() => (
+                            <DisableEnableStrategy
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environmentId}
+                                strategyId={strategy.id}
+                            />
+                        )}
+                    />
                     <FeatureStrategyRemove
                         projectId={projectId}
                         featureId={featureId}

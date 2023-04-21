@@ -39,13 +39,17 @@ const StyledIndexLabel = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledContainer = styled(Box)(({ theme }) => ({
+const StyledContainer = styled(Box, {
+    shouldForwardProp: prop => prop !== 'disabled',
+})<{ disabled?: boolean }>(({ theme, disabled }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px solid ${theme.palette.divider}`,
+    border: `1px ${disabled ? 'dashed' : 'solid'} ${theme.palette.divider}`,
     '& + &': {
         marginTop: theme.spacing(2),
     },
-    background: theme.palette.background.paper,
+    background: disabled
+        ? theme.palette.envAccordion.disabled
+        : theme.palette.background.paper,
 }));
 
 const StyledHeader = styled('div', {
@@ -72,13 +76,16 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     const Icon = getFeatureStrategyIcon(strategy.name);
     const { uiConfig } = useUiConfig();
 
+    const disabled = false;
+    // FIXME: flag
+
     return (
         <Box sx={{ position: 'relative' }}>
             <ConditionallyRender
                 condition={orderNumber !== undefined}
                 show={<StyledIndexLabel>{orderNumber}</StyledIndexLabel>}
             />
-            <StyledContainer style={style}>
+            <StyledContainer disabled={disabled} style={style}>
                 <StyledHeader draggable={Boolean(onDragStart)}>
                     <ConditionallyRender
                         condition={Boolean(onDragStart)}

@@ -68,7 +68,7 @@ exports.down = function (db, callback) {
               feature_strategies.parameters as parameters,
               feature_strategies.constraints as constraints,
               feature_strategies.sort_order as sort_order,
-              fss.segment_id as segments
+              fss.segment_id as segments,
               feature_strategies.title as strategy_title
           FROM
               features

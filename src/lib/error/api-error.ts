@@ -20,7 +20,7 @@ const UnleashApiErrorTypes = [
     'RoleInUseError',
     'ProjectWithoutOwnerError',
     'UnknownError',
-    'PasswordMismatch',
+    'PasswordMismatchError',
     'DisabledError',
     'ContentTypeError',
 
@@ -72,7 +72,7 @@ export const statusCode = (errorKind: UnleashApiErrorKind): number => {
             return 400;
         case 'InternalError':
             return 500;
-        case 'PasswordMismatch':
+        case 'PasswordMismatchError':
             return 401;
         case 'DisabledError':
             return 422;
@@ -181,6 +181,63 @@ export const apiErrorSchema = {
     },
     components: {},
 } as const;
+
+const authErrorSchema = {
+    type: 'object',
+    additionalProperties: false,
+    required: ['path', 'name'],
+    description: 'An API authorization error. Contains a path.',
+    properties: {
+        name: {
+            type: 'string',
+            enum: ['PasswordMismatchError'],
+            example: 'PasswordMismatchError',
+            description: 'The name of this authorization error type.',
+        },
+        path: {
+            type: 'string',
+            pattern: 'uri',
+            example: '/auth/simple/login',
+            description: 'Where you must go to log in.',
+        },
+    },
+};
+
+const validationErrorSchema = {
+    type: 'object',
+    additionalProperties: false,
+    required: ['errors', 'name'],
+    description: 'An API authorization error. Contains a path.',
+    properties: {
+        name: {
+            type: 'string',
+            enum: ['ValidationError'],
+            example: 'ValidationError',
+            description: 'The name of this authorization error type.',
+        },
+        errors: {
+            type: 'array',
+            description:
+                'A list of errors on the request body with description and suggestions.',
+            example: [
+                {
+                    description: 'The x property is wrong.',
+                    suggestion: 'Try doing it right.',
+                },
+            ],
+            items: {
+                type: 'object',
+                required: ['description', 'suggestion'],
+                properties: {
+                    description: { type: 'string' },
+                    suggestion: { type: 'string' },
+                },
+            },
+            example: '/auth/simple/login',
+            description: 'Where you must go to log in.',
+        },
+    },
+};
 
 export const fromLegacyError = (e: Error): UnleashError => {
     const type = UnleashApiErrorTypes.includes(e.name as UnleashApiErrorKind)

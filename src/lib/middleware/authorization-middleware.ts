@@ -2,6 +2,7 @@ import { IAuthRequest } from '../routes/unleash-types';
 import { NextFunction, Response } from 'express';
 import AuthenticationRequired from '../types/authentication-required';
 import { LogProvider } from '../logger';
+import { UnleashError } from '../error/api-error';
 
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 const authorizationMiddleware = (
@@ -28,11 +29,24 @@ const authorizationMiddleware = (
         }
         if (req.header('authorization')) {
             // API clients should get 401 without body
-            return res.sendStatus(401);
+            return res.status(401).json(
+                new UnleashError({
+                    type: 'PasswordMismatchError',
+                    message: 'You must log in to use Unleash.',
+                    suggestion: 'Noh.',
+                }),
+            );
         }
         // Admin UI users should get auth-response
-        const authRequired = await generateAuthResponse();
-        return res.status(401).json(authRequired);
+        // const authRequired = await generateAuthResponse();
+        return res.status(401).json(
+            new UnleashError({
+                type: 'PasswordMismatchError',
+                message:
+                    'You must log in to use Unleash. Your request had no authorization header, so we could not authorize you.',
+                suggestion: `Log in using ${baseUriPath}/auth/simple/login.`,
+            }),
+        );
     };
 };
 

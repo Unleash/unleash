@@ -24,10 +24,11 @@ import SettingService from './setting-service';
 import { SimpleAuthSettings } from '../server-impl';
 import { simpleAuthSettingsKey } from '../types/settings/simple-auth-settings';
 import DisabledError from '../error/disabled-error';
-import PasswordMismatch from '../error/password-mismatch';
+// import PasswordMismatch from '../error/password-mismatch';
 import BadDataError from '../error/bad-data-error';
 import { isDefined } from '../util/isDefined';
 import { TokenUserSchema } from '../openapi/spec/token-user-schema';
+import { UnleashError } from '../error/api-error';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -298,7 +299,14 @@ class UserService {
             await this.store.successfullyLogin(user);
             return user;
         }
-        throw new PasswordMismatch();
+
+        throw new UnleashError({
+            type: 'PasswordMismatchError',
+            message: 'The password you provided does not match the username.',
+            suggestion:
+                "Ensure that the password is correct for the username you're using and try again. If you have forgotten your password ... ",
+        });
+        // throw new PasswordMismatch();
     }
 
     /**

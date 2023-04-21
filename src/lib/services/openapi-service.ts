@@ -142,37 +142,37 @@ export class OpenApiService {
                 //     ],
                 // };
 
-                const requiredText = (validationError: ErrorObject) => {
-                    console.log('the error is:', validationError);
-
-                    // @ts-ignore-error it does exist
-                    return `The ${validationError.dataPath}.${validationError.params.missingProperty} property is required. It was not present on the data you sent.`;
-                };
-                const regularText = (validationError: ErrorObject) => {
-                    console.log('the error is:', validationError);
-                    const youSent = JSON.stringify(
-                        req.body[
-                            // @ts-ignore-error it does exist
-                            validationError.dataPath.substring('.body.'.length)
-                        ],
-                    );
-                    // @ts-ignore-error it does exist
+                const errors = err.validationErrors.map((validationError) => {
                     const propertyName = validationError.dataPath.substring(
                         '.body.'.length,
                     );
-                    return `The ${propertyName} property ${validationError.message}. You sent ${youSent}.`;
-                };
-
-                const description =
-                    err.validationErrors[0].keyword === 'required'
-                        ? requiredText(err.validationErrors[0])
-                        : regularText(err.validationErrors[0]);
+                    if (validationError.keyword === 'required') {
+                        const path =
+                            propertyName +
+                            '.' +
+                            validationError.params.missingProperty;
+                        return {
+                            path,
+                            description: `The ${path} property is required. It was not present on the data you sent.`,
+                        };
+                    } else {
+                        console.log('the error is:', validationError);
+                        const youSent = JSON.stringify(
+                            // @ts-ignore-error it does exist
+                            req.body[propertyName],
+                        );
+                        return {
+                            description: `The .${propertyName} property ${validationError.message}. You sent ${youSent}.`,
+                            path: propertyName,
+                        };
+                    }
+                });
 
                 const apiError = new UnleashError({
-                    name: 'BadRequestError',
+                    name: 'ValidationError',
                     message:
-                        "The request payload you provided doesn't conform to the schema." +
-                        description,
+                        "The request payload you provided doesn't conform to the schema. Check the `errors` property for a list of errors that we found.",
+                    errors,
                 });
 
                 res.status(apiError.statusCode).json(apiError);

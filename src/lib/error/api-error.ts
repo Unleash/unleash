@@ -94,7 +94,12 @@ type UnleashErrorData =
           documentationLink?: string;
       } & (
           | {
-                name: Exclude<UnleashApiErrorKind, 'NoAccessError'>;
+                name: Exclude<
+                    UnleashApiErrorKind,
+                    | 'NoAccessError'
+                    | 'AuthenticationRequired'
+                    | 'ValidationError'
+                >;
             }
           | {
                 name: 'NoAccessError';
@@ -104,6 +109,10 @@ type UnleashErrorData =
                 name: 'AuthenticationRequired';
                 path: string;
                 type: string;
+            }
+          | {
+                name: 'ValidationError';
+                errors: { description: string; path?: string }[];
             }
       );
 
@@ -247,10 +256,10 @@ const validationErrorSchema = {
             ],
             items: {
                 type: 'object',
-                required: ['description', 'suggestion'],
+                required: ['description'],
                 properties: {
                     description: { type: 'string' },
-                    suggestion: { type: 'string' },
+                    path: { type: 'string' },
                 },
             },
         },
@@ -258,20 +267,39 @@ const validationErrorSchema = {
 };
 
 export const fromLegacyError = (e: Error): UnleashError => {
-    const type = UnleashApiErrorTypes.includes(e.name as UnleashApiErrorKind)
+    const name = UnleashApiErrorTypes.includes(e.name as UnleashApiErrorKind)
         ? (e.name as UnleashApiErrorKind)
         : 'UnknownError';
 
-    if (type === 'NoAccessError') {
+    if (name === 'NoAccessError') {
         return new UnleashError({
-            name: type,
+            name,
             message: e.message,
             permission: 'unknown',
         });
     }
 
+    if (name === 'ValidationError') {
+        return new UnleashError({
+            name,
+            message:
+                'Your request body failed to validate. Refer to the `errors` list to see what happened.',
+            errors: [{ description: e.message }],
+        });
+    }
+
+    if (name === 'AuthenticationRequired') {
+        return new UnleashError({
+            name,
+            message:
+                'Your request body failed to validate. Refer to the `errors` list to see what happened.',
+            path: `/err/maybe/login?`,
+            type: 'password',
+            // errors: [{ description: e.message }],
+        });
+    }
     return new UnleashError({
-        name: type,
+        name,
         message: e.message,
     });
 };

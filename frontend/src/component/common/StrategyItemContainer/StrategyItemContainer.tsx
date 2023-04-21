@@ -1,6 +1,6 @@
 import { DragEventHandler, FC, ReactNode } from 'react';
 import { DragIndicator } from '@mui/icons-material';
-import { styled, IconButton, Box } from '@mui/material';
+import { styled, IconButton, Box, Chip } from '@mui/material';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
     getFeatureStrategyIcon,
@@ -43,7 +43,7 @@ const StyledContainer = styled(Box, {
     shouldForwardProp: prop => prop !== 'disabled',
 })<{ disabled?: boolean }>(({ theme, disabled }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px ${disabled ? 'dashed' : 'solid'} ${theme.palette.divider}`,
+    border: `1px solid ${theme.palette.divider}`,
     '& + &': {
         marginTop: theme.spacing(2),
     },
@@ -53,16 +53,21 @@ const StyledContainer = styled(Box, {
 }));
 
 const StyledHeader = styled('div', {
-    shouldForwardProp: prop => prop !== 'draggable',
-})(({ theme, draggable }) => ({
-    padding: theme.spacing(0.5, 2),
-    display: 'flex',
-    gap: theme.spacing(1),
-    alignItems: 'center',
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    fontWeight: theme.typography.fontWeightMedium,
-    paddingLeft: draggable ? theme.spacing(1) : theme.spacing(2),
-}));
+    shouldForwardProp: prop => prop !== 'draggable' && prop !== 'disabled',
+})<{ draggable: boolean; disabled: boolean }>(
+    ({ theme, draggable, disabled }) => ({
+        padding: theme.spacing(0.5, 2),
+        display: 'flex',
+        gap: theme.spacing(1),
+        alignItems: 'center',
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        fontWeight: theme.typography.fontWeightMedium,
+        paddingLeft: draggable ? theme.spacing(1) : theme.spacing(2),
+        color: disabled
+            ? theme.palette.action.disabled
+            : theme.palette.text.primary,
+    })
+);
 
 export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     strategy,
@@ -82,8 +87,14 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                 condition={orderNumber !== undefined}
                 show={<StyledIndexLabel>{orderNumber}</StyledIndexLabel>}
             />
-            <StyledContainer disabled={strategy?.disabled || false} style={style}>
-                <StyledHeader draggable={Boolean(onDragStart)}>
+            <StyledContainer
+                disabled={strategy?.disabled || false}
+                style={style}
+            >
+                <StyledHeader
+                    draggable={Boolean(onDragStart)}
+                    disabled={Boolean(strategy?.disabled)}
+                >
                     <ConditionallyRender
                         condition={Boolean(onDragStart)}
                         show={() => (
@@ -115,6 +126,25 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                             uiConfig?.flags?.strategyTitle
                                 ? strategy.title || strategy.name
                                 : strategy.name
+                        )}
+                    />
+                    <ConditionallyRender
+                        condition={Boolean(strategy?.disabled)}
+                        show={() => (
+                            <Chip
+                                label="Disabled"
+                                size="small"
+                                sx={{
+                                    color: theme =>
+                                        theme.palette.text.secondary,
+                                    background: theme =>
+                                        theme.palette.background.paper,
+                                    border: theme =>
+                                        `1px solid ${theme.palette.divider}`,
+                                    borderRadius: theme =>
+                                        `${theme.shape.borderRadius}px`,
+                                }}
+                            />
                         )}
                     />
                     <Box

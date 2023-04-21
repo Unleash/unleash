@@ -53,6 +53,7 @@ export interface IFlags {
     demo?: boolean;
     strategyTitle?: boolean;
     groupRootRoles?: boolean;
+    strategyDisable?: boolean;
 }
 
 export interface IVersionInfo {

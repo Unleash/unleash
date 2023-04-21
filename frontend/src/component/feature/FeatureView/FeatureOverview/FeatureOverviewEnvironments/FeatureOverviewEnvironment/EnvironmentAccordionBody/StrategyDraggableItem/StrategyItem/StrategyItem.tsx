@@ -13,6 +13,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import { DisableEnableStrategy } from './DisableEnableStrategy/DisableEnableStrategy';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IStrategyItemProps {
     environmentId: string;
@@ -33,6 +34,7 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
     orderNumber,
     headerChildren,
 }) => {
+    const { uiConfig } = useUiConfig();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
 
@@ -78,14 +80,14 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                         <Edit />
                     </PermissionIconButton>
                     <ConditionallyRender
-                        condition={true}
-                        // FIXME: flag
+                        condition={Boolean(uiConfig?.flags?.strategyDisable)}
                         show={() => (
                             <DisableEnableStrategy
                                 projectId={projectId}
                                 featureId={featureId}
                                 environmentId={environmentId}
                                 strategyId={strategy.id}
+                                disabled={Boolean(strategy.disabled)}
                             />
                         )}
                     />

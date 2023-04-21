@@ -3,6 +3,12 @@ id: state
 title: /api/admin/state
 ---
 
+:::caution Deprecation notice
+
+Api admin state is deprecated from version 5. We recommend using `/api/admin/features-batch` instead for [import](https://docs.getunleash.io/reference/api/unleash/import-toggles) and [export](https://docs.getunleash.io/reference/api/unleash/export-features).
+
+:::
+
 > In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](/how-to/how-to-create-api-tokens) and add an Authorization header using the token.
 
 ### Export Feature Toggles & Strategies {#export-feature-toggles--strategies}

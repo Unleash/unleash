@@ -61,7 +61,6 @@ exports[`should create default config 1`] = `
     "_maxListeners": undefined,
     Symbol(kCapture): false,
   },
-  "eventHook": undefined,
   "experimental": {
     "externalResolver": {
       "isEnabled": [Function],

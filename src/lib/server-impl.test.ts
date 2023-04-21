@@ -93,20 +93,6 @@ test('should call preRouterHook', async () => {
     await stop();
 });
 
-test('should call eventHook', async () => {
-    let called = 0;
-    const config = createTestConfig({
-        server: { port: 0 },
-        eventHook: () => {
-            called++;
-        },
-    });
-    const { stop } = await start(config);
-    eventStore.emit('feature-created', {});
-    expect(called === 1).toBe(true);
-    await stop();
-});
-
 test('should auto-create server on start()', async () => {
     const { server, stop } = await start(
         createTestConfig({ server: { port: 0 } }),

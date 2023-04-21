@@ -23,7 +23,7 @@ export const Demo = () => {
     const [finishOpen, setFinishOpen] = useState(false);
 
     const [expanded, setExpanded] = useState(storedProgress.expanded ?? true);
-    const [topic, setTopic] = useState(storedProgress.topic ?? -1);
+    const [topic, setTopic] = useState(storedProgress.topic ?? defaultProgress.topic);
     const [steps, setSteps] = useState(storedProgress.steps ?? [0]);
 
     useEffect(() => {

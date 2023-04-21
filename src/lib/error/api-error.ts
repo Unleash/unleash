@@ -91,7 +91,6 @@ const statusCode = (errorKind: UnleashApiErrorKind): number => {
 type UnleashErrorData =
     | {
           message: string;
-          suggestion: string;
           documentationLink?: string;
       } & (
           | {
@@ -111,8 +110,6 @@ type UnleashErrorData =
 export class UnleashError implements Error {
     id: string;
 
-    suggestion: string;
-
     name: UnleashApiErrorKind;
 
     message: string;
@@ -126,14 +123,12 @@ export class UnleashError implements Error {
     constructor({
         name,
         message,
-        suggestion,
         documentationLink,
         ...rest
     }: UnleashErrorData) {
         this.id = uuidV4();
         this.name = name;
         this.message = message;
-        this.suggestion = suggestion;
         this.documentationLink = documentationLink ?? null;
 
         this.statusCode = statusCode(name);
@@ -150,7 +145,6 @@ export class UnleashError implements Error {
             id: this.id,
             name: this.name,
             message: this.message,
-            suggestion: this.suggestion,
             documentationLink:
                 this.documentationLink ||
                 'There is no documentation link available for this or none was provided.',
@@ -197,12 +191,6 @@ export const apiErrorSchema = {
             description: 'A human-readable explanation of what went wrong.',
             example:
                 "We couldn't find an addon provider with the name that you are trying to add ('bogus-addon')",
-        },
-        suggestion: {
-            type: 'string',
-            description: 'Suggestions to fix what might have gone wrong.',
-            example:
-                "You need to use the name of an existing addon provider (such as 'slack' or 'webhook') as the `provider` property value",
         },
         help: {
             type: 'string',
@@ -278,7 +266,6 @@ export const fromLegacyError = (e: Error): UnleashError => {
         return new UnleashError({
             name: type,
             message: e.message,
-            suggestion: 'Tell Unleash about this suggestion being missing',
             permission: 'unknown',
         });
     }
@@ -286,7 +273,6 @@ export const fromLegacyError = (e: Error): UnleashError => {
     return new UnleashError({
         name: type,
         message: e.message,
-        suggestion: 'Tell Unleash about this suggestion being missing',
     });
 };
 

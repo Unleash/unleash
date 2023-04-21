@@ -12,7 +12,7 @@ import { ApiOperation } from '../openapi/util/api-operation';
 import { Logger } from '../logger';
 import { validateSchema } from '../openapi/validate';
 import { IFlagResolver } from '../types';
-import { statusCode, UnleashError } from '../error/api-error';
+import { UnleashError } from '../error/api-error';
 
 export class OpenApiService {
     private readonly config: IUnleashConfig;
@@ -60,6 +60,88 @@ export class OpenApiService {
     useErrorHandler(app: Express): void {
         app.use((err, req, res, next) => {
             if (err && err.status && err.validationErrors) {
+                // const requiredError = {
+                //     error: 'Request validation failed',
+                //     validation: [
+                //         {
+                //             keyword: 'required',
+                //             dataPath: '.body',
+                //             schemaPath:
+                //                 '#/components/schemas/addonCreateUpdateSchema/required',
+                //             params: {
+                //                 missingProperty: 'enabled',
+                //             },
+                //             message: "should have required property 'enabled'",
+                //         },
+                //     ],
+                // };
+
+                // const typeError = {
+                //     error: 'Request validation failed',
+                //     validation: [
+                //         {
+                //             keyword: 'type',
+                //             dataPath: '.body.parameters',
+                //             schemaPath:
+                //                 '#/components/schemas/addonCreateUpdateSchema/properties/parameters/type',
+                //             params: {
+                //                 type: 'object',
+                //             },
+                //             message: 'should be object',
+                //         },
+                //     ],
+                // };
+                // const patternError = {
+                //     error: 'Request validation failed',
+                //     validation: [
+                //         {
+                //             keyword: 'pattern',
+                //             dataPath: '.body.description',
+                //             schemaPath:
+                //                 '#/components/schemas/addonCreateUpdateSchema/properties/description/pattern',
+                //             params: {
+                //                 pattern: '^this is',
+                //             },
+                //             message: 'should match pattern "^this is"',
+                //         },
+                //     ],
+                // };
+
+                // const maxLength = {
+                //     // minlength is equivalent
+                //     error: 'Request validation failed',
+                //     validation: [
+                //         {
+                //             keyword: 'maxLength',
+                //             dataPath: '.body.description',
+                //             schemaPath:
+                //                 '#/components/schemas/addonCreateUpdateSchema/properties/description/maxLength',
+                //             params: {
+                //                 limit: 5,
+                //             },
+                //             message: 'should NOT be longer than 5 characters',
+                //         },
+                //     ],
+                // };
+
+                // const integerMax = {
+                //     error: 'Request validation failed',
+                //     validation: [
+                //         {
+                //             keyword: 'maximum',
+                //             dataPath: '.body.newprop',
+                //             schemaPath:
+                //                 '#/components/schemas/addonCreateUpdateSchema/properties/newprop/maximum',
+                //             params: {
+                //                 comparison: '<=',
+                //                 limit: 5,
+                //                 exclusive: false,
+                //             },
+                //             message: 'should be <= 5',
+                //         },
+                //     ],
+                // };
+
                 const requiredText = (validationError: ErrorObject) => {
                     console.log('the error is:', validationError);
 
@@ -89,11 +171,11 @@ export class OpenApiService {
                 const apiError = new UnleashError({
                     name: 'BadRequestError',
                     message:
-                        "The request payload you provided doesn't conform to the schema.",
-                    suggestion: description,
+                        "The request payload you provided doesn't conform to the schema." +
+                        description,
                 });
 
-                res.status(statusCode(apiError.name)).json(apiError);
+                res.status(apiError.statusCode).json(apiError);
             } else {
                 next(err);
             }

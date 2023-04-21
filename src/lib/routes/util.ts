@@ -1,7 +1,7 @@
 import joi from 'joi';
 import { Response } from 'express';
 import { Logger } from '../logger';
-import { fromLegacyError, statusCode } from '../error/api-error';
+import { fromLegacyError } from '../error/api-error';
 
 export const customJoi = joi.extend((j) => ({
     type: 'isUrlFriendly',
@@ -37,5 +37,5 @@ export const handleErrors: (
         logger.error('Server failed executing request', error);
     }
 
-    return res.status(statusCode(newError.name)).json(newError).end();
+    return res.status(newError.statusCode).json(newError).end();
 };

@@ -28,6 +28,7 @@ import { Knex } from 'knex';
 import maintenanceMiddleware from './middleware/maintenance-middleware';
 import { unless } from './middleware/unless-middleware';
 import { catchAllErrorHandler } from './middleware/catch-all-error-handler';
+import { UnleashError } from './error/api-error';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -183,9 +184,24 @@ export default async function getApp(
         res.send(indexHTML);
     });
 
+    // // handle all API 404s
+    // app.use(`${baseUriPath}/api`, (req, res) => {
+    //     const error = new UnleashError({
+    //         name: 'NotFoundError',
+    //         message: `The path you were looking for (${baseUriPath}/api${req.path}) is not available.`,
+    //         suggestion: 'Try using a path that does exist.',
+    //     });
+    //     res.status(error.statusCode).send(error);
+    //     return;
+    // });
+
     app.get(`${baseUriPath}/*`, (req, res) => {
         if (req.path.startsWith(`${baseUriPath}/api`)) {
-            res.status(404).send({ message: 'Not found' });
+            const error = new UnleashError({
+                name: 'NotFoundError',
+                message: `The path you were looking for (${req.path}) is not available.`,
+            });
+            res.status(error.statusCode).send(error);
             return;
         }
 

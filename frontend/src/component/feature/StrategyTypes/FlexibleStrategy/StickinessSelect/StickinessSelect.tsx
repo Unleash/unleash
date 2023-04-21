@@ -4,6 +4,9 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 
 type OptionType = { key: string; label: string };
 
+const DEFAULT_RANDOM_OPTION = 'random';
+const DEFAULT_STICKINESS_OPTION = 'default';
+
 interface IStickinessSelectProps {
     label: string;
     value: string | undefined;
@@ -26,11 +29,18 @@ export const StickinessSelect = ({
             .filter(field => field.stickiness)
             .map(c => ({ key: c.name, label: c.name })) as OptionType[];
 
-        if (!options.find(option => option.key === 'default')) {
+        debugger;
+        if (
+            !options.find(option => option.key === 'default') &&
+            !context.find(field => field.name === DEFAULT_STICKINESS_OPTION)
+        ) {
             options.push({ key: 'default', label: 'default' });
         }
 
-        if (!options.find(option => option.key === 'random')) {
+        if (
+            !options.find(option => option.key === 'random') &&
+            !context.find(field => field.name === DEFAULT_RANDOM_OPTION)
+        ) {
             options.push({ key: 'random', label: 'random' });
         }
 

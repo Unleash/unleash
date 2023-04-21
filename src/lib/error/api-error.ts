@@ -22,6 +22,7 @@ const UnleashApiErrorTypes = [
     'UnknownError',
     'PasswordMismatch',
     'DisabledError',
+    'ContentTypeError',
 
     // server errors; not the end user's fault
     'InternalError',
@@ -31,6 +32,8 @@ type UnleashApiErrorKind = typeof UnleashApiErrorTypes[number];
 
 export const statusCode = (errorKind: UnleashApiErrorKind): number => {
     switch (errorKind) {
+        case 'ContentTypeError':
+            return 415;
         case 'ValidationError':
             return 400;
         case 'BadDataError':

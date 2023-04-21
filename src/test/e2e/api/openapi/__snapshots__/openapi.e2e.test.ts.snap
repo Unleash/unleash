@@ -3716,6 +3716,7 @@ Stats are divided into current and previous **windows**.
       },
       "publicSignupTokenCreateSchema": {
         "additionalProperties": false,
+        "description": "Used for creating a [public invite link](https://docs.getunleash.io/reference/public-signup#public-sign-up-tokens)",
         "properties": {
           "expiresAt": {
             "description": "The token's expiration date.",
@@ -3735,7 +3736,7 @@ Stats are divided into current and previous **windows**.
       },
       "publicSignupTokenSchema": {
         "additionalProperties": false,
-        "description": "Used for creating a [public invite link](https://docs.getunleash.io/reference/public-signup#public-sign-up-tokens)",
+        "description": "Used for transporting a [public invite link](https://docs.getunleash.io/reference/public-signup#public-sign-up-tokens)",
         "properties": {
           "createdAt": {
             "description": "When the token was created.",

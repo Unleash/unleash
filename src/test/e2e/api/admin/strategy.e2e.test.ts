@@ -171,15 +171,6 @@ test('can reactivate a deprecated strategy', async () => {
         .expect((res) => expect(res.body.deprecated).toBe(false));
 });
 
-test('cannot deprecate default strategy', async () => {
-    expect.assertions(0);
-
-    await app.request
-        .post('/api/admin/strategies/default/deprecate')
-        .set('Content-Type', 'application/json')
-        .expect(403);
-});
-
 test('can update a exiting strategy with deprecated', async () => {
     await app.request
         .post('/api/admin/strategies')

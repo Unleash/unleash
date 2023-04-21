@@ -229,11 +229,6 @@ class StrategyController extends Controller {
         const userName = extractUsername(req);
         const { strategyName } = req.params;
 
-        if (strategyName === 'default') {
-            res.status(403).end();
-            return;
-        }
-
         await this.strategyService.deprecateStrategy(strategyName, userName);
         res.status(200).end();
     }

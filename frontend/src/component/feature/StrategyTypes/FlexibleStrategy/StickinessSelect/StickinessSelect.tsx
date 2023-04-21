@@ -29,7 +29,6 @@ export const StickinessSelect = ({
             .filter(field => field.stickiness)
             .map(c => ({ key: c.name, label: c.name })) as OptionType[];
 
-        debugger;
         if (
             !options.find(option => option.key === 'default') &&
             !context.find(field => field.name === DEFAULT_STICKINESS_OPTION)

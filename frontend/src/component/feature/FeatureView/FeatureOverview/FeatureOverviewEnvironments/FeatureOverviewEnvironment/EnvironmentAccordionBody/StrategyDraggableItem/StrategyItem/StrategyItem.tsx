@@ -78,7 +78,7 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                         <Edit />
                     </PermissionIconButton>
                     <ConditionallyRender
-                        condition={false}
+                        condition={true}
                         // FIXME: flag
                         show={() => (
                             <DisableEnableStrategy

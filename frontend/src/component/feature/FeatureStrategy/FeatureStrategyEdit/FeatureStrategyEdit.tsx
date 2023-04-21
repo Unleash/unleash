@@ -202,6 +202,7 @@ export const createStrategyPayload = (
     constraints: strategy.constraints ?? [],
     parameters: strategy.parameters ?? {},
     segments: segments.map(segment => segment.id),
+    disabled: strategy.disabled ?? false,
 });
 
 export const formatFeaturePath = (

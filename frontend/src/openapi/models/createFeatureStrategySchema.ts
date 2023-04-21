@@ -11,6 +11,8 @@ export interface CreateFeatureStrategySchema {
     name: string;
     /** A descriptive title for the strategy */
     title?: string | null;
+    /** A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs */
+    disabled?: boolean | null;
     /** The order of the strategy in the list */
     sortOrder?: number;
     /** A list of the constraints attached to the strategy */

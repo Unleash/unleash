@@ -76,16 +76,13 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     const Icon = getFeatureStrategyIcon(strategy.name);
     const { uiConfig } = useUiConfig();
 
-    const disabled = false;
-    // FIXME: flag
-
     return (
         <Box sx={{ position: 'relative' }}>
             <ConditionallyRender
                 condition={orderNumber !== undefined}
                 show={<StyledIndexLabel>{orderNumber}</StyledIndexLabel>}
             />
-            <StyledContainer disabled={disabled} style={style}>
+            <StyledContainer disabled={strategy?.disabled || false} style={style}>
                 <StyledHeader draggable={Boolean(onDragStart)}>
                     <ConditionallyRender
                         condition={Boolean(onDragStart)}

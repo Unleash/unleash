@@ -17,6 +17,8 @@ export interface PlaygroundStrategySchema {
     id: string;
     /** The strategy's evaluation result. If the strategy is a custom strategy that Unleash can't evaluate, `evaluationStatus` will be `unknown`. Otherwise, it will be `true` or `false` */
     result: PlaygroundStrategySchemaResult;
+    /** The strategy's status. Disabled strategies are not evaluated */
+    disabled: boolean | null;
     /** The strategy's segments and their evaluation results. */
     segments: PlaygroundSegmentSchema[];
     /** The strategy's constraints and their evaluation results. */

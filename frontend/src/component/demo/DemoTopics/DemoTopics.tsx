@@ -138,7 +138,7 @@ interface IDemoTopicsProps {
     currentTopic: number;
     setCurrentTopic: (topic: number) => void;
     topics: ITutorialTopic[];
-    onShowWelcome: () => void;
+    onWelcome: () => void;
 }
 
 export const DemoTopics = ({
@@ -148,7 +148,7 @@ export const DemoTopics = ({
     currentTopic,
     setCurrentTopic,
     topics,
-    onShowWelcome,
+    onWelcome,
 }: IDemoTopicsProps) => {
     const completedSteps = steps.reduce((acc, step) => acc + (step || 0), 0);
     const totalSteps = topics.flatMap(({ steps }) => steps).length;
@@ -203,7 +203,7 @@ export const DemoTopics = ({
                         </StyledStep>
                     );
                 })}
-                <StyledButton variant="outlined" onClick={onShowWelcome}>
+                <StyledButton variant="outlined" onClick={onWelcome}>
                     View demo link again
                 </StyledButton>
             </AccordionDetails>

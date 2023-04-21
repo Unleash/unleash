@@ -6,6 +6,7 @@ const strategySchema = joi
     .keys({
         name: nameType,
         title: joi.string().allow(null).allow('').optional(),
+        disabled: joi.boolean().allow(null).optional(),
         editable: joi.boolean().default(true),
         deprecated: joi.boolean().default(false),
         description: joi.string().allow(null).allow('').optional(),

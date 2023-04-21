@@ -50,6 +50,7 @@ interface IDemoStepsProps {
     topic: number;
     setTopic: React.Dispatch<React.SetStateAction<number>>;
     topics: ITutorialTopic[];
+    onFinish: () => void;
 }
 
 export const DemoSteps = ({
@@ -59,54 +60,58 @@ export const DemoSteps = ({
     topic,
     setTopic,
     topics,
+    onFinish,
 }: IDemoStepsProps) => {
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
     const [run, setRun] = useState(false);
-    const [flow, setFlow] = useState<'next' | 'back'>('next');
+    const [flow, setFlow] = useState<'next' | 'back' | 'load'>('load');
 
     const abortController = new AbortController();
 
-    const skip = () => {
-        abortController.abort();
-        setTopic(-1);
-        setExpanded(false);
+    const setTopicStep = (topic: number, step?: number) => {
+        setRun(false);
+        setTopic(topic);
+        if (step !== undefined) {
+            setSteps(steps => {
+                const newSteps = [...steps];
+                newSteps[topic] = step;
+                return newSteps;
+            });
+        }
     };
 
-    const setStep = (topic: number, step: number) => {
-        setSteps(steps => {
-            const newSteps = [...steps];
-            newSteps[topic] = step;
-            return newSteps;
-        });
+    const skip = () => {
+        abortController.abort();
+        setTopicStep(-1);
+        setExpanded(false);
     };
 
     const back = () => {
         setFlow('back');
         if (steps[topic] === 0) {
             const newTopic = topic - 1;
-            setTopic(newTopic);
-            setStep(newTopic, topics[newTopic].steps.length - 1);
+            setTopicStep(newTopic, topics[newTopic].steps.length - 1);
         } else {
-            setStep(topic, steps[topic] - 1);
+            setTopicStep(topic, steps[topic] - 1);
         }
     };
 
     const nextTopic = () => {
         if (topic === topics.length - 1) {
-            setTopic(-1);
+            setTopicStep(-1);
             setExpanded(false);
+            onFinish();
         } else {
             const newTopic = topic + 1;
-            setTopic(newTopic);
-            setStep(newTopic, 0);
+            setTopicStep(newTopic, 0);
         }
     };
 
     const next = (index = steps[topic]) => {
         setFlow('next');
-        setStep(topic, index + 1);
+        setTopicStep(topic, index + 1);
         if (index === topics[topic].steps.length - 1) {
             nextTopic();
         }
@@ -146,14 +151,6 @@ export const DemoSteps = ({
                 }
             }
         }
-
-        if (run && !document.querySelector(step.target as string)) {
-            if (step.optional && flow === 'next') {
-                next();
-            } else {
-                back();
-            }
-        }
     };
 
     const onBack = (step: ITutorialTopicStep) => {
@@ -172,21 +169,38 @@ export const DemoSteps = ({
         back();
     };
 
+    const waitForLoad = (step: ITutorialTopicStep, tries = 0) => {
+        setTimeout(() => {
+            if (document.querySelector(step.target as string)) {
+                setRun(true);
+            } else {
+                if (flow === 'next' && step.optional) {
+                    next();
+                } else if (flow === 'back' || tries > 4) {
+                    back();
+                } else {
+                    waitForLoad(step, tries + 1);
+                }
+            }
+        }, 200);
+    };
+
     useEffect(() => {
-        setRun(false);
         if (topic === -1) return;
         const currentTopic = topics[topic];
-        const currentStep = steps[topic];
-        const href = currentTopic.steps[currentStep]?.href;
-        if (href && location.pathname !== href) {
-            navigate(href);
-        }
-        currentTopic.setup?.();
+        const currentStepIndex = steps[topic];
+        const currentStep = currentTopic.steps[currentStepIndex];
+        if (!currentStep) return;
 
-        setTimeout(() => {
-            setRun(true);
-        }, 200);
+        if (currentStep.href && location.pathname !== currentStep.href) {
+            navigate(currentStep.href);
+        }
+        waitForLoad(currentStep);
     }, [topic, steps]);
+
+    useEffect(() => {
+        if (topic > -1) topics[topic].setup?.();
+    }, [topic]);
 
     if (topic === -1) return null;
 

@@ -185,6 +185,7 @@ export const TOPICS: ITutorialTopic[] = [
                     </>
                 ),
                 optional: true,
+                backCloseModal: true,
             },
         ],
     },
@@ -289,6 +290,7 @@ export const TOPICS: ITutorialTopic[] = [
                     </>
                 ),
                 optional: true,
+                backCloseModal: true,
             },
         ],
     },

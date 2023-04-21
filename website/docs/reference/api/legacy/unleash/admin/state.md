@@ -5,7 +5,7 @@ title: /api/admin/state
 
 :::caution Deprecation notice
 
-Api admin state is deprecated from version 5. We recommend using `/api/admin/features-batch` instead for [import](https://docs.getunleash.io/reference/api/unleash/import-toggles) and [export](https://docs.getunleash.io/reference/api/unleash/export-features).
+Api admin state is deprecated from version 5. We recommend using the new [Environment Import & Export](https://docs.getunleash.io/reference/deploy/environment-import-export).
 
 :::
 

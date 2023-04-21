@@ -13,6 +13,7 @@ export type SegmentForEvaluation = {
 export interface StrategyTransportInterface {
     name: string;
     title?: string;
+    disabled?: boolean;
     parameters: any;
     constraints: Constraint[];
     segments?: number[];
@@ -107,9 +108,7 @@ export class Strategy {
         });
 
         return {
-            result: resolvedSegments.every(
-                (segment) => segment.result === true,
-            ),
+            result: resolvedSegments.every((segment) => segment.result),
             segments: resolvedSegments,
         };
     }
@@ -118,7 +117,8 @@ export class Strategy {
         parameters: unknown,
         context: Context,
         constraints: Iterable<Constraint>,
-        segments: SegmentForEvaluation[],
+        segments: Array<SegmentForEvaluation>,
+        disabled?: boolean,
     ): StrategyEvaluationResult {
         const constraintResults = this.checkConstraints(context, constraints);
         const enabledResult = this.isEnabled(parameters, context);
@@ -128,7 +128,10 @@ export class Strategy {
             constraintResults.result && enabledResult && segmentResults.result;
 
         return {
-            result: { enabled: overallResult, evaluationStatus: 'complete' },
+            result: {
+                enabled: disabled ? false : overallResult,
+                evaluationStatus: 'complete',
+            },
             constraints: constraintResults.constraints,
             segments: segmentResults.segments,
         };

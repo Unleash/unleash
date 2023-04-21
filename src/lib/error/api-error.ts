@@ -23,6 +23,9 @@ const UnleashApiErrorTypes = [
     'PasswordMismatchError',
     'DisabledError',
     'ContentTypeError',
+    'NotImplementedError',
+    'NoAccessError',
+    'AuthenticationRequired',
 
     // server errors; not the end user's fault
     'InternalError',
@@ -30,7 +33,7 @@ const UnleashApiErrorTypes = [
 
 type UnleashApiErrorKind = typeof UnleashApiErrorTypes[number];
 
-export const statusCode = (errorKind: UnleashApiErrorKind): number => {
+const statusCode = (errorKind: UnleashApiErrorKind): number => {
     switch (errorKind) {
         case 'ContentTypeError':
             return 415;
@@ -69,22 +72,41 @@ export const statusCode = (errorKind: UnleashApiErrorKind): number => {
         case 'ProjectWithoutOwnerError':
             return 409;
         case 'UnknownError':
-            return 400;
+            return 500;
         case 'InternalError':
             return 500;
         case 'PasswordMismatchError':
             return 401;
         case 'DisabledError':
             return 422;
+        case 'NotImplementedError':
+            return 405;
+        case 'NoAccessError':
+            return 403;
+        case 'AuthenticationRequired':
+            return 401;
     }
 };
 
-type UnleashErrorData = {
-    name: UnleashApiErrorKind;
-    message: string;
-    suggestion: string;
-    documentationLink?: string;
-};
+type UnleashErrorData =
+    | {
+          message: string;
+          suggestion: string;
+          documentationLink?: string;
+      } & (
+          | {
+                name: Exclude<UnleashApiErrorKind, 'NoAccessError'>;
+            }
+          | {
+                name: 'NoAccessError';
+                permission: string;
+            }
+          | {
+                name: 'AuthenticationRequired';
+                path: string;
+                type: string;
+            }
+      );
 
 export class UnleashError implements Error {
     id: string;
@@ -97,17 +119,26 @@ export class UnleashError implements Error {
 
     documentationLink: string | null;
 
+    statusCode: number;
+
+    otherparams: object;
+
     constructor({
         name,
         message,
         suggestion,
         documentationLink,
+        ...rest
     }: UnleashErrorData) {
         this.id = uuidV4();
         this.name = name;
         this.message = message;
         this.suggestion = suggestion;
         this.documentationLink = documentationLink ?? null;
+
+        this.statusCode = statusCode(name);
+
+        this.otherparams = rest;
     }
 
     help(): string {
@@ -124,6 +155,7 @@ export class UnleashError implements Error {
                 this.documentationLink ||
                 'There is no documentation link available for this or none was provided.',
             help: this.help(),
+            ...this.otherparams,
         };
     }
 
@@ -241,6 +273,15 @@ export const fromLegacyError = (e: Error): UnleashError => {
     const type = UnleashApiErrorTypes.includes(e.name as UnleashApiErrorKind)
         ? (e.name as UnleashApiErrorKind)
         : 'UnknownError';
+
+    if (type === 'NoAccessError') {
+        return new UnleashError({
+            name: type,
+            message: e.message,
+            suggestion: 'Tell Unleash about this suggestion being missing',
+            permission: 'unknown',
+        });
+    }
 
     return new UnleashError({
         name: type,

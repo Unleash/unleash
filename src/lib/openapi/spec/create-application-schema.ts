@@ -43,6 +43,7 @@ export const createApplicationSchema = {
             example: 'https://github.com/favicon.ico',
         },
     },
+    components: {},
 } as const;
 
 export type CreateApplicationSchema = FromSchema<

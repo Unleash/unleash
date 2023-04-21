@@ -47,6 +47,10 @@ class MetricsController extends Controller {
                 openApiService.validPath({
                     tags: ['Metrics'],
                     operationId: 'createApplication',
+                    summary:
+                        'Create an application to connect reported metrics',
+                    description:
+                        'Is used to report usage as well which sdk the application uses',
                     responses: {
                         202: emptyResponse,
                         ...getStandardResponses(400, 401, 403),
@@ -65,6 +69,7 @@ class MetricsController extends Controller {
                 openApiService.validPath({
                     tags: ['Metrics'],
                     operationId: 'deleteApplication',
+                    summary: 'Deletes an application',
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403),
@@ -80,6 +85,9 @@ class MetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Metrics'],
+                    summary: 'Gets a list of applications',
+                    description:
+                        'Gets all applications created via metrics reporting and manual creation',
                     operationId: 'getApplications',
                     responses: {
                         200: createResponseSchema('applicationsSchema'),
@@ -96,8 +104,12 @@ class MetricsController extends Controller {
                 openApiService.validPath({
                     tags: ['Metrics'],
                     operationId: 'getApplication',
+                    summary: 'Get specific application',
+                    description:
+                        'Gets specific application with `appName`. An application contains information on name, sdkVersion and how to display it in a list.',
                     responses: {
                         200: createResponseSchema('applicationSchema'),
+                        ...getStandardResponses(404),
                     },
                 }),
             ],

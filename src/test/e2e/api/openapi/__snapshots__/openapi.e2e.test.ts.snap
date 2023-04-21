@@ -3735,6 +3735,7 @@ Stats are divided into current and previous **windows**.
       },
       "publicSignupTokenCreateSchema": {
         "additionalProperties": false,
+        "description": "Used for creating a [public invite link](https://docs.getunleash.io/reference/public-signup#public-sign-up-tokens)",
         "properties": {
           "expiresAt": {
             "description": "The token's expiration date.",
@@ -3754,23 +3755,34 @@ Stats are divided into current and previous **windows**.
       },
       "publicSignupTokenSchema": {
         "additionalProperties": false,
+        "description": "Used for transporting a [public invite link](https://docs.getunleash.io/reference/public-signup#public-sign-up-tokens)",
         "properties": {
           "createdAt": {
+            "description": "When the token was created.",
+            "example": "2023-04-12T11:13:31.960Z",
             "format": "date-time",
             "type": "string",
           },
           "createdBy": {
+            "description": "The creator's email or username",
+            "example": "someone@example.com",
             "nullable": true,
             "type": "string",
           },
           "enabled": {
+            "description": "Whether the token is active. This property will always be \`false\` for a token that has expired.",
+            "example": true,
             "type": "boolean",
           },
           "expiresAt": {
+            "description": "The time when the token will expire.",
+            "example": "2023-04-12T11:13:31.960Z",
             "format": "date-time",
             "type": "string",
           },
           "name": {
+            "description": "The token's name. Only for displaying in the UI",
+            "example": "Invite public viewers",
             "type": "string",
           },
           "role": {
@@ -3778,10 +3790,13 @@ Stats are divided into current and previous **windows**.
             "description": "Users who sign up using this token will be given this role.",
           },
           "secret": {
+            "description": "The actual value of the token. This is the part that is used by Unleash to create an invite link",
+            "example": "a3c84b25409ea8ca1782ef17f94a42fc",
             "type": "string",
           },
           "url": {
             "description": "The public signup link for the token. Users who follow this link will be taken to a signup page where they can create an Unleash user.",
+            "example": "https://sandbox.getunleash.io/enterprise/new-user?invite=a3c84b25409ea8ca1782ef17f94a42fc",
             "type": "string",
           },
           "users": {
@@ -3807,12 +3822,16 @@ Stats are divided into current and previous **windows**.
       },
       "publicSignupTokenUpdateSchema": {
         "additionalProperties": false,
+        "description": "Used by Unleash for updating a token's expiration date or, when deleting the invite link, it's status",
         "properties": {
           "enabled": {
+            "description": "Whether the token is active or not.",
+            "example": true,
             "type": "boolean",
           },
           "expiresAt": {
             "description": "The token's expiration date.",
+            "example": "2023-04-11T15:46:56Z",
             "format": "date-time",
             "type": "string",
           },
@@ -3821,8 +3840,27 @@ Stats are divided into current and previous **windows**.
       },
       "publicSignupTokensSchema": {
         "additionalProperties": false,
+        "description": "A wrapper object containing all the public signup tokens",
         "properties": {
           "tokens": {
+            "description": "An array of all the public signup tokens",
+            "example": [
+              {
+                "createdAt": "2023-04-12T11:13:31.960Z",
+                "createdBy": "someone",
+                "enabled": false,
+                "expiresAt": "2023-04-12T11:13:31.960Z",
+                "name": "Invite public viewers",
+                "role": {
+                  "id": 3,
+                  "name": "Viewer",
+                  "type": "root",
+                },
+                "secret": "a3c84b25409ea8ca1782ef17f94a42fc",
+                "url": "https://my_unleash_instance/new-user?invite=a3c84b25409ea8ca1782ef17f94a42fc",
+                "users": null,
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/publicSignupTokenSchema",
             },
@@ -6518,6 +6556,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
       "post": {
+        "description": "Lets administrators create a invite link to share with colleagues.  People that join using the public invite are assigned the \`Viewer\` role",
         "operationId": "createPublicSignupToken",
         "requestBody": {
           "content": {
@@ -6549,6 +6588,15 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
+          },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
         },
         "summary": "Create a public signup token",
@@ -6582,6 +6630,12 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "publicSignupTokenSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
         "summary": "Retrieve a token",
         "tags": [
@@ -6589,6 +6643,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
       "put": {
+        "description": "Update information about a specific token. The \`:token\` part of the URL should be the token's secret.",
         "operationId": "updatePublicSignupToken",
         "parameters": [
           {
@@ -6621,6 +6676,15 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "publicSignupTokenSchema",
+          },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
         },
         "summary": "Update a public signup token",

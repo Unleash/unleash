@@ -87,7 +87,7 @@ export class OpenApiService {
                         : regularText(err.validationErrors[0]);
 
                 const apiError = new UnleashError({
-                    type: 'BadRequestError',
+                    name: 'BadRequestError',
                     message:
                         "The request payload you provided doesn't conform to the schema.",
                     suggestion: description,

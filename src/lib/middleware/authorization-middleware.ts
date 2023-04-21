@@ -31,7 +31,7 @@ const authorizationMiddleware = (
             // API clients should get 401 without body
             return res.status(401).json(
                 new UnleashError({
-                    type: 'PasswordMismatchError',
+                    name: 'PasswordMismatchError',
                     message: 'You must log in to use Unleash.',
                     suggestion: 'Noh.',
                 }),
@@ -41,7 +41,7 @@ const authorizationMiddleware = (
         // const authRequired = await generateAuthResponse();
         return res.status(401).json(
             new UnleashError({
-                type: 'PasswordMismatchError',
+                name: 'PasswordMismatchError',
                 message:
                     'You must log in to use Unleash. Your request had no authorization header, so we could not authorize you.',
                 suggestion: `Log in using ${baseUriPath}/auth/simple/login.`,

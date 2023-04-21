@@ -80,7 +80,7 @@ export const statusCode = (errorKind: UnleashApiErrorKind): number => {
 };
 
 type UnleashErrorData = {
-    type: UnleashApiErrorKind;
+    name: UnleashApiErrorKind;
     message: string;
     suggestion: string;
     documentationLink?: string;
@@ -98,26 +98,26 @@ export class UnleashError implements Error {
     documentationLink: string | null;
 
     constructor({
-        type,
+        name,
         message,
         suggestion,
         documentationLink,
     }: UnleashErrorData) {
         this.id = uuidV4();
-        this.name = type;
+        this.name = name;
         this.message = message;
         this.suggestion = suggestion;
         this.documentationLink = documentationLink ?? null;
     }
 
-    help() {
+    help(): string {
         return `Get help for id ${this.id}`;
     }
 
     serialize(): ApiErrorSchema {
         return {
             id: this.id,
-            type: this.name,
+            name: this.name,
             message: this.message,
             suggestion: this.suggestion,
             documentationLink:
@@ -127,7 +127,7 @@ export class UnleashError implements Error {
         };
     }
 
-    toJSON() {
+    toJSON(): ApiErrorSchema {
         return this.serialize();
     }
 }
@@ -136,11 +136,11 @@ export const apiErrorSchema = {
     $id: '#/components/schemas/apiError',
     type: 'object',
     additionalProperties: false,
-    required: ['id', 'type', 'message', 'documentationLink'],
+    required: ['id', 'name', 'message', 'documentationLink'],
     description:
         'An Unleash API error. Contains information about what went wrong and suggests what you can do to fix your issue.',
     properties: {
-        type: {
+        name: {
             type: 'string',
             enum: UnleashApiErrorTypes,
             description:
@@ -233,8 +233,6 @@ const validationErrorSchema = {
                     suggestion: { type: 'string' },
                 },
             },
-            example: '/auth/simple/login',
-            description: 'Where you must go to log in.',
         },
     },
 };
@@ -245,7 +243,7 @@ export const fromLegacyError = (e: Error): UnleashError => {
         : 'UnknownError';
 
     return new UnleashError({
-        type,
+        name: type,
         message: e.message,
         suggestion: 'Tell Unleash about this suggestion being missing',
     });

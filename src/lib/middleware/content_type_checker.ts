@@ -23,7 +23,7 @@ export default function requireContentType(
             next();
         } else {
             const error = new UnleashError({
-                type: 'ContentTypeError',
+                name: 'ContentTypeError',
                 message: `We do not accept the content-type you provided (${
                     contentType || "you didn't provide one"
                 }).`,

@@ -301,7 +301,7 @@ class UserService {
         }
 
         throw new UnleashError({
-            type: 'PasswordMismatchError',
+            name: 'PasswordMismatchError',
             message: 'The password you provided does not match the username.',
             suggestion:
                 "Ensure that the password is correct for the username you're using and try again. If you have forgotten your password ... ",

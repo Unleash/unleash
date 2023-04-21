@@ -3738,6 +3738,7 @@ Stats are divided into current and previous **windows**.
         "description": "Used for creating a [public invite link](https://docs.getunleash.io/reference/public-signup#public-sign-up-tokens)",
         "properties": {
           "createdAt": {
+            "description": "When the token was created.",
             "example": "2023-04-12T11:13:31.960Z",
             "format": "date-time",
             "type": "string",
@@ -3754,6 +3755,7 @@ Stats are divided into current and previous **windows**.
             "type": "boolean",
           },
           "expiresAt": {
+            "description": "The time when the token will expire.",
             "example": "2023-04-12T11:13:31.960Z",
             "format": "date-time",
             "type": "string",

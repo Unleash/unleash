@@ -6794,7 +6794,35 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-docusaurus-plugin-openapi-docs@2.0.0-beta.1, docusaurus-plugin-openapi-docs@^2.0.0-beta.1:
+docusaurus-plugin-openapi-docs@2.0.0-beta.2:
+  version "2.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/docusaurus-plugin-openapi-docs/-/docusaurus-plugin-openapi-docs-2.0.0-beta.2.tgz#728c3765833d868d79ede01c81d8d2dd53a7e351"
+  integrity sha512-QQwoz3CLMb9dl2M9PKU4tPNeqkqTUjukh8L4d1ggmGTojmt0i2QxDixqGcdEV0zA/bzrRdgm6gykOHvyMdiP0A==
+  dependencies:
+    "@apidevtools/json-schema-ref-parser" "^9.0.9"
+    "@docusaurus/mdx-loader" "^2.3.0"
+    "@docusaurus/plugin-content-docs" "^2.3.0"
+    "@docusaurus/utils" "^2.3.0"
+    "@docusaurus/utils-validation" "^2.3.0"
+    "@paloaltonetworks/openapi-to-postmanv2" "3.1.0-hotfix.1"
+    "@paloaltonetworks/postman-collection" "^4.1.0"
+    "@redocly/openapi-core" "^1.0.0-beta.103"
+    chalk "^4.1.2"
+    clsx "^1.1.1"
+    fs-extra "^9.0.1"
+    js-yaml "^4.1.0"
+    json-pointer "^0.6.2"
+    json-refs "^3.0.15"
+    json-schema-merge-allof "^0.8.1"
+    lodash "^4.17.20"
+    mustache "^4.2.0"
+    slugify "^1.6.5"
+    swagger2openapi "^7.0.8"
+    url-template "^3.0.0"
+    webpack "^5.61.0"
+    xml-formatter "^2.6.1"
+
+docusaurus-plugin-openapi-docs@^2.0.0-beta.1:
   version "2.0.0-beta.1"
   resolved "https://registry.yarnpkg.com/docusaurus-plugin-openapi-docs/-/docusaurus-plugin-openapi-docs-2.0.0-beta.1.tgz#04d3c0c335ae3fb420e4ea62a8fb837ba89c6285"
   integrity sha512-SM7u9HRy3SFJm65Mmb33RNBhkYpYzl0J43afBv/wRg3Z0AnlQSOmVVyxg2GoR4+PLPhFLhVoARuOXmqbjMdVPw==

@@ -216,7 +216,6 @@ export const StrategiesList = () => {
                         <StrategySwitch
                             deprecated={original.deprecated}
                             onToggle={onToggle(original)}
-                            disabled={original.name === 'default'}
                         />
                         <ActionCell.Divider />
                         <StrategyEditButton

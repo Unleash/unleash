@@ -92,9 +92,7 @@ export const SegmentTable = () => {
                 columns: ['createdAt', 'createdBy'],
             },
             {
-                condition:
-                    Boolean(projectId) ||
-                    !Boolean(uiConfig.flags.projectScopedSegments),
+                condition: Boolean(projectId),
                 columns: ['project'],
             },
         ],

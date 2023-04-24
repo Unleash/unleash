@@ -1,4 +1,5 @@
 import { subDays } from 'date-fns';
+import { ValidationError } from 'joi';
 import User, { IUser } from '../types/user';
 import { AccessService } from './access-service';
 import NameExistsError from '../error/name-exists-error';
@@ -423,7 +424,12 @@ export default class ProjectService {
         const role = await this.accessService.getRole(roleId);
         const group = await this.groupService.getGroup(groupId);
         const project = await this.getProject(projectId);
-        if (group.id == null) throw new TypeError('Unexpected empty group id');
+        if (group.id == null)
+            throw new ValidationError(
+                'Unexpected empty group id',
+                [],
+                undefined,
+            );
 
         await this.accessService.addGroupToRole(
             group.id,
@@ -454,7 +460,12 @@ export default class ProjectService {
         const group = await this.groupService.getGroup(groupId);
         const role = await this.accessService.getRole(roleId);
         const project = await this.getProject(projectId);
-        if (group.id == null) throw new TypeError('Unexpected empty group id');
+        if (group.id == null)
+            throw new ValidationError(
+                'Unexpected empty group id',
+                [],
+                undefined,
+            );
 
         await this.accessService.removeGroupFromRole(
             group.id,
@@ -543,12 +554,18 @@ export default class ProjectService {
     ): Promise<void> {
         const usersWithRoles = await this.getAccessToProject(projectId);
         const user = usersWithRoles.users.find((u) => u.id === userId);
-        if (!user) throw new TypeError('Unexpected empty user');
+        if (!user)
+            throw new ValidationError('Unexpected empty user', [], undefined);
 
         const currentRole = usersWithRoles.roles.find(
             (r) => r.id === user.roleId,
         );
-        if (!currentRole) throw new TypeError('Unexpected empty current role');
+        if (!currentRole)
+            throw new ValidationError(
+                'Unexpected empty current role',
+                [],
+                undefined,
+            );
 
         if (currentRole.id === roleId) {
             // Nothing to do....
@@ -592,11 +609,17 @@ export default class ProjectService {
     ): Promise<void> {
         const usersWithRoles = await this.getAccessToProject(projectId);
         const user = usersWithRoles.groups.find((u) => u.id === userId);
-        if (!user) throw new TypeError('Unexpected empty user');
+        if (!user)
+            throw new ValidationError('Unexpected empty user', [], undefined);
         const currentRole = usersWithRoles.roles.find(
             (r) => r.id === user.roleId,
         );
-        if (!currentRole) throw new TypeError('Unexpected empty current role');
+        if (!currentRole)
+            throw new ValidationError(
+                'Unexpected empty current role',
+                [],
+                undefined,
+            );
 
         if (currentRole.id === roleId) {
             // Nothing to do....

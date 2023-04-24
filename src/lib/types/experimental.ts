@@ -55,10 +55,6 @@ const flags = {
         process.env.UNLEASH_BULK_OPERATIONS,
         false,
     ),
-    projectScopedSegments: parseEnvVarBoolean(
-        process.env.PROJECT_SCOPED_SEGMENTS,
-        false,
-    ),
     projectScopedStickiness: parseEnvVarBoolean(
         process.env.PROJECT_SCOPED_STICKINESS,
         false,
@@ -76,8 +72,16 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
         false,
     ),
+    groupRootRoles: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ROOT_ROLE_GROUPS,
+        false,
+    ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
+    strategyTitle: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_TITLE,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

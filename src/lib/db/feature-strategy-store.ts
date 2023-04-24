@@ -35,6 +35,7 @@ const COLUMNS = [
     'parameters',
     'constraints',
     'created_at',
+    'disabled',
 ];
 /*
 const mapperToColumnNames = {
@@ -62,6 +63,7 @@ interface IFeatureStrategiesTable {
     constraints: string;
     sort_order: number;
     created_at?: Date;
+    disabled?: boolean | null;
 }
 
 export interface ILoadFeatureToggleWithEnvsParams {
@@ -83,6 +85,7 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
         constraints: (row.constraints as unknown as IConstraint[]) || [],
         createdAt: row.created_at,
         sortOrder: row.sort_order,
+        disabled: row.disabled,
     };
 }
 
@@ -98,6 +101,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         constraints: JSON.stringify(input.constraints || []),
         created_at: input.createdAt,
         sort_order: input.sortOrder,
+        disabled: input.disabled,
     };
 }
 
@@ -106,6 +110,7 @@ interface StrategyUpdate {
     parameters: object;
     constraints: string;
     title?: string;
+    disabled?: boolean;
 }
 
 function mapStrategyUpdate(
@@ -120,6 +125,9 @@ function mapStrategyUpdate(
     }
     if (input.title !== null) {
         update.title = input.title;
+    }
+    if (input.disabled !== null) {
+        update.disabled = input.disabled;
     }
     update.constraints = JSON.stringify(input.constraints || []);
     return update;
@@ -590,6 +598,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             sortOrder: r.sort_order,
             id: r.strategy_id,
             title: r.strategy_title || '',
+            disabled: r.strategy_disabled || false,
         };
         if (!includeId) {
             delete strategy.id;

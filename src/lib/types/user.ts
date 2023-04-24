@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi, { ValidationError } from 'joi';
 import { generateImageUrl } from '../util/generateImageUrl';
 
 export const AccountTypes = ['User', 'Service Account'] as const;
@@ -70,7 +70,7 @@ export default class User implements IUser {
         isService,
     }: UserData) {
         if (!id) {
-            throw new TypeError('Id is required');
+            throw new ValidationError('Id is required', [], undefined);
         }
         Joi.assert(email, Joi.string().email(), 'Email');
         Joi.assert(username, Joi.string(), 'Username');

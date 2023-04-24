@@ -48,10 +48,11 @@ export interface IFlags {
     notifications?: boolean;
     loginHistory?: boolean;
     bulkOperations?: boolean;
-    projectScopedSegments?: boolean;
     projectScopedStickiness?: boolean;
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
+    strategyTitle?: boolean;
+    groupRootRoles?: boolean;
 }
 
 export interface IVersionInfo {

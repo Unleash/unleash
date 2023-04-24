@@ -43,6 +43,7 @@ export default class FakeAddonStore implements IAddonStore {
         const ins: IAddon = {
             id: this.highestId++,
             createdAt: new Date(),
+            description: null,
             ...addon,
         };
         this.addons.push(ins);
@@ -51,7 +52,12 @@ export default class FakeAddonStore implements IAddonStore {
 
     async update(id: number, addon: IAddonDto): Promise<IAddon> {
         await this.delete(id);
-        const inserted: IAddon = { id, createdAt: new Date(), ...addon };
+        const inserted: IAddon = {
+            id,
+            createdAt: new Date(),
+            description: null,
+            ...addon,
+        };
         this.addons.push(inserted);
         return inserted;
     }

@@ -26,6 +26,13 @@ export const featureStrategySchema = {
             example: 'Gradual Rollout 25-Prod',
             nullable: true,
         },
+        disabled: {
+            type: 'boolean',
+            description:
+                'A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs',
+            example: false,
+            nullable: true,
+        },
         featureName: {
             type: 'string',
             description: 'The name or feature the strategy is attached to',

@@ -250,9 +250,21 @@ export default class AddonService {
     }
 
     async validateKnownProvider(config: Partial<IAddonDto>): Promise<boolean> {
+        if (!config.provider) {
+            throw new ValidationError(
+                'No addon provider supplied. The property was either missing or an empty value.',
+                [],
+                undefined,
+            );
+        }
+
         const p = this.addonProviders[config.provider];
         if (!p) {
-            throw new TypeError(`Unknown addon provider ${config.provider}`);
+            throw new ValidationError(
+                `Unknown addon provider ${config.provider}`,
+                [],
+                undefined,
+            );
         } else {
             return true;
         }

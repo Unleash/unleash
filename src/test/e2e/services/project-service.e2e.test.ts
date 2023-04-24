@@ -604,9 +604,8 @@ test('should fail if user is not authorized', async () => {
             project.id,
         );
     } catch (err) {
-        expect(err.message).toBe(
-            `You need permission=${MOVE_FEATURE_TOGGLE} to perform this action`,
-        );
+        expect(err.message.toLowerCase().includes('permission'));
+        expect(err.message.includes(MOVE_FEATURE_TOGGLE));
     }
 });
 

@@ -160,8 +160,13 @@ export const ChangeActions: FC<{
                                                 changeRequest.environment
                                             }
                                             open={editOpen}
-                                            setOpen={setEditOpen}
-                                            refetch={onRefetch}
+                                            onSubmit={() => {
+                                                setEditOpen(false);
+                                                onRefetch?.();
+                                            }}
+                                            onClose={() => {
+                                                setEditOpen(false);
+                                            }}
                                         />
                                     </MenuItem>
                                 }

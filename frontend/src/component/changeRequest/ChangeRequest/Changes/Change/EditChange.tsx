@@ -29,8 +29,8 @@ interface IEditChangeProps {
     featureId: string;
     environment: string;
     open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    refetch?: () => void;
+    onSubmit: () => void;
+    onClose: () => void;
 }
 
 export const EditChange = ({
@@ -38,8 +38,8 @@ export const EditChange = ({
     changeRequestId,
     environment,
     open,
-    setOpen,
-    refetch,
+    onSubmit,
+    onClose,
     featureId,
 }: IEditChangeProps) => {
     const projectId = useRequiredPathParam('projectId');
@@ -99,15 +99,14 @@ export const EditChange = ({
         segments: segments.map(segment => segment.id),
     };
 
-    const onSubmit = async () => {
+    const onInternalSubmit = async () => {
         try {
             await editChange(projectId, changeRequestId, change.id, {
                 action: strategy.id ? 'updateStrategy' : 'addStrategy',
                 feature: featureId,
                 payload,
             });
-            setOpen(false);
-            refetch?.();
+            onSubmit();
             setToastData({
                 title: 'Change updated',
                 type: 'success',
@@ -126,9 +125,7 @@ export const EditChange = ({
     return (
         <SidebarModal
             open={open}
-            onClose={() => {
-                setOpen(false);
-            }}
+            onClose={onClose}
             label="Edit change"
             onClick={e => {
                 e.stopPropagation();
@@ -158,10 +155,8 @@ export const EditChange = ({
                     segments={segments}
                     setSegments={setSegments}
                     environmentId={environment}
-                    onSubmit={onSubmit}
-                    onCancel={() => {
-                        setOpen(false);
-                    }}
+                    onSubmit={onInternalSubmit}
+                    onCancel={onClose}
                     loading={false}
                     permission={UPDATE_FEATURE_STRATEGY}
                     errors={errors}

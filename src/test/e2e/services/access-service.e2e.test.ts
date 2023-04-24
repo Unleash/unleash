@@ -777,10 +777,8 @@ test('Should be denied move feature toggle to project where the user does not ha
         );
     } catch (e) {
         expect(e.name).toContain('NoAccess');
-        expect(e.message).toContain(
-            'permission',
-            permissions.MOVE_FEATURE_TOGGLE,
-        );
+        expect(e.message.includes('permission'));
+        expect(e.message.includes(permissions.MOVE_FEATURE_TOGGLE));
     }
 });
 

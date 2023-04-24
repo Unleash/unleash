@@ -2,8 +2,6 @@ import { v4 as uuidV4 } from 'uuid';
 import { FromSchema } from 'json-schema-to-ts';
 
 const UnleashApiErrorTypes = [
-    'BadDataError',
-    'BadRequestError',
     'OwaspValidationError',
     'PasswordUndefinedError',
     'MinimumOneEnvironmentError',
@@ -30,6 +28,8 @@ const UnleashApiErrorTypes = [
 
 // types that have extra data associated with them
 const UnleashApiErrorTypes2 = [
+    'BadDataError',
+    'BadRequestError',
     'ValidationError',
     'AuthenticationRequired',
     'NoAccessError',
@@ -112,6 +112,8 @@ type UnleashErrorData =
                     | 'NoAccessError'
                     | 'AuthenticationRequired'
                     | 'ValidationError'
+                    | 'BadDataError'
+                    | 'BadRequestError'
                 >;
             }
           | {
@@ -124,7 +126,7 @@ type UnleashErrorData =
                 type: string;
             }
           | {
-                name: 'ValidationError';
+                name: 'ValidationError' | 'BadDataError' | 'BadRequestError';
                 errors: [
                     ValidationErrorDescription,
                     ...ValidationErrorDescription[],
@@ -225,9 +227,12 @@ export const fromLegacyError = (e: Error): UnleashError => {
         });
     }
 
-    if (name === 'ValidationError') {
+    if (['ValidationError', 'BadRequestError', 'BadDataError'].includes(name)) {
         return new UnleashError({
-            name,
+            name: name as
+                | 'ValidationError'
+                | 'BadRequestError'
+                | 'BadDataError',
             message:
                 'Your request body failed to validate. Refer to the `errors` list to see what happened.',
             errors: [{ description: e.message }],
@@ -237,8 +242,7 @@ export const fromLegacyError = (e: Error): UnleashError => {
     if (name === 'AuthenticationRequired') {
         return new UnleashError({
             name,
-            message:
-                'Your request body failed to validate. Refer to the `errors` list to see what happened.',
+            message: `You must be authenticated to view this content. Please log in.`,
             path: `/err/maybe/login?`,
             type: 'password',
         });
@@ -246,6 +250,7 @@ export const fromLegacyError = (e: Error): UnleashError => {
     return new UnleashError({
         name,
         message: e.message,
+        errors: [{ description: "this shouldn't be here" }],
     });
 };
 

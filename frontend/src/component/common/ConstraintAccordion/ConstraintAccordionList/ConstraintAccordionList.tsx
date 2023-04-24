@@ -190,6 +190,7 @@ export const ConstraintAccordionList = forwardRef<
                                 onClick={onAdd}
                                 variant="outlined"
                                 color="primary"
+                                data-testid="ADD_CONSTRAINT_BUTTON"
                             >
                                 Add constraint
                             </Button>

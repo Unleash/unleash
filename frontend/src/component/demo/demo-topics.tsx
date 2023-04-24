@@ -127,10 +127,10 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
             },
             {
-                target: 'a[href="/projects/default/features/demoApp.step2/strategies/create?environmentId=default&strategyName=userWithId"]',
+                target: 'a[href="/projects/default/features/demoApp.step2/strategies/create?environmentId=default&strategyName=default"]',
                 content: (
                     <Description>
-                        Select the <Badge as="span">UserIDs</Badge> strategy
+                        Select the <Badge as="span">Standard</Badge> strategy
                         type.
                     </Description>
                 ),
@@ -138,7 +138,62 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
-                target: '#input-add-items',
+                target: 'button[data-testid="ADD_CONSTRAINT_BUTTON"]',
+                content: (
+                    <>
+                        <Description>
+                            <a
+                                href="https://docs.getunleash.io/reference/strategy-constraints"
+                                target="_blank"
+                            >
+                                Strategy constraints
+                            </a>{' '}
+                            are conditions that must be satisfied for an{' '}
+                            <a
+                                href="https://docs.getunleash.io/reference/activation-strategies"
+                                target="_blank"
+                            >
+                                activation strategy
+                            </a>{' '}
+                            to be evaluated for a feature toggle.
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
+                            Click this button to add a constraint.
+                        </Description>
+                    </>
+                ),
+                backCloseModal: true,
+            },
+            {
+                target: '#context-field-select',
+                content: (
+                    <Description>
+                        <a
+                            href="https://docs.getunleash.io/reference/unleash-context"
+                            target="_blank"
+                        >
+                            Unleash context
+                        </a>{' '}
+                        contains information relating to the current feature
+                        toggle request.
+                    </Description>
+                ),
+                backCloseModal: true,
+                anyClick: true,
+            },
+            {
+                target: 'li[data-testid="SELECT_ITEM_ID-userId"]',
+                content: (
+                    <Description>
+                        Select the <Badge as="span">userId</Badge> context
+                        field.
+                    </Description>
+                ),
+                placement: 'right',
+                backCloseModal: true,
+            },
+            {
+                target: 'div[data-testid="CONSTRAINT_VALUES_INPUT"]',
                 content: (
                     <>
                         <Description>
@@ -152,7 +207,16 @@ export const TOPICS: ITutorialTopic[] = [
                         </Badge>
                     </>
                 ),
+                backCloseModal: true,
                 nextButton: true,
+            },
+            {
+                target: 'button[data-testid="CONSTRAINT_VALUES_ADD_BUTTON"]',
+                content: <Description>Add the constraint value.</Description>,
+            },
+            {
+                target: 'button[data-testid="CONSTRAINT_SAVE_BUTTON"]',
+                content: <Description>Save the constraint.</Description>,
                 backCloseModal: true,
             },
             {
@@ -170,6 +234,7 @@ export const TOPICS: ITutorialTopic[] = [
                         </Badge>
                     </>
                 ),
+                backCloseModal: true,
             },
             {
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
@@ -259,6 +324,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <Description>Change the rollout percentage.</Description>
                 ),
                 backCloseModal: true,
+                nextButton: true,
             },
             {
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',

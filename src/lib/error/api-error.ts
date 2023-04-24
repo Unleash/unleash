@@ -170,10 +170,6 @@ export class UnleashError implements Error {
             id: this.id,
             name: this.name,
             message: this.message,
-            documentationLink:
-                this.documentationLink ||
-                'There is no documentation link available for this or none was provided.',
-            help: this.help(),
             ...this.otherparams,
         };
     }
@@ -186,10 +182,9 @@ export class UnleashError implements Error {
 export const apiErrorSchema = {
     $id: '#/components/schemas/apiError',
     type: 'object',
-    additionalProperties: false,
-    required: ['id', 'name', 'message', 'documentationLink'],
+    required: ['id', 'name', 'message'],
     description:
-        'An Unleash API error. Contains information about what went wrong and suggests what you can do to fix your issue.',
+        'An Unleash API error. Contains information about what went wrong.',
     properties: {
         name: {
             type: 'string',
@@ -204,89 +199,15 @@ export const apiErrorSchema = {
                 'A unique identifier for this error instance. Can be used to search logs etc.',
             example: '0b84c7fd-5278-4087-832d-0b502c7929b3',
         },
-        documentationLink: {
-            type: 'string',
-            pattern: 'url',
-            description:
-                'A URL to where you can find more information about using this addon type.',
-            example: 'https://docs.getunleash.io/docs/addons/slack',
-        },
         message: {
             type: 'string',
             description: 'A human-readable explanation of what went wrong.',
             example:
                 "We couldn't find an addon provider with the name that you are trying to add ('bogus-addon')",
         },
-        help: {
-            type: 'string',
-            description: 'Where can you get more help?',
-            example:
-                'If you need help, you can ask a question on [GitHub discussions](https://github.com/orgs/Unleash/discussions) or on Slack (slack.unleash.run). Or ask your Unleash administrator to look up the error id 0b84c7fd-5278-4087-832d-0b502c7929b3.',
-        },
     },
     components: {},
 } as const;
-
-const authErrorSchema = {
-    type: 'object',
-    additionalProperties: false,
-    required: ['path', 'name'],
-    description: 'An API authorization error. Contains a path.',
-    properties: {
-        name: {
-            type: 'string',
-            enum: ['PasswordMismatchError'],
-            example: 'PasswordMismatchError',
-            description: 'The name of this authorization error type.',
-        },
-        path: {
-            type: 'string',
-            pattern: 'uri',
-            example: '/auth/simple/login',
-            description: 'Where you must go to log in.',
-        },
-        type: {
-            type: 'string',
-            example: 'password',
-            description: 'The kind of login that is required.',
-        },
-    },
-};
-
-const validationErrorSchema = {
-    type: 'object',
-    additionalProperties: false,
-    required: ['errors', 'name'],
-    description: 'An API authorization error. Contains a path.',
-    properties: {
-        name: {
-            type: 'string',
-            enum: ['ValidationError'],
-            example: 'ValidationError',
-            description: 'The name of this authorization error type.',
-        },
-        errors: {
-            type: 'array',
-            minLength: 1,
-            description:
-                'A list of errors on the request body with description and suggestions.',
-            example: [
-                {
-                    description: 'The x property is wrong.',
-                    suggestion: 'Try doing it right.',
-                },
-            ],
-            items: {
-                type: 'object',
-                required: ['description'],
-                properties: {
-                    description: { type: 'string' },
-                    path: { type: 'string' },
-                },
-            },
-        },
-    },
-};
 
 export const fromLegacyError = (e: Error): UnleashError => {
     const name = AllUnleashApiErrorTypes.includes(e.name as UnleashApiErrorKind)

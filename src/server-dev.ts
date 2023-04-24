@@ -41,6 +41,7 @@ process.nextTick(async () => {
                         newProjectOverview: true,
                         bulkOperations: true,
                         optimal304: true,
+                        optimal304Frontend: true,
                         optimal304Differ: false,
                     },
                 },

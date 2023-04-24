@@ -66,6 +66,10 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
         false,
     ),
+    optimal304Frontend: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_FRONTEND,
+        false,
+    ),
     groupRootRoles: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ROOT_ROLE_GROUPS,
         false,

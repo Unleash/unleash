@@ -4,8 +4,9 @@ import { Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { IEventList } from '../types/events';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
+import { EventEmitter } from 'stream';
 
-export default class EventService {
+export default class EventService extends EventEmitter {
     private logger: Logger;
 
     private eventStore: IEventStore;
@@ -16,6 +17,7 @@ export default class EventService {
         { eventStore }: Pick<IUnleashStores, 'eventStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
+        super();
         this.logger = getLogger('services/event-service.ts');
         this.eventStore = eventStore;
     }
@@ -47,9 +49,15 @@ export default class EventService {
     }
 
     async updateMaxRevisionId(): Promise<number> {
-        this.revisionId = await this.eventStore.getMaxRevisionId(
+        const revisionId = await this.eventStore.getMaxRevisionId(
             this.revisionId,
         );
+        if (this.revisionId !== revisionId) {
+            this.logger.info('updating rev ID!', revisionId);
+            this.emit('update', revisionId);
+            this.revisionId = revisionId;
+        }
+
         return this.revisionId;
     }
 }

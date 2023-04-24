@@ -72,6 +72,9 @@ export const uiConfigSchema = {
                 'none',
             ],
         },
+        toast: {
+            type: 'object',
+        },
         versionInfo: {
             $ref: '#/components/schemas/versionSchema',
         },

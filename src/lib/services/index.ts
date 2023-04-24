@@ -193,6 +193,7 @@ export const createServices = (
         clientMetricsServiceV2,
         segmentService,
         settingService,
+        eventService,
     });
 
     const edgeService = new EdgeService(stores, config);

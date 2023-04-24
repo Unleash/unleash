@@ -1,6 +1,5 @@
 import openapi, { IExpressOpenApi } from '@unleash/express-openapi';
 import { Express, RequestHandler, Response } from 'express';
-import { ErrorObject } from 'ajv';
 import { IUnleashConfig } from '../types/option';
 import {
     createOpenApiSchema,

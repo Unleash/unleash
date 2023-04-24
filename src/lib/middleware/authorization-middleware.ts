@@ -12,13 +12,6 @@ const authorizationMiddleware = (
     const logger = getLogger('/middleware/authorization-middleware.ts');
     logger.debug('Enabling Authorization middleware');
 
-    const generateAuthResponse = async () =>
-        new AuthenticationRequired({
-            type: 'password',
-            path: `${baseUriPath}/auth/simple/login`,
-            message: 'You must sign in order to use Unleash',
-        });
-
     return async (req: IAuthRequest, res: Response, next: NextFunction) => {
         if (req.session && req.session.user) {
             req.user = req.session.user;

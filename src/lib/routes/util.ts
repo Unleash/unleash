@@ -1,7 +1,7 @@
 import joi from 'joi';
 import { Response } from 'express';
 import { Logger } from '../logger';
-import { fromLegacyError } from '../error/api-error';
+import { fromLegacyError, UnleashError } from '../error/api-error';
 
 export const customJoi = joi.extend((j) => ({
     type: 'isUrlFriendly',
@@ -31,11 +31,12 @@ export const handleErrors: (
     // eslint-disable-next-line no-param-reassign
     error.isJoi = true;
 
-    const newError = fromLegacyError(error);
+    const finalError =
+        error instanceof UnleashError ? error : fromLegacyError(error);
 
-    if (['InternalError', 'UnknownError'].includes(newError.name)) {
+    if (['InternalError', 'UnknownError'].includes(finalError.name)) {
         logger.error('Server failed executing request', error);
     }
 
-    return res.status(newError.statusCode).json(newError).end();
+    return res.status(finalError.statusCode).json(finalError).end();
 };

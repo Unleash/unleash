@@ -559,7 +559,9 @@ const defaultImportPayload: ImportTogglesSchema = {
 };
 
 const getFeature = async (feature: string) =>
-    app.request.get(`/api/admin/features/${feature}`).expect(200);
+    app.request
+        .get(`/api/admin/projects/${DEFAULT_PROJECT}/features/${feature}`)
+        .expect(200);
 
 const getFeatureEnvironment = (feature: string) =>
     app.request

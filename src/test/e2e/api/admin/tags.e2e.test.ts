@@ -121,7 +121,7 @@ test('Can tag features', async () => {
         value: 'remove_me',
         type: 'simple',
     };
-    await app.request.post('/api/admin/features').send({
+    await app.request.post('/api/admin/projects/default/features').send({
         name: featureName,
         type: 'killswitch',
         enabled: true,
@@ -137,7 +137,7 @@ test('Can tag features', async () => {
 
     expect(initialTagState.body).toMatchObject({ tags: [removedTag] });
 
-    await app.request.post('/api/admin/features').send({
+    await app.request.post('/api/admin/projects/default/features').send({
         name: featureName2,
         type: 'killswitch',
         enabled: true,

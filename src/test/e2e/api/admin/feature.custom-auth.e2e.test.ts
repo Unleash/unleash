@@ -53,7 +53,7 @@ test('creates new feature toggle with createdBy', async () => {
 
     // create toggle
     await request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'com.test.Username',
             enabled: false,

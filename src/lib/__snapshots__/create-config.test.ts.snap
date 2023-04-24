@@ -44,7 +44,6 @@ exports[`should create default config 1`] = `
     "user": "unleash",
     "version": undefined,
   },
-  "disableLegacyFeaturesApi": false,
   "email": {
     "host": undefined,
     "port": 587,

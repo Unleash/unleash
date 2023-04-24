@@ -37,22 +37,15 @@ const authorizationMiddleware = (
             );
         }
 
-        const newLogin = true;
-        if (newLogin) {
-            const path = `${baseUriPath}/auth/simple/login`;
-            const error = new UnleashError({
-                name: 'AuthenticationRequired',
-                message: `You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at ${baseUriPath}/auth/simple/login.`,
-                type: 'password',
-                path,
-            });
+        const path = `${baseUriPath}/auth/simple/login`;
+        const error = new UnleashError({
+            name: 'AuthenticationRequired',
+            message: `You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at ${baseUriPath}/auth/simple/login.`,
+            type: 'password',
+            path,
+        });
 
-            return res.status(error.statusCode).json(error);
-        } else {
-            // Admin UI users should get auth-response
-            const authRequired = await generateAuthResponse();
-            return res.status(401).json(authRequired);
-        }
+        return res.status(error.statusCode).json(error);
     };
 };
 

@@ -305,7 +305,6 @@ class UserService {
             message:
                 'The password you provided does not match the username. If you have forgotten your password ...',
         });
-        // throw new PasswordMismatch();
     }
 
     /**

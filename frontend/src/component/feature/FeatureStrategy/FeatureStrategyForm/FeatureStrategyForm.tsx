@@ -37,6 +37,7 @@ interface IFeatureStrategyFormProps {
     environmentId: string;
     permission: string;
     onSubmit: () => void;
+    onCancel?: () => void;
     loading: boolean;
     isChangeRequest?: boolean;
     strategy: Partial<IFeatureStrategy>;
@@ -74,6 +75,7 @@ export const FeatureStrategyForm = ({
     environmentId,
     permission,
     onSubmit,
+    onCancel,
     loading,
     strategy,
     setStrategy,
@@ -149,7 +151,7 @@ export const FeatureStrategyForm = ({
             .every(Boolean);
     };
 
-    const onCancel = () => {
+    const onDefaultCancel = () => {
         navigate(formatFeaturePath(feature.project, feature.name));
     };
 
@@ -270,7 +272,7 @@ export const FeatureStrategyForm = ({
                 <Button
                     type="button"
                     color="primary"
-                    onClick={onCancel}
+                    onClick={onCancel ? onCancel : onDefaultCancel}
                     disabled={loading}
                 >
                     Cancel

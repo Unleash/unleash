@@ -17,6 +17,7 @@ const UnleashApiErrorTypes = [
     'RoleInUseError',
     'ProjectWithoutOwnerError',
     'UnknownError',
+    'PasswordMismatch',
     'PasswordMismatchError',
     'DisabledError',
     'ContentTypeError',
@@ -86,6 +87,7 @@ const statusCode = (errorKind: UnleashApiErrorKind): number => {
             return 500;
         case 'InternalError':
             return 500;
+        case 'PasswordMismatch':
         case 'PasswordMismatchError':
             return 401;
         case 'DisabledError':

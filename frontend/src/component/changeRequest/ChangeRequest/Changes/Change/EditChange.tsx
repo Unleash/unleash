@@ -21,6 +21,7 @@ import {
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 
 interface IEditChangeProps {
     change: IChangeRequestAddStrategy | IChangeRequestUpdateStrategy;
@@ -48,9 +49,13 @@ export const EditChange = ({
         change.payload
     );
 
-    const [segments, setSegments] = useState<ISegment[]>(
-        change.payload.segments as any as ISegment[]
-    );
+    const { segments: allSegments } = useSegments();
+    const strategySegments =
+        allSegments?.filter(segment => {
+            return change.payload.segments?.includes(segment.id);
+        }) || [];
+
+    const [segments, setSegments] = useState<ISegment[]>(strategySegments);
 
     const strategyDefinition = {
         parameters: change.payload.parameters,
@@ -89,12 +94,17 @@ export const EditChange = ({
         }
     }, [feature]);
 
+    const payload = {
+        ...strategy,
+        segments: segments.map(segment => segment.id),
+    };
+
     const onSubmit = async () => {
         try {
             await editChange(projectId, changeRequestId, change.id, {
                 action: strategy.id ? 'updateStrategy' : 'addStrategy',
                 feature: featureId,
-                payload: { ...strategy, segments },
+                payload,
             });
             setOpen(false);
             refetch?.();
@@ -135,7 +145,7 @@ export const EditChange = ({
                         projectId,
                         changeRequestId,
                         change.id,
-                        strategy,
+                        payload,
                         unleashUrl
                     )
                 }

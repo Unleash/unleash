@@ -175,6 +175,10 @@ export class UnleashError extends Error {
     toJSON(): ApiErrorSchema {
         return this.serialize();
     }
+
+    toString(): string {
+        return `${this.name}: ${this.message}.`;
+    }
 }
 
 export const apiErrorSchema = {

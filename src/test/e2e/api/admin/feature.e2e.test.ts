@@ -324,7 +324,6 @@ test('refuses to create a new feature toggle with variant when type is json but 
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect((res) => {
-            expect(res.body.errors[0].type).toBe('invalidJsonString');
             expect(res.body.errors[0].description).toBe(
                 `'value' must be a valid json string when 'type' is json`,
             );

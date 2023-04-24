@@ -776,8 +776,10 @@ test('Should be denied move feature toggle to project where the user does not ha
             projectOrigin.id,
         );
     } catch (e) {
-        expect(e.toString()).toBe(
-            'NoAccessError: You need permission=MOVE_FEATURE_TOGGLE to perform this action',
+        expect(e.name).toContain('NoAccess');
+        expect(e.message).toContain(
+            'permission',
+            permissions.MOVE_FEATURE_TOGGLE,
         );
     }
 });

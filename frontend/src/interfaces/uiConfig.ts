@@ -53,6 +53,7 @@ export interface IFlags {
     demo?: boolean;
     strategyTitle?: boolean;
     groupRootRoles?: boolean;
+    googleAuthEnabled?: boolean;
 }
 
 export interface IVersionInfo {

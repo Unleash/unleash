@@ -9,6 +9,10 @@ import {
 } from '@server/types/permissions';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useEnableDisable } from './hooks/useEnableDisable';
+import { useSuggestEnableDisable } from './hooks/useSuggestEnableDisable';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { FeatureStrategyChangeRequestAlert } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
 
 interface IDisableEnableStrategyProps {
     projectId: string;
@@ -17,19 +21,24 @@ interface IDisableEnableStrategyProps {
     strategyId: string;
 }
 
-const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({
-    projectId,
-    environmentId,
-    featureId,
-    strategyId,
-}) => {
+const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
+    const { projectId, environmentId } = props;
     const [isDialogueOpen, setDialogueOpen] = useState(false);
-    const { onDisable } = useEnableDisable({
-        projectId,
-        environmentId,
-        featureId,
-        strategyId,
-    });
+    const { onDisable } = useEnableDisable({ ...props });
+    const { onSuggestDisable } = useSuggestEnableDisable({ ...props });
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const isChangeRequest = isChangeRequestConfigured(environmentId);
+
+    const onClick = (event: React.FormEvent) => {
+        console.log('click', { isChangeRequest });
+        event.preventDefault();
+        if (isChangeRequest) {
+            onSuggestDisable();
+        } else {
+            onDisable();
+        }
+        setDialogueOpen(false);
+    };
 
     return (
         <>
@@ -38,45 +47,66 @@ const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({
                 projectId={projectId}
                 environmentId={environmentId}
                 permission={DELETE_FEATURE_STRATEGY}
-                tooltipProps={{ title: 'Disable strategy' }}
+                tooltipProps={{
+                    title: isChangeRequest
+                        ? 'Add to draft'
+                        : 'Disable strategy',
+                }}
                 type="button"
             >
                 <BlockIcon />
             </PermissionIconButton>
             <Dialogue
-                title="Are you sure you want to disable this strategy?"
+                title={
+                    isChangeRequest
+                        ? 'Add disabling strategy to change request?'
+                        : 'Are you sure you want to disable this strategy?'
+                }
                 open={isDialogueOpen}
-                primaryButtonText="Disable strategy"
+                primaryButtonText={
+                    isChangeRequest ? 'Add to draft' : 'Disable strategy'
+                }
                 secondaryButtonText="Cancel"
-                onClick={event => {
-                    onDisable(event);
-                    setDialogueOpen(false);
-                }}
+                onClick={onClick}
                 onClose={() => setDialogueOpen(false)}
             >
-                <Alert severity="error">
-                    Disabling the strategy will change which users receive
-                    access to the feature.
-                </Alert>
+                <ConditionallyRender
+                    condition={isChangeRequest}
+                    show={
+                        <FeatureStrategyChangeRequestAlert
+                            environment={environmentId}
+                        />
+                    }
+                    elseShow={
+                        <Alert severity="error">
+                            Disabling the strategy will change which users
+                            receive access to the feature.
+                        </Alert>
+                    }
+                />
             </Dialogue>
         </>
     );
 };
 
-const EnableStrategy: VFC<IDisableEnableStrategyProps> = ({
-    projectId,
-    environmentId,
-    featureId,
-    strategyId,
-}) => {
+const EnableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
+    const { projectId, environmentId } = props;
     const [isDialogueOpen, setDialogueOpen] = useState(false);
+    const { onEnable } = useEnableDisable({ ...props });
+    const { onSuggestEnable } = useSuggestEnableDisable({ ...props });
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const isChangeRequest = isChangeRequestConfigured(environmentId);
 
-    const { onEnable } = useEnableDisable({
-        projectId,
-        environmentId,
-        featureId,
-        strategyId,
-    });
+    const onClick = (event: React.FormEvent) => {
+        console.log('click', { isChangeRequest });
+        event.preventDefault();
+        if (isChangeRequest) {
+            onSuggestEnable();
+        } else {
+            onEnable();
+        }
+        setDialogueOpen(false);
+    };
 
     return (
         <>
@@ -85,24 +115,41 @@ const EnableStrategy: VFC<IDisableEnableStrategyProps> = ({
                 projectId={projectId}
                 environmentId={environmentId}
                 permission={CREATE_FEATURE_STRATEGY}
-                tooltipProps={{ title: 'Enable strategy' }}
+                tooltipProps={{
+                    title: isChangeRequest ? 'Add to draft' : 'Enable strategy',
+                }}
                 type="button"
             >
                 <TrackChangesIcon />
             </PermissionIconButton>
             <Dialogue
-                title="Are you sure you want to enable this strategy?"
+                title={
+                    isChangeRequest
+                        ? 'Add enabling strategy to change request?'
+                        : 'Are you sure you want to enable this strategy?'
+                }
                 open={isDialogueOpen}
-                primaryButtonText="Enable strategy"
+                primaryButtonText={
+                    isChangeRequest ? 'Add to draft' : 'Enable strategy'
+                }
                 secondaryButtonText="Cancel"
-                onClick={event => {
-                    onEnable(event);
-                    setDialogueOpen(false);
-                }}
+                onClick={onClick}
                 onClose={() => setDialogueOpen(false)}
             >
-                Enabling the strategy will change which users receive access to
-                the feature.
+                <ConditionallyRender
+                    condition={isChangeRequest}
+                    show={
+                        <FeatureStrategyChangeRequestAlert
+                            environment={environmentId}
+                        />
+                    }
+                    elseShow={
+                        <Alert severity="error">
+                            Enabling the strategy will change which users
+                            receive access to the feature.
+                        </Alert>
+                    }
+                />
             </Dialogue>
         </>
     );

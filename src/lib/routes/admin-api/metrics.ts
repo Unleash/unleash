@@ -88,7 +88,7 @@ class MetricsController extends Controller {
                     tags: ['Metrics'],
                     summary: 'Get all applications',
                     description:
-                        'Gets all applications created via metrics reporting and manual creation',
+                        'Returns all applications registered with Unleash. Applications can be created via metrics reporting or manual creation',
                     operationId: 'getApplications',
                     responses: {
                         200: createResponseSchema('applicationsSchema'),

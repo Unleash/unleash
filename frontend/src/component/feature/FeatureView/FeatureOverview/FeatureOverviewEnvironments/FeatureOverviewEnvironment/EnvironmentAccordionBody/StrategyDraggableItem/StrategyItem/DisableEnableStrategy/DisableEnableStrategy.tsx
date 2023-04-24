@@ -7,11 +7,8 @@ import {
     DELETE_FEATURE_STRATEGY,
     CREATE_FEATURE_STRATEGY,
 } from '@server/types/permissions';
-import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/formatUnknownError';
+import { useEnableDisable } from './hooks/useEnableDisable';
 
 interface IDisableEnableStrategyProps {
     projectId: string;
@@ -27,31 +24,12 @@ const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({
     strategyId,
 }) => {
     const [isDialogueOpen, setDialogueOpen] = useState(false);
-    const { refetchFeature } = useFeature(projectId, featureId);
-    const { setStrategyDisabledState } = useFeatureStrategyApi();
-    const { setToastData, setToastApiError } = useToast();
-
-    const onDisable = async (event: React.FormEvent) => {
-        try {
-            event.preventDefault();
-            setDialogueOpen(false);
-            await setStrategyDisabledState(
-                projectId,
-                featureId,
-                environmentId,
-                strategyId,
-                true
-            );
-            setToastData({
-                title: 'Strategy disabled',
-                type: 'success',
-            });
-
-            refetchFeature();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
+    const { onDisable } = useEnableDisable({
+        projectId,
+        environmentId,
+        featureId,
+        strategyId,
+    });
 
     return (
         <>
@@ -70,7 +48,10 @@ const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({
                 open={isDialogueOpen}
                 primaryButtonText="Disable strategy"
                 secondaryButtonText="Cancel"
-                onClick={onDisable}
+                onClick={event => {
+                    onDisable(event);
+                    setDialogueOpen(false);
+                }}
                 onClose={() => setDialogueOpen(false)}
             >
                 <Alert severity="error">
@@ -89,31 +70,13 @@ const EnableStrategy: VFC<IDisableEnableStrategyProps> = ({
     strategyId,
 }) => {
     const [isDialogueOpen, setDialogueOpen] = useState(false);
-    const { refetchFeature } = useFeature(projectId, featureId);
-    const { setStrategyDisabledState } = useFeatureStrategyApi();
-    const { setToastData, setToastApiError } = useToast();
 
-    const onEnable = async (event: React.FormEvent) => {
-        try {
-            event.preventDefault();
-            setDialogueOpen(false);
-            await setStrategyDisabledState(
-                projectId,
-                featureId,
-                environmentId,
-                strategyId,
-                false
-            );
-            setToastData({
-                title: 'Strategy enabled',
-                type: 'success',
-            });
-
-            refetchFeature();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
+    const { onEnable } = useEnableDisable({
+        projectId,
+        environmentId,
+        featureId,
+        strategyId,
+    });
 
     return (
         <>
@@ -132,7 +95,10 @@ const EnableStrategy: VFC<IDisableEnableStrategyProps> = ({
                 open={isDialogueOpen}
                 primaryButtonText="Enable strategy"
                 secondaryButtonText="Cancel"
-                onClick={onEnable}
+                onClick={event => {
+                    onEnable(event);
+                    setDialogueOpen(false);
+                }}
                 onClose={() => setDialogueOpen(false)}
             >
                 Enabling the strategy will change which users receive access to

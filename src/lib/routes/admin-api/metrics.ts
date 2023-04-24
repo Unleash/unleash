@@ -86,7 +86,7 @@ class MetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Metrics'],
-                    summary: 'Gets a list of applications',
+                    summary: 'Get all applications',
                     description:
                         'Gets all applications created via metrics reporting and manual creation',
                     operationId: 'getApplications',

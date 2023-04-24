@@ -141,7 +141,7 @@ export class UnleashError extends Error {
 
     statusCode: number;
 
-    otherparams: object;
+    additionalParameters: object;
 
     constructor({
         name,
@@ -149,14 +149,15 @@ export class UnleashError extends Error {
         documentationLink,
         ...rest
     }: UnleashErrorData) {
-        super(message);
+        super();
         this.id = uuidV4();
         this.documentationLink = documentationLink ?? null;
         this.name = name;
+        super.message = message;
 
         this.statusCode = statusCode(name);
 
-        this.otherparams = rest;
+        this.additionalParameters = rest;
     }
 
     help(): string {
@@ -168,7 +169,7 @@ export class UnleashError extends Error {
             id: this.id,
             name: this.name,
             message: this.message,
-            ...this.otherparams,
+            ...this.additionalParameters,
         };
     }
 

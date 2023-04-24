@@ -132,12 +132,10 @@ type UnleashErrorData =
             }
       );
 
-export class UnleashError implements Error {
+export class UnleashError extends Error {
     id: string;
 
     name: UnleashApiErrorKind;
-
-    message: string;
 
     documentationLink: string | null;
 
@@ -151,10 +149,10 @@ export class UnleashError implements Error {
         documentationLink,
         ...rest
     }: UnleashErrorData) {
+        super(message);
         this.id = uuidV4();
-        this.name = name;
-        this.message = message;
         this.documentationLink = documentationLink ?? null;
+        this.name = name;
 
         this.statusCode = statusCode(name);
 

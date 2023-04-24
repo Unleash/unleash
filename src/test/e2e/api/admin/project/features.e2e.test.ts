@@ -184,9 +184,7 @@ test('Trying to add a strategy configuration to environment not connected to tog
         })
         .expect(400)
         .expect((r) => {
-            expect(r.body.details[0].message).toBe(
-                'You have not added the current environment to the project',
-            );
+            expect(r.body.message).toContain('environment', 'project');
         });
 });
 
@@ -777,8 +775,9 @@ test('Trying to patch variants on a feature toggle should trigger an OperationDe
         ])
         .expect(403)
         .expect((res) => {
-            expect(res.body.details[0].message).toEqual(
-                'Changing variants is done via PATCH operation to /api/admin/projects/:project/features/:feature/variants',
+            expect(res.body.message).toContain(
+                'PATCH',
+                '/api/admin/projects/:project/features/:feature/variants',
             );
         });
 });

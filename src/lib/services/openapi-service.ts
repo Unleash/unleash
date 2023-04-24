@@ -60,88 +60,6 @@ export class OpenApiService {
     useErrorHandler(app: Express): void {
         app.use((err, req, res, next) => {
             if (err && err.status && err.validationErrors) {
-                // const requiredError = {
-                //     error: 'Request validation failed',
-                //     validation: [
-                //         {
-                //             keyword: 'required',
-                //             dataPath: '.body',
-                //             schemaPath:
-                //                 '#/components/schemas/addonCreateUpdateSchema/required',
-                //             params: {
-                //                 missingProperty: 'enabled',
-                //             },
-                //             message: "should have required property 'enabled'",
-                //         },
-                //     ],
-                // };
-
-                // const typeError = {
-                //     error: 'Request validation failed',
-                //     validation: [
-                //         {
-                //             keyword: 'type',
-                //             dataPath: '.body.parameters',
-                //             schemaPath:
-                //                 '#/components/schemas/addonCreateUpdateSchema/properties/parameters/type',
-                //             params: {
-                //                 type: 'object',
-                //             },
-                //             message: 'should be object',
-                //         },
-                //     ],
-                // };
-                // const patternError = {
-                //     error: 'Request validation failed',
-                //     validation: [
-                //         {
-                //             keyword: 'pattern',
-                //             dataPath: '.body.description',
-                //             schemaPath:
-                //                 '#/components/schemas/addonCreateUpdateSchema/properties/description/pattern',
-                //             params: {
-                //                 pattern: '^this is',
-                //             },
-                //             message: 'should match pattern "^this is"',
-                //         },
-                //     ],
-                // };
-
-                // const maxLength = {
-                //     // minlength is equivalent
-                //     error: 'Request validation failed',
-                //     validation: [
-                //         {
-                //             keyword: 'maxLength',
-                //             dataPath: '.body.description',
-                //             schemaPath:
-                //                 '#/components/schemas/addonCreateUpdateSchema/properties/description/maxLength',
-                //             params: {
-                //                 limit: 5,
-                //             },
-                //             message: 'should NOT be longer than 5 characters',
-                //         },
-                //     ],
-                // };
-
-                // const integerMax = {
-                //     error: 'Request validation failed',
-                //     validation: [
-                //         {
-                //             keyword: 'maximum',
-                //             dataPath: '.body.newprop',
-                //             schemaPath:
-                //                 '#/components/schemas/addonCreateUpdateSchema/properties/newprop/maximum',
-                //             params: {
-                //                 comparison: '<=',
-                //                 limit: 5,
-                //                 exclusive: false,
-                //             },
-                //             message: 'should be <= 5',
-                //         },
-                //     ],
-                // };
-
                 const errors = err.validationErrors.map((validationError) => {
                     const propertyName = validationError.dataPath.substring(
                         '.body.'.length,
@@ -156,11 +74,7 @@ export class OpenApiService {
                             description: `The ${path} property is required. It was not present on the data you sent.`,
                         };
                     } else {
-                        console.log('the error is:', validationError);
-                        const youSent = JSON.stringify(
-                            // @ts-ignore-error it does exist
-                            req.body[propertyName],
-                        );
+                        const youSent = JSON.stringify(req.body[propertyName]);
                         return {
                             description: `The .${propertyName} property ${validationError.message}. You sent ${youSent}.`,
                             path: propertyName,

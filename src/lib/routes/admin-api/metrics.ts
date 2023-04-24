@@ -107,7 +107,7 @@ class MetricsController extends Controller {
                     operationId: 'getApplication',
                     summary: 'Get application data',
                     description:
-                        'Gets specific application with `appName`. An application contains information on name, sdkVersion and how to display it in a list.',
+                        'Returns data about the specified application (`appName`). The data contains information on the name of the application, sdkVersion, as well as data about how to display this application in a list.',
                     responses: {
                         200: createResponseSchema('applicationSchema'),
                         ...getStandardResponses(404),

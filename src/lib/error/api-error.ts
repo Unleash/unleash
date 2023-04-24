@@ -4,7 +4,6 @@ import { FromSchema } from 'json-schema-to-ts';
 const UnleashApiErrorTypes = [
     'OwaspValidationError',
     'PasswordUndefinedError',
-    'MinimumOneEnvironmentError',
     'InvalidTokenError',
     'NoAccessError',
     'UsedTokenError',
@@ -29,6 +28,7 @@ const UnleashApiErrorTypes = [
 
 // types that have extra data associated with them
 const UnleashApiErrorTypes2 = [
+    'MinimumOneEnvironmentError',
     'BadDataError',
     'BadRequestError',
     'ValidationError',
@@ -128,7 +128,11 @@ type UnleashErrorData =
                 type: string;
             }
           | {
-                name: 'ValidationError' | 'BadDataError' | 'BadRequestError';
+                name:
+                    | 'ValidationError'
+                    | 'BadDataError'
+                    | 'BadRequestError'
+                    | 'MinimumOneEnvironmentError';
                 errors: [
                     ValidationErrorDescription,
                     ...ValidationErrorDescription[],
@@ -229,7 +233,14 @@ export const fromLegacyError = (e: Error): UnleashError => {
         });
     }
 
-    if (['ValidationError', 'BadRequestError', 'BadDataError'].includes(name)) {
+    if (
+        [
+            'ValidationError',
+            'BadRequestError',
+            'BadDataError',
+            'MinimumOneEnvironmentError',
+        ].includes(name)
+    ) {
         return new UnleashError({
             name: name as
                 | 'ValidationError'
@@ -252,7 +263,7 @@ export const fromLegacyError = (e: Error): UnleashError => {
     return new UnleashError({
         name,
         message: e.message,
-        errors: [{ description: "this shouldn't be here" }],
+        errors: [{ description: 'whoops' }],
     });
 };
 

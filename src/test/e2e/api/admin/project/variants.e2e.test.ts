@@ -651,8 +651,6 @@ test('PATCHING with no variable variants fails with 400', async () => {
         .send(patch)
         .expect(400)
         .expect((res) => {
-            console.log(res.body);
-
             expect(res.body.errors).toHaveLength(1);
             expect(res.body.errors[0].description).toEqual(
                 'There must be at least one "variable" variant',

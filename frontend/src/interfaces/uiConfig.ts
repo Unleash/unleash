@@ -46,7 +46,6 @@ export interface IFlags {
     crOnVariants?: boolean;
     proPlanAutoCharge?: boolean;
     notifications?: boolean;
-    loginHistory?: boolean;
     bulkOperations?: boolean;
     projectScopedStickiness?: boolean;
     personalAccessTokensKillSwitch?: boolean;

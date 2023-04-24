@@ -38,7 +38,7 @@ export const applicationSchema = {
             example: 'https://github.com/Unleash/unleash-client-proxy-js',
         },
         color: {
-            description: `Css color to be used to color the application's entry in the application list`,
+            description: `The CSS color that is used to color the application's entry in the application list`,
             type: 'string',
             example: 'red',
         },

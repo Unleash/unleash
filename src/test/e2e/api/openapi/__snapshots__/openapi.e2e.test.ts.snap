@@ -703,23 +703,19 @@ The provider you choose for your addon dictates what properties the \`parameters
       "applicationSchema": {
         "additionalProperties": false,
         "properties": {
-          "announced": {
-            "description": "Internal to Unleash to allow Unleash to know if the application has already been inserted in a previous batch.",
-            "example": false,
-            "type": "boolean",
-          },
           "appName": {
             "description": "Name of the application",
             "example": "accounting",
             "type": "string",
           },
           "color": {
-            "description": "Css color to be used to color the application's entry in the application list",
+            "description": "The CSS color that is used to color the application's entry in the application list",
             "example": "red",
             "type": "string",
           },
           "description": {
             "description": "Extra information added about the application reporting the metrics. Only present if added via the Unleash Admin interface",
+            "example": "Application for reporting page visits",
             "type": "string",
           },
           "icon": {
@@ -804,7 +800,7 @@ The provider you choose for your addon dictates what properties the \`parameters
         "description": "A batch of metrics accumulated by Edge (or other compatible applications). Includes both application registrations as well usage metrics from clients",
         "properties": {
           "applications": {
-            "description": "a list of applications registered by Unleash SDK",
+            "description": "A list of applications registered by an Unleash SDK",
             "items": {
               "$ref": "#/components/schemas/bulkRegistrationSchema",
             },
@@ -8352,7 +8348,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/metrics/applications": {
       "get": {
-        "description": "Gets all applications created via metrics reporting and manual creation",
+        "description": "Returns all applications registered with Unleash. Applications can be created via metrics reporting or manual creation",
         "operationId": "getApplications",
         "responses": {
           "200": {
@@ -8366,7 +8362,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "applicationsSchema",
           },
         },
-        "summary": "Gets a list of applications",
+        "summary": "Get all applications",
         "tags": [
           "Metrics",
         ],
@@ -8374,6 +8370,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/metrics/applications/{appName}": {
       "delete": {
+        "description": "Delete the application specified in the request URL. Returns 200 OK if the application was successfully deleted or if it didn't exist",
         "operationId": "deleteApplication",
         "parameters": [
           {
@@ -8396,13 +8393,13 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
         },
-        "summary": "Deletes an application",
+        "summary": "Delete an application",
         "tags": [
           "Metrics",
         ],
       },
       "get": {
-        "description": "Gets specific application with \`appName\`. An application contains information on name, sdkVersion and how to display it in a list.",
+        "description": "Returns data about the specified application (\`appName\`). The data contains information on the name of the application, sdkVersion (which sdk reported these metrics, typically \`unleash-client-node:3.4.1\` or \`unleash-client-java:7.1.0\`), as well as data about how to display this application in a list.",
         "operationId": "getApplication",
         "parameters": [
           {
@@ -8429,7 +8426,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "The requested resource was not found.",
           },
         },
-        "summary": "Get specific application",
+        "summary": "Get application data",
         "tags": [
           "Metrics",
         ],

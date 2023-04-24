@@ -848,8 +848,8 @@ test('If sum of fixed variant weight exceed 1000 fails with 400', async () => {
         .send(patch)
         .expect(400)
         .expect((res) => {
-            expect(res.body.details).toHaveLength(1);
-            expect(res.body.details[0].message).toEqual(
+            expect(res.body.errors).toHaveLength(1);
+            expect(res.body.errors[0].description).toEqual(
                 'The traffic distribution total must equal 100%',
             );
         });
@@ -962,7 +962,7 @@ test('PATCH endpoint validates uniqueness of variant names', async () => {
         .send(patch)
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].message).toMatch(
+            expect(res.body.errors[0].description).toMatch(
                 /contains a duplicate value/,
             );
         });
@@ -998,7 +998,7 @@ test('PUT endpoint validates uniqueness of variant names', async () => {
         ])
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].message).toMatch(
+            expect(res.body.errors[0].description).toMatch(
                 /contains a duplicate value/,
             );
         });

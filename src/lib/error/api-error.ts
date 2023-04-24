@@ -2,7 +2,6 @@ import { v4 as uuidV4 } from 'uuid';
 import { FromSchema } from 'json-schema-to-ts';
 
 const UnleashApiErrorTypes = [
-    'ValidationError',
     'BadDataError',
     'BadRequestError',
     'OwaspValidationError',
@@ -24,14 +23,26 @@ const UnleashApiErrorTypes = [
     'DisabledError',
     'ContentTypeError',
     'NotImplementedError',
-    'NoAccessError',
-    'AuthenticationRequired',
 
     // server errors; not the end user's fault
     'InternalError',
 ] as const;
 
-type UnleashApiErrorKind = typeof UnleashApiErrorTypes[number];
+// types that have extra data associated with them
+const UnleashApiErrorTypes2 = [
+    'ValidationError',
+    'AuthenticationRequired',
+    'NoAccessError',
+] as const;
+
+const AllUnleashApiErrorTypes = [
+    ...UnleashApiErrorTypes,
+    ...UnleashApiErrorTypes2,
+] as const;
+
+type UnleashApiErrorKind =
+    | typeof UnleashApiErrorTypes[number]
+    | typeof UnleashApiErrorTypes2[number];
 
 const statusCode = (errorKind: UnleashApiErrorKind): number => {
     switch (errorKind) {
@@ -88,6 +99,8 @@ const statusCode = (errorKind: UnleashApiErrorKind): number => {
     }
 };
 
+type ValidationErrorDescription = { description: string; path?: string };
+
 type UnleashErrorData =
     | {
           message: string;
@@ -112,7 +125,10 @@ type UnleashErrorData =
             }
           | {
                 name: 'ValidationError';
-                errors: { description: string; path?: string }[];
+                errors: [
+                    ValidationErrorDescription,
+                    ...ValidationErrorDescription[],
+                ];
             }
       );
 
@@ -177,7 +193,7 @@ export const apiErrorSchema = {
     properties: {
         name: {
             type: 'string',
-            enum: UnleashApiErrorTypes,
+            enum: AllUnleashApiErrorTypes,
             description:
                 'The kind of error that occurred. Meant for machine consumption.',
             example: 'ValidationError',
@@ -229,6 +245,11 @@ const authErrorSchema = {
             example: '/auth/simple/login',
             description: 'Where you must go to log in.',
         },
+        type: {
+            type: 'string',
+            example: 'password',
+            description: 'The kind of login that is required.',
+        },
     },
 };
 
@@ -246,6 +267,7 @@ const validationErrorSchema = {
         },
         errors: {
             type: 'array',
+            minLength: 1,
             description:
                 'A list of errors on the request body with description and suggestions.',
             example: [
@@ -267,7 +289,7 @@ const validationErrorSchema = {
 };
 
 export const fromLegacyError = (e: Error): UnleashError => {
-    const name = UnleashApiErrorTypes.includes(e.name as UnleashApiErrorKind)
+    const name = AllUnleashApiErrorTypes.includes(e.name as UnleashApiErrorKind)
         ? (e.name as UnleashApiErrorKind)
         : 'UnknownError';
 
@@ -295,7 +317,6 @@ export const fromLegacyError = (e: Error): UnleashError => {
                 'Your request body failed to validate. Refer to the `errors` list to see what happened.',
             path: `/err/maybe/login?`,
             type: 'password',
-            // errors: [{ description: e.message }],
         });
     }
     return new UnleashError({

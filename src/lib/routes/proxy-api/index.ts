@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import hashSum from 'hash-sum';
 import Controller from '../controller';
 import {
     IFlagResolver,
@@ -21,6 +22,7 @@ import { Context } from 'unleash-client';
 import { enrichContextWithIp } from '../../proxy';
 import { corsOriginMiddleware } from '../../middleware';
 import { UnleashError } from '../../error/api-error';
+import { EventService } from 'lib/services';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -33,8 +35,15 @@ interface ApiUserRequest<
 
 type Services = Pick<
     IUnleashServices,
-    'settingService' | 'proxyService' | 'openApiService'
+    'settingService' | 'proxyService' | 'openApiService' | 'eventService'
 >;
+
+//copy with pride
+interface IMeta {
+    revisionId: number;
+    etag: string;
+    queryHash: string;
+}
 
 export default class ProxyController extends Controller {
     private readonly logger: Logger;
@@ -42,6 +51,8 @@ export default class ProxyController extends Controller {
     private services: Services;
 
     private flagResolver: IFlagResolver;
+
+    private eventService: EventService;
 
     constructor(
         config: IUnleashConfig,
@@ -52,6 +63,7 @@ export default class ProxyController extends Controller {
         this.logger = config.getLogger('proxy-api/index.ts');
         this.services = services;
         this.flagResolver = flagResolver;
+        this.eventService = services.eventService;
 
         // Support CORS requests for the frontend endpoints.
         // Preflight requests are handled in `app.ts`.
@@ -147,6 +159,48 @@ export default class ProxyController extends Controller {
         req: ApiUserRequest,
         res: Response<ProxyFeaturesSchema>,
     ) {
+        if (this.flagResolver.isEnabled('optimal304Frontend')) {
+            return this.optimal304(req, res);
+        }
+
+        const toggles = await this.services.proxyService.getProxyFeatures(
+            req.user,
+            ProxyController.createContext(req),
+        );
+
+        res.set('Cache-control', 'public, max-age=2');
+
+        this.services.openApiService.respondWithValidation(
+            200,
+            res,
+            proxyFeaturesSchema.$id,
+            { toggles },
+        );
+    }
+
+    private async optimal304(
+        req: ApiUserRequest,
+        res: Response<ProxyFeaturesSchema>,
+    ) {
+        const context = ProxyController.createContext(req);
+        const env = req.user.environment;
+
+        const userVersion = req.headers['if-none-match'];
+        const meta = await this.calculateMeta(context, env);
+        const { etag } = meta;
+
+        res.setHeader('ETag', etag);
+
+        if (etag === userVersion) {
+            res.status(304);
+            res.end();
+            return;
+        } else {
+            this.logger.debug(
+                `Provided revision: ${userVersion}, calculated revision: ${etag}`,
+            );
+        }
+
         const toggles = await this.services.proxyService.getProxyFeatures(
             req.user,
             ProxyController.createContext(req),
@@ -186,5 +240,15 @@ export default class ProxyController extends Controller {
     private static createContext(req: ApiUserRequest): Context {
         const { query } = req;
         return enrichContextWithIp(query, req.ip);
+    }
+
+    async calculateMeta(context: Context, environment: string): Promise<IMeta> {
+        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
+        const revisionId = await this.eventService.getMaxRevisionId();
+
+        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
+        const queryHash = hashSum({ context, environment });
+        const etag = `"${queryHash}:${revisionId}"`;
+        return { revisionId, etag, queryHash };
     }
 }

@@ -19,7 +19,7 @@ type Stores = Pick<IUnleashStores, 'projectStore' | 'eventStore'>;
 
 type Services = Pick<
     IUnleashServices,
-    'featureToggleServiceV2' | 'segmentService'
+    'featureToggleServiceV2' | 'segmentService' | 'eventService'
 >;
 
 export class ProxyRepository
@@ -78,16 +78,14 @@ export class ProxyRepository
         this.running = true;
         await this.dataPolling();
 
-        // Reload cached token data whenever something relevant has changed.
-        // For now, simply reload all the data on any EventStore event.
-        this.stores.eventStore.on(ANY_EVENT, this.onAnyEvent);
+        this.services.eventService.on('update', this.onAnyEvent);
 
         this.emit(UnleashEvents.Ready);
         this.emit(UnleashEvents.Changed);
     }
 
     stop(): void {
-        this.stores.eventStore.off(ANY_EVENT, this.onAnyEvent);
+        this.services.eventService.off(ANY_EVENT, this.onAnyEvent);
         this.running = false;
     }
 
@@ -121,6 +119,7 @@ export class ProxyRepository
     }
 
     private async onAnyEvent() {
+        this.logger.info('Updating proxy');
         try {
             await this.loadDataForToken();
         } catch (error) {

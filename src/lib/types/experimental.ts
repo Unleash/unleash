@@ -45,11 +45,19 @@ const flags = {
         process.env.UNLEASH_PRO_PLAN_AUTO_CHARGE,
         false,
     ),
+    bulkOperations: parseEnvVarBoolean(
+        process.env.UNLEASH_BULK_OPERATIONS,
+        false,
+    ),
     personalAccessTokensKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_PAT_KILL_SWITCH,
         false,
     ),
     cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
+    optimal304Frontend: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_FRONTEND,
+        false,
+    ),
     groupRootRoles: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ROOT_ROLE_GROUPS,
         false,

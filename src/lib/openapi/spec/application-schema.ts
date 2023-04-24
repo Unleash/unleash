@@ -30,6 +30,7 @@ export const applicationSchema = {
             description:
                 'Extra information added about the application reporting the metrics. Only present if added via the Unleash Admin interface',
             type: 'string',
+            example: 'Application for reporting page visits',
         },
         url: {
             description:
@@ -46,12 +47,6 @@ export const applicationSchema = {
             description: `An URL to an icon file to be used for the applications's entry in the application list`,
             type: 'string',
             example: 'https://github.com/favicon.ico',
-        },
-        announced: {
-            description:
-                'Internal to Unleash to allow Unleash to know if the application has already been inserted in a previous batch.',
-            type: 'boolean',
-            example: false,
         },
     },
     components: {},

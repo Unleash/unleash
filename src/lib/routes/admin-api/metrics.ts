@@ -70,7 +70,7 @@ class MetricsController extends Controller {
                     tags: ['Metrics'],
                     operationId: 'deleteApplication',
                     summary: 'Delete an application',
-                    description: 'Delete the application specified in the request URL. Returns 200 OK if the application was successfully deleted or if it didn't exist.'
+                    description: `Delete the application specified in the request URL. Returns 200 OK if the application was successfully deleted or if it didn't exist`,
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403),
@@ -107,7 +107,7 @@ class MetricsController extends Controller {
                     operationId: 'getApplication',
                     summary: 'Get application data',
                     description:
-                        'Returns data about the specified application (`appName`). The data contains information on the name of the application, sdkVersion, as well as data about how to display this application in a list.',
+                        'Returns data about the specified application (`appName`). The data contains information on the name of the application, sdkVersion (which sdk reported these metrics, typically `unleash-client-node:3.4.1` or `unleash-client-java:7.1.0`), as well as data about how to display this application in a list.',
                     responses: {
                         200: createResponseSchema('applicationSchema'),
                         ...getStandardResponses(404),

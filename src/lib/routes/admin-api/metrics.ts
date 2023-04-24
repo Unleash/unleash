@@ -69,7 +69,8 @@ class MetricsController extends Controller {
                 openApiService.validPath({
                     tags: ['Metrics'],
                     operationId: 'deleteApplication',
-                    summary: 'Deletes an application',
+                    summary: 'Delete an application',
+                    description: 'Delete the application specified in the request URL. Returns 200 OK if the application was successfully deleted or if it didn't exist.'
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403),

@@ -105,7 +105,7 @@ class MetricsController extends Controller {
                 openApiService.validPath({
                     tags: ['Metrics'],
                     operationId: 'getApplication',
-                    summary: 'Get specific application',
+                    summary: 'Get application data',
                     description:
                         'Gets specific application with `appName`. An application contains information on name, sdkVersion and how to display it in a list.',
                     responses: {

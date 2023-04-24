@@ -1,6 +1,5 @@
 import { IAuthRequest } from '../routes/unleash-types';
 import { NextFunction, Response } from 'express';
-import AuthenticationRequired from '../types/authentication-required';
 import { LogProvider } from '../logger';
 import { UnleashError } from '../error/api-error';
 

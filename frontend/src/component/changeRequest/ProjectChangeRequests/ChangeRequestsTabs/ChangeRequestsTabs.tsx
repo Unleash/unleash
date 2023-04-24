@@ -103,7 +103,8 @@ export const ChangeRequestsTabs = ({
                 Header: 'Title',
                 width: 100,
                 canSort: true,
-                accessor: 'id',
+                accessor: 'title',
+                searchable: true,
                 Cell: ChangeRequestTitleCell,
             },
             {

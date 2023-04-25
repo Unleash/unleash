@@ -83,7 +83,7 @@ class UserService {
     constructor(
         stores: Pick<IUnleashStores, 'userStore' | 'eventStore'>,
         {
-            config,
+            server,
             getLogger,
             authentication,
         }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'server'>,
@@ -107,7 +107,7 @@ class UserService {
             process.nextTick(() => this.initAdminUser());
         }
 
-        this.baseUriPath = config.server.baseUriPath || '';
+        this.baseUriPath = server.baseUriPath || '';
     }
 
     validatePassword(password: string): boolean {

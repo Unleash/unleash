@@ -13,7 +13,6 @@ export const AuthSettings = () => {
     const { authenticationType } = useUiConfig().uiConfig;
     const { uiConfig } = useUiConfig();
 
-
     const tabs = [
         {
             label: 'OpenID Connect',
@@ -31,8 +30,8 @@ export const AuthSettings = () => {
             label: 'Google',
             component: <GoogleAuth />,
         },
-    ].filter((item) =>
-        uiConfig.flags?.googleAuthEnabled || item.label !== 'Google'
+    ].filter(
+        item => uiConfig.flags?.googleAuthEnabled || item.label !== 'Google'
     );
 
     return (

@@ -89,16 +89,16 @@ export const Change: FC<{
                     />
                 )}
                 {change.action === 'addStrategy' ||
-                    change.action === 'deleteStrategy' ||
-                    (change.action === 'updateStrategy' && (
-                        <StrategyChange
-                            discard={discard}
-                            change={change}
-                            featureName={feature.name}
-                            environmentName={changeRequest.environment}
-                            projectId={changeRequest.project}
-                        />
-                    ))}
+                change.action === 'deleteStrategy' ||
+                change.action === 'updateStrategy' ? (
+                    <StrategyChange
+                        discard={discard}
+                        change={change}
+                        featureName={feature.name}
+                        environmentName={changeRequest.environment}
+                        projectId={changeRequest.project}
+                    />
+                ) : null}
                 {change.action === 'patchVariant' && (
                     <VariantPatch
                         feature={feature.name}

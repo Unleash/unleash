@@ -101,7 +101,10 @@ export const StrategyChange: VFC<{
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>
                             <Typography>Editing strategy:</Typography>
-                            <StrategyTooltipLink change={change}>
+                            <StrategyTooltipLink
+                                change={change}
+                                previousTitle={currentStrategy?.title}
+                            >
                                 <StrategyDiff
                                     change={change}
                                     currentStrategy={currentStrategy}

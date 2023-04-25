@@ -885,3 +885,39 @@ test('Should return "default" for stickiness when creating a flexibleRollout str
             expect(toggle.strategies[0].parameters.stickiness).toBe('default');
         });
 });
+
+test('Should throw error when updating a flexibleRollout strategy with "" for stickiness', async () => {
+    const username = 'toggle-feature';
+    const feature = {
+        name: 'test-featureA',
+        description: 'the #1 feature',
+    };
+    const projectId = 'default';
+
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        projectId,
+        feature,
+        username,
+    );
+    await app.services.featureToggleServiceV2.createStrategy(
+        defaultStrategy,
+        { projectId, featureName: feature.name, environment: DEFAULT_ENV },
+        username,
+    );
+
+    const featureToggle =
+        await app.services.featureToggleServiceV2.getFeatureToggle(
+            feature.name,
+        );
+
+    await app.request
+        .patch(
+            `/api/admin/projects/${projectId}/features/${feature.name}/environments/${DEFAULT_ENV}/strategies/${featureToggle.environments[0].strategies[0].id}`,
+        )
+        .send(defaultStrategy)
+        .expect((res) => {
+            const result = res.body;
+            expect(res.status).toBe(400);
+            expect(result.error).toBe('Request validation failed');
+        });
+});

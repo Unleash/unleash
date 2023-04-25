@@ -50,6 +50,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                     connectSrc: [
                         "'self'",
                         'cdn.getunleash.io',
+                        'plausible.getunleash.io',
                         'gravatar.com',
                         'europe-west3-metrics-304612.cloudfunctions.net',
                         ...config.additionalCspAllowedDomains.connectSrc,

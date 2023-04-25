@@ -47,6 +47,13 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         'gravatar.com',
                         ...config.additionalCspAllowedDomains.imgSrc,
                     ],
+                    connectSrc: [
+                        "'self'",
+                        'cdn.getunleash.io',
+                        'gravatar.com',
+                        'europe-west3-metrics-304612.cloudfunctions.net',
+                        ...config.additionalCspAllowedDomains.connectSrc,
+                    ],
                 },
             },
             crossOriginEmbedderPolicy: false,

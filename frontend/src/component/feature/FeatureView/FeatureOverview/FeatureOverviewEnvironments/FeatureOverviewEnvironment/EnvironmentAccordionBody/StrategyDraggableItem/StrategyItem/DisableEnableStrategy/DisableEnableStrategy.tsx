@@ -30,7 +30,6 @@ const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
     const isChangeRequest = isChangeRequestConfigured(environmentId);
 
     const onClick = (event: React.FormEvent) => {
-        console.log('click', { isChangeRequest });
         event.preventDefault();
         if (isChangeRequest) {
             onSuggestDisable();
@@ -98,7 +97,6 @@ const EnableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
     const isChangeRequest = isChangeRequestConfigured(environmentId);
 
     const onClick = (event: React.FormEvent) => {
-        console.log('click', { isChangeRequest });
         event.preventDefault();
         if (isChangeRequest) {
             onSuggestEnable();

@@ -19,7 +19,6 @@ export const useSuggestEnableDisable = ({
         usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
     const onSuggestEnableDisable = (enabled: boolean) => async () => {
-        console.log('onSuggestEnableDisable', enabled)
         try {
             await addChange(projectId, environmentId, {
                 action: 'updateStrategy',

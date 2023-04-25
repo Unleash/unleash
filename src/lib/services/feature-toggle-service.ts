@@ -1044,11 +1044,16 @@ class FeatureToggleService {
                 featureName,
                 environment,
             );
+        const defaultStrategy = await this.projectStore.getDefaultStrategy(
+            project,
+            environment,
+        );
         return {
             name: featureName,
             environment,
             enabled: envMetadata.enabled,
             strategies,
+            defaultStrategy,
         };
     }
 

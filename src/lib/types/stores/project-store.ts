@@ -9,6 +9,7 @@ import {
     ProjectMode,
 } from '../model';
 import { Store } from './store';
+import { CreateFeatureStrategySchema } from '../../openapi';
 
 export interface IProjectInsert {
     id: string;
@@ -29,6 +30,11 @@ export interface IProjectSettingsRow {
     default_stickiness: string;
 }
 
+export interface IProjectEnvironmenDefaultStrategyRow {
+    environment: string;
+    default_strategy: any;
+}
+
 export interface IProjectArchived {
     id: string;
     archived: boolean;
@@ -42,6 +48,11 @@ export interface IProjectHealthUpdate {
 export interface IProjectQuery {
     id?: string;
 }
+
+export type ProjectEnvironment = {
+    environment: string;
+    defaultStrategy: CreateFeatureStrategySchema;
+};
 
 export interface IProjectEnvironmentWithChangeRequests {
     environment: string;
@@ -66,7 +77,7 @@ export interface IProjectStore extends Store<IProject, string> {
 
     deleteEnvironmentForProject(id: string, environment: string): Promise<void>;
 
-    getEnvironmentsForProject(id: string): Promise<string[]>;
+    getEnvironmentsForProject(id: string): Promise<ProjectEnvironment[]>;
 
     getMembersCountByProject(projectId: string): Promise<number>;
 
@@ -103,4 +114,14 @@ export interface IProjectStore extends Store<IProject, string> {
         defaultStickiness: string,
         mode: ProjectMode,
     ): Promise<void>;
+
+    getDefaultStrategy(
+        projectId: string,
+        environment: string,
+    ): Promise<CreateFeatureStrategySchema | undefined>;
+    updateDefaultStrategy(
+        projectId: string,
+        environment: string,
+        strategy: CreateFeatureStrategySchema,
+    ): Promise<CreateFeatureStrategySchema>;
 }

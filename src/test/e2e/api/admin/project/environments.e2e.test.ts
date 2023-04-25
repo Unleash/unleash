@@ -26,11 +26,11 @@ afterEach(async () => {
     );
     await Promise.all(
         all
-            .filter((env) => env !== DEFAULT_ENV)
+            .filter((env) => env.environment !== DEFAULT_ENV)
             .map(async (env) =>
                 db.stores.projectStore.deleteEnvironmentForProject(
                     'default',
-                    env,
+                    env.environment,
                 ),
             ),
     );
@@ -56,7 +56,7 @@ test('Should add environment to project', async () => {
         'default',
     );
 
-    const environment = envs.find((env) => env === 'test');
+    const environment = envs.find((env) => env.environment === 'test');
 
     expect(environment).toBeDefined();
     expect(envs).toHaveLength(2);

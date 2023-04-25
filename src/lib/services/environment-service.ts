@@ -12,6 +12,7 @@ import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-st
 import { IProjectStore } from 'lib/types/stores/project-store';
 import MinimumOneEnvironmentError from '../error/minimum-one-environment-error';
 import { IFlagResolver } from 'lib/types/experimental';
+import { CreateFeatureStrategySchema } from '../openapi';
 
 export default class EnvironmentService {
     private logger: Logger;
@@ -105,6 +106,33 @@ export default class EnvironmentService {
             }
             throw e;
         }
+    }
+
+    async addDefaultStrategy(
+        environment: string,
+        projectId: string,
+        strategy: CreateFeatureStrategySchema,
+    ): Promise<CreateFeatureStrategySchema> {
+        let saved;
+        if (environment === '*') {
+            const environments =
+                await this.projectStore.getEnvironmentsForProject(projectId);
+
+            for (const projectEnvironment of environments) {
+                saved = await this.projectStore.updateDefaultStrategy(
+                    projectId,
+                    projectEnvironment.environment,
+                    strategy,
+                );
+            }
+        } else {
+            saved = await this.projectStore.updateDefaultStrategy(
+                projectId,
+                environment,
+                strategy,
+            );
+        }
+        return saved;
     }
 
     async overrideEnabledProjects(

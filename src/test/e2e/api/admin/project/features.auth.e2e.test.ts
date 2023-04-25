@@ -18,11 +18,11 @@ afterEach(async () => {
     );
     await Promise.all(
         all
-            .filter((env) => env !== DEFAULT_ENV)
+            .filter((env) => env.environment !== DEFAULT_ENV)
             .map(async (env) =>
                 db.stores.projectStore.deleteEnvironmentForProject(
                     'default',
-                    env,
+                    env.environment,
                 ),
             ),
     );

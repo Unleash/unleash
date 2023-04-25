@@ -4,6 +4,8 @@ import { IRole } from './stores/access-store';
 import { IUser } from './user';
 import { ALL_OPERATORS } from '../util';
 import { IProjectStats } from 'lib/services/project-service';
+import { CreateFeatureStrategySchema } from '../openapi';
+import { ProjectEnvironment } from './stores/project-store';
 
 export type Operator = typeof ALL_OPERATORS[number];
 
@@ -84,6 +86,7 @@ export interface IFeatureEnvironmentInfo {
     environment: string;
     enabled: boolean;
     strategies: IFeatureStrategy[];
+    defaultStrategy?: CreateFeatureStrategySchema;
 }
 
 export interface FeatureToggleWithEnvironment extends FeatureToggle {
@@ -141,6 +144,7 @@ export interface IEnvironment {
 export interface IProjectEnvironment extends IEnvironment {
     projectApiTokenCount?: number;
     projectEnabledToggleCount?: number;
+    defaultStrategy?: CreateFeatureStrategySchema;
 }
 
 export interface IEnvironmentCreate {
@@ -182,7 +186,7 @@ export type ProjectMode = 'open' | 'protected';
 export interface IProjectOverview {
     name: string;
     description: string;
-    environments: string[];
+    environments: ProjectEnvironment[];
     features: IFeatureOverview[];
     members: number;
     version: number;

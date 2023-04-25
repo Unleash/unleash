@@ -8,6 +8,7 @@ import { constraintSchema } from './constraint-schema';
 import { environmentSchema } from './environment-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
 import { projectStatsSchema } from './project-stats-schema';
+import { createFeatureStrategySchema } from './create-feature-strategy-schema';
 
 export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',
@@ -63,7 +64,15 @@ export const projectOverviewSchema = {
         environments: {
             type: 'array',
             items: {
-                type: 'string',
+                type: 'object',
+                properties: {
+                    environment: {
+                        type: 'string',
+                    },
+                    defaultStrategy: {
+                        $ref: '#/components/schemas/createFeatureStrategySchema',
+                    },
+                },
             },
             example: ['development', 'production'],
             description: 'The environments that are enabled for this project',
@@ -93,6 +102,7 @@ export const projectOverviewSchema = {
         schemas: {
             constraintSchema,
             environmentSchema,
+            createFeatureStrategySchema,
             featureSchema,
             featureEnvironmentSchema,
             overrideSchema,

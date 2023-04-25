@@ -238,7 +238,7 @@ export default class ProjectService {
         );
         return arraysHaveSameItems(
             featureEnvs.map((env) => env.environment),
-            newEnvs,
+            newEnvs.map((projectEnv) => projectEnv.environment),
         );
     }
 

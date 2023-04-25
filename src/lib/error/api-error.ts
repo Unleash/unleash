@@ -42,6 +42,10 @@ const AllUnleashApiErrorTypes = [
 ] as const;
 
 type UnleashApiErrorName = typeof AllUnleashApiErrorTypes[number];
+type UnleashApiErrorNameWithoutExtraData = Exclude<
+    UnleashApiErrorName,
+    typeof UnleashApiErrorTypesWithExtraData[number]
+>;
 
 const statusCode = (errorName: UnleashApiErrorName): number => {
     switch (errorName) {
@@ -111,14 +115,7 @@ type UnleashErrorData =
           documentationLink?: string;
       } & (
           | {
-                name: Exclude<
-                    UnleashApiErrorName,
-                    | 'NoAccessError'
-                    | 'AuthenticationRequired'
-                    | 'ValidationError'
-                    | 'BadDataError'
-                    | 'BadRequestError'
-                >;
+                name: UnleashApiErrorNameWithoutExtraData;
             }
           | {
                 name: 'NoAccessError';
@@ -240,7 +237,8 @@ export const fromLegacyError = (e: Error): UnleashError => {
             name: name as
                 | 'ValidationError'
                 | 'BadRequestError'
-                | 'BadDataError',
+                | 'BadDataError'
+                | 'MinimumOneEnvironmentError',
             message:
                 'Your request body failed to validate. Refer to the `details` list to see what happened.',
             details: [{ description: e.message, message: e.message }],
@@ -255,10 +253,10 @@ export const fromLegacyError = (e: Error): UnleashError => {
             type: 'password',
         });
     }
+
     return new UnleashError({
-        name,
+        name: name as UnleashApiErrorNameWithoutExtraData,
         message: e.message,
-        details: [{ description: 'Ignore this list', message: '' }],
     });
 };
 

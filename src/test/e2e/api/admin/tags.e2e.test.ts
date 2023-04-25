@@ -86,8 +86,8 @@ test('Can validate a tag', async () =>
         .expect('Content-Type', /json/)
         .expect(400)
         .expect((res) => {
-            expect(res.body.errors.length).toBe(1);
-            expect(res.body.errors[0].description).toBe(
+            expect(res.body.details.length).toBe(1);
+            expect(res.body.details[0].description).toBe(
                 '"type" must be URL friendly',
             );
         }));

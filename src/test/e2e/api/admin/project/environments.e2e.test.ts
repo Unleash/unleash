@@ -100,7 +100,7 @@ test('Should not remove environment from project if project only has one environ
         .delete(`/api/admin/projects/default/environments/default`)
         .expect(400)
         .expect((r) => {
-            expect(r.body.errors[0].description).toBe(
+            expect(r.body.details[0].description).toBe(
                 'You must always have one active environment',
             );
         });

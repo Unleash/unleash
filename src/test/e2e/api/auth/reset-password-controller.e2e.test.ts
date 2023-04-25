@@ -170,7 +170,7 @@ test('Trying to reset password with same token twice does not work', async () =>
         })
         .expect(401)
         .expect((res) => {
-            expect(res.body.errors[0].description).toBeTruthy();
+            expect(res.body.details[0].description).toBeTruthy();
         });
 });
 

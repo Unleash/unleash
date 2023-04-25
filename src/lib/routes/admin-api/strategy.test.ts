@@ -55,7 +55,7 @@ test('require a name when creating a new strategy', async () => {
         .expect((res) => {
             expect(
                 ['name', 'property', 'required'].every((word) =>
-                    res.body.errors[0].description.includes(word),
+                    res.body.details[0].description.includes(word),
                 ),
             );
         });
@@ -68,7 +68,7 @@ test('require parameters array when creating a new strategy', async () => {
         .send({ name: 'TestStrat' })
         .expect(400)
         .expect((res) => {
-            expect(res.body.errors[0].description).toEqual(
+            expect(res.body.details[0].description).toEqual(
                 '"parameters" is required',
             );
         });

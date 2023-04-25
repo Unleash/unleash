@@ -99,7 +99,11 @@ const statusCode = (errorName: UnleashApiErrorName): number => {
     }
 };
 
-type ValidationErrorDescription = { description: string; path?: string };
+type ValidationErrorDescription = {
+    description: string;
+    message: string;
+    path?: string;
+};
 
 type UnleashErrorData =
     | {
@@ -131,7 +135,7 @@ type UnleashErrorData =
                     | 'BadDataError'
                     | 'BadRequestError'
                     | 'MinimumOneEnvironmentError';
-                errors: [
+                details: [
                     ValidationErrorDescription,
                     ...ValidationErrorDescription[],
                 ];
@@ -238,8 +242,8 @@ export const fromLegacyError = (e: Error): UnleashError => {
                 | 'BadRequestError'
                 | 'BadDataError',
             message:
-                'Your request body failed to validate. Refer to the `errors` list to see what happened.',
-            errors: [{ description: e.message }],
+                'Your request body failed to validate. Refer to the `details` list to see what happened.',
+            details: [{ description: e.message, message: e.message }],
         });
     }
 
@@ -254,7 +258,7 @@ export const fromLegacyError = (e: Error): UnleashError => {
     return new UnleashError({
         name,
         message: e.message,
-        errors: [{ description: 'whoops' }],
+        details: [{ description: 'Ignore this list', message: '' }],
     });
 };
 
@@ -268,14 +272,18 @@ export const fromOpenApiValidationError =
         if (validationError.keyword === 'required') {
             const path =
                 propertyName + '.' + validationError.params.missingProperty;
+            const description = `The ${path} property is required. It was not present on the data you sent.`;
             return {
                 path,
-                description: `The ${path} property is required. It was not present on the data you sent.`,
+                description,
+                message: description,
             };
         } else {
             const youSent = JSON.stringify(requestBody[propertyName]);
+            const description = `The .${propertyName} property ${validationError.message}. You sent ${youSent}.`;
             return {
-                description: `The .${propertyName} property ${validationError.message}. You sent ${youSent}.`,
+                description,
+                message: description,
                 path: propertyName,
             };
         }
@@ -285,16 +293,16 @@ export const fromOpenApiValidationErrors = (
     requestBody: object,
     validationErrors: [ErrorObject, ...ErrorObject[]],
 ): UnleashError => {
-    const errors = validationErrors.map(
+    const details = validationErrors.map(
         fromOpenApiValidationError(requestBody),
     );
 
     return new UnleashError({
         name: 'ValidationError',
         message:
-            "The request payload you provided doesn't conform to the schema. Check the `errors` property for a list of errors that we found.",
+            "The request payload you provided doesn't conform to the schema. Check the `details` property for a list of errors that we found.",
         // @ts-expect-error We know that the list is non-empty
-        errors,
+        details,
     });
 };
 

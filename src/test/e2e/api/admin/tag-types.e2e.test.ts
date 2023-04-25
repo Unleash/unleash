@@ -77,7 +77,7 @@ test('Invalid tag types gets rejected', async () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect((res) => {
-            expect(res.body.errors[0].description).toBe(
+            expect(res.body.details[0].description).toBe(
                 '"name" must be URL friendly',
             );
         });
@@ -151,7 +151,7 @@ test('Invalid tag-types get refused by validator', async () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect((res) => {
-            expect(res.body.errors[0].description).toBe(
+            expect(res.body.details[0].description).toBe(
                 '"name" must be URL friendly',
             );
         });

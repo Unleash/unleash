@@ -166,12 +166,12 @@ describe('OpenAPI error conversion', () => {
             fromOpenApiValidationErrors({ newprop: 7 }, errors).toJSON();
 
         expect(serializedUnleashError.name).toBe('ValidationError');
-        expect(serializedUnleashError.message).toContain('`errors`');
+        expect(serializedUnleashError.message).toContain('`details`');
         expect(
-            serializedUnleashError.errors!![0].description.includes('newprop'),
+            serializedUnleashError.details!![0].description.includes('newprop'),
         );
         expect(
-            serializedUnleashError.errors!![1].description.includes('enabled'),
+            serializedUnleashError.details!![1].description.includes('enabled'),
         );
     });
 

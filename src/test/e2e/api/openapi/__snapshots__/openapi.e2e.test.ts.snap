@@ -44,27 +44,121 @@ exports[`should serve the OpenAPI spec 1`] = `
 {
   "components": {
     "schemas": {
-      "addonParameterSchema": {
+      "addonCreateUpdateSchema": {
+        "description": "Data required to create or update an [Unleash addon](https://docs.getunleash.io/reference/addons) instance.",
         "properties": {
           "description": {
+            "description": "A description of the addon.",
+            "example": "This addon posts updates to our internal feature tracking system whenever a feature is created or updated.",
+            "type": "string",
+          },
+          "enabled": {
+            "description": "Whether the addon should be enabled or not.",
+            "type": "boolean",
+          },
+          "environments": {
+            "description": "The list of environments that this addon will listen to events from. An empty list means it will listen to events from **all** environments.",
+            "example": [
+              "development",
+              "production",
+            ],
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "events": {
+            "description": "The event types that will trigger this specific addon.",
+            "example": [
+              "feature-created",
+              "feature-updated",
+            ],
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "parameters": {
+            "additionalProperties": {},
+            "description": "Parameters for the addon provider. This object has different required and optional properties depending on the provider you choose. Consult the documentation for details.",
+            "example": {
+              "url": "http://localhost:4242/webhook",
+            },
+            "type": "object",
+          },
+          "projects": {
+            "description": "The projects that this addon will listen to events from. An empty list means it will listen to events from **all** projects.",
+            "example": [
+              "new-landing-project",
+              "signups-v2",
+            ],
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "provider": {
+            "description": "The addon provider, such as "webhook" or "slack". This string is **case sensitive** and maps to the provider's \`name\` property.
+
+The list of all supported providers and their parameters for a specific Unleash instance can be found by making a GET request to the \`api/admin/addons\` endpoint: the \`providers\` property of that response will contain all available providers.
+
+The default set of providers can be found in the [addons reference documentation](https://docs.getunleash.io/reference/addons). The default supported options are:
+- \`datadog\` for [Datadog](https://docs.getunleash.io/reference/addons/datadog)
+- \`slack\` for [Slack](https://docs.getunleash.io/reference/addons/slack)
+- \`teams\` for [Microsoft Teams](https://docs.getunleash.io/reference/addons/teams)
+- \`webhook\` for [webhooks](https://docs.getunleash.io/reference/addons/webhook)
+
+The provider you choose for your addon dictates what properties the \`parameters\` object needs. Refer to the documentation for each provider for more information.
+",
+            "example": "webhook",
+            "type": "string",
+          },
+        },
+        "required": [
+          "provider",
+          "enabled",
+          "parameters",
+          "events",
+        ],
+        "type": "object",
+      },
+      "addonParameterSchema": {
+        "additionalProperties": false,
+        "description": "An addon parameter definition.",
+        "properties": {
+          "description": {
+            "description": "A description of the parameter. This should explain to the end user what the parameter is used for.",
+            "example": "The emoji_icon to use when posting messages to slack. Defaults to ":unleash:".",
             "type": "string",
           },
           "displayName": {
+            "description": "The name of the parameter as it is shown to the end user in the Admin UI.",
+            "example": "Emoji Icon",
             "type": "string",
           },
           "name": {
+            "description": "The name of the parameter as it is used in code. References to this parameter should use this value.",
+            "example": "emojiIcon",
             "type": "string",
           },
           "placeholder": {
+            "description": "The default value for this parameter. This value is used if no other value is provided.",
+            "example": ":unleash:",
             "type": "string",
           },
           "required": {
+            "description": "Whether this parameter is required or not. If a parameter is required, you must give it a value when you create the addon. If it is not required it can be left out. It may receive a default value in those cases.",
+            "example": false,
             "type": "boolean",
           },
           "sensitive": {
+            "description": "Indicates whether this parameter is **sensitive** or not. Unleash will not return sensitive parameters to API requests. It will instead use a number of asterisks to indicate that a value is set, e.g. "******". The number of asterisks does not correlate to the parameter's value.",
+            "example": false,
             "type": "boolean",
           },
           "type": {
+            "description": "The type of the parameter. Corresponds roughly to [HTML \`input\` field types](https://developer.mozilla.org/docs/Web/HTML/Element/Input#input_types). Multi-line inut fields are indicated as \`textfield\` (equivalent to the HTML \`textarea\` tag).",
+            "example": "text",
             "type": "string",
           },
         },
@@ -78,48 +172,74 @@ exports[`should serve the OpenAPI spec 1`] = `
         "type": "object",
       },
       "addonSchema": {
+        "description": "An [addon](https://docs.getunleash.io/reference/addons) instance description. Contains data about what kind of provider it uses, whether it's enabled or not, what events it listens for, and more.",
         "properties": {
-          "createdAt": {
-            "format": "date-time",
+          "description": {
+            "description": "A description of the addon. \`null\` if no description exists.",
+            "example": "This addon posts updates to our internal feature tracking system whenever a feature is created or updated.",
             "nullable": true,
             "type": "string",
           },
-          "description": {
-            "type": "string",
-          },
           "enabled": {
+            "description": "Whether the addon is enabled or not.",
             "type": "boolean",
           },
           "environments": {
+            "description": "The list of environments that this addon listens to events from. An empty list means it listens to events from **all** environments.",
+            "example": [
+              "development",
+              "production",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "events": {
+            "description": "The event types that trigger this specific addon.",
+            "example": [
+              "feature-created",
+              "feature-updated",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "id": {
-            "type": "number",
+            "description": "The addon's unique identifier.",
+            "example": 27,
+            "minimum": 1,
+            "type": "integer",
           },
           "parameters": {
-            "additionalProperties": true,
+            "additionalProperties": {},
+            "description": "Parameters for the addon provider. This object has different required and optional properties depending on the provider you choose.",
+            "example": {
+              "url": "http://localhost:4242/webhook",
+            },
             "type": "object",
           },
           "projects": {
+            "description": "The projects that this addon listens to events from. An empty list means it listens to events from **all** projects.",
+            "example": [
+              "new-landing-project",
+              "signups-v2",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "provider": {
+            "description": "The addon provider, such as "webhook" or "slack".",
+            "example": "webhook",
             "type": "string",
           },
         },
         "required": [
+          "id",
+          "description",
           "provider",
           "enabled",
           "parameters",
@@ -128,32 +248,104 @@ exports[`should serve the OpenAPI spec 1`] = `
         "type": "object",
       },
       "addonTypeSchema": {
+        "additionalProperties": false,
+        "description": "An addon provider. Defines a specific addon type and what the end user must configure when creating a new addon of that type.",
         "properties": {
           "description": {
+            "description": "A description of the addon type.",
+            "example": "Allows Unleash to post updates to Slack.",
             "type": "string",
           },
           "displayName": {
+            "description": "The addon type's name as it should be displayed in the admin UI.",
+            "example": "Slack",
             "type": "string",
           },
           "documentationUrl": {
+            "description": "A URL to where you can find more information about using this addon type.",
+            "example": "https://docs.getunleash.io/docs/addons/slack",
             "type": "string",
           },
           "events": {
+            "description": "All the [event types](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#feature-toggle-events) that are available for this addon provider.",
+            "example": [
+              "feature-created",
+              "feature-updated",
+              "feature-archived",
+              "feature-revived",
+              "feature-stale-on",
+              "feature-stale-off",
+              "feature-environment-enabled",
+              "feature-environment-disabled",
+              "feature-strategy-remove",
+              "feature-strategy-update",
+              "feature-strategy-add",
+              "feature-metadata-updated",
+              "feature-variants-updated",
+              "feature-project-change",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "name": {
+            "description": "The name of the addon type. When creating new addons, this goes in the payload's \`type\` field.",
+            "example": "slack",
             "type": "string",
           },
           "parameters": {
+            "description": "The addon provider's parameters. Use these to configure an addon of this provider type. Items with \`required: true\` must be provided.",
+            "example": [
+              {
+                "description": "(Required)",
+                "displayName": "Slack webhook URL",
+                "name": "url",
+                "required": true,
+                "sensitive": true,
+                "type": "url",
+              },
+              {
+                "description": "The username to use when posting messages to slack. Defaults to "Unleash".",
+                "displayName": "Username",
+                "name": "username",
+                "placeholder": "Unleash",
+                "required": false,
+                "sensitive": false,
+                "type": "text",
+              },
+              {
+                "description": "The emoji_icon to use when posting messages to slack. Defaults to ":unleash:".",
+                "displayName": "Emoji Icon",
+                "name": "emojiIcon",
+                "placeholder": ":unleash:",
+                "required": false,
+                "sensitive": false,
+                "type": "text",
+              },
+              {
+                "description": "(Required) Default channel to post updates to if not specified in the slack-tag",
+                "displayName": "Default channel",
+                "name": "defaultChannel",
+                "required": true,
+                "sensitive": false,
+                "type": "text",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/addonParameterSchema",
             },
             "type": "array",
           },
           "tagTypes": {
+            "description": "A list of [Unleash tag types](https://docs.getunleash.io/reference/tags#tag-types) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created.",
+            "example": [
+              {
+                "description": "Slack tag used by the slack-addon to specify the slack channel.",
+                "icon": "S",
+                "name": "slack",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/tagTypeSchema",
             },
@@ -169,14 +361,241 @@ exports[`should serve the OpenAPI spec 1`] = `
         "type": "object",
       },
       "addonsSchema": {
+        "description": "An object containing two things:
+1. A list of all [addons](https://docs.getunleash.io/reference/addons) defined on this Unleash instance
+2. A list of all addon providers defined on this instance",
         "properties": {
           "addons": {
+            "description": "All the addons that exist on this instance of Unleash.",
             "items": {
               "$ref": "#/components/schemas/addonSchema",
             },
             "type": "array",
           },
           "providers": {
+            "description": "A list of  all available addon providers, along with their parameters and descriptions.",
+            "example": [
+              {
+                "description": "A Webhook is a generic way to post messages from Unleash to third party services.",
+                "displayName": "Webhook",
+                "documentationUrl": "https://docs.getunleash.io/docs/addons/webhook",
+                "events": [
+                  "feature-created",
+                  "feature-updated",
+                  "feature-archived",
+                  "feature-revived",
+                  "feature-stale-on",
+                  "feature-stale-off",
+                  "feature-environment-enabled",
+                  "feature-environment-disabled",
+                  "feature-strategy-remove",
+                  "feature-strategy-update",
+                  "feature-strategy-add",
+                  "feature-metadata-updated",
+                  "feature-variants-updated",
+                  "feature-project-change",
+                  "feature-tagged",
+                  "feature-untagged",
+                  "change-request-created",
+                  "change-request-discarded",
+                  "change-added",
+                  "change-discarded",
+                  "change-request-approved",
+                  "change-request-approval-added",
+                  "change-request-cancelled",
+                  "change-request-sent-to-review",
+                  "change-request-applied",
+                ],
+                "name": "webhook",
+                "parameters": [
+                  {
+                    "description": "(Required) Unleash will perform a HTTP Post to the specified URL (one retry if first attempt fails)",
+                    "displayName": "Webhook URL",
+                    "name": "url",
+                    "required": true,
+                    "sensitive": true,
+                    "type": "url",
+                  },
+                  {
+                    "description": "(Optional) The Content-Type header to use. Defaults to "application/json".",
+                    "displayName": "Content-Type",
+                    "name": "contentType",
+                    "placeholder": "application/json",
+                    "required": false,
+                    "sensitive": false,
+                    "type": "text",
+                  },
+                  {
+                    "description": "(Optional) The Authorization header to use. Not used if left blank.",
+                    "displayName": "Authorization",
+                    "name": "authorization",
+                    "placeholder": "",
+                    "required": false,
+                    "sensitive": true,
+                    "type": "text",
+                  },
+                  {
+                    "description": "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/reference/api/legacy/unleash/admin/events)",
+                    "displayName": "Body template",
+                    "name": "bodyTemplate",
+                    "placeholder": "{
+  "event": "{{event.type}}",
+  "createdBy": "{{event.createdBy}}",
+  "featureToggle": "{{event.data.name}}",
+  "timestamp": "{{event.data.createdAt}}"
+}",
+                    "required": false,
+                    "sensitive": false,
+                    "type": "textfield",
+                  },
+                ],
+              },
+              {
+                "description": "Allows Unleash to post updates to Slack.",
+                "displayName": "Slack",
+                "documentationUrl": "https://docs.getunleash.io/docs/addons/slack",
+                "events": [
+                  "feature-created",
+                  "feature-updated",
+                  "feature-archived",
+                  "feature-revived",
+                  "feature-stale-on",
+                  "feature-stale-off",
+                  "feature-environment-enabled",
+                  "feature-environment-disabled",
+                  "feature-strategy-remove",
+                  "feature-strategy-update",
+                  "feature-strategy-add",
+                  "feature-metadata-updated",
+                  "feature-variants-updated",
+                  "feature-project-change",
+                ],
+                "name": "slack",
+                "parameters": [
+                  {
+                    "description": "(Required)",
+                    "displayName": "Slack webhook URL",
+                    "name": "url",
+                    "required": true,
+                    "sensitive": true,
+                    "type": "url",
+                  },
+                  {
+                    "description": "The username to use when posting messages to slack. Defaults to "Unleash".",
+                    "displayName": "Username",
+                    "name": "username",
+                    "placeholder": "Unleash",
+                    "required": false,
+                    "sensitive": false,
+                    "type": "text",
+                  },
+                  {
+                    "description": "The emoji_icon to use when posting messages to slack. Defaults to ":unleash:".",
+                    "displayName": "Emoji Icon",
+                    "name": "emojiIcon",
+                    "placeholder": ":unleash:",
+                    "required": false,
+                    "sensitive": false,
+                    "type": "text",
+                  },
+                  {
+                    "description": "(Required) Default channel to post updates to if not specified in the slack-tag",
+                    "displayName": "Default channel",
+                    "name": "defaultChannel",
+                    "required": true,
+                    "sensitive": false,
+                    "type": "text",
+                  },
+                ],
+                "tagTypes": [
+                  {
+                    "description": "Slack tag used by the slack-addon to specify the slack channel.",
+                    "icon": "S",
+                    "name": "slack",
+                  },
+                ],
+              },
+              {
+                "description": "Allows Unleash to post updates to Microsoft Teams.",
+                "displayName": "Microsoft Teams",
+                "documentationUrl": "https://docs.getunleash.io/docs/addons/teams",
+                "events": [
+                  "feature-created",
+                  "feature-updated",
+                  "feature-archived",
+                  "feature-revived",
+                  "feature-stale-on",
+                  "feature-stale-off",
+                  "feature-environment-enabled",
+                  "feature-environment-disabled",
+                  "feature-strategy-remove",
+                  "feature-strategy-update",
+                  "feature-strategy-add",
+                  "feature-metadata-updated",
+                  "feature-variants-updated",
+                  "feature-project-change",
+                ],
+                "name": "teams",
+                "parameters": [
+                  {
+                    "description": "(Required)",
+                    "displayName": "Microsoft Teams webhook URL",
+                    "name": "url",
+                    "required": true,
+                    "sensitive": true,
+                    "type": "url",
+                  },
+                ],
+              },
+              {
+                "description": "Allows Unleash to post updates to Datadog.",
+                "displayName": "Datadog",
+                "documentationUrl": "https://docs.getunleash.io/docs/addons/datadog",
+                "events": [
+                  "feature-created",
+                  "feature-updated",
+                  "feature-archived",
+                  "feature-revived",
+                  "feature-stale-on",
+                  "feature-stale-off",
+                  "feature-environment-enabled",
+                  "feature-environment-disabled",
+                  "feature-strategy-remove",
+                  "feature-strategy-update",
+                  "feature-strategy-add",
+                  "feature-metadata-updated",
+                  "feature-project-change",
+                  "feature-variants-updated",
+                ],
+                "name": "datadog",
+                "parameters": [
+                  {
+                    "description": "Default url: https://api.datadoghq.com/api/v1/events. Needs to be changed if your not using the US1 site.",
+                    "displayName": "Datadog Events URL",
+                    "name": "url",
+                    "required": false,
+                    "sensitive": false,
+                    "type": "url",
+                  },
+                  {
+                    "description": "(Required) API key from Datadog",
+                    "displayName": "Datadog API key",
+                    "name": "apiKey",
+                    "placeholder": "j96c23b0f12a6b3434a8d710110bd862",
+                    "required": true,
+                    "sensitive": true,
+                    "type": "text",
+                  },
+                ],
+                "tagTypes": [
+                  {
+                    "description": "All Datadog tags added to a specific feature are sent to datadog event stream.",
+                    "icon": "D",
+                    "name": "datadog",
+                  },
+                ],
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/addonTypeSchema",
             },
@@ -936,26 +1355,65 @@ exports[`should serve the OpenAPI spec 1`] = `
       "createFeatureStrategySchema": {
         "properties": {
           "constraints": {
+            "description": "A list of the constraints attached to the strategy",
+            "example": [
+              {
+                "caseInsensitive": false,
+                "contextName": "appName",
+                "inverted": false,
+                "operator": "IN",
+                "values": [
+                  "1",
+                  "2",
+                ],
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
           },
+          "disabled": {
+            "description": "A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs",
+            "example": false,
+            "nullable": true,
+            "type": "boolean",
+          },
           "name": {
+            "description": "The name or type of strategy",
+            "example": "flexibleRollout",
             "type": "string",
           },
           "parameters": {
             "$ref": "#/components/schemas/parametersSchema",
+            "description": "An object containing the parameters for the strategy",
+            "example": {
+              "groupId": "some_new",
+              "rollout": "25",
+              "stickiness": "sessionId",
+            },
           },
           "segments": {
             "description": "Ids of segments to use for this strategy",
+            "example": [
+              1,
+              2,
+            ],
             "items": {
               "type": "number",
             },
             "type": "array",
           },
           "sortOrder": {
+            "description": "The order of the strategy in the list",
+            "example": 9999,
             "type": "number",
+          },
+          "title": {
+            "description": "A descriptive title for the strategy",
+            "example": "Gradual Rollout 25-Prod",
+            "nullable": true,
+            "type": "string",
           },
         },
         "required": [
@@ -1628,33 +2086,60 @@ exports[`should serve the OpenAPI spec 1`] = `
       },
       "featureStrategySchema": {
         "additionalProperties": false,
+        "description": "A singles activation strategy configuration schema for a feature",
         "properties": {
           "constraints": {
+            "description": "A list of the constraints attached to the strategy",
             "items": {
               "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
           },
+          "disabled": {
+            "description": "A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs",
+            "example": false,
+            "nullable": true,
+            "type": "boolean",
+          },
           "featureName": {
+            "description": "The name or feature the strategy is attached to",
+            "example": "myAwesomeFeature",
             "type": "string",
           },
           "id": {
+            "description": "A uuid for the feature strategy",
+            "example": "6b5157cb-343a-41e7-bfa3-7b4ec3044840",
             "type": "string",
           },
           "name": {
+            "description": "The name or type of strategy",
+            "example": "flexibleRollout",
             "type": "string",
           },
           "parameters": {
             "$ref": "#/components/schemas/parametersSchema",
           },
           "segments": {
+            "description": "A list of segment ids attached to the strategy",
+            "example": [
+              1,
+              2,
+            ],
             "items": {
               "type": "number",
             },
             "type": "array",
           },
           "sortOrder": {
+            "description": "The order of the strategy in the list",
+            "example": 9999,
             "type": "number",
+          },
+          "title": {
+            "description": "A descriptive title for the strategy",
+            "example": "Gradual Rollout 25-Prod",
+            "nullable": true,
+            "type": "string",
           },
         },
         "required": [
@@ -1688,7 +2173,7 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "tagType": {
-            "description": "The type of tag",
+            "description": "The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag",
             "example": "simple",
             "type": "string",
           },
@@ -1699,12 +2184,12 @@ exports[`should serve the OpenAPI spec 1`] = `
           },
           "type": {
             "deprecated": true,
-            "description": "This field is deprecated and currently unused, use tagType instead",
+            "description": "The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the \`tagType\` property.",
             "type": "string",
           },
           "value": {
             "deprecated": true,
-            "description": "This field is deprecated and currently unused, use tagValue instead",
+            "description": "The value of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the \`tagValue\` property.",
             "type": "string",
           },
         },
@@ -1883,6 +2368,11 @@ exports[`should serve the OpenAPI spec 1`] = `
               "type": "string",
             },
             "type": "array",
+          },
+          "rootRole": {
+            "description": "A role id that is used as the root role for all users in this group. This can be either the id of the Editor or Admin role.",
+            "nullable": true,
+            "type": "number",
           },
           "users": {
             "items": {
@@ -2742,6 +3232,12 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
+          "disabled": {
+            "description": "The strategy's status. Disabled strategies are not evaluated",
+            "example": false,
+            "nullable": true,
+            "type": "boolean",
+          },
           "id": {
             "description": "The strategy's id.",
             "type": "string",
@@ -2824,6 +3320,11 @@ exports[`should serve the OpenAPI spec 1`] = `
             },
             "type": "array",
           },
+          "title": {
+            "description": "Description of the feature's purpose.",
+            "example": "Beta rollout",
+            "type": "string",
+          },
         },
         "required": [
           "id",
@@ -2832,6 +3333,7 @@ exports[`should serve the OpenAPI spec 1`] = `
           "segments",
           "constraints",
           "parameters",
+          "disabled",
         ],
         "type": "object",
       },
@@ -3233,6 +3735,7 @@ Stats are divided into current and previous **windows**.
       },
       "publicSignupTokenCreateSchema": {
         "additionalProperties": false,
+        "description": "Used for creating a [public invite link](https://docs.getunleash.io/reference/public-signup#public-sign-up-tokens)",
         "properties": {
           "expiresAt": {
             "description": "The token's expiration date.",
@@ -3252,23 +3755,34 @@ Stats are divided into current and previous **windows**.
       },
       "publicSignupTokenSchema": {
         "additionalProperties": false,
+        "description": "Used for transporting a [public invite link](https://docs.getunleash.io/reference/public-signup#public-sign-up-tokens)",
         "properties": {
           "createdAt": {
+            "description": "When the token was created.",
+            "example": "2023-04-12T11:13:31.960Z",
             "format": "date-time",
             "type": "string",
           },
           "createdBy": {
+            "description": "The creator's email or username",
+            "example": "someone@example.com",
             "nullable": true,
             "type": "string",
           },
           "enabled": {
+            "description": "Whether the token is active. This property will always be \`false\` for a token that has expired.",
+            "example": true,
             "type": "boolean",
           },
           "expiresAt": {
+            "description": "The time when the token will expire.",
+            "example": "2023-04-12T11:13:31.960Z",
             "format": "date-time",
             "type": "string",
           },
           "name": {
+            "description": "The token's name. Only for displaying in the UI",
+            "example": "Invite public viewers",
             "type": "string",
           },
           "role": {
@@ -3276,10 +3790,13 @@ Stats are divided into current and previous **windows**.
             "description": "Users who sign up using this token will be given this role.",
           },
           "secret": {
+            "description": "The actual value of the token. This is the part that is used by Unleash to create an invite link",
+            "example": "a3c84b25409ea8ca1782ef17f94a42fc",
             "type": "string",
           },
           "url": {
             "description": "The public signup link for the token. Users who follow this link will be taken to a signup page where they can create an Unleash user.",
+            "example": "https://sandbox.getunleash.io/enterprise/new-user?invite=a3c84b25409ea8ca1782ef17f94a42fc",
             "type": "string",
           },
           "users": {
@@ -3305,12 +3822,16 @@ Stats are divided into current and previous **windows**.
       },
       "publicSignupTokenUpdateSchema": {
         "additionalProperties": false,
+        "description": "Used by Unleash for updating a token's expiration date or, when deleting the invite link, it's status",
         "properties": {
           "enabled": {
+            "description": "Whether the token is active or not.",
+            "example": true,
             "type": "boolean",
           },
           "expiresAt": {
             "description": "The token's expiration date.",
+            "example": "2023-04-11T15:46:56Z",
             "format": "date-time",
             "type": "string",
           },
@@ -3319,8 +3840,27 @@ Stats are divided into current and previous **windows**.
       },
       "publicSignupTokensSchema": {
         "additionalProperties": false,
+        "description": "A wrapper object containing all the public signup tokens",
         "properties": {
           "tokens": {
+            "description": "An array of all the public signup tokens",
+            "example": [
+              {
+                "createdAt": "2023-04-12T11:13:31.960Z",
+                "createdBy": "someone",
+                "enabled": false,
+                "expiresAt": "2023-04-12T11:13:31.960Z",
+                "name": "Invite public viewers",
+                "role": {
+                  "id": 3,
+                  "name": "Viewer",
+                  "type": "root",
+                },
+                "secret": "a3c84b25409ea8ca1782ef17f94a42fc",
+                "url": "https://my_unleash_instance/new-user?invite=a3c84b25409ea8ca1782ef17f94a42fc",
+                "users": null,
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/publicSignupTokenSchema",
             },
@@ -3637,6 +4177,8 @@ Stats are divided into current and previous **windows**.
       },
       "stateSchema": {
         "additionalProperties": true,
+        "deprecated": true,
+        "description": "The state of the application used by export/import APIs which are deprecated in favor of the more fine grained /api/admin/export and /api/admin/import APIs",
         "properties": {
           "environments": {
             "items": {
@@ -3734,43 +4276,65 @@ Stats are divided into current and previous **windows**.
       },
       "strategySchema": {
         "additionalProperties": false,
+        "description": "The [activation strategy](https://docs.getunleash.io/reference/activation-strategies) schema",
         "properties": {
           "deprecated": {
+            "description": "",
+            "example": true,
             "type": "boolean",
           },
           "description": {
+            "description": "A short description for the strategy",
+            "example": "Gradual rollout to logged in users",
             "type": "string",
           },
           "displayName": {
+            "description": "A human friendly name for the strategy",
+            "example": "Gradual Rollout",
             "nullable": true,
             "type": "string",
           },
           "editable": {
+            "description": "Determines whether the strategy allows for editing",
+            "example": true,
             "type": "boolean",
           },
           "name": {
+            "description": "The name or type of the strategy",
+            "example": "flexibleRollout",
             "type": "string",
           },
           "parameters": {
+            "description": "A list of relevant parameters for each strategy",
             "items": {
               "additionalProperties": false,
               "properties": {
                 "description": {
+                  "example": "Gradual rollout to logged in users",
                   "type": "string",
                 },
                 "name": {
+                  "example": "percentage",
                   "type": "string",
                 },
                 "required": {
+                  "example": true,
                   "type": "boolean",
                 },
                 "type": {
+                  "example": "percentage",
                   "type": "string",
                 },
               },
               "type": "object",
             },
             "type": "array",
+          },
+          "title": {
+            "description": "An optional title for the strategy",
+            "example": "GradualRollout - Prod25",
+            "nullable": true,
+            "type": "string",
           },
         },
         "required": [
@@ -3785,11 +4349,11 @@ Stats are divided into current and previous **windows**.
       },
       "tagSchema": {
         "additionalProperties": false,
-        "description": "Representation of a tag",
+        "description": "Representation of a [tag](https://docs.getunleash.io/reference/tags)",
         "properties": {
           "type": {
             "default": "simple",
-            "description": "The type of the tag",
+            "description": "The [type](https://docs.getunleash.io/reference/tags#tag-types) of the tag",
             "example": "simple",
             "maxLength": 50,
             "minLength": 2,
@@ -4110,6 +4674,12 @@ Stats are divided into current and previous **windows**.
             },
             "type": "array",
           },
+          "disabled": {
+            "description": "A toggle to disable the strategy. defaults to true. Disabled strategies are not evaluated or returned to the SDKs",
+            "example": false,
+            "nullable": true,
+            "type": "boolean",
+          },
           "name": {
             "type": "string",
           },
@@ -4118,6 +4688,12 @@ Stats are divided into current and previous **windows**.
           },
           "sortOrder": {
             "type": "number",
+          },
+          "title": {
+            "description": "A descriptive title for the strategy",
+            "example": "Gradual Rollout 25-Prod",
+            "nullable": true,
+            "type": "string",
           },
         },
         "type": "object",
@@ -4135,7 +4711,7 @@ Stats are divided into current and previous **windows**.
       },
       "updateTagsSchema": {
         "additionalProperties": false,
-        "description": "Represents a set of changes to tags of a feature.",
+        "description": "Represents a set of changes to a feature's tags, such as adding or removing tags.",
         "example": {
           "addedTags": [
             {
@@ -4543,6 +5119,7 @@ Stats are divided into current and previous **windows**.
   "paths": {
     "/api/admin/addons": {
       "get": {
+        "description": "Retrieve all addons and providers that are defined on this Unleash instance.",
         "operationId": "getAddons",
         "responses": {
           "200": {
@@ -4555,22 +5132,27 @@ Stats are divided into current and previous **windows**.
             },
             "description": "addonsSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
         },
+        "summary": "Get all addons and providers",
         "tags": [
           "Addons",
         ],
       },
       "post": {
+        "description": "Create an addon instance. The addon must use one of the providers available on this Unleash instance.",
         "operationId": "createAddon",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/addonSchema",
+                "$ref": "#/components/schemas/addonCreateUpdateSchema",
               },
             },
           },
-          "description": "addonSchema",
+          "description": "addonCreateUpdateSchema",
           "required": true,
         },
         "responses": {
@@ -4584,7 +5166,23 @@ Stats are divided into current and previous **windows**.
             },
             "description": "addonSchema",
           },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "413": {
+            "description": "The body request body is larger than what we accept. By default we only accept bodies of 100kB or less",
+          },
+          "415": {
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
+          },
         },
+        "summary": "Create a new addon",
         "tags": [
           "Addons",
         ],
@@ -4592,6 +5190,7 @@ Stats are divided into current and previous **windows**.
     },
     "/api/admin/addons/{id}": {
       "delete": {
+        "description": "Delete the addon specified by the ID in the request path.",
         "operationId": "deleteAddon",
         "parameters": [
           {
@@ -4607,12 +5206,20 @@ Stats are divided into current and previous **windows**.
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
+        "summary": "Delete an addon",
         "tags": [
           "Addons",
         ],
       },
       "get": {
+        "description": "Retrieve information about the addon whose ID matches the ID in the request URL.",
         "operationId": "getAddon",
         "parameters": [
           {
@@ -4635,12 +5242,19 @@ Stats are divided into current and previous **windows**.
             },
             "description": "addonSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
         },
+        "summary": "Get a specific addon",
         "tags": [
           "Addons",
         ],
       },
       "put": {
+        "description": "Update the addon with a specific ID. Any fields in the update object will be updated. Properties that are not included in the update object will not be affected. To empty a property, pass \`null\` as that property's value.
+
+Note: passing \`null\` as a value for the description property will set it to an empty string.",
         "operationId": "updateAddon",
         "parameters": [
           {
@@ -4656,11 +5270,11 @@ Stats are divided into current and previous **windows**.
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/addonSchema",
+                "$ref": "#/components/schemas/addonCreateUpdateSchema",
               },
             },
           },
-          "description": "addonSchema",
+          "description": "addonCreateUpdateSchema",
           "required": true,
         },
         "responses": {
@@ -4674,7 +5288,23 @@ Stats are divided into current and previous **windows**.
             },
             "description": "addonSchema",
           },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "413": {
+            "description": "The body request body is larger than what we accept. By default we only accept bodies of 100kB or less",
+          },
+          "415": {
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
+          },
         },
+        "summary": "Update an addon",
         "tags": [
           "Addons",
         ],
@@ -5631,6 +6261,12 @@ If the provided project does not exist, the list of events will be empty.",
           "401": {
             "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
           },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "description": "The requested resource was not found.",
+          },
         },
         "summary": "Get all tags for a feature.",
         "tags": [
@@ -5920,6 +6556,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
       "post": {
+        "description": "Lets administrators create a invite link to share with colleagues.  People that join using the public invite are assigned the \`Viewer\` role",
         "operationId": "createPublicSignupToken",
         "requestBody": {
           "content": {
@@ -5951,6 +6588,15 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
+          },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
         },
         "summary": "Create a public signup token",
@@ -5984,6 +6630,12 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "publicSignupTokenSchema",
           },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
         "summary": "Retrieve a token",
         "tags": [
@@ -5991,6 +6643,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
       "put": {
+        "description": "Update information about a specific token. The \`:token\` part of the URL should be the token's secret.",
         "operationId": "updatePublicSignupToken",
         "parameters": [
           {
@@ -6023,6 +6676,15 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "publicSignupTokenSchema",
+          },
+          "400": {
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
         },
         "summary": "Update a public signup token",
@@ -7952,6 +8614,8 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/state/export": {
       "get": {
+        "deprecated": true,
+        "description": "Exports the current state of the system. Deprecated in favor of /api/admin/features-batch/export",
         "operationId": "export",
         "parameters": [
           {
@@ -8100,6 +8764,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "stateSchema",
           },
         },
+        "summary": "Export state (deprecated)",
         "tags": [
           "Import/Export",
         ],
@@ -8107,6 +8772,8 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/state/import": {
       "post": {
+        "deprecated": true,
+        "description": "Imports state into the system. Deprecated in favor of /api/admin/features-batch/import",
         "operationId": "import",
         "requestBody": {
           "content": {
@@ -8124,6 +8791,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "This response has no body.",
           },
         },
+        "summary": "Import state (deprecated)",
         "tags": [
           "Import/Export",
         ],
@@ -9542,7 +10210,7 @@ If the provided project does not exist, the list of events will be empty.",
       "name": "Addons",
     },
     {
-      "description": "Configure the Unleash Admin UI.",
+      "description": "Configure the Unleash Admin UI. Why did you enable an experimental feature?",
       "name": "Admin UI",
     },
     {

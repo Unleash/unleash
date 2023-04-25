@@ -61,13 +61,11 @@ exports[`should create default config 1`] = `
     "_maxListeners": undefined,
     Symbol(kCapture): false,
   },
-  "eventHook": undefined,
   "experimental": {
     "externalResolver": {
       "isEnabled": [Function],
     },
     "flags": {
-      "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
       "bulkOperations": false,
       "caseInsensitiveInOperators": false,
@@ -77,7 +75,7 @@ exports[`should create default config 1`] = `
       "embedProxy": true,
       "embedProxyFrontend": true,
       "featuresExportImport": true,
-      "loginHistory": false,
+      "groupRootRoles": false,
       "maintenanceMode": false,
       "messageBanner": false,
       "migrationLock": false,
@@ -86,15 +84,14 @@ exports[`should create default config 1`] = `
       "optimal304Differ": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
-      "projectScopedSegments": false,
       "projectScopedStickiness": false,
       "responseTimeWithAppNameKillSwitch": false,
+      "strategyTitle": false,
       "strictSchemaValidation": false,
     },
   },
   "flagResolver": FlagResolver {
     "experiments": {
-      "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
       "bulkOperations": false,
       "caseInsensitiveInOperators": false,
@@ -104,7 +101,7 @@ exports[`should create default config 1`] = `
       "embedProxy": true,
       "embedProxyFrontend": true,
       "featuresExportImport": true,
-      "loginHistory": false,
+      "groupRootRoles": false,
       "maintenanceMode": false,
       "messageBanner": false,
       "migrationLock": false,
@@ -113,9 +110,9 @@ exports[`should create default config 1`] = `
       "optimal304Differ": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
-      "projectScopedSegments": false,
       "projectScopedStickiness": false,
       "responseTimeWithAppNameKillSwitch": false,
+      "strategyTitle": false,
       "strictSchemaValidation": false,
     },
     "externalResolver": {
@@ -169,9 +166,6 @@ exports[`should create default config 1`] = `
   "strategySegmentsLimit": 5,
   "ui": {
     "environment": "Open Source",
-    "flags": {
-      "ENABLE_DARK_MODE_SUPPORT": false,
-    },
   },
   "versionCheck": {
     "enable": true,

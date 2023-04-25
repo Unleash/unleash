@@ -24,6 +24,12 @@ export const groupSchema = {
                 type: 'string',
             },
         },
+        rootRole: {
+            type: 'number',
+            nullable: true,
+            description:
+                'A role id that is used as the root role for all users in this group. This can be either the id of the Editor or Admin role.',
+        },
         createdBy: {
             type: 'string',
             nullable: true,

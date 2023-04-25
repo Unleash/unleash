@@ -69,6 +69,7 @@ module.exports = {
                     items: [
                         'how-to/how-to-create-api-tokens',
                         'how-to/how-to-create-personal-access-tokens',
+                        'how-to/how-to-create-project-api-tokens',
                         'how-to/how-to-create-service-accounts',
                         'how-to/how-to-download-login-history',
                         'how-to/how-to-use-the-admin-api',
@@ -292,6 +293,10 @@ module.exports = {
                             'Jira Server': [
                                 'reference/integrations/jira-server-plugin-installation',
                                 'reference/integrations/jira-server-plugin-usage',
+                            ],
+                            'Jira Cloud': [
+                                'reference/integrations/jira-cloud-plugin-installation',
+                                'reference/integrations/jira-cloud-plugin-usage',
                             ],
                         },
                         ,

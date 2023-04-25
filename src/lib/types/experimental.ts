@@ -4,7 +4,6 @@ export type IFlags = Partial<typeof flags>;
 export type IFlagKey = keyof IFlags;
 
 const flags = {
-    ENABLE_DARK_MODE_SUPPORT: false,
     anonymiseEventLog: false,
     embedProxy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
@@ -50,13 +49,8 @@ const flags = {
         process.env.UNLEASH_PRO_PLAN_AUTO_CHARGE,
         false,
     ),
-    loginHistory: parseEnvVarBoolean(process.env.UNLEASH_LOGIN_HISTORY, false),
     bulkOperations: parseEnvVarBoolean(
         process.env.UNLEASH_BULK_OPERATIONS,
-        false,
-    ),
-    projectScopedSegments: parseEnvVarBoolean(
-        process.env.PROJECT_SCOPED_SEGMENTS,
         false,
     ),
     projectScopedStickiness: parseEnvVarBoolean(
@@ -76,8 +70,16 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
         false,
     ),
+    groupRootRoles: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ROOT_ROLE_GROUPS,
+        false,
+    ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
+    strategyTitle: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_TITLE,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

@@ -1105,3 +1105,104 @@ test('should not return all features', async () => {
             });
         });
 });
+
+test('should NOT evaluate disabled strategies when returning toggles', async () => {
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    await createFeatureToggle({
+        name: 'enabledFeature',
+        enabled: true,
+        strategies: [
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                parameters: {
+                    rollout: '100',
+                    stickiness: 'default',
+                    groupId: 'some-new',
+                },
+            },
+        ],
+    });
+    await createFeatureToggle({
+        name: 'disabledFeature',
+        enabled: false,
+        strategies: [
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                disabled: true,
+                parameters: {
+                    rollout: '100',
+                    stickiness: 'default',
+                    groupId: 'some-new',
+                },
+            },
+        ],
+    });
+    await createFeatureToggle({
+        name: 'disabledFeature3',
+        enabled: true,
+        strategies: [
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                disabled: true,
+                parameters: {
+                    rollout: '100',
+                    stickiness: 'default',
+                    groupId: 'some-new',
+                },
+            },
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                disabled: false,
+                parameters: {
+                    rollout: '0',
+                    stickiness: 'default',
+                    groupId: 'some-new',
+                },
+            },
+        ],
+    });
+    await createFeatureToggle({
+        name: 'enabledFeature2',
+        enabled: true,
+        strategies: [
+            {
+                name: 'flexibleRollout',
+                constraints: [],
+                disabled: true,
+                parameters: {
+                    rollout: '100',
+                    stickiness: 'default',
+                    groupId: 'some-new',
+                },
+            },
+        ],
+    });
+
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body).toEqual({
+                toggles: [
+                    {
+                        name: 'enabledFeature',
+                        enabled: true,
+                        impressionData: false,
+                        variant: { enabled: false, name: 'disabled' },
+                    },
+                    {
+                        name: 'enabledFeature2',
+                        enabled: true,
+                        impressionData: false,
+                        variant: { enabled: false, name: 'disabled' },
+                    },
+                ],
+            });
+        });
+});

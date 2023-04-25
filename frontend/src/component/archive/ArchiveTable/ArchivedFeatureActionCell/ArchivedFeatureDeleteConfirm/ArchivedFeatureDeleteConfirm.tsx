@@ -104,7 +104,7 @@ export const ArchivedFeatureDeleteConfirm = ({
                     }}
                     value={confirmName}
                     placeholder="<deletion confirmation>"
-                    label="Deletetion confirmation"
+                    label="Deletion confirmation"
                 />
             </form>
         </Dialogue>

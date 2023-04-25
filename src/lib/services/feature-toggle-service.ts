@@ -1,17 +1,6 @@
-import { IUnleashConfig } from '../types/option';
-import { IFlagResolver, IUnleashStores } from '../types';
-import { Logger } from '../logger';
-import BadDataError from '../error/bad-data-error';
-import NameExistsError from '../error/name-exists-error';
-import InvalidOperationError from '../error/invalid-operation-error';
-import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import {
-    constraintSchema,
-    featureMetadataSchema,
-    nameSchema,
-    variantsArraySchema,
-} from '../schema/feature-schema';
-import {
+    CREATE_FEATURE_STRATEGY,
+    EnvironmentVariantEvent,
     FEATURE_UPDATED,
     FeatureArchivedEvent,
     FeatureChangeProjectEvent,
@@ -24,44 +13,57 @@ import {
     FeatureStrategyAddEvent,
     FeatureStrategyRemoveEvent,
     FeatureStrategyUpdateEvent,
+    FeatureToggle,
+    FeatureToggleDTO,
+    FeatureToggleLegacy,
+    FeatureToggleWithEnvironment,
     FeatureVariantEvent,
-    EnvironmentVariantEvent,
-} from '../types/events';
+    IConstraint,
+    IEventStore,
+    IFeatureEnvironmentInfo,
+    IFeatureEnvironmentStore,
+    IFeatureOverview,
+    IFeatureStrategy,
+    IFeatureTagStore,
+    IFeatureToggleClientStore,
+    IFeatureToggleQuery,
+    IFeatureToggleStore,
+    IFlagResolver,
+    IProjectStore,
+    ISegment,
+    IStrategyConfig,
+    IUnleashConfig,
+    IUnleashStores,
+    IVariant,
+    Saved,
+    SKIP_CHANGE_REQUEST,
+    Unsaved,
+    WeightType,
+} from '../types';
+import { Logger } from '../logger';
+import BadDataError from '../error/bad-data-error';
+import NameExistsError from '../error/name-exists-error';
+import InvalidOperationError from '../error/invalid-operation-error';
+import { FOREIGN_KEY_VIOLATION, OperationDeniedError } from '../error';
+import {
+    constraintSchema,
+    featureMetadataSchema,
+    nameSchema,
+    variantsArraySchema,
+} from '../schema/feature-schema';
 import NotFoundError from '../error/notfound-error';
 import {
     FeatureConfigurationClient,
     IFeatureStrategiesStore,
 } from '../types/stores/feature-strategies-store';
-import { IEventStore } from '../types/stores/event-store';
-import { IProjectStore } from '../types/stores/project-store';
-import { IFeatureTagStore } from '../types/stores/feature-tag-store';
-import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
-import {
-    FeatureToggle,
-    FeatureToggleDTO,
-    FeatureToggleLegacy,
-    FeatureToggleWithEnvironment,
-    IConstraint,
-    IFeatureEnvironmentInfo,
-    IFeatureOverview,
-    IFeatureStrategy,
-    IFeatureToggleQuery,
-    ISegment,
-    IStrategyConfig,
-    IVariant,
-    WeightType,
-} from '../types/model';
-import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
-import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
 import {
     DATE_OPERATORS,
     DEFAULT_ENV,
     NUM_OPERATORS,
     SEMVER_OPERATORS,
     STRING_OPERATORS,
-} from '../util/constants';
+} from '../util';
 import { applyPatch, deepClone, Operation } from 'fast-json-patch';
-import { OperationDeniedError } from '../error/operation-denied-error';
 import {
     validateDate,
     validateLegalValues,
@@ -70,15 +72,10 @@ import {
     validateString,
 } from '../util/validators/constraint-types';
 import { IContextFieldStore } from 'lib/types/stores/context-field-store';
-import { Saved, Unsaved } from '../types/saved';
 import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-order-schema';
 import { getDefaultStrategy } from '../util/feature-evaluator/helpers';
 import { AccessService } from './access-service';
 import { User } from '../server-impl';
-import {
-    CREATE_FEATURE_STRATEGY,
-    SKIP_CHANGE_REQUEST,
-} from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
 import { unique } from '../util/unique';
@@ -354,6 +351,8 @@ class FeatureToggleService {
         return {
             id: featureStrategy.id,
             name: featureStrategy.strategyName,
+            title: featureStrategy.title,
+            disabled: featureStrategy.disabled,
             constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
             segments: segments.map((segment) => segment.id) ?? [],
@@ -415,6 +414,8 @@ class FeatureToggleService {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
                     strategyName: strategyConfig.name,
+                    title: strategyConfig.title,
+                    disabled: strategyConfig.disabled,
                     constraints: strategyConfig.constraints || [],
                     parameters: strategyConfig.parameters || {},
                     sortOrder: strategyConfig.sortOrder,
@@ -471,6 +472,7 @@ class FeatureToggleService {
      * @param updates
      * @param context - Which context does this strategy live in (projectId, featureName, environment)
      * @param userName - Human readable id of the user performing the update
+     * @param user - Optional User object performing the action
      */
     async updateStrategy(
         id: string,
@@ -598,6 +600,7 @@ class FeatureToggleService {
      * @param id - strategy id
      * @param context - Which context does this strategy live in (projectId, featureName, environment)
      * @param createdBy - Which user does this strategy belong to
+     * @param user
      */
     async deleteStrategy(
         id: string,
@@ -673,6 +676,8 @@ class FeatureToggleService {
                     name: strat.strategyName,
                     constraints: strat.constraints,
                     parameters: strat.parameters,
+                    title: strat.title,
+                    disabled: strat.disabled,
                     sortOrder: strat.sortOrder,
                     segments,
                 });
@@ -689,6 +694,7 @@ class FeatureToggleService {
      * @param featureName
      * @param archived - return archived or non archived toggles
      * @param projectId - provide if you're requesting the feature in the context of a specific project.
+     * @param userId
      */
     async getFeature({
         featureName,
@@ -747,10 +753,12 @@ class FeatureToggleService {
     async getClientFeatures(
         query?: IFeatureToggleQuery,
         includeIds?: boolean,
+        includeDisabledStrategies?: boolean,
     ): Promise<FeatureConfigurationClient[]> {
         const result = await this.featureToggleClientStore.getClient(
             query || {},
             includeIds,
+            includeDisabledStrategies,
         );
         if (this.flagResolver.isEnabled('cleanClientApi')) {
             return result.map(
@@ -1007,6 +1015,8 @@ class FeatureToggleService {
             constraints: strategy.constraints || [],
             parameters: strategy.parameters,
             segments: [],
+            title: strategy.title,
+            disabled: strategy.disabled,
         };
 
         if (segments && segments.length > 0) {

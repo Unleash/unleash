@@ -304,7 +304,7 @@ export const VariantForm = ({
     }, [variant.weight]);
 
     return (
-        <StyledVariantForm>
+        <StyledVariantForm data-testid="VARIANT">
             <StyledDeleteButtonTooltip
                 arrow
                 title={
@@ -441,6 +441,7 @@ export const VariantForm = ({
                     onClick={onAddOverride}
                     variant="text"
                     color="primary"
+                    data-testid="VARIANT_ADD_OVERRIDE_BUTTON"
                 >
                     Add override
                 </StyledAddOverrideButton>

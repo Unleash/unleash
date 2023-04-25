@@ -7,7 +7,6 @@ import { createMetricsMonitor } from './metrics';
 import { createStores } from './db';
 import { createServices, scheduleServices } from './services';
 import { createConfig } from './create-config';
-import { addEventHook } from './event-hook';
 import registerGracefulShutdown from './util/graceful-shutdown';
 import { createDb } from './db/db-pool';
 import sessionDb from './middleware/session-db';
@@ -70,9 +69,6 @@ async function createApp(
     }
     const app = await getApp(config, stores, services, unleashSession, db);
 
-    if (typeof config.eventHook === 'function') {
-        addEventHook(config.eventHook, stores.eventStore);
-    }
     await metricsMonitor.startMonitoring(
         config,
         stores,

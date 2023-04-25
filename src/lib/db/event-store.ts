@@ -109,6 +109,9 @@ class EventStore implements IEventStore {
         let count = await this.db(TABLE)
             .count<Record<string, number>>()
             .first();
+        if (!count) {
+            return 0;
+        }
         if (typeof count.count === 'string') {
             return parseInt(count.count, 10);
         } else {
@@ -128,6 +131,9 @@ class EventStore implements IEventStore {
             query = query.andWhere({ feature_name: eventSearch.feature });
         }
         let count = await query.count().first();
+        if (!count) {
+            return 0;
+        }
         if (typeof count.count === 'string') {
             return parseInt(count.count, 10);
         } else {

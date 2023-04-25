@@ -13,6 +13,7 @@ export const apiTokenSchema = {
         username: {
             type: 'string',
             deprecated: true,
+            description: 'This property was deprecated in Unleash v5. Prefer the `tokenName` property instead.'
         },
         tokenName: {
             type: 'string',

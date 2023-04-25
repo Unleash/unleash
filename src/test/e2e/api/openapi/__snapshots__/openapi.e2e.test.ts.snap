@@ -683,6 +683,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "username": {
             "deprecated": true,
+            "description": "This property was deprecated in Unleash v5. Prefer the \`tokenName\` property instead.",
             "type": "string",
           },
         },

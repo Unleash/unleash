@@ -264,17 +264,41 @@ export const fromLegacyError = (e: Error): UnleashError => {
 export const fromOpenApiValidationError =
     (requestBody: object) =>
     (validationError: ErrorObject): ValidationErrorDescription => {
-        console.log(requestBody, validationError);
-
-        throw new Error();
+        // @ts-expect-error Unsure why, but the `dataPath` isn't listed on the type definition for error objects. However, it's always there. Suspect this is a bug in the library.
+        const propertyName = validationError.dataPath.substring(
+            '.body.'.length,
+        );
+        if (validationError.keyword === 'required') {
+            const path =
+                propertyName + '.' + validationError.params.missingProperty;
+            return {
+                path,
+                description: `The ${path} property is required. It was not present on the data you sent.`,
+            };
+        } else {
+            const youSent = JSON.stringify(requestBody[propertyName]);
+            return {
+                description: `The .${propertyName} property ${validationError.message}. You sent ${youSent}.`,
+                path: propertyName,
+            };
+        }
     };
 
 export const fromOpenApiValidationErrors = (
     requestBody: object,
-    validationErrors: ErrorObject[],
+    validationErrors: [ErrorObject, ...ErrorObject[]],
 ): UnleashError => {
-    console.log(requestBody, validationErrors);
-    throw new Error();
+    const errors = validationErrors.map(
+        fromOpenApiValidationError(requestBody),
+    );
+
+    return new UnleashError({
+        name: 'ValidationError',
+        message:
+            "The request payload you provided doesn't conform to the schema. Check the `errors` property for a list of errors that we found.",
+        // @ts-expect-error We know that the list is non-empty
+        errors,
+    });
 };
 
 export type ApiErrorSchema = FromSchema<typeof apiErrorSchema>;

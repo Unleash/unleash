@@ -1,4 +1,6 @@
+import { ErrorObject } from 'ajv';
 import {
+    ApiErrorSchema,
     fromOpenApiValidationError,
     fromOpenApiValidationErrors,
 } from './api-error';
@@ -131,10 +133,11 @@ describe('OpenAPI error conversion', () => {
     });
 
     it('Handles multiple errors', () => {
-        const errors = [
+        const errors: [ErrorObject, ...ErrorObject[]] = [
             {
                 keyword: 'maximum',
                 instancePath: '',
+                // @ts-expect-error
                 dataPath: '.body.newprop',
                 schemaPath:
                     '#/components/schemas/addonCreateUpdateSchema/properties/newprop/maximum',
@@ -158,14 +161,18 @@ describe('OpenAPI error conversion', () => {
             },
         ];
 
-        const error = fromOpenApiValidationErrors({ newprop: 7 }, errors);
+        // create an error and serialize it as it would be shown to the end user.
+        const serializedUnleashError: ApiErrorSchema =
+            fromOpenApiValidationErrors({ newprop: 7 }, errors).toJSON();
 
-        expect(error.name).toBe('ValidationError');
-        expect(error.message).toContain('`errors`');
-        // @ts-expect-error property exists on validation errors
-        expect(error.errors[0].description.includes('newprop'));
-        // @ts-expect-error property exists on validation errors
-        expect(error.errors[1].description.includes('enabled'));
+        expect(serializedUnleashError.name).toBe('ValidationError');
+        expect(serializedUnleashError.message).toContain('`errors`');
+        expect(
+            serializedUnleashError.errors!![0].description.includes('newprop'),
+        );
+        expect(
+            serializedUnleashError.errors!![1].description.includes('enabled'),
+        );
     });
 
     it('Handles deeply nested properties gracefully', () => {

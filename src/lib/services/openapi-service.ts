@@ -11,7 +11,7 @@ import { ApiOperation } from '../openapi/util/api-operation';
 import { Logger } from '../logger';
 import { validateSchema } from '../openapi/validate';
 import { IFlagResolver } from '../types';
-import { UnleashError } from '../error/api-error';
+import { fromOpenApiValidationErrors } from '../error/api-error';
 
 export class OpenApiService {
     private readonly config: IUnleashConfig;
@@ -59,34 +59,10 @@ export class OpenApiService {
     useErrorHandler(app: Express): void {
         app.use((err, req, res, next) => {
             if (err && err.status && err.validationErrors) {
-                const errors = err.validationErrors.map((validationError) => {
-                    const propertyName = validationError.dataPath.substring(
-                        '.body.'.length,
-                    );
-                    if (validationError.keyword === 'required') {
-                        const path =
-                            propertyName +
-                            '.' +
-                            validationError.params.missingProperty;
-                        return {
-                            path,
-                            description: `The ${path} property is required. It was not present on the data you sent.`,
-                        };
-                    } else {
-                        const youSent = JSON.stringify(req.body[propertyName]);
-                        return {
-                            description: `The .${propertyName} property ${validationError.message}. You sent ${youSent}.`,
-                            path: propertyName,
-                        };
-                    }
-                });
-
-                const apiError = new UnleashError({
-                    name: 'ValidationError',
-                    message:
-                        "The request payload you provided doesn't conform to the schema. Check the `errors` property for a list of errors that we found.",
-                    errors,
-                });
+                const apiError = fromOpenApiValidationErrors(
+                    req.body,
+                    err.validationErrors,
+                );
 
                 res.status(apiError.statusCode).json(apiError);
             } else {

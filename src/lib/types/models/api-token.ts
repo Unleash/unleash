@@ -37,6 +37,10 @@ export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
     alias: string | null;
 }
 
+export interface IApiTokenExt extends IApiToken {
+    tokenName?: string;
+}
+
 export const isAllProjects = (projects: string[]): boolean => {
     return projects && projects.length === 1 && projects[0] === ALL;
 };

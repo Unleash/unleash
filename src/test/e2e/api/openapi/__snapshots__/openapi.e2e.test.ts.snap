@@ -667,6 +667,12 @@ The provider you choose for your addon dictates what properties the \`parameters
             "nullable": true,
             "type": "string",
           },
+          "tokenName": {
+            "description": "A unique name for this particular token",
+            "example": "some-user",
+            "nullable": true,
+            "type": "string",
+          },
           "type": {
             "enum": [
               "client",
@@ -676,6 +682,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "username": {
+            "deprecated": true,
             "type": "string",
           },
         },

@@ -14,7 +14,7 @@ import { AccessService } from '../../services/access-service';
 import { IAuthRequest } from '../unleash-types';
 import User from '../../types/user';
 import { IUnleashConfig } from '../../types/option';
-import { ApiTokenType, IApiToken } from '../../types/models/api-token';
+import { ApiTokenType, IApiTokenExt } from '../../types/models/api-token';
 import { createApiToken } from '../../schema/api-token-schema';
 import { OpenApiService } from '../../services/openapi-service';
 import { IUnleashServices } from '../../types';
@@ -168,7 +168,7 @@ export class ApiTokenController extends Controller {
             201,
             res,
             apiTokenSchema.$id,
-            serializeDates(token),
+            serializeDates({ ...token, tokenName: token.username }),
             { location: `api-tokens` },
         );
     }
@@ -204,8 +204,15 @@ export class ApiTokenController extends Controller {
         res.status(200).end();
     }
 
-    private async accessibleTokens(user: User): Promise<IApiToken[]> {
-        const allTokens = await this.apiTokenService.getAllTokens();
+    private async accessibleTokens(user: User): Promise<IApiTokenExt[]> {
+        const allTokens = (await this.apiTokenService.getAllTokens()).map(
+            (token) => {
+                return {
+                    ...token,
+                    tokenName: token.username,
+                };
+            },
+        );
 
         if (user.isAPI && user.permissions.includes(ADMIN)) {
             return allTokens;

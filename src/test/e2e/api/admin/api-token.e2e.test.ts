@@ -44,6 +44,7 @@ test('creates new client token', async () => {
         .expect(201)
         .expect((res) => {
             expect(res.body.username).toBe('default-client');
+            expect(res.body.tokenName).toBe('default-client');
             expect(res.body.type).toBe('client');
             expect(res.body.createdAt).toBeTruthy();
             expect(res.body.secret.length > 16).toBe(true);
@@ -61,6 +62,7 @@ test('creates new admin token', async () => {
         .expect(201)
         .expect((res) => {
             expect(res.body.username).toBe('default-admin');
+            expect(res.body.tokenName).toBe('default-admin');
             expect(res.body.type).toBe('admin');
             expect(res.body.environment).toBe(ALL);
             expect(res.body.createdAt).toBeTruthy();
@@ -80,6 +82,7 @@ test('creates new ADMIN token should fix casing', async () => {
         .expect(201)
         .expect((res) => {
             expect(res.body.username).toBe('default-admin');
+            expect(res.body.tokenName).toBe('default-admin');
             expect(res.body.type).toBe('admin');
             expect(res.body.createdAt).toBeTruthy();
             expect(res.body.expiresAt).toBeFalsy();

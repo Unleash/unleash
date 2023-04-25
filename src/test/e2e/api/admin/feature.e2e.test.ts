@@ -889,7 +889,7 @@ test('Should return "default" for stickiness when creating a flexibleRollout str
 test('Should throw error when updating a flexibleRollout strategy with "" for stickiness', async () => {
     const username = 'toggle-feature';
     const feature = {
-        name: 'test-featureA',
+        name: 'test-featureB',
         description: 'the #1 feature',
     };
     const projectId = 'default';

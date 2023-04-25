@@ -78,12 +78,15 @@ class UserService {
 
     private passwordResetTimeouts: { [key: string]: NodeJS.Timeout } = {};
 
+    private baseUriPath: string;
+
     constructor(
         stores: Pick<IUnleashStores, 'userStore' | 'eventStore'>,
         {
+            config,
             getLogger,
             authentication,
-        }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
+        }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'server'>,
         services: {
             accessService: AccessService;
             resetTokenService: ResetTokenService;
@@ -103,6 +106,8 @@ class UserService {
         if (authentication && authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
         }
+
+        this.baseUriPath = config.server.baseUriPath || '';
     }
 
     validatePassword(password: string): boolean {
@@ -301,8 +306,7 @@ class UserService {
 
         throw new UnleashError({
             name: 'PasswordMismatchError',
-            message:
-                'The password you provided does not match the username. If you have forgotten your password ...',
+            message: `The combination of password and username you provided is invalid. If you have forgotten your password, visit ${this.baseUriPath}/forgotten-password or get in touch with your instance administrator.`,
         });
     }
 

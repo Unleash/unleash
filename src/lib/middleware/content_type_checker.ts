@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import { UnleashError } from '../error/api-error';
 import { is } from 'type-is';
 
 const DEFAULT_ACCEPTED_CONTENT_TYPE = 'application/json';
@@ -21,7 +22,15 @@ export default function requireContentType(
         if (is(contentType, acceptedContentTypes)) {
             next();
         } else {
-            res.status(415).end();
+            const error = new UnleashError({
+                name: 'ContentTypeError',
+                message: `We do not accept the content-type you provided (${
+                    contentType || "you didn't provide one"
+                }). Try using one of the content-types we do accept instead (${acceptedContentTypes.join(
+                    ', ',
+                )}) and make sure the body is in the corresponding format.`,
+            });
+            res.status(error.statusCode).json(error).end();
         }
     };
 }

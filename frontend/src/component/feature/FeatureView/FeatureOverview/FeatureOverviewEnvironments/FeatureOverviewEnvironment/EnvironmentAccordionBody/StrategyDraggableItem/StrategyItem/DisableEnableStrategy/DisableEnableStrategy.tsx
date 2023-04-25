@@ -3,10 +3,7 @@ import { Alert } from '@mui/material';
 import BlockIcon from '@mui/icons-material/Block';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import {
-    DELETE_FEATURE_STRATEGY,
-    CREATE_FEATURE_STRATEGY,
-} from '@server/types/permissions';
+import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useEnableDisable } from './hooks/useEnableDisable';
 import { useSuggestEnableDisable } from './hooks/useSuggestEnableDisable';
@@ -45,7 +42,7 @@ const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
                 onClick={() => setDialogueOpen(true)}
                 projectId={projectId}
                 environmentId={environmentId}
-                permission={DELETE_FEATURE_STRATEGY}
+                permission={UPDATE_FEATURE_STRATEGY}
                 tooltipProps={{
                     title: isChangeRequest
                         ? 'Add to draft'
@@ -112,7 +109,7 @@ const EnableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
                 onClick={() => setDialogueOpen(true)}
                 projectId={projectId}
                 environmentId={environmentId}
-                permission={CREATE_FEATURE_STRATEGY}
+                permission={UPDATE_FEATURE_STRATEGY}
                 tooltipProps={{
                     title: isChangeRequest ? 'Add to draft' : 'Enable strategy',
                 }}

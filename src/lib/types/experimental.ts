@@ -4,10 +4,6 @@ export type IFlags = Partial<typeof flags>;
 export type IFlagKey = keyof IFlags;
 
 const flags = {
-    ENABLE_DARK_MODE_SUPPORT: parseEnvVarBoolean(
-        process.env.UNLEASH_DARK_MODE,
-        false,
-    ),
     anonymiseEventLog: false,
     embedProxy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
@@ -53,7 +49,6 @@ const flags = {
         process.env.UNLEASH_PRO_PLAN_AUTO_CHARGE,
         false,
     ),
-    loginHistory: parseEnvVarBoolean(process.env.UNLEASH_LOGIN_HISTORY, false),
     bulkOperations: parseEnvVarBoolean(
         process.env.UNLEASH_BULK_OPERATIONS,
         false,

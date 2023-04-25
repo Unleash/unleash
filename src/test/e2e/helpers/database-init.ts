@@ -99,8 +99,7 @@ export default async function init(
 
     await db.raw(`DROP SCHEMA IF EXISTS ${config.db.schema} CASCADE`);
     await db.raw(`CREATE SCHEMA IF NOT EXISTS ${config.db.schema}`);
-    // @ts-expect-error
-    await migrateDb({ ...config, databaseSchema: config.db.schema });
+    await migrateDb(config);
     await db.destroy();
     const testDb = createDb(config);
     const stores = await createStores(config, testDb);

@@ -106,7 +106,7 @@ type ChangeRequestEnabled = { enabled: boolean };
 
 type ChangeRequestAddStrategy = Pick<
     IFeatureStrategy,
-    'parameters' | 'constraints'
+    'parameters' | 'constraints' | 'segments'
 > & { name: string };
 
 type ChangeRequestEditStrategy = ChangeRequestAddStrategy & { id: string };

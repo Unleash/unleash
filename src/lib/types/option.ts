@@ -159,6 +159,7 @@ export interface ICspDomainOptions {
     styleSrc?: string[];
     scriptSrc?: string[];
     imgSrc?: string[];
+    connectSrc?: string[];
 }
 
 export interface ICspDomainConfig {
@@ -167,6 +168,7 @@ export interface ICspDomainConfig {
     styleSrc: string[];
     scriptSrc: string[];
     imgSrc: string[];
+    connectSrc: string[];
 }
 
 interface IFrontendApi {

@@ -4,6 +4,7 @@ exports[`should create default config 1`] = `
 {
   "accessControlMaxAge": 86400,
   "additionalCspAllowedDomains": {
+    "connectSrc": [],
     "defaultSrc": [],
     "fontSrc": [],
     "imgSrc": [],
@@ -66,7 +67,6 @@ exports[`should create default config 1`] = `
       "isEnabled": [Function],
     },
     "flags": {
-      "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
       "bulkOperations": false,
       "caseInsensitiveInOperators": false,
@@ -77,7 +77,6 @@ exports[`should create default config 1`] = `
       "embedProxyFrontend": true,
       "featuresExportImport": true,
       "groupRootRoles": false,
-      "loginHistory": false,
       "maintenanceMode": false,
       "messageBanner": false,
       "migrationLock": false,
@@ -95,7 +94,6 @@ exports[`should create default config 1`] = `
   },
   "flagResolver": FlagResolver {
     "experiments": {
-      "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
       "bulkOperations": false,
       "caseInsensitiveInOperators": false,
@@ -106,7 +104,6 @@ exports[`should create default config 1`] = `
       "embedProxyFrontend": true,
       "featuresExportImport": true,
       "groupRootRoles": false,
-      "loginHistory": false,
       "maintenanceMode": false,
       "messageBanner": false,
       "migrationLock": false,
@@ -172,9 +169,6 @@ exports[`should create default config 1`] = `
   "strategySegmentsLimit": 5,
   "ui": {
     "environment": "Open Source",
-    "flags": {
-      "ENABLE_DARK_MODE_SUPPORT": false,
-    },
   },
   "versionCheck": {
     "enable": true,

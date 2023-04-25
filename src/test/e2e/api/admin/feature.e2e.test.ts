@@ -847,3 +847,41 @@ test('Can add and remove tags at the same time', async () => {
             expect(res.body.tags).toHaveLength(1);
         });
 });
+
+test('Should return "default" for stickiness when creating a flexibleRollout strategy with "" for stickiness', async () => {
+    const username = 'toggle-feature';
+    const feature = {
+        name: 'test-featureA',
+        description: 'the #1 feature',
+    };
+    const projectId = 'default';
+
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        projectId,
+        feature,
+        username,
+    );
+    await app.services.featureToggleServiceV2.createStrategy(
+        defaultStrategy,
+        { projectId, featureName: feature.name, environment: DEFAULT_ENV },
+        username,
+    );
+
+    await app.request
+        .get(
+            `/api/admin/projects/${projectId}/features/${feature.name}/environments/${DEFAULT_ENV}`,
+        )
+        .expect((res) => {
+            const toggle = res.body;
+            expect(toggle.strategies).toHaveLength(1);
+            expect(toggle.strategies[0].parameters.stickiness).toBe('default');
+        });
+
+    await app.request
+        .get(`/api/admin/features/${feature.name}`)
+        .expect((res) => {
+            const toggle = res.body;
+            expect(toggle.strategies).toHaveLength(1);
+            expect(toggle.strategies[0].parameters.stickiness).toBe('default');
+        });
+});

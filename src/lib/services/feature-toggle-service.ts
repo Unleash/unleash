@@ -422,10 +422,10 @@ class FeatureToggleService {
 
         if (
             strategyConfig.parameters &&
-            'stickinees' in strategyConfig.parameters &&
-            strategyConfig.parameters.stickinees === ''
+            'stickiness' in strategyConfig.parameters &&
+            strategyConfig.parameters.stickiness === ''
         ) {
-            strategyConfig.parameters.stickinees = 'default';
+            strategyConfig.parameters.stickiness = 'default';
         }
 
         try {

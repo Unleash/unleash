@@ -5,7 +5,6 @@ import { ErrorObject } from 'ajv';
 const UnleashApiErrorTypes = [
     'OwaspValidationError',
     'PasswordUndefinedError',
-    'InvalidTokenError',
     'NoAccessError',
     'UsedTokenError',
     'InvalidOperationError',
@@ -34,6 +33,7 @@ const UnleashApiErrorTypesWithExtraData = [
     'ValidationError',
     'AuthenticationRequired',
     'NoAccessError',
+    'InvalidTokenError',
 ] as const;
 
 const AllUnleashApiErrorTypes = [
@@ -131,7 +131,8 @@ type UnleashErrorData =
                     | 'ValidationError'
                     | 'BadDataError'
                     | 'BadRequestError'
-                    | 'MinimumOneEnvironmentError';
+                    | 'MinimumOneEnvironmentError'
+                    | 'InvalidTokenError';
                 details: [
                     ValidationErrorDescription,
                     ...ValidationErrorDescription[],
@@ -230,6 +231,7 @@ export const fromLegacyError = (e: Error): UnleashError => {
             'ValidationError',
             'BadRequestError',
             'BadDataError',
+            'InvalidTokenError',
             'MinimumOneEnvironmentError',
         ].includes(name)
     ) {
@@ -238,6 +240,7 @@ export const fromLegacyError = (e: Error): UnleashError => {
                 | 'ValidationError'
                 | 'BadRequestError'
                 | 'BadDataError'
+                | 'InvalidTokenError'
                 | 'MinimumOneEnvironmentError',
             message:
                 'Your request body failed to validate. Refer to the `details` list to see what happened.',

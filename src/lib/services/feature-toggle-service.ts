@@ -224,6 +224,16 @@ class FeatureToggleService {
                 'You can not change the featureName for an activation strategy.',
             );
         }
+
+        if (
+            strategy.parameters &&
+            'stickiness' in strategy.parameters &&
+            strategy.parameters.stickiness === ''
+        ) {
+            throw new InvalidOperationError(
+                'You can not have an empty string for stickiness.',
+            );
+        }
     }
 
     async validateProjectCanAccessSegments(
@@ -408,6 +418,14 @@ class FeatureToggleService {
             strategyConfig.constraints = await this.validateConstraints(
                 strategyConfig.constraints,
             );
+        }
+
+        if (
+            strategyConfig.parameters &&
+            'stickinees' in strategyConfig.parameters &&
+            strategyConfig.parameters.stickinees === ''
+        ) {
+            strategyConfig.parameters.stickinees = 'default';
         }
 
         try {

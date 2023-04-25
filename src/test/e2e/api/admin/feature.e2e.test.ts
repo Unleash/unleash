@@ -17,8 +17,11 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 const defaultStrategy = {
-    name: 'default',
-    parameters: {},
+    name: 'flexibleRollout',
+    parameters: {
+        rollout: '100',
+        stickiness: '',
+    },
     constraints: [],
 };
 

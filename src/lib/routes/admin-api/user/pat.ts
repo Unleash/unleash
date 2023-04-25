@@ -52,7 +52,7 @@ export default class PatController extends Controller {
                 openApiService.validPath({
                     tags: ['Personal access tokens'],
                     operationId: 'getPats',
-                    summary: 'Get all current users Personal Access Tokens.',
+                    summary: 'Get all Personal Access Tokens for the current user.',
                     description:
                         'Returns all of the [Personal Access Tokens](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens) belonging to the current user.',
                     responses: {

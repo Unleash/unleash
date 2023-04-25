@@ -9,7 +9,9 @@ const resolveMode = (): themeMode => {
         return value as themeMode;
     }
 
-    let osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const osDark =
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     if (osDark) {
         return 'dark';

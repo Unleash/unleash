@@ -2,18 +2,14 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { IDisableEnableStrategyProps } from '../IDisableEnableStrategyProps';
 
 export const useEnableDisable = ({
     projectId,
     environmentId,
     featureId,
-    strategyId,
-}: {
-    projectId: string;
-    environmentId: string;
-    featureId: string;
-    strategyId: string;
-}) => {
+    strategy,
+}: IDisableEnableStrategyProps) => {
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setStrategyDisabledState } = useFeatureStrategyApi();
     const { setToastData, setToastApiError } = useToast();
@@ -24,7 +20,7 @@ export const useEnableDisable = ({
                 projectId,
                 featureId,
                 environmentId,
-                strategyId,
+                strategy.id,
                 !enabled
             );
             setToastData({

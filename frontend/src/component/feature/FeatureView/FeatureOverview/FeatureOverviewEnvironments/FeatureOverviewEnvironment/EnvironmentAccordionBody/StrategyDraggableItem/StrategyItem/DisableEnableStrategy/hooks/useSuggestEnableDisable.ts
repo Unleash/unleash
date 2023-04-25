@@ -2,18 +2,14 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { IDisableEnableStrategyProps } from '../IDisableEnableStrategyProps';
 
 export const useSuggestEnableDisable = ({
     projectId,
     environmentId,
     featureId,
-    strategyId,
-}: {
-    projectId: string;
-    environmentId: string;
-    featureId: string;
-    strategyId: string;
-}) => {
+    strategy,
+}: IDisableEnableStrategyProps) => {
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
@@ -24,7 +20,7 @@ export const useSuggestEnableDisable = ({
                 action: 'updateStrategy',
                 feature: featureId,
                 payload: {
-                    id: strategyId,
+                    ...strategy,
                     disabled: !enabled,
                 },
             });

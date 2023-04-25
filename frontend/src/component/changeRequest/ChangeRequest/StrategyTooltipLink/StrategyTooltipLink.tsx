@@ -8,11 +8,11 @@ import {
     formatStrategyName,
     GetFeatureStrategyIcon,
 } from 'utils/strategyNames';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import EventDiff from 'component/events/EventDiff/EventDiff';
 import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { styled } from '@mui/material';
+import { IFeatureStrategy } from 'interfaces/strategy';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -25,41 +25,13 @@ const StyledCodeSection = styled('div')(({ theme }) => ({
     },
 }));
 
-const useCurrentStrategy = (
-    change:
-        | IChangeRequestAddStrategy
-        | IChangeRequestUpdateStrategy
-        | IChangeRequestDeleteStrategy,
-    project: string,
-    feature: string,
-    environmentName: string
-) => {
-    const currentFeature = useFeature(project, feature);
-    const currentStrategy = currentFeature.feature?.environments
-        .find(environment => environment.name === environmentName)
-        ?.strategies.find(
-            strategy =>
-                'id' in change.payload && strategy.id === change.payload.id
-        );
-    return currentStrategy;
-};
-
 export const StrategyDiff: FC<{
     change:
         | IChangeRequestAddStrategy
         | IChangeRequestUpdateStrategy
         | IChangeRequestDeleteStrategy;
-    project: string;
-    feature: string;
-    environmentName: string;
-}> = ({ change, project, feature, environmentName }) => {
-    const currentStrategy = useCurrentStrategy(
-        change,
-        project,
-        feature,
-        environmentName
-    );
-
+    currentStrategy?: IFeatureStrategy;
+}> = ({ change, currentStrategy }) => {
     const changeRequestStrategy =
         change.action === 'deleteStrategy' ? undefined : change.payload;
 
@@ -94,7 +66,7 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                 maxHeight: 600,
             }}
         >
-            {formatStrategyName(change.payload.name)}
+            {change.payload.title || formatStrategyName(change.payload.name)}
         </TooltipLink>
     </>
 );

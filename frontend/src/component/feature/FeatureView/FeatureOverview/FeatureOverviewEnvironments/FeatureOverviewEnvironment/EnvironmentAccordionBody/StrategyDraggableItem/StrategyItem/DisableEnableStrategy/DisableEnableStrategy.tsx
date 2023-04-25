@@ -10,13 +10,7 @@ import { useSuggestEnableDisable } from './hooks/useSuggestEnableDisable';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyChangeRequestAlert } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
-
-interface IDisableEnableStrategyProps {
-    projectId: string;
-    featureId: string;
-    environmentId: string;
-    strategyId: string;
-}
+import { IDisableEnableStrategyProps } from './IDisableEnableStrategyProps';
 
 const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
     const { projectId, environmentId } = props;
@@ -44,9 +38,7 @@ const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
                 environmentId={environmentId}
                 permission={UPDATE_FEATURE_STRATEGY}
                 tooltipProps={{
-                    title: isChangeRequest
-                        ? 'Add to draft'
-                        : 'Disable strategy',
+                    title: 'Disable strategy',
                 }}
                 type="button"
             >
@@ -111,7 +103,7 @@ const EnableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
                 environmentId={environmentId}
                 permission={UPDATE_FEATURE_STRATEGY}
                 tooltipProps={{
-                    title: isChangeRequest ? 'Add to draft' : 'Enable strategy',
+                    title: 'Enable strategy',
                 }}
                 type="button"
             >
@@ -150,9 +142,11 @@ const EnableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
     );
 };
 
-export const DisableEnableStrategy: VFC<
-    IDisableEnableStrategyProps & {
-        disabled: boolean;
-    }
-> = ({ disabled, ...props }) =>
-    disabled ? <EnableStrategy {...props} /> : <DisableStrategy {...props} />;
+export const DisableEnableStrategy: VFC<IDisableEnableStrategyProps> = ({
+    ...props
+}) =>
+    props.strategy.disabled ? (
+        <EnableStrategy {...props} />
+    ) : (
+        <DisableStrategy {...props} />
+    );

@@ -86,8 +86,7 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                                 projectId={projectId}
                                 featureId={featureId}
                                 environmentId={environmentId}
-                                strategyId={strategy.id}
-                                disabled={Boolean(strategy.disabled)}
+                                strategy={strategy}
                             />
                         )}
                     />

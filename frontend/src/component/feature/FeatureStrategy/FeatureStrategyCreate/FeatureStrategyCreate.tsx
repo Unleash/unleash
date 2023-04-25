@@ -114,9 +114,9 @@ export const FeatureStrategyCreate = () => {
         refetchChangeRequests();
     };
 
-    const onSubmit = async () => {
-        const payload = createStrategyPayload(strategy, segments);
+    const payload = createStrategyPayload(strategy, segments);
 
+    const onSubmit = async () => {
         trackEvent('strategyTitle', {
             props: {
                 hasTitle: Boolean(strategy.title),
@@ -153,7 +153,7 @@ export const FeatureStrategyCreate = () => {
                     projectId,
                     featureId,
                     environmentId,
-                    strategy,
+                    payload,
                     unleashUrl
                 )
             }

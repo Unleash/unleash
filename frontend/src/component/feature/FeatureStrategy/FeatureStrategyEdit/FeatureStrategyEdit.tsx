@@ -94,6 +94,9 @@ export const FeatureStrategyEdit = () => {
         savedStrategySegments && setSegments(savedStrategySegments);
     }, [JSON.stringify(savedStrategySegments)]);
 
+    const segmentsToSubmit = uiConfig?.flags.SE ? segments : [];
+    const payload = createStrategyPayload(strategy, segmentsToSubmit);
+
     const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
         await updateStrategyOnFeature(
             projectId,
@@ -134,9 +137,6 @@ export const FeatureStrategyEdit = () => {
     };
 
     const onSubmit = async () => {
-        const segmentsToSubmit = uiConfig?.flags.SE ? segments : [];
-        const payload = createStrategyPayload(strategy, segmentsToSubmit);
-
         try {
             if (isChangeRequestConfigured(environmentId)) {
                 await onStrategyRequestEdit(payload);
@@ -168,7 +168,7 @@ export const FeatureStrategyEdit = () => {
                     projectId,
                     featureId,
                     environmentId,
-                    strategy,
+                    payload,
                     strategyDefinition,
                     unleashUrl
                 )

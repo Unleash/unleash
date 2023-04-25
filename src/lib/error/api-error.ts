@@ -1,5 +1,6 @@
 import { v4 as uuidV4 } from 'uuid';
 import { FromSchema } from 'json-schema-to-ts';
+import { ErrorObject } from 'ajv';
 
 const UnleashApiErrorTypes = [
     'OwaspValidationError',
@@ -258,6 +259,22 @@ export const fromLegacyError = (e: Error): UnleashError => {
         message: e.message,
         errors: [{ description: 'whoops' }],
     });
+};
+
+export const fromOpenApiValidationError =
+    (requestBody: object) =>
+    (validationError: ErrorObject): ValidationErrorDescription => {
+        console.log(requestBody, validationError);
+
+        throw new Error();
+    };
+
+export const fromOpenApiValidationErrors = (
+    requestBody: object,
+    validationErrors: ErrorObject[],
+): UnleashError => {
+    console.log(requestBody, validationErrors);
+    throw new Error();
 };
 
 export type ApiErrorSchema = FromSchema<typeof apiErrorSchema>;

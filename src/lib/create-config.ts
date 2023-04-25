@@ -105,9 +105,6 @@ function loadUI(options: IUnleashOptions): IUIConfig {
         environment: 'Open Source',
     };
 
-    ui.flags = {
-        ENABLE_DARK_MODE_SUPPORT: false,
-    };
     return mergeAll([ui, uiO]);
 }
 

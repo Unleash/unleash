@@ -36,7 +36,6 @@ export interface IFlags {
     T?: boolean;
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;
-    ENABLE_DARK_MODE_SUPPORT?: boolean;
     embedProxyFrontend?: boolean;
     maintenanceMode?: boolean;
     messageBanner?: boolean;

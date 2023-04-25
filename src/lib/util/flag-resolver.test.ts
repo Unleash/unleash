@@ -7,7 +7,7 @@ test('should produce empty exposed flags', () => {
 
     const result = resolver.getAll();
 
-    expect(result.ENABLE_DARK_MODE_SUPPORT).toBe(false);
+    expect(result.anonymiseEventLog).toBe(false);
 });
 
 test('should produce UI flags with extra dynamic flags', () => {

@@ -1,5 +1,7 @@
-import { Box, styled, Typography } from '@mui/material';
 import { VFC, FC, ReactNode } from 'react';
+import { Box, styled, Tooltip, Typography } from '@mui/material';
+import BlockIcon from '@mui/icons-material/Block';
+import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import {
     StrategyDiff,
     StrategyTooltipLink,
@@ -11,6 +13,9 @@ import {
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { useCurrentStrategy } from './hooks/useCurrentStrategy';
+import { Badge } from 'component/common/Badge/Badge';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { flexRow } from 'themes/themeStyles';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -33,6 +38,57 @@ const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
 
 const hasNameField = (payload: unknown): payload is { name: string } =>
     typeof payload === 'object' && payload !== null && 'name' in payload;
+
+const DisabledEnabledState: VFC<{ disabled: boolean }> = ({ disabled }) => {
+    if (disabled) {
+        return (
+            <Tooltip
+                title="This strategy will not be taken into account when evaluating feature toggle."
+                arrow
+                sx={{ cursor: 'pointer' }}
+            >
+                <Badge color="disabled" icon={<BlockIcon />}>
+                    Disabled
+                </Badge>
+            </Tooltip>
+        );
+    }
+
+    return (
+        <Tooltip
+            title="This was disabled before and with this change it will be taken into account when evaluating feature toggle."
+            arrow
+            sx={{ cursor: 'pointer' }}
+        >
+            <Badge color="success" icon={<TrackChangesIcon />}>
+                Enabled
+            </Badge>
+        </Tooltip>
+    );
+};
+
+const EditHeader: VFC<{
+    wasDisabled?: boolean;
+    willBeDisabled?: boolean;
+}> = ({ wasDisabled = false, willBeDisabled = false }) => {
+    if (wasDisabled && willBeDisabled) {
+        return (
+            <Typography color="action.disabled">
+                Editing disabled strategy
+            </Typography>
+        );
+    }
+
+    if (!wasDisabled && willBeDisabled) {
+        return <Typography color="error.dark">Editing strategy</Typography>;
+    }
+
+    if (wasDisabled && !willBeDisabled) {
+        return <Typography color="success.dark">Editing strategy</Typography>;
+    }
+
+    return <Typography>Editing strategy:</Typography>;
+};
 
 export const StrategyChange: VFC<{
     discard?: ReactNode;
@@ -58,9 +114,11 @@ export const StrategyChange: VFC<{
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>
                             <Typography
-                                sx={theme => ({
-                                    color: theme.palette.success.dark,
-                                })}
+                                color={
+                                    change.payload?.disabled
+                                        ? 'action.disabled'
+                                        : 'success.dark'
+                                }
                             >
                                 + Adding strategy:
                             </Typography>
@@ -70,6 +128,12 @@ export const StrategyChange: VFC<{
                                     currentStrategy={currentStrategy}
                                 />
                             </StrategyTooltipLink>
+                            <ConditionallyRender
+                                condition={Boolean(
+                                    change.payload?.disabled === true
+                                )}
+                                show={<DisabledEnabledState disabled={true} />}
+                            />
                         </ChangeItemInfo>
                         {discard}
                     </ChangeItemCreateEditWrapper>
@@ -100,7 +164,10 @@ export const StrategyChange: VFC<{
                 <>
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>
-                            <Typography>Editing strategy:</Typography>
+                            <EditHeader
+                                wasDisabled={currentStrategy?.disabled}
+                                willBeDisabled={change.payload?.disabled}
+                            />
                             <StrategyTooltipLink
                                 change={change}
                                 previousTitle={currentStrategy?.title}
@@ -114,6 +181,28 @@ export const StrategyChange: VFC<{
                         {discard}
                     </ChangeItemCreateEditWrapper>
                     <StrategyExecution strategy={change.payload} />
+                    <ConditionallyRender
+                        condition={
+                            change.payload?.disabled !==
+                            currentStrategy?.disabled
+                        }
+                        show={
+                            <Typography
+                                sx={{
+                                    marginTop: theme => theme.spacing(2),
+                                    paddingLeft: theme => theme.spacing(3),
+                                    paddingRight: theme => theme.spacing(3),
+                                    ...flexRow,
+                                    gap: theme => theme.spacing(1),
+                                }}
+                            >
+                                This strategy will be{' '}
+                                <DisabledEnabledState
+                                    disabled={change.payload?.disabled || false}
+                                />
+                            </Typography>
+                        }
+                    />
                 </>
             )}
         </>

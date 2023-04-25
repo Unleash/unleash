@@ -14,7 +14,7 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Typography, styled } from '@mui/material';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import theme from 'themes/theme';
+import { textTruncated } from 'themes/themeStyles';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -64,12 +64,20 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
     <>
         <GetFeatureStrategyIcon strategyName={change.payload.name} />
         <ConditionallyRender
-            condition={previousTitle !== change.payload.title}
+            condition={Boolean(
+                previousTitle && previousTitle !== change.payload.title
+            )}
             show={
                 <>
-                    <Typography component="s" color="action.disabled">
-                        {previousTitle ||
-                            formatStrategyName(change.payload.name)}
+                    <Typography
+                        component="s"
+                        color="action.disabled"
+                        sx={{
+                            ...textTruncated,
+                            maxWidth: '100px',
+                        }}
+                    >
+                        {previousTitle}
                     </Typography>{' '}
                 </>
             }
@@ -81,7 +89,20 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                 maxHeight: 600,
             }}
         >
-            {change.payload.title || formatStrategyName(change.payload.name)}
+            <Typography
+                component="span"
+                sx={{
+                    ...textTruncated,
+                    maxWidth:
+                        previousTitle === change.payload.title
+                            ? '300px'
+                            : '200px',
+                    display: 'block',
+                }}
+            >
+                {change.payload.title ||
+                    formatStrategyName(change.payload.name)}
+            </Typography>
         </TooltipLink>
     </>
 );

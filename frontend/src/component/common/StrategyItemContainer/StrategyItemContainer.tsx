@@ -10,6 +10,7 @@ import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PlaygroundStrategySchema } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { Badge } from '../Badge/Badge';
 
 interface IStrategyItemContainerProps {
     strategy: IFeatureStrategy | PlaygroundStrategySchema;
@@ -131,20 +132,9 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                     <ConditionallyRender
                         condition={Boolean(strategy?.disabled)}
                         show={() => (
-                            <Chip
-                                label="Disabled"
-                                size="small"
-                                sx={{
-                                    color: theme =>
-                                        theme.palette.text.secondary,
-                                    background: theme =>
-                                        theme.palette.background.paper,
-                                    border: theme =>
-                                        `1px solid ${theme.palette.divider}`,
-                                    borderRadius: theme =>
-                                        `${theme.shape.borderRadius}px`,
-                                }}
-                            />
+                            <>
+                                <Badge color="disabled">Disabled</Badge>
+                            </>
                         )}
                     />
                     <Box

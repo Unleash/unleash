@@ -43,13 +43,15 @@ The UI shows the currently available projects. To create a new project, use the 
 
 The configuration of a new Project is now available. the following input is available to create the new Project.
 
-![A project creation form. The form fields are labeled "project ID", "name", and "description". The "Create" button is highlighted.](/img/projects_save_new_project.png)
+![A project creation form. The "Create" button is highlighted.](/img/projects_save_new_project_v2.png)
 
-| Item         | Description                        |
-| ------------ | ---------------------------------- |
-| Project Id   | Id for this Project                |
-| Project name | The name of the Project.           |
-| Description  | A short description of the project |
+| Item               | Description                                                                                 |
+|--------------------|---------------------------------------------------------------------------------------------|
+| Project Id         | Id for this Project                                                                         |
+| Project name       | The name of the Project.                                                                    |
+| Description        | A short description of the project                                                          |
+| Mode               | The project [collaboration mode](/reference/project-collaboration-mode.md)                  |
+| Default Stickiness | The default stickiness for the project. This setting controls the default stickiness value for variants and for the gradual rollout strategy.                                                                 |
 
 ## Deleting an existing project {#deleting-an-existing-project}
 

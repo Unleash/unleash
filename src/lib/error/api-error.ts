@@ -40,10 +40,10 @@ const AllUnleashApiErrorTypes = [
     ...UnleashApiErrorTypesWithExtraData,
 ] as const;
 
-type UnleashApiErrorType = typeof AllUnleashApiErrorTypes[number];
+type UnleashApiErrorName = typeof AllUnleashApiErrorTypes[number];
 
-const statusCode = (errorKind: UnleashApiErrorType): number => {
-    switch (errorKind) {
+const statusCode = (errorName: UnleashApiErrorName): number => {
+    switch (errorName) {
         case 'ContentTypeError':
             return 415;
         case 'ValidationError':
@@ -107,7 +107,7 @@ type UnleashErrorData =
       } & (
           | {
                 name: Exclude<
-                    UnleashApiErrorType,
+                    UnleashApiErrorName,
                     | 'NoAccessError'
                     | 'AuthenticationRequired'
                     | 'ValidationError'
@@ -140,7 +140,7 @@ type UnleashErrorData =
 export class UnleashError extends Error {
     id: string;
 
-    name: UnleashApiErrorType;
+    name: UnleashApiErrorName;
 
     documentationLink: string | null;
 
@@ -214,8 +214,8 @@ export const apiErrorSchema = {
 } as const;
 
 export const fromLegacyError = (e: Error): UnleashError => {
-    const name = AllUnleashApiErrorTypes.includes(e.name as UnleashApiErrorType)
-        ? (e.name as UnleashApiErrorType)
+    const name = AllUnleashApiErrorTypes.includes(e.name as UnleashApiErrorName)
+        ? (e.name as UnleashApiErrorName)
         : 'UnknownError';
 
     if (name === 'NoAccessError') {

@@ -143,8 +143,6 @@ export class UnleashError extends Error {
 
     name: UnleashApiErrorName;
 
-    documentationLink: string | null;
-
     statusCode: number;
 
     additionalParameters: object;
@@ -157,7 +155,6 @@ export class UnleashError extends Error {
     }: UnleashErrorData) {
         super();
         this.id = uuidV4();
-        this.documentationLink = documentationLink ?? null;
         this.name = name;
         super.message = message;
 

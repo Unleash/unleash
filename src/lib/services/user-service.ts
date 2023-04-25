@@ -24,7 +24,6 @@ import SettingService from './setting-service';
 import { SimpleAuthSettings } from '../server-impl';
 import { simpleAuthSettingsKey } from '../types/settings/simple-auth-settings';
 import DisabledError from '../error/disabled-error';
-// import PasswordMismatch from '../error/password-mismatch';
 import BadDataError from '../error/bad-data-error';
 import { isDefined } from '../util/isDefined';
 import { TokenUserSchema } from '../openapi/spec/token-user-schema';

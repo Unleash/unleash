@@ -26,8 +26,7 @@ const UnleashApiErrorTypes = [
     'InternalError',
 ] as const;
 
-// types that have extra data associated with them
-const UnleashApiErrorTypes2 = [
+const UnleashApiErrorTypesWithExtraData = [
     'MinimumOneEnvironmentError',
     'BadDataError',
     'BadRequestError',
@@ -38,14 +37,12 @@ const UnleashApiErrorTypes2 = [
 
 const AllUnleashApiErrorTypes = [
     ...UnleashApiErrorTypes,
-    ...UnleashApiErrorTypes2,
+    ...UnleashApiErrorTypesWithExtraData,
 ] as const;
 
-type UnleashApiErrorKind =
-    | typeof UnleashApiErrorTypes[number]
-    | typeof UnleashApiErrorTypes2[number];
+type UnleashApiErrorType = typeof AllUnleashApiErrorTypes[number];
 
-const statusCode = (errorKind: UnleashApiErrorKind): number => {
+const statusCode = (errorKind: UnleashApiErrorType): number => {
     switch (errorKind) {
         case 'ContentTypeError':
             return 415;
@@ -110,7 +107,7 @@ type UnleashErrorData =
       } & (
           | {
                 name: Exclude<
-                    UnleashApiErrorKind,
+                    UnleashApiErrorType,
                     | 'NoAccessError'
                     | 'AuthenticationRequired'
                     | 'ValidationError'
@@ -143,7 +140,7 @@ type UnleashErrorData =
 export class UnleashError extends Error {
     id: string;
 
-    name: UnleashApiErrorKind;
+    name: UnleashApiErrorType;
 
     documentationLink: string | null;
 
@@ -172,17 +169,13 @@ export class UnleashError extends Error {
         return `Get help for id ${this.id}`;
     }
 
-    serialize(): ApiErrorSchema {
+    toJSON(): ApiErrorSchema {
         return {
             id: this.id,
             name: this.name,
             message: this.message,
             ...this.additionalParameters,
         };
-    }
-
-    toJSON(): ApiErrorSchema {
-        return this.serialize();
     }
 
     toString(): string {
@@ -221,8 +214,8 @@ export const apiErrorSchema = {
 } as const;
 
 export const fromLegacyError = (e: Error): UnleashError => {
-    const name = AllUnleashApiErrorTypes.includes(e.name as UnleashApiErrorKind)
-        ? (e.name as UnleashApiErrorKind)
+    const name = AllUnleashApiErrorTypes.includes(e.name as UnleashApiErrorType)
+        ? (e.name as UnleashApiErrorType)
         : 'UnknownError';
 
     if (name === 'NoAccessError') {

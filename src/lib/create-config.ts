@@ -313,6 +313,7 @@ const parseCspConfig = (
         scriptSrc: cspConfig.scriptSrc || [],
         imgSrc: cspConfig.imgSrc || [],
         styleSrc: cspConfig.styleSrc || [],
+        connectSrc: cspConfig.connectSrc || [],
     };
 };
 
@@ -322,12 +323,14 @@ const parseCspEnvironmentVariables = (): ICspDomainConfig => {
     const styleSrc = process.env.CSP_ALLOWED_STYLE?.split(',') || [];
     const scriptSrc = process.env.CSP_ALLOWED_SCRIPT?.split(',') || [];
     const imgSrc = process.env.CSP_ALLOWED_IMG?.split(',') || [];
+    const connectSrc = process.env.CSP_ALLOWED_CONNECT?.split(',') || [];
     return {
         defaultSrc,
         fontSrc,
         styleSrc,
         scriptSrc,
         imgSrc,
+        connectSrc,
     };
 };
 

@@ -16,7 +16,7 @@ export const patSchema = {
         secret: {
             type: 'string',
             description: 'The token used for authentication.',
-            example: 'user.xyzrandomstring',
+            example: 'user:xyzrandomstring',
         },
         expiresAt: {
             type: 'string',

@@ -1,6 +1,9 @@
 import { Button, styled } from '@mui/material';
 
 const StyledBanner = styled('div')(({ theme }) => ({
+    position: 'sticky',
+    top: 0,
+    zIndex: theme.zIndex.appBar,
     display: 'flex',
     gap: theme.spacing(1),
     justifyContent: 'center',

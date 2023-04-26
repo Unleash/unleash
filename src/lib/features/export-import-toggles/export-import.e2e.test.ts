@@ -673,11 +673,7 @@ test('reject import with unknown context fields', async () => {
         400,
     );
 
-    expect(
-        body.details.includes((error) =>
-            error.description.includes('ContextField1'),
-        ),
-    ).toBeTruthy();
+    expect(body.details[0].description).toMatch(/\bContextField1\b/);
 });
 
 test('reject import with unsupported strategies', async () => {
@@ -697,11 +693,7 @@ test('reject import with unsupported strategies', async () => {
         400,
     );
 
-    expect(
-        body.errors.includes((error) =>
-            error.description.includes('customStrategy'),
-        ),
-    ).toBeTruthy();
+    expect(body.details[0].description).toMatch(/\bcustomStrategy\b/);
 });
 
 test('validate import data', async () => {

@@ -1,8 +1,8 @@
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { ChartData } from 'chart.js';
 import { ILocationSettings } from 'hooks/useLocationSettings';
-import theme from 'themes/theme';
 import 'chartjs-adapter-date-fns';
+import { Theme } from '@mui/material/styles/createTheme';
 
 interface IPoint {
     x: string;
@@ -10,6 +10,7 @@ interface IPoint {
 }
 
 export const createChartData = (
+    theme: Theme,
     metrics: IFeatureMetricsRaw[],
     locationSettings: ILocationSettings
 ): ChartData<'line', IPoint[], string> => {

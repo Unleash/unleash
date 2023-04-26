@@ -5,6 +5,7 @@ import Input from 'component/common/Input/Input';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IArchivedFeatureDeleteConfirmProps {
     deletedFeatures: string[];
@@ -34,14 +35,21 @@ export const ArchivedFeatureDeleteConfirm = ({
 }: IArchivedFeatureDeleteConfirmProps) => {
     const [confirmName, setConfirmName] = useState('');
     const { setToastData, setToastApiError } = useToast();
-    const { deleteFeatures } = useProjectApi();
+    const { deleteFeature, deleteFeatures } = useProjectApi();
+    const { uiConfig } = useUiConfig();
 
     const onDeleteFeatureToggle = async () => {
         try {
             if (deletedFeatures.length === 0) {
                 return;
             }
-            await deleteFeatures(projectId, deletedFeatures);
+
+            if (uiConfig?.flags?.bulkOperations) {
+                await deleteFeatures(projectId, deletedFeatures);
+            } else {
+                await deleteFeature(deletedFeatures[0]);
+            }
+
             await refetch();
             setToastData({
                 type: 'success',
@@ -96,7 +104,7 @@ export const ArchivedFeatureDeleteConfirm = ({
                     }}
                     value={confirmName}
                     placeholder="<deletion confirmation>"
-                    label="Deletetion confirmation"
+                    label="Deletion confirmation"
                 />
             </form>
         </Dialogue>

@@ -1,19 +1,14 @@
-/// <reference types="cypress" />
-
-const baseUrl = Cypress.config().baseUrl;
-const randomId = String(Math.random()).split('.')[1];
-const groupName = `unleash-e2e-${randomId}`;
-const userIds: any[] = [];
-
-// Disable all active splash pages by visiting them.
-const disableActiveSplashScreens = () => {
-    cy.visit(`/splash/operators`);
-};
+///<reference path="../../global.d.ts" />
 
 describe('groups', () => {
+    const baseUrl = Cypress.config().baseUrl;
+    const randomId = String(Math.random()).split('.')[1];
+    const groupName = `unleash-e2e-${randomId}`;
+    const userIds: any[] = [];
+
     before(() => {
-        disableActiveSplashScreens();
-        cy.login();
+        cy.runBefore();
+        cy.login_UI();
         for (let i = 1; i <= 2; i++) {
             cy.request('POST', `${baseUrl}/api/admin/user-admin`, {
                 name: `unleash-e2e-user${i}-${randomId}`,
@@ -31,7 +26,7 @@ describe('groups', () => {
     });
 
     beforeEach(() => {
-        cy.login();
+        cy.login_UI();
         cy.visit('/admin/groups');
         if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
             cy.get("[data-testid='CLOSE_SPLASH']").click();

@@ -6,12 +6,10 @@ import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
 
 export const useLoginHistory = () => {
-    const { uiConfig, isEnterprise } = useUiConfig();
-
-    const { loginHistory } = uiConfig.flags;
+    const { isEnterprise } = useUiConfig();
 
     const { data, error, mutate } = useConditionalSWR(
-        loginHistory && isEnterprise(),
+        isEnterprise(),
         { events: [] },
         formatApiPath(`api/admin/logins`),
         fetcher

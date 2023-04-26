@@ -18,16 +18,18 @@ import {
     ILocationSettings,
     useLocationSettings,
 } from 'hooks/useLocationSettings';
-import theme from 'themes/theme';
 import { formatDateHM } from 'utils/formatDate';
 import { RequestsPerSecondSchema } from 'openapi';
 import 'chartjs-adapter-date-fns';
-import { Alert } from '@mui/material';
+import { Alert, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { CyclicIterator } from 'utils/cyclicIterator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { unknownify } from 'utils/unknownify';
+import { Theme } from '@mui/material/styles/createTheme';
+
+const pointStyles = ['circle', 'rect', 'rectRounded', 'rectRot', 'triangle'];
 
 interface IPoint {
     x: number;
@@ -49,6 +51,7 @@ const createChartPoints = (
 };
 
 const createInstanceChartOptions = (
+    theme: Theme,
     locationSettings: ILocationSettings
 ): ChartOptions<'line'> => ({
     locale: locationSettings.locale,
@@ -58,6 +61,7 @@ const createInstanceChartOptions = (
         mode: 'index',
         intersect: false,
     },
+    color: theme.palette.text.secondary,
     plugins: {
         tooltip: {
             backgroundColor: theme.palette.background.paper,
@@ -78,12 +82,13 @@ const createInstanceChartOptions = (
             itemSort: (a, b) => b.parsed.y - a.parsed.y,
         },
         legend: {
-            position: 'top',
-            align: 'end',
+            position: 'bottom',
+            align: 'start',
             labels: {
                 boxWidth: 10,
                 boxHeight: 10,
                 usePointStyle: true,
+                padding: 24,
             },
         },
         title: {
@@ -95,6 +100,10 @@ const createInstanceChartOptions = (
                 size: 16,
                 weight: '400',
             },
+            color: theme.palette.text.primary,
+            padding: {
+                bottom: 32,
+            },
         },
     },
     scales: {
@@ -103,15 +112,24 @@ const createInstanceChartOptions = (
             title: {
                 display: true,
                 text: 'Requests per second',
+                color: theme.palette.text.secondary,
             },
             // min: 0,
             suggestedMin: 0,
-            ticks: { precision: 0 },
+            ticks: { precision: 0, color: theme.palette.text.secondary },
+            grid: {
+                color: theme.palette.divider,
+                borderColor: theme.palette.divider,
+            },
         },
         x: {
             type: 'time',
             time: { unit: 'minute' },
-            grid: { display: true },
+            grid: {
+                display: true,
+                color: theme.palette.divider,
+                borderColor: theme.palette.divider,
+            },
             ticks: {
                 callback: (_, i, data) =>
                     formatDateHM(data[i].value * 1000, locationSettings.locale),
@@ -135,7 +153,10 @@ class ItemPicker<T> {
     }
 }
 
-const toChartData = (rps?: RequestsPerSecondSchema): ChartDatasetType[] => {
+const toChartData = (
+    theme: Theme,
+    rps?: RequestsPerSecondSchema
+): ChartDatasetType[] => {
     if (rps?.data?.result) {
         const colorPicker = new ItemPicker([
             theme.palette.success,
@@ -143,7 +164,7 @@ const toChartData = (rps?: RequestsPerSecondSchema): ChartDatasetType[] => {
             theme.palette.primary,
             theme.palette.warning,
         ]);
-        return rps.data.result.map(dataset => {
+        return rps.data.result.map((dataset, i) => {
             const endpoint = unknownify(dataset.metric?.endpoint);
             const appName = unknownify(dataset.metric?.appName);
             const color = colorPicker.pick(endpoint);
@@ -156,7 +177,7 @@ const toChartData = (rps?: RequestsPerSecondSchema): ChartDatasetType[] => {
                 elements: {
                     point: {
                         radius: 4,
-                        pointStyle: 'circle',
+                        pointStyle: pointStyles[i % pointStyles.length],
                     },
                     line: {
                         borderDash: [8, 4],
@@ -171,15 +192,16 @@ const toChartData = (rps?: RequestsPerSecondSchema): ChartDatasetType[] => {
 export const NetworkTraffic: VFC = () => {
     const { locationSettings } = useLocationSettings();
     const { metrics } = useInstanceMetrics();
+    const theme = useTheme();
     const options = useMemo(() => {
-        return createInstanceChartOptions(locationSettings);
-    }, [locationSettings]);
+        return createInstanceChartOptions(theme, locationSettings);
+    }, [theme, locationSettings]);
 
     usePageTitle('Network - Traffic');
 
     const data = useMemo(() => {
-        return { datasets: toChartData(metrics) };
-    }, [metrics, locationSettings]);
+        return { datasets: toChartData(theme, metrics) };
+    }, [theme, metrics, locationSettings]);
 
     return (
         <ConditionallyRender

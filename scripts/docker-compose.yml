@@ -5,7 +5,7 @@ services:
     image: postgres:alpine3.15
     environment:
       POSTGRES_USER: unleash_user
-      POSTGRES_PASSWORD: passord
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: unleash
     ports:
       - 5432:5432

@@ -4,7 +4,6 @@
  * See `gen:api` script in package.json
  */
 import type { ProjectSchemaMode } from './projectSchemaMode';
-import type { ProjectSchemaDefaultStickiness } from './projectSchemaDefaultStickiness';
 
 /**
  * A definition of the project used for projects listing purposes
@@ -26,8 +25,8 @@ export interface ProjectSchema {
     updatedAt?: string | null;
     /** `true` if the project was favorited, otherwise `false`. */
     favorite?: boolean;
-    /** A mode of the project affecting what actions are possible in this project */
+    /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
     mode?: ProjectSchemaMode;
     /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
-    defaultStickiness?: ProjectSchemaDefaultStickiness;
+    defaultStickiness?: string;
 }

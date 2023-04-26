@@ -15,6 +15,9 @@ export const stateSchema = {
     $id: '#/components/schemas/stateSchema',
     type: 'object',
     additionalProperties: true,
+    deprecated: true,
+    description:
+        'The state of the application used by export/import APIs which are deprecated in favor of the more fine grained /api/admin/export and /api/admin/import APIs',
     required: ['version'],
     properties: {
         version: {

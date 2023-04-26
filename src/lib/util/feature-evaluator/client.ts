@@ -108,12 +108,15 @@ export default class UnleashClient {
                 return {
                     name: strategySelector.name,
                     id: strategySelector.id,
+                    title: strategySelector.title,
+                    disabled: strategySelector.disabled || false,
                     parameters: strategySelector.parameters,
                     ...strategy.isEnabledWithConstraints(
                         strategySelector.parameters,
                         context,
                         strategySelector.constraints,
                         segments,
+                        strategySelector.disabled,
                     ),
                 };
             },

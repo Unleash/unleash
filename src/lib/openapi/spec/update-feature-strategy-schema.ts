@@ -18,6 +18,19 @@ export const updateFeatureStrategySchema = {
                 $ref: '#/components/schemas/constraintSchema',
             },
         },
+        title: {
+            type: 'string',
+            nullable: true,
+            description: 'A descriptive title for the strategy',
+            example: 'Gradual Rollout 25-Prod',
+        },
+        disabled: {
+            type: 'boolean',
+            description:
+                'A toggle to disable the strategy. defaults to true. Disabled strategies are not evaluated or returned to the SDKs',
+            example: false,
+            nullable: true,
+        },
         parameters: {
             $ref: '#/components/schemas/parametersSchema',
         },

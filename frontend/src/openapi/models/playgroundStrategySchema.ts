@@ -11,10 +11,14 @@ import type { ParametersSchema } from './parametersSchema';
 export interface PlaygroundStrategySchema {
     /** The strategy's name. */
     name: string;
+    /** Description of the feature's purpose. */
+    title?: string;
     /** The strategy's id. */
     id: string;
     /** The strategy's evaluation result. If the strategy is a custom strategy that Unleash can't evaluate, `evaluationStatus` will be `unknown`. Otherwise, it will be `true` or `false` */
     result: PlaygroundStrategySchemaResult;
+    /** The strategy's status. Disabled strategies are not evaluated */
+    disabled: boolean | null;
     /** The strategy's segments and their evaluation results. */
     segments: PlaygroundSegmentSchema[];
     /** The strategy's constraints and their evaluation results. */

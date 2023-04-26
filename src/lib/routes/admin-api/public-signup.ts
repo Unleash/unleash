@@ -1,31 +1,33 @@
 import { Response } from 'express';
 
 import Controller from '../controller';
-import { ADMIN } from '../../types/permissions';
+import {
+    ADMIN,
+    IUnleashConfig,
+    IUnleashServices,
+    serializeDates,
+} from '../../types';
 import { Logger } from '../../logger';
-import { AccessService } from '../../services/access-service';
+import {
+    AccessService,
+    OpenApiService,
+    PublicSignupTokenService,
+} from '../../services';
 import { IAuthRequest } from '../unleash-types';
-import { IUnleashConfig, IUnleashServices } from '../../types';
-import { OpenApiService } from '../../services/openapi-service';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
+    createRequestSchema,
     createResponseSchema,
-    resourceCreatedResponseSchema,
-} from '../../openapi/util/create-response-schema';
-import { serializeDates } from '../../types/serialize-dates';
-import { PublicSignupTokenService } from '../../services/public-signup-token-service';
-import UserService from '../../services/user-service';
-import {
+    getStandardResponses,
+    PublicSignupTokenCreateSchema,
     publicSignupTokenSchema,
     PublicSignupTokenSchema,
-} from '../../openapi/spec/public-signup-token-schema';
-import {
     publicSignupTokensSchema,
     PublicSignupTokensSchema,
-} from '../../openapi/spec/public-signup-tokens-schema';
-import { PublicSignupTokenCreateSchema } from '../../openapi/spec/public-signup-token-create-schema';
-import { PublicSignupTokenUpdateSchema } from '../../openapi/spec/public-signup-token-update-schema';
-import { extractUsername } from '../../util/extract-user';
+    PublicSignupTokenUpdateSchema,
+    resourceCreatedResponseSchema,
+} from '../../openapi';
+import UserService from '../../services/user-service';
+import { extractUsername } from '../../util';
 
 interface TokenParam {
     token: string;
@@ -91,6 +93,8 @@ export class PublicSignupController extends Controller {
                     tags: ['Public signup tokens'],
                     operationId: 'createPublicSignupToken',
                     summary: 'Create a public signup token',
+                    description:
+                        'Lets administrators create a invite link to share with colleagues.  People that join using the public invite are assigned the `Viewer` role',
                     requestBody: createRequestSchema(
                         'publicSignupTokenCreateSchema',
                     ),
@@ -98,6 +102,7 @@ export class PublicSignupController extends Controller {
                         201: resourceCreatedResponseSchema(
                             'publicSignupTokenSchema',
                         ),
+                        ...getStandardResponses(400, 401, 403),
                     },
                 }),
             ],
@@ -117,6 +122,7 @@ export class PublicSignupController extends Controller {
                     operationId: 'getPublicSignupToken',
                     responses: {
                         200: createResponseSchema('publicSignupTokenSchema'),
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -132,11 +138,15 @@ export class PublicSignupController extends Controller {
                     tags: ['Public signup tokens'],
                     operationId: 'updatePublicSignupToken',
                     summary: 'Update a public signup token',
+                    description:
+                        "Update information about a specific token. The `:token` part of the URL should be the token's secret.",
+
                     requestBody: createRequestSchema(
                         'publicSignupTokenUpdateSchema',
                     ),
                     responses: {
                         200: createResponseSchema('publicSignupTokenSchema'),
+                        ...getStandardResponses(400, 401, 403),
                     },
                 }),
             ],

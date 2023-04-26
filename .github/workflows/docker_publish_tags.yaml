@@ -37,4 +37,4 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: NODE_VERSION=16-alpine
+          build-args: NODE_VERSION=18-alpine

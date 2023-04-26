@@ -63,7 +63,7 @@ docker run -p 4242:4242 \
 
 **Steps:**
 
-1. Clone the [Unleash repository](https://github.com/Unleash/unleash-docker).
+1. Clone the [Unleash repository](https://github.com/Unleash/unleash).
 2. Run `docker compose up -d` in repository root folder.
 
 ### Option 3 - from Node.js {#option-three---from-nodejs}

@@ -9,6 +9,7 @@ interface ISidebarModalProps {
     open: boolean;
     onClose: () => void;
     label: string;
+    onClick?: (e: React.SyntheticEvent) => void;
     children: React.ReactElement<any, any>;
 }
 
@@ -39,6 +40,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 export const BaseModal: FC<ISidebarModalProps> = ({
     open,
     onClose,
+    onClick,
     label,
     children,
 }) => {
@@ -46,6 +48,7 @@ export const BaseModal: FC<ISidebarModalProps> = ({
         <Modal
             open={open}
             onClose={onClose}
+            onClick={onClick}
             closeAfterTransition
             aria-label={label}
             BackdropComponent={Backdrop}

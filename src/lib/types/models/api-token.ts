@@ -27,6 +27,7 @@ export interface IApiTokenCreate {
     environment: string;
     projects: string[];
     expiresAt?: Date;
+    tokenName?: string;
 }
 
 export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
@@ -35,10 +36,6 @@ export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
     environment: string;
     project: string;
     alias: string | null;
-}
-
-export interface IApiTokenExt extends IApiToken {
-    tokenName?: string;
 }
 
 export const isAllProjects = (projects: string[]): boolean => {

@@ -27,6 +27,7 @@ interface ITokenInsert {
     created_at: Date;
     seen_at?: Date;
     environment: string;
+    tokenName?: string;
 }
 
 interface ITokenRow extends ITokenInsert {
@@ -47,6 +48,7 @@ const tokenRowReducer = (acc, tokenRow) => {
             createdAt: token.created_at,
             alias: token.alias,
             seenAt: token.seen_at,
+            tokenName: token.username,
         };
     }
     const currentToken = acc[tokenRow.secret];
@@ -61,7 +63,7 @@ const tokenRowReducer = (acc, tokenRow) => {
 };
 
 const toRow = (newToken: IApiTokenCreate) => ({
-    username: newToken.username,
+    username: newToken.tokenName ?? newToken.username,
     secret: newToken.secret,
     type: newToken.type,
     environment:

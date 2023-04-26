@@ -18,7 +18,7 @@ import {
     READ_PROJECT_API_TOKEN,
     serializeDates,
 } from '../../../types';
-import { ApiTokenType, IApiTokenExt } from '../../../types/models/api-token';
+import { ApiTokenType, IApiToken } from '../../../types/models/api-token';
 import {
     AccessService,
     ApiTokenService,
@@ -202,15 +202,8 @@ export class ProjectApiTokenController extends Controller {
     private async accessibleTokens(
         user: User,
         project: string,
-    ): Promise<IApiTokenExt[]> {
-        const allTokens = (await this.apiTokenService.getAllTokens()).map(
-            (token) => {
-                return {
-                    ...token,
-                    tokenName: token.username,
-                };
-            },
-        );
+    ): Promise<IApiToken[]> {
+        const allTokens = await this.apiTokenService.getAllTokens();
 
         if (user.isAPI && user.permissions.includes(ADMIN)) {
             return allTokens;

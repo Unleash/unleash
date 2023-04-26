@@ -670,7 +670,6 @@ The provider you choose for your addon dictates what properties the \`parameters
           "tokenName": {
             "description": "A unique name for this particular token",
             "example": "some-user",
-            "nullable": true,
             "type": "string",
           },
           "type": {

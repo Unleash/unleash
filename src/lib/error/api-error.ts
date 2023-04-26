@@ -279,8 +279,24 @@ export const fromOpenApiValidationError =
                 description,
                 message: description,
             };
+        } else if (validationError.keyword === 'additionalProperties') {
+            const path =
+                (propertyName ? propertyName + '.' : '') +
+                validationError.params.additionalProperty;
+            const description = `The ${
+                propertyName ? `\`${propertyName}\`` : 'root'
+            } object of the request body does not allow additional properties. Your request included the \`${path}\` property.`;
+            return {
+                path,
+                description,
+                message: description,
+            };
         } else {
-            const youSent = JSON.stringify(requestBody[propertyName]);
+            const input = propertyName
+                .split('.')
+                .reduce((x, prop) => x[prop], requestBody);
+
+            const youSent = JSON.stringify(input);
             const description = `The .${propertyName} property ${validationError.message}. You sent ${youSent}.`;
             return {
                 description,

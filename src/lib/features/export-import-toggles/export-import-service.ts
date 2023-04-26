@@ -372,9 +372,13 @@ export default class ExportImportService {
                     'Some of the context fields you are trying to import are not supported.',
                 // @ts-ignore-error We know that the array contains at least one
                 // element here.
-                errors: unsupportedContextFields.map((field) => ({
-                    description: `${field.name} is not supported.`,
-                })),
+                details: unsupportedContextFields.map((field) => {
+                    const description = `${field.name} is not supported.`;
+                    return {
+                        description,
+                        message: description,
+                    };
+                }),
             });
         }
     }
@@ -453,9 +457,14 @@ export default class ExportImportService {
                     'Some of the strategies you are trying to import are not supported.',
                 // @ts-ignore-error We know that the array contains at least one
                 // element here.
-                errors: unsupportedStrategies.map((strategy) => ({
-                    description: `${strategy.name} is not supported.`,
-                })),
+                details: unsupportedStrategies.map((strategy) => {
+                    const description = `${strategy.name} is not supported.`;
+
+                    return {
+                        description,
+                        message: description,
+                    };
+                }),
             });
         }
     }

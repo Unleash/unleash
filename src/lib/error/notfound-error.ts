@@ -1,10 +1,11 @@
-class NotFoundError extends Error {
-    constructor(message?: string) {
-        super();
-        Error.captureStackTrace(this, this.constructor);
+import { UnleashError } from './api-error';
 
-        this.name = this.constructor.name;
-        this.message = message;
+class NotFoundError extends UnleashError {
+    constructor(message?: string) {
+        super({
+            message: message ?? 'The requested resource could not be found',
+            name: 'NotFoundError',
+        });
     }
 }
 export default NotFoundError;

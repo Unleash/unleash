@@ -1,23 +1,22 @@
-export default class PasswordUndefinedError extends Error {
-    constructor() {
-        super();
-        Error.captureStackTrace(this, this.constructor);
+import { UnleashError } from './api-error';
 
-        this.name = this.constructor.name;
-        this.message = 'Password cannot be empty or undefined';
+export default class PasswordUndefinedError extends UnleashError {
+    constructor() {
+        super({
+            message: 'Password cannot be empty or undefined',
+            name: 'PasswordUndefinedError',
+        });
     }
 
-    toJSON(): any {
-        const obj = {
-            isJoi: true,
-            name: this.constructor.name,
+    additionalSerializedProps(): object {
+        return {
             details: [
                 {
                     validationErrors: [],
-                    message: 'Password cannot be empty or undefined',
+                    message: this.message,
+                    description: this.message,
                 },
             ],
         };
-        return obj;
     }
 }

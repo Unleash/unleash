@@ -1,22 +1,8 @@
-class FeatureHasTagError extends Error {
+import { UnleashError } from './api-error';
+
+class FeatureHasTagError extends UnleashError {
     constructor(message: string) {
-        super();
-        Error.captureStackTrace(this, this.constructor);
-
-        this.name = this.constructor.name;
-        this.message = message;
-    }
-
-    toJSON(): object {
-        return {
-            isJoi: true,
-            name: this.constructor.name,
-            details: [
-                {
-                    message: this.message,
-                },
-            ],
-        };
+        super({ message, name: 'FeatureHasTagError' });
     }
 }
 export default FeatureHasTagError;

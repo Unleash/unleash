@@ -1,9 +1,8 @@
-import BaseError from './base-error';
+import { UnleashError } from './api-error';
 
-class DisabledError extends BaseError {
+class DisabledError extends UnleashError {
     constructor(message: string) {
-        super(message, 422, 'DisabledError');
-        Error.captureStackTrace(this, this.constructor);
+        super({ message, name: 'DisabledError' });
     }
 }
 

@@ -11,7 +11,6 @@ class NoAccessError extends UnleashError {
             message,
             permission,
         });
-        Error.captureStackTrace(this, this.constructor);
     }
 }
 

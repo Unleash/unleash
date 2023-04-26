@@ -1,22 +1,11 @@
-class UsedTokenError extends Error {
-    constructor(usedAt: Date) {
-        super();
-        Error.captureStackTrace(this, this.constructor);
-        this.name = this.constructor.name;
-        this.message = `Token was already used at ${usedAt}`;
-    }
+import { UnleashError } from './api-error';
 
-    toJSON(): any {
-        const obj = {
-            isJoi: true,
-            name: this.constructor.name,
-            details: [
-                {
-                    message: this.message,
-                },
-            ],
-        };
-        return obj;
+class UsedTokenError extends UnleashError {
+    constructor(usedAt: Date) {
+        super({
+            message: `Token was already used at ${usedAt}`,
+            name: 'UsedTokenError',
+        });
     }
 }
 

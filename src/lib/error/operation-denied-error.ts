@@ -1,21 +1,7 @@
-export class OperationDeniedError extends Error {
+import { UnleashError } from './api-error';
+
+export class OperationDeniedError extends UnleashError {
     constructor(message: string) {
-        super();
-        Error.captureStackTrace(this, this.constructor);
-
-        this.name = this.constructor.name;
-        this.message = message;
-    }
-
-    toJSON(): object {
-        return {
-            isJoi: true,
-            name: this.constructor.name,
-            details: [
-                {
-                    message: this.message,
-                },
-            ],
-        };
+        super({ message, name: 'OperationDeniedError' });
     }
 }

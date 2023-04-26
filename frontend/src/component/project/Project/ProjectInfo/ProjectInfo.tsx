@@ -60,33 +60,6 @@ const ProjectInfo = ({
         (!showChangeRequestsWidget && !showProjectMembersWidget) ||
         (isSmallScreen && showChangeRequestsWidget && showProjectMembersWidget);
 
-    if (!Boolean(uiConfig?.flags.newProjectOverview)) {
-        return (
-            <aside>
-                <Box
-                    sx={{
-                        display: 'grid',
-                        gridTemplateColumns:
-                            'repeat(auto-fit, minmax(225px, 1fr))',
-                        gap: theme => theme.spacing(2),
-                        paddingBottom: theme => theme.spacing(2),
-                    }}
-                >
-                    <LegacyHealthWidget projectId={id} health={health} />
-                    <ConditionallyRender
-                        condition={showProjectMembersWidget}
-                        show={
-                            <LegacyProjectMembersWidget
-                                projectId={id}
-                                memberCount={memberCount}
-                            />
-                        }
-                    />
-                </Box>
-            </aside>
-        );
-    }
-
     return (
         <aside>
             <StyledProjectInfoSidebarContainer

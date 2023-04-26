@@ -55,6 +55,7 @@ export default class FakeProjectStore implements IProjectStore {
             health: 100,
             createdAt: new Date(),
             mode: 'open',
+            defaultStickiness: 'default',
         };
         this.projects.push(newProj);
         return newProj;

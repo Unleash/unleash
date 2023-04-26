@@ -13,7 +13,7 @@ import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
 import { FavoritesService } from '../../../lib/services';
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';
-import { subDays } from 'date-fns';
+import { addDays, subDays } from 'date-fns';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
 let stores;
@@ -107,6 +107,7 @@ test('should list all projects', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'default',
     };
 
     await projectService.createProject(project, user);
@@ -121,6 +122,7 @@ test('should create new project', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'protected' as const,
+        defaultStickiness: 'default',
     };
 
     await projectService.createProject(project, user);
@@ -138,6 +140,7 @@ test('should delete project', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'default',
     };
 
     await projectService.createProject(project, user);
@@ -156,12 +159,14 @@ test('should not be able to delete project with toggles', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     await projectService.createProject(project, user);
     await stores.featureToggleStore.create(project.id, {
         name: 'test-project-delete',
         project: project.id,
         enabled: false,
+        defaultStickiness: 'default',
     });
 
     try {
@@ -192,6 +197,7 @@ test('should not be able to create existing project', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'default',
     };
     try {
         await projectService.createProject(project, user);
@@ -223,6 +229,7 @@ test('should update project', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'default',
     };
 
     const updatedProject = {
@@ -230,6 +237,7 @@ test('should update project', async () => {
         name: 'New name',
         description: 'Blah longer desc',
         mode: 'protected' as const,
+        defaultStickiness: 'userId',
     };
 
     await projectService.createProject(project, user);
@@ -240,6 +248,7 @@ test('should update project', async () => {
     expect(updatedProject.name).toBe(readProject.name);
     expect(updatedProject.description).toBe(readProject.description);
     expect(updatedProject.mode).toBe('protected');
+    expect(updatedProject.defaultStickiness).toBe('userId');
 });
 
 test('should update project without existing settings', async () => {
@@ -248,6 +257,7 @@ test('should update project without existing settings', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'default',
     };
 
     const updatedProject = {
@@ -255,6 +265,7 @@ test('should update project without existing settings', async () => {
         name: 'New name',
         description: 'Blah longer desc',
         mode: 'protected' as const,
+        defaultStickiness: 'clientId',
     };
 
     await projectService.createProject(project, user);
@@ -269,6 +280,7 @@ test('should update project without existing settings', async () => {
     expect(updatedProject.name).toBe(readProject.name);
     expect(updatedProject.description).toBe(readProject.description);
     expect(updatedProject.mode).toBe('protected');
+    expect(updatedProject.defaultStickiness).toBe('clientId');
 });
 
 test('should give error when getting unknown project', async () => {
@@ -285,6 +297,7 @@ test('should get list of users with access to project', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     await projectService.createProject(project, user);
     const { users } = await projectService.getAccessToProject(project.id);
@@ -307,6 +320,7 @@ test('should add a member user to the project', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     await projectService.createProject(project, user);
 
@@ -363,6 +377,7 @@ test('should add admin users to the project', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     await projectService.createProject(project, user);
 
@@ -410,6 +425,7 @@ test('add user should fail if user already have access', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     await projectService.createProject(project, user);
 
@@ -445,6 +461,7 @@ test('should remove user from the project', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     await projectService.createProject(project, user);
 
@@ -480,6 +497,7 @@ test('should not remove user from the project', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     await projectService.createProject(project, user);
 
@@ -504,6 +522,7 @@ test('should not change project if feature toggle project does not match current
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
 
     const toggle = { name: 'test-toggle' };
@@ -519,9 +538,8 @@ test('should not change project if feature toggle project does not match current
             'wrong-project-id',
         );
     } catch (err) {
-        expect(err.message).toBe(
-            `You need permission=${MOVE_FEATURE_TOGGLE} to perform this action`,
-        );
+        expect(err.message.toLowerCase().includes('permission')).toBeTruthy();
+        expect(err.message.includes(MOVE_FEATURE_TOGGLE)).toBeTruthy();
     }
 });
 
@@ -531,6 +549,7 @@ test('should return 404 if no project is found with the project id', async () =>
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
 
     const toggle = { name: 'test-toggle-2' };
@@ -556,6 +575,7 @@ test('should fail if user is not authorized', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
 
     const projectDestination = {
@@ -563,6 +583,7 @@ test('should fail if user is not authorized', async () => {
         name: 'New project 2',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
 
     const toggle = { name: 'test-toggle-3' };
@@ -583,9 +604,8 @@ test('should fail if user is not authorized', async () => {
             project.id,
         );
     } catch (err) {
-        expect(err.message).toBe(
-            `You need permission=${MOVE_FEATURE_TOGGLE} to perform this action`,
-        );
+        expect(err.message.toLowerCase().includes('permission')).toBeTruthy();
+        expect(err.message.includes(MOVE_FEATURE_TOGGLE)).toBeTruthy();
     }
 });
 
@@ -594,11 +614,13 @@ test('should change project when checks pass', async () => {
         id: randomId(),
         name: randomId(),
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     const projectB = {
         id: randomId(),
         name: randomId(),
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     const toggle = { name: randomId() };
 
@@ -623,11 +645,13 @@ test('changing project should emit event even if user does not have a username s
         id: randomId(),
         name: randomId(),
         mode: 'open' as const,
+        defaultStickiness: 'default',
     };
     const projectB = {
         id: randomId(),
         name: randomId(),
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     const toggle = { name: randomId() };
     await projectService.createProject(projectA, user);
@@ -649,11 +673,13 @@ test('should require equal project environments to move features', async () => {
         id: randomId(),
         name: randomId(),
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     const projectB = {
         id: randomId(),
         name: randomId(),
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     const environment = { name: randomId(), type: 'production' };
     const toggle = { name: randomId() };
@@ -683,6 +709,7 @@ test('A newly created project only gets connected to enabled environments', asyn
         name: 'New environment project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     const enabledEnv = 'connection_test';
     await db.stores.environmentStore.create({
@@ -710,6 +737,7 @@ test('should have environments sorted in order', async () => {
         name: 'Environment testing project',
         description: '',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     const first = 'test';
     const second = 'abc';
@@ -749,6 +777,7 @@ test('should add a user to the project with a custom role', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     await projectService.createProject(project, user);
 
@@ -800,6 +829,7 @@ test('should delete role entries when deleting project', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
 
     await projectService.createProject(project, user);
@@ -852,6 +882,7 @@ test('should change a users role in the project', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
 
     await projectService.createProject(project, user);
@@ -919,6 +950,7 @@ test('should update role for user on project', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     await projectService.createProject(project, user);
 
@@ -957,6 +989,7 @@ test('should able to assign role without existing members', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     await projectService.createProject(project, user);
 
@@ -1000,6 +1033,7 @@ test('should not update role for user on project when she is the owner', async (
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     await projectService.createProject(project, user);
 
@@ -1034,6 +1068,7 @@ test('Should allow bulk update of group permissions', async () => {
         id: 'bulk-update-project',
         name: 'bulk-update-project',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     await projectService.createProject(project, user.id);
     const groupStore = stores.groupStore;
@@ -1111,6 +1146,7 @@ test('Should allow bulk update of only groups', async () => {
         id: 'bulk-update-project-only',
         name: 'bulk-update-project-only',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
     const groupStore = stores.groupStore;
 
@@ -1152,6 +1188,7 @@ test('should only count active feature toggles for project', async () => {
         name: 'New project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
 
     await projectService.createProject(project, user);
@@ -1180,6 +1217,7 @@ test('should list projects with all features archived', async () => {
         name: 'Listed project',
         description: 'Blah',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
 
     await projectService.createProject(project, user);
@@ -1216,6 +1254,7 @@ test('should calculate average time to production', async () => {
         id: 'average-time-to-prod',
         name: 'average-time-to-prod',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
 
     await projectService.createProject(project, user.id);
@@ -1269,11 +1308,101 @@ test('should calculate average time to production', async () => {
     expect(result.updates.avgTimeToProdCurrentWindow).toBe(11.4);
 });
 
+test('should calculate average time to production ignoring some items', async () => {
+    const project = {
+        id: 'average-time-to-prod-corner-cases',
+        name: 'average-time-to-prod',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+    const makeEvent = (featureName: string) => ({
+        enabled: true,
+        project: project.id,
+        featureName,
+        environment: 'default',
+        createdBy: 'Fredrik',
+        tags: [],
+    });
+
+    await projectService.createProject(project, user.id);
+    await stores.environmentStore.create({
+        name: 'customEnv',
+        type: 'development',
+    });
+    await environmentService.addEnvironmentToProject('customEnv', project.id);
+
+    // actual toggle we take for calculations
+    const toggle = { name: 'main-toggle' };
+    await featureToggleService.createFeatureToggle(project.id, toggle, user);
+    await updateFeature(toggle.name, {
+        created_at: subDays(new Date(), 20),
+    });
+    await stores.eventStore.store(
+        new FeatureEnvironmentEvent(makeEvent(toggle.name)),
+    );
+    // ignore events added after first enabled
+    await updateEventCreatedAt(addDays(new Date(), 1), toggle.name);
+    await stores.eventStore.store(
+        new FeatureEnvironmentEvent(makeEvent(toggle.name)),
+    );
+
+    // ignore toggles enabled in non-prod envs
+    const devToggle = { name: 'dev-toggle' };
+    await featureToggleService.createFeatureToggle(project.id, devToggle, user);
+    await stores.eventStore.store(
+        new FeatureEnvironmentEvent({
+            ...makeEvent(devToggle.name),
+            environment: 'customEnv',
+        }),
+    );
+
+    // ignore toggles from other projects
+    const otherProjectToggle = { name: 'other-project' };
+    await featureToggleService.createFeatureToggle(
+        'default',
+        otherProjectToggle,
+        user,
+    );
+    await stores.eventStore.store(
+        new FeatureEnvironmentEvent(makeEvent(otherProjectToggle.name)),
+    );
+
+    // ignore non-release toggles
+    const nonReleaseToggle = { name: 'permission-toggle', type: 'permission' };
+    await featureToggleService.createFeatureToggle(
+        project.id,
+        nonReleaseToggle,
+        user,
+    );
+    await stores.eventStore.store(
+        new FeatureEnvironmentEvent(makeEvent(nonReleaseToggle.name)),
+    );
+
+    // ignore toggles with events before toggle creation time
+    const previouslyDeleteToggle = { name: 'previously-deleted' };
+    await featureToggleService.createFeatureToggle(
+        project.id,
+        previouslyDeleteToggle,
+        user,
+    );
+    await stores.eventStore.store(
+        new FeatureEnvironmentEvent(makeEvent(previouslyDeleteToggle.name)),
+    );
+    await updateEventCreatedAt(
+        subDays(new Date(), 30),
+        previouslyDeleteToggle.name,
+    );
+
+    const result = await projectService.getStatusUpdates(project.id);
+    expect(result.updates.avgTimeToProdCurrentWindow).toBe(20);
+});
+
 test('should get correct amount of features created in current and past window', async () => {
     const project = {
         id: 'features-created',
         name: 'features-created',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
 
     await projectService.createProject(project, user.id);
@@ -1310,6 +1439,7 @@ test('should get correct amount of features archived in current and past window'
         id: 'features-archived',
         name: 'features-archived',
         mode: 'open' as const,
+        defaultStickiness: 'clientId',
     };
 
     await projectService.createProject(project, user.id);
@@ -1360,6 +1490,7 @@ test('should get correct amount of project members for current and past window',
         id: 'features-members',
         name: 'features-members',
         mode: 'open' as const,
+        defaultStickiness: 'default',
     };
 
     await projectService.createProject(project, user.id);

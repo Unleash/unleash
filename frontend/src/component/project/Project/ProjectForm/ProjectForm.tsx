@@ -9,11 +9,10 @@ import {
     StyledInput,
     StyledTextField,
 } from './ProjectForm.styles';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Select from 'component/common/select';
-import { DefaultStickiness, ProjectMode } from '../hooks/useProjectForm';
+import { ProjectMode } from '../hooks/useProjectForm';
 import { Box } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 
@@ -23,9 +22,7 @@ interface IProjectForm {
     projectDesc: string;
     projectStickiness?: string;
     projectMode?: string;
-    setProjectStickiness?: React.Dispatch<
-        React.SetStateAction<DefaultStickiness>
-    >;
+    setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
@@ -62,10 +59,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
     validateProjectId,
     clearErrors,
 }) => {
-    const { uiConfig } = useUiConfig();
-    const { projectScopedStickiness, projectMode: projectModeFlag } =
-        uiConfig.flags;
-
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
@@ -112,10 +105,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 />
 
                 <ConditionallyRender
-                    condition={
-                        Boolean(projectScopedStickiness) &&
-                        setProjectStickiness != null
-                    }
+                    condition={setProjectStickiness != null}
                     show={
                         <>
                             <StyledDescription>
@@ -127,44 +117,40 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 data-testid={PROJECT_STICKINESS_SELECT}
                                 onChange={e =>
                                     setProjectStickiness &&
-                                    setProjectStickiness(
-                                        e.target.value as DefaultStickiness
-                                    )
+                                    setProjectStickiness(e.target.value)
                                 }
                                 editable
                             />
                         </>
                     }
                 />
-                <ConditionallyRender
-                    condition={Boolean(projectModeFlag)}
-                    show={
-                        <>
-                            <Box sx={{ display: 'flex' }}>
-                                <StyledDescription>
-                                    What is your project collaboration mode?
-                                </StyledDescription>
-                                <CollaborationModeTooltip />
-                            </Box>
-                            <Select
-                                id="project-mode"
-                                value={projectMode}
-                                label="Project collaboration mode"
-                                name="Project collaboration mode"
-                                onChange={e => {
-                                    setProjectMode?.(
-                                        e.target.value as ProjectMode
-                                    );
-                                }}
-                                options={[
-                                    { key: 'open', label: 'open' },
-                                    { key: 'protected', label: 'protected' },
-                                ]}
-                                style={{ minWidth: '200px' }}
-                            ></Select>
-                        </>
-                    }
-                />
+                <>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginBottom: 1,
+                            gap: 1,
+                        }}
+                    >
+                        <p>What is your project collaboration mode?</p>
+                        <CollaborationModeTooltip />
+                    </Box>
+                    <Select
+                        id="project-mode"
+                        value={projectMode}
+                        label="Project collaboration mode"
+                        name="Project collaboration mode"
+                        onChange={e => {
+                            setProjectMode?.(e.target.value as ProjectMode);
+                        }}
+                        options={[
+                            { key: 'open', label: 'open' },
+                            { key: 'protected', label: 'protected' },
+                        ]}
+                        style={{ minWidth: '200px' }}
+                    ></Select>
+                </>
             </StyledContainer>
 
             <StyledButtonContainer>

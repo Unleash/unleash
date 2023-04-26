@@ -5,9 +5,16 @@
  */
 import type { ConstraintSchema } from './constraintSchema';
 
+/**
+ * Represents a segment of users defined by a set of constraints.
+ */
 export interface SegmentSchema {
+    /** The segment's id. */
     id: number;
+    /** The name of the segment. */
     name?: string;
+    /** The description of the segment. */
     description?: string | null;
+    /** List of constraints that determine which users are part of the segment */
     constraints: ConstraintSchema[];
 }

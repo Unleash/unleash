@@ -1,7 +1,11 @@
 import { Response } from 'express';
 import Controller from '../../controller';
 import { Logger } from '../../../logger';
-import { IUnleashConfig, IUnleashServices } from '../../../types';
+import {
+    IFlagResolver,
+    IUnleashConfig,
+    IUnleashServices,
+} from '../../../types';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { OpenApiService } from '../../../services/openapi-service';
@@ -21,6 +25,8 @@ export default class PatController extends Controller {
 
     private logger: Logger;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -30,6 +36,7 @@ export default class PatController extends Controller {
     ) {
         super(config);
         this.logger = config.getLogger('lib/routes/auth/pat-controller.ts');
+        this.flagResolver = config.flagResolver;
         this.openApiService = openApiService;
         this.patService = patService;
         this.route({
@@ -77,6 +84,11 @@ export default class PatController extends Controller {
     }
 
     async createPat(req: IAuthRequest, res: Response): Promise<void> {
+        if (this.flagResolver.isEnabled('personalAccessTokensKillSwitch')) {
+            res.status(404).send({ message: 'PAT is disabled' });
+            return;
+        }
+
         const pat = req.body;
         const createdPat = await this.patService.createPat(
             pat,
@@ -92,6 +104,10 @@ export default class PatController extends Controller {
     }
 
     async getPats(req: IAuthRequest, res: Response<PatSchema>): Promise<void> {
+        if (this.flagResolver.isEnabled('personalAccessTokensKillSwitch')) {
+            res.status(404).send({ message: 'PAT is disabled' });
+            return;
+        }
         const pats = await this.patService.getAll(req.user.id);
         this.openApiService.respondWithValidation(200, res, patsSchema.$id, {
             pats: serializeDates(pats),

@@ -1,4 +1,6 @@
 import { ApiTokenType } from './models/api-token';
+import { ValidationError } from 'joi';
+
 import { CLIENT } from './permissions';
 
 interface IApiUserData {
@@ -36,7 +38,7 @@ export default class ApiUser {
         secret,
     }: IApiUserData) {
         if (!username) {
-            throw new TypeError('username is required');
+            throw new ValidationError('username is required', [], undefined);
         }
         this.username = username;
         this.permissions = permissions;

@@ -33,7 +33,7 @@ Unleash currently also work with PostgreSQL v12+, but this might change in a fut
 
 ```bash
 $ psql postgres <<SQL
-CREATE USER unleash_user WITH PASSWORD 'passord';
+CREATE USER unleash_user WITH PASSWORD 'password';
 CREATE DATABASE unleash;
 GRANT ALL PRIVILEGES ON DATABASE unleash to unleash_user;
 CREATE DATABASE unleash_test;
@@ -42,15 +42,15 @@ ALTER DATABASE unleash_test SET timezone TO 'UTC';
 SQL
 ```
 
-> Password is intentionally set to 'passord', which is the Norwegian word for password.
+> Password is intentionally set to 'password', which is the Norwegian word for password.
 
 Then set env vars:
 
 (Optional as unleash will assume these as default values).
 
 ```
-export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash
-export TEST_DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash_test
+export DATABASE_URL=postgres://unleash_user:password@localhost:5432/unleash
+export TEST_DATABASE_URL=postgres://unleash_user:password@localhost:5432/unleash_test
 ```
 
 ## PostgreSQL with docker {#postgresql-with-docker}
@@ -86,7 +86,7 @@ We use database migrations to track database changes. Never change a migration t
 
 To run migrations, you will set the environment variable for DATABASE_URL
 
-`export DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash`
+`export DATABASE_URL=postgres://unleash_user:password@localhost:5432/unleash`
 
 Use db-migrate to create new migrations file.
 

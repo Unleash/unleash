@@ -1,11 +1,19 @@
 import { useContext, useMemo, useState } from 'react';
-import { Box, Button, IconButton, Tooltip, useTheme } from '@mui/material';
+import {
+    Box,
+    Button,
+    IconButton,
+    Tooltip,
+    useTheme,
+    styled,
+    useMediaQuery,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { ReactComponent as Logo } from 'assets/icons/logoPlain.svg';
+import { ReactComponent as UnleashLogo } from 'assets/icons/logoBg.svg';
+import { ReactComponent as UnleashLogoWhite } from 'assets/icons/logoWhiteBg.svg';
 import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
-    contentSpacingY,
     fadeInTopEnter,
     fadeInTopLeave,
     fadeInTopStart,
@@ -17,6 +25,13 @@ import {
 } from 'component/feedback/FeedbackNPS/showNPSFeedback';
 import { useAuthFeedback } from 'hooks/api/getters/useAuth/useAuthFeedback';
 import { useAuthFeedbackApi } from 'hooks/api/actions/useAuthFeedbackApi/useAuthFeedbackApi';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+
+const StyledHeader = styled('h3')(({ theme }) => ({
+    margin: 0,
+    color: theme.palette.text.primary,
+    marginLeft: theme.spacing(1),
+}));
 
 interface IFeedbackNPSProps {
     openUrl: string;
@@ -29,14 +44,29 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
     const [answeredNotNow, setAnsweredNotNow] = useState(false);
     const theme = useTheme();
     const feedbackId = PNPS_FEEDBACK_ID;
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const animations = useMemo(
         () => ({
-            start: { ...fadeInTopStart(theme), zIndex: theme.zIndex.tooltip },
+            start: {
+                ...fadeInTopStart(theme),
+                zIndex: theme.zIndex.tooltip,
+                right: theme.spacing(4),
+                top: theme.spacing(2),
+                left: 'auto',
+                maxWidth: '400px',
+                ...(isSmallScreen && {
+                    right: theme.spacing(3),
+                    left: theme.spacing(3),
+                    top: theme.spacing(5),
+                    display: 'flex',
+                    maxWidth: '600px',
+                }),
+            },
             enter: fadeInTopEnter,
             leave: fadeInTopLeave,
         }),
-        [theme]
+        [theme, isSmallScreen]
     );
 
     const onConfirm = async () => {
@@ -77,48 +107,51 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
             leave={animations.leave}
         >
             <Box
+                className="dropdown-outline"
                 sx={{
                     borderRadius: `${theme.shape.borderRadiusLarge}px`,
                     backgroundColor: theme.palette.background.paper,
                     zIndex: 9999,
                     boxShadow: theme.boxShadows.elevated,
-                    padding: theme.spacing(3),
-                    maxWidth: '400px',
+                    padding: theme.spacing(4),
+                    flexGrow: 1,
                 }}
             >
                 <Box
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
+                        rowGap: theme.spacing(1.5),
                         position: 'relative',
-                        ...contentSpacingY(theme),
                     }}
                 >
                     <Tooltip title="Close" arrow>
                         <IconButton
-                            sx={{
+                            sx={theme => ({
                                 position: 'absolute',
-                                right: '-38px',
-                                top: '-47px',
-                                backgroundColor: theme.palette.background.paper,
-                                boxShadow: theme.boxShadows.elevated,
-                                '&:hover': {
-                                    backgroundColor:
-                                        theme.palette.background.paper,
-                                },
-                            }}
+                                right: theme.spacing(-4),
+                                top: theme.spacing(-4),
+                            })}
                             onClick={() => setShowFeedback(false)}
                             size="large"
                         >
                             <CloseIcon />
                         </IconButton>
                     </Tooltip>
-                    <Logo
-                        style={{
-                            width: '25px',
-                            height: '25px',
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
                         }}
-                    />
+                    >
+                        <ThemeMode
+                            darkmode={<UnleashLogoWhite />}
+                            lightmode={<UnleashLogo />}
+                        />
+                        <StyledHeader>Unleash feedback</StyledHeader>
+                    </Box>
+
                     <ConditionallyRender
                         condition={answeredNotNow}
                         show={
@@ -135,7 +168,12 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                         }
                     />
 
-                    <Box>
+                    <Box
+                        sx={{
+                            textAlign: 'right',
+                            marginTop: theme.spacing(2.5),
+                        }}
+                    >
                         <ConditionallyRender
                             condition={answeredNotNow}
                             show={

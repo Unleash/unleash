@@ -44,6 +44,13 @@ const createUserViewerAccess = async (name, email) => {
     return user;
 };
 
+const createUserAdminAccess = async (name, email) => {
+    const { userStore } = stores;
+    const user = await userStore.insert({ name, email });
+    await accessService.addUserToRole(user.id, adminRole.id, 'default');
+    return user;
+};
+
 const hasCommonProjectAccess = async (user, projectName, condition) => {
     const defaultEnv = 'default';
     const developmentEnv = 'development';
@@ -769,9 +776,11 @@ test('Should be denied move feature toggle to project where the user does not ha
             projectOrigin.id,
         );
     } catch (e) {
-        expect(e.toString()).toBe(
-            'NoAccessError: You need permission=MOVE_FEATURE_TOGGLE to perform this action',
-        );
+        expect(e.name).toContain('NoAccess');
+        expect(e.message.includes('permission')).toBeTruthy();
+        expect(
+            e.message.includes(permissions.MOVE_FEATURE_TOGGLE),
+        ).toBeTruthy();
     }
 });
 
@@ -1061,4 +1070,182 @@ test('Should allow user to take multiple group roles and have expected permissio
             projectForDelete.id,
         ),
     ).toBe(true);
+});
+
+test('Should allow user to take on root role through a group that has a root role defined', async () => {
+    const groupStore = stores.groupStore;
+
+    const viewerUser = await createUserViewerAccess(
+        'Vincent Viewer',
+        'vincent@getunleash.io',
+    );
+
+    const groupWithRootAdminRole = await groupStore.create({
+        name: 'GroupThatGrantsAdminRights',
+        description: '',
+        rootRole: adminRole.id,
+    });
+
+    await groupStore.addUsersToGroup(
+        groupWithRootAdminRole.id!,
+        [{ user: viewerUser }],
+        'Admin',
+    );
+
+    expect(
+        await accessService.hasPermission(viewerUser, permissions.ADMIN),
+    ).toBe(true);
+});
+
+test('Should not elevate permissions for a user that is not present in a root role group', async () => {
+    const groupStore = stores.groupStore;
+
+    const viewerUser = await createUserViewerAccess(
+        'Violet Viewer',
+        'violet@getunleash.io',
+    );
+
+    const viewerUserNotInGroup = await createUserViewerAccess(
+        'Veronica Viewer',
+        'veronica@getunleash.io',
+    );
+
+    const groupWithRootAdminRole = await groupStore.create({
+        name: 'GroupThatGrantsAdminRights',
+        description: '',
+        rootRole: adminRole.id,
+    });
+
+    await groupStore.addUsersToGroup(
+        groupWithRootAdminRole.id!,
+        [{ user: viewerUser }],
+        'Admin',
+    );
+
+    expect(
+        await accessService.hasPermission(viewerUser, permissions.ADMIN),
+    ).toBe(true);
+
+    expect(
+        await accessService.hasPermission(
+            viewerUserNotInGroup,
+            permissions.ADMIN,
+        ),
+    ).toBe(false);
+});
+
+test('Should not reduce permissions for an admin user that enters an editor group', async () => {
+    const groupStore = stores.groupStore;
+
+    const adminUser = await createUserAdminAccess(
+        'Austin Admin',
+        'austin@getunleash.io',
+    );
+
+    const groupWithRootEditorRole = await groupStore.create({
+        name: 'GroupThatGrantsEditorRights',
+        description: '',
+        rootRole: editorRole.id,
+    });
+
+    await groupStore.addUsersToGroup(
+        groupWithRootEditorRole.id!,
+        [{ user: adminUser }],
+        'Admin',
+    );
+
+    expect(
+        await accessService.hasPermission(adminUser, permissions.ADMIN),
+    ).toBe(true);
+});
+
+test('Should not change permissions for a user in a group without a root role', async () => {
+    const groupStore = stores.groupStore;
+
+    const viewerUser = await createUserViewerAccess(
+        'Virgil Viewer',
+        'virgil@getunleash.io',
+    );
+
+    const groupWithoutRootRole = await groupStore.create({
+        name: 'GroupWithNoRootRole',
+        description: '',
+    });
+
+    const preAddedToGroupPermissions =
+        await accessService.getPermissionsForUser(viewerUser);
+
+    await groupStore.addUsersToGroup(
+        groupWithoutRootRole.id!,
+        [{ user: viewerUser }],
+        'Admin',
+    );
+
+    const postAddedToGroupPermissions =
+        await accessService.getPermissionsForUser(viewerUser);
+
+    expect(
+        JSON.stringify(preAddedToGroupPermissions) ===
+            JSON.stringify(postAddedToGroupPermissions),
+    ).toBe(true);
+});
+
+test('Should add permissions to user when a group is given a root role after the user has been added to the group', async () => {
+    const groupStore = stores.groupStore;
+
+    const viewerUser = await createUserViewerAccess(
+        'Vera Viewer',
+        'vera@getunleash.io',
+    );
+
+    const groupWithoutRootRole = await groupStore.create({
+        name: 'GroupWithNoRootRole',
+        description: '',
+    });
+
+    await groupStore.addUsersToGroup(
+        groupWithoutRootRole.id!,
+        [{ user: viewerUser }],
+        'Admin',
+    );
+
+    expect(
+        await accessService.hasPermission(viewerUser, permissions.ADMIN),
+    ).toBe(false);
+
+    await groupStore.update({
+        id: groupWithoutRootRole.id!,
+        name: 'GroupWithNoRootRole',
+        rootRole: adminRole.id,
+        users: [{ user: viewerUser }],
+    });
+
+    expect(
+        await accessService.hasPermission(viewerUser, permissions.ADMIN),
+    ).toBe(true);
+});
+
+test('Should give full project access to the default project to user in a group with an editor root role', async () => {
+    const projectName = 'default';
+
+    const groupStore = stores.groupStore;
+
+    const viewerUser = await createUserViewerAccess(
+        'Vee viewer',
+        'vee@getunleash.io',
+    );
+
+    const groupWithRootEditorRole = await groupStore.create({
+        name: 'GroupThatGrantsEditorRights',
+        description: '',
+        rootRole: editorRole.id,
+    });
+
+    await groupStore.addUsersToGroup(
+        groupWithRootEditorRole.id!,
+        [{ user: viewerUser }],
+        'Admin',
+    );
+
+    await hasFullProjectAccess(viewerUser, projectName, true);
 });

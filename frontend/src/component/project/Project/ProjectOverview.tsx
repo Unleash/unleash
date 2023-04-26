@@ -60,10 +60,7 @@ const ProjectOverview = () => {
                 stats={stats}
             />
             <StyledContentContainer>
-                <ConditionallyRender
-                    condition={Boolean(uiConfig?.flags.newProjectOverview)}
-                    show={<ProjectStats stats={project.stats} />}
-                />
+                <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
                         features={features}

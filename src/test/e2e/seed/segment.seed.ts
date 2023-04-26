@@ -33,13 +33,6 @@ const fetchSegments = (app: IUnleashTest): Promise<ISegment[]> => {
     return app.services.segmentService.getAll();
 };
 
-const fetchFeatures = (app: IUnleashTest): Promise<IFeatureToggleClient[]> => {
-    return app.request
-        .get('/api/admin/features')
-        .expect(200)
-        .then((res) => res.body.features);
-};
-
 const createSegment = (
     app: IUnleashTest,
     postData: UpsertSegmentSchema,
@@ -52,11 +45,12 @@ const createFeatureToggle = (
     app: IUnleashTest,
     postData: object,
     expectStatusCode = 201,
-): Promise<unknown> => {
+): Promise<IFeatureToggleClient> => {
     return app.request
         .post('/api/admin/features')
         .send(postData)
-        .expect(expectStatusCode);
+        .expect(expectStatusCode)
+        .then((res) => res.body);
 };
 
 const addSegmentToStrategy = (
@@ -116,13 +110,12 @@ const seedSegmentsDatabase = async (
         }),
     );
 
-    await Promise.all(
-        seedFeatures(spec).map((seed) => {
+    const features = await Promise.all(
+        seedFeatures(spec).map(async (seed) => {
             return createFeatureToggle(app, seed);
         }),
     );
 
-    const features = await fetchFeatures(app);
     const segments = await fetchSegments(app);
     assert(features.length === spec.featuresCount);
     assert(segments.length === spec.segmentsPerFeature);

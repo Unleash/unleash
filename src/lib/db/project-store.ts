@@ -33,7 +33,7 @@ const COLUMNS = [
     'updated_at',
 ];
 const TABLE = 'projects';
-const SETTINGS_COLUMNS = ['project_mode'];
+const SETTINGS_COLUMNS = ['project_mode', 'default_stickiness'];
 const SETTINGS_TABLE = 'project_settings';
 
 export interface IEnvironmentProjectLink {
@@ -391,14 +391,12 @@ class ProjectStore implements IProjectStore {
     }
 
     async getProjectsByUser(userId: number): Promise<string[]> {
-        const members = await this.db
+        const projects = await this.db
             .from((db) => {
                 db.select('project')
                     .from('role_user')
                     .leftJoin('roles', 'role_user.role_id', 'roles.id')
-                    .where('type', 'root')
-                    .andWhere('name', 'Editor')
-                    .andWhere('user_id', userId)
+                    .where('user_id', userId)
                     .union((queryBuilder) => {
                         queryBuilder
                             .select('project')
@@ -413,7 +411,7 @@ class ProjectStore implements IProjectStore {
                     .as('query');
             })
             .pluck('project');
-        return members;
+        return projects;
     }
 
     async getMembersCountByProject(projectId: string): Promise<number> {
@@ -533,6 +531,7 @@ class ProjectStore implements IProjectStore {
             health: row.health ?? 100,
             updatedAt: row.updated_at || new Date(),
             mode: row.project_mode || 'open',
+            defaultStickiness: row.default_stickiness || 'default',
         };
     }
 }

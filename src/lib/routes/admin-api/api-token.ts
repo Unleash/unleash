@@ -200,7 +200,7 @@ export class ApiTokenController extends Controller {
         const { token } = req.params;
 
         await this.apiTokenService.delete(token, extractUsername(req));
-        this.proxyService.deleteClientForProxyToken(token);
+        await this.proxyService.deleteClientForProxyToken(token);
         res.status(200).end();
     }
 

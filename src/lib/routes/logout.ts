@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { promisify } from 'util';
-import { IUnleashConfig } from '../types';
+import { IUnleashConfig, NONE } from '../types';
 import Controller from './controller';
 import { IAuthRequest } from './unleash-types';
 import { IUnleashServices } from '../types';
@@ -24,7 +24,14 @@ class LogoutController extends Controller {
         this.baseUri = config.server.baseUriPath;
         this.clearSiteDataOnLogout = config.session.clearSiteDataOnLogout;
         this.cookieName = config.session.cookieName;
-        this.get('/', this.logout);
+
+        this.route({
+            method: 'post',
+            path: '/',
+            handler: this.logout,
+            permission: NONE,
+            acceptAnyContentType: true,
+        });
     }
 
     async logout(req: IAuthRequest, res: Response): Promise<void> {

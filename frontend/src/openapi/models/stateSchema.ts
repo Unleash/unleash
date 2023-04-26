@@ -15,6 +15,10 @@ import type { EnvironmentSchema } from './environmentSchema';
 import type { SegmentSchema } from './segmentSchema';
 import type { FeatureStrategySegmentSchema } from './featureStrategySegmentSchema';
 
+/**
+ * The state of the application used by export/import APIs which are deprecated in favor of the more fine grained /api/admin/export and /api/admin/import APIs
+ * @deprecated
+ */
 export interface StateSchema {
     version: number;
     features?: FeatureSchema[];

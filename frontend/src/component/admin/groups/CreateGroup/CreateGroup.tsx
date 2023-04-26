@@ -26,6 +26,8 @@ export const CreateGroup = () => {
         setMappingsSSO,
         users,
         setUsers,
+        rootRole,
+        setRootRole,
         getGroupPayload,
         clearErrors,
         errors,
@@ -95,10 +97,12 @@ export const CreateGroup = () => {
                 name={name}
                 description={description}
                 mappingsSSO={mappingsSSO}
+                rootRole={rootRole}
                 users={users}
                 setName={onSetName}
                 setDescription={setDescription}
                 setMappingsSSO={setMappingsSSO}
+                setRootRole={setRootRole}
                 setUsers={setUsers}
                 errors={errors}
                 handleSubmit={handleSubmit}

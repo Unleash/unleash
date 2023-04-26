@@ -1,5 +1,5 @@
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
     CategoryScale,
@@ -16,6 +16,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import 'chartjs-adapter-date-fns';
 import { createChartData } from './createChartData';
 import { createChartOptions } from './createChartOptions';
+import { useTheme } from '@mui/material';
 
 interface IFeatureMetricsChartProps {
     metrics: IFeatureMetricsRaw[];
@@ -28,6 +29,7 @@ export const FeatureMetricsChart = ({
     hoursBack,
     statsSectionId,
 }: IFeatureMetricsChartProps) => {
+    const theme = useTheme();
     const { locationSettings } = useLocationSettings();
 
     const sortedMetrics = useMemo(() => {
@@ -37,12 +39,17 @@ export const FeatureMetricsChart = ({
     }, [metrics]);
 
     const options = useMemo(() => {
-        return createChartOptions(sortedMetrics, hoursBack, locationSettings);
-    }, [sortedMetrics, hoursBack, locationSettings]);
+        return createChartOptions(
+            theme,
+            sortedMetrics,
+            hoursBack,
+            locationSettings
+        );
+    }, [theme, sortedMetrics, hoursBack, locationSettings]);
 
     const data = useMemo(() => {
-        return createChartData(sortedMetrics, locationSettings);
-    }, [sortedMetrics, locationSettings]);
+        return createChartData(theme, sortedMetrics, locationSettings);
+    }, [theme, sortedMetrics, locationSettings]);
 
     return (
         <div style={{ height: 400 }}>

@@ -1,4 +1,5 @@
 import { subDays } from 'date-fns';
+import { ValidationError } from 'joi';
 import User, { IUser } from '../types/user';
 import { AccessService } from './access-service';
 import NameExistsError from '../error/name-exists-error';
@@ -8,7 +9,6 @@ import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
     DEFAULT_PROJECT,
-    FEATURE_ENVIRONMENT_ENABLED,
     FeatureToggle,
     IAccountStore,
     IEnvironmentStore,
@@ -54,7 +54,7 @@ import { arraysHaveSameItems } from '../util';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
-import { TimeToProduction } from '../read-models/time-to-production/time-to-production';
+import { calculateAverageTimeToProd } from '../features/feature-toggle/time-to-production/time-to-production';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 import { uniqueByKey } from '../util/unique';
 
@@ -424,7 +424,12 @@ export default class ProjectService {
         const role = await this.accessService.getRole(roleId);
         const group = await this.groupService.getGroup(groupId);
         const project = await this.getProject(projectId);
-        if (group.id == null) throw new TypeError('Unexpected empty group id');
+        if (group.id == null)
+            throw new ValidationError(
+                'Unexpected empty group id',
+                [],
+                undefined,
+            );
 
         await this.accessService.addGroupToRole(
             group.id,
@@ -455,7 +460,12 @@ export default class ProjectService {
         const group = await this.groupService.getGroup(groupId);
         const role = await this.accessService.getRole(roleId);
         const project = await this.getProject(projectId);
-        if (group.id == null) throw new TypeError('Unexpected empty group id');
+        if (group.id == null)
+            throw new ValidationError(
+                'Unexpected empty group id',
+                [],
+                undefined,
+            );
 
         await this.accessService.removeGroupFromRole(
             group.id,
@@ -544,12 +554,18 @@ export default class ProjectService {
     ): Promise<void> {
         const usersWithRoles = await this.getAccessToProject(projectId);
         const user = usersWithRoles.users.find((u) => u.id === userId);
-        if (!user) throw new TypeError('Unexpected empty user');
+        if (!user)
+            throw new ValidationError('Unexpected empty user', [], undefined);
 
         const currentRole = usersWithRoles.roles.find(
             (r) => r.id === user.roleId,
         );
-        if (!currentRole) throw new TypeError('Unexpected empty current role');
+        if (!currentRole)
+            throw new ValidationError(
+                'Unexpected empty current role',
+                [],
+                undefined,
+            );
 
         if (currentRole.id === roleId) {
             // Nothing to do....
@@ -593,11 +609,17 @@ export default class ProjectService {
     ): Promise<void> {
         const usersWithRoles = await this.getAccessToProject(projectId);
         const user = usersWithRoles.groups.find((u) => u.id === userId);
-        if (!user) throw new TypeError('Unexpected empty user');
+        if (!user)
+            throw new ValidationError('Unexpected empty user', [], undefined);
         const currentRole = usersWithRoles.roles.find(
             (r) => r.id === user.roleId,
         );
-        if (!currentRole) throw new TypeError('Unexpected empty current role');
+        if (!currentRole)
+            throw new ValidationError(
+                'Unexpected empty current role',
+                [],
+                undefined,
+            );
 
         if (currentRole.id === roleId) {
             // Nothing to do....
@@ -667,63 +689,49 @@ export default class ProjectService {
     }
 
     async statusJob(): Promise<void> {
-        if (this.flagResolver.isEnabled('projectStatusApi')) {
-            const projects = await this.store.getAll();
+        const projects = await this.store.getAll();
 
-            const statusUpdates = await Promise.all(
-                projects.map((project) => this.getStatusUpdates(project.id)),
-            );
+        const statusUpdates = await Promise.all(
+            projects.map((project) => this.getStatusUpdates(project.id)),
+        );
 
-            await Promise.all(
-                statusUpdates.map((statusUpdate) => {
-                    return this.projectStatsStore.updateProjectStats(
-                        statusUpdate.projectId,
-                        statusUpdate.updates,
-                    );
-                }),
-            );
-        } else {
-            this.logger.info('Project status API is disabled');
-        }
+        await Promise.all(
+            statusUpdates.map((statusUpdate) => {
+                return this.projectStatsStore.updateProjectStats(
+                    statusUpdate.projectId,
+                    statusUpdate.updates,
+                );
+            }),
+        );
     }
 
     async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {
-        // Get all features for project with type release
-        const features = await this.featureToggleStore.getAll({
-            type: 'release',
-            project: projectId,
-        });
-
-        const archivedFeatures = await this.featureToggleStore.getAll({
-            archived: true,
-            type: 'release',
-            project: projectId,
-        });
-
         const dateMinusThirtyDays = subDays(new Date(), 30).toISOString();
         const dateMinusSixtyDays = subDays(new Date(), 60).toISOString();
 
-        const [createdCurrentWindow, createdPastWindow] = await Promise.all([
-            await this.featureToggleStore.getByDate({
+        const [
+            createdCurrentWindow,
+            createdPastWindow,
+            archivedCurrentWindow,
+            archivedPastWindow,
+        ] = await Promise.all([
+            await this.featureToggleStore.countByDate({
                 project: projectId,
                 dateAccessor: 'created_at',
                 date: dateMinusThirtyDays,
             }),
-            await this.featureToggleStore.getByDate({
+            await this.featureToggleStore.countByDate({
                 project: projectId,
                 dateAccessor: 'created_at',
                 range: [dateMinusSixtyDays, dateMinusThirtyDays],
             }),
-        ]);
-
-        const [archivedCurrentWindow, archivedPastWindow] = await Promise.all([
-            await this.featureToggleStore.getByDate({
+            await this.featureToggleStore.countByDate({
                 project: projectId,
                 archived: true,
                 dateAccessor: 'archived_at',
                 date: dateMinusThirtyDays,
             }),
-            await this.featureToggleStore.getByDate({
+            await this.featureToggleStore.countByDate({
                 project: projectId,
                 archived: true,
                 dateAccessor: 'archived_at',
@@ -755,33 +763,8 @@ export default class ProjectService {
                 ]),
             ]);
 
-        // Get all project environments with type of production
-        const productionEnvironments =
-            await this.environmentStore.getProjectEnvironments(projectId, {
-                type: 'production',
-            });
-
-        // Get all events for features that correspond to feature toggle environment ON
-        // Filter out events that are not a production evironment
-
-        const allFeatures = [...features, ...archivedFeatures];
-
-        const eventsData = await this.eventStore.query([
-            {
-                op: 'forFeatures',
-                parameters: {
-                    features: allFeatures.map((feature) => feature.name),
-                    environments: productionEnvironments.map((env) => env.name),
-                    type: FEATURE_ENVIRONMENT_ENABLED,
-                    projectId,
-                },
-            },
-        ]);
-
-        const currentWindowTimeToProdReadModel = new TimeToProduction(
-            allFeatures,
-            productionEnvironments,
-            eventsData,
+        const avgTimeToProdCurrentWindow = calculateAverageTimeToProd(
+            await this.projectStatsStore.getTimeToProdDates(projectId),
         );
 
         const projectMembersAddedCurrentWindow =
@@ -793,16 +776,14 @@ export default class ProjectService {
         return {
             projectId,
             updates: {
-                avgTimeToProdCurrentWindow:
-                    currentWindowTimeToProdReadModel.calculateAverageTimeToProd(),
-                createdCurrentWindow: createdCurrentWindow.length,
-                createdPastWindow: createdPastWindow.length,
-                archivedCurrentWindow: archivedCurrentWindow.length,
-                archivedPastWindow: archivedPastWindow.length,
-                projectActivityCurrentWindow: projectActivityCurrentWindow,
-                projectActivityPastWindow: projectActivityPastWindow,
-                projectMembersAddedCurrentWindow:
-                    projectMembersAddedCurrentWindow,
+                avgTimeToProdCurrentWindow,
+                createdCurrentWindow,
+                createdPastWindow,
+                archivedCurrentWindow,
+                archivedPastWindow,
+                projectActivityCurrentWindow,
+                projectActivityPastWindow,
+                projectMembersAddedCurrentWindow,
             },
         };
     }
@@ -836,13 +817,12 @@ export default class ProjectService {
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
         ]);
-
         return {
             stats: projectStats,
             name: project.name,
             description: project.description,
             mode: project.mode,
-            defaultStickiness: project.defaultStickiness || 'default',
+            defaultStickiness: project.defaultStickiness,
             health: project.health || 0,
             favorite: favorite,
             updatedAt: project.updatedAt,

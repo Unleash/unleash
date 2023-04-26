@@ -36,7 +36,6 @@ export interface IFlags {
     T?: boolean;
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;
-    ENABLE_DARK_MODE_SUPPORT?: boolean;
     embedProxyFrontend?: boolean;
     maintenanceMode?: boolean;
     messageBanner?: boolean;
@@ -44,14 +43,15 @@ export interface IFlags {
     newProjectOverview?: boolean;
     caseInsensitiveInOperators?: boolean;
     crOnVariants?: boolean;
-    showProjectApiAccess?: boolean;
     proPlanAutoCharge?: boolean;
     notifications?: boolean;
-    loginHistory?: boolean;
     bulkOperations?: boolean;
-    projectScopedSegments?: boolean;
-    projectScopedStickiness?: boolean;
-    projectMode?: boolean;
+    personalAccessTokensKillSwitch?: boolean;
+    demo?: boolean;
+    strategyTitle?: boolean;
+    groupRootRoles?: boolean;
+    strategyDisable?: boolean;
+    googleAuthEnabled?: boolean;
 }
 
 export interface IVersionInfo {

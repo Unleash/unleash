@@ -15,7 +15,7 @@ export interface FeatureSchema {
     type?: string;
     /** Detailed description of the feature */
     description?: string | null;
-    /** `true` if the feature is archived, otherwise `false`. */
+    /** `true` if the feature is archived */
     archived?: boolean;
     /** Name of the project the feature belongs to */
     project?: string;
@@ -31,9 +31,15 @@ export interface FeatureSchema {
     lastSeenAt?: string | null;
     /** The list of environments where the feature can be used */
     environments?: FeatureEnvironmentSchema[];
-    /** The list of feature variants */
+    /**
+     * The list of feature variants
+     * @deprecated
+     */
     variants?: VariantSchema[];
-    /** This is a legacy field that will be deprecated */
+    /**
+     * This is a legacy field that will be deprecated
+     * @deprecated
+     */
     strategies?: FeatureSchemaStrategiesItem[];
     /** The list of feature tags */
     tags?: TagSchema[] | null;

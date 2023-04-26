@@ -9,7 +9,7 @@
         "ecmaVersion": 2019,
         "project": "./tsconfig.json"
     },
-    "plugins": ["@typescript-eslint", "prettier", "import", "no-only-tests"],
+    "plugins": ["@typescript-eslint", "prettier", "import", "no-only-tests", "regexp"],
     "root": true,
     "rules": {
         "@typescript-eslint/no-var-requires": 0,
@@ -32,7 +32,11 @@
             {
                 "capIsNewExceptions": ["Router", "Mitm"]
             }
-        ]
+        ],
+        "regexp/no-super-linear-backtracking": "error",
+        "regexp/strict": "warn",
+        "regexp/no-useless-escape": "warn",
+        "prefer-regex-literals": "warn"
     },
     "overrides": [
         {

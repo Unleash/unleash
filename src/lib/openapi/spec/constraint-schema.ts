@@ -18,6 +18,7 @@ export const constraintSchemaBase = {
                 'The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators).',
             type: 'string',
             enum: ALL_OPERATORS,
+            example: 'IN',
         },
         caseInsensitive: {
             description:
@@ -38,11 +39,13 @@ export const constraintSchemaBase = {
             items: {
                 type: 'string',
             },
+            example: ['my-app', 'my-other-app'],
         },
         value: {
             description:
                 'The context value that should be used for constraint evaluation. Use this property instead of `values` for properties that only accept single values.',
             type: 'string',
+            example: 'my-app',
         },
     },
     components: {},

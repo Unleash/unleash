@@ -13,7 +13,7 @@ test('renders an empty list correctly', () => {
         <MemoryRouter>
             <ThemeProvider>
                 <AnnouncerProvider>
-                    <UIProvider darkmode={false}>
+                    <UIProvider>
                         <AccessProviderMock
                             permissions={[{ permission: ADMIN }]}
                         >

@@ -44,6 +44,7 @@ import { isValidField } from './import-context-validation';
 import { IImportTogglesStore } from './import-toggles-store-type';
 import { ImportPermissionsService } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
+import { UnleashError } from '../../error/api-error';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -365,11 +366,20 @@ export default class ExportImportService {
             Array.isArray(unsupportedContextFields) &&
             unsupportedContextFields.length > 0
         ) {
-            throw new BadDataError(
-                `Context fields with errors: ${unsupportedContextFields
-                    .map((field) => field.name)
-                    .join(', ')}`,
-            );
+            throw new UnleashError({
+                name: 'BadDataError',
+                message:
+                    'Some of the context fields you are trying to import are not supported.',
+                // @ts-ignore-error We know that the array contains at least one
+                // element here.
+                details: unsupportedContextFields.map((field) => {
+                    const description = `${field.name} is not supported.`;
+                    return {
+                        description,
+                        message: description,
+                    };
+                }),
+            });
         }
     }
 
@@ -441,11 +451,21 @@ export default class ExportImportService {
     private async verifyStrategies(dto: ImportTogglesSchema) {
         const unsupportedStrategies = await this.getUnsupportedStrategies(dto);
         if (unsupportedStrategies.length > 0) {
-            throw new BadDataError(
-                `Unsupported strategies: ${unsupportedStrategies
-                    .map((strategy) => strategy.name)
-                    .join(', ')}`,
-            );
+            throw new UnleashError({
+                name: 'BadDataError',
+                message:
+                    'Some of the strategies you are trying to import are not supported.',
+                // @ts-ignore-error We know that the array contains at least one
+                // element here.
+                details: unsupportedStrategies.map((strategy) => {
+                    const description = `${strategy.name} is not supported.`;
+
+                    return {
+                        description,
+                        message: description,
+                    };
+                }),
+            });
         }
     }
 

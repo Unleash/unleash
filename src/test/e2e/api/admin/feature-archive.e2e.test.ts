@@ -108,7 +108,7 @@ test('must set name when reviving toggle', async () => {
 test('should be allowed to reuse deleted toggle name', async () => {
     expect.assertions(2);
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'really.delete.feature',
             enabled: false,
@@ -121,8 +121,8 @@ test('should be allowed to reuse deleted toggle name', async () => {
             expect(res.body.createdAt).toBeTruthy();
         });
     await app.request
-        .delete('/api/admin/features/really.delete.feature')
-        .expect(200);
+        .delete('/api/admin/projects/default/features/really.delete.feature')
+        .expect(202);
     await app.request
         .delete('/api/admin/archive/really.delete.feature')
         .expect(200);
@@ -135,7 +135,7 @@ test('should be allowed to reuse deleted toggle name', async () => {
 test('Deleting an unarchived toggle should not take effect', async () => {
     expect.assertions(2);
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'really.delete.feature',
             enabled: false,
@@ -161,7 +161,7 @@ test('can bulk delete features and recreate after', async () => {
     const features = ['first.bulk.issue', 'second.bulk.issue'];
     for (const feature of features) {
         await app.request
-            .post('/api/admin/features')
+            .post('/api/admin/projects/default/features')
             .send({
                 name: feature,
                 enabled: false,
@@ -193,7 +193,7 @@ test('can bulk revive features', async () => {
     const features = ['first.revive.issue', 'second.revive.issue'];
     for (const feature of features) {
         await app.request
-            .post('/api/admin/features')
+            .post('/api/admin/projects/default/features')
             .send({
                 name: feature,
                 enabled: false,

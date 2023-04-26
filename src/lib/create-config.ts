@@ -310,6 +310,7 @@ const parseCspConfig = (
         scriptSrc: cspConfig.scriptSrc || [],
         imgSrc: cspConfig.imgSrc || [],
         styleSrc: cspConfig.styleSrc || [],
+        connectSrc: cspConfig.connectSrc || [],
     };
 };
 
@@ -319,12 +320,14 @@ const parseCspEnvironmentVariables = (): ICspDomainConfig => {
     const styleSrc = process.env.CSP_ALLOWED_STYLE?.split(',') || [];
     const scriptSrc = process.env.CSP_ALLOWED_SCRIPT?.split(',') || [];
     const imgSrc = process.env.CSP_ALLOWED_IMG?.split(',') || [];
+    const connectSrc = process.env.CSP_ALLOWED_CONNECT?.split(',') || [];
     return {
         defaultSrc,
         fontSrc,
         styleSrc,
         scriptSrc,
         imgSrc,
+        connectSrc,
     };
 };
 
@@ -435,10 +438,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const enableOAS =
         options.enableOAS || parseEnvVarBoolean(process.env.ENABLE_OAS, false);
 
-    const disableLegacyFeaturesApi =
-        options.disableLegacyFeaturesApi ||
-        parseEnvVarBoolean(process.env.DISABLE_LEGACY_FEATURES_API, false);
-
     const additionalCspAllowedDomains: ICspDomainConfig =
         parseCspConfig(options.additionalCspAllowedDomains) ||
         parseCspEnvironmentVariables();
@@ -481,7 +480,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         email,
         secureHeaders,
         enableOAS,
-        disableLegacyFeaturesApi,
         preHook: options.preHook,
         preRouterHook: options.preRouterHook,
         enterpriseVersion: options.enterpriseVersion,

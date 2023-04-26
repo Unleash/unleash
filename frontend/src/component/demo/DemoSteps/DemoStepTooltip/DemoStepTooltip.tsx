@@ -89,7 +89,13 @@ export const DemoStepTooltip = ({
     if (step.target === 'body') {
         return (
             <div {...tooltipProps}>
-                <StyledDialog open onClose={onClose} transitionDuration={0}>
+                <StyledDialog
+                    open
+                    onClose={(_, r) => {
+                        if (r !== 'backdropClick') onClose();
+                    }}
+                    transitionDuration={0}
+                >
                     <StyledCloseButton aria-label="close" onClick={onClose}>
                         <CloseIcon />
                     </StyledCloseButton>

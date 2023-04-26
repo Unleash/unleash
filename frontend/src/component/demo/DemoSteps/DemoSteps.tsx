@@ -89,6 +89,10 @@ export const DemoSteps = ({
     ) => {
         const { action, index, step } = data;
 
+        if (action === ACTIONS.CLOSE) {
+            close();
+        }
+
         if (action === ACTIONS.UPDATE) {
             const el = document.querySelector(step.target as string);
             if (el) {

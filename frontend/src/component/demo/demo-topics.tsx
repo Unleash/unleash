@@ -3,6 +3,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Badge } from 'component/common/Badge/Badge';
 import { Step } from 'react-joyride';
 import { gradualRollout, variants } from './demo-setup';
+import { basePath } from 'utils/formatPath';
 
 export interface ITutorialTopicStep extends Step {
     href?: string;
@@ -110,7 +111,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}`,
-                target: `a[href="/projects/${PROJECT}/features/demoApp.step2"]`,
+                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2"]`,
                 content: (
                     <Description>
                         First, let's open the feature toggle configuration for{' '}
@@ -130,7 +131,7 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
             },
             {
-                target: `a[href="/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=default"]`,
+                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=default"]`,
                 content: (
                     <Description>
                         Select the <Badge as="span">Standard</Badge> strategy
@@ -291,7 +292,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}`,
-                target: `a[href="/projects/${PROJECT}/features/demoApp.step3"]`,
+                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step3"]`,
                 content: (
                     <Description>
                         First, let's open the feature toggle configuration for{' '}
@@ -392,7 +393,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}`,
-                target: `a[href="/projects/${PROJECT}/features/demoApp.step4"]`,
+                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4"]`,
                 content: (
                     <Description>
                         First, let's open the feature toggle configuration for{' '}

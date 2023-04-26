@@ -417,7 +417,10 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         const query = await this.prepQuery(req.query, projectId);
-        const features = await this.featureService.getFeatureOverview(query);
+        const features = await this.featureService.getFeatureOverview({
+            ...query,
+            userId: req.user.id,
+        });
         this.openApiService.respondWithValidation(
             200,
             res,

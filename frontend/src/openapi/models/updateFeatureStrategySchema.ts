@@ -10,5 +10,9 @@ export interface UpdateFeatureStrategySchema {
     name?: string;
     sortOrder?: number;
     constraints?: ConstraintSchema[];
+    /** A descriptive title for the strategy */
+    title?: string | null;
+    /** A toggle to disable the strategy. defaults to true. Disabled strategies are not evaluated or returned to the SDKs */
+    disabled?: boolean | null;
     parameters?: ParametersSchema;
 }

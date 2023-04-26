@@ -8,9 +8,6 @@ export const projectSchema = joi
         name: joi.string().required(),
         description: joi.string().allow(null).allow('').optional(),
         mode: joi.string().valid('open', 'protected').default('open'),
-        defaultStickiness: joi
-            .string()
-            .valid('default', 'userId', 'sessionId', 'random')
-            .default('default'),
+        defaultStickiness: joi.string().default('default'),
     })
     .options({ allowUnknown: false, stripUnknown: true });

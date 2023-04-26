@@ -11,6 +11,7 @@ import type { ChangeRequestSchemaCreatedBy } from './changeRequestSchemaCreatedB
 
 export interface ChangeRequestSchema {
     id: number;
+    title?: string;
     environment: string;
     state: ChangeRequestSchemaState;
     minApprovals: number;

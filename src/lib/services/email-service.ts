@@ -229,6 +229,6 @@ export class EmailService {
     }
 
     stripSpecialCharacters(str: string): string {
-        return str?.replace(/[`~!@#$%^&*()_|+=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+        return str?.replace(/[`~!@#$%^&*()_|+=?;:'",.<>{}[\]\\/]/gi, '');
     }
 }

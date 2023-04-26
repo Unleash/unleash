@@ -4,7 +4,7 @@ export const environmentSchema = {
     $id: '#/components/schemas/environmentSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'type', 'enabled'],
+    required: ['name', 'type', 'enabled', 'protected', 'sortOrder'],
     description: 'A definition of the project environment',
     properties: {
         name: {
@@ -15,7 +15,8 @@ export const environmentSchema = {
         type: {
             type: 'string',
             example: 'development',
-            description: 'The type of the environment',
+            description:
+                'The [type of environment](https://docs.getunleash.io/reference/environments#environment-types).',
         },
         enabled: {
             type: 'boolean',
@@ -25,28 +26,34 @@ export const environmentSchema = {
         },
         protected: {
             type: 'boolean',
+            example: true,
+            description:
+                '`true` if the environment is protected, otherwise `false`. A *protected* environment can not be deleted.',
         },
         sortOrder: {
-            type: 'number',
+            type: 'integer',
             example: 3,
             description:
-                'The sort order of the environment in the environments list',
+                'Priority of the environment in a list of environments, the lower the value, the higher up in the list the environment will appear. Needs to be an integer',
         },
         projectCount: {
-            type: 'number',
+            type: 'integer',
             nullable: true,
+            minimum: 0,
             example: 10,
             description: 'The number of projects with this environment',
         },
         apiTokenCount: {
-            type: 'number',
+            type: 'integer',
             nullable: true,
+            minimum: 0,
             example: 6,
             description: 'The number of API tokens for the project environment',
         },
         enabledToggleCount: {
-            type: 'number',
+            type: 'integer',
             nullable: true,
+            minimum: 0,
             example: 10,
             description:
                 'The number of enabled toggles for the project environment',

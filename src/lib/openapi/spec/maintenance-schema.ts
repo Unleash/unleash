@@ -8,6 +8,7 @@ export const maintenanceSchema = {
     properties: {
         enabled: {
             type: 'boolean',
+            example: true,
         },
     },
     components: {},

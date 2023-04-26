@@ -17,7 +17,10 @@ import {
     EnvironmentSchema,
 } from '../../openapi/spec/environment-schema';
 import { SortOrderSchema } from '../../openapi/spec/sort-order-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import {
     environmentsProjectSchema,
     EnvironmentsProjectSchema,
@@ -58,8 +61,14 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
+                    summary: 'Get all environments',
+                    description:
+                        'Retrieves all environments that exist in this Unleash instance.',
                     operationId: 'getAllEnvironments',
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: createResponseSchema('environmentsSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
                 }),
             ],
         });
@@ -73,8 +82,12 @@ export class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['Environments'],
                     operationId: 'getEnvironment',
+                    summary: 'Get the environment with `name`',
+                    description:
+                        'Retrieves the environment with `name` if it exists in this Unleash instance',
                     responses: {
                         200: createResponseSchema('environmentSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -89,8 +102,12 @@ export class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['Environments'],
                     operationId: 'getProjectEnvironments',
+                    summary: 'Get the environments available to a project',
+                    description:
+                        'Gets the environments that are available for this project. An environment is available for a project if enabled in the [project configuration](https://docs.getunleash.io/reference/environments#step-1-enable-new-environments-for-your-project)',
                     responses: {
                         200: createResponseSchema('environmentsProjectSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -104,9 +121,15 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
+                    summary: 'Update environment sort orders',
+                    description:
+                        'Updates sort orders for the named environments. Environments not specified are unaffected.',
                     operationId: 'updateSortOrder',
                     requestBody: createRequestSchema('sortOrderSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -120,8 +143,14 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
+                    summary: 'Toggle the environment with `name` on',
+                    description:
+                        'Makes it possible to enable this environment for a project. An environment must first be globally enabled using this endpoint before it can be enabled for a project',
                     operationId: 'toggleEnvironmentOn',
-                    responses: { 204: emptyResponse },
+                    responses: {
+                        204: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -135,8 +164,14 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
+                    summary: 'Toggle the environment with `name` off',
+                    description:
+                        'Removes this environment from the list of available environments for projects to use',
                     operationId: 'toggleEnvironmentOff',
-                    responses: { 204: emptyResponse },
+                    responses: {
+                        204: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });

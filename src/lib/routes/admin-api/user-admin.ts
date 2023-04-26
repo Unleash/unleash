@@ -39,6 +39,8 @@ import {
 } from '../../openapi/spec/users-groups-base-schema';
 import { IGroup } from '../../types/group';
 import { IFlagResolver } from '../../types/experimental';
+import rateLimit from 'express-rate-limit';
+import { minutesToMilliseconds } from 'date-fns';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
@@ -202,6 +204,12 @@ export default class UserAdminController extends Controller {
                     requestBody: createRequestSchema('createUserSchema'),
                     responses: { 200: createResponseSchema('userSchema') },
                 }),
+                rateLimit({
+                    windowMs: minutesToMilliseconds(1),
+                    max: 20,
+                    standardHeaders: true,
+                    legacyHeaders: false,
+                }),
             ],
         });
 
@@ -333,6 +341,7 @@ export default class UserAdminController extends Controller {
                 id: g.id,
                 name: g.name,
                 userCount: g.users.length,
+                rootRole: g.rootRole,
             } as IGroup;
         });
         this.openApiService.respondWithValidation(

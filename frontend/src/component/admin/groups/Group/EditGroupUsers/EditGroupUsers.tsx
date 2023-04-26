@@ -60,7 +60,8 @@ export const EditGroupUsers: FC<IEditGroupUsersProps> = ({
         group.name,
         group.description,
         group.mappingsSSO,
-        group.users
+        group.users,
+        group.rootRole
     );
 
     useEffect(() => {

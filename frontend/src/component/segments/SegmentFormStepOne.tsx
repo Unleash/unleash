@@ -126,11 +126,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     data-testid={SEGMENT_DESC_ID}
                 />
                 <ConditionallyRender
-                    condition={
-                        Boolean(uiConfig.flags.projectScopedSegments) &&
-                        !projectId &&
-                        !loading
-                    }
+                    condition={!projectId && !loading}
                     show={
                         <>
                             <StyledInputDescription>

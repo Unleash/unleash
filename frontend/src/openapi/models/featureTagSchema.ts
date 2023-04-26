@@ -4,10 +4,24 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Describes a tag applied to a feature
+ */
 export interface FeatureTagSchema {
+    /** The name of the feature this tag is applied to */
     featureName: string;
+    /** The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag */
     tagType?: string;
+    /** The value of the tag */
     tagValue: string;
+    /**
+     * The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagType` property.
+     * @deprecated
+     */
     type?: string;
+    /**
+     * The value of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagValue` property.
+     * @deprecated
+     */
     value?: string;
 }

@@ -192,6 +192,10 @@ const otherRequests = (feature: string) => {
         version: 1,
         tags: [],
     });
+    testServerRoute(server, `api/admin/tag-types`, {
+        tagTypes: [],
+        version: 1,
+    });
     testServerRoute(server, 'api/admin/user', {
         user: {
             isAPI: false,

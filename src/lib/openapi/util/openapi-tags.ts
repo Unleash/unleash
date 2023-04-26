@@ -7,7 +7,11 @@ const OPENAPI_TAGS = [
         description:
             'Create, update, and delete [Unleash addons](https://docs.getunleash.io/addons).',
     },
-    { name: 'Admin UI', description: 'Configure the Unleash Admin UI.' },
+    {
+        name: 'Admin UI',
+        description:
+            'Configure the Unleash Admin UI. Why did you enable an experimental feature?',
+    },
     {
         name: 'API tokens',
         description:

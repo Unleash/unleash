@@ -121,7 +121,7 @@ describe('Playground API E2E', () => {
 
                 // assign strategies
                 await Promise.all(
-                    (feature.strategies || []).map((strategy) =>
+                    (feature.strategies || []).map((strategy, index) =>
                         database.stores.featureStrategiesStore.createStrategyFeatureEnv(
                             {
                                 parameters: {},
@@ -130,6 +130,7 @@ describe('Playground API E2E', () => {
                                 featureName: feature.name,
                                 environment,
                                 strategyName: strategy.name,
+                                disabled: !!(index % 2),
                                 projectId: feature.project,
                             },
                         ),

@@ -1,12 +1,11 @@
 import Select from 'component/common/select';
 import { SelectChangeEvent, useTheme } from '@mui/material';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-const builtInStickinessOptions = [
-    { key: 'default', label: 'default' },
-    { key: 'userId', label: 'userId' },
-    { key: 'sessionId', label: 'sessionId' },
-    { key: 'random', label: 'random' },
-];
+
+type OptionType = { key: string; label: string };
+
+const DEFAULT_RANDOM_OPTION = 'random';
+const DEFAULT_STICKINESS_OPTION = 'default';
 
 interface IStickinessSelectProps {
     label: string;
@@ -25,23 +24,29 @@ export const StickinessSelect = ({
     const { context } = useUnleashContext();
     const theme = useTheme();
 
-    const resolveStickinessOptions = () =>
-        builtInStickinessOptions.concat(
-            context
-                .filter(contextDefinition => contextDefinition.stickiness)
-                .filter(
-                    contextDefinition =>
-                        !builtInStickinessOptions.find(
-                            builtInStickinessOption =>
-                                builtInStickinessOption.key ===
-                                contextDefinition.name
-                        )
-                )
-                .map(c => ({ key: c.name, label: c.name }))
-        );
+    const resolveStickinessOptions = () => {
+        const options = context
+            .filter(field => field.stickiness)
+            .map(c => ({ key: c.name, label: c.name })) as OptionType[];
+
+        if (
+            !options.find(option => option.key === 'default') &&
+            !context.find(field => field.name === DEFAULT_STICKINESS_OPTION)
+        ) {
+            options.push({ key: 'default', label: 'default' });
+        }
+
+        if (
+            !options.find(option => option.key === 'random') &&
+            !context.find(field => field.name === DEFAULT_RANDOM_OPTION)
+        ) {
+            options.push({ key: 'random', label: 'random' });
+        }
+
+        return options;
+    };
 
     const stickinessOptions = resolveStickinessOptions();
-
     return (
         <Select
             id="stickiness-select"

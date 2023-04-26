@@ -1,32 +1,42 @@
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Typography, Tooltip } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 import { ChangeRequestStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 import {
     StyledPaper,
-    StyledContainer,
     StyledHeader,
     StyledInnerContainer,
     StyledAvatar,
     StyledCard,
 } from './ChangeRequestHeader.styles';
 import { Separator } from '../../ChangeRequestSidebar/ChangeRequestSidebar';
+import { ChangeRequestTitle } from '../../ChangeRequestSidebar/EnvironmentChangeRequest/ChangeRequestTitle';
 
 export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
     changeRequest,
 }) => {
+    const [title, setTitle] = useState(changeRequest.title);
     return (
         <StyledPaper elevation={0}>
-            <StyledContainer>
+            <ChangeRequestTitle
+                environmentChangeRequest={changeRequest}
+                title={title}
+                setTitle={setTitle}
+            >
                 <StyledHeader variant="h1" sx={{ mr: 1.5 }}>
-                    Change request #{changeRequest.id}
+                    {title}
                 </StyledHeader>
-                <ChangeRequestStatusBadge state={changeRequest.state} />
-            </StyledContainer>
+            </ChangeRequestTitle>
             <StyledInnerContainer>
-                <Typography variant="body2" sx={{ margin: 'auto 0' }}>
+                <ChangeRequestStatusBadge state={changeRequest.state} />
+                <Typography
+                    variant="body2"
+                    sx={theme => ({
+                        margin: theme.spacing('auto', 0, 'auto', 2),
+                    })}
+                >
                     Created{' '}
                     <TimeAgo
                         minPeriod={60}
@@ -45,6 +55,12 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                         />
                     </Tooltip>
                 </Box>
+                <Typography
+                    variant="body2"
+                    sx={theme => ({ marginLeft: theme.spacing(0.5) })}
+                >
+                    {changeRequest?.createdBy?.username}
+                </Typography>
                 <Box sx={theme => ({ marginLeft: theme.spacing(1.5) })}>
                     <StyledCard variant="outlined">
                         <Typography variant="body2" sx={{ lineHeight: 1 }}>

@@ -61,6 +61,10 @@ export default class ResetTokenService {
         }
     }
 
+    expireExistingTokensForUser = async (userId: number): Promise<void> => {
+        return this.store.expireExistingTokensForUser(userId);
+    };
+
     async isValid(token: string): Promise<IResetToken> {
         let t;
         try {
@@ -109,7 +113,7 @@ export default class ResetTokenService {
     ): Promise<IResetToken> {
         const token = await this.generateToken();
         const expiry = new Date(Date.now() + expiryDelta);
-        await this.store.expireExistingTokensForUser(tokenUser);
+        await this.expireExistingTokensForUser(tokenUser);
         return this.store.insert({
             reset_token: token,
             user_id: tokenUser,

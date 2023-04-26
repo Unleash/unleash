@@ -26,7 +26,7 @@ test('should not allow to create feature toggles in maintenance mode', async () 
     });
 
     return appWithMaintenanceMode.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'maintenance-feature',
         })
@@ -38,7 +38,7 @@ test('maintenance mode is off by default', async () => {
     const appWithMaintenanceMode = await setupApp(db.stores);
 
     return appWithMaintenanceMode.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'maintenance-feature1',
         })
@@ -58,7 +58,7 @@ test('should go into maintenance mode, when user has set it', async () => {
         .expect(204);
 
     return appWithMaintenanceMode.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'maintenance-feature1',
         })
@@ -83,7 +83,7 @@ test('maintenance mode flag should take precedence over maintenance mode setting
         .expect(204);
 
     return appWithMaintenanceMode.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'maintenance-feature1',
         })

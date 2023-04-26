@@ -11,6 +11,7 @@ import {
 import { CheckCircle, CircleOutlined, ExpandMore } from '@mui/icons-material';
 import { ITutorialTopic } from '../demo-topics';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ReactComponent as StarsIcon } from 'assets/img/stars.svg';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     position: 'fixed',
@@ -47,6 +48,13 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     borderTopLeftRadius: theme.shape.borderRadiusLarge,
     borderTopRightRadius: theme.shape.borderRadiusLarge,
+    height: 91,
+}));
+
+const StyledStars = styled(StarsIcon)(({ theme }) => ({
+    position: 'absolute',
+    left: 6,
+    top: -24,
 }));
 
 const StyledExpandMoreIcon = styled(ExpandMore)(({ theme }) => ({
@@ -160,6 +168,7 @@ export const DemoTopics = ({
             onChange={() => setExpanded(expanded => !expanded)}
         >
             <StyledAccordionSummary>
+                <StyledStars />
                 <StyledTitle>
                     <Typography fontWeight="bold">Unleash demo</Typography>
                     <StyledExpandMoreIcon className="expand-icon" />

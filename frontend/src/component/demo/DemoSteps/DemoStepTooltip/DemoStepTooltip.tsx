@@ -54,6 +54,7 @@ const StyledTooltipTitle = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     marginBottom: theme.spacing(1),
     flexWrap: 'wrap',
+    paddingRight: theme.spacing(4),
 }));
 
 const StyledTooltipActions = styled('div')(({ theme }) => ({

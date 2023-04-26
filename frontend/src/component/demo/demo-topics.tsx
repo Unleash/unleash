@@ -207,7 +207,6 @@ export const TOPICS: ITutorialTopic[] = [
                         </Badge>
                     </>
                 ),
-                backCloseModal: true,
                 nextButton: true,
             },
             {
@@ -217,7 +216,6 @@ export const TOPICS: ITutorialTopic[] = [
             {
                 target: 'button[data-testid="CONSTRAINT_SAVE_BUTTON"]',
                 content: <Description>Save the constraint.</Description>,
-                backCloseModal: true,
             },
             {
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',

@@ -3,31 +3,31 @@ import { FromSchema } from 'json-schema-to-ts';
 import { ErrorObject } from 'ajv';
 
 export const UnleashApiErrorTypes = [
-    'OwaspValidationError',
-    'PasswordUndefinedError',
-    'NoAccessError',
-    'UsedTokenError',
-    'InvalidOperationError',
-    'IncompatibleProjectError',
-    'OperationDeniedError',
-    'NotFoundError',
-    'NameExistsError',
+    'ContentTypeError',
+    'DisabledError',
     'FeatureHasTagError',
-    'RoleInUseError',
-    'ProjectWithoutOwnerError',
-    'UnknownError',
+    'IncompatibleProjectError',
+    'InvalidOperationError',
+    'MinimumOneEnvironmentError',
+    'NameExistsError',
+    'NoAccessError',
+    'NotFoundError',
+    'NotImplementedError',
+    'OperationDeniedError',
+    'OwaspValidationError',
     'PasswordMismatch',
     'PasswordMismatchError',
-    'DisabledError',
-    'ContentTypeError',
-    'NotImplementedError',
+    'PasswordUndefinedError',
+    'ProjectWithoutOwnerError',
+    'RoleInUseError',
+    'UnknownError',
+    'UsedTokenError',
 
     // server errors; not the end user's fault
     'InternalError',
 ] as const;
 
 const UnleashApiErrorTypesWithExtraData = [
-    'MinimumOneEnvironmentError',
     'BadDataError',
     'BadRequestError',
     'ValidationError',
@@ -231,7 +231,6 @@ export const fromLegacyError = (e: Error): UnleashError => {
             'BadDataError',
             'BadRequestError',
             'InvalidTokenError',
-            'MinimumOneEnvironmentError',
             'NoAccessError',
             'ValidationError',
         ].includes(name)
@@ -241,8 +240,7 @@ export const fromLegacyError = (e: Error): UnleashError => {
                 | 'ValidationError'
                 | 'BadRequestError'
                 | 'BadDataError'
-                | 'InvalidTokenError'
-                | 'MinimumOneEnvironmentError',
+                | 'InvalidTokenError',
             message:
                 'Request validation failed: your request body failed to validate. Refer to the `details` list to see what happened.',
             details: [{ description: e.message, message: e.message }],

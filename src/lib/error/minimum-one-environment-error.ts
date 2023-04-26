@@ -1,22 +1,11 @@
-class MinimumOneEnvironmentError extends Error {
+import { UnleashError } from './api-error';
+
+class MinimumOneEnvironmentError extends UnleashError {
     constructor(message: string) {
-        super();
-        Error.captureStackTrace(this, this.constructor);
-
-        this.name = this.constructor.name;
-        this.message = message;
-    }
-
-    toJSON(): object {
-        return {
-            isJoi: true,
-            name: this.constructor.name,
-            details: [
-                {
-                    message: this.message,
-                },
-            ],
-        };
+        super({
+            name: 'MinimumOneEnvironmentError',
+            message,
+        });
     }
 }
 export default MinimumOneEnvironmentError;

@@ -783,7 +783,7 @@ test('Trying to patch variants on a feature toggle should trigger an OperationDe
                 res.body.message.includes(
                     '/api/admin/projects/:project/features/:feature/variants',
                 ),
-            );
+            ).toBeTruthy();
         });
 });
 

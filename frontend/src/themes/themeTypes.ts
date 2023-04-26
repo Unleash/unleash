@@ -39,6 +39,11 @@ declare module '@mui/material/styles' {
         neutral: PaletteColorOptions;
 
         /**
+         * Sales-related palette color
+         */
+        web: PaletteColorOptions;
+
+        /**
          * Table colors
          */
         table: {
@@ -146,6 +151,11 @@ declare module '@mui/system/createTheme/shape' {
 declare module '@mui/material/styles/zIndex' {
     interface ZIndex {
         sticky: number;
+    }
+}
+declare module '@mui/material' {
+    interface ButtonPropsColorOverrides {
+        web: true;
     }
 }
 

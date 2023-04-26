@@ -131,6 +131,10 @@ const theme = {
             border: '#8A3E45',
             contrastText: '#EEEEFC', // Color used for content when error.main is used as a background
         },
+        web: {
+            main: '#1A4049', // used on sales-related elements
+            contrastText: '#EEEEFC', // Color used for inner text
+        },
 
         /**
          *  Used for grey badges, hover elements, and grey light elements

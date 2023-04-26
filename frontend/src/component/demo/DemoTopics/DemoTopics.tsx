@@ -51,11 +51,11 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     height: 91,
 }));
 
-const StyledStars = styled(StarsIcon)(({ theme }) => ({
+const StyledStars = styled(StarsIcon)({
     position: 'absolute',
     left: 6,
     top: -24,
-}));
+});
 
 const StyledExpandMoreIcon = styled(ExpandMore)(({ theme }) => ({
     color: theme.palette.primary.contrastText,

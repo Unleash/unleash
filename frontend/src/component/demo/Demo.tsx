@@ -6,6 +6,7 @@ import { TOPICS } from './demo-topics';
 import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome';
 import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { DemoDialogPlans } from './DemoDialog/DemoDialogPlans/DemoDialogPlans';
 
 const defaultProgress = {
     welcomeOpen: true,
@@ -24,6 +25,7 @@ export const Demo = () => {
         storedProgress.welcomeOpen ?? defaultProgress.welcomeOpen
     );
     const [finishOpen, setFinishOpen] = useState(false);
+    const [plansOpen, setPlansOpen] = useState(false);
 
     const [expanded, setExpanded] = useState(
         storedProgress.expanded ?? defaultProgress.expanded
@@ -81,11 +83,16 @@ export const Demo = () => {
                 open={finishOpen}
                 onClose={() => {
                     setFinishOpen(false);
+                    setPlansOpen(true);
                 }}
                 onRestart={() => {
                     setFinishOpen(false);
                     onStart();
                 }}
+            />
+            <DemoDialogPlans
+                open={plansOpen}
+                onClose={() => setPlansOpen(false)}
             />
             <DemoTopics
                 expanded={expanded}

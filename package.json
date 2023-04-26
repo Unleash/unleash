@@ -132,7 +132,6 @@
     "pkginfo": "^0.4.1",
     "prom-client": "^14.0.0",
     "response-time": "^2.3.2",
-    "sanitize-filename": "^1.6.3",
     "semver": "^7.3.5",
     "serve-favicon": "^2.5.0",
     "stoppable": "^1.1.0",

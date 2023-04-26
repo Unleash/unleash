@@ -84,6 +84,10 @@ const flags = {
         process.env.UNLEASH_STRATEGY_DISABLE,
         false,
     ),
+    googleAuthEnabled: parseEnvVarBoolean(
+        process.env.GOOGLE_AUTH_ENABLED,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

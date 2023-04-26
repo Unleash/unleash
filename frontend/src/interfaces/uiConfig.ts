@@ -52,6 +52,7 @@ export interface IFlags {
     strategyTitle?: boolean;
     groupRootRoles?: boolean;
     strategyDisable?: boolean;
+    googleAuthEnabled?: boolean;
 }
 
 export interface IVersionInfo {

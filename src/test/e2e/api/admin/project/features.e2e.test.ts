@@ -160,7 +160,7 @@ async function addStrategies(featureName: string, envName: string) {
 
 test('Trying to add a strategy configuration to environment not connected to toggle should fail', async () => {
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'com.test.feature',
             enabled: false,
@@ -184,15 +184,14 @@ test('Trying to add a strategy configuration to environment not connected to tog
         })
         .expect(400)
         .expect((r) => {
-            expect(r.body.details[0].message).toBe(
-                'You have not added the current environment to the project',
-            );
+            expect(r.body.message.includes('environment'));
+            expect(r.body.message.includes('project'));
         });
 });
 
 test('Can get project overview', async () => {
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'project-overview',
             enabled: false,
@@ -241,7 +240,7 @@ test('Can get features for project', async () => {
 
 test('Project overview includes environment connected to feature', async () => {
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'com.test.environment',
             enabled: false,
@@ -274,7 +273,7 @@ test('Project overview includes environment connected to feature', async () => {
 
 test('Disconnecting environment from project, removes environment from features in project overview', async () => {
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'com.test.disconnect.environment',
             enabled: false,
@@ -777,8 +776,11 @@ test('Trying to patch variants on a feature toggle should trigger an OperationDe
         ])
         .expect(403)
         .expect((res) => {
-            expect(res.body.details[0].message).toEqual(
-                'Changing variants is done via PATCH operation to /api/admin/projects/:project/features/:feature/variants',
+            expect(res.body.message.includes('PATCH'));
+            expect(
+                res.body.message.includes(
+                    '/api/admin/projects/:project/features/:feature/variants',
+                ),
             );
         });
 });

@@ -212,10 +212,11 @@ export default class AddonService {
         data: IAddonDto,
         userName: string,
     ): Promise<IAddon> {
+        const existingConfig = await this.addonStore.get(id); // because getting an early 404 here makes more sense
         const addonConfig = await addonSchema.validateAsync(data);
+        await this.validateKnownProvider(addonConfig);
         await this.validateRequiredParameters(addonConfig);
         if (this.sensitiveParams[addonConfig.provider].length > 0) {
-            const existingConfig = await this.addonStore.get(id);
             addonConfig.parameters = Object.keys(addonConfig.parameters).reduce(
                 (params, key) => {
                     const o = { ...params };

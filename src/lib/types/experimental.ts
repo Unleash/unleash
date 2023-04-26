@@ -4,7 +4,6 @@ export type IFlags = Partial<typeof flags>;
 export type IFlagKey = keyof IFlags;
 
 const flags = {
-    ENABLE_DARK_MODE_SUPPORT: false,
     anonymiseEventLog: false,
     embedProxy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
@@ -54,10 +53,6 @@ const flags = {
         process.env.UNLEASH_BULK_OPERATIONS,
         false,
     ),
-    projectScopedStickiness: parseEnvVarBoolean(
-        process.env.PROJECT_SCOPED_STICKINESS,
-        false,
-    ),
     personalAccessTokensKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_PAT_KILL_SWITCH,
         false,
@@ -79,6 +74,14 @@ const flags = {
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
     strategyTitle: parseEnvVarBoolean(
         process.env.UNLEASH_STRATEGY_TITLE,
+        false,
+    ),
+    strategyDisable: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_DISABLE,
+        false,
+    ),
+    googleAuthEnabled: parseEnvVarBoolean(
+        process.env.GOOGLE_AUTH_ENABLED,
         false,
     ),
 };

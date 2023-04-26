@@ -10,6 +10,8 @@ export interface GroupSchema {
     name: string;
     description?: string | null;
     mappingsSSO?: string[];
+    /** A role id that is used as the root role for all users in this group. This can be either the id of the Editor or Admin role. */
+    rootRole?: number | null;
     createdBy?: string | null;
     createdAt?: string | null;
     users?: GroupUserModelSchema[];

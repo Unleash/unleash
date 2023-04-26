@@ -16,7 +16,10 @@ const returns415: (t: jest.Mock) => Response = (t) => ({
     status: (code) => {
         expect(415).toBe(code);
         return {
-            end: t,
+            json: () => ({
+                // @ts-ignore
+                end: t,
+            }),
         };
     },
 });
@@ -25,7 +28,10 @@ const expectNoCall: (t: jest.Mock) => Response = (t) => ({
     // @ts-ignore
     status: () => ({
         // @ts-ignore
-        end: () => expect(t).toHaveBeenCalledTimes(0),
+        json: () => ({
+            // @ts-ignore
+            end: () => expect(t).toHaveBeenCalledTimes(0),
+        }),
     }),
 });
 

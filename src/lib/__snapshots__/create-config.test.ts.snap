@@ -4,6 +4,7 @@ exports[`should create default config 1`] = `
 {
   "accessControlMaxAge": 86400,
   "additionalCspAllowedDomains": {
+    "connectSrc": [],
     "defaultSrc": [],
     "fontSrc": [],
     "imgSrc": [],
@@ -43,7 +44,6 @@ exports[`should create default config 1`] = `
     "user": "unleash",
     "version": undefined,
   },
-  "disableLegacyFeaturesApi": false,
   "email": {
     "host": undefined,
     "port": 587,
@@ -66,7 +66,6 @@ exports[`should create default config 1`] = `
       "isEnabled": [Function],
     },
     "flags": {
-      "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
       "bulkOperations": false,
       "caseInsensitiveInOperators": false,
@@ -76,6 +75,7 @@ exports[`should create default config 1`] = `
       "embedProxy": true,
       "embedProxyFrontend": true,
       "featuresExportImport": true,
+      "googleAuthEnabled": false,
       "groupRootRoles": false,
       "maintenanceMode": false,
       "messageBanner": false,
@@ -85,15 +85,14 @@ exports[`should create default config 1`] = `
       "optimal304Differ": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
-      "projectScopedStickiness": false,
       "responseTimeWithAppNameKillSwitch": false,
+      "strategyDisable": false,
       "strategyTitle": false,
       "strictSchemaValidation": false,
     },
   },
   "flagResolver": FlagResolver {
     "experiments": {
-      "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
       "bulkOperations": false,
       "caseInsensitiveInOperators": false,
@@ -103,6 +102,7 @@ exports[`should create default config 1`] = `
       "embedProxy": true,
       "embedProxyFrontend": true,
       "featuresExportImport": true,
+      "googleAuthEnabled": false,
       "groupRootRoles": false,
       "maintenanceMode": false,
       "messageBanner": false,
@@ -112,8 +112,8 @@ exports[`should create default config 1`] = `
       "optimal304Differ": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
-      "projectScopedStickiness": false,
       "responseTimeWithAppNameKillSwitch": false,
+      "strategyDisable": false,
       "strategyTitle": false,
       "strictSchemaValidation": false,
     },
@@ -168,9 +168,6 @@ exports[`should create default config 1`] = `
   "strategySegmentsLimit": 5,
   "ui": {
     "environment": "Open Source",
-    "flags": {
-      "ENABLE_DARK_MODE_SUPPORT": false,
-    },
   },
   "versionCheck": {
     "enable": true,

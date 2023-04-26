@@ -111,7 +111,6 @@ export interface IUnleashOptions {
     preHook?: Function;
     preRouterHook?: Function;
     enterpriseVersion?: string;
-    disableLegacyFeaturesApi?: boolean;
     inlineSegmentConstraints?: boolean;
     clientFeatureCaching?: Partial<IClientCachingOption>;
     flagResolver?: IFlagResolver;
@@ -159,6 +158,7 @@ export interface ICspDomainOptions {
     styleSrc?: string[];
     scriptSrc?: string[];
     imgSrc?: string[];
+    connectSrc?: string[];
 }
 
 export interface ICspDomainConfig {
@@ -167,6 +167,7 @@ export interface ICspDomainConfig {
     styleSrc: string[];
     scriptSrc: string[];
     imgSrc: string[];
+    connectSrc: string[];
 }
 
 interface IFrontendApi {
@@ -194,7 +195,6 @@ export interface IUnleashConfig {
     preRouterHook?: Function;
     enterpriseVersion?: string;
     eventBus: EventEmitter;
-    disableLegacyFeaturesApi?: boolean;
     environmentEnableOverrides?: string[];
     frontendApi: IFrontendApi;
     inlineSegmentConstraints: boolean;

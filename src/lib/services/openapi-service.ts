@@ -11,6 +11,7 @@ import { ApiOperation } from '../openapi/util/api-operation';
 import { Logger } from '../logger';
 import { validateSchema } from '../openapi/validate';
 import { IFlagResolver } from '../types';
+import { fromOpenApiValidationErrors } from '../error/api-error';
 
 export class OpenApiService {
     private readonly config: IUnleashConfig;
@@ -58,10 +59,12 @@ export class OpenApiService {
     useErrorHandler(app: Express): void {
         app.use((err, req, res, next) => {
             if (err && err.status && err.validationErrors) {
-                res.status(err.status).json({
-                    error: err.message,
-                    validation: err.validationErrors,
-                });
+                const apiError = fromOpenApiValidationErrors(
+                    req.body,
+                    err.validationErrors,
+                );
+
+                res.status(apiError.statusCode).json(apiError);
             } else {
                 next(err);
             }

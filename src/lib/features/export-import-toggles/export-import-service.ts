@@ -44,6 +44,7 @@ import { isValidField } from './import-context-validation';
 import { IImportTogglesStore } from './import-toggles-store-type';
 import { ImportPermissionsService } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
+import { UnleashError } from '../../error/api-error';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -361,15 +362,23 @@ export default class ExportImportService {
         const unsupportedContextFields = await this.getUnsupportedContextFields(
             dto,
         );
-        if (
-            Array.isArray(unsupportedContextFields) &&
-            unsupportedContextFields.length > 0
-        ) {
-            throw new BadDataError(
-                `Context fields with errors: ${unsupportedContextFields
-                    .map((field) => field.name)
-                    .join(', ')}`,
-            );
+        if (Array.isArray(unsupportedContextFields)) {
+            const [firstError, ...remainingErrors] =
+                unsupportedContextFields.map((field) => {
+                    const description = `${field.name} is not supported.`;
+                    return {
+                        description,
+                        message: description,
+                    };
+                });
+            if (firstError !== undefined) {
+                throw new UnleashError({
+                    name: 'BadDataError',
+                    message:
+                        'Some of the context fields you are trying to import are not supported.',
+                    details: [firstError, ...remainingErrors],
+                });
+            }
         }
     }
 
@@ -440,12 +449,24 @@ export default class ExportImportService {
 
     private async verifyStrategies(dto: ImportTogglesSchema) {
         const unsupportedStrategies = await this.getUnsupportedStrategies(dto);
-        if (unsupportedStrategies.length > 0) {
-            throw new BadDataError(
-                `Unsupported strategies: ${unsupportedStrategies
-                    .map((strategy) => strategy.name)
-                    .join(', ')}`,
-            );
+
+        const [firstError, ...remainingErrors] = unsupportedStrategies.map(
+            (strategy) => {
+                const description = `${strategy.name} is not supported.`;
+
+                return {
+                    description,
+                    message: description,
+                };
+            },
+        );
+        if (firstError !== undefined) {
+            throw new UnleashError({
+                name: 'BadDataError',
+                message:
+                    'Some of the strategies you are trying to import are not supported.',
+                details: [firstError, ...remainingErrors],
+            });
         }
     }
 

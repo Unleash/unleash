@@ -3,7 +3,7 @@
 exports.up = function (db, callback) {
     db.runSql(
         `
-            INSERT INTO context_fields(name, description, sort_order, stickiness) VALUES('sessionId', 'Allows you to constrain on sessionId', 4, true);
+            INSERT INTO context_fields(name, description, sort_order, stickiness) VALUES('sessionId', 'Allows you to constrain on sessionId', 4, true) ON CONFLICT DO NOTHING;
 
             UPDATE context_fields
             SET stickiness = true
@@ -16,12 +16,6 @@ exports.up = function (db, callback) {
 exports.down = function (db, callback) {
     db.runSql(
         `
-            DELETE FROM context_fields
-            WHERE name LIKE 'sessionId';
-
-            UPDATE context_fields
-            SET stickiness = null
-            WHERE name LIKE 'userId';
         `,
         callback,
     );

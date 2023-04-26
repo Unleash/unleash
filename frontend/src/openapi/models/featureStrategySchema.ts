@@ -16,6 +16,8 @@ export interface FeatureStrategySchema {
     name: string;
     /** A descriptive title for the strategy */
     title?: string | null;
+    /** A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs */
+    disabled?: boolean | null;
     /** The name or feature the strategy is attached to */
     featureName?: string;
     /** The order of the strategy in the list */

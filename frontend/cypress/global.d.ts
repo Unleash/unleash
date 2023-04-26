@@ -75,7 +75,7 @@ declare namespace Cypress {
         ): Chainable;
         createProject_API(name: string): Chainable;
         deleteProject_API(name: string): Chainable;
-        createFeature_API(name: string, projectName: string): Chainable;
+        createFeature_API(name: string, projectName?: string): Chainable;
         deleteFeature_API(name: string): Chainable;
     }
 }

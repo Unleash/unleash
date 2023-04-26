@@ -5,7 +5,7 @@
  */
 
 /**
- * A mode of the project affecting what actions are possible in this project. During a rollout of project modes this feature can be optional or `null`
+ * The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.
  */
 export type HealthOverviewSchemaMode =
     typeof HealthOverviewSchemaMode[keyof typeof HealthOverviewSchemaMode];
@@ -14,5 +14,4 @@ export type HealthOverviewSchemaMode =
 export const HealthOverviewSchemaMode = {
     open: 'open',
     protected: 'protected',
-    null: null,
 } as const;

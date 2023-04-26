@@ -14,10 +14,11 @@ export const testServerSetup = (): SetupServerApi => {
 export const testServerRoute = (
     server: SetupServerApi,
     path: string,
-    json: object
+    json: object,
+    method: 'get' | 'post' | 'put' | 'delete' = 'get'
 ) => {
     server.use(
-        rest.get(path, (req, res, ctx) => {
+        rest[method](path, (req, res, ctx) => {
             return res(ctx.json(json));
         })
     );

@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { ProjectCreatedSchemaMode } from './projectCreatedSchemaMode';
 
 /**
  * Details about the newly created project.
@@ -14,4 +15,8 @@ export interface ProjectCreatedSchema {
     name: string;
     /** The project's description. */
     description?: string | null;
+    /** A mode of the project affecting what actions are possible in this project */
+    mode?: ProjectCreatedSchemaMode;
+    /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
+    defaultStickiness?: string;
 }

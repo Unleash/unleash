@@ -4,15 +4,10 @@ export type IFlags = Partial<typeof flags>;
 export type IFlagKey = keyof IFlags;
 
 const flags = {
-    ENABLE_DARK_MODE_SUPPORT: false,
     anonymiseEventLog: false,
     embedProxy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
-    ),
-    projectStatusApi: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_STATUS_API,
-        false,
     ),
     newProjectOverview: parseEnvVarBoolean(
         process.env.NEW_PROJECT_OVERVIEW,
@@ -54,20 +49,14 @@ const flags = {
         process.env.UNLEASH_PRO_PLAN_AUTO_CHARGE,
         false,
     ),
-    loginHistory: parseEnvVarBoolean(process.env.UNLEASH_LOGIN_HISTORY, false),
     bulkOperations: parseEnvVarBoolean(
         process.env.UNLEASH_BULK_OPERATIONS,
         false,
     ),
-    projectScopedSegments: parseEnvVarBoolean(
-        process.env.PROJECT_SCOPED_SEGMENTS,
+    personalAccessTokensKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_PAT_KILL_SWITCH,
         false,
     ),
-    projectScopedStickiness: parseEnvVarBoolean(
-        process.env.PROJECT_SCOPED_STICKINESS,
-        false,
-    ),
-    projectMode: parseEnvVarBoolean(process.env.PROJECT_MODE, false),
     cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
     optimal304: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304,
@@ -77,7 +66,24 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
         false,
     ),
+    groupRootRoles: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ROOT_ROLE_GROUPS,
+        false,
+    ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
+    demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
+    strategyTitle: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_TITLE,
+        false,
+    ),
+    strategyDisable: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_DISABLE,
+        false,
+    ),
+    googleAuthEnabled: parseEnvVarBoolean(
+        process.env.GOOGLE_AUTH_ENABLED,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

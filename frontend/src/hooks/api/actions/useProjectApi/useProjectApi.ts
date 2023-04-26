@@ -223,6 +223,15 @@ const useProjectApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const deleteFeature = async (featureId: string) => {
+        const path = `api/admin/archive/${featureId}`;
+        const req = createRequest(path, {
+            method: 'DELETE',
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     const deleteFeatures = async (projectId: string, featureIds: string[]) => {
         const path = `api/admin/projects/${projectId}/delete`;
         const req = createRequest(path, {
@@ -267,6 +276,7 @@ const useProjectApi = () => {
         archiveFeatures,
         reviveFeatures,
         staleFeatures,
+        deleteFeature,
         deleteFeatures,
         searchProjectUser,
         errors,

@@ -209,7 +209,7 @@ export const EnvironmentVariantsModal = ({
                 stickiness:
                     variantsEdit?.length > 0
                         ? variantsEdit[0].stickiness
-                        : 'default',
+                        : defaultStickiness,
                 new: true,
                 isValid: false,
                 id,
@@ -273,7 +273,13 @@ export const EnvironmentVariantsModal = ({
         isChangeRequestConfigured(environment?.name || '') &&
         uiConfig.flags.crOnVariants;
 
-    const stickiness = variants[0]?.stickiness || defaultStickiness;
+    const stickiness = useMemo(() => {
+        if (!loading) {
+            return variants[0]?.stickiness || defaultStickiness;
+        }
+        return '';
+    }, [loading, defaultStickiness, JSON.stringify(variants[0] ?? {})]);
+
     const stickinessOptions = useMemo(
         () => [
             'default',
@@ -296,7 +302,7 @@ export const EnvironmentVariantsModal = ({
     };
 
     const onStickinessChange = (value: string) => {
-        updateStickiness(value).catch(console.warn);
+        updateStickiness(value);
     };
 
     const [error, setError] = useState<string | undefined>();
@@ -307,18 +313,16 @@ export const EnvironmentVariantsModal = ({
         }
     }, [apiPayload.error]);
 
+    const handleClose = () => {
+        updateStickiness(defaultStickiness);
+        setOpen(false);
+    };
+
     if (loading || stickiness === '') {
         return <Loader />;
     }
-
     return (
-        <SidebarModal
-            open={open}
-            onClose={() => {
-                setOpen(false);
-            }}
-            label=""
-        >
+        <SidebarModal open={open} onClose={handleClose} label="">
             <FormTemplate
                 modal
                 title=""
@@ -459,11 +463,7 @@ export const EnvironmentVariantsModal = ({
                                 ? changeRequestButtonText
                                 : 'Save variants'}
                         </Button>
-                        <StyledCancelButton
-                            onClick={() => {
-                                setOpen(false);
-                            }}
-                        >
+                        <StyledCancelButton onClick={handleClose}>
                             Cancel
                         </StyledCancelButton>
                     </StyledButtonContainer>

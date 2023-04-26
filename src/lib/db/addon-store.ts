@@ -16,6 +16,7 @@ const COLUMNS = [
     'events',
     'projects',
     'environments',
+    'created_at',
 ];
 const TABLE = 'addons';
 
@@ -71,18 +72,19 @@ export default class AddonStore implements IAddonStore {
         stopTimer();
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const { id, created_at } = rows[0];
-        return { id, createdAt: created_at, ...addon };
+        return this.rowToAddon({ id, createdAt: created_at, ...addon });
     }
 
     async update(id: number, addon: IAddonDto): Promise<IAddon> {
         const rows = await this.db(TABLE)
             .where({ id })
-            .update(this.addonToRow(addon));
+            .update(this.addonToRow(addon))
+            .returning(COLUMNS);
 
         if (!rows) {
             throw new NotFoundError('Could not find addon');
         }
-        return rows[0];
+        return this.rowToAddon(rows[0]);
     }
 
     async delete(id: number): Promise<void> {
@@ -114,7 +116,7 @@ export default class AddonStore implements IAddonStore {
             id: row.id,
             provider: row.provider,
             enabled: row.enabled,
-            description: row.description,
+            description: row.description ?? null,
             parameters: row.parameters,
             events: row.events,
             projects: row.projects || [],

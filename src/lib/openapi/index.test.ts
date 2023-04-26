@@ -17,15 +17,6 @@ test('all schema files should be added to the schemas object', () => {
     expect(expectedSchemaNames.sort()).toEqual(addedSchemaNames.sort());
 });
 
-test('all schema $id attributes should have the expected format', () => {
-    const schemaIds = Object.values(schemas).map((schema) => schema.$id);
-    const schemaIdRegExp = new RegExp(`^#/components/schemas/[a-z][a-zA-Z]+$`);
-
-    schemaIds.forEach((schemaId) => {
-        expect(schemaId).toMatch(schemaIdRegExp);
-    });
-});
-
 test('removeJsonSchemaProps', () => {
     expect(removeJsonSchemaProps({ a: 'b', $id: 'c', components: {} }))
         .toMatchInlineSnapshot(`
@@ -41,7 +32,7 @@ describe('createOpenApiSchema', () => {
             createOpenApiSchema({
                 unleashUrl: 'https://example.com',
                 baseUriPath: '',
-            }).servers[0].url,
+            }).servers![0].url,
         ).toEqual('https://example.com');
     });
 
@@ -50,7 +41,7 @@ describe('createOpenApiSchema', () => {
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/demo2',
                 baseUriPath: '/demo2',
-            }).servers[0].url,
+            }).servers![0].url,
         ).toEqual('https://example.com');
     });
 
@@ -59,7 +50,7 @@ describe('createOpenApiSchema', () => {
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/demo2',
                 baseUriPath: 'example',
-            }).servers[0].url,
+            }).servers![0].url,
         ).toEqual('https://example.com/demo2');
     });
 
@@ -68,13 +59,13 @@ describe('createOpenApiSchema', () => {
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/example/',
                 baseUriPath: 'example',
-            }).servers[0].url,
+            }).servers![0].url,
         ).toEqual('https://example.com');
         expect(
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/example/',
                 baseUriPath: '/example',
-            }).servers[0].url,
+            }).servers![0].url,
         ).toEqual('https://example.com');
     });
 });

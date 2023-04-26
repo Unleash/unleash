@@ -52,7 +52,10 @@ export const useChangeRequestApi = () => {
     const changeState = async (
         project: string,
         changeRequestId: number,
-        payload: { state: 'Approved' | 'Applied' | 'Cancelled' | 'In review' }
+        payload: {
+            state: 'Approved' | 'Applied' | 'Cancelled' | 'In review';
+            comment?: string;
+        }
     ) => {
         trackEvent('change_request', {
             props: {
@@ -76,11 +79,29 @@ export const useChangeRequestApi = () => {
     const discardChange = async (
         project: string,
         changeRequestId: number,
-        changeRequestEventId: number
+        changeId: number
     ) => {
-        const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/changes/${changeRequestEventId}`;
+        const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/changes/${changeId}`;
         const req = createRequest(path, {
             method: 'DELETE',
+        });
+        try {
+            return await makeRequest(req.caller, req.id);
+        } catch (e) {
+            throw e;
+        }
+    };
+
+    const editChange = async (
+        project: string,
+        changeRequestId: number,
+        changeId: number,
+        payload: IChangeSchema
+    ) => {
+        const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/changes/${changeId}`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify(payload),
         });
         try {
             return await makeRequest(req.caller, req.id);
@@ -148,13 +169,38 @@ export const useChangeRequestApi = () => {
         }
     };
 
+    const updateTitle = async (
+        project: string,
+        changeRequestId: number,
+        title: string
+    ) => {
+        trackEvent('change_request', {
+            props: {
+                eventType: 'title updated',
+            },
+        });
+
+        const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/title`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify({ title }),
+        });
+        try {
+            await makeRequest(req.caller, req.id);
+        } catch (e) {
+            throw e;
+        }
+    };
+
     return {
         addChange,
+        editChange,
         changeState,
         discardChange,
         updateChangeRequestEnvironmentConfig,
         discardDraft,
         addComment,
+        updateTitle,
         errors,
         loading,
     };

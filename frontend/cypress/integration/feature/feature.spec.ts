@@ -1,14 +1,13 @@
 ///<reference path="../../global.d.ts" />
 
-const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
-const randomId = String(Math.random()).split('.')[1];
-const featureToggleName = `unleash-e2e-${randomId}`;
-
-const variant1 = 'variant1';
-const variant2 = 'variant2';
-let strategyId = '';
-
 describe('feature', () => {
+    const randomId = String(Math.random()).split('.')[1];
+    const featureToggleName = `unleash-e2e-${randomId}`;
+
+    const variant1 = 'variant1';
+    const variant2 = 'variant2';
+    let strategyId = '';
+
     before(() => {
         cy.runBefore();
     });

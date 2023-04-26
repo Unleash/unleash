@@ -9,10 +9,17 @@
         "ecmaVersion": 2019,
         "project": "./tsconfig.json"
     },
-    "plugins": ["@typescript-eslint", "prettier", "import", "no-only-tests", "regexp"],
+    "plugins": [
+        "@typescript-eslint",
+        "prettier",
+        "import",
+        "no-only-tests",
+        "regexp"
+    ],
     "root": true,
     "rules": {
         "@typescript-eslint/no-var-requires": 0,
+        "@typescript-eslint/switch-exhaustiveness-check": "error",
         "@typescript-eslint/naming-convention": 0,
         "@typescript-eslint/space-before-function-paren": 0,
         "import/prefer-default-export": 0,

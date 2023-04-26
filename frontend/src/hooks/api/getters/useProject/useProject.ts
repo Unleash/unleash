@@ -13,6 +13,7 @@ const fallbackProject: IProject = {
     description: 'Default',
     favorite: false,
     mode: 'open',
+    defaultStickiness: 'default',
     stats: {
         archivedCurrentWindow: 0,
         archivedPastWindow: 0,

@@ -1,7 +1,7 @@
 import joi from 'joi';
 import { Response } from 'express';
 import { Logger } from '../logger';
-import BaseError from '../error/base-error';
+import { fromLegacyError, UnleashError } from '../error/api-error';
 
 export const customJoi = joi.extend((j) => ({
     type: 'isUrlFriendly',
@@ -26,52 +26,14 @@ export const handleErrors: (
     logger: Logger,
     error: Error,
 ) => void = (res, logger, error) => {
-    logger.warn(error.message);
-    // @ts-expect-error
-    // eslint-disable-next-line no-param-reassign
-    error.isJoi = true;
+    const finalError =
+        error instanceof UnleashError ? error : fromLegacyError(error);
 
-    if (error instanceof BaseError) {
-        return res.status(error.statusCode).json(error).end();
+    logger.warn(finalError.id, finalError.message);
+
+    if (['InternalError', 'UnknownError'].includes(finalError.name)) {
+        logger.error('Server failed executing request', error);
     }
 
-    switch (error.name) {
-        case 'ValidationError':
-            return res.status(400).json(error).end();
-        case 'BadDataError':
-            return res.status(400).json(error).end();
-        case 'BadRequestError':
-            return res.status(400).json(error).end();
-        case 'OwaspValidationError':
-            return res.status(400).json(error).end();
-        case 'PasswordUndefinedError':
-            return res.status(400).json(error).end();
-        case 'MinimumOneEnvironmentError':
-            return res.status(400).json(error).end();
-        case 'InvalidTokenError':
-            return res.status(401).json(error).end();
-        case 'NoAccessError':
-            return res.status(403).json(error).end();
-        case 'UsedTokenError':
-            return res.status(403).json(error).end();
-        case 'InvalidOperationError':
-            return res.status(403).json(error).end();
-        case 'IncompatibleProjectError':
-            return res.status(403).json(error).end();
-        case 'OperationDeniedError':
-            return res.status(403).json(error).end();
-        case 'NotFoundError':
-            return res.status(404).json(error).end();
-        case 'NameExistsError':
-            return res.status(409).json(error).end();
-        case 'FeatureHasTagError':
-            return res.status(409).json(error).end();
-        case 'RoleInUseError':
-            return res.status(400).json(error).end();
-        case 'ProjectWithoutOwnerError':
-            return res.status(409).json(error).end();
-        default:
-            logger.error('Server failed executing request', error);
-            return res.status(500).end();
-    }
+    return res.status(finalError.statusCode).json(finalError).end();
 };

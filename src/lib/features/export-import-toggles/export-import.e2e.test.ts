@@ -559,7 +559,9 @@ const defaultImportPayload: ImportTogglesSchema = {
 };
 
 const getFeature = async (feature: string) =>
-    app.request.get(`/api/admin/features/${feature}`).expect(200);
+    app.request
+        .get(`/api/admin/projects/${DEFAULT_PROJECT}/features/${feature}`)
+        .expect(200);
 
 const getFeatureEnvironment = (feature: string) =>
     app.request
@@ -671,13 +673,7 @@ test('reject import with unknown context fields', async () => {
         400,
     );
 
-    expect(body).toMatchObject({
-        details: [
-            {
-                message: 'Context fields with errors: ContextField1',
-            },
-        ],
-    });
+    expect(body.details[0].description).toMatch(/\bContextField1\b/);
 });
 
 test('reject import with unsupported strategies', async () => {
@@ -697,13 +693,7 @@ test('reject import with unsupported strategies', async () => {
         400,
     );
 
-    expect(body).toMatchObject({
-        details: [
-            {
-                message: 'Unsupported strategies: customStrategy',
-            },
-        ],
-    });
+    expect(body.details[0].description).toMatch(/\bcustomStrategy\b/);
 });
 
 test('validate import data', async () => {

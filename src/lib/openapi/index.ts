@@ -3,6 +3,7 @@ import {
     adminFeaturesQuerySchema,
     addonParameterSchema,
     addonSchema,
+    addonCreateUpdateSchema,
     addonsSchema,
     addonTypeSchema,
     apiTokenSchema,
@@ -109,6 +110,7 @@ import {
     tagTypeSchema,
     tagTypesSchema,
     tagWithVersionSchema,
+    tokenStringListSchema,
     tokenUserSchema,
     uiConfigSchema,
     updateApiTokenSchema,
@@ -123,7 +125,7 @@ import {
     usersGroupsBaseSchema,
     usersSchema,
     usersSearchSchema,
-    validateEdgeTokensSchema,
+    validatedEdgeTokensSchema,
     validatePasswordSchema,
     validateTagTypeSchema,
     variantSchema,
@@ -146,12 +148,42 @@ import { bulkMetricsSchema } from './spec/bulk-metrics-schema';
 import { clientMetricsEnvSchema } from './spec/client-metrics-env-schema';
 import { updateTagsSchema } from './spec/update-tags-schema';
 import { batchStaleSchema } from './spec/batch-stale-schema';
+import { createApplicationSchema } from './spec/create-application-schema';
+
+// Schemas must have an $id property on the form "#/components/schemas/mySchema".
+export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
+
+// Schemas must list all their $refs in `components`, including nested schemas.
+export type SchemaRef = typeof schemas[keyof typeof schemas]['components'];
+
+// JSON schema properties that should not be included in the OpenAPI spec.
+export interface JsonSchemaProps {
+    $id: string;
+    components: object;
+}
+
+type SchemaWithMandatoryFields = Partial<
+    Omit<
+        OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject,
+        '$id' | 'components'
+    >
+> &
+    JsonSchemaProps;
+
+interface UnleashSchemas {
+    [name: string]: SchemaWithMandatoryFields;
+}
+
+interface OpenAPIV3DocumentWithServers extends OpenAPIV3.Document {
+    servers: OpenAPIV3.ServerObject[];
+}
 
 // All schemas in `openapi/spec` should be listed here.
-export const schemas = {
+export const schemas: UnleashSchemas = {
     adminFeaturesQuerySchema,
     addonParameterSchema,
     addonSchema,
+    addonCreateUpdateSchema,
     addonsSchema,
     addonTypeSchema,
     apiTokenSchema,
@@ -174,6 +206,7 @@ export const schemas = {
     contextFieldSchema,
     contextFieldsSchema,
     createApiTokenSchema,
+    createApplicationSchema,
     createFeatureSchema,
     createFeatureStrategySchema,
     createInvitedUserSchema,
@@ -265,6 +298,7 @@ export const schemas = {
     tagTypesSchema,
     tagWithVersionSchema,
     tokenUserSchema,
+    tokenStringListSchema,
     uiConfigSchema,
     updateApiTokenSchema,
     updateFeatureSchema,
@@ -279,7 +313,7 @@ export const schemas = {
     usersGroupsBaseSchema,
     usersSchema,
     usersSearchSchema,
-    validateEdgeTokensSchema,
+    validatedEdgeTokensSchema,
     validatePasswordSchema,
     validateTagTypeSchema,
     variantSchema,
@@ -290,18 +324,6 @@ export const schemas = {
     importTogglesValidateSchema,
     importTogglesValidateItemSchema,
 };
-
-// Schemas must have an $id property on the form "#/components/schemas/mySchema".
-export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
-
-// Schemas must list all their $refs in `components`, including nested schemas.
-export type SchemaRef = typeof schemas[keyof typeof schemas]['components'];
-
-// JSON schema properties that should not be included in the OpenAPI spec.
-export interface JsonSchemaProps {
-    $id: string;
-    components: object;
-}
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.
 export const removeJsonSchemaProps = <T extends JsonSchemaProps>(
@@ -328,7 +350,7 @@ export const createOpenApiSchema = ({
     unleashUrl,
     baseUriPath,
 }: Pick<IServerOption, 'unleashUrl' | 'baseUriPath'>): Omit<
-    OpenAPIV3.Document,
+    OpenAPIV3DocumentWithServers,
     'paths'
 > => {
     const url = findRootUrl(unleashUrl, baseUriPath);

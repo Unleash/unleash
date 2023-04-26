@@ -24,6 +24,7 @@ export interface IProject {
     favorite: boolean;
     features: IFeatureToggleListItem[];
     mode: 'open' | 'protected';
+    defaultStickiness: string;
 }
 
 export interface IProjectHealthReport extends IProject {

@@ -4,36 +4,24 @@ import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
 import {
     IFeatureToggleClient,
+    IFeatureToggleClientStore,
     IFeatureToggleQuery,
     IStrategyConfig,
     ITag,
-} from '../types/model';
-import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
-import { DEFAULT_ENV } from '../util/constants';
-import { PartialDeep } from '../types/partial';
+    PartialDeep,
+} from '../types';
+import { DEFAULT_ENV, ensureStringValue, mapValues } from '../util';
 import EventEmitter from 'events';
 import FeatureToggleStore from './feature-toggle-store';
-import { ensureStringValue } from '../util/ensureStringValue';
-import { mapValues } from '../util/map-values';
-import Raw = Knex.Raw;
 import { Db } from './db';
-
-export interface FeaturesTable {
-    name: string;
-    description: string;
-    type: string;
-    stale: boolean;
-    variants: string;
-    project: string;
-    last_seen_at?: Date;
-    created_at?: Date;
-}
+import Raw = Knex.Raw;
 
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;
     archived: boolean;
     isAdmin: boolean;
     includeStrategyIds?: boolean;
+    includeDisabledStrategies?: boolean;
     userId?: number;
 }
 
@@ -67,6 +55,7 @@ export default class FeatureToggleClientStore
         archived,
         isAdmin,
         includeStrategyIds,
+        includeDisabledStrategies,
         userId,
     }: IGetAllFeatures): Promise<IFeatureToggleClient[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
@@ -86,6 +75,7 @@ export default class FeatureToggleClientStore
             'fe.environment as environment',
             'fs.id as strategy_id',
             'fs.strategy_name as strategy_name',
+            'fs.disabled as strategy_disabled',
             'fs.parameters as parameters',
             'fs.constraints as constraints',
             'segments.id as segment_id',
@@ -180,7 +170,7 @@ export default class FeatureToggleClientStore
                 strategies: [],
             };
             if (this.isUnseenStrategyRow(feature, r)) {
-                feature.strategies.push(
+                feature.strategies?.push(
                     FeatureToggleClientStore.rowToStrategy(r),
                 );
             }
@@ -221,6 +211,12 @@ export default class FeatureToggleClientStore
             FeatureToggleClientStore.removeIdsFromStrategies(features);
         }
 
+        if (!includeDisabledStrategies) {
+            // We should not send disabled strategies from the client API,
+            // as this breaks the way SDKs evaluate the status of the feature.
+            return this.removeDisabledStrategies(features);
+        }
+
         return features;
     }
 
@@ -228,6 +224,8 @@ export default class FeatureToggleClientStore
         return {
             id: row.strategy_id,
             name: row.strategy_name,
+            title: row.strategy_title,
+            disabled: row.strategy_disabled,
             constraints: row.constraints || [],
             parameters: mapValues(row.parameters || {}, ensureStringValue),
         };
@@ -248,13 +246,26 @@ export default class FeatureToggleClientStore
         });
     }
 
+    private removeDisabledStrategies(
+        features: IFeatureToggleClient[],
+    ): IFeatureToggleClient[] {
+        const filtered: IFeatureToggleClient[] = [];
+        features.forEach((feature) => {
+            const filteredStrategies = feature.strategies.filter(
+                (strategy) => !strategy.disabled,
+            );
+            filtered.push({ ...feature, strategies: filteredStrategies });
+        });
+        return filtered;
+    }
+
     private isUnseenStrategyRow(
         feature: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
     ): boolean {
         return (
             row.strategy_id &&
-            !feature.strategies.find((s) => s.id === row.strategy_id)
+            !feature.strategies?.find((s) => s?.id === row.strategy_id)
         );
     }
 
@@ -276,7 +287,7 @@ export default class FeatureToggleClientStore
             row.tag_value &&
             !feature.tags?.some(
                 (tag) =>
-                    tag.type === row.tag_type && tag.value === row.tag_value,
+                    tag?.type === row.tag_type && tag?.value === row.tag_value,
             )
         );
     }
@@ -286,16 +297,16 @@ export default class FeatureToggleClientStore
         row: Record<string, any>,
     ) {
         feature.strategies
-            .find((s) => s.id === row.strategy_id)
-            ?.constraints.push(...row.segment_constraints);
+            ?.find((s) => s?.id === row.strategy_id)
+            ?.constraints?.push(...row.segment_constraints);
     }
 
     private addSegmentIdsToStrategy(
         feature: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
     ) {
-        const strategy = feature.strategies.find(
-            (s) => s.id === row.strategy_id,
+        const strategy = feature.strategies?.find(
+            (s) => s?.id === row.strategy_id,
         );
         if (!strategy) {
             return;
@@ -309,12 +320,14 @@ export default class FeatureToggleClientStore
     async getClient(
         featureQuery?: IFeatureToggleQuery,
         includeStrategyIds?: boolean,
+        includeDisabledStrategies?: boolean,
     ): Promise<IFeatureToggleClient[]> {
         return this.getAll({
             featureQuery,
             archived: false,
             isAdmin: false,
             includeStrategyIds,
+            includeDisabledStrategies,
         });
     }
 
@@ -323,7 +336,13 @@ export default class FeatureToggleClientStore
         userId,
         archived,
     }: IGetAdminFeatures): Promise<IFeatureToggleClient[]> {
-        return this.getAll({ featureQuery, archived, isAdmin: true, userId });
+        return this.getAll({
+            featureQuery,
+            archived: Boolean(archived),
+            isAdmin: true,
+            userId,
+            includeDisabledStrategies: true,
+        });
     }
 }
 

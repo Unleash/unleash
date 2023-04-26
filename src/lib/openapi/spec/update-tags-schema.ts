@@ -4,17 +4,21 @@ import { tagSchema } from './tag-schema';
 export const updateTagsSchema = {
     $id: '#/components/schemas/updateTagsSchema',
     type: 'object',
+    description:
+        "Represents a set of changes to a feature's tags, such as adding or removing tags.",
     additionalProperties: false,
     required: ['addedTags', 'removedTags'],
     properties: {
         addedTags: {
             type: 'array',
+            description: 'Tags to add to the feature.',
             items: {
                 $ref: '#/components/schemas/tagSchema',
             },
         },
         removedTags: {
             type: 'array',
+            description: 'Tags to remove from the feature.',
             items: {
                 $ref: '#/components/schemas/tagSchema',
             },

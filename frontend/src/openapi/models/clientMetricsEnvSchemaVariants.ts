@@ -4,4 +4,7 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * How many times each variant was returned
+ */
 export type ClientMetricsEnvSchemaVariants = { [key: string]: number };

@@ -10,20 +10,20 @@ import {
     IConstraint,
     IEnvironmentOverview,
     IFeatureOverview,
+    IFeatureStrategiesStore,
     IFeatureStrategy,
     IFeatureToggleClient,
+    IFlagResolver,
     IStrategyConfig,
     ITag,
-} from '../types/model';
-import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
-import { PartialDeep, PartialSome } from '../types/partial';
+    PartialDeep,
+    PartialSome,
+} from '../types';
 import FeatureToggleStore from './feature-toggle-store';
-import { ensureStringValue } from '../util/ensureStringValue';
-import { mapValues } from '../util/map-values';
-import { IFlagResolver } from '../types/experimental';
+import { ensureStringValue, mapValues } from '../util';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
-import Raw = Knex.Raw;
 import { Db } from './db';
+import Raw = Knex.Raw;
 
 const COLUMNS = [
     'id',
@@ -31,9 +31,11 @@ const COLUMNS = [
     'project_name',
     'environment',
     'strategy_name',
+    'title',
     'parameters',
     'constraints',
     'created_at',
+    'disabled',
 ];
 /*
 const mapperToColumnNames = {
@@ -55,11 +57,13 @@ interface IFeatureStrategiesTable {
     feature_name: string;
     project_name: string;
     environment: string;
+    title?: string | null;
     strategy_name: string;
     parameters: object;
     constraints: string;
     sort_order: number;
     created_at?: Date;
+    disabled?: boolean | null;
 }
 
 export interface ILoadFeatureToggleWithEnvsParams {
@@ -76,10 +80,12 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
         projectId: row.project_name,
         environment: row.environment,
         strategyName: row.strategy_name,
+        title: row.title,
         parameters: mapValues(row.parameters || {}, ensureStringValue),
         constraints: (row.constraints as unknown as IConstraint[]) || [],
         createdAt: row.created_at,
         sortOrder: row.sort_order,
+        disabled: row.disabled,
     };
 }
 
@@ -90,10 +96,12 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         project_name: input.projectId,
         environment: input.environment,
         strategy_name: input.strategyName,
+        title: input.title,
         parameters: input.parameters,
         constraints: JSON.stringify(input.constraints || []),
         created_at: input.createdAt,
         sort_order: input.sortOrder,
+        disabled: input.disabled,
     };
 }
 
@@ -101,6 +109,8 @@ interface StrategyUpdate {
     strategy_name: string;
     parameters: object;
     constraints: string;
+    title?: string;
+    disabled?: boolean;
 }
 
 function mapStrategyUpdate(
@@ -112,6 +122,12 @@ function mapStrategyUpdate(
     }
     if (input.parameters !== null) {
         update.parameters = input.parameters;
+    }
+    if (input.title !== null) {
+        update.title = input.title;
+    }
+    if (input.disabled !== null) {
+        update.disabled = input.disabled;
     }
     update.constraints = JSON.stringify(input.constraints || []);
     return update;
@@ -376,8 +392,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         feature: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
     ) {
-        const strategy = feature.strategies.find(
-            (s) => s.id === row.strategy_id,
+        const strategy = feature.strategies?.find(
+            (s) => s?.id === row.strategy_id,
         );
         if (!strategy) {
             return;
@@ -581,6 +597,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             parameters: r.parameters,
             sortOrder: r.sort_order,
             id: r.strategy_id,
+            title: r.strategy_title || '',
+            disabled: r.strategy_disabled || false,
         };
         if (!includeId) {
             delete strategy.id;

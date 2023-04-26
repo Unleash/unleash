@@ -10,6 +10,7 @@ export interface IGroup {
     addedAt?: string;
     userCount?: number;
     mappingsSSO: string[];
+    rootRole?: number;
 }
 
 export interface IGroupUser extends IUser {

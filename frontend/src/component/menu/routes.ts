@@ -451,7 +451,6 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         path: '/admin/logins',
         title: 'Login history',
         menu: { adminSettings: true, mode: ['enterprise'] },
-        flag: 'loginHistory',
     },
     {
         path: '/admin/users',

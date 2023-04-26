@@ -4,8 +4,6 @@ import { ILegacyApiTokenCreate } from './models/api-token';
 import { IFlagResolver, IExperimentalOptions, IFlags } from './experimental';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
-export type EventHook = (eventName: string, data: object) => void;
-
 export interface ISSLOption {
     rejectUnauthorized: boolean;
     ca?: string;
@@ -112,9 +110,7 @@ export interface IUnleashOptions {
     enableOAS?: boolean;
     preHook?: Function;
     preRouterHook?: Function;
-    eventHook?: EventHook;
     enterpriseVersion?: string;
-    disableLegacyFeaturesApi?: boolean;
     inlineSegmentConstraints?: boolean;
     clientFeatureCaching?: Partial<IClientCachingOption>;
     flagResolver?: IFlagResolver;
@@ -162,6 +158,7 @@ export interface ICspDomainOptions {
     styleSrc?: string[];
     scriptSrc?: string[];
     imgSrc?: string[];
+    connectSrc?: string[];
 }
 
 export interface ICspDomainConfig {
@@ -170,6 +167,7 @@ export interface ICspDomainConfig {
     styleSrc: string[];
     scriptSrc: string[];
     imgSrc: string[];
+    connectSrc: string[];
 }
 
 interface IFrontendApi {
@@ -195,10 +193,8 @@ export interface IUnleashConfig {
     enableOAS: boolean;
     preHook?: Function;
     preRouterHook?: Function;
-    eventHook?: EventHook;
     enterpriseVersion?: string;
     eventBus: EventEmitter;
-    disableLegacyFeaturesApi?: boolean;
     environmentEnableOverrides?: string[];
     frontendApi: IFrontendApi;
     inlineSegmentConstraints: boolean;

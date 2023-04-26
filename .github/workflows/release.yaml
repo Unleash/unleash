@@ -10,20 +10,22 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [18.x]
 
     steps:
       - uses: actions/checkout@v3
-      - name: Publish to npm
+      - name: Setup to npm
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
-      - run: |
+      - name: Build
+        run: |
           yarn install --frozen-lockfile
           yarn --cwd ./frontend install --frozen-lockfile
-      - run: |
+      - name: Publish to npm
+        run: |
           LATEST=$(npm show unleash-server version)
           TAG=$(node scripts/npm-tag.js $LATEST)
           npm publish --tag ${TAG:-latest}

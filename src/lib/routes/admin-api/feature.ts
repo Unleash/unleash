@@ -2,12 +2,7 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
 import { extractUsername } from '../../util/extract-user';
-import {
-    CREATE_FEATURE,
-    DELETE_FEATURE,
-    NONE,
-    UPDATE_FEATURE,
-} from '../../types/permissions';
+import { NONE, UPDATE_FEATURE } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types';
 import FeatureToggleService from '../../services/feature-toggle-service';
@@ -60,23 +55,6 @@ class FeatureController extends Controller {
         this.openApiService = openApiService;
         this.service = featureToggleServiceV2;
 
-        if (!config.disableLegacyFeaturesApi) {
-            this.post('/', this.createToggle, CREATE_FEATURE);
-            this.get('/:featureName', this.getToggle);
-            this.put('/:featureName', this.updateToggle, UPDATE_FEATURE);
-            this.delete('/:featureName', this.archiveToggle, DELETE_FEATURE);
-            this.post('/:featureName/toggle', this.toggle, UPDATE_FEATURE);
-            this.post('/:featureName/toggle/on', this.toggleOn, UPDATE_FEATURE);
-            this.post(
-                '/:featureName/toggle/off',
-                this.toggleOff,
-                UPDATE_FEATURE,
-            );
-
-            this.post('/:featureName/stale/on', this.staleOn, UPDATE_FEATURE);
-            this.post('/:featureName/stale/off', this.staleOff, UPDATE_FEATURE);
-        }
-
         this.route({
             method: 'get',
             path: '',
@@ -120,7 +98,7 @@ class FeatureController extends Controller {
                     operationId: 'listTags',
                     responses: {
                         200: createResponseSchema('tagsSchema'),
-                        ...getStandardResponses(401),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],

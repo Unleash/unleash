@@ -7,4 +7,5 @@ import type { ChangeRequestStateSchemaState } from './changeRequestStateSchemaSt
 
 export interface ChangeRequestStateSchema {
     state: ChangeRequestStateSchemaState;
+    comment?: string;
 }

@@ -184,8 +184,10 @@ test('Trying to add a strategy configuration to environment not connected to tog
         })
         .expect(400)
         .expect((r) => {
-            expect(r.body.message.includes('environment')).toBeTruthy();
-            expect(r.body.message.includes('project')).toBeTruthy();
+            expect(
+                r.body.details[0].message.includes('environment'),
+            ).toBeTruthy();
+            expect(r.body.details[0].message.includes('project')).toBeTruthy();
         });
 });
 

@@ -135,7 +135,9 @@ Used to fetch details about a specific featureToggle. This is mostly provded to 
 ## Create a new Feature Toggle {#create-a-new-feature-toggle}
 
 :::caution Removal notice
-This endpoint was removed in Unleash v5. Please use the [project-based endpoint to create feature toggles](/reference/api/legacy/unleash/admin/features-v2.md#create-toggle) instead.
+
+This endpoint was removed in Unleash v5 (deprecated since v4). Please use the [project-based endpoint to create feature toggles](/reference/api/legacy/unleash/admin/features-v2.md#create-toggle) instead.
+
 :::
 
 

@@ -1,9 +1,47 @@
 import { ErrorObject } from 'ajv';
 import {
     ApiErrorSchema,
+    fromLegacyError,
     fromOpenApiValidationError,
     fromOpenApiValidationErrors,
+    UnleashApiErrorNameWithoutExtraData,
+    UnleashApiErrorTypes,
+    UnleashError,
 } from './api-error';
+import BadDataError from './bad-data-error';
+
+describe('v5 deprecation: backwards compatibility', () => {
+    it.each(UnleashApiErrorTypes)(
+        'Adds details to error type: "%s"',
+        (name: UnleashApiErrorNameWithoutExtraData) => {
+            const message = `Error type: ${name}`;
+            const error = new UnleashError({ name, message }).toJSON();
+
+            expect(error.message).toBe(message);
+            expect(error.details).toStrictEqual([
+                {
+                    message,
+                    description: message,
+                },
+            ]);
+        },
+    );
+});
+
+describe('Standard/legacy error conversion', () => {
+    it('Moves message to the details list for baddataerror', () => {
+        const message = `: message!`;
+        const result = fromLegacyError(new BadDataError(message)).toJSON();
+
+        expect(result.message.includes('`details`'));
+        expect(result.details).toStrictEqual([
+            {
+                message,
+                description: message,
+            },
+        ]);
+    });
+});
 
 describe('OpenAPI error conversion', () => {
     it('Gives useful error messages for missing properties', () => {

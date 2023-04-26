@@ -53,10 +53,6 @@ const flags = {
         process.env.UNLEASH_BULK_OPERATIONS,
         false,
     ),
-    projectScopedStickiness: parseEnvVarBoolean(
-        process.env.PROJECT_SCOPED_STICKINESS,
-        false,
-    ),
     personalAccessTokensKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_PAT_KILL_SWITCH,
         false,

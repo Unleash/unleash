@@ -9,7 +9,6 @@ import {
     StyledInput,
     StyledTextField,
 } from './ProjectForm.styles';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Select from 'component/common/select';
@@ -60,9 +59,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
     validateProjectId,
     clearErrors,
 }) => {
-    const { uiConfig } = useUiConfig();
-    const { projectScopedStickiness } = uiConfig.flags;
-
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
@@ -109,10 +105,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 />
 
                 <ConditionallyRender
-                    condition={
-                        Boolean(projectScopedStickiness) &&
-                        setProjectStickiness != null
-                    }
+                    condition={setProjectStickiness != null}
                     show={
                         <>
                             <StyledDescription>

@@ -14,6 +14,7 @@ import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/
 import { InstanceStatus } from 'component/common/InstanceStatus/InstanceStatus';
 import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 import { MessageBanner } from 'component/common/MessageBanner/MessageBanner';
+import { Demo } from 'component/demo/Demo';
 
 window.global ||= window;
 
@@ -28,6 +29,7 @@ ReactDOM.render(
                                 <MessageBanner />
                                 <ScrollTop />
                                 <App />
+                                <Demo />
                             </InstanceStatus>
                         </FeedbackCESProvider>
                     </AnnouncerProvider>

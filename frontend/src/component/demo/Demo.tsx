@@ -5,6 +5,7 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 import { TOPICS } from './demo-topics';
 import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome';
 import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const defaultProgress = {
     welcomeOpen: true,
@@ -17,6 +18,8 @@ const { value: storedProgress, setValue: setStoredProgress } =
     createLocalStorage('Tutorial:v1', defaultProgress);
 
 export const Demo = () => {
+    const { uiConfig } = useUiConfig();
+
     const [welcomeOpen, setWelcomeOpen] = useState(
         storedProgress.welcomeOpen ?? defaultProgress.welcomeOpen
     );
@@ -58,6 +61,8 @@ export const Demo = () => {
             setFinishOpen(true);
         }
     };
+
+    if (!uiConfig.flags.demo) return null;
 
     return (
         <>

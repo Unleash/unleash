@@ -1,6 +1,5 @@
 import { FC, ReactNode } from 'react';
 import {
-    hasNameField,
     IChange,
     IChangeRequest,
     IChangeRequestFeature,
@@ -8,18 +7,8 @@ import {
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Box, styled } from '@mui/material';
-
-import {
-    StrategyTooltipLink,
-    StrategyDiff,
-} from 'component/changeRequest/ChangeRequest/StrategyTooltipLink/StrategyTooltipLink';
-import { StrategyExecution } from '../../../../feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import { ToggleStatusChange } from './ToggleStatusChange';
-import {
-    StrategyAddedChange,
-    StrategyDeletedChange,
-    StrategyEditedChange,
-} from './StrategyChange';
+import { StrategyChange } from './StrategyChange';
 import { VariantPatch } from './VariantPatch/VariantPatch';
 
 const StyledSingleChangeBox = styled(Box, {
@@ -74,6 +63,7 @@ export const Change: FC<{
     const lastIndex = feature.defaultChange
         ? feature.changes.length + 1
         : feature.changes.length;
+
     return (
         <StyledSingleChangeBox
             key={objectId(change)}
@@ -98,50 +88,17 @@ export const Change: FC<{
                         discard={discard}
                     />
                 )}
-                {change.action === 'addStrategy' && (
-                    <>
-                        <StrategyAddedChange discard={discard}>
-                            <StrategyTooltipLink change={change}>
-                                <StrategyDiff
-                                    change={change}
-                                    feature={feature.name}
-                                    environmentName={changeRequest.environment}
-                                    project={changeRequest.project}
-                                />
-                            </StrategyTooltipLink>
-                        </StrategyAddedChange>
-                        <StrategyExecution strategy={change.payload} />
-                    </>
-                )}
-                {change.action === 'deleteStrategy' && (
-                    <StrategyDeletedChange discard={discard}>
-                        {hasNameField(change.payload) && (
-                            <StrategyTooltipLink change={change}>
-                                <StrategyDiff
-                                    change={change}
-                                    feature={feature.name}
-                                    environmentName={changeRequest.environment}
-                                    project={changeRequest.project}
-                                />
-                            </StrategyTooltipLink>
-                        )}
-                    </StrategyDeletedChange>
-                )}
-                {change.action === 'updateStrategy' && (
-                    <>
-                        <StrategyEditedChange discard={discard}>
-                            <StrategyTooltipLink change={change}>
-                                <StrategyDiff
-                                    change={change}
-                                    feature={feature.name}
-                                    environmentName={changeRequest.environment}
-                                    project={changeRequest.project}
-                                />
-                            </StrategyTooltipLink>
-                        </StrategyEditedChange>
-                        <StrategyExecution strategy={change.payload} />
-                    </>
-                )}
+                {change.action === 'addStrategy' ||
+                change.action === 'deleteStrategy' ||
+                change.action === 'updateStrategy' ? (
+                    <StrategyChange
+                        discard={discard}
+                        change={change}
+                        featureName={feature.name}
+                        environmentName={changeRequest.environment}
+                        projectId={changeRequest.project}
+                    />
+                ) : null}
                 {change.action === 'patchVariant' && (
                     <VariantPatch
                         feature={feature.name}

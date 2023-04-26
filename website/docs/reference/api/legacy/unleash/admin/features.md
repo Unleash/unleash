@@ -107,7 +107,9 @@ Response format is the same as `api/admin/features`
 ## Fetch specific feature toggle {#fetch-specific-feature-toggle}
 
 :::caution Removal notice
-This endpoint was removed in Unleash v5. Please use the [project-based endpoint to fetch specific toggles](/reference/api/legacy/unleash/admin/features-v2.md#get-toggle) instead.
+
+This endpoint was removed in Unleash v5 (deprecated since v4). Please use the [project-based endpoint to fetch specific toggles](/reference/api/legacy/unleash/admin/features-v2.md#get-toggle) instead.
+
 :::
 
 `GET: http://unleash.host.com/api/admin/features/:featureName`

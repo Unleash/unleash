@@ -371,7 +371,7 @@ export default class ExportImportService {
                         message: description,
                     };
                 });
-            if (firstError) {
+            if (firstError !== undefined) {
                 throw new UnleashError({
                     name: 'BadDataError',
                     message:
@@ -460,7 +460,7 @@ export default class ExportImportService {
                 };
             },
         );
-        if (firstError) {
+        if (firstError !== undefined) {
             throw new UnleashError({
                 name: 'BadDataError',
                 message:

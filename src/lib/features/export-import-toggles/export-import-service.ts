@@ -362,10 +362,7 @@ export default class ExportImportService {
         const unsupportedContextFields = await this.getUnsupportedContextFields(
             dto,
         );
-        if (
-            Array.isArray(unsupportedContextFields) &&
-            unsupportedContextFields.length > 0
-        ) {
+        if (Array.isArray(unsupportedContextFields)) {
             const [firstError, ...remainingErrors] =
                 unsupportedContextFields.map((field) => {
                     const description = `${field.name} is not supported.`;
@@ -374,12 +371,14 @@ export default class ExportImportService {
                         message: description,
                     };
                 });
-            throw new UnleashError({
-                name: 'BadDataError',
-                message:
-                    'Some of the context fields you are trying to import are not supported.',
-                details: [firstError, ...remainingErrors],
-            });
+            if (firstError) {
+                throw new UnleashError({
+                    name: 'BadDataError',
+                    message:
+                        'Some of the context fields you are trying to import are not supported.',
+                    details: [firstError, ...remainingErrors],
+                });
+            }
         }
     }
 

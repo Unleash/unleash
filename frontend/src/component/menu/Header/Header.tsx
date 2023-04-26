@@ -239,32 +239,22 @@ const Header: VFC = () => {
                         />
                     </StyledLinks>
                     <StyledUserContainer>
-                        <ConditionallyRender
-                            condition={Boolean(
-                                uiConfig.flags.ENABLE_DARK_MODE_SUPPORT
-                            )}
-                            show={
-                                <Tooltip
-                                    title={
-                                        themeMode === 'dark'
-                                            ? 'Switch to light theme'
-                                            : 'Switch to dark theme'
-                                    }
-                                    arrow
-                                >
-                                    <IconButton
-                                        onClick={onSetThemeMode}
-                                        sx={focusable}
-                                    >
-                                        <ConditionallyRender
-                                            condition={themeMode === 'dark'}
-                                            show={<DarkModeOutlined />}
-                                            elseShow={<LightModeOutlined />}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
+                        <Tooltip
+                            title={
+                                themeMode === 'dark'
+                                    ? 'Switch to light theme'
+                                    : 'Switch to dark theme'
                             }
-                        />
+                            arrow
+                        >
+                            <IconButton onClick={onSetThemeMode} sx={focusable}>
+                                <ConditionallyRender
+                                    condition={themeMode === 'dark'}
+                                    show={<DarkModeOutlined />}
+                                    elseShow={<LightModeOutlined />}
+                                />
+                            </IconButton>
+                        </Tooltip>{' '}
                         <ConditionallyRender
                             condition={!isOss()}
                             show={<Notifications />}

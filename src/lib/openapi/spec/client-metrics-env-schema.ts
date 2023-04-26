@@ -31,13 +31,15 @@ export const clientMetricsEnvSchema = {
         },
         yes: {
             description: 'How many times the toggle evaluated to true',
-            type: 'number',
+            type: 'integer',
             example: 974,
+            minimum: 0,
         },
         no: {
             description: 'How many times the toggle evaluated to false',
-            type: 'number',
+            type: 'integer',
             example: 50,
+            minimum: 0,
         },
         variants: {
             description: 'How many times each variant was returned',

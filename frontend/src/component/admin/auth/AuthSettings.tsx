@@ -11,6 +11,7 @@ import { TabNav } from 'component/common/TabNav/TabNav/TabNav';
 
 export const AuthSettings = () => {
     const { authenticationType } = useUiConfig().uiConfig;
+    const { uiConfig } = useUiConfig();
 
     const tabs = [
         {
@@ -29,7 +30,9 @@ export const AuthSettings = () => {
             label: 'Google',
             component: <GoogleAuth />,
         },
-    ];
+    ].filter(
+        item => uiConfig.flags?.googleAuthEnabled || item.label !== 'Google'
+    );
 
     return (
         <div>

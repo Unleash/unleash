@@ -79,11 +79,29 @@ export const useChangeRequestApi = () => {
     const discardChange = async (
         project: string,
         changeRequestId: number,
-        changeRequestEventId: number
+        changeId: number
     ) => {
-        const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/changes/${changeRequestEventId}`;
+        const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/changes/${changeId}`;
         const req = createRequest(path, {
             method: 'DELETE',
+        });
+        try {
+            return await makeRequest(req.caller, req.id);
+        } catch (e) {
+            throw e;
+        }
+    };
+
+    const editChange = async (
+        project: string,
+        changeRequestId: number,
+        changeId: number,
+        payload: IChangeSchema
+    ) => {
+        const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/changes/${changeId}`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify(payload),
         });
         try {
             return await makeRequest(req.caller, req.id);
@@ -176,6 +194,7 @@ export const useChangeRequestApi = () => {
 
     return {
         addChange,
+        editChange,
         changeState,
         discardChange,
         updateChangeRequestEnvironmentConfig,

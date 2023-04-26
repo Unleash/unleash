@@ -24,10 +24,10 @@ import SettingService from './setting-service';
 import { SimpleAuthSettings } from '../server-impl';
 import { simpleAuthSettingsKey } from '../types/settings/simple-auth-settings';
 import DisabledError from '../error/disabled-error';
-import PasswordMismatch from '../error/password-mismatch';
 import BadDataError from '../error/bad-data-error';
 import { isDefined } from '../util/isDefined';
 import { TokenUserSchema } from '../openapi/spec/token-user-schema';
+import { UnleashError } from '../error/api-error';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -78,12 +78,15 @@ class UserService {
 
     private passwordResetTimeouts: { [key: string]: NodeJS.Timeout } = {};
 
+    private baseUriPath: string;
+
     constructor(
         stores: Pick<IUnleashStores, 'userStore' | 'eventStore'>,
         {
+            server,
             getLogger,
             authentication,
-        }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
+        }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'server'>,
         services: {
             accessService: AccessService;
             resetTokenService: ResetTokenService;
@@ -103,6 +106,8 @@ class UserService {
         if (authentication && authentication.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
         }
+
+        this.baseUriPath = server.baseUriPath || '';
     }
 
     validatePassword(password: string): boolean {
@@ -298,7 +303,11 @@ class UserService {
             await this.store.successfullyLogin(user);
             return user;
         }
-        throw new PasswordMismatch();
+
+        throw new UnleashError({
+            name: 'PasswordMismatchError',
+            message: `The combination of password and username you provided is invalid. If you have forgotten your password, visit ${this.baseUriPath}/forgotten-password or get in touch with your instance administrator.`,
+        });
     }
 
     /**

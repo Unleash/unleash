@@ -121,7 +121,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                     requestBody: createRequestSchema('addonCreateUpdateSchema'),
                     responses: {
                         200: createResponseSchema('addonSchema'),
-                        ...getStandardResponses(400, 401, 403, 413, 415),
+                        ...getStandardResponses(400, 401, 403, 404, 413, 415),
                     },
                 }),
             ],
@@ -142,7 +142,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                     operationId: 'deleteAddon',
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(401, 403),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],

@@ -106,7 +106,7 @@ type ChangeRequestEnabled = { enabled: boolean };
 
 type ChangeRequestAddStrategy = Pick<
     IFeatureStrategy,
-    'parameters' | 'constraints'
+    'parameters' | 'constraints' | 'segments' | 'title' | 'disabled'
 > & { name: string };
 
 type ChangeRequestEditStrategy = ChangeRequestAddStrategy & { id: string };
@@ -114,6 +114,8 @@ type ChangeRequestEditStrategy = ChangeRequestAddStrategy & { id: string };
 type ChangeRequestDeleteStrategy = {
     id: string;
     name: string;
+    title?: string;
+    disabled?: boolean;
 };
 
 export type ChangeRequestAction =
@@ -122,6 +124,3 @@ export type ChangeRequestAction =
     | 'updateStrategy'
     | 'deleteStrategy'
     | 'patchVariant';
-
-export const hasNameField = (payload: unknown): payload is { name: string } =>
-    typeof payload === 'object' && payload !== null && 'name' in payload;

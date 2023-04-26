@@ -11,6 +11,7 @@ export interface IFeatureStrategy {
     projectId?: string;
     environment?: string;
     segments?: number[];
+    disabled?: boolean;
 }
 
 export interface IFeatureStrategyParameters {
@@ -24,6 +25,7 @@ export interface IFeatureStrategyPayload {
     constraints: IConstraint[];
     parameters: IFeatureStrategyParameters;
     segments?: number[];
+    disabled?: boolean;
 }
 
 export interface IStrategy {

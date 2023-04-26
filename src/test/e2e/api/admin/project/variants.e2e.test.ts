@@ -489,7 +489,7 @@ test('PUTing an invalid variant throws 400 exception', async () => {
         .expect(400)
         .expect((res) => {
             expect(res.body.details).toHaveLength(1);
-            expect(res.body.details[0].message).toMatch(
+            expect(res.body.details[0].description).toMatch(
                 /.*weightType" must be one of/,
             );
         });
@@ -524,7 +524,7 @@ test('Invalid variant in PATCH also throws 400 exception', async () => {
         .expect(400)
         .expect((res) => {
             expect(res.body.details).toHaveLength(1);
-            expect(res.body.details[0].message).toMatch(
+            expect(res.body.details[0].description).toMatch(
                 /.*weight" must be less than or equal to 1000/,
             );
         });
@@ -652,7 +652,7 @@ test('PATCHING with no variable variants fails with 400', async () => {
         .expect(400)
         .expect((res) => {
             expect(res.body.details).toHaveLength(1);
-            expect(res.body.details[0].message).toEqual(
+            expect(res.body.details[0].description).toEqual(
                 'There must be at least one "variable" variant',
             );
         });
@@ -847,7 +847,7 @@ test('If sum of fixed variant weight exceed 1000 fails with 400', async () => {
         .expect(400)
         .expect((res) => {
             expect(res.body.details).toHaveLength(1);
-            expect(res.body.details[0].message).toEqual(
+            expect(res.body.details[0].description).toEqual(
                 'The traffic distribution total must equal 100%',
             );
         });
@@ -960,7 +960,7 @@ test('PATCH endpoint validates uniqueness of variant names', async () => {
         .send(patch)
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].message).toMatch(
+            expect(res.body.details[0].description).toMatch(
                 /contains a duplicate value/,
             );
         });
@@ -996,7 +996,7 @@ test('PUT endpoint validates uniqueness of variant names', async () => {
         ])
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].message).toMatch(
+            expect(res.body.details[0].description).toMatch(
                 /contains a duplicate value/,
             );
         });

@@ -3,8 +3,8 @@ import { screen } from '@testing-library/react';
 import { ChangeRequestTitle } from './ChangeRequestTitle';
 import { ChangeRequestState } from '../../changeRequest.types';
 import userEvent from '@testing-library/user-event';
-import { testServerRoute, testServerSetup } from '../../../../utils/testServer';
-import { render } from '../../../../utils/testRenderer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { render } from 'utils/testRenderer';
 import { UIProviderContainer } from '../../../providers/UIProvider/UIProviderContainer';
 
 const changeRequest = {

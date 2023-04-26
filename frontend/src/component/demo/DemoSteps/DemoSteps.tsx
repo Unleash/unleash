@@ -182,7 +182,7 @@ export const DemoSteps = ({
                     waitForLoad(step, tries + 1);
                 }
             }
-        }, 200);
+        }, 300);
     };
 
     useEffect(() => {

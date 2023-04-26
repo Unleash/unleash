@@ -103,7 +103,8 @@ export const ChangeRequestsTabs = ({
                 Header: 'Title',
                 width: 100,
                 canSort: true,
-                accessor: 'id',
+                accessor: 'title',
+                searchable: true,
                 Cell: ChangeRequestTitleCell,
             },
             {
@@ -111,9 +112,18 @@ export const ChangeRequestsTabs = ({
                 Header: 'Updated feature toggles',
                 canSort: false,
                 accessor: 'features',
-                Cell: ({ value }: any) => {
-                    return <FeaturesCell project={projectId} value={value} />;
-                },
+                Cell: ({
+                    value,
+                    row: {
+                        original: { title },
+                    },
+                }: any) => (
+                    <FeaturesCell
+                        project={projectId}
+                        value={value}
+                        key={title}
+                    />
+                ),
             },
             {
                 Header: 'By',

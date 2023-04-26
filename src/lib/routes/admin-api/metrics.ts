@@ -9,7 +9,11 @@ import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { ApplicationSchema } from '../../openapi/spec/application-schema';
 import { ApplicationsSchema } from '../../openapi/spec/applications-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
+import { CreateApplicationSchema } from '../../openapi/spec/create-application-schema';
 
 class MetricsController extends Controller {
     private logger: Logger;
@@ -43,10 +47,15 @@ class MetricsController extends Controller {
                 openApiService.validPath({
                     tags: ['Metrics'],
                     operationId: 'createApplication',
+                    summary:
+                        'Create an application to connect reported metrics',
+                    description:
+                        'Is used to report usage as well which sdk the application uses',
                     responses: {
                         202: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
                     },
-                    requestBody: createRequestSchema('applicationSchema'),
+                    requestBody: createRequestSchema('createApplicationSchema'),
                 }),
             ],
         });
@@ -60,8 +69,11 @@ class MetricsController extends Controller {
                 openApiService.validPath({
                     tags: ['Metrics'],
                     operationId: 'deleteApplication',
+                    summary: 'Delete an application',
+                    description: `Delete the application specified in the request URL. Returns 200 OK if the application was successfully deleted or if it didn't exist`,
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -74,6 +86,9 @@ class MetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Metrics'],
+                    summary: 'Get all applications',
+                    description:
+                        'Returns all applications registered with Unleash. Applications can be created via metrics reporting or manual creation',
                     operationId: 'getApplications',
                     responses: {
                         200: createResponseSchema('applicationsSchema'),
@@ -90,8 +105,12 @@ class MetricsController extends Controller {
                 openApiService.validPath({
                     tags: ['Metrics'],
                     operationId: 'getApplication',
+                    summary: 'Get application data',
+                    description:
+                        'Returns data about the specified application (`appName`). The data contains information on the name of the application, sdkVersion (which sdk reported these metrics, typically `unleash-client-node:3.4.1` or `unleash-client-java:7.1.0`), as well as data about how to display this application in a list.',
                     responses: {
                         200: createResponseSchema('applicationSchema'),
+                        ...getStandardResponses(404),
                     },
                 }),
             ],
@@ -117,7 +136,7 @@ class MetricsController extends Controller {
     }
 
     async createApplication(
-        req: Request<{ appName: string }, unknown, ApplicationSchema>,
+        req: Request<{ appName: string }, unknown, CreateApplicationSchema>,
         res: Response,
     ): Promise<void> {
         const input = {

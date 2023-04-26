@@ -30,6 +30,7 @@ import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewW
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle';
+import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -37,6 +38,7 @@ interface IFeatureStrategyFormProps {
     environmentId: string;
     permission: string;
     onSubmit: () => void;
+    onCancel?: () => void;
     loading: boolean;
     isChangeRequest?: boolean;
     strategy: Partial<IFeatureStrategy>;
@@ -74,6 +76,7 @@ export const FeatureStrategyForm = ({
     environmentId,
     permission,
     onSubmit,
+    onCancel,
     loading,
     strategy,
     setStrategy,
@@ -149,7 +152,7 @@ export const FeatureStrategyForm = ({
             .every(Boolean);
     };
 
-    const onCancel = () => {
+    const onDefaultCancel = () => {
         navigate(formatFeaturePath(feature.project, feature.name));
     };
 
@@ -248,6 +251,16 @@ export const FeatureStrategyForm = ({
                 hasAccess={access}
             />
             <StyledHr />
+            <FeatureStrategyEnabledDisabled
+                enabled={!strategy?.disabled}
+                onToggleEnabled={() =>
+                    setStrategy(strategyState => ({
+                        ...strategyState,
+                        disabled: !strategyState.disabled,
+                    }))
+                }
+            />
+            <StyledHr />
             <StyledButtons>
                 <PermissionButton
                     permission={permission}
@@ -270,7 +283,7 @@ export const FeatureStrategyForm = ({
                 <Button
                     type="button"
                     color="primary"
-                    onClick={onCancel}
+                    onClick={onCancel ? onCancel : onDefaultCancel}
                     disabled={loading}
                 >
                     Cancel

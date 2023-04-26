@@ -36,8 +36,8 @@ beforeAll(async () => {
     roleStore = stores.roleStore;
     sessionStore = stores.sessionStore;
     const roles = await roleStore.getRootRoles();
-    editorRole = roles.find((r) => r.name === RoleName.EDITOR);
-    adminRole = roles.find((r) => r.name === RoleName.ADMIN);
+    editorRole = roles.find((r) => r.name === RoleName.EDITOR)!!;
+    adminRole = roles.find((r) => r.name === RoleName.ADMIN)!!;
 });
 
 afterAll(async () => {

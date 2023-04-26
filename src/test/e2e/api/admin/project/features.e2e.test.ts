@@ -160,7 +160,7 @@ async function addStrategies(featureName: string, envName: string) {
 
 test('Trying to add a strategy configuration to environment not connected to toggle should fail', async () => {
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'com.test.feature',
             enabled: false,
@@ -191,7 +191,7 @@ test('Trying to add a strategy configuration to environment not connected to tog
 
 test('Can get project overview', async () => {
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'project-overview',
             enabled: false,
@@ -240,7 +240,7 @@ test('Can get features for project', async () => {
 
 test('Project overview includes environment connected to feature', async () => {
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'com.test.environment',
             enabled: false,
@@ -273,7 +273,7 @@ test('Project overview includes environment connected to feature', async () => {
 
 test('Disconnecting environment from project, removes environment from features in project overview', async () => {
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'com.test.disconnect.environment',
             enabled: false,

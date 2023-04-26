@@ -111,7 +111,6 @@ export interface IUnleashOptions {
     preHook?: Function;
     preRouterHook?: Function;
     enterpriseVersion?: string;
-    disableLegacyFeaturesApi?: boolean;
     inlineSegmentConstraints?: boolean;
     clientFeatureCaching?: Partial<IClientCachingOption>;
     flagResolver?: IFlagResolver;
@@ -196,7 +195,6 @@ export interface IUnleashConfig {
     preRouterHook?: Function;
     enterpriseVersion?: string;
     eventBus: EventEmitter;
-    disableLegacyFeaturesApi?: boolean;
     environmentEnableOverrides?: string[];
     frontendApi: IFrontendApi;
     inlineSegmentConstraints: boolean;

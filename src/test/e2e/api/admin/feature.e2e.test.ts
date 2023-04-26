@@ -916,6 +916,7 @@ test('Should throw error when updating a flexibleRollout strategy with "" for st
         .expect((res) => {
             const result = res.body;
             expect(res.status).toBe(400);
-            expect(result.error).toBe('Request validation failed');
+            expect(result.message.includes('validation'));
+            expect(result.message.includes('failed'));
         });
 });

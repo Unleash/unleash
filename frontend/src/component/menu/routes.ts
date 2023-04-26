@@ -450,8 +450,7 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/logins',
         title: 'Login history',
-        menu: { adminSettings: true },
-        flag: 'loginHistory',
+        menu: { adminSettings: true, mode: ['enterprise'] },
     },
     {
         path: '/admin/users',
@@ -461,14 +460,14 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/groups',
         title: 'Groups',
-        menu: { adminSettings: true },
+        menu: { adminSettings: true, mode: ['enterprise'] },
         flag: UG,
     },
     {
         path: '/admin/roles',
         title: 'Project roles',
         flag: RE,
-        menu: { adminSettings: true },
+        menu: { adminSettings: true, mode: ['enterprise'] },
     },
     {
         path: '/admin/auth',
@@ -483,12 +482,12 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/service-accounts',
         title: 'Service accounts',
-        menu: { adminSettings: true, isEnterprise: true },
+        menu: { adminSettings: true, mode: ['enterprise'] },
     },
     {
         path: '/admin/network/*',
         title: 'Network',
-        menu: { adminSettings: true },
+        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         configFlag: 'networkViewEnabled',
     },
     {
@@ -505,7 +504,7 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/admin-invoices',
         title: 'Billing & invoices',
-        menu: { adminSettings: true, isEnterprise: true },
+        menu: { adminSettings: true, mode: ['pro'] },
     },
 ];
 

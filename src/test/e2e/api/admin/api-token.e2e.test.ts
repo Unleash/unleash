@@ -2,7 +2,7 @@ import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ALL, ApiTokenType } from '../../../../lib/types/models/api-token';
-import { DEFAULT_ENV } from '../../../../lib/util/constants';
+import { DEFAULT_ENV } from '../../../../lib/util';
 
 let db;
 let app;
@@ -258,7 +258,7 @@ test('should not create token for invalid projectId', async () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].message).toMatch(
+            expect(res.body.details[0].description).toMatch(
                 /bogus-project-something/,
             );
         });
@@ -275,7 +275,7 @@ test('should not create token for invalid environment', async () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].message).toMatch(
+            expect(res.body.details[0].description).toMatch(
                 /bogus-environment-something/,
             );
         });
@@ -332,7 +332,7 @@ test('client tokens cannot span all environments', async () => {
         .expect(400);
 });
 
-test('should not create token for disabled environment', async () => {
+test('should create token for disabled environment', async () => {
     await db.stores.environmentStore.create({
         name: 'disabledEnvironment',
         type: 'production',
@@ -347,5 +347,5 @@ test('should not create token for disabled environment', async () => {
             environment: 'disabledEnvironment',
         })
         .set('Content-Type', 'application/json')
-        .expect(400);
+        .expect(201);
 });

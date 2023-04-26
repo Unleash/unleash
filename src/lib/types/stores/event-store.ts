@@ -15,4 +15,5 @@ export interface IEventStore
     searchEvents(search: SearchEventsSchema): Promise<IEvent[]>;
     getMaxRevisionId(currentMax?: number): Promise<number>;
     query(operations: IQueryOperations[]): Promise<IEvent[]>;
+    queryCount(operations: IQueryOperations[]): Promise<number>;
 }

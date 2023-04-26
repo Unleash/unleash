@@ -5,7 +5,7 @@ import {
     StyledInputDescription,
     StyledSelectInput,
 } from '../ApiTokenForm.styles';
-import { useEnvironments } from '../../../../../hooks/api/getters/useEnvironments/useEnvironments';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 
 interface IEnvironmentSelectorProps {
     type: string;
@@ -23,9 +23,11 @@ export const EnvironmentSelector = ({
             ? [{ key: '*', label: 'ALL' }]
             : environments.map(environment => ({
                   key: environment.name,
-                  label: environment.name,
+                  label: `${environment.name.concat(
+                      !environment.enabled ? ' - deprecated' : ''
+                  )}`,
                   title: environment.name,
-                  disabled: !environment.enabled,
+                  disabled: false,
               }));
 
     return (

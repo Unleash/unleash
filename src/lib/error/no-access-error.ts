@@ -1,31 +1,17 @@
-class NoAccessError extends Error {
-    permission: string;
+import { UnleashError } from './api-error';
 
-    name: string;
-
-    message: string;
-
-    environment?: string;
-
+class NoAccessError extends UnleashError {
     constructor(permission: string, environment?: string) {
-        super();
+        const message =
+            `You don't have the required permissions to perform this operation. You need the "${permission}" permission to perform this action` +
+            (environment ? ` in the "${environment}" environment.` : `.`);
+
+        super({
+            name: 'NoAccessError',
+            message,
+            permission,
+        });
         Error.captureStackTrace(this, this.constructor);
-
-        this.name = this.constructor.name;
-        this.permission = permission;
-        this.environment = environment;
-        if (environment) {
-            this.message = `You need permission=${permission} to perform this action on environment=${environment}`;
-        } else {
-            this.message = `You need permission=${permission} to perform this action`;
-        }
-    }
-
-    toJSON(): any {
-        return {
-            permission: this.permission,
-            message: this.message,
-        };
     }
 }
 

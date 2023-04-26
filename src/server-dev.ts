@@ -9,7 +9,7 @@ process.nextTick(async () => {
             createConfig({
                 db: {
                     user: 'unleash_user',
-                    password: 'passord',
+                    password: 'password',
                     host: 'localhost',
                     port: 5432,
                     database: process.env.UNLEASH_DATABASE_NAME || 'unleash',
@@ -38,13 +38,8 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        featuresExportImport: true,
                         newProjectOverview: true,
                         bulkOperations: true,
-                        projectStatusApi: true,
-                        showProjectApiAccess: true,
-                        projectScopedSegments: true,
-                        projectScopedStickiness: true,
                         optimal304: true,
                         optimal304Differ: false,
                     },

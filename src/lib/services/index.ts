@@ -58,10 +58,7 @@ import {
 } from '../features/change-request-access-service/createChangeRequestAccessReadModel';
 
 // TODO: will be moved to scheduler feature directory
-export const scheduleServices = (
-    services: IUnleashServices,
-    config: IUnleashConfig,
-): void => {
+export const scheduleServices = (services: IUnleashServices): void => {
     const {
         schedulerService,
         apiTokenService,
@@ -94,12 +91,10 @@ export const scheduleServices = (
         hoursToMilliseconds(24),
     );
 
-    if (config.flagResolver.isEnabled('projectStatusApi')) {
-        schedulerService.schedule(
-            projectService.statusJob.bind(projectService),
-            hoursToMilliseconds(24),
-        );
-    }
+    schedulerService.schedule(
+        projectService.statusJob.bind(projectService),
+        hoursToMilliseconds(24),
+    );
 
     schedulerService.schedule(
         projectHealthService.setHealthRating.bind(projectHealthService),

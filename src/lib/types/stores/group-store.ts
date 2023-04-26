@@ -12,6 +12,7 @@ export interface IStoreGroup {
     name: string;
     description?: string;
     mappingsSSO?: string[];
+    rootRole?: number;
 }
 
 export interface IGroupStore extends Store<IGroup, number> {

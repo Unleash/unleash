@@ -195,43 +195,6 @@ export const Project = () => {
                             />
                         </StyledDiv>
                     </StyledTopRow>
-                    <ConditionallyRender
-                        condition={
-                            !Boolean(uiConfig?.flags?.newProjectOverview)
-                        }
-                        // TODO: !!! Remove entire block when removing feature flag!
-                        show={() => (
-                            <StyledColumn>
-                                <StyledProjectTitle>
-                                    <div>
-                                        <ConditionallyRender
-                                            condition={Boolean(
-                                                project.description
-                                            )}
-                                            show={
-                                                <StyledDiv>
-                                                    <StyledTitle data-loading>
-                                                        Description:&nbsp;
-                                                    </StyledTitle>
-                                                    <StyledText data-loading>
-                                                        {project.description}
-                                                    </StyledText>
-                                                </StyledDiv>
-                                            }
-                                        />
-                                        <StyledDiv>
-                                            <StyledTitle data-loading>
-                                                projectId:&nbsp;
-                                            </StyledTitle>
-                                            <StyledText data-loading>
-                                                {projectId}
-                                            </StyledText>
-                                        </StyledDiv>
-                                    </div>
-                                </StyledProjectTitle>
-                            </StyledColumn>
-                        )}
-                    />
                 </StyledInnerContainer>
 
                 <StyledSeparator />

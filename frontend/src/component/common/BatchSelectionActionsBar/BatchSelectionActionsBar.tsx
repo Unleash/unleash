@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Box, Paper, styled, Typography } from '@mui/material';
+import { BATCH_ACTIONS_BAR, BATCH_SELECTED_COUNT } from 'utils/testIds';
 
 interface IBatchSelectionActionsBarProps {
     count: number;
@@ -29,14 +30,14 @@ const StyledBar = styled(Paper)(({ theme }) => ({
     marginRight: 'auto',
     padding: theme.spacing(2, 3),
     backgroundColor: theme.palette.background.paper,
-    border: `1px solid ${theme.palette.secondary.main}`,
+    border: `1px solid ${theme.palette.background.alternative}`,
     borderRadius: theme.shape.borderRadiusLarge,
     gap: theme.spacing(1),
     flexWrap: 'wrap',
 }));
 
 const StyledCount = styled('span')(({ theme }) => ({
-    background: theme.palette.secondary.main,
+    background: theme.palette.background.alternative,
     color: theme.palette.common.white,
     padding: theme.spacing(0.5, 1),
     borderRadius: theme.shape.borderRadius,
@@ -56,11 +57,13 @@ export const BatchSelectionActionsBar: FC<IBatchSelectionActionsBarProps> = ({
     }
 
     return (
-        <StyledStickyContainer>
+        <StyledStickyContainer data-testid={BATCH_ACTIONS_BAR}>
             <StyledContainer>
                 <StyledBar elevation={4}>
                     <StyledText>
-                        <StyledCount>{count}</StyledCount>
+                        <StyledCount data-testid={BATCH_SELECTED_COUNT}>
+                            {count}
+                        </StyledCount>
                         &ensp;selected
                     </StyledText>
                     {children}

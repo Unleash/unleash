@@ -10,4 +10,5 @@ export interface IChangeRequestAccessReadModel {
         project: string,
         environment: string,
     ): Promise<boolean>;
+    isChangeRequestsEnabledForProject(project: string): Promise<boolean>;
 }

@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi, { ValidationError } from 'joi';
 import { IUser } from './user';
 
 export interface IGroup {
@@ -6,6 +6,7 @@ export interface IGroup {
     name: string;
     description?: string;
     mappingsSSO?: string[];
+    rootRole?: number;
     createdAt?: Date;
     userCount?: number;
     createdBy?: string;
@@ -15,6 +16,7 @@ export interface IGroupUser {
     groupId: number;
     userId: number;
     joinedAt: Date;
+    rootRoleId?: number;
     seenAt?: Date;
     createdBy?: string;
 }
@@ -58,6 +60,8 @@ export default class Group implements IGroup {
 
     name: string;
 
+    rootRole?: number;
+
     description: string;
 
     mappingsSSO: string[];
@@ -67,17 +71,19 @@ export default class Group implements IGroup {
         name,
         description,
         mappingsSSO,
+        rootRole,
         createdBy,
         createdAt,
     }: IGroup) {
         if (!id) {
-            throw new TypeError('Id is required');
+            throw new ValidationError('Id is required', [], undefined);
         }
 
         Joi.assert(name, Joi.string(), 'Name');
 
         this.id = id;
         this.name = name;
+        this.rootRole = rootRole;
         this.description = description;
         this.mappingsSSO = mappingsSSO;
         this.createdBy = createdBy;

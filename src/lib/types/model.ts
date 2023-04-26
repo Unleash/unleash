@@ -2,7 +2,7 @@ import { ITagType } from './stores/tag-type-store';
 import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
-import { ALL_OPERATORS } from '../util/constants';
+import { ALL_OPERATORS } from '../util';
 import { IProjectStats } from 'lib/services/project-service';
 
 export type Operator = typeof ALL_OPERATORS[number];
@@ -27,6 +27,8 @@ export interface IStrategyConfig {
     segments?: number[];
     parameters?: { [key: string]: string };
     sortOrder?: number;
+    title?: string | null;
+    disabled?: boolean | null;
 }
 export interface IFeatureStrategy {
     id: string;
@@ -39,6 +41,8 @@ export interface IFeatureStrategy {
     constraints: IConstraint[];
     createdAt?: Date;
     segments?: number[];
+    title?: string | null;
+    disabled?: boolean | null;
 }
 
 export interface FeatureToggleDTO {
@@ -175,8 +179,6 @@ export interface IFeatureOverview {
 
 export type ProjectMode = 'open' | 'protected';
 
-export type DefaultStickiness = 'default' | 'sessionId' | 'userId' | 'random';
-
 export interface IProjectOverview {
     name: string;
     description: string;
@@ -190,7 +192,7 @@ export interface IProjectOverview {
     stats?: IProjectStats;
     mode: ProjectMode;
 
-    defaultStickiness: DefaultStickiness;
+    defaultStickiness: string;
 }
 
 export interface IProjectHealthReport extends IProjectOverview {
@@ -374,7 +376,7 @@ export interface IProject {
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
-    defaultStickiness?: DefaultStickiness;
+    defaultStickiness: string;
 }
 
 export interface ICustomRole {

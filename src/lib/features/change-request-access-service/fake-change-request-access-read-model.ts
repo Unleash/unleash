@@ -19,4 +19,8 @@ export class FakeChangeRequestAccessReadModel
     public async isChangeRequestsEnabled(): Promise<boolean> {
         return this.isChangeRequestEnabled;
     }
+
+    public async isChangeRequestsEnabledForProject(): Promise<boolean> {
+        return this.isChangeRequestEnabled;
+    }
 }

@@ -120,7 +120,7 @@ const Header: VFC = () => {
 
     const [admin, setAdmin] = useState(false);
     const { permissions } = useAuthPermissions();
-    const { uiConfig, isOss } = useUiConfig();
+    const { uiConfig, isOss, isPro, isEnterprise } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
 
@@ -140,8 +140,13 @@ const Header: VFC = () => {
 
     const routes = getRoutes();
 
-    const filterByEnterprise = (route: INavigationMenuItem): boolean => {
-        return !route.menu.isEnterprise || !isOss();
+    const filterByMode = (route: INavigationMenuItem): boolean => {
+        const { mode } = route.menu;
+        return (
+            !mode ||
+            (mode.includes('pro') && isPro()) ||
+            (mode.includes('enterprise') && isEnterprise())
+        );
     };
 
     const filteredMainRoutes = {
@@ -159,7 +164,7 @@ const Header: VFC = () => {
         ),
         adminRoutes: adminMenuRoutes
             .filter(filterByConfig(uiConfig))
-            .filter(filterByEnterprise)
+            .filter(filterByMode)
             .map(route => ({
                 ...route,
                 path: route.path.replace('/*', ''),
@@ -234,37 +239,24 @@ const Header: VFC = () => {
                         />
                     </StyledLinks>
                     <StyledUserContainer>
-                        <ConditionallyRender
-                            condition={Boolean(
-                                uiConfig.flags.ENABLE_DARK_MODE_SUPPORT
-                            )}
-                            show={
-                                <Tooltip
-                                    title={
-                                        themeMode === 'dark'
-                                            ? 'Switch to light theme'
-                                            : 'Switch to dark theme'
-                                    }
-                                    arrow
-                                >
-                                    <IconButton
-                                        onClick={onSetThemeMode}
-                                        sx={focusable}
-                                    >
-                                        <ConditionallyRender
-                                            condition={themeMode === 'dark'}
-                                            show={<DarkModeOutlined />}
-                                            elseShow={<LightModeOutlined />}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
+                        <Tooltip
+                            title={
+                                themeMode === 'dark'
+                                    ? 'Switch to light theme'
+                                    : 'Switch to dark theme'
                             }
-                        />
+                            arrow
+                        >
+                            <IconButton onClick={onSetThemeMode} sx={focusable}>
+                                <ConditionallyRender
+                                    condition={themeMode === 'dark'}
+                                    show={<DarkModeOutlined />}
+                                    elseShow={<LightModeOutlined />}
+                                />
+                            </IconButton>
+                        </Tooltip>{' '}
                         <ConditionallyRender
-                            condition={
-                                Boolean(uiConfig?.flags?.notifications) &&
-                                !isOss()
-                            }
+                            condition={!isOss()}
                             show={<Notifications />}
                         />
                         <Tooltip title="Documentation" arrow>

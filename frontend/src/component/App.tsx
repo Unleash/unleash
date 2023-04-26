@@ -20,6 +20,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import MaintenanceBanner from './maintenance/MaintenanceBanner';
 import { styled } from '@mui/material';
 import { InitialRedirect } from './InitialRedirect';
+import { Demo } from './demo/Demo';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -48,61 +49,74 @@ export const App = () => {
 
     return (
         <ErrorBoundary FallbackComponent={Error}>
-            <SWRProvider>
-                <Suspense fallback={<Loader />}>
-                    <PlausibleProvider>
-                        <ConditionallyRender
-                            condition={!hasFetchedAuth}
-                            show={<Loader />}
-                            elseShow={
-                                <>
-                                    <ConditionallyRender
-                                        condition={Boolean(
-                                            uiConfig?.maintenanceMode
-                                        )}
-                                        show={<MaintenanceBanner />}
-                                    />
-                                    <StyledContainer>
-                                        <ToastRenderer />
-                                        <Routes>
-                                            {availableRoutes.map(route => (
+            <PlausibleProvider>
+                <ErrorBoundary FallbackComponent={Error}>
+                    <SWRProvider>
+                        <Suspense fallback={<Loader />}>
+                            <ConditionallyRender
+                                condition={!hasFetchedAuth}
+                                show={<Loader />}
+                                elseShow={
+                                    <>
+                                        <ConditionallyRender
+                                            condition={Boolean(
+                                                uiConfig?.maintenanceMode
+                                            )}
+                                            show={<MaintenanceBanner />}
+                                        />
+                                        <StyledContainer>
+                                            <ToastRenderer />
+                                            <Routes>
+                                                {availableRoutes.map(route => (
+                                                    <Route
+                                                        key={route.path}
+                                                        path={route.path}
+                                                        element={
+                                                            <LayoutPicker
+                                                                isStandalone={
+                                                                    route.isStandalone ===
+                                                                    true
+                                                                }
+                                                            >
+                                                                <ProtectedRoute
+                                                                    route={
+                                                                        route
+                                                                    }
+                                                                />
+                                                            </LayoutPicker>
+                                                        }
+                                                    />
+                                                ))}
                                                 <Route
-                                                    key={route.path}
-                                                    path={route.path}
+                                                    path="/"
                                                     element={
-                                                        <LayoutPicker
-                                                            isStandalone={
-                                                                route.isStandalone ===
-                                                                true
-                                                            }
-                                                        >
-                                                            <ProtectedRoute
-                                                                route={route}
-                                                            />
-                                                        </LayoutPicker>
+                                                        <InitialRedirect />
                                                     }
                                                 />
-                                            ))}
-                                            <Route
-                                                path="/"
-                                                element={<InitialRedirect />}
-                                            />
-                                            <Route
-                                                path="*"
-                                                element={<NotFound />}
-                                            />
-                                        </Routes>
+                                                <Route
+                                                    path="*"
+                                                    element={<NotFound />}
+                                                />
+                                            </Routes>
 
-                                        <FeedbackNPS openUrl="http://feedback.unleash.run" />
+                                            <FeedbackNPS openUrl="http://feedback.unleash.run" />
 
-                                        <SplashPageRedirect />
-                                    </StyledContainer>
-                                </>
-                            }
-                        />
-                    </PlausibleProvider>
-                </Suspense>
-            </SWRProvider>
+                                            <ConditionallyRender
+                                                condition={Boolean(
+                                                    uiConfig.flags.demo
+                                                )}
+                                                show={<Demo />}
+                                            />
+
+                                            <SplashPageRedirect />
+                                        </StyledContainer>
+                                    </>
+                                }
+                            />
+                        </Suspense>
+                    </SWRProvider>
+                </ErrorBoundary>
+            </PlausibleProvider>
         </ErrorBoundary>
     );
 };

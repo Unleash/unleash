@@ -1,6 +1,15 @@
+import { styled } from '@mui/material';
 import GeneralSelect, {
     IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
+
+const StyledTitle = styled('h2')(({ theme }) => ({
+    margin: 0,
+    marginBottom: theme.spacing(1),
+    fontSize: theme.fontSizes.smallBody,
+    fontWeight: theme.fontWeight.thin,
+    color: theme.palette.text.secondary,
+}));
 
 interface IFeatureMetricsHoursProps {
     hoursBack: number;
@@ -18,15 +27,17 @@ export const FeatureMetricsHours = ({
     };
 
     return (
-        <GeneralSelect
-            label="Period"
-            name="feature-metrics-period"
-            id="feature-metrics-period"
-            options={hourOptions}
-            value={String(hoursBack)}
-            onChange={onChange}
-            fullWidth
-        />
+        <div>
+            <StyledTitle>Period</StyledTitle>
+            <GeneralSelect
+                name="feature-metrics-period"
+                id="feature-metrics-period"
+                options={hourOptions}
+                value={String(hoursBack)}
+                onChange={onChange}
+                fullWidth
+            />
+        </div>
     );
 };
 

@@ -15,7 +15,7 @@ import useProject from './api/getters/useProject/useProject';
  * This is for features not integrated with change request.
  * If the feature is integrated with change request, use useCheckProjectAccess instead.
  */
-const useCheckProjectPermissions = (projectId?: string) => {
+export const useCheckProjectPermissions = (projectId?: string) => {
     const { hasAccess } = useContext(AccessContext);
 
     const checkPermission = (

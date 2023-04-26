@@ -7,12 +7,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { PasswordTab } from './PasswordTab/PasswordTab';
 import { PersonalAPITokensTab } from './PersonalAPITokensTab/PersonalAPITokensTab';
 import { ProfileTab } from './ProfileTab/ProfileTab';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const Profile = () => {
     const { user } = useAuthUser();
     const location = useLocation();
     const navigate = useNavigate();
     const { config: simpleAuthConfig } = useAuthSettings('simple');
+
+    const { uiConfig } = useUiConfig();
 
     const tabs = [
         { id: 'profile', label: 'Profile' },
@@ -26,6 +29,7 @@ export const Profile = () => {
             id: 'pat',
             label: 'Personal API tokens',
             path: 'personal-api-tokens',
+            hidden: uiConfig.flags.personalAccessTokensKillSwitch,
         },
     ];
 

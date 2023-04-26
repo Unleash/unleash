@@ -16,6 +16,7 @@ import {
     featureMetricsSchema,
     FeatureMetricsSchema,
 } from '../../openapi/spec/feature-metrics-schema';
+import { getStandardResponses } from '../../openapi';
 
 interface IName {
     name: string;
@@ -58,8 +59,11 @@ class ClientMetricsController extends Controller {
                 openApiService.validPath({
                     operationId: 'getRawFeatureMetrics',
                     tags: ['Metrics'],
+                    summary:
+                        'Feature usage metrics for the last 48 hours, grouped by hour',
                     responses: {
                         200: createResponseSchema('featureMetricsSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -74,8 +78,12 @@ class ClientMetricsController extends Controller {
                 openApiService.validPath({
                     operationId: 'getFeatureUsageSummary',
                     tags: ['Metrics'],
+                    summary: `Last hour of usage and a list of applications that have reported seeing this feature toggle`,
+                    description:
+                        'Separate counts for yes (enabled), no (disabled), as well as how many times each variant was selected during the last hour',
                     responses: {
                         200: createResponseSchema('featureUsageSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],

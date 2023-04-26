@@ -71,11 +71,37 @@ const useFeatureStrategyApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
+    const setStrategyDisabledState = async (
+        projectId: string,
+        featureId: string,
+        environmentId: string,
+        strategyId: string,
+        disabled: boolean
+    ): Promise<void> => {
+        const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
+        const req = createRequest(
+            path,
+            {
+                method: 'PATCH',
+                body: JSON.stringify([
+                    {
+                        path: '/disabled',
+                        value: disabled,
+                        op: 'replace',
+                    },
+                ]),
+            },
+            'setStrategyDisabledState'
+        );
+        await makeRequest(req.caller, req.id);
+    };
+
     return {
         addStrategyToFeature,
         updateStrategyOnFeature,
         deleteStrategyFromFeature,
         setStrategiesSortOrder,
+        setStrategyDisabledState,
         loading,
         errors,
     };

@@ -237,19 +237,19 @@ test('Can get strategies for specific environment', async () => {
 test('Can use multiple filters', async () => {
     expect.assertions(3);
 
-    await app.request.post('/api/admin/features').send({
+    await app.request.post('/api/admin/projects/default/features').send({
         name: 'test.feature',
         type: 'killswitch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
-    await app.request.post('/api/admin/features').send({
+    await app.request.post('/api/admin/projects/default/features').send({
         name: 'test.feature2',
         type: 'killswitch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
-    await app.request.post('/api/admin/features').send({
+    await app.request.post('/api/admin/projects/default/features').send({
         name: 'notestprefix.feature3',
         type: 'release',
         enabled: true,

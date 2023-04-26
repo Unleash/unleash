@@ -109,6 +109,9 @@ class EventStore implements IEventStore {
         let count = await this.db(TABLE)
             .count<Record<string, number>>()
             .first();
+        if (!count) {
+            return 0;
+        }
         if (typeof count.count === 'string') {
             return parseInt(count.count, 10);
         } else {
@@ -128,6 +131,9 @@ class EventStore implements IEventStore {
             query = query.andWhere({ feature_name: eventSearch.feature });
         }
         let count = await query.count().first();
+        if (!count) {
+            return 0;
+        }
         if (typeof count.count === 'string') {
             return parseInt(count.count, 10);
         } else {
@@ -204,6 +210,35 @@ class EventStore implements IEventStore {
             return rows.map(this.rowToEvent);
         } catch (e) {
             return [];
+        }
+    }
+
+    async queryCount(operations: IQueryOperations[]): Promise<number> {
+        try {
+            let query: Knex.QueryBuilder = this.db.count().from(TABLE);
+
+            operations.forEach((operation) => {
+                if (operation.op === 'where') {
+                    query = this.where(query, operation.parameters);
+                }
+
+                if (operation.op === 'forFeatures') {
+                    query = this.forFeatures(query, operation.parameters);
+                }
+
+                if (operation.op === 'beforeDate') {
+                    query = this.beforeDate(query, operation.parameters);
+                }
+
+                if (operation.op === 'betweenDate') {
+                    query = this.betweenDate(query, operation.parameters);
+                }
+            });
+
+            const queryResult = await query.first();
+            return parseInt(queryResult.count || 0);
+        } catch (e) {
+            return 0;
         }
     }
 

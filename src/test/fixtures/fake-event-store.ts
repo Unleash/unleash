@@ -16,7 +16,7 @@ class FakeEventStore implements IEventStore {
     }
 
     getMaxRevisionId(): Promise<number> {
-        throw new Error('Method not implemented.');
+        return Promise.resolve(1);
     }
 
     store(event: IEvent): Promise<void> {
@@ -64,7 +64,7 @@ class FakeEventStore implements IEventStore {
     }
 
     async get(key: number): Promise<IEvent> {
-        return this.events.find((e) => e.id === key);
+        return this.events.find((e) => e.id === key)!;
     }
 
     async getAll(): Promise<IEvent[]> {
@@ -93,6 +93,11 @@ class FakeEventStore implements IEventStore {
     async query(operations: IQueryOperations[]): Promise<IEvent[]> {
         if (operations) return [];
         return [];
+    }
+
+    async queryCount(operations: IQueryOperations[]): Promise<number> {
+        if (operations) return 0;
+        return 0;
     }
 
     setMaxListeners(number: number): EventEmitter {

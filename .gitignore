@@ -50,7 +50,8 @@ package-lock.json
 /website/i18n/*
 .env
 
-#report.json
+# Ignore frontend build
+frontend/build
 
 # Generated docs
 website/docs/reference/api/**/sidebar.js

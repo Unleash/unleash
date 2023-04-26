@@ -33,11 +33,13 @@ describe('Standard/legacy error conversion', () => {
         const message = `: message!`;
         const result = fromLegacyError(new BadDataError(message)).toJSON();
 
-        console.log(result);
-
         expect(result.message.includes('`details`'));
-        expect(result.details[0].description).toBe(message);
-        expect(result.details[0].description).toBe(result.details[0].message);
+        expect(result.details).toStrictEqual([
+            {
+                message,
+                description: message,
+            },
+        ]);
     });
 });
 

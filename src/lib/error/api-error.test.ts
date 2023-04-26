@@ -202,11 +202,8 @@ describe('OpenAPI error conversion', () => {
                     openApiError.params.additionalProperty,
                 ),
             ).toBeTruthy();
-            expect(
-                error.description
-                    .toLowerCase()
-                    .includes('additional properties'),
-            ).toBeTruthy();
+            expect(error.description).toMatch(/\broot\b/i);
+            expect(error.description).toMatch(/\badditional properties\b/i);
         });
 
         it('gives useful messages for nested properties', () => {
@@ -226,8 +223,6 @@ describe('OpenAPI error conversion', () => {
             };
 
             const error = fromOpenApiValidationError(request2)(openApiError);
-
-            console.log(error);
 
             expect(
                 error.description.includes('nestedObject.nested2'),
@@ -261,7 +256,7 @@ describe('OpenAPI error conversion', () => {
         })(error);
 
         // it should hold the full path to the error
-        expect(description.includes('nestedObject.a.b')).toBeTruthy();
+        expect(description).toMatch(/\bnestedObject.a.b\b/);
         // it should include the value that the user sent
         expect(description.includes('[]')).toBeTruthy();
     });
@@ -282,7 +277,7 @@ describe('OpenAPI error conversion', () => {
         })(error);
 
         // it should hold the full path to the error
-        expect(description.includes('nestedObject.a.b')).toBeTruthy();
+        expect(description).toMatch(/\bnestedObject.a.b\b/);
         // it should include the value that the user sent
         expect(description.includes(illegalValue)).toBeTruthy();
     });

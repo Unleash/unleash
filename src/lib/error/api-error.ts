@@ -193,7 +193,7 @@ export class UnleashError extends Error {
     }
 
     toString(): string {
-        return `${this.name}: ${this.message}.`;
+        return `${this.name}: ${this.message}`;
     }
 }
 

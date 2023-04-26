@@ -301,7 +301,7 @@ export const fromOpenApiValidationErrors = (
     return new UnleashError({
         name: 'ValidationError',
         message:
-            "The request payload you provided doesn't conform to the schema. Check the `details` property for a list of errors that we found.",
+            "Request validation failed: the payload you provided doesn't conform to the schema. Check the `details` property for a list of errors that we found.",
         // @ts-expect-error We know that the list is non-empty
         details,
     });

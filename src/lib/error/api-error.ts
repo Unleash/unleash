@@ -2,7 +2,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { FromSchema } from 'json-schema-to-ts';
 import { ErrorObject } from 'ajv';
 
-const UnleashApiErrorTypes = [
+export const UnleashApiErrorTypes = [
     'OwaspValidationError',
     'PasswordUndefinedError',
     'NoAccessError',
@@ -42,10 +42,8 @@ const AllUnleashApiErrorTypes = [
 ] as const;
 
 type UnleashApiErrorName = typeof AllUnleashApiErrorTypes[number];
-type UnleashApiErrorNameWithoutExtraData = Exclude<
-    UnleashApiErrorName,
-    typeof UnleashApiErrorTypesWithExtraData[number]
->;
+export type UnleashApiErrorNameWithoutExtraData =
+    typeof UnleashApiErrorTypes[number];
 
 const statusCode = (errorName: UnleashApiErrorName): number => {
     switch (errorName) {
@@ -174,6 +172,7 @@ export class UnleashError extends Error {
             id: this.id,
             name: this.name,
             message: this.message,
+            details: [{ message: this.message, description: this.message }],
             ...this.additionalParameters,
         };
     }
@@ -228,11 +227,13 @@ export const fromLegacyError = (e: Error): UnleashError => {
 
     if (
         [
-            'ValidationError',
-            'BadRequestError',
+            'AuthenticationRequired',
             'BadDataError',
+            'BadRequestError',
             'InvalidTokenError',
             'MinimumOneEnvironmentError',
+            'NoAccessError',
+            'ValidationError',
         ].includes(name)
     ) {
         return new UnleashError({

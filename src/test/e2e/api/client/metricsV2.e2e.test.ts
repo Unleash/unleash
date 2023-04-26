@@ -16,7 +16,7 @@ beforeAll(async () => {
         type: ApiTokenType.CLIENT,
         project: 'default',
         environment: 'default',
-        username: 'tester',
+        tokenName: 'tester',
     });
 });
 
@@ -70,7 +70,7 @@ test('should pick up environment from token', async () => {
         type: ApiTokenType.CLIENT,
         project: 'default',
         environment,
-        username: 'tester',
+        tokenName: 'tester',
     });
 
     await app.request
@@ -114,7 +114,7 @@ test('should set lastSeen for toggles with metrics', async () => {
         type: ApiTokenType.CLIENT,
         project: 'default',
         environment: 'default',
-        username: 'tester',
+        tokenName: 'tester',
     });
 
     await app.request

@@ -39,7 +39,7 @@ const tokenRowReducer = (acc, tokenRow) => {
     if (!acc[tokenRow.secret]) {
         acc[tokenRow.secret] = {
             secret: token.secret,
-            username: token.username,
+            tokenName: token.token_name,
             type: token.type,
             project: ALL,
             projects: [ALL],
@@ -48,7 +48,7 @@ const tokenRowReducer = (acc, tokenRow) => {
             createdAt: token.created_at,
             alias: token.alias,
             seenAt: token.seen_at,
-            tokenName: token.username,
+            username: token.token_name,
         };
     }
     const currentToken = acc[tokenRow.secret];
@@ -63,7 +63,7 @@ const tokenRowReducer = (acc, tokenRow) => {
 };
 
 const toRow = (newToken: IApiTokenCreate) => ({
-    username: newToken.tokenName ?? newToken.username,
+    token_name: newToken.tokenName,
     secret: newToken.secret,
     type: newToken.type,
     environment:
@@ -125,7 +125,7 @@ export class ApiTokenStore implements IApiTokenStore {
             )
             .select(
                 'tokens.secret',
-                'username',
+                'token_name',
                 'type',
                 'expires_at',
                 'created_at',

@@ -25,7 +25,7 @@ beforeAll(async () => {
     const { apiTokenService } = app.services;
     token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.ADMIN,
-        username: 'tester',
+        tokenName: 'tester',
         environment: ALL,
         projects: [ALL],
     });

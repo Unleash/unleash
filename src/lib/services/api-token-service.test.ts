@@ -18,7 +18,7 @@ test('Should init api token', async () => {
         project: '*',
         secret: '*:*:some-random-string',
         type: ApiTokenType.ADMIN,
-        username: 'admin',
+        tokenName: 'admin',
     };
 
     const config: IUnleashConfig = createTestConfig({
@@ -51,7 +51,7 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
         projects: ['*'],
         secret: '*:*:some-random-string',
         type: ApiTokenType.FRONTEND,
-        username: 'front',
+        tokenName: 'front',
         expiresAt: null,
     };
 
@@ -86,7 +86,7 @@ test('Api token operations should all have events attached', async () => {
         projects: ['*'],
         secret: '*:*:some-random-string',
         type: ApiTokenType.FRONTEND,
-        username: 'front',
+        tokenName: 'front',
         expiresAt: null,
     };
 

@@ -26,13 +26,10 @@ export const handleErrors: (
     logger: Logger,
     error: Error,
 ) => void = (res, logger, error) => {
-    logger.warn(error.message);
-    // @ts-expect-error
-    // eslint-disable-next-line no-param-reassign
-    error.isJoi = true;
-
     const finalError =
         error instanceof UnleashError ? error : fromLegacyError(error);
+
+    logger.warn(finalError.id, finalError.message);
 
     if (['InternalError', 'UnknownError'].includes(finalError.name)) {
         logger.error('Server failed executing request', error);

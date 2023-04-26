@@ -1,9 +1,47 @@
 import { ErrorObject } from 'ajv';
 import {
     ApiErrorSchema,
+    fromLegacyError,
     fromOpenApiValidationError,
     fromOpenApiValidationErrors,
+    UnleashApiErrorNameWithoutExtraData,
+    UnleashApiErrorTypes,
+    UnleashError,
 } from './api-error';
+import BadDataError from './bad-data-error';
+
+describe('v5 deprecation: backwards compatibility', () => {
+    it.each(UnleashApiErrorTypes)(
+        'Adds details to error type: "%s"',
+        (name: UnleashApiErrorNameWithoutExtraData) => {
+            const message = `Error type: ${name}`;
+            const error = new UnleashError({ name, message }).toJSON();
+
+            expect(error.message).toBe(message);
+            expect(error.details).toStrictEqual([
+                {
+                    message,
+                    description: message,
+                },
+            ]);
+        },
+    );
+});
+
+describe('Standard/legacy error conversion', () => {
+    it('Moves message to the details list for baddataerror', () => {
+        const message = `: message!`;
+        const result = fromLegacyError(new BadDataError(message)).toJSON();
+
+        expect(result.message.includes('`details`'));
+        expect(result.details).toStrictEqual([
+            {
+                message,
+                description: message,
+            },
+        ]);
+    });
+});
 
 describe('OpenAPI error conversion', () => {
     it('Gives useful error messages for missing properties', () => {
@@ -21,9 +59,9 @@ describe('OpenAPI error conversion', () => {
         const { description } = fromOpenApiValidationError({})(error);
 
         // it tells the user that the property is required
-        expect(description.includes('required'));
+        expect(description.includes('required')).toBeTruthy();
         // it tells the user the name of the missing property
-        expect(description.includes(error.params.missingProperty));
+        expect(description.includes(error.params.missingProperty)).toBeTruthy();
     });
 
     it('Gives useful error messages for type errors', () => {
@@ -45,9 +83,11 @@ describe('OpenAPI error conversion', () => {
         })(error);
 
         // it provides the message
-        expect(description.includes(error.message));
+        expect(description.includes(error.message)).toBeTruthy();
         // it tells the user what they provided
-        expect(description.includes(JSON.stringify(parameterValue)));
+        expect(
+            description.includes(JSON.stringify(parameterValue)),
+        ).toBeTruthy();
     });
 
     it('Gives useful pattern error messages', () => {
@@ -69,11 +109,11 @@ describe('OpenAPI error conversion', () => {
         })(error);
 
         // it tells the user what the pattern it should match is
-        expect(description.includes(error.params.pattern));
+        expect(description.includes(error.params.pattern)).toBeTruthy();
         // it tells the user which property it pertains to
-        expect(description.includes('description'));
+        expect(description.includes('description')).toBeTruthy();
         // it tells the user what they provided
-        expect(description.includes(requestDescription));
+        expect(description.includes(requestDescription)).toBeTruthy();
     });
 
     it('Gives useful min/maxlength error messages', () => {
@@ -95,11 +135,13 @@ describe('OpenAPI error conversion', () => {
         })(error);
 
         // it tells the user what the pattern it should match is
-        expect(description.includes(error.params.limit.toString()));
+        expect(
+            description.includes(error.params.limit.toString()),
+        ).toBeTruthy();
         // it tells the user which property it pertains to
-        expect(description.includes('description'));
+        expect(description.includes('description')).toBeTruthy();
         // it tells the user what they provided
-        expect(description.includes(requestDescription));
+        expect(description.includes(requestDescription)).toBeTruthy();
     });
 
     it('Handles numerical min/max errors', () => {
@@ -123,13 +165,15 @@ describe('OpenAPI error conversion', () => {
         })(error);
 
         // it tells the user what the limit is
-        expect(description.includes(error.params.limit.toString()));
+        expect(
+            description.includes(error.params.limit.toString()),
+        ).toBeTruthy();
         // it tells the user what kind of comparison it performed
-        expect(description.includes(error.params.comparison));
+        expect(description.includes(error.params.comparison)).toBeTruthy();
         // it tells the user which property it pertains to
-        expect(description.includes('newprop'));
+        expect(description.includes('newprop')).toBeTruthy();
         // it tells the user what they provided
-        expect(description.includes(propertyValue.toString()));
+        expect(description.includes(propertyValue.toString())).toBeTruthy();
     });
 
     it('Handles multiple errors', () => {
@@ -175,6 +219,65 @@ describe('OpenAPI error conversion', () => {
         );
     });
 
+    describe('Disallowed additional properties', () => {
+        it('gives useful messages for base-level properties', () => {
+            const openApiError = {
+                keyword: 'additionalProperties',
+                instancePath: '',
+                dataPath: '.body',
+                schemaPath:
+                    '#/components/schemas/addonCreateUpdateSchema/additionalProperties',
+                params: { additionalProperty: 'bogus' },
+                message: 'should NOT have additional properties',
+            };
+
+            const error = fromOpenApiValidationError({ bogus: 5 })(
+                openApiError,
+            );
+
+            expect(
+                error.description.includes(
+                    openApiError.params.additionalProperty,
+                ),
+            ).toBeTruthy();
+            expect(error.description).toMatch(/\broot\b/i);
+            expect(error.description).toMatch(/\badditional properties\b/i);
+        });
+
+        it('gives useful messages for nested properties', () => {
+            const request2 = {
+                nestedObject: {
+                    nested2: { extraPropertyName: 'illegal property' },
+                },
+            };
+            const openApiError = {
+                keyword: 'additionalProperties',
+                instancePath: '',
+                dataPath: '.body.nestedObject.nested2',
+                schemaPath:
+                    '#/components/schemas/addonCreateUpdateSchema/properties/nestedObject/properties/nested2/additionalProperties',
+                params: { additionalProperty: 'extraPropertyName' },
+                message: 'should NOT have additional properties',
+            };
+
+            const error = fromOpenApiValidationError(request2)(openApiError);
+
+            expect(
+                error.description.includes('nestedObject.nested2'),
+            ).toBeTruthy();
+            expect(
+                error.description.includes(
+                    openApiError.params.additionalProperty,
+                ),
+            ).toBeTruthy();
+            expect(
+                error.description
+                    .toLowerCase()
+                    .includes('additional properties'),
+            ).toBeTruthy();
+        });
+    });
+
     it('Handles deeply nested properties gracefully', () => {
         const error = {
             keyword: 'type',
@@ -191,9 +294,9 @@ describe('OpenAPI error conversion', () => {
         })(error);
 
         // it should hold the full path to the error
-        expect(description.includes('nestedObject.a.b'));
+        expect(description).toMatch(/\bnestedObject.a.b\b/);
         // it should include the value that the user sent
-        expect(description.includes('[]'));
+        expect(description.includes('[]')).toBeTruthy();
     });
 
     it('Handles deeply nested properties on referenced schemas', () => {
@@ -212,8 +315,8 @@ describe('OpenAPI error conversion', () => {
         })(error);
 
         // it should hold the full path to the error
-        expect(description.includes('nestedObject.a.b'));
+        expect(description).toMatch(/\bnestedObject.a.b\b/);
         // it should include the value that the user sent
-        expect(description.includes(illegalValue));
+        expect(description.includes(illegalValue)).toBeTruthy();
     });
 });

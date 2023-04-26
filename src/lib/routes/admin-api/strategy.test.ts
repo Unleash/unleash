@@ -57,7 +57,7 @@ test('require a name when creating a new strategy', async () => {
                 ['name', 'property', 'required'].every((word) =>
                     res.body.details[0].description.includes(word),
                 ),
-            );
+            ).toBeTruthy();
         });
 });
 

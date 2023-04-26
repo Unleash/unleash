@@ -30,6 +30,7 @@ import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewW
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle';
+import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -248,6 +249,16 @@ export const FeatureStrategyForm = ({
                 validateParameter={validateParameter}
                 errors={errors}
                 hasAccess={access}
+            />
+            <StyledHr />
+            <FeatureStrategyEnabledDisabled
+                enabled={!strategy?.disabled}
+                onToggleEnabled={() =>
+                    setStrategy(strategyState => ({
+                        ...strategyState,
+                        disabled: !strategyState.disabled,
+                    }))
+                }
             />
             <StyledHr />
             <StyledButtons>

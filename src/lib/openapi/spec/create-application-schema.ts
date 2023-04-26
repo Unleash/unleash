@@ -1,9 +1,10 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const applicationSchema = {
-    $id: '#/components/schemas/applicationSchema',
+export const createApplicationSchema = {
+    $id: '#/components/schemas/createApplicationSchema',
     type: 'object',
-    additionalProperties: false,
+    additionalProperties: true,
+    description: 'Reported application information from Unleash SDKs',
     required: ['appName'],
     properties: {
         appName: {
@@ -26,12 +27,6 @@ export const applicationSchema = {
             },
             example: ['standard', 'gradualRollout', 'mySpecialCustomStrategy'],
         },
-        description: {
-            description:
-                'Extra information added about the application reporting the metrics. Only present if added via the Unleash Admin interface',
-            type: 'string',
-            example: 'Application for reporting page visits',
-        },
         url: {
             description:
                 'A link to reference the application reporting the metrics. Could for instance be a GitHub link to the repository of the application',
@@ -39,7 +34,7 @@ export const applicationSchema = {
             example: 'https://github.com/Unleash/unleash-client-proxy-js',
         },
         color: {
-            description: `The CSS color that is used to color the application's entry in the application list`,
+            description: `Css color to be used to color the application's entry in the application list`,
             type: 'string',
             example: 'red',
         },
@@ -52,4 +47,6 @@ export const applicationSchema = {
     components: {},
 } as const;
 
-export type ApplicationSchema = FromSchema<typeof applicationSchema>;
+export type CreateApplicationSchema = FromSchema<
+    typeof createApplicationSchema
+>;

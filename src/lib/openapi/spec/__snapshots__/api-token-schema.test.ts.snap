@@ -12,6 +12,15 @@ exports[`apiTokenSchema empty 1`] = `
       },
       "schemaPath": "#/required",
     },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'type'",
+      "params": {
+        "missingProperty": "type",
+      },
+      "schemaPath": "#/required",
+    },
   ],
   "schema": "#/components/schemas/apiTokenSchema",
 }

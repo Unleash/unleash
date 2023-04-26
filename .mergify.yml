@@ -1,0 +1,6 @@
+pull_request_rules:
+  - name: Automatic update of all PRs
+    conditions:
+      - base=main # Targeting the main branch
+    actions:
+      update: {} # Update PR with base branch

@@ -6062,12 +6062,84 @@ Note: passing \`null\` as a value for the description property will set it to an
             "description": "featureUsageSchema",
           },
           "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
             "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
           },
           "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
             "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
           "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
             "description": "The requested resource was not found.",
           },
         },
@@ -6102,12 +6174,84 @@ Note: passing \`null\` as a value for the description property will set it to an
             "description": "featureMetricsSchema",
           },
           "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
             "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
           },
           "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
             "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
           "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
             "description": "The requested resource was not found.",
           },
         },
@@ -8387,9 +8531,57 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "This response has no body.",
           },
           "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
             "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
           },
           "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
             "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
         },
@@ -8423,6 +8615,30 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "applicationSchema",
           },
           "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
             "description": "The requested resource was not found.",
           },
         },
@@ -8460,12 +8676,84 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "This response has no body.",
           },
           "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "The request payload you provided doesn't conform to the schema. The .parameters property should be object. You sent [].",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ValidationError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
             "description": "The request data does not match what we expect.",
           },
           "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
             "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
           },
           "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
             "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
         },

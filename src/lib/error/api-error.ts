@@ -244,7 +244,7 @@ export const fromLegacyError = (e: Error): UnleashError => {
                 | 'InvalidTokenError'
                 | 'MinimumOneEnvironmentError',
             message:
-                'Your request body failed to validate. Refer to the `details` list to see what happened.',
+                'Request validation failed: your request body failed to validate. Refer to the `details` list to see what happened.',
             details: [{ description: e.message, message: e.message }],
         });
     }

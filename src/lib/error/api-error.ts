@@ -227,11 +227,9 @@ export const fromLegacyError = (e: Error): UnleashError => {
 
     if (
         [
-            'AuthenticationRequired',
             'BadDataError',
             'BadRequestError',
             'InvalidTokenError',
-            'NoAccessError',
             'ValidationError',
         ].includes(name)
     ) {

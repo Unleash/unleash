@@ -8,6 +8,7 @@ import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish
 import { DemoDialogPlans } from './DemoDialog/DemoDialogPlans/DemoDialogPlans';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { DemoBanner } from './DemoBanner/DemoBanner';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const defaultProgress = {
     welcomeOpen: true,
@@ -22,6 +23,7 @@ interface IDemoProps {
 
 export const Demo = ({ children }: IDemoProps): JSX.Element => {
     const { uiConfig } = useUiConfig();
+    const { trackEvent } = usePlausibleTracker();
 
     const { value: storedProgress, setValue: setStoredProgress } =
         createLocalStorage('Tutorial:v1', defaultProgress);
@@ -66,6 +68,12 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
 
         if (completedSteps === totalSteps) {
             setFinishOpen(true);
+
+            trackEvent('demo', {
+                props: {
+                    eventType: 'finish',
+                },
+            });
         }
     };
 
@@ -76,6 +84,12 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
             <DemoBanner
                 onPlans={() => {
                     setPlansOpen(true);
+
+                    trackEvent('demo', {
+                        props: {
+                            eventType: 'see_plans',
+                        },
+                    });
                 }}
             />
             {children}
@@ -84,10 +98,23 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                 onClose={() => {
                     setWelcomeOpen(false);
                     setExpanded(false);
+
+                    trackEvent('demo', {
+                        props: {
+                            eventType: 'close',
+                            topic: 'start',
+                        },
+                    });
                 }}
                 onStart={() => {
                     setWelcomeOpen(false);
                     onStart();
+
+                    trackEvent('demo', {
+                        props: {
+                            eventType: 'start',
+                        },
+                    });
                 }}
             />
             <DemoDialogFinish
@@ -99,6 +126,12 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                 onRestart={() => {
                     setFinishOpen(false);
                     onStart();
+
+                    trackEvent('demo', {
+                        props: {
+                            eventType: 'restart',
+                        },
+                    });
                 }}
             />
             <DemoDialogPlans
@@ -117,9 +150,24 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                         newSteps[topic] = 0;
                         return newSteps;
                     });
+
+                    trackEvent('demo', {
+                        props: {
+                            eventType: 'start_topic',
+                            step: TOPICS[topic].title,
+                        },
+                    });
                 }}
                 topics={TOPICS}
-                onWelcome={() => setWelcomeOpen(true)}
+                onWelcome={() => {
+                    setWelcomeOpen(true);
+
+                    trackEvent('demo', {
+                        props: {
+                            eventType: 'view_demo_link',
+                        },
+                    });
+                }}
             />
             <DemoSteps
                 setExpanded={setExpanded}

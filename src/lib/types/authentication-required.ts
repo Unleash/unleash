@@ -1,3 +1,5 @@
+import { UnleashError } from '../error/api-error';
+
 interface IBaseOptions {
     type: string;
     path: string;
@@ -9,12 +11,10 @@ interface IOptions extends IBaseOptions {
     options?: IBaseOptions[];
 }
 
-class AuthenticationRequired {
+class AuthenticationRequired extends UnleashError {
     private type: string;
 
     private path: string;
-
-    private message: string;
 
     private defaultHidden: boolean;
 
@@ -27,9 +27,9 @@ class AuthenticationRequired {
         options,
         defaultHidden = false,
     }: IOptions) {
+        super({ name: 'AuthenticationRequired', message, path, type });
         this.type = type;
         this.path = path;
-        this.message = message;
         this.options = options;
         this.defaultHidden = defaultHidden;
     }

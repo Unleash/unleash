@@ -562,9 +562,10 @@ export default class ExportImportService {
         query: ExportQuerySchema,
         userName: string,
     ): Promise<ExportResultSchema> {
-        const featureNames = query.tag
-            ? await this.featureTagService.listFeatures(query.tag)
-            : query.features || [];
+        const featureNames =
+            typeof query.tag === 'string'
+                ? await this.featureTagService.listFeatures(query.tag)
+                : (query.features as string[]) || [];
         const [
             features,
             featureEnvironments,

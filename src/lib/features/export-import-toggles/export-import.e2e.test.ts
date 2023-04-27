@@ -295,6 +295,62 @@ test('exports features', async () => {
     });
 });
 
+test('exports features by tag', async () => {
+    await createProjects();
+    const strategy = {
+        name: 'default',
+        parameters: { rollout: '100', stickiness: 'default' },
+        constraints: [
+            {
+                contextName: 'appName',
+                values: ['test'],
+                operator: 'IN' as const,
+            },
+        ],
+    };
+    await createToggle(
+        {
+            name: 'first_feature',
+            description: 'the #1 feature',
+        },
+        strategy,
+        ['mytag'],
+    );
+    await createToggle(
+        {
+            name: 'second_feature',
+            description: 'the #1 feature',
+        },
+        strategy,
+        ['anothertag'],
+    );
+    const { body } = await app.request
+        .post('/api/admin/features-batch/export')
+        .send({
+            tag: 'mytag',
+            environment: 'default',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    const { name, ...resultStrategy } = strategy;
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'first_feature',
+            },
+        ],
+        featureStrategies: [resultStrategy],
+        featureEnvironments: [
+            {
+                enabled: false,
+                environment: 'default',
+                featureName: 'first_feature',
+            },
+        ],
+    });
+});
+
 test('should export custom context fields from strategies and variants', async () => {
     await createProjects();
     const strategyContext = {

@@ -1,25 +1,25 @@
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { formatApiPath } from 'utils/formatPath';
 
+const PROJECT = 'demo-app';
+const ENVIRONMENT = 'dev';
+
 export const gradualRollout = async () => {
-    const projectId = 'default';
     const featureId = 'demoApp.step3';
-    const environmentId = 'default';
 
     const { environments }: IFeatureToggle = await fetch(
         formatApiPath(
-            `api/admin/projects/${projectId}/features/${featureId}?variantEnvironments=true`
+            `api/admin/projects/${PROJECT}/features/${featureId}?variantEnvironments=true`
         )
     ).then(res => res.json());
 
     const strategies =
-        environments.find(({ name }) => name === environmentId)?.strategies ||
-        [];
+        environments.find(({ name }) => name === ENVIRONMENT)?.strategies || [];
 
     if (!strategies.find(({ name }) => name === 'flexibleRollout')) {
         await fetch(
             formatApiPath(
-                `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies`
+                `api/admin/projects/${PROJECT}/features/${featureId}/environments/${ENVIRONMENT}/strategies`
             ),
             {
                 method: 'POST',
@@ -41,20 +41,18 @@ export const gradualRollout = async () => {
 };
 
 export const variants = async () => {
-    const projectId = 'default';
     const featureId = 'demoApp.step4';
-    const environmentId = 'default';
 
     const { variants }: IFeatureToggle = await fetch(
         formatApiPath(
-            `api/admin/projects/${projectId}/features/${featureId}?variantEnvironments=true`
+            `api/admin/projects/${PROJECT}/features/${featureId}?variantEnvironments=true`
         )
     ).then(res => res.json());
 
     if (!variants.length) {
         await fetch(
             formatApiPath(
-                `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/variants`
+                `api/admin/projects/${PROJECT}/features/${featureId}/environments/${ENVIRONMENT}/variants`
             ),
             {
                 method: 'PATCH',

@@ -3,16 +3,9 @@ import { FromSchema } from 'json-schema-to-ts';
 export const exportQuerySchema = {
     $id: '#/components/schemas/exportQuerySchema',
     type: 'object',
-    additionalProperties: false,
-    required: ['features', 'environment'],
+    additionalProperties: true,
+    required: ['environment'],
     properties: {
-        features: {
-            type: 'array',
-            items: {
-                type: 'string',
-                minLength: 1,
-            },
-        },
         environment: {
             type: 'string',
         },
@@ -20,6 +13,31 @@ export const exportQuerySchema = {
             type: 'boolean',
         },
     },
+    oneOf: [
+        {
+            required: ['features'],
+            properties: {
+                features: {
+                    type: 'array',
+                    items: {
+                        type: 'string',
+                        minLength: 1,
+                    },
+                    description: 'Selects features to export by name.',
+                },
+            },
+        },
+        {
+            required: ['tag'],
+            properties: {
+                tag: {
+                    type: 'string',
+                    description:
+                        'Selects features to export by tag. Takes precedence over the features field.',
+                },
+            },
+        },
+    ],
     components: {
         schemas: {},
     },

@@ -3,7 +3,7 @@ import { Store } from './store';
 export interface ITagType {
     name: string;
     description?: string;
-    icon?: string;
+    icon?: string | null;
 }
 
 export interface ITagTypeStore extends Store<ITagType, string> {

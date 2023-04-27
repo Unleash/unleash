@@ -1,6 +1,7 @@
 import { v4 as uuidV4 } from 'uuid';
 import { FromSchema } from 'json-schema-to-ts';
 import { ErrorObject } from 'ajv';
+import OwaspValidationError from './owasp-validation-error';
 
 export const UnleashApiErrorTypes = [
     'ContentTypeError',
@@ -14,7 +15,6 @@ export const UnleashApiErrorTypes = [
     'NotFoundError',
     'NotImplementedError',
     'OperationDeniedError',
-    'OwaspValidationError',
     'PasswordMismatch',
     'PasswordMismatchError',
     'PasswordUndefinedError',
@@ -34,6 +34,7 @@ const UnleashApiErrorTypesWithExtraData = [
     'AuthenticationRequired',
     'NoAccessError',
     'InvalidTokenError',
+    'OwaspValidationError',
 ] as const;
 
 const AllUnleashApiErrorTypes = [
@@ -134,6 +135,15 @@ type UnleashErrorData =
                 details: [
                     ValidationErrorDescription,
                     ...ValidationErrorDescription[],
+                ];
+            }
+          | {
+                name: 'OwaspValidationError';
+                details: [
+                    {
+                        validationErrors: string[];
+                        message: string;
+                    },
                 ];
             }
       );
@@ -242,6 +252,15 @@ export const fromLegacyError = (e: Error): UnleashError => {
             message:
                 'Request validation failed: your request body failed to validate. Refer to the `details` list to see what happened.',
             details: [{ description: e.message, message: e.message }],
+        });
+    }
+
+    if (name === 'OwaspValidationError') {
+        return new UnleashError({
+            name,
+            message:
+                'Password validation failed. Refer to the `details` property.',
+            details: (e as OwaspValidationError).toJSON().details,
         });
     }
 

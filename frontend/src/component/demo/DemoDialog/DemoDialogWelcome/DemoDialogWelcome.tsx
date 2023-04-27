@@ -3,6 +3,7 @@ import qrImage from 'assets/img/demo_qr.png';
 import { formatAssetPath } from 'utils/formatPath';
 import { Launch } from '@mui/icons-material';
 import { DemoDialog } from '../DemoDialog';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledDemoPane = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -55,39 +56,53 @@ export const DemoDialogWelcome = ({
     open,
     onClose,
     onStart,
-}: IDemoDialogWelcomeProps) => (
-    <DemoDialog open={open} onClose={onClose}>
-        <DemoDialog.Header>Explore Unleash</DemoDialog.Header>
-        <Typography color="textSecondary" sx={{ mt: 2 }}>
-            You can explore Unleash on your own, however for the best experience
-            it's recommended you follow our interactive demo. To get started,
-            you will need to open the demo website below.
-        </Typography>
-        <StyledDemoPane>
-            <StyledScanMessage>
-                Scan the QR code with your phone
-            </StyledScanMessage>
-            <StyledQRCode src={formatAssetPath(qrImage)} alt="Demo QR Code" />
-            <StyledDivider>OR</StyledDivider>
-            <Typography>
-                Open demo website in another tab:{' '}
-                <StyledLink
-                    href="https://demo.unleash-hosted.com/"
-                    target="_blank"
-                >
-                    demo.unleash-hosted.com <Launch />
-                </StyledLink>
+}: IDemoDialogWelcomeProps) => {
+    const { trackEvent } = usePlausibleTracker();
+
+    return (
+        <DemoDialog open={open} onClose={onClose}>
+            <DemoDialog.Header>Explore Unleash</DemoDialog.Header>
+            <Typography color="textSecondary" sx={{ mt: 2 }}>
+                You can explore Unleash on your own, however for the best
+                experience it's recommended you follow our interactive demo. To
+                get started, you will need to open the demo website below.
             </Typography>
-            <Typography color="textSecondary">
-                (we recommend you keep the pages open side by side)
-            </Typography>
-        </StyledDemoPane>
-        <StyledStartButton
-            variant="contained"
-            color="primary"
-            onClick={onStart}
-        >
-            Try Unleash demo
-        </StyledStartButton>
-    </DemoDialog>
-);
+            <StyledDemoPane>
+                <StyledScanMessage>
+                    Scan the QR code with your phone
+                </StyledScanMessage>
+                <StyledQRCode
+                    src={formatAssetPath(qrImage)}
+                    alt="Demo QR Code"
+                />
+                <StyledDivider>OR</StyledDivider>
+                <Typography>
+                    Open demo website in another tab:{' '}
+                    <StyledLink
+                        href="https://demo.unleash-hosted.com/"
+                        target="_blank"
+                        onClick={() => {
+                            trackEvent('demo', {
+                                props: {
+                                    eventType: 'open_demo_web',
+                                },
+                            });
+                        }}
+                    >
+                        demo.unleash-hosted.com <Launch />
+                    </StyledLink>
+                </Typography>
+                <Typography color="textSecondary">
+                    (we recommend you keep the pages open side by side)
+                </Typography>
+            </StyledDemoPane>
+            <StyledStartButton
+                variant="contained"
+                color="primary"
+                onClick={onStart}
+            >
+                Try Unleash demo
+            </StyledStartButton>
+        </DemoDialog>
+    );
+};

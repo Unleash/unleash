@@ -1,4 +1,5 @@
 import { Button, styled } from '@mui/material';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledBanner = styled('div')(({ theme }) => ({
     position: 'sticky',
@@ -30,22 +31,33 @@ interface IDemoBannerProps {
     onPlans: () => void;
 }
 
-export const DemoBanner = ({ onPlans }: IDemoBannerProps) => (
-    <StyledBanner>
-        <span>
-            This is a <strong>demo of Unleash</strong>. Play around as much as
-            you want. Reach out when you're ready.
-        </span>
-        <StyledQuestionsButton
-            variant="outlined"
-            sx={{ ml: 1 }}
-            href="https://slack.unleash.run/"
-            target="_blank"
-        >
-            Ask questions
-        </StyledQuestionsButton>
-        <StyledButton variant="contained" color="primary" onClick={onPlans}>
-            Get Unleash
-        </StyledButton>
-    </StyledBanner>
-);
+export const DemoBanner = ({ onPlans }: IDemoBannerProps) => {
+    const { trackEvent } = usePlausibleTracker();
+
+    return (
+        <StyledBanner>
+            <span>
+                This is a <strong>demo of Unleash</strong>. Play around as much
+                as you want. Reach out when you're ready.
+            </span>
+            <StyledQuestionsButton
+                variant="outlined"
+                sx={{ ml: 1 }}
+                href="https://slack.unleash.run/"
+                target="_blank"
+                onClick={() => {
+                    trackEvent('demo', {
+                        props: {
+                            eventType: 'ask_questions',
+                        },
+                    });
+                }}
+            >
+                Ask questions
+            </StyledQuestionsButton>
+            <StyledButton variant="contained" color="primary" onClick={onPlans}>
+                Get Unleash
+            </StyledButton>
+        </StyledBanner>
+    );
+};

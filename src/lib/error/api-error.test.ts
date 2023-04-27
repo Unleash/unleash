@@ -1,5 +1,6 @@
 import owasp from 'owasp-password-strength-test';
 import { ErrorObject } from 'ajv';
+import AuthenticationRequired from '../types/authentication-required';
 import {
     ApiErrorSchema,
     fromLegacyError,
@@ -10,7 +11,11 @@ import {
     UnleashError,
 } from './api-error';
 import BadDataError from './bad-data-error';
+import NoAccessError from './no-access-error';
 import OwaspValidationError from './owasp-validation-error';
+import IncompatibleProjectError from './incompatible-project-error';
+import PasswordUndefinedError from './password-undefined';
+import ProjectWithoutOwnerError from './project-without-owner-error';
 
 describe('v5 deprecation: backwards compatibility', () => {
     it.each(UnleashApiErrorTypes)(
@@ -331,5 +336,86 @@ describe('Error serialization special cases', () => {
 
         expect(json.details!![0].message).toBe(results.errors[0]);
         expect(json.details!![0].validationErrors).toBe(results.errors);
+    });
+});
+
+// test that password mismatch errors contain the expected props etc. ...
+
+describe('Error serialization special cases', () => {
+    it('AuthenticationRequired: adds `path` and `type`', () => {
+        const type = 'password';
+        const path = '/api/login';
+        const error = new AuthenticationRequired({
+            type,
+            path,
+            message: 'this is a message',
+        });
+
+        const json = error.toJSON();
+
+        expect(json.path).toBe(path);
+        expect(json.type).toBe(type);
+    });
+
+    it('NoAccessError: adds `permission`', () => {
+        const permission = 'x';
+        const error = new NoAccessError(permission);
+        const json = error.toJSON();
+
+        expect(json.permission).toBe(permission);
+    });
+
+    it('BadDataError: adds `details` with error details to', () => {
+        const description = 'You did **this** wrong';
+        const error = new BadDataError(description).toJSON();
+
+        expect(error.message).toBe(description);
+        expect(error.details![0].message).toBe(description);
+        expect(error.details![0].description).toBe(description);
+    });
+
+    it('OwaspValidationErrors: adds `validationErrors` to `details`', () => {
+        const results = owasp.test('123');
+        const error = new OwaspValidationError(results);
+        const json = error.toJSON();
+
+        console.log(results, json);
+
+        expect(json.message).toBe(results.errors[0]);
+        expect(json.details![0].message).toBe(results.errors[0]);
+        expect(json.details![0].validationErrors).toBe(results.errors);
+    });
+
+    it('IncompatibleProjectError: adds `validationErrors: []` to the `details` list', () => {
+        const targetProject = 'x';
+        const error = new IncompatibleProjectError(targetProject);
+        const json = error.toJSON();
+
+        expect(json.details![0].validationErrors).toStrictEqual([]);
+        expect(json.details![0].message).toMatch(/\bx\b/);
+    });
+
+    it('PasswordUndefinedError: adds `validationErrors: []` to the `details` list', () => {
+        const error = new PasswordUndefinedError();
+        const json = error.toJSON();
+
+        expect(json.details![0].validationErrors).toStrictEqual([]);
+        expect(json.details![0].message).toMatch(json.message);
+    });
+
+    it('ProjectWithoutOwnerError: adds `validationErrors: []` to the `details` list', () => {
+        const error = new ProjectWithoutOwnerError();
+        const json = error.toJSON();
+
+        expect(json.details![0].validationErrors).toStrictEqual([]);
+        expect(json.details![0].message).toMatch(json.message);
+    });
+});
+
+describe('Stack traces', () => {
+    it('captures stack traces regardless of whether `Error.captureStackTrace`', () => {
+        const e = new PasswordUndefinedError();
+
+        expect(e.stack).toBeTruthy();
     });
 });

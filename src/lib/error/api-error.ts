@@ -127,11 +127,7 @@ type UnleashErrorData =
                 type: string;
             }
           | {
-                name:
-                    | 'ValidationError'
-                    | 'BadDataError'
-                    | 'BadRequestError'
-                    | 'MinimumOneEnvironmentError';
+                name: 'ValidationError' | 'BadDataError' | 'BadRequestError';
                 details: [
                     ValidationErrorDescription,
                     ...ValidationErrorDescription[],

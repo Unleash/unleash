@@ -6,6 +6,7 @@ import { DB_TIME } from '../metric-events';
 import {
     IEnvironment,
     IEnvironmentCreate,
+    IEnvironmentWithCounts,
     IProjectEnvironment,
 } from '../types/model';
 import NotFoundError from '../error/notfound-error';
@@ -53,7 +54,7 @@ function mapRow(row: IEnvironmentsTable): IEnvironment {
 
 function mapRowWithCounts(
     row: IEnvironmentsWithCountsTable,
-): IProjectEnvironment {
+): IEnvironmentWithCounts {
     return {
         ...mapRow(row),
         projectCount: row.project_count ? parseInt(row.project_count, 10) : 0,
@@ -156,7 +157,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
         return rows.map(mapRow);
     }
 
-    async getAllWithCounts(query?: Object): Promise<IEnvironment[]> {
+    async getAllWithCounts(query?: Object): Promise<IEnvironmentWithCounts[]> {
         let qB = this.db<IEnvironmentsWithCountsTable>(TABLE)
             .select(
                 '*',

@@ -5,7 +5,6 @@ import { variantSchema } from './variant-schema';
 import { overrideSchema } from './override-schema';
 import { constraintSchema } from './constraint-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
-import { environmentSchema } from './environment-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
 
 export const featuresSchema = {
@@ -27,7 +26,6 @@ export const featuresSchema = {
     components: {
         schemas: {
             constraintSchema,
-            environmentSchema,
             featureSchema,
             overrideSchema,
             featureEnvironmentSchema,

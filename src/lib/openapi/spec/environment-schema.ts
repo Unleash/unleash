@@ -4,7 +4,16 @@ export const environmentSchema = {
     $id: '#/components/schemas/environmentSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'type', 'enabled', 'protected', 'sortOrder'],
+    required: [
+        'name',
+        'type',
+        'enabled',
+        'protected',
+        'sortOrder',
+        'projectCount',
+        'apiTokenCount',
+        'enabledToggleCount',
+    ],
     description: 'A definition of the project environment',
     properties: {
         name: {

@@ -133,14 +133,21 @@ export interface IEnvironment {
     sortOrder: number;
     enabled: boolean;
     protected: boolean;
-    projectCount?: number;
-    apiTokenCount?: number;
-    enabledToggleCount?: number;
+}
+
+export interface IEnvironmentWithCounts extends IEnvironment {
+    projectCount: number;
+    apiTokenCount: number;
+    enabledToggleCount: number;
+}
+
+export interface IStrategyEnvironment extends Omit<IEnvironment, 'protected'> {
+    variantCount: number;
 }
 
 export interface IProjectEnvironment extends IEnvironment {
-    projectApiTokenCount?: number;
-    projectEnabledToggleCount?: number;
+    projectApiTokenCount: number;
+    projectEnabledToggleCount: number;
 }
 
 export interface IEnvironmentCreate {
@@ -174,7 +181,7 @@ export interface IFeatureOverview {
     stale: boolean;
     createdAt: Date;
     lastSeenAt: Date;
-    environments: IEnvironmentOverview[];
+    environments: IEnvironmentWithCounts[];
 }
 
 export type ProjectMode = 'open' | 'protected';

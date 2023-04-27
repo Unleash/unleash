@@ -1,6 +1,7 @@
 import {
     IEnvironment,
     IEnvironmentCreate,
+    IEnvironmentWithCounts,
     IProjectEnvironment,
 } from '../model';
 import { Store } from './store';
@@ -23,7 +24,7 @@ export interface IEnvironmentStore extends Store<IEnvironment, string> {
     disable(environments: IEnvironment[]): Promise<void>;
     enable(environments: IEnvironment[]): Promise<void>;
     count(): Promise<number>;
-    getAllWithCounts(): Promise<IEnvironment[]>;
+    getAllWithCounts(query?: Object): Promise<IEnvironmentWithCounts[]>;
     getProjectEnvironments(
         projectId: string,
         query?: Object,

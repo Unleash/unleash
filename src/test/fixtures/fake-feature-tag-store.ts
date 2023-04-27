@@ -18,6 +18,13 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
         return Promise.resolve(tags);
     }
 
+    async getAllFeaturesForTag(tagValue: string): Promise<string[]> {
+        const tags = this.featureTags
+            .filter((f) => f.tagValue === tagValue)
+            .map((f) => f.featureName);
+        return Promise.resolve(tags);
+    }
+
     async delete(key: IFeatureTag): Promise<void> {
         this.featureTags.splice(
             this.featureTags.findIndex((t) => t === key),

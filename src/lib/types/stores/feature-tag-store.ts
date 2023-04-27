@@ -13,6 +13,7 @@ export interface IFeatureAndTag {
 }
 export interface IFeatureTagStore extends Store<IFeatureTag, IFeatureTag> {
     getAllTagsForFeature(featureName: string): Promise<ITag[]>;
+    getAllFeaturesForTag(tagValue: string): Promise<string[]>;
     getAllByFeatures(features: string[]): Promise<IFeatureTag[]>;
     tagFeature(featureName: string, tag: ITag): Promise<ITag>;
     tagFeatures(featureTags: IFeatureTag[]): Promise<IFeatureAndTag[]>;

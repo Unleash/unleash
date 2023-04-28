@@ -14,7 +14,7 @@ This script allows you to synchronize feature toggles between two Unleash instan
 
 You can find this script in the following location within the project:
 
-`src/scripts/promote.sh`
+`scripts/promote.sh`
 
 This script can also be integrated into a continuous deployment pipeline, allowing you to automatically synchronize feature toggles between instances at a frequency determined by your pipeline configuration.
 

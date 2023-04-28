@@ -611,11 +611,12 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<FeatureEnvironmentSchema>,
     ): Promise<void> {
         const { environment, featureName, projectId } = req.params;
-        const environmentInfo = await this.featureService.getEnvironmentInfo(
-            projectId,
-            environment,
-            featureName,
-        );
+        const { defaultStrategy, ...environmentInfo } =
+            await this.featureService.getEnvironmentInfo(
+                projectId,
+                environment,
+                featureName,
+            );
 
         const result = {
             ...environmentInfo,

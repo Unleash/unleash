@@ -48,7 +48,10 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
-import { useEnvironmentsRef } from './hooks/useEnvironmentsRef';
+import {
+    ProjectEnvironmentType,
+    useEnvironmentsRef,
+} from './hooks/useEnvironmentsRef';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { FeatureToggleSwitch } from './FeatureToggleSwitch/FeatureToggleSwitch';
 import { ActionsCell } from './ActionsCell/ActionsCell';
@@ -321,46 +324,53 @@ export const ProjectFeatureToggles = ({
                 sortType: 'date',
                 minWidth: 120,
             },
-            ...environments.map((name: string) => ({
-                Header: loading ? () => '' : name,
-                maxWidth: 90,
-                id: `environments.${name}`,
-                accessor: (row: ListItemType) =>
-                    row.environments[name]?.enabled,
-                align: 'center',
-                Cell: ({
-                    value,
-                    row: { original: feature },
-                }: {
-                    value: boolean;
-                    row: { original: ListItemType };
-                }) => {
-                    const hasWarning =
-                        feature.someEnabledEnvironmentHasVariants &&
-                        feature.environments[name].variantCount === 0 &&
-                        feature.environments[name].enabled;
+            ...environments.map((value: ProjectEnvironmentType | string) => {
+                const name =
+                    typeof value === 'string'
+                        ? value
+                        : (value as ProjectEnvironmentType).environment;
+                return {
+                    Header: loading ? () => '' : name,
+                    maxWidth: 90,
+                    id: `environments.${name}`,
+                    accessor: (row: ListItemType) =>
+                        row.environments[name]?.enabled,
+                    align: 'center',
+                    Cell: ({
+                        value,
+                        row: { original: feature },
+                    }: {
+                        value: boolean;
+                        row: { original: ListItemType };
+                    }) => {
+                        const hasWarning =
+                            feature.someEnabledEnvironmentHasVariants &&
+                            feature.environments[name].variantCount === 0 &&
+                            feature.environments[name].enabled;
 
-                    return (
-                        <StyledSwitchContainer hasWarning={hasWarning}>
-                            <FeatureToggleSwitch
-                                value={value}
-                                projectId={projectId}
-                                featureName={feature?.name}
-                                environmentName={name}
-                                onToggle={onToggle}
-                            />
-                            <ConditionallyRender
-                                condition={hasWarning}
-                                show={<VariantsWarningTooltip />}
-                            />
-                        </StyledSwitchContainer>
-                    );
-                },
-                sortType: 'boolean',
-                filterName: name,
-                filterParsing: (value: boolean) =>
-                    value ? 'enabled' : 'disabled',
-            })),
+                        return (
+                            <StyledSwitchContainer hasWarning={hasWarning}>
+                                <FeatureToggleSwitch
+                                    value={value}
+                                    projectId={projectId}
+                                    featureName={feature?.name}
+                                    environmentName={name}
+                                    onToggle={onToggle}
+                                />
+                                <ConditionallyRender
+                                    condition={hasWarning}
+                                    show={<VariantsWarningTooltip />}
+                                />
+                            </StyledSwitchContainer>
+                        );
+                    },
+                    sortType: 'boolean',
+                    filterName: name,
+                    filterParsing: (value: boolean) =>
+                        value ? 'enabled' : 'disabled',
+                };
+            }),
+
             {
                 id: 'Actions',
                 maxWidth: 56,
@@ -477,7 +487,6 @@ export const ProjectFeatureToggles = ({
     );
 
     const getRowId = useCallback((row: any) => row.name, []);
-
     const {
         allColumns,
         headerGroups,

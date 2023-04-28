@@ -37,6 +37,7 @@ beforeEach(async () => {
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
     const resetTokenService = new ResetTokenService(stores, config);
+    // @ts-ignore
     const emailService = new EmailService(undefined, config.getLogger);
     const sessionService = new SessionService(stores, config);
     const settingService = new SettingService(stores, config);
@@ -52,7 +53,7 @@ beforeEach(async () => {
     adminUser = await userService.createUser({
         username: 'admin@test.com',
         email: 'admin@test.com',
-        rootRole: adminRole.id,
+        rootRole: adminRole!.id,
         password: password,
     });
 });

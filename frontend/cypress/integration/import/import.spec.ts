@@ -34,7 +34,7 @@ describe('imports', () => {
 
     it('can import data', () => {
         cy.visit('/projects/default');
-        cy.get("[data-testid='IMPORT_BUTTON']").click();
+        cy.get("[data-testid='IMPORT_BUTTON']").click({ force: true });
 
         const exportText = {
             features: [

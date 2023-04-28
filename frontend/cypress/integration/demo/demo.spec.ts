@@ -8,19 +8,6 @@ describe('demo', () => {
     before(() => {
         cy.runBefore();
 
-        cy.intercept('GET', '/api/admin/ui-config', req => {
-            req.headers['cache-control'] =
-                'no-cache, no-store, must-revalidate';
-            req.on('response', res => {
-                if (res.body) {
-                    res.body.flags = {
-                        ...res.body.flags,
-                        demo: true,
-                    };
-                }
-            });
-        });
-
         cy.createEnvironment_API(
             {
                 name: 'dev',
@@ -56,6 +43,18 @@ describe('demo', () => {
         if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
             cy.get("[data-testid='CLOSE_SPLASH']").click();
         }
+        cy.intercept('GET', '/api/admin/ui-config', req => {
+            req.headers['cache-control'] =
+                'no-cache, no-store, must-revalidate';
+            req.on('response', res => {
+                if (res.body) {
+                    res.body.flags = {
+                        ...res.body.flags,
+                        demo: true,
+                    };
+                }
+            });
+        });
     });
 
     after(() => {
@@ -107,8 +106,6 @@ describe('demo', () => {
 
     it('can complete the demo', () => {
         cy.get('[data-testid="DEMO_START_BUTTON"]').click();
-
-        cy.wait(10000);
 
         for (let topic = 0; topic < TOPICS.length; topic++) {
             const currentTopic = TOPICS[topic];

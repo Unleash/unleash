@@ -9,7 +9,7 @@ import {
     IUnleashStores,
 } from '../types';
 import { Logger } from '../logger';
-import { UNIQUE_CONSTRAINT_VIOLATION } from '../error';
+import { BadDataError, UNIQUE_CONSTRAINT_VIOLATION } from '../error';
 import NameExistsError from '../error/name-exists-error';
 import { sortOrderSchema } from './state-schema';
 import NotFoundError from '../error/notfound-error';
@@ -117,6 +117,11 @@ export default class EnvironmentService {
         projectId: string,
         strategy: CreateFeatureStrategySchema,
     ): Promise<CreateFeatureStrategySchema> {
+        if (strategy.name !== 'flexibleRollout') {
+            throw new BadDataError(
+                'Only "flexibleRollout" strategy can be used as a default strategy for an environment',
+            );
+        }
         return this.projectStore.updateDefaultStrategy(
             projectId,
             environment,

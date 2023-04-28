@@ -146,3 +146,16 @@ test('Should add default strategy to environment', async () => {
         },
     });
 });
+
+test('Should throw an error if you try to set defaultStrategy other than flexibleRollout', async () => {
+    await app.request
+        .post(
+            `/api/admin/projects/default/environments/default/default-strategy`,
+        )
+        .send({
+            name: 'default',
+            constraints: [],
+            parameters: {},
+        })
+        .expect(400);
+});

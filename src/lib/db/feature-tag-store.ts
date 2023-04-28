@@ -187,13 +187,15 @@ class FeatureTagStore implements IFeatureTagStore {
     }
 
     async tagFeatures(featureTags: IFeatureTag[]): Promise<IFeatureAndTag[]> {
-        const rows = await this.db(TABLE)
-            .insert(featureTags.map(this.featureTagToRow))
-            .returning(COLUMNS)
-            .onConflict(COLUMNS)
-            .ignore();
-        if (rows) {
-            return rows.map(this.rowToFeatureAndTag);
+        if (featureTags.length !== 0) {
+            const rows = await this.db(TABLE)
+                .insert(featureTags.map(this.featureTagToRow))
+                .returning(COLUMNS)
+                .onConflict(COLUMNS)
+                .ignore();
+            if (rows) {
+                return rows.map(this.rowToFeatureAndTag);
+            }
         }
         return [];
     }

@@ -310,6 +310,48 @@ test('admin token only supports ALL projects', async () => {
         .expect(400);
 });
 
+test('needs one of the username and tokenName properties set', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            type: 'admin',
+            environment: '*',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
+test('can create with tokenName only', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            tokenName: 'default-admin',
+            type: 'admin',
+            environment: '*',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.type).toBe('admin');
+            expect(res.body.secret.length > 16).toBe(true);
+            expect(res.body.username).toBe('default-admin');
+            expect(res.body.tokenName).toBe('default-admin');
+        });
+});
+
+test('only one of tokenName and username can be set', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-client-name',
+            tokenName: 'default-token-name',
+            type: 'admin',
+            environment: '*',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
 test('admin token only supports ALL environments', async () => {
     return app.request
         .post('/api/admin/api-tokens')

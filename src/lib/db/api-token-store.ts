@@ -63,7 +63,7 @@ const tokenRowReducer = (acc, tokenRow) => {
 };
 
 const toRow = (newToken: IApiTokenCreate) => ({
-    token_name: newToken.tokenName,
+    token_name: newToken.tokenName ?? newToken.username,
     secret: newToken.secret,
     type: newToken.type,
     environment:
@@ -156,6 +156,7 @@ export class ApiTokenStore implements IApiTokenStore {
             await Promise.all(updateProjectTasks);
             return {
                 ...newToken,
+                username: newToken.tokenName,
                 alias: newToken.alias || null,
                 project: newToken.projects?.join(',') || '*',
                 createdAt: row.created_at,

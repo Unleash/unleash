@@ -14,7 +14,6 @@ import { IAuthRequest } from '../../unleash-types';
 import { OpenApiService } from '../../../services/openapi-service';
 import { emptyResponse } from '../../../openapi/util/standard-responses';
 import { BatchFeaturesSchema, createRequestSchema } from '../../../openapi';
-import NotFoundError from '../../../error/notfound-error';
 import Controller from '../../controller';
 
 const PATH = '/:projectId';
@@ -105,9 +104,6 @@ export default class ProjectArchiveController extends Controller {
         req: IAuthRequest<IProjectParam, any, BatchFeaturesSchema>,
         res: Response<void>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('bulkOperations')) {
-            throw new NotFoundError('Bulk operations are not enabled');
-        }
         const { projectId } = req.params;
         const { features } = req.body;
         const user = extractUsername(req);
@@ -119,9 +115,6 @@ export default class ProjectArchiveController extends Controller {
         req: IAuthRequest<IProjectParam, any, BatchFeaturesSchema>,
         res: Response<void>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('bulkOperations')) {
-            throw new NotFoundError('Bulk operations are not enabled');
-        }
         const { projectId } = req.params;
         const { features } = req.body;
         const user = extractUsername(req);
@@ -133,10 +126,6 @@ export default class ProjectArchiveController extends Controller {
         req: IAuthRequest<IProjectParam, void, BatchFeaturesSchema>,
         res: Response,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('bulkOperations')) {
-            throw new NotFoundError('Bulk operations are not enabled');
-        }
-
         const { features } = req.body;
         const { projectId } = req.params;
         const userName = extractUsername(req);

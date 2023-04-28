@@ -46,6 +46,12 @@ export class PlaygroundService {
             this.segmentService.getActive(),
         ]);
 
+        features.forEach((feature) => {
+            feature.enabled = Boolean(
+                feature.strategies.find((strategy) => !strategy.disabled),
+            );
+        });
+
         const [head, ...rest] = features;
         if (!head) {
             return [];

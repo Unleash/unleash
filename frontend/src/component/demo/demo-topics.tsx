@@ -13,6 +13,7 @@ export interface ITutorialTopicStep extends Step {
     preventDefault?: boolean;
     anyClick?: boolean;
     optional?: boolean;
+    focus?: boolean | string;
 }
 
 export interface ITutorialTopic {
@@ -212,6 +213,7 @@ export const TOPICS: ITutorialTopic[] = [
                     </>
                 ),
                 nextButton: true,
+                focus: 'input',
             },
             {
                 target: 'button[data-testid="CONSTRAINT_VALUES_ADD_BUTTON"]',
@@ -440,6 +442,7 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
                 backCloseModal: true,
                 nextButton: true,
+                focus: 'input',
             },
             {
                 target: 'div[data-testid="VARIANT"]:last-of-type #variant-payload-value',
@@ -456,6 +459,7 @@ export const TOPICS: ITutorialTopic[] = [
                     </Description>
                 ),
                 nextButton: true,
+                focus: true,
             },
             {
                 target: 'div[data-testid="VARIANT"]:last-of-type button[data-testid="VARIANT_ADD_OVERRIDE_BUTTON"]',
@@ -499,6 +503,7 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
                 nextButton: true,
                 backCloseModal: true,
+                focus: 'input',
             },
             {
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',

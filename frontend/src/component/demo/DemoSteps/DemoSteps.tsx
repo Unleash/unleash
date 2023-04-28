@@ -104,11 +104,22 @@ export const DemoSteps = ({
         }
 
         if (action === ACTIONS.UPDATE) {
-            const el = document.querySelector(step.target as string);
+            const el = document.querySelector(
+                step.target as string
+            ) as HTMLElement | null;
             if (el) {
                 el.scrollIntoView({
                     block: 'center',
                 });
+                if (step.focus) {
+                    if (step.focus === true) {
+                        el.focus();
+                    } else {
+                        (
+                            el.querySelector(step.focus) as HTMLElement | null
+                        )?.focus();
+                    }
+                }
                 if (!step.nextButton) {
                     const clickHandler = (e: Event) => {
                         abortController.abort();

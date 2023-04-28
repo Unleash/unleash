@@ -4,7 +4,7 @@ import {
     setupAppWithCustomConfig,
 } from '../../../helpers/test-helper';
 import getLogger from '../../../../fixtures/no-logger';
-import { DEFAULT_ENV } from '../../../../../lib/util/constants';
+import { DEFAULT_ENV } from '../../../../../lib/util';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -110,4 +110,39 @@ test('Should not remove environment from project if project only has one environ
     );
 
     expect(envs).toHaveLength(1);
+});
+
+test('Should add default strategy to environment', async () => {
+    await app.request
+        .post(
+            `/api/admin/projects/default/environments/default/default-strategy`,
+        )
+        .send({
+            name: 'flexibleRollout',
+            constraints: [],
+            parameters: {
+                rollout: '50',
+                stickiness: 'customAppName',
+                groupId: 'stickytoggle',
+            },
+        })
+        .expect(200);
+
+    const envs = await db.stores.projectStore.getEnvironmentsForProject(
+        'default',
+    );
+
+    expect(envs).toHaveLength(1);
+    expect(envs[0]).toStrictEqual({
+        environment: 'default',
+        defaultStrategy: {
+            name: 'flexibleRollout',
+            constraints: [],
+            parameters: {
+                rollout: '50',
+                stickiness: 'customAppName',
+                groupId: 'stickytoggle',
+            },
+        },
+    });
 });

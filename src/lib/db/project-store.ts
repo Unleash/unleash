@@ -519,12 +519,14 @@ class ProjectStore implements IProjectStore {
         environment: string,
         strategy: CreateFeatureStrategySchema,
     ): Promise<CreateFeatureStrategySchema> {
-        return this.db(PROJECT_ENVIRONMENTS)
+        const rows = await this.db(PROJECT_ENVIRONMENTS)
             .update({
                 default_strategy: strategy,
             })
-            .where({ project: projectId, environment })
+            .where({ project_id: projectId, environment_name: environment })
             .returning('default_strategy');
+
+        return rows[0].default_strategy;
     }
 
     async count(): Promise<number> {

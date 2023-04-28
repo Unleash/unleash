@@ -1,22 +1,22 @@
 import { Request, Response } from 'express';
 import Controller from '../../controller';
-import { IUnleashConfig } from '../../../types/option';
-import { IUnleashServices } from '../../../types/services';
+import {
+    IUnleashConfig,
+    IUnleashServices,
+    serializeDates,
+    UPDATE_PROJECT,
+} from '../../../types';
 import { Logger } from '../../../logger';
 import EnvironmentService from '../../../services/environment-service';
-import { UPDATE_PROJECT } from '../../../types/permissions';
-import { createRequestSchema } from '../../../openapi/util/create-request-schema';
-import { ProjectEnvironmentSchema } from '../../../openapi/spec/project-environment-schema';
-import {
-    emptyResponse,
-    getStandardResponses,
-} from '../../../openapi/util/standard-responses';
 import {
     createFeatureStrategySchema,
     CreateFeatureStrategySchema,
+    createRequestSchema,
     createResponseSchema,
+    emptyResponse,
+    getStandardResponses,
+    ProjectEnvironmentSchema,
 } from '../../../openapi';
-import { serializeDates } from '../../../types';
 import { OpenApiService } from '../../../services';
 
 const PREFIX = '/:projectId/environments';
@@ -141,7 +141,7 @@ export default class EnvironmentsController extends Controller {
         res: Response<CreateFeatureStrategySchema>,
     ): Promise<void> {
         const { projectId, environment } = req.params;
-        const { strategy } = req.body;
+        const strategy = req.body;
 
         const saved = await this.environmentService.addDefaultStrategy(
             environment,

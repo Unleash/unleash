@@ -5,6 +5,7 @@ import {
     Button,
     LinearProgress,
     Typography,
+    alpha,
     linearProgressClasses,
     styled,
 } from '@mui/material';
@@ -44,8 +45,8 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
         flexDirection: 'column',
         alignItems: 'center',
     },
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.web.main,
+    color: theme.palette.web.contrastText,
     borderTopLeftRadius: theme.shape.borderRadiusLarge,
     borderTopRightRadius: theme.shape.borderRadiusLarge,
     height: 91,
@@ -84,11 +85,11 @@ const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: theme.spacing(1),
     borderRadius: theme.shape.borderRadius,
     [`&.${linearProgressClasses.colorPrimary}`]: {
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: alpha(theme.palette.web.contrastText!, 0.1),
     },
     [`& .${linearProgressClasses.bar}`]: {
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.web.contrastText,
     },
 }));
 

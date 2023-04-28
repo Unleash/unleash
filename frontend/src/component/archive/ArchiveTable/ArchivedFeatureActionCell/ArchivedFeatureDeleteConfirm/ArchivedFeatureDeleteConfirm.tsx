@@ -43,12 +43,7 @@ export const ArchivedFeatureDeleteConfirm = ({
             if (deletedFeatures.length === 0) {
                 return;
             }
-
-            if (uiConfig?.flags?.bulkOperations) {
-                await deleteFeatures(projectId, deletedFeatures);
-            } else {
-                await deleteFeature(deletedFeatures[0]);
-            }
+            await deleteFeatures(projectId, deletedFeatures);
 
             await refetch();
             setToastData({

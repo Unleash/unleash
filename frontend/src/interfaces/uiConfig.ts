@@ -45,7 +45,6 @@ export interface IFlags {
     crOnVariants?: boolean;
     proPlanAutoCharge?: boolean;
     notifications?: boolean;
-    bulkOperations?: boolean;
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
     strategyTitle?: boolean;

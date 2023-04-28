@@ -429,9 +429,10 @@ test(`should not show environment on feature toggle, when environment is disable
         .expect(200);
 
     const result = body.environments;
-    expect(result).toHaveLength(2);
-    expect(result[0].name).toBe('development');
-    expect(result[0].enabled).toBeTruthy();
-    expect(result[1].name).toBe('production');
-    expect(result[1].enabled).toBeFalsy();
+    const sorted = result.sort((e1, e2) => e1.name[0] < e2.name[0]);
+    expect(sorted).toHaveLength(2);
+    expect(sorted[0].name).toBe('development');
+    expect(sorted[0].enabled).toBeTruthy();
+    expect(sorted[1].name).toBe('production');
+    expect(sorted[1].enabled).toBeFalsy();
 });

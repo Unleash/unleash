@@ -380,7 +380,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 );
                 return e;
             });
-            if (featureToggle.strategies.length === 0) {
+            if (
+                featureToggle.strategies &&
+                featureToggle.strategies.length === 0
+            ) {
                 featureToggle.enabled = false;
             }
 

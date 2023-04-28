@@ -11,7 +11,7 @@ import { ApiOperation } from '../openapi/util/api-operation';
 import { Logger } from '../logger';
 import { validateSchema } from '../openapi/validate';
 import { IFlagResolver } from '../types';
-import { fromOpenApiValidationErrors } from '../error/api-error';
+import { fromOpenApiValidationErrors } from '../error/bad-data-error';
 
 export class OpenApiService {
     private readonly config: IUnleashConfig;

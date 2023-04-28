@@ -103,12 +103,6 @@ const statusCode = (errorName: UnleashApiErrorName): number => {
     }
 };
 
-type ValidationErrorDescription = {
-    description: string;
-    message: string;
-    path?: string;
-};
-
 type UnleashErrorData =
     | {
           message: string;
@@ -128,8 +122,8 @@ type UnleashErrorData =
           | {
                 name: 'ValidationError' | 'BadDataError' | 'BadRequestError';
                 details: [
-                    ValidationErrorDescription,
-                    ...ValidationErrorDescription[],
+                    { description: string; message: string },
+                    ...{ description: string; message: string }[],
                 ];
             }
           | {
@@ -258,65 +252,6 @@ export const fromLegacyError = (e: Error): UnleashError => {
     return new UnleashError({
         name: name as UnleashApiErrorNameWithoutExtraData,
         message: e.message,
-    });
-};
-
-export const fromOpenApiValidationError =
-    (requestBody: object) =>
-    (validationError: ErrorObject): ValidationErrorDescription => {
-        // @ts-expect-error Unsure why, but the `dataPath` isn't listed on the type definition for error objects. However, it's always there. Suspect this is a bug in the library.
-        const propertyName = validationError.dataPath.substring(
-            '.body.'.length,
-        );
-        if (validationError.keyword === 'required') {
-            const path =
-                propertyName + '.' + validationError.params.missingProperty;
-            const description = `The ${path} property is required. It was not present on the data you sent.`;
-            return {
-                path,
-                description,
-                message: description,
-            };
-        } else if (validationError.keyword === 'additionalProperties') {
-            const path =
-                (propertyName ? propertyName + '.' : '') +
-                validationError.params.additionalProperty;
-            const description = `The ${
-                propertyName ? `\`${propertyName}\`` : 'root'
-            } object of the request body does not allow additional properties. Your request included the \`${path}\` property.`;
-            return {
-                path,
-                description,
-                message: description,
-            };
-        } else {
-            const input = propertyName
-                .split('.')
-                .reduce((x, prop) => x[prop], requestBody);
-
-            const youSent = JSON.stringify(input);
-            const description = `The .${propertyName} property ${validationError.message}. You sent ${youSent}.`;
-            return {
-                description,
-                message: description,
-                path: propertyName,
-            };
-        }
-    };
-
-export const fromOpenApiValidationErrors = (
-    requestBody: object,
-    validationErrors: [ErrorObject, ...ErrorObject[]],
-): UnleashError => {
-    const [firstDetail, ...remainingDetails] = validationErrors.map(
-        fromOpenApiValidationError(requestBody),
-    );
-
-    return new UnleashError({
-        name: 'ValidationError',
-        message:
-            "Request validation failed: the payload you provided doesn't conform to the schema. Check the `details` property for a list of errors that we found.",
-        details: [firstDetail, ...remainingDetails],
     });
 };
 

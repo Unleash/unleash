@@ -4,13 +4,14 @@ import AuthenticationRequired from '../types/authentication-required';
 import {
     ApiErrorSchema,
     fromLegacyError,
-    fromOpenApiValidationError,
-    fromOpenApiValidationErrors,
     UnleashApiErrorNameWithoutExtraData,
     UnleashApiErrorTypes,
     UnleashError,
 } from './api-error';
-import BadDataError from './bad-data-error';
+import BadDataError, {
+    fromOpenApiValidationError,
+    fromOpenApiValidationErrors,
+} from './bad-data-error';
 import NoAccessError from './no-access-error';
 import OwaspValidationError from './owasp-validation-error';
 import IncompatibleProjectError from './incompatible-project-error';
@@ -218,7 +219,7 @@ describe('OpenAPI error conversion', () => {
 
         console.log(serializedUnleashError);
 
-        expect(serializedUnleashError.name).toBe('ValidationError');
+        expect(serializedUnleashError.name).toBe('BadDataError');
         expect(serializedUnleashError.message).toContain('`details`');
         expect(
             serializedUnleashError.details!![0].description.includes('newprop'),

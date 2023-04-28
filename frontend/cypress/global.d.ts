@@ -73,9 +73,16 @@ declare namespace Cypress {
             role: number,
             projectName?: string
         ): Chainable;
-        createProject_API(name: string): Chainable;
+        createProject_API(
+            name: string,
+            options?: Partial<Cypress.RequestOptions>
+        ): Chainable;
         deleteProject_API(name: string): Chainable;
-        createFeature_API(name: string, projectName?: string): Chainable;
+        createFeature_API(
+            name: string,
+            projectName?: string,
+            options?: Partial<Cypress.RequestOptions>
+        ): Chainable;
         deleteFeature_API(name: string): Chainable;
     }
 }

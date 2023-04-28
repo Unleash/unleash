@@ -3908,6 +3908,14 @@ cuid@^2.1.8:
   resolved "https://registry.yarnpkg.com/cuid/-/cuid-2.1.8.tgz#cbb88f954171e0d5747606c0139fb65c5101eac0"
   integrity sha512-xiEMER6E7TlTPnDxrM4eRiC6TRgjNX9xzEZ5U/Se2YJKr7Mq4pJn/2XEHjl3STcSh96GmkHPcBXLES8M29wyyg==
 
+cypress-vite@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/cypress-vite/-/cypress-vite-1.4.0.tgz#4d2889d62c11aed7188b1082af16210240aac2e6"
+  integrity sha512-BHmOku8q6nRtDGPiBcE7zcAZs56/OsiX5SFoldHEMSQ+I6nnPUU2tcrRNeRsCArONQAvwTu2Da7R/rFGA/DSEg==
+  dependencies:
+    chokidar "^3.5.3"
+    debug "^4.3.4"
+
 cypress@9.7.0:
   version "9.7.0"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-9.7.0.tgz#bf55b2afd481f7a113ef5604aa8b693564b5e744"

@@ -6,7 +6,8 @@ const password = Cypress.env(`AUTH_PASSWORD`) + '_A';
 const PROJECT_MEMBER = 5;
 export const createFeature_API = (
     featureName: string,
-    projectName?: string
+    projectName?: string,
+    options?: Partial<Cypress.RequestOptions>
 ): Chainable<any> => {
     const project = projectName || 'default';
     return cy.request({
@@ -18,6 +19,7 @@ export const createFeature_API = (
             type: 'release',
             impressionData: false,
         },
+        ...options,
     });
 };
 
@@ -32,7 +34,10 @@ export const deleteFeature_API = (name: string): Chainable<any> => {
     });
 };
 
-export const createProject_API = (project: string): Chainable<any> => {
+export const createProject_API = (
+    project: string,
+    options?: Partial<Cypress.RequestOptions>
+): Chainable<any> => {
     return cy.request({
         url: `/api/admin/projects`,
         method: 'POST',
@@ -42,6 +47,7 @@ export const createProject_API = (project: string): Chainable<any> => {
             description: project,
             impressionData: false,
         },
+        ...options,
     });
 };
 

@@ -35,6 +35,7 @@ Cypress.Commands.add('deleteFeature_API', deleteFeature_API);
 Cypress.Commands.add('deleteProject_API', deleteProject_API);
 Cypress.Commands.add('logout_UI', logout_UI);
 Cypress.Commands.add('createProject_UI', createProject_UI);
+Cypress.Commands.add('createProject_API', createProject_API);
 Cypress.Commands.add('createUser_API', createUser_API);
 Cypress.Commands.add('addUserToProject_API', addUserToProject_API);
 Cypress.Commands.add('updateUserPassword_API', updateUserPassword_API);

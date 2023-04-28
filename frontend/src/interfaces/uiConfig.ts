@@ -46,7 +46,6 @@ export interface IFlags {
     proPlanAutoCharge?: boolean;
     notifications?: boolean;
     bulkOperations?: boolean;
-    projectScopedStickiness?: boolean;
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
     strategyTitle?: boolean;

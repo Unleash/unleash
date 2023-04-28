@@ -2,32 +2,32 @@ import { v4 as uuidV4 } from 'uuid';
 import { FromSchema } from 'json-schema-to-ts';
 import { ErrorObject } from 'ajv';
 
-const UnleashApiErrorTypes = [
-    'OwaspValidationError',
-    'PasswordUndefinedError',
-    'NoAccessError',
-    'UsedTokenError',
-    'InvalidOperationError',
-    'IncompatibleProjectError',
-    'OperationDeniedError',
-    'NotFoundError',
-    'NameExistsError',
+export const UnleashApiErrorTypes = [
+    'ContentTypeError',
+    'DisabledError',
     'FeatureHasTagError',
-    'RoleInUseError',
-    'ProjectWithoutOwnerError',
-    'UnknownError',
+    'IncompatibleProjectError',
+    'InvalidOperationError',
+    'MinimumOneEnvironmentError',
+    'NameExistsError',
+    'NoAccessError',
+    'NotFoundError',
+    'NotImplementedError',
+    'OperationDeniedError',
+    'OwaspValidationError',
     'PasswordMismatch',
     'PasswordMismatchError',
-    'DisabledError',
-    'ContentTypeError',
-    'NotImplementedError',
+    'PasswordUndefinedError',
+    'ProjectWithoutOwnerError',
+    'RoleInUseError',
+    'UnknownError',
+    'UsedTokenError',
 
     // server errors; not the end user's fault
     'InternalError',
 ] as const;
 
 const UnleashApiErrorTypesWithExtraData = [
-    'MinimumOneEnvironmentError',
     'BadDataError',
     'BadRequestError',
     'ValidationError',
@@ -42,10 +42,8 @@ const AllUnleashApiErrorTypes = [
 ] as const;
 
 type UnleashApiErrorName = typeof AllUnleashApiErrorTypes[number];
-type UnleashApiErrorNameWithoutExtraData = Exclude<
-    UnleashApiErrorName,
-    typeof UnleashApiErrorTypesWithExtraData[number]
->;
+export type UnleashApiErrorNameWithoutExtraData =
+    typeof UnleashApiErrorTypes[number];
 
 const statusCode = (errorName: UnleashApiErrorName): number => {
     switch (errorName) {
@@ -174,6 +172,7 @@ export class UnleashError extends Error {
             id: this.id,
             name: this.name,
             message: this.message,
+            details: [{ message: this.message, description: this.message }],
             ...this.additionalParameters,
         };
     }
@@ -228,11 +227,10 @@ export const fromLegacyError = (e: Error): UnleashError => {
 
     if (
         [
-            'ValidationError',
-            'BadRequestError',
             'BadDataError',
+            'BadRequestError',
             'InvalidTokenError',
-            'MinimumOneEnvironmentError',
+            'ValidationError',
         ].includes(name)
     ) {
         return new UnleashError({
@@ -240,10 +238,9 @@ export const fromLegacyError = (e: Error): UnleashError => {
                 | 'ValidationError'
                 | 'BadRequestError'
                 | 'BadDataError'
-                | 'InvalidTokenError'
-                | 'MinimumOneEnvironmentError',
+                | 'InvalidTokenError',
             message:
-                'Your request body failed to validate. Refer to the `details` list to see what happened.',
+                'Request validation failed: your request body failed to validate. Refer to the `details` list to see what happened.',
             details: [{ description: e.message, message: e.message }],
         });
     }
@@ -279,8 +276,24 @@ export const fromOpenApiValidationError =
                 description,
                 message: description,
             };
+        } else if (validationError.keyword === 'additionalProperties') {
+            const path =
+                (propertyName ? propertyName + '.' : '') +
+                validationError.params.additionalProperty;
+            const description = `The ${
+                propertyName ? `\`${propertyName}\`` : 'root'
+            } object of the request body does not allow additional properties. Your request included the \`${path}\` property.`;
+            return {
+                path,
+                description,
+                message: description,
+            };
         } else {
-            const youSent = JSON.stringify(requestBody[propertyName]);
+            const input = propertyName
+                .split('.')
+                .reduce((x, prop) => x[prop], requestBody);
+
+            const youSent = JSON.stringify(input);
             const description = `The .${propertyName} property ${validationError.message}. You sent ${youSent}.`;
             return {
                 description,

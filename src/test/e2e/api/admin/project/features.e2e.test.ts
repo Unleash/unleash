@@ -2001,7 +2001,7 @@ test('Should not allow changing project to target project without the same enabl
         .send({})
         .expect(200);
     const user = new ApiUser({
-        username: 'project-changer',
+        tokenName: 'project-changer',
         permissions: ['ADMIN'],
         project: '*',
         type: ApiTokenType.ADMIN,
@@ -2081,7 +2081,7 @@ test('Should allow changing project to target project with the same enabled envi
         .send({})
         .expect(200);
     const user = new ApiUser({
-        username: 'project-changer',
+        tokenName: 'project-changer',
         permissions: ['ADMIN'],
         project: '*',
         type: ApiTokenType.ADMIN,

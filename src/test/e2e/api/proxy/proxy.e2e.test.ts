@@ -1166,7 +1166,7 @@ test('should NOT evaluate disabled strategies when returning toggles', async () 
         ],
     });
     await createFeatureToggle({
-        name: 'enabledFeature2',
+        name: 'disabledFeature3',
         enabled: true,
         strategies: [
             {
@@ -1192,12 +1192,6 @@ test('should NOT evaluate disabled strategies when returning toggles', async () 
                 toggles: [
                     {
                         name: 'enabledFeature',
-                        enabled: true,
-                        impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
-                    },
-                    {
-                        name: 'enabledFeature2',
                         enabled: true,
                         impressionData: false,
                         variant: { enabled: false, name: 'disabled' },

@@ -110,6 +110,14 @@ class FeatureTagStore implements IFeatureTagStore {
         }
     }
 
+    async getAllFeaturesForTag(tagValue: string): Promise<string[]> {
+        const rows = await this.db
+            .select('feature_name')
+            .from<FeatureTagTable>(TABLE)
+            .where({ tag_value: tagValue });
+        return rows.map(({ feature_name }) => feature_name);
+    }
+
     async featureExists(featureName: string): Promise<boolean> {
         const result = await this.db.raw(
             'SELECT EXISTS (SELECT 1 FROM features WHERE name = ?) AS present',

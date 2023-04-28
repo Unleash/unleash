@@ -118,6 +118,10 @@ const theme = {
             border: colors.red[300],
             contrastText: colors.red[800], // Color used for text inside alert
         },
+        web: {
+            main: '#1A4049', // used on sales-related elements
+            contrastText: colors.grey[50], // Color used for inner text
+        },
 
         /**
          *  Used for grey badges, hover elements, and grey light elements

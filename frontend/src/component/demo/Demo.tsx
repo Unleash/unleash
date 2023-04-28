@@ -5,6 +5,10 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 import { TOPICS } from './demo-topics';
 import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome';
 import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish';
+import { DemoDialogPlans } from './DemoDialog/DemoDialogPlans/DemoDialogPlans';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { DemoBanner } from './DemoBanner/DemoBanner';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const defaultProgress = {
     welcomeOpen: true,
@@ -13,14 +17,22 @@ const defaultProgress = {
     steps: [0],
 };
 
-const { value: storedProgress, setValue: setStoredProgress } =
-    createLocalStorage('Tutorial:v1', defaultProgress);
+interface IDemoProps {
+    children: JSX.Element;
+}
 
-export const Demo = () => {
+export const Demo = ({ children }: IDemoProps): JSX.Element => {
+    const { uiConfig } = useUiConfig();
+    const { trackEvent } = usePlausibleTracker();
+
+    const { value: storedProgress, setValue: setStoredProgress } =
+        createLocalStorage('Tutorial:v1', defaultProgress);
+
     const [welcomeOpen, setWelcomeOpen] = useState(
         storedProgress.welcomeOpen ?? defaultProgress.welcomeOpen
     );
     const [finishOpen, setFinishOpen] = useState(false);
+    const [plansOpen, setPlansOpen] = useState(false);
 
     const [expanded, setExpanded] = useState(
         storedProgress.expanded ?? defaultProgress.expanded
@@ -56,31 +68,75 @@ export const Demo = () => {
 
         if (completedSteps === totalSteps) {
             setFinishOpen(true);
+
+            trackEvent('demo', {
+                props: {
+                    eventType: 'finish',
+                },
+            });
         }
     };
 
+    if (!uiConfig.flags.demo) return children;
+
     return (
         <>
+            <DemoBanner
+                onPlans={() => {
+                    setPlansOpen(true);
+
+                    trackEvent('demo', {
+                        props: {
+                            eventType: 'see_plans',
+                        },
+                    });
+                }}
+            />
+            {children}
             <DemoDialogWelcome
                 open={welcomeOpen}
                 onClose={() => {
                     setWelcomeOpen(false);
                     setExpanded(false);
+
+                    trackEvent('demo', {
+                        props: {
+                            eventType: 'close',
+                            topic: 'start',
+                        },
+                    });
                 }}
                 onStart={() => {
                     setWelcomeOpen(false);
                     onStart();
+
+                    trackEvent('demo', {
+                        props: {
+                            eventType: 'start',
+                        },
+                    });
                 }}
             />
             <DemoDialogFinish
                 open={finishOpen}
                 onClose={() => {
                     setFinishOpen(false);
+                    setPlansOpen(true);
                 }}
                 onRestart={() => {
                     setFinishOpen(false);
                     onStart();
+
+                    trackEvent('demo', {
+                        props: {
+                            eventType: 'restart',
+                        },
+                    });
                 }}
+            />
+            <DemoDialogPlans
+                open={plansOpen}
+                onClose={() => setPlansOpen(false)}
             />
             <DemoTopics
                 expanded={expanded}
@@ -94,9 +150,24 @@ export const Demo = () => {
                         newSteps[topic] = 0;
                         return newSteps;
                     });
+
+                    trackEvent('demo', {
+                        props: {
+                            eventType: 'start_topic',
+                            step: TOPICS[topic].title,
+                        },
+                    });
                 }}
                 topics={TOPICS}
-                onWelcome={() => setWelcomeOpen(true)}
+                onWelcome={() => {
+                    setWelcomeOpen(true);
+
+                    trackEvent('demo', {
+                        props: {
+                            eventType: 'view_demo_link',
+                        },
+                    });
+                }}
             />
             <DemoSteps
                 setExpanded={setExpanded}

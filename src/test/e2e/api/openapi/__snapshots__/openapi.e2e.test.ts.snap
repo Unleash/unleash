@@ -1897,7 +1897,35 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "object",
       },
       "exportQuerySchema": {
-        "additionalProperties": false,
+        "additionalProperties": true,
+        "oneOf": [
+          {
+            "properties": {
+              "features": {
+                "description": "Selects features to export by name.",
+                "items": {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                "type": "array",
+              },
+            },
+            "required": [
+              "features",
+            ],
+          },
+          {
+            "properties": {
+              "tag": {
+                "description": "Selects features to export by tag. Takes precedence over the features field.",
+                "type": "string",
+              },
+            },
+            "required": [
+              "tag",
+            ],
+          },
+        ],
         "properties": {
           "downloadFile": {
             "type": "boolean",
@@ -1905,16 +1933,8 @@ The provider you choose for your addon dictates what properties the \`parameters
           "environment": {
             "type": "string",
           },
-          "features": {
-            "items": {
-              "minLength": 1,
-              "type": "string",
-            },
-            "type": "array",
-          },
         },
         "required": [
-          "features",
           "environment",
         ],
         "type": "object",

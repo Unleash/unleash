@@ -3,45 +3,12 @@ import Joyride, {
     CallBackProps,
     TooltipRenderProps,
 } from 'react-joyride';
-import { Button, Typography, styled, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import { ITutorialTopic, ITutorialTopicStep } from '../demo-topics';
 import { useEffect, useState } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-const StyledTooltip = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.text.primary,
-    borderRadius: theme.shape.borderRadiusMedium,
-    width: '100%',
-    maxWidth: theme.spacing(45),
-    padding: theme.spacing(3),
-}));
-
-const StyledTooltipTitle = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    flexWrap: 'wrap',
-}));
-
-const StyledTooltipActions = styled('div')(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: theme.spacing(3),
-    '&&& button': {
-        '&:first-of-type': {
-            marginLeft: theme.spacing(-2),
-        },
-        fontSize: theme.fontSizes.smallBody,
-    },
-}));
-
-const StyledTooltipPrimaryActions = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-}));
+import { DemoStepTooltip } from './DemoStepTooltip/DemoStepTooltip';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IDemoStepsProps {
     setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
@@ -65,6 +32,7 @@ export const DemoSteps = ({
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
+    const { trackEvent } = usePlausibleTracker();
     const [run, setRun] = useState(false);
     const [flow, setFlow] = useState<'next' | 'back' | 'load'>('load');
 
@@ -82,10 +50,17 @@ export const DemoSteps = ({
         }
     };
 
-    const skip = () => {
+    const close = () => {
         abortController.abort();
         setTopicStep(-1);
-        setExpanded(false);
+
+        trackEvent('demo', {
+            props: {
+                eventType: 'close',
+                topic: topics[topic].title,
+                step: steps[topic] + 1,
+            },
+        });
     };
 
     const back = () => {
@@ -123,6 +98,10 @@ export const DemoSteps = ({
         }
     ) => {
         const { action, index, step } = data;
+
+        if (action === ACTIONS.CLOSE) {
+            close();
+        }
 
         if (action === ACTIONS.UPDATE) {
             const el = document.querySelector(step.target as string);
@@ -237,78 +216,27 @@ export const DemoSteps = ({
                     border: `2px solid ${theme.palette.primary.main}`,
                     outline: `2px solid ${theme.palette.secondary.border}`,
                     backgroundColor: 'transparent',
+                    animation: 'pulse 2s infinite',
                 },
                 overlay: {
                     backgroundColor: 'transparent',
                     mixBlendMode: 'unset',
                 },
             }}
-            tooltipComponent={({
-                step,
-                tooltipProps,
-            }: TooltipRenderProps & {
-                step: ITutorialTopicStep;
-            }) => (
-                <StyledTooltip {...tooltipProps}>
-                    <StyledTooltipTitle>
-                        <ConditionallyRender
-                            condition={Boolean(step.title)}
-                            show={step.title}
-                            elseShow={
-                                <Typography fontWeight="bold">
-                                    {topics[topic].title}
-                                </Typography>
-                            }
-                        />
-                        <ConditionallyRender
-                            condition={topics[topic].steps.length > 1}
-                            show={
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    flexShrink={0}
-                                >
-                                    (step {steps[topic] + 1} of{' '}
-                                    {topics[topic].steps.length})
-                                </Typography>
-                            }
-                        />
-                    </StyledTooltipTitle>
-                    {step.content}
-                    <StyledTooltipActions>
-                        <Button variant="text" onClick={skip}>
-                            Skip
-                        </Button>
-                        <StyledTooltipPrimaryActions>
-                            <ConditionallyRender
-                                condition={topic > 0 || steps[topic] > 0}
-                                show={
-                                    <Button
-                                        variant="outlined"
-                                        onClick={() => onBack(step)}
-                                    >
-                                        Back
-                                    </Button>
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={Boolean(step.nextButton)}
-                                show={
-                                    <Button
-                                        onClick={() => next(steps[topic])}
-                                        variant="contained"
-                                    >
-                                        {topic === topics.length - 1 &&
-                                        steps[topic] ===
-                                            topics[topic].steps.length - 1
-                                            ? 'Finish'
-                                            : 'Next'}
-                                    </Button>
-                                }
-                            />
-                        </StyledTooltipPrimaryActions>
-                    </StyledTooltipActions>
-                </StyledTooltip>
+            tooltipComponent={(
+                props: TooltipRenderProps & {
+                    step: ITutorialTopicStep;
+                }
+            ) => (
+                <DemoStepTooltip
+                    {...props}
+                    topic={topic}
+                    topics={topics}
+                    steps={steps}
+                    onClose={close}
+                    onBack={onBack}
+                    onNext={next}
+                />
             )}
         />
     );

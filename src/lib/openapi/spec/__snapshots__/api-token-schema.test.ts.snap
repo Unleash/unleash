@@ -10,7 +10,23 @@ exports[`apiTokenSchema empty 1`] = `
       "params": {
         "missingProperty": "username",
       },
-      "schemaPath": "#/required",
+      "schemaPath": "#/anyOf/0/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'tokenName'",
+      "params": {
+        "missingProperty": "tokenName",
+      },
+      "schemaPath": "#/anyOf/1/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "anyOf",
+      "message": "must match a schema in anyOf",
+      "params": {},
+      "schemaPath": "#/anyOf",
     },
   ],
   "schema": "#/components/schemas/apiTokenSchema",

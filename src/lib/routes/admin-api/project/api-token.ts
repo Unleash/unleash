@@ -161,7 +161,7 @@ export class ProjectApiTokenController extends Controller {
                 201,
                 res,
                 apiTokenSchema.$id,
-                serializeDates({ ...token, tokenName: token.username }),
+                serializeDates(token),
                 { location: `api-tokens` },
             );
         } else {

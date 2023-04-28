@@ -5,7 +5,7 @@ export const apiTokenSchema = {
     $id: '#/components/schemas/apiTokenSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['username', 'type'],
+    required: ['type'],
     properties: {
         secret: {
             type: 'string',
@@ -57,6 +57,24 @@ export const apiTokenSchema = {
             nullable: true,
         },
     },
+    anyOf: [
+        {
+            properties: {
+                username: {
+                    type: 'string',
+                },
+            },
+            required: ['username'],
+        },
+        {
+            properties: {
+                tokenName: {
+                    type: 'string',
+                },
+            },
+            required: ['tokenName'],
+        },
+    ],
     components: {},
 } as const;
 

@@ -632,6 +632,28 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "apiTokenSchema": {
         "additionalProperties": false,
+        "anyOf": [
+          {
+            "properties": {
+              "username": {
+                "type": "string",
+              },
+            },
+            "required": [
+              "username",
+            ],
+          },
+          {
+            "properties": {
+              "tokenName": {
+                "type": "string",
+              },
+            },
+            "required": [
+              "tokenName",
+            ],
+          },
+        ],
         "properties": {
           "alias": {
             "nullable": true,
@@ -687,7 +709,6 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
         },
         "required": [
-          "username",
           "type",
         ],
         "type": "object",
@@ -1348,6 +1369,28 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "array",
       },
       "createApiTokenSchema": {
+        "anyOf": [
+          {
+            "properties": {
+              "username": {
+                "type": "string",
+              },
+            },
+            "required": [
+              "username",
+            ],
+          },
+          {
+            "properties": {
+              "tokenName": {
+                "type": "string",
+              },
+            },
+            "required": [
+              "tokenName",
+            ],
+          },
+        ],
         "properties": {
           "environment": {
             "type": "string",
@@ -1373,12 +1416,8 @@ The provider you choose for your addon dictates what properties the \`parameters
             "description": "One of client, admin, frontend",
             "type": "string",
           },
-          "username": {
-            "type": "string",
-          },
         },
         "required": [
-          "username",
           "type",
         ],
         "type": "object",

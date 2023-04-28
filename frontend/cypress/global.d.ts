@@ -12,6 +12,12 @@ declare namespace Cypress {
         email: string;
         password: string;
     }
+
+    interface IEnvironment {
+        name: string;
+        type: 'development' | 'preproduction' | 'test' | 'production';
+    }
+
     interface Chainable {
         runBefore(): Chainable;
 
@@ -84,5 +90,9 @@ declare namespace Cypress {
             options?: Partial<Cypress.RequestOptions>
         ): Chainable;
         deleteFeature_API(name: string): Chainable;
+        createEnvironment_API(
+            environment: IEnvironment,
+            options?: Partial<Cypress.RequestOptions>
+        ): Chainable;
     }
 }

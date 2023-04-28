@@ -107,3 +107,20 @@ export const addUserToProject_API = (
         }
     );
 };
+
+interface IEnvironment {
+    name: string;
+    type: 'development' | 'preproduction' | 'test' | 'production';
+}
+
+export const createEnvironment_API = (
+    environment: IEnvironment,
+    options?: Partial<Cypress.RequestOptions>
+): Chainable<any> => {
+    return cy.request({
+        url: `/api/admin/environments`,
+        method: 'POST',
+        body: environment,
+        ...options,
+    });
+};

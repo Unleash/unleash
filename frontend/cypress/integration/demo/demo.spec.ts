@@ -14,6 +14,20 @@ describe(
         before(() => {
             cy.runBefore();
 
+            cy.createEnvironment_API(
+                {
+                    name: 'dev',
+                    type: 'development',
+                },
+                { failOnStatusCode: false }
+            );
+            cy.createEnvironment_API(
+                {
+                    name: 'prod',
+                    type: 'production',
+                },
+                { failOnStatusCode: false }
+            );
             cy.createProject_API('demo-app', { failOnStatusCode: false });
             cy.createFeature_API('demoApp.step1', 'demo-app', {
                 failOnStatusCode: false,

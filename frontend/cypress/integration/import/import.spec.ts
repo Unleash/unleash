@@ -109,10 +109,8 @@ describe('imports', () => {
                 fileName: 'upload.json',
                 lastModified: Date.now(),
             });
-        cy.get("[data-testid='VALIDATE_BUTTON']").click({ force: true });
-        cy.get("[data-testid='IMPORT_CONFIGURATION_BUTTON']").click({
-            force: true,
-        });
+        cy.get("[data-testid='VALIDATE_BUTTON']").click();
+        cy.get("[data-testid='IMPORT_CONFIGURATION_BUTTON']").click();
         // cy.contains('Import completed');
 
         cy.visit(`/projects/default/features/${randomFeatureName}`);

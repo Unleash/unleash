@@ -50,7 +50,7 @@ const FeatureSettingsProjectConfirm = ({
     const hasSameEnvironments: boolean = useMemo(() => {
         return arraysHaveSameItems(
             feature.environments.map(env => env.name),
-            project.environments
+            project.environments.map(projectEnv => projectEnv.environment)
         );
     }, [feature, project]);
 

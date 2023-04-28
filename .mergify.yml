@@ -1,6 +1,7 @@
 pull_request_rules:
-  - name: Automatic update of all PRs
+  - name: Automatic update of open PRs
     conditions:
       - base=main # Targeting the main branch
+      - "#state=open" # Only apply to open PRs
     actions:
       update: {} # Update PR with base branch

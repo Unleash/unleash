@@ -67,7 +67,6 @@ exports[`should create default config 1`] = `
     },
     "flags": {
       "anonymiseEventLog": false,
-      "bulkOperations": false,
       "caseInsensitiveInOperators": false,
       "cleanClientApi": false,
       "crOnVariants": false,
@@ -94,7 +93,6 @@ exports[`should create default config 1`] = `
   "flagResolver": FlagResolver {
     "experiments": {
       "anonymiseEventLog": false,
-      "bulkOperations": false,
       "caseInsensitiveInOperators": false,
       "cleanClientApi": false,
       "crOnVariants": false,

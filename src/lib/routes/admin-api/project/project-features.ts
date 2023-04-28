@@ -40,7 +40,6 @@ import {
 } from '../../../openapi';
 import { OpenApiService, FeatureToggleService } from '../../../services';
 import { querySchema } from '../../../schema/feature-schema';
-import NotFoundError from '../../../error/notfound-error';
 import { BatchStaleSchema } from '../../../openapi/spec/batch-stale-schema';
 
 interface FeatureStrategyParams {
@@ -594,10 +593,6 @@ export default class ProjectFeaturesController extends Controller {
         req: IAuthRequest<{ projectId: string }, void, BatchStaleSchema>,
         res: Response,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('bulkOperations')) {
-            throw new NotFoundError('Bulk operations are not enabled');
-        }
-
         const { features, stale } = req.body;
         const { projectId } = req.params;
         const userName = extractUsername(req);

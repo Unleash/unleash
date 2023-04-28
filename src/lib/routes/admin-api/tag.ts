@@ -24,7 +24,6 @@ import {
 import { emptyResponse } from '../../openapi/util/standard-responses';
 import FeatureTagService from 'lib/services/feature-tag-service';
 import { TagsBulkAddSchema } from '../../openapi/spec/tags-bulk-add-schema';
-import NotFoundError from '../../error/notfound-error';
 import { IFlagResolver } from '../../types';
 
 const version = 1;
@@ -214,9 +213,6 @@ class TagController extends Controller {
         req: IAuthRequest<void, void, TagsBulkAddSchema>,
         res: Response<TagSchema>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('bulkOperations')) {
-            throw new NotFoundError('Bulk operations are not enabled');
-        }
         const { features, tags } = req.body;
         const userName = extractUsername(req);
         await this.featureTagService.updateTags(

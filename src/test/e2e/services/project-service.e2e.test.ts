@@ -538,8 +538,8 @@ test('should not change project if feature toggle project does not match current
             'wrong-project-id',
         );
     } catch (err) {
-        expect(err.message.toLowerCase().includes('permission'));
-        expect(err.message.includes(MOVE_FEATURE_TOGGLE));
+        expect(err.message.toLowerCase().includes('permission')).toBeTruthy();
+        expect(err.message.includes(MOVE_FEATURE_TOGGLE)).toBeTruthy();
     }
 });
 
@@ -604,8 +604,8 @@ test('should fail if user is not authorized', async () => {
             project.id,
         );
     } catch (err) {
-        expect(err.message.toLowerCase().includes('permission'));
-        expect(err.message.includes(MOVE_FEATURE_TOGGLE));
+        expect(err.message.toLowerCase().includes('permission')).toBeTruthy();
+        expect(err.message.includes(MOVE_FEATURE_TOGGLE)).toBeTruthy();
     }
 });
 

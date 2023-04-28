@@ -6,6 +6,7 @@ import {
     IContextFieldStore,
     ILegalValue,
 } from '../types/stores/context-field-store';
+import NotFoundError from '../error/notfound-error';
 
 const COLUMNS = [
     'name',
@@ -76,11 +77,16 @@ class ContextFieldStore implements IContextFieldStore {
     }
 
     async get(key: string): Promise<IContextField> {
-        return this.db
+        const row = await this.db
             .first(COLUMNS)
             .from(TABLE)
-            .where({ name: key })
-            .then(mapRow);
+            .where({ name: key });
+        if (!row) {
+            throw new NotFoundError(
+                `Could not find Context field with name ${key}`,
+            );
+        }
+        return mapRow(row);
     }
 
     async deleteAll(): Promise<void> {

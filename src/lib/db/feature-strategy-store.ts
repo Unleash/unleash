@@ -380,6 +380,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 );
                 return e;
             });
+            if (featureToggle.strategies.length === 0) {
+                featureToggle.enabled = false;
+            }
+
             featureToggle.archived = archived;
             return featureToggle;
         }
@@ -389,10 +393,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     }
 
     private addSegmentIdsToStrategy(
-        feature: PartialDeep<IFeatureToggleClient>,
+        featureToggle: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
     ) {
-        const strategy = feature.strategies?.find(
+        const strategy = featureToggle.strategies?.find(
             (s) => s?.id === row.strategy_id,
         );
         if (!strategy) {
@@ -415,22 +419,22 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     }
 
     private addTag(
-        feature: Record<string, any>,
+        featureToggle: Record<string, any>,
         row: Record<string, any>,
     ): void {
-        const tags = feature.tags || [];
+        const tags = featureToggle.tags || [];
         const newTag = FeatureStrategiesStore.rowToTag(row);
-        feature.tags = [...tags, newTag];
+        featureToggle.tags = [...tags, newTag];
     }
 
     private isNewTag(
-        feature: Record<string, any>,
+        featureToggle: Record<string, any>,
         row: Record<string, any>,
     ): boolean {
         return (
             row.tag_type &&
             row.tag_value &&
-            !feature.tags?.some(
+            !featureToggle.tags?.some(
                 (tag) =>
                     tag.type === row.tag_type && tag.value === row.tag_value,
             )

@@ -56,7 +56,7 @@ export const DemoBanner = ({ onPlans }: IDemoBannerProps) => {
                 Ask questions
             </StyledQuestionsButton>
             <StyledButton variant="contained" color="primary" onClick={onPlans}>
-                Get Unleash
+                Get started
             </StyledButton>
         </StyledBanner>
     );

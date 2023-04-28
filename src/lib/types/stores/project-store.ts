@@ -51,7 +51,8 @@ export interface IProjectQuery {
 
 export type ProjectEnvironment = {
     environment: string;
-    defaultStrategy: CreateFeatureStrategySchema;
+    changeRequestEnabled?: boolean;
+    defaultStrategy?: CreateFeatureStrategySchema;
 };
 
 export interface IProjectEnvironmentWithChangeRequests {
@@ -118,7 +119,7 @@ export interface IProjectStore extends Store<IProject, string> {
     getDefaultStrategy(
         projectId: string,
         environment: string,
-    ): Promise<CreateFeatureStrategySchema | undefined>;
+    ): Promise<CreateFeatureStrategySchema | null>;
     updateDefaultStrategy(
         projectId: string,
         environment: string,

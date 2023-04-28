@@ -9,6 +9,7 @@ import { environmentSchema } from './environment-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
 import { projectStatsSchema } from './project-stats-schema';
 import { createFeatureStrategySchema } from './create-feature-strategy-schema';
+import { projectEnvironmentSchema } from './project-environment-schema';
 
 export const healthOverviewSchema = {
     $id: '#/components/schemas/healthOverviewSchema',
@@ -48,15 +49,7 @@ export const healthOverviewSchema = {
         environments: {
             type: 'array',
             items: {
-                type: 'object',
-                properties: {
-                    environment: {
-                        type: 'string',
-                    },
-                    defaultStrategy: {
-                        $ref: '#/components/schemas/createFeatureStrategySchema',
-                    },
-                },
+                $ref: '#/components/schemas/projectEnvironmentSchema',
             },
         },
         features: {
@@ -80,9 +73,10 @@ export const healthOverviewSchema = {
     },
     components: {
         schemas: {
+            environmentSchema,
+            projectEnvironmentSchema,
             createFeatureStrategySchema,
             constraintSchema,
-            environmentSchema,
             featureSchema,
             featureEnvironmentSchema,
             overrideSchema,

@@ -2593,15 +2593,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "environments": {
             "items": {
-              "properties": {
-                "defaultStrategy": {
-                  "$ref": "#/components/schemas/createFeatureStrategySchema",
-                },
-                "environment": {
-                  "type": "string",
-                },
-              },
-              "type": "object",
+              "$ref": "#/components/schemas/projectEnvironmentSchema",
             },
             "type": "array",
           },
@@ -2668,15 +2660,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "environments": {
             "items": {
-              "properties": {
-                "defaultStrategy": {
-                  "$ref": "#/components/schemas/createFeatureStrategySchema",
-                },
-                "environment": {
-                  "type": "string",
-                },
-              },
-              "type": "object",
+              "$ref": "#/components/schemas/projectEnvironmentSchema",
             },
             "type": "array",
           },
@@ -3530,6 +3514,9 @@ The provider you choose for your addon dictates what properties the \`parameters
           "changeRequestsEnabled": {
             "type": "boolean",
           },
+          "defaultStrategy": {
+            "$ref": "#/components/schemas/createFeatureStrategySchema",
+          },
           "environment": {
             "type": "string",
           },
@@ -3557,19 +3544,24 @@ The provider you choose for your addon dictates what properties the \`parameters
           "environments": {
             "description": "The environments that are enabled for this project",
             "example": [
-              "development",
-              "production",
+              {
+                "environment": "development",
+              },
+              {
+                "defaultStrategy": {
+                  "constraints": [],
+                  "name": "flexibleRollout",
+                  "parameters": {
+                    "groupId": "stickytoggle",
+                    "rollout": "50",
+                    "stickiness": "customAppName",
+                  },
+                },
+                "environment": "production",
+              },
             ],
             "items": {
-              "properties": {
-                "defaultStrategy": {
-                  "$ref": "#/components/schemas/createFeatureStrategySchema",
-                },
-                "environment": {
-                  "type": "string",
-                },
-              },
-              "type": "object",
+              "$ref": "#/components/schemas/projectEnvironmentSchema",
             },
             "type": "array",
           },
@@ -9238,6 +9230,30 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "createFeatureStrategySchema",
           },
           "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "The request payload you provided doesn't conform to the schema. The .parameters property should be object. You sent [].",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ValidationError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
             "description": "The request data does not match what we expect.",
           },
         },

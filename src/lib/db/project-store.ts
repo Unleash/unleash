@@ -506,12 +506,12 @@ class ProjectStore implements IProjectStore {
     async getDefaultStrategy(
         projectId: string,
         environment: string,
-    ): Promise<CreateFeatureStrategySchema | undefined> {
+    ): Promise<CreateFeatureStrategySchema | null> {
         const rows = await this.db(PROJECT_ENVIRONMENTS)
             .select('default_strategy')
-            .where({ project: projectId, environment });
+            .where({ project_id: projectId, environment_name: environment });
 
-        return rows.length > 0 ? rows[0] : undefined;
+        return rows.length > 0 ? rows[0].default_strategy : null;
     }
 
     async updateDefaultStrategy(
@@ -573,7 +573,10 @@ class ProjectStore implements IProjectStore {
     }): ProjectEnvironment {
         return {
             environment: row.environment_name,
-            defaultStrategy: row.default_strategy,
+            defaultStrategy:
+                row.default_strategy === null
+                    ? undefined
+                    : row.default_strategy,
         };
     }
 }

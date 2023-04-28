@@ -2694,7 +2694,7 @@ test('should add multiple segments to a strategy', async () => {
             const defaultEnv = res.body.environments.find(
                 (env) => env.name === 'default',
             );
-            const strategy = defaultEnv.strategies.find(
+            const strategy = defaultEnv?.strategies.find(
                 (strat) => strat.id === strategyOne.id,
             );
 

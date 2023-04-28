@@ -1,4 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { createFeatureStrategySchema } from './create-feature-strategy-schema';
 
 export const projectEnvironmentSchema = {
     $id: '#/components/schemas/projectEnvironmentSchema',
@@ -12,8 +13,15 @@ export const projectEnvironmentSchema = {
         changeRequestsEnabled: {
             type: 'boolean',
         },
+        defaultStrategy: {
+            $ref: '#/components/schemas/createFeatureStrategySchema',
+        },
     },
-    components: {},
+    components: {
+        schemas: {
+            createFeatureStrategySchema,
+        },
+    },
 } as const;
 
 export type ProjectEnvironmentSchema = FromSchema<

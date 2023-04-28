@@ -110,6 +110,7 @@ export default class ProjectApi extends Controller {
             archived,
             user.id,
         );
+
         this.openApiService.respondWithValidation(
             200,
             res,

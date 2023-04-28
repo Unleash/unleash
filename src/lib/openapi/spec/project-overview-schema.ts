@@ -9,6 +9,7 @@ import { environmentSchema } from './environment-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
 import { projectStatsSchema } from './project-stats-schema';
 import { createFeatureStrategySchema } from './create-feature-strategy-schema';
+import { projectEnvironmentSchema } from './project-environment-schema';
 
 export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',
@@ -64,17 +65,23 @@ export const projectOverviewSchema = {
         environments: {
             type: 'array',
             items: {
-                type: 'object',
-                properties: {
-                    environment: {
-                        type: 'string',
-                    },
+                $ref: '#/components/schemas/projectEnvironmentSchema',
+            },
+            example: [
+                { environment: 'development' },
+                {
+                    environment: 'production',
                     defaultStrategy: {
-                        $ref: '#/components/schemas/createFeatureStrategySchema',
+                        name: 'flexibleRollout',
+                        constraints: [],
+                        parameters: {
+                            rollout: '50',
+                            stickiness: 'customAppName',
+                            groupId: 'stickytoggle',
+                        },
                     },
                 },
-            },
-            example: ['development', 'production'],
+            ],
             description: 'The environments that are enabled for this project',
         },
         features: {
@@ -100,9 +107,10 @@ export const projectOverviewSchema = {
     },
     components: {
         schemas: {
-            constraintSchema,
             environmentSchema,
+            projectEnvironmentSchema,
             createFeatureStrategySchema,
+            constraintSchema,
             featureSchema,
             featureEnvironmentSchema,
             overrideSchema,

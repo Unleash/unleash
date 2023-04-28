@@ -67,7 +67,6 @@ exports[`should create default config 1`] = `
     },
     "flags": {
       "anonymiseEventLog": false,
-      "bulkOperations": false,
       "caseInsensitiveInOperators": false,
       "cleanClientApi": false,
       "crOnVariants": false,
@@ -80,7 +79,6 @@ exports[`should create default config 1`] = `
       "maintenanceMode": false,
       "messageBanner": false,
       "migrationLock": false,
-      "newProjectOverview": false,
       "optimal304": false,
       "optimal304Differ": false,
       "personalAccessTokensKillSwitch": false,
@@ -94,7 +92,6 @@ exports[`should create default config 1`] = `
   "flagResolver": FlagResolver {
     "experiments": {
       "anonymiseEventLog": false,
-      "bulkOperations": false,
       "caseInsensitiveInOperators": false,
       "cleanClientApi": false,
       "crOnVariants": false,
@@ -107,7 +104,6 @@ exports[`should create default config 1`] = `
       "maintenanceMode": false,
       "messageBanner": false,
       "migrationLock": false,
-      "newProjectOverview": false,
       "optimal304": false,
       "optimal304Differ": false,
       "personalAccessTokensKillSwitch": false,

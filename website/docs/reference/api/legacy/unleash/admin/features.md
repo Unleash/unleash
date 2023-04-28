@@ -3,7 +3,9 @@ title: /api/admin/features
 ---
 
 :::caution Deprecation notice
-Most of this API was deprecated as part of the v4.3 release and will be removed in v5.0. You should use [the project-based API (/api/admin/projects/:projectId)](/reference/api/legacy/unleash/admin/features-v2.md) instead. The deprecated endpoints are marked as such in the document below.
+
+Most of this API was removed in Unleash v5 (after being deprecated since Unleash v4.3). You should use [the project-based API (/api/admin/projects/:projectId)](/reference/api/legacy/unleash/admin/features-v2.md) instead.
+
 :::
 
 
@@ -15,7 +17,9 @@ In order to access the admin API endpoints you need to identify yourself. Unless
 ## Fetching Feature Toggles {#fetching-feature-toggles}
 
 :::caution Deprecation notice
-This endpoint is deprecated. Please use the [project-based endpoint to fetch all toggles](/reference/api/legacy/unleash/admin/features-v2.md#fetching-toggles) instead.
+
+This endpoint was removed in Unleash v5. Please use the [project-based endpoint to fetch all toggles](/reference/api/legacy/unleash/admin/features-v2.md#fetching-toggles) instead.
+
 :::
 
 `GET: http://unleash.host.com/api/admin/features`

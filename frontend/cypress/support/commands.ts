@@ -24,6 +24,7 @@ import {
     deleteFeature_API,
     deleteProject_API,
     updateUserPassword_API,
+    createEnvironment_API,
     //@ts-ignore
 } from './API';
 
@@ -56,3 +57,4 @@ Cypress.Commands.add(
     'updateFlexibleRolloutStrategy_UI',
     updateFlexibleRolloutStrategy_UI
 );
+Cypress.Commands.add('createEnvironment_API', createEnvironment_API);

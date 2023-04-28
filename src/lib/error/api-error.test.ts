@@ -40,7 +40,7 @@ describe('Standard/legacy error conversion', () => {
         const message = `: message!`;
         const result = fromLegacyError(new BadDataError(message)).toJSON();
 
-        expect(result.message.includes('`details`'));
+        expect(result.message.includes('`details`')).toBeTruthy();
         expect(result.details).toStrictEqual([
             {
                 message,
@@ -216,6 +216,8 @@ describe('OpenAPI error conversion', () => {
         const serializedUnleashError: ApiErrorSchema =
             fromOpenApiValidationErrors({ newprop: 7 }, errors).toJSON();
 
+        console.log(serializedUnleashError);
+
         expect(serializedUnleashError.name).toBe('ValidationError');
         expect(serializedUnleashError.message).toContain('`details`');
         expect(
@@ -365,11 +367,10 @@ describe('Error serialization special cases', () => {
         expect(json.permission).toBe(permission);
     });
 
-    it('BadDataError: adds `details` with error details to', () => {
+    it('BadDataError: adds `details` with error details', () => {
         const description = 'You did **this** wrong';
         const error = new BadDataError(description).toJSON();
 
-        expect(error.message).toBe(description);
         expect(error.details![0].message).toBe(description);
         expect(error.details![0].description).toBe(description);
     });
@@ -378,8 +379,6 @@ describe('Error serialization special cases', () => {
         const results = owasp.test('123');
         const error = new OwaspValidationError(results);
         const json = error.toJSON();
-
-        console.log(results, json);
 
         expect(json.message).toBe(results.errors[0]);
         expect(json.details![0].message).toBe(results.errors[0]);

@@ -1,4 +1,4 @@
-import { UnleashError } from './api-error';
+import { ApiErrorSchema, UnleashError } from './api-error';
 
 export default class PasswordUndefinedError extends UnleashError {
     constructor() {
@@ -8,8 +8,9 @@ export default class PasswordUndefinedError extends UnleashError {
         });
     }
 
-    additionalSerializedProps(): object {
+    toJSON(): ApiErrorSchema {
         return {
+            ...super.toJSON(),
             details: [
                 {
                     validationErrors: [],

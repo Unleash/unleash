@@ -112,7 +112,6 @@ type ValidationErrorDescription = {
 type UnleashErrorData =
     | {
           message: string;
-          documentationLink?: string;
       } & (
           | {
                 name: UnleashApiErrorNameWithoutExtraData;
@@ -153,28 +152,17 @@ export class UnleashError extends Error {
 
     additionalParameters: object;
 
-    constructor({
-        name,
-        message,
-        documentationLink,
-        ...rest
-    }: UnleashErrorData) {
+    constructor({ name, message }: UnleashErrorData) {
         super();
         this.id = uuidV4();
         this.name = name;
         super.message = message;
 
         this.statusCode = statusCode(name);
-
-        this.additionalParameters = rest;
     }
 
     help(): string {
         return `Get help for id ${this.id}`;
-    }
-
-    additionalSerializedProps(): object {
-        return {};
     }
 
     toJSON(): ApiErrorSchema {
@@ -183,8 +171,6 @@ export class UnleashError extends Error {
             name: this.name,
             message: this.message,
             details: [{ message: this.message, description: this.message }],
-            ...this.additionalParameters,
-            ...this.additionalSerializedProps,
         };
     }
 
@@ -224,6 +210,9 @@ export const apiErrorSchema = {
 } as const;
 
 export const fromLegacyError = (e: Error): UnleashError => {
+    if (e instanceof UnleashError) {
+        return e;
+    }
     const name = AllUnleashApiErrorTypes.includes(e.name as UnleashApiErrorName)
         ? (e.name as UnleashApiErrorName)
         : 'UnknownError';
@@ -319,7 +308,7 @@ export const fromOpenApiValidationErrors = (
     requestBody: object,
     validationErrors: [ErrorObject, ...ErrorObject[]],
 ): UnleashError => {
-    const details = validationErrors.map(
+    const [firstDetail, ...remainingDetails] = validationErrors.map(
         fromOpenApiValidationError(requestBody),
     );
 
@@ -327,8 +316,7 @@ export const fromOpenApiValidationErrors = (
         name: 'ValidationError',
         message:
             "Request validation failed: the payload you provided doesn't conform to the schema. Check the `details` property for a list of errors that we found.",
-        // @ts-expect-error We know that the list is non-empty
-        details,
+        details: [firstDetail, ...remainingDetails],
     });
 };
 

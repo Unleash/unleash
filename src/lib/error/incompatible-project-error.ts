@@ -1,4 +1,4 @@
-import { UnleashError } from './api-error';
+import { ApiErrorSchema, UnleashError } from './api-error';
 
 export default class IncompatibleProjectError extends UnleashError {
     constructor(targetProject: string) {
@@ -8,12 +8,14 @@ export default class IncompatibleProjectError extends UnleashError {
         });
     }
 
-    additionalSerializedProps(): object {
+    toJSON(): ApiErrorSchema {
         return {
+            ...super.toJSON(),
             details: [
                 {
                     validationErrors: [],
                     message: this.message,
+                    description: this.message,
                 },
             ],
         };

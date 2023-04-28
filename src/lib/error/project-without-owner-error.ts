@@ -1,4 +1,4 @@
-import { UnleashError } from './api-error';
+import { ApiErrorSchema, UnleashError } from './api-error';
 
 export default class ProjectWithoutOwnerError extends UnleashError {
     constructor() {
@@ -6,5 +6,18 @@ export default class ProjectWithoutOwnerError extends UnleashError {
             message: 'A project must have at least one owner',
             name: 'ProjectWithoutOwnerError',
         });
+    }
+
+    toJSON(): ApiErrorSchema {
+        return {
+            ...super.toJSON(),
+            details: [
+                {
+                    description: this.message,
+                    message: this.message,
+                    validationErrors: [],
+                },
+            ],
+        };
     }
 }

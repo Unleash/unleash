@@ -1,4 +1,4 @@
-import { UnleashError } from '../error/api-error';
+import { ApiErrorSchema, UnleashError } from '../error/api-error';
 
 interface IBaseOptions {
     type: string;
@@ -32,6 +32,14 @@ class AuthenticationRequired extends UnleashError {
         this.path = path;
         this.options = options;
         this.defaultHidden = defaultHidden;
+    }
+
+    toJSON(): ApiErrorSchema {
+        return {
+            ...super.toJSON(),
+            path: this.path,
+            type: this.type,
+        };
     }
 }
 

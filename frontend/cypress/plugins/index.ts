@@ -12,6 +12,7 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
+import path from 'path';
 import vitePreprocessor from 'cypress-vite';
 
 /**
@@ -21,5 +22,11 @@ import vitePreprocessor from 'cypress-vite';
 module.exports = (on, config) => {
     // `on` is used to hook into various events Cypress emits
     // `config` is the resolved Cypress config
-    on('file:preprocessor', vitePreprocessor());
+    on(
+        'file:preprocessor',
+        vitePreprocessor({
+            configFile: path.resolve(__dirname, './../../vite.config.ts'),
+            mode: 'development',
+        })
+    );
 };

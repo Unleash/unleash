@@ -49,10 +49,6 @@ const flags = {
         process.env.UNLEASH_PRO_PLAN_AUTO_CHARGE,
         false,
     ),
-    bulkOperations: parseEnvVarBoolean(
-        process.env.UNLEASH_BULK_OPERATIONS,
-        false,
-    ),
     personalAccessTokensKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_PAT_KILL_SWITCH,
         false,

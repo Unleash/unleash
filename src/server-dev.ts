@@ -39,7 +39,6 @@ process.nextTick(async () => {
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
                         newProjectOverview: true,
-                        bulkOperations: true,
                         optimal304: true,
                         optimal304Differ: false,
                     },

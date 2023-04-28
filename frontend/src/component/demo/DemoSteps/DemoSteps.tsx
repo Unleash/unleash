@@ -133,9 +133,17 @@ export const DemoSteps = ({
                     };
 
                     if (step.anyClick) {
-                        window.addEventListener('click', clickHandler, {
-                            signal: abortController.signal,
-                        });
+                        window.addEventListener(
+                            'click',
+                            e => {
+                                const targetEl = e.target as HTMLElement;
+                                if (!targetEl.closest('.__floater'))
+                                    clickHandler(e);
+                            },
+                            {
+                                signal: abortController.signal,
+                            }
+                        );
                     } else {
                         el.addEventListener('click', clickHandler, {
                             signal: abortController.signal,

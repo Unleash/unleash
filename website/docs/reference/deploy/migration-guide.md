@@ -14,7 +14,7 @@ Unleash v5 drops support Node.js versions below 18, which is the current active 
 
 ### The Google Authenticator provider for SSO has been removed
 
-The Google Authenticator provider is now hidden by default. We recommend using [OpenID Connect](../../how-to-add-sso-open-id-connect.md) instead.
+The Google Authenticator provider is now hidden by default. We recommend using [OpenID Connect](../../how-to/how-to-add-sso-open-id-connect.md) instead.
 
 However, if you are running a self hosted version of Unleash and you need to temporarily re-enable Google SSO, you can do so by setting the `GOOGLE_AUTH_ENABLED` environment variable to `true`. If you're running a hosted version of Unleash, you'll need to reach out to us and ask us to re-enable the flag. However, the ability to do this will be removed in a future release and this is not safe to depend on.
 

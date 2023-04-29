@@ -3246,10 +3246,10 @@ faker@5.5.3:
   resolved "https://registry.yarnpkg.com/faker/-/faker-5.5.3.tgz#c57974ee484431b25205c2c8dc09fda861e51e0e"
   integrity sha512-wLTv2a28wjUyWkbnX7u/ABZBkUkIF2fCd73V6P2oFqEGEktDfzWx4UxrSqtPRw0xPRAcjeAOIiJWqZm3pP4u3g==
 
-fast-check@3.8.0:
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.8.0.tgz#43a6367db76c2bc1a1976e9898e1e6a4acfbac26"
-  integrity sha512-Mz6k/+bton0iMXdIaqG/ow81oUCYxIDtmGUvf1Q/9O5QhiLI6T9JaCNEr4Y6LfMOpY/jBUfo8hK+3qd5sGfTfw==
+fast-check@3.8.1:
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.8.1.tgz#804db0496e16bd0c4a27d3cba23bb2114b512ba3"
+  integrity sha512-WRll9CUIz6jWKgByFlHT2M/1BY3F7lewKl5BBIz5VHAy7B8y5iklK9rVm922kx+0x1hJqdkffuTs008xfIgytQ==
   dependencies:
     pure-rand "^6.0.0"
 

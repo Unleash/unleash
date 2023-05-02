@@ -10,7 +10,6 @@ import {
 } from '../util/offline-unleash-client';
 import { ALL_ENVS, ALL_PROJECTS } from '../util/constants';
 import { UnleashEvents } from 'unleash-client';
-import { ANY_EVENT } from '../util/anyEventEmitter';
 import { Logger } from '../logger';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi'>;
@@ -85,7 +84,7 @@ export class ProxyRepository
     }
 
     stop(): void {
-        this.services.eventService.off(ANY_EVENT, this.onAnyEvent);
+        this.services.eventService.off('update', this.onAnyEvent);
         this.running = false;
     }
 

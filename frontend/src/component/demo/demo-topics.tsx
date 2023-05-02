@@ -34,7 +34,7 @@ export const TOPICS: ITutorialTopic[] = [
         title: 'Enable/disable a feature toggle',
         steps: [
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -63,7 +63,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: `div[data-testid="TOGGLE-demoApp.step1-${ENVIRONMENT}"]`,
                 content: (
                     <>
@@ -87,7 +87,7 @@ export const TOPICS: ITutorialTopic[] = [
         title: 'Enable for a specific user',
         steps: [
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -111,7 +111,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2"]`,
                 content: (
                     <Description>
@@ -263,7 +263,7 @@ export const TOPICS: ITutorialTopic[] = [
         setup: gradualRollout,
         steps: [
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -293,7 +293,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step3"]`,
                 content: (
                     <Description>
@@ -369,7 +369,7 @@ export const TOPICS: ITutorialTopic[] = [
         setup: variants,
         steps: [
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -394,7 +394,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4"]`,
                 content: (
                     <Description>

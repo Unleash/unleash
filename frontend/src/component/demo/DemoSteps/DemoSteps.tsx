@@ -193,7 +193,10 @@ export const DemoSteps = ({
         const currentStep = currentTopic.steps[currentStepIndex];
         if (!currentStep) return;
 
-        if (currentStep.href && location.pathname !== currentStep.href) {
+        if (
+            currentStep.href &&
+            location.pathname !== currentStep.href.split('?')[0]
+        ) {
             navigate(currentStep.href);
         }
         waitForLoad(currentStep);

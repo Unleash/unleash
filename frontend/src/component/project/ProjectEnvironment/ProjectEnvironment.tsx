@@ -74,7 +74,7 @@ const ProjectEnvironmentList = () => {
             environments.map(environment => ({
                 ...environment,
                 projectVisible: project?.environments
-                    .map(projectEnvironment => projectEnvironment.environment)
+                    .(({environment}) => environment)
                     .includes(environment.name),
             })),
         [environments, project?.environments]

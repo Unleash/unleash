@@ -104,11 +104,25 @@ export const DemoSteps = ({
         }
 
         if (action === ACTIONS.UPDATE) {
-            const el = document.querySelector(step.target as string);
+            const el = document.querySelector(
+                step.target as string
+            ) as HTMLElement | null;
             if (el) {
                 el.scrollIntoView({
                     block: 'center',
                 });
+
+                if (step.focus) {
+                    if (step.focus === true) {
+                        el.focus();
+                    } else {
+                        const focusEl = el.querySelector(
+                            step.focus
+                        ) as HTMLElement | null;
+                        focusEl?.focus();
+                    }
+                }
+
                 if (!step.nextButton) {
                     const clickHandler = (e: Event) => {
                         abortController.abort();
@@ -119,9 +133,17 @@ export const DemoSteps = ({
                     };
 
                     if (step.anyClick) {
-                        window.addEventListener('click', clickHandler, {
-                            signal: abortController.signal,
-                        });
+                        window.addEventListener(
+                            'click',
+                            e => {
+                                const targetEl = e.target as HTMLElement;
+                                if (!targetEl.closest('.__floater'))
+                                    clickHandler(e);
+                            },
+                            {
+                                signal: abortController.signal,
+                            }
+                        );
                     } else {
                         el.addEventListener('click', clickHandler, {
                             signal: abortController.signal,

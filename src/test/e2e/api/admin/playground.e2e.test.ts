@@ -92,11 +92,11 @@ describe('Playground API E2E', () => {
             features.map(async (feature) => {
                 // create feature
                 const toggle = await database.stores.featureToggleStore.create(
-                    feature.project,
+                    feature.project!,
                     {
-                        ...feature,
+                        ...(feature as any),
                         createdAt: undefined,
-                        variants: null,
+                        variants: null as any,
                     },
                 );
 
@@ -108,7 +108,7 @@ describe('Playground API E2E', () => {
                 );
 
                 await database.stores.featureToggleStore.saveVariants(
-                    feature.project,
+                    feature.project!,
                     feature.name,
                     [
                         ...(feature.variants ?? []).map((variant) => ({
@@ -131,7 +131,7 @@ describe('Playground API E2E', () => {
                                 environment,
                                 strategyName: strategy.name,
                                 disabled: !!(index % 2),
-                                projectId: feature.project,
+                                projectId: feature.project!,
                             },
                         ),
                     ),
@@ -194,7 +194,7 @@ describe('Playground API E2E', () => {
                             ),
                         );
 
-                        request.projects = projects;
+                        request.projects = projects as any;
 
                         // create a list of features that can be filtered
                         // pass in args that should filter the list
@@ -388,6 +388,7 @@ describe('Playground API E2E', () => {
                                 (acc, next) => ({
                                     ...acc,
                                     [next.name]:
+                                        // @ts-ignore
                                         next.strategies[0].constraints[0]
                                             .values[0] === req.context.appName,
                                 }),
@@ -485,8 +486,8 @@ describe('Playground API E2E', () => {
                                 (acc, next) => ({
                                     ...acc,
                                     [next.name]:
-                                        next.strategies[0].constraints[0]
-                                            .values[0] === contextField,
+                                        next.strategies![0].constraints![0]
+                                            .values![0] === contextField,
                                 }),
                                 {},
                             );
@@ -599,14 +600,14 @@ describe('Playground API E2E', () => {
                             const shouldBeEnabled = features.reduce(
                                 (acc, next) => {
                                     const constraint =
-                                        next.strategies[0].constraints[0];
+                                        next.strategies![0].constraints![0];
 
                                     return {
                                         ...acc,
                                         [next.name]:
                                             constraint.contextName ===
                                                 generatedContextValue.name &&
-                                            constraint.values[0] ===
+                                            constraint.values![0] ===
                                                 generatedContextValue.value,
                                     };
                                 },
@@ -684,7 +685,7 @@ describe('Playground API E2E', () => {
             const body = await playgroundRequest(app, token.secret, request);
 
             // when enabled, this toggle should have one of the variants
-            expect(body.features[0].variant.name).toBe('a');
+            expect(body.features[0].variant!.name).toBe('a');
         });
     });
 });

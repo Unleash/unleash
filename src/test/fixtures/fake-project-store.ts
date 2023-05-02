@@ -3,6 +3,7 @@ import {
     IProjectInsert,
     IProjectSettings,
     IProjectStore,
+    ProjectEnvironment,
 } from '../../lib/types/stores/project-store';
 import {
     IEnvironment,
@@ -15,13 +16,14 @@ import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
 } from 'lib/db/project-store';
+import { CreateFeatureStrategySchema } from '../../lib/openapi';
 
 export default class FakeProjectStore implements IProjectStore {
     projects: IProject[] = [];
 
     projectEnvironment: Map<string, Set<string>> = new Map();
 
-    getEnvironmentsForProject(): Promise<string[]> {
+    getEnvironmentsForProject(): Promise<ProjectEnvironment[]> {
         throw new Error('Method not implemented.');
     }
 
@@ -178,6 +180,26 @@ export default class FakeProjectStore implements IProjectStore {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         mode: ProjectMode,
     ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    updateDefaultStrategy(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projectId: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        strategy: CreateFeatureStrategySchema,
+    ): Promise<CreateFeatureStrategySchema> {
+        throw new Error('Method not implemented.');
+    }
+
+    getDefaultStrategy(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        projectId: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environment: string,
+    ): Promise<CreateFeatureStrategySchema | undefined> {
         throw new Error('Method not implemented.');
     }
 }

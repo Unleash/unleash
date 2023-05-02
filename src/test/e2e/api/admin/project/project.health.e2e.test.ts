@@ -56,7 +56,9 @@ test('Project with no stale toggles should have 100% health rating', async () =>
         .expect((res) => {
             expect(res.body.health).toBe(100);
             expect(res.body.environments).toHaveLength(1);
-            expect(res.body.environments).toStrictEqual(['default']);
+            expect(res.body.environments).toStrictEqual([
+                { environment: 'default' },
+            ]);
         });
 });
 

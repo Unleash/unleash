@@ -32,11 +32,13 @@ export const ImportOptions: FC<IImportOptionsProps> = ({
     onChange,
 }) => {
     const { project: projectInfo } = useProject(project);
-    const environmentOptions = projectInfo.environments.map(environment => ({
-        key: environment,
-        label: environment,
-        title: environment,
-    }));
+    const environmentOptions = projectInfo.environments.map(
+        ({ environment }) => ({
+            key: environment,
+            label: environment,
+            title: environment,
+        })
+    );
 
     useEffect(() => {
         if (environment === '' && environmentOptions[0]) {

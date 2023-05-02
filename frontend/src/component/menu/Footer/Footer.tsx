@@ -93,6 +93,18 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
+                                                    href="https://docs.getunleash.io/reference/sdks/rust"
+                                                    target="_blank"
+                                                >
+                                                    Rust
+                                                </a>
+                                            }
+                                        />
+                                    </StyledListItem>{' '}
+                                    <StyledListItem>
+                                        <ListItemText
+                                            primary={
+                                                <a
                                                     href="https://docs.getunleash.io/reference/sdks/ruby"
                                                     target="_blank"
                                                 >
@@ -175,7 +187,7 @@ export const Footer: VFC = () => {
                                                     href="https://docs.getunleash.io/reference/sdks/javascript-browser"
                                                     target="_blank"
                                                 >
-                                                    JavaScript SDK
+                                                    JavaScript
                                                 </a>
                                             }
                                         />
@@ -187,7 +199,31 @@ export const Footer: VFC = () => {
                                                     href="https://docs.getunleash.io/reference/sdks/react"
                                                     target="_blank"
                                                 >
-                                                    React SDK
+                                                    React
+                                                </a>
+                                            }
+                                        />
+                                    </StyledListItem>
+                                    <StyledListItem>
+                                        <ListItemText
+                                            primary={
+                                                <a
+                                                    href="https://docs.getunleash.io/reference/sdks/next-js"
+                                                    target="_blank"
+                                                >
+                                                    Next.js
+                                                </a>
+                                            }
+                                        />
+                                    </StyledListItem>
+                                    <StyledListItem>
+                                        <ListItemText
+                                            primary={
+                                                <a
+                                                    href="https://docs.getunleash.io/reference/sdks/vue"
+                                                    target="_blank"
+                                                >
+                                                    Vue
                                                 </a>
                                             }
                                         />
@@ -199,7 +235,7 @@ export const Footer: VFC = () => {
                                                     href="https://docs.getunleash.io/reference/sdks/ios-proxy"
                                                     target="_blank"
                                                 >
-                                                    iOS SDK
+                                                    iOS
                                                 </a>
                                             }
                                         />
@@ -211,7 +247,19 @@ export const Footer: VFC = () => {
                                                     href="https://docs.getunleash.io/reference/sdks/android-proxy"
                                                     target="_blank"
                                                 >
-                                                    Android SDK
+                                                    Android
+                                                </a>
+                                            }
+                                        />
+                                    </StyledListItem>
+                                    <StyledListItem>
+                                        <ListItemText
+                                            primary={
+                                                <a
+                                                    href="https://docs.getunleash.io/reference/sdks/flutter"
+                                                    target="_blank"
+                                                >
+                                                    Flutter
                                                 </a>
                                             }
                                         />

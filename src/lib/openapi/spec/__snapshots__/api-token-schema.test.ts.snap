@@ -28,6 +28,15 @@ exports[`apiTokenSchema empty 1`] = `
       "params": {},
       "schemaPath": "#/anyOf",
     },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'type'",
+      "params": {
+        "missingProperty": "type",
+      },
+      "schemaPath": "#/required",
+    },
   ],
   "schema": "#/components/schemas/apiTokenSchema",
 }

@@ -12,6 +12,15 @@ exports[`featureEnvironmentSchema empty 1`] = `
       },
       "schemaPath": "#/required",
     },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'enabled'",
+      "params": {
+        "missingProperty": "enabled",
+      },
+      "schemaPath": "#/required",
+    },
   ],
   "schema": "#/components/schemas/featureEnvironmentSchema",
 }

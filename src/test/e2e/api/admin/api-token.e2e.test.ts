@@ -135,7 +135,7 @@ test('update admin token with expiry', async () => {
 });
 
 test('creates a lot of client tokens', async () => {
-    const requests = [];
+    const requests: any[] = [];
 
     for (let i = 0; i < 10; i++) {
         requests.push(

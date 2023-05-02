@@ -89,7 +89,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    bulkOperations: true,
                 },
             },
         },
@@ -103,11 +102,11 @@ afterEach(async () => {
     );
     await Promise.all(
         all
-            .filter((env) => env !== DEFAULT_ENV)
+            .filter((env) => env.environment !== DEFAULT_ENV)
             .map(async (env) =>
                 db.stores.projectStore.deleteEnvironmentForProject(
                     'default',
-                    env,
+                    env.environment,
                 ),
             ),
     );
@@ -2694,7 +2693,7 @@ test('should add multiple segments to a strategy', async () => {
             const defaultEnv = res.body.environments.find(
                 (env) => env.name === 'default',
             );
-            const strategy = defaultEnv.strategies.find(
+            const strategy = defaultEnv?.strategies.find(
                 (strat) => strat.id === strategyOne.id,
             );
 

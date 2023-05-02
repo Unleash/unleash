@@ -7,23 +7,14 @@ import { CreateFeatureStrategySchema } from 'openapi';
 
 export type ProjectEnvironmentType = {
     environment: string;
-    defaultStrategy: CreateFeatureStrategySchema | null;
+    defaultStrategy?: CreateFeatureStrategySchema;
 };
 export const useEnvironmentsRef = (
-    environments: Array<string | ProjectEnvironmentType> = []
+    environments: Array<ProjectEnvironmentType> = []
 ): string[] => {
-    let names: string[];
-    if (
-        environments &&
-        environments.length > 0 &&
-        typeof environments[0] !== 'string'
-    ) {
-        names = environments.map(
-            env => (env as ProjectEnvironmentType).environment
-        );
-    } else {
-        names = environments as string[];
-    }
+    let names = environments.map(
+        env => (env as ProjectEnvironmentType).environment
+    );
     const ref = useRef<Array<string>>(names);
     if (names.join('') !== ref.current?.join('')) {
         ref.current = names;

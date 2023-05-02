@@ -251,11 +251,11 @@ export default class FeatureToggleClientStore
     ): IFeatureToggleClient[] {
         const filtered: IFeatureToggleClient[] = [];
         features.forEach((feature) => {
-            let enabled = feature.enabled;
+            let { enabled } = feature;
             const filteredStrategies = feature.strategies.filter(
                 (strategy) => !strategy.disabled,
             );
-            if (filteredStrategies.length === 0) {
+            if (!filteredStrategies.length) {
                 enabled = false;
             }
             filtered.push({

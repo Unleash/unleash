@@ -12,6 +12,51 @@ exports[`strategySchema 1`] = `
       },
       "schemaPath": "#/required",
     },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'displayName'",
+      "params": {
+        "missingProperty": "displayName",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'description'",
+      "params": {
+        "missingProperty": "description",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'editable'",
+      "params": {
+        "missingProperty": "editable",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'deprecated'",
+      "params": {
+        "missingProperty": "deprecated",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'parameters'",
+      "params": {
+        "missingProperty": "parameters",
+      },
+      "schemaPath": "#/required",
+    },
   ],
   "schema": "#/components/schemas/strategySchema",
 }

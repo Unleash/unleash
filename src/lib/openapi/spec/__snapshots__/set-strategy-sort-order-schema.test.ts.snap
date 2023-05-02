@@ -12,6 +12,15 @@ exports[`setStrategySortOrderSchema missing id 1`] = `
       },
       "schemaPath": "#/items/required",
     },
+    {
+      "instancePath": "/1",
+      "keyword": "required",
+      "message": "must have required property 'id'",
+      "params": {
+        "missingProperty": "id",
+      },
+      "schemaPath": "#/items/required",
+    },
   ],
   "schema": "#/components/schemas/setStrategySortOrderSchema",
 }

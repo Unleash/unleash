@@ -149,8 +149,7 @@ export const ProjectFeatureToggles = ({
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const environments = useEnvironmentsRef(
         loading
-            ? ['a', 'b', 'c'].map(environment=> ({environment}))
-
+            ? [{ environment: 'a' }, { environment: 'b' }, { environment: 'c' }]
             : newEnvironments
     );
     const { refetch } = useProject(projectId);

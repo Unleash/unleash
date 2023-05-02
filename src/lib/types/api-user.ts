@@ -4,7 +4,6 @@ import { ValidationError } from 'joi';
 import { CLIENT } from './permissions';
 
 interface IApiUserData {
-    username?: string;
     permissions?: string[];
     projects?: string[];
     project?: string;
@@ -17,8 +16,6 @@ interface IApiUserData {
 export default class ApiUser {
     readonly isAPI: boolean = true;
 
-    readonly username: string;
-
     readonly permissions: string[];
 
     readonly projects: string[];
@@ -30,18 +27,17 @@ export default class ApiUser {
     readonly secret: string;
 
     constructor({
-        username,
         permissions = [CLIENT],
         projects,
         project,
         environment,
         type,
         secret,
+        tokenName,
     }: IApiUserData) {
-        if (!username) {
-            throw new ValidationError('username is required', [], undefined);
+        if (!tokenName) {
+            throw new ValidationError('tokenName is required', [], undefined);
         }
-        this.username = username;
         this.permissions = permissions;
         this.environment = environment;
         this.type = type;

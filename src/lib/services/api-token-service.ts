@@ -144,13 +144,12 @@ export class ApiTokenService {
             this.lastSeenSecrets.add(token.secret);
 
             return new ApiUser({
-                username: token.tokenName,
+                tokenName: token.tokenName,
                 permissions: resolveTokenPermissions(token.type),
                 projects: token.projects,
                 environment: token.environment,
                 type: token.type,
                 secret: token.secret,
-                tokenName: token.tokenName,
             });
         }
 

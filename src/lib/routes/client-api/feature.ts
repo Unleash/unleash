@@ -2,10 +2,8 @@ import memoizee from 'memoizee';
 import { Response } from 'express';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hashSum from 'hash-sum';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { diff } from 'deep-object-diff';
 import Controller from '../controller';
-import { IFlagResolver, IUnleashConfig, IUnleashServices } from '../../types';
+import { IUnleashConfig, IUnleashServices } from '../../types';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { Logger } from '../../logger';
 import { querySchema } from '../../schema/feature-schema';
@@ -31,8 +29,6 @@ import {
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { EventService } from 'lib/services';
 import { hoursToMilliseconds } from 'date-fns';
-import { isEmpty } from '../../util/isEmpty';
-import EventEmitter from 'events';
 
 const version = 2;
 
@@ -50,8 +46,6 @@ interface IMeta {
 export default class FeatureController extends Controller {
     private readonly logger: Logger;
 
-    private eventBus: EventEmitter;
-
     private featureToggleServiceV2: FeatureToggleService;
 
     private segmentService: ISegmentService;
@@ -62,13 +56,7 @@ export default class FeatureController extends Controller {
 
     private eventService: EventService;
 
-    private readonly cache: boolean;
-
     private cachedFeatures: any;
-
-    private cachedFeatures2: any;
-
-    private flagResolver: IFlagResolver;
 
     constructor(
         {
@@ -88,15 +76,13 @@ export default class FeatureController extends Controller {
         config: IUnleashConfig,
     ) {
         super(config);
-        const { clientFeatureCaching, flagResolver, eventBus } = config;
+        const { clientFeatureCaching } = config;
         this.featureToggleServiceV2 = featureToggleServiceV2;
         this.segmentService = segmentService;
         this.clientSpecService = clientSpecService;
         this.openApiService = openApiService;
-        this.flagResolver = flagResolver;
         this.eventService = eventService;
         this.logger = config.getLogger('client-api/feature.js');
-        this.eventBus = eventBus;
 
         this.route({
             method: 'get',
@@ -130,27 +116,15 @@ export default class FeatureController extends Controller {
             ],
         });
 
-        if (clientFeatureCaching?.enabled) {
-            this.cache = true;
-            this.cachedFeatures = memoizee(
-                (query) => this.resolveFeaturesAndSegments(query),
-                {
-                    promise: true,
-                    maxAge: clientFeatureCaching.maxAge,
-                    normalizer(args) {
-                        // args is arguments object as accessible in memoized function
-                        return JSON.stringify(args[0]);
-                    },
-                },
-            );
-        }
-        this.cachedFeatures2 = memoizee(
+        this.cachedFeatures = memoizee(
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             (query: IFeatureToggleQuery, etag: string) =>
                 this.resolveFeaturesAndSegments(query),
             {
                 promise: true,
-                maxAge: hoursToMilliseconds(1),
+                maxAge: clientFeatureCaching.maxAge
+                    ? clientFeatureCaching.maxAge
+                    : hoursToMilliseconds(1),
                 normalizer(args) {
                     // args is arguments object as accessible in memoized function
                     return args[1];
@@ -162,11 +136,21 @@ export default class FeatureController extends Controller {
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
     ): Promise<[FeatureConfigurationClient[], ISegment[]]> {
-        this.logger.debug('bypass cache');
         return Promise.all([
             this.featureToggleServiceV2.getClientFeatures(query),
             this.segmentService.getActive(),
         ]);
+    }
+
+    private async featuresAndSegments(
+        query: IFeatureToggleQuery,
+        etag: string,
+    ): Promise<[FeatureConfigurationClient[], ISegment[]]> {
+        if (this.config.clientFeatureCaching.enabled) {
+            return this.cachedFeatures(query, etag);
+        } else {
+            return this.resolveFeaturesAndSegments(query);
+        }
     }
 
     private async resolveQuery(
@@ -240,93 +224,6 @@ export default class FeatureController extends Controller {
         req: IAuthRequest,
         res: Response<ClientFeaturesSchema>,
     ): Promise<void> {
-        if (this.flagResolver.isEnabled('optimal304')) {
-            return this.optimal304(req, res);
-        }
-
-        const query = await this.resolveQuery(req);
-
-        const [features, segments] = this.cache
-            ? await this.cachedFeatures(query)
-            : await this.resolveFeaturesAndSegments(query);
-
-        if (this.flagResolver.isEnabled('optimal304Differ')) {
-            process.nextTick(async () =>
-                this.doOptimal304Diffing(features, query),
-            );
-        }
-
-        if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
-            this.openApiService.respondWithValidation(
-                200,
-                res,
-                clientFeaturesSchema.$id,
-                { version, features, query: { ...query }, segments },
-            );
-        } else {
-            this.openApiService.respondWithValidation(
-                200,
-                res,
-                clientFeaturesSchema.$id,
-                { version, features, query },
-            );
-        }
-    }
-
-    /**
-     * This helper method is used to validate that the new way of calculating
-     * cache-key based on query hash and revision id, with an internal memoization
-     * of 1hr still ends up producing the same result.
-     *
-     * It's worth to note that it is expected that a diff will occur immediately after
-     * a toggle changes due to the nature of two individual caches and how fast they
-     * detect the change. The diffs should however go away as soon as they both have
-     * the latest feature toggle configuration, which will happen within 600ms on the
-     * default configurations.
-     *
-     * This method is experimental and will only be used to validate our internal state
-     * to make sure our new way of caching is correct and stable.
-     *
-     * @deprecated
-     */
-    async doOptimal304Diffing(
-        features: FeatureConfigurationClient[],
-        query: IFeatureToggleQuery,
-    ): Promise<void> {
-        try {
-            const { etag } = await this.calculateMeta(query);
-            const [featuresNew] = await this.cachedFeatures2(query, etag);
-            const theDiffedObject = diff(features, featuresNew);
-
-            if (isEmpty(theDiffedObject)) {
-                this.logger.warn('The diff is: <Empty>');
-                this.eventBus.emit('optimal304Differ', { status: 'equal' });
-            } else {
-                this.logger.warn(
-                    `The diff is: ${JSON.stringify(theDiffedObject)}`,
-                );
-                this.eventBus.emit('optimal304Differ', { status: 'diff' });
-            }
-        } catch (e) {
-            this.logger.error('The diff checker crashed', e);
-            this.eventBus.emit('optimal304Differ', { status: 'crash' });
-        }
-    }
-
-    async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {
-        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
-        const revisionId = await this.eventService.getMaxRevisionId();
-
-        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
-        const queryHash = hashSum(query);
-        const etag = `"${queryHash}:${revisionId}"`;
-        return { revisionId, etag, queryHash };
-    }
-
-    async optimal304(
-        req: IAuthRequest,
-        res: Response<ClientFeaturesSchema>,
-    ): Promise<void> {
         const query = await this.resolveQuery(req);
 
         const userVersion = req.headers['if-none-match'];
@@ -345,7 +242,10 @@ export default class FeatureController extends Controller {
             );
         }
 
-        const [features, segments] = await this.cachedFeatures2(query, etag);
+        const [features, segments] = await this.featuresAndSegments(
+            query,
+            etag,
+        );
 
         if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
             this.openApiService.respondWithValidation(
@@ -368,6 +268,16 @@ export default class FeatureController extends Controller {
                 { version, features, query, meta },
             );
         }
+    }
+
+    async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {
+        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
+        const revisionId = await this.eventService.getMaxRevisionId();
+
+        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
+        const queryHash = hashSum(query);
+        const etag = `"${queryHash}:${revisionId}"`;
+        return { revisionId, etag, queryHash };
     }
 
     async getFeatureToggle(

@@ -50,14 +50,6 @@ const flags = {
         false,
     ),
     cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
-    optimal304: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304,
-        false,
-    ),
-    optimal304Differ: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
-        false,
-    ),
     groupRootRoles: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ROOT_ROLE_GROUPS,
         false,

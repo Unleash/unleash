@@ -19,7 +19,7 @@ import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { Badge } from 'component/common/Badge/Badge';
 
 interface IStrategyExecutionProps {
-    strategy: IFeatureStrategyPayload;
+    strategy: IFeatureStrategyPayload | CreateFeatureStrategySchema;
 }
 
 const NoItems: VFC = () => (

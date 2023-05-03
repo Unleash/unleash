@@ -1,10 +1,10 @@
 import { DragEventHandler, FC, ReactNode } from 'react';
 import { DragIndicator } from '@mui/icons-material';
-import { styled, IconButton, Box, Chip } from '@mui/material';
+import { Box, IconButton, styled } from '@mui/material';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
-    getFeatureStrategyIcon,
     formatStrategyName,
+    getFeatureStrategyIcon,
 } from 'utils/strategyNames';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -22,11 +22,11 @@ interface IStrategyItemContainerProps {
     style?: React.CSSProperties;
 }
 
-const DragIcon = styled(IconButton)(({ theme }) => ({
+const DragIcon = styled(IconButton)({
     padding: 0,
     cursor: 'inherit',
     transition: 'color 0.2s ease-in-out',
-}));
+});
 
 const StyledIndexLabel = styled('div')(({ theme }) => ({
     fontSize: theme.typography.fontSize,
@@ -124,7 +124,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                         maxWidth="150"
                         maxLength={15}
                         text={formatStrategyName(
-                            uiConfig?.flags?.strategyTitle
+                            uiConfig?.flags?.strategyImprovements
                                 ? strategy.title || strategy.name
                                 : strategy.name
                         )}

@@ -28,7 +28,6 @@ import {
 } from '../../openapi/spec/client-features-schema';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { EventService } from 'lib/services';
-import { hoursToMilliseconds } from 'date-fns';
 
 const version = 2;
 
@@ -126,9 +125,7 @@ export default class FeatureController extends Controller {
                     this.resolveFeaturesAndSegments(query),
                 {
                     promise: true,
-                    maxAge: clientFeatureCaching.maxAge
-                        ? clientFeatureCaching.maxAge
-                        : hoursToMilliseconds(1),
+                    maxAge: clientFeatureCaching.maxAge,
                     normalizer(args) {
                         // args is arguments object as accessible in memoized function
                         return args[1];

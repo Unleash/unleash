@@ -378,7 +378,7 @@ test('Supports multiple domains comma separated in environment variables', () =>
 test('Should enable client feature caching with .6 seconds max age by default', () => {
     const config = createConfig({});
     expect(config.clientFeatureCaching.enabled).toBe(true);
-    expect(config.clientFeatureCaching.maxAge).toBe(600);
+    expect(config.clientFeatureCaching.maxAge).toBe(3600000);
 });
 
 test('Should use overrides from options for client feature caching', () => {

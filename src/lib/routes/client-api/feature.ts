@@ -56,7 +56,10 @@ export default class FeatureController extends Controller {
 
     private eventService: EventService;
 
-    private cachedFeatures: any;
+    private featuresAndSegments: (
+        query: IFeatureToggleQuery,
+        etag: string,
+    ) => Promise<[FeatureConfigurationClient[], ISegment[]]>;
 
     constructor(
         {
@@ -116,21 +119,25 @@ export default class FeatureController extends Controller {
             ],
         });
 
-        this.cachedFeatures = memoizee(
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            (query: IFeatureToggleQuery, etag: string) =>
-                this.resolveFeaturesAndSegments(query),
-            {
-                promise: true,
-                maxAge: clientFeatureCaching.maxAge
-                    ? clientFeatureCaching.maxAge
-                    : hoursToMilliseconds(1),
-                normalizer(args) {
-                    // args is arguments object as accessible in memoized function
-                    return args[1];
+        if (clientFeatureCaching.enabled) {
+            this.featuresAndSegments = memoizee(
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                (query: IFeatureToggleQuery, etag: string) =>
+                    this.resolveFeaturesAndSegments(query),
+                {
+                    promise: true,
+                    maxAge: clientFeatureCaching.maxAge
+                        ? clientFeatureCaching.maxAge
+                        : hoursToMilliseconds(1),
+                    normalizer(args) {
+                        // args is arguments object as accessible in memoized function
+                        return args[1];
+                    },
                 },
-            },
-        );
+            );
+        } else {
+            this.featuresAndSegments = this.resolveFeaturesAndSegments;
+        }
     }
 
     private async resolveFeaturesAndSegments(
@@ -140,17 +147,6 @@ export default class FeatureController extends Controller {
             this.featureToggleServiceV2.getClientFeatures(query),
             this.segmentService.getActive(),
         ]);
-    }
-
-    private async featuresAndSegments(
-        query: IFeatureToggleQuery,
-        etag: string,
-    ): Promise<[FeatureConfigurationClient[], ISegment[]]> {
-        if (this.config.clientFeatureCaching.enabled) {
-            return this.cachedFeatures(query, etag);
-        } else {
-            return this.resolveFeaturesAndSegments(query);
-        }
     }
 
     private async resolveQuery(

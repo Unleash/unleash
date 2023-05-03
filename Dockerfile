@@ -28,6 +28,8 @@ FROM node:$NODE_VERSION
 
 ENV NODE_ENV production
 
+ENV TZ UTC
+
 WORKDIR /unleash
 
 COPY --from=builder /unleash/docker /unleash

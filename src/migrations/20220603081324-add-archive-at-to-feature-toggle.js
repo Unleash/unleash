@@ -3,6 +3,8 @@
 exports.up = function (db, callback) {
     db.runSql(
         `
+        CREATE INDEX events_created_at_idx ON events (created_at);
+        CREATE INDEX events_type_idx ON events (type);
         ALTER TABLE features ADD archived_at TIMESTAMP WITH TIME ZONE;
         UPDATE features f
         SET    archived_at = res.archived_at
@@ -28,6 +30,8 @@ exports.up = function (db, callback) {
 exports.down = function (db, callback) {
     db.runSql(
         `
+        DROP INDEX events_created_at_idx;
+        DROP INDEX events_type_idx;
         UPDATE features
         SET    archived = TRUE
         WHERE  archived_at IS NOT NULL;

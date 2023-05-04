@@ -17,7 +17,7 @@ export interface ILegacyApiTokenCreate {
     project?: string;
     projects?: string[];
     expiresAt?: Date;
-    tokenName: string;
+    tokenName?: string;
 }
 
 export interface IApiTokenCreate {

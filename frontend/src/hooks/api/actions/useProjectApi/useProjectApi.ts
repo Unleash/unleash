@@ -266,7 +266,7 @@ const useProjectApi = () => {
         environment: string,
         strategy: CreateFeatureStrategySchema
     ) => {
-        const path = `api/admin/projects/${projectId}/environments/${environement}/default-strategy`;
+        const path = `api/admin/projects/${projectId}/environments/${environment}/default-strategy`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify(strategy),

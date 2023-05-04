@@ -21,7 +21,7 @@ import useProjectApi from '../../../../../../../hooks/api/actions/useProjectApi/
 import { usePlausibleTracker } from '../../../../../../../hooks/usePlausibleTracker';
 import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm';
 import { CreateFeatureStrategySchema } from '../../../../../../../openapi';
-import { useProjectEnvironments } from '../../../../../../../hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
+import useProject from '../../../../../../../hooks/api/getters/useProject/useProject';
 
 interface EditDefaultStrategyProps {
     strategy: IFeatureStrategy | CreateFeatureStrategySchema;
@@ -30,6 +30,8 @@ interface EditDefaultStrategyProps {
 const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
     const projectId = useRequiredPathParam('projectId');
     const environmentId = useRequiredQueryParam('environmentId');
+
+    const { refetch: refetchProject } = useProject(projectId);
 
     const [defaultStrategy, setDefaultStrategy] = useState<
         Partial<IFeatureStrategy> | CreateFeatureStrategySchema
@@ -46,8 +48,6 @@ const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
 
     const [previousTitle, setPreviousTitle] = useState<string>('');
     const { trackEvent } = usePlausibleTracker();
-
-    const { refetchEnvironments } = useProjectEnvironments(projectId);
 
     const trackTitle = (title: string = '') => {
         // don't expose the title, just if it was added, removed, or edited
@@ -104,7 +104,10 @@ const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
     }, [JSON.stringify(allSegments), JSON.stringify(strategy.segments)]);
 
     const segmentsToSubmit = uiConfig?.flags.SE ? segments : [];
-    const payload = createStrategyPayload(strategy as any, segmentsToSubmit);
+    const payload = createStrategyPayload(
+        defaultStrategy as any,
+        segmentsToSubmit
+    );
 
     const onDefaultStrategyEdit = async (
         payload: CreateFeatureStrategySchema
@@ -127,8 +130,9 @@ const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
     const onSubmit = async () => {
         const path = `/projects/${projectId}/settings/default-strategy`;
         try {
+            debugger;
             await onDefaultStrategyEdit(payload);
-            await refetchEnvironments();
+            await refetchProject();
             navigate(path);
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

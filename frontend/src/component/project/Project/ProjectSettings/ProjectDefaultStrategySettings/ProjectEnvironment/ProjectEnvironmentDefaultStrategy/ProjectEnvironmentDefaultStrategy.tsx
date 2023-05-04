@@ -10,6 +10,7 @@ import { IFeatureStrategy } from 'interfaces/strategy';
 import React, { useMemo } from 'react';
 import EditDefaultStrategy from './EditDefaultStrategy';
 import { SidebarModal } from '../../../../../../common/SidebarModal/SidebarModal';
+import { CreateFeatureStrategySchema } from '../../../../../../../openapi';
 
 interface ProjectEnvironmentDefaultStrategyProps {
     environment: ProjectEnvironmentType;
@@ -24,8 +25,7 @@ export const formatEditProjectEnvironmentStrategyPath = (
     return `/projects/${projectId}/settings/default-strategy/edit?${params}`;
 };
 
-const DEFAULT_STRATEGY: Partial<IFeatureStrategy> = {
-    id: '',
+const DEFAULT_STRATEGY: CreateFeatureStrategySchema = {
     name: 'flexibleRollout',
     disabled: false,
     constraints: [],
@@ -51,7 +51,7 @@ const ProjectEnvironmentDefaultStrategy = ({
 
     const path = `/projects/${projectId}/settings/default-strategy`;
 
-    const strategy = useMemo(() => {
+    const strategy: CreateFeatureStrategySchema = useMemo(() => {
         return defaultStrategy ? defaultStrategy : DEFAULT_STRATEGY;
     }, [JSON.stringify(defaultStrategy)]);
 

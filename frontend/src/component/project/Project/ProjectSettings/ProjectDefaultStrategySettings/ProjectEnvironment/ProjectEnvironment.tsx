@@ -3,6 +3,7 @@ import {
     AccordionDetails,
     AccordionSummary,
     styled,
+    useTheme,
 } from '@mui/material';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
@@ -36,6 +37,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     [theme.breakpoints.down(400)]: {
         padding: theme.spacing(1, 2),
     },
+    '&.Mui': { backgroundColor: 'white' },
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails, {
@@ -98,6 +100,7 @@ const StyledStringTruncator = styled(StringTruncator)(({ theme }) => ({
 
 const ProjectEnvironment = ({ environment }: IProjectEnvironmentProps) => {
     const { environment: name } = environment;
+    const theme = useTheme();
     const enabled = false;
     return (
         <StyledProjectEnvironmentOverview enabled={false}>
@@ -108,6 +111,10 @@ const ProjectEnvironment = ({ environment }: IProjectEnvironmentProps) => {
                 className={`environment-accordion ${
                     enabled ? '' : 'accordion-disabled'
                 }`}
+                style={{
+                    outline: `2px solid ${theme.palette.divider}`,
+                    backgroundColor: theme.palette.background.paper,
+                }}
             >
                 <StyledAccordionSummary>
                     <StyledHeader data-loading enabled={enabled}>

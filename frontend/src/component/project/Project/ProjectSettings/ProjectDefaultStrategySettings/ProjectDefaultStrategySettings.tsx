@@ -2,7 +2,7 @@ import { useRequiredPathParam } from '../../../../../hooks/useRequiredPathParam'
 import useProject, {
     useProjectNameOrId,
 } from '../../../../../hooks/api/getters/useProject/useProject';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import AccessContext from '../../../../../contexts/AccessContext';
 import { usePageTitle } from '../../../../../hooks/usePageTitle';
 import { PageContent } from '../../../../common/PageContent/PageContent';

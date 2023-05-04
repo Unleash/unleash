@@ -1,5 +1,5 @@
 import { Logger } from '../../logger';
-import { IUnleashConfig } from '../../server-impl';
+import { IUnleashConfig } from '../../types';
 import { IUnleashStores } from '../../types';
 import { ToggleMetricsSummary } from '../../types/models/metrics';
 import {
@@ -90,8 +90,10 @@ export default class ClientMetricsServiceV2 {
             timestamp: value.bucket.start, //we might need to approximate between start/stop...
             yes: value.bucket.toggles[name].yes,
             no: value.bucket.toggles[name].no,
+            variants: value.bucket.toggles[name].variants,
         }));
         await this.registerBulkMetrics(clientMetrics);
+
         this.config.eventBus.emit(CLIENT_METRICS, value);
     }
 

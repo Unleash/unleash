@@ -7,6 +7,16 @@ import { subHours } from 'date-fns';
 let app;
 let db: ITestDb;
 
+const fetchHoursBack = (hoursBack: number, feature: string = 'demo') => {
+    return app.request
+        .get(
+            `/api/admin/client-metrics/features/${feature}/raw?hoursBack=${hoursBack}`,
+        )
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((res) => res.body);
+};
+
 beforeAll(async () => {
     db = await dbInit('client_metrics_serial', getLogger);
     app = await setupAppWithCustomConfig(db.stores, {});
@@ -123,16 +133,6 @@ test('should support the hoursBack query param for raw metrics', async () => {
     ];
 
     await db.stores.clientMetricsStoreV2.batchInsertMetrics(metrics);
-
-    const fetchHoursBack = (hoursBack: number) => {
-        return app.request
-            .get(
-                `/api/admin/client-metrics/features/demo/raw?hoursBack=${hoursBack}`,
-            )
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .then((res) => res.body);
-    };
 
     const hours1 = await fetchHoursBack(1);
     const hours24 = await fetchHoursBack(24);
@@ -290,4 +290,24 @@ test('should only include last hour of metrics return toggle summary', async () 
     expect(test.yes).toBe(2);
     expect(test.no).toBe(6);
     expect(demo.seenApplications).toStrictEqual(['backend-api', 'web']);
+});
+
+test('should support posting and receiving variants data', async () => {
+    const date = new Date();
+    const metric = {
+        featureName: 'demo',
+        appName: 'web',
+        environment: 'default',
+        timestamp: date,
+        yes: 1,
+        no: 1,
+        variants: { red: 3, blue: 4 },
+    };
+    const metrics: IClientMetricsEnv[] = [metric];
+
+    await db.stores.clientMetricsStoreV2.batchInsertMetrics(metrics);
+
+    const hours1 = await fetchHoursBack(1);
+
+    expect(hours1.data[0].variants).toMatchObject(metric.variants);
 });

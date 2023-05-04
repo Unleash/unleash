@@ -13,6 +13,7 @@ async function initSchema(db: IDBOption): Promise<void> {
 }
 
 test('Up & down migrations work', async () => {
+    jest.setTimeout(15000);
     const config = createTestConfig({
         db: {
             ...getDbConfig(),

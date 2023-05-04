@@ -12,6 +12,7 @@ import {
     spreadVariants,
 } from '../util/collapseHourlyMetrics';
 import { Db } from './db';
+import { IFlagResolver } from '../types';
 
 interface ClientMetricsBaseTable {
     feature_name: string;
@@ -94,9 +95,12 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
 
     private logger: Logger;
 
-    constructor(db: Db, getLogger: LogProvider) {
+    private flagResolver: IFlagResolver;
+
+    constructor(db: Db, getLogger: LogProvider, flagResolver: IFlagResolver) {
         this.db = db;
         this.logger = getLogger('client-metrics-store-v2.js');
+        this.flagResolver = flagResolver;
     }
 
     async get(key: IClientMetricsEnvKey): Promise<IClientMetricsEnv> {
@@ -171,15 +175,17 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         const query = `${insert.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp) DO UPDATE SET "yes" = "client_metrics_env"."yes" + EXCLUDED.yes, "no" = "client_metrics_env"."no" + EXCLUDED.no`;
         await this.db.raw(query);
 
-        const variantRows = spreadVariants(metrics).map(toVariantRow);
-        if (variantRows.length > 0) {
-            const insertVariants = this.db<ClientMetricsEnvVariantTable>(
-                TABLE_VARIANTS,
-            )
-                .insert(variantRows)
-                .toQuery();
-            const variantsQuery = `${insertVariants.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp, variant) DO UPDATE SET "count" = "client_metrics_env_variants"."count" + EXCLUDED.count`;
-            await this.db.raw(variantsQuery);
+        if (this.flagResolver.isEnabled('variantMetrics')) {
+            const variantRows = spreadVariants(metrics).map(toVariantRow);
+            if (variantRows.length > 0) {
+                const insertVariants = this.db<ClientMetricsEnvVariantTable>(
+                    TABLE_VARIANTS,
+                )
+                    .insert(variantRows)
+                    .toQuery();
+                const variantsQuery = `${insertVariants.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp, variant) DO UPDATE SET "count" = "client_metrics_env_variants"."count" + EXCLUDED.count`;
+                await this.db.raw(variantsQuery);
+            }
         }
     }
 
@@ -187,24 +193,40 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         featureName: string,
         hoursBack: number = 24,
     ): Promise<IClientMetricsEnv[]> {
-        const rows = await this.db<ClientMetricsEnvTable>(TABLE)
-            .select([`${TABLE}.*`, 'variant', 'count'])
-            .leftJoin(TABLE_VARIANTS, function () {
-                this.on(
-                    `${TABLE_VARIANTS}.feature_name`,
-                    `${TABLE}.feature_name`,
-                )
-                    .on(`${TABLE_VARIANTS}.app_name`, `${TABLE}.app_name`)
-                    .on(`${TABLE_VARIANTS}.environment`, `${TABLE}.environment`)
-                    .on(`${TABLE_VARIANTS}.timestamp`, `${TABLE}.timestamp`);
-            })
-            .where(`${TABLE}.feature_name`, featureName)
-            .andWhereRaw(
-                `${TABLE}.timestamp >= NOW() - INTERVAL '${hoursBack} hours'`,
-            );
+        if (this.flagResolver.isEnabled('variantMetrics')) {
+            const rows = await this.db<ClientMetricsEnvTable>(TABLE)
+                .select([`${TABLE}.*`, 'variant', 'count'])
+                .leftJoin(TABLE_VARIANTS, function () {
+                    this.on(
+                        `${TABLE_VARIANTS}.feature_name`,
+                        `${TABLE}.feature_name`,
+                    )
+                        .on(`${TABLE_VARIANTS}.app_name`, `${TABLE}.app_name`)
+                        .on(
+                            `${TABLE_VARIANTS}.environment`,
+                            `${TABLE}.environment`,
+                        )
+                        .on(
+                            `${TABLE_VARIANTS}.timestamp`,
+                            `${TABLE}.timestamp`,
+                        );
+                })
+                .where(`${TABLE}.feature_name`, featureName)
+                .andWhereRaw(
+                    `${TABLE}.timestamp >= NOW() - INTERVAL '${hoursBack} hours'`,
+                );
 
-        const tokens = rows.reduce(variantRowReducer, {});
-        return Object.values(tokens);
+            const tokens = rows.reduce(variantRowReducer, {});
+            return Object.values(tokens);
+        } else {
+            const rows = await this.db<ClientMetricsEnvTable>(TABLE)
+                .select('*')
+                .where({ feature_name: featureName })
+                .andWhereRaw(
+                    `timestamp >= NOW() - INTERVAL '${hoursBack} hours'`,
+                );
+            return rows.map(fromRow);
+        }
     }
 
     async getSeenAppsForFeatureToggle(

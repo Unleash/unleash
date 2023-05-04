@@ -63,24 +63,24 @@ export const FeatureMetricsStats = ({
         >
             <Grid item xs={12} sm={4}>
                 <StyledItem>
-                    <StyledTitle>Exposure</StyledTitle>
+                    <StyledTitle>Enabled</StyledTitle>
                     <StyledValue>
                         <PrettifyLargeNumber value={totalYes} />
                     </StyledValue>
                     <StyledText>
-                        Total exposure of the feature in the environment{' '}
+                        Total exposure of the enabled feature in the environment{' '}
                         {hoursSuffix}.
                     </StyledText>
                 </StyledItem>
             </Grid>
             <Grid item xs={12} sm={4}>
                 <StyledItem>
-                    <StyledTitle>Exposure %</StyledTitle>
+                    <StyledTitle>Enabled %</StyledTitle>
                     <StyledValue>
                         {calculatePercentage(totalYes + totalNo, totalYes)}%
                     </StyledValue>
                     <StyledText>
-                        % total exposure of the feature in the environment{' '}
+                        % total exposure of the enabled feature in the environment{' '}
                         {hoursSuffix}.
                     </StyledText>
                 </StyledItem>

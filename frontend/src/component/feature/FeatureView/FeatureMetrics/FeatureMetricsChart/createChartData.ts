@@ -31,7 +31,7 @@ export const createChartData = (
     };
 
     const yesSeries = {
-        label: 'exposed',
+        label: 'enabled',
         borderColor: theme.palette.success.main,
         backgroundColor: theme.palette.success.main,
         data: createChartPoints(metrics, locationSettings, m => m.yes),
@@ -44,7 +44,7 @@ export const createChartData = (
     };
 
     const noSeries = {
-        label: 'not exposed',
+        label: 'disabled',
         borderColor: theme.palette.error.main,
         backgroundColor: theme.palette.error.main,
         data: createChartPoints(metrics, locationSettings, m => m.no),

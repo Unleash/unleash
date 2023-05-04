@@ -92,7 +92,7 @@ const FeatureOverviewEnvironmentMetrics = ({
                         data-loading
                     >
                         The feature has been requested <b>0 times</b> and
-                        exposed
+                        enabled
                         <b> 0 times</b> in the last hour
                     </StyledInfoParagraph>
                 </StyledInfo>
@@ -110,7 +110,7 @@ const FeatureOverviewEnvironmentMetrics = ({
                     <b>
                         <PrettifyLargeNumber value={total} /> times
                     </b>{' '}
-                    and exposed{' '}
+                    and enabled{' '}
                     <b>
                         <PrettifyLargeNumber value={environmentMetric.yes} />{' '}
                         times

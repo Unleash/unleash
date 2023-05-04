@@ -105,7 +105,7 @@ const COLUMNS = [
         accessor: (original: any) => original.yes + original.no,
     },
     {
-        Header: 'Exposed',
+        Header: 'Enabled',
         accessor: 'yes',
     },
 ];

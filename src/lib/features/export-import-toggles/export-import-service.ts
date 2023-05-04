@@ -45,7 +45,6 @@ import { IImportTogglesStore } from './import-toggles-store-type';
 import { ImportPermissionsService } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
 import { UnleashError } from '../../error/api-error';
-import { uniqueByKey } from '../../util/unique';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -281,17 +280,17 @@ export default class ExportImportService {
         await this.importTogglesStore.deleteTagsForFeatures(
             dto.data.features.map((feature) => feature.name),
         );
-        return Promise.all(
-            uniqueByKey(dto.data.featureTags || [], 'tagValue').map((tag) => {
-                return tag.tagType
-                    ? this.featureTagService.addTag(
-                          tag.featureName,
-                          { type: tag.tagType, value: tag.tagValue },
-                          extractUsernameFromUser(user),
-                      )
-                    : Promise.resolve();
-            }),
-        );
+
+        const featureTags = dto.data.featureTags || [];
+        for (const tag of featureTags) {
+            if (tag.tagType) {
+                await this.featureTagService.addTag(
+                    tag.featureName,
+                    { type: tag.tagType, value: tag.tagValue },
+                    extractUsernameFromUser(user),
+                );
+            }
+        }
     }
 
     private async importContextFields(dto: ImportTogglesSchema, user: User) {

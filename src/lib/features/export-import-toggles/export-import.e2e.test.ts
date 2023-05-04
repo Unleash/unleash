@@ -548,6 +548,10 @@ const exportedFeature: ImportTogglesSchema['data']['features'][0] = {
     project: 'old_project',
     name: 'first_feature',
 };
+const anotherExportedFeature: ImportTogglesSchema['data']['features'][0] = {
+    project: 'old_project',
+    name: 'second_feature',
+};
 const constraints: ImportTogglesSchema['data']['featureStrategies'][0]['constraints'] =
     [
         {
@@ -567,12 +571,6 @@ const exportedStrategy: ImportTogglesSchema['data']['featureStrategies'][0] = {
 };
 
 const tags = [
-    {
-        featureName: defaultFeature,
-        tagType: 'simple',
-        tagValue: 'tag1',
-    },
-    // deliberate duplicate
     {
         featureName: defaultFeature,
         tagType: 'simple',
@@ -616,6 +614,31 @@ const defaultImportPayload: ImportTogglesSchema = {
             },
         ],
         featureTags: tags,
+        tagTypes,
+        contextFields: [],
+        segments: [],
+    },
+    project: DEFAULT_PROJECT,
+    environment: DEFAULT_ENV,
+};
+
+const importWithMultipleFeatures: ImportTogglesSchema = {
+    data: {
+        features: [exportedFeature, anotherExportedFeature],
+        featureStrategies: [],
+        featureEnvironments: [],
+        featureTags: [
+            {
+                featureName: exportedFeature.name,
+                tagType: 'simple',
+                tagValue: 'tag1',
+            },
+            {
+                featureName: anotherExportedFeature.name,
+                tagType: 'simple',
+                tagValue: 'tag1',
+            },
+        ],
         tagTypes,
         contextFields: [],
         segments: [],
@@ -679,6 +702,24 @@ test('import features to existing project and environment', async () => {
     const { body: importedTags } = await getTags(defaultFeature);
     expect(importedTags).toMatchObject({
         tags: resultTags,
+    });
+});
+
+test('import multiple features with same tag', async () => {
+    await createProjects();
+
+    await app.importToggles(importWithMultipleFeatures);
+
+    const { body: tags1 } = await getTags(exportedFeature.name);
+    const { body: tags2 } = await getTags(anotherExportedFeature.name);
+
+    expect(tags1).toMatchObject({
+        version: 1,
+        tags: [{ value: 'tag1', type: 'simple' }],
+    });
+    expect(tags2).toMatchObject({
+        version: 1,
+        tags: [{ value: 'tag1', type: 'simple' }],
     });
 });
 

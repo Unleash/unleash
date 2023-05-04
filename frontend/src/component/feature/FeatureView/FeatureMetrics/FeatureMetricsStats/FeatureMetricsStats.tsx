@@ -43,12 +43,12 @@ const StyledText = styled('p')(({ theme }) => ({
 }));
 
 export const FeatureMetricsStats = ({
-    totalYes,
-    totalNo,
-    hoursBack,
-    statsSectionId,
-    tableSectionId,
-}: IFeatureMetricsStatsProps) => {
+                                        totalYes,
+                                        totalNo,
+                                        hoursBack,
+                                        statsSectionId,
+                                        tableSectionId,
+                                    }: IFeatureMetricsStatsProps) => {
     const hoursSuffix =
         hoursBack === 1 ? 'in the last hour' : `in the last ${hoursBack} hours`;
 
@@ -58,8 +58,8 @@ export const FeatureMetricsStats = ({
             spacing={2}
             id={statsSectionId}
             aria-describedby={tableSectionId}
-            aria-label="Feature metrics summary"
-            component="section"
+            aria-label='Feature metrics summary'
+            component='section'
         >
             <Grid item xs={12} sm={4}>
                 <StyledItem>

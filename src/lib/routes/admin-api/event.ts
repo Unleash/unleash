@@ -5,7 +5,7 @@ import EventService from '../../services/event-service';
 import { ADMIN, NONE } from '../../types/permissions';
 import { IEvent, IEventList } from '../../types/events';
 import Controller from '../controller';
-import { anonymise } from '../../util/anonymise';
+import { anonymiseKeys } from '../../util/anonymise';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { endpointDescriptions } from '../../openapi/endpoint-descriptions';
@@ -23,6 +23,7 @@ import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
 import { IFlagResolver } from '../../types/experimental';
 
+const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1;
 export default class EventController extends Controller {
     private eventService: EventService;
@@ -108,24 +109,7 @@ export default class EventController extends Controller {
 
     maybeAnonymiseEvents(events: IEvent[]): IEvent[] {
         if (this.flagResolver.isEnabled('anonymiseEventLog')) {
-            return events.map((e: IEvent) => ({
-                ...e,
-                createdBy: anonymise(e.createdBy),
-                data:
-                    e.data && 'email' in e.data
-                        ? {
-                              ...e.data,
-                              email: anonymise(e.data.email),
-                          }
-                        : e.data,
-                preData:
-                    e.preData && 'email' in e.preData
-                        ? {
-                              ...e.preData,
-                              email: anonymise(e.preData.email),
-                          }
-                        : e.preData,
-            }));
+            return anonymiseKeys(events, ANON_KEYS);
         }
         return events;
     }

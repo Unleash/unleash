@@ -40,6 +40,7 @@ export const DROP_STRATEGIES = 'drop-strategies';
 export const CONTEXT_FIELD_CREATED = 'context-field-created';
 export const CONTEXT_FIELD_UPDATED = 'context-field-updated';
 export const CONTEXT_FIELD_DELETED = 'context-field-deleted';
+export const PROJECT_ACCESS_ADDED = 'project-access-added';
 export const PROJECT_CREATED = 'project-created';
 export const PROJECT_UPDATED = 'project-updated';
 export const PROJECT_DELETED = 'project-deleted';
@@ -634,6 +635,25 @@ export class ProjectGroupUpdateRoleEvent extends BaseEvent {
         this.project = project;
         this.data = data;
         this.preData = preData;
+    }
+}
+
+export class ProjectAccessAddedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly data: any;
+
+    readonly preData: any;
+
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(p: { project: string; createdBy: string | IUser; data: any }) {
+        super(PROJECT_ACCESS_ADDED, p.createdBy);
+        const { project, data } = p;
+        this.project = project;
+        this.data = data;
+        this.preData = null;
     }
 }
 

@@ -35,6 +35,7 @@ import {
     ProjectUserUpdateRoleEvent,
     RoleName,
     IFlagResolver,
+    ProjectAccessAddedEvent,
 } from '../types';
 import {
     IProjectQuery,
@@ -348,6 +349,7 @@ export default class ProjectService {
         };
     }
 
+    // Deprecated: See addAccess instead.
     async addUser(
         projectId: string,
         roleId: number,
@@ -492,12 +494,54 @@ export default class ProjectService {
         usersAndGroups: IProjectAccessModel,
         createdBy: string,
     ): Promise<void> {
-        return this.accessService.addAccessToProject(
+        await this.accessService.addAccessToProject(
             usersAndGroups.users,
             usersAndGroups.groups,
             projectId,
             roleId,
             createdBy,
+        );
+
+        const role = await this.accessService.getRole(roleId);
+        const { users, groups } = await this.getAccessToProject(projectId);
+
+        const addedUsers = users.filter(({ id }) =>
+            usersAndGroups.users.some(({ id: userId }) => userId === id),
+        );
+
+        const addedGroups = groups.filter(({ id }) =>
+            usersAndGroups.groups.some(({ id: groupId }) => groupId === id),
+        );
+
+        await this.eventStore.store(
+            new ProjectAccessAddedEvent({
+                project: projectId,
+                createdBy,
+                data: {
+                    roleId,
+                    roleName: role.name,
+                    groups: addedGroups.map(
+                        ({ id, name, users: groupUsers }) => ({
+                            id,
+                            name,
+                            users: groupUsers.map(
+                                ({
+                                    user: { id: userId, email, username },
+                                }) => ({
+                                    id: userId,
+                                    email,
+                                    username,
+                                }),
+                            ),
+                        }),
+                    ),
+                    users: addedUsers.map(({ id, email, username }) => ({
+                        id,
+                        email,
+                        username,
+                    })),
+                },
+            }),
         );
     }
 

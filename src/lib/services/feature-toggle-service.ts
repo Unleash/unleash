@@ -1239,6 +1239,7 @@ class FeatureToggleService {
         enabled: boolean,
         createdBy: string,
         user?: User,
+        shouldActivateDisabledStrategies = false,
     ): Promise<FeatureToggle> {
         await this.stopWhenChangeRequestsEnabled(project, environment, user);
         if (enabled) {
@@ -1256,6 +1257,7 @@ class FeatureToggleService {
             environment,
             enabled,
             createdBy,
+            shouldActivateDisabledStrategies,
         );
     }
 
@@ -1265,6 +1267,7 @@ class FeatureToggleService {
         environment: string,
         enabled: boolean,
         createdBy: string,
+        shouldActivateDisabledStrategies: boolean,
     ): Promise<FeatureToggle> {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
@@ -1284,9 +1287,23 @@ class FeatureToggleService {
                 featureName,
                 environment,
             );
-            if (strategies.length === 0) {
+            const hasDisabledStrategies = strategies.some(
+                (strategy) => strategy.disabled,
+            );
+
+            if (strategies.length === 0 && !hasDisabledStrategies) {
+                const projectEnvironmentDefaultStrategy =
+                    await this.projectStore.getDefaultStrategy(
+                        project,
+                        environment,
+                    );
+                const strategy =
+                    this.flagResolver.isEnabled('strategyImprovements') &&
+                    projectEnvironmentDefaultStrategy != null
+                        ? projectEnvironmentDefaultStrategy
+                        : getDefaultStrategy(featureName);
                 await this.unprotectedCreateStrategy(
-                    getDefaultStrategy(featureName),
+                    strategy,
                     {
                         environment,
                         projectId: project,
@@ -1294,6 +1311,25 @@ class FeatureToggleService {
                     },
                     createdBy,
                 );
+            }
+
+            if (
+                this.flagResolver.isEnabled('strategyImprovements') &&
+                hasDisabledStrategies &&
+                shouldActivateDisabledStrategies
+            ) {
+                strategies.map(async (strategy) => {
+                    return this.updateStrategy(
+                        strategy.id,
+                        { disabled: false },
+                        {
+                            environment,
+                            projectId: project,
+                            featureName,
+                        },
+                        createdBy,
+                    );
+                });
             }
         }
         const updatedEnvironmentStatus =

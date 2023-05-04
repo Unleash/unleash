@@ -49,6 +49,10 @@ interface FeatureStrategyParams {
     sortOrder?: number;
 }
 
+interface FeatureStrategyQuery {
+    shouldActivateDisabledStrategies: boolean;
+}
+
 interface FeatureParams extends ProjectParam {
     featureName: string;
 }
@@ -641,10 +645,16 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async toggleFeatureEnvironmentOn(
-        req: IAuthRequest<FeatureStrategyParams, any, any, any>,
+        req: IAuthRequest<
+            FeatureStrategyParams,
+            any,
+            any,
+            FeatureStrategyQuery
+        >,
         res: Response<void>,
     ): Promise<void> {
         const { featureName, environment, projectId } = req.params;
+        const { shouldActivateDisabledStrategies } = req.query;
         await this.featureService.updateEnabled(
             projectId,
             featureName,
@@ -652,6 +662,7 @@ export default class ProjectFeaturesController extends Controller {
             true,
             extractUsername(req),
             req.user,
+            shouldActivateDisabledStrategies,
         );
         res.status(200).end();
     }

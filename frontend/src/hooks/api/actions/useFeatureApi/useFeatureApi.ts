@@ -51,8 +51,13 @@ const useFeatureApi = () => {
     };
 
     const toggleFeatureEnvironmentOn = useCallback(
-        async (projectId: string, featureId: string, environmentId: string) => {
-            const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/on`;
+        async (
+            projectId: string,
+            featureId: string,
+            environmentId: string,
+            shouldActivateDisabled = false
+        ) => {
+            const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/on?shouldActivateDisabled=${shouldActivateDisabled}`;
             const req = createRequest(
                 path,
                 { method: 'POST' },

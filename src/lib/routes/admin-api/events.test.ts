@@ -107,7 +107,7 @@ test('should also anonymise email fields in data and preData properties', async 
 });
 
 test('should anonymise any PII fields, no matter the depth', async () => {
-    const username = 'test-username';
+    const testUsername = 'test-username';
 
     const { request, base, eventStore } = await getSetup(true);
     eventStore.store(
@@ -115,7 +115,11 @@ test('should anonymise any PII fields, no matter the depth', async () => {
             createdBy: 'some@email.com',
             data: {
                 groups: [
-                    { name: 'test', project: 'default', users: [{ username }] },
+                    {
+                        name: 'test',
+                        project: 'default',
+                        users: [{ username: testUsername }],
+                    },
                 ],
             },
             project: 'default',
@@ -127,5 +131,7 @@ test('should anonymise any PII fields, no matter the depth', async () => {
         .expect(200);
 
     expect(body.events.length).toBe(1);
-    expect(body.events[0].data.groups[0].users[0].username).not.toBe(username);
+    expect(body.events[0].data.groups[0].users[0].username).not.toBe(
+        testUsername,
+    );
 });

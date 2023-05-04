@@ -14,6 +14,7 @@ import {
     IProjectStore,
     ISegment,
     IStrategyConfig,
+    ITagStore,
     IVariant,
 } from '../../types';
 import { DEFAULT_ENV } from '../../util';
@@ -33,6 +34,7 @@ let environmentStore: IEnvironmentStore;
 let contextFieldStore: IContextFieldStore;
 let projectStore: IProjectStore;
 let toggleStore: IFeatureToggleStore;
+let tagStore: ITagStore;
 
 const defaultStrategy: IStrategyConfig = {
     name: 'default',
@@ -150,6 +152,7 @@ beforeAll(async () => {
     projectStore = db.stores.projectStore;
     contextFieldStore = db.stores.contextFieldStore;
     toggleStore = db.stores.featureToggleStore;
+    tagStore = db.stores.tagStore;
 });
 
 beforeEach(async () => {
@@ -157,6 +160,7 @@ beforeEach(async () => {
     await toggleStore.deleteAll();
     await projectStore.deleteAll();
     await environmentStore.deleteAll();
+    await tagStore.deleteAll();
 
     await contextFieldStore.deleteAll();
     await app.createContextField({ name: 'appName' });
@@ -563,6 +567,12 @@ const exportedStrategy: ImportTogglesSchema['data']['featureStrategies'][0] = {
 };
 
 const tags = [
+    {
+        featureName: defaultFeature,
+        tagType: 'simple',
+        tagValue: 'tag1',
+    },
+    // deliberate duplicate
     {
         featureName: defaultFeature,
         tagType: 'simple',

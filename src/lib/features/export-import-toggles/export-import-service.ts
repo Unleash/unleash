@@ -45,6 +45,7 @@ import { IImportTogglesStore } from './import-toggles-store-type';
 import { ImportPermissionsService } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
 import { UnleashError } from '../../error/api-error';
+import { uniqueByKey } from '../../util/unique';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -281,7 +282,7 @@ export default class ExportImportService {
             dto.data.features.map((feature) => feature.name),
         );
         return Promise.all(
-            (dto.data.featureTags || []).map((tag) => {
+            uniqueByKey(dto.data.featureTags || [], 'tagValue').map((tag) => {
                 return tag.tagType
                     ? this.featureTagService.addTag(
                           tag.featureName,

@@ -43,12 +43,12 @@ const StyledText = styled('p')(({ theme }) => ({
 }));
 
 export const FeatureMetricsStats = ({
-                                        totalYes,
-                                        totalNo,
-                                        hoursBack,
-                                        statsSectionId,
-                                        tableSectionId,
-                                    }: IFeatureMetricsStatsProps) => {
+    totalYes,
+    totalNo,
+    hoursBack,
+    statsSectionId,
+    tableSectionId,
+}: IFeatureMetricsStatsProps) => {
     const hoursSuffix =
         hoursBack === 1 ? 'in the last hour' : `in the last ${hoursBack} hours`;
 
@@ -58,17 +58,17 @@ export const FeatureMetricsStats = ({
             spacing={2}
             id={statsSectionId}
             aria-describedby={tableSectionId}
-            aria-label='Feature metrics summary'
-            component='section'
+            aria-label="Feature metrics summary"
+            component="section"
         >
             <Grid item xs={12} sm={4}>
                 <StyledItem>
-                    <StyledTitle>Enabled</StyledTitle>
+                    <StyledTitle>Enabled Count</StyledTitle>
                     <StyledValue>
                         <PrettifyLargeNumber value={totalYes} />
                     </StyledValue>
                     <StyledText>
-                        Total exposure of the enabled feature in the environment{' '}
+                        Total enabled count of the feature in the environment{' '}
                         {hoursSuffix}.
                     </StyledText>
                 </StyledItem>
@@ -80,14 +80,14 @@ export const FeatureMetricsStats = ({
                         {calculatePercentage(totalYes + totalNo, totalYes)}%
                     </StyledValue>
                     <StyledText>
-                        % total exposure of the enabled feature in the environment{' '}
-                        {hoursSuffix}.
+                        % total exposure of the enabled feature in the
+                        environment {hoursSuffix}.
                     </StyledText>
                 </StyledItem>
             </Grid>
             <Grid item xs={12} sm={4}>
                 <StyledItem>
-                    <StyledTitle>Requests</StyledTitle>
+                    <StyledTitle>Total Requests Count</StyledTitle>
                     <StyledValue>
                         <PrettifyLargeNumber value={totalYes + totalNo} />
                     </StyledValue>

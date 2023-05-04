@@ -5,22 +5,22 @@ import {
     IFeatureStrategy,
     IFeatureStrategyParameters,
     IStrategyParameter,
-} from '../../../../../../../interfaces/strategy';
-import useUiConfig from '../../../../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { ConditionallyRender } from '../../../../../../common/ConditionallyRender/ConditionallyRender';
-import { STRATEGY_FORM_SUBMIT_ID } from '../../../../../../../utils/testIds';
-import { useConstraintsValidation } from '../../../../../../../hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
-import PermissionButton from '../../../../../../common/PermissionButton/PermissionButton';
-import { FeatureStrategySegment } from '../../../../../../feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
-import { ISegment } from '../../../../../../../interfaces/segment';
-import { IFormErrors } from '../../../../../../../hooks/useFormErrors';
-import { validateParameterValue } from '../../../../../../../utils/validateParameterValue';
-import { useStrategy } from '../../../../../../../hooks/api/getters/useStrategy/useStrategy';
-import { useHasProjectEnvironmentAccess } from '../../../../../../../hooks/useHasAccess';
-import { FeatureStrategyConstraints } from '../../../../../../feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints';
-import { FeatureStrategyType } from '../../../../../../feature/FeatureStrategy/FeatureStrategyType/FeatureStrategyType';
-import { FeatureStrategyTitle } from '../../../../../../feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle';
-import { CreateFeatureStrategySchema } from '../../../../../../../openapi';
+} from 'interfaces/strategy';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
+import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
+import { ISegment } from 'interfaces/segment';
+import { IFormErrors } from 'hooks/useFormErrors';
+import { validateParameterValue } from 'utils/validateParameterValue';
+import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
+import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
+import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints';
+import { FeatureStrategyType } from 'component/feature/FeatureStrategy/FeatureStrategyType/FeatureStrategyType';
+import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle';
+import { CreateFeatureStrategySchema } from 'openapi';
 
 interface IProjectDefaultStrategyFormProps {
     projectId: string;

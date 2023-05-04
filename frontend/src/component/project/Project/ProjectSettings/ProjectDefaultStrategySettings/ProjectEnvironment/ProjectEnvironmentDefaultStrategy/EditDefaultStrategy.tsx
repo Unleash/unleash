@@ -130,7 +130,6 @@ const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
     const onSubmit = async () => {
         const path = `/projects/${projectId}/settings/default-strategy`;
         try {
-            debugger;
             await onDefaultStrategyEdit(payload);
             await refetchProject();
             navigate(path);

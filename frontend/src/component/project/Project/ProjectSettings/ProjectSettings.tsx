@@ -12,7 +12,7 @@ import { ChangeRequestConfiguration } from './ChangeRequestConfiguration/ChangeR
 import { ProjectApiAccess } from 'component/project/Project/ProjectSettings/ProjectApiAccess/ProjectApiAccess';
 import { ProjectSegments } from './ProjectSegments/ProjectSegments';
 import { ProjectDefaultStrategySettings } from './ProjectDefaultStrategySettings/ProjectDefaultStrategySettings';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const ProjectSettings = () => {
     const location = useLocation();

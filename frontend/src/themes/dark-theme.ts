@@ -194,6 +194,15 @@ const theme = {
         highlight: 'rgba(255, 234, 204, 0.7)',
 
         /**
+         * Used for the interactive guide spotlight
+         */
+        spotlight: {
+            border: '#8c89bf',
+            outline: '#bcb9f3',
+            pulse: '#bcb9f3',
+        },
+
+        /**
          * Background color used for the API command in the sidebar
          */
         codebox: 'rgba(52, 50, 94, 0.3)',
@@ -268,6 +277,10 @@ export default createTheme({
         // Skeleton
         MuiCssBaseline: {
             styleOverrides: {
+                '#react-joyride-portal ~ .MuiDialog-root': {
+                    zIndex: 1500,
+                },
+
                 '.skeleton': {
                     '&::before': {
                         backgroundColor: theme.palette.background.elevation1,

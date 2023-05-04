@@ -41,7 +41,7 @@ export class PlaygroundService {
                     environment,
                 },
                 true,
-                true,
+                false,
             ),
             this.segmentService.getActive(),
         ]);

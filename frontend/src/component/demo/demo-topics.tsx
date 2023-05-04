@@ -34,7 +34,7 @@ export const TOPICS: ITutorialTopic[] = [
         title: 'Enable/disable a feature toggle',
         steps: [
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -63,7 +63,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: `div[data-testid="TOGGLE-demoApp.step1-${ENVIRONMENT}"]`,
                 content: (
                     <>
@@ -87,7 +87,7 @@ export const TOPICS: ITutorialTopic[] = [
         title: 'Enable for a specific user',
         steps: [
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -111,7 +111,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2"]`,
                 content: (
                     <Description>
@@ -225,36 +225,33 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
+                content: <Description>Save your strategy.</Description>,
+                backCloseModal: true,
+            },
+            {
+                target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
+                content: <Description>Confirm your changes.</Description>,
+                optional: true,
+                backCloseModal: true,
+            },
+            {
+                href: `/projects/${PROJECT}?sort=name`,
+                target: `div[data-testid="TOGGLE-demoApp.step2-${ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
-                            Save your strategy to apply it.
+                            Finally, toggle{' '}
+                            <Badge as="span">demoApp.step2</Badge>
                         </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
                         >
-                            Look at the demo page after saving!
+                            Look at the demo page to see your changes!
                         </Badge>
                     </>
                 ),
-                backCloseModal: true,
-            },
-            {
-                target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
-                content: (
-                    <>
-                        <Description>Confirm your changes.</Description>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
-                            Look at the demo page after saving!
-                        </Badge>
-                    </>
-                ),
-                optional: true,
-                backCloseModal: true,
+                nextButton: true,
             },
         ],
     },
@@ -263,7 +260,7 @@ export const TOPICS: ITutorialTopic[] = [
         setup: gradualRollout,
         steps: [
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -293,7 +290,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step3"]`,
                 content: (
                     <Description>
@@ -332,35 +329,32 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
+                content: <Description>Save your strategy.</Description>,
+            },
+            {
+                target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
+                content: <Description>Confirm your changes.</Description>,
+                optional: true,
+                backCloseModal: true,
+            },
+            {
+                href: `/projects/${PROJECT}?sort=name`,
+                target: `div[data-testid="TOGGLE-demoApp.step3-${ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
-                            Save your strategy to apply it.
+                            Finally, toggle{' '}
+                            <Badge as="span">demoApp.step3</Badge>
                         </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
                         >
-                            Look at the demo page after saving!
+                            Look at the demo page to see your changes!
                         </Badge>
                     </>
                 ),
-            },
-            {
-                target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
-                content: (
-                    <>
-                        <Description>Confirm your changes.</Description>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
-                            Look at the demo page after saving!
-                        </Badge>
-                    </>
-                ),
-                optional: true,
-                backCloseModal: true,
+                nextButton: true,
             },
         ],
     },
@@ -369,7 +363,7 @@ export const TOPICS: ITutorialTopic[] = [
         setup: variants,
         steps: [
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -394,7 +388,7 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                href: `/projects/${PROJECT}`,
+                href: `/projects/${PROJECT}?sort=name`,
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4"]`,
                 content: (
                     <Description>
@@ -507,19 +501,26 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
+                content: <Description>Save your variants.</Description>,
+            },
+            {
+                href: `/projects/${PROJECT}?sort=name`,
+                target: `div[data-testid="TOGGLE-demoApp.step4-${ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
-                            Save your variants to apply them.
+                            Finally, toggle{' '}
+                            <Badge as="span">demoApp.step4</Badge>
                         </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
                         >
-                            Look at the demo page after saving!
+                            Look at the demo page to see your changes!
                         </Badge>
                     </>
                 ),
+                nextButton: true,
             },
         ],
     },

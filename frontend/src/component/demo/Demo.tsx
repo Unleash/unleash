@@ -14,7 +14,8 @@ const defaultProgress = {
     welcomeOpen: true,
     expanded: true,
     topic: -1,
-    steps: [0],
+    step: 0,
+    stepsCompletion: Array(TOPICS.length).fill(0),
 };
 
 interface IDemoProps {
@@ -26,7 +27,7 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
     const { trackEvent } = usePlausibleTracker();
 
     const { value: storedProgress, setValue: setStoredProgress } =
-        createLocalStorage('Tutorial:v1', defaultProgress);
+        createLocalStorage('Tutorial:v1.1', defaultProgress);
 
     const [welcomeOpen, setWelcomeOpen] = useState(
         storedProgress.welcomeOpen ?? defaultProgress.welcomeOpen
@@ -40,8 +41,11 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
     const [topic, setTopic] = useState(
         storedProgress.topic ?? defaultProgress.topic
     );
-    const [steps, setSteps] = useState(
-        storedProgress.steps ?? defaultProgress.steps
+    const [step, setStep] = useState(
+        storedProgress.step ?? defaultProgress.step
+    );
+    const [stepsCompletion, setStepsCompletion] = useState(
+        storedProgress.stepsCompletion ?? defaultProgress.stepsCompletion
     );
 
     useEffect(() => {
@@ -49,32 +53,26 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
             welcomeOpen,
             expanded,
             topic,
-            steps,
+            step,
+            stepsCompletion,
         });
-    }, [welcomeOpen, expanded, topic, steps]);
+    }, [welcomeOpen, expanded, topic, step, stepsCompletion]);
 
     const onStart = () => {
         setTopic(0);
-        setSteps([0]);
+        setStep(0);
+        setStepsCompletion(Array(TOPICS.length).fill(0));
         setExpanded(true);
     };
 
     const onFinish = () => {
-        const completedSteps = steps.reduce(
-            (acc, step) => acc + (step || 0),
-            1
-        );
-        const totalSteps = TOPICS.flatMap(({ steps }) => steps).length;
+        setFinishOpen(true);
 
-        if (completedSteps === totalSteps) {
-            setFinishOpen(true);
-
-            trackEvent('demo', {
-                props: {
-                    eventType: 'finish',
-                },
-            });
-        }
+        trackEvent('demo', {
+            props: {
+                eventType: 'finish',
+            },
+        });
     };
 
     if (!uiConfig.flags.demo) return children;
@@ -141,15 +139,11 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
             <DemoTopics
                 expanded={expanded}
                 setExpanded={setExpanded}
-                steps={steps}
+                stepsCompletion={stepsCompletion}
                 currentTopic={topic}
                 setCurrentTopic={(topic: number) => {
                     setTopic(topic);
-                    setSteps(steps => {
-                        const newSteps = [...steps];
-                        newSteps[topic] = 0;
-                        return newSteps;
-                    });
+                    setStep(0);
 
                     trackEvent('demo', {
                         props: {
@@ -171,8 +165,10 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
             />
             <DemoSteps
                 setExpanded={setExpanded}
-                steps={steps}
-                setSteps={setSteps}
+                step={step}
+                setStep={setStep}
+                stepsCompletion={stepsCompletion}
+                setStepsCompletion={setStepsCompletion}
                 topic={topic}
                 setTopic={setTopic}
                 topics={TOPICS}

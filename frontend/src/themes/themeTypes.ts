@@ -92,6 +92,15 @@ declare module '@mui/material/styles' {
         highlight: string;
 
         /**
+         * Used for the interactive guide spotlight
+         */
+        spotlight: {
+            border: string;
+            outline: string;
+            pulse: string;
+        };
+
+        /**
          * For Links
          */
         links: string;

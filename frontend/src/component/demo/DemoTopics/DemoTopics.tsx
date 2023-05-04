@@ -144,7 +144,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 interface IDemoTopicsProps {
     expanded: boolean;
     setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
-    steps: number[];
+    stepsCompletion: number[];
     currentTopic: number;
     setCurrentTopic: (topic: number) => void;
     topics: ITutorialTopic[];
@@ -154,13 +154,16 @@ interface IDemoTopicsProps {
 export const DemoTopics = ({
     expanded,
     setExpanded,
-    steps,
+    stepsCompletion,
     currentTopic,
     setCurrentTopic,
     topics,
     onWelcome,
 }: IDemoTopicsProps) => {
-    const completedSteps = steps.reduce((acc, step) => acc + (step || 0), 0);
+    const completedSteps = stepsCompletion.reduce(
+        (acc, step) => acc + (step || 0),
+        0
+    );
     const totalSteps = topics.flatMap(({ steps }) => steps).length;
     const percentage = (completedSteps / totalSteps) * 100;
 
@@ -194,7 +197,8 @@ export const DemoTopics = ({
                 </Typography>
                 {topics.map((topic, index) => {
                     const selected = currentTopic === index;
-                    const completed = steps[index] === topic.steps.length;
+                    const completed =
+                        stepsCompletion[index] === topic.steps.length;
                     return (
                         <StyledStep
                             key={topic.title}

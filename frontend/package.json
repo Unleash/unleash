@@ -51,7 +51,7 @@
     "@types/lodash.omit": "4.5.7",
     "@types/node": "17.0.18",
     "@types/react": "17.0.58",
-    "@types/react-dom": "17.0.19",
+    "@types/react-dom": "17.0.20",
     "@types/react-linkify": "1.0.1",
     "@types/react-router-dom": "5.3.3",
     "@types/react-table": "7.7.14",
@@ -73,7 +73,7 @@
     "debounce": "1.2.1",
     "deep-diff": "1.0.2",
     "dequal": "2.0.3",
-    "eslint": "8.38.0",
+    "eslint": "8.39.0",
     "eslint-config-react-app": "7.0.1",
     "fast-json-patch": "3.1.1",
     "http-proxy-middleware": "2.0.6",
@@ -102,10 +102,10 @@
     "react-table": "7.8.0",
     "react-test-renderer": "17.0.2",
     "react-timeago": "7.1.0",
-    "sass": "1.62.0",
-    "semver": "7.3.8",
-    "swr": "2.0.4",
-    "tss-react": "4.6.1",
+    "sass": "1.62.1",
+    "semver": "7.5.0",
+    "swr": "2.1.5",
+    "tss-react": "4.8.2",
     "typescript": "4.8.4",
     "vite": "4.1.4",
     "vite-plugin-env-compatible": "1.1.1",
@@ -122,7 +122,7 @@
     "@xmldom/xmldom": "^0.8.4",
     "json5": "^2.2.2",
     "@types/react": "17.0.58",
-    "@types/react-dom": "17.0.19"
+    "@types/react-dom": "17.0.20"
   },
   "jest": {
     "moduleNameMapper": {

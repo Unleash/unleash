@@ -78,6 +78,7 @@ const StyledHeader = styled('div', {
 const StyledHeaderTitle = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
+    fontWeight: 'bold',
     [theme.breakpoints.down(560)]: {
         flexDirection: 'column',
         textAlign: 'center',
@@ -100,6 +101,7 @@ const StyledStringTruncator = styled(StringTruncator)(({ theme }) => ({
 
 const ProjectEnvironment = ({ environment }: IProjectEnvironmentProps) => {
     const { environment: name } = environment;
+    const description = `Default strategy configuration in the ${name} environment`;
     const theme = useTheme();
     const enabled = false;
     return (
@@ -136,6 +138,7 @@ const ProjectEnvironment = ({ environment }: IProjectEnvironmentProps) => {
                         <StyledAccordionBodyInnerContainer>
                             <ProjectEnvironmentDefaultStrategy
                                 environment={environment}
+                                description={description}
                             />
                         </StyledAccordionBodyInnerContainer>
                     </StyledAccordionBody>

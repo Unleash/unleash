@@ -4,16 +4,16 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { UPDATE_FEATURE_STRATEGY } from '../../../../../../providers/AccessProvider/permissions';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import { Edit } from '@mui/icons-material';
-import { StrategyExecution } from '../../../../../../feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
+import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import { ProjectEnvironmentType } from 'interfaces/environments';
-import { IFeatureStrategy } from 'interfaces/strategy';
 import React, { useMemo } from 'react';
 import EditDefaultStrategy from './EditDefaultStrategy';
-import { SidebarModal } from '../../../../../../common/SidebarModal/SidebarModal';
-import { CreateFeatureStrategySchema } from '../../../../../../../openapi';
+import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { CreateFeatureStrategySchema } from 'openapi';
 
 interface ProjectEnvironmentDefaultStrategyProps {
     environment: ProjectEnvironmentType;
+    description: string;
 }
 
 export const formatEditProjectEnvironmentStrategyPath = (
@@ -39,6 +39,7 @@ const DEFAULT_STRATEGY: CreateFeatureStrategySchema = {
 
 const ProjectEnvironmentDefaultStrategy = ({
     environment,
+    description,
 }: ProjectEnvironmentDefaultStrategyProps) => {
     const navigate = useNavigate();
     const projectId = useRequiredPathParam('projectId');
@@ -62,6 +63,7 @@ const ProjectEnvironmentDefaultStrategy = ({
         <>
             <StrategyItemContainer
                 strategy={(strategy || DEFAULT_STRATEGY) as any}
+                description={description}
                 actions={
                     <>
                         <PermissionIconButton

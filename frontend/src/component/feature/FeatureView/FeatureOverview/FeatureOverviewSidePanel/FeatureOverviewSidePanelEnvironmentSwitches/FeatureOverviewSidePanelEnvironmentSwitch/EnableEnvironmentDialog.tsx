@@ -29,7 +29,6 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
         <Dialogue
             open={isOpen}
             secondaryButtonText="Cancel"
-            onClick={onAddDefaultStrategy}
             permissionButton={
                 <>
                     <PermissionButton
@@ -37,7 +36,7 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
                         permission={UPDATE_FEATURE}
                         projectId={projectId}
                         environmentId={environment}
-                        onClick={onActivateDisabledStrategies}
+                        onClick={onAddDefaultStrategy}
                     >
                         Add default strategy
                     </PermissionButton>

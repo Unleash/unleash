@@ -128,18 +128,18 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
             return;
         }
 
-        if (featureHasDisabledStrategies()) {
+        if (featureHasOnlyDisabledStrategies()) {
             setShowEnabledDialog(true);
         } else {
             await handleToggleEnvironmentOn();
         }
     };
 
-    const featureHasDisabledStrategies = () => {
+    const featureHasOnlyDisabledStrategies = () => {
         const featureEnvironment = feature?.environments?.find(
             env => env.name === name
         );
-        return featureEnvironment?.strategies?.some(
+        return featureEnvironment?.strategies?.every(
             strategy => strategy.disabled
         );
     };

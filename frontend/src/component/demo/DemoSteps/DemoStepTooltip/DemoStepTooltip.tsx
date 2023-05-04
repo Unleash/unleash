@@ -23,13 +23,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 const StyledTooltip = styled('div')(({ theme }) => ({
     '@keyframes pulse': {
         '0%': {
-            boxShadow: `0 0 0 0 ${alpha(theme.palette.primary.main, 0.7)}`,
+            boxShadow: `0 0 0 0 ${alpha(theme.palette.spotlight.pulse, 1)}`,
         },
         '70%': {
-            boxShadow: `0 0 0 10px ${alpha(theme.palette.primary.main, 0)}`,
+            boxShadow: `0 0 0 16px ${alpha(theme.palette.spotlight.pulse, 0)}`,
         },
         '100%': {
-            boxShadow: `0 0 0 0 ${alpha(theme.palette.primary.main, 0)}`,
+            boxShadow: `0 0 0 0 ${alpha(theme.palette.spotlight.pulse, 0)}`,
         },
     },
     position: 'relative',
@@ -70,7 +70,7 @@ export interface IDemoStepTooltipProps extends TooltipRenderProps {
     step: ITutorialTopicStep;
     topic: number;
     topics: ITutorialTopic[];
-    steps: number[];
+    stepIndex: number;
     onClose: () => void;
     onBack: (step: ITutorialTopicStep) => void;
     onNext: (step: number) => void;
@@ -81,7 +81,7 @@ export const DemoStepTooltip = ({
     step,
     topic,
     topics,
-    steps,
+    stepIndex,
     onClose,
     onBack,
     onNext,
@@ -95,6 +95,7 @@ export const DemoStepTooltip = ({
                         if (r !== 'backdropClick') onClose();
                     }}
                     transitionDuration={0}
+                    hideBackdrop
                 >
                     <StyledCloseButton aria-label="close" onClick={onClose}>
                         <CloseIcon />
@@ -114,7 +115,7 @@ export const DemoStepTooltip = ({
                     <StyledTooltipActions>
                         <div>
                             <ConditionallyRender
-                                condition={topic > 0 || steps[topic] > 0}
+                                condition={topic > 0 || stepIndex > 0}
                                 show={
                                     <Button
                                         variant="outlined"
@@ -130,12 +131,12 @@ export const DemoStepTooltip = ({
                                 condition={Boolean(step.nextButton)}
                                 show={
                                     <Button
-                                        onClick={() => onNext(steps[topic])}
+                                        onClick={() => onNext(stepIndex)}
                                         variant="contained"
                                         sx={{ alignSelf: 'flex-end' }}
                                     >
                                         {topic === topics.length - 1 &&
-                                        steps[topic] ===
+                                        stepIndex ===
                                             topics[topic].steps.length - 1
                                             ? 'Finish'
                                             : 'Next'}
@@ -169,7 +170,7 @@ export const DemoStepTooltip = ({
             <StyledTooltipActions>
                 <div>
                     <ConditionallyRender
-                        condition={topic > 0 || steps[topic] > 0}
+                        condition={topic > 0 || stepIndex > 0}
                         show={
                             <Button
                                 variant="outlined"
@@ -185,12 +186,12 @@ export const DemoStepTooltip = ({
                         condition={Boolean(step.nextButton)}
                         show={
                             <Button
-                                onClick={() => onNext(steps[topic])}
+                                onClick={() => onNext(stepIndex)}
                                 variant="contained"
                                 sx={{ alignSelf: 'flex-end' }}
                             >
                                 {topic === topics.length - 1 &&
-                                steps[topic] === topics[topic].steps.length - 1
+                                stepIndex === topics[topic].steps.length - 1
                                     ? 'Finish'
                                     : 'Next'}
                             </Button>

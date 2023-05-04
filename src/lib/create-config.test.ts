@@ -24,7 +24,7 @@ test('should add initApiToken for admin token from options', async () => {
         project: '*',
         secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
-        username: 'admin',
+        tokenName: 'admin',
     };
     const config = createConfig({
         db: {
@@ -58,7 +58,7 @@ test('should add initApiToken for client token from options', async () => {
         project: 'default',
         secret: 'default:development.some-random-string',
         type: ApiTokenType.CLIENT,
-        username: 'admin',
+        tokenName: 'admin',
     };
     const config = createConfig({
         db: {
@@ -143,7 +143,7 @@ test('should merge initApiToken from options and env vars', async () => {
         project: '*',
         secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
-        username: 'admin',
+        tokenName: 'admin',
     };
     const config = createConfig({
         db: {
@@ -204,7 +204,7 @@ test('should handle cases where no env var specified for tokens', async () => {
         project: '*',
         secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
-        username: 'admin',
+        tokenName: 'admin',
     };
     const config = createConfig({
         db: {

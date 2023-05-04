@@ -632,6 +632,28 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "apiTokenSchema": {
         "additionalProperties": false,
+        "anyOf": [
+          {
+            "properties": {
+              "username": {
+                "type": "string",
+              },
+            },
+            "required": [
+              "username",
+            ],
+          },
+          {
+            "properties": {
+              "tokenName": {
+                "type": "string",
+              },
+            },
+            "required": [
+              "tokenName",
+            ],
+          },
+        ],
         "properties": {
           "alias": {
             "nullable": true,
@@ -667,6 +689,11 @@ The provider you choose for your addon dictates what properties the \`parameters
             "nullable": true,
             "type": "string",
           },
+          "tokenName": {
+            "description": "A unique name for this particular token",
+            "example": "some-user",
+            "type": "string",
+          },
           "type": {
             "enum": [
               "client",
@@ -676,11 +703,12 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "username": {
+            "deprecated": true,
+            "description": "This property was deprecated in Unleash v5. Prefer the \`tokenName\` property instead.",
             "type": "string",
           },
         },
         "required": [
-          "username",
           "type",
         ],
         "type": "object",
@@ -1341,6 +1369,28 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "array",
       },
       "createApiTokenSchema": {
+        "anyOf": [
+          {
+            "properties": {
+              "username": {
+                "type": "string",
+              },
+            },
+            "required": [
+              "username",
+            ],
+          },
+          {
+            "properties": {
+              "tokenName": {
+                "type": "string",
+              },
+            },
+            "required": [
+              "tokenName",
+            ],
+          },
+        ],
         "properties": {
           "environment": {
             "type": "string",
@@ -1366,12 +1416,8 @@ The provider you choose for your addon dictates what properties the \`parameters
             "description": "One of client, admin, frontend",
             "type": "string",
           },
-          "username": {
-            "type": "string",
-          },
         },
         "required": [
-          "username",
           "type",
         ],
         "type": "object",

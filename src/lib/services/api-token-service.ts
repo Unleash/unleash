@@ -144,7 +144,7 @@ export class ApiTokenService {
             this.lastSeenSecrets.add(token.secret);
 
             return new ApiUser({
-                username: token.username,
+                tokenName: token.tokenName,
                 permissions: resolveTokenPermissions(token.type),
                 projects: token.projects,
                 environment: token.environment,
@@ -202,7 +202,6 @@ export class ApiTokenService {
         createdBy: string = 'unleash-system',
     ): Promise<IApiToken> {
         validateApiToken(newToken);
-
         const environments = await this.environmentStore.getAll();
         validateApiTokenEnvironment(newToken, environments);
 

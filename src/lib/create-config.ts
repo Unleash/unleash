@@ -264,7 +264,7 @@ const loadTokensFromString = (
             environment,
             secret,
             type: tokenType,
-            username: 'admin',
+            tokenName: 'admin',
         };
         validateApiToken(mapLegacyToken(token));
         return token;

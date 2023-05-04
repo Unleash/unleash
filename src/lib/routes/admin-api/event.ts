@@ -111,6 +111,20 @@ export default class EventController extends Controller {
             return events.map((e: IEvent) => ({
                 ...e,
                 createdBy: anonymise(e.createdBy),
+                data:
+                    e.data && 'email' in e.data
+                        ? {
+                              ...e.data,
+                              email: anonymise(e.data.email),
+                          }
+                        : e.data,
+                preData:
+                    e.preData && 'email' in e.preData
+                        ? {
+                              ...e.preData,
+                              email: anonymise(e.preData.email),
+                          }
+                        : e.preData,
             }));
         }
         return events;

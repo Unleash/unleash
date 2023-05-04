@@ -86,7 +86,7 @@ test('should have empty list of tokens', async () => {
 
 test('should create client token', async () => {
     const token = await apiTokenService.createApiToken({
-        username: 'default-client',
+        tokenName: 'default-client',
         type: ApiTokenType.CLIENT,
         project: '*',
         environment: DEFAULT_ENV,
@@ -102,7 +102,7 @@ test('should create client token', async () => {
 
 test('should create admin token', async () => {
     const token = await apiTokenService.createApiToken({
-        username: 'admin',
+        tokenName: 'admin',
         type: ApiTokenType.ADMIN,
         project: '*',
         environment: '*',
@@ -115,7 +115,7 @@ test('should create admin token', async () => {
 test('should set expiry of token', async () => {
     const time = new Date('2022-01-01');
     await apiTokenService.createApiToken({
-        username: 'default-client',
+        tokenName: 'default-client',
         type: ApiTokenType.CLIENT,
         expiresAt: time,
         project: '*',
@@ -133,7 +133,7 @@ test('should update expiry of token', async () => {
 
     const token = await apiTokenService.createApiToken(
         {
-            username: 'default-client',
+            tokenName: 'default-client',
             type: ApiTokenType.CLIENT,
             expiresAt: time,
             project: '*',
@@ -155,7 +155,7 @@ test('should only return valid tokens', async () => {
     const tomorrow = addDays(now, 1);
 
     await apiTokenService.createApiToken({
-        username: 'default-expired',
+        tokenName: 'default-expired',
         type: ApiTokenType.CLIENT,
         expiresAt: yesterday,
         project: '*',
@@ -163,7 +163,7 @@ test('should only return valid tokens', async () => {
     });
 
     const activeToken = await apiTokenService.createApiToken({
-        username: 'default-valid',
+        tokenName: 'default-valid',
         type: ApiTokenType.CLIENT,
         expiresAt: tomorrow,
         project: '*',
@@ -178,7 +178,7 @@ test('should only return valid tokens', async () => {
 
 test('should create client token with project list', async () => {
     const token = await apiTokenService.createApiToken({
-        username: 'default-client',
+        tokenName: 'default-client',
         type: ApiTokenType.CLIENT,
         projects: ['default', 'test-project'],
         environment: DEFAULT_ENV,
@@ -190,7 +190,7 @@ test('should create client token with project list', async () => {
 
 test('should strip all other projects if ALL_PROJECTS is present', async () => {
     const token = await apiTokenService.createApiToken({
-        username: 'default-client',
+        tokenName: 'default-client',
         type: ApiTokenType.CLIENT,
         projects: ['*', 'default'],
         environment: DEFAULT_ENV,
@@ -204,7 +204,7 @@ test('should return user with multiple projects', async () => {
     const tomorrow = addDays(now, 1);
 
     await apiTokenService.createApiToken({
-        username: 'default-valid',
+        tokenName: 'default-valid',
         type: ApiTokenType.CLIENT,
         expiresAt: tomorrow,
         projects: ['test-project', 'default'],
@@ -212,7 +212,7 @@ test('should return user with multiple projects', async () => {
     });
 
     await apiTokenService.createApiToken({
-        username: 'default-also-valid',
+        tokenName: 'default-also-valid',
         type: ApiTokenType.CLIENT,
         expiresAt: tomorrow,
         projects: ['test-project'],
@@ -237,7 +237,7 @@ test('should return user with multiple projects', async () => {
 test('should not partially create token if projects are invalid', async () => {
     try {
         await apiTokenService.createApiTokenWithProjects({
-            username: 'default-client',
+            tokenName: 'default-client',
             type: ApiTokenType.CLIENT,
             projects: ['non-existent-project'],
             environment: DEFAULT_ENV,

@@ -51,7 +51,7 @@ export const createApiToken = (
         type,
         projects: ['*'],
         environment: 'default',
-        username: `${type}-token-${randomId()}`,
+        tokenName: `${type}-token-${randomId()}`,
         ...overrides,
     });
 };

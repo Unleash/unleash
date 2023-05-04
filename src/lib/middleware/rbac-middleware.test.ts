@@ -45,7 +45,7 @@ test('should give api-user ADMIN permission', async () => {
     const cb = jest.fn();
     const req: any = {
         user: new ApiUser({
-            username: 'api',
+            tokenName: 'api',
             permissions: [perms.ADMIN],
             project: '*',
             environment: '*',
@@ -71,7 +71,7 @@ test('should not give api-user ADMIN permission', async () => {
     const cb = jest.fn();
     const req: any = {
         user: new ApiUser({
-            username: 'api',
+            tokenName: 'api',
             permissions: [perms.CLIENT],
             project: '*',
             environment: '*',

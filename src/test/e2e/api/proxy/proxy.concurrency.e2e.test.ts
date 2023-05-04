@@ -48,7 +48,7 @@ test('multiple parallel calls to api/frontend should not create multiple instanc
             type: ApiTokenType.FRONTEND,
             projects: ['default'],
             environment: 'default',
-            username: `test-token-${randomId()}`,
+            tokenName: `test-token-${randomId()}`,
         });
 
     await Promise.all(

@@ -520,19 +520,10 @@ export default class ProjectService {
                 data: {
                     roleId,
                     roleName: role.name,
-                    groups: addedGroups.map(
-                        ({ id: groupId, name, users: groupUsers }) => ({
-                            id: groupId,
-                            name,
-                            users: groupUsers.map(
-                                ({ user: { id, email, username } }) => ({
-                                    id,
-                                    email,
-                                    username,
-                                }),
-                            ),
-                        }),
-                    ),
+                    groups: addedGroups.map(({ id: groupId, name }) => ({
+                        id: groupId,
+                        name,
+                    })),
                     users: addedUsers.map(({ id, email, username }) => ({
                         id,
                         email,

@@ -11,6 +11,9 @@ export enum ApiTokenType {
 
 export interface ILegacyApiTokenCreate {
     secret: string;
+    /**
+     * @deprecated Use tokenName instead
+     */
     username?: string;
     type: ApiTokenType;
     environment: string;
@@ -28,6 +31,9 @@ export interface IApiTokenCreate {
     environment: string;
     projects: string[];
     expiresAt?: Date;
+    /**
+     * @deprecated Use tokenName instead
+     */
     username?: string;
 }
 
@@ -68,7 +74,7 @@ export const mapLegacyToken = (
 ): Omit<IApiTokenCreate, 'secret'> => {
     const cleanedProjects = mapLegacyProjects(token.project, token.projects);
     return {
-        tokenName: token.username ?? token.tokenName,
+        tokenName: token.username ?? token.tokenName!,
         type: token.type,
         environment: token.environment,
         projects: cleanedProjects,

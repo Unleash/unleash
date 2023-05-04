@@ -148,7 +148,9 @@ export const ProjectFeatureToggles = ({
     const [searchParams, setSearchParams] = useSearchParams();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const environments = useEnvironmentsRef(
-        loading ? ['a', 'b', 'c'] : newEnvironments
+        loading
+            ? [{ environment: 'a' }, { environment: 'b' }, { environment: 'c' }]
+            : newEnvironments
     );
     const { refetch } = useProject(projectId);
     const { setToastData, setToastApiError } = useToast();

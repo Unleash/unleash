@@ -53,43 +53,31 @@ describe('demo', () => {
     after(() => {
         cy.request({
             method: 'DELETE',
-            url: `${baseUrl}/api/admin/features/demoApp.step1`,
-            failOnStatusCode: false,
+            url: `${baseUrl}/api/admin/projects/demo-app/features/demoApp.step1`,
         });
         cy.request({
             method: 'DELETE',
-            url: `${baseUrl}/api/admin/features/demoApp.step2`,
-            failOnStatusCode: false,
+            url: `${baseUrl}/api/admin/projects/demo-app/features/demoApp.step2`,
         });
         cy.request({
             method: 'DELETE',
-            url: `${baseUrl}/api/admin/features/demoApp.step3`,
-            failOnStatusCode: false,
+            url: `${baseUrl}/api/admin/projects/demo-app/features/demoApp.step3`,
         });
         cy.request({
             method: 'DELETE',
-            url: `${baseUrl}/api/admin/features/demoApp.step4`,
-            failOnStatusCode: false,
+            url: `${baseUrl}/api/admin/projects/demo-app/features/demoApp.step4`,
         });
         cy.request({
-            method: 'DELETE',
-            url: `${baseUrl}/api/admin/archive/demoApp.step1`,
-            failOnStatusCode: false,
-        });
-        cy.request({
-            method: 'DELETE',
-            url: `${baseUrl}/api/admin/archive/demoApp.step2`,
-            failOnStatusCode: false,
-        });
-        cy.request({
-            method: 'DELETE',
-            url: `${baseUrl}/api/admin/archive/demoApp.step3`,
-            failOnStatusCode: false,
-        });
-        cy.request({
-            method: 'DELETE',
-            url: `${baseUrl}/api/admin/archive/demoApp.step4`,
-            failOnStatusCode: false,
+            method: 'POST',
+            url: `${baseUrl}/api/admin/projects/demo-app/delete`,
+            body: {
+                features: [
+                    'demoApp.step1',
+                    'demoApp.step2',
+                    'demoApp.step3',
+                    'demoApp.step4',
+                ],
+            },
         });
     });
 

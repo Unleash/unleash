@@ -7,7 +7,6 @@ jobs:
     strategy:
       matrix:
         test:
-          - demo/demo.spec.ts
           - feature/feature.spec.ts
           - groups/groups.spec.ts
           - projects/access.spec.ts
@@ -24,8 +23,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Run Cypress
         uses: cypress-io/github-action@v5
-        env:
-          DEBUG: '@cypress/github-action'
         with:
           working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all

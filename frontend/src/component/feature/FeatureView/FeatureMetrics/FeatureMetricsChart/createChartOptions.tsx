@@ -44,19 +44,23 @@ export const createChartOptions = (
                 boxPadding: 5,
                 usePointStyle: true,
                 itemSort: (a, b) => {
-                    const order = ['total requests', 'exposed', 'not exposed'];
+                    const order = ['Total requests', 'Exposed', 'Not exposed'];
                     const aIndex = order.indexOf(a.dataset.label!);
                     const bIndex = order.indexOf(b.dataset.label!);
                     return aIndex - bIndex;
                 },
                 callbacks: {
+                    label: item => {
+                        console.log(item);
+                        return `${item.formattedValue} - ${item.dataset.label}`;
+                    },
                     afterLabel: item => {
                         const data = item.dataset.data[
                             item.dataIndex
                         ] as any as IPoint;
 
                         if (
-                            item.dataset.label !== 'exposed' ||
+                            item.dataset.label !== 'Exposed' ||
                             data.variants === undefined
                         ) {
                             return '';
@@ -68,10 +72,10 @@ export const createChartOptions = (
                         return output;
                     },
                     title: items =>
-                        formatDateHM(
+                        `Time: ${formatDateHM(
                             items[0].parsed.x,
                             locationSettings.locale
-                        ),
+                        )}`,
                 },
                 // Sort tooltip items in the same order as the lines in the chart.
                 // itemSort: (a, b) => b.parsed.y - a.parsed.y,

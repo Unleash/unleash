@@ -16,7 +16,7 @@ export const createChartData = (
     locationSettings: ILocationSettings
 ): ChartData<'line', IPoint[], string> => {
     const requestsSeries = {
-        label: 'total requests',
+        label: 'Total requests',
         borderColor: theme.palette.primary.main,
         backgroundColor: theme.palette.primary.main,
         data: createChartPoints(metrics, locationSettings, m => m.yes + m.no),
@@ -32,7 +32,7 @@ export const createChartData = (
     };
 
     const yesSeries = {
-        label: 'exposed',
+        label: 'Exposed',
         borderColor: theme.palette.success.main,
         backgroundColor: theme.palette.success.main,
         data: createChartPoints(metrics, locationSettings, m => m.yes),
@@ -45,7 +45,7 @@ export const createChartData = (
     };
 
     const noSeries = {
-        label: 'not exposed',
+        label: 'Not exposed',
         borderColor: theme.palette.error.main,
         backgroundColor: theme.palette.error.main,
         data: createChartPoints(metrics, locationSettings, m => m.no),

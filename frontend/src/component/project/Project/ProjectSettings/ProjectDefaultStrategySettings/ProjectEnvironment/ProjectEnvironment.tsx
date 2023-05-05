@@ -37,7 +37,6 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     [theme.breakpoints.down(400)]: {
         padding: theme.spacing(1, 2),
     },
-    '&.Mui': { backgroundColor: 'white' },
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails, {

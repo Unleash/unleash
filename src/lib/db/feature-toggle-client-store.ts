@@ -255,7 +255,7 @@ export default class FeatureToggleClientStore
             const filteredStrategies = feature.strategies.filter(
                 (strategy) => !strategy.disabled,
             );
-            if (!filteredStrategies.length) {
+            if (filteredStrategies.length === 0) {
                 enabled = false;
             }
             filtered.push({

@@ -218,12 +218,14 @@ export const fromLegacyError = (e: Error): UnleashError => {
         });
     }
 
-    if (['BadDataError', 'BadRequestError', 'ValidationError'].includes(name)) {
+    const badRequestErrors = [
+        'BadDataError',
+        'BadRequestError',
+        'ValidationError',
+    ] as const;
+    if ((badRequestErrors as readonly string[]).includes(name)) {
         return new UnleashError({
-            name: name as
-                | 'ValidationError'
-                | 'BadRequestError'
-                | 'BadDataError',
+            name: name as typeof badRequestErrors[number],
             message:
                 'Request validation failed: your request body failed to validate. Refer to the `details` list to see what happened.',
             details: [{ description: e.message, message: e.message }],

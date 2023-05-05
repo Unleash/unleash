@@ -1,13 +1,13 @@
-import { useRequiredPathParam } from '../../../../../hooks/useRequiredPathParam';
+import { useContext } from 'react';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useProject, {
     useProjectNameOrId,
-} from '../../../../../hooks/api/getters/useProject/useProject';
-import { useContext, useEffect } from 'react';
-import AccessContext from '../../../../../contexts/AccessContext';
-import { usePageTitle } from '../../../../../hooks/usePageTitle';
-import { PageContent } from '../../../../common/PageContent/PageContent';
-import { PageHeader } from '../../../../common/PageHeader/PageHeader';
-import { UPDATE_PROJECT } from '../../../../providers/AccessProvider/permissions';
+} from 'hooks/api/getters/useProject/useProject';
+import AccessContext from 'contexts/AccessContext';
+import { usePageTitle } from 'hooks/usePageTitle';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { Alert, styled } from '@mui/material';
 import ProjectEnvironment from './ProjectEnvironment/ProjectEnvironment';
 

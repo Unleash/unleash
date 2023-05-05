@@ -1,7 +1,7 @@
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE_STRATEGY } from '../../../../../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import { Edit } from '@mui/icons-material';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';

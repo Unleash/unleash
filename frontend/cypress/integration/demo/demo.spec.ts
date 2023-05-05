@@ -48,7 +48,6 @@ describe('demo', () => {
 
     afterEach(() => {
         cy.intercept('GET', `${baseUrl}/api/admin/ui-config`).as('uiConfig');
-        cy.wait('@uiConfig');
     });
 
     after(() => {

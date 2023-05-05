@@ -4,9 +4,10 @@ import { ILocationSettings } from 'hooks/useLocationSettings';
 import 'chartjs-adapter-date-fns';
 import { Theme } from '@mui/material/styles/createTheme';
 
-interface IPoint {
+export interface IPoint {
     x: string;
     y: number;
+    variants: Record<string, number>;
 }
 
 export const createChartData = (
@@ -57,7 +58,10 @@ export const createChartData = (
         },
     };
 
-    return { datasets: [yesSeries, noSeries, requestsSeries] };
+    return {
+        datasets: [yesSeries, noSeries, requestsSeries],
+        // labels: [requestsSeries.label, yesSeries.label, noSeries.label],
+    };
 };
 
 const createChartPoints = (
@@ -68,5 +72,6 @@ const createChartPoints = (
     return metrics.map(metric => ({
         x: metric.timestamp,
         y: y(metric),
+        variants: metric.variants,
     }));
 };

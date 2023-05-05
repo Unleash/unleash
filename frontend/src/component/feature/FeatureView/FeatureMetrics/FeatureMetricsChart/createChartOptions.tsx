@@ -4,6 +4,19 @@ import { ChartOptions, defaults } from 'chart.js';
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { formatDateHM } from 'utils/formatDate';
 import { Theme } from '@mui/material/styles/createTheme';
+import { formatAssetPath } from '../../../../../utils/formatPath';
+import logo from '../../../../../assets/img/unleashLogoIconDarkAlpha.gif';
+import { IPoint } from './createChartData';
+
+const formatVariantEntry = (
+    variant: [string, number],
+    totalExposure: number
+) => {
+    if (totalExposure === 0) return '';
+    const [key, value] = variant;
+    const percentage = Math.floor((Number(value) / totalExposure) * 100);
+    return `${value} (${percentage}%) - variant ${key}`;
+};
 
 export const createChartOptions = (
     theme: Theme,
@@ -30,7 +43,30 @@ export const createChartOptions = (
                 padding: 10,
                 boxPadding: 5,
                 usePointStyle: true,
+                itemSort: (a, b) => {
+                    const order = ['total requests', 'exposed', 'not exposed'];
+                    const aIndex = order.indexOf(a.dataset.label!);
+                    const bIndex = order.indexOf(b.dataset.label!);
+                    return aIndex - bIndex;
+                },
                 callbacks: {
+                    afterLabel: item => {
+                        const data = item.dataset.data[
+                            item.dataIndex
+                        ] as any as IPoint;
+
+                        if (
+                            item.dataset.label !== 'exposed' ||
+                            data.variants === undefined
+                        ) {
+                            return '';
+                        }
+                        const { disabled, ...actualVariants } = data.variants;
+                        const output = Object.entries(actualVariants)
+                            .map(entry => formatVariantEntry(entry, data.y))
+                            .join('\n');
+                        return output;
+                    },
                     title: items =>
                         formatDateHM(
                             items[0].parsed.x,
@@ -38,7 +74,7 @@ export const createChartOptions = (
                         ),
                 },
                 // Sort tooltip items in the same order as the lines in the chart.
-                itemSort: (a, b) => b.parsed.y - a.parsed.y,
+                // itemSort: (a, b) => b.parsed.y - a.parsed.y,
             },
             legend: {
                 position: 'top',

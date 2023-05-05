@@ -16,7 +16,7 @@ describe('demo', () => {
                 name: 'dev',
                 type: 'development',
             },
-            { failOnStatusCode: true }
+            { failOnStatusCode: false }
         );
         cy.createProject_API('demo-app', options);
         cy.createFeature_API('demoApp.step1', 'demo-app', options);

@@ -179,7 +179,6 @@ export const updateFlexibleRolloutStrategy_UI = (
         .clear()
         .type('new-group-id');
 
-    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
     cy.intercept(
         'PUT',
         `/api/admin/projects/${project}/features/${featureToggleName}/environments/*/strategies/${strategyId}`,
@@ -199,6 +198,8 @@ export const updateFlexibleRolloutStrategy_UI = (
             });
         }
     ).as('updateStrategy');
+
+    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
     return cy.wait('@updateStrategy');
 };
 

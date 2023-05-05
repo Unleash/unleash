@@ -1,6 +1,5 @@
 import { v4 as uuidV4 } from 'uuid';
 import { FromSchema } from 'json-schema-to-ts';
-import { ErrorObject } from 'ajv';
 import OwaspValidationError from './owasp-validation-error';
 
 export const UnleashApiErrorTypes = [
@@ -232,12 +231,7 @@ export const fromLegacyError = (e: Error): UnleashError => {
     }
 
     if (name === 'OwaspValidationError') {
-        return new UnleashError({
-            name,
-            message:
-                'Password validation failed. Refer to the `details` property.',
-            details: (e as OwaspValidationError).toJSON().details,
-        });
+        return e as OwaspValidationError;
     }
 
     if (name === 'AuthenticationRequired') {

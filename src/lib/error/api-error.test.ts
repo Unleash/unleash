@@ -342,8 +342,6 @@ describe('Error serialization special cases', () => {
     });
 });
 
-// test that password mismatch errors contain the expected props etc. ...
-
 describe('Error serialization special cases', () => {
     it('AuthenticationRequired: adds `path` and `type`', () => {
         const type = 'password';

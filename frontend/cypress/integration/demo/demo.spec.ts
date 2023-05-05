@@ -8,33 +8,35 @@ describe('demo', () => {
     before(() => {
         cy.runBefore();
 
+        const options = {}; //{ failOnStatusCode: false };
+
         cy.createEnvironment_API(
             {
                 name: 'dev',
                 type: 'development',
             },
-            { failOnStatusCode: false }
+            options
         );
         cy.createEnvironment_API(
             {
                 name: 'prod',
                 type: 'production',
             },
-            { failOnStatusCode: false }
+            options
         );
-        cy.createProject_API('demo-app', { failOnStatusCode: false });
-        cy.createFeature_API('demoApp.step1', 'demo-app', {
-            failOnStatusCode: false,
-        });
-        cy.createFeature_API('demoApp.step2', 'demo-app', {
-            failOnStatusCode: false,
-        });
-        cy.createFeature_API('demoApp.step3', 'demo-app', {
-            failOnStatusCode: false,
-        });
-        cy.createFeature_API('demoApp.step4', 'demo-app', {
-            failOnStatusCode: false,
-        });
+        cy.createProject_API('demo-app', options);
+        cy.createFeature_API('demoApp.step1', 'demo-app', options);
+        cy.createFeature_API('demoApp.step2', 'demo-app', options);
+        cy.createFeature_API('demoApp.step3', 'demo-app', options);
+        cy.createFeature_API('demoApp.step4', 'demo-app', options);
+    });
+
+    beforeEach(() => {
+        cy.login_UI();
+        cy.visit('/projects');
+        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
+            cy.get("[data-testid='CLOSE_SPLASH']").click();
+        }
 
         cy.intercept('GET', '/api/admin/ui-config', req => {
             req.headers['cache-control'] =
@@ -50,12 +52,9 @@ describe('demo', () => {
         });
     });
 
-    beforeEach(() => {
-        cy.login_UI();
-        cy.visit('/projects');
-        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
-            cy.get("[data-testid='CLOSE_SPLASH']").click();
-        }
+    afterEach(() => {
+        cy.intercept('GET', '/api/admin/ui-config').as('uiConfig');
+        cy.wait('@uiConfig');
     });
 
     after(() => {

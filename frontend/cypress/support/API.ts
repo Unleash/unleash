@@ -11,7 +11,7 @@ export const createFeature_API = (
 ): Chainable<any> => {
     const project = projectName || 'default';
     return cy.request({
-        url: `/api/admin/projects/${project}/features`,
+        url: `${baseUrl}/api/admin/projects/${project}/features`,
         method: 'POST',
         body: {
             name: `${featureName}`,
@@ -39,7 +39,7 @@ export const createProject_API = (
     options?: Partial<Cypress.RequestOptions>
 ): Chainable<any> => {
     return cy.request({
-        url: `/api/admin/projects`,
+        url: `${baseUrl}/api/admin/projects`,
         method: 'POST',
         body: {
             id: project,
@@ -118,7 +118,7 @@ export const createEnvironment_API = (
     options?: Partial<Cypress.RequestOptions>
 ): Chainable<any> => {
     return cy.request({
-        url: `/api/admin/environments`,
+        url: `${baseUrl}/api/admin/environments`,
         method: 'POST',
         body: environment,
         ...options,

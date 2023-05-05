@@ -86,7 +86,10 @@ const variantRowReducer = (acc, tokenRow) => {
             variants: {},
         };
     }
-    acc[key].variants![variant] = count;
+    if (variant) {
+        acc[key].variants[variant] = count;
+    }
+
     return acc;
 };
 

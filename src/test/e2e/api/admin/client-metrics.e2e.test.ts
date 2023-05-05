@@ -18,8 +18,25 @@ const fetchHoursBack = (hoursBack: number, feature: string = 'demo') => {
 };
 
 beforeAll(async () => {
-    db = await dbInit('client_metrics_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {});
+    db = await dbInit('client_metrics_serial', getLogger, {
+        experimental: {
+            flags: {
+                variantMetrics: true,
+            },
+        },
+    });
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    variantMetrics: true,
+                    strictSchemaValidation: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {
@@ -299,7 +316,7 @@ test('should support posting and receiving variants data', async () => {
         appName: 'web',
         environment: 'default',
         timestamp: date,
-        yes: 1,
+        yes: 7,
         no: 1,
         variants: { red: 3, blue: 4 },
     };

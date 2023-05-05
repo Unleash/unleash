@@ -61,7 +61,7 @@ const ProjectEnvironmentDefaultStrategy = ({
     return (
         <>
             <StrategyItemContainer
-                strategy={(strategy || DEFAULT_STRATEGY) as any}
+                strategy={strategy as any}
                 description={description}
                 actions={
                     <>
@@ -81,7 +81,7 @@ const ProjectEnvironmentDefaultStrategy = ({
                     </>
                 }
             >
-                <StrategyExecution strategy={strategy || DEFAULT_STRATEGY} />
+                <StrategyExecution strategy={strategy} />
             </StrategyItemContainer>
             <Routes>
                 <Route
@@ -92,7 +92,7 @@ const ProjectEnvironmentDefaultStrategy = ({
                             onClose={onSidebarClose}
                             open
                         >
-                            <EditDefaultStrategy strategy={strategy as any} />
+                            <EditDefaultStrategy strategy={strategy} />
                         </SidebarModal>
                     }
                 />

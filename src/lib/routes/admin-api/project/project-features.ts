@@ -773,6 +773,7 @@ export default class ProjectFeaturesController extends Controller {
         const userName = extractUsername(req);
         const patch = req.body;
         const strategy = await this.featureService.getStrategy(strategyId);
+
         const { newDocument } = applyPatch(strategy, patch);
         const updatedStrategy = await this.featureService.updateStrategy(
             strategyId,
@@ -781,6 +782,22 @@ export default class ProjectFeaturesController extends Controller {
             userName,
             req.user,
         );
+        const feature = await this.featureService.getFeature({ featureName });
+
+        const env = feature.environments.find((e) => e.name === environment);
+        const hasOnlyDisabledStrategies = env!.strategies.every(
+            (strat) => strat.disabled,
+        );
+        if (hasOnlyDisabledStrategies) {
+            // If it is the
+            await this.featureService.updateEnabled(
+                projectId,
+                featureName,
+                environment,
+                false,
+                userName,
+            );
+        }
         res.status(200).json(updatedStrategy);
     }
 

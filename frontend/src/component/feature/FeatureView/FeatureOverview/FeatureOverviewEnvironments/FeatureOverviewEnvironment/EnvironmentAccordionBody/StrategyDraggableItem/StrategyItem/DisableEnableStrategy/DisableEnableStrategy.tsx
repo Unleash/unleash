@@ -11,14 +11,16 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyChangeRequestAlert } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
 import { IDisableEnableStrategyProps } from './IDisableEnableStrategyProps';
+import { useFeature } from '../../../../../../../../../../hooks/api/getters/useFeature/useFeature';
 
 const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
-    const { projectId, environmentId } = props;
+    const { projectId, environmentId, featureId } = props;
     const [isDialogueOpen, setDialogueOpen] = useState(false);
     const { onDisable } = useEnableDisable({ ...props });
     const { onSuggestDisable } = useSuggestEnableDisable({ ...props });
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const isChangeRequest = isChangeRequestConfigured(environmentId);
+    const { refetchFeature } = useFeature(projectId, featureId);
 
     const onClick = (event: React.FormEvent) => {
         event.preventDefault();
@@ -26,6 +28,7 @@ const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
             onSuggestDisable();
         } else {
             onDisable();
+            refetchFeature();
         }
         setDialogueOpen(false);
     };

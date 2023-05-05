@@ -21,7 +21,7 @@ import { CreateFeatureStrategySchema } from 'openapi';
 import useProject from 'hooks/api/getters/useProject/useProject';
 
 interface EditDefaultStrategyProps {
-    strategy: IFeatureStrategy | CreateFeatureStrategySchema;
+    strategy: CreateFeatureStrategySchema;
 }
 
 const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
@@ -30,9 +30,8 @@ const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
 
     const { refetch: refetchProject } = useProject(projectId);
 
-    const [defaultStrategy, setDefaultStrategy] = useState<
-        Partial<IFeatureStrategy> | CreateFeatureStrategySchema
-    >(strategy);
+    const [defaultStrategy, setDefaultStrategy] =
+        useState<CreateFeatureStrategySchema>(strategy);
 
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateDefaultStrategy, loading } = useProjectApi();
@@ -161,7 +160,7 @@ const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
             <ProjectDefaultStrategyForm
                 projectId={projectId}
                 strategy={defaultStrategy as any}
-                setStrategy={setDefaultStrategy}
+                setStrategy={setDefaultStrategy as any}
                 segments={segments}
                 setSegments={setSegments}
                 environmentId={environmentId}

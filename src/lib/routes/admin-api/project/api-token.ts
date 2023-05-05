@@ -127,7 +127,7 @@ export class ProjectApiTokenController extends Controller {
                     operationId: 'deleteProjectApiToken',
                     summary: 'Delete a project API token.',
                     description:
-                        'Endpoint that allows deletion of a project API token.',
+                        `This operation deletes the API token specified in the request URL. If the token doesn't exist, returns an OK response (status code 200).`,
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403),

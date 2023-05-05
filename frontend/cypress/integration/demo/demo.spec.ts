@@ -9,20 +9,20 @@ describe('demo', () => {
         cy.runBefore();
         cy.login_UI();
 
-        const options = {}; //{ failOnStatusCode: false };
+        const optionsIgnore409 = { failOnStatusCode: false };
 
         cy.createEnvironment_API(
             {
                 name: 'dev',
                 type: 'development',
             },
-            { failOnStatusCode: false }
+            optionsIgnore409
         );
-        cy.createProject_API('demo-app', { failOnStatusCode: false });
-        cy.createFeature_API('demoApp.step1', 'demo-app', options);
-        cy.createFeature_API('demoApp.step2', 'demo-app', options);
-        cy.createFeature_API('demoApp.step3', 'demo-app', options);
-        cy.createFeature_API('demoApp.step4', 'demo-app', options);
+        cy.createProject_API('demo-app', optionsIgnore409);
+        cy.createFeature_API('demoApp.step1', 'demo-app', optionsIgnore409);
+        cy.createFeature_API('demoApp.step2', 'demo-app', optionsIgnore409);
+        cy.createFeature_API('demoApp.step3', 'demo-app', optionsIgnore409);
+        cy.createFeature_API('demoApp.step4', 'demo-app', optionsIgnore409);
     });
 
     beforeEach(() => {

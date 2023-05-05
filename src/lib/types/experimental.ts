@@ -9,10 +9,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
     ),
-    newProjectOverview: parseEnvVarBoolean(
-        process.env.NEW_PROJECT_OVERVIEW,
-        false,
-    ),
     embedProxyFrontend: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
         true,
@@ -47,10 +43,6 @@ const flags = {
     ),
     proPlanAutoCharge: parseEnvVarBoolean(
         process.env.UNLEASH_PRO_PLAN_AUTO_CHARGE,
-        false,
-    ),
-    bulkOperations: parseEnvVarBoolean(
-        process.env.UNLEASH_BULK_OPERATIONS,
         false,
     ),
     personalAccessTokensKillSwitch: parseEnvVarBoolean(

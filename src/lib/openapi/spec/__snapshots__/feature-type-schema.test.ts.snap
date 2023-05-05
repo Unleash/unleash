@@ -12,6 +12,33 @@ exports[`featureTypeSchema empty 1`] = `
       },
       "schemaPath": "#/required",
     },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'name'",
+      "params": {
+        "missingProperty": "name",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'description'",
+      "params": {
+        "missingProperty": "description",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'lifetimeDays'",
+      "params": {
+        "missingProperty": "lifetimeDays",
+      },
+      "schemaPath": "#/required",
+    },
   ],
   "schema": "#/components/schemas/featureTypeSchema",
 }

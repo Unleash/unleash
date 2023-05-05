@@ -118,6 +118,10 @@ const theme = {
             border: colors.red[300],
             contrastText: colors.red[800], // Color used for text inside alert
         },
+        web: {
+            main: '#1A4049', // used on sales-related elements
+            contrastText: colors.grey[50], // Color used for inner text
+        },
 
         /**
          *  Used for grey badges, hover elements, and grey light elements
@@ -174,6 +178,15 @@ const theme = {
          * Text highlight effect color. Used when filtering/searching over content
          */
         highlight: colors.orange[200],
+
+        /**
+         * Used for the interactive guide spotlight
+         */
+        spotlight: {
+            border: '#463cfb',
+            outline: '#6058f5',
+            pulse: '#463cfb',
+        },
 
         /**
          * Background color used for the API command in the sidebar
@@ -250,6 +263,10 @@ export default createTheme({
         // Skeleton
         MuiCssBaseline: {
             styleOverrides: {
+                '#react-joyride-portal ~ .MuiDialog-root': {
+                    zIndex: 1500,
+                },
+
                 '.skeleton': {
                     '&::before': {
                         backgroundColor: theme.palette.background.elevation1,

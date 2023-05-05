@@ -110,6 +110,14 @@ class FeatureTagStore implements IFeatureTagStore {
         }
     }
 
+    async getAllFeaturesForTag(tagValue: string): Promise<string[]> {
+        const rows = await this.db
+            .select('feature_name')
+            .from<FeatureTagTable>(TABLE)
+            .where({ tag_value: tagValue });
+        return rows.map(({ feature_name }) => feature_name);
+    }
+
     async featureExists(featureName: string): Promise<boolean> {
         const result = await this.db.raw(
             'SELECT EXISTS (SELECT 1 FROM features WHERE name = ?) AS present',
@@ -179,13 +187,15 @@ class FeatureTagStore implements IFeatureTagStore {
     }
 
     async tagFeatures(featureTags: IFeatureTag[]): Promise<IFeatureAndTag[]> {
-        const rows = await this.db(TABLE)
-            .insert(featureTags.map(this.featureTagToRow))
-            .returning(COLUMNS)
-            .onConflict(COLUMNS)
-            .ignore();
-        if (rows) {
-            return rows.map(this.rowToFeatureAndTag);
+        if (featureTags.length !== 0) {
+            const rows = await this.db(TABLE)
+                .insert(featureTags.map(this.featureTagToRow))
+                .returning(COLUMNS)
+                .onConflict(COLUMNS)
+                .ignore();
+            if (rows) {
+                return rows.map(this.rowToFeatureAndTag);
+            }
         }
         return [];
     }

@@ -1,4 +1,10 @@
-import { Dialog, IconButton, Typography, styled } from '@mui/material';
+import {
+    Dialog,
+    DialogProps,
+    IconButton,
+    Typography,
+    styled,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -22,14 +28,19 @@ const StyledHeader = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
 }));
 
-interface IDemoDialogProps {
+interface IDemoDialogProps extends DialogProps {
     open: boolean;
     onClose: () => void;
     children: React.ReactNode;
 }
 
-export const DemoDialog = ({ open, onClose, children }: IDemoDialogProps) => (
-    <StyledDialog open={open} onClose={onClose}>
+export const DemoDialog = ({
+    open,
+    onClose,
+    children,
+    ...props
+}: IDemoDialogProps) => (
+    <StyledDialog open={open} onClose={onClose} {...props}>
         <StyledCloseButton aria-label="close" onClick={onClose}>
             <CloseIcon />
         </StyledCloseButton>

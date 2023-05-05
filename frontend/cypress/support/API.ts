@@ -24,7 +24,7 @@ export const createFeature_API = (
 export const deleteFeature_API = (name: string): Chainable<any> => {
     cy.request({
         method: 'DELETE',
-        url: `${baseUrl}/api/admin/features/${name}`,
+        url: `${baseUrl}/api/admin/projects/default/features/${name}`,
     });
     return cy.request({
         method: 'DELETE',

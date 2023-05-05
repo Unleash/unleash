@@ -1,13 +1,23 @@
 import { Request, Response } from 'express';
 import Controller from '../../controller';
-import { IUnleashConfig } from '../../../types/option';
-import { IUnleashServices } from '../../../types/services';
+import {
+    IUnleashConfig,
+    IUnleashServices,
+    serializeDates,
+    UPDATE_PROJECT,
+} from '../../../types';
 import { Logger } from '../../../logger';
 import EnvironmentService from '../../../services/environment-service';
-import { UPDATE_PROJECT } from '../../../types/permissions';
-import { createRequestSchema } from '../../../openapi/util/create-request-schema';
-import { ProjectEnvironmentSchema } from '../../../openapi/spec/project-environment-schema';
-import { emptyResponse } from '../../../openapi/util/standard-responses';
+import {
+    createFeatureStrategySchema,
+    CreateFeatureStrategySchema,
+    createRequestSchema,
+    createResponseSchema,
+    emptyResponse,
+    getStandardResponses,
+    ProjectEnvironmentSchema,
+} from '../../../openapi';
+import { OpenApiService } from '../../../services';
 
 const PREFIX = '/:projectId/environments';
 
@@ -21,6 +31,8 @@ export default class EnvironmentsController extends Controller {
 
     private environmentService: EnvironmentService;
 
+    private openApiService: OpenApiService;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -32,6 +44,7 @@ export default class EnvironmentsController extends Controller {
 
         this.logger = config.getLogger('admin-api/project/environments.ts');
         this.environmentService = environmentService;
+        this.openApiService = openApiService;
 
         this.route({
             method: 'post',
@@ -61,6 +74,30 @@ export default class EnvironmentsController extends Controller {
                     tags: ['Projects'],
                     operationId: 'removeEnvironmentFromProject',
                     responses: { 200: emptyResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: `${PREFIX}/:environment/default-strategy`,
+            handler: this.addDefaultStrategyToProjectEnvironment,
+            permission: UPDATE_PROJECT,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Projects'],
+                    operationId: 'addDefaultStrategyToProjectEnvironment',
+                    description:
+                        'Adds a default strategy for this environment. Unleash will use this strategy by default when enabling a toggle. Use the wild card "*" for `:environment` to add to all environments. ',
+                    requestBody: createRequestSchema(
+                        'createFeatureStrategySchema',
+                    ),
+                    responses: {
+                        200: createResponseSchema(
+                            'createFeatureStrategySchema',
+                        ),
+                        ...getStandardResponses(400),
+                    },
                 }),
             ],
         });
@@ -97,5 +134,26 @@ export default class EnvironmentsController extends Controller {
         );
 
         res.status(200).end();
+    }
+
+    async addDefaultStrategyToProjectEnvironment(
+        req: Request<IProjectEnvironmentParams, CreateFeatureStrategySchema>,
+        res: Response<CreateFeatureStrategySchema>,
+    ): Promise<void> {
+        const { projectId, environment } = req.params;
+        const strategy = req.body;
+
+        const saved = await this.environmentService.addDefaultStrategy(
+            environment,
+            projectId,
+            strategy,
+        );
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            createFeatureStrategySchema.$id,
+            serializeDates(saved),
+        );
     }
 }

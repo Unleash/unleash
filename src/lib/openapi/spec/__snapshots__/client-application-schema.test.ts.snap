@@ -12,6 +12,33 @@ exports[`clientApplicationSchema no fields 1`] = `
       },
       "schemaPath": "#/required",
     },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'interval'",
+      "params": {
+        "missingProperty": "interval",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'started'",
+      "params": {
+        "missingProperty": "started",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'strategies'",
+      "params": {
+        "missingProperty": "strategies",
+      },
+      "schemaPath": "#/required",
+    },
   ],
   "schema": "#/components/schemas/clientApplicationSchema",
 }

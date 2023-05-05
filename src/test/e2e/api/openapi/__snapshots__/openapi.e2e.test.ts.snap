@@ -632,6 +632,28 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "apiTokenSchema": {
         "additionalProperties": false,
+        "anyOf": [
+          {
+            "properties": {
+              "username": {
+                "type": "string",
+              },
+            },
+            "required": [
+              "username",
+            ],
+          },
+          {
+            "properties": {
+              "tokenName": {
+                "type": "string",
+              },
+            },
+            "required": [
+              "tokenName",
+            ],
+          },
+        ],
         "properties": {
           "alias": {
             "nullable": true,
@@ -667,6 +689,11 @@ The provider you choose for your addon dictates what properties the \`parameters
             "nullable": true,
             "type": "string",
           },
+          "tokenName": {
+            "description": "A unique name for this particular token",
+            "example": "some-user",
+            "type": "string",
+          },
           "type": {
             "enum": [
               "client",
@@ -676,11 +703,12 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "username": {
+            "deprecated": true,
+            "description": "This property was deprecated in Unleash v5. Prefer the \`tokenName\` property instead.",
             "type": "string",
           },
         },
         "required": [
-          "username",
           "type",
         ],
         "type": "object",
@@ -1341,6 +1369,28 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "array",
       },
       "createApiTokenSchema": {
+        "anyOf": [
+          {
+            "properties": {
+              "username": {
+                "type": "string",
+              },
+            },
+            "required": [
+              "username",
+            ],
+          },
+          {
+            "properties": {
+              "tokenName": {
+                "type": "string",
+              },
+            },
+            "required": [
+              "tokenName",
+            ],
+          },
+        ],
         "properties": {
           "environment": {
             "type": "string",
@@ -1366,12 +1416,8 @@ The provider you choose for your addon dictates what properties the \`parameters
             "description": "One of client, admin, frontend",
             "type": "string",
           },
-          "username": {
-            "type": "string",
-          },
         },
         "required": [
-          "username",
           "type",
         ],
         "type": "object",
@@ -1851,7 +1897,35 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "object",
       },
       "exportQuerySchema": {
-        "additionalProperties": false,
+        "additionalProperties": true,
+        "oneOf": [
+          {
+            "properties": {
+              "features": {
+                "description": "Selects features to export by name.",
+                "items": {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                "type": "array",
+              },
+            },
+            "required": [
+              "features",
+            ],
+          },
+          {
+            "properties": {
+              "tag": {
+                "description": "Selects features to export by tag. Takes precedence over the features field.",
+                "type": "string",
+              },
+            },
+            "required": [
+              "tag",
+            ],
+          },
+        ],
         "properties": {
           "downloadFile": {
             "type": "boolean",
@@ -1859,16 +1933,8 @@ The provider you choose for your addon dictates what properties the \`parameters
           "environment": {
             "type": "string",
           },
-          "features": {
-            "items": {
-              "minLength": 1,
-              "type": "string",
-            },
-            "type": "array",
-          },
         },
         "required": [
-          "features",
           "environment",
         ],
         "type": "object",
@@ -2573,7 +2639,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "environments": {
             "items": {
-              "type": "string",
+              "$ref": "#/components/schemas/projectEnvironmentSchema",
             },
             "type": "array",
           },
@@ -2640,7 +2706,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "environments": {
             "items": {
-              "type": "string",
+              "$ref": "#/components/schemas/projectEnvironmentSchema",
             },
             "type": "array",
           },
@@ -3508,6 +3574,9 @@ The provider you choose for your addon dictates what properties the \`parameters
           "changeRequestsEnabled": {
             "type": "boolean",
           },
+          "defaultStrategy": {
+            "$ref": "#/components/schemas/createFeatureStrategySchema",
+          },
           "environment": {
             "type": "string",
           },
@@ -3535,11 +3604,24 @@ The provider you choose for your addon dictates what properties the \`parameters
           "environments": {
             "description": "The environments that are enabled for this project",
             "example": [
-              "development",
-              "production",
+              {
+                "environment": "development",
+              },
+              {
+                "defaultStrategy": {
+                  "constraints": [],
+                  "name": "flexibleRollout",
+                  "parameters": {
+                    "groupId": "stickytoggle",
+                    "rollout": "50",
+                    "stickiness": "customAppName",
+                  },
+                },
+                "environment": "production",
+              },
             ],
             "items": {
-              "type": "string",
+              "$ref": "#/components/schemas/projectEnvironmentSchema",
             },
             "type": "array",
           },
@@ -9156,6 +9238,83 @@ If the provided project does not exist, the list of events will be empty.",
         "responses": {
           "200": {
             "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Projects",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/environments/{environment}/default-strategy": {
+      "post": {
+        "description": "Adds a default strategy for this environment. Unleash will use this strategy by default when enabling a toggle. Use the wild card "*" for \`:environment\` to add to all environments. ",
+        "operationId": "addDefaultStrategyToProjectEnvironment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "environment",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createFeatureStrategySchema",
+              },
+            },
+          },
+          "description": "createFeatureStrategySchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createFeatureStrategySchema",
+                },
+              },
+            },
+            "description": "createFeatureStrategySchema",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "The request payload you provided doesn't conform to the schema. The .parameters property should be object. You sent [].",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ValidationError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The request data does not match what we expect.",
           },
         },
         "tags": [

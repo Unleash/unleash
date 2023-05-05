@@ -51,7 +51,7 @@ export const createApiToken = (
         type,
         projects: ['*'],
         environment: 'default',
-        username: `${type}-token-${randomId()}`,
+        tokenName: `${type}-token-${randomId()}`,
         ...overrides,
     });
 };
@@ -1108,6 +1108,7 @@ test('should not return all features', async () => {
 
 test('should NOT evaluate disabled strategies when returning toggles', async () => {
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+
     await createFeatureToggle({
         name: 'enabledFeature',
         enabled: true,
@@ -1140,7 +1141,7 @@ test('should NOT evaluate disabled strategies when returning toggles', async () 
         ],
     });
     await createFeatureToggle({
-        name: 'disabledFeature3',
+        name: 'disabledFeature2',
         enabled: true,
         strategies: [
             {
@@ -1166,7 +1167,7 @@ test('should NOT evaluate disabled strategies when returning toggles', async () 
         ],
     });
     await createFeatureToggle({
-        name: 'enabledFeature2',
+        name: 'disabledFeature3',
         enabled: true,
         strategies: [
             {
@@ -1192,12 +1193,6 @@ test('should NOT evaluate disabled strategies when returning toggles', async () 
                 toggles: [
                     {
                         name: 'enabledFeature',
-                        enabled: true,
-                        impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
-                    },
-                    {
-                        name: 'enabledFeature2',
                         enabled: true,
                         impressionData: false,
                         variant: { enabled: false, name: 'disabled' },

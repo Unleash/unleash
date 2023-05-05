@@ -23,12 +23,12 @@ describe('project overview', () => {
     after(() => {
         cy.request({
             method: 'DELETE',
-            url: `${baseUrl}/api/admin/features/${featureToggleName}-A`,
+            url: `${baseUrl}/api/admin/projects/default/features/${featureToggleName}-A`,
             failOnStatusCode: false,
         });
         cy.request({
             method: 'DELETE',
-            url: `${baseUrl}/api/admin/features/${featureToggleName}-B`,
+            url: `${baseUrl}/api/admin/projects/default/features/${featureToggleName}-B`,
             failOnStatusCode: false,
         });
         cy.request({

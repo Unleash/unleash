@@ -1294,7 +1294,33 @@ class FeatureToggleService {
                 (strategy) => strategy.disabled,
             );
 
-            if (strategies.length === 0 && !hasDisabledStrategies) {
+            if (
+                this.flagResolver.isEnabled('strategyImprovements') &&
+                hasDisabledStrategies &&
+                shouldActivateDisabledStrategies
+            ) {
+                strategies.map(async (strategy) => {
+                    return this.updateStrategy(
+                        strategy.id,
+                        { disabled: false },
+                        {
+                            environment,
+                            projectId: project,
+                            featureName,
+                        },
+                        createdBy,
+                    );
+                });
+            }
+
+            const hasOnlyDisabledStrategies = strategies.every(
+                (strategy) => strategy.disabled,
+            );
+
+            const shouldCreate =
+                hasOnlyDisabledStrategies && !shouldActivateDisabledStrategies;
+
+            if (strategies.length === 0 || shouldCreate) {
                 const projectEnvironmentDefaultStrategy =
                     await this.projectStore.getDefaultStrategy(
                         project,
@@ -1318,25 +1344,6 @@ class FeatureToggleService {
                     },
                     createdBy,
                 );
-            }
-
-            if (
-                this.flagResolver.isEnabled('strategyImprovements') &&
-                hasDisabledStrategies &&
-                shouldActivateDisabledStrategies
-            ) {
-                strategies.map(async (strategy) => {
-                    return this.updateStrategy(
-                        strategy.id,
-                        { disabled: false },
-                        {
-                            environment,
-                            projectId: project,
-                            featureName,
-                        },
-                        createdBy,
-                    );
-                });
             }
         }
         const updatedEnvironmentStatus =

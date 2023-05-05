@@ -139,8 +139,10 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
         const featureEnvironment = feature?.environments?.find(
             env => env.name === name
         );
-        return featureEnvironment?.strategies?.every(
-            strategy => strategy.disabled
+        return (
+            featureEnvironment?.strategies &&
+            featureEnvironment?.strategies?.length > 0 &&
+            featureEnvironment?.strategies?.every(strategy => strategy.disabled)
         );
     };
 
@@ -155,10 +157,12 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
 
     const onActivateStrategies = async () => {
         await handleToggleEnvironmentOn(true);
+        setShowEnabledDialog(false);
     };
 
     const onAddDefaultStrategy = async () => {
-        await handleToggleEnvironmentOn(false);
+        await handleToggleEnvironmentOn();
+        setShowEnabledDialog(false);
     };
 
     return (

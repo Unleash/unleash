@@ -55,9 +55,9 @@ const useFeatureApi = () => {
             projectId: string,
             featureId: string,
             environmentId: string,
-            shouldActivateDisabled = false
+            shouldActivateDisabledStrategies = false
         ) => {
-            const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/on?shouldActivateDisabled=${shouldActivateDisabled}`;
+            const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/on?shouldActivateDisabledStrategies=${shouldActivateDisabledStrategies}`;
             const req = createRequest(
                 path,
                 { method: 'POST' },

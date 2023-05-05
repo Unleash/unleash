@@ -1,4 +1,4 @@
-import { IStrategyConfig } from '../../types/model';
+import { IStrategyConfig } from '../../types';
 import { FeatureStrategiesEvaluationResult } from './client';
 import { Context } from './context';
 
@@ -44,6 +44,7 @@ export function getDefaultStrategy(featureName: string): IStrategyConfig {
     return {
         name: 'flexibleRollout',
         constraints: [],
+        disabled: false,
         parameters: {
             rollout: '100',
             stickiness: 'default',

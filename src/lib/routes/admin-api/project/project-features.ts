@@ -50,7 +50,7 @@ interface FeatureStrategyParams {
 }
 
 interface FeatureStrategyQuery {
-    shouldActivateDisabledStrategies: boolean;
+    shouldActivateDisabledStrategies: string;
 }
 
 interface FeatureParams extends ProjectParam {
@@ -662,7 +662,7 @@ export default class ProjectFeaturesController extends Controller {
             true,
             extractUsername(req),
             req.user,
-            shouldActivateDisabledStrategies,
+            shouldActivateDisabledStrategies === 'true',
         );
         res.status(200).end();
     }

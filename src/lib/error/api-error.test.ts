@@ -217,8 +217,6 @@ describe('OpenAPI error conversion', () => {
         const serializedUnleashError: ApiErrorSchema =
             fromOpenApiValidationErrors({ newprop: 7 }, errors).toJSON();
 
-        console.log(serializedUnleashError);
-
         expect(serializedUnleashError.name).toBe('BadDataError');
         expect(serializedUnleashError.message).toContain('`details`');
         expect(

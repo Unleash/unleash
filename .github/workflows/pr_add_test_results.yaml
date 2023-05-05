@@ -1,7 +1,7 @@
 name: 'Attach Test report'
 on:
   workflow_run:
-    workflows: ['TestReport']
+    workflows: [TestReport]
     types:
       - completed
 jobs:

@@ -1,6 +1,9 @@
 name: TestReport
 on:
   pull_request:
+    paths-ignore:
+      - website/**
+      - coverage/**
 
 jobs:
   testreport:

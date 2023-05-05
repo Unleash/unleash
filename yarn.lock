@@ -6989,10 +6989,10 @@ ts-toolbelt@^9.6.0:
   resolved "https://registry.yarnpkg.com/ts-toolbelt/-/ts-toolbelt-9.6.0.tgz#50a25426cfed500d4a09bd1b3afb6f28879edfd5"
   integrity sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==
 
-tsc-watch@6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/tsc-watch/-/tsc-watch-6.0.0.tgz#474b661b8d6a226c0921a3b6048d7a91f61d888a"
-  integrity sha512-zgpju+/z5z29/kK5V28Nz16CMkX2voFOUxkTlCim/R25hxzbyUqu2NfTnmJBQfESBSPbEQUGqDdB9A8opAcB4A==
+tsc-watch@6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/tsc-watch/-/tsc-watch-6.0.1.tgz#c643195a65284d4d97e024cb2f0ff50bb22c1a65"
+  integrity sha512-npQCgDnE308qOPk9WnMK+s4wO2MuTGOy9YUVFKnOikC+t9f6LQsIpCUenMkaj8a2qzDJlKnzaySLPDeinGExGQ==
   dependencies:
     cross-spawn "^7.0.3"
     node-cleanup "^2.1.2"

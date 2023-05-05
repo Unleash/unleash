@@ -16,14 +16,7 @@ describe('demo', () => {
                 name: 'dev',
                 type: 'development',
             },
-            options
-        );
-        cy.createEnvironment_API(
-            {
-                name: 'prod',
-                type: 'production',
-            },
-            options
+            { failOnStatusCode: true }
         );
         cy.createProject_API('demo-app', options);
         cy.createFeature_API('demoApp.step1', 'demo-app', options);

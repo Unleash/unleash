@@ -56,7 +56,6 @@ const ProjectEnvironmentDefaultStrategy = ({
         return defaultStrategy ? defaultStrategy : DEFAULT_STRATEGY;
     }, [JSON.stringify(defaultStrategy)]);
 
-    console.log(strategy);
     const onSidebarClose = () => navigate(path);
 
     return (

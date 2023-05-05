@@ -237,9 +237,9 @@ export class EnvironmentsController extends Controller {
             environmentsProjectSchema.$id,
             {
                 version: 1,
-                environments: await this.service.getProjectEnvironments(
+                environments: (await this.service.getProjectEnvironments(
                     req.params.projectId,
-                ),
+                )) as any,
             },
         );
     }

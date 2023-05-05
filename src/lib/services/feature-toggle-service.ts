@@ -73,7 +73,10 @@ import {
 } from '../util/validators/constraint-types';
 import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-order-schema';
-import { getDefaultStrategy } from '../util/feature-evaluator/helpers';
+import {
+    getDefaultStrategy,
+    getProjectDefaultStrategy,
+} from '../util/feature-evaluator/helpers';
 import { AccessService } from './access-service';
 import { User } from '../server-impl';
 import NoAccessError from '../error/no-access-error';
@@ -1071,7 +1074,7 @@ class FeatureToggleService {
             environment,
             enabled: envMetadata.enabled,
             strategies,
-            defaultStrategy,
+            defaultStrategy: defaultStrategy,
         };
     }
 
@@ -1284,9 +1287,24 @@ class FeatureToggleService {
                 featureName,
                 environment,
             );
+            const projectEnvironmentDefaultStrategy =
+                await this.projectStore.getDefaultStrategy(
+                    project,
+                    environment,
+                );
+
+            const strategy =
+                this.flagResolver.isEnabled('strategyImprovements') &&
+                projectEnvironmentDefaultStrategy != null
+                    ? getProjectDefaultStrategy(
+                          projectEnvironmentDefaultStrategy,
+                          featureName,
+                      )
+                    : getDefaultStrategy(featureName);
+
             if (strategies.length === 0) {
                 await this.unprotectedCreateStrategy(
-                    getDefaultStrategy(featureName),
+                    strategy,
                     {
                         environment,
                         projectId: project,

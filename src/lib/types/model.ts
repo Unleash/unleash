@@ -86,7 +86,7 @@ export interface IFeatureEnvironmentInfo {
     environment: string;
     enabled: boolean;
     strategies: IFeatureStrategy[];
-    defaultStrategy?: CreateFeatureStrategySchema;
+    defaultStrategy?: CreateFeatureStrategySchema | null;
 }
 
 export interface FeatureToggleWithEnvironment extends FeatureToggle {

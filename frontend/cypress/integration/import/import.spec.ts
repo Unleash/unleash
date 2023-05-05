@@ -114,6 +114,9 @@ describe('imports', () => {
         // cy.contains('Import completed');
 
         cy.visit(`/projects/default/features/${randomFeatureName}`);
+
+        cy.wait(500);
+
         cy.get(
             "[data-testid='feature-toggle-status'] input[type='checkbox']:checked"
         )

@@ -89,7 +89,8 @@ describe('demo', () => {
             for (let step = 0; step < currentTopic.steps.length; step++) {
                 const currentStep = currentTopic.steps[step];
 
-                cy.log(
+                cy.task(
+                    'log',
                     `Testing topic #${topic + 1} "${
                         currentTopic.title
                     }", step #${step + 1}...`

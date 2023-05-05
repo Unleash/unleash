@@ -153,7 +153,7 @@ export const FeatureStrategyEdit = () => {
             payload
         );
 
-        if (uiConfig?.flags?.strategyTitle) {
+        if (uiConfig?.flags?.strategyImprovements) {
             // NOTE: remove tracking when feature flag is removed
             trackTitle(strategy.title);
         }

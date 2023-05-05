@@ -64,12 +64,8 @@ const flags = {
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
-    strategyTitle: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_TITLE,
-        false,
-    ),
-    strategyDisable: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_DISABLE,
+    strategyImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_IMPROVEMENTS,
         false,
     ),
     strategyImprovements: parseEnvVarBoolean(

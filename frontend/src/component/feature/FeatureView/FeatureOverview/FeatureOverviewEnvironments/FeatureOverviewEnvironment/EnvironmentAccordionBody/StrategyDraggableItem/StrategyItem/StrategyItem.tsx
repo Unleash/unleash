@@ -80,7 +80,9 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                         <Edit />
                     </PermissionIconButton>
                     <ConditionallyRender
-                        condition={Boolean(uiConfig?.flags?.strategyDisable)}
+                        condition={Boolean(
+                            uiConfig?.flags?.strategyImprovements
+                        )}
                         show={() => (
                             <DisableEnableStrategy
                                 projectId={projectId}

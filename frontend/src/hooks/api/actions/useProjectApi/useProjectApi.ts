@@ -1,4 +1,4 @@
-import type { BatchStaleSchema } from 'openapi';
+import type { BatchStaleSchema, CreateFeatureStrategySchema } from 'openapi';
 import useAPI from '../useApi/useApi';
 
 interface ICreatePayload {
@@ -261,6 +261,20 @@ const useProjectApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const updateDefaultStrategy = async (
+        projectId: string,
+        environment: string,
+        strategy: CreateFeatureStrategySchema
+    ) => {
+        const path = `api/admin/projects/${projectId}/environments/${environment}/default-strategy`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify(strategy),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     return {
         createProject,
         validateId,
@@ -279,6 +293,7 @@ const useProjectApi = () => {
         deleteFeature,
         deleteFeatures,
         searchProjectUser,
+        updateDefaultStrategy,
         errors,
         loading,
     };

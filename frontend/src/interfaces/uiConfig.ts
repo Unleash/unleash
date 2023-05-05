@@ -46,10 +46,9 @@ export interface IFlags {
     notifications?: boolean;
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
-    strategyTitle?: boolean;
     groupRootRoles?: boolean;
-    strategyDisable?: boolean;
     googleAuthEnabled?: boolean;
+    strategyImprovements?: boolean;
 }
 
 export interface IVersionInfo {

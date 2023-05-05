@@ -14,7 +14,7 @@ export const FeatureStrategyTitle: VFC<IFeatureStrategyTitleProps> = ({
 }) => {
     const { uiConfig } = useUiConfig();
 
-    if (!uiConfig.flags.strategyTitle) {
+    if (!uiConfig.flags.strategyImprovements) {
         return null;
     }
 

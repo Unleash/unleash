@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Button, styled } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import {
     IFeatureStrategy,
     IFeatureStrategyParameters,
     IStrategyParameter,
 } from 'interfaces/strategy';
-import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType';
-import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled';
-import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints';
-import { IFeatureToggle } from 'interfaces/featureToggle';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
@@ -20,20 +16,13 @@ import { ISegment } from 'interfaces/segment';
 import { IFormErrors } from 'hooks/useFormErrors';
 import { validateParameterValue } from 'utils/validateParameterValue';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import { FeatureStrategyChangeRequestAlert } from './FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
-import {
-    FeatureStrategyProdGuard,
-    useFeatureStrategyProdGuard,
-} from '../FeatureStrategyProdGuard/FeatureStrategyProdGuard';
-import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
-import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
-import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
-import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle';
-import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled';
+import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints';
+import { FeatureStrategyType } from 'component/feature/FeatureStrategy/FeatureStrategyType/FeatureStrategyType';
+import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle';
+import { CreateFeatureStrategySchema } from 'openapi';
 
-interface IFeatureStrategyFormProps {
-    feature: IFeatureToggle;
+interface IProjectDefaultStrategyFormProps {
     projectId: string;
     environmentId: string;
     permission: string;
@@ -41,7 +30,7 @@ interface IFeatureStrategyFormProps {
     onCancel?: () => void;
     loading: boolean;
     isChangeRequest?: boolean;
-    strategy: Partial<IFeatureStrategy>;
+    strategy: IFeatureStrategy | CreateFeatureStrategySchema;
     setStrategy: React.Dispatch<
         React.SetStateAction<Partial<IFeatureStrategy>>
     >;
@@ -70,9 +59,8 @@ const StyledButtons = styled('div')(({ theme }) => ({
     paddingBottom: theme.spacing(10),
 }));
 
-export const FeatureStrategyForm = ({
+export const ProjectDefaultStrategyForm = ({
     projectId,
-    feature,
     environmentId,
     permission,
     onSubmit,
@@ -83,28 +71,14 @@ export const FeatureStrategyForm = ({
     segments,
     setSegments,
     errors,
-    isChangeRequest,
-}: IFeatureStrategyFormProps) => {
-    const [showProdGuard, setShowProdGuard] = useState(false);
+}: IProjectDefaultStrategyFormProps) => {
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
-    const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
     const access = useHasProjectEnvironmentAccess(
         permission,
         projectId,
         environmentId
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
-
-    const { data } = usePendingChangeRequests(feature.project);
-    const { changeRequestInReviewOrApproved, alert } =
-        useChangeRequestInReviewWarning(data);
-
-    const hasChangeRequestInReviewForEnvironment =
-        changeRequestInReviewOrApproved(environmentId || '');
-
-    const changeRequestButtonText = hasChangeRequestInReviewForEnvironment
-        ? 'Add to existing change request'
-        : 'Add change to draft';
 
     const navigate = useNavigate();
 
@@ -153,64 +127,19 @@ export const FeatureStrategyForm = ({
     };
 
     const onDefaultCancel = () => {
-        navigate(formatFeaturePath(feature.project, feature.name));
+        navigate(`/projects/${projectId}/settings/default-strategy`);
     };
 
     const onSubmitWithValidation = async (event: React.FormEvent) => {
         event.preventDefault();
         if (!validateAllParameters()) {
             return;
-        }
-
-        if (enableProdGuard && !isChangeRequest) {
-            setShowProdGuard(true);
         } else {
             onSubmit();
         }
     };
-
     return (
         <StyledForm onSubmit={onSubmitWithValidation}>
-            <ConditionallyRender
-                condition={hasChangeRequestInReviewForEnvironment}
-                show={alert}
-                elseShow={
-                    <ConditionallyRender
-                        condition={Boolean(isChangeRequest)}
-                        show={
-                            <FeatureStrategyChangeRequestAlert
-                                environment={environmentId}
-                            />
-                        }
-                    />
-                }
-            />
-            <FeatureStrategyEnabled
-                projectId={feature.project}
-                featureId={feature.name}
-                environmentId={environmentId}
-            >
-                <ConditionallyRender
-                    condition={Boolean(isChangeRequest)}
-                    show={
-                        <Alert severity="success">
-                            This feature toggle is currently enabled in the{' '}
-                            <strong>{environmentId}</strong> environment. Any
-                            changes made here will be available to users as soon
-                            as these changes are approved and applied.
-                        </Alert>
-                    }
-                    elseShow={
-                        <Alert severity="success">
-                            This feature toggle is currently enabled in the{' '}
-                            <strong>{environmentId}</strong> environment. Any
-                            changes made here will be available to users as soon
-                            as you hit <strong>save</strong>.
-                        </Alert>
-                    }
-                />
-            </FeatureStrategyEnabled>
-            <StyledHr />
             <ConditionallyRender
                 condition={Boolean(uiConfig.flags.SE)}
                 show={
@@ -236,14 +165,14 @@ export const FeatureStrategyForm = ({
                 }
             />
             <FeatureStrategyConstraints
-                projectId={feature.project}
+                projectId={projectId}
                 environmentId={environmentId}
-                strategy={strategy}
+                strategy={strategy as any}
                 setStrategy={setStrategy}
             />
             <StyledHr />
             <FeatureStrategyType
-                strategy={strategy}
+                strategy={strategy as any}
                 strategyDefinition={strategyDefinition}
                 setStrategy={setStrategy}
                 validateParameter={validateParameter}
@@ -251,20 +180,10 @@ export const FeatureStrategyForm = ({
                 hasAccess={access}
             />
             <StyledHr />
-            <FeatureStrategyEnabledDisabled
-                enabled={!strategy?.disabled}
-                onToggleEnabled={() =>
-                    setStrategy(strategyState => ({
-                        ...strategyState,
-                        disabled: !strategyState.disabled,
-                    }))
-                }
-            />
-            <StyledHr />
             <StyledButtons>
                 <PermissionButton
                     permission={permission}
-                    projectId={feature.project}
+                    projectId={projectId}
                     environmentId={environmentId}
                     variant="contained"
                     color="primary"
@@ -276,9 +195,7 @@ export const FeatureStrategyForm = ({
                     }
                     data-testid={STRATEGY_FORM_SUBMIT_ID}
                 >
-                    {isChangeRequest
-                        ? changeRequestButtonText
-                        : 'Save strategy'}
+                    Save strategy
                 </PermissionButton>
                 <Button
                     type="button"
@@ -288,13 +205,6 @@ export const FeatureStrategyForm = ({
                 >
                     Cancel
                 </Button>
-                <FeatureStrategyProdGuard
-                    open={showProdGuard}
-                    onClose={() => setShowProdGuard(false)}
-                    onClick={onSubmit}
-                    loading={loading}
-                    label="Save strategy"
-                />
             </StyledButtons>
         </StyledForm>
     );

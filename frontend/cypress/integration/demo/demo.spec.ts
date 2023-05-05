@@ -18,7 +18,7 @@ describe('demo', () => {
             },
             { failOnStatusCode: false }
         );
-        cy.createProject_API('demo-app', options);
+        cy.createProject_API('demo-app', { failOnStatusCode: false });
         cy.createFeature_API('demoApp.step1', 'demo-app', options);
         cy.createFeature_API('demoApp.step2', 'demo-app', options);
         cy.createFeature_API('demoApp.step3', 'demo-app', options);

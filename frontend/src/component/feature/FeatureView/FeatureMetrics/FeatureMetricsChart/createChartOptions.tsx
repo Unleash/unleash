@@ -13,7 +13,7 @@ const formatVariantEntry = (
     if (totalExposure === 0) return '';
     const [key, value] = variant;
     const percentage = Math.floor((Number(value) / totalExposure) * 100);
-    return `${value} (${percentage}%) - variant ${key}`;
+    return `${value} (${percentage}%) - ${key}`;
 };
 
 export const createChartOptions = (

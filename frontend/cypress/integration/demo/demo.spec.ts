@@ -101,6 +101,8 @@ describe('demo', () => {
             for (let step = 0; step < currentTopic.steps.length; step++) {
                 const currentStep = currentTopic.steps[step];
 
+                cy.log(`Testing topic "${topic}", step #${step + 1}...`);
+
                 if (!currentStep.optional) {
                     cy.wait(2000);
 

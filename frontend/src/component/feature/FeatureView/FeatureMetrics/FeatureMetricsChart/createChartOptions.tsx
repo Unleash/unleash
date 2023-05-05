@@ -4,8 +4,6 @@ import { ChartOptions, defaults } from 'chart.js';
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { formatDateHM } from 'utils/formatDate';
 import { Theme } from '@mui/material/styles/createTheme';
-import { formatAssetPath } from '../../../../../utils/formatPath';
-import logo from '../../../../../assets/img/unleashLogoIconDarkAlpha.gif';
 import { IPoint } from './createChartData';
 
 const formatVariantEntry = (
@@ -51,7 +49,6 @@ export const createChartOptions = (
                 },
                 callbacks: {
                     label: item => {
-                        console.log(item);
                         return `${item.formattedValue} - ${item.dataset.label}`;
                     },
                     afterLabel: item => {
@@ -66,10 +63,9 @@ export const createChartOptions = (
                             return '';
                         }
                         const { disabled, ...actualVariants } = data.variants;
-                        const output = Object.entries(actualVariants)
+                        return Object.entries(actualVariants)
                             .map(entry => formatVariantEntry(entry, data.y))
                             .join('\n');
-                        return output;
                     },
                     title: items =>
                         `Time: ${formatDateHM(
@@ -77,8 +73,6 @@ export const createChartOptions = (
                             locationSettings.locale
                         )}`,
                 },
-                // Sort tooltip items in the same order as the lines in the chart.
-                // itemSort: (a, b) => b.parsed.y - a.parsed.y,
             },
             legend: {
                 position: 'top',

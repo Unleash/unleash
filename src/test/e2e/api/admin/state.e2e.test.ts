@@ -398,7 +398,7 @@ test(`should not delete api_tokens on import when drop-flag is set`, async () =>
         userName,
     );
     await app.services.apiTokenService.createApiTokenWithProjects({
-        username: apiTokenName,
+        tokenName: apiTokenName,
         type: ApiTokenType.CLIENT,
         environment: environment,
         projects: [projectId],

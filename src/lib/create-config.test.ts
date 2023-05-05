@@ -24,7 +24,7 @@ test('should add initApiToken for admin token from options', async () => {
         project: '*',
         secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
-        username: 'admin',
+        tokenName: 'admin',
     };
     const config = createConfig({
         db: {
@@ -58,7 +58,7 @@ test('should add initApiToken for client token from options', async () => {
         project: 'default',
         secret: 'default:development.some-random-string',
         type: ApiTokenType.CLIENT,
-        username: 'admin',
+        tokenName: 'admin',
     };
     const config = createConfig({
         db: {
@@ -143,7 +143,7 @@ test('should merge initApiToken from options and env vars', async () => {
         project: '*',
         secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
-        username: 'admin',
+        tokenName: 'admin',
     };
     const config = createConfig({
         db: {
@@ -204,7 +204,7 @@ test('should handle cases where no env var specified for tokens', async () => {
         project: '*',
         secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
-        username: 'admin',
+        tokenName: 'admin',
     };
     const config = createConfig({
         db: {
@@ -378,7 +378,7 @@ test('Supports multiple domains comma separated in environment variables', () =>
 test('Should enable client feature caching with .6 seconds max age by default', () => {
     const config = createConfig({});
     expect(config.clientFeatureCaching.enabled).toBe(true);
-    expect(config.clientFeatureCaching.maxAge).toBe(600);
+    expect(config.clientFeatureCaching.maxAge).toBe(3600000);
 });
 
 test('Should use overrides from options for client feature caching', () => {

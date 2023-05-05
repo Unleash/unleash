@@ -13,7 +13,7 @@ let apiTokenService: ApiTokenService;
 const environment = 'testing';
 const project = 'default';
 const project2 = 'some';
-const username = 'test';
+const tokenName = 'test';
 const feature1 = 'f1.token.access';
 const feature2 = 'f2.token.access';
 const feature3 = 'f3.p2.token.access';
@@ -47,7 +47,7 @@ beforeAll(async () => {
             name: feature1,
             description: 'the #1 feature',
         },
-        username,
+        tokenName,
     );
 
     await featureToggleServiceV2.createStrategy(
@@ -57,7 +57,7 @@ beforeAll(async () => {
             parameters: {},
         },
         { projectId: project, featureName: feature1, environment: DEFAULT_ENV },
-        username,
+        tokenName,
     );
     await featureToggleServiceV2.createStrategy(
         {
@@ -66,7 +66,7 @@ beforeAll(async () => {
             parameters: {},
         },
         { projectId: project, featureName: feature1, environment },
-        username,
+        tokenName,
     );
 
     // create feature 2
@@ -75,7 +75,7 @@ beforeAll(async () => {
         {
             name: feature2,
         },
-        username,
+        tokenName,
     );
     await featureToggleServiceV2.createStrategy(
         {
@@ -84,7 +84,7 @@ beforeAll(async () => {
             parameters: {},
         },
         { projectId: project, featureName: feature2, environment },
-        username,
+        tokenName,
     );
 
     // create feature 3
@@ -93,7 +93,7 @@ beforeAll(async () => {
         {
             name: feature3,
         },
-        username,
+        tokenName,
     );
     await featureToggleServiceV2.createStrategy(
         {
@@ -102,7 +102,7 @@ beforeAll(async () => {
             parameters: {},
         },
         { projectId: project2, featureName: feature3, environment },
-        username,
+        tokenName,
     );
 });
 
@@ -114,7 +114,7 @@ afterAll(async () => {
 test('returns feature toggle with "default" config', async () => {
     const token = await apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
-        username,
+        tokenName,
         environment: DEFAULT_ENV,
         project,
     });
@@ -136,7 +136,7 @@ test('returns feature toggle with "default" config', async () => {
 test('returns feature toggle with testing environment config', async () => {
     const token = await apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
-        username,
+        tokenName: tokenName,
         environment,
         project,
     });
@@ -162,7 +162,7 @@ test('returns feature toggle with testing environment config', async () => {
 test('returns feature toggle for project2', async () => {
     const token = await apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
-        username,
+        tokenName: tokenName,
         environment,
         project: project2,
     });
@@ -182,7 +182,7 @@ test('returns feature toggle for project2', async () => {
 test('returns feature toggle for all projects', async () => {
     const token = await apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
-        username,
+        tokenName: tokenName,
         environment,
         project: '*',
     });

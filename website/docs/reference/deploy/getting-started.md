@@ -8,7 +8,7 @@ title: Getting Started
 
 You will need:
 
-- [Node.js](https://nodejs.org/en/download/) (version 14 or later)
+- [Node.js](https://nodejs.org/en/download/) (version 18 or later)
 - [PostgreSQL](https://www.postgresql.org/download/) (version 10 or later)
 - [Create an unleash user and database](./database-setup).
 

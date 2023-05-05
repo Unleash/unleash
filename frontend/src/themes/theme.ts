@@ -180,6 +180,15 @@ const theme = {
         highlight: colors.orange[200],
 
         /**
+         * Used for the interactive guide spotlight
+         */
+        spotlight: {
+            border: '#463cfb',
+            outline: '#6058f5',
+            pulse: '#463cfb',
+        },
+
+        /**
          * Background color used for the API command in the sidebar
          */
         codebox: colors.action[0.12],
@@ -254,6 +263,10 @@ export default createTheme({
         // Skeleton
         MuiCssBaseline: {
             styleOverrides: {
+                '#react-joyride-portal ~ .MuiDialog-root': {
+                    zIndex: 1500,
+                },
+
                 '.skeleton': {
                     '&::before': {
                         backgroundColor: theme.palette.background.elevation1,

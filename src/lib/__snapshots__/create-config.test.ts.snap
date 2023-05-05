@@ -20,7 +20,7 @@ exports[`should create default config 1`] = `
   },
   "clientFeatureCaching": {
     "enabled": true,
-    "maxAge": 600,
+    "maxAge": 3600000,
   },
   "db": {
     "acquireConnectionTimeout": 30000,
@@ -79,8 +79,6 @@ exports[`should create default config 1`] = `
       "maintenanceMode": false,
       "messageBanner": false,
       "migrationLock": false,
-      "optimal304": false,
-      "optimal304Differ": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
@@ -104,8 +102,6 @@ exports[`should create default config 1`] = `
       "maintenanceMode": false,
       "messageBanner": false,
       "migrationLock": false,
-      "optimal304": false,
-      "optimal304Differ": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,

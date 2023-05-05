@@ -6,7 +6,6 @@ describe('feature', () => {
 
     const variant1 = 'variant1';
     const variant2 = 'variant2';
-    let strategyId = '';
 
     before(() => {
         cy.runBefore();
@@ -40,26 +39,20 @@ describe('feature', () => {
         );
     });
 
-    it('can add, update and delete a gradual rollout strategy to the development environment', async () => {
+    it('can add, update and delete a gradual rollout strategy to the development environment', () => {
         cy.addFlexibleRolloutStrategyToFeature_UI({
             featureToggleName,
-        }).then(value => {
-            strategyId = value;
-            cy.updateFlexibleRolloutStrategy_UI(
-                featureToggleName,
-                strategyId
-            ).then(() =>
-                cy.deleteFeatureStrategy_UI(featureToggleName, strategyId)
+        }).then(() => {
+            cy.updateFlexibleRolloutStrategy_UI(featureToggleName).then(() =>
+                cy.deleteFeatureStrategy_UI(featureToggleName)
             );
         });
     });
 
     it('can add a userId strategy to the development environment', () => {
-        cy.addUserIdStrategyToFeature_UI(featureToggleName, strategyId).then(
-            value => {
-                cy.deleteFeatureStrategy_UI(featureToggleName, value, false);
-            }
-        );
+        cy.addUserIdStrategyToFeature_UI(featureToggleName).then(() => {
+            cy.deleteFeatureStrategy_UI(featureToggleName, false);
+        });
     });
 
     it('can add variants to the development environment', () => {

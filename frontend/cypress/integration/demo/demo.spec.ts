@@ -35,14 +35,7 @@ describe('demo', () => {
         cy.createFeature_API('demoApp.step4', 'demo-app', {
             failOnStatusCode: false,
         });
-    });
 
-    beforeEach(() => {
-        cy.login_UI();
-        cy.visit('/projects');
-        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
-            cy.get("[data-testid='CLOSE_SPLASH']").click();
-        }
         cy.intercept('GET', '/api/admin/ui-config', req => {
             req.headers['cache-control'] =
                 'no-cache, no-store, must-revalidate';
@@ -55,6 +48,14 @@ describe('demo', () => {
                 }
             });
         });
+    });
+
+    beforeEach(() => {
+        cy.login_UI();
+        cy.visit('/projects');
+        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
+            cy.get("[data-testid='CLOSE_SPLASH']").click();
+        }
     });
 
     after(() => {

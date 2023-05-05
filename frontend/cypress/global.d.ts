@@ -54,19 +54,14 @@ declare namespace Cypress {
         // STRATEGY
         addUserIdStrategyToFeature_UI(
             featureName: string,
-            strategyId: string,
             projectName?: string
         ): Chainable;
         addFlexibleRolloutStrategyToFeature_UI(
             options: AddFlexibleRolloutStrategyOptions
         ): Chainable;
-        updateFlexibleRolloutStrategy_UI(
-            featureToggleName: string,
-            strategyId: string
-        );
+        updateFlexibleRolloutStrategy_UI(featureToggleName: string);
         deleteFeatureStrategy_UI(
             featureName: string,
-            strategyId: string,
             shouldWait?: boolean,
             projectName?: string
         ): Chainable;

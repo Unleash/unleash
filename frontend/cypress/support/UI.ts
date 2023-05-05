@@ -5,6 +5,9 @@ import AddStrategyOptions = Cypress.AddFlexibleRolloutStrategyOptions;
 const AUTH_USER = Cypress.env('AUTH_USER');
 const AUTH_PASSWORD = Cypress.env('AUTH_PASSWORD');
 const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
+
+let strategyId: string | undefined;
+
 const disableActiveSplashScreens = () => {
     return cy.visit(`/splash/operators`);
 };
@@ -90,19 +93,14 @@ export const createProject_UI = (
 
 export const createSegment_UI = (segmentName: string): Chainable<any> => {
     cy.get("[data-testid='NAVIGATE_TO_CREATE_SEGMENT']").click();
-    let segmentId;
-    cy.intercept('POST', '/api/admin/segments', req => {
-        req.continue(res => {
-            segmentId = res.body.id;
-        });
-    }).as('createSegment');
+
+    cy.intercept('POST', '/api/admin/segments').as('createSegment');
 
     cy.get("[data-testid='SEGMENT_NAME_ID']").type(segmentName);
     cy.get("[data-testid='SEGMENT_DESC_ID']").type('hello-world');
     cy.get("[data-testid='SEGMENT_NEXT_BTN_ID']").click();
     cy.get("[data-testid='SEGMENT_CREATE_BTN_ID']").click();
-    cy.wait('@createSegment');
-    return cy.wrap(segmentId);
+    return cy.wait('@createSegment');
 };
 
 export const deleteSegment_UI = (segmentName: string): Chainable<any> => {
@@ -121,7 +119,7 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
     const defaultStickiness = stickiness || 'default';
 
     cy.visit(`/projects/default/features/${featureToggleName}`);
-    let strategyId;
+
     cy.intercept(
         'POST',
         `/api/admin/projects/${projectName}/features/${featureToggleName}/environments/development/strategies`,
@@ -154,13 +152,11 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
         cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
     }
     cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
-    cy.wait('@addStrategyToFeature');
-    return cy.wrap(strategyId);
+    return cy.wait('@addStrategyToFeature');
 };
 
 export const updateFlexibleRolloutStrategy_UI = (
     featureToggleName: string,
-    strategyId: string,
     projectName?: string
 ) => {
     const project = projectName || 'default';
@@ -208,7 +204,6 @@ export const updateFlexibleRolloutStrategy_UI = (
 
 export const deleteFeatureStrategy_UI = (
     featureToggleName: string,
-    strategyId: string,
     shouldWait?: boolean,
     projectName?: string
 ): Chainable<any> => {
@@ -225,7 +220,7 @@ export const deleteFeatureStrategy_UI = (
     ).as('deleteUserStrategy');
     cy.visit(`/projects/${project}/features/${featureToggleName}`);
     cy.get('[data-testid=FEATURE_ENVIRONMENT_ACCORDION_development]').click();
-    cy.get('[data-testid=STRATEGY_FORM_REMOVE_ID]').click();
+    cy.get('[data-testid=STRATEGY_FORM_REMOVE_ID]').first().click();
     if (!shouldWait) return cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
     else cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
     return cy.wait('@deleteUserStrategy');
@@ -254,7 +249,7 @@ export const addUserIdStrategyToFeature_UI = (
         .type('user2')
         .type('{enter}');
     cy.get('[data-testid=ADD_TO_STRATEGY_INPUT_LIST]').click();
-    let strategyId;
+
     cy.intercept(
         'POST',
         `/api/admin/projects/default/features/${featureToggleName}/environments/*/strategies`,
@@ -276,8 +271,7 @@ export const addUserIdStrategyToFeature_UI = (
     ).as('addStrategyToFeature');
 
     cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
-    cy.wait('@addStrategyToFeature');
-    return cy.wrap(strategyId);
+    return cy.wait('@addStrategyToFeature');
 };
 
 export const addVariantsToFeature_UI = (

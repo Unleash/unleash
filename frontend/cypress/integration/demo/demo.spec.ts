@@ -101,10 +101,6 @@ describe('demo', () => {
         });
     });
 
-    it('loads the demo', () => {
-        cy.get('[data-testid="DEMO_START_BUTTON"]');
-    });
-
     it('can complete the demo', () => {
         cy.get('[data-testid="DEMO_START_BUTTON"]').click();
 

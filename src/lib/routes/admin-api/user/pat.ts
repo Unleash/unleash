@@ -52,16 +52,13 @@ export default class PatController extends Controller {
                 openApiService.validPath({
                     tags: ['Personal access tokens'],
                     operationId: 'getPats',
-                    summary: 'Get all Personal Access Tokens for the current user.',
+                    summary:
+                        'Get all Personal Access Tokens for the current user.',
                     description:
                         'Returns all of the [Personal Access Tokens](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens) belonging to the current user.',
                     responses: {
                         200: createResponseSchema('patsSchema'),
-                        ...getStandardResponses(401, 403),
-                        404: {
-                            description:
-                                'Is returned when Personal Access Tokens are disabled.',
-                        },
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -81,11 +78,7 @@ export default class PatController extends Controller {
                     requestBody: createRequestSchema('patSchema'),
                     responses: {
                         201: resourceCreatedResponseSchema('patSchema'),
-                        ...getStandardResponses(401, 403),
-                        404: {
-                            description:
-                                'Is returned when Personal Access Tokens are disabled.',
-                        },
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],

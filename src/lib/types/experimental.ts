@@ -64,6 +64,10 @@ const flags = {
         process.env.GOOGLE_AUTH_ENABLED,
         false,
     ),
+    variantMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_VARIANT_METRICS,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

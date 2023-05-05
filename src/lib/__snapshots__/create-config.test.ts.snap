@@ -84,6 +84,7 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppNameKillSwitch": false,
       "strategyImprovements": false,
       "strictSchemaValidation": false,
+      "variantMetrics": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -106,6 +107,7 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppNameKillSwitch": false,
       "strategyImprovements": false,
       "strictSchemaValidation": false,
+      "variantMetrics": false,
     },
     "externalResolver": {
       "isEnabled": [Function],

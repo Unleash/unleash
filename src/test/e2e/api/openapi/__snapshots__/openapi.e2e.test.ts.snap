@@ -2038,6 +2038,19 @@ The provider you choose for your addon dictates what properties the \`parameters
             "description": "The start of the time window these metrics are valid for. The window is usually 1 hour wide",
             "example": "1926-05-08T12:00:00.000Z",
           },
+          "variants": {
+            "additionalProperties": {
+              "minimum": 0,
+              "type": "integer",
+            },
+            "description": "How many times each variant was returned",
+            "example": {
+              "variantA": 15,
+              "variantB": 25,
+              "variantC": 5,
+            },
+            "type": "object",
+          },
           "yes": {
             "description": "How many times the toggle evaluated to true",
             "example": 974,

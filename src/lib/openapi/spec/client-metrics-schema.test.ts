@@ -13,7 +13,7 @@ test('clientMetricsSchema full', () => {
                 someToggle: {
                     yes: 52,
                     no: 2,
-                    variants: {},
+                    variants: { someVariant: 52, newVariant: 33 },
                 },
             },
         },

@@ -280,17 +280,17 @@ export default class ExportImportService {
         await this.importTogglesStore.deleteTagsForFeatures(
             dto.data.features.map((feature) => feature.name),
         );
-        return Promise.all(
-            (dto.data.featureTags || []).map((tag) => {
-                return tag.tagType
-                    ? this.featureTagService.addTag(
-                          tag.featureName,
-                          { type: tag.tagType, value: tag.tagValue },
-                          extractUsernameFromUser(user),
-                      )
-                    : Promise.resolve();
-            }),
-        );
+
+        const featureTags = dto.data.featureTags || [];
+        for (const tag of featureTags) {
+            if (tag.tagType) {
+                await this.featureTagService.addTag(
+                    tag.featureName,
+                    { type: tag.tagType, value: tag.tagValue },
+                    extractUsernameFromUser(user),
+                );
+            }
+        }
     }
 
     private async importContextFields(dto: ImportTogglesSchema, user: User) {

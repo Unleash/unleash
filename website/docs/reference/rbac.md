@@ -124,7 +124,7 @@ You can assign the following permissions on a per-environment level within the p
 
 :::info availability
 
-User groups are available to Unleash Enterprise users since **Unleash 4.14**.
+User groups are available to Unleash Enterprise users since **Unleash 4.14** and root role groups are planned to be released in **Unleash 5.1**.
 
 :::
 
@@ -136,10 +136,15 @@ A user group consists of the following:
 - a **description** (optional)
 - a **list of users** (required)
 - a list of SSO groups to sync from (optional)
+- a root role associated with the group (optional) (only available in **Unleash 5.1** and later)
 
-Groups do nothing on their own. They must be given a role on a project to assign permissions. You can assign both standard roles and custom project roles to groups.
+Groups do nothing on their own. They must either be given a root role directly or a role on a project to assign permissions.
 
-While a user can only have one role in a given project, a user may belong to multiple groups, and each of those groups may be given a role on a project. In the case where a given user is given permissions to a project through more than one group, the user will inherit most permissive permissions of all their groups in that project.
+Groups that do not have a root role need to be assigned a role on a project to be useful. You can assign both standard roles and custom project roles to groups.
+
+Groups that *do* have a root role can't be assigned to a project. Any user that is a member of a group with a root role will inherit that root role's permissions globally.
+
+While a user can only have one role in a given project, a user may belong to multiple groups, and each of those groups may be given a role on a project. In the case where a given user is given permissions through more than one group, the user will inherit most permissive permissions of all their groups in that project.
 
 ## User Group SSO Integration
 

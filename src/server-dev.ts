@@ -38,6 +38,7 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
+                        variantMetrics: true,
                     },
                 },
                 authentication: {

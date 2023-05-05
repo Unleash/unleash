@@ -50,6 +50,7 @@ export interface IFlags {
     groupRootRoles?: boolean;
     strategyDisable?: boolean;
     googleAuthEnabled?: boolean;
+    variantMetrics?: boolean;
 }
 
 export interface IVersionInfo {

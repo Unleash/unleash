@@ -1,27 +1,24 @@
-import useToast from '../../../../../../../hooks/useToast';
-import useUiConfig from '../../../../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
-import { useRequiredPathParam } from '../../../../../../../hooks/useRequiredPathParam';
-import { useStrategy } from '../../../../../../../hooks/api/getters/useStrategy/useStrategy';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import React, { useEffect, useState } from 'react';
-import { formatUnknownError } from '../../../../../../../utils/formatUnknownError';
-import FormTemplate from '../../../../../../common/FormTemplate/FormTemplate';
-import { UPDATE_FEATURE_STRATEGY } from '../../../../../../providers/AccessProvider/permissions';
-import {
-    IFeatureStrategy,
-    IStrategy,
-} from '../../../../../../../interfaces/strategy';
-import { useRequiredQueryParam } from '../../../../../../../hooks/useRequiredQueryParam';
-import { ISegment } from '../../../../../../../interfaces/segment';
-import { useFormErrors } from '../../../../../../../hooks/useFormErrors';
-import { useSegments } from '../../../../../../../hooks/api/getters/useSegments/useSegments';
-import { formatStrategyName } from '../../../../../../../utils/strategyNames';
-import { sortStrategyParameters } from '../../../../../../../utils/sortStrategyParameters';
-import useProjectApi from '../../../../../../../hooks/api/actions/useProjectApi/useProjectApi';
-import { usePlausibleTracker } from '../../../../../../../hooks/usePlausibleTracker';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
+import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
+import { ISegment } from 'interfaces/segment';
+import { useFormErrors } from 'hooks/useFormErrors';
+import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
+import { formatStrategyName } from 'utils/strategyNames';
+import { sortStrategyParameters } from 'utils/sortStrategyParameters';
+import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm';
-import { CreateFeatureStrategySchema } from '../../../../../../../openapi';
-import useProject from '../../../../../../../hooks/api/getters/useProject/useProject';
+import { CreateFeatureStrategySchema } from 'openapi';
+import useProject from 'hooks/api/getters/useProject/useProject';
 
 interface EditDefaultStrategyProps {
     strategy: IFeatureStrategy | CreateFeatureStrategySchema;

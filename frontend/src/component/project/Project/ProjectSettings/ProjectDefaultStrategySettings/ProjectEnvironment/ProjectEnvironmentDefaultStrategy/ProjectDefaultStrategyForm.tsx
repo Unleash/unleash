@@ -106,17 +106,23 @@ export const ProjectDefaultStrategyForm = ({
         name: string,
         value: IFeatureStrategyParameters[string]
     ): boolean => {
-        const parameterValueError = validateParameterValue(
-            findParameterDefinition(name),
-            value
-        );
-        if (parameterValueError) {
-            errors.setFormError(name, parameterValueError);
-            return false;
-        } else {
-            errors.removeFormError(name);
-            return true;
+        const parameter = findParameterDefinition(name);
+        // We don't validate groupId for the default strategy.
+        // it will get filled when added to a toggle
+        if (name !== 'groupId') {
+            const parameterValueError = validateParameterValue(
+                parameter,
+                value
+            );
+            if (parameterValueError) {
+                errors.setFormError(name, parameterValueError);
+                return false;
+            } else {
+                errors.removeFormError(name);
+                return true;
+            }
         }
+        return true;
     };
 
     const validateAllParameters = (): boolean => {

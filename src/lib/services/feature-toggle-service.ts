@@ -73,7 +73,10 @@ import {
 } from '../util/validators/constraint-types';
 import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-order-schema';
-import { getDefaultStrategy } from '../util/feature-evaluator/helpers';
+import {
+    getDefaultStrategy,
+    getProjectDefaultStrategy,
+} from '../util/feature-evaluator/helpers';
 import { AccessService } from './access-service';
 import { User } from '../server-impl';
 import NoAccessError from '../error/no-access-error';
@@ -1300,8 +1303,12 @@ class FeatureToggleService {
                 const strategy =
                     this.flagResolver.isEnabled('strategyImprovements') &&
                     projectEnvironmentDefaultStrategy != null
-                        ? projectEnvironmentDefaultStrategy
+                        ? getProjectDefaultStrategy(
+                              projectEnvironmentDefaultStrategy,
+                              featureName,
+                          )
                         : getDefaultStrategy(featureName);
+
                 await this.unprotectedCreateStrategy(
                     strategy,
                     {

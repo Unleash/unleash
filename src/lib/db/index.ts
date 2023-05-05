@@ -56,7 +56,11 @@ export const createStores = (
             getLogger,
         ),
         clientInstanceStore: new ClientInstanceStore(db, eventBus, getLogger),
-        clientMetricsStoreV2: new ClientMetricsStoreV2(db, getLogger),
+        clientMetricsStoreV2: new ClientMetricsStoreV2(
+            db,
+            getLogger,
+            config.flagResolver,
+        ),
         contextFieldStore: new ContextFieldStore(db, getLogger),
         settingStore: new SettingStore(db, getLogger),
         userStore: new UserStore(db, getLogger),

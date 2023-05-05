@@ -68,10 +68,6 @@ const flags = {
         process.env.UNLEASH_STRATEGY_IMPROVEMENTS,
         false,
     ),
-    strategyImprovements: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_IMPROVEMENTS,
-        false,
-    ),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
         false,

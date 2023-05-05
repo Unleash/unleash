@@ -52,6 +52,18 @@ export function getDefaultStrategy(featureName: string): IStrategyConfig {
     };
 }
 
+function resolveGroupId(
+    defaultStrategy: IStrategyConfig,
+    featureName: string,
+): string {
+    const groupId =
+        defaultStrategy?.parameters?.groupId !== ''
+            ? defaultStrategy.parameters?.groupId
+            : featureName;
+
+    return groupId || '';
+}
+
 export function getProjectDefaultStrategy(
     defaultStrategy: IStrategyConfig,
     featureName: string,
@@ -60,7 +72,7 @@ export function getProjectDefaultStrategy(
         ...defaultStrategy,
         parameters: {
             ...defaultStrategy.parameters,
-            groupId: featureName,
+            groupId: resolveGroupId(defaultStrategy, featureName),
         },
     };
 }

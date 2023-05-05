@@ -51,3 +51,16 @@ export function getDefaultStrategy(featureName: string): IStrategyConfig {
         },
     };
 }
+
+export function getProjectDefaultStrategy(
+    defaultStrategy: IStrategyConfig,
+    featureName: string,
+): IStrategyConfig {
+    return {
+        ...defaultStrategy,
+        parameters: {
+            ...defaultStrategy.parameters,
+            groupId: featureName,
+        },
+    };
+}

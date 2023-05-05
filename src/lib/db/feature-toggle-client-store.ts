@@ -55,7 +55,6 @@ export default class FeatureToggleClientStore
         archived,
         isAdmin,
         includeStrategyIds,
-        includeDisabledStrategies,
         userId,
     }: IGetAllFeatures): Promise<IFeatureToggleClient[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
@@ -169,7 +168,7 @@ export default class FeatureToggleClientStore
             let feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
                 strategies: [],
             };
-            if (this.isUnseenStrategyRow(feature, r)) {
+            if (this.isUnseenStrategyRow(feature, r) && !r.strategy_disabled) {
                 feature.strategies?.push(
                     FeatureToggleClientStore.rowToStrategy(r),
                 );
@@ -211,12 +210,6 @@ export default class FeatureToggleClientStore
             FeatureToggleClientStore.removeIdsFromStrategies(features);
         }
 
-        if (!includeDisabledStrategies) {
-            // We should not send disabled strategies from the client API,
-            // as this breaks the way SDKs evaluate the status of the feature.
-            return this.removeDisabledStrategies(features);
-        }
-
         return features;
     }
 
@@ -225,7 +218,6 @@ export default class FeatureToggleClientStore
             id: row.strategy_id,
             name: row.strategy_name,
             title: row.strategy_title,
-            disabled: row.strategy_disabled,
             constraints: row.constraints || [],
             parameters: mapValues(row.parameters || {}, ensureStringValue),
         };
@@ -244,27 +236,6 @@ export default class FeatureToggleClientStore
                 delete strategy.id;
             });
         });
-    }
-
-    private removeDisabledStrategies(
-        features: IFeatureToggleClient[],
-    ): IFeatureToggleClient[] {
-        const filtered: IFeatureToggleClient[] = [];
-        features.forEach((feature) => {
-            let { enabled } = feature;
-            const filteredStrategies = feature.strategies.filter(
-                (strategy) => !strategy.disabled,
-            );
-            if (filteredStrategies.length === 0) {
-                enabled = false;
-            }
-            filtered.push({
-                ...feature,
-                enabled,
-                strategies: filteredStrategies,
-            });
-        });
-        return filtered;
     }
 
     private isUnseenStrategyRow(

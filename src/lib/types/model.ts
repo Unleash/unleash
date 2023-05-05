@@ -73,7 +73,7 @@ export interface IFeatureToggleClient {
     stale: boolean;
     variants: IVariant[];
     enabled: boolean;
-    strategies: IStrategyConfig[];
+    strategies: Omit<IStrategyConfig, 'disabled'>[];
     impressionData?: boolean;
     lastSeenAt?: Date;
     createdAt?: Date;

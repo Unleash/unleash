@@ -19,6 +19,16 @@ describe('demo', () => {
             optionsIgnore409
         );
         cy.createProject_API('demo-app', optionsIgnore409);
+        // cy.request({
+        //     method: 'DELETE',
+        //     url: `${baseUrl}/api/admin/projects/demo-app/environments/development`,
+        //     failOnStatusCode: false,
+        // });
+        // cy.request({
+        //     method: 'DELETE',
+        //     url: `${baseUrl}/api/admin/projects/demo-app/environments/production`,
+        //     failOnStatusCode: false,
+        // });
         cy.createFeature_API('demoApp.step1', 'demo-app', optionsIgnore409);
         cy.createFeature_API('demoApp.step2', 'demo-app', optionsIgnore409);
         cy.createFeature_API('demoApp.step3', 'demo-app', optionsIgnore409);
@@ -97,7 +107,7 @@ describe('demo', () => {
                 );
 
                 if (!currentStep.optional) {
-                    cy.wait(2000);
+                    cy.wait(5000);
 
                     if (currentStep.nextButton) {
                         if (currentStep.focus) {

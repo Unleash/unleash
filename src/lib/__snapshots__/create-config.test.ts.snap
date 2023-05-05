@@ -87,6 +87,7 @@ exports[`should create default config 1`] = `
       "strategyDisable": false,
       "strategyTitle": false,
       "strictSchemaValidation": false,
+      "variantMetrics": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -112,6 +113,7 @@ exports[`should create default config 1`] = `
       "strategyDisable": false,
       "strategyTitle": false,
       "strictSchemaValidation": false,
+      "variantMetrics": false,
     },
     "externalResolver": {
       "isEnabled": [Function],

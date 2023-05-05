@@ -7,6 +7,7 @@ describe('demo', () => {
 
     before(() => {
         cy.runBefore();
+        cy.login_UI();
 
         const options = {}; //{ failOnStatusCode: false };
 
@@ -38,7 +39,7 @@ describe('demo', () => {
             cy.get("[data-testid='CLOSE_SPLASH']").click();
         }
 
-        cy.intercept('GET', '/api/admin/ui-config', req => {
+        cy.intercept('GET', `${baseUrl}/api/admin/ui-config`, req => {
             req.headers['cache-control'] =
                 'no-cache, no-store, must-revalidate';
             req.on('response', res => {
@@ -53,7 +54,7 @@ describe('demo', () => {
     });
 
     afterEach(() => {
-        cy.intercept('GET', '/api/admin/ui-config').as('uiConfig');
+        cy.intercept('GET', `${baseUrl}/api/admin/ui-config`).as('uiConfig');
         cy.wait('@uiConfig');
     });
 

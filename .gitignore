@@ -56,3 +56,8 @@ frontend/build
 # Generated docs
 website/docs/reference/api/**/sidebar.js
 website/docs/generated
+
+# Devenv
+.devenv*
+devenv.local.nix
+

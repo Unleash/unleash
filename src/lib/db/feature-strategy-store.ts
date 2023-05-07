@@ -35,6 +35,7 @@ const COLUMNS = [
     'parameters',
     'constraints',
     'created_at',
+    'disabled',
 ];
 /*
 const mapperToColumnNames = {
@@ -62,6 +63,7 @@ interface IFeatureStrategiesTable {
     constraints: string;
     sort_order: number;
     created_at?: Date;
+    disabled?: boolean | null;
 }
 
 export interface ILoadFeatureToggleWithEnvsParams {
@@ -83,6 +85,7 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
         constraints: (row.constraints as unknown as IConstraint[]) || [],
         createdAt: row.created_at,
         sortOrder: row.sort_order,
+        disabled: row.disabled,
     };
 }
 
@@ -98,6 +101,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         constraints: JSON.stringify(input.constraints || []),
         created_at: input.createdAt,
         sort_order: input.sortOrder,
+        disabled: input.disabled,
     };
 }
 
@@ -106,6 +110,7 @@ interface StrategyUpdate {
     parameters: object;
     constraints: string;
     title?: string;
+    disabled?: boolean;
 }
 
 function mapStrategyUpdate(
@@ -120,6 +125,9 @@ function mapStrategyUpdate(
     }
     if (input.title !== null) {
         update.title = input.title;
+    }
+    if (input.disabled !== null) {
+        update.disabled = input.disabled;
     }
     update.constraints = JSON.stringify(input.constraints || []);
     return update;
@@ -370,8 +378,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 e.strategies = e.strategies.sort(
                     (a, b) => a.sortOrder - b.sortOrder,
                 );
+                if (e.strategies && e.strategies.length === 0) {
+                    e.enabled = false;
+                }
                 return e;
             });
+
             featureToggle.archived = archived;
             return featureToggle;
         }
@@ -381,10 +393,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     }
 
     private addSegmentIdsToStrategy(
-        feature: PartialDeep<IFeatureToggleClient>,
+        featureToggle: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
     ) {
-        const strategy = feature.strategies?.find(
+        const strategy = featureToggle.strategies?.find(
             (s) => s?.id === row.strategy_id,
         );
         if (!strategy) {
@@ -407,22 +419,22 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     }
 
     private addTag(
-        feature: Record<string, any>,
+        featureToggle: Record<string, any>,
         row: Record<string, any>,
     ): void {
-        const tags = feature.tags || [];
+        const tags = featureToggle.tags || [];
         const newTag = FeatureStrategiesStore.rowToTag(row);
-        feature.tags = [...tags, newTag];
+        featureToggle.tags = [...tags, newTag];
     }
 
     private isNewTag(
-        feature: Record<string, any>,
+        featureToggle: Record<string, any>,
         row: Record<string, any>,
     ): boolean {
         return (
             row.tag_type &&
             row.tag_value &&
-            !feature.tags?.some(
+            !featureToggle.tags?.some(
                 (tag) =>
                     tag.type === row.tag_type && tag.value === row.tag_value,
             )
@@ -590,6 +602,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             sortOrder: r.sort_order,
             id: r.strategy_id,
             title: r.strategy_title || '',
+            disabled: r.strategy_disabled || false,
         };
         if (!includeId) {
             delete strategy.id;

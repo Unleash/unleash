@@ -89,7 +89,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    bulkOperations: true,
                 },
             },
         },
@@ -103,11 +102,11 @@ afterEach(async () => {
     );
     await Promise.all(
         all
-            .filter((env) => env !== DEFAULT_ENV)
+            .filter((env) => env.environment !== DEFAULT_ENV)
             .map(async (env) =>
                 db.stores.projectStore.deleteEnvironmentForProject(
                     'default',
-                    env,
+                    env.environment,
                 ),
             ),
     );
@@ -160,7 +159,7 @@ async function addStrategies(featureName: string, envName: string) {
 
 test('Trying to add a strategy configuration to environment not connected to toggle should fail', async () => {
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'com.test.feature',
             enabled: false,
@@ -184,15 +183,16 @@ test('Trying to add a strategy configuration to environment not connected to tog
         })
         .expect(400)
         .expect((r) => {
-            expect(r.body.details[0].message).toBe(
-                'You have not added the current environment to the project',
-            );
+            expect(
+                r.body.details[0].message.includes('environment'),
+            ).toBeTruthy();
+            expect(r.body.details[0].message.includes('project')).toBeTruthy();
         });
 });
 
 test('Can get project overview', async () => {
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'project-overview',
             enabled: false,
@@ -241,7 +241,7 @@ test('Can get features for project', async () => {
 
 test('Project overview includes environment connected to feature', async () => {
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'com.test.environment',
             enabled: false,
@@ -274,7 +274,7 @@ test('Project overview includes environment connected to feature', async () => {
 
 test('Disconnecting environment from project, removes environment from features in project overview', async () => {
     await app.request
-        .post('/api/admin/features')
+        .post('/api/admin/projects/default/features')
         .send({
             name: 'com.test.disconnect.environment',
             enabled: false,
@@ -777,9 +777,12 @@ test('Trying to patch variants on a feature toggle should trigger an OperationDe
         ])
         .expect(403)
         .expect((res) => {
-            expect(res.body.details[0].message).toEqual(
-                'Changing variants is done via PATCH operation to /api/admin/projects/:project/features/:feature/variants',
-            );
+            expect(res.body.message.includes('PATCH')).toBeTruthy();
+            expect(
+                res.body.message.includes(
+                    '/api/admin/projects/:project/features/:feature/variants',
+                ),
+            ).toBeTruthy();
         });
 });
 
@@ -1997,7 +2000,7 @@ test('Should not allow changing project to target project without the same enabl
         .send({})
         .expect(200);
     const user = new ApiUser({
-        username: 'project-changer',
+        tokenName: 'project-changer',
         permissions: ['ADMIN'],
         project: '*',
         type: ApiTokenType.ADMIN,
@@ -2077,7 +2080,7 @@ test('Should allow changing project to target project with the same enabled envi
         .send({})
         .expect(200);
     const user = new ApiUser({
-        username: 'project-changer',
+        tokenName: 'project-changer',
         permissions: ['ADMIN'],
         project: '*',
         type: ApiTokenType.ADMIN,
@@ -2690,7 +2693,7 @@ test('should add multiple segments to a strategy', async () => {
             const defaultEnv = res.body.environments.find(
                 (env) => env.name === 'default',
             );
-            const strategy = defaultEnv.strategies.find(
+            const strategy = defaultEnv?.strategies.find(
                 (strat) => strat.id === strategyOne.id,
             );
 
@@ -2822,4 +2825,103 @@ test('Should batch stale features', async () => {
         )
         .expect(200);
     expect(body.stale).toBeTruthy();
+});
+
+test('should return disabled strategies', async () => {
+    const toggle = { name: uuidv4(), impressionData: false };
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: toggle.name,
+        })
+        .expect(201);
+
+    const { body: strategyOne } = await app.request
+        .post(
+            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+            disabled: true,
+        })
+        .expect(200);
+
+    const { body: strategyTwo } = await app.request
+        .post(
+            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        )
+        .send({
+            name: 'gradualrollout',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200);
+
+    const { body: strategies } = await app.request.get(
+        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+    );
+
+    expect(strategies[0].id).toBe(strategyOne.id);
+    expect(strategies[0].disabled).toBe(strategyOne.disabled);
+    expect(strategies[1].id).toBe(strategyTwo.id);
+    expect(strategies[1].disabled).toBe(strategyTwo.disabled);
+});
+
+test('should disable strategies in place', async () => {
+    const toggle = { name: uuidv4(), impressionData: false };
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: toggle.name,
+        })
+        .expect(201);
+
+    const { body: strategyOne } = await app.request
+        .post(
+            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        )
+        .send({
+            name: 'flexibleRollout',
+            constraints: [],
+            parameters: {
+                rollout: '100',
+                stickiness: 'default',
+                groupId: 'some-new',
+            },
+        })
+        .expect(200);
+
+    const { body: strategies } = await app.request.get(
+        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+    );
+
+    expect(strategies[0].id).toBe(strategyOne.id);
+    expect(strategies[0].disabled).toBe(false);
+
+    const { body: updatedStrategyOne } = await app.request
+        .put(
+            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies/${strategyOne.id}`,
+        )
+        .send({
+            name: 'flexibleRollout',
+            constraints: [],
+            disabled: true,
+            parameters: {
+                rollout: '100',
+                stickiness: 'default',
+                groupId: 'some-new',
+            },
+        })
+        .expect(200);
+
+    const { body: updatedStrategies } = await app.request.get(
+        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+    );
+
+    expect(updatedStrategies[0].id).toBe(updatedStrategyOne.id);
+    expect(updatedStrategies[0].disabled).toBe(updatedStrategyOne.disabled);
 });

@@ -3,113 +3,105 @@ import Joyride, {
     CallBackProps,
     TooltipRenderProps,
 } from 'react-joyride';
-import { Button, Typography, styled, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import { ITutorialTopic, ITutorialTopicStep } from '../demo-topics';
 import { useEffect, useState } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-const StyledTooltip = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.text.primary,
-    borderRadius: theme.shape.borderRadiusMedium,
-    width: '100%',
-    maxWidth: theme.spacing(45),
-    padding: theme.spacing(3),
-}));
-
-const StyledTooltipTitle = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    flexWrap: 'wrap',
-}));
-
-const StyledTooltipActions = styled('div')(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: theme.spacing(3),
-    '&&& button': {
-        '&:first-of-type': {
-            marginLeft: theme.spacing(-2),
-        },
-        fontSize: theme.fontSizes.smallBody,
-    },
-}));
-
-const StyledTooltipPrimaryActions = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-}));
+import { DemoStepTooltip } from './DemoStepTooltip/DemoStepTooltip';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IDemoStepsProps {
-    run: boolean;
-    setRun: React.Dispatch<React.SetStateAction<boolean>>;
     setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
-    steps: number[];
-    setSteps: React.Dispatch<React.SetStateAction<number[]>>;
+    step: number;
+    setStep: React.Dispatch<React.SetStateAction<number>>;
+    stepsCompletion: number[];
+    setStepsCompletion: React.Dispatch<React.SetStateAction<number[]>>;
     topic: number;
     setTopic: React.Dispatch<React.SetStateAction<number>>;
     topics: ITutorialTopic[];
+    onFinish: () => void;
 }
 
 export const DemoSteps = ({
-    run,
-    setRun,
     setExpanded,
-    steps,
-    setSteps,
+    step,
+    setStep,
+    stepsCompletion,
+    setStepsCompletion,
     topic,
     setTopic,
     topics,
+    onFinish,
 }: IDemoStepsProps) => {
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
-    const [flow, setFlow] = useState<'next' | 'back'>('next');
+    const { trackEvent } = usePlausibleTracker();
+    const [run, setRun] = useState(false);
+    const [flow, setFlow] = useState<'next' | 'back' | 'load'>('load');
 
     const abortController = new AbortController();
 
-    const skip = () => {
-        abortController.abort();
-        setTopic(-1);
-        setExpanded(false);
+    const setTopicStep = (topic: number, step?: number) => {
+        setRun(false);
+        if (step !== undefined) {
+            if (stepsCompletion[topic] < step) {
+                setStepsCompletion(steps => {
+                    const newSteps = [...steps];
+                    newSteps[topic] = step;
+                    return newSteps;
+                });
+            }
+            setStep(step);
+        }
+        setTopic(topic);
     };
 
-    const setStep = (topic: number, step: number) => {
-        setSteps(steps => {
-            const newSteps = [...steps];
-            newSteps[topic] = step;
-            return newSteps;
+    const close = () => {
+        abortController.abort();
+        setTopicStep(-1);
+
+        trackEvent('demo', {
+            props: {
+                eventType: 'close',
+                topic: topics[topic].title,
+                step: step + 1,
+            },
         });
     };
 
     const back = () => {
         setFlow('back');
-        if (steps[topic] === 0) {
+        if (step === 0) {
             const newTopic = topic - 1;
-            setTopic(newTopic);
-            setStep(newTopic, topics[newTopic].steps.length - 1);
+            setTopicStep(newTopic, topics[newTopic].steps.length - 1);
         } else {
-            setStep(topic, steps[topic] - 1);
+            setTopicStep(topic, step - 1);
         }
     };
 
     const nextTopic = () => {
-        if (topic === topics.length - 1) {
-            setTopic(-1);
+        const currentTopic = topic;
+
+        const nextUnfinishedTopic =
+            topics.findIndex(
+                (topic, index) =>
+                    index !== currentTopic &&
+                    stepsCompletion[index] < topic.steps.length
+            ) ?? -1;
+
+        if (nextUnfinishedTopic === -1) {
+            setTopicStep(-1);
             setExpanded(false);
+            onFinish();
         } else {
-            const newTopic = topic + 1;
-            setTopic(newTopic);
-            setStep(newTopic, 0);
+            setTopicStep(nextUnfinishedTopic, 0);
         }
     };
 
-    const next = (index = steps[topic]) => {
+    const next = (index = step) => {
         setFlow('next');
-        setStep(topic, index + 1);
+        setTopicStep(topic, index + 1);
         if (index === topics[topic].steps.length - 1) {
             nextTopic();
         }
@@ -122,12 +114,30 @@ export const DemoSteps = ({
     ) => {
         const { action, index, step } = data;
 
+        if (action === ACTIONS.CLOSE) {
+            close();
+        }
+
         if (action === ACTIONS.UPDATE) {
-            const el = document.querySelector(step.target as string);
+            const el = document.querySelector(
+                step.target as string
+            ) as HTMLElement | null;
             if (el) {
                 el.scrollIntoView({
                     block: 'center',
                 });
+
+                if (step.focus) {
+                    if (step.focus === true) {
+                        el.focus();
+                    } else {
+                        const focusEl = el.querySelector(
+                            step.focus
+                        ) as HTMLElement | null;
+                        focusEl?.focus();
+                    }
+                }
+
                 if (!step.nextButton) {
                     const clickHandler = (e: Event) => {
                         abortController.abort();
@@ -138,23 +148,28 @@ export const DemoSteps = ({
                     };
 
                     if (step.anyClick) {
-                        window.addEventListener('click', clickHandler, {
-                            signal: abortController.signal,
-                        });
+                        window.addEventListener(
+                            'click',
+                            e => {
+                                const targetEl = e.target as HTMLElement;
+                                if (
+                                    !targetEl.closest('.__floater') &&
+                                    !targetEl.className.includes(
+                                        'react-joyride__overlay'
+                                    )
+                                )
+                                    clickHandler(e);
+                            },
+                            {
+                                signal: abortController.signal,
+                            }
+                        );
                     } else {
                         el.addEventListener('click', clickHandler, {
                             signal: abortController.signal,
                         });
                     }
                 }
-            }
-        }
-
-        if (run && !document.querySelector(step.target as string)) {
-            if (step.optional && flow === 'next') {
-                next();
-            } else {
-                back();
             }
         }
     };
@@ -175,21 +190,41 @@ export const DemoSteps = ({
         back();
     };
 
+    const waitForLoad = (step: ITutorialTopicStep, tries = 0) => {
+        setTimeout(() => {
+            if (document.querySelector(step.target as string)) {
+                setRun(true);
+            } else {
+                if (flow === 'next' && step.optional) {
+                    next();
+                } else if (flow === 'back' || tries > 4) {
+                    back();
+                } else {
+                    waitForLoad(step, tries + 1);
+                }
+            }
+        }, 300);
+    };
+
     useEffect(() => {
-        setRun(false);
         if (topic === -1) return;
         const currentTopic = topics[topic];
-        const currentStep = steps[topic];
-        const href = currentTopic.steps[currentStep]?.href;
-        if (href && location.pathname !== href) {
-            navigate(href);
-        }
-        currentTopic.setup?.();
+        const currentStep = currentTopic.steps[step];
+        if (!currentStep) return;
 
-        setTimeout(() => {
-            setRun(true);
-        }, 200);
-    }, [topic, steps]);
+        if (
+            currentStep.href &&
+            !location.pathname.endsWith(currentStep.href.split('?')[0])
+        ) {
+            navigate(currentStep.href);
+        }
+
+        waitForLoad(currentStep);
+    }, [topic, step]);
+
+    useEffect(() => {
+        if (topic > -1) topics[topic].setup?.();
+    }, [topic]);
 
     if (topic === -1) return null;
 
@@ -201,7 +236,7 @@ export const DemoSteps = ({
     return (
         <Joyride
             run={run}
-            stepIndex={steps[topic]}
+            stepIndex={step}
             callback={joyrideCallback}
             steps={joyrideSteps}
             disableScrolling
@@ -223,81 +258,28 @@ export const DemoSteps = ({
                 },
                 spotlight: {
                     borderRadius: theme.shape.borderRadiusMedium,
-                    border: `2px solid ${theme.palette.primary.main}`,
-                    outline: `2px solid ${theme.palette.secondary.border}`,
-                    backgroundColor: 'transparent',
+                    border: `2px solid ${theme.palette.spotlight.border}`,
+                    outline: `2px solid ${theme.palette.spotlight.outline}`,
+                    animation: 'pulse 2s infinite',
                 },
                 overlay: {
-                    backgroundColor: 'transparent',
-                    mixBlendMode: 'unset',
+                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
                 },
             }}
-            tooltipComponent={({
-                step,
-                tooltipProps,
-            }: TooltipRenderProps & {
-                step: ITutorialTopicStep;
-            }) => (
-                <StyledTooltip {...tooltipProps}>
-                    <StyledTooltipTitle>
-                        <ConditionallyRender
-                            condition={Boolean(step.title)}
-                            show={step.title}
-                            elseShow={
-                                <Typography fontWeight="bold">
-                                    {topics[topic].title}
-                                </Typography>
-                            }
-                        />
-                        <ConditionallyRender
-                            condition={topics[topic].steps.length > 1}
-                            show={
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    flexShrink={0}
-                                >
-                                    (step {steps[topic] + 1} of{' '}
-                                    {topics[topic].steps.length})
-                                </Typography>
-                            }
-                        />
-                    </StyledTooltipTitle>
-                    {step.content}
-                    <StyledTooltipActions>
-                        <Button variant="text" onClick={skip}>
-                            Skip
-                        </Button>
-                        <StyledTooltipPrimaryActions>
-                            <ConditionallyRender
-                                condition={topic > 0 || steps[topic] > 0}
-                                show={
-                                    <Button
-                                        variant="outlined"
-                                        onClick={() => onBack(step)}
-                                    >
-                                        Back
-                                    </Button>
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={Boolean(step.nextButton)}
-                                show={
-                                    <Button
-                                        onClick={() => next(steps[topic])}
-                                        variant="contained"
-                                    >
-                                        {topic === topics.length - 1 &&
-                                        steps[topic] ===
-                                            topics[topic].steps.length - 1
-                                            ? 'Finish'
-                                            : 'Next'}
-                                    </Button>
-                                }
-                            />
-                        </StyledTooltipPrimaryActions>
-                    </StyledTooltipActions>
-                </StyledTooltip>
+            tooltipComponent={(
+                props: TooltipRenderProps & {
+                    step: ITutorialTopicStep;
+                }
+            ) => (
+                <DemoStepTooltip
+                    {...props}
+                    topic={topic}
+                    topics={topics}
+                    stepIndex={step}
+                    onClose={close}
+                    onBack={onBack}
+                    onNext={next}
+                />
             )}
         />
     );

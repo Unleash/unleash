@@ -111,7 +111,7 @@ export const ChangeRequestTable: VFC = () => {
             return {
                 key,
                 label: `${key} ${labelText}`,
-                sx: { 'font-size': theme.fontSizes.smallBody },
+                sx: { fontSize: theme.fontSizes.smallBody },
             };
         });
 

@@ -3,6 +3,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Badge } from 'component/common/Badge/Badge';
 import { Step } from 'react-joyride';
 import { gradualRollout, variants } from './demo-setup';
+import { basePath } from 'utils/formatPath';
 
 export interface ITutorialTopicStep extends Step {
     href?: string;
@@ -12,6 +13,7 @@ export interface ITutorialTopicStep extends Step {
     preventDefault?: boolean;
     anyClick?: boolean;
     optional?: boolean;
+    focus?: boolean | string;
 }
 
 export interface ITutorialTopic {
@@ -24,12 +26,15 @@ const Description = (props: TypographyProps) => (
     <Typography variant="body2" color="text.secondary" {...props} />
 );
 
+const PROJECT = 'demo-app';
+const ENVIRONMENT = 'dev';
+
 export const TOPICS: ITutorialTopic[] = [
     {
         title: 'Enable/disable a feature toggle',
         steps: [
             {
-                href: '/projects/default',
+                href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -58,8 +63,8 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                href: '/projects/default',
-                target: 'div[data-testid="TOGGLE-demoApp.step1-default"]',
+                href: `/projects/${PROJECT}?sort=name`,
+                target: `div[data-testid="TOGGLE-demoApp.step1-${ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
@@ -82,7 +87,7 @@ export const TOPICS: ITutorialTopic[] = [
         title: 'Enable for a specific user',
         steps: [
             {
-                href: '/projects/default',
+                href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -106,19 +111,19 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                href: '/projects/default',
-                target: 'a[href="/projects/default/features/demoApp.step2"]',
+                href: `/projects/${PROJECT}?sort=name`,
+                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2"]`,
                 content: (
                     <Description>
                         First, let's open the feature toggle configuration for{' '}
-                        <Badge as="span">demoApp.step2</Badge>.
+                        <Badge as="span">demoApp.step2</Badge>
                     </Description>
                 ),
                 preventDefault: true,
             },
             {
-                href: '/projects/default/features/demoApp.step2',
-                target: 'div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_default"] button',
+                href: `/projects/${PROJECT}/features/demoApp.step2`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button`,
                 content: (
                     <Description>
                         Add a new strategy to this environment by clicking this
@@ -127,10 +132,10 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
             },
             {
-                target: 'a[href="/projects/default/features/demoApp.step2/strategies/create?environmentId=default&strategyName=userWithId"]',
+                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=default"]`,
                 content: (
                     <Description>
-                        Select the <Badge as="span">UserIDs</Badge> strategy
+                        Select the <Badge as="span">Standard</Badge> strategy
                         type.
                     </Description>
                 ),
@@ -138,11 +143,66 @@ export const TOPICS: ITutorialTopic[] = [
                 backCloseModal: true,
             },
             {
-                target: '#input-add-items',
+                target: 'button[data-testid="ADD_CONSTRAINT_BUTTON"]',
                 content: (
                     <>
                         <Description>
-                            Enter your <Badge as="span">userId</Badge>.
+                            <a
+                                href="https://docs.getunleash.io/reference/strategy-constraints"
+                                target="_blank"
+                            >
+                                Strategy constraints
+                            </a>{' '}
+                            are conditions that must be satisfied for an{' '}
+                            <a
+                                href="https://docs.getunleash.io/reference/activation-strategies"
+                                target="_blank"
+                            >
+                                activation strategy
+                            </a>{' '}
+                            to be evaluated for a feature toggle.
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
+                            Click this button to add a constraint.
+                        </Description>
+                    </>
+                ),
+                backCloseModal: true,
+            },
+            {
+                target: '#context-field-select',
+                content: (
+                    <Description>
+                        <a
+                            href="https://docs.getunleash.io/reference/unleash-context"
+                            target="_blank"
+                        >
+                            Unleash context
+                        </a>{' '}
+                        contains information relating to the current feature
+                        toggle request.
+                    </Description>
+                ),
+                backCloseModal: true,
+                anyClick: true,
+            },
+            {
+                target: 'li[data-testid="SELECT_ITEM_ID-userId"]',
+                content: (
+                    <Description>
+                        Select the <Badge as="span">userId</Badge> context
+                        field.
+                    </Description>
+                ),
+                placement: 'right',
+                backCloseModal: true,
+            },
+            {
+                target: 'div[data-testid="CONSTRAINT_VALUES_INPUT"]',
+                content: (
+                    <>
+                        <Description>
+                            Enter your <Badge as="span">userId</Badge>
                         </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
@@ -153,38 +213,45 @@ export const TOPICS: ITutorialTopic[] = [
                     </>
                 ),
                 nextButton: true,
-                backCloseModal: true,
+                focus: 'input',
+            },
+            {
+                target: 'button[data-testid="CONSTRAINT_VALUES_ADD_BUTTON"]',
+                content: <Description>Add the constraint value.</Description>,
+            },
+            {
+                target: 'button[data-testid="CONSTRAINT_SAVE_BUTTON"]',
+                content: <Description>Save the constraint.</Description>,
             },
             {
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
+                content: <Description>Save your strategy.</Description>,
+                backCloseModal: true,
+            },
+            {
+                target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
+                content: <Description>Confirm your changes.</Description>,
+                optional: true,
+                backCloseModal: true,
+            },
+            {
+                href: `/projects/${PROJECT}?sort=name`,
+                target: `div[data-testid="TOGGLE-demoApp.step2-${ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
-                            Save your strategy to apply it.
+                            Finally, toggle{' '}
+                            <Badge as="span">demoApp.step2</Badge>
                         </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
                         >
-                            Look at the demo page after saving!
+                            Look at the demo page to see your changes!
                         </Badge>
                     </>
                 ),
-            },
-            {
-                target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
-                content: (
-                    <>
-                        <Description>Confirm your changes.</Description>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
-                            Look at the demo page after saving!
-                        </Badge>
-                    </>
-                ),
-                optional: true,
+                nextButton: true,
             },
         ],
     },
@@ -193,7 +260,7 @@ export const TOPICS: ITutorialTopic[] = [
         setup: gradualRollout,
         steps: [
             {
-                href: '/projects/default',
+                href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -223,19 +290,19 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                href: '/projects/default',
-                target: 'a[href="/projects/default/features/demoApp.step3"]',
+                href: `/projects/${PROJECT}?sort=name`,
+                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step3"]`,
                 content: (
                     <Description>
                         First, let's open the feature toggle configuration for{' '}
-                        <Badge as="span">demoApp.step3</Badge>.
+                        <Badge as="span">demoApp.step3</Badge>
                     </Description>
                 ),
                 preventDefault: true,
             },
             {
-                href: '/projects/default/features/demoApp.step3',
-                target: 'div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_default"] .MuiAccordionSummary-expandIconWrapper',
+                href: `/projects/${PROJECT}/features/demoApp.step3`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] .MuiAccordionSummary-expandIconWrapper`,
                 content: (
                     <Description>
                         Expand the environment card to see all the defined
@@ -244,7 +311,7 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
             },
             {
-                target: 'div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_default"].Mui-expanded a[data-testid="STRATEGY_EDIT-flexibleRollout"]',
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"].Mui-expanded a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
                 content: (
                     <Description>
                         Edit the existing gradual rollout strategy.
@@ -258,37 +325,36 @@ export const TOPICS: ITutorialTopic[] = [
                     <Description>Change the rollout percentage.</Description>
                 ),
                 backCloseModal: true,
+                nextButton: true,
             },
             {
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
+                content: <Description>Save your strategy.</Description>,
+            },
+            {
+                target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
+                content: <Description>Confirm your changes.</Description>,
+                optional: true,
+                backCloseModal: true,
+            },
+            {
+                href: `/projects/${PROJECT}?sort=name`,
+                target: `div[data-testid="TOGGLE-demoApp.step3-${ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
-                            Save your strategy to apply it.
+                            Finally, toggle{' '}
+                            <Badge as="span">demoApp.step3</Badge>
                         </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
                         >
-                            Look at the demo page after saving!
+                            Look at the demo page to see your changes!
                         </Badge>
                     </>
                 ),
-            },
-            {
-                target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
-                content: (
-                    <>
-                        <Description>Confirm your changes.</Description>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
-                            Look at the demo page after saving!
-                        </Badge>
-                    </>
-                ),
-                optional: true,
+                nextButton: true,
             },
         ],
     },
@@ -297,7 +363,7 @@ export const TOPICS: ITutorialTopic[] = [
         setup: variants,
         steps: [
             {
-                href: '/projects/default',
+                href: `/projects/${PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -322,18 +388,18 @@ export const TOPICS: ITutorialTopic[] = [
                 nextButton: true,
             },
             {
-                href: '/projects/default',
-                target: 'a[href="/projects/default/features/demoApp.step4"]',
+                href: `/projects/${PROJECT}?sort=name`,
+                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4"]`,
                 content: (
                     <Description>
                         First, let's open the feature toggle configuration for{' '}
-                        <Badge as="span">demoApp.step4</Badge>.
+                        <Badge as="span">demoApp.step4</Badge>
                     </Description>
                 ),
                 preventDefault: true,
             },
             {
-                href: '/projects/default/features/demoApp.step4',
+                href: `/projects/${PROJECT}/features/demoApp.step4`,
                 target: 'button[data-testid="TAB-Variants"]',
                 content: <Description>Select the variants tab.</Description>,
             },
@@ -364,12 +430,13 @@ export const TOPICS: ITutorialTopic[] = [
                             .
                         </Description>
                         <Description>
-                            Example: <Badge as="span">aqua</Badge>.
+                            Example: <Badge as="span">aqua</Badge>
                         </Description>
                     </>
                 ),
                 backCloseModal: true,
                 nextButton: true,
+                focus: 'input',
             },
             {
                 target: 'div[data-testid="VARIANT"]:last-of-type #variant-payload-value',
@@ -386,6 +453,7 @@ export const TOPICS: ITutorialTopic[] = [
                     </Description>
                 ),
                 nextButton: true,
+                focus: true,
             },
             {
                 target: 'div[data-testid="VARIANT"]:last-of-type button[data-testid="VARIANT_ADD_OVERRIDE_BUTTON"]',
@@ -417,7 +485,7 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Enter your <Badge as="span">userId</Badge>.
+                            Enter your <Badge as="span">userId</Badge>
                         </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
@@ -429,22 +497,30 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
                 nextButton: true,
                 backCloseModal: true,
+                focus: 'input',
             },
             {
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
+                content: <Description>Save your variants.</Description>,
+            },
+            {
+                href: `/projects/${PROJECT}?sort=name`,
+                target: `div[data-testid="TOGGLE-demoApp.step4-${ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
-                            Save your variants to apply them.
+                            Finally, toggle{' '}
+                            <Badge as="span">demoApp.step4</Badge>
                         </Description>
                         <Badge
                             sx={{ marginTop: 2 }}
                             icon={<InfoOutlinedIcon />}
                         >
-                            Look at the demo page after saving!
+                            Look at the demo page to see your changes!
                         </Badge>
                     </>
                 ),
+                nextButton: true,
             },
         ],
     },

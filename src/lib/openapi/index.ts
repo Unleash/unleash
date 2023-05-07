@@ -1,11 +1,11 @@
 import { OpenAPIV3 } from 'openapi-types';
 import {
-    adminFeaturesQuerySchema,
+    addonCreateUpdateSchema,
     addonParameterSchema,
     addonSchema,
-    addonCreateUpdateSchema,
     addonsSchema,
     addonTypeSchema,
+    adminFeaturesQuerySchema,
     apiTokenSchema,
     apiTokensSchema,
     applicationSchema,
@@ -35,8 +35,8 @@ import {
     environmentsSchema,
     eventSchema,
     eventsSchema,
-    exportResultSchema,
     exportQuerySchema,
+    exportResultSchema,
     featureEnvironmentMetricsSchema,
     featureEnvironmentSchema,
     featureEventsSchema,
@@ -58,6 +58,9 @@ import {
     healthOverviewSchema,
     healthReportSchema,
     idSchema,
+    importTogglesSchema,
+    importTogglesValidateItemSchema,
+    importTogglesValidateSchema,
     instanceAdminStatsSchema,
     legalValueSchema,
     loginSchema,
@@ -79,20 +82,21 @@ import {
     playgroundStrategySchema,
     profileSchema,
     projectEnvironmentSchema,
+    projectOverviewSchema,
     projectSchema,
     projectsSchema,
+    projectStatsSchema,
     proxyClientSchema,
     proxyFeatureSchema,
     proxyFeaturesSchema,
     publicSignupTokenCreateSchema,
-    projectStatsSchema,
     publicSignupTokenSchema,
     publicSignupTokensSchema,
     publicSignupTokenUpdateSchema,
     pushVariantsSchema,
-    resetPasswordSchema,
     requestsPerSecondSchema,
     requestsPerSecondSegmentedSchema,
+    resetPasswordSchema,
     roleSchema,
     sdkContextSchema,
     searchEventsSchema,
@@ -131,10 +135,6 @@ import {
     variantSchema,
     variantsSchema,
     versionSchema,
-    projectOverviewSchema,
-    importTogglesSchema,
-    importTogglesValidateSchema,
-    importTogglesValidateItemSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -148,6 +148,7 @@ import { bulkMetricsSchema } from './spec/bulk-metrics-schema';
 import { clientMetricsEnvSchema } from './spec/client-metrics-env-schema';
 import { updateTagsSchema } from './spec/update-tags-schema';
 import { batchStaleSchema } from './spec/batch-stale-schema';
+import { createApplicationSchema } from './spec/create-application-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
@@ -205,6 +206,7 @@ export const schemas: UnleashSchemas = {
     contextFieldSchema,
     contextFieldsSchema,
     createApiTokenSchema,
+    createApplicationSchema,
     createFeatureSchema,
     createFeatureStrategySchema,
     createInvitedUserSchema,

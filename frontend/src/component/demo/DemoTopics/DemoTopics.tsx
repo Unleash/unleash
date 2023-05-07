@@ -5,12 +5,14 @@ import {
     Button,
     LinearProgress,
     Typography,
+    alpha,
     linearProgressClasses,
     styled,
 } from '@mui/material';
 import { CheckCircle, CircleOutlined, ExpandMore } from '@mui/icons-material';
 import { ITutorialTopic } from '../demo-topics';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ReactComponent as StarsIcon } from 'assets/img/stars.svg';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     position: 'fixed',
@@ -32,9 +34,10 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
         right: theme.spacing(2),
         fontSize: theme.fontSizes.mainHeader,
         transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+        transform: 'rotate(180deg)',
     },
     '&.Mui-expanded .expand-icon': {
-        transform: 'rotate(180deg)',
+        transform: 'rotate(0)',
     },
 }));
 
@@ -43,11 +46,18 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
         flexDirection: 'column',
         alignItems: 'center',
     },
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.web.main,
+    color: theme.palette.web.contrastText,
     borderTopLeftRadius: theme.shape.borderRadiusLarge,
     borderTopRightRadius: theme.shape.borderRadiusLarge,
+    height: 91,
 }));
+
+const StyledStars = styled(StarsIcon)({
+    position: 'absolute',
+    left: 6,
+    top: -24,
+});
 
 const StyledExpandMoreIcon = styled(ExpandMore)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
@@ -76,11 +86,11 @@ const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: theme.spacing(1),
     borderRadius: theme.shape.borderRadius,
     [`&.${linearProgressClasses.colorPrimary}`]: {
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: alpha(theme.palette.web.contrastText!, 0.1),
     },
     [`& .${linearProgressClasses.bar}`]: {
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.web.contrastText,
     },
 }));
 
@@ -99,7 +109,7 @@ const StyledStep = styled('li', {
         ...(selected && {
             backgroundColor: theme.palette.secondary.light,
             fontWeight: theme.typography.fontWeightBold,
-            border: `1px solid ${theme.palette.primary.main}`,
+            outline: `1px solid ${theme.palette.primary.main}`,
         }),
         ...(completed && {
             backgroundColor: theme.palette.background.elevation1,
@@ -134,21 +144,26 @@ const StyledButton = styled(Button)(({ theme }) => ({
 interface IDemoTopicsProps {
     expanded: boolean;
     setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
-    steps: number[];
+    stepsCompletion: number[];
     currentTopic: number;
     setCurrentTopic: (topic: number) => void;
     topics: ITutorialTopic[];
+    onWelcome: () => void;
 }
 
 export const DemoTopics = ({
     expanded,
     setExpanded,
-    steps,
+    stepsCompletion,
     currentTopic,
     setCurrentTopic,
     topics,
+    onWelcome,
 }: IDemoTopicsProps) => {
-    const completedSteps = steps.reduce((acc, step) => acc + (step || 0), 0);
+    const completedSteps = stepsCompletion.reduce(
+        (acc, step) => acc + (step || 0),
+        0
+    );
     const totalSteps = topics.flatMap(({ steps }) => steps).length;
     const percentage = (completedSteps / totalSteps) * 100;
 
@@ -158,12 +173,13 @@ export const DemoTopics = ({
             onChange={() => setExpanded(expanded => !expanded)}
         >
             <StyledAccordionSummary>
+                <StyledStars />
                 <StyledTitle>
-                    <Typography fontWeight="bold">Unleash tutorial</Typography>
+                    <Typography fontWeight="bold">Unleash demo</Typography>
                     <StyledExpandMoreIcon className="expand-icon" />
                 </StyledTitle>
                 <StyledSubtitle>
-                    Complete all steps to finish tutorial
+                    Complete all steps to finish demo
                 </StyledSubtitle>
                 <StyledProgress>
                     <Typography variant="body2">
@@ -181,7 +197,8 @@ export const DemoTopics = ({
                 </Typography>
                 {topics.map((topic, index) => {
                     const selected = currentTopic === index;
-                    const completed = steps[index] === topic.steps.length;
+                    const completed =
+                        stepsCompletion[index] === topic.steps.length;
                     return (
                         <StyledStep
                             key={topic.title}
@@ -201,8 +218,8 @@ export const DemoTopics = ({
                         </StyledStep>
                     );
                 })}
-                <StyledButton variant="outlined">
-                    View demo link again
+                <StyledButton variant="outlined" onClick={onWelcome}>
+                    View demo page
                 </StyledButton>
             </AccordionDetails>
         </StyledAccordion>

@@ -1,6 +1,5 @@
 export * from './logger';
 export * from './metrics';
-export * from './event-hook';
 export * from './metric-events';
 export * from './default-custom-auth-deny-all';
 export * from './addons';

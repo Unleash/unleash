@@ -12,6 +12,33 @@ exports[`meSchema empty 1`] = `
       },
       "schemaPath": "#/required",
     },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'permissions'",
+      "params": {
+        "missingProperty": "permissions",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'feedback'",
+      "params": {
+        "missingProperty": "feedback",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'splash'",
+      "params": {
+        "missingProperty": "splash",
+      },
+      "schemaPath": "#/required",
+    },
   ],
   "schema": "#/components/schemas/meSchema",
 }
@@ -26,6 +53,24 @@ exports[`meSchema missing permissions 1`] = `
       "message": "must have required property 'permissions'",
       "params": {
         "missingProperty": "permissions",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'feedback'",
+      "params": {
+        "missingProperty": "feedback",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'splash'",
+      "params": {
+        "missingProperty": "splash",
       },
       "schemaPath": "#/required",
     },

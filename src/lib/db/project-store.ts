@@ -16,6 +16,7 @@ import {
     IProjectSettings,
     IProjectSettingsRow,
     IProjectStore,
+    ProjectEnvironment,
 } from '../types/stores/project-store';
 import { DEFAULT_ENV } from '../util';
 import metricsHelper from '../util/metrics-helper';
@@ -23,6 +24,7 @@ import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
 import { Db } from './db';
 import Raw = Knex.Raw;
+import { CreateFeatureStrategySchema } from '../openapi';
 
 const COLUMNS = [
     'id',
@@ -35,6 +37,7 @@ const COLUMNS = [
 const TABLE = 'projects';
 const SETTINGS_COLUMNS = ['project_mode', 'default_stickiness'];
 const SETTINGS_TABLE = 'project_settings';
+const PROJECT_ENVIRONMENTS = 'project_environments';
 
 export interface IEnvironmentProjectLink {
     environmentName: string;
@@ -350,8 +353,8 @@ class ProjectStore implements IProjectStore {
             .ignore();
     }
 
-    async getEnvironmentsForProject(id: string): Promise<string[]> {
-        return this.db('project_environments')
+    async getEnvironmentsForProject(id: string): Promise<ProjectEnvironment[]> {
+        const rows = await this.db(PROJECT_ENVIRONMENTS)
             .where({
                 project_id: id,
             })
@@ -362,7 +365,12 @@ class ProjectStore implements IProjectStore {
             )
             .orderBy('environments.sort_order', 'asc')
             .orderBy('project_environments.environment_name', 'asc')
-            .pluck('project_environments.environment_name');
+            .returning([
+                'project_environments.environment_name',
+                'project_environments.default_strategy',
+            ]);
+
+        return rows.map(this.mapProjectEnvironmentRow);
     }
 
     async getMembersCount(): Promise<IProjectMembersCount[]> {
@@ -495,6 +503,32 @@ class ProjectStore implements IProjectStore {
             .where({ project: projectId });
     }
 
+    async getDefaultStrategy(
+        projectId: string,
+        environment: string,
+    ): Promise<CreateFeatureStrategySchema | null> {
+        const rows = await this.db(PROJECT_ENVIRONMENTS)
+            .select('default_strategy')
+            .where({ project_id: projectId, environment_name: environment });
+
+        return rows.length > 0 ? rows[0].default_strategy : null;
+    }
+
+    async updateDefaultStrategy(
+        projectId: string,
+        environment: string,
+        strategy: CreateFeatureStrategySchema,
+    ): Promise<CreateFeatureStrategySchema> {
+        const rows = await this.db(PROJECT_ENVIRONMENTS)
+            .update({
+                default_strategy: strategy,
+            })
+            .where({ project_id: projectId, environment_name: environment })
+            .returning('default_strategy');
+
+        return rows[0].default_strategy;
+    }
+
     async count(): Promise<number> {
         return this.db
             .from(TABLE)
@@ -532,6 +566,19 @@ class ProjectStore implements IProjectStore {
             updatedAt: row.updated_at || new Date(),
             mode: row.project_mode || 'open',
             defaultStickiness: row.default_stickiness || 'default',
+        };
+    }
+
+    mapProjectEnvironmentRow(row: {
+        environment_name: string;
+        default_strategy: CreateFeatureStrategySchema;
+    }): ProjectEnvironment {
+        return {
+            environment: row.environment_name,
+            defaultStrategy:
+                row.default_strategy === null
+                    ? undefined
+                    : row.default_strategy,
         };
     }
 }

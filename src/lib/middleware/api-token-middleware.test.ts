@@ -82,7 +82,7 @@ test('should not make database query when provided PAT format', async () => {
 
 test('should add user if known token', async () => {
     const apiUser = new ApiUser({
-        username: 'default',
+        tokenName: 'default',
         permissions: [CLIENT],
         project: ALL,
         environment: ALL,
@@ -114,7 +114,7 @@ test('should not add user if not /api/client', async () => {
     expect.assertions(5);
 
     const apiUser = new ApiUser({
-        username: 'default',
+        tokenName: 'default',
         permissions: [CLIENT],
         project: ALL,
         environment: ALL,
@@ -153,7 +153,7 @@ test('should not add user if not /api/client', async () => {
 
 test('should not add user if disabled', async () => {
     const apiUser = new ApiUser({
-        username: 'default',
+        tokenName: 'default',
         permissions: [CLIENT],
         project: ALL,
         environment: ALL,

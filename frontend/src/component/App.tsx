@@ -20,7 +20,6 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import MaintenanceBanner from './maintenance/MaintenanceBanner';
 import { styled } from '@mui/material';
 import { InitialRedirect } from './InitialRedirect';
-import { Demo } from './demo/Demo';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -100,13 +99,6 @@ export const App = () => {
                                             </Routes>
 
                                             <FeedbackNPS openUrl="http://feedback.unleash.run" />
-
-                                            <ConditionallyRender
-                                                condition={Boolean(
-                                                    uiConfig.flags.demo
-                                                )}
-                                                show={<Demo />}
-                                            />
 
                                             <SplashPageRedirect />
                                         </StyledContainer>

@@ -260,7 +260,7 @@ describe('the playground service (e2e)', () => {
                             );
 
                             // the playground differs from a normal SDK in that
-                            // it _must_ evaluate all srategies and features
+                            // it _must_ evaluate all strategies and features
                             // regardless of whether they're supposed to be
                             // enabled in the current environment or not.
                             const expectedSDKState = feature.isEnabled;
@@ -268,8 +268,6 @@ describe('the playground service (e2e)', () => {
                             const enabledStateMatches =
                                 expectedSDKState ===
                                 client.isEnabled(feature.name, clientContext);
-
-                            expect(enabledStateMatches).toBe(true);
 
                             ctx.log(
                                 `feature.isEnabled, feature.isEnabledInCurrentEnvironment, presumedSDKState: ${feature.isEnabled}, ${feature.isEnabledInCurrentEnvironment}, ${expectedSDKState}`,
@@ -280,6 +278,7 @@ describe('the playground service (e2e)', () => {
                                     clientContext,
                                 )}`,
                             );
+                            expect(enabledStateMatches).toBe(true);
 
                             // if x is disabled, then the variant will be the
                             // disabled variant.
@@ -709,6 +708,8 @@ describe('the playground service (e2e)', () => {
                                         expect.arrayContaining([
                                             {
                                                 ...strategy,
+                                                title: undefined,
+                                                disabled: false,
                                                 constraints:
                                                     strategy.constraints ?? [],
                                                 parameters:

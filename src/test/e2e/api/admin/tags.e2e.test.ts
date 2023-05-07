@@ -11,7 +11,6 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 strictSchemaValidation: true,
-                bulkOperations: true,
             },
         },
     });
@@ -87,7 +86,7 @@ test('Can validate a tag', async () =>
         .expect(400)
         .expect((res) => {
             expect(res.body.details.length).toBe(1);
-            expect(res.body.details[0].message).toBe(
+            expect(res.body.details[0].description).toBe(
                 '"type" must be URL friendly',
             );
         }));
@@ -121,7 +120,7 @@ test('Can tag features', async () => {
         value: 'remove_me',
         type: 'simple',
     };
-    await app.request.post('/api/admin/features').send({
+    await app.request.post('/api/admin/projects/default/features').send({
         name: featureName,
         type: 'killswitch',
         enabled: true,
@@ -137,7 +136,7 @@ test('Can tag features', async () => {
 
     expect(initialTagState.body).toMatchObject({ tags: [removedTag] });
 
-    await app.request.post('/api/admin/features').send({
+    await app.request.post('/api/admin/projects/default/features').send({
         name: featureName2,
         type: 'killswitch',
         enabled: true,
@@ -161,4 +160,49 @@ test('Can tag features', async () => {
 
     expect(res.body).toMatchObject({ tags: [addedTag] });
     expect(res2.body).toMatchObject({ tags: [addedTag] });
+});
+
+test('Can bulk remove tags', async () => {
+    const featureName = 'test.feature3';
+    const featureName2 = 'test.feature4';
+    const addedTag = {
+        value: 'TeamRed',
+        type: 'simple',
+    };
+
+    await app.request.post('/api/admin/projects/default/features').send({
+        name: featureName,
+        type: 'killswitch',
+        enabled: true,
+        strategies: [{ name: 'default' }],
+    });
+
+    await app.request.post('/api/admin/projects/default/features').send({
+        name: featureName2,
+        type: 'killswitch',
+        enabled: true,
+        strategies: [{ name: 'default' }],
+    });
+
+    await app.request
+        .put('/api/admin/tags/features')
+        .send({
+            features: [featureName, featureName2],
+            tags: {
+                addedTags: [addedTag],
+                removedTags: [],
+            },
+        })
+        .expect(200);
+
+    await app.request
+        .put('/api/admin/tags/features')
+        .send({
+            features: [featureName, featureName2],
+            tags: {
+                addedTags: [],
+                removedTags: [addedTag],
+            },
+        })
+        .expect(200);
 });

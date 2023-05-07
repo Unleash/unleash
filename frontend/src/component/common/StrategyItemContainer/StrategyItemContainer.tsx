@@ -1,6 +1,6 @@
 import { DragEventHandler, FC, ReactNode } from 'react';
 import { DragIndicator } from '@mui/icons-material';
-import { styled, IconButton, Box } from '@mui/material';
+import { styled, IconButton, Box, Chip } from '@mui/material';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
     getFeatureStrategyIcon,
@@ -10,6 +10,7 @@ import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PlaygroundStrategySchema } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { Badge } from '../Badge/Badge';
 
 interface IStrategyItemContainerProps {
     strategy: IFeatureStrategy | PlaygroundStrategySchema;
@@ -39,26 +40,35 @@ const StyledIndexLabel = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledContainer = styled(Box)(({ theme }) => ({
+const StyledContainer = styled(Box, {
+    shouldForwardProp: prop => prop !== 'disabled',
+})<{ disabled?: boolean }>(({ theme, disabled }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     border: `1px solid ${theme.palette.divider}`,
     '& + &': {
         marginTop: theme.spacing(2),
     },
-    background: theme.palette.background.paper,
+    background: disabled
+        ? theme.palette.envAccordion.disabled
+        : theme.palette.background.paper,
 }));
 
 const StyledHeader = styled('div', {
-    shouldForwardProp: prop => prop !== 'draggable',
-})(({ theme, draggable }) => ({
-    padding: theme.spacing(0.5, 2),
-    display: 'flex',
-    gap: theme.spacing(1),
-    alignItems: 'center',
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    fontWeight: theme.typography.fontWeightMedium,
-    paddingLeft: draggable ? theme.spacing(1) : theme.spacing(2),
-}));
+    shouldForwardProp: prop => prop !== 'draggable' && prop !== 'disabled',
+})<{ draggable: boolean; disabled: boolean }>(
+    ({ theme, draggable, disabled }) => ({
+        padding: theme.spacing(0.5, 2),
+        display: 'flex',
+        gap: theme.spacing(1),
+        alignItems: 'center',
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        fontWeight: theme.typography.fontWeightMedium,
+        paddingLeft: draggable ? theme.spacing(1) : theme.spacing(2),
+        color: disabled
+            ? theme.palette.action.disabled
+            : theme.palette.text.primary,
+    })
+);
 
 export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     strategy,
@@ -78,8 +88,14 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                 condition={orderNumber !== undefined}
                 show={<StyledIndexLabel>{orderNumber}</StyledIndexLabel>}
             />
-            <StyledContainer style={style}>
-                <StyledHeader draggable={Boolean(onDragStart)}>
+            <StyledContainer
+                disabled={strategy?.disabled || false}
+                style={style}
+            >
+                <StyledHeader
+                    draggable={Boolean(onDragStart)}
+                    disabled={Boolean(strategy?.disabled)}
+                >
                     <ConditionallyRender
                         condition={Boolean(onDragStart)}
                         show={() => (
@@ -111,6 +127,14 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                             uiConfig?.flags?.strategyTitle
                                 ? strategy.title || strategy.name
                                 : strategy.name
+                        )}
+                    />
+                    <ConditionallyRender
+                        condition={Boolean(strategy?.disabled)}
+                        show={() => (
+                            <>
+                                <Badge color="disabled">Disabled</Badge>
+                            </>
                         )}
                     />
                     <Box

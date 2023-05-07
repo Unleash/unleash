@@ -9,7 +9,14 @@ import React, {
 } from 'react';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
-type Color = 'info' | 'success' | 'warning' | 'error' | 'secondary' | 'neutral';
+type Color =
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'error'
+    | 'secondary'
+    | 'neutral'
+    | 'disabled'; // TODO: refactor theme
 
 interface IBadgeProps {
     as?: React.ElementType;
@@ -37,16 +44,27 @@ const StyledBadge = styled('div')<IBadgeProps>(
         fontSize: theme.fontSizes.smallerBody,
         fontWeight: theme.fontWeight.bold,
         lineHeight: 1,
-        backgroundColor: theme.palette[color].light,
-        color: theme.palette[color].contrastText,
-        border: `1px solid ${theme.palette[color].border}`,
+        ...(color === 'disabled'
+            ? {
+                  color: theme.palette.text.secondary,
+                  background: theme.palette.background.paper,
+                  border: `1px solid ${theme.palette.divider}`,
+              }
+            : {
+                  backgroundColor: theme.palette[color].light,
+                  color: theme.palette[color].contrastText,
+                  border: `1px solid ${theme.palette[color].border}`,
+              }),
     })
 );
 
 const StyledBadgeIcon = styled('div')<IBadgeIconProps>(
     ({ theme, color = 'neutral', iconRight = false }) => ({
         display: 'flex',
-        color: theme.palette[color].main,
+        color:
+            color === 'disabled'
+                ? theme.palette.action.disabled
+                : theme.palette[color].main,
         margin: iconRight
             ? theme.spacing(0, 0, 0, 0.5)
             : theme.spacing(0, 0.5, 0, 0),

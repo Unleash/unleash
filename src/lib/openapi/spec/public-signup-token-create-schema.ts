@@ -3,6 +3,8 @@ import { FromSchema } from 'json-schema-to-ts';
 export const publicSignupTokenCreateSchema = {
     $id: '#/components/schemas/publicSignupTokenCreateSchema',
     type: 'object',
+    description:
+        'Used for creating a [public invite link](https://docs.getunleash.io/reference/public-signup#public-sign-up-tokens)',
     additionalProperties: false,
     required: ['name', 'expiresAt'],
     properties: {

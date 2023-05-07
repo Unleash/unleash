@@ -5,7 +5,7 @@ export const apiTokenSchema = {
     $id: '#/components/schemas/apiTokenSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['username', 'type'],
+    required: ['type'],
     description: 'An overview of an API token.',
     properties: {
         secret: {
@@ -15,7 +15,13 @@ export const apiTokenSchema = {
         },
         username: {
             type: 'string',
-            description: 'The name of the token',
+            deprecated: true,
+            description:
+                'This property was deprecated in Unleash v5. Prefer the `tokenName` property instead.',
+        },
+        tokenName: {
+            type: 'string',
+            description: 'A unique name for this particular token',
             example: 'some-user',
         },
         type: {
@@ -74,6 +80,24 @@ export const apiTokenSchema = {
             example: 'some-alias',
         },
     },
+    anyOf: [
+        {
+            properties: {
+                username: {
+                    type: 'string',
+                },
+            },
+            required: ['username'],
+        },
+        {
+            properties: {
+                tokenName: {
+                    type: 'string',
+                },
+            },
+            required: ['tokenName'],
+        },
+    ],
     components: {},
 } as const;
 

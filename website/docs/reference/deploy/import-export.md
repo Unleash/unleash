@@ -1,11 +1,17 @@
 ---
-title: Import & Export
+title: '[Deprecated] Import & Export'
 ---
 import ApiRequest from '@site/src/components/ApiRequest'
 
 :::info Availability
 
 The import and export API first appeared in Unleash 3.3.0.
+
+:::
+
+:::caution Deprecation notice
+
+Api admin state is deprecated from version 5. We recommend using the new [Environment Import & Export](https://docs.getunleash.io/reference/deploy/environment-import-export).
 
 :::
 

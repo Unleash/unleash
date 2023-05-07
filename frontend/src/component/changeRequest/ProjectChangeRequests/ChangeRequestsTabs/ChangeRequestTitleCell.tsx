@@ -21,7 +21,6 @@ export const ChangeRequestTitleCell = ({
 }: IChangeRequestTitleCellProps) => {
     const projectId = useRequiredPathParam('projectId');
     const { id, title, features: changes } = original;
-    const theme = useTheme();
     const path = `/projects/${projectId}/change-requests/${id}`;
 
     if (!value) {

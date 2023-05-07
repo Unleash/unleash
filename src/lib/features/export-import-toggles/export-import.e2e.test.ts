@@ -14,6 +14,7 @@ import {
     IProjectStore,
     ISegment,
     IStrategyConfig,
+    ITagStore,
     IVariant,
 } from '../../types';
 import { DEFAULT_ENV } from '../../util';
@@ -33,6 +34,7 @@ let environmentStore: IEnvironmentStore;
 let contextFieldStore: IContextFieldStore;
 let projectStore: IProjectStore;
 let toggleStore: IFeatureToggleStore;
+let tagStore: ITagStore;
 
 const defaultStrategy: IStrategyConfig = {
     name: 'default',
@@ -150,6 +152,7 @@ beforeAll(async () => {
     projectStore = db.stores.projectStore;
     contextFieldStore = db.stores.contextFieldStore;
     toggleStore = db.stores.featureToggleStore;
+    tagStore = db.stores.tagStore;
 });
 
 beforeEach(async () => {
@@ -157,6 +160,7 @@ beforeEach(async () => {
     await toggleStore.deleteAll();
     await projectStore.deleteAll();
     await environmentStore.deleteAll();
+    await tagStore.deleteAll();
 
     await contextFieldStore.deleteAll();
     await app.createContextField({ name: 'appName' });
@@ -290,6 +294,62 @@ test('exports features', async () => {
             {
                 id: segment.id,
                 name: segmentName,
+            },
+        ],
+    });
+});
+
+test('exports features by tag', async () => {
+    await createProjects();
+    const strategy = {
+        name: 'default',
+        parameters: { rollout: '100', stickiness: 'default' },
+        constraints: [
+            {
+                contextName: 'appName',
+                values: ['test'],
+                operator: 'IN' as const,
+            },
+        ],
+    };
+    await createToggle(
+        {
+            name: 'first_feature',
+            description: 'the #1 feature',
+        },
+        strategy,
+        ['mytag'],
+    );
+    await createToggle(
+        {
+            name: 'second_feature',
+            description: 'the #1 feature',
+        },
+        strategy,
+        ['anothertag'],
+    );
+    const { body } = await app.request
+        .post('/api/admin/features-batch/export')
+        .send({
+            tag: 'mytag',
+            environment: 'default',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    const { name, ...resultStrategy } = strategy;
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'first_feature',
+            },
+        ],
+        featureStrategies: [resultStrategy],
+        featureEnvironments: [
+            {
+                enabled: false,
+                environment: 'default',
+                featureName: 'first_feature',
             },
         ],
     });
@@ -488,6 +548,10 @@ const exportedFeature: ImportTogglesSchema['data']['features'][0] = {
     project: 'old_project',
     name: 'first_feature',
 };
+const anotherExportedFeature: ImportTogglesSchema['data']['features'][0] = {
+    project: 'old_project',
+    name: 'second_feature',
+};
 const constraints: ImportTogglesSchema['data']['featureStrategies'][0]['constraints'] =
     [
         {
@@ -558,8 +622,35 @@ const defaultImportPayload: ImportTogglesSchema = {
     environment: DEFAULT_ENV,
 };
 
+const importWithMultipleFeatures: ImportTogglesSchema = {
+    data: {
+        features: [exportedFeature, anotherExportedFeature],
+        featureStrategies: [],
+        featureEnvironments: [],
+        featureTags: [
+            {
+                featureName: exportedFeature.name,
+                tagType: 'simple',
+                tagValue: 'tag1',
+            },
+            {
+                featureName: anotherExportedFeature.name,
+                tagType: 'simple',
+                tagValue: 'tag1',
+            },
+        ],
+        tagTypes,
+        contextFields: [],
+        segments: [],
+    },
+    project: DEFAULT_PROJECT,
+    environment: DEFAULT_ENV,
+};
+
 const getFeature = async (feature: string) =>
-    app.request.get(`/api/admin/features/${feature}`).expect(200);
+    app.request
+        .get(`/api/admin/projects/${DEFAULT_PROJECT}/features/${feature}`)
+        .expect(200);
 
 const getFeatureEnvironment = (feature: string) =>
     app.request
@@ -611,6 +702,24 @@ test('import features to existing project and environment', async () => {
     const { body: importedTags } = await getTags(defaultFeature);
     expect(importedTags).toMatchObject({
         tags: resultTags,
+    });
+});
+
+test('import multiple features with same tag', async () => {
+    await createProjects();
+
+    await app.importToggles(importWithMultipleFeatures);
+
+    const { body: tags1 } = await getTags(exportedFeature.name);
+    const { body: tags2 } = await getTags(anotherExportedFeature.name);
+
+    expect(tags1).toMatchObject({
+        version: 1,
+        tags: [{ value: 'tag1', type: 'simple' }],
+    });
+    expect(tags2).toMatchObject({
+        version: 1,
+        tags: [{ value: 'tag1', type: 'simple' }],
     });
 });
 
@@ -671,13 +780,7 @@ test('reject import with unknown context fields', async () => {
         400,
     );
 
-    expect(body).toMatchObject({
-        details: [
-            {
-                message: 'Context fields with errors: ContextField1',
-            },
-        ],
-    });
+    expect(body.details[0].description).toMatch(/\bContextField1\b/);
 });
 
 test('reject import with unsupported strategies', async () => {
@@ -697,13 +800,7 @@ test('reject import with unsupported strategies', async () => {
         400,
     );
 
-    expect(body).toMatchObject({
-        details: [
-            {
-                message: 'Unsupported strategies: customStrategy',
-            },
-        ],
-    });
+    expect(body.details[0].description).toMatch(/\bcustomStrategy\b/);
 });
 
 test('validate import data', async () => {

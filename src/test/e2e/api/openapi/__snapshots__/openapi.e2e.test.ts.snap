@@ -3629,7 +3629,7 @@ The provider you choose for your addon dictates what properties the \`parameters
         "description": "Add an environment to a project, optionally also sets if change requests are enabled for this environment on the project",
         "properties": {
           "changeRequestsEnabled": {
-            "description": "Should change requests be enabled or not for this environment on the project",
+            "description": "Whether change requests should be enabled or for this environment on the project or not",
             "example": true,
             "nullable": true,
             "type": "boolean",
@@ -9393,7 +9393,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/api-tokens/{token}": {
       "delete": {
-        "description": "Endpoint that allows deletion of a project API token.",
+        "description": "This operation deletes the API token specified in the request URL. If the token doesn't exist, returns an OK response (status code 200).",
         "operationId": "deleteProjectApiToken",
         "parameters": [
           {

@@ -22,6 +22,8 @@ export const projectEnvironmentSchema = {
         },
         defaultStrategy: {
             $ref: '#/components/schemas/createFeatureStrategySchema',
+            description:
+                'A default strategy to create for this environment on the project.',
         },
     },
     components: {

@@ -42,7 +42,7 @@ test('Returns list of tokens', async () => {
     const tokenSecret = 'random-secret';
 
     await db.stores.apiTokenStore.insert({
-        username: 'test',
+        tokenName: 'test',
         secret: tokenSecret,
         type: ApiTokenType.CLIENT,
         environment: 'default',
@@ -101,7 +101,7 @@ test('Deletes existing tokens', async () => {
     const tokenSecret = 'random-secret';
 
     await db.stores.apiTokenStore.insert({
-        username: 'test',
+        tokenName: 'test',
         secret: tokenSecret,
         type: ApiTokenType.CLIENT,
         environment: 'default',

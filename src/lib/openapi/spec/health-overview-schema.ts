@@ -65,7 +65,6 @@ export const healthOverviewSchema = {
             },
             description:
                 'An array containing the names of all the environments configured for the project.',
-            example: ['development', 'production'],
         },
         features: {
             type: 'array',

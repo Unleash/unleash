@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_FEATURE } from '../../../../../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 
 interface IEnableEnvironmentDialogProps {
     isOpen: boolean;

@@ -789,7 +789,6 @@ export default class ProjectFeaturesController extends Controller {
             (strat) => strat.disabled,
         );
         if (hasOnlyDisabledStrategies) {
-            // If it is the
             await this.featureService.updateEnabled(
                 projectId,
                 featureName,

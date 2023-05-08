@@ -21,6 +21,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     width: '100%',
     maxWidth: theme.spacing(30),
     zIndex: theme.zIndex.fab,
+    boxShadow: theme.boxShadows.popup,
     '&&&': {
         borderRadius: 0,
         borderTopLeftRadius: theme.shape.borderRadiusLarge,

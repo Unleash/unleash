@@ -247,7 +247,7 @@ export const DemoSteps = ({
                 disableAnimation: true,
                 styles: {
                     floater: {
-                        filter: `drop-shadow(${theme.palette.primary.main} 0px 0px 3px)`,
+                        filter: `drop-shadow(rgba(32, 32, 33, .2) 0px 4px 12px)`,
                     },
                 },
             }}
@@ -263,7 +263,7 @@ export const DemoSteps = ({
                     animation: 'pulse 2s infinite',
                 },
                 overlay: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
                 },
             }}
             tooltipComponent={(

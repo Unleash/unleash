@@ -1292,7 +1292,7 @@ class FeatureToggleService {
         environment: string,
         enabled: boolean,
         createdBy: string,
-        shouldActivateDisabledStrategies: boolean,
+        shouldActivateDisabledStrategies = false,
     ): Promise<FeatureToggle> {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(

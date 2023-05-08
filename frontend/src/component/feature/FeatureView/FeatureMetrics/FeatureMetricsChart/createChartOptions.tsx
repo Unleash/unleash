@@ -54,7 +54,7 @@ export const createChartOptions = (
                     afterLabel: item => {
                         const data = item.dataset.data[
                             item.dataIndex
-                        ] as any as IPoint;
+                        ] as unknown as IPoint;
 
                         if (
                             item.dataset.label !== 'Exposed' ||

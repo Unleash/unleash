@@ -139,7 +139,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                     />
                     <StyledHeaderContainer>
                         <StringTruncator
-                            maxWidth="150"
+                            maxWidth="400"
                             maxLength={15}
                             text={formatStrategyName(
                                 uiConfig?.flags?.strategyImprovements

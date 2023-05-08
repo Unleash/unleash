@@ -91,13 +91,15 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                                 strategy={strategy}
                             />
                         )}
-                    />
-                    <FeatureStrategyRemove
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        strategyId={strategy.id}
-                        icon
+                        elseShow={() => (
+                            <FeatureStrategyRemove
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environmentId}
+                                strategyId={strategy.id}
+                                icon
+                            />
+                        )}
                     />
                 </>
             }

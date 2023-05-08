@@ -6,11 +6,20 @@ exports[`apiTokenSchema empty 1`] = `
     {
       "instancePath": "",
       "keyword": "required",
+      "message": "must have required property 'secret'",
+      "params": {
+        "missingProperty": "secret",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
       "message": "must have required property 'username'",
       "params": {
         "missingProperty": "username",
       },
-      "schemaPath": "#/anyOf/0/required",
+      "schemaPath": "#/required",
     },
     {
       "instancePath": "",
@@ -19,14 +28,7 @@ exports[`apiTokenSchema empty 1`] = `
       "params": {
         "missingProperty": "tokenName",
       },
-      "schemaPath": "#/anyOf/1/required",
-    },
-    {
-      "instancePath": "",
-      "keyword": "anyOf",
-      "message": "must match a schema in anyOf",
-      "params": {},
-      "schemaPath": "#/anyOf",
+      "schemaPath": "#/required",
     },
     {
       "instancePath": "",
@@ -34,6 +36,24 @@ exports[`apiTokenSchema empty 1`] = `
       "message": "must have required property 'type'",
       "params": {
         "missingProperty": "type",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'project'",
+      "params": {
+        "missingProperty": "project",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'projects'",
+      "params": {
+        "missingProperty": "projects",
       },
       "schemaPath": "#/required",
     },

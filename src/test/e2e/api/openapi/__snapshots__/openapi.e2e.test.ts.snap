@@ -632,34 +632,7 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "apiTokenSchema": {
         "additionalProperties": false,
-        "anyOf": [
-          {
-            "properties": {
-              "username": {
-                "deprecated": true,
-                "description": "This property was deprecated in Unleash v5. Prefer the \`tokenName\` property instead.",
-                "example": "a-name",
-                "type": "string",
-              },
-            },
-            "required": [
-              "username",
-            ],
-          },
-          {
-            "properties": {
-              "tokenName": {
-                "description": "A unique name for this particular token",
-                "example": "some-user",
-                "type": "string",
-              },
-            },
-            "required": [
-              "tokenName",
-            ],
-          },
-        ],
-        "description": "An overview of an API token.",
+        "description": "An overview of an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).",
         "properties": {
           "alias": {
             "description": "Not actively used. Present as a legacy format for identifying older tokens",
@@ -738,7 +711,12 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
         },
         "required": [
+          "secret",
+          "username",
+          "tokenName",
           "type",
+          "project",
+          "projects",
         ],
         "type": "object",
       },
@@ -3626,6 +3604,7 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "object",
       },
       "projectEnvironmentSchema": {
+        "additionalProperties": false,
         "description": "Add an environment to a project, optionally also sets if change requests are enabled for this environment on the project",
         "properties": {
           "changeRequestsEnabled": {
@@ -9277,6 +9256,33 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
         "summary": "Get api tokens for project.",
         "tags": [
@@ -9328,7 +9334,31 @@ If the provided project does not exist, the list of events will be empty.",
             },
           },
           "400": {
-            "description": "This response has no body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "The request payload you provided doesn't conform to the schema. The .parameters property should be object. You sent [].",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ValidationError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The request data does not match what we expect.",
           },
           "401": {
             "content": {

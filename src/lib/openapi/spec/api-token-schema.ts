@@ -6,7 +6,7 @@ export const apiTokenSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['type'],
-    description: 'An overview of an API token.',
+    description: 'An overview of an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).',
     properties: {
         secret: {
             type: 'string',

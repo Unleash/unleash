@@ -1,4 +1,5 @@
 import { ErrorObject } from 'ajv';
+import { getPropFromString } from '../util/get-prop-from-string';
 import { ApiErrorSchema, UnleashError } from './api-error';
 
 type ValidationErrorDescription = {
@@ -62,9 +63,7 @@ export const fromOpenApiValidationError =
                 message: description,
             };
         } else {
-            const input = propertyName
-                .split('.')
-                .reduce((x, prop) => x[prop], requestBody);
+            const input = getPropFromString(propertyName, requestBody);
 
             const youSent = JSON.stringify(input);
             const description = `The .${propertyName} property ${validationError.message}. You sent ${youSent}.`;
@@ -79,7 +78,7 @@ export const fromOpenApiValidationError =
 export const fromOpenApiValidationErrors = (
     requestBody: object,
     validationErrors: [ErrorObject, ...ErrorObject[]],
-): UnleashError => {
+): BadDataError => {
     const [firstDetail, ...remainingDetails] = validationErrors.map(
         fromOpenApiValidationError(requestBody),
     );

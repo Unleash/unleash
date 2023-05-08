@@ -11,7 +11,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyChangeRequestAlert } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
 import { IDisableEnableStrategyProps } from './IDisableEnableStrategyProps';
-import { useFeature } from '../../../../../../../../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
     const { projectId, environmentId, featureId } = props;

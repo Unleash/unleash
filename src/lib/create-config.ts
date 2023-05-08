@@ -22,7 +22,11 @@ import {
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
 import { formatBaseUri } from './util/format-base-uri';
-import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
+import {
+    hoursToMilliseconds,
+    minutesToMilliseconds,
+    secondsToMilliseconds,
+} from 'date-fns';
 import EventEmitter from 'events';
 import {
     ApiTokenType,
@@ -72,7 +76,7 @@ function loadExperimental(options: IUnleashOptions): IExperimentalOptions {
 
 const defaultClientCachingOptions: IClientCachingOption = {
     enabled: true,
-    maxAge: 600,
+    maxAge: hoursToMilliseconds(1),
 };
 
 function loadClientCachingOptions(

@@ -33,8 +33,8 @@ async function getSetup() {
 const callGetAll = async (controller: FeatureController) => {
     await controller.getAll(
         // @ts-expect-error
-        { query: {}, header: () => undefined },
-        { json: () => {} },
+        { query: {}, header: () => undefined, headers: {} },
+        { json: () => {}, setHeader: () => undefined },
     );
 };
 
@@ -82,16 +82,19 @@ test('if caching is enabled should memoize', async () => {
     const openApiService = { respondWithValidation, validPath };
     const featureToggleServiceV2 = { getClientFeatures };
     const segmentService = { getActive };
+    const eventService = { getMaxRevisionId: () => 1 };
 
     const controller = new FeatureController(
         {
             clientSpecService,
-            // @ts-expect-error
+            // @ts-expect-error due to partial implementation
             openApiService,
-            // @ts-expect-error
+            // @ts-expect-error due to partial implementation
             featureToggleServiceV2,
-            // @ts-expect-error
+            // @ts-expect-error due to partial implementation
             segmentService,
+            // @ts-expect-error due to partial implementation
+            eventService,
         },
         {
             getLogger,
@@ -117,16 +120,19 @@ test('if caching is not enabled all calls goes to service', async () => {
     const featureToggleServiceV2 = { getClientFeatures };
     const segmentService = { getActive };
     const openApiService = { respondWithValidation, validPath };
+    const eventService = { getMaxRevisionId: () => 1 };
 
     const controller = new FeatureController(
         {
             clientSpecService,
-            // @ts-expect-error
+            // @ts-expect-error due to partial implementation
             openApiService,
-            // @ts-expect-error
+            // @ts-expect-error due to partial implementation
             featureToggleServiceV2,
-            // @ts-expect-error
+            // @ts-expect-error due to partial implementation
             segmentService,
+            // @ts-expect-error due to partial implementation
+            eventService,
         },
         {
             getLogger,

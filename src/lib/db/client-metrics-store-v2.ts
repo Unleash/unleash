@@ -2,23 +2,37 @@ import { Logger, LogProvider } from '../logger';
 import {
     IClientMetricsEnv,
     IClientMetricsEnvKey,
+    IClientMetricsEnvVariant,
     IClientMetricsStoreV2,
 } from '../types/stores/client-metrics-store-v2';
 import NotFoundError from '../error/notfound-error';
 import { startOfHour } from 'date-fns';
-import { collapseHourlyMetrics } from '../util/collapseHourlyMetrics';
+import {
+    collapseHourlyMetrics,
+    spreadVariants,
+} from '../util/collapseHourlyMetrics';
 import { Db } from './db';
+import { IFlagResolver } from '../types';
 
-interface ClientMetricsEnvTable {
+interface ClientMetricsBaseTable {
     feature_name: string;
     app_name: string;
     environment: string;
     timestamp: Date;
+}
+
+interface ClientMetricsEnvTable extends ClientMetricsBaseTable {
     yes: number;
     no: number;
 }
 
+interface ClientMetricsEnvVariantTable extends ClientMetricsBaseTable {
+    variant: string;
+    count: number;
+}
+
 const TABLE = 'client_metrics_env';
+const TABLE_VARIANTS = 'client_metrics_env_variants';
 
 const fromRow = (row: ClientMetricsEnvTable) => ({
     featureName: row.feature_name,
@@ -38,14 +52,58 @@ const toRow = (metric: IClientMetricsEnv): ClientMetricsEnvTable => ({
     no: metric.no,
 });
 
+const toVariantRow = (
+    metric: IClientMetricsEnvVariant,
+): ClientMetricsEnvVariantTable => ({
+    feature_name: metric.featureName,
+    app_name: metric.appName,
+    environment: metric.environment,
+    timestamp: startOfHour(metric.timestamp),
+    variant: metric.variant,
+    count: metric.count,
+});
+
+const variantRowReducer = (acc, tokenRow) => {
+    const {
+        feature_name: featureName,
+        app_name: appName,
+        environment,
+        timestamp,
+        yes,
+        no,
+        variant,
+        count,
+    } = tokenRow;
+    const key = `${featureName}_${appName}_${environment}_${timestamp}_${yes}_${no}`;
+    if (!acc[key]) {
+        acc[key] = {
+            featureName,
+            appName,
+            environment,
+            timestamp,
+            yes: Number(yes),
+            no: Number(no),
+            variants: {},
+        };
+    }
+    if (variant) {
+        acc[key].variants[variant] = count;
+    }
+
+    return acc;
+};
+
 export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
     private db: Db;
 
     private logger: Logger;
 
-    constructor(db: Db, getLogger: LogProvider) {
+    private flagResolver: IFlagResolver;
+
+    constructor(db: Db, getLogger: LogProvider, flagResolver: IFlagResolver) {
         this.db = db;
         this.logger = getLogger('client-metrics-store-v2.js');
+        this.flagResolver = flagResolver;
     }
 
     async get(key: IClientMetricsEnvKey): Promise<IClientMetricsEnv> {
@@ -103,7 +161,6 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         if (!metrics || metrics.length == 0) {
             return;
         }
-
         const rows = collapseHourlyMetrics(metrics).map(toRow);
 
         // Sort the rows to avoid deadlocks
@@ -118,20 +175,61 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         const insert = this.db<ClientMetricsEnvTable>(TABLE)
             .insert(sortedRows)
             .toQuery();
-
         const query = `${insert.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp) DO UPDATE SET "yes" = "client_metrics_env"."yes" + EXCLUDED.yes, "no" = "client_metrics_env"."no" + EXCLUDED.no`;
         await this.db.raw(query);
+
+        if (this.flagResolver.isEnabled('variantMetrics')) {
+            const variantRows = spreadVariants(metrics).map(toVariantRow);
+            if (variantRows.length > 0) {
+                const insertVariants = this.db<ClientMetricsEnvVariantTable>(
+                    TABLE_VARIANTS,
+                )
+                    .insert(variantRows)
+                    .toQuery();
+                const variantsQuery = `${insertVariants.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp, variant) DO UPDATE SET "count" = "client_metrics_env_variants"."count" + EXCLUDED.count`;
+                await this.db.raw(variantsQuery);
+            }
+        }
     }
 
     async getMetricsForFeatureToggle(
         featureName: string,
         hoursBack: number = 24,
     ): Promise<IClientMetricsEnv[]> {
-        const rows = await this.db<ClientMetricsEnvTable>(TABLE)
-            .select('*')
-            .where({ feature_name: featureName })
-            .andWhereRaw(`timestamp >= NOW() - INTERVAL '${hoursBack} hours'`);
-        return rows.map(fromRow);
+        if (this.flagResolver.isEnabled('variantMetrics')) {
+            const rows = await this.db<ClientMetricsEnvTable>(TABLE)
+                .select([`${TABLE}.*`, 'variant', 'count'])
+                .leftJoin(TABLE_VARIANTS, function () {
+                    this.on(
+                        `${TABLE_VARIANTS}.feature_name`,
+                        `${TABLE}.feature_name`,
+                    )
+                        .on(`${TABLE_VARIANTS}.app_name`, `${TABLE}.app_name`)
+                        .on(
+                            `${TABLE_VARIANTS}.environment`,
+                            `${TABLE}.environment`,
+                        )
+                        .on(
+                            `${TABLE_VARIANTS}.timestamp`,
+                            `${TABLE}.timestamp`,
+                        );
+                })
+                .where(`${TABLE}.feature_name`, featureName)
+                .andWhereRaw(
+                    `${TABLE}.timestamp >= NOW() - INTERVAL '${hoursBack} hours'`,
+                );
+
+            const tokens = rows.reduce(variantRowReducer, {});
+            return Object.values(tokens);
+        } else {
+            const rows = await this.db<ClientMetricsEnvTable>(TABLE)
+                .select('*')
+                .where({ feature_name: featureName })
+                .andWhereRaw(
+                    `timestamp >= NOW() - INTERVAL '${hoursBack} hours'`,
+                );
+            return rows.map(fromRow);
+        }
     }
 
     async getSeenAppsForFeatureToggle(

@@ -73,7 +73,10 @@ import {
 } from '../util/validators/constraint-types';
 import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-order-schema';
-import { getDefaultStrategy } from '../util/feature-evaluator/helpers';
+import {
+    getDefaultStrategy,
+    getProjectDefaultStrategy,
+} from '../util/feature-evaluator/helpers';
 import { AccessService } from './access-service';
 import { User } from '../server-impl';
 import NoAccessError from '../error/no-access-error';
@@ -644,6 +647,28 @@ class FeatureToggleService {
         this.validateUpdatedProperties(context, existingStrategy);
 
         await this.featureStrategiesStore.delete(id);
+
+        const featureStrategies =
+            await this.featureStrategiesStore.getStrategiesForFeatureEnv(
+                projectId,
+                featureName,
+                environment,
+            );
+
+        const hasOnlyDisabledStrategies = featureStrategies.every(
+            (strategy) => strategy.disabled,
+        );
+
+        if (hasOnlyDisabledStrategies) {
+            // Disable the feature in the environment if it only has disabled strategies
+            await this.updateEnabled(
+                projectId,
+                featureName,
+                environment,
+                false,
+                createdBy,
+            );
+        }
 
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
         const preData = this.featureStrategyToPublic(existingStrategy);
@@ -1239,6 +1264,7 @@ class FeatureToggleService {
         enabled: boolean,
         createdBy: string,
         user?: User,
+        shouldActivateDisabledStrategies = false,
     ): Promise<FeatureToggle> {
         await this.stopWhenChangeRequestsEnabled(project, environment, user);
         if (enabled) {
@@ -1256,6 +1282,7 @@ class FeatureToggleService {
             environment,
             enabled,
             createdBy,
+            shouldActivateDisabledStrategies,
         );
     }
 
@@ -1265,6 +1292,7 @@ class FeatureToggleService {
         environment: string,
         enabled: boolean,
         createdBy: string,
+        shouldActivateDisabledStrategies = false,
     ): Promise<FeatureToggle> {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
@@ -1284,9 +1312,53 @@ class FeatureToggleService {
                 featureName,
                 environment,
             );
-            if (strategies.length === 0) {
+            const hasDisabledStrategies = strategies.some(
+                (strategy) => strategy.disabled,
+            );
+
+            if (
+                this.flagResolver.isEnabled('strategyImprovements') &&
+                hasDisabledStrategies &&
+                shouldActivateDisabledStrategies
+            ) {
+                strategies.map(async (strategy) => {
+                    return this.updateStrategy(
+                        strategy.id,
+                        { disabled: false },
+                        {
+                            environment,
+                            projectId: project,
+                            featureName,
+                        },
+                        createdBy,
+                    );
+                });
+            }
+
+            const hasOnlyDisabledStrategies = strategies.every(
+                (strategy) => strategy.disabled,
+            );
+
+            const shouldCreate =
+                hasOnlyDisabledStrategies && !shouldActivateDisabledStrategies;
+
+            if (strategies.length === 0 || shouldCreate) {
+                const projectEnvironmentDefaultStrategy =
+                    await this.projectStore.getDefaultStrategy(
+                        project,
+                        environment,
+                    );
+                const strategy =
+                    this.flagResolver.isEnabled('strategyImprovements') &&
+                    projectEnvironmentDefaultStrategy != null
+                        ? getProjectDefaultStrategy(
+                              projectEnvironmentDefaultStrategy,
+                              featureName,
+                          )
+                        : getDefaultStrategy(featureName);
+
                 await this.unprotectedCreateStrategy(
-                    getDefaultStrategy(featureName),
+                    strategy,
                     {
                         environment,
                         projectId: project,

@@ -100,6 +100,7 @@ export const DemoDialogWelcome = ({
                 variant="contained"
                 color="primary"
                 onClick={onStart}
+                data-testid="DEMO_START_BUTTON"
             >
                 Try Unleash demo
             </StyledStartButton>

@@ -134,6 +134,7 @@ export const DemoStepTooltip = ({
                                         onClick={() => onNext(stepIndex)}
                                         variant="contained"
                                         sx={{ alignSelf: 'flex-end' }}
+                                        data-testid="DEMO_NEXT_BUTTON"
                                     >
                                         {topic === topics.length - 1 &&
                                         stepIndex ===
@@ -189,6 +190,7 @@ export const DemoStepTooltip = ({
                                 onClick={() => onNext(stepIndex)}
                                 variant="contained"
                                 sx={{ alignSelf: 'flex-end' }}
+                                data-testid="DEMO_NEXT_BUTTON"
                             >
                                 {topic === topics.length - 1 &&
                                 stepIndex === topics[topic].steps.length - 1

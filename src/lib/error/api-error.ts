@@ -15,7 +15,6 @@ export const UnleashApiErrorTypes = [
     'NotImplementedError',
     'OperationDeniedError',
     'PasswordMismatch',
-    'PasswordMismatchError',
     'PasswordUndefinedError',
     'ProjectWithoutOwnerError',
     'RoleInUseError',
@@ -78,7 +77,6 @@ const statusCode = (errorName: UnleashApiErrorName): number => {
         case 'InternalError':
             return 500;
         case 'PasswordMismatch':
-        case 'PasswordMismatchError':
             return 401;
         case 'Unauthorized':
             return 401;

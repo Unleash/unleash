@@ -1,5 +1,5 @@
 /**
- * Get the value of an objects (nested) property from a string.
+ * Get the value of an object's (nested) property from a string.
  *
  * This function does not do any processing or validation of the property path.
  * Empty paths and non-existent properties yield `undefined`. Whitespace is

@@ -253,6 +253,7 @@ export const TOPICS: ITutorialTopic[] = [
                     </>
                 ),
                 nextButton: true,
+                delay: 500,
             },
         ],
     },
@@ -356,6 +357,7 @@ export const TOPICS: ITutorialTopic[] = [
                     </>
                 ),
                 nextButton: true,
+                delay: 500,
             },
         ],
     },

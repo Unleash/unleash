@@ -87,7 +87,7 @@ export class ProjectApiTokenController extends Controller {
                         'Returns the [project API tokens](https://docs.getunleash.io/how-to/how-to-create-project-api-tokens) that have been created for this project.',
                     responses: {
                         200: createResponseSchema('apiTokensSchema'),
-                        ...getStandardResponses(401, 403),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -108,8 +108,7 @@ export class ProjectApiTokenController extends Controller {
                         'Endpoint that allows creation of [project API tokens](https://docs.getunleash.io/how-to/how-to-create-project-api-tokens) for the specified project.',
                     responses: {
                         201: resourceCreatedResponseSchema('apiTokenSchema'),
-                        400: emptyResponse,
-                        ...getStandardResponses(401, 403),
+                        ...getStandardResponses(400, 401, 403),
                     },
                 }),
             ],
@@ -126,8 +125,7 @@ export class ProjectApiTokenController extends Controller {
                     tags: ['Projects'],
                     operationId: 'deleteProjectApiToken',
                     summary: 'Delete a project API token.',
-                    description:
-                        `This operation deletes the API token specified in the request URL. If the token doesn't exist, returns an OK response (status code 200).`,
+                    description: `This operation deletes the API token specified in the request URL. If the token doesn't exist, returns an OK response (status code 200).`,
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403),

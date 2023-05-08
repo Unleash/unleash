@@ -1,11 +1,13 @@
 import { TestResult } from 'owasp-password-strength-test';
 import { ApiErrorSchema, UnleashError } from './api-error';
 
+type ValidationError = {
+    validationErrors: string[];
+    message: string;
+};
+
 class OwaspValidationError extends UnleashError {
-    private details: [
-        { validationErrors: string[]; message: string },
-        ...{ validationErrors: string[]; message: string }[],
-    ];
+    private details: [ValidationError];
 
     constructor(testResult: TestResult) {
         const details = {

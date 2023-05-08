@@ -14,92 +14,104 @@ This guides shows you how to use [Unleash's Single-Sign-On (SSO) integration](..
 
 ## Basic configuration
 
-### Step 1: Sign-in to Unleash {#step-1}
+### Prequisites
 
-In order to configure SSO you will need to log in to the Unleash instance with a user that have "Admin" role. If you are self-hosting Unleash then a default user will be automatically created the first time you start Unleash:
+This guide expects you to already have:
 
-- username: `admin`
-- password: `unleash4all`
+- Administrator access to the Unleash instance you want to configure
+- Azure AD access for your Azure instance 
 
-### Step 2: Navigate to SSO configuration {#step-2}
+### Step 1: Create an Enterprise Application within Azure AD {#step-1}
 
-In order to configure SSO with SAML with your Unleash enterprise you should navigate to the Single-Sign-On configuration section and choose the "SAML 2.0" tab.
+**a) Sign in to your Azure AD and **create a new Enterprise Application**. 
 
-![sso-config](/img/sso-configure-saml.png)
+![In the Azure directory overview, use the add button and select the enterprise application option.](/img/sso-azure-saml-add-enterprise-app.png)
 
-### Step 3: Create an Enterprise Application within Azure AD {#step-3}
+**b) In the Azure AD gallery, select the option to create your own application.**
 
-Sign in to your Azure AD and **create a new Enterprise Application**. 
+![The Azure AD gallery. The "create your own application" button is highlighted.](/img/sso-azure-saml-create-own-app.png)
 
-![Azure: Create Azure AD App](/img/sso-azure-saml-add-enterprise-app.png)
+**c) Next, provide the application with a name. When asked what you're looking to do with the application, select the "Integrate any other application you don't find in the gallery (Non-gallery)" option.**
 
-**a) Choose "Create your own application", add a name, and select "Integrate any other application you don't find in the gallery (Non-gallery)", and click "Create"**
+![Azure application creation form. The name is set to "UnleashSSO" and the "non-gallery" option is selected.](/img/sso-azure-saml-name-app.png)
 
-![Azure: App Setup 1](/img/sso-azure-saml-create-own-app.png)
-![Azure: App Setup 2](/img/sso-azure-saml-name-app.png)
+### Step 2: Configure SSO via SAML in Azure AD {#step-2}
 
-**b) Select "Single sign-on" from the side bar and select the "SAML" option**
+**a) On the single sign-on page ("single sign-on" in the side bar), select the "SAML" option**
 
-![Azure: SSO Setup SAML](/img/sso-azure-saml-saml-choice.png)
+![Azure: SSO method selection page](/img/sso-azure-saml-saml-choice.png)
 
-**c) Section 1: Basic SAML Configuration**
+**b) Section 1: Basic SAML Configuration {#basic-saml-configuration}**
 
-The "Identifier" is your Unleash URL (typically formatted as: https://**[region]**.app.unleash-hosted.com/**[instanceName]**). 
-The "Reply URL" is the Unleash Callback URL, which can be found on the Unleash SSO Configuration page (typically formatted as: https://**[region]**.app.unleash-hosted.com/**[instanceName]**/auth/saml/callback).
-Click save. 
+When configuring SSO with SAML, you'll need to add an **identifier** and a **reply URL**.
+The **identifier** is your Unleash URL. (For hosted instances, that's usually `https://<region>.app.unleash-hosted.com/<instanceName>`).
 
-![Azure: SSO Setup Overview](/img/sso-azure-saml-azure-details-overview.png)
-![Azure: SSO Setup Section 1](/img/sso-azure-saml-section-one.png)
+The **reply URL** is the Unleash callback URL. The Unleash callback URL is available on the Unleash SSO configuration page, and is typically your Unleash URL followed by `/auth/saml/callback`.
 
-**d) Section 2: Attributes & Claims**
+![Azure: The basic SAML configuration form with example values filled out for the required fields.](/img/sso-azure-saml-section-one.png)
 
-Unleash requires an email to be sent from the SSO provider so make sure to set the "Unique User Identifier" to the "user.mail" source attribute.
+**c) Section 2: Attributes & Claims {#attributes-and-claims}**
 
-In addition you may provide the following attributes:
+1. Set the "name identifier format" to "Email address".
+2. Select "attribute" as the source.
+3. Enter "user.mail" in the source attribute field.
 
-- firstName
-- lastName
+Optionally, you can also provide a first name and a last name. If provided, these will be used to enrich the data in Unleash.
 
-_(These will be used to enrich the user data in Unleash, but are not required)._
-
-![Azure: SAML Unique Identifier](/img/sso-azure-saml-unique-id-email-id.png)
-![Azure: SAML Attributes](/img/sso-azure-saml-attributes-claim.png)
+![Azure: The manage claim form with email configuration filled out](/img/sso-azure-saml-unique-id-email-id.png)
+![Azure: The list of claims used by the SAML setup, including the optional claims for given name and surname](/img/sso-azure-saml-attributes-claim.png)
 
 > Please make sure to replace URLs with the public URL for your Unleash instance. This will require correct region prefix and the instance name. 
 >
 > The correct format is: https://**[region]**.app.unleash-hosted.com/**[instanceName]**/auth/saml/callback
 
-**e) Get the Azure AD Setup Details**
+**d) Sections 3 and 4: Azure AD setup details {#azure-details}**
 
-Make note of the following details necessary for the Unleash SAML configuration.
+You will need some details from section 3 and 4 of the SAML setup form to configure the integration within Unleash. These details are:
+- Azure AD Identifier (from section 4)
+- Login URL (from section 4)
+- X.509 Certificate (in the Federation Metadata XML from section 3)
 
-Unleash will need:
-- Azure AD Identifier
-- Login URL
-- X.509 Certificate (in the Federation Metadata XML)
+![Azure: Section 3 contains a download link for the Federation Metadata XML file. Section 4 lists the Azure AD identifier and the login URL](/img/sso-azure-saml-azure-details.png)
+![Azure: Within the Federation Metadata XML file, find the `X509Certificate` tag. You'll need the content within that tag.](/img/sso-azure-saml-x509cert.png)
 
-![Azure: Azure Details for Unleash](/img/sso-azure-saml-azure-details.png)
-![Azure: Azure X509 for Unleash](/img/sso-azure-saml-x509cert.png)
+### Step 3: Configure SAML 2.0 provider in Unleash {#step-3}
 
-### Step 4: Configure SAML 2.0 provider in Unleash {#step-4}
+In order to configure SSO with SAML with your Unleash enterprise you should navigate to the Single-Sign-On configuration section and choose the "SAML 2.0" tab.
 
-Go back to Unleash Admin Dashboard and navigate to `Admin Menu -> Single-Sign-On -> SAML`. Fill in the values captured in the _"Get the Azure AD Setup Details"_ step.
-This is how the Azure details map to Unleash
-- Azure AD Identifier > Entity ID (should be formatted as https://sts.windows.net/**{GUID}**)
-- Login URL > Single Sign-On URL (should be formatted as https://login.microsoftonline.com/**{GUID}**/saml2)
-- Azure Federation Metadata XML (copy the X509Certificate) > X.509 Certificate
+![Unleash: sso-config screen](/img/sso-configure-saml.png)
 
-You may also choose to “Auto-create users”. This will make Unleash automatically create new users on the fly the first time they sign-in to Unleash with the given SSO provider (JIT). If you decide to automatically create users in Unleash you must also provide a list of valid email domains separated by commas. You must also decide which global Unleash role they will be assigned (Editor role will be the default).
+Use the values from the [previous section](#azure-details) to fill out the form:
+1. In the entity ID field, add the **Azure AD identifier**. It should look a little like this `https://sts.windows.net/<identifier>.
+2. In the single sign-on URL field, add the **login URL**. It should look something like `https://login.microsoftonline.com/<identifier>/saml2`
+3. In the X.509 certificate field, add the content of the `X509Certificate` tag from the **federation metadata XML**.
 
-![Unleash: SAML 2.0](/img/sso-azure-saml-unleash-config.png)
+Optionally, you may also choose to “Auto-create users”. This will make Unleash automatically create new users on the fly the first time they sign-in to Unleash with the given SSO provider (JIT). If you decide to automatically create users in Unleash you must also provide a list of valid email domains separated by commas. You must also decide which global Unleash role they will be assigned. Without this enabled you will need to manually add users to Unleash before SSO will work for their accounts and Unleash. 
 
-### Step 5: Validate {#step-5}
+![Unleash: SAML 2.0 filled out with entity ID, Single Sign-On URL, and X.509 certificate and auto-creating users for users with the '@getunleash.ai' and '@getunleash.io' emaiil domains.](/img/sso-azure-saml-unleash-config.png)
 
-You have now successfully configured Unleash to use SAML 2.0 together with Azure AD as an IdP. Please note that you also must assign users to the application defined in Azure AD to actually be able to log-in to Unleash.
+### Validate {#validation}
 
-Try signing out of Unleash. If everything is configured correctly you should be presented with the option to sign in with SAML 2.0.
+If everything is set up correctly, you should now be able to sign in with the SAML 2.0 option. You can verify that this works by logging out of Unleash: the login screen should give you the option to sign in with SAML 2.0.
 
-Additionally, Azure gives the option to test logging in with a user at the bottom of the Azure AD SAML setup page. 
+You can also test the integration in Azure by using the "test single sign on" step in the SAML setup wizard. 
 
-![Azure: Test User](/img/sso-azure-saml-test-user.png)
+![Azure: The SAML setup wizard contains a step that lets you test your SAML 2.0 integration. You can use this to verify that everything is configured correctly within Azure.](/img/sso-azure-saml-test-user.png)
 
+### Group Syncing {#group-syncing}
+
+Optionally, you can sync groups from Azure AD to Unleash to [map them to groups in Unleash](/how-to-set-up-group-sso-sync.md). 
+
+**a) Add a group claim in Azure**
+In section 2 (Attributes and claims) of the Azure SAML set-up, select the option to "Add a group claim". 
+
+Check the box to "Customize the name of the group claim" and update the "Name" to something simple, such as "groups". 
+
+![Azure: section 2, attributes and claims, adding a group claim with the name 'group'](/img/sso-azure-saml-group-setup.png)
+
+**b) Unleash SSO Setup**
+In the Unleash Admin SSO section, enable the option to "Enable Group Syncing". 
+
+Add the same "Name" you used from the previous section (eg. "groups") as the "Group Field JSON Path". 
+
+![Unleash: SAML 2.0 SSO setup, enabled group syncing with the Group Field JSON Path as 'groups'](/img/sso-azure-saml-unleash-group-settings.png)

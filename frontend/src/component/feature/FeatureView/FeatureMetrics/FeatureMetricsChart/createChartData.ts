@@ -60,7 +60,6 @@ export const createChartData = (
 
     return {
         datasets: [yesSeries, noSeries, requestsSeries],
-        // labels: [requestsSeries.label, yesSeries.label, noSeries.label],
     };
 };
 

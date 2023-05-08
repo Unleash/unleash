@@ -14,6 +14,7 @@ export interface ITutorialTopicStep extends Step {
     anyClick?: boolean;
     optional?: boolean;
     focus?: boolean | string;
+    delay?: number;
 }
 
 export interface ITutorialTopic {
@@ -521,6 +522,7 @@ export const TOPICS: ITutorialTopic[] = [
                     </>
                 ),
                 nextButton: true,
+                delay: 500,
             },
         ],
     },

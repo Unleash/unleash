@@ -168,7 +168,7 @@ export default class ExportImportService {
         const errors = ImportValidationMessages.compileErrors(
             dto.project,
             unsupportedStrategies,
-            unsupportedContextFields,
+            unsupportedContextFields || [],
             [],
             otherProjectFeatures,
             false,
@@ -225,7 +225,7 @@ export default class ExportImportService {
 
     private async importToggleStatuses(dto: ImportTogglesSchema, user: User) {
         await Promise.all(
-            dto.data.featureEnvironments?.map((featureEnvironment) =>
+            (dto.data.featureEnvironments || []).map((featureEnvironment) =>
                 this.featureToggleService.updateEnabled(
                     dto.project,
                     featureEnvironment.name,
@@ -279,15 +279,17 @@ export default class ExportImportService {
         await this.importTogglesStore.deleteTagsForFeatures(
             dto.data.features.map((feature) => feature.name),
         );
-        return Promise.all(
-            dto.data.featureTags?.map((tag) =>
-                this.featureTagService.addTag(
+
+        const featureTags = dto.data.featureTags || [];
+        for (const tag of featureTags) {
+            if (tag.tagType) {
+                await this.featureTagService.addTag(
                     tag.featureName,
                     { type: tag.tagType, value: tag.tagValue },
                     extractUsernameFromUser(user),
-                ),
-            ),
-        );
+                );
+            }
+        }
     }
 
     private async importContextFields(dto: ImportTogglesSchema, user: User) {

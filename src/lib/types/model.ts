@@ -73,7 +73,7 @@ export interface IFeatureToggleClient {
     stale: boolean;
     variants: IVariant[];
     enabled: boolean;
-    strategies: IStrategyConfig[];
+    strategies: Omit<IStrategyConfig, 'disabled'>[];
     impressionData?: boolean;
     lastSeenAt?: Date;
     createdAt?: Date;
@@ -86,7 +86,7 @@ export interface IFeatureEnvironmentInfo {
     environment: string;
     enabled: boolean;
     strategies: IFeatureStrategy[];
-    defaultStrategy?: CreateFeatureStrategySchema | null;
+    defaultStrategy: CreateFeatureStrategySchema | null;
 }
 
 export interface FeatureToggleWithEnvironment extends FeatureToggle {

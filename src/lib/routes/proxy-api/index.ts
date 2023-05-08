@@ -203,7 +203,7 @@ export default class ProxyController extends Controller {
 
         const toggles = await this.services.proxyService.getProxyFeatures(
             req.user,
-            ProxyController.createContext(req),
+            context,
         );
 
         res.set('Cache-control', 'public, max-age=2');

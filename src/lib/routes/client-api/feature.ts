@@ -28,6 +28,7 @@ import {
 } from '../../openapi/spec/client-features-schema';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { EventService } from 'lib/services';
+import ClientFeatures from 'lib/services/client-features';
 
 const version = 2;
 
@@ -55,6 +56,8 @@ export default class FeatureController extends Controller {
 
     private eventService: EventService;
 
+    private clientFeatures: ClientFeatures;
+
     private featuresAndSegments: (
         query: IFeatureToggleQuery,
         etag: string,
@@ -67,6 +70,7 @@ export default class FeatureController extends Controller {
             clientSpecService,
             openApiService,
             eventService,
+            clientFeatures,
         }: Pick<
             IUnleashServices,
             | 'featureToggleServiceV2'
@@ -74,6 +78,7 @@ export default class FeatureController extends Controller {
             | 'clientSpecService'
             | 'openApiService'
             | 'eventService'
+            | 'clientFeatures'
         >,
         config: IUnleashConfig,
     ) {
@@ -84,6 +89,7 @@ export default class FeatureController extends Controller {
         this.clientSpecService = clientSpecService;
         this.openApiService = openApiService;
         this.eventService = eventService;
+        this.clientFeatures = clientFeatures;
         this.logger = config.getLogger('client-api/feature.js');
 
         this.route({

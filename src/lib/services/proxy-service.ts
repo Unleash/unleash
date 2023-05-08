@@ -2,12 +2,7 @@ import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
 import { Logger } from '../logger';
 import { ClientMetricsSchema, ProxyFeatureSchema } from '../openapi';
 import ApiUser from '../types/api-user';
-import {
-    Context,
-    InMemStorageProvider,
-    Unleash,
-    UnleashEvents,
-} from 'unleash-client';
+import { Context, Unleash, UnleashEvents } from 'unleash-client';
 import { ProxyRepository } from '../proxy';
 import { ApiTokenType } from '../types/models/api-token';
 import {
@@ -28,6 +23,7 @@ type Stores = Pick<IUnleashStores, 'projectStore' | 'eventStore'>;
 type Services = Pick<
     IUnleashServices,
     | 'featureToggleServiceV2'
+    | 'clientFeatures'
     | 'segmentService'
     | 'clientMetricsServiceV2'
     | 'settingService'
@@ -126,9 +122,9 @@ export class ProxyService {
         const client = new Unleash({
             appName: 'proxy',
             url: 'unused',
-            storageProvider: new InMemStorageProvider(),
+            //storageProvider: new InMemStorageProvider(), // this storage provider also keeps things in memory? Also, if the repository is provided then this parameter is ignored: https://github.com/Unleash/unleash-client-node/blob/2584b383da5e8f4af1b4e686ac7412216aa94a70/src/unleash.ts#L107-L124
             disableMetrics: true,
-            repository,
+            repository, // this repository is loading everything in memory
         });
 
         client.on(UnleashEvents.Error, (error) => {

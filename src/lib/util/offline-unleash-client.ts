@@ -22,9 +22,9 @@ export const mapFeaturesForClient = (
         variants: (feature.variants || []).map((variant) => ({
             overrides: [],
             ...variant,
-            payload: variant.payload && {
+            payload: variant.payload! && {
                 ...variant.payload,
-                type: variant.payload.type as unknown as PayloadType,
+                type: variant.payload.type as PayloadType,
             },
         })),
         project: feature.project,
@@ -32,13 +32,14 @@ export const mapFeaturesForClient = (
             parameters: {},
             ...strategy,
             constraints:
-                strategy.constraints &&
-                strategy.constraints.map((constraint) => ({
-                    inverted: false,
-                    values: [],
-                    ...constraint,
-                    operator: constraint.operator as unknown as Operator,
-                })),
+                (strategy.constraints &&
+                    strategy.constraints.map((constraint) => ({
+                        inverted: false,
+                        values: [],
+                        ...constraint,
+                        operator: constraint.operator as Operator,
+                    }))) ??
+                [],
         })),
     }));
 
@@ -63,7 +64,7 @@ export const offlineUnleashClient = async ({
         storageProvider: new InMemStorageProvider(),
         bootstrap: {
             data: mapFeaturesForClient(features),
-            segments: mapSegmentsForClient(segments),
+            segments: mapSegmentsForClient(segments ?? []),
         },
     });
 

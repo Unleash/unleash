@@ -26,7 +26,7 @@ import ClientMetricsServiceV2 from '../services/client-metrics/metrics-service-v
 import UserSplashService from '../services/user-splash-service';
 import { OpenApiService } from '../services/openapi-service';
 import { ClientSpecService } from '../services/client-spec-service';
-import { PlaygroundService } from 'lib/services/playground-service';
+import { PlaygroundService } from '../services/playground-service';
 import { GroupService } from '../services/group-service';
 import { ProxyService } from '../services/proxy-service';
 import EdgeService from '../services/edge-service';
@@ -40,7 +40,8 @@ import { AccountService } from '../services/account-service';
 import { SchedulerService } from '../services/scheduler-service';
 import { Knex } from 'knex';
 import ExportImportService from '../features/export-import-toggles/export-import-service';
-import { ISegmentService } from 'lib/segments/segment-service-interface';
+import { ISegmentService } from '../segments/segment-service-interface';
+import ClientFeatures from '../services/client-features';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -86,6 +87,7 @@ export interface IUnleashServices {
     maintenanceService: MaintenanceService;
     exportImportService: ExportImportService;
     schedulerService: SchedulerService;
+    clientFeatures: ClientFeatures;
     transactionalExportImportService: (
         db: Knex.Transaction,
     ) => ExportImportService;

@@ -18,7 +18,10 @@ type Stores = Pick<IUnleashStores, 'projectStore' | 'eventStore'>;
 
 type Services = Pick<
     IUnleashServices,
-    'featureToggleServiceV2' | 'segmentService' | 'eventService'
+    | 'featureToggleServiceV2'
+    | 'clientFeatures'
+    | 'segmentService'
+    | 'eventService'
 >;
 
 export class ProxyRepository
@@ -127,6 +130,14 @@ export class ProxyRepository
     }
 
     private async featuresForToken(): Promise<FeatureInterface[]> {
+        if (this.useClientFeatures) {
+            return mapFeaturesForClient(
+                await this.services.clientFeatures.getFeatures({
+                    project: await this.projectIdsForToken(),
+                    environment: this.environmentNameForToken(),
+                }),
+            );
+        }
         return mapFeaturesForClient(
             await this.services.featureToggleServiceV2.getClientFeatures({
                 project: await this.projectIdsForToken(),

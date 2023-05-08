@@ -3,7 +3,7 @@ import { ValidationError } from 'joi';
 
 import { CLIENT } from './permissions';
 
-interface IApiUserData {
+export interface IApiUserData {
     permissions?: string[];
     projects?: string[];
     project?: string;

@@ -29,7 +29,6 @@ export const UnleashApiErrorTypes = [
 
 const UnleashApiErrorTypesWithExtraData = [
     'BadDataError',
-    'BadRequestError',
     'ValidationError',
     'AuthenticationRequired',
     'NoAccessError',
@@ -53,8 +52,6 @@ const statusCode = (errorName: UnleashApiErrorName): number => {
         case 'ValidationError':
             return 400;
         case 'BadDataError':
-            return 400;
-        case 'BadRequestError':
             return 400;
         case 'OwaspValidationError':
             return 400;
@@ -119,7 +116,7 @@ type UnleashErrorData =
                 type: string;
             }
           | {
-                name: 'ValidationError' | 'BadDataError' | 'BadRequestError';
+                name: 'ValidationError' | 'BadDataError';
                 details: [
                     { description: string; message: string },
                     ...{ description: string; message: string }[],
@@ -218,11 +215,7 @@ export const fromLegacyError = (e: Error): UnleashError => {
         });
     }
 
-    const badRequestErrors = [
-        'BadDataError',
-        'BadRequestError',
-        'ValidationError',
-    ] as const;
+    const badRequestErrors = ['BadDataError', 'ValidationError'] as const;
     if ((badRequestErrors as readonly string[]).includes(name)) {
         return new UnleashError({
             name: name as typeof badRequestErrors[number],

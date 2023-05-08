@@ -18,7 +18,6 @@ class BadDataError extends UnleashError {
             message:
                 'Request validation failed: your request body failed to validate. Refer to the `details` list to see what happened.',
             name: 'BadDataError',
-            details: [{ description: 'x', message: 'x' }],
         });
 
         this.details = errors ?? [{ message, description: message }];

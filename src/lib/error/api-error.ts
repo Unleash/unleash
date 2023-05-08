@@ -1,6 +1,5 @@
 import { v4 as uuidV4 } from 'uuid';
 import { FromSchema } from 'json-schema-to-ts';
-import OwaspValidationError from './owasp-validation-error';
 
 export const UnleashApiErrorTypes = [
     'ContentTypeError',
@@ -22,26 +21,19 @@ export const UnleashApiErrorTypes = [
     'RoleInUseError',
     'UnknownError',
     'UsedTokenError',
+    'BadDataError',
+    'ValidationError',
+    'AuthenticationRequired',
+    'Unauthorized',
+    'NoAccessError',
+    'InvalidTokenError',
+    'OwaspValidationError',
 
     // server errors; not the end user's fault
     'InternalError',
 ] as const;
 
-const UnleashApiErrorTypesWithExtraData = [
-    'BadDataError',
-    'ValidationError',
-    'AuthenticationRequired',
-    'NoAccessError',
-    'InvalidTokenError',
-    'OwaspValidationError',
-] as const;
-
-const AllUnleashApiErrorTypes = [
-    ...UnleashApiErrorTypes,
-    ...UnleashApiErrorTypesWithExtraData,
-] as const;
-
-type UnleashApiErrorName = typeof AllUnleashApiErrorTypes[number];
+type UnleashApiErrorName = typeof UnleashApiErrorTypes[number];
 export type UnleashApiErrorNameWithoutExtraData =
     typeof UnleashApiErrorTypes[number];
 
@@ -88,6 +80,8 @@ const statusCode = (errorName: UnleashApiErrorName): number => {
         case 'PasswordMismatch':
         case 'PasswordMismatchError':
             return 401;
+        case 'Unauthorized':
+            return 401;
         case 'DisabledError':
             return 422;
         case 'NotImplementedError':
@@ -99,39 +93,10 @@ const statusCode = (errorName: UnleashApiErrorName): number => {
     }
 };
 
-type UnleashErrorData =
-    | {
-          message: string;
-      } & (
-          | {
-                name: UnleashApiErrorNameWithoutExtraData;
-            }
-          | {
-                name: 'NoAccessError';
-                permission: string;
-            }
-          | {
-                name: 'AuthenticationRequired';
-                path: string;
-                type: string;
-            }
-          | {
-                name: 'ValidationError' | 'BadDataError';
-                details: [
-                    { description: string; message: string },
-                    ...{ description: string; message: string }[],
-                ];
-            }
-          | {
-                name: 'OwaspValidationError';
-                details: [
-                    {
-                        validationErrors: string[];
-                        message: string;
-                    },
-                ];
-            }
-      );
+type UnleashErrorData = {
+    message: string;
+    name: UnleashApiErrorName;
+};
 
 export class UnleashError extends Error {
     id: string;
@@ -142,7 +107,7 @@ export class UnleashError extends Error {
 
     additionalParameters: object;
 
-    constructor({ name, message }: UnleashErrorData) {
+    protected constructor({ name, message }: UnleashErrorData) {
         super();
         this.id = uuidV4();
         this.name = name;
@@ -169,6 +134,18 @@ export class UnleashError extends Error {
     }
 }
 
+class GenericUnleashError extends UnleashError {
+    constructor({
+        name,
+        message,
+    }: {
+        name: UnleashApiErrorNameWithoutExtraData;
+        message: string;
+    }) {
+        super({ name, message });
+    }
+}
+
 export const apiErrorSchema = {
     $id: '#/components/schemas/apiError',
     type: 'object',
@@ -178,7 +155,7 @@ export const apiErrorSchema = {
     properties: {
         name: {
             type: 'string',
-            enum: AllUnleashApiErrorTypes,
+            enum: UnleashApiErrorTypes,
             description:
                 'The kind of error that occurred. Meant for machine consumption.',
             example: 'ValidationError',
@@ -203,42 +180,39 @@ export const fromLegacyError = (e: Error): UnleashError => {
     if (e instanceof UnleashError) {
         return e;
     }
-    const name = AllUnleashApiErrorTypes.includes(e.name as UnleashApiErrorName)
+    const name = UnleashApiErrorTypes.includes(e.name as UnleashApiErrorName)
         ? (e.name as UnleashApiErrorName)
         : 'UnknownError';
 
     if (name === 'NoAccessError') {
-        return new UnleashError({
-            name,
+        return new GenericUnleashError({
+            name: 'NoAccessError',
             message: e.message,
-            permission: 'unknown',
         });
     }
 
-    const badRequestErrors = ['BadDataError', 'ValidationError'] as const;
-    if ((badRequestErrors as readonly string[]).includes(name)) {
-        return new UnleashError({
-            name: name as typeof badRequestErrors[number],
-            message:
-                'Request validation failed: your request body failed to validate. Refer to the `details` list to see what happened.',
-            details: [{ description: e.message, message: e.message }],
+    if (name === 'ValidationError' || name === 'BadDataError') {
+        return new GenericUnleashError({
+            name: 'BadDataError',
+            message: e.message,
         });
     }
 
     if (name === 'OwaspValidationError') {
-        return e as OwaspValidationError;
-    }
-
-    if (name === 'AuthenticationRequired') {
-        return new UnleashError({
-            name,
-            message: `You must be authenticated to view this content. Please log in.`,
-            path: `/err/maybe/login?`,
-            type: 'password',
+        return new GenericUnleashError({
+            name: 'OwaspValidationError',
+            message: e.message,
         });
     }
 
-    return new UnleashError({
+    if (name === 'AuthenticationRequired') {
+        return new GenericUnleashError({
+            name: 'AuthenticationRequired',
+            message: `You must be authenticated to view this content. Please log in.`,
+        });
+    }
+
+    return new GenericUnleashError({
         name: name as UnleashApiErrorNameWithoutExtraData,
         message: e.message,
     });

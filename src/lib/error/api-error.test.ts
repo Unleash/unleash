@@ -6,7 +6,6 @@ import {
     fromLegacyError,
     UnleashApiErrorNameWithoutExtraData,
     UnleashApiErrorTypes,
-    UnleashError,
 } from './api-error';
 import BadDataError, {
     fromOpenApiValidationError,
@@ -17,13 +16,14 @@ import OwaspValidationError from './owasp-validation-error';
 import IncompatibleProjectError from './incompatible-project-error';
 import PasswordUndefinedError from './password-undefined';
 import ProjectWithoutOwnerError from './project-without-owner-error';
+import NotFoundError from './notfound-error';
 
 describe('v5 deprecation: backwards compatibility', () => {
     it.each(UnleashApiErrorTypes)(
         'Adds details to error type: "%s"',
         (name: UnleashApiErrorNameWithoutExtraData) => {
             const message = `Error type: ${name}`;
-            const error = new UnleashError({ name, message }).toJSON();
+            const error = new NotFoundError(message).toJSON();
 
             expect(error.message).toBe(message);
             expect(error.details).toStrictEqual([

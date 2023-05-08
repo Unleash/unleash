@@ -12,7 +12,6 @@ class NoAccessError extends UnleashError {
         super({
             name: 'NoAccessError',
             message,
-            permission,
         });
 
         this.permission = permission;

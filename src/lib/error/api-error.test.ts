@@ -41,7 +41,6 @@ describe('Standard/legacy error conversion', () => {
         const message = `: message!`;
         const result = fromLegacyError(new BadDataError(message)).toJSON();
 
-        expect(result.message.includes('`details`')).toBeTruthy();
         expect(result.details).toStrictEqual([
             {
                 message,

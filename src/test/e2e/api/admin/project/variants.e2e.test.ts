@@ -488,8 +488,6 @@ test('PUTing an invalid variant throws 400 exception', async () => {
         .send(invalidJson)
         .expect(400)
         .expect((res) => {
-            console.log(res.body);
-
             expect(res.body.details).toHaveLength(1);
             expect(res.body.details[0].description).toMatch(
                 /.*weightType" must be one of/,

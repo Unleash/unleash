@@ -14,13 +14,17 @@ class BadDataError extends UnleashError {
         message: string,
         errors?: [ValidationErrorDescription, ...ValidationErrorDescription[]],
     ) {
+        const topLevelMessage =
+            'Request validation failed: your request body contains invalid data' +
+            (errors
+                ? '. Refer to the `details` list to see what happened.'
+                : `: ${message}`);
         super({
-            message:
-                'Request validation failed: your request body failed to validate. Refer to the `details` list to see what happened.',
+            message: topLevelMessage,
             name: 'BadDataError',
         });
 
-        this.details = errors ?? [{ message, description: message }];
+        this.details = errors ?? [{ message: message, description: message }];
     }
 
     toJSON(): ApiErrorSchema {

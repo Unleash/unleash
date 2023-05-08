@@ -31,7 +31,7 @@ export const gradualRollout = async () => {
                     constraints: [],
                     parameters: {
                         rollout: '50',
-                        stickiness: 'userId',
+                        stickiness: 'default',
                         groupId: featureId,
                     },
                 }),

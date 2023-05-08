@@ -4,6 +4,7 @@ import { createFeatureStrategySchema } from './create-feature-strategy-schema';
 export const projectEnvironmentSchema = {
     $id: '#/components/schemas/projectEnvironmentSchema',
     type: 'object',
+    additionalProperties: false,
     description:
         'Add an environment to a project, optionally also sets if change requests are enabled for this environment on the project',
     required: ['environment'],

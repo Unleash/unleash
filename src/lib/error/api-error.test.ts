@@ -408,7 +408,7 @@ describe('Error serialization special cases', () => {
 });
 
 describe('Stack traces', () => {
-    it('captures stack traces regardless of whether `Error.captureStackTrace`', () => {
+    it('captures stack traces regardless of whether `Error.captureStackTrace` is called explicitly or not', () => {
         const e = new PasswordUndefinedError();
 
         expect(e.stack).toBeTruthy();

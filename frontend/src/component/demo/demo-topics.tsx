@@ -247,7 +247,11 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
-                content: <Description>Confirm your changes.</Description>,
+                content: (
+                    <Description>
+                        Confirm your changes by using this button.
+                    </Description>
+                ),
                 optional: true,
                 backCloseModal: true,
             },
@@ -257,8 +261,8 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Finally, toggle{' '}
-                            <Badge as="span">demoApp.step2</Badge>
+                            Finally, enable or disable the feature for your user
+                            by toggling the highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!

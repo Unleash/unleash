@@ -22,9 +22,10 @@ const authorizationMiddleware = (
         }
         if (req.header('authorization')) {
             // API clients should get 401 with a basic body
-            return res
-                .status(401)
-                .json(new UnauthorizedError('You must log in to use Unleash.'));
+            const error = new UnauthorizedError(
+                'You must log in to use Unleash.',
+            );
+            return res.status(error.statusCode).json(error);
         }
 
         const path = `${baseUriPath}/auth/simple/login`;

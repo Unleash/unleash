@@ -296,8 +296,9 @@ export const TOPICS: ITutorialTopic[] = [
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step3"]`,
                 content: (
                     <Description>
-                        First, let's open the feature toggle configuration for{' '}
-                        <Badge as="span">demoApp.step3</Badge>
+                        First, open the feature toggle configuration for{' '}
+                        <Badge as="span">demoApp.step3</Badge> by using this
+                        link.
                     </Description>
                 ),
                 preventDefault: true,
@@ -308,7 +309,7 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <Description>
                         Expand the environment card to see all the defined
-                        strategies.
+                        strategies by using the arrow button.
                     </Description>
                 ),
             },
@@ -316,7 +317,8 @@ export const TOPICS: ITutorialTopic[] = [
                 target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"].Mui-expanded a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
                 content: (
                     <Description>
-                        Edit the existing gradual rollout strategy.
+                        Edit the existing gradual rollout strategy by using the
+                        "Edit" button.
                     </Description>
                 ),
                 backCollapseExpanded: true,
@@ -324,18 +326,35 @@ export const TOPICS: ITutorialTopic[] = [
             {
                 target: 'span[data-testid="ROLLOUT_SLIDER_ID"]',
                 content: (
-                    <Description>Change the rollout percentage.</Description>
+                    <>
+                        <Description>
+                            Change the rollout percentage by adjusting the
+                            percentage slider.
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
+                            When you're done, use the "Next" button in the
+                            dialog.
+                        </Description>
+                    </>
                 ),
                 backCloseModal: true,
                 nextButton: true,
             },
             {
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
-                content: <Description>Save your strategy.</Description>,
+                content: (
+                    <Description>
+                        Save and apply your strategy by using this button.
+                    </Description>
+                ),
             },
             {
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
-                content: <Description>Confirm your changes.</Description>,
+                content: (
+                    <Description>
+                        Confirm your changes by using this button.
+                    </Description>
+                ),
                 optional: true,
                 backCloseModal: true,
             },
@@ -345,13 +364,10 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Finally, toggle{' '}
-                            <Badge as="span">demoApp.step3</Badge>
+                            Finally, enable or disable the feature with the new
+                            variant by toggling the highlighted switch.
                         </Description>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
+                        <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
                         </Badge>
                     </>

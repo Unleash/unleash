@@ -86,6 +86,13 @@ export const DemoStepTooltip = ({
     onBack,
     onNext,
 }: IDemoStepTooltipProps) => {
+    const nextLabel =
+        stepIndex === 0
+            ? 'Start'
+            : stepIndex === topics[topic].steps.length - 1
+            ? 'Finish'
+            : 'Next';
+
     if (step.target === 'body') {
         return (
             <div {...tooltipProps}>
@@ -136,11 +143,7 @@ export const DemoStepTooltip = ({
                                         sx={{ alignSelf: 'flex-end' }}
                                         data-testid="DEMO_NEXT_BUTTON"
                                     >
-                                        {topic === topics.length - 1 &&
-                                        stepIndex ===
-                                            topics[topic].steps.length - 1
-                                            ? 'Finish'
-                                            : 'Next'}
+                                        {nextLabel}
                                     </Button>
                                 }
                             />
@@ -192,10 +195,7 @@ export const DemoStepTooltip = ({
                                 sx={{ alignSelf: 'flex-end' }}
                                 data-testid="DEMO_NEXT_BUTTON"
                             >
-                                {topic === topics.length - 1 &&
-                                stepIndex === topics[topic].steps.length - 1
-                                    ? 'Finish'
-                                    : 'Next'}
+                                {nextLabel}
                             </Button>
                         }
                     />

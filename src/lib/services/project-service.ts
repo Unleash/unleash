@@ -502,33 +502,14 @@ export default class ProjectService {
             createdBy,
         );
 
-        const role = await this.accessService.getRole(roleId);
-        const { users, groups } = await this.getAccessToProject(projectId);
-
-        const addedUsers = users.filter(({ id }) =>
-            usersAndGroups.users.some(({ id: userId }) => userId === id),
-        );
-
-        const addedGroups = groups.filter(({ id }) =>
-            usersAndGroups.groups.some(({ id: groupId }) => groupId === id),
-        );
-
         await this.eventStore.store(
             new ProjectAccessAddedEvent({
                 project: projectId,
                 createdBy,
                 data: {
                     roleId,
-                    roleName: role.name,
-                    groups: addedGroups.map(({ id: groupId, name }) => ({
-                        id: groupId,
-                        name,
-                    })),
-                    users: addedUsers.map(({ id, email, username }) => ({
-                        id,
-                        email,
-                        username,
-                    })),
+                    groups: usersAndGroups.groups.map(({ id }) => id),
+                    users: usersAndGroups.users.map(({ id }) => id),
                 },
             }),
         );

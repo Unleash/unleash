@@ -5,7 +5,6 @@ import Input from 'component/common/Input/Input';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IArchivedFeatureDeleteConfirmProps {
     deletedFeatures: string[];
@@ -35,8 +34,7 @@ export const ArchivedFeatureDeleteConfirm = ({
 }: IArchivedFeatureDeleteConfirmProps) => {
     const [confirmName, setConfirmName] = useState('');
     const { setToastData, setToastApiError } = useToast();
-    const { deleteFeature, deleteFeatures } = useProjectApi();
-    const { uiConfig } = useUiConfig();
+    const { deleteFeatures } = useProjectApi();
 
     const onDeleteFeatureToggle = async () => {
         try {

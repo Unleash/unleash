@@ -661,7 +661,7 @@ class FeatureToggleService {
 
         if (hasOnlyDisabledStrategies) {
             // Disable the feature in the environment if it only has disabled strategies
-            await this.updateEnabled(
+            await this.unprotectedUpdateEnabled(
                 projectId,
                 featureName,
                 environment,
@@ -1292,7 +1292,7 @@ class FeatureToggleService {
         environment: string,
         enabled: boolean,
         createdBy: string,
-        shouldActivateDisabledStrategies: boolean,
+        shouldActivateDisabledStrategies = false,
     ): Promise<FeatureToggle> {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(

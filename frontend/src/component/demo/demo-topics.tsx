@@ -72,10 +72,7 @@ export const TOPICS: ITutorialTopic[] = [
                             The simplest way to use a feature toggle is to
                             enable or disable it for everyone (on/off).
                         </Description>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
+                        <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page when toggling!
                         </Badge>
                     </>
@@ -205,10 +202,7 @@ export const TOPICS: ITutorialTopic[] = [
                         <Description>
                             Enter your <Badge as="span">userId</Badge>
                         </Description>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
+                        <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             You can find your userId on the demo page.
                         </Badge>
                     </>
@@ -244,10 +238,7 @@ export const TOPICS: ITutorialTopic[] = [
                             Finally, toggle{' '}
                             <Badge as="span">demoApp.step2</Badge>
                         </Description>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
+                        <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
                         </Badge>
                     </>
@@ -530,10 +521,7 @@ export const TOPICS: ITutorialTopic[] = [
                         <Description>
                             Enter your <Badge as="span">userId</Badge>
                         </Description>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
+                        <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             You can find your userId on the demo page.
                         </Badge>
                         <Description sx={{ mt: 1 }}>

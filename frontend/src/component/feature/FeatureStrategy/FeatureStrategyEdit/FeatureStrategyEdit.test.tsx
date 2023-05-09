@@ -37,7 +37,7 @@ test('formatUpdateStrategyApiCode', () => {
             'unleashUrl'
         )
     ).toMatchInlineSnapshot(`
-      "curl --location --request PUT 'unleashUrl/api/admin/projects/projectId/features/featureId/environments/environmentId/strategies/a' \\\\
+      "curl --location --request PUT 'unleashUrl/api/admin/projects/projectId/features/featureId/environments/environmentId/strategies/strategyId' \\\\
           --header 'Authorization: INSERT_API_KEY' \\\\
           --header 'Content-Type: application/json' \\\\
           --data-raw '{

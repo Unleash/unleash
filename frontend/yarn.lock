@@ -4356,7 +4356,7 @@ deepmerge@^2.2.1:
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.2.1.tgz#5d3ff22a01c00f645405a2fbc17d0778a1801170"
   integrity sha512-R9hc1Xa/NOBi9WRVUWg19rl1UB7Tt4kuPd+thNJgFZoxXsTz7ncaPaeIm+40oSGuP33DfMb4sZt1QIGiJzC4EA==
 
-deepmerge@^4.2.2:
+deepmerge@^4.2.2, deepmerge@^4.3.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-4.3.1.tgz#44b5f2147cd3b00d4b56137685966f26fd25dd4a"
   integrity sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==
@@ -7860,11 +7860,11 @@ react-is@^17.0.1, react-is@^17.0.2:
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
 react-joyride@^2.5.3:
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/react-joyride/-/react-joyride-2.5.3.tgz#3e753f80502a74abcc956babec4873d204345911"
-  integrity sha512-DKKvb/JAAsHm0x/RWO3WI6NOtTMHDso5v8MTauxTSz2dFs7Tu1rWg1BDBWmEMj6pUCvem7hblFbCiDAcvhs8tQ==
+  version "2.5.4"
+  resolved "https://registry.yarnpkg.com/react-joyride/-/react-joyride-2.5.4.tgz#e428fe322acf867624179cb3561ad128648495bd"
+  integrity sha512-CLV1Ju79iRKIP/KqsEX05nSxMBzT41BhPAyNrTdBQWEYAkpyo6iiCPelk6No2W8iPgw373JKk2cK7AQ5Q3lFew==
   dependencies:
-    deepmerge "^4.2.2"
+    deepmerge "^4.3.1"
     exenv "^1.2.2"
     is-lite "^0.9.2"
     prop-types "^15.8.1"

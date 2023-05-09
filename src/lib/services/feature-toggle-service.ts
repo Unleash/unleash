@@ -661,7 +661,7 @@ class FeatureToggleService {
 
         if (hasOnlyDisabledStrategies) {
             // Disable the feature in the environment if it only has disabled strategies
-            await this.updateEnabled(
+            await this.unprotectedUpdateEnabled(
                 projectId,
                 featureName,
                 environment,

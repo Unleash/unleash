@@ -213,6 +213,7 @@ export const FeatureStrategyEdit = () => {
                     projectId,
                     featureId,
                     environmentId,
+                    strategyId,
                     payload,
                     strategyDefinition,
                     unleashUrl
@@ -272,6 +273,7 @@ export const formatUpdateStrategyApiCode = (
     projectId: string,
     featureId: string,
     environmentId: string,
+    strategyId: string,
     strategy: Partial<IFeatureStrategy>,
     strategyDefinition: IStrategy,
     unleashUrl?: string
@@ -290,7 +292,7 @@ export const formatUpdateStrategyApiCode = (
         ),
     };
 
-    const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategy.id}`;
+    const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
     const payload = JSON.stringify(sortedStrategy, undefined, 2);
 
     return `curl --location --request PUT '${url}' \\

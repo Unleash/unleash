@@ -100,7 +100,7 @@ You can also test the integration in Azure by using the "test single sign on" st
 
 ### Group Syncing {#group-syncing}
 
-Optionally, you can sync groups from Azure AD to Unleash to [map them to groups in Unleash](/how-to-set-up-group-sso-sync.md). 
+Optionally, you can sync groups from Azure AD to Unleash to [map them to groups in Unleash](../how-to/how-to-set-up-group-sso-sync.md). 
 
 **a) Add a group claim in Azure**
 In section 2 (Attributes and claims) of the Azure SAML set-up, select the option to "Add a group claim". 

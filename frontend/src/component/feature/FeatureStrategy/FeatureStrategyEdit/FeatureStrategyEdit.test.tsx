@@ -31,6 +31,7 @@ test('formatUpdateStrategyApiCode', () => {
             'projectId',
             'featureId',
             'environmentId',
+            'strategyId',
             strategy,
             strategyDefinition,
             'unleashUrl'

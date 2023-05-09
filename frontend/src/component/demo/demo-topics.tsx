@@ -113,8 +113,9 @@ export const TOPICS: ITutorialTopic[] = [
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2"]`,
                 content: (
                     <Description>
-                        First, let's open the feature toggle configuration for{' '}
-                        <Badge as="span">demoApp.step2</Badge>
+                        First, open the feature toggle configuration for{' '}
+                        <Badge as="span">demoApp.step2</Badge> by using this
+                        link.
                     </Description>
                 ),
                 preventDefault: true,
@@ -124,7 +125,7 @@ export const TOPICS: ITutorialTopic[] = [
                 target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button`,
                 content: (
                     <Description>
-                        Add a new strategy to this environment by clicking this
+                        Add a new strategy to this environment by using this
                         button.
                     </Description>
                 ),
@@ -161,7 +162,7 @@ export const TOPICS: ITutorialTopic[] = [
                             to be evaluated for a feature toggle.
                         </Description>
                         <Description sx={{ mt: 1 }}>
-                            Click this button to add a constraint.
+                            Add a constraint by using this button.
                         </Description>
                     </>
                 ),
@@ -170,16 +171,21 @@ export const TOPICS: ITutorialTopic[] = [
             {
                 target: '#context-field-select',
                 content: (
-                    <Description>
-                        <a
-                            href="https://docs.getunleash.io/reference/unleash-context"
-                            target="_blank"
-                        >
-                            Unleash context
-                        </a>{' '}
-                        contains information relating to the current feature
-                        toggle request.
-                    </Description>
+                    <>
+                        <Description>
+                            <a
+                                href="https://docs.getunleash.io/reference/unleash-context"
+                                target="_blank"
+                            >
+                                Unleash context
+                            </a>{' '}
+                            contains information relating to the current feature
+                            toggle request.
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
+                            Select the context field by using this dropdown.
+                        </Description>
+                    </>
                 ),
                 backCloseModal: true,
                 anyClick: true,
@@ -205,6 +211,10 @@ export const TOPICS: ITutorialTopic[] = [
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             You can find your userId on the demo page.
                         </Badge>
+                        <Description sx={{ mt: 1 }}>
+                            When you're done, use the "Next" button in the
+                            dialog.
+                        </Description>
                     </>
                 ),
                 nextButton: true,
@@ -212,20 +222,36 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 target: 'button[data-testid="CONSTRAINT_VALUES_ADD_BUTTON"]',
-                content: <Description>Add the constraint value.</Description>,
+                content: (
+                    <Description>
+                        Add the constraint value by using this button.
+                    </Description>
+                ),
             },
             {
                 target: 'button[data-testid="CONSTRAINT_SAVE_BUTTON"]',
-                content: <Description>Save the constraint.</Description>,
+                content: (
+                    <Description>
+                        Save the constraint by using this button.
+                    </Description>
+                ),
             },
             {
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
-                content: <Description>Save your strategy.</Description>,
+                content: (
+                    <Description>
+                        Save and apply your strategy by using this button.
+                    </Description>
+                ),
                 backCloseModal: true,
             },
             {
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
-                content: <Description>Confirm your changes.</Description>,
+                content: (
+                    <Description>
+                        Confirm your changes by using this button.
+                    </Description>
+                ),
                 optional: true,
                 backCloseModal: true,
             },
@@ -235,8 +261,8 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Finally, toggle{' '}
-                            <Badge as="span">demoApp.step2</Badge>
+                            Finally, enable or disable the feature for your user
+                            by toggling the highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!

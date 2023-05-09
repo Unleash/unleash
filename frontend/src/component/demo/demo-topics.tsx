@@ -69,11 +69,11 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            The simplest way to use a feature toggle is to
-                            enable or disable it for everyone (on/off).
+                            Enable or disable the feature for everyone by
+                            toggling the highlighted switch.
                         </Description>
                         <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
-                            Look at the demo page when toggling!
+                            Look at the demo page to see your changes!
                         </Badge>
                     </>
                 ),

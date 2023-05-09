@@ -124,7 +124,7 @@ You can assign the following permissions on a per-environment level within the p
 
 :::info availability
 
-User groups are available to Unleash Enterprise users since **Unleash 4.14** and root role groups are planned to be released in **Unleash 5.1**.
+User groups are available to Unleash Enterprise users since **Unleash 4.14**. Root role groups are planned to be released in **Unleash 5.1**.
 
 :::
 

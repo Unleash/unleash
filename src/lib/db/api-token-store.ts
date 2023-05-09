@@ -38,8 +38,8 @@ const tokenRowReducer = (acc, tokenRow) => {
     if (!acc[tokenRow.secret]) {
         acc[tokenRow.secret] = {
             secret: token.secret,
-            username: token.username,
-            type: token.type,
+            username: token.token_name,
+            type: token.type.toLowerCase(),
             project: ALL,
             projects: [ALL],
             environment: token.environment ? token.environment : ALL,

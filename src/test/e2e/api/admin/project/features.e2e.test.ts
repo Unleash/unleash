@@ -2999,8 +2999,8 @@ test('Disabling last strategy for feature environment should disable that enviro
 });
 
 test('Enabling a feature environment should add the default strategy when only disabled strategies', async () => {
-    const envName = 'last_strategy_disable';
-    const featureName = 'last_strategy_disable_feature';
+    const envName = 'add_default_strategy';
+    const featureName = 'add_default_strategy_feature';
     // Create environment
     await db.stores.environmentStore.create({
         name: envName,

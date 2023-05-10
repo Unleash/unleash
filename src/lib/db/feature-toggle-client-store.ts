@@ -4,37 +4,24 @@ import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
 import {
     IFeatureToggleClient,
+    IFeatureToggleClientStore,
     IFeatureToggleQuery,
     IStrategyConfig,
     ITag,
-} from '../types/model';
-import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
-import { DEFAULT_ENV } from '../util/constants';
-import { PartialDeep } from '../types/partial';
+    PartialDeep,
+} from '../types';
+import { DEFAULT_ENV, ensureStringValue, mapValues } from '../util';
 import EventEmitter from 'events';
 import FeatureToggleStore from './feature-toggle-store';
-import { ensureStringValue } from '../util/ensureStringValue';
-import { mapValues } from '../util/map-values';
-import { IFlagResolver } from '../types/experimental';
-import Raw = Knex.Raw;
 import { Db } from './db';
-
-export interface FeaturesTable {
-    name: string;
-    description: string;
-    type: string;
-    stale: boolean;
-    variants: string;
-    project: string;
-    last_seen_at?: Date;
-    created_at?: Date;
-}
+import Raw = Knex.Raw;
 
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;
     archived: boolean;
     isAdmin: boolean;
     includeStrategyIds?: boolean;
+    includeDisabledStrategies?: boolean;
     userId?: number;
 }
 
@@ -51,28 +38,16 @@ export default class FeatureToggleClientStore
 
     private logger: Logger;
 
-    private inlineSegmentConstraints: boolean;
-
     private timer: Function;
 
-    private flagResolver: IFlagResolver;
-
-    constructor(
-        db: Db,
-        eventBus: EventEmitter,
-        getLogger: LogProvider,
-        inlineSegmentConstraints: boolean,
-        flagResolver: IFlagResolver,
-    ) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-toggle-client-store.ts');
-        this.inlineSegmentConstraints = inlineSegmentConstraints;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle',
                 action,
             });
-        this.flagResolver = flagResolver;
     }
 
     private async getAll({
@@ -99,6 +74,7 @@ export default class FeatureToggleClientStore
             'fe.environment as environment',
             'fs.id as strategy_id',
             'fs.strategy_name as strategy_name',
+            'fs.disabled as strategy_disabled',
             'fs.parameters as parameters',
             'fs.constraints as constraints',
             'segments.id as segment_id',
@@ -192,8 +168,8 @@ export default class FeatureToggleClientStore
             let feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
                 strategies: [],
             };
-            if (this.isUnseenStrategyRow(feature, r)) {
-                feature.strategies.push(
+            if (this.isUnseenStrategyRow(feature, r) && !r.strategy_disabled) {
+                feature.strategies?.push(
                     FeatureToggleClientStore.rowToStrategy(r),
                 );
             }
@@ -211,7 +187,6 @@ export default class FeatureToggleClientStore
             feature.impressionData = r.impression_data;
             feature.enabled = !!r.enabled;
             feature.name = r.name;
-            feature.favorite = r.favorite;
             feature.description = r.description;
             feature.project = r.project;
             feature.stale = r.stale;
@@ -219,6 +194,7 @@ export default class FeatureToggleClientStore
             feature.variants = r.variants || [];
             feature.project = r.project;
             if (isAdmin) {
+                feature.favorite = r.favorite;
                 feature.lastSeenAt = r.last_seen_at;
                 feature.createdAt = r.created_at;
             }
@@ -241,6 +217,7 @@ export default class FeatureToggleClientStore
         return {
             id: row.strategy_id,
             name: row.strategy_name,
+            title: row.strategy_title,
             constraints: row.constraints || [],
             parameters: mapValues(row.parameters || {}, ensureStringValue),
         };
@@ -267,7 +244,7 @@ export default class FeatureToggleClientStore
     ): boolean {
         return (
             row.strategy_id &&
-            !feature.strategies.find((s) => s.id === row.strategy_id)
+            !feature.strategies?.find((s) => s?.id === row.strategy_id)
         );
     }
 
@@ -289,7 +266,7 @@ export default class FeatureToggleClientStore
             row.tag_value &&
             !feature.tags?.some(
                 (tag) =>
-                    tag.type === row.tag_type && tag.value === row.tag_value,
+                    tag?.type === row.tag_type && tag?.value === row.tag_value,
             )
         );
     }
@@ -299,16 +276,16 @@ export default class FeatureToggleClientStore
         row: Record<string, any>,
     ) {
         feature.strategies
-            .find((s) => s.id === row.strategy_id)
-            ?.constraints.push(...row.segment_constraints);
+            ?.find((s) => s?.id === row.strategy_id)
+            ?.constraints?.push(...row.segment_constraints);
     }
 
     private addSegmentIdsToStrategy(
         feature: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
     ) {
-        const strategy = feature.strategies.find(
-            (s) => s.id === row.strategy_id,
+        const strategy = feature.strategies?.find(
+            (s) => s?.id === row.strategy_id,
         );
         if (!strategy) {
             return;
@@ -322,12 +299,14 @@ export default class FeatureToggleClientStore
     async getClient(
         featureQuery?: IFeatureToggleQuery,
         includeStrategyIds?: boolean,
+        includeDisabledStrategies?: boolean,
     ): Promise<IFeatureToggleClient[]> {
         return this.getAll({
             featureQuery,
             archived: false,
             isAdmin: false,
             includeStrategyIds,
+            includeDisabledStrategies,
         });
     }
 
@@ -336,7 +315,13 @@ export default class FeatureToggleClientStore
         userId,
         archived,
     }: IGetAdminFeatures): Promise<IFeatureToggleClient[]> {
-        return this.getAll({ featureQuery, archived, isAdmin: true, userId });
+        return this.getAll({
+            featureQuery,
+            archived: Boolean(archived),
+            isAdmin: true,
+            userId,
+            includeDisabledStrategies: true,
+        });
     }
 }
 

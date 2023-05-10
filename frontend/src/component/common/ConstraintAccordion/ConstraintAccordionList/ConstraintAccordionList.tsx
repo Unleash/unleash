@@ -46,7 +46,7 @@ const StyledHelpWrapper = styled(Tooltip)(({ theme }) => ({
 }));
 
 const StyledHelp = styled(HelpOutline)(({ theme }) => ({
-    fill: theme.palette.tertiary.dark,
+    fill: theme.palette.action.active,
     [theme.breakpoints.down(860)]: {
         display: 'none',
     },
@@ -60,7 +60,7 @@ const StyledConstraintLabel = styled('p')(({ theme }) => ({
 const StyledAddCustomLabel = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
     display: 'flex',
 }));
 
@@ -170,7 +170,10 @@ export const ConstraintAccordionList = forwardRef<
                         <div>
                             <StyledAddCustomLabel>
                                 <p>Add any number of constraints</p>
-                                <StyledHelpWrapper title="Help" arrow>
+                                <StyledHelpWrapper
+                                    title="View constraints documentation"
+                                    arrow
+                                >
                                     <a
                                         href={
                                             'https://docs.getunleash.io/reference/strategy-constraints'
@@ -186,7 +189,8 @@ export const ConstraintAccordionList = forwardRef<
                                 type="button"
                                 onClick={onAdd}
                                 variant="outlined"
-                                color="secondary"
+                                color="primary"
+                                data-testid="ADD_CONSTRAINT_BUTTON"
                             >
                                 Add constraint
                             </Button>

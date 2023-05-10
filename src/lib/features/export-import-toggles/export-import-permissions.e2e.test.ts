@@ -87,6 +87,7 @@ const createProject = async () => {
         name: DEFAULT_PROJECT,
         description: '',
         id: DEFAULT_PROJECT,
+        mode: 'open' as const,
     });
 };
 
@@ -346,7 +347,7 @@ test('validate import data', async () => {
                     'Create context fields',
                     'Create activation strategies',
                     'Delete activation strategies',
-                    'Update variants on environment',
+                    'Update variants',
                 ],
             },
         ],

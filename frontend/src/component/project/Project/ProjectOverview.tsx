@@ -7,8 +7,7 @@ import { ProjectFeatureToggles } from './ProjectFeatureToggles/ProjectFeatureTog
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useLastViewedProject } from '../../../hooks/useLastViewedProject';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ProjectStats } from './ProjectStats/ProjectStats';
 
@@ -60,10 +59,7 @@ const ProjectOverview = () => {
                 stats={stats}
             />
             <StyledContentContainer>
-                <ConditionallyRender
-                    condition={Boolean(uiConfig?.flags.newProjectOverview)}
-                    show={<ProjectStats stats={project.stats} />}
-                />
+                <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
                         features={features}

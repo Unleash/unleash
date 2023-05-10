@@ -8,7 +8,7 @@ title: Getting Started
 
 You will need:
 
-- [Node.js](https://nodejs.org/en/download/) (version 14 or later)
+- [Node.js](https://nodejs.org/en/download/) (version 18 or later)
 - [PostgreSQL](https://www.postgresql.org/download/) (version 10 or later)
 - [Create an unleash user and database](./database-setup).
 
@@ -63,7 +63,7 @@ docker run -p 4242:4242 \
 
 **Steps:**
 
-1. Clone the [Unleash repository](https://github.com/Unleash/unleash-docker).
+1. Clone the [Unleash repository](https://github.com/Unleash/unleash).
 2. Run `docker compose up -d` in repository root folder.
 
 ### Option 3 - from Node.js {#option-three---from-nodejs}

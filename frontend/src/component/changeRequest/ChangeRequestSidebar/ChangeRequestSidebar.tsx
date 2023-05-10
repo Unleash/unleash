@@ -59,7 +59,7 @@ export const Separator = () => (
         sx={{
             marginLeft: 1.5,
             marginRight: 1.5,
-            color: 'dividerAlternative',
+            color: 'divider',
         }}
     >
         |
@@ -95,9 +95,12 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
     const { changeState, discardDraft } = useChangeRequestApi();
     const { setToastApiError } = useToast();
 
-    const onReview = async (draftId: number) => {
+    const onReview = async (draftId: number, comment?: string) => {
         try {
-            await changeState(project, draftId, { state: 'In review' });
+            await changeState(project, draftId, {
+                state: 'In review',
+                comment,
+            });
             refetchChangeRequest();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

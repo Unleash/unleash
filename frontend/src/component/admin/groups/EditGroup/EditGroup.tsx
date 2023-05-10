@@ -13,10 +13,34 @@ import { useGroup } from 'hooks/api/getters/useGroup/useGroup';
 import { UG_SAVE_BTN_ID } from 'utils/testIds';
 import { GO_BACK } from 'constants/navigate';
 import { useGroups } from 'hooks/api/getters/useGroups/useGroups';
+import { IGroup } from 'interfaces/group';
 
-export const EditGroup = () => {
+export const EditGroupContainer = () => {
     const groupId = Number(useRequiredPathParam('groupId'));
     const { group, refetchGroup } = useGroup(groupId);
+
+    if (!group) return null;
+
+    return (
+        <EditGroup
+            group={group}
+            groupId={groupId}
+            refetchGroup={refetchGroup}
+        />
+    );
+};
+
+interface IEditGroupProps {
+    group: IGroup;
+    groupId: number;
+    refetchGroup: () => void;
+}
+
+export const EditGroup = ({
+    group,
+    groupId,
+    refetchGroup,
+}: IEditGroupProps) => {
     const { refetchGroups } = useGroups();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
@@ -31,6 +55,8 @@ export const EditGroup = () => {
         setMappingsSSO,
         users,
         setUsers,
+        rootRole,
+        setRootRole,
         getGroupPayload,
         clearErrors,
         errors,
@@ -39,7 +65,8 @@ export const EditGroup = () => {
         group?.name,
         group?.description,
         group?.mappingsSSO,
-        group?.users
+        group?.users,
+        group?.rootRole
     );
 
     const { groups } = useGroups();
@@ -105,10 +132,12 @@ export const EditGroup = () => {
                 description={description}
                 mappingsSSO={mappingsSSO}
                 users={users}
+                rootRole={rootRole}
                 setName={onSetName}
                 setDescription={setDescription}
                 setMappingsSSO={setMappingsSSO}
                 setUsers={setUsers}
+                setRootRole={setRootRole}
                 errors={errors}
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}

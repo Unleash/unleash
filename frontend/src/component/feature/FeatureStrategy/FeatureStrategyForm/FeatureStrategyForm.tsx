@@ -29,6 +29,8 @@ import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
+import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle';
+import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -36,6 +38,7 @@ interface IFeatureStrategyFormProps {
     environmentId: string;
     permission: string;
     onSubmit: () => void;
+    onCancel?: () => void;
     loading: boolean;
     isChangeRequest?: boolean;
     strategy: Partial<IFeatureStrategy>;
@@ -57,7 +60,7 @@ const StyledHr = styled('hr')(({ theme }) => ({
     height: '1px',
     margin: theme.spacing(2, 0),
     border: 'none',
-    background: theme.palette.tertiary.light,
+    background: theme.palette.background.elevation2,
 }));
 
 const StyledButtons = styled('div')(({ theme }) => ({
@@ -73,6 +76,7 @@ export const FeatureStrategyForm = ({
     environmentId,
     permission,
     onSubmit,
+    onCancel,
     loading,
     strategy,
     setStrategy,
@@ -148,7 +152,7 @@ export const FeatureStrategyForm = ({
             .every(Boolean);
     };
 
-    const onCancel = () => {
+    const onDefaultCancel = () => {
         navigate(formatFeaturePath(feature.project, feature.name));
     };
 
@@ -213,6 +217,21 @@ export const FeatureStrategyForm = ({
                     <FeatureStrategySegment
                         segments={segments}
                         setSegments={setSegments}
+                        projectId={projectId}
+                    />
+                }
+            />
+            <ConditionallyRender
+                condition={Boolean(uiConfig?.flags?.strategyImprovements)}
+                show={
+                    <FeatureStrategyTitle
+                        title={strategy.title || ''}
+                        setTitle={title => {
+                            setStrategy(prev => ({
+                                ...prev,
+                                title,
+                            }));
+                        }}
                     />
                 }
             />
@@ -230,6 +249,16 @@ export const FeatureStrategyForm = ({
                 validateParameter={validateParameter}
                 errors={errors}
                 hasAccess={access}
+            />
+            <StyledHr />
+            <FeatureStrategyEnabledDisabled
+                enabled={!strategy?.disabled}
+                onToggleEnabled={() =>
+                    setStrategy(strategyState => ({
+                        ...strategyState,
+                        disabled: !strategyState.disabled,
+                    }))
+                }
             />
             <StyledHr />
             <StyledButtons>
@@ -253,8 +282,8 @@ export const FeatureStrategyForm = ({
                 </PermissionButton>
                 <Button
                     type="button"
-                    color="secondary"
-                    onClick={onCancel}
+                    color="primary"
+                    onClick={onCancel ? onCancel : onDefaultCancel}
                     disabled={loading}
                 >
                     Cancel

@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import { Button, Chip, Divider, styled } from '@mui/material';
 import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
 import { Add, Cancel } from '@mui/icons-material';
-import AddTagDialog from 'component/feature/FeatureView/FeatureOverview/AddTagDialog/AddTagDialog';
+import { ManageTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageTagsDialog';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -27,9 +27,6 @@ const StyledTagContainer = styled('div')(({ theme }) => ({
 
 const StyledChip = styled(Chip)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    '.MuiChip-deleteIcon': {
-        color: theme.palette.neutral.main,
-    },
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -123,7 +120,7 @@ export const FeatureOverviewSidePanelTags = ({
                     </>
                 }
             />
-            <AddTagDialog open={openTagDialog} setOpen={setOpenTagDialog} />
+            <ManageTagsDialog open={openTagDialog} setOpen={setOpenTagDialog} />
             <Dialogue
                 open={showDelDialog}
                 primaryButtonText="Delete tag"

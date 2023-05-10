@@ -27,6 +27,53 @@ import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+
+const useTitleTracking = () => {
+    const [previousTitle, setPreviousTitle] = useState<string>('');
+    const { trackEvent } = usePlausibleTracker();
+
+    const trackTitle = (title: string = '') => {
+        // don't expose the title, just if it was added, removed, or edited
+        if (title === previousTitle) {
+            trackEvent('strategyTitle', {
+                props: {
+                    action: 'none',
+                    on: 'edit',
+                },
+            });
+        }
+        if (previousTitle === '' && title !== '') {
+            trackEvent('strategyTitle', {
+                props: {
+                    action: 'added',
+                    on: 'edit',
+                },
+            });
+        }
+        if (previousTitle !== '' && title === '') {
+            trackEvent('strategyTitle', {
+                props: {
+                    action: 'removed',
+                    on: 'edit',
+                },
+            });
+        }
+        if (previousTitle !== '' && title !== '' && title !== previousTitle) {
+            trackEvent('strategyTitle', {
+                props: {
+                    action: 'edited',
+                    on: 'edit',
+                },
+            });
+        }
+    };
+
+    return {
+        setPreviousTitle,
+        trackTitle,
+    };
+};
 
 export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -47,6 +94,7 @@ export const FeatureStrategyEdit = () => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
+    const { setPreviousTitle, trackTitle } = useTitleTracking();
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
 
@@ -85,12 +133,16 @@ export const FeatureStrategyEdit = () => {
             .flatMap(environment => environment.strategies)
             .find(strategy => strategy.id === strategyId);
         setStrategy(prev => ({ ...prev, ...savedStrategy }));
+        setPreviousTitle(savedStrategy?.title || '');
     }, [strategyId, data]);
 
     useEffect(() => {
         // Fill in the selected segments once they've been fetched.
         savedStrategySegments && setSegments(savedStrategySegments);
     }, [JSON.stringify(savedStrategySegments)]);
+
+    const segmentsToSubmit = uiConfig?.flags.SE ? segments : [];
+    const payload = createStrategyPayload(strategy, segmentsToSubmit);
 
     const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
         await updateStrategyOnFeature(
@@ -100,6 +152,11 @@ export const FeatureStrategyEdit = () => {
             strategyId,
             payload
         );
+
+        if (uiConfig?.flags?.strategyImprovements) {
+            // NOTE: remove tracking when feature flag is removed
+            trackTitle(strategy.title);
+        }
 
         await refetchSavedStrategySegments();
         setToastData({
@@ -125,9 +182,6 @@ export const FeatureStrategyEdit = () => {
     };
 
     const onSubmit = async () => {
-        const segmentsToSubmit = uiConfig?.flags.SE ? segments : [];
-        const payload = createStrategyPayload(strategy, segmentsToSubmit);
-
         try {
             if (isChangeRequestConfigured(environmentId)) {
                 await onStrategyRequestEdit(payload);
@@ -159,7 +213,8 @@ export const FeatureStrategyEdit = () => {
                     projectId,
                     featureId,
                     environmentId,
-                    strategy,
+                    strategyId,
+                    payload,
                     strategyDefinition,
                     unleashUrl
                 )
@@ -189,9 +244,11 @@ export const createStrategyPayload = (
     segments: ISegment[]
 ): IFeatureStrategyPayload => ({
     name: strategy.name,
+    title: strategy.title,
     constraints: strategy.constraints ?? [],
     parameters: strategy.parameters ?? {},
     segments: segments.map(segment => segment.id),
+    disabled: strategy.disabled ?? false,
 });
 
 export const formatFeaturePath = (
@@ -216,6 +273,7 @@ export const formatUpdateStrategyApiCode = (
     projectId: string,
     featureId: string,
     environmentId: string,
+    strategyId: string,
     strategy: Partial<IFeatureStrategy>,
     strategyDefinition: IStrategy,
     unleashUrl?: string
@@ -234,7 +292,7 @@ export const formatUpdateStrategyApiCode = (
         ),
     };
 
-    const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategy.id}`;
+    const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
     const payload = JSON.stringify(sortedStrategy, undefined, 2);
 
     return `curl --location --request PUT '${url}' \\

@@ -1,11 +1,13 @@
-import { MonetizationOn } from '@mui/icons-material';
+import { AttachMoneyRounded } from '@mui/icons-material';
 import { styled, Tooltip } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 
-const StyledMonetizationOn = styled(MonetizationOn)(({ theme }) => ({
+const StyledMonetizationOn = styled(AttachMoneyRounded)(({ theme }) => ({
     color: theme.palette.primary.light,
-    fontSize: '1.75rem',
+    fontSize: '1.5rem',
+    backgroundColor: '#F1F0FC',
+    borderRadius: theme.shape.borderRadiusLarge,
 }));
 
 interface IUserTypeCellProps {
@@ -22,7 +24,7 @@ export const UserTypeCell = ({ value }: IUserTypeCellProps) => {
                         <StyledMonetizationOn />
                     </Tooltip>
                 }
-                elseShow="Free"
+                elseShow="Included"
             />
         </TextCell>
     );

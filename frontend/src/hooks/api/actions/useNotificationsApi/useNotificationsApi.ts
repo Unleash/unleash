@@ -1,4 +1,3 @@
-import { NotificationsSchemaItem } from 'openapi';
 import useAPI from '../useApi/useApi';
 
 export const useNotificationsApi = () => {
@@ -14,9 +13,7 @@ export const useNotificationsApi = () => {
         });
 
         try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res.json();
+            await makeRequest(req.caller, req.id);
         } catch (e) {
             throw e;
         }

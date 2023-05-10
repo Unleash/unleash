@@ -6,7 +6,8 @@ export const useGroupForm = (
     initialName = '',
     initialDescription = '',
     initialMappingsSSO: string[] = [],
-    initialUsers: IGroupUser[] = []
+    initialUsers: IGroupUser[] = [],
+    initialRootRole: number | null = null
 ) => {
     const params = useQueryParams();
     const groupQueryName = params.get('name');
@@ -14,6 +15,7 @@ export const useGroupForm = (
     const [description, setDescription] = useState(initialDescription);
     const [mappingsSSO, setMappingsSSO] = useState(initialMappingsSSO);
     const [users, setUsers] = useState<IGroupUser[]>(initialUsers);
+    const [rootRole, setRootRole] = useState<number | null>(initialRootRole);
     const [errors, setErrors] = useState({});
 
     const getGroupPayload = () => {
@@ -24,6 +26,7 @@ export const useGroupForm = (
             users: users.map(({ id }) => ({
                 user: { id },
             })),
+            rootRole: rootRole || undefined,
         };
     };
 
@@ -44,5 +47,7 @@ export const useGroupForm = (
         clearErrors,
         errors,
         setErrors,
+        rootRole,
+        setRootRole,
     };
 };

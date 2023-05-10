@@ -1,4 +1,5 @@
 import { styled, TableCell } from '@mui/material';
+import { focusable } from 'themes/themeStyles';
 
 export const StyledTableCell = styled(TableCell, {
     shouldForwardProp: prop =>
@@ -22,7 +23,7 @@ export const StyledTableCell = styled(TableCell, {
     ...(isSortable && {
         padding: 0,
         '&:hover, &:focus': {
-            backgroundColor: theme.palette.tableHeaderHover,
+            backgroundColor: theme.palette.table.headerHover,
             '& svg': {
                 color: 'inherit',
             },
@@ -36,13 +37,13 @@ export const StyledTableCell = styled(TableCell, {
 export const StyledButton = styled('button', {
     shouldForwardProp: prop => prop !== 'isSorted',
 })<{ isSorted?: boolean }>(({ theme, isSorted }) => ({
+    ...focusable(theme),
     all: 'unset',
     whiteSpace: 'nowrap',
     width: '100%',
     position: 'relative',
     zIndex: 1,
     ':hover, :focus, &:focus-visible, &:active': {
-        outline: 'revert',
         '.hover-only': {
             display: 'inline-block',
         },

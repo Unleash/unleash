@@ -10,6 +10,7 @@ jobs:
           - feature/feature.spec.ts
           - groups/groups.spec.ts
           - projects/access.spec.ts
+          - projects/overview.spec.ts
           - segments/segments.spec.ts
           - import/import.spec.ts
     steps:
@@ -21,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Run Cypress
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         with:
           working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all

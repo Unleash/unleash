@@ -13,6 +13,7 @@ import { Divider, styled, Typography } from '@mui/material';
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
+    projectId: string;
 }
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -22,6 +23,7 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 export const FeatureStrategySegment = ({
     segments: selectedSegments,
     setSegments: setSelectedSegments,
+    projectId,
 }: IFeatureStrategySegmentProps) => {
     const { segments: allSegments } = useSegments();
     const { strategySegmentsLimit } = useSegmentLimits();
@@ -35,7 +37,11 @@ export const FeatureStrategySegment = ({
         return null;
     }
 
-    const unusedSegments = allSegments.filter(segment => {
+    const allSelectableSegments = allSegments.filter(
+        ({ project }) => !project || project === projectId
+    );
+
+    const unusedSegments = allSelectableSegments.filter(segment => {
         return !selectedSegments.find(selected => selected.id === segment.id);
     });
 

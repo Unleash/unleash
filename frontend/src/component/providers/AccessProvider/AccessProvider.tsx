@@ -1,6 +1,6 @@
 import { ReactElement, ReactNode, useMemo } from 'react';
 import AccessContext, { IAccessContext } from 'contexts/AccessContext';
-import { ADMIN } from './permissions';
+import { ADMIN, SKIP_CHANGE_REQUEST } from './permissions';
 import { IPermission } from 'interfaces/user';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 
@@ -63,29 +63,19 @@ const checkPermission = (
         return false;
     }
 
-    if (p.permission === ADMIN) {
+    if (p.permission === ADMIN && permission !== SKIP_CHANGE_REQUEST) {
         return true;
     }
 
     if (
         p.permission === permission &&
         (p.project === project || p.project === '*') &&
-        (p.environment === environment || p.environment === '*')
+        (!p.environment ||
+            p.environment === environment ||
+            p.environment === '*')
     ) {
         return true;
     }
 
-    if (
-        p.permission === permission &&
-        (p.project === project || p.project === '*') &&
-        !Boolean(p.environment)
-    ) {
-        return true;
-    }
-
-    return (
-        p.permission === permission &&
-        p.project === undefined &&
-        p.environment === null
-    );
+    return p.permission === permission && !p.project && !p.environment;
 };

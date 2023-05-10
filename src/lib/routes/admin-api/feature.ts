@@ -2,12 +2,7 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
 import { extractUsername } from '../../util/extract-user';
-import {
-    CREATE_FEATURE,
-    DELETE_FEATURE,
-    NONE,
-    UPDATE_FEATURE,
-} from '../../types/permissions';
+import { NONE, UPDATE_FEATURE } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types';
 import FeatureToggleService from '../../services/feature-toggle-service';
@@ -29,7 +24,11 @@ import {
     createResponseSchema,
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
+import { UpdateTagsSchema } from '../../openapi/spec/update-tags-schema';
 
 const version = 1;
 
@@ -55,23 +54,6 @@ class FeatureController extends Controller {
         this.tagService = featureTagService;
         this.openApiService = openApiService;
         this.service = featureToggleServiceV2;
-
-        if (!config.disableLegacyFeaturesApi) {
-            this.post('/', this.createToggle, CREATE_FEATURE);
-            this.get('/:featureName', this.getToggle);
-            this.put('/:featureName', this.updateToggle, UPDATE_FEATURE);
-            this.delete('/:featureName', this.archiveToggle, DELETE_FEATURE);
-            this.post('/:featureName/toggle', this.toggle, UPDATE_FEATURE);
-            this.post('/:featureName/toggle/on', this.toggleOn, UPDATE_FEATURE);
-            this.post(
-                '/:featureName/toggle/off',
-                this.toggleOff,
-                UPDATE_FEATURE,
-            );
-
-            this.post('/:featureName/stale/on', this.staleOn, UPDATE_FEATURE);
-            this.post('/:featureName/stale/off', this.staleOff, UPDATE_FEATURE);
-        }
 
         this.route({
             method: 'get',
@@ -109,9 +91,15 @@ class FeatureController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get all tags for a feature.',
+                    description:
+                        'Retrieves all the tags for a feature name. If the feature does not exist it returns an empty list.',
                     tags: ['Features'],
                     operationId: 'listTags',
-                    responses: { 200: createResponseSchema('tagsSchema') },
+                    responses: {
+                        200: createResponseSchema('tagsSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -123,11 +111,36 @@ class FeatureController extends Controller {
             handler: this.addTag,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Adds a tag to a feature.',
+                    description:
+                        'Adds a tag to a feature if the feature and tag type exist in the system. The operation is idempotent, so adding an existing tag will result in a successful response.',
                     tags: ['Features'],
                     operationId: 'addTag',
                     requestBody: createRequestSchema('tagSchema'),
                     responses: {
                         201: resourceCreatedResponseSchema('tagSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'put',
+            path: '/:featureName/tags',
+            permission: UPDATE_FEATURE,
+            handler: this.updateTags,
+            middleware: [
+                openApiService.validPath({
+                    summary: 'Updates multiple tags for a feature.',
+                    description:
+                        'Receives a list of tags to add and a list of tags to remove that are mandatory but can be empty. All tags under addedTags are first added to the feature and then all tags under removedTags are removed from the feature.',
+                    tags: ['Features'],
+                    operationId: 'updateTags',
+                    requestBody: createRequestSchema('updateTagsSchema'),
+                    responses: {
+                        200: resourceCreatedResponseSchema('tagsSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
             ],
@@ -141,9 +154,15 @@ class FeatureController extends Controller {
             handler: this.removeTag,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Removes a tag from a feature.',
+                    description:
+                        'Removes a tag from a feature. If the feature exists but the tag does not, it returns a successful response.',
                     tags: ['Features'],
                     operationId: 'removeTag',
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(404),
+                    },
                 }),
             ],
         });
@@ -228,6 +247,35 @@ class FeatureController extends Controller {
             userName,
         );
         res.status(201).header('location', `${featureName}/tags`).json(tag);
+    }
+
+    async updateTags(
+        req: IAuthRequest<
+            { featureName: string },
+            Response<TagsSchema>,
+            UpdateTagsSchema,
+            any
+        >,
+        res: Response<TagsSchema>,
+    ): Promise<void> {
+        const { featureName } = req.params;
+        const { addedTags, removedTags } = req.body;
+        const userName = extractUsername(req);
+
+        await Promise.all(
+            addedTags.map((addedTag) =>
+                this.tagService.addTag(featureName, addedTag, userName),
+            ),
+        );
+
+        await Promise.all(
+            removedTags.map((removedTag) =>
+                this.tagService.removeTag(featureName, removedTag, userName),
+            ),
+        );
+
+        const tags = await this.tagService.listTags(featureName);
+        res.json({ version, tags });
     }
 
     // TODO

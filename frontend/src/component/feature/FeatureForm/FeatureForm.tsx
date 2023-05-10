@@ -6,6 +6,7 @@ import {
     Switch,
     Theme,
     Typography,
+    Link,
 } from '@mui/material';
 import FeatureTypeSelect from '../FeatureView/FeatureSettings/FeatureSettingsMetadata/FeatureTypeSelect/FeatureTypeSelect';
 import { CF_DESC_ID, CF_NAME_ID, CF_TYPE_ID } from 'utils/testIds';
@@ -52,7 +53,6 @@ const StyledContainer = styled('div')({
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1),
-    color: theme.palette.text.secondary,
 }));
 
 const StyledInput = styled(Input)(({ theme }) => ({
@@ -210,13 +210,13 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                         When you enable impression data for a feature toggle,
                         your client SDKs will emit events you can listen for
                         every time this toggle gets triggered. Learn more in{' '}
-                        <a
+                        <Link
                             target="_blank"
                             rel="noopener noreferrer"
                             href="https://docs.getunleash.io/advanced/impression_data"
                         >
                             the impression data documentation
-                        </a>
+                        </Link>
                     </p>
                     <StyledRow>
                         <FormControlLabel

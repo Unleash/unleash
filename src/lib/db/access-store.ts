@@ -142,8 +142,30 @@ export class AccessStore implements IAccessStore {
                 .join(`${T.GROUP_ROLE} AS gr`, 'gu.group_id', 'gr.group_id')
                 .join(`${T.ROLE_PERMISSION} AS rp`, 'rp.role_id', 'gr.role_id')
                 .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
-                .where('gu.user_id', '=', userId);
+                .whereNull('g.root_role_id')
+                .andWhere('gu.user_id', '=', userId);
         });
+
+        userPermissionQuery = userPermissionQuery.union((db) => {
+            db.select(
+                this.db.raw("'default' as project"),
+                'permission',
+                'environment',
+                'p.type',
+                'g.root_role_id as role_id',
+            )
+                .from<IPermissionRow>(`${T.GROUP_USER} as gu`)
+                .join(`${T.GROUPS} AS g`, 'g.id', 'gu.group_id')
+                .join(
+                    `${T.ROLE_PERMISSION} as rp`,
+                    'rp.role_id',
+                    'g.root_role_id',
+                )
+                .join(`${T.PERMISSIONS} as p`, 'p.id', 'rp.permission_id')
+                .whereNotNull('g.root_role_id')
+                .andWhere('gu.user_id', '=', userId);
+        });
+
         const rows = await userPermissionQuery;
         stopTimer();
         return rows.map(this.mapUserPermission);
@@ -474,20 +496,5 @@ export class AccessStore implements IAccessStore {
                 from ${T.ROLE_PERMISSION} where environment = ?)`,
             [destinationEnvironment, sourceEnvironment],
         );
-    }
-
-    async isChangeRequestsEnabled(
-        project: string,
-        environment: string,
-    ): Promise<boolean> {
-        const result = await this.db.raw(
-            `SELECT EXISTS(SELECT 1
-                           FROM ${T.CHANGE_REQUEST_SETTINGS}
-                           WHERE environment = ?
-                             and project = ?) AS present`,
-            [environment, project],
-        );
-        const { present } = result.rows[0];
-        return present;
     }
 }

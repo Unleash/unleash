@@ -17,6 +17,7 @@ import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useMemo, useState } from 'react';
 import { SegmentEmpty } from 'component/segments/SegmentEmpty';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { DonutLarge } from '@mui/icons-material';
 import { SegmentActionCell } from 'component/segments/SegmentActionCell/SegmentActionCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -25,9 +26,14 @@ import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 export const SegmentTable = () => {
+    const projectId = useOptionalPathParam('projectId');
     const { segments, loading } = useSegments();
+    const { uiConfig } = useUiConfig();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [initialState] = useState({
         sortBy: [{ id: 'createdAt' }],
@@ -35,16 +41,22 @@ export const SegmentTable = () => {
     });
 
     const data = useMemo(() => {
-        return (
-            segments ??
-            Array(5).fill({
+        if (!segments) {
+            return Array(5).fill({
                 name: 'Segment name',
                 description: 'Segment descripton',
                 createdAt: new Date().toISOString(),
                 createdBy: 'user',
-            })
-        );
-    }, [segments]);
+                projectId: 'Project',
+            });
+        }
+
+        if (projectId) {
+            return segments.filter(({ project }) => project === projectId);
+        }
+
+        return segments;
+    }, [segments, projectId]);
 
     const {
         getTableProps,
@@ -78,6 +90,10 @@ export const SegmentTable = () => {
             {
                 condition: isSmallScreen,
                 columns: ['createdAt', 'createdBy'],
+            },
+            {
+                condition: Boolean(projectId),
+                columns: ['project'],
             },
         ],
         setHiddenColumns,
@@ -171,6 +187,21 @@ const COLUMNS = [
         Cell: ({ value, row: { original } }: any) => (
             <HighlightCell value={value} subtitle={original.description} />
         ),
+    },
+    {
+        Header: 'Project',
+        accessor: 'project',
+        Cell: ({ value }: { value: string }) => (
+            <ConditionallyRender
+                condition={Boolean(value)}
+                show={<LinkCell title={value} to={`/projects/${value}`} />}
+                elseShow={<TextCell>Global</TextCell>}
+            />
+        ),
+        sortType: 'alphanumeric',
+        maxWidth: 150,
+        filterName: 'project',
+        searchable: true,
     },
     {
         Header: 'Created at',

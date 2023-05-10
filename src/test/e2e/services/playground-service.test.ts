@@ -20,12 +20,14 @@ import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playgrou
 import { PlaygroundSegmentSchema } from 'lib/openapi/spec/playground-segment-schema';
 import { GroupService } from '../../../lib/services/group-service';
 import { AccessService } from '../../../lib/services/access-service';
+import { ISegmentService } from '../../../lib/segments/segment-service-interface';
+import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: PlaygroundService;
 let featureToggleService: FeatureToggleService;
-let segmentService: SegmentService;
+let segmentService: ISegmentService;
 
 beforeAll(async () => {
     const config = createTestConfig();
@@ -34,11 +36,16 @@ beforeAll(async () => {
     segmentService = new SegmentService(stores, config);
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
+    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+        db.rawDatabase,
+        accessService,
+    );
     featureToggleService = new FeatureToggleService(
         stores,
         config,
         segmentService,
         accessService,
+        changeRequestAccessReadModel,
     );
     service = new PlaygroundService(config, {
         featureToggleServiceV2: featureToggleService,
@@ -147,7 +154,7 @@ export const seedDatabaseForPlaygroundTest = async (
                                 featureName: feature.name,
                                 environment,
                                 strategyName: strategy.name,
-                                projectId: feature.project,
+                                projectId: feature.project!,
                             },
                         );
 
@@ -156,7 +163,7 @@ export const seedDatabaseForPlaygroundTest = async (
                                 strategySegments.map((segmentId) =>
                                     database.stores.segmentStore.addToStrategy(
                                         segmentId,
-                                        strategy.id,
+                                        strategy.id!,
                                     ),
                                 ),
                             );
@@ -253,7 +260,7 @@ describe('the playground service (e2e)', () => {
                             );
 
                             // the playground differs from a normal SDK in that
-                            // it _must_ evaluate all srategies and features
+                            // it _must_ evaluate all strategies and features
                             // regardless of whether they're supposed to be
                             // enabled in the current environment or not.
                             const expectedSDKState = feature.isEnabled;
@@ -261,8 +268,6 @@ describe('the playground service (e2e)', () => {
                             const enabledStateMatches =
                                 expectedSDKState ===
                                 client.isEnabled(feature.name, clientContext);
-
-                            expect(enabledStateMatches).toBe(true);
 
                             ctx.log(
                                 `feature.isEnabled, feature.isEnabledInCurrentEnvironment, presumedSDKState: ${feature.isEnabled}, ${feature.isEnabledInCurrentEnvironment}, ${expectedSDKState}`,
@@ -273,6 +278,7 @@ describe('the playground service (e2e)', () => {
                                     clientContext,
                                 )}`,
                             );
+                            expect(enabledStateMatches).toBe(true);
 
                             // if x is disabled, then the variant will be the
                             // disabled variant.
@@ -702,6 +708,8 @@ describe('the playground service (e2e)', () => {
                                         expect.arrayContaining([
                                             {
                                                 ...strategy,
+                                                title: undefined,
+                                                disabled: false,
                                                 constraints:
                                                     strategy.constraints ?? [],
                                                 parameters:

@@ -12,7 +12,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(4),
     position: 'fixed',
     inset: 0,
-    backgroundColor: theme.palette.text.tertiaryContrast,
+    backgroundColor: theme.palette.primary.contrastText,
     width: '100%',
 }));
 

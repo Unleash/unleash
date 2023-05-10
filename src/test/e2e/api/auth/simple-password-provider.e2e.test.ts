@@ -30,13 +30,14 @@ const password = 'DtUYwi&l5I1KX4@Le';
 let userService: UserService;
 let adminUser: IUser;
 
-beforeAll(async () => {
+beforeEach(async () => {
     db = await dbInit('simple_password_provider_api_serial', getLogger);
     stores = db.stores;
     app = await setupApp(stores);
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
     const resetTokenService = new ResetTokenService(stores, config);
+    // @ts-ignore
     const emailService = new EmailService(undefined, config.getLogger);
     const sessionService = new SessionService(stores, config);
     const settingService = new SettingService(stores, config);
@@ -52,7 +53,7 @@ beforeAll(async () => {
     adminUser = await userService.createUser({
         username: 'admin@test.com',
         email: 'admin@test.com',
-        rootRole: adminRole.id,
+        rootRole: adminRole!.id,
         password: password,
     });
 });
@@ -72,8 +73,8 @@ test('Can log in', async () => {
         .expect(200);
 });
 
-test('Gets rate limited after 5 tries', async () => {
-    for (let statusCode of [200, 200, 200, 200, 429]) {
+test('Gets rate limited after 10 tries', async () => {
+    for (let statusCode of [...Array(10).fill(200), 429]) {
         await app.request
             .post('/auth/simple/login')
             .send({

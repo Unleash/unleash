@@ -14,7 +14,7 @@ const SeparatorContainer = styled('div')(({ theme }) => ({
         transform: 'translateY(-50%)',
         height: 2,
         width: '100%',
-        backgroundColor: theme.palette.dividerAlternative,
+        backgroundColor: theme.palette.divider,
     },
 }));
 
@@ -22,7 +22,7 @@ const SeparatorContent = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
     textAlign: 'center',
     padding: '0 1rem',
-    background: theme.palette.secondaryContainer,
+    background: theme.palette.envAccordion.expanded,
     position: 'relative',
     maxWidth: '80%',
     color: theme.palette.text.primary,

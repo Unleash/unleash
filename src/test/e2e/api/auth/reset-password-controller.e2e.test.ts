@@ -73,13 +73,13 @@ beforeAll(async () => {
         settingService,
     });
     resetTokenService = new ResetTokenService(stores, config);
-    const adminRole = await accessService.getRootRole(RoleName.ADMIN);
+    const adminRole = (await accessService.getRootRole(RoleName.ADMIN))!;
     adminUser = await userService.createUser({
         username: 'admin@test.com',
         rootRole: adminRole.id,
-    });
+    })!;
 
-    const userRole = await accessService.getRootRole(RoleName.EDITOR);
+    const userRole = (await accessService.getRootRole(RoleName.EDITOR))!;
     user = await userService.createUser({
         username: 'test@test.com',
         email: 'test@test.com',
@@ -99,7 +99,7 @@ afterAll(async () => {
 test('Can validate token for password reset', async () => {
     const url = await resetTokenService.createResetPasswordUrl(
         user.id,
-        adminUser.username,
+        adminUser.username!,
     );
     const relative = getBackendResetUrl(url);
     return app.request
@@ -114,12 +114,12 @@ test('Can validate token for password reset', async () => {
 test('Can use token to reset password', async () => {
     const url = await resetTokenService.createResetPasswordUrl(
         user.id,
-        adminUser.username,
+        adminUser.username!,
     );
     const relative = getBackendResetUrl(url);
     // Can't login before reset
     await expect(async () =>
-        userService.loginUser(user.email, password),
+        userService.loginUser(user.email!, password),
     ).rejects.toThrow(Error);
 
     let token;
@@ -137,14 +137,14 @@ test('Can use token to reset password', async () => {
             password,
         })
         .expect(200);
-    const loggedInUser = await userService.loginUser(user.email, password);
+    const loggedInUser = await userService.loginUser(user.email!, password);
     expect(user.email).toBe(loggedInUser.email);
 });
 
 test('Trying to reset password with same token twice does not work', async () => {
     const url = await resetTokenService.createResetPasswordUrl(
         user.id,
-        adminUser.username,
+        adminUser.username!,
     );
     const relative = getBackendResetUrl(url);
     let token;
@@ -168,9 +168,9 @@ test('Trying to reset password with same token twice does not work', async () =>
             token,
             password,
         })
-        .expect(403)
+        .expect(401)
         .expect((res) => {
-            expect(res.body.details[0].message).toBeTruthy();
+            expect(res.body.details[0].description).toBeTruthy();
         });
 });
 
@@ -191,7 +191,7 @@ test('Calling validate endpoint with already existing session should destroy ses
     await request.get('/api/admin/features').expect(200);
     const url = await resetTokenService.createResetPasswordUrl(
         user.id,
-        adminUser.username,
+        adminUser.username!,
     );
     const relative = getBackendResetUrl(url);
 
@@ -205,7 +205,7 @@ test('Calling reset endpoint with already existing session should logout/destroy
     const { request, destroy } = await setupAppWithAuth(stores);
     const url = await resetTokenService.createResetPasswordUrl(
         user.id,
-        adminUser.username,
+        adminUser.username!,
     );
     const relative = getBackendResetUrl(url);
     let token;
@@ -248,7 +248,7 @@ test('Trying to change password to undefined should yield 400 without crashing t
 
     const url = await resetTokenService.createResetPasswordUrl(
         user.id,
-        adminUser.username,
+        adminUser.username!,
     );
     const relative = getBackendResetUrl(url);
     let token;
@@ -266,4 +266,32 @@ test('Trying to change password to undefined should yield 400 without crashing t
             password: undefined,
         })
         .expect(400);
+});
+
+test('changing password should expire all active tokens', async () => {
+    const url = await resetTokenService.createResetPasswordUrl(
+        user.id,
+        adminUser.username!,
+    );
+    const relative = getBackendResetUrl(url);
+
+    const {
+        body: { token },
+    } = await app.request
+        .get(relative)
+        .expect(200)
+        .expect('Content-Type', /json/);
+
+    await app.request
+        .post(`/api/admin/user-admin/${user.id}/change-password`)
+        .send({ password: 'simple123-_ASsad' })
+        .expect(200);
+
+    await app.request
+        .post('/auth/reset/password')
+        .send({
+            token,
+            password,
+        })
+        .expect(401);
 });

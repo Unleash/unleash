@@ -50,9 +50,9 @@ const resolveContextDefinition = (
 const StyledForm = styled('div')({ padding: 0, margin: 0, width: '100%' });
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
-    border: `1px solid ${theme.palette.dividerAlternative}`,
+    border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: theme.palette.constraintAccordion.editBackground,
+    backgroundColor: theme.palette.background.elevation1,
     boxShadow: 'none',
     margin: 0,
     '& .expanded': {

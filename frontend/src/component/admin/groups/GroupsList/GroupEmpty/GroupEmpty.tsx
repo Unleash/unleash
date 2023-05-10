@@ -26,7 +26,7 @@ export const GroupEmpty = () => {
                 to="/admin/groups/create-group"
                 component={Link}
                 variant="outlined"
-                color="secondary"
+                color="primary"
             >
                 Create your first group
             </Button>

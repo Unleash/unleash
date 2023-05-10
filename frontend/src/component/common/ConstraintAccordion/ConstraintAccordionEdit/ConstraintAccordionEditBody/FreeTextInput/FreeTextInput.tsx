@@ -106,13 +106,15 @@ export const FreeTextInput = ({
                         className={styles.input}
                         error={Boolean(error)}
                         errorText={error}
+                        data-testid="CONSTRAINT_VALUES_INPUT"
                     />
                 </div>
                 <Button
                     className={styles.button}
                     variant="outlined"
-                    color="secondary"
+                    color="primary"
                     onClick={() => addValues()}
+                    data-testid="CONSTRAINT_VALUES_ADD_BUTTON"
                 >
                     Add values
                 </Button>

@@ -17,7 +17,6 @@ interface ISortArrowProps {
 const iconStyle = (theme: Theme) => ({
     marginLeft: theme.spacing(0.25),
     marginRight: theme.spacing(-0.5),
-    color: theme.palette.neutral.main,
     fontSize: theme.fontSizes.mainHeader,
     verticalAlign: 'middle',
 });
@@ -36,7 +35,6 @@ export const SortArrow: VFC<ISortArrowProps> = ({
                     <KeyboardArrowDown
                         sx={theme => ({
                             ...iconStyle(theme),
-                            color: theme.palette.tableHeaderColor,
                         })}
                         className={className}
                         fontSize="inherit"
@@ -46,7 +44,6 @@ export const SortArrow: VFC<ISortArrowProps> = ({
                     <KeyboardArrowUp
                         sx={theme => ({
                             ...iconStyle(theme),
-                            color: theme.palette.tableHeaderColor,
                         })}
                         className={className}
                         fontSize="inherit"

@@ -2,6 +2,7 @@ import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import { IFeatureToggleStore } from 'lib/types/stores/feature-toggle-store';
 import dbInit from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
+import NotFoundError from '../../../lib/error/notfound-error';
 
 let stores;
 let db;
@@ -43,7 +44,7 @@ test('should tag feature', async () => {
     expect(featureTag.tagValue).toBe(tag.value);
 });
 
-test('feature tag exits', async () => {
+test('feature tag exists', async () => {
     await featureTagStore.tagFeature(featureName, tag);
     const exists = await featureTagStore.exists({
         featureName,
@@ -71,16 +72,6 @@ test('should untag feature', async () => {
     expect(featureTags).toHaveLength(0);
 });
 
-test('should throw if feature have tag', async () => {
-    expect.assertions(1);
-    await featureTagStore.tagFeature(featureName, tag);
-    try {
-        await featureTagStore.tagFeature(featureName, tag);
-    } catch (e) {
-        expect(e.message).toContain('already has the tag');
-    }
-});
-
 test('get all feature tags', async () => {
     await featureTagStore.tagFeature(featureName, tag);
     await featureToggleStore.create('default', {
@@ -95,7 +86,7 @@ test('should import feature tags', async () => {
     await featureToggleStore.create('default', {
         name: 'some-other-toggle-import',
     });
-    await featureTagStore.importFeatureTags([
+    await featureTagStore.tagFeatures([
         { featureName, tagType: tag.type, tagValue: tag.value },
         {
             featureName: 'some-other-toggle-import',
@@ -106,4 +97,21 @@ test('should import feature tags', async () => {
 
     const all = await featureTagStore.getAll();
     expect(all).toHaveLength(2);
+});
+
+test('should throw not found error if feature does not exist', async () => {
+    await expect(async () =>
+        featureTagStore.getAllTagsForFeature('non.existing.toggle'),
+    ).rejects.toThrow(
+        new NotFoundError(
+            `Could not find feature with name non.existing.toggle`,
+        ),
+    );
+});
+
+test('Returns empty tag list for existing feature with no tags', async () => {
+    const name = 'feature.with.no.tags';
+    await featureToggleStore.create('default', { name });
+    let tags = await featureTagStore.getAllTagsForFeature(name);
+    expect(tags).toHaveLength(0);
 });

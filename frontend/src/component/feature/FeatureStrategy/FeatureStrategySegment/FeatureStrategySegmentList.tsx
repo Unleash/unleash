@@ -30,7 +30,7 @@ const StyledAnd = styled('p')(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
     lineHeight: 1,
     color: theme.palette.text.primary,
-    backgroundColor: theme.palette.secondaryContainer,
+    backgroundColor: theme.palette.background.elevation2,
 }));
 
 export const FeatureStrategySegmentList = ({

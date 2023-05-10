@@ -7,6 +7,8 @@ import useUiConfig from './api/getters/useUiConfig/useUiConfig';
 export interface IUsersPlanOutput {
     planUsers: IUser[];
     isBillingUsers: boolean;
+    seats: number;
+    extraSeats: number;
 }
 
 export const useUsersPlan = (users: IUser[]): IUsersPlanOutput => {
@@ -24,7 +26,11 @@ export const useUsersPlan = (users: IUser[]): IUsersPlanOutput => {
         [users, isBillingUsers, seats]
     );
 
+    const extraSeats = planUsers.filter(user => user.paid).length;
+
     return {
+        seats,
+        extraSeats,
         planUsers,
         isBillingUsers,
     };

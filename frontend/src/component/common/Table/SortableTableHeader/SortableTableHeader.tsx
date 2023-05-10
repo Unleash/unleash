@@ -1,40 +1,20 @@
-import { VFC } from 'react';
-import { styled, TableHead, TableRow } from '@mui/material';
+import { TableHead, TableRow } from '@mui/material';
 import { HeaderGroup } from 'react-table';
 import { CellSortable } from './CellSortable/CellSortable';
 
-interface ISortableTableHeaderProps {
-    headerGroups: HeaderGroup<object>[];
-    className?: string;
-    flex?: boolean;
-}
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '& > th': {
-        height: theme.shape.tableRowHeightCompact,
-        border: 0,
-        backgroundColor: theme.palette.tableHeaderBackground,
-        color: theme.palette.tableHeaderColor,
-        '&:first-of-type': {
-            borderTopLeftRadius: theme.shape.borderRadiusMedium,
-            borderBottomLeftRadius: theme.shape.borderRadiusMedium,
-        },
-        '&:last-of-type': {
-            borderTopRightRadius: theme.shape.borderRadiusMedium,
-            borderBottomRightRadius: theme.shape.borderRadiusMedium,
-        },
-    },
-}));
-
-export const SortableTableHeader: VFC<ISortableTableHeaderProps> = ({
+export const SortableTableHeader = <T extends object>({
     headerGroups,
     className,
     flex,
+}: {
+    headerGroups: HeaderGroup<T>[];
+    className?: string;
+    flex?: boolean;
 }) => (
     <TableHead className={className}>
         {headerGroups.map(headerGroup => (
-            <StyledTableRow {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column: HeaderGroup) => {
+            <TableRow {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column: HeaderGroup<T>) => {
                     const content = column.render('Header');
 
                     return (
@@ -64,7 +44,7 @@ export const SortableTableHeader: VFC<ISortableTableHeaderProps> = ({
                         </CellSortable>
                     );
                 })}
-            </StyledTableRow>
+            </TableRow>
         ))}
     </TableHead>
 );

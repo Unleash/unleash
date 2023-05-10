@@ -1,6 +1,6 @@
 import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
 import { Logger } from '../logger';
-import { ProxyFeatureSchema, ProxyMetricsSchema } from '../openapi';
+import { ClientMetricsSchema, ProxyFeatureSchema } from '../openapi';
 import ApiUser from '../types/api-user';
 import {
     Context,
@@ -42,11 +42,17 @@ export class ProxyService {
 
     private readonly services: Services;
 
-    private readonly clients: Map<ApiUser['secret'], Unleash> = new Map();
+    /**
+     * This is intentionally a Promise becasue we want to be able to await
+     * until the client (which might be being created by a different request) is ready
+     * Check this test that fails if we don't use a Promise: src/test/e2e/api/proxy/proxy.concurrency.e2e.test.ts
+     */
+    private readonly clients: Map<ApiUser['secret'], Promise<Unleash>> =
+        new Map();
 
     private cachedFrontendSettings?: FrontendSettings;
 
-    private timer: NodeJS.Timeout;
+    private timer: NodeJS.Timeout | null;
 
     constructor(config: Config, stores: Stores, services: Services) {
         this.config = config;
@@ -77,24 +83,9 @@ export class ProxyService {
             }));
     }
 
-    async getAllProxyFeatures(
-        token: ApiUser,
-        context: Context,
-    ): Promise<ProxyFeatureSchema[]> {
-        const client = await this.clientForProxyToken(token);
-        const definitions = client.getFeatureToggleDefinitions() || [];
-
-        return definitions.map((feature) => ({
-            name: feature.name,
-            enabled: Boolean(feature.enabled),
-            variant: client.forceGetVariant(feature.name, context),
-            impressionData: Boolean(feature.impressionData),
-        }));
-    }
-
     async registerProxyMetrics(
         token: ApiUser,
-        metrics: ProxyMetricsSchema,
+        metrics: ClientMetricsSchema,
         ip: string,
     ): Promise<void> {
         ProxyService.assertExpectedTokenType(token);
@@ -114,14 +105,13 @@ export class ProxyService {
     private async clientForProxyToken(token: ApiUser): Promise<Unleash> {
         ProxyService.assertExpectedTokenType(token);
 
-        if (!this.clients.has(token.secret)) {
-            this.clients.set(
-                token.secret,
-                await this.createClientForProxyToken(token),
-            );
+        let client = this.clients.get(token.secret);
+        if (!client) {
+            client = this.createClientForProxyToken(token);
+            this.clients.set(token.secret, client);
         }
 
-        return this.clients.get(token.secret);
+        return client;
     }
 
     private async createClientForProxyToken(token: ApiUser): Promise<Unleash> {
@@ -149,12 +139,17 @@ export class ProxyService {
         return client;
     }
 
-    deleteClientForProxyToken(secret: string): void {
-        this.clients.delete(secret);
+    async deleteClientForProxyToken(secret: string): Promise<void> {
+        let clientPromise = this.clients.get(secret);
+        if (clientPromise) {
+            const client = await clientPromise;
+            client.destroy();
+            this.clients.delete(secret);
+        }
     }
 
     stopAll(): void {
-        this.clients.forEach((client) => client.destroy());
+        this.clients.forEach((promise) => promise.then((c) => c.destroy()));
     }
 
     private static assertExpectedTokenType({ type }: ApiUser) {
@@ -200,7 +195,9 @@ export class ProxyService {
     }
 
     destroy(): void {
-        clearInterval(this.timer);
-        this.timer = null;
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
     }
 }

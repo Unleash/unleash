@@ -8,6 +8,8 @@ import { constraintSchema } from './constraint-schema';
 import { environmentSchema } from './environment-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
 import { projectStatsSchema } from './project-stats-schema';
+import { createFeatureStrategySchema } from './create-feature-strategy-schema';
+import { projectEnvironmentSchema } from './project-environment-schema';
 
 export const healthOverviewSchema = {
     $id: '#/components/schemas/healthOverviewSchema',
@@ -25,6 +27,19 @@ export const healthOverviewSchema = {
             type: 'string',
             nullable: true,
         },
+        defaultStickiness: {
+            type: 'string',
+            example: 'userId',
+            description:
+                'A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy',
+        },
+        mode: {
+            type: 'string',
+            enum: ['open', 'protected'],
+            example: 'open',
+            description:
+                "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+        },
         members: {
             type: 'number',
         },
@@ -34,7 +49,7 @@ export const healthOverviewSchema = {
         environments: {
             type: 'array',
             items: {
-                type: 'string',
+                $ref: '#/components/schemas/projectEnvironmentSchema',
             },
         },
         features: {
@@ -58,8 +73,10 @@ export const healthOverviewSchema = {
     },
     components: {
         schemas: {
-            constraintSchema,
             environmentSchema,
+            projectEnvironmentSchema,
+            createFeatureStrategySchema,
+            constraintSchema,
             featureSchema,
             featureEnvironmentSchema,
             overrideSchema,

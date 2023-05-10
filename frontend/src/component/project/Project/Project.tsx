@@ -44,6 +44,8 @@ import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi
 import { ImportModal } from './Import/ImportModal';
 import { IMPORT_BUTTON } from 'utils/testIds';
 
+const NAVIGATE_TO_EDIT_PROJECT = 'NAVIGATE_TO_EDIT_PROJECT';
+
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
@@ -167,6 +169,7 @@ export const Project = () => {
                                         }
                                         tooltipProps={{ title: 'Edit project' }}
                                         data-loading
+                                        data-testid={NAVIGATE_TO_EDIT_PROJECT}
                                     >
                                         <Edit />
                                     </PermissionIconButton>
@@ -192,43 +195,6 @@ export const Project = () => {
                             />
                         </StyledDiv>
                     </StyledTopRow>
-                    <ConditionallyRender
-                        condition={
-                            !Boolean(uiConfig?.flags?.newProjectOverview)
-                        }
-                        // TODO: !!! Remove entire block when removing feature flag!
-                        show={() => (
-                            <StyledColumn>
-                                <StyledProjectTitle>
-                                    <div>
-                                        <ConditionallyRender
-                                            condition={Boolean(
-                                                project.description
-                                            )}
-                                            show={
-                                                <StyledDiv>
-                                                    <StyledTitle data-loading>
-                                                        Description:&nbsp;
-                                                    </StyledTitle>
-                                                    <StyledText data-loading>
-                                                        {project.description}
-                                                    </StyledText>
-                                                </StyledDiv>
-                                            }
-                                        />
-                                        <StyledDiv>
-                                            <StyledTitle data-loading>
-                                                projectId:&nbsp;
-                                            </StyledTitle>
-                                            <StyledText data-loading>
-                                                {projectId}
-                                            </StyledText>
-                                        </StyledDiv>
-                                    </div>
-                                </StyledProjectTitle>
-                            </StyledColumn>
-                        )}
-                    />
                 </StyledInnerContainer>
 
                 <StyledSeparator />
@@ -246,6 +212,7 @@ export const Project = () => {
                                 label={tab.title}
                                 value={tab.path}
                                 onClick={() => navigate(tab.path)}
+                                data-testid={`TAB_${tab.title}`}
                             />
                         ))}
                     </Tabs>

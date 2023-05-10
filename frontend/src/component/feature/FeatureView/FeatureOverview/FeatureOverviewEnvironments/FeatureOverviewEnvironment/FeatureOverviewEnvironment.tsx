@@ -3,7 +3,6 @@ import {
     AccordionDetails,
     AccordionSummary,
     Box,
-    Chip,
     styled,
 } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
@@ -22,6 +21,7 @@ import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
+import { Badge } from 'component/common/Badge/Badge';
 
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;
@@ -32,10 +32,9 @@ const StyledFeatureOverviewEnvironment = styled('div', {
 })<{ enabled: boolean }>(({ theme, enabled }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     marginBottom: theme.spacing(2),
-    backgroundColor: theme.palette.background.paper,
-    background: enabled
+    backgroundColor: enabled
         ? theme.palette.background.paper
-        : theme.palette.neutral.light,
+        : theme.palette.envAccordion.disabled,
 }));
 
 const StyledAccordion = styled(Accordion)({
@@ -53,14 +52,12 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
 
 const StyledAccordionDetails = styled(AccordionDetails, {
     shouldForwardProp: prop => prop !== 'enabled',
-})<{ enabled: boolean }>(({ theme, enabled }) => ({
+})<{ enabled: boolean }>(({ theme }) => ({
     padding: theme.spacing(3),
-    background: theme.palette.secondaryContainer,
+    background: theme.palette.envAccordion.expanded,
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
-    borderBottom: `4px solid ${
-        enabled ? theme.palette.primary.light : theme.palette.neutral.border
-    }`,
+    boxShadow: 'inset 0px 2px 4px rgba(32, 32, 33, 0.05)', // replace this with variable
 
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(2, 1),
@@ -143,6 +140,9 @@ const FeatureOverviewEnvironment = ({
                 <StyledFeatureOverviewEnvironment enabled={env.enabled}>
                     <StyledAccordion
                         data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${env.name}`}
+                        className={`environment-accordion ${
+                            env.enabled ? '' : 'accordion-disabled'
+                        }`}
                     >
                         <StyledAccordionSummary
                             expandIcon={<ExpandMore titleAccess="Toggle" />}
@@ -162,12 +162,12 @@ const FeatureOverviewEnvironment = ({
                                     <ConditionallyRender
                                         condition={!env.enabled}
                                         show={
-                                            <Chip
-                                                size="small"
-                                                variant="outlined"
-                                                label="Disabled"
+                                            <Badge
+                                                color="neutral"
                                                 sx={{ ml: 1 }}
-                                            />
+                                            >
+                                                Disabled
+                                            </Badge>
                                         }
                                     />
                                 </StyledHeaderTitle>

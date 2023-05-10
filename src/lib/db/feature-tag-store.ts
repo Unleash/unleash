@@ -1,16 +1,15 @@
-import { EventEmitter } from 'stream';
 import { Logger, LogProvider } from '../logger';
-import { ITag } from '../types/model';
+import { ITag } from '../types';
+import EventEmitter from 'events';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
-import { UNIQUE_CONSTRAINT_VIOLATION } from '../error/db-error';
-import FeatureHasTagError from '../error/feature-has-tag-error';
 import {
     IFeatureAndTag,
     IFeatureTag,
     IFeatureTagStore,
 } from '../types/stores/feature-tag-store';
 import { Db } from './db';
+import NotFoundError from '../error/notfound-error';
 
 const COLUMNS = ['feature_name', 'tag_type', 'tag_value'];
 const TABLE = 'feature_tag';
@@ -97,12 +96,35 @@ class FeatureTagStore implements IFeatureTagStore {
 
     async getAllTagsForFeature(featureName: string): Promise<ITag[]> {
         const stopTimer = this.timer('getAllForFeature');
+        if (await this.featureExists(featureName)) {
+            const rows = await this.db
+                .select(COLUMNS)
+                .from<FeatureTagTable>(TABLE)
+                .where({ feature_name: featureName });
+            stopTimer();
+            return rows.map(this.featureTagRowToTag);
+        } else {
+            throw new NotFoundError(
+                `Could not find feature with name ${featureName}`,
+            );
+        }
+    }
+
+    async getAllFeaturesForTag(tagValue: string): Promise<string[]> {
         const rows = await this.db
-            .select(COLUMNS)
+            .select('feature_name')
             .from<FeatureTagTable>(TABLE)
-            .where({ feature_name: featureName });
-        stopTimer();
-        return rows.map(this.featureTagRowToTag);
+            .where({ tag_value: tagValue });
+        return rows.map(({ feature_name }) => feature_name);
+    }
+
+    async featureExists(featureName: string): Promise<boolean> {
+        const result = await this.db.raw(
+            'SELECT EXISTS (SELECT 1 FROM features WHERE name = ?) AS present',
+            [featureName],
+        );
+        const { present } = result.rows[0];
+        return present;
     }
 
     async getAllByFeatures(features: string[]): Promise<IFeatureTag[]> {
@@ -123,17 +145,22 @@ class FeatureTagStore implements IFeatureTagStore {
         const stopTimer = this.timer('tagFeature');
         await this.db<FeatureTagTable>(TABLE)
             .insert(this.featureAndTagToRow(featureName, tag))
-            .catch((err) => {
-                if (err.code === UNIQUE_CONSTRAINT_VIOLATION) {
-                    throw new FeatureHasTagError(
-                        `${featureName} already has the tag: [${tag.type}:${tag.value}]`,
-                    );
-                } else {
-                    throw err;
-                }
-            });
+            .onConflict(COLUMNS)
+            .merge();
         stopTimer();
         return tag;
+    }
+
+    async untagFeatures(featureTags: IFeatureTag[]): Promise<void> {
+        const stopTimer = this.timer('untagFeatures');
+        try {
+            await this.db(TABLE)
+                .whereIn(COLUMNS, featureTags.map(this.featureTagArray))
+                .delete();
+        } catch (err) {
+            this.logger.error(err);
+        }
+        stopTimer();
     }
 
     /**
@@ -159,16 +186,16 @@ class FeatureTagStore implements IFeatureTagStore {
         stopTimer();
     }
 
-    async importFeatureTags(
-        featureTags: IFeatureTag[],
-    ): Promise<IFeatureAndTag[]> {
-        const rows = await this.db(TABLE)
-            .insert(featureTags.map(this.importToRow))
-            .returning(COLUMNS)
-            .onConflict(COLUMNS)
-            .ignore();
-        if (rows) {
-            return rows.map(this.rowToFeatureAndTag);
+    async tagFeatures(featureTags: IFeatureTag[]): Promise<IFeatureAndTag[]> {
+        if (featureTags.length !== 0) {
+            const rows = await this.db(TABLE)
+                .insert(featureTags.map(this.featureTagToRow))
+                .returning(COLUMNS)
+                .onConflict(COLUMNS)
+                .ignore();
+            if (rows) {
+                return rows.map(this.rowToFeatureAndTag);
+            }
         }
         return [];
     }
@@ -186,13 +213,10 @@ class FeatureTagStore implements IFeatureTagStore {
     }
 
     featureTagRowToTag(row: FeatureTagTable): ITag {
-        if (row) {
-            return {
-                value: row.tag_value,
-                type: row.tag_type,
-            };
-        }
-        return null;
+        return {
+            value: row.tag_value,
+            type: row.tag_type,
+        };
     }
 
     rowToFeatureAndTag(row: FeatureTagTable): IFeatureAndTag {
@@ -205,7 +229,7 @@ class FeatureTagStore implements IFeatureTagStore {
         };
     }
 
-    importToRow({
+    featureTagToRow({
         featureName,
         tagType,
         tagValue,
@@ -215,6 +239,10 @@ class FeatureTagStore implements IFeatureTagStore {
             tag_type: tagType,
             tag_value: tagValue,
         };
+    }
+
+    featureTagArray({ featureName, tagType, tagValue }: IFeatureTag): string[] {
+        return [featureName, tagType, tagValue];
     }
 
     featureAndTagToRow(

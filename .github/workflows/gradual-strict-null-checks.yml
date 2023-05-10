@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
 
     steps:
       - name: Checkout current branch
@@ -47,13 +47,12 @@ jobs:
               --data "{ \"body\": \"${1}\" }"
           }
 
-          sed -i 's/\/\/\s*"strictNullChecks":\s*true,/"strictNullChecks": true,/' "current/tsconfig.json"
-          sed -i 's/\/\/\s*"strictNullChecks":\s*true,/"strictNullChecks": true,/' "main/tsconfig.json"
+          YARN_1="yarn --mutex network --cwd ./current"
+          YARN_2="yarn --mutex network --cwd ./main"
 
-          yarn --mutex network --cwd ./current 2> .stderr-current > .out-current &
+          $YARN_1 install --ignore-scripts &> /dev/null && $YARN_1 build --strictNullChecks true 2> .stderr-current > .out-current &
           pid1=$!
-          
-          yarn --mutex network --cwd ./main 2> .stderr-main  > .out-main &
+          $YARN_2 install --ignore-scripts &> /dev/null && $YARN_2 build --strictNullChecks true 2> .stderr-main > .out-main &
           pid2=$!
 
           # wait for the processes that are expected to fail
@@ -66,7 +65,7 @@ jobs:
           MAIN=$(grep "Found [0-9]* errors" .out-main | sed 's/Found \(.*\) errors in .* files./\1/')
 
           if [ $CURRENT -gt $MAIN ]; then
-            comment "After enabling [\`strictNullChecks\`](https://www.typescriptlang.org/tsconfig#strictNullChecks) this PR would be **increasing** the number of null check errors from ${MAIN} to ${CURRENT}. <br /> Make sure your branch is up-to-date with ${MAIN_BRANCH} and **check the diff in the console output** to gather more details."
+            comment "After enabling [\`strictNullChecks\`](https://www.typescriptlang.org/tsconfig#strictNullChecks) this PR would be **increasing** the number of null check errors from ${MAIN} to ${CURRENT}. <br /> Make sure your branch is up-to-date with ${MAIN_BRANCH} and **check the diff in the console output** to pinpoint the offending files."
             diff .out-current .out-main
             exit 1
           else

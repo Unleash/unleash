@@ -1,5 +1,7 @@
 import memoizee from 'memoizee';
 import { Response } from 'express';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import hashSum from 'hash-sum';
 import Controller from '../controller';
 import { IUnleashConfig, IUnleashServices } from '../../types';
 import FeatureToggleService from '../../services/feature-toggle-service';
@@ -10,7 +12,6 @@ import NotFoundError from '../../error/notfound-error';
 import { IAuthRequest } from '../unleash-types';
 import ApiUser from '../../types/api-user';
 import { ALL, isAllProjects } from '../../types/models/api-token';
-import { SegmentService } from '../../services/segment-service';
 import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
 import { ClientSpecService } from '../../services/client-spec-service';
 import { OpenApiService } from '../../services/openapi-service';
@@ -25,6 +26,8 @@ import {
     clientFeaturesSchema,
     ClientFeaturesSchema,
 } from '../../openapi/spec/client-features-schema';
+import { ISegmentService } from 'lib/segments/segment-service-interface';
+import { EventService } from 'lib/services';
 
 const version = 2;
 
@@ -33,20 +36,29 @@ interface QueryOverride {
     environment?: string;
 }
 
+interface IMeta {
+    revisionId: number;
+    etag: string;
+    queryHash: string;
+}
+
 export default class FeatureController extends Controller {
     private readonly logger: Logger;
 
     private featureToggleServiceV2: FeatureToggleService;
 
-    private segmentService: SegmentService;
+    private segmentService: ISegmentService;
 
     private clientSpecService: ClientSpecService;
 
     private openApiService: OpenApiService;
 
-    private readonly cache: boolean;
+    private eventService: EventService;
 
-    private cachedFeatures: any;
+    private featuresAndSegments: (
+        query: IFeatureToggleQuery,
+        etag: string,
+    ) => Promise<[FeatureConfigurationClient[], ISegment[]]>;
 
     constructor(
         {
@@ -54,12 +66,14 @@ export default class FeatureController extends Controller {
             segmentService,
             clientSpecService,
             openApiService,
+            eventService,
         }: Pick<
             IUnleashServices,
             | 'featureToggleServiceV2'
             | 'segmentService'
             | 'clientSpecService'
             | 'openApiService'
+            | 'eventService'
         >,
         config: IUnleashConfig,
     ) {
@@ -69,6 +83,7 @@ export default class FeatureController extends Controller {
         this.segmentService = segmentService;
         this.clientSpecService = clientSpecService;
         this.openApiService = openApiService;
+        this.eventService = eventService;
         this.logger = config.getLogger('client-api/feature.js');
 
         this.route({
@@ -81,7 +96,7 @@ export default class FeatureController extends Controller {
                     operationId: 'getClientFeature',
                     tags: ['Client'],
                     responses: {
-                        200: createResponseSchema('clientFeaturesSchema'),
+                        200: createResponseSchema('clientFeatureSchema'),
                     },
                 }),
             ],
@@ -103,19 +118,22 @@ export default class FeatureController extends Controller {
             ],
         });
 
-        if (clientFeatureCaching?.enabled) {
-            this.cache = true;
-            this.cachedFeatures = memoizee(
-                (query) => this.resolveFeaturesAndSegments(query),
+        if (clientFeatureCaching.enabled) {
+            this.featuresAndSegments = memoizee(
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                (query: IFeatureToggleQuery, etag: string) =>
+                    this.resolveFeaturesAndSegments(query),
                 {
                     promise: true,
                     maxAge: clientFeatureCaching.maxAge,
                     normalizer(args) {
                         // args is arguments object as accessible in memoized function
-                        return JSON.stringify(args[0]);
+                        return args[1];
                     },
                 },
             );
+        } else {
+            this.featuresAndSegments = this.resolveFeaturesAndSegments;
         }
     }
 
@@ -175,7 +193,7 @@ export default class FeatureController extends Controller {
             !environment &&
             !inlineSegmentConstraints
         ) {
-            return null;
+            return {};
         }
 
         const tagQuery = this.paramToArray(tag);
@@ -201,25 +219,58 @@ export default class FeatureController extends Controller {
     ): Promise<void> {
         const query = await this.resolveQuery(req);
 
-        const [features, segments] = this.cache
-            ? await this.cachedFeatures(query)
-            : await this.resolveFeaturesAndSegments(query);
+        const userVersion = req.headers['if-none-match'];
+        const meta = await this.calculateMeta(query);
+        const { etag } = meta;
+
+        res.setHeader('ETag', etag);
+
+        if (etag === userVersion) {
+            res.status(304);
+            res.end();
+            return;
+        } else {
+            this.logger.debug(
+                `Provided revision: ${userVersion}, calculated revision: ${etag}`,
+            );
+        }
+
+        const [features, segments] = await this.featuresAndSegments(
+            query,
+            etag,
+        );
 
         if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
             this.openApiService.respondWithValidation(
                 200,
                 res,
                 clientFeaturesSchema.$id,
-                { version, features, query: { ...query }, segments },
+                {
+                    version,
+                    features,
+                    query: { ...query },
+                    segments,
+                    meta,
+                },
             );
         } else {
             this.openApiService.respondWithValidation(
                 200,
                 res,
                 clientFeaturesSchema.$id,
-                { version, features, query },
+                { version, features, query, meta },
             );
         }
+    }
+
+    async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {
+        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
+        const revisionId = await this.eventService.getMaxRevisionId();
+
+        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
+        const queryHash = hashSum(query);
+        const etag = `"${queryHash}:${revisionId}"`;
+        return { revisionId, etag, queryHash };
     }
 
     async getFeatureToggle(
@@ -230,7 +281,6 @@ export default class FeatureController extends Controller {
         const featureQuery = await this.resolveQuery(req);
         const q = { ...featureQuery, namePrefix: name };
         const toggles = await this.featureToggleServiceV2.getClientFeatures(q);
-
         const toggle = toggles.find((t) => t.name === name);
         if (!toggle) {
             throw new NotFoundError(`Could not find feature toggle ${name}`);

@@ -4,6 +4,7 @@ export interface ISegment {
     id: number;
     name: string;
     description: string;
+    project?: string;
     createdAt: string;
     createdBy: string;
     constraints: IConstraint[];

@@ -69,7 +69,7 @@ test('createFeatureStrategy with parameters', () => {
           "groupId": "a",
           "rollout": "50",
           "s": "",
-          "stickiness": "default",
+          "stickiness": "",
         },
       }
     `);

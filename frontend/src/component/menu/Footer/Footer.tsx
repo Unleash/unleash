@@ -5,13 +5,14 @@ import { List, ListItem, ListItemText, Grid, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ApiDetails } from './ApiDetails/ApiDetails';
 import { FooterTitle } from './FooterTitle';
+import { focusable } from 'themes/themeStyles';
 
 const StyledFooter = styled('footer')(({ theme }) => ({
     padding: theme.spacing(4, 8),
     width: '100%',
     flexGrow: 1,
     zIndex: 100,
-    backgroundColor: theme.palette.footerBackground,
+    backgroundColor: theme.palette.background.paper,
 }));
 
 const StyledList = styled(List)({
@@ -23,8 +24,12 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
     padding: 0,
     margin: 0,
     '& a': {
+        ...focusable(theme),
         textDecoration: 'none',
         color: theme.palette.text.primary,
+        '&:hover': {
+            textDecoration: 'underline',
+        },
     },
 }));
 
@@ -80,6 +85,18 @@ export const Footer: VFC = () => {
                                                     target="_blank"
                                                 >
                                                     Go
+                                                </a>
+                                            }
+                                        />
+                                    </StyledListItem>{' '}
+                                    <StyledListItem>
+                                        <ListItemText
+                                            primary={
+                                                <a
+                                                    href="https://docs.getunleash.io/reference/sdks/rust"
+                                                    target="_blank"
+                                                >
+                                                    Rust
                                                 </a>
                                             }
                                         />
@@ -170,7 +187,7 @@ export const Footer: VFC = () => {
                                                     href="https://docs.getunleash.io/reference/sdks/javascript-browser"
                                                     target="_blank"
                                                 >
-                                                    JavaScript SDK
+                                                    JavaScript
                                                 </a>
                                             }
                                         />
@@ -182,7 +199,31 @@ export const Footer: VFC = () => {
                                                     href="https://docs.getunleash.io/reference/sdks/react"
                                                     target="_blank"
                                                 >
-                                                    React SDK
+                                                    React
+                                                </a>
+                                            }
+                                        />
+                                    </StyledListItem>
+                                    <StyledListItem>
+                                        <ListItemText
+                                            primary={
+                                                <a
+                                                    href="https://docs.getunleash.io/reference/sdks/next-js"
+                                                    target="_blank"
+                                                >
+                                                    Next.js
+                                                </a>
+                                            }
+                                        />
+                                    </StyledListItem>
+                                    <StyledListItem>
+                                        <ListItemText
+                                            primary={
+                                                <a
+                                                    href="https://docs.getunleash.io/reference/sdks/vue"
+                                                    target="_blank"
+                                                >
+                                                    Vue
                                                 </a>
                                             }
                                         />
@@ -194,7 +235,7 @@ export const Footer: VFC = () => {
                                                     href="https://docs.getunleash.io/reference/sdks/ios-proxy"
                                                     target="_blank"
                                                 >
-                                                    iOS SDK
+                                                    iOS
                                                 </a>
                                             }
                                         />
@@ -206,7 +247,19 @@ export const Footer: VFC = () => {
                                                     href="https://docs.getunleash.io/reference/sdks/android-proxy"
                                                     target="_blank"
                                                 >
-                                                    Android SDK
+                                                    Android
+                                                </a>
+                                            }
+                                        />
+                                    </StyledListItem>
+                                    <StyledListItem>
+                                        <ListItemText
+                                            primary={
+                                                <a
+                                                    href="https://docs.getunleash.io/reference/sdks/flutter"
+                                                    target="_blank"
+                                                >
+                                                    Flutter
                                                 </a>
                                             }
                                         />

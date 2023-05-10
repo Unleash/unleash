@@ -9,7 +9,7 @@ interface IStandaloneLayout {
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(11),
-    background: theme.palette.standaloneBackground,
+    background: theme.palette.background.application,
     display: 'flex',
     [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
@@ -33,15 +33,20 @@ const StyledHeader = styled('header')(({ theme }) => ({
 const StyledMain = styled('main')(({ theme }) => ({
     width: '60%',
     flex: '1',
-    borderTopRightRadius: '3px',
-    borderBottomRightRadius: '3px',
+    borderTopRightRadius: theme.shape.borderRadiusLarge,
+    borderBottomRightRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.background.paper,
     position: 'relative',
     [theme.breakpoints.down('md')]: {
-        borderRadius: '0',
+        borderTopRightRadius: '0',
+        borderBottomLeftRadius: theme.shape.borderRadiusLarge,
+        borderBottomRightRadius: theme.shape.borderRadiusLarge,
         width: '100%',
         position: 'static',
         minHeight: 'auto',
+    },
+    [theme.breakpoints.down('sm')]: {
+        borderRadius: '0',
     },
 }));
 

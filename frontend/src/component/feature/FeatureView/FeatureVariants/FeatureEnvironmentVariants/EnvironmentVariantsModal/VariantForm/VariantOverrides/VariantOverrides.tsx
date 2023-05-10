@@ -24,8 +24,10 @@ const StyledRow = styled('div')(({ theme }) => ({
 }));
 
 const StyledSelectMenu = styled(SelectMenu)(({ theme }) => ({
-    minWidth: theme.spacing(20),
     marginRight: theme.spacing(10),
+    [theme.breakpoints.up('sm')]: {
+        minWidth: theme.spacing(20),
+    },
 }));
 
 const StyledFieldColumn = styled('div')(({ theme }) => ({
@@ -91,6 +93,7 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
                             id="override-context-name"
                             name="contextName"
                             label="Context Field"
+                            data-testid="context_field"
                             value={override.contextName}
                             options={contextNames}
                             onChange={e =>
@@ -138,6 +141,7 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
                                         placeholder=""
                                         values={override.values}
                                         updateValues={updateValues(index)}
+                                        data-testid="OVERRIDE_VALUES"
                                     />
                                 }
                             />

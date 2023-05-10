@@ -10,13 +10,15 @@ import { ProjectAccess } from 'component/project/ProjectAccess/ProjectAccess';
 import ProjectEnvironmentList from 'component/project/ProjectEnvironment/ProjectEnvironment';
 import { ChangeRequestConfiguration } from './ChangeRequestConfiguration/ChangeRequestConfiguration';
 import { ProjectApiAccess } from 'component/project/Project/ProjectSettings/ProjectApiAccess/ProjectApiAccess';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { ProjectSegments } from './ProjectSegments/ProjectSegments';
+import { ProjectDefaultStrategySettings } from './ProjectDefaultStrategySettings/ProjectDefaultStrategySettings';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const ProjectSettings = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { uiConfig } = useUiConfig();
-    const { showProjectApiAccess } = uiConfig.flags;
+    const { strategyImprovements } = uiConfig.flags;
 
     const tabs: ITab[] = [
         {
@@ -28,15 +30,23 @@ export const ProjectSettings = () => {
             label: 'Access',
         },
         {
+            id: 'segments',
+            label: 'Segments',
+        },
+        {
             id: 'change-requests',
             label: 'Change request configuration',
         },
-    ];
-
-    if (Boolean(showProjectApiAccess)) {
-        tabs.push({
+        {
             id: 'api-access',
             label: 'API access',
+        },
+    ];
+
+    if (Boolean(strategyImprovements)) {
+        tabs.push({
+            id: 'default-strategy',
+            label: 'Default strategy',
         });
     }
 
@@ -60,12 +70,17 @@ export const ProjectSettings = () => {
                     element={<ProjectEnvironmentList />}
                 />
                 <Route path="access/*" element={<ProjectAccess />} />
+                <Route path="segments/*" element={<ProjectSegments />} />
                 <Route
                     path="change-requests/*"
                     element={<ChangeRequestConfiguration />}
                 />
-                {Boolean(showProjectApiAccess) && (
-                    <Route path="api-access/*" element={<ProjectApiAccess />} />
+                <Route path="api-access/*" element={<ProjectApiAccess />} />
+                {Boolean(strategyImprovements) && (
+                    <Route
+                        path="default-strategy/*"
+                        element={<ProjectDefaultStrategySettings />}
+                    />
                 )}
                 <Route
                     path="*"

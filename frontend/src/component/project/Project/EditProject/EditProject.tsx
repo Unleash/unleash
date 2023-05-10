@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
-import useProjectForm from '../hooks/useProjectForm';
+import useProjectForm, {
+    DEFAULT_PROJECT_STICKINESS,
+} from '../hooks/useProjectForm';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
@@ -14,6 +16,10 @@ import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Alert } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
+import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+
+const EDIT_PROJECT_BTN = 'EDIT_PROJECT_BTN';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -21,21 +27,33 @@ const EditProject = () => {
     const { hasAccess } = useContext(AccessContext);
     const id = useRequiredPathParam('projectId');
     const { project } = useProject(id);
+    const { defaultStickiness } = useDefaultProjectSettings(id);
     const navigate = useNavigate();
+    const { trackEvent } = usePlausibleTracker();
 
     const {
         projectId,
         projectName,
         projectDesc,
+        projectStickiness,
+        projectMode,
         setProjectId,
         setProjectName,
         setProjectDesc,
+        setProjectStickiness,
+        setProjectMode,
         getProjectPayload,
         clearErrors,
         validateProjectId,
         validateName,
         errors,
-    } = useProjectForm(id, project.name, project.description);
+    } = useProjectForm(
+        id,
+        project.name,
+        project.description,
+        defaultStickiness,
+        project.mode
+    );
 
     const formatApiCode = () => {
         return `curl --location --request PUT '${
@@ -64,6 +82,9 @@ const EditProject = () => {
                     title: 'Project information updated',
                     type: 'success',
                 });
+                if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
+                    trackEvent('project_stickiness_set');
+                }
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -97,7 +118,11 @@ const EditProject = () => {
                 projectId={projectId}
                 setProjectId={setProjectId}
                 projectName={projectName}
+                projectMode={projectMode}
                 setProjectName={setProjectName}
+                projectStickiness={projectStickiness}
+                setProjectStickiness={setProjectStickiness}
+                setProjectMode={setProjectMode}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}
                 mode="Edit"
@@ -107,6 +132,7 @@ const EditProject = () => {
                 <UpdateButton
                     permission={UPDATE_PROJECT}
                     projectId={projectId}
+                    data-testid={EDIT_PROJECT_BTN}
                 />
             </ProjectForm>
         </FormTemplate>

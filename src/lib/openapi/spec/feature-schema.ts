@@ -34,8 +34,7 @@ export const featureSchema = {
         archived: {
             type: 'boolean',
             example: true,
-            description:
-                '`true` if the feature is archived, otherwise `false`.',
+            description: '`true` if the feature is archived',
         },
         project: {
             type: 'string',
@@ -96,6 +95,7 @@ export const featureSchema = {
                 $ref: '#/components/schemas/variantSchema',
             },
             description: 'The list of feature variants',
+            deprecated: true,
         },
         strategies: {
             type: 'array',
@@ -103,6 +103,7 @@ export const featureSchema = {
                 type: 'object',
             },
             description: 'This is a legacy field that will be deprecated',
+            deprecated: true,
         },
         tags: {
             type: 'array',

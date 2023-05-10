@@ -1,5 +1,6 @@
 import { ProjectStatsSchema } from 'openapi';
 import { IFeatureToggleListItem } from './featureToggle';
+import { ProjectEnvironmentType } from '../component/project/Project/ProjectFeatureToggles/hooks/useEnvironmentsRef';
 
 export interface IProjectCard {
     name: string;
@@ -18,11 +19,13 @@ export interface IProject {
     version: string;
     name: string;
     description?: string;
-    environments: string[];
+    environments: Array<ProjectEnvironmentType>;
     health: number;
     stats: ProjectStatsSchema;
     favorite: boolean;
     features: IFeatureToggleListItem[];
+    mode: 'open' | 'protected';
+    defaultStickiness: string;
 }
 
 export interface IProjectHealthReport extends IProject {

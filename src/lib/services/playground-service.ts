@@ -8,14 +8,14 @@ import { IUnleashConfig } from 'lib/types';
 import { offlineUnleashClient } from '../util/offline-unleash-client';
 import { FeatureInterface } from 'lib/util/feature-evaluator/feature';
 import { FeatureStrategiesEvaluationResult } from 'lib/util/feature-evaluator/client';
-import { SegmentService } from './segment-service';
+import { ISegmentService } from 'lib/segments/segment-service-interface';
 
 export class PlaygroundService {
     private readonly logger: Logger;
 
     private readonly featureToggleService: FeatureToggleService;
 
-    private readonly segmentService: SegmentService;
+    private readonly segmentService: ISegmentService;
 
     constructor(
         config: IUnleashConfig,
@@ -41,6 +41,7 @@ export class PlaygroundService {
                     environment,
                 },
                 true,
+                false,
             ),
             this.segmentService.getActive(),
         ]);

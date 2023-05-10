@@ -5,7 +5,8 @@ import { DEFAULT_ENV } from '../util/constants';
 export const createApiToken = joi
     .object()
     .keys({
-        username: joi.string().required(),
+        username: joi.string().optional(),
+        tokenName: joi.string().optional(),
         type: joi
             .string()
             .lowercase()
@@ -27,5 +28,6 @@ export const createApiToken = joi
             otherwise: joi.string().optional().default(ALL),
         }),
     })
+    .nand('username', 'tokenName')
     .nand('project', 'projects')
     .options({ stripUnknown: true, allowUnknown: false, abortEarly: false });

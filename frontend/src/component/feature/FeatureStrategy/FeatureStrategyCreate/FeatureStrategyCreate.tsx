@@ -29,6 +29,7 @@ import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -52,6 +53,7 @@ export const FeatureStrategyCreate = () => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
+    const { trackEvent } = usePlausibleTracker();
 
     const { data, staleDataNotification, forceRefreshCache } =
         useCollaborateData<IFeatureToggle>(
@@ -74,7 +76,7 @@ export const FeatureStrategyCreate = () => {
             forceRefreshCache(feature);
             ref.current = feature;
         }
-    }, [feature]);
+    }, [feature.name]);
 
     useEffect(() => {
         if (strategyDefinition) {
@@ -112,8 +114,15 @@ export const FeatureStrategyCreate = () => {
         refetchChangeRequests();
     };
 
+    const payload = createStrategyPayload(strategy, segments);
+
     const onSubmit = async () => {
-        const payload = createStrategyPayload(strategy, segments);
+        trackEvent('strategyTitle', {
+            props: {
+                hasTitle: Boolean(strategy.title),
+                on: 'create',
+            },
+        });
 
         try {
             if (isChangeRequestConfigured(environmentId)) {
@@ -144,7 +153,7 @@ export const FeatureStrategyCreate = () => {
                     projectId,
                     featureId,
                     environmentId,
-                    strategy,
+                    payload,
                     unleashUrl
                 )
             }

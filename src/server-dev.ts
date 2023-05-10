@@ -9,7 +9,7 @@ process.nextTick(async () => {
             createConfig({
                 db: {
                     user: 'unleash_user',
-                    password: 'passord',
+                    password: 'password',
                     host: 'localhost',
                     port: 5432,
                     database: process.env.UNLEASH_DATABASE_NAME || 'unleash',
@@ -38,10 +38,8 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        featuresExportImport: true,
-                        newProjectOverview: true,
-                        projectStatusApi: true,
-                        showProjectApiAccess: true,
+                        variantMetrics: true,
+                        strategyImprovements: true,
                     },
                 },
                 authentication: {
@@ -51,10 +49,16 @@ process.nextTick(async () => {
                             project: '*',
                             secret: '*:*.964a287e1b728cb5f4f3e0120df92cb5',
                             type: ApiTokenType.ADMIN,
-                            username: 'some-user',
+                            tokenName: 'some-user',
                         },
                     ],
                 },
+                /* can be tweaked to control configuration caching for /api/client/features
+                clientFeatureCaching: {
+                    enabled: true,
+                    maxAge: 4000,
+                },
+                */
             }),
         );
     } catch (error) {

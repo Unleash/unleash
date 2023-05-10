@@ -1,20 +1,22 @@
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { ChartData } from 'chart.js';
 import { ILocationSettings } from 'hooks/useLocationSettings';
-import theme from 'themes/theme';
 import 'chartjs-adapter-date-fns';
+import { Theme } from '@mui/material/styles/createTheme';
 
-interface IPoint {
+export interface IPoint {
     x: string;
     y: number;
+    variants: Record<string, number>;
 }
 
 export const createChartData = (
+    theme: Theme,
     metrics: IFeatureMetricsRaw[],
     locationSettings: ILocationSettings
 ): ChartData<'line', IPoint[], string> => {
     const requestsSeries = {
-        label: 'total requests',
+        label: 'Total requests',
         borderColor: theme.palette.primary.main,
         backgroundColor: theme.palette.primary.main,
         data: createChartPoints(metrics, locationSettings, m => m.yes + m.no),
@@ -30,7 +32,7 @@ export const createChartData = (
     };
 
     const yesSeries = {
-        label: 'exposed',
+        label: 'Exposed',
         borderColor: theme.palette.success.main,
         backgroundColor: theme.palette.success.main,
         data: createChartPoints(metrics, locationSettings, m => m.yes),
@@ -43,7 +45,7 @@ export const createChartData = (
     };
 
     const noSeries = {
-        label: 'not exposed',
+        label: 'Not exposed',
         borderColor: theme.palette.error.main,
         backgroundColor: theme.palette.error.main,
         data: createChartPoints(metrics, locationSettings, m => m.no),
@@ -56,7 +58,9 @@ export const createChartData = (
         },
     };
 
-    return { datasets: [yesSeries, noSeries, requestsSeries] };
+    return {
+        datasets: [yesSeries, noSeries, requestsSeries],
+    };
 };
 
 const createChartPoints = (
@@ -67,5 +71,6 @@ const createChartPoints = (
     return metrics.map(metric => ({
         x: metric.timestamp,
         y: y(metric),
+        variants: metric.variants,
     }));
 };

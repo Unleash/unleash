@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { ITag } from 'interfaces/tags';
 import { Operation } from 'fast-json-patch';
 import { IConstraint } from 'interfaces/strategy';
-import { CreateFeatureSchema } from 'openapi';
+import { CreateFeatureSchema, UpdateTagsSchema } from 'openapi';
 import useAPI from '../useApi/useApi';
 import { IFeatureVariant } from 'interfaces/featureToggle';
 
@@ -51,8 +51,13 @@ const useFeatureApi = () => {
     };
 
     const toggleFeatureEnvironmentOn = useCallback(
-        async (projectId: string, featureId: string, environmentId: string) => {
-            const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/on`;
+        async (
+            projectId: string,
+            featureId: string,
+            environmentId: string,
+            shouldActivateDisabledStrategies = false
+        ) => {
+            const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/on?shouldActivateDisabledStrategies=${shouldActivateDisabledStrategies}`;
             const req = createRequest(
                 path,
                 { method: 'POST' },
@@ -136,6 +141,26 @@ const useFeatureApi = () => {
         const path = `api/admin/features/${featureId}/tags/${type}/${value}`;
         const req = createRequest(path, {
             method: 'DELETE',
+        });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
+    const updateFeatureTags = async (
+        featureId: string,
+        update: UpdateTagsSchema
+    ) => {
+        // TODO: Change this path to the new API when moved.
+        const path = `api/admin/features/${featureId}/tags`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify({ ...update }),
         });
 
         try {
@@ -274,6 +299,7 @@ const useFeatureApi = () => {
         toggleFeatureEnvironmentOff,
         addTagToFeature,
         deleteTagFromFeature,
+        updateFeatureTags,
         archiveFeatureToggle,
         patchFeatureToggle,
         patchFeatureVariants,

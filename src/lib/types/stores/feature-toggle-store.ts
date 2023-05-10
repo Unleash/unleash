@@ -15,16 +15,23 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     create(project: string, data: FeatureToggleDTO): Promise<FeatureToggle>;
     update(project: string, data: FeatureToggleDTO): Promise<FeatureToggle>;
     archive(featureName: string): Promise<FeatureToggle>;
+    batchArchive(featureNames: string[]): Promise<FeatureToggle[]>;
+    batchStale(
+        featureNames: string[],
+        stale: boolean,
+    ): Promise<FeatureToggle[]>;
+    batchDelete(featureNames: string[]): Promise<void>;
+    batchRevive(featureNames: string[]): Promise<FeatureToggle[]>;
     revive(featureName: string): Promise<FeatureToggle>;
     getAll(query?: Partial<IFeatureToggleQuery>): Promise<FeatureToggle[]>;
     getAllByNames(names: string[]): Promise<FeatureToggle[]>;
-    getByDate(queryModifiers: {
+    countByDate(queryModifiers: {
         archived?: boolean;
         project?: string;
         date?: string;
         range?: string[];
         dateAccessor: string;
-    }): Promise<FeatureToggle[]>;
+    }): Promise<number>;
     /**
      * @deprecated - Variants should be fetched from FeatureEnvironmentStore (since variants are now; since 4.18, connected to environments)
      * @param featureName

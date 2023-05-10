@@ -22,6 +22,9 @@ import {
     TagWithVersionSchema,
 } from '../../openapi/spec/tag-with-version-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
+import FeatureTagService from 'lib/services/feature-tag-service';
+import { TagsBulkAddSchema } from '../../openapi/spec/tags-bulk-add-schema';
+import { IFlagResolver } from '../../types';
 
 const version = 1;
 
@@ -30,19 +33,29 @@ class TagController extends Controller {
 
     private tagService: TagService;
 
+    private featureTagService: FeatureTagService;
+
     private openApiService: OpenApiService;
+
+    private flagResolver: IFlagResolver;
 
     constructor(
         config: IUnleashConfig,
         {
             tagService,
             openApiService,
-        }: Pick<IUnleashServices, 'tagService' | 'openApiService'>,
+            featureTagService,
+        }: Pick<
+            IUnleashServices,
+            'tagService' | 'openApiService' | 'featureTagService'
+        >,
     ) {
         super(config);
         this.tagService = tagService;
         this.openApiService = openApiService;
+        this.featureTagService = featureTagService;
         this.logger = config.getLogger('/admin-api/tag.js');
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'get',
@@ -72,6 +85,20 @@ class TagController extends Controller {
                         ),
                     },
                     requestBody: createRequestSchema('tagSchema'),
+                }),
+            ],
+        });
+        this.route({
+            method: 'put',
+            path: '/features',
+            handler: this.updateFeaturesTags,
+            permission: UPDATE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Tags'],
+                    operationId: 'addTagToFeatures',
+                    requestBody: createRequestSchema('tagsBulkAddSchema'),
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });
@@ -179,6 +206,21 @@ class TagController extends Controller {
         const { type, value } = req.params;
         const userName = extractUsername(req);
         await this.tagService.deleteTag({ type, value }, userName);
+        res.status(200).end();
+    }
+
+    async updateFeaturesTags(
+        req: IAuthRequest<void, void, TagsBulkAddSchema>,
+        res: Response<TagSchema>,
+    ): Promise<void> {
+        const { features, tags } = req.body;
+        const userName = extractUsername(req);
+        await this.featureTagService.updateTags(
+            features,
+            tags.addedTags,
+            tags.removedTags,
+            userName,
+        );
         res.status(200).end();
     }
 }

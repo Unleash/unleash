@@ -27,16 +27,13 @@ interface IConstraintAccordionViewProps {
 }
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
-    border: `1px solid ${theme.palette.dividerAlternative}`,
+    border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: theme.palette.constraintAccordion.background,
+    backgroundColor: 'transparent',
     boxShadow: 'none',
     margin: 0,
-
-    '& .root': {
-        '&:before': {
-            opacity: '0 !important',
-        },
+    '&:before': {
+        opacity: '0',
     },
 }));
 

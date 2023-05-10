@@ -1,7 +1,7 @@
-import { EventEmitter } from 'events';
 import express from 'express';
 import { createTestConfig } from '../test/config/test-config';
 import { start, create } from './server-impl';
+import FakeEventStore from '../test/fixtures/fake-event-store';
 
 jest.mock(
     './routes',
@@ -15,7 +15,7 @@ jest.mock(
 
 const noop = () => {};
 
-const eventStore = new EventEmitter();
+const eventStore = new FakeEventStore();
 const settingStore = {
     get: () => {
         Promise.resolve('secret');
@@ -34,18 +34,28 @@ jest.mock('./metrics', () => ({
 jest.mock('./db', () => ({
     createStores() {
         return {
-            db: { destroy: () => undefined },
-            clientInstanceStore: { destroy: noop },
+            db: {
+                destroy: () => undefined,
+            },
+            clientInstanceStore: {
+                destroy: noop,
+                removeInstancesOlderThanTwoDays: noop,
+            },
             clientMetricsStore: { destroy: noop, on: noop },
             eventStore,
             publicSignupTokenStore: { destroy: noop, on: noop },
             settingStore,
+            projectStore: { getAll: () => Promise.resolve([]) },
         };
     },
 }));
 
 jest.mock('../migrator', () => ({
     migrateDb: () => Promise.resolve(),
+}));
+
+jest.mock('./util/db-lock', () => ({
+    withDbLock: () => (fn) => fn,
 }));
 
 jest.mock(
@@ -83,20 +93,6 @@ test('should call preRouterHook', async () => {
     await stop();
 });
 
-test('should call eventHook', async () => {
-    let called = 0;
-    const config = createTestConfig({
-        server: { port: 0 },
-        eventHook: () => {
-            called++;
-        },
-    });
-    const { stop } = await start(config);
-    eventStore.emit('feature-created', {});
-    expect(called === 1).toBe(true);
-    await stop();
-});
-
 test('should auto-create server on start()', async () => {
     const { server, stop } = await start(
         createTestConfig({ server: { port: 0 } }),
@@ -117,5 +113,5 @@ test('should shutdown the server when calling stop()', async () => {
         createTestConfig({ server: { port: 0 } }),
     );
     await stop();
-    expect(server.address()).toBe(null);
+    expect(server!.address()).toBe(null);
 });

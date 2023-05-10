@@ -1,6 +1,5 @@
 import { Fragment, useMemo, VFC } from 'react';
 import { Box, Chip, styled } from '@mui/material';
-import { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
@@ -16,9 +15,12 @@ import {
     parseParameterStrings,
 } from 'utils/parseParameter';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import { Badge } from 'component/common/Badge/Badge';
+import { CreateFeatureStrategySchema } from 'openapi';
+import { IFeatureStrategyPayload } from 'interfaces/strategy';
 
 interface IStrategyExecutionProps {
-    strategy: IFeatureStrategyPayload;
+    strategy: IFeatureStrategyPayload | CreateFeatureStrategySchema;
 }
 
 const NoItems: VFC = () => (
@@ -29,7 +31,7 @@ const NoItems: VFC = () => (
 
 const StyledValueContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2, 3),
-    border: `1px solid ${theme.palette.dividerAlternative}`,
+    border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
 }));
 
@@ -72,13 +74,8 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                 />
                             </Box>
                             <div>
-                                <Chip
-                                    color="success"
-                                    variant="outlined"
-                                    size="small"
-                                    label={`${percentage}%`}
-                                />{' '}
-                                of your base{' '}
+                                <Badge color="success">{percentage}%</Badge> of
+                                your base{' '}
                                 {constraints.length > 0
                                     ? 'who match constraints'
                                     : ''}{' '}
@@ -167,12 +164,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                             <div>
                                 {nameItem}
                                 {isSetTo}
-                                <Chip
-                                    color="success"
-                                    variant="outlined"
-                                    size="small"
-                                    label={`${percentage}%`}
-                                />
+                                <Badge color="success">{percentage}%</Badge>
                             </div>
                         </StyledValueContainer>
                     ) : null;
@@ -187,16 +179,15 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                 text={name}
                             />
                             {isSetTo}
-                            <Chip
+                            <Badge
                                 color={
                                     parameters[name] === 'true'
                                         ? 'success'
                                         : 'error'
                                 }
-                                variant="outlined"
-                                size="small"
-                                label={parameters[name]}
-                            />
+                            >
+                                {parameters[name]}
+                            </Badge>
                         </StyledValueContainer>
                     ) : null;
 
@@ -266,13 +257,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
         strategy.name === 'default' && (
             <>
                 <StyledValueContainer sx={{ width: '100%' }}>
-                    The standard strategy is{' '}
-                    <Chip
-                        variant="outlined"
-                        size="small"
-                        color="success"
-                        label="ON"
-                    />{' '}
+                    The standard strategy is <Badge color="success">ON</Badge>{' '}
                     for all users.
                 </StyledValueContainer>
             </>

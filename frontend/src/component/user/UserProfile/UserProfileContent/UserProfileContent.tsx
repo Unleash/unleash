@@ -45,7 +45,7 @@ const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(1),
     padding: 0,
-    color: theme.palette.primary.dark,
+    color: theme.palette.links,
     fontWeight: theme.fontWeight.medium,
     '&:hover, &:focus': {
         textDecoration: 'underline',
@@ -87,7 +87,7 @@ export const UserProfileContent = ({
     <ConditionallyRender
         condition={showProfile}
         show={
-            <StyledPaper id={id}>
+            <StyledPaper className="dropdown-outline" id={id}>
                 <StyledProfileInfo>
                     <StyledUserAvatar user={profile} />
                     <div>
@@ -123,13 +123,15 @@ export const UserProfileContent = ({
 
                 <StyledDivider />
 
-                <StyledLogoutButton
-                    variant="outlined"
-                    color="primary"
-                    href={`${basePath}/logout`}
-                >
-                    Log out
-                </StyledLogoutButton>
+                <form method="POST" action={`${basePath}/logout`}>
+                    <StyledLogoutButton
+                        type="submit"
+                        variant="outlined"
+                        color="primary"
+                    >
+                        Log out
+                    </StyledLogoutButton>
+                </form>
             </StyledPaper>
         }
     />

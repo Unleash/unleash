@@ -28,5 +28,5 @@ interface IRouteMenu {
     mobile?: boolean;
     advanced?: boolean;
     adminSettings?: boolean;
-    isEnterprise?: boolean;
+    mode?: Array<'pro' | 'enterprise'>;
 }

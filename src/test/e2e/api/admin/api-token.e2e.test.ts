@@ -2,7 +2,7 @@ import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ALL, ApiTokenType } from '../../../../lib/types/models/api-token';
-import { DEFAULT_ENV } from '../../../../lib/util/constants';
+import { DEFAULT_ENV } from '../../../../lib/util';
 
 let db;
 let app;
@@ -44,6 +44,7 @@ test('creates new client token', async () => {
         .expect(201)
         .expect((res) => {
             expect(res.body.username).toBe('default-client');
+            expect(res.body.tokenName).toBe(res.body.username);
             expect(res.body.type).toBe('client');
             expect(res.body.createdAt).toBeTruthy();
             expect(res.body.secret.length > 16).toBe(true);
@@ -61,6 +62,7 @@ test('creates new admin token', async () => {
         .expect(201)
         .expect((res) => {
             expect(res.body.username).toBe('default-admin');
+            expect(res.body.tokenName).toBe(res.body.username);
             expect(res.body.type).toBe('admin');
             expect(res.body.environment).toBe(ALL);
             expect(res.body.createdAt).toBeTruthy();
@@ -80,6 +82,7 @@ test('creates new ADMIN token should fix casing', async () => {
         .expect(201)
         .expect((res) => {
             expect(res.body.username).toBe('default-admin');
+            expect(res.body.tokenName).toBe(res.body.username);
             expect(res.body.type).toBe('admin');
             expect(res.body.createdAt).toBeTruthy();
             expect(res.body.expiresAt).toBeFalsy();
@@ -132,7 +135,7 @@ test('update admin token with expiry', async () => {
 });
 
 test('creates a lot of client tokens', async () => {
-    const requests = [];
+    const requests: any[] = [];
 
     for (let i = 0; i < 10; i++) {
         requests.push(
@@ -258,7 +261,7 @@ test('should not create token for invalid projectId', async () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].message).toMatch(
+            expect(res.body.details[0].description).toMatch(
                 /bogus-project-something/,
             );
         });
@@ -275,7 +278,7 @@ test('should not create token for invalid environment', async () => {
         .set('Content-Type', 'application/json')
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].message).toMatch(
+            expect(res.body.details[0].description).toMatch(
                 /bogus-environment-something/,
             );
         });
@@ -307,6 +310,48 @@ test('admin token only supports ALL projects', async () => {
         .expect(400);
 });
 
+test('needs one of the username and tokenName properties set', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            type: 'admin',
+            environment: '*',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
+test('can create with tokenName only', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            tokenName: 'default-admin',
+            type: 'admin',
+            environment: '*',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.type).toBe('admin');
+            expect(res.body.secret.length > 16).toBe(true);
+            expect(res.body.username).toBe('default-admin');
+            expect(res.body.tokenName).toBe('default-admin');
+        });
+});
+
+test('only one of tokenName and username can be set', async () => {
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default-client-name',
+            tokenName: 'default-token-name',
+            type: 'admin',
+            environment: '*',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
 test('admin token only supports ALL environments', async () => {
     return app.request
         .post('/api/admin/api-tokens')
@@ -332,7 +377,7 @@ test('client tokens cannot span all environments', async () => {
         .expect(400);
 });
 
-test('should not create token for disabled environment', async () => {
+test('should create token for disabled environment', async () => {
     await db.stores.environmentStore.create({
         name: 'disabledEnvironment',
         type: 'production',
@@ -347,5 +392,5 @@ test('should not create token for disabled environment', async () => {
             environment: 'disabledEnvironment',
         })
         .set('Content-Type', 'application/json')
-        .expect(400);
+        .expect(201);
 });

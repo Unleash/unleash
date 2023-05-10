@@ -2,8 +2,10 @@ import { ITagType } from './stores/tag-type-store';
 import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
-import { ALL_OPERATORS } from '../util/constants';
+import { ALL_OPERATORS } from '../util';
 import { IProjectStats } from 'lib/services/project-service';
+import { CreateFeatureStrategySchema } from '../openapi';
+import { ProjectEnvironment } from './stores/project-store';
 
 export type Operator = typeof ALL_OPERATORS[number];
 
@@ -27,6 +29,8 @@ export interface IStrategyConfig {
     segments?: number[];
     parameters?: { [key: string]: string };
     sortOrder?: number;
+    title?: string | null;
+    disabled?: boolean | null;
 }
 export interface IFeatureStrategy {
     id: string;
@@ -39,6 +43,8 @@ export interface IFeatureStrategy {
     constraints: IConstraint[];
     createdAt?: Date;
     segments?: number[];
+    title?: string | null;
+    disabled?: boolean | null;
 }
 
 export interface FeatureToggleDTO {
@@ -67,7 +73,7 @@ export interface IFeatureToggleClient {
     stale: boolean;
     variants: IVariant[];
     enabled: boolean;
-    strategies: IStrategyConfig[];
+    strategies: Omit<IStrategyConfig, 'disabled'>[];
     impressionData?: boolean;
     lastSeenAt?: Date;
     createdAt?: Date;
@@ -80,6 +86,7 @@ export interface IFeatureEnvironmentInfo {
     environment: string;
     enabled: boolean;
     strategies: IFeatureStrategy[];
+    defaultStrategy: CreateFeatureStrategySchema | null;
 }
 
 export interface FeatureToggleWithEnvironment extends FeatureToggle {
@@ -137,6 +144,7 @@ export interface IEnvironment {
 export interface IProjectEnvironment extends IEnvironment {
     projectApiTokenCount?: number;
     projectEnabledToggleCount?: number;
+    defaultStrategy?: CreateFeatureStrategySchema;
 }
 
 export interface IEnvironmentCreate {
@@ -173,10 +181,12 @@ export interface IFeatureOverview {
     environments: IEnvironmentOverview[];
 }
 
+export type ProjectMode = 'open' | 'protected';
+
 export interface IProjectOverview {
     name: string;
     description: string;
-    environments: string[];
+    environments: ProjectEnvironment[];
     features: IFeatureOverview[];
     members: number;
     version: number;
@@ -184,6 +194,9 @@ export interface IProjectOverview {
     favorite?: boolean;
     updatedAt?: Date;
     stats?: IProjectStats;
+    mode: ProjectMode;
+
+    defaultStickiness: string;
 }
 
 export interface IProjectHealthReport extends IProjectOverview {
@@ -366,7 +379,10 @@ export interface IProject {
     createdAt?: Date;
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
+    mode: ProjectMode;
+    defaultStickiness: string;
 }
+
 export interface ICustomRole {
     id: number;
     name: string;
@@ -384,6 +400,7 @@ export interface ISegment {
     id: number;
     name: string;
     description?: string;
+    project?: string;
     constraints: IConstraint[];
     createdBy?: string;
     createdAt: Date;

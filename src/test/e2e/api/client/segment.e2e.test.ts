@@ -14,11 +14,18 @@ import {
 } from '../../../../lib/util/segments';
 import { collectIds } from '../../../../lib/util/collect-ids';
 import { arraysHaveSameItems } from '../../../../lib/util/arraysHaveSameItems';
+import {
+    CreateFeatureSchema,
+    CreateFeatureStrategySchema,
+    FeatureStrategySchema,
+    UpsertSegmentSchema,
+} from 'lib/openapi';
+import { DEFAULT_ENV } from '../../../../lib/util';
+import { DEFAULT_PROJECT } from '../../../../lib/types';
 
 let db: ITestDb;
 let app: IUnleashTest;
 
-const FEATURES_ADMIN_BASE_PATH = '/api/admin/features';
 const FEATURES_CLIENT_BASE_PATH = '/api/client/features';
 
 const fetchSegments = (): Promise<ISegment[]> => {
@@ -27,7 +34,7 @@ const fetchSegments = (): Promise<ISegment[]> => {
 
 const fetchFeatures = (): Promise<IFeatureToggleClient[]> => {
     return app.request
-        .get(FEATURES_ADMIN_BASE_PATH)
+        .get(`/api/admin/features`)
         .expect(200)
         .then((res) => res.body.features);
 };
@@ -39,33 +46,91 @@ const fetchClientFeatures = (): Promise<IFeatureToggleClient[]> => {
         .then((res) => res.body.features);
 };
 
-const createSegment = (postData: object): Promise<unknown> => {
+const createSegment = (postData: UpsertSegmentSchema): Promise<ISegment> => {
     return app.services.segmentService.create(postData, {
         email: 'test@example.com',
     });
 };
 
-const createFeatureToggle = (
-    postData: object,
-    expectStatusCode = 201,
-): Promise<unknown> => {
-    return app.request
-        .post(FEATURES_ADMIN_BASE_PATH)
-        .send(postData)
-        .expect(expectStatusCode);
+const updateSegment = (
+    id: number,
+    postData: UpsertSegmentSchema,
+): Promise<void> => {
+    return app.services.segmentService.update(id, postData, {
+        email: 'test@example.com',
+    });
 };
 
-const addSegmentToStrategy = (
-    segmentId: number,
-    strategyId: string,
-): Promise<unknown> => {
-    return app.services.segmentService.addToStrategy(segmentId, strategyId);
-};
-
-const mockFeatureToggle = (): object => {
+const mockStrategy = (segments: number[] = []) => {
     return {
         name: randomId(),
-        strategies: [{ name: randomId(), constraints: [], parameters: {} }],
+        parameters: {},
+        constraints: [],
+        segments,
+    };
+};
+
+const createProjects = async (projects: string[] = [DEFAULT_PROJECT]) => {
+    for (const project of projects) {
+        await db.stores.projectStore.create({
+            name: project,
+            description: '',
+            id: project,
+            mode: 'open' as const,
+        });
+        await app.request
+            .post(`/api/admin/projects/${project}/environments`)
+            .send({
+                environment: DEFAULT_ENV,
+            })
+            .expect(200);
+    }
+};
+
+const createFeatureToggle = async (
+    feature: CreateFeatureSchema,
+    strategies: CreateFeatureStrategySchema[] = [mockStrategy()],
+    project = DEFAULT_PROJECT,
+    environment = DEFAULT_ENV,
+    expectStatusCode = 201,
+    expectSegmentStatusCodes: { status: number; message?: string }[] = [
+        { status: 200 },
+    ],
+): Promise<void> => {
+    await app.createFeature(feature, project, expectStatusCode);
+    let processed = 0;
+    for (const strategy of strategies) {
+        const { body, status } = await app.request
+            .post(
+                `/api/admin/projects/${project}/features/${feature.name}/environments/${environment}/strategies`,
+            )
+            .send(strategy);
+        const expectation = expectSegmentStatusCodes[processed++];
+        expect(status).toBe(expectation.status);
+        if (expectation.message) {
+            expect(JSON.stringify(body)).toContain(expectation.message);
+        }
+    }
+};
+
+const updateFeatureStrategy = async (
+    featureName: string,
+    strategy: FeatureStrategySchema,
+    project = DEFAULT_PROJECT,
+    environment = DEFAULT_ENV,
+    expectedStatus = 200,
+): Promise<void> => {
+    const { status } = await app.request
+        .put(
+            `/api/admin/projects/${project}/features/${featureName}/environments/${environment}/strategies/${strategy.id}`,
+        )
+        .send(strategy);
+    expect(status).toBe(expectedStatus);
+};
+
+const mockFeatureToggle = () => {
+    return {
+        name: randomId(),
     };
 };
 
@@ -98,19 +163,19 @@ const fetchClientResponse = (): Promise<{
 const createTestSegments = async () => {
     const constraints = mockConstraints();
 
-    await createSegment({ name: 'S1', constraints });
-    await createSegment({ name: 'S2', constraints });
-    await createSegment({ name: 'S3', constraints });
+    const segment1 = await createSegment({ name: 'S1', constraints });
+    const segment2 = await createSegment({ name: 'S2', constraints });
+    const segment3 = await createSegment({ name: 'S3', constraints });
 
-    await createFeatureToggle(mockFeatureToggle());
-    await createFeatureToggle(mockFeatureToggle());
+    await createFeatureToggle(mockFeatureToggle(), [
+        mockStrategy([segment1.id, segment2.id]),
+    ]);
+    await createFeatureToggle(mockFeatureToggle(), [
+        mockStrategy([segment2.id]),
+    ]);
     await createFeatureToggle(mockFeatureToggle());
 
-    const [feature1, feature2] = await fetchFeatures();
-    const [segment1, segment2] = await fetchSegments();
-    await addSegmentToStrategy(segment1.id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segment2.id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segment2.id, feature2.strategies[0].id);
+    return [segment1, segment2, segment3];
 };
 
 beforeAll(async () => {
@@ -167,53 +232,50 @@ test('should validate segment constraint values limit with multiple constraints'
 });
 
 test('should validate feature strategy segment limit', async () => {
-    await createSegment({ name: 'S1', constraints: [] });
-    await createSegment({ name: 'S2', constraints: [] });
-    await createSegment({ name: 'S3', constraints: [] });
-    await createSegment({ name: 'S4', constraints: [] });
-    await createSegment({ name: 'S5', constraints: [] });
-    await createSegment({ name: 'S6', constraints: [] });
-    await createFeatureToggle(mockFeatureToggle());
-    const [feature1] = await fetchFeatures();
-    const segments = await fetchSegments();
+    const segments: ISegment[] = [];
+    for (const id of [1, 2, 3, 4, 5, 6]) {
+        segments.push(await createSegment({ name: `S${id}`, constraints: [] }));
+    }
 
-    await addSegmentToStrategy(segments[0].id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segments[1].id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segments[2].id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segments[3].id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segments[4].id, feature1.strategies[0].id);
-
-    await expect(
-        addSegmentToStrategy(segments[5].id, feature1.strategies[0].id),
-    ).rejects.toThrow(
-        `Strategies may not have more than ${DEFAULT_STRATEGY_SEGMENTS_LIMIT} segments`,
+    await createFeatureToggle(
+        mockFeatureToggle(),
+        [mockStrategy(segments.map((s) => s.id))],
+        DEFAULT_PROJECT,
+        DEFAULT_ENV,
+        201,
+        [
+            {
+                status: 400,
+                message: `Strategies may not have more than ${DEFAULT_STRATEGY_SEGMENTS_LIMIT} segments`,
+            },
+        ],
     );
 });
 
 test('should clone feature strategy segments', async () => {
     const constraints = mockConstraints();
-    await createSegment({ name: 'S1', constraints });
-    await createFeatureToggle(mockFeatureToggle());
+    const segment1 = await createSegment({ name: 'S1', constraints });
+    await createFeatureToggle(mockFeatureToggle(), [
+        mockStrategy([segment1.id]),
+    ]);
     await createFeatureToggle(mockFeatureToggle());
 
     const [feature1, feature2] = await fetchFeatures();
     const strategy1 = feature1.strategies[0].id;
     const strategy2 = feature2.strategies[0].id;
-    const [segment1] = await fetchSegments();
-    await addSegmentToStrategy(segment1.id, feature1.strategies[0].id);
 
-    let segments1 = await app.services.segmentService.getByStrategy(strategy1);
-    let segments2 = await app.services.segmentService.getByStrategy(strategy2);
+    let segments1 = await app.services.segmentService.getByStrategy(strategy1!);
+    let segments2 = await app.services.segmentService.getByStrategy(strategy2!);
     expect(collectIds(segments1)).toEqual([segment1.id]);
     expect(collectIds(segments2)).toEqual([]);
 
     await app.services.segmentService.cloneStrategySegments(
-        strategy1,
-        strategy2,
+        strategy1!,
+        strategy2!,
     );
 
-    segments1 = await app.services.segmentService.getByStrategy(strategy1);
-    segments2 = await app.services.segmentService.getByStrategy(strategy2);
+    segments1 = await app.services.segmentService.getByStrategy(strategy1!);
+    segments2 = await app.services.segmentService.getByStrategy(strategy2!);
     expect(collectIds(segments1)).toEqual([segment1.id]);
     expect(collectIds(segments2)).toEqual([segment1.id]);
 });
@@ -238,9 +300,18 @@ test('should inline segment constraints into features by default', async () => {
 
     const [feature1, feature2, feature3] = await fetchFeatures();
     const [, , segment3] = await fetchSegments();
-    await addSegmentToStrategy(segment3.id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segment3.id, feature2.strategies[0].id);
-    await addSegmentToStrategy(segment3.id, feature3.strategies[0].id);
+
+    // add segment3 to all features
+    for (const feature of [feature1, feature2, feature3]) {
+        const strategy = {
+            ...feature.strategies[0],
+            segments: feature.strategies[0].segments ?? [],
+        };
+        await updateFeatureStrategy(feature.name, {
+            ...strategy,
+            segments: [...strategy.segments, segment3.id],
+        });
+    }
 
     const clientFeatures = await fetchClientFeatures();
     const clientStrategies = clientFeatures.flatMap((f) => f.strategies);
@@ -314,4 +385,174 @@ test('should send all segments that are in use by feature', async () => {
     expect(arraysHaveSameItems(globalSegmentIds, toggleSegmentIds)).toEqual(
         true,
     );
+});
+
+describe('project-specific segments', () => {
+    test(`can create a toggle with a project-specific segment`, async () => {
+        const segmentName = 'my-segment';
+        const project = randomId();
+        await createProjects([project]);
+        const segment = await createSegment({
+            name: segmentName,
+            project,
+            constraints: [],
+        });
+        const strategy = {
+            name: 'default',
+            parameters: {},
+            constraints: [],
+            segments: [segment.id],
+        };
+        await createFeatureToggle(
+            {
+                name: 'first_feature',
+                description: 'the #1 feature',
+            },
+            [strategy],
+            project,
+        );
+    });
+
+    test(`can't create a toggle with a segment from a different project`, async () => {
+        const segmentName = 'my-segment';
+        const project1 = randomId();
+        const project2 = randomId();
+        await createProjects([project1, project2]);
+        const segment = await createSegment({
+            name: segmentName,
+            project: project1,
+            constraints: [],
+        });
+        const strategy = {
+            name: 'default',
+            parameters: {},
+            constraints: [],
+            segments: [segment.id],
+        };
+        await createFeatureToggle(
+            {
+                name: 'first_feature',
+                description: 'the #1 feature',
+            },
+            [strategy],
+            project2,
+            DEFAULT_ENV,
+            201,
+            [{ status: 400 }],
+        );
+    });
+
+    test(`can't set a different segment project when being used by another project`, async () => {
+        const segmentName = 'my-segment';
+        const project1 = randomId();
+        const project2 = randomId();
+        await createProjects([project1, project2]);
+        const segment = await createSegment({
+            name: segmentName,
+            project: project1,
+            constraints: [],
+        });
+        const strategy = {
+            name: 'default',
+            parameters: {},
+            constraints: [],
+            segments: [segment.id],
+        };
+        await createFeatureToggle(
+            {
+                name: 'first_feature',
+                description: 'the #1 feature',
+            },
+            [strategy],
+            project1,
+        );
+        await expect(() =>
+            updateSegment(segment.id, {
+                ...segment,
+                project: project2,
+            }),
+        ).rejects.toThrow(
+            `Invalid project. Segment is being used by strategies in other projects: ${project1}`,
+        );
+    });
+
+    test('can promote a segment project to global even when being used by a specific project', async () => {
+        const segmentName = 'my-segment';
+        const project1 = randomId();
+        const project2 = randomId();
+        await createProjects([project1, project2]);
+        const segment = await createSegment({
+            name: segmentName,
+            project: project1,
+            constraints: [],
+        });
+        const strategy = {
+            name: 'default',
+            parameters: {},
+            constraints: [],
+            segments: [segment.id],
+        };
+        await createFeatureToggle(
+            {
+                name: 'first_feature',
+                description: 'the #1 feature',
+            },
+            [strategy],
+            project1,
+        );
+        await expect(() =>
+            updateSegment(segment.id, {
+                ...segment,
+                project: '',
+            }),
+        ).resolves;
+    });
+
+    test(`can't set a specific segment project when being used by multiple projects (global)`, async () => {
+        const segmentName = 'my-segment';
+        const project1 = randomId();
+        const project2 = randomId();
+        await createProjects([project1, project2]);
+        const segment = await createSegment({
+            name: segmentName,
+            project: '',
+            constraints: [],
+        });
+        const strategy = {
+            name: 'default',
+            parameters: {},
+            constraints: [],
+            segments: [segment.id],
+        };
+        const strategy2 = {
+            name: 'default',
+            parameters: {},
+            constraints: [],
+            segments: [segment.id],
+        };
+        await createFeatureToggle(
+            {
+                name: 'first_feature',
+                description: 'the #1 feature',
+            },
+            [strategy],
+            project1,
+        );
+        await createFeatureToggle(
+            {
+                name: 'second_feature',
+                description: 'the #2 feature',
+            },
+            [strategy2],
+            project2,
+        );
+        await expect(() =>
+            updateSegment(segment.id, {
+                ...segment,
+                project: project1,
+            }),
+        ).rejects.toThrow(
+            `Invalid project. Segment is being used by strategies in other projects: ${project1}, ${project2}`,
+        );
+    });
 });

@@ -26,8 +26,8 @@ const StyledHeader = styled('div')(({ theme }) => ({
     alignItems: 'center',
     padding: theme.spacing(6),
     borderRadius: theme.shape.borderRadiusLarge,
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.text.tertiaryContrast,
+    backgroundColor: theme.palette.background.alternative,
+    color: theme.palette.primary.contrastText,
     marginBottom: theme.spacing(3),
     boxShadow: theme.boxShadows.primaryHeader,
 }));
@@ -77,7 +77,7 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
 }));
 
 const StyledInputLabel = styled(InputLabel)(({ theme }) => ({
-    backgroundColor: theme.palette.inputLabelBackground,
+    backgroundColor: theme.palette.background.paper,
 }));
 
 interface IProfileTabProps {

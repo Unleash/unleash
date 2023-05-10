@@ -2,8 +2,14 @@ import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
 } from '../../db/project-store';
-import { IEnvironment, IProject, IProjectWithCount } from '../model';
+import {
+    IEnvironment,
+    IProject,
+    IProjectWithCount,
+    ProjectMode,
+} from '../model';
 import { Store } from './store';
+import { CreateFeatureStrategySchema } from '../../openapi';
 
 export interface IProjectInsert {
     id: string;
@@ -11,6 +17,22 @@ export interface IProjectInsert {
     description: string;
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
+    mode: ProjectMode;
+}
+
+export interface IProjectSettings {
+    mode: ProjectMode;
+    defaultStickiness: string;
+}
+
+export interface IProjectSettingsRow {
+    project_mode: ProjectMode;
+    default_stickiness: string;
+}
+
+export interface IProjectEnvironmenDefaultStrategyRow {
+    environment: string;
+    default_strategy: any;
 }
 
 export interface IProjectArchived {
@@ -26,6 +48,12 @@ export interface IProjectHealthUpdate {
 export interface IProjectQuery {
     id?: string;
 }
+
+export type ProjectEnvironment = {
+    environment: string;
+    changeRequestEnabled?: boolean;
+    defaultStrategy?: CreateFeatureStrategySchema;
+};
 
 export interface IProjectEnvironmentWithChangeRequests {
     environment: string;
@@ -50,7 +78,7 @@ export interface IProjectStore extends Store<IProject, string> {
 
     deleteEnvironmentForProject(id: string, environment: string): Promise<void>;
 
-    getEnvironmentsForProject(id: string): Promise<string[]>;
+    getEnvironmentsForProject(id: string): Promise<ProjectEnvironment[]>;
 
     getMembersCountByProject(projectId: string): Promise<number>;
 
@@ -80,4 +108,21 @@ export interface IProjectStore extends Store<IProject, string> {
         environment: string,
         projects: string[],
     ): Promise<void>;
+
+    getProjectSettings(projectId: string): Promise<IProjectSettings>;
+    setProjectSettings(
+        projectId: string,
+        defaultStickiness: string,
+        mode: ProjectMode,
+    ): Promise<void>;
+
+    getDefaultStrategy(
+        projectId: string,
+        environment: string,
+    ): Promise<CreateFeatureStrategySchema | null>;
+    updateDefaultStrategy(
+        projectId: string,
+        environment: string,
+        strategy: CreateFeatureStrategySchema,
+    ): Promise<CreateFeatureStrategySchema>;
 }

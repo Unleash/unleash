@@ -15,10 +15,11 @@ import { ALL_PROJECTS } from '../../../lib/util/constants';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
 import { FavoritesService } from '../../../lib/services';
+import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
 let db: ITestDb;
 let stores: IUnleashStores;
-let accessService;
+let accessService: AccessService;
 let groupService;
 let featureToggleService;
 let favoritesService;
@@ -40,6 +41,13 @@ const createUserViewerAccess = async (name, email) => {
     const { userStore } = stores;
     const user = await userStore.insert({ name, email });
     await accessService.addUserToRole(user.id, readRole.id, ALL_PROJECTS);
+    return user;
+};
+
+const createUserAdminAccess = async (name, email) => {
+    const { userStore } = stores;
+    const user = await userStore.insert({ name, email });
+    await accessService.addUserToRole(user.id, adminRole.id, 'default');
     return user;
 };
 
@@ -216,11 +224,16 @@ beforeAll(async () => {
     editorRole = roles.find((r) => r.name === RoleName.EDITOR);
     adminRole = roles.find((r) => r.name === RoleName.ADMIN);
     readRole = roles.find((r) => r.name === RoleName.VIEWER);
+    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
+        db.rawDatabase,
+        accessService,
+    );
     featureToggleService = new FeatureToggleService(
         stores,
         config,
         new SegmentService(stores, config),
         accessService,
+        changeRequestAccessReadModel,
     );
     favoritesService = new FavoritesService(stores, config);
     projectService = new ProjectService(
@@ -385,6 +398,7 @@ test('should create default roles to project', async () => {
 
 test('should require name when create default roles to project', async () => {
     await expect(async () => {
+        // @ts-ignore
         await accessService.createDefaultProjectRoles(editorUser);
     }).rejects.toThrow(new Error('ProjectId cannot be empty'));
 });
@@ -701,14 +715,14 @@ test('Should be denied access to delete a role that is in use', async () => {
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
             {
                 id: 8,
                 name: 'DELETE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Delete Feature Toggles',
                 type: 'project',
             },
@@ -762,9 +776,11 @@ test('Should be denied move feature toggle to project where the user does not ha
             projectOrigin.id,
         );
     } catch (e) {
-        expect(e.toString()).toBe(
-            'NoAccessError: You need permission=MOVE_FEATURE_TOGGLE to perform this action',
-        );
+        expect(e.name).toContain('NoAccess');
+        expect(e.message.includes('permission')).toBeTruthy();
+        expect(
+            e.message.includes(permissions.MOVE_FEATURE_TOGGLE),
+        ).toBeTruthy();
     }
 });
 
@@ -886,7 +902,7 @@ test('Should be allowed move feature toggle to project when given access through
     });
 
     await groupStore.addUsersToGroup(
-        groupWithProjectAccess.id,
+        groupWithProjectAccess.id!,
         [{ user: viewerUser }],
         'Admin',
     );
@@ -896,7 +912,7 @@ test('Should be allowed move feature toggle to project when given access through
     await hasCommonProjectAccess(viewerUser, project.id, false);
 
     await accessService.addGroupToRole(
-        groupWithProjectAccess.id,
+        groupWithProjectAccess.id!,
         projectRole.id,
         'SomeAdminUser',
         project.id,
@@ -923,7 +939,7 @@ test('Should not lose user role access when given permissions from a group', asy
     });
 
     await groupStore.addUsersToGroup(
-        groupWithNoAccess.id,
+        groupWithNoAccess.id!,
         [{ user: user }],
         'Admin',
     );
@@ -931,7 +947,7 @@ test('Should not lose user role access when given permissions from a group', asy
     const viewerRole = await accessService.getRoleByName(RoleName.VIEWER);
 
     await accessService.addGroupToRole(
-        groupWithNoAccess.id,
+        groupWithNoAccess.id!,
         viewerRole.id,
         'SomeAdminUser',
         project.id,
@@ -972,13 +988,13 @@ test('Should allow user to take multiple group roles and have expected permissio
     });
 
     await groupStore.addUsersToGroup(
-        groupWithCreateAccess.id,
+        groupWithCreateAccess.id!,
         [{ user: viewerUser }],
         'Admin',
     );
 
     await groupStore.addUsersToGroup(
-        groupWithDeleteAccess.id,
+        groupWithDeleteAccess.id!,
         [{ user: viewerUser }],
         'Admin',
     );
@@ -990,7 +1006,7 @@ test('Should allow user to take multiple group roles and have expected permissio
             {
                 id: 2,
                 name: 'CREATE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Create Feature Toggles',
                 type: 'project',
             },
@@ -1004,7 +1020,7 @@ test('Should allow user to take multiple group roles and have expected permissio
             {
                 id: 8,
                 name: 'DELETE_FEATURE',
-                environment: null,
+                environment: undefined,
                 displayName: 'Delete Feature Toggles',
                 type: 'project',
             },
@@ -1012,14 +1028,14 @@ test('Should allow user to take multiple group roles and have expected permissio
     });
 
     await accessService.addGroupToRole(
-        groupWithCreateAccess.id,
+        groupWithCreateAccess.id!,
         deleteFeatureRole.id,
         'SomeAdminUser',
         projectForDelete.id,
     );
 
     await accessService.addGroupToRole(
-        groupWithDeleteAccess.id,
+        groupWithDeleteAccess.id!,
         createFeatureRole.id,
         'SomeAdminUser',
         projectForCreate.id,
@@ -1054,4 +1070,182 @@ test('Should allow user to take multiple group roles and have expected permissio
             projectForDelete.id,
         ),
     ).toBe(true);
+});
+
+test('Should allow user to take on root role through a group that has a root role defined', async () => {
+    const groupStore = stores.groupStore;
+
+    const viewerUser = await createUserViewerAccess(
+        'Vincent Viewer',
+        'vincent@getunleash.io',
+    );
+
+    const groupWithRootAdminRole = await groupStore.create({
+        name: 'GroupThatGrantsAdminRights',
+        description: '',
+        rootRole: adminRole.id,
+    });
+
+    await groupStore.addUsersToGroup(
+        groupWithRootAdminRole.id!,
+        [{ user: viewerUser }],
+        'Admin',
+    );
+
+    expect(
+        await accessService.hasPermission(viewerUser, permissions.ADMIN),
+    ).toBe(true);
+});
+
+test('Should not elevate permissions for a user that is not present in a root role group', async () => {
+    const groupStore = stores.groupStore;
+
+    const viewerUser = await createUserViewerAccess(
+        'Violet Viewer',
+        'violet@getunleash.io',
+    );
+
+    const viewerUserNotInGroup = await createUserViewerAccess(
+        'Veronica Viewer',
+        'veronica@getunleash.io',
+    );
+
+    const groupWithRootAdminRole = await groupStore.create({
+        name: 'GroupThatGrantsAdminRights',
+        description: '',
+        rootRole: adminRole.id,
+    });
+
+    await groupStore.addUsersToGroup(
+        groupWithRootAdminRole.id!,
+        [{ user: viewerUser }],
+        'Admin',
+    );
+
+    expect(
+        await accessService.hasPermission(viewerUser, permissions.ADMIN),
+    ).toBe(true);
+
+    expect(
+        await accessService.hasPermission(
+            viewerUserNotInGroup,
+            permissions.ADMIN,
+        ),
+    ).toBe(false);
+});
+
+test('Should not reduce permissions for an admin user that enters an editor group', async () => {
+    const groupStore = stores.groupStore;
+
+    const adminUser = await createUserAdminAccess(
+        'Austin Admin',
+        'austin@getunleash.io',
+    );
+
+    const groupWithRootEditorRole = await groupStore.create({
+        name: 'GroupThatGrantsEditorRights',
+        description: '',
+        rootRole: editorRole.id,
+    });
+
+    await groupStore.addUsersToGroup(
+        groupWithRootEditorRole.id!,
+        [{ user: adminUser }],
+        'Admin',
+    );
+
+    expect(
+        await accessService.hasPermission(adminUser, permissions.ADMIN),
+    ).toBe(true);
+});
+
+test('Should not change permissions for a user in a group without a root role', async () => {
+    const groupStore = stores.groupStore;
+
+    const viewerUser = await createUserViewerAccess(
+        'Virgil Viewer',
+        'virgil@getunleash.io',
+    );
+
+    const groupWithoutRootRole = await groupStore.create({
+        name: 'GroupWithNoRootRole',
+        description: '',
+    });
+
+    const preAddedToGroupPermissions =
+        await accessService.getPermissionsForUser(viewerUser);
+
+    await groupStore.addUsersToGroup(
+        groupWithoutRootRole.id!,
+        [{ user: viewerUser }],
+        'Admin',
+    );
+
+    const postAddedToGroupPermissions =
+        await accessService.getPermissionsForUser(viewerUser);
+
+    expect(
+        JSON.stringify(preAddedToGroupPermissions) ===
+            JSON.stringify(postAddedToGroupPermissions),
+    ).toBe(true);
+});
+
+test('Should add permissions to user when a group is given a root role after the user has been added to the group', async () => {
+    const groupStore = stores.groupStore;
+
+    const viewerUser = await createUserViewerAccess(
+        'Vera Viewer',
+        'vera@getunleash.io',
+    );
+
+    const groupWithoutRootRole = await groupStore.create({
+        name: 'GroupWithNoRootRole',
+        description: '',
+    });
+
+    await groupStore.addUsersToGroup(
+        groupWithoutRootRole.id!,
+        [{ user: viewerUser }],
+        'Admin',
+    );
+
+    expect(
+        await accessService.hasPermission(viewerUser, permissions.ADMIN),
+    ).toBe(false);
+
+    await groupStore.update({
+        id: groupWithoutRootRole.id!,
+        name: 'GroupWithNoRootRole',
+        rootRole: adminRole.id,
+        users: [{ user: viewerUser }],
+    });
+
+    expect(
+        await accessService.hasPermission(viewerUser, permissions.ADMIN),
+    ).toBe(true);
+});
+
+test('Should give full project access to the default project to user in a group with an editor root role', async () => {
+    const projectName = 'default';
+
+    const groupStore = stores.groupStore;
+
+    const viewerUser = await createUserViewerAccess(
+        'Vee viewer',
+        'vee@getunleash.io',
+    );
+
+    const groupWithRootEditorRole = await groupStore.create({
+        name: 'GroupThatGrantsEditorRights',
+        description: '',
+        rootRole: editorRole.id,
+    });
+
+    await groupStore.addUsersToGroup(
+        groupWithRootEditorRole.id!,
+        [{ user: viewerUser }],
+        'Admin',
+    );
+
+    await hasFullProjectAccess(viewerUser, projectName, true);
 });

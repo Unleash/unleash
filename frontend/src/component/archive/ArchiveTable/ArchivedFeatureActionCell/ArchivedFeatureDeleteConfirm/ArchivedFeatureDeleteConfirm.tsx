@@ -2,13 +2,13 @@ import { Alert, styled } from '@mui/material';
 import React, { useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
-import { IFeatureToggle } from 'interfaces/featureToggle';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useFeatureArchiveApi } from 'hooks/api/actions/useFeatureArchiveApi/useReviveFeatureApi';
 import useToast from 'hooks/useToast';
+import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 
 interface IArchivedFeatureDeleteConfirmProps {
-    deletedFeature?: IFeatureToggle;
+    deletedFeatures: string[];
+    projectId: string;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     refetch: () => void;
@@ -23,27 +23,33 @@ const StyledFormInput = styled(Input)(({ theme }) => ({
     width: '100%',
 }));
 
+const confirmationText = 'I want to delete';
+
 export const ArchivedFeatureDeleteConfirm = ({
-    deletedFeature,
+    deletedFeatures,
+    projectId,
     open,
     setOpen,
     refetch,
 }: IArchivedFeatureDeleteConfirmProps) => {
     const [confirmName, setConfirmName] = useState('');
     const { setToastData, setToastApiError } = useToast();
-    const { deleteFeature } = useFeatureArchiveApi();
+    const { deleteFeatures } = useProjectApi();
 
     const onDeleteFeatureToggle = async () => {
         try {
-            if (!deletedFeature) {
+            if (deletedFeatures.length === 0) {
                 return;
             }
-            await deleteFeature(deletedFeature.name);
+            await deleteFeatures(projectId, deletedFeatures);
+
             await refetch();
             setToastData({
                 type: 'success',
-                title: 'Feature toggle deleted',
-                text: `You have successfully deleted the ${deletedFeature.name} feature toggle.`,
+                title: 'Feature toggles deleted',
+                text: `You have successfully deleted following features toggles: ${deletedFeatures.join(
+                    ', '
+                )}.`,
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -61,13 +67,13 @@ export const ArchivedFeatureDeleteConfirm = ({
 
     return (
         <Dialogue
-            title="Delete feature toggle?"
+            title="Delete feature toggles?"
             open={open}
-            primaryButtonText="Delete feature toggle"
+            primaryButtonText="Delete feature toggles"
             secondaryButtonText="Cancel"
             onClick={onDeleteFeatureToggle}
             onClose={clearModal}
-            disabledPrimaryButton={deletedFeature?.name !== confirmName}
+            disabledPrimaryButton={confirmationText !== confirmName}
             formId={formId}
         >
             <Alert severity="warning">
@@ -78,8 +84,9 @@ export const ArchivedFeatureDeleteConfirm = ({
             </Alert>
 
             <StyledDeleteParagraph>
-                In order to delete this feature toggle, please enter its name in
-                the text field below: <strong>{deletedFeature?.name}</strong>
+                In order to delete feature toggles, please enter the following
+                confirmation text in the text field below:{' '}
+                <strong>I want to delete</strong>
             </StyledDeleteParagraph>
 
             <form id={formId}>
@@ -89,8 +96,8 @@ export const ArchivedFeatureDeleteConfirm = ({
                         setConfirmName(e.currentTarget.value);
                     }}
                     value={confirmName}
-                    placeholder="<feature toggle name>"
-                    label="Feature toggle name"
+                    placeholder="<deletion confirmation>"
+                    label="Deletion confirmation"
                 />
             </form>
         </Dialogue>

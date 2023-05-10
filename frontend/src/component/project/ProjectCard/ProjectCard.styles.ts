@@ -13,13 +13,13 @@ export const StyledProjectCard = styled(Card)(({ theme }) => ({
     justifyContent: 'space-between',
     margin: theme.spacing(1),
     boxShadow: 'none',
-    border: `1px solid ${theme.palette.tertiary.contrast}`,
+    border: `1px solid ${theme.palette.divider}`,
     [theme.breakpoints.down('sm')]: {
         justifyContent: 'center',
     },
     '&:hover': {
         transition: 'background-color 0.2s ease-in-out',
-        backgroundColor: theme.palette.projectCard.hover,
+        backgroundColor: theme.palette.neutral.light,
     },
 }));
 
@@ -58,6 +58,7 @@ export const StyledProjectIcon = styled(ProjectIcon)(({ theme }) => ({
     margin: theme.spacing(2, 'auto'),
     width: '80px',
     display: 'block',
+    fill: 'red',
 }));
 
 export const StyledDivInfo = styled('div')(({ theme }) => ({
@@ -71,6 +72,6 @@ export const StyledDivInfoContainer = styled('div')(() => ({
 }));
 
 export const StyledParagraphInfo = styled('p')(({ theme }) => ({
-    color: theme.palette.projectCard.textColor,
+    color: theme.palette.primary.dark,
     fontWeight: 'bold',
 }));

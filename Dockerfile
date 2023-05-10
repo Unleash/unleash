@@ -1,4 +1,4 @@
-ARG NODE_VERSION=16-alpine
+ARG NODE_VERSION=18-alpine
 
 FROM --platform=$BUILDPLATFORM node:$NODE_VERSION as frontend_builder
 
@@ -27,6 +27,8 @@ RUN yarn install --frozen-lockfile --production=true
 FROM node:$NODE_VERSION
 
 ENV NODE_ENV production
+
+ENV TZ UTC
 
 WORKDIR /unleash
 

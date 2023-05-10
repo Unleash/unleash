@@ -9,7 +9,7 @@ const StyledContent = styled('div')(({ theme }) => ({
     padding: theme.spacing(0.75, 1),
     color: theme.palette.text.primary,
     fontSize: theme.fontSizes.smallerBody,
-    backgroundColor: theme.palette.secondaryContainer,
+    backgroundColor: theme.palette.background.elevation2,
     borderRadius: theme.shape.borderRadius,
     position: 'absolute',
     zIndex: theme.zIndex.fab,
@@ -23,8 +23,7 @@ const StyledCenteredContent = styled(StyledContent)(({ theme }) => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    backgroundColor: theme.palette.activityIndicators.primary,
-    border: `1px solid ${theme.palette.primary.border}`,
+    backgroundColor: theme.palette.seen.primary,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(0.75, 1.5),
 }));

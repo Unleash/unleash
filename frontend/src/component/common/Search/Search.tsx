@@ -6,6 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { SearchSuggestions } from './SearchSuggestions/SearchSuggestions';
 import { IGetSearchContextOutput } from 'hooks/useSearch';
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
+import { SEARCH_INPUT } from 'utils/testIds';
 
 interface ISearchProps {
     initialValue?: string;
@@ -35,20 +36,21 @@ const StyledContainer = styled('div')(({ theme }) => ({
 const StyledSearch = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.elevation1,
     border: `1px solid ${theme.palette.neutral.border}`,
     borderRadius: theme.shape.borderRadiusExtraLarge,
     padding: '3px 5px 3px 12px',
     width: '100%',
     zIndex: 3,
     '&:focus-within': {
-        borderColor: theme.palette.primary.light,
+        borderColor: theme.palette.primary.main,
         boxShadow: theme.boxShadows.main,
     },
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
     width: '100%',
+    backgroundColor: theme.palette.background.elevation1,
 }));
 
 const StyledClose = styled(Close)(({ theme }) => ({
@@ -101,13 +103,16 @@ export const Search = ({
                 <SearchIcon
                     sx={{
                         mr: 1,
-                        color: theme => theme.palette.inactiveIcon,
+                        color: theme => theme.palette.action.disabled,
                     }}
                 />
                 <StyledInputBase
                     inputRef={ref}
                     placeholder={placeholder}
-                    inputProps={{ 'aria-label': placeholder }}
+                    inputProps={{
+                        'aria-label': placeholder,
+                        'data-testid': SEARCH_INPUT,
+                    }}
                     value={value}
                     onChange={e => onSearchChange(e.target.value)}
                     onFocus={() => setShowSuggestions(true)}

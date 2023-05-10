@@ -6,7 +6,7 @@ import { Billing } from './billing/Billing';
 import FlaggedBillingRedirect from './billing/FlaggedBillingRedirect/FlaggedBillingRedirect';
 import { CorsAdmin } from './cors';
 import { CreateGroup } from './groups/CreateGroup/CreateGroup';
-import { EditGroup } from './groups/EditGroup/EditGroup';
+import { EditGroupContainer } from './groups/EditGroup/EditGroup';
 import { Group } from './groups/Group/Group';
 import { GroupsAdmin } from './groups/GroupsAdmin';
 import { InstanceAdmin } from './instance-admin/InstanceAdmin';
@@ -37,7 +37,10 @@ export const Admin = () => (
             <Route path="invite-link" element={<InviteLink />} />
             <Route path="groups" element={<GroupsAdmin />} />
             <Route path="groups/create-group" element={<CreateGroup />} />
-            <Route path="groups/:groupId/edit" element={<EditGroup />} />
+            <Route
+                path="groups/:groupId/edit"
+                element={<EditGroupContainer />}
+            />
             <Route path="groups/:groupId" element={<Group />} />
             <Route path="roles" element={<ProjectRoles />} />
             <Route path="instance" element={<InstanceAdmin />} />

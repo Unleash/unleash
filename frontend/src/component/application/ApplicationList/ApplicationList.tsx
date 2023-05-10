@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Link } from '@mui/material';
 import { Warning } from '@mui/icons-material';
 import { AppsLinkList, styles as themeStyles } from 'component/common';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -49,9 +49,9 @@ export const ApplicationList = () => {
                 <br />
                 You can read more about how to use Unleash in your application
                 in the{' '}
-                <a href="https://docs.getunleash.io/docs/sdks/">
+                <Link href="https://docs.getunleash.io/docs/sdks/">
                     documentation.
-                </a>
+                </Link>
             </section>
         </>
     );

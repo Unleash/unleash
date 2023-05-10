@@ -4,6 +4,7 @@ import { Box, styled, Typography, Tooltip } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import { StyledAvatar } from './StyledAvatar';
 import { IChangeRequestComment } from '../../changeRequest.types';
+import Linkify from 'react-linkify';
 
 const ChangeRequestCommentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -20,7 +21,7 @@ const CommentPaper = styled(Paper)(({ theme }) => ({
 const CommentHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     borderBottom: '1px solid',
-    borderColor: theme.palette.dividerAlternative,
+    borderColor: theme.palette.divider,
     paddingBottom: theme.spacing(1.5),
 }));
 
@@ -44,7 +45,9 @@ export const ChangeRequestComment: FC<{ comment: IChangeRequestComment }> = ({
                     </Typography>
                 </Box>
             </CommentHeader>
-            <Box sx={{ paddingTop: 2.5 }}>{comment.text}</Box>
+            <Box sx={{ paddingTop: 2.5 }}>
+                <Linkify>{comment.text}</Linkify>
+            </Box>
         </CommentPaper>
     </ChangeRequestCommentWrapper>
 );

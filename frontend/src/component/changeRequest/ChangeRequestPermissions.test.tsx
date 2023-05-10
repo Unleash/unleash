@@ -8,8 +8,13 @@ import { testServerRoute, testServerSetup } from '../../utils/testServer';
 import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
 import { FC } from 'react';
 import { IPermission } from '../../interfaces/user';
+import { ProjectMode } from '../project/Project/hooks/useProjectForm';
+import { SWRConfig } from 'swr';
 
 const server = testServerSetup();
+
+const projectWithCollaborationMode = (mode: ProjectMode) =>
+    testServerRoute(server, '/api/admin/projects/default', { mode });
 
 const changeRequestsEnabledIn = (
     env: 'development' | 'production' | 'custom'
@@ -57,7 +62,6 @@ const setupOtherRoutes = (feature: string) => {
         'api/admin/projects/default/change-requests/pending',
         []
     );
-    testServerRoute(server, '/api/admin/projects/default', {});
     testServerRoute(server, `api/admin/client-metrics/features/${feature}`, {
         version: 1,
         maturity: 'stable',
@@ -69,6 +73,15 @@ const setupOtherRoutes = (feature: string) => {
         version: 1,
         tags: [],
     });
+    testServerRoute(server, `api/admin/tag-types`, {
+        tagTypes: [],
+        version: 1,
+    });
+    testServerRoute(server, `api/admin/tags/simple`, {
+        version: 1,
+        tags: [],
+    });
+
     testServerRoute(server, `api/admin/strategies`, {
         version: 1,
         strategies: [
@@ -119,6 +132,15 @@ const userHasPermissions = (permissions: Array<IPermission>) => {
         splash: {},
     });
 };
+const userIsMemberOfProjects = (projects: string[]) => {
+    userHasPermissions(
+        projects.map(project => ({
+            project,
+            environment: 'irrelevant',
+            permission: 'irrelevant',
+        }))
+    );
+};
 
 const featureEnvironments = (
     feature: string,
@@ -156,19 +178,21 @@ const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
     path,
     pathTemplate,
 }) => (
-    <UIProviderContainer>
-        <AccessProvider>
-            <MemoryRouter initialEntries={[path]}>
-                <ThemeProvider>
-                    <AnnouncerProvider>
-                        <Routes>
-                            <Route path={pathTemplate} element={children} />
-                        </Routes>
-                    </AnnouncerProvider>
-                </ThemeProvider>
-            </MemoryRouter>
-        </AccessProvider>
-    </UIProviderContainer>
+    <SWRConfig value={{ provider: () => new Map() }}>
+        <UIProviderContainer>
+            <AccessProvider>
+                <MemoryRouter initialEntries={[path]}>
+                    <ThemeProvider>
+                        <AnnouncerProvider>
+                            <Routes>
+                                <Route path={pathTemplate} element={children} />
+                            </Routes>
+                        </AnnouncerProvider>
+                    </ThemeProvider>
+                </MemoryRouter>
+            </AccessProvider>
+        </UIProviderContainer>
+    </SWRConfig>
 );
 
 const strategiesAreDisplayed = async (
@@ -196,6 +220,23 @@ const deleteButtonsActiveInChangeRequestEnv = async () => {
     });
 };
 
+const deleteButtonsInactiveInChangeRequestEnv = async () => {
+    const deleteButtons = screen.getAllByTestId('STRATEGY_FORM_REMOVE_ID');
+    expect(deleteButtons.length).toBe(2);
+
+    // wait for change request config to be loaded
+    await waitFor(() => {
+        // production
+        const productionStrategyDeleteButton = deleteButtons[0];
+        expect(productionStrategyDeleteButton).toBeDisabled();
+    });
+    await waitFor(() => {
+        // custom env
+        const customEnvStrategyDeleteButton = deleteButtons[1];
+        expect(customEnvStrategyDeleteButton).toBeDisabled();
+    });
+};
+
 const copyButtonsActiveInOtherEnv = async () => {
     const copyButtons = screen.getAllByTestId('STRATEGY_FORM_COPY_ID');
     expect(copyButtons.length).toBe(2);
@@ -209,7 +250,7 @@ const copyButtonsActiveInOtherEnv = async () => {
     expect(customEnvStrategyCopyButton).not.toBeDisabled();
 };
 
-test('user without priviledges can only perform change requests actions', async () => {
+test('open mode + non-project member can perform basic change request actions', async () => {
     const project = 'default';
     const featureName = 'test';
     featureEnvironments(featureName, [
@@ -217,14 +258,9 @@ test('user without priviledges can only perform change requests actions', async 
         { name: 'production', strategies: ['userWithId'] },
         { name: 'custom', strategies: ['default'] },
     ]);
-    userHasPermissions([
-        {
-            project,
-            environment: 'production',
-            permission: 'APPLY_CHANGE_REQUEST',
-        },
-    ]);
+    userIsMemberOfProjects([]);
     changeRequestsEnabledIn('production');
+    projectWithCollaborationMode('open');
     uiConfigForEnterprise();
     setupOtherRoutes(featureName);
 
@@ -239,5 +275,61 @@ test('user without priviledges can only perform change requests actions', async 
 
     await strategiesAreDisplayed('UserIDs', 'Standard');
     await deleteButtonsActiveInChangeRequestEnv();
+    await copyButtonsActiveInOtherEnv();
+});
+
+test('protected mode + project member can perform basic change request actions', async () => {
+    const project = 'default';
+    const featureName = 'test';
+    featureEnvironments(featureName, [
+        { name: 'development', strategies: [] },
+        { name: 'production', strategies: ['userWithId'] },
+        { name: 'custom', strategies: ['default'] },
+    ]);
+    userIsMemberOfProjects([project]);
+    changeRequestsEnabledIn('production');
+    projectWithCollaborationMode('protected');
+    uiConfigForEnterprise();
+    setupOtherRoutes(featureName);
+
+    render(
+        <UnleashUiSetup
+            pathTemplate="/projects/:projectId/features/:featureId/*"
+            path={`/projects/${project}/features/${featureName}`}
+        >
+            <FeatureView />
+        </UnleashUiSetup>
+    );
+
+    await strategiesAreDisplayed('UserIDs', 'Standard');
+    await deleteButtonsActiveInChangeRequestEnv();
+    await copyButtonsActiveInOtherEnv();
+});
+
+test('protected mode + non-project member cannot perform basic change request actions', async () => {
+    const project = 'default';
+    const featureName = 'test';
+    featureEnvironments(featureName, [
+        { name: 'development', strategies: [] },
+        { name: 'production', strategies: ['userWithId'] },
+        { name: 'custom', strategies: ['default'] },
+    ]);
+    userIsMemberOfProjects([]);
+    changeRequestsEnabledIn('production');
+    projectWithCollaborationMode('protected');
+    uiConfigForEnterprise();
+    setupOtherRoutes(featureName);
+
+    render(
+        <UnleashUiSetup
+            pathTemplate="/projects/:projectId/features/:featureId/*"
+            path={`/projects/${project}/features/${featureName}`}
+        >
+            <FeatureView />
+        </UnleashUiSetup>
+    );
+
+    await strategiesAreDisplayed('UserIDs', 'Standard');
+    await deleteButtonsInactiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
 });

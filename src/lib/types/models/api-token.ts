@@ -11,25 +11,33 @@ export enum ApiTokenType {
 
 export interface ILegacyApiTokenCreate {
     secret: string;
-    username: string;
+    /**
+     * @deprecated Use tokenName instead
+     */
+    username?: string;
     type: ApiTokenType;
     environment: string;
     project?: string;
     projects?: string[];
     expiresAt?: Date;
+    tokenName?: string;
 }
 
 export interface IApiTokenCreate {
     secret: string;
-    username: string;
+    tokenName: string;
     alias?: string;
     type: ApiTokenType;
     environment: string;
     projects: string[];
     expiresAt?: Date;
+    /**
+     * @deprecated Use tokenName instead
+     */
+    username?: string;
 }
 
-export interface IApiToken extends IApiTokenCreate {
+export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
     createdAt: Date;
     seenAt?: Date;
     environment: string;
@@ -66,7 +74,7 @@ export const mapLegacyToken = (
 ): Omit<IApiTokenCreate, 'secret'> => {
     const cleanedProjects = mapLegacyProjects(token.project, token.projects);
     return {
-        username: token.username,
+        tokenName: token.username ?? token.tokenName!,
         type: token.type,
         environment: token.environment,
         projects: cleanedProjects,
@@ -127,11 +135,5 @@ export const validateApiTokenEnvironment = (
 
     if (!selectedEnvironment) {
         throw new BadDataError(`Environment=${environment} does not exist`);
-    }
-
-    if (!selectedEnvironment.enabled) {
-        throw new BadDataError(
-            'Client token cannot be scoped to disabled environments',
-        );
     }
 };

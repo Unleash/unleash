@@ -1,9 +1,15 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
-import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
+import {
+    SortingRule,
+    useFlexLayout,
+    useRowSelect,
+    useSortBy,
+    useTable,
+} from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useMediaQuery } from '@mui/material';
+import { Checkbox, useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -27,6 +33,9 @@ import { useSearchParams } from 'react-router-dom';
 import { ArchivedFeatureDeleteConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { RowSelectCell } from '../../project/Project/ProjectFeatureToggles/RowSelectCell/RowSelectCell';
+import { BatchSelectionActionsBar } from '../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
+import { ArchiveBatchActions } from './ArchiveBatchActions';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
@@ -84,6 +93,18 @@ export const ArchiveTable = ({
 
     const columns = useMemo(
         () => [
+            {
+                id: 'Select',
+                Header: ({ getToggleAllRowsSelectedProps }: any) => (
+                    <Checkbox {...getToggleAllRowsSelectedProps()} />
+                ),
+                Cell: ({ row }: any) => (
+                    <RowSelectCell {...row?.getToggleRowSelectedProps?.()} />
+                ),
+                maxWidth: 50,
+                disableSortBy: true,
+                hideInMenu: true,
+            },
             {
                 Header: 'Seen',
                 width: 85,
@@ -203,12 +224,15 @@ export const ArchiveTable = ({
             },
         ],
         hiddenColumns: ['description'],
+        selectedRowIds: {},
     }));
+
+    const getRowId = useCallback((row: any) => row.name, []);
 
     const {
         headerGroups,
         rows,
-        state: { sortBy },
+        state: { sortBy, selectedRowIds },
         prepareRow,
         setHiddenColumns,
     } = useTable(
@@ -220,9 +244,11 @@ export const ArchiveTable = ({
             autoResetHiddenColumns: false,
             disableSortRemove: true,
             autoResetSortBy: false,
+            getRowId,
         },
         useFlexLayout,
-        useSortBy
+        useSortBy,
+        useRowSelect
     );
 
     useConditionallyHiddenColumns(
@@ -260,58 +286,75 @@ export const ArchiveTable = ({
     }, [loading, sortBy, searchValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <PageContent
-            isLoading={loading}
-            header={
-                <PageHeader
-                    titleElement={`${title} (${
-                        rows.length < data.length
-                            ? `${rows.length} of ${data.length}`
-                            : data.length
-                    })`}
-                    actions={
-                        <Search
-                            initialValue={searchValue}
-                            onChange={setSearchValue}
-                            hasFilters
-                            getSearchContext={getSearchContext}
-                        />
-                    }
-                />
-            }
-        >
-            <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
-            </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={() => (
-                    <ConditionallyRender
-                        condition={searchValue?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No feature toggles found matching &ldquo;
-                                {searchValue}&rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                None of the feature toggles were archived yet.
-                            </TablePlaceholder>
+        <>
+            <PageContent
+                isLoading={loading}
+                header={
+                    <PageHeader
+                        titleElement={`${title} (${
+                            rows.length < data.length
+                                ? `${rows.length} of ${data.length}`
+                                : data.length
+                        })`}
+                        actions={
+                            <Search
+                                initialValue={searchValue}
+                                onChange={setSearchValue}
+                                hasFilters
+                                getSearchContext={getSearchContext}
+                            />
                         }
                     />
-                )}
+                }
+            >
+                <SearchHighlightProvider value={getSearchText(searchValue)}>
+                    <VirtualizedTable
+                        rows={rows}
+                        headerGroups={headerGroups}
+                        prepareRow={prepareRow}
+                    />
+                </SearchHighlightProvider>
+                <ConditionallyRender
+                    condition={rows.length === 0}
+                    show={() => (
+                        <ConditionallyRender
+                            condition={searchValue?.length > 0}
+                            show={
+                                <TablePlaceholder>
+                                    No feature toggles found matching &ldquo;
+                                    {searchValue}&rdquo;
+                                </TablePlaceholder>
+                            }
+                            elseShow={
+                                <TablePlaceholder>
+                                    None of the feature toggles were archived
+                                    yet.
+                                </TablePlaceholder>
+                            }
+                        />
+                    )}
+                />
+                <ArchivedFeatureDeleteConfirm
+                    deletedFeatures={[deletedFeature?.name!]}
+                    projectId={projectId!}
+                    open={deleteModalOpen}
+                    setOpen={setDeleteModalOpen}
+                    refetch={refetch}
+                />
+            </PageContent>
+            <ConditionallyRender
+                condition={Boolean(projectId)}
+                show={
+                    <BatchSelectionActionsBar
+                        count={Object.keys(selectedRowIds).length}
+                    >
+                        <ArchiveBatchActions
+                            selectedIds={Object.keys(selectedRowIds)}
+                            projectId={projectId!}
+                        />
+                    </BatchSelectionActionsBar>
+                }
             />
-            <ArchivedFeatureDeleteConfirm
-                deletedFeature={deletedFeature}
-                open={deleteModalOpen}
-                setOpen={setDeleteModalOpen}
-                refetch={refetch}
-            />
-        </PageContent>
+        </>
     );
 };

@@ -1,5 +1,5 @@
 import useSWR, { SWRConfiguration } from 'swr';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { NotificationsSchema } from 'openapi';
@@ -21,6 +21,7 @@ export const useNotifications = (options: SWRConfiguration = {}) => {
         error,
         loading: !error && !data,
         refetchNotifications,
+        mutateNotifications: mutate,
     };
 };
 

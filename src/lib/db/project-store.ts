@@ -2,20 +2,29 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
-import { IEnvironment, IProject, IProjectWithCount } from '../types/model';
+import {
+    IEnvironment,
+    IFlagResolver,
+    IProject,
+    IProjectWithCount,
+    ProjectMode,
+} from '../types';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectQuery,
+    IProjectSettings,
+    IProjectSettingsRow,
     IProjectStore,
+    ProjectEnvironment,
 } from '../types/stores/project-store';
-import { DEFAULT_ENV } from '../util/constants';
+import { DEFAULT_ENV } from '../util';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import EventEmitter from 'events';
-import { IFlagResolver } from '../types';
-import Raw = Knex.Raw;
 import { Db } from './db';
+import Raw = Knex.Raw;
+import { CreateFeatureStrategySchema } from '../openapi';
 
 const COLUMNS = [
     'id',
@@ -26,6 +35,9 @@ const COLUMNS = [
     'updated_at',
 ];
 const TABLE = 'projects';
+const SETTINGS_COLUMNS = ['project_mode', 'default_stickiness'];
+const SETTINGS_TABLE = 'project_settings';
+const PROJECT_ENVIRONMENTS = 'project_environments';
 
 export interface IEnvironmentProjectLink {
     environmentName: string;
@@ -63,7 +75,7 @@ class ProjectStore implements IProjectStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    fieldToRow(data): IProjectInsert {
+    fieldToRow(data): Omit<IProjectInsert, 'mode'> {
         return {
             id: data.id,
             name: data.name,
@@ -133,8 +145,11 @@ class ProjectStore implements IProjectStore {
         const memberMap = new Map<string, number>(
             memberCount.map((c) => [c.project, Number(c.count)]),
         );
-        return projectsWithFeatureCount.map((r) => {
-            return { ...r, memberCount: memberMap.get(r.id) };
+        return projectsWithFeatureCount.map((projectWithCount) => {
+            return {
+                ...projectWithCount,
+                memberCount: memberMap.get(projectWithCount.id) || 0,
+            };
         });
     }
 
@@ -149,6 +164,8 @@ class ProjectStore implements IProjectStore {
             featureCount: Number(row.number_of_features) || 0,
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,
+            mode: 'open',
+            defaultStickiness: 'default',
         };
     }
 
@@ -164,8 +181,13 @@ class ProjectStore implements IProjectStore {
 
     async get(id: string): Promise<IProject> {
         return this.db
-            .first(COLUMNS)
+            .first([...COLUMNS, ...SETTINGS_COLUMNS])
             .from(TABLE)
+            .leftJoin(
+                SETTINGS_TABLE,
+                `${SETTINGS_TABLE}.project`,
+                `${TABLE}.id`,
+            )
             .where({ id })
             .then(this.mapRow);
     }
@@ -185,11 +207,29 @@ class ProjectStore implements IProjectStore {
             .update({ health: healthUpdate.health, updated_at: new Date() });
     }
 
-    async create(project: IProjectInsert): Promise<IProject> {
+    async create(
+        project: IProjectInsert & IProjectSettings,
+    ): Promise<IProject> {
         const row = await this.db(TABLE)
             .insert(this.fieldToRow(project))
             .returning('*');
-        return this.mapRow(row[0]);
+        const settingsRow = await this.db(SETTINGS_TABLE)
+            .insert({
+                project: project.id,
+                project_mode: project.mode,
+                default_stickiness: project.defaultStickiness,
+            })
+            .returning('*');
+        return this.mapRow({ ...row[0], ...settingsRow[0] });
+    }
+
+    private async hasProjectSettings(projectId: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1 FROM ${SETTINGS_TABLE} WHERE project = ?) AS present`,
+            [projectId],
+        );
+        const { present } = result.rows[0];
+        return present;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -198,6 +238,20 @@ class ProjectStore implements IProjectStore {
             await this.db(TABLE)
                 .where({ id: data.id })
                 .update(this.fieldToRow(data));
+            if (await this.hasProjectSettings(data.id)) {
+                await this.db(SETTINGS_TABLE)
+                    .where({ project: data.id })
+                    .update({
+                        project_mode: data.mode,
+                        default_stickiness: data.defaultStickiness,
+                    });
+            } else {
+                await this.db(SETTINGS_TABLE).insert({
+                    project: data.id,
+                    project_mode: data.mode,
+                    default_stickiness: data.defaultStickiness,
+                });
+            }
         } catch (err) {
             this.logger.error('Could not update project, error: ', err);
         }
@@ -224,8 +278,8 @@ class ProjectStore implements IProjectStore {
     }
 
     async addDefaultEnvironment(projects: any[]): Promise<void> {
-        const environments = projects.map((p) => ({
-            project_id: p.id,
+        const environments = projects.map((project) => ({
+            project_id: project.id,
             environment_name: DEFAULT_ENV,
         }));
         await this.db('project_environments')
@@ -299,8 +353,8 @@ class ProjectStore implements IProjectStore {
             .ignore();
     }
 
-    async getEnvironmentsForProject(id: string): Promise<string[]> {
-        return this.db('project_environments')
+    async getEnvironmentsForProject(id: string): Promise<ProjectEnvironment[]> {
+        const rows = await this.db(PROJECT_ENVIRONMENTS)
             .where({
                 project_id: id,
             })
@@ -311,7 +365,12 @@ class ProjectStore implements IProjectStore {
             )
             .orderBy('environments.sort_order', 'asc')
             .orderBy('project_environments.environment_name', 'asc')
-            .pluck('project_environments.environment_name');
+            .returning([
+                'project_environments.environment_name',
+                'project_environments.default_strategy',
+            ]);
+
+        return rows.map(this.mapProjectEnvironmentRow);
     }
 
     async getMembersCount(): Promise<IProjectMembersCount[]> {
@@ -340,14 +399,12 @@ class ProjectStore implements IProjectStore {
     }
 
     async getProjectsByUser(userId: number): Promise<string[]> {
-        const members = await this.db
+        const projects = await this.db
             .from((db) => {
                 db.select('project')
                     .from('role_user')
                     .leftJoin('roles', 'role_user.role_id', 'roles.id')
-                    .where('type', 'root')
-                    .andWhere('name', 'Editor')
-                    .andWhere('user_id', userId)
+                    .where('user_id', userId)
                     .union((queryBuilder) => {
                         queryBuilder
                             .select('project')
@@ -362,7 +419,7 @@ class ProjectStore implements IProjectStore {
                     .as('query');
             })
             .pluck('project');
-        return members;
+        return projects;
     }
 
     async getMembersCountByProject(projectId: string): Promise<number> {
@@ -428,11 +485,62 @@ class ProjectStore implements IProjectStore {
         return Number(members.count);
     }
 
+    async getProjectSettings(projectId: string): Promise<IProjectSettings> {
+        const row = await this.db(SETTINGS_TABLE).where({ project: projectId });
+        return this.mapSettingsRow(row[0]);
+    }
+
+    async setProjectSettings(
+        projectId: string,
+        defaultStickiness: string,
+        mode: ProjectMode,
+    ): Promise<void> {
+        await this.db(SETTINGS_TABLE)
+            .update({
+                default_stickiness: defaultStickiness,
+                project_mode: mode,
+            })
+            .where({ project: projectId });
+    }
+
+    async getDefaultStrategy(
+        projectId: string,
+        environment: string,
+    ): Promise<CreateFeatureStrategySchema | null> {
+        const rows = await this.db(PROJECT_ENVIRONMENTS)
+            .select('default_strategy')
+            .where({ project_id: projectId, environment_name: environment });
+
+        return rows.length > 0 ? rows[0].default_strategy : null;
+    }
+
+    async updateDefaultStrategy(
+        projectId: string,
+        environment: string,
+        strategy: CreateFeatureStrategySchema,
+    ): Promise<CreateFeatureStrategySchema> {
+        const rows = await this.db(PROJECT_ENVIRONMENTS)
+            .update({
+                default_strategy: strategy,
+            })
+            .where({ project_id: projectId, environment_name: environment })
+            .returning('default_strategy');
+
+        return rows[0].default_strategy;
+    }
+
     async count(): Promise<number> {
         return this.db
             .from(TABLE)
             .count('*')
             .then((res) => Number(res[0].count));
+    }
+
+    mapSettingsRow(row?: IProjectSettingsRow): IProjectSettings {
+        return {
+            defaultStickiness: row?.default_stickiness || 'default',
+            mode: row?.project_mode || 'open',
+        };
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -456,6 +564,21 @@ class ProjectStore implements IProjectStore {
             createdAt: row.created_at,
             health: row.health ?? 100,
             updatedAt: row.updated_at || new Date(),
+            mode: row.project_mode || 'open',
+            defaultStickiness: row.default_stickiness || 'default',
+        };
+    }
+
+    mapProjectEnvironmentRow(row: {
+        environment_name: string;
+        default_strategy: CreateFeatureStrategySchema;
+    }): ProjectEnvironment {
+        return {
+            environment: row.environment_name,
+            defaultStrategy:
+                row.default_strategy === null
+                    ? undefined
+                    : row.default_strategy,
         };
     }
 }

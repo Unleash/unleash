@@ -7,7 +7,6 @@ import { createMetricsMonitor } from './metrics';
 import { createStores } from './db';
 import { createServices, scheduleServices } from './services';
 import { createConfig } from './create-config';
-import { addEventHook } from './event-hook';
 import registerGracefulShutdown from './util/graceful-shutdown';
 import { createDb } from './db/db-pool';
 import sessionDb from './middleware/session-db';
@@ -32,6 +31,7 @@ import { Knex } from 'knex';
 import * as permissions from './types/permissions';
 import * as eventType from './types/events';
 import { Db } from './db/db';
+import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock';
 
 async function createApp(
     config: IUnleashConfig,
@@ -43,7 +43,7 @@ async function createApp(
     const db = createDb(config);
     const stores = createStores(config, db);
     const services = createServices(stores, config, db);
-    scheduleServices(services, config);
+    scheduleServices(services);
 
     const metricsMonitor = createMetricsMonitor();
     const unleashSession = sessionDb(config, db);
@@ -69,9 +69,6 @@ async function createApp(
     }
     const app = await getApp(config, stores, services, unleashSession, db);
 
-    if (typeof config.eventHook === 'function') {
-        addEventHook(config.eventHook, stores.eventStore);
-    }
     await metricsMonitor.startMonitoring(
         config,
         stores,
@@ -98,7 +95,10 @@ async function createApp(
         });
     }
 
-    if (config.environmentEnableOverrides?.length > 0) {
+    if (
+        config.environmentEnableOverrides &&
+        config.environmentEnableOverrides?.length > 0
+    ) {
         await services.environmentService.overrideEnabledProjects(
             config.environmentEnableOverrides,
         );
@@ -138,7 +138,18 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
             logger.info('DB migration: disabled');
         } else {
             logger.debug('DB migration: start');
-            await migrateDb(config);
+            if (opts.flagResolver?.isEnabled('migrationLock')) {
+                logger.info('Running migration with lock');
+                const lock = withDbLock(config.db, {
+                    lockKey: defaultLockKey,
+                    timeout: defaultTimeout,
+                    logger,
+                });
+                await lock(migrateDb)(config);
+            } else {
+                await migrateDb(config);
+            }
+
             logger.debug('DB migration: end');
         }
     } catch (err) {

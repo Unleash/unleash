@@ -14,8 +14,9 @@ import {
 import User from '../types/user';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import BadDataError from '../error/bad-data-error';
+import { ISegmentService } from '../segments/segment-service-interface';
 
-export class SegmentService {
+export class SegmentService implements ISegmentService {
     private logger: Logger;
 
     private segmentStore: ISegmentStore;
@@ -96,6 +97,8 @@ export class SegmentService {
         if (preData.name !== input.name) {
             await this.validateName(input.name);
         }
+
+        await this.validateSegmentProject(id, input);
 
         const segment = await this.segmentStore.update(id, input);
 
@@ -214,6 +217,30 @@ export class SegmentService {
         if (valuesCount > segmentValuesLimit) {
             throw new BadDataError(
                 `Segments may not have more than ${segmentValuesLimit} values`,
+            );
+        }
+    }
+
+    private async validateSegmentProject(
+        id: number,
+        segment: Omit<ISegment, 'id'>,
+    ): Promise<void> {
+        const strategies =
+            await this.featureStrategiesStore.getStrategiesBySegment(id);
+
+        const projectsUsed = new Set(
+            strategies.map((strategy) => strategy.projectId),
+        );
+
+        if (
+            segment.project &&
+            (projectsUsed.size > 1 ||
+                (projectsUsed.size === 1 && !projectsUsed.has(segment.project)))
+        ) {
+            throw new BadDataError(
+                `Invalid project. Segment is being used by strategies in other projects: ${Array.from(
+                    projectsUsed,
+                ).join(', ')}`,
             );
         }
     }

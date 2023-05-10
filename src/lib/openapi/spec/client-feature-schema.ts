@@ -49,6 +49,7 @@ export const clientFeatureSchema = {
             items: {
                 $ref: '#/components/schemas/featureStrategySchema',
             },
+            deprecated: true,
         },
         variants: {
             type: 'array',
@@ -56,6 +57,7 @@ export const clientFeatureSchema = {
                 $ref: '#/components/schemas/variantSchema',
             },
             nullable: true,
+            deprecated: true,
         },
     },
     components: {

@@ -48,7 +48,7 @@ const StyledCard = styled(Link)(({ theme }) => ({
     lineHeight: 1.25,
     borderWidth: '1px',
     borderStyle: 'solid',
-    borderColor: theme.palette.dividerAlternative,
+    borderColor: theme.palette.divider,
     borderRadius: theme.spacing(1),
     '&:hover, &:focus': {
         borderColor: theme.palette.primary.main,

@@ -6,7 +6,7 @@ import { IMPORT_ENVIRONMENT } from 'utils/testIds';
 import useProject from 'hooks/api/getters/useProject/useProject';
 
 const ImportOptionsContainer = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.secondaryContainer,
+    backgroundColor: theme.palette.background.elevation2,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(3),
 }));
@@ -32,11 +32,13 @@ export const ImportOptions: FC<IImportOptionsProps> = ({
     onChange,
 }) => {
     const { project: projectInfo } = useProject(project);
-    const environmentOptions = projectInfo.environments.map(environment => ({
-        key: environment,
-        label: environment,
-        title: environment,
-    }));
+    const environmentOptions = projectInfo.environments.map(
+        ({ environment }) => ({
+            key: environment,
+            label: environment,
+            title: environment,
+        })
+    );
 
     useEffect(() => {
         if (environment === '' && environmentOptions[0]) {

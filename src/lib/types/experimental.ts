@@ -4,19 +4,10 @@ export type IFlags = Partial<typeof flags>;
 export type IFlagKey = keyof IFlags;
 
 const flags = {
-    ENABLE_DARK_MODE_SUPPORT: false,
     anonymiseEventLog: false,
     embedProxy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
-    ),
-    projectStatusApi: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_STATUS_API,
-        false,
-    ),
-    newProjectOverview: parseEnvVarBoolean(
-        process.env.NEW_PROJECT_OVERVIEW,
-        false,
     ),
     embedProxyFrontend: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
@@ -24,10 +15,6 @@ const flags = {
     ),
     responseTimeWithAppNameKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH,
-        false,
-    ),
-    proxyReturnAllToggles: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROXY_RETURN_ALL_TOGGLES,
         false,
     ),
     maintenanceMode: parseEnvVarBoolean(
@@ -40,7 +27,7 @@ const flags = {
     ),
     featuresExportImport: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURES_EXPORT_IMPORT,
-        false,
+        true,
     ),
     caseInsensitiveInOperators: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CASE_INSENSITIVE_IN_OPERATORS,
@@ -48,10 +35,6 @@ const flags = {
     ),
     crOnVariants: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CR_ON_VARIANTS,
-        false,
-    ),
-    showProjectApiAccess: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_API_ACCESS,
         false,
     ),
     strictSchemaValidation: parseEnvVarBoolean(
@@ -62,8 +45,29 @@ const flags = {
         process.env.UNLEASH_PRO_PLAN_AUTO_CHARGE,
         false,
     ),
-    notifications: parseEnvVarBoolean(process.env.NOTIFICATIONS, false),
-    signOnLog: parseEnvVarBoolean(process.env.UNLEASH_SIGN_ON_LOG, false),
+    personalAccessTokensKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_PAT_KILL_SWITCH,
+        false,
+    ),
+    cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
+    groupRootRoles: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ROOT_ROLE_GROUPS,
+        false,
+    ),
+    migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
+    demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
+    strategyImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_IMPROVEMENTS,
+        false,
+    ),
+    googleAuthEnabled: parseEnvVarBoolean(
+        process.env.GOOGLE_AUTH_ENABLED,
+        false,
+    ),
+    variantMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_VARIANT_METRICS,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

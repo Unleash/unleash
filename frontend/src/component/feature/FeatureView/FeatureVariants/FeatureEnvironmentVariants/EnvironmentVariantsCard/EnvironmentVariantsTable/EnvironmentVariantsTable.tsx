@@ -1,10 +1,4 @@
-import {
-    styled,
-    TableBody,
-    TableRow,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
+import { TableBody, TableRow, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     SortableTableHeader,
@@ -18,11 +12,7 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { calculateVariantWeight } from 'component/common/util';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useSearch } from 'hooks/useSearch';
-import {
-    IFeatureEnvironment,
-    IOverride,
-    IPayload,
-} from 'interfaces/featureToggle';
+import { IFeatureVariant, IOverride, IPayload } from 'interfaces/featureToggle';
 import { useMemo } from 'react';
 import { useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
@@ -30,26 +20,20 @@ import { PayloadCell } from './PayloadCell/PayloadCell';
 import { OverridesCell } from './OverridesCell/OverridesCell';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
-const StyledTableContainer = styled('div')(({ theme }) => ({
-    margin: theme.spacing(3, 0),
-}));
-
 interface IEnvironmentVariantsTableProps {
-    environment: IFeatureEnvironment;
-    searchValue: string;
+    variants: IFeatureVariant[];
+    searchValue?: string;
 }
 
 export const EnvironmentVariantsTable = ({
-    environment,
-    searchValue,
+    variants,
+    searchValue = '',
 }: IEnvironmentVariantsTableProps) => {
     const projectId = useRequiredPathParam('projectId');
 
     const theme = useTheme();
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isLargeScreen = useMediaQuery(theme.breakpoints.down('lg'));
-
-    const variants = environment.variants ?? [];
 
     const columns = useMemo(
         () => [
@@ -107,7 +91,7 @@ export const EnvironmentVariantsTable = ({
                 sortType: 'alphanumeric',
             },
         ],
-        [projectId, variants, environment]
+        [projectId, variants]
     );
 
     const initialState = useMemo(
@@ -156,7 +140,7 @@ export const EnvironmentVariantsTable = ({
     );
 
     return (
-        <StyledTableContainer>
+        <>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <Table {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups as any} />
@@ -191,6 +175,6 @@ export const EnvironmentVariantsTable = ({
                     />
                 }
             />
-        </StyledTableContainer>
+        </>
     );
 };

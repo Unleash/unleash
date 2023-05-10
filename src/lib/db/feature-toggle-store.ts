@@ -110,16 +110,16 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return rows.map(this.rowToFeature);
     }
 
-    async getByDate(queryModifiers: {
+    async countByDate(queryModifiers: {
         archived?: boolean;
         project?: string;
         date?: string;
         range?: string[];
         dateAccessor: string;
-    }): Promise<FeatureToggle[]> {
+    }): Promise<number> {
         const { project, archived, dateAccessor } = queryModifiers;
         let query = this.db
-            .select(FEATURE_COLUMNS)
+            .count()
             .from(TABLE)
             .where({ project })
             .modify(FeatureToggleStore.filterByArchived, archived);
@@ -135,8 +135,8 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             ]);
         }
 
-        const rows = await query;
-        return rows.map(this.rowToFeature);
+        const queryResult = await query.first();
+        return parseInt(queryResult.count || 0);
     }
 
     /**
@@ -274,9 +274,36 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return this.rowToFeature(row[0]);
     }
 
+    async batchArchive(names: string[]): Promise<FeatureToggle[]> {
+        const now = new Date();
+        const rows = await this.db(TABLE)
+            .whereIn('name', names)
+            .update({ archived_at: now })
+            .returning(FEATURE_COLUMNS);
+        return rows.map((row) => this.rowToFeature(row));
+    }
+
+    async batchStale(
+        names: string[],
+        stale: boolean,
+    ): Promise<FeatureToggle[]> {
+        const rows = await this.db(TABLE)
+            .whereIn('name', names)
+            .update({ stale })
+            .returning(FEATURE_COLUMNS);
+        return rows.map((row) => this.rowToFeature(row));
+    }
+
     async delete(name: string): Promise<void> {
         await this.db(TABLE)
             .where({ name }) // Feature toggle must be archived to allow deletion
+            .whereNotNull('archived_at')
+            .del();
+    }
+
+    async batchDelete(names: string[]): Promise<void> {
+        await this.db(TABLE)
+            .whereIn('name', names)
             .whereNotNull('archived_at')
             .del();
     }
@@ -287,6 +314,14 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .update({ archived_at: null })
             .returning(FEATURE_COLUMNS);
         return this.rowToFeature(row[0]);
+    }
+
+    async batchRevive(names: string[]): Promise<FeatureToggle[]> {
+        const rows = await this.db(TABLE)
+            .whereIn('name', names)
+            .update({ archived_at: null })
+            .returning(FEATURE_COLUMNS);
+        return rows.map((row) => this.rowToFeature(row));
     }
 
     async getVariants(featureName: string): Promise<IVariant[]> {

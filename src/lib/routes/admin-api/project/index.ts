@@ -1,30 +1,34 @@
 import { Response } from 'express';
 import Controller from '../../controller';
-import { IUnleashConfig } from '../../../types/option';
-import { IUnleashServices } from '../../../types/services';
-import ProjectFeaturesController from './features';
+import {
+    IArchivedQuery,
+    IProjectParam,
+    IUnleashConfig,
+    IUnleashServices,
+    NONE,
+    serializeDates,
+} from '../../../types';
+import ProjectFeaturesController from './project-features';
 import EnvironmentsController from './environments';
 import ProjectHealthReport from './health-report';
 import ProjectService from '../../../services/project-service';
 import VariantsController from './variants';
-import { NONE } from '../../../types/permissions';
 import {
-    projectsSchema,
-    ProjectsSchema,
-} from '../../../openapi/spec/projects-schema';
-import { OpenApiService } from '../../../services/openapi-service';
-import { serializeDates } from '../../../types/serialize-dates';
-import { createResponseSchema } from '../../../openapi/util/create-response-schema';
-import { IAuthRequest } from '../../unleash-types';
-import {
+    createResponseSchema,
     ProjectOverviewSchema,
     projectOverviewSchema,
-} from '../../../../lib/openapi';
-import { IArchivedQuery, IProjectParam } from '../../../types/model';
+    projectsSchema,
+    ProjectsSchema,
+} from '../../../openapi';
+import { OpenApiService, SettingService } from '../../../services';
+import { IAuthRequest } from '../../unleash-types';
 import { ProjectApiTokenController } from './api-token';
+import ProjectArchiveController from './project-archive';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
+
+    private settingService: SettingService;
 
     private openApiService: OpenApiService;
 
@@ -32,6 +36,7 @@ export default class ProjectApi extends Controller {
         super(config);
         this.projectService = services.projectService;
         this.openApiService = services.openApiService;
+        this.settingService = services.settingService;
 
         this.route({
             path: '',
@@ -70,6 +75,7 @@ export default class ProjectApi extends Controller {
         this.use('/', new ProjectHealthReport(config, services).router);
         this.use('/', new VariantsController(config, services).router);
         this.use('/', new ProjectApiTokenController(config, services).router);
+        this.use('/', new ProjectArchiveController(config, services).router);
     }
 
     async getProjects(
@@ -104,6 +110,7 @@ export default class ProjectApi extends Controller {
             archived,
             user.id,
         );
+
         this.openApiService.respondWithValidation(
             200,
             res,

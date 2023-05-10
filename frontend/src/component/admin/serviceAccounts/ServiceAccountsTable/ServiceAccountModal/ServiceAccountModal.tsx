@@ -71,7 +71,7 @@ const StyledRoleRadio = styled(Radio)(({ theme }) => ({
 
 const StyledSecondaryContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
-    backgroundColor: theme.palette.secondaryContainer,
+    backgroundColor: theme.palette.background.elevation2,
     borderRadius: theme.shape.borderRadiusMedium,
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(2),

@@ -1,29 +1,34 @@
-interface IUseSearchOutput {
-    getSearchText: (input: string) => string;
-    data: any[];
-    getSearchContext: () => IGetSearchContextOutput;
-}
+import { useCallback, useMemo } from 'react';
 
-export interface IGetSearchContextOutput {
-    data: any[];
+export type IGetSearchContextOutput<T extends any = any> = {
+    data: T[];
     columns: any[];
     searchValue: string;
-}
+};
 
-export const useSearch = (
+type IUseSearchOutput<T extends any> = {
+    getSearchText: (input: string) => string;
+    data: T[];
+    getSearchContext: () => IGetSearchContextOutput<T>;
+};
+
+export const useSearch = <T extends any>(
     columns: any[],
     searchValue: string,
-    data: any[]
-): IUseSearchOutput => {
-    const getSearchText = getSearchTextGenerator(columns);
+    data: T[]
+): IUseSearchOutput<T> => {
+    const getSearchText = useCallback(
+        (value: string) => getSearchTextGenerator(columns)(value),
+        [columns]
+    );
 
-    const getSearchContext = () => {
+    const getSearchContext = useCallback(() => {
         return { data, searchValue, columns };
-    };
+    }, [data, searchValue, columns]);
 
-    if (!searchValue) return { data, getSearchText, getSearchContext };
+    const search = useMemo(() => {
+        if (!searchValue) return data;
 
-    const search = () => {
         const filteredData = filter(columns, searchValue, data);
         const searchedData = searchInFilteredData(
             columns,
@@ -32,9 +37,9 @@ export const useSearch = (
         );
 
         return searchedData;
-    };
+    }, [columns, searchValue, data, getSearchText]);
 
-    return { data: search(), getSearchText, getSearchContext };
+    return { data: search, getSearchText, getSearchContext };
 };
 
 export const filter = (columns: any[], searchValue: string, data: any[]) => {
@@ -57,10 +62,10 @@ export const filter = (columns: any[], searchValue: string, data: any[]) => {
     return filteredDataSet;
 };
 
-export const searchInFilteredData = (
+export const searchInFilteredData = <T extends any>(
     columns: any[],
     searchValue: string,
-    filteredData: any[]
+    filteredData: T[]
 ) => {
     const searchableColumns = columns.filter(
         column => column.searchable && column.accessor

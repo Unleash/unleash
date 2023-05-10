@@ -44,6 +44,7 @@ import { isValidField } from './import-context-validation';
 import { IImportTogglesStore } from './import-toggles-store-type';
 import { ImportPermissionsService } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
+import { UnleashError } from '../../error/api-error';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -168,7 +169,7 @@ export default class ExportImportService {
         const errors = ImportValidationMessages.compileErrors(
             dto.project,
             unsupportedStrategies,
-            unsupportedContextFields,
+            unsupportedContextFields || [],
             [],
             otherProjectFeatures,
             false,
@@ -225,7 +226,7 @@ export default class ExportImportService {
 
     private async importToggleStatuses(dto: ImportTogglesSchema, user: User) {
         await Promise.all(
-            dto.data.featureEnvironments?.map((featureEnvironment) =>
+            (dto.data.featureEnvironments || []).map((featureEnvironment) =>
                 this.featureToggleService.updateEnabled(
                     dto.project,
                     featureEnvironment.name,
@@ -279,15 +280,17 @@ export default class ExportImportService {
         await this.importTogglesStore.deleteTagsForFeatures(
             dto.data.features.map((feature) => feature.name),
         );
-        return Promise.all(
-            dto.data.featureTags?.map((tag) =>
-                this.featureTagService.addTag(
+
+        const featureTags = dto.data.featureTags || [];
+        for (const tag of featureTags) {
+            if (tag.tagType) {
+                await this.featureTagService.addTag(
                     tag.featureName,
                     { type: tag.tagType, value: tag.tagValue },
                     extractUsernameFromUser(user),
-                ),
-            ),
-        );
+                );
+            }
+        }
     }
 
     private async importContextFields(dto: ImportTogglesSchema, user: User) {
@@ -310,12 +313,14 @@ export default class ExportImportService {
     private async importTagTypes(dto: ImportTogglesSchema, user: User) {
         const newTagTypes = await this.getNewTagTypes(dto);
         return Promise.all(
-            newTagTypes.map((tagType) =>
-                this.tagTypeService.createTagType(
-                    tagType,
-                    extractUsernameFromUser(user),
-                ),
-            ),
+            newTagTypes.map((tagType) => {
+                return tagType
+                    ? this.tagTypeService.createTagType(
+                          tagType,
+                          extractUsernameFromUser(user),
+                      )
+                    : Promise.resolve();
+            }),
         );
     }
 
@@ -327,15 +332,17 @@ export default class ExportImportService {
                     featureEnvironment.variants.length > 0,
             ) || [];
         await Promise.all(
-            featureEnvsWithVariants.map((featureEnvironment) =>
-                this.featureToggleService.saveVariantsOnEnv(
-                    dto.project,
-                    featureEnvironment.featureName,
-                    dto.environment,
-                    featureEnvironment.variants as IVariant[],
-                    user,
-                ),
-            ),
+            featureEnvsWithVariants.map((featureEnvironment) => {
+                return featureEnvironment.featureName
+                    ? this.featureToggleService.saveVariantsOnEnv(
+                          dto.project,
+                          featureEnvironment.featureName,
+                          dto.environment,
+                          featureEnvironment.variants as IVariant[],
+                          user,
+                      )
+                    : Promise.resolve();
+            }),
         );
     }
 
@@ -361,15 +368,23 @@ export default class ExportImportService {
         const unsupportedContextFields = await this.getUnsupportedContextFields(
             dto,
         );
-        if (
-            Array.isArray(unsupportedContextFields) &&
-            unsupportedContextFields.length > 0
-        ) {
-            throw new BadDataError(
-                `Context fields with errors: ${unsupportedContextFields
-                    .map((field) => field.name)
-                    .join(', ')}`,
-            );
+        if (Array.isArray(unsupportedContextFields)) {
+            const [firstError, ...remainingErrors] =
+                unsupportedContextFields.map((field) => {
+                    const description = `${field.name} is not supported.`;
+                    return {
+                        description,
+                        message: description,
+                    };
+                });
+            if (firstError !== undefined) {
+                throw new UnleashError({
+                    name: 'BadDataError',
+                    message:
+                        'Some of the context fields you are trying to import are not supported.',
+                    details: [firstError, ...remainingErrors],
+                });
+            }
         }
     }
 
@@ -386,11 +401,10 @@ export default class ExportImportService {
 
     private async cleanData(dto: ImportTogglesSchema) {
         const removedFeaturesDto = await this.removeArchivedFeatures(dto);
-        const remappedDto = this.remapSegments(removedFeaturesDto);
-        return remappedDto;
+        return ExportImportService.remapSegments(removedFeaturesDto);
     }
 
-    private async remapSegments(dto: ImportTogglesSchema) {
+    private static async remapSegments(dto: ImportTogglesSchema) {
         return {
             ...dto,
             data: {
@@ -440,12 +454,24 @@ export default class ExportImportService {
 
     private async verifyStrategies(dto: ImportTogglesSchema) {
         const unsupportedStrategies = await this.getUnsupportedStrategies(dto);
-        if (unsupportedStrategies.length > 0) {
-            throw new BadDataError(
-                `Unsupported strategies: ${unsupportedStrategies
-                    .map((strategy) => strategy.name)
-                    .join(', ')}`,
-            );
+
+        const [firstError, ...remainingErrors] = unsupportedStrategies.map(
+            (strategy) => {
+                const description = `${strategy.name} is not supported.`;
+
+                return {
+                    description,
+                    message: description,
+                };
+            },
+        );
+        if (firstError !== undefined) {
+            throw new UnleashError({
+                name: 'BadDataError',
+                message:
+                    'Some of the strategies you are trying to import are not supported.',
+                details: [firstError, ...remainingErrors],
+            });
         }
     }
 
@@ -512,14 +538,12 @@ export default class ExportImportService {
         const existingTagTypes = (await this.tagTypeService.getAll()).map(
             (tagType) => tagType.name,
         );
-        const newTagTypes =
-            dto.data.tagTypes?.filter(
-                (tagType) => !existingTagTypes.includes(tagType.name),
-            ) || [];
-        const uniqueTagTypes = [
+        const newTagTypes = (dto.data.tagTypes || []).filter(
+            (tagType) => !existingTagTypes.includes(tagType.name),
+        );
+        return [
             ...new Map(newTagTypes.map((item) => [item.name, item])).values(),
         ];
-        return uniqueTagTypes;
     }
 
     private async getNewContextFields(dto: ImportTogglesSchema) {
@@ -538,6 +562,10 @@ export default class ExportImportService {
         query: ExportQuerySchema,
         userName: string,
     ): Promise<ExportResultSchema> {
+        const featureNames =
+            typeof query.tag === 'string'
+                ? await this.featureTagService.listFeatures(query.tag)
+                : (query.features as string[]) || [];
         const [
             features,
             featureEnvironments,
@@ -548,18 +576,18 @@ export default class ExportImportService {
             segments,
             tagTypes,
         ] = await Promise.all([
-            this.toggleStore.getAllByNames(query.features),
+            this.toggleStore.getAllByNames(featureNames),
             await this.featureEnvironmentStore.getAllByFeatures(
-                query.features,
+                featureNames,
                 query.environment,
             ),
             this.featureStrategiesStore.getAllByFeatures(
-                query.features,
+                featureNames,
                 query.environment,
             ),
             this.segmentStore.getAllFeatureStrategySegments(),
             this.contextFieldStore.getAll(),
-            this.featureTagStore.getAllByFeatures(query.features),
+            this.featureTagStore.getAllByFeatures(featureNames),
             this.segmentStore.getAll(),
             this.tagTypeStore.getAll(),
         ]);

@@ -53,9 +53,11 @@ test('require a name when creating a new strategy', async () => {
         .send({})
         .expect(400)
         .expect((res) => {
-            expect(res.body.validation[0].message).toEqual(
-                "should have required property 'name'",
-            );
+            expect(
+                ['name', 'property', 'required'].every((word) =>
+                    res.body.details[0].description.includes(word),
+                ),
+            ).toBeTruthy();
         });
 });
 
@@ -66,7 +68,7 @@ test('require parameters array when creating a new strategy', async () => {
         .send({ name: 'TestStrat' })
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].message).toEqual(
+            expect(res.body.details[0].description).toEqual(
                 '"parameters" is required',
             );
         });
@@ -206,12 +208,4 @@ test('reactivating a non-existent strategy yields 404', async () => {
         .post(`${base}/api/admin/strategies/non-existent-strategy/reactivate`)
         .set('Content-Type', 'application/json')
         .expect(404);
-});
-test("deprecating 'default' strategy will yield 403", async () => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
-    const { request, base } = await getSetup();
-    return request
-        .post(`${base}/api/admin/strategies/default/deprecate`)
-        .set('Content-Type', 'application/json')
-        .expect(403);
 });

@@ -1,5 +1,5 @@
 import { CloudCircle } from '@mui/icons-material';
-import { styled } from '@mui/material';
+import { styled, Link } from '@mui/material';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -8,7 +8,7 @@ import { Badge } from 'component/common/Badge/Badge';
 const StyledCard = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusLarge,
-    border: `1px solid ${theme.palette.dividerAlternative}`,
+    border: `1px solid ${theme.palette.divider}`,
     '&:not(:last-child)': {
         marginBottom: theme.spacing(3),
     },
@@ -48,6 +48,10 @@ const StyledDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1.5),
 }));
 
+const StyledTableContainer = styled('div')(({ theme }) => ({
+    margin: theme.spacing(3, 0),
+}));
+
 const StyledStickinessContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -84,10 +88,12 @@ export const EnvironmentVariantsCard = ({
                 condition={variants.length > 0}
                 show={
                     <>
-                        <EnvironmentVariantsTable
-                            environment={environment}
-                            searchValue={searchValue}
-                        />
+                        <StyledTableContainer>
+                            <EnvironmentVariantsTable
+                                variants={variants}
+                                searchValue={searchValue}
+                            />
+                        </StyledTableContainer>
                         <ConditionallyRender
                             condition={variants.length > 1}
                             show={
@@ -101,13 +107,13 @@ export const EnvironmentVariantsCard = ({
                                         control which parameter is used to
                                         ensure consistent traffic allocation
                                         across variants.{' '}
-                                        <a
+                                        <Link
                                             href="https://docs.getunleash.io/reference/feature-toggle-variants"
                                             target="_blank"
                                             rel="noreferrer"
                                         >
                                             Read more
-                                        </a>
+                                        </Link>
                                     </StyledDescription>
                                 </>
                             }

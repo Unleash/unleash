@@ -3,9 +3,10 @@ import { LogProvider, Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { ITag } from '../types/model';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
-import { AnyEventEmitter } from '../util/anyEventEmitter';
+import { sharedEventEmitter } from '../util/anyEventEmitter';
 import { Db } from './db';
 import { Knex } from 'knex';
+import EventEmitter from 'events';
 
 const EVENT_COLUMNS = [
     'id',
@@ -76,13 +77,16 @@ export interface IEventTable {
 
 const TABLE = 'events';
 
-class EventStore extends AnyEventEmitter implements IEventStore {
+class EventStore implements IEventStore {
     private db: Db;
+
+    // only one shared event emitter should exist across all event store instances
+    private eventEmitter: EventEmitter = sharedEventEmitter;
 
     private logger: Logger;
 
+    // a new DB has to be injected per transaction
     constructor(db: Db, getLogger: LogProvider) {
-        super();
         this.db = db;
         this.logger = getLogger('lib/db/event-store.ts');
     }
@@ -93,7 +97,9 @@ class EventStore extends AnyEventEmitter implements IEventStore {
                 .insert(this.eventToDbRow(event))
                 .returning(EVENT_COLUMNS);
             const savedEvent = this.rowToEvent(rows[0]);
-            process.nextTick(() => this.emit(event.type, savedEvent));
+            process.nextTick(() =>
+                this.eventEmitter.emit(event.type, savedEvent),
+            );
         } catch (error: unknown) {
             this.logger.warn(`Failed to store "${event.type}" event: ${error}`);
         }
@@ -103,6 +109,9 @@ class EventStore extends AnyEventEmitter implements IEventStore {
         let count = await this.db(TABLE)
             .count<Record<string, number>>()
             .first();
+        if (!count) {
+            return 0;
+        }
         if (typeof count.count === 'string') {
             return parseInt(count.count, 10);
         } else {
@@ -122,6 +131,9 @@ class EventStore extends AnyEventEmitter implements IEventStore {
             query = query.andWhere({ feature_name: eventSearch.feature });
         }
         let count = await query.count().first();
+        if (!count) {
+            return 0;
+        }
         if (typeof count.count === 'string') {
             return parseInt(count.count, 10);
         } else {
@@ -136,11 +148,21 @@ class EventStore extends AnyEventEmitter implements IEventStore {
                 .returning(EVENT_COLUMNS);
             const savedEvents = savedRows.map(this.rowToEvent);
             process.nextTick(() =>
-                savedEvents.forEach((e) => this.emit(e.type, e)),
+                savedEvents.forEach((e) => this.eventEmitter.emit(e.type, e)),
             );
         } catch (error: unknown) {
             this.logger.warn(`Failed to store events: ${error}`);
         }
+    }
+
+    async getMaxRevisionId(largerThan: number = 0): Promise<number> {
+        const row = await this.db(TABLE)
+            .max('id')
+            .whereNotNull('feature_name')
+            .orWhere('type', 'segment-update')
+            .andWhere('id', '>=', largerThan)
+            .first();
+        return row ? row.max : -1;
     }
 
     async delete(key: number): Promise<void> {
@@ -188,6 +210,35 @@ class EventStore extends AnyEventEmitter implements IEventStore {
             return rows.map(this.rowToEvent);
         } catch (e) {
             return [];
+        }
+    }
+
+    async queryCount(operations: IQueryOperations[]): Promise<number> {
+        try {
+            let query: Knex.QueryBuilder = this.db.count().from(TABLE);
+
+            operations.forEach((operation) => {
+                if (operation.op === 'where') {
+                    query = this.where(query, operation.parameters);
+                }
+
+                if (operation.op === 'forFeatures') {
+                    query = this.forFeatures(query, operation.parameters);
+                }
+
+                if (operation.op === 'beforeDate') {
+                    query = this.beforeDate(query, operation.parameters);
+                }
+
+                if (operation.op === 'betweenDate') {
+                    query = this.betweenDate(query, operation.parameters);
+                }
+            });
+
+            const queryResult = await query.first();
+            return parseInt(queryResult.count || 0);
+        } catch (e) {
+            return 0;
         }
     }
 
@@ -329,6 +380,28 @@ class EventStore extends AnyEventEmitter implements IEventStore {
             project: e.project,
             environment: e.environment,
         };
+    }
+
+    setMaxListeners(number: number): EventEmitter {
+        return this.eventEmitter.setMaxListeners(number);
+    }
+
+    on(
+        eventName: string | symbol,
+        listener: (...args: any[]) => void,
+    ): EventEmitter {
+        return this.eventEmitter.on(eventName, listener);
+    }
+
+    emit(eventName: string | symbol, ...args: any[]): boolean {
+        return this.eventEmitter.emit(eventName, ...args);
+    }
+
+    off(
+        eventName: string | symbol,
+        listener: (...args: any[]) => void,
+    ): EventEmitter {
+        return this.eventEmitter.off(eventName, listener);
     }
 }
 

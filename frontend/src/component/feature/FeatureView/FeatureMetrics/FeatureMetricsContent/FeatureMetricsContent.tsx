@@ -2,7 +2,6 @@ import { FeatureMetricsTable } from '../FeatureMetricsTable/FeatureMetricsTable'
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { FeatureMetricsStatsRaw } from '../FeatureMetricsStats/FeatureMetricsStatsRaw';
 import { Box, Typography } from '@mui/material';
-import theme from 'themes/theme';
 import { useId } from 'hooks/useId';
 import React, { Suspense } from 'react';
 
@@ -35,12 +34,7 @@ export const FeatureMetricsContent = ({
 
     return (
         <Suspense fallback={null}>
-            <Box
-                borderTop={1}
-                pt={2}
-                mt={3}
-                borderColor={theme.palette.grey[200]}
-            >
+            <Box borderTop={1} pt={2} mt={3} borderColor="divider">
                 <LazyFeatureMetricsChart
                     metrics={metrics}
                     hoursBack={hoursBack}

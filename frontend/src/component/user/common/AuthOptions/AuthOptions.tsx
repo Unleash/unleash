@@ -30,7 +30,9 @@ const AuthOptions = ({ options }: IAuthOptionProps) => {
                         href={o.path}
                         size="small"
                         data-testid={`${SSO_LOGIN_BUTTON}-${o.type}`}
-                        style={{ height: '40px', color: '#000' }}
+                        style={{
+                            height: '40px',
+                        }}
                         startIcon={
                             <ConditionallyRender
                                 condition={o.type === 'google'}

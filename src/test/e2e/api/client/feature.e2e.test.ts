@@ -1,4 +1,7 @@
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
@@ -8,7 +11,13 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('feature_api_client', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         {
@@ -228,19 +237,19 @@ test('Can get strategies for specific environment', async () => {
 test('Can use multiple filters', async () => {
     expect.assertions(3);
 
-    await app.request.post('/api/admin/features').send({
+    await app.request.post('/api/admin/projects/default/features').send({
         name: 'test.feature',
         type: 'killswitch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
-    await app.request.post('/api/admin/features').send({
+    await app.request.post('/api/admin/projects/default/features').send({
         name: 'test.feature2',
         type: 'killswitch',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
-    await app.request.post('/api/admin/features').send({
+    await app.request.post('/api/admin/projects/default/features').send({
         name: 'notestprefix.feature3',
         type: 'release',
         enabled: true,
@@ -280,6 +289,7 @@ test('returns a feature toggles impression data for a different project', async 
         id: 'impression-data-client',
         name: 'ImpressionData',
         description: '',
+        mode: 'open' as const,
     };
 
     await db.stores.projectStore.create(project);

@@ -55,6 +55,19 @@ export const projectSchema = {
             description:
                 '`true` if the project was favorited, otherwise `false`.',
         },
+        mode: {
+            type: 'string',
+            enum: ['open', 'protected'],
+            example: 'open',
+            description:
+                "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+        },
+        defaultStickiness: {
+            type: 'string',
+            example: 'userId',
+            description:
+                'A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy',
+        },
     },
     components: {},
 } as const;

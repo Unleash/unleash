@@ -36,7 +36,7 @@ const StyledContainer = styled('section', {
     width: '100%',
     display: 'flex',
     margin: '0 auto',
-    overflow: 'hidden',
+    overflow: modal ? 'unset' : 'hidden',
     [theme.breakpoints.down(1100)]: {
         flexDirection: 'column',
         minHeight: 0,
@@ -46,7 +46,7 @@ const StyledContainer = styled('section', {
 const StyledRelativeDiv = styled('div')(({ theme }) => relative);
 
 const StyledFormContent = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.formBackground,
+    backgroundColor: theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(6),
@@ -73,7 +73,7 @@ const StyledSidebarDivider = styled(Divider)(({ theme }) => ({
 }));
 
 const StyledSubtitle = styled('h2')(({ theme }) => ({
-    color: theme.palette.formSidebarTextColor,
+    color: theme.palette.common.white,
     marginBottom: theme.spacing(2),
     display: 'flex',
     justifyContent: 'space-between',
@@ -83,7 +83,7 @@ const StyledSubtitle = styled('h2')(({ theme }) => ({
 }));
 
 const StyledIcon = styled(FileCopy)(({ theme }) => ({
-    fill: theme.palette.text.tertiaryContrast,
+    fill: theme.palette.primary.contrastText,
 }));
 
 const StyledMobileGuidanceContainer = styled('div')(() => ({
@@ -105,11 +105,11 @@ const StyledMobileGuidanceButton = styled(IconButton)(() => ({
 }));
 
 const StyledInfoIcon = styled(Info)(({ theme }) => ({
-    fill: theme.palette.text.tertiaryContrast,
+    fill: theme.palette.primary.contrastText,
 }));
 
 const StyledSidebar = styled('aside')(({ theme }) => ({
-    backgroundColor: theme.palette.formSidebar,
+    backgroundColor: theme.palette.background.sidebar,
     padding: theme.spacing(4),
     flexGrow: 0,
     flexShrink: 0,
@@ -124,7 +124,7 @@ const StyledSidebar = styled('aside')(({ theme }) => ({
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({
-    color: theme.palette.formSidebarTextColor,
+    color: theme.palette.common.white,
     zIndex: 1,
     position: 'relative',
 }));
@@ -137,11 +137,11 @@ const StyledLinkContainer = styled('div')(({ theme }) => ({
 
 const StyledLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
     marginRight: theme.spacing(1),
-    color: theme.palette.text.tertiaryContrast,
+    color: theme.palette.primary.contrastText,
 }));
 
 const StyledDocumentationLink = styled('a')(({ theme }) => ({
-    color: theme.palette.text.tertiaryContrast,
+    color: theme.palette.primary.contrastText,
     display: 'block',
     '&:hover': {
         textDecoration: 'none',
@@ -160,7 +160,6 @@ const FormTemplate: React.FC<ICreateProps> = ({
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
-
     const copyCommand = () => {
         if (copy(formatApiCode())) {
             setToastData({

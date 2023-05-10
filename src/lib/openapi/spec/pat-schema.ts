@@ -38,7 +38,7 @@ export const patSchema = {
             nullable: true,
             example: '2023-04-19T08:15:14.000Z',
             description:
-                'When the token was last seen/used to authenticate with. Null if it has not been used yet.',
+                'When the token was last seen/used to authenticate with. Null if it has not been used yet, this property is ignored on write.',
         },
     },
     components: {

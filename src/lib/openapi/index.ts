@@ -151,10 +151,10 @@ import { batchStaleSchema } from './spec/batch-stale-schema';
 import { createApplicationSchema } from './spec/create-application-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
-export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
+export type SchemaId = (typeof schemas)[keyof typeof schemas]['$id'];
 
 // Schemas must list all their $refs in `components`, including nested schemas.
-export type SchemaRef = typeof schemas[keyof typeof schemas]['components'];
+export type SchemaRef = (typeof schemas)[keyof typeof schemas]['components'];
 
 // JSON schema properties that should not be included in the OpenAPI spec.
 export interface JsonSchemaProps {

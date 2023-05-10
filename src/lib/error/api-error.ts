@@ -42,9 +42,9 @@ const AllUnleashApiErrorTypes = [
     ...UnleashApiErrorTypesWithExtraData,
 ] as const;
 
-type UnleashApiErrorName = typeof AllUnleashApiErrorTypes[number];
+type UnleashApiErrorName = (typeof AllUnleashApiErrorTypes)[number];
 export type UnleashApiErrorNameWithoutExtraData =
-    typeof UnleashApiErrorTypes[number];
+    (typeof UnleashApiErrorTypes)[number];
 
 const statusCode = (errorName: UnleashApiErrorName): number => {
     switch (errorName) {

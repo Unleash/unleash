@@ -8,7 +8,7 @@ type Rule = {
     name: string;
     match?: (
         schemaName: string,
-        schema: typeof schemas[SchemaNames],
+        schema: (typeof schemas)[SchemaNames],
     ) => boolean;
     metaSchema: Schema;
     knownExceptions?: string[];

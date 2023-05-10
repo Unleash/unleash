@@ -133,4 +133,4 @@ export const openApiTags = [...OPENAPI_TAGS].sort((a, b) =>
 
 export type OpenApiTag =
     // The official OpenAPI tags that we use.
-    typeof OPENAPI_TAGS[number]['name'];
+    (typeof OPENAPI_TAGS)[number]['name'];

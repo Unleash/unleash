@@ -2,7 +2,7 @@ import Joi, { ValidationError } from 'joi';
 import { generateImageUrl } from '../util/generateImageUrl';
 
 export const AccountTypes = ['User', 'Service Account'] as const;
-type AccountType = typeof AccountTypes[number];
+type AccountType = (typeof AccountTypes)[number];
 
 export interface UserData {
     id: number;

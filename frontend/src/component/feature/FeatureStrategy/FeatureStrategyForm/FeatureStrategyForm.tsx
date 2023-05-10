@@ -222,7 +222,7 @@ export const FeatureStrategyForm = ({
                 }
             />
             <ConditionallyRender
-                condition={Boolean(uiConfig?.flags?.strategyTitle)}
+                condition={Boolean(uiConfig?.flags?.strategyImprovements)}
                 show={
                     <FeatureStrategyTitle
                         title={strategy.title || ''}

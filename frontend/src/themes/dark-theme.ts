@@ -131,6 +131,10 @@ const theme = {
             border: '#8A3E45',
             contrastText: '#EEEEFC', // Color used for content when error.main is used as a background
         },
+        web: {
+            main: '#1A4049', // used on sales-related elements
+            contrastText: '#EEEEFC', // Color used for inner text
+        },
 
         /**
          *  Used for grey badges, hover elements, and grey light elements
@@ -188,6 +192,15 @@ const theme = {
          * Text highlight effect color. Used when filtering/searching over content
          */
         highlight: 'rgba(255, 234, 204, 0.7)',
+
+        /**
+         * Used for the interactive guide spotlight
+         */
+        spotlight: {
+            border: '#8c89bf',
+            outline: '#bcb9f3',
+            pulse: '#bcb9f3',
+        },
 
         /**
          * Background color used for the API command in the sidebar
@@ -264,6 +277,10 @@ export default createTheme({
         // Skeleton
         MuiCssBaseline: {
             styleOverrides: {
+                '#react-joyride-portal ~ .MuiDialog-root': {
+                    zIndex: 1500,
+                },
+
                 '.skeleton': {
                     '&::before': {
                         backgroundColor: theme.palette.background.elevation1,

@@ -47,6 +47,10 @@ class FeatureTagService {
         return this.featureTagStore.getAllTagsForFeature(featureName);
     }
 
+    async listFeatures(tagValue: string): Promise<string[]> {
+        return this.featureTagStore.getAllFeaturesForTag(tagValue);
+    }
+
     // TODO: add project Id
     async addTag(
         featureName: string,

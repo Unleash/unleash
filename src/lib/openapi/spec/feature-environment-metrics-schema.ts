@@ -42,6 +42,19 @@ export const featureEnvironmentMetricsSchema = {
             example: 50,
             minimum: 0,
         },
+        variants: {
+            description: 'How many times each variant was returned',
+            type: 'object',
+            additionalProperties: {
+                type: 'integer',
+                minimum: 0,
+            },
+            example: {
+                variantA: 15,
+                variantB: 25,
+                variantC: 5,
+            },
+        },
     },
     components: {
         dateSchema,

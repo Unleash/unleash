@@ -95,7 +95,10 @@ async function createApp(
         });
     }
 
-    if (config.environmentEnableOverrides?.length > 0) {
+    if (
+        config.environmentEnableOverrides &&
+        config.environmentEnableOverrides?.length > 0
+    ) {
         await services.environmentService.overrideEnabledProjects(
             config.environmentEnableOverrides,
         );

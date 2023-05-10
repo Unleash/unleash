@@ -1,17 +1,22 @@
-import { IUnleashStores } from '../types/stores';
-import { IUnleashConfig } from '../types/option';
+import {
+    IEnvironment,
+    IEnvironmentStore,
+    IFeatureEnvironmentStore,
+    IFeatureStrategiesStore,
+    IProjectEnvironment,
+    ISortOrder,
+    IUnleashConfig,
+    IUnleashStores,
+} from '../types';
 import { Logger } from '../logger';
-import { IEnvironment, IProjectEnvironment, ISortOrder } from '../types/model';
-import { UNIQUE_CONSTRAINT_VIOLATION } from '../error/db-error';
+import { BadDataError, UNIQUE_CONSTRAINT_VIOLATION } from '../error';
 import NameExistsError from '../error/name-exists-error';
 import { sortOrderSchema } from './state-schema';
 import NotFoundError from '../error/notfound-error';
-import { IEnvironmentStore } from '../types/stores/environment-store';
-import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
-import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IProjectStore } from 'lib/types/stores/project-store';
 import MinimumOneEnvironmentError from '../error/minimum-one-environment-error';
 import { IFlagResolver } from 'lib/types/experimental';
+import { CreateFeatureStrategySchema } from '../openapi';
 
 export default class EnvironmentService {
     private logger: Logger;
@@ -105,6 +110,23 @@ export default class EnvironmentService {
             }
             throw e;
         }
+    }
+
+    async addDefaultStrategy(
+        environment: string,
+        projectId: string,
+        strategy: CreateFeatureStrategySchema,
+    ): Promise<CreateFeatureStrategySchema> {
+        if (strategy.name !== 'flexibleRollout') {
+            throw new BadDataError(
+                'Only "flexibleRollout" strategy can be used as a default strategy for an environment',
+            );
+        }
+        return this.projectStore.updateDefaultStrategy(
+            projectId,
+            environment,
+            strategy,
+        );
     }
 
     async overrideEnabledProjects(

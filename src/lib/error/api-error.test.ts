@@ -1,3 +1,4 @@
+import owasp from 'owasp-password-strength-test';
 import { ErrorObject } from 'ajv';
 import {
     ApiErrorSchema,
@@ -9,6 +10,7 @@ import {
     UnleashError,
 } from './api-error';
 import BadDataError from './bad-data-error';
+import OwaspValidationError from './owasp-validation-error';
 
 describe('v5 deprecation: backwards compatibility', () => {
     it.each(UnleashApiErrorTypes)(
@@ -318,5 +320,16 @@ describe('OpenAPI error conversion', () => {
         expect(description).toMatch(/\bnestedObject.a.b\b/);
         // it should include the value that the user sent
         expect(description.includes(illegalValue)).toBeTruthy();
+    });
+});
+
+describe('Error serialization special cases', () => {
+    it('OwaspValidationErrors: adds `validationErrors` to `details`', () => {
+        const results = owasp.test('123');
+        const error = new OwaspValidationError(results);
+        const json = fromLegacyError(error).toJSON();
+
+        expect(json.details!![0].message).toBe(results.errors[0]);
+        expect(json.details!![0].validationErrors).toBe(results.errors);
     });
 });

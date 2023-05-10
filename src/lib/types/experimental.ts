@@ -9,10 +9,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
         true,
     ),
-    newProjectOverview: parseEnvVarBoolean(
-        process.env.NEW_PROJECT_OVERVIEW,
-        false,
-    ),
     embedProxyFrontend: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
         true,
@@ -49,39 +45,27 @@ const flags = {
         process.env.UNLEASH_PRO_PLAN_AUTO_CHARGE,
         false,
     ),
-    bulkOperations: parseEnvVarBoolean(
-        process.env.UNLEASH_BULK_OPERATIONS,
-        false,
-    ),
     personalAccessTokensKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_PAT_KILL_SWITCH,
         false,
     ),
     cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
-    optimal304: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304,
-        false,
-    ),
-    optimal304Differ: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
-        false,
-    ),
     groupRootRoles: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ROOT_ROLE_GROUPS,
         false,
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
-    strategyTitle: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_TITLE,
-        false,
-    ),
-    strategyDisable: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_DISABLE,
+    strategyImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_IMPROVEMENTS,
         false,
     ),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
+        false,
+    ),
+    variantMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_VARIANT_METRICS,
         false,
     ),
 };

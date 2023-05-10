@@ -12,6 +12,12 @@ declare namespace Cypress {
         email: string;
         password: string;
     }
+
+    interface IEnvironment {
+        name: string;
+        type: 'development' | 'preproduction' | 'test' | 'production';
+    }
+
     interface Chainable {
         runBefore(): Chainable;
 
@@ -48,19 +54,14 @@ declare namespace Cypress {
         // STRATEGY
         addUserIdStrategyToFeature_UI(
             featureName: string,
-            strategyId: string,
             projectName?: string
         ): Chainable;
         addFlexibleRolloutStrategyToFeature_UI(
             options: AddFlexibleRolloutStrategyOptions
         ): Chainable;
-        updateFlexibleRolloutStrategy_UI(
-            featureToggleName: string,
-            strategyId: string
-        );
+        updateFlexibleRolloutStrategy_UI(featureToggleName: string);
         deleteFeatureStrategy_UI(
             featureName: string,
-            strategyId: string,
             shouldWait?: boolean,
             projectName?: string
         ): Chainable;
@@ -73,9 +74,20 @@ declare namespace Cypress {
             role: number,
             projectName?: string
         ): Chainable;
-        createProject_API(name: string): Chainable;
+        createProject_API(
+            name: string,
+            options?: Partial<Cypress.RequestOptions>
+        ): Chainable;
         deleteProject_API(name: string): Chainable;
-        createFeature_API(name: string, projectName?: string): Chainable;
+        createFeature_API(
+            name: string,
+            projectName?: string,
+            options?: Partial<Cypress.RequestOptions>
+        ): Chainable;
         deleteFeature_API(name: string): Chainable;
+        createEnvironment_API(
+            environment: IEnvironment,
+            options?: Partial<Cypress.RequestOptions>
+        ): Chainable;
     }
 }

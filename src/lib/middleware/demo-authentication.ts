@@ -42,7 +42,7 @@ function demoAuthentication(
         if (!authentication.enableApiToken && !req.user) {
             // @ts-expect-error
             req.user = new ApiUser({
-                username: 'unauthed-default-client',
+                tokenName: 'unauthed-default-client',
                 permissions: [],
                 environment: 'default',
                 type: ApiTokenType.CLIENT,

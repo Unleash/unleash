@@ -14,6 +14,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import { Demo } from 'component/demo/Demo';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -84,41 +85,50 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         return (
             <>
                 <SkipNavLink />
-                <Header />
-                <SkipNavTarget />
-                <MainLayoutContainer>
-                    <MainLayoutContentWrapper>
-                        <ConditionallyRender
-                            condition={Boolean(
-                                projectId && isChangeRequestConfiguredInAnyEnv()
-                            )}
-                            show={<DraftBanner project={projectId || ''} />}
-                        />
-                        <MainLayoutContent item xs={12} sm={12} my={2}>
-                            <MainLayoutContentContainer ref={ref}>
-                                <BreadcrumbNav />
-                                <Proclamation toast={uiConfig.toast} />
-                                {children}
-                            </MainLayoutContentContainer>
-                        </MainLayoutContent>
-                        <ThemeMode
-                            darkmode={
-                                <StyledImg
-                                    style={{ opacity: 0.06 }}
-                                    src={formatAssetPath(textureImage)}
-                                    alt=""
+                <Demo>
+                    <>
+                        <Header />
+                        <SkipNavTarget />
+                        <MainLayoutContainer>
+                            <MainLayoutContentWrapper>
+                                <ConditionallyRender
+                                    condition={Boolean(
+                                        projectId &&
+                                            isChangeRequestConfiguredInAnyEnv()
+                                    )}
+                                    show={
+                                        <DraftBanner
+                                            project={projectId || ''}
+                                        />
+                                    }
                                 />
-                            }
-                            lightmode={
-                                <StyledImg
-                                    src={formatAssetPath(textureImage)}
-                                    alt=""
+                                <MainLayoutContent item xs={12} sm={12} my={2}>
+                                    <MainLayoutContentContainer ref={ref}>
+                                        <BreadcrumbNav />
+                                        <Proclamation toast={uiConfig.toast} />
+                                        {children}
+                                    </MainLayoutContentContainer>
+                                </MainLayoutContent>
+                                <ThemeMode
+                                    darkmode={
+                                        <StyledImg
+                                            style={{ opacity: 0.06 }}
+                                            src={formatAssetPath(textureImage)}
+                                            alt=""
+                                        />
+                                    }
+                                    lightmode={
+                                        <StyledImg
+                                            src={formatAssetPath(textureImage)}
+                                            alt=""
+                                        />
+                                    }
                                 />
-                            }
-                        />
-                    </MainLayoutContentWrapper>
-                    <Footer />
-                </MainLayoutContainer>
+                            </MainLayoutContentWrapper>
+                            <Footer />
+                        </MainLayoutContainer>
+                    </>
+                </Demo>
             </>
         );
     }

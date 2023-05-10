@@ -40,7 +40,6 @@ import {
 } from '../../../openapi';
 import { OpenApiService, FeatureToggleService } from '../../../services';
 import { querySchema } from '../../../schema/feature-schema';
-import NotFoundError from '../../../error/notfound-error';
 import { BatchStaleSchema } from '../../../openapi/spec/batch-stale-schema';
 
 interface FeatureStrategyParams {
@@ -48,6 +47,10 @@ interface FeatureStrategyParams {
     featureName: string;
     environment: string;
     sortOrder?: number;
+}
+
+interface FeatureStrategyQuery {
+    shouldActivateDisabledStrategies: string;
 }
 
 interface FeatureParams extends ProjectParam {
@@ -594,10 +597,6 @@ export default class ProjectFeaturesController extends Controller {
         req: IAuthRequest<{ projectId: string }, void, BatchStaleSchema>,
         res: Response,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('bulkOperations')) {
-            throw new NotFoundError('Bulk operations are not enabled');
-        }
-
         const { features, stale } = req.body;
         const { projectId } = req.params;
         const userName = extractUsername(req);
@@ -616,11 +615,12 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<FeatureEnvironmentSchema>,
     ): Promise<void> {
         const { environment, featureName, projectId } = req.params;
-        const environmentInfo = await this.featureService.getEnvironmentInfo(
-            projectId,
-            environment,
-            featureName,
-        );
+        const { defaultStrategy, ...environmentInfo } =
+            await this.featureService.getEnvironmentInfo(
+                projectId,
+                environment,
+                featureName,
+            );
 
         const result = {
             ...environmentInfo,
@@ -645,10 +645,16 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async toggleFeatureEnvironmentOn(
-        req: IAuthRequest<FeatureStrategyParams, any, any, any>,
+        req: IAuthRequest<
+            FeatureStrategyParams,
+            any,
+            any,
+            FeatureStrategyQuery
+        >,
         res: Response<void>,
     ): Promise<void> {
         const { featureName, environment, projectId } = req.params;
+        const { shouldActivateDisabledStrategies } = req.query;
         await this.featureService.updateEnabled(
             projectId,
             featureName,
@@ -656,6 +662,7 @@ export default class ProjectFeaturesController extends Controller {
             true,
             extractUsername(req),
             req.user,
+            shouldActivateDisabledStrategies === 'true',
         );
         res.status(200).end();
     }
@@ -766,6 +773,7 @@ export default class ProjectFeaturesController extends Controller {
         const userName = extractUsername(req);
         const patch = req.body;
         const strategy = await this.featureService.getStrategy(strategyId);
+
         const { newDocument } = applyPatch(strategy, patch);
         const updatedStrategy = await this.featureService.updateStrategy(
             strategyId,
@@ -774,6 +782,21 @@ export default class ProjectFeaturesController extends Controller {
             userName,
             req.user,
         );
+        const feature = await this.featureService.getFeature({ featureName });
+
+        const env = feature.environments.find((e) => e.name === environment);
+        const hasOnlyDisabledStrategies = env!.strategies.every(
+            (strat) => strat.disabled,
+        );
+        if (hasOnlyDisabledStrategies) {
+            await this.featureService.updateEnabled(
+                projectId,
+                featureName,
+                environment,
+                false,
+                userName,
+            );
+        }
         res.status(200).json(updatedStrategy);
     }
 

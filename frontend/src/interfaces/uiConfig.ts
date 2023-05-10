@@ -40,18 +40,16 @@ export interface IFlags {
     maintenanceMode?: boolean;
     messageBanner?: boolean;
     featuresExportImport?: boolean;
-    newProjectOverview?: boolean;
     caseInsensitiveInOperators?: boolean;
     crOnVariants?: boolean;
     proPlanAutoCharge?: boolean;
     notifications?: boolean;
-    bulkOperations?: boolean;
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
-    strategyTitle?: boolean;
     groupRootRoles?: boolean;
-    strategyDisable?: boolean;
     googleAuthEnabled?: boolean;
+    variantMetrics?: boolean;
+    strategyImprovements?: boolean;
 }
 
 export interface IVersionInfo {

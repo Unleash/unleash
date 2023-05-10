@@ -13,9 +13,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { changesCount } from '../../../changesCount';
 import {
-    Box,
     IconButton,
-    Link,
     ListItemIcon,
     ListItemText,
     MenuItem,
@@ -25,7 +23,7 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { Delete, Edit, GroupRounded, MoreVert } from '@mui/icons-material';
+import { Delete, Edit, MoreVert } from '@mui/icons-material';
 import { EditChange } from './EditChange';
 
 const useShowActions = (changeRequest: IChangeRequest, change: IChange) => {

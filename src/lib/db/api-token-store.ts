@@ -27,6 +27,7 @@ interface ITokenInsert {
     created_at: Date;
     seen_at?: Date;
     environment: string;
+    tokenName?: string;
 }
 
 interface ITokenRow extends ITokenInsert {
@@ -38,8 +39,8 @@ const tokenRowReducer = (acc, tokenRow) => {
     if (!acc[tokenRow.secret]) {
         acc[tokenRow.secret] = {
             secret: token.secret,
-            username: token.username,
-            type: token.type,
+            tokenName: token.token_name,
+            type: token.type.toLowerCase(),
             project: ALL,
             projects: [ALL],
             environment: token.environment ? token.environment : ALL,
@@ -47,6 +48,7 @@ const tokenRowReducer = (acc, tokenRow) => {
             createdAt: token.created_at,
             alias: token.alias,
             seenAt: token.seen_at,
+            username: token.token_name,
         };
     }
     const currentToken = acc[tokenRow.secret];
@@ -61,7 +63,7 @@ const tokenRowReducer = (acc, tokenRow) => {
 };
 
 const toRow = (newToken: IApiTokenCreate) => ({
-    username: newToken.username,
+    token_name: newToken.tokenName ?? newToken.username,
     secret: newToken.secret,
     type: newToken.type,
     environment:
@@ -123,7 +125,7 @@ export class ApiTokenStore implements IApiTokenStore {
             )
             .select(
                 'tokens.secret',
-                'username',
+                'token_name',
                 'type',
                 'expires_at',
                 'created_at',
@@ -154,6 +156,7 @@ export class ApiTokenStore implements IApiTokenStore {
             await Promise.all(updateProjectTasks);
             return {
                 ...newToken,
+                username: newToken.tokenName,
                 alias: newToken.alias || null,
                 project: newToken.projects?.join(',') || '*',
                 createdAt: row.created_at,

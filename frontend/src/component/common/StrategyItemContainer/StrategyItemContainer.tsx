@@ -1,10 +1,10 @@
 import { DragEventHandler, FC, ReactNode } from 'react';
 import { DragIndicator } from '@mui/icons-material';
-import { styled, IconButton, Box, Chip } from '@mui/material';
+import { Box, IconButton, styled } from '@mui/material';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
-    getFeatureStrategyIcon,
     formatStrategyName,
+    getFeatureStrategyIcon,
 } from 'utils/strategyNames';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -20,13 +20,14 @@ interface IStrategyItemContainerProps {
     orderNumber?: number;
     className?: string;
     style?: React.CSSProperties;
+    description?: string;
 }
 
-const DragIcon = styled(IconButton)(({ theme }) => ({
+const DragIcon = styled(IconButton)({
     padding: 0,
     cursor: 'inherit',
     transition: 'color 0.2s ease-in-out',
-}));
+});
 
 const StyledIndexLabel = styled('div')(({ theme }) => ({
     fontSize: theme.typography.fontSize,
@@ -39,6 +40,21 @@ const StyledIndexLabel = styled('div')(({ theme }) => ({
         display: 'block',
     },
 }));
+const StyledDescription = styled('div')(({ theme }) => ({
+    fontSize: theme.typography.fontSize,
+    fontWeight: 'normal',
+    color: theme.palette.text.secondary,
+    display: 'none',
+    top: theme.spacing(2.5),
+    [theme.breakpoints.up('md')]: {
+        display: 'block',
+    },
+}));
+const StyledHeaderContainer = styled('div')({
+    flexDirection: 'column',
+    justifyContent: 'center',
+    verticalAlign: 'middle',
+});
 
 const StyledContainer = styled(Box, {
     shouldForwardProp: prop => prop !== 'disabled',
@@ -78,6 +94,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     children,
     orderNumber,
     style = {},
+    description,
 }) => {
     const Icon = getFeatureStrategyIcon(strategy.name);
     const { uiConfig } = useUiConfig();
@@ -120,15 +137,26 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                             fill: theme => theme.palette.action.disabled,
                         }}
                     />
-                    <StringTruncator
-                        maxWidth="150"
-                        maxLength={15}
-                        text={formatStrategyName(
-                            uiConfig?.flags?.strategyTitle
-                                ? strategy.title || strategy.name
-                                : strategy.name
-                        )}
-                    />
+                    <StyledHeaderContainer>
+                        <StringTruncator
+                            maxWidth="150"
+                            maxLength={15}
+                            text={formatStrategyName(
+                                uiConfig?.flags?.strategyImprovements
+                                    ? strategy.title || strategy.name
+                                    : strategy.name
+                            )}
+                        />
+                        <ConditionallyRender
+                            condition={Boolean(description)}
+                            show={
+                                <StyledDescription>
+                                    {description}
+                                </StyledDescription>
+                            }
+                        />
+                    </StyledHeaderContainer>
+
                     <ConditionallyRender
                         condition={Boolean(strategy?.disabled)}
                         show={() => (

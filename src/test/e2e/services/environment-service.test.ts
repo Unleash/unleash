@@ -2,7 +2,7 @@ import EnvironmentService from '../../../lib/services/environment-service';
 import { createTestConfig } from '../../config/test-config';
 import dbInit from '../helpers/database-init';
 import NotFoundError from '../../../lib/error/notfound-error';
-import { IUnleashStores } from '../../../lib/types/stores';
+import { IUnleashStores } from '../../../lib/types';
 import NameExistsError from '../../../lib/error/name-exists-error';
 
 let stores: IUnleashStores;
@@ -164,8 +164,8 @@ test('Setting an override disables all other envs', async () => {
         .filter((x) => x.name != enabledEnvName)
         .map((env) => env.enabled);
 
-    expect(targetedEnvironment.enabled).toBe(true);
-    expect(allOtherEnvironments.every((x) => x === false)).toBe(true);
+    expect(targetedEnvironment?.enabled).toBe(true);
+    expect(allOtherEnvironments.every((x) => !x)).toBe(true);
 });
 
 test('Passing an empty override does nothing', async () => {
@@ -185,7 +185,7 @@ test('Passing an empty override does nothing', async () => {
         (env) => env.name == enabledEnvName,
     );
 
-    expect(targetedEnvironment.enabled).toBe(true);
+    expect(targetedEnvironment?.enabled).toBe(true);
 });
 
 test('When given overrides should remap projects to override environments', async () => {
@@ -224,9 +224,9 @@ test('When given overrides should remap projects to override environments', asyn
 
     await service.overrideEnabledProjects([enabledEnvName]);
 
-    const projects = await stores.projectStore.getEnvironmentsForProject(
-        'default',
-    );
+    const projects = (
+        await stores.projectStore.getEnvironmentsForProject('default')
+    ).map((e) => e.environment);
 
     expect(projects).toContain('enabled');
     expect(projects).not.toContain('default');
@@ -263,6 +263,6 @@ test('Override works correctly when enabling default and disabling prod and dev'
 
     expect(envNames).toContain('production');
     expect(envNames).toContain('development');
-    expect(targetedEnvironment.enabled).toBe(true);
-    expect(allOtherEnvironments.every((x) => x === false)).toBe(true);
+    expect(targetedEnvironment?.enabled).toBe(true);
+    expect(allOtherEnvironments.every((x) => !x)).toBe(true);
 });

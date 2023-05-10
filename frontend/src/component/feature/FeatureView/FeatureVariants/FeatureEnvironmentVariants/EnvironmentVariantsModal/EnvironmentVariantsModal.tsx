@@ -270,8 +270,7 @@ export const EnvironmentVariantsModal = ({
         : 'Add change to draft';
 
     const isChangeRequest =
-        isChangeRequestConfigured(environment?.name || '') &&
-        uiConfig.flags.crOnVariants;
+        isChangeRequestConfigured(environment?.name || '');
 
     const stickiness = useMemo(() => {
         if (!loading) {

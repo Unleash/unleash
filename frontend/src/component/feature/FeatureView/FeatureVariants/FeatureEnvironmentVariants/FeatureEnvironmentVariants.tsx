@@ -70,10 +70,9 @@ export const FeatureEnvironmentVariants = () => {
             feature?.environments?.map(environment => ({
                 ...environment,
                 crEnabled:
-                    uiConfig.flags.crOnVariants &&
                     isChangeRequestConfigured(environment.name),
             })) || [],
-        [feature.environments, uiConfig.flags.crOnVariants]
+        [feature.environments]
     );
 
     const createPatch = (

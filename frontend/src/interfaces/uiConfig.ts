@@ -41,7 +41,7 @@ export interface IFlags {
     messageBanner?: boolean;
     featuresExportImport?: boolean;
     caseInsensitiveInOperators?: boolean;
-    crOnVariants?: boolean;
+    /api/admin/projects/default/features/test'iants?: boolean;
     proPlanAutoCharge?: boolean;
     notifications?: boolean;
     personalAccessTokensKillSwitch?: boolean;

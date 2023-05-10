@@ -193,7 +193,7 @@ Some facets of the [segments feature](../segments.mdx) can be customized via env
 
 `UNLEASH_STRATEGY_SEGMENTS_LIMIT` controls the maximum number of segments that can be applied to a single strategy. The default is 5.
 
-`UNLEASH_SEGMENT_VALUES_LIMIT` controls the maximum number of values that you can assign across a segment's constraints. The default is 1000.
+`UNLEASH_SEGMENT_VALUES_LIMIT` controls the maximum number of values that you can assign across a segment's constraints. The default is 1000 (Since v5.1.0)
 
 ## Securing Unleash {#securing-unleash}
 

@@ -32,7 +32,7 @@ test('Should always return token type in lowercase', async () => {
         secret: 'some-secret',
         type: 'FRONTEND' as any,
         projects: ['default'],
-        tokenName: 'some-name',
+        username: 'some-username',
     });
 
     const storedToken = await apiTokenStore.get('some-secret');

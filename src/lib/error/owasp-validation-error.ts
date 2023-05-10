@@ -14,10 +14,7 @@ class OwaspValidationError extends UnleashError {
             validationErrors: testResult.errors,
             message: testResult.errors[0],
         };
-        super({
-            message: testResult.errors[0],
-            name: 'OwaspValidationError',
-        });
+        super(testResult.errors[0]);
 
         this.details = [details];
     }

@@ -27,7 +27,7 @@ class AuthenticationRequired extends UnleashError {
         options,
         defaultHidden = false,
     }: IOptions) {
-        super({ name: 'AuthenticationRequired', message });
+        super(message);
         this.type = type;
         this.path = path;
         this.options = options;

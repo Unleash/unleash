@@ -9,10 +9,7 @@ class NoAccessError extends UnleashError {
             `You don't have the required permissions to perform this operation. You need the "${permission}" permission to perform this action` +
             (environment ? ` in the "${environment}" environment.` : `.`);
 
-        super({
-            name: 'NoAccessError',
-            message,
-        });
+        super(message);
 
         this.permission = permission;
     }

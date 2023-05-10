@@ -1,13 +1,6 @@
 import { UnleashError } from './api-error';
 
-class NotImplementedError extends UnleashError {
-    constructor(message: string) {
-        super({
-            name: 'NotImplementedError',
-            message,
-        });
-    }
-}
+class NotImplementedError extends UnleashError {}
 
 export default NotImplementedError;
 module.exports = NotImplementedError;

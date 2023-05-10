@@ -1,11 +1,8 @@
 import { UnleashError } from './api-error';
 
 class NotFoundError extends UnleashError {
-    constructor(message?: string) {
-        super({
-            message: message ?? 'The requested resource could not be found',
-            name: 'NotFoundError',
-        });
+    constructor(message: string = 'The requested resource could not be found') {
+        super(message);
     }
 }
 export default NotFoundError;

@@ -2,10 +2,7 @@ import { ApiErrorSchema, UnleashError } from './api-error';
 
 export default class IncompatibleProjectError extends UnleashError {
     constructor(targetProject: string) {
-        super({
-            message: `${targetProject} is not a compatible target`,
-            name: 'IncompatibleProjectError',
-        });
+        super(`${targetProject} is not a compatible target`);
     }
 
     toJSON(): ApiErrorSchema {

@@ -19,10 +19,7 @@ class BadDataError extends UnleashError {
             (errors
                 ? '. Refer to the `details` list to see what happened.'
                 : `: ${message}`);
-        super({
-            message: topLevelMessage,
-            name: 'BadDataError',
-        });
+        super(topLevelMessage);
 
         this.details = errors ?? [{ message: message, description: message }];
     }

@@ -1,9 +1,5 @@
 import { UnleashError } from './api-error';
 
-class NameExistsError extends UnleashError {
-    constructor(message: string) {
-        super({ message, name: 'NameExistsError' });
-    }
-}
+class NameExistsError extends UnleashError {}
 export default NameExistsError;
 module.exports = NameExistsError;

@@ -1,9 +1,6 @@
 import { UnleashError } from './api-error';
 
-class MinimumOneEnvironmentError extends UnleashError {
-    constructor(message: string) {
-        super({ message, name: 'MinimumOneEnvironmentError' });
-    }
-}
+class MinimumOneEnvironmentError extends UnleashError {}
+
 export default MinimumOneEnvironmentError;
 module.exports = MinimumOneEnvironmentError;

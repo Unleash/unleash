@@ -11,10 +11,7 @@ class ContentTypeError extends UnleashError {
             ', ',
         )}) and make sure the body is in the corresponding format.`;
 
-        super({
-            name: 'ContentTypeError',
-            message,
-        });
+        super(message);
     }
 }
 

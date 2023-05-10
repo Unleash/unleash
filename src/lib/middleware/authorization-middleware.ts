@@ -2,7 +2,7 @@ import { IAuthRequest } from '../routes/unleash-types';
 import { NextFunction, Response } from 'express';
 import { LogProvider } from '../logger';
 import { AuthenticationRequired } from '../server-impl';
-import UnauthorizedError from '../error/unauthorized';
+import UnauthorizedError from '../error/unauthorized-error';
 
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 const authorizationMiddleware = (

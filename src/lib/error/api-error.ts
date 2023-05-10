@@ -23,7 +23,7 @@ export const UnleashApiErrorTypes = [
     'BadDataError',
     'ValidationError',
     'AuthenticationRequired',
-    'Unauthorized',
+    'UnauthorizedError',
     'NoAccessError',
     'InvalidTokenError',
     'OwaspValidationError',
@@ -36,7 +36,7 @@ type UnleashApiErrorName = typeof UnleashApiErrorTypes[number];
 export type UnleashApiErrorNameWithoutExtraData =
     typeof UnleashApiErrorTypes[number];
 
-const statusCode = (errorName: UnleashApiErrorName): number => {
+const statusCode = (errorName: string): number => {
     switch (errorName) {
         case 'ContentTypeError':
             return 415;
@@ -78,7 +78,7 @@ const statusCode = (errorName: UnleashApiErrorName): number => {
             return 500;
         case 'PasswordMismatch':
             return 401;
-        case 'Unauthorized':
+        case 'UnauthorizedError':
             return 401;
         case 'DisabledError':
             return 422;
@@ -88,30 +88,27 @@ const statusCode = (errorName: UnleashApiErrorName): number => {
             return 403;
         case 'AuthenticationRequired':
             return 401;
+        default:
+            return 500;
     }
 };
 
-type UnleashErrorData = {
-    message: string;
-    name: UnleashApiErrorName;
-};
-
-export class UnleashError extends Error {
+export abstract class UnleashError extends Error {
     id: string;
 
-    name: UnleashApiErrorName;
+    name: string;
 
     statusCode: number;
 
     additionalParameters: object;
 
-    protected constructor({ name, message }: UnleashErrorData) {
+    constructor(message: string, name?: string) {
         super();
         this.id = uuidV4();
-        this.name = name;
+        this.name = name || this.constructor.name;
         super.message = message;
 
-        this.statusCode = statusCode(name);
+        this.statusCode = statusCode(this.name);
     }
 
     help(): string {
@@ -140,7 +137,7 @@ class GenericUnleashError extends UnleashError {
         name: UnleashApiErrorNameWithoutExtraData;
         message: string;
     }) {
-        super({ name, message });
+        super(message, name);
     }
 }
 
@@ -153,7 +150,6 @@ export const apiErrorSchema = {
     properties: {
         name: {
             type: 'string',
-            enum: UnleashApiErrorTypes,
             description:
                 'The kind of error that occurred. Meant for machine consumption.',
             example: 'ValidationError',

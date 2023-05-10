@@ -2,10 +2,7 @@ import { ApiErrorSchema, UnleashError } from './api-error';
 
 export default class PasswordUndefinedError extends UnleashError {
     constructor() {
-        super({
-            message: 'Password cannot be empty or undefined',
-            name: 'PasswordUndefinedError',
-        });
+        super('Password cannot be empty or undefined');
     }
 
     toJSON(): ApiErrorSchema {

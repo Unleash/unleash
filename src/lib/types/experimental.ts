@@ -33,10 +33,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_CASE_INSENSITIVE_IN_OPERATORS,
         false,
     ),
-    crOnVariants: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CR_ON_VARIANTS,
-        false,
-    ),
     strictSchemaValidation: parseEnvVarBoolean(
         process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
         false,

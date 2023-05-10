@@ -1737,13 +1737,7 @@ class FeatureToggleService {
         user: User,
         oldVariants?: IVariant[],
     ): Promise<IVariant[]> {
-        if (this.flagResolver.isEnabled('crOnVariants')) {
-            await this.stopWhenChangeRequestsEnabled(
-                projectId,
-                environment,
-                user,
-            );
-        }
+        await this.stopWhenChangeRequestsEnabled(projectId, environment, user);
         return this.saveVariantsOnEnv(
             projectId,
             featureName,
@@ -1761,10 +1755,8 @@ class FeatureToggleService {
         newVariants: IVariant[],
         user: User,
     ): Promise<IVariant[]> {
-        if (this.flagResolver.isEnabled('crOnVariants')) {
-            for (const env of environments) {
-                await this.stopWhenChangeRequestsEnabled(projectId, env);
-            }
+        for (const env of environments) {
+            await this.stopWhenChangeRequestsEnabled(projectId, env);
         }
         return this.setVariantsOnEnvs(
             projectId,

@@ -34,7 +34,6 @@ import { ArchivedFeatureDeleteConfirm } from './ArchivedFeatureActionCell/Archiv
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { RowSelectCell } from '../../project/Project/ProjectFeatureToggles/RowSelectCell/RowSelectCell';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { BatchSelectionActionsBar } from '../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ArchiveBatchActions } from './ArchiveBatchActions';
 
@@ -64,7 +63,6 @@ export const ArchiveTable = ({
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { setToastData, setToastApiError } = useToast();
-    const { uiConfig } = useUiConfig();
 
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [deletedFeature, setDeletedFeature] = useState<IFeatureToggle>();

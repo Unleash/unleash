@@ -14,6 +14,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { styled } from '@mui/material';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { FeatureOverviewSidePanelEnvironmentHider } from './FeatureOverviewSidePanelEnvironmentHider';
+import { useState } from 'react';
+import { EnableEnvironmentDialog } from './EnableEnvironmentDialog';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(-1.5),
@@ -53,7 +55,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
     const featureId = useRequiredPathParam('featureId');
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
-    const { refetchFeature } = useFeature(projectId, featureId);
+    const { feature, refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const {
@@ -63,9 +65,20 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
         changeRequestDialogDetails,
     } = useChangeRequestToggle(projectId);
 
-    const handleToggleEnvironmentOn = async () => {
+    const [showEnabledDialog, setShowEnabledDialog] = useState(false);
+    const disabledStrategiesCount = environment.strategies.filter(
+        strategy => strategy.disabled
+    ).length;
+    const handleToggleEnvironmentOn = async (
+        shouldActivateDisabled = false
+    ) => {
         try {
-            await toggleFeatureEnvironmentOn(projectId, featureId, name);
+            await toggleFeatureEnvironmentOn(
+                projectId,
+                featureId,
+                name,
+                shouldActivateDisabled
+            );
             setToastData({
                 type: 'success',
                 title: `Available in ${name}`,
@@ -114,7 +127,23 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
             await handleToggleEnvironmentOff();
             return;
         }
-        await handleToggleEnvironmentOn();
+
+        if (featureHasOnlyDisabledStrategies()) {
+            setShowEnabledDialog(true);
+        } else {
+            await handleToggleEnvironmentOn();
+        }
+    };
+
+    const featureHasOnlyDisabledStrategies = () => {
+        const featureEnvironment = feature?.environments?.find(
+            env => env.name === name
+        );
+        return (
+            featureEnvironment?.strategies &&
+            featureEnvironment?.strategies?.length > 0 &&
+            featureEnvironment?.strategies?.every(strategy => strategy.disabled)
+        );
     };
 
     const defaultContent = (
@@ -125,6 +154,16 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
             <StringTruncator text={name} maxWidth="120" maxLength={15} />
         </>
     );
+
+    const onActivateStrategies = async () => {
+        await handleToggleEnvironmentOn(true);
+        setShowEnabledDialog(false);
+    };
+
+    const onAddDefaultStrategy = async () => {
+        await handleToggleEnvironmentOn();
+        setShowEnabledDialog(false);
+    };
 
     return (
         <StyledContainer>
@@ -160,6 +199,14 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
                         environment={changeRequestDialogDetails.environment!}
                     />
                 }
+            />
+            <EnableEnvironmentDialog
+                isOpen={showEnabledDialog}
+                onClose={() => setShowEnabledDialog(false)}
+                environment={name}
+                disabledStrategiesCount={disabledStrategiesCount}
+                onActivateDisabledStrategies={onActivateStrategies}
+                onAddDefaultStrategy={onAddDefaultStrategy}
             />
         </StyledContainer>
     );

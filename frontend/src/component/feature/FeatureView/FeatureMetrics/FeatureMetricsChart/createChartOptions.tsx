@@ -4,6 +4,17 @@ import { ChartOptions, defaults } from 'chart.js';
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { formatDateHM } from 'utils/formatDate';
 import { Theme } from '@mui/material/styles/createTheme';
+import { IPoint } from './createChartData';
+
+const formatVariantEntry = (
+    variant: [string, number],
+    totalExposure: number
+) => {
+    if (totalExposure === 0) return '';
+    const [key, value] = variant;
+    const percentage = Math.floor((Number(value) / totalExposure) * 100);
+    return `${value} (${percentage}%) - ${key}`;
+};
 
 export const createChartOptions = (
     theme: Theme,
@@ -30,15 +41,38 @@ export const createChartOptions = (
                 padding: 10,
                 boxPadding: 5,
                 usePointStyle: true,
+                itemSort: (a, b) => {
+                    const order = ['Total requests', 'Exposed', 'Not exposed'];
+                    const aIndex = order.indexOf(a.dataset.label!);
+                    const bIndex = order.indexOf(b.dataset.label!);
+                    return aIndex - bIndex;
+                },
                 callbacks: {
+                    label: item => {
+                        return `${item.formattedValue} - ${item.dataset.label}`;
+                    },
+                    afterLabel: item => {
+                        const data = item.dataset.data[
+                            item.dataIndex
+                        ] as unknown as IPoint;
+
+                        if (
+                            item.dataset.label !== 'Exposed' ||
+                            data.variants === undefined
+                        ) {
+                            return '';
+                        }
+                        const { disabled, ...actualVariants } = data.variants;
+                        return Object.entries(actualVariants)
+                            .map(entry => formatVariantEntry(entry, data.y))
+                            .join('\n');
+                    },
                     title: items =>
-                        formatDateHM(
+                        `Time: ${formatDateHM(
                             items[0].parsed.x,
                             locationSettings.locale
-                        ),
+                        )}`,
                 },
-                // Sort tooltip items in the same order as the lines in the chart.
-                itemSort: (a, b) => b.parsed.y - a.parsed.y,
             },
             legend: {
                 position: 'top',

@@ -57,6 +57,7 @@ export const DemoDialogFinish = ({
                     variant="contained"
                     color="primary"
                     onClick={onClose}
+                    data-testid="DEMO_FINISH_BUTTON"
                 >
                     Continue
                 </StyledButton>

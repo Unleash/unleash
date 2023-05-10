@@ -1673,6 +1673,10 @@ The provider you choose for your addon dictates what properties the \`parameters
         "additionalProperties": false,
         "description": "Describes a project's configuration in a given environment.",
         "properties": {
+          "defaultStrategy": {
+            "$ref": "#/components/schemas/createFeatureStrategySchema",
+            "description": "The strategy configuration to add when enabling a feature environment by default",
+          },
           "enabled": {
             "description": "\`true\` if the environment is enabled for the project, otherwise \`false\`",
             "example": true,
@@ -2033,6 +2037,19 @@ The provider you choose for your addon dictates what properties the \`parameters
             "$ref": "#/components/schemas/dateSchema",
             "description": "The start of the time window these metrics are valid for. The window is usually 1 hour wide",
             "example": "1926-05-08T12:00:00.000Z",
+          },
+          "variants": {
+            "additionalProperties": {
+              "minimum": 0,
+              "type": "integer",
+            },
+            "description": "How many times each variant was returned",
+            "example": {
+              "variantA": 15,
+              "variantB": 25,
+              "variantC": 5,
+            },
+            "type": "object",
           },
           "yes": {
             "description": "How many times the toggle evaluated to true",

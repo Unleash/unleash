@@ -9,28 +9,28 @@ export const patSchema = {
         id: {
             type: 'integer',
             description:
-                'The unique identification number for this Personal Access Token.',
+                'The unique identification number for this Personal Access Token. This property is set backend when token is created.',
             example: 1,
             minimum: 1,
         },
         secret: {
             type: 'string',
-            description: 'The token used for authentication.',
+            description:
+                'The token used for authentication. This property is set backend when token is created.',
             example: 'user:xyzrandomstring',
         },
         expiresAt: {
             type: 'string',
             format: 'date-time',
-            nullable: true,
             description: `The token's expiration date.`,
             example: '2023-04-19T08:15:14.000Z',
         },
         createdAt: {
             type: 'string',
             format: 'date-time',
-            nullable: true,
             example: '2023-04-19T08:15:14.000Z',
-            description: 'When the token was created.',
+            description:
+                'When the token was created. This property is set backend when token is created.',
         },
         seenAt: {
             type: 'string',
@@ -38,7 +38,7 @@ export const patSchema = {
             nullable: true,
             example: '2023-04-19T08:15:14.000Z',
             description:
-                'When the token was last seen/used to authenticate with.',
+                'When the token was last seen/used to authenticate with. Null if it has not been used yet.',
         },
     },
     components: {

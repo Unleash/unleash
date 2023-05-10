@@ -3036,32 +3036,30 @@ The provider you choose for your addon dictates what properties the \`parameters
         "description": "An overview of a [Personal Access Token](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens).",
         "properties": {
           "createdAt": {
-            "description": "When the token was created.",
+            "description": "When the token was created. This property is set backend when token is created.",
             "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
-            "nullable": true,
             "type": "string",
           },
           "expiresAt": {
             "description": "The token's expiration date.",
             "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
-            "nullable": true,
             "type": "string",
           },
           "id": {
-            "description": "The unique identification number for this Personal Access Token.",
+            "description": "The unique identification number for this Personal Access Token. This property is set backend when token is created.",
             "example": 1,
             "minimum": 1,
             "type": "integer",
           },
           "secret": {
-            "description": "The token used for authentication.",
+            "description": "The token used for authentication. This property is set backend when token is created.",
             "example": "user:xyzrandomstring",
             "type": "string",
           },
           "seenAt": {
-            "description": "When the token was last seen/used to authenticate with.",
+            "description": "When the token was last seen/used to authenticate with. Null if it has not been used yet.",
             "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
             "nullable": true,

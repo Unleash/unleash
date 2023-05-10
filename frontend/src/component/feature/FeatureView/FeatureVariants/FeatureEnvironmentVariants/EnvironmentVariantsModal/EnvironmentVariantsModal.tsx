@@ -269,8 +269,7 @@ export const EnvironmentVariantsModal = ({
         ? 'Add to existing change request'
         : 'Add change to draft';
 
-    const isChangeRequest =
-        isChangeRequestConfigured(environment?.name || '');
+    const isChangeRequest = isChangeRequestConfigured(environment?.name || '');
 
     const stickiness = useMemo(() => {
         if (!loading) {

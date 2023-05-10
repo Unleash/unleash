@@ -69,8 +69,7 @@ export const FeatureEnvironmentVariants = () => {
         () =>
             feature?.environments?.map(environment => ({
                 ...environment,
-                crEnabled:
-                    isChangeRequestConfigured(environment.name),
+                crEnabled: isChangeRequestConfigured(environment.name),
             })) || [],
         [feature.environments]
     );

@@ -32,8 +32,12 @@ const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
 
 const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: theme.spacing(1),
+}));
+
+const StrategyUpdateWrapper: FC = styled('div')(({ theme }) => ({
+    flexDirection: 'column',
 }));
 
 const hasNameField = (payload: unknown): payload is { name: string } =>
@@ -113,27 +117,32 @@ export const StrategyChange: VFC<{
                 <>
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>
-                            <Typography
-                                color={
-                                    change.payload?.disabled
-                                        ? 'action.disabled'
-                                        : 'success.dark'
-                                }
-                            >
-                                + Adding strategy:
-                            </Typography>
-                            <StrategyTooltipLink change={change}>
-                                <StrategyDiff
-                                    change={change}
-                                    currentStrategy={currentStrategy}
+                            <StrategyUpdateWrapper>
+                                <Typography
+                                    color={
+                                        change.payload?.disabled
+                                            ? 'action.disabled'
+                                            : 'success.dark'
+                                    }
+                                >
+                                    + Adding strategy:
+                                </Typography>
+
+                                <StrategyTooltipLink change={change}>
+                                    <StrategyDiff
+                                        change={change}
+                                        currentStrategy={currentStrategy}
+                                    />
+                                </StrategyTooltipLink>
+                                <ConditionallyRender
+                                    condition={Boolean(
+                                        change.payload?.disabled === true
+                                    )}
+                                    show={
+                                        <DisabledEnabledState disabled={true} />
+                                    }
                                 />
-                            </StrategyTooltipLink>
-                            <ConditionallyRender
-                                condition={Boolean(
-                                    change.payload?.disabled === true
-                                )}
-                                show={<DisabledEnabledState disabled={true} />}
-                            />
+                            </StrategyUpdateWrapper>
                         </ChangeItemInfo>
                         {discard}
                     </ChangeItemCreateEditWrapper>

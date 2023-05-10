@@ -24,6 +24,7 @@ interface IFeatureStrategyRemoveProps {
     strategyId: string;
     disabled?: boolean;
     icon?: boolean;
+    text?: boolean;
 }
 
 interface IFeatureStrategyRemoveDialogueProps {
@@ -163,6 +164,7 @@ export const FeatureStrategyRemove = ({
     strategyId,
     disabled,
     icon,
+    text,
 }: IFeatureStrategyRemoveProps) => {
     const [openDialogue, setOpenDialogue] = useState(false);
 
@@ -197,6 +199,18 @@ export const FeatureStrategyRemove = ({
                         type="button"
                     >
                         <Delete />
+                        <ConditionallyRender
+                            condition={Boolean(text)}
+                            show={
+                                <Typography
+                                    variant={'body1'}
+                                    color={'text.secondary'}
+                                    sx={{ ml: theme => theme.spacing(1) }}
+                                >
+                                    Remove
+                                </Typography>
+                            }
+                        />
                     </PermissionIconButton>
                 }
                 elseShow={

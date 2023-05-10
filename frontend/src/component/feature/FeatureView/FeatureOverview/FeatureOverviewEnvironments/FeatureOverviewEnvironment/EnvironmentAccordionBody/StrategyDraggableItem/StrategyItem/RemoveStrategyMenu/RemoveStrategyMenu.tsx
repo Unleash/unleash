@@ -1,22 +1,49 @@
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 import {
     Avatar,
     Box,
     IconButton,
+    ListItem,
     Menu,
     MenuItem,
+    styled,
     Tooltip,
+    Typography,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { IFeatureStrategy } from '../../../../../../../../../../interfaces/strategy';
+import { FeatureStrategyRemove } from '../../../../../../../../FeatureStrategy/FeatureStrategyRemove/FeatureStrategyRemove';
+import { DisableEnableStrategy } from '../DisableEnableStrategy/DisableEnableStrategy';
 
-const RemoveStrategyMenu = () => {
+export interface IRemoveStrategyMenuProps {
+    projectId: string;
+    featureId: string;
+    environmentId: string;
+    strategy: IFeatureStrategy;
+}
+
+const StyledContainer = styled(ListItem)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    minWidth: 'fit-content',
+    padding: theme.spacing(0, 2),
+}));
+
+const RemoveStrategyMenu = ({
+    projectId,
+    strategy,
+    featureId,
+    environmentId,
+}: IRemoveStrategyMenuProps) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
-    const handleClose = () => {
+    const handleClose = (event: SyntheticEvent) => {
         setAnchorEl(null);
+        event.stopPropagation();
     };
     return (
         <>
@@ -27,12 +54,11 @@ const RemoveStrategyMenu = () => {
                     textAlign: 'center',
                 }}
             >
-                <Tooltip title="Remove strategy">
+                <Tooltip title="More actions">
                     <IconButton
                         onClick={handleClick}
                         size="small"
-                        sx={{ ml: 2 }}
-                        aria-controls={open ? 'account-menu' : undefined}
+                        aria-controls={open ? 'actions-menu' : undefined}
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
                     >
@@ -42,7 +68,7 @@ const RemoveStrategyMenu = () => {
             </Box>
             <Menu
                 anchorEl={anchorEl}
-                id="account-menu"
+                id="actions-menu"
                 open={open}
                 onClose={handleClose}
                 onClick={handleClose}
@@ -52,11 +78,11 @@ const RemoveStrategyMenu = () => {
                         overflow: 'visible',
                         filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                         mt: 1.5,
-                        '& .MuiAvatar-root': {
-                            width: 32,
-                            height: 32,
-                            ml: -0.5,
-                            mr: 1,
+                        pl: 0.5,
+                        minWidth: 'fit-content',
+                        justifyContent: 'center',
+                        li: {
+                            pl: 0,
                         },
                         '&:before': {
                             content: '""',
@@ -75,13 +101,34 @@ const RemoveStrategyMenu = () => {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem onClick={handleClose}>
-                    <Avatar /> Profile
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                    <Avatar /> My account
-                </MenuItem>
+                <MenuItem
+                    component={() => (
+                        <StyledContainer>
+                            <DisableEnableStrategy
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environmentId}
+                                strategy={strategy}
+                                text
+                            />
+                        </StyledContainer>
+                    )}
+                />
+                <MenuItem
+                    component={() => (
+                        <FeatureStrategyRemove
+                            projectId={projectId}
+                            featureId={featureId}
+                            environmentId={environmentId}
+                            strategyId={strategy.id}
+                            text
+                            icon
+                        />
+                    )}
+                />
             </Menu>
         </>
     );
 };
+
+export default RemoveStrategyMenu;

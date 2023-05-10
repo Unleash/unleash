@@ -56,12 +56,21 @@ interface IStrategyTooltipLinkProps {
     previousTitle?: string;
 }
 
+const StyledContainer: FC = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    width: '100%',
+}));
+
 export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
     change,
     previousTitle,
     children,
 }) => (
-    <>
+    <StyledContainer>
         <GetFeatureStrategyIcon strategyName={change.payload.name} />
         <ConditionallyRender
             condition={Boolean(
@@ -71,10 +80,10 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                 <>
                     <Typography
                         component="s"
-                        color="action.disabled"
+                        color="text.secondary"
                         sx={{
                             ...textTruncated,
-                            maxWidth: '100px',
+                            maxWidth: '100%',
                         }}
                     >
                         {previousTitle}
@@ -104,5 +113,5 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     formatStrategyName(change.payload.name)}
             </Typography>
         </TooltipLink>
-    </>
+    </StyledContainer>
 );

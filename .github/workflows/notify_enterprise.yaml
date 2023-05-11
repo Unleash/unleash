@@ -17,15 +17,17 @@ jobs:
           github-token: ${{ secrets.UNLEASH_CI_BUILDER_GITHUB_TOKEN }}
           result-encoding: string
           script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: 'ivarconr',
-              repo: 'unleash-enterprise',
-              workflow_id: 'continuous_version_sync.yaml',
-              ref: 'master'
-              inputs: {
-                repository: "${{ github.repository }}",
-                commit: "${{ github.event.head_commit.id }}",
-                actor: "${{ github.event.head_commit.committer.username }}",
-                message: "${{ github.repository }}",
-              }
-            })
+            echo "${{ github.repository }}"
+
+#            await github.rest.actions.createWorkflowDispatch({
+#              owner: 'ivarconr',
+#              repo: 'unleash-enterprise',
+#              workflow_id: 'continuous_version_sync.yaml',
+#              ref: 'master'
+#              inputs: {
+#                repository: "${{ github.repository }}",
+#                commit: "${{ github.event.head_commit.id }}",
+#                actor: "${{ github.event.head_commit.committer.username }}",
+#                message: "${{ github.repository }}",
+#              }
+#            })

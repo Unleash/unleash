@@ -20,7 +20,7 @@ jobs:
               owner: 'ivarconr',
               repo: 'unleash-enterprise',
               workflow_id: 'continuous_version_sync.yaml',
-              ref: 'master'
+              ref: 'master',
               inputs: {
                 repository: "${{ github.repository }}",
                 commit: "99431793938ef515df9456d07ba1ba49824d0c1f",

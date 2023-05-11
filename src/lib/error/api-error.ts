@@ -1,7 +1,7 @@
 import { v4 as uuidV4 } from 'uuid';
 import { FromSchema } from 'json-schema-to-ts';
 
-export const UnleashApiErrorTypes = [
+const UnleashApiErrorTypes = [
     'ContentTypeError',
     'DisabledError',
     'FeatureHasTagError',
@@ -33,8 +33,6 @@ export const UnleashApiErrorTypes = [
 ] as const;
 
 type UnleashApiErrorName = typeof UnleashApiErrorTypes[number];
-export type UnleashApiErrorNameWithoutExtraData =
-    typeof UnleashApiErrorTypes[number];
 
 const statusCode = (errorName: string): number => {
     switch (errorName) {
@@ -134,7 +132,7 @@ class GenericUnleashError extends UnleashError {
         name,
         message,
     }: {
-        name: UnleashApiErrorNameWithoutExtraData;
+        name: UnleashApiErrorName;
         message: string;
     }) {
         super(message, name);
@@ -207,7 +205,7 @@ export const fromLegacyError = (e: Error): UnleashError => {
     }
 
     return new GenericUnleashError({
-        name: name as UnleashApiErrorNameWithoutExtraData,
+        name: name as UnleashApiErrorName,
         message: e.message,
     });
 };

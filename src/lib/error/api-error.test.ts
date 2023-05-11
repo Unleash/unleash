@@ -1,12 +1,7 @@
 import owasp from 'owasp-password-strength-test';
 import { ErrorObject } from 'ajv';
 import AuthenticationRequired from '../types/authentication-required';
-import {
-    ApiErrorSchema,
-    fromLegacyError,
-    UnleashApiErrorNameWithoutExtraData,
-    UnleashApiErrorTypes,
-} from './api-error';
+import { ApiErrorSchema, fromLegacyError } from './api-error';
 import BadDataError, {
     fromOpenApiValidationError,
     fromOpenApiValidationErrors,
@@ -19,23 +14,20 @@ import ProjectWithoutOwnerError from './project-without-owner-error';
 import NotFoundError from './notfound-error';
 
 describe('v5 deprecation: backwards compatibility', () => {
-    it.each(UnleashApiErrorTypes)(
-        'Adds details to error type: "%s"',
-        (name: UnleashApiErrorNameWithoutExtraData) => {
-            const message = `Error type: ${name}`;
-            const error = new NotFoundError(message).toJSON();
+    it(`Adds details to error types that don't specify it`, () => {
+        const message = `Error!`;
+        const error = new NotFoundError(message).toJSON();
 
-            expect(error).toMatchObject({
-                message,
-                details: [
-                    {
-                        message,
-                        description: message,
-                    },
-                ],
-            });
-        },
-    );
+        expect(error).toMatchObject({
+            message,
+            details: [
+                {
+                    message,
+                    description: message,
+                },
+            ],
+        });
+    });
 });
 
 describe('Standard/legacy error conversion', () => {

@@ -1,12 +1,7 @@
 name: Notify enterprise of new OSS version
 
-#on:
-#  push:
-#    branches:
-#      - main
-
 on:
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   notify:

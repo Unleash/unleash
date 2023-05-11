@@ -9,7 +9,7 @@ export const patSchema = {
         id: {
             type: 'integer',
             description:
-                'The unique identification number for this Personal Access Token. This property is set backend when token is created.',
+                'The unique identification number for this Personal Access Token. (This property is set by Unleash when the token is created and cannot be set manually: if you provide a value when creating a PAT, Unleash will ignore it.)',
             example: 1,
             minimum: 1,
         },

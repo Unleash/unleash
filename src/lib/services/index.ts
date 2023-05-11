@@ -56,6 +56,7 @@ import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
 } from '../features/change-request-access-service/createChangeRequestAccessReadModel';
+import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = (services: IUnleashServices): void => {
@@ -66,7 +67,7 @@ export const scheduleServices = (services: IUnleashServices): void => {
         clientInstanceService,
         projectService,
         projectHealthService,
-        eventService,
+        configurationRevisionService,
     } = services;
 
     schedulerService.schedule(
@@ -102,7 +103,9 @@ export const scheduleServices = (services: IUnleashServices): void => {
     );
 
     schedulerService.schedule(
-        eventService.updateMaxRevisionId.bind(eventService),
+        configurationRevisionService.updateMaxRevisionId.bind(
+            configurationRevisionService,
+        ),
         secondsToMilliseconds(1),
     );
 };
@@ -188,11 +191,18 @@ export const createServices = (
         featureToggleServiceV2,
         segmentService,
     });
+
+    const configurationRevisionService = new ConfigurationRevisionService(
+        stores,
+        config,
+    );
+
     const proxyService = new ProxyService(config, stores, {
         featureToggleServiceV2,
         clientMetricsServiceV2,
         segmentService,
         settingService,
+        configurationRevisionService,
     });
 
     const edgeService = new EdgeService(stores, config);
@@ -264,6 +274,7 @@ export const createServices = (
         exportImportService,
         transactionalExportImportService,
         schedulerService,
+        configurationRevisionService,
     };
 };
 

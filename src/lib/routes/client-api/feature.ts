@@ -26,8 +26,8 @@ import {
     clientFeaturesSchema,
     ClientFeaturesSchema,
 } from '../../openapi/spec/client-features-schema';
-import { ISegmentService } from 'lib/segments/segment-service-interface';
-import { EventService } from 'lib/services';
+import { ISegmentService } from '../../segments/segment-service-interface';
+import ConfigurationRevisionService from '../../features/feature-toggle/configuration-revision-service';
 
 const version = 2;
 
@@ -53,7 +53,7 @@ export default class FeatureController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private eventService: EventService;
+    private configurationRevisionService: ConfigurationRevisionService;
 
     private featuresAndSegments: (
         query: IFeatureToggleQuery,
@@ -66,14 +66,14 @@ export default class FeatureController extends Controller {
             segmentService,
             clientSpecService,
             openApiService,
-            eventService,
+            configurationRevisionService,
         }: Pick<
             IUnleashServices,
             | 'featureToggleServiceV2'
             | 'segmentService'
             | 'clientSpecService'
             | 'openApiService'
-            | 'eventService'
+            | 'configurationRevisionService'
         >,
         config: IUnleashConfig,
     ) {
@@ -83,7 +83,7 @@ export default class FeatureController extends Controller {
         this.segmentService = segmentService;
         this.clientSpecService = clientSpecService;
         this.openApiService = openApiService;
-        this.eventService = eventService;
+        this.configurationRevisionService = configurationRevisionService;
         this.logger = config.getLogger('client-api/feature.js');
 
         this.route({
@@ -265,7 +265,8 @@ export default class FeatureController extends Controller {
 
     async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {
         // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
-        const revisionId = await this.eventService.getMaxRevisionId();
+        const revisionId =
+            await this.configurationRevisionService.getMaxRevisionId();
 
         // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
         const queryHash = hashSum(query);

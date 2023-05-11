@@ -1,7 +1,10 @@
-import { Logger } from 'lib/logger';
-import { IEventStore } from 'lib/types';
+import { EventEmitter } from 'stream';
+import { Logger } from '../../logger';
+import { IEventStore, IUnleashConfig, IUnleashStores } from '../../types';
 
-export default class ToggleConfigChangeEmitter {
+export const UPDATE_REVISION = 'UPDATE_REVISION';
+
+export default class ConfigurationRevisionService extends EventEmitter {
     private logger: Logger;
 
     private eventStore: IEventStore;
@@ -12,28 +15,11 @@ export default class ToggleConfigChangeEmitter {
         { eventStore }: Pick<IUnleashStores, 'eventStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
+        super();
         this.logger = getLogger(
             'features/config-client/toggle-config-change-emitter',
         );
         this.eventStore = eventStore;
-    }
-
-    async getEvents(): Promise<IEventList> {
-        let totalEvents = await this.eventStore.count();
-        let events = await this.eventStore.getEvents();
-        return {
-            events,
-            totalEvents,
-        };
-    }
-
-    async searchEvents(search: SearchEventsSchema): Promise<IEventList> {
-        let totalEvents = await this.eventStore.filteredCount(search);
-        let events = await this.eventStore.searchEvents(search);
-        return {
-            events,
-            totalEvents,
-        };
     }
 
     async getMaxRevisionId(): Promise<number> {
@@ -45,9 +31,18 @@ export default class ToggleConfigChangeEmitter {
     }
 
     async updateMaxRevisionId(): Promise<number> {
-        this.revisionId = await this.eventStore.getMaxRevisionId(
+        const revisionId = await this.eventStore.getMaxRevisionId(
             this.revisionId,
         );
+        if (this.revisionId !== revisionId) {
+            this.logger.debug(
+                'Updating feature configuration with new revision Id',
+                revisionId,
+            );
+            this.emit(UPDATE_REVISION, revisionId);
+            this.revisionId = revisionId;
+        }
+
         return this.revisionId;
     }
 }

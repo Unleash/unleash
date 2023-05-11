@@ -3050,24 +3050,34 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "object",
       },
       "patSchema": {
+        "description": "An overview of a [Personal Access Token](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens).",
         "properties": {
           "createdAt": {
+            "description": "When the token was created. (This property is set by Unleash when the token is created and cannot be set manually: if you provide a value when creating a PAT, Unleash will ignore it.)",
+            "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
-            "nullable": true,
             "type": "string",
           },
           "expiresAt": {
+            "description": "The token's expiration date.",
+            "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
-            "nullable": true,
             "type": "string",
           },
           "id": {
-            "type": "number",
+            "description": "The unique identification number for this Personal Access Token. (This property is set by Unleash when the token is created and cannot be set manually: if you provide a value when creating a PAT, Unleash will ignore it.)",
+            "example": 1,
+            "minimum": 1,
+            "type": "integer",
           },
           "secret": {
+            "description": "The token used for authentication. (This property is set by Unleash when the token is created and cannot be set manually: if you provide a value when creating a PAT, Unleash will ignore it.)",
+            "example": "user:xyzrandomstring",
             "type": "string",
           },
           "seenAt": {
+            "description": "When the token was last seen/used to authenticate with. \`null\` if it has not been used yet. (This property is set by Unleash when the token is created and cannot be set manually: if you provide a value when creating a PAT, Unleash will ignore it.)",
+            "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
@@ -3108,8 +3118,10 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "array",
       },
       "patsSchema": {
+        "description": "Contains a collection of [Personal Access Tokens](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens).",
         "properties": {
           "pats": {
+            "description": "A collection of Personal Access Tokens",
             "items": {
               "$ref": "#/components/schemas/patSchema",
             },
@@ -11942,6 +11954,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/user/tokens": {
       "get": {
+        "description": "Returns all of the [Personal Access Tokens](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens) belonging to the current user.",
         "operationId": "getPats",
         "responses": {
           "200": {
@@ -11954,12 +11967,95 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "patsSchema",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Get all Personal Access Tokens for the current user.",
         "tags": [
           "Personal access tokens",
         ],
       },
       "post": {
+        "description": "Creates a new [Personal Access Token](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens) for the current user.",
         "operationId": "createPat",
         "requestBody": {
           "content": {
@@ -11973,7 +12069,7 @@ If the provided project does not exist, the list of events will be empty.",
           "required": true,
         },
         "responses": {
-          "200": {
+          "201": {
             "content": {
               "application/json": {
                 "schema": {
@@ -11981,9 +12077,100 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
-            "description": "patSchema",
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
           },
         },
+        "summary": "Create a new Personal Access Token.",
         "tags": [
           "Personal access tokens",
         ],
@@ -11991,6 +12178,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/user/tokens/{id}": {
       "delete": {
+        "description": "This endpoint allows for deleting a [Personal Access Token](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens) belonging to the current user.",
         "operationId": "deletePat",
         "parameters": [
           {
@@ -12006,7 +12194,89 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Delete a Personal Access Token.",
         "tags": [
           "Personal access tokens",
         ],

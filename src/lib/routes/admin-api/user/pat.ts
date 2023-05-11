@@ -7,7 +7,11 @@ import {
     IUnleashServices,
 } from '../../../types';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../../openapi/util/create-response-schema';
+import {
+    createResponseSchema,
+    resourceCreatedResponseSchema,
+} from '../../../openapi/util/create-response-schema';
+import { getStandardResponses } from '../../../openapi/util/standard-responses';
 import { OpenApiService } from '../../../services/openapi-service';
 import { emptyResponse } from '../../../openapi/util/standard-responses';
 
@@ -15,8 +19,8 @@ import PatService from '../../../services/pat-service';
 import { NONE } from '../../../types/permissions';
 import { IAuthRequest } from '../../unleash-types';
 import { serializeDates } from '../../../types/serialize-dates';
-import { PatSchema, patSchema } from '../../../openapi/spec/pat-schema';
-import { patsSchema } from '../../../openapi/spec/pats-schema';
+import { patSchema } from '../../../openapi/spec/pat-schema';
+import { PatsSchema, patsSchema } from '../../../openapi/spec/pats-schema';
 
 export default class PatController extends Controller {
     private patService: PatService;
@@ -48,7 +52,14 @@ export default class PatController extends Controller {
                 openApiService.validPath({
                     tags: ['Personal access tokens'],
                     operationId: 'getPats',
-                    responses: { 200: createResponseSchema('patsSchema') },
+                    summary:
+                        'Get all Personal Access Tokens for the current user.',
+                    description:
+                        'Returns all of the [Personal Access Tokens](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens) belonging to the current user.',
+                    responses: {
+                        200: createResponseSchema('patsSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -61,8 +72,14 @@ export default class PatController extends Controller {
                 openApiService.validPath({
                     tags: ['Personal access tokens'],
                     operationId: 'createPat',
+                    summary: 'Create a new Personal Access Token.',
+                    description:
+                        'Creates a new [Personal Access Token](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens) for the current user.',
                     requestBody: createRequestSchema('patSchema'),
-                    responses: { 200: createResponseSchema('patSchema') },
+                    responses: {
+                        201: resourceCreatedResponseSchema('patSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -77,7 +94,13 @@ export default class PatController extends Controller {
                 openApiService.validPath({
                     tags: ['Personal access tokens'],
                     operationId: 'deletePat',
-                    responses: { 200: emptyResponse },
+                    summary: 'Delete a Personal Access Token.',
+                    description:
+                        'This endpoint allows for deleting a [Personal Access Token](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens) belonging to the current user.',
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -103,7 +126,7 @@ export default class PatController extends Controller {
         );
     }
 
-    async getPats(req: IAuthRequest, res: Response<PatSchema>): Promise<void> {
+    async getPats(req: IAuthRequest, res: Response<PatsSchema>): Promise<void> {
         if (this.flagResolver.isEnabled('personalAccessTokensKillSwitch')) {
             res.status(404).send({ message: 'PAT is disabled' });
             return;

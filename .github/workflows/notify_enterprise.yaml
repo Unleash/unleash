@@ -23,8 +23,8 @@ jobs:
               ref: 'master'
               inputs: {
                 repository: "${{ github.repository }}",
-                commit: "${{ github.event.head_commit.id }}",
-                actor: "${{ github.event.head_commit.committer.username }}",
+                commit: "99431793938ef515df9456d07ba1ba49824d0c1f",
+                actor: "testing",
                 message: "${{ github.repository }}",
               }
             })

@@ -255,7 +255,7 @@ export const DemoSteps = ({
             styles={{
                 options: {
                     arrowColor: theme.palette.background.paper,
-                    zIndex: theme.zIndex.snackbar,
+                    zIndex: theme.zIndex.snackbar - 1,
                 },
                 spotlight: {
                     borderRadius: theme.shape.borderRadiusMedium,

@@ -65,6 +65,9 @@ const theme = {
         tableRowHeightCompact: 56,
         tableRowHeightDense: 48,
     },
+    zIndex: {
+        sticky: 2000,
+    },
 
     palette: {
         common: {

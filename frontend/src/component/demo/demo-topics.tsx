@@ -1,9 +1,10 @@
-import { Typography, TypographyProps } from '@mui/material';
+import { Typography, TypographyProps, styled } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Badge } from 'component/common/Badge/Badge';
 import { Step } from 'react-joyride';
 import { gradualRollout, variants } from './demo-setup';
 import { basePath } from 'utils/formatPath';
+import userIdImage from 'assets/img/userId-image.png';
 
 export interface ITutorialTopicStep extends Step {
     href?: string;
@@ -26,6 +27,10 @@ export interface ITutorialTopic {
 const Description = (props: TypographyProps) => (
     <Typography variant="body2" color="text.secondary" {...props} />
 );
+
+const StyledImg = styled('img')(({ theme }) => ({
+    borderRadius: theme.shape.borderRadius,
+}));
 
 const PROJECT = 'demo-app';
 const ENVIRONMENT = 'dev';
@@ -208,15 +213,23 @@ export const TOPICS: ITutorialTopic[] = [
                         <Description>
                             Enter your <Badge as="span">userId</Badge>
                         </Description>
-                        <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
+                        <Badge
+                            sx={{ mt: 2, mb: 1, width: '100%' }}
+                            icon={<InfoOutlinedIcon />}
+                        >
                             You can find your userId on the demo page.
                         </Badge>
+                        <StyledImg
+                            src={userIdImage}
+                            alt="You can find your userId on the demo page."
+                        />
                         <Description sx={{ mt: 1 }}>
                             When you're done, use the "Next" button in the
                             dialog.
                         </Description>
                     </>
                 ),
+                placement: 'right',
                 nextButton: true,
                 focus: 'input',
             },
@@ -547,15 +560,23 @@ export const TOPICS: ITutorialTopic[] = [
                         <Description>
                             Enter your <Badge as="span">userId</Badge>
                         </Description>
-                        <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
+                        <Badge
+                            sx={{ mt: 2, mb: 1, width: '100%' }}
+                            icon={<InfoOutlinedIcon />}
+                        >
                             You can find your userId on the demo page.
                         </Badge>
+                        <StyledImg
+                            src={userIdImage}
+                            alt="You can find your userId on the demo page."
+                        />
                         <Description sx={{ mt: 1 }}>
                             When you're done, use the "Next" button in the
                             dialog.
                         </Description>
                     </>
                 ),
+                placement: 'right',
                 nextButton: true,
                 backCloseModal: true,
                 focus: 'input',

@@ -4,7 +4,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 const StyledBanner = styled('div')(({ theme }) => ({
     position: 'sticky',
     top: 0,
-    zIndex: theme.zIndex.appBar,
+    zIndex: theme.zIndex.sticky,
     display: 'flex',
     gap: theme.spacing(1),
     justifyContent: 'center',

@@ -1,5 +1,5 @@
 import { ErrorObject } from 'ajv';
-import { getPropFromString } from '../util/get-prop-from-string';
+import getProp from 'lodash.get';
 import { ApiErrorSchema, UnleashError } from './api-error';
 
 type ValidationErrorDescription = {
@@ -63,7 +63,7 @@ export const fromOpenApiValidationError =
                 message: description,
             };
         } else {
-            const input = getPropFromString(propertyName, requestBody);
+            const input = getProp(requestBody, propertyName);
 
             const youSent = JSON.stringify(input);
             const description = `The .${propertyName} property ${validationError.message}. You sent ${youSent}.`;

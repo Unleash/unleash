@@ -102,13 +102,13 @@ You'll need:
    docker start postgres
    ```
 
-4. **Start the server.** Run the below command and the server will start up and try to connect to the database. On a successful connection it will also configure the database for Unleash.
+4. **Start Unleash.** Run the below command and Unleash will start up and try to connect to the database. On a successful connection it will also configure the database.
 
    ```bash
-   yarn start:dev
+   yarn dev
    ```
 
-5. **Log into the admin UI**. Use a browser and navigate to `localhost:4242`. Log in using:
+5. **Log into the admin UI**. Use a browser and navigate to `localhost:3000`. Log in using:
    - username: `admin`
    - password: `unleash4all`
 

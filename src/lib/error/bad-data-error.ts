@@ -34,44 +34,77 @@ class BadDataError extends UnleashError {
 
 export default BadDataError;
 
+const constructPath = (pathToParent: string, propertyName: string) =>
+    [pathToParent, propertyName].filter(Boolean).join('.');
+
+const missingRequiredPropertyMessage = (
+    pathToParentObject: string,
+    missingPropertyName: string,
+) => {
+    const path = constructPath(pathToParentObject, missingPropertyName);
+    const description = `The ${path} property is required. It was not present on the data you sent.`;
+    return {
+        path,
+        description,
+        message: description,
+    };
+};
+
+const additionalPropertiesMessage = (
+    pathToParentObject: string,
+    additionalPropertyName: string,
+) => {
+    const path = constructPath(pathToParentObject, additionalPropertyName);
+    const description = `The ${
+        pathToParentObject ? `\`${pathToParentObject}\`` : 'root'
+    } object of the request body does not allow additional properties. Your request included the \`${path}\` property.`;
+
+    return {
+        path,
+        description,
+        message: description,
+    };
+};
+
+const genericErrorMessage = (
+    requestBody: object,
+    propertyName: string,
+    errorMessage: string = 'is invalid',
+) => {
+    const input = getProp(requestBody, propertyName);
+
+    const youSent = JSON.stringify(input);
+    const description = `The .${propertyName} property ${errorMessage}. You sent ${youSent}.`;
+    return {
+        description,
+        message: description,
+        path: propertyName,
+    };
+};
+
 export const fromOpenApiValidationError =
     (requestBody: object) =>
     (validationError: ErrorObject): ValidationErrorDescription => {
         // @ts-expect-error Unsure why, but the `dataPath` isn't listed on the type definition for error objects. However, it's always there. Suspect this is a bug in the library.
-        const propertyName = validationError.dataPath.substring(
-            '.body.'.length,
-        );
-        if (validationError.keyword === 'required') {
-            const path =
-                propertyName + '.' + validationError.params.missingProperty;
-            const description = `The ${path} property is required. It was not present on the data you sent.`;
-            return {
-                path,
-                description,
-                message: description,
-            };
-        } else if (validationError.keyword === 'additionalProperties') {
-            const path =
-                (propertyName ? propertyName + '.' : '') +
-                validationError.params.additionalProperty;
-            const description = `The ${
-                propertyName ? `\`${propertyName}\`` : 'root'
-            } object of the request body does not allow additional properties. Your request included the \`${path}\` property.`;
-            return {
-                path,
-                description,
-                message: description,
-            };
-        } else {
-            const input = getProp(requestBody, propertyName);
+        const dataPath = validationError.dataPath.substring('.body.'.length);
 
-            const youSent = JSON.stringify(input);
-            const description = `The .${propertyName} property ${validationError.message}. You sent ${youSent}.`;
-            return {
-                description,
-                message: description,
-                path: propertyName,
-            };
+        switch (validationError.keyword) {
+            case 'required':
+                return missingRequiredPropertyMessage(
+                    dataPath,
+                    validationError.params.missingProperty,
+                );
+            case 'additionalProperties':
+                return additionalPropertiesMessage(
+                    dataPath,
+                    validationError.params.additionalProperty,
+                );
+            default:
+                return genericErrorMessage(
+                    requestBody,
+                    dataPath,
+                    validationError.message,
+                );
         }
     };
 

@@ -1,23 +1,5 @@
-class InvalidOperationError extends Error {
-    constructor(message: string) {
-        super();
-        Error.captureStackTrace(this, this.constructor);
+import { UnleashError } from './unleash-error';
 
-        this.name = this.constructor.name;
-        this.message = message;
-    }
-
-    toJSON(): object {
-        return {
-            isJoi: true,
-            name: this.constructor.name,
-            details: [
-                {
-                    message: this.message,
-                },
-            ],
-        };
-    }
-}
+class InvalidOperationError extends UnleashError {}
 export default InvalidOperationError;
 module.exports = InvalidOperationError;

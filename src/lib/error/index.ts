@@ -1,5 +1,4 @@
 import BadDataError from './bad-data-error';
-import BaseError from './base-error';
 import { UNIQUE_CONSTRAINT_VIOLATION, FOREIGN_KEY_VIOLATION } from './db-error';
 import DisabledError from './disabled-error';
 import FeatureHasTagError from './feature-has-tag-error';
@@ -18,7 +17,6 @@ import PasswordMismatchError from './password-mismatch';
 
 export {
     BadDataError,
-    BaseError,
     UNIQUE_CONSTRAINT_VIOLATION,
     FOREIGN_KEY_VIOLATION,
     DisabledError,

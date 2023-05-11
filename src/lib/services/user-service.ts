@@ -27,7 +27,7 @@ import DisabledError from '../error/disabled-error';
 import BadDataError from '../error/bad-data-error';
 import { isDefined } from '../util/isDefined';
 import { TokenUserSchema } from '../openapi/spec/token-user-schema';
-import { UnleashError } from '../error/api-error';
+import PasswordMismatch from '../error/password-mismatch';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -304,10 +304,9 @@ class UserService {
             return user;
         }
 
-        throw new UnleashError({
-            name: 'PasswordMismatchError',
-            message: `The combination of password and username you provided is invalid. If you have forgotten your password, visit ${this.baseUriPath}/forgotten-password or get in touch with your instance administrator.`,
-        });
+        throw new PasswordMismatch(
+            `The combination of password and username you provided is invalid. If you have forgotten your password, visit ${this.baseUriPath}/forgotten-password or get in touch with your instance administrator.`,
+        );
     }
 
     /**

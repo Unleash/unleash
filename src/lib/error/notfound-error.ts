@@ -1,10 +1,8 @@
-class NotFoundError extends Error {
-    constructor(message?: string) {
-        super();
-        Error.captureStackTrace(this, this.constructor);
+import { UnleashError } from './unleash-error';
 
-        this.name = this.constructor.name;
-        this.message = message;
+class NotFoundError extends UnleashError {
+    constructor(message: string = 'The requested resource could not be found') {
+        super(message);
     }
 }
 export default NotFoundError;

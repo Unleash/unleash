@@ -1,4 +1,4 @@
-import { ApiErrorSchema, UnleashError } from './api-error';
+import { ApiErrorSchema, UnleashError } from './unleash-error';
 
 export default class IncompatibleProjectError extends UnleashError {
     constructor(targetProject: string) {

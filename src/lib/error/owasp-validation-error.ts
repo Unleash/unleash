@@ -1,5 +1,5 @@
 import { TestResult } from 'owasp-password-strength-test';
-import { ApiErrorSchema, UnleashError } from './api-error';
+import { ApiErrorSchema, UnleashError } from './unleash-error';
 
 type ValidationError = {
     validationErrors: string[];

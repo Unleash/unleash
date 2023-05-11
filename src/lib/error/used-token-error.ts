@@ -1,4 +1,4 @@
-import { UnleashError } from './api-error';
+import { UnleashError } from './unleash-error';
 
 class UsedTokenError extends UnleashError {
     constructor(usedAt: Date) {

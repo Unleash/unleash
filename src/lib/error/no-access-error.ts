@@ -1,5 +1,4 @@
-import { ApiErrorSchema } from './api-error';
-import { UnleashError } from './api-error';
+import { ApiErrorSchema, UnleashError } from './unleash-error';
 
 class NoAccessError extends UnleashError {
     permission: string;

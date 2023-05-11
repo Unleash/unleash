@@ -1,3 +1,3 @@
-import { UnleashError } from './api-error';
+import { UnleashError } from './unleash-error';
 
 export class OperationDeniedError extends UnleashError {}

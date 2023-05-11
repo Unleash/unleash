@@ -1,7 +1,7 @@
 import owasp from 'owasp-password-strength-test';
 import { ErrorObject } from 'ajv';
 import AuthenticationRequired from '../types/authentication-required';
-import { ApiErrorSchema, fromLegacyError } from './api-error';
+import { ApiErrorSchema, fromLegacyError } from './unleash-error';
 import BadDataError, {
     fromOpenApiValidationError,
     fromOpenApiValidationErrors,

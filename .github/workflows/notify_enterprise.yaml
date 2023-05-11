@@ -4,6 +4,7 @@ name: Notify enterprise of new OSS version
 #  push:
 #    branches:
 #      - main
+
 on:
   pull_request:
 
@@ -13,7 +14,7 @@ jobs:
     steps:
       - uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.MY_TOKEN }}
+          github-token: ${{ secrets.UNLEASH_CI_BUILDER_GITHUB_TOKEN }}
           result-encoding: string
           script: |
             await github.rest.actions.createWorkflowDispatch({

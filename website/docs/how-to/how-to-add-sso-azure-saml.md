@@ -23,7 +23,7 @@ This guide expects you to already have:
 
 ### Step 1: Create an Enterprise Application within Azure AD {#step-1}
 
-**a) Sign in to your Azure AD and **create a new Enterprise Application**.
+**a) Sign in to your Azure AD and create a new Enterprise Application**.
 
 ![In the Azure directory overview, use the add button and select the enterprise application option.](/img/sso-azure-saml-add-enterprise-app.png)
 

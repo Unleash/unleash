@@ -15,7 +15,6 @@ jobs:
       - uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.UNLEASH_CI_BUILDER_GITHUB_TOKEN }}
-          result-encoding: string
           script: |
             await github.rest.actions.createWorkflowDispatch({
               owner: 'ivarconr',

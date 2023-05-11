@@ -105,7 +105,7 @@ export class ProjectApiTokenController extends Controller {
                     requestBody: createRequestSchema('createApiTokenSchema'),
                     summary: 'Create a project API token.',
                     description:
-                        'Endpoint that allows creation of [project API tokens](https://docs.getunleash.io/how-to/how-to-create-project-api-tokens) for the specified project.',
+                        'Endpoint that allows creation of [project API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys#api-token-visibility) for the specified project.',
                     responses: {
                         201: resourceCreatedResponseSchema('apiTokenSchema'),
                         ...getStandardResponses(400, 401, 403),

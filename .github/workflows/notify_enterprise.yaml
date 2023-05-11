@@ -26,6 +26,6 @@ jobs:
                 repository: "${{ github.repository }}",
                 commit: "${{ github.event.head_commit.id }}",
                 actor: "${{ github.event.head_commit.committer.username }}",
-                message: ${{ toJSON(github.event.head_commit.message) }},
+                message: "${{ github.repository }}",
               }
             })

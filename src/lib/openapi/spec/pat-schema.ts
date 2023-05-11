@@ -16,7 +16,7 @@ export const patSchema = {
         secret: {
             type: 'string',
             description:
-                'The token used for authentication. This property is set backend when token is created.',
+                'The token used for authentication. (This property is set by Unleash when the token is created and cannot be set manually: if you provide a value when creating a PAT, Unleash will ignore it.)',
             example: 'user:xyzrandomstring',
         },
         expiresAt: {
@@ -30,7 +30,7 @@ export const patSchema = {
             format: 'date-time',
             example: '2023-04-19T08:15:14.000Z',
             description:
-                'When the token was created. This property is set backend when token is created.',
+                'When the token was created. (This property is set by Unleash when the token is created and cannot be set manually: if you provide a value when creating a PAT, Unleash will ignore it.)',
         },
         seenAt: {
             type: 'string',

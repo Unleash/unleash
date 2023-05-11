@@ -31,6 +31,7 @@ import Controller from '../../controller';
 import { Logger } from '../../../logger';
 import { Response } from 'express';
 import { timingSafeEqual } from 'crypto';
+import { createApiToken } from '../../../schema/api-token-schema';
 
 interface ProjectTokenParam {
     token: string;
@@ -143,7 +144,7 @@ export class ProjectApiTokenController extends Controller {
         req: IAuthRequest,
         res: Response<ApiTokenSchema>,
     ): Promise<any> {
-        const createToken = req.body;
+        const createToken = await createApiToken.validateAsync(req.body);
         const { projectId } = req.params;
         if (!createToken.project) {
             createToken.project = projectId;

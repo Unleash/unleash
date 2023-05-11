@@ -38,7 +38,7 @@ export const patSchema = {
             nullable: true,
             example: '2023-04-19T08:15:14.000Z',
             description:
-                'When the token was last seen/used to authenticate with. Null if it has not been used yet, this property is ignored on write.',
+                'When the token was last seen/used to authenticate with. `null` if it has not been used yet. (This property is set by Unleash when the token is created and cannot be set manually: if you provide a value when creating a PAT, Unleash will ignore it.)',
         },
     },
     components: {

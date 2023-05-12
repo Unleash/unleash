@@ -81,7 +81,7 @@ const StyledHeader = styled('div', {
         fontWeight: theme.typography.fontWeightMedium,
         paddingLeft: draggable ? theme.spacing(1) : theme.spacing(2),
         color: disabled
-            ? theme.palette.action.disabled
+            ? theme.palette.text.secondary
             : theme.palette.text.primary,
     })
 );

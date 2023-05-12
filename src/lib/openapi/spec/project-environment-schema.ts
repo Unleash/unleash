@@ -16,7 +16,6 @@ export const projectEnvironmentSchema = {
         },
         changeRequestsEnabled: {
             type: 'boolean',
-            nullable: true,
             description:
                 'Whether change requests should be enabled or for this environment on the project or not',
             example: true,

@@ -15,11 +15,22 @@ export const healthOverviewSchema = {
     $id: '#/components/schemas/healthOverviewSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['version', 'name'],
-    description: `An overview of a project and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)`,
+    required: [
+        'version',
+        'name',
+        'defaultStickiness',
+        'mode',
+        'members',
+        'health',
+        'environments',
+        'features',
+        'favorite',
+        'stats',
+    ],
+    description: `An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)`,
     properties: {
         version: {
-            type: 'number',
+            type: 'integer',
             description: 'The project overview version.',
             example: 1,
         },
@@ -31,7 +42,7 @@ export const healthOverviewSchema = {
         description: {
             type: 'string',
             nullable: true,
-            description: 'The project description',
+            description: `The project's description`,
             example: 'The project for all things enterprisegrowth',
         },
         defaultStickiness: {
@@ -48,12 +59,13 @@ export const healthOverviewSchema = {
                 "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
         },
         members: {
-            type: 'number',
+            type: 'integer',
             description: 'The number of users/members in the project.',
             example: 5,
+            minimum: 0,
         },
         health: {
-            type: 'number',
+            type: 'integer',
             description:
                 'The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project.',
             example: 95,

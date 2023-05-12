@@ -25,7 +25,7 @@ export const healthOverviewSchema = {
         },
         name: {
             type: 'string',
-            description: 'Project name',
+            description: `The project's name`,
             example: 'enterprisegrowth',
         },
         description: {

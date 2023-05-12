@@ -45,6 +45,7 @@ export const DemoBanner = ({ onPlans }: IDemoBannerProps) => {
                 sx={{ ml: 1 }}
                 href="https://slack.unleash.run/"
                 target="_blank"
+                rel="noreferrer"
                 onClick={() => {
                     trackEvent('demo', {
                         props: {

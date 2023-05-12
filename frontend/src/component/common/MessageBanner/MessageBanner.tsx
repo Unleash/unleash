@@ -202,7 +202,7 @@ const BannerButton = ({
         );
 
     return (
-        <Link href={link} target="_blank" onClick={trackEvent}>
+        <Link href={link} target="_blank" rel="noreferrer" onClick={trackEvent}>
             {children}
         </Link>
     );

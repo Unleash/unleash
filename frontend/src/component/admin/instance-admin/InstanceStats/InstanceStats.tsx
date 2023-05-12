@@ -78,6 +78,7 @@ export const InstanceStats: VFC = () => {
                         color="primary"
                         variant="contained"
                         target="_blank"
+                        rel="noreferrer"
                         href={formatApiPath(
                             '/api/admin/instance-admin/statistics/csv'
                         )}

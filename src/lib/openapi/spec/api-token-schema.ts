@@ -41,8 +41,8 @@ export const apiTokenSchema = {
         },
         environment: {
             type: 'string',
-            description: 'The environment the token has access to.',
-            nullable: true,
+            description:
+                'The environment the token has access to. * if it has access to all environments.',
             example: 'development',
         },
         project: {
@@ -63,13 +63,12 @@ export const apiTokenSchema = {
             type: 'string',
             format: 'date-time',
             nullable: true,
-            description: `The token's expiration date.`,
+            description: `The token's expiration date. NULL if the token doesn't have an expiration set.`,
             example: '2023-04-19T08:15:14.000Z',
         },
         createdAt: {
             type: 'string',
             format: 'date-time',
-            nullable: true,
             example: '2023-04-19T08:15:14.000Z',
             description: 'When the token was created.',
         },
@@ -79,14 +78,13 @@ export const apiTokenSchema = {
             nullable: true,
             example: '2023-04-19T08:15:14.000Z',
             description:
-                'When the token was last seen/used to authenticate with.',
+                'When the token was last seen/used to authenticate with. NULL if the token has not yet been used for authentication.',
         },
         alias: {
             type: 'string',
             nullable: true,
-            description:
-                'Not actively used. Present as a legacy format for identifying older tokens',
-            example: 'some-alias',
+            description: `Alias is no longer in active use and will often be NULL. It's kept around as a way of allowing old proxy tokens created with the old metadata format to keep working.`,
+            example: 'randomid-or-some-alias',
         },
     },
     components: {},

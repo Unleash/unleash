@@ -112,6 +112,7 @@ Here's some of the fantastic work our community has done to make Unleash work in
 - C++ ([aruizs/unleash-client-cpp](https://github.com/aruizs/unleash-client-cpp))
 - Dart ([uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash))
 - Elixir ([afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex))
+- Haskell ([finn-no/unleash-client-haskell](https://github.com/finn-no/unleash-client-haskell))
 - Kotlin ([silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin))
 - Laravel - PHP ([mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash))
 - NestJS - Node.js ([pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash))

@@ -5,7 +5,7 @@ This directory contains the Unleash Admin UI frontend app.
 ## Run with a local instance of the unleash-api
 
 Refer to the [Contributing to Unleash](../CONTRIBUTING.md#how-to-run-the-project) guide for instructions.
-The frontend dev server runs simultaneously with the backend dev server:
+The frontend dev server runs (in port 3000) simultaneously with the backend dev server (in port 4242):
 
 ```
 yarn install

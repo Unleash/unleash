@@ -41,15 +41,14 @@ export interface IFlags {
     messageBanner?: boolean;
     featuresExportImport?: boolean;
     caseInsensitiveInOperators?: boolean;
-    crOnVariants?: boolean;
     proPlanAutoCharge?: boolean;
     notifications?: boolean;
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
-    strategyTitle?: boolean;
     groupRootRoles?: boolean;
-    strategyDisable?: boolean;
     googleAuthEnabled?: boolean;
+    variantMetrics?: boolean;
+    strategyImprovements?: boolean;
 }
 
 export interface IVersionInfo {

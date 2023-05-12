@@ -11,6 +11,7 @@ import {
 import NotFoundError from '../error/notfound-error';
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { snakeCaseKeys } from '../util/snakeCase';
+import { CreateFeatureStrategySchema } from '../openapi';
 
 interface IEnvironmentsTable {
     name: string;
@@ -30,6 +31,7 @@ interface IEnvironmentsWithCountsTable extends IEnvironmentsTable {
 interface IEnvironmentsWithProjectCountsTable extends IEnvironmentsTable {
     project_api_token_count?: string;
     project_enabled_toggle_count?: string;
+    project_default_strategy?: CreateFeatureStrategySchema;
 }
 
 const COLUMNS = [
@@ -77,6 +79,9 @@ function mapRowWithProjectCounts(
         projectEnabledToggleCount: row.project_enabled_toggle_count
             ? parseInt(row.project_enabled_toggle_count, 10)
             : 0,
+        defaultStrategy: row.project_default_strategy
+            ? (row.project_default_strategy as any)
+            : undefined,
     };
 }
 
@@ -194,6 +199,10 @@ export default class EnvironmentStore implements IEnvironmentStore {
                 ),
                 this.db.raw(
                     '(SELECT COUNT(*) FROM feature_environments INNER JOIN features on feature_environments.feature_name = features.name WHERE enabled=true AND feature_environments.environment = environments.name AND project = :projectId) as project_enabled_toggle_count',
+                    { projectId },
+                ),
+                this.db.raw(
+                    '(SELECT default_strategy FROM project_environments pe WHERE pe.environment_name = environments.name AND pe.project_id = :projectId) as project_default_strategy',
                     { projectId },
                 ),
             )

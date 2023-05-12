@@ -1,3 +1,6 @@
+import { CreateFeatureStrategySchema } from '../openapi';
+import { IFeatureStrategy } from './strategy';
+
 export interface IEnvironment {
     name: string;
     type: string;
@@ -14,7 +17,13 @@ export interface IProjectEnvironment extends IEnvironment {
     projectVisible?: boolean;
     projectApiTokenCount?: number;
     projectEnabledToggleCount?: number;
+    defaultStrategy?: Partial<IFeatureStrategy> | CreateFeatureStrategySchema;
 }
+
+export type ProjectEnvironmentType = {
+    environment: string;
+    defaultStrategy?: CreateFeatureStrategySchema;
+};
 
 export interface IEnvironmentPayload {
     name: string;

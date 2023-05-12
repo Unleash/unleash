@@ -24,14 +24,13 @@
 }
 
 .listLink {
-    color: #212121;
     text-decoration: none;
     font-weight: normal;
     display: block;
 }
 
 .listLink:hover {
-    color: #000;
+    text-decoration: underline;
 }
 
 @media (max-width: 920px) {

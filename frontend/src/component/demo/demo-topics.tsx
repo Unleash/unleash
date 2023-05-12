@@ -1,9 +1,10 @@
-import { Typography, TypographyProps } from '@mui/material';
+import { Typography, TypographyProps, styled } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Badge } from 'component/common/Badge/Badge';
 import { Step } from 'react-joyride';
 import { gradualRollout, variants } from './demo-setup';
 import { basePath } from 'utils/formatPath';
+import userIdImage from 'assets/img/userId-image.png';
 
 export interface ITutorialTopicStep extends Step {
     href?: string;
@@ -14,6 +15,7 @@ export interface ITutorialTopicStep extends Step {
     anyClick?: boolean;
     optional?: boolean;
     focus?: boolean | string;
+    delay?: number;
 }
 
 export interface ITutorialTopic {
@@ -25,6 +27,10 @@ export interface ITutorialTopic {
 const Description = (props: TypographyProps) => (
     <Typography variant="body2" color="text.secondary" {...props} />
 );
+
+const StyledImg = styled('img')(({ theme }) => ({
+    borderRadius: theme.shape.borderRadius,
+}));
 
 const PROJECT = 'demo-app';
 const ENVIRONMENT = 'dev';
@@ -68,14 +74,11 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            The simplest way to use a feature toggle is to
-                            enable or disable it for everyone (on/off).
+                            Enable or disable the feature for everyone by
+                            toggling the highlighted switch.
                         </Description>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
-                            Look at the demo page when toggling!
+                        <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
+                            Look at the demo page to see your changes!
                         </Badge>
                     </>
                 ),
@@ -115,8 +118,9 @@ export const TOPICS: ITutorialTopic[] = [
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2"]`,
                 content: (
                     <Description>
-                        First, let's open the feature toggle configuration for{' '}
-                        <Badge as="span">demoApp.step2</Badge>
+                        First, open the feature toggle configuration for{' '}
+                        <Badge as="span">demoApp.step2</Badge> by using this
+                        link.
                     </Description>
                 ),
                 preventDefault: true,
@@ -126,7 +130,7 @@ export const TOPICS: ITutorialTopic[] = [
                 target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button`,
                 content: (
                     <Description>
-                        Add a new strategy to this environment by clicking this
+                        Add a new strategy to this environment by using this
                         button.
                     </Description>
                 ),
@@ -163,7 +167,7 @@ export const TOPICS: ITutorialTopic[] = [
                             to be evaluated for a feature toggle.
                         </Description>
                         <Description sx={{ mt: 1 }}>
-                            Click this button to add a constraint.
+                            Add a constraint by using this button.
                         </Description>
                     </>
                 ),
@@ -172,16 +176,21 @@ export const TOPICS: ITutorialTopic[] = [
             {
                 target: '#context-field-select',
                 content: (
-                    <Description>
-                        <a
-                            href="https://docs.getunleash.io/reference/unleash-context"
-                            target="_blank"
-                        >
-                            Unleash context
-                        </a>{' '}
-                        contains information relating to the current feature
-                        toggle request.
-                    </Description>
+                    <>
+                        <Description>
+                            <a
+                                href="https://docs.getunleash.io/reference/unleash-context"
+                                target="_blank"
+                            >
+                                Unleash context
+                            </a>{' '}
+                            contains information relating to the current feature
+                            toggle request.
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
+                            Select the context field by using this dropdown.
+                        </Description>
+                    </>
                 ),
                 backCloseModal: true,
                 anyClick: true,
@@ -205,32 +214,57 @@ export const TOPICS: ITutorialTopic[] = [
                             Enter your <Badge as="span">userId</Badge>
                         </Description>
                         <Badge
-                            sx={{ marginTop: 2 }}
+                            sx={{ mt: 2, mb: 1, width: '100%' }}
                             icon={<InfoOutlinedIcon />}
                         >
                             You can find your userId on the demo page.
                         </Badge>
+                        <StyledImg
+                            src={userIdImage}
+                            alt="You can find your userId on the demo page."
+                        />
+                        <Description sx={{ mt: 1 }}>
+                            When you're done, use the "Next" button in the
+                            dialog.
+                        </Description>
                     </>
                 ),
+                placement: 'right',
                 nextButton: true,
                 focus: 'input',
             },
             {
                 target: 'button[data-testid="CONSTRAINT_VALUES_ADD_BUTTON"]',
-                content: <Description>Add the constraint value.</Description>,
+                content: (
+                    <Description>
+                        Add the constraint value by using this button.
+                    </Description>
+                ),
             },
             {
                 target: 'button[data-testid="CONSTRAINT_SAVE_BUTTON"]',
-                content: <Description>Save the constraint.</Description>,
+                content: (
+                    <Description>
+                        Save the constraint by using this button.
+                    </Description>
+                ),
             },
             {
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
-                content: <Description>Save your strategy.</Description>,
+                content: (
+                    <Description>
+                        Save and apply your strategy by using this button.
+                    </Description>
+                ),
                 backCloseModal: true,
             },
             {
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
-                content: <Description>Confirm your changes.</Description>,
+                content: (
+                    <Description>
+                        Confirm your changes by using this button.
+                    </Description>
+                ),
                 optional: true,
                 backCloseModal: true,
             },
@@ -240,18 +274,16 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Finally, toggle{' '}
-                            <Badge as="span">demoApp.step2</Badge>
+                            Finally, enable or disable the feature for your user
+                            by toggling the highlighted switch.
                         </Description>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
+                        <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
                         </Badge>
                     </>
                 ),
                 nextButton: true,
+                delay: 500,
             },
         ],
     },
@@ -294,8 +326,9 @@ export const TOPICS: ITutorialTopic[] = [
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step3"]`,
                 content: (
                     <Description>
-                        First, let's open the feature toggle configuration for{' '}
-                        <Badge as="span">demoApp.step3</Badge>
+                        First, open the feature toggle configuration for{' '}
+                        <Badge as="span">demoApp.step3</Badge> by using this
+                        link.
                     </Description>
                 ),
                 preventDefault: true,
@@ -306,7 +339,7 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <Description>
                         Expand the environment card to see all the defined
-                        strategies.
+                        strategies by using the arrow button.
                     </Description>
                 ),
             },
@@ -314,7 +347,8 @@ export const TOPICS: ITutorialTopic[] = [
                 target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"].Mui-expanded a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
                 content: (
                     <Description>
-                        Edit the existing gradual rollout strategy.
+                        Edit the existing gradual rollout strategy by using the
+                        "Edit" button.
                     </Description>
                 ),
                 backCollapseExpanded: true,
@@ -322,18 +356,35 @@ export const TOPICS: ITutorialTopic[] = [
             {
                 target: 'span[data-testid="ROLLOUT_SLIDER_ID"]',
                 content: (
-                    <Description>Change the rollout percentage.</Description>
+                    <>
+                        <Description>
+                            Change the rollout percentage by adjusting the
+                            percentage slider.
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
+                            When you're done, use the "Next" button in the
+                            dialog.
+                        </Description>
+                    </>
                 ),
                 backCloseModal: true,
                 nextButton: true,
             },
             {
                 target: 'button[data-testid="STRATEGY_FORM_SUBMIT_ID"]',
-                content: <Description>Save your strategy.</Description>,
+                content: (
+                    <Description>
+                        Save and apply your strategy by using this button.
+                    </Description>
+                ),
             },
             {
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
-                content: <Description>Confirm your changes.</Description>,
+                content: (
+                    <Description>
+                        Confirm your changes by using this button.
+                    </Description>
+                ),
                 optional: true,
                 backCloseModal: true,
             },
@@ -343,18 +394,16 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Finally, toggle{' '}
-                            <Badge as="span">demoApp.step3</Badge>
+                            Finally, enable or disable the feature with the new
+                            variant by toggling the highlighted switch.
                         </Description>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
+                        <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
                         </Badge>
                     </>
                 ),
                 nextButton: true,
+                delay: 500,
             },
         ],
     },
@@ -392,8 +441,9 @@ export const TOPICS: ITutorialTopic[] = [
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4"]`,
                 content: (
                     <Description>
-                        First, let's open the feature toggle configuration for{' '}
-                        <Badge as="span">demoApp.step4</Badge>
+                        First, open the feature toggle configuration for{' '}
+                        <Badge as="span">demoApp.step4</Badge> by using this
+                        link.
                     </Description>
                 ),
                 preventDefault: true,
@@ -401,16 +451,22 @@ export const TOPICS: ITutorialTopic[] = [
             {
                 href: `/projects/${PROJECT}/features/demoApp.step4`,
                 target: 'button[data-testid="TAB-Variants"]',
-                content: <Description>Select the variants tab.</Description>,
+                content: <Description>Select the "Variants" tab.</Description>,
             },
             {
                 target: 'button[data-testid="EDIT_VARIANTS_BUTTON"]',
-                content: <Description>Edit the existing variants.</Description>,
+                content: (
+                    <Description>
+                        Edit the existing variants by using this button.
+                    </Description>
+                ),
             },
             {
                 target: 'button[data-testid="MODAL_ADD_VARIANT_BUTTON"]',
                 content: (
-                    <Description>Add a new variant to the list.</Description>
+                    <Description>
+                        Add a new variant to the list by using this button.
+                    </Description>
                 ),
                 backCloseModal: true,
             },
@@ -418,19 +474,12 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'div[data-testid="VARIANT"]:last-of-type div[data-testid="VARIANT_NAME_INPUT"]',
                 content: (
                     <>
-                        <Description>Enter a new variant name.</Description>
-                        <Description sx={{ mt: 1 }}>
-                            We recommend choosing a{' '}
-                            <a
-                                href="https://developer.mozilla.org/en-US/docs/Web/CSS/named-color"
-                                target="_blank"
-                            >
-                                color
-                            </a>
-                            .
-                        </Description>
                         <Description>
-                            Example: <Badge as="span">aqua</Badge>
+                            Enter a unique name for your variant.
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
+                            When you're done, use the "Next" button in the
+                            dialog.
                         </Description>
                     </>
                 ),
@@ -441,16 +490,29 @@ export const TOPICS: ITutorialTopic[] = [
             {
                 target: 'div[data-testid="VARIANT"]:last-of-type #variant-payload-value',
                 content: (
-                    <Description>
-                        Enter the{' '}
-                        <a
-                            href="https://developer.mozilla.org/en-US/docs/Web/CSS/named-color"
-                            target="_blank"
-                        >
-                            color
-                        </a>{' '}
-                        you chose on the previous step as the payload.
-                    </Description>
+                    <>
+                        <Description>
+                            Enter a{' '}
+                            <a
+                                href="https://developer.mozilla.org/en-US/docs/Web/CSS/named-color"
+                                target="_blank"
+                            >
+                                color
+                            </a>{' '}
+                            as the payload. It will be passed along and used in
+                            the demo website.
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
+                            It can be any color. For example, you can use one of
+                            these: <Badge as="span">teal</Badge>,{' '}
+                            <Badge as="span">orange</Badge> or{' '}
+                            <Badge as="span">purple</Badge>
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
+                            When you're done, use the "Next" button in the
+                            dialog.
+                        </Description>
+                    </>
                 ),
                 nextButton: true,
                 focus: true,
@@ -458,14 +520,25 @@ export const TOPICS: ITutorialTopic[] = [
             {
                 target: 'div[data-testid="VARIANT"]:last-of-type button[data-testid="VARIANT_ADD_OVERRIDE_BUTTON"]',
                 content: (
-                    <Description>
-                        Let's also add an override for our user.
-                    </Description>
+                    <>
+                        <Description>
+                            By adding an override, we can specify that your user
+                            will always get this variant.
+                        </Description>
+                        <Description sx={{ mt: 1 }}>
+                            Let's add an override for your user by using this
+                            button.
+                        </Description>
+                    </>
                 ),
             },
             {
                 target: 'div[data-testid="VARIANT"]:last-of-type #override-context-name',
-                content: <Description>Choose a context field.</Description>,
+                content: (
+                    <Description>
+                        Select the context field by using this dropdown.
+                    </Description>
+                ),
                 anyClick: true,
                 backCloseModal: true,
             },
@@ -488,20 +561,33 @@ export const TOPICS: ITutorialTopic[] = [
                             Enter your <Badge as="span">userId</Badge>
                         </Description>
                         <Badge
-                            sx={{ marginTop: 2 }}
+                            sx={{ mt: 2, mb: 1, width: '100%' }}
                             icon={<InfoOutlinedIcon />}
                         >
                             You can find your userId on the demo page.
                         </Badge>
+                        <StyledImg
+                            src={userIdImage}
+                            alt="You can find your userId on the demo page."
+                        />
+                        <Description sx={{ mt: 1 }}>
+                            When you're done, use the "Next" button in the
+                            dialog.
+                        </Description>
                     </>
                 ),
+                placement: 'right',
                 nextButton: true,
                 backCloseModal: true,
                 focus: 'input',
             },
             {
                 target: 'button[data-testid="DIALOGUE_CONFIRM_ID"]',
-                content: <Description>Save your variants.</Description>,
+                content: (
+                    <Description>
+                        Save your variants by using this button.
+                    </Description>
+                ),
             },
             {
                 href: `/projects/${PROJECT}?sort=name`,
@@ -509,18 +595,16 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Finally, toggle{' '}
-                            <Badge as="span">demoApp.step4</Badge>
+                            Finally, enable or disable the feature with the new
+                            variant by toggling the highlighted switch.
                         </Description>
-                        <Badge
-                            sx={{ marginTop: 2 }}
-                            icon={<InfoOutlinedIcon />}
-                        >
+                        <Badge sx={{ mt: 2 }} icon={<InfoOutlinedIcon />}>
                             Look at the demo page to see your changes!
                         </Badge>
                     </>
                 ),
                 nextButton: true,
+                delay: 500,
             },
         ],
     },

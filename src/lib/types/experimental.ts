@@ -33,10 +33,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_CASE_INSENSITIVE_IN_OPERATORS,
         false,
     ),
-    crOnVariants: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CR_ON_VARIANTS,
-        false,
-    ),
     strictSchemaValidation: parseEnvVarBoolean(
         process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
         false,
@@ -50,30 +46,22 @@ const flags = {
         false,
     ),
     cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
-    optimal304: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304,
-        false,
-    ),
-    optimal304Differ: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_OPTIMAL_304_DIFFER,
-        false,
-    ),
     groupRootRoles: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ROOT_ROLE_GROUPS,
         false,
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
-    strategyTitle: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_TITLE,
-        false,
-    ),
-    strategyDisable: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_DISABLE,
+    strategyImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_IMPROVEMENTS,
         false,
     ),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
+        false,
+    ),
+    variantMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_VARIANT_METRICS,
         false,
     ),
 };

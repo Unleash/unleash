@@ -1,5 +1,5 @@
 ---
-title: "ADR: Braking DB changes"
+title: "ADR: Breaking DB changes"
 ---
 
 ## Background

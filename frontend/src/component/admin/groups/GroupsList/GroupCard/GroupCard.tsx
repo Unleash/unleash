@@ -7,7 +7,6 @@ import { Badge } from 'component/common/Badge/Badge';
 import { GroupCardActions } from './GroupCardActions/GroupCardActions';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { IProjectRole } from 'interfaces/role';
-import { IProject } from 'interfaces/project';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',

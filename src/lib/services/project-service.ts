@@ -35,6 +35,7 @@ import {
     ProjectUserUpdateRoleEvent,
     RoleName,
     IFlagResolver,
+    ProjectAccessAddedEvent,
 } from '../types';
 import {
     IProjectQuery,
@@ -348,6 +349,7 @@ export default class ProjectService {
         };
     }
 
+    // Deprecated: See addAccess instead.
     async addUser(
         projectId: string,
         roleId: number,
@@ -492,12 +494,24 @@ export default class ProjectService {
         usersAndGroups: IProjectAccessModel,
         createdBy: string,
     ): Promise<void> {
-        return this.accessService.addAccessToProject(
+        await this.accessService.addAccessToProject(
             usersAndGroups.users,
             usersAndGroups.groups,
             projectId,
             roleId,
             createdBy,
+        );
+
+        await this.eventStore.store(
+            new ProjectAccessAddedEvent({
+                project: projectId,
+                createdBy,
+                data: {
+                    roleId,
+                    groups: usersAndGroups.groups.map(({ id }) => id),
+                    users: usersAndGroups.users.map(({ id }) => id),
+                },
+            }),
         );
     }
 

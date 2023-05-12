@@ -7,6 +7,7 @@ import createStores from '../../../test/fixtures/store';
 import getApp from '../../app';
 import {
     FeatureCreatedEvent,
+    ProjectAccessAddedEvent,
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
 } from '../../types/events';
@@ -103,4 +104,34 @@ test('should also anonymise email fields in data and preData properties', async 
     expect(body.events.length).toBe(2);
     expect(body.events[0].data.email).not.toBe(email1);
     expect(body.events[1].preData.email).not.toBe(email2);
+});
+
+test('should anonymise any PII fields, no matter the depth', async () => {
+    const testUsername = 'test-username';
+
+    const { request, base, eventStore } = await getSetup(true);
+    eventStore.store(
+        new ProjectAccessAddedEvent({
+            createdBy: 'some@email.com',
+            data: {
+                groups: [
+                    {
+                        name: 'test',
+                        project: 'default',
+                        users: [{ username: testUsername }],
+                    },
+                ],
+            },
+            project: 'default',
+        }),
+    );
+    const { body } = await request
+        .get(`${base}/api/admin/events`)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.events.length).toBe(1);
+    expect(body.events[0].data.groups[0].users[0].username).not.toBe(
+        testUsername,
+    );
 });

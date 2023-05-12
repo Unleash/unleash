@@ -1,5 +1,5 @@
 import { Button, Divider, Typography, styled } from '@mui/material';
-import qrImage from 'assets/img/demo_qr.png';
+import qrImage from 'assets/img/demo_qr_temp.svg';
 import { formatAssetPath } from 'utils/formatPath';
 import { Launch } from '@mui/icons-material';
 import { DemoDialog } from '../DemoDialog';
@@ -79,7 +79,7 @@ export const DemoDialogWelcome = ({
                 <Typography>
                     Open demo website in another tab:{' '}
                     <StyledLink
-                        href="https://demo.unleash-hosted.com/"
+                        href="https://unleash-demo-app.vercel.app/"
                         target="_blank"
                         onClick={() => {
                             trackEvent('demo', {
@@ -89,7 +89,7 @@ export const DemoDialogWelcome = ({
                             });
                         }}
                     >
-                        demo.unleash-hosted.com <Launch />
+                        unleash-demo-app.vercel.app <Launch />
                     </StyledLink>
                 </Typography>
                 <Typography color="textSecondary">
@@ -100,6 +100,7 @@ export const DemoDialogWelcome = ({
                 variant="contained"
                 color="primary"
                 onClick={onStart}
+                data-testid="DEMO_START_BUTTON"
             >
                 Try Unleash demo
             </StyledStartButton>

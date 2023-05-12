@@ -10,6 +10,12 @@ export interface IClientMetricsEnvKey {
 export interface IClientMetricsEnv extends IClientMetricsEnvKey {
     yes: number;
     no: number;
+    variants?: Record<string, number>;
+}
+
+export interface IClientMetricsEnvVariant extends IClientMetricsEnvKey {
+    variant: string;
+    count: number;
 }
 
 export interface IClientMetricsStoreV2

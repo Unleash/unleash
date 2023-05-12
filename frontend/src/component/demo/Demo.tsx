@@ -75,12 +75,19 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
         });
     };
 
+    const closeGuide = () => {
+        setTopic(-1);
+        setStep(0);
+    };
+
     if (!uiConfig.flags.demo) return children;
 
     return (
         <>
             <DemoBanner
                 onPlans={() => {
+                    closeGuide();
+
                     setPlansOpen(true);
 
                     trackEvent('demo', {
@@ -154,6 +161,8 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                 }}
                 topics={TOPICS}
                 onWelcome={() => {
+                    closeGuide();
+
                     setWelcomeOpen(true);
 
                     trackEvent('demo', {

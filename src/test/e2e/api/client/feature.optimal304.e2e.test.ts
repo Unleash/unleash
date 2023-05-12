@@ -142,7 +142,7 @@ test('returns 200 when content updates and hash does not match anymore', async (
         },
         'test',
     );
-    await app.services.eventService.updateMaxRevisionId();
+    await app.services.configurationRevisionService.updateMaxRevisionId();
 
     const res = await app.request
         .get('/api/client/features')

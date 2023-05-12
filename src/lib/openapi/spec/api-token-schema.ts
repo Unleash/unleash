@@ -53,7 +53,7 @@ export const apiTokenSchema = {
         projects: {
             type: 'array',
             description:
-                'The list of projects this token has access to. If the token has access to specific projects they will be listed here. If the token has access to all projects it will be represented as [`*`]',
+                'The list of projects this token has access to. If the token has access to specific projects they will be listed here. If the token has access to all projects it will be represented as `[*]`',
             items: {
                 type: 'string',
             },

@@ -94,7 +94,7 @@ export const healthOverviewSchema = {
         favorite: {
             type: 'boolean',
             description:
-                'Indicates if the project has been favourited by the current user requesting the project health overview.',
+                'Indicates if the project has been marked as a favorite by the current user requesting the project health overview.',
             example: true,
         },
         stats: {

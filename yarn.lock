@@ -2486,14 +2486,7 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-date-fns@^2.25.0:
-  version "2.30.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.30.0.tgz#f367e644839ff57894ec6ac480de40cae4b0f4d0"
-  integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
-  dependencies:
-    "@babel/runtime" "^7.21.0"
-
-date-fns@^2.29.3:
+date-fns@^2.25.0, date-fns@^2.29.3:
   version "2.30.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.30.0.tgz#f367e644839ff57894ec6ac480de40cae4b0f4d0"
   integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
@@ -5606,10 +5599,10 @@ onetime@^6.0.0:
   dependencies:
     mimic-fn "^4.0.0"
 
-openapi-enforcer@1.22.2:
-  version "1.22.2"
-  resolved "https://registry.yarnpkg.com/openapi-enforcer/-/openapi-enforcer-1.22.2.tgz#a170ec6d129c1954c81c044d283ebb01a1fcae2b"
-  integrity sha512-uIG8xNKBVjJOreRylkSN0ATZafIZaGEm64t9PJm8Ty32b+Dh/4ls8Jwv1SHnMeQdC7LBPdxmcBD9hyOJado5Ug==
+openapi-enforcer@1.22.3:
+  version "1.22.3"
+  resolved "https://registry.yarnpkg.com/openapi-enforcer/-/openapi-enforcer-1.22.3.tgz#02ecb0fc17aee015161ced9c188cc92ed9eadd11"
+  integrity sha512-WNHm6oaW+I2SD4nn5U8N/vgKFxkhwRIRMKFdnA3XxPJpshESZpkJWRICNUoBLijhUye9IOnruVjSAEcaSeRx3A==
   dependencies:
     js-yaml "^4.1.0"
     randexp "^0.5.3"

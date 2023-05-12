@@ -42,7 +42,7 @@ export const apiTokenSchema = {
         environment: {
             type: 'string',
             description:
-                'The environment the token has access to. * if it has access to all environments.',
+                'The environment the token has access to. `*` if it has access to all environments.',
             example: 'development',
         },
         project: {

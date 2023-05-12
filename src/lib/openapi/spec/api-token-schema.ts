@@ -7,7 +7,6 @@ export const apiTokenSchema = {
     additionalProperties: false,
     required: [
         'secret',
-        'username',
         'tokenName',
         'type',
         'project',

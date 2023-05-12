@@ -24,8 +24,6 @@ export const healthOverviewSchema = {
         'health',
         'environments',
         'features',
-        'favorite',
-        'stats',
     ],
     description: `An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)`,
     properties: {

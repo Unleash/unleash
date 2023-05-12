@@ -77,6 +77,7 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                         startIcon={<GitHub />}
                         href="https://github.com/unleash/unleash"
                         target="_blank"
+                        rel="noreferrer"
                         onClick={() => {
                             trackEvent('demo', {
                                 props: {
@@ -110,6 +111,7 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                         color="primary"
                         href="https://www.getunleash.io/plans/pro"
                         target="_blank"
+                        rel="noreferrer"
                         onClick={() => {
                             trackEvent('demo', {
                                 props: {
@@ -141,6 +143,7 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                         color="web"
                         href="https://www.getunleash.io/plans/enterprise"
                         target="_blank"
+                        rel="noreferrer"
                         onClick={() => {
                             trackEvent('demo', {
                                 props: {
@@ -157,6 +160,7 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
             <StyledCompareLink
                 href="https://www.getunleash.io/plans"
                 target="_blank"
+                rel="noreferrer"
                 onClick={() => {
                     trackEvent('demo', {
                         props: {

@@ -93,7 +93,7 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
     };
 
     const featureLabel = Boolean(url) ? (
-        <StyledLink href={url} target="_blank">
+        <StyledLink href={url} target="_blank" rel="noreferrer">
             {label}
         </StyledLink>
     ) : (
@@ -133,6 +133,7 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
                             <StyledLink
                                 href={upgradeUrl}
                                 target="_blank"
+                                rel="noreferrer"
                                 onClick={handleClick}
                             >
                                 Upgrade now
@@ -156,6 +157,7 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
                                 variant="outlined"
                                 href={upgradeUrl}
                                 target="_blank"
+                                rel="noreferrer"
                                 onClick={handleClick}
                             >
                                 Upgrade now

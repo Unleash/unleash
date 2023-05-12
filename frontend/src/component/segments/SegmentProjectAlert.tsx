@@ -31,7 +31,11 @@ export const SegmentProjectAlert = ({
         <StyledUl>
             {Array.from(projectsUsed).map(projectId => (
                 <li key={projectId}>
-                    <Link to={`/projects/${projectId}`} target="_blank">
+                    <Link
+                        to={`/projects/${projectId}`}
+                        target="_blank"
+                        rel="noreferrer"
+                    >
                         {projects.find(({ id }) => id === projectId)?.name ??
                             projectId}
                     </Link>
@@ -50,6 +54,7 @@ export const SegmentProjectAlert = ({
                                             strategy.id
                                         )}
                                         target="_blank"
+                                        rel="noreferrer"
                                     >
                                         {strategy.featureName!}{' '}
                                         {formatStrategyNameParens(strategy)}

@@ -76,7 +76,11 @@ export const FeatureStrategySegmentChip = ({
 
     return (
         <StyledChip>
-            <StyledLink to={`/segments/edit/${segment.id}`} target="_blank">
+            <StyledLink
+                to={`/segments/edit/${segment.id}`}
+                target="_blank"
+                rel="noreferrer"
+            >
                 {segment.name}
             </StyledLink>
             <Tooltip title={previewIconTooltip} arrow>

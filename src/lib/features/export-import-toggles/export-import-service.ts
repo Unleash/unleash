@@ -44,7 +44,6 @@ import { isValidField } from './import-context-validation';
 import { IImportTogglesStore } from './import-toggles-store-type';
 import { ImportPermissionsService } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
-import { UnleashError } from '../../error/api-error';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -378,12 +377,10 @@ export default class ExportImportService {
                     };
                 });
             if (firstError !== undefined) {
-                throw new UnleashError({
-                    name: 'BadDataError',
-                    message:
-                        'Some of the context fields you are trying to import are not supported.',
-                    details: [firstError, ...remainingErrors],
-                });
+                throw new BadDataError(
+                    'Some of the context fields you are trying to import are not supported.',
+                    [firstError, ...remainingErrors],
+                );
             }
         }
     }
@@ -466,12 +463,10 @@ export default class ExportImportService {
             },
         );
         if (firstError !== undefined) {
-            throw new UnleashError({
-                name: 'BadDataError',
-                message:
-                    'Some of the strategies you are trying to import are not supported.',
-                details: [firstError, ...remainingErrors],
-            });
+            throw new BadDataError(
+                'Some of the strategies you are trying to import are not supported.',
+                [firstError, ...remainingErrors],
+            );
         }
     }
 

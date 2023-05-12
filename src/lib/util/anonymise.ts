@@ -14,7 +14,7 @@ export function anonymiseKeys<T>(object: T, keys: string[]): T {
     }
 
     if (Array.isArray(object)) {
-        return object.map((item) => anonymiseKeys(item, keys)) as unknown as T;
+        return object.map((item) => anonymiseKeys(item, keys)) as T;
     } else {
         return Object.keys(object).reduce((result, key) => {
             if (

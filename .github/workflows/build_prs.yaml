@@ -19,5 +19,5 @@ jobs:
           cache: 'yarn'
       - run: yarn install --frozen-lockfile --ignore-scripts
       - run: yarn lint
-      - run: yarn build
+      - run: yarn build:backend
       #- run: yarn build:frontend # not needed

@@ -20,7 +20,7 @@ import {
 import { Context } from 'unleash-client';
 import { enrichContextWithIp } from '../../proxy';
 import { corsOriginMiddleware } from '../../middleware';
-import { UnleashError } from '../../error/api-error';
+import NotImplementedError from '../../error/not-implemented-error';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -136,10 +136,9 @@ export default class ProxyController extends Controller {
         req: ApiUserRequest,
         res: Response,
     ) {
-        const error = new UnleashError({
-            name: 'NotImplementedError',
-            message: 'The frontend API does not support this endpoint.',
-        });
+        const error = new NotImplementedError(
+            'The frontend API does not support this endpoint.',
+        );
         res.status(error.statusCode).json(error);
     }
 

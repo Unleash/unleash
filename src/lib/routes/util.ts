@@ -1,7 +1,7 @@
 import joi from 'joi';
 import { Response } from 'express';
 import { Logger } from '../logger';
-import { fromLegacyError, UnleashError } from '../error/api-error';
+import { fromLegacyError, UnleashError } from '../error/unleash-error';
 
 export const customJoi = joi.extend((j) => ({
     type: 'isUrlFriendly',
@@ -28,6 +28,14 @@ export const handleErrors: (
 ) => void = (res, logger, error) => {
     const finalError =
         error instanceof UnleashError ? error : fromLegacyError(error);
+
+    if (!(error instanceof UnleashError)) {
+        logger.warn(
+            `I encountered an error that wasn't an instance of the \`UnleashError\` type. This probably means that we had an unexpected crash. The original error and what it was mapped to are:`,
+            error,
+            finalError,
+        );
+    }
 
     logger.warn(finalError.id, finalError.message);
 

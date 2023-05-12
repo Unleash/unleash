@@ -20,7 +20,7 @@ Before developing on this project you will need two things:
 
 ```sh
 yarn install
-yarn run start:dev
+yarn dev
 ```
 
 ## PostgreSQL {#postgresql}
@@ -65,14 +65,14 @@ In order to start the application you will need Node.js v14.x or newer installed
 // Install dependencies
 yarn install
 
-// Start server in development
-yarn start:dev
+// Start Unleash in development
+yarn dev
 
 // Unleash UI
-http://localhost:4242
+http://localhost:3000
 
 // API:
-http://localhost:4242/api/
+http://localhost:3000/api/
 
 // Execute tests in all packages:
 yarn test

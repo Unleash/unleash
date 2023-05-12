@@ -36,7 +36,7 @@ export const ConfirmToken = ({
                         By default, all {TokenType.FRONTEND} tokens may be used
                         from any CORS origin. If you'd like to configure a
                         strict set of origins, please use the{' '}
-                        <Link to="/admin/cors" target="_blank">
+                        <Link to="/admin/cors" target="_blank" rel="noreferrer">
                             CORS origins configuration page
                         </Link>
                         .

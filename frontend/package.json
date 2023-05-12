@@ -11,6 +11,7 @@
   },
   "scripts": {
     "build": "vite build",
+    "dev": "vite",
     "start": "vite",
     "start:prod": "vite build && vite preview",
     "start:sandbox": "UNLEASH_API=https://sandbox.getunleash.io/ospro yarn run start",
@@ -29,8 +30,7 @@
     "e2e:heroku": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn run cypress open --config baseUrl='https://unleash.herokuapp.com' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
     "gen:api": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" orval --config orval.config.js",
     "gen:api:demo": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
-    "gen:api:sandbox": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",
-    "prepare": "yarn run build"
+    "gen:api:sandbox": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api"
   },
   "devDependencies": {
     "@codemirror/lang-json": "6.0.1",

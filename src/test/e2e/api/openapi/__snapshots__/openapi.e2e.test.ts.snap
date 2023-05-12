@@ -635,8 +635,8 @@ The provider you choose for your addon dictates what properties the \`parameters
         "description": "An overview of an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).",
         "properties": {
           "alias": {
-            "description": "Not actively used. Present as a legacy format for identifying older tokens",
-            "example": "some-alias",
+            "description": "Alias is no longer in active use and will often be NULL. It's kept around as a way of allowing old proxy tokens created with the old metadata format to keep working.",
+            "example": "randomid-or-some-alias",
             "nullable": true,
             "type": "string",
           },
@@ -644,17 +644,15 @@ The provider you choose for your addon dictates what properties the \`parameters
             "description": "When the token was created.",
             "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
-            "nullable": true,
             "type": "string",
           },
           "environment": {
-            "description": "The environment the token has access to.",
+            "description": "The environment the token has access to. * if it has access to all environments.",
             "example": "development",
-            "nullable": true,
             "type": "string",
           },
           "expiresAt": {
-            "description": "The token's expiration date.",
+            "description": "The token's expiration date. NULL if the token doesn't have an expiration set.",
             "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
             "nullable": true,
@@ -682,7 +680,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "seenAt": {
-            "description": "When the token was last seen/used to authenticate with.",
+            "description": "When the token was last seen/used to authenticate with. NULL if the token has not yet been used for authentication.",
             "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
             "nullable": true,
@@ -712,11 +710,11 @@ The provider you choose for your addon dictates what properties the \`parameters
         },
         "required": [
           "secret",
-          "username",
           "tokenName",
           "type",
           "project",
           "projects",
+          "createdAt",
         ],
         "type": "object",
       },
@@ -2653,7 +2651,7 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "healthOverviewSchema": {
         "additionalProperties": false,
-        "description": "An overview of a project and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)",
+        "description": "An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)",
         "properties": {
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
@@ -2661,7 +2659,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "description": {
-            "description": "The project description",
+            "description": "The project's description",
             "example": "The project for all things enterprisegrowth",
             "nullable": true,
             "type": "string",
@@ -2688,12 +2686,13 @@ The provider you choose for your addon dictates what properties the \`parameters
           "health": {
             "description": "The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project.",
             "example": 95,
-            "type": "number",
+            "type": "integer",
           },
           "members": {
             "description": "The number of users/members in the project.",
             "example": 5,
-            "type": "number",
+            "minimum": 0,
+            "type": "integer",
           },
           "mode": {
             "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
@@ -2705,7 +2704,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "name": {
-            "description": "Project name",
+            "description": "The project's name",
             "example": "enterprisegrowth",
             "type": "string",
           },
@@ -2723,12 +2722,18 @@ The provider you choose for your addon dictates what properties the \`parameters
           "version": {
             "description": "The project overview version.",
             "example": 1,
-            "type": "number",
+            "type": "integer",
           },
         },
         "required": [
           "version",
           "name",
+          "defaultStickiness",
+          "mode",
+          "members",
+          "health",
+          "environments",
+          "features",
         ],
         "type": "object",
       },
@@ -2747,7 +2752,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "description": {
-            "description": "The project description",
+            "description": "The project's description",
             "example": "The project for all things enterprisegrowth",
             "nullable": true,
             "type": "string",
@@ -2774,12 +2779,13 @@ The provider you choose for your addon dictates what properties the \`parameters
           "health": {
             "description": "The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project.",
             "example": 95,
-            "type": "number",
+            "type": "integer",
           },
           "members": {
             "description": "The number of users/members in the project.",
             "example": 5,
-            "type": "number",
+            "minimum": 0,
+            "type": "integer",
           },
           "mode": {
             "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
@@ -2791,7 +2797,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "name": {
-            "description": "Project name",
+            "description": "The project's name",
             "example": "enterprisegrowth",
             "type": "string",
           },
@@ -2819,12 +2825,18 @@ The provider you choose for your addon dictates what properties the \`parameters
           "version": {
             "description": "The project overview version.",
             "example": 1,
-            "type": "number",
+            "type": "integer",
           },
         },
         "required": [
           "version",
           "name",
+          "defaultStickiness",
+          "mode",
+          "members",
+          "health",
+          "environments",
+          "features",
           "potentiallyStaleCount",
           "activeCount",
           "staleCount",
@@ -3639,7 +3651,6 @@ The provider you choose for your addon dictates what properties the \`parameters
           "changeRequestsEnabled": {
             "description": "Whether change requests should be enabled or for this environment on the project or not",
             "example": true,
-            "nullable": true,
             "type": "boolean",
           },
           "defaultStrategy": {
@@ -9095,7 +9106,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}": {
       "get": {
-        "description": "This endpoint returns an overview of the specified project.",
+        "description": "This endpoint returns an overview of the specified projects stats, project health, number of members, which environments are configured, and the features in the project.",
         "operationId": "getProjectOverview",
         "parameters": [
           {
@@ -9319,7 +9330,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
       "post": {
-        "description": "Endpoint that allows creation of [project API tokens](https://docs.getunleash.io/how-to/how-to-create-project-api-tokens) for the specified project.",
+        "description": "Endpoint that allows creation of [project API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys#api-token-visibility) for the specified project.",
         "operationId": "createProjectApiToken",
         "parameters": [
           {

@@ -53,9 +53,9 @@ jobs:
               workflow_id: 'continuous_version_sync.yaml',
               ref: 'master',
               inputs: {
-                repository: "${{ github.repository }}",
-                commit: "99431793938ef515df9456d07ba1ba49824d0c1f",
-                actor: "testing",
-                message: "${{ github.repository }}",
+                 repository: "${{ github.repository }}",
+                 commit: "${{ github.event.head_commit.id }}",
+                 actor: "${{ github.event.head_commit.committer.username }}",
+                 message: ${{ toJSON(github.event.head_commit.message) }},
               }
             })

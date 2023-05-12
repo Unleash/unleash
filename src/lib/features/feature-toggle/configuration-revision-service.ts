@@ -16,9 +16,7 @@ export default class ConfigurationRevisionService extends EventEmitter {
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
         super();
-        this.logger = getLogger(
-            'configuration-revision-service.ts',
-        );
+        this.logger = getLogger('configuration-revision-service.ts');
         this.eventStore = eventStore;
     }
 

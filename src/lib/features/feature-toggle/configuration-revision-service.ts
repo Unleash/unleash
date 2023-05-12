@@ -17,7 +17,7 @@ export default class ConfigurationRevisionService extends EventEmitter {
     ) {
         super();
         this.logger = getLogger(
-            'features/config-client/toggle-config-change-emitter',
+            'configuration-revision-service.ts',
         );
         this.eventStore = eventStore;
     }

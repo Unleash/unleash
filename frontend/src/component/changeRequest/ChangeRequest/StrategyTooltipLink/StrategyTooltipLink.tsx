@@ -62,7 +62,7 @@ const StyledContainer: FC = styled('div')(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(1),
     marginTop: theme.spacing(1),
-    width: '100%',
+    // width: '100%',
 }));
 
 export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({

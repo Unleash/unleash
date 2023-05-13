@@ -32,18 +32,30 @@ const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
 
 const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
     display: 'flex',
-    alignItems: 'flex-start',
+    flexGrow: 1,
+    alignItems: 'center',
     gap: theme.spacing(1),
 }));
 
-const StrategyUpdateWrapper: FC = styled('div')(({ theme }) => ({
-    flexDirection: 'column',
-}));
+// const StrategyUpdateWrapper: FC = styled('div')(({ theme }) => ({
+//     flexDirection: 'row',
+//     display: 'flex',
+//     flexGrow: 1,
+// }));
+
+// const Title
 
 const hasNameField = (payload: unknown): payload is { name: string } =>
     typeof payload === 'object' && payload !== null && 'name' in payload;
 
-const DisabledEnabledState: VFC<{ disabled: boolean }> = ({ disabled }) => {
+const DisabledEnabledState: VFC<{ show?: boolean; disabled: boolean }> = ({
+    show = true,
+    disabled,
+}) => {
+    if (!show) {
+        return null;
+    }
+
     if (disabled) {
         return (
             <Tooltip
@@ -77,18 +89,16 @@ const EditHeader: VFC<{
 }> = ({ wasDisabled = false, willBeDisabled = false }) => {
     if (wasDisabled && willBeDisabled) {
         return (
-            <Typography color="action.disabled">
-                Editing disabled strategy
-            </Typography>
+            <Typography color="action.disabled">Editing strategy:</Typography>
         );
     }
 
     if (!wasDisabled && willBeDisabled) {
-        return <Typography color="error.dark">Editing strategy</Typography>;
+        return <Typography color="error.dark">Editing strategy:</Typography>;
     }
 
     if (wasDisabled && !willBeDisabled) {
-        return <Typography color="success.dark">Editing strategy</Typography>;
+        return <Typography color="success.dark">Editing strategy:</Typography>;
     }
 
     return <Typography>Editing strategy:</Typography>;
@@ -117,32 +127,29 @@ export const StrategyChange: VFC<{
                 <>
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>
-                            <StrategyUpdateWrapper>
-                                <Typography
-                                    color={
-                                        change.payload?.disabled
-                                            ? 'action.disabled'
-                                            : 'success.dark'
-                                    }
-                                >
-                                    + Adding strategy:
-                                </Typography>
+                            <Typography
+                                color={
+                                    change.payload?.disabled
+                                        ? 'action.disabled'
+                                        : 'success.dark'
+                                }
+                                sx={{
+                                    flexGrowq: 1,
+                                }}
+                            >
+                                + Adding strategy:
+                            </Typography>
 
-                                <StrategyTooltipLink change={change}>
-                                    <StrategyDiff
-                                        change={change}
-                                        currentStrategy={currentStrategy}
-                                    />
-                                </StrategyTooltipLink>
-                                <ConditionallyRender
-                                    condition={Boolean(
-                                        change.payload?.disabled === true
-                                    )}
-                                    show={
-                                        <DisabledEnabledState disabled={true} />
-                                    }
+                            <StrategyTooltipLink change={change}>
+                                <StrategyDiff
+                                    change={change}
+                                    currentStrategy={currentStrategy}
                                 />
-                            </StrategyUpdateWrapper>
+                            </StrategyTooltipLink>
+                            <DisabledEnabledState
+                                disabled
+                                show={change.payload?.disabled === true}
+                            />
                         </ChangeItemInfo>
                         {discard}
                     </ChangeItemCreateEditWrapper>
@@ -155,7 +162,7 @@ export const StrategyChange: VFC<{
                         <Typography
                             sx={theme => ({ color: theme.palette.error.main })}
                         >
-                            - Deleting strategy
+                            - Deleting strategy:
                         </Typography>
                         {hasNameField(change.payload) && (
                             <StrategyTooltipLink change={change}>
@@ -189,7 +196,6 @@ export const StrategyChange: VFC<{
                         </ChangeItemInfo>
                         {discard}
                     </ChangeItemCreateEditWrapper>
-                    <StrategyExecution strategy={change.payload} />
                     <ConditionallyRender
                         condition={
                             change.payload?.disabled !==
@@ -199,8 +205,7 @@ export const StrategyChange: VFC<{
                             <Typography
                                 sx={{
                                     marginTop: theme => theme.spacing(2),
-                                    paddingLeft: theme => theme.spacing(3),
-                                    paddingRight: theme => theme.spacing(3),
+                                    marginBottom: theme => theme.spacing(2),
                                     ...flexRow,
                                     gap: theme => theme.spacing(1),
                                 }}
@@ -212,6 +217,7 @@ export const StrategyChange: VFC<{
                             </Typography>
                         }
                     />
+                    <StrategyExecution strategy={change.payload} />
                 </>
             )}
         </>

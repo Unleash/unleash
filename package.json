@@ -43,7 +43,7 @@
     "copy-templates": "copyfiles -u 1 src/mailtemplates/**/*.mustache dist/",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
     "lint": "eslint ./src",
-    "postinstall": "yarn run build && echo [${NODE_ENV}] POSTINSTALL DONE",
+    "postinstall": "yarn --cwd ./frontend install && yarn run build && echo [${NODE_ENV}] POSTINSTALL DONE",
     "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build",
     "prebuild:watch": "yarn run clean",
     "build:watch": "tsc -w --strictNullChecks false",

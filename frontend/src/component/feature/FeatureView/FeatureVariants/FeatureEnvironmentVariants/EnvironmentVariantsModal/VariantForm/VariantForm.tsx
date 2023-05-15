@@ -226,7 +226,7 @@ export const VariantForm = ({
                 'A variant with that name already exists for this environment.'
             );
         }
-        setName(name);
+        setName(name.trim());
     };
 
     const onSetPercentage = (percentage: string) => {

@@ -3,7 +3,6 @@ import useProject from 'hooks/api/getters/useProject/useProject';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
-    StyledColumn,
     StyledDiv,
     StyledFavoriteIconButton,
     StyledHeader,
@@ -13,8 +12,6 @@ import {
     StyledSeparator,
     StyledTab,
     StyledTabContainer,
-    StyledText,
-    StyledTitle,
     StyledTopRow,
 } from './Project.styles';
 import { Tabs } from '@mui/material';

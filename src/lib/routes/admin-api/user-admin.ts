@@ -294,6 +294,8 @@ export default class UserAdminController extends Controller {
     anonymiseUsers(users: IUser[]): IUser[] {
         return users.map((u) => ({
             ...u,
+            name: anonymise(u.name),
+            username: anonymise(u.username),
             email: anonymise(u.email || 'random'),
             imageUrl:
                 'https://gravatar.com/avatar/21232f297a57a5a743894a0e4a801fc3?size=42&default=retro',
@@ -334,6 +336,9 @@ export default class UserAdminController extends Controller {
                 accountType: u.accountType,
             } as IUser;
         });
+        if (this.flagResolver.isEnabled('anonymiseEventLog')) {
+            users = this.anonymiseUsers(users);
+        }
 
         let allGroups = await this.groupService.getAll();
         let groups = allGroups.map((g) => {

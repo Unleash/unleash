@@ -40,6 +40,7 @@ jobs:
           URL: ${{ github.event.pull_request.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -x
           comment () {
             curl -X POST $URL \
               -H "Content-Type: application/json" \

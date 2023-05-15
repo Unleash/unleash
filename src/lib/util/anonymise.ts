@@ -1,6 +1,9 @@
 import { createHash } from 'crypto';
 
-export function anonymise(s: string): string {
+export function anonymise(s?: string): string {
+    if (!s) {
+        return '';
+    }
     const hash = createHash('sha256')
         .update(s, 'utf-8')
         .digest('hex')

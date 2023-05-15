@@ -372,3 +372,26 @@ test('generates USER_UPDATED event', async () => {
     expect(events[0].data.id).toBe(body.id);
     expect(events[0].data.name).toBe('New name');
 });
+
+test('Anonymises name, username and email fields if anonymiseEventLog flag is set', async () => {
+    let anonymisedApp = await setupAppWithCustomConfig(
+        stores,
+        { experimental: { flags: { anonymiseEventLog: true } } },
+        db,
+    );
+    await anonymisedApp.request
+        .post('/api/admin/user-admin')
+        .send({
+            email: 'some@getunleash.ai',
+            name: 'Some Name',
+            rootRole: editorRole.id,
+        })
+        .set('Content-Type', 'application/json');
+    let response = await anonymisedApp.request.get(
+        '/api/admin/user-admin/access',
+    );
+    let body = response.body;
+    expect(body.users[0].email).toEqual('aeb83743e@unleash.run');
+    expect(body.users[0].name).toEqual('3a8b17647@unleash.run');
+    expect(body.users[0].username).toEqual(''); // Not set, so anonymise should return the empty string.
+});

@@ -179,17 +179,27 @@ export class GroupService {
     }
 
     async validateGroup(
-        { name }: IGroupModel,
+        group: IGroupModel,
         existingGroup?: IGroup,
     ): Promise<void> {
-        if (!name) {
+        if (!group.name) {
             throw new BadDataError('Group name cannot be empty');
         }
 
-        if (!existingGroup || existingGroup.name != name) {
-            if (await this.groupStore.existsWithName(name)) {
+        if (!existingGroup || existingGroup.name != group.name) {
+            if (await this.groupStore.existsWithName(group.name)) {
                 throw new NameExistsError('Group name already exists');
             }
+        }
+
+        if (
+            group.id &&
+            group.rootRole &&
+            (await this.groupStore.hasProjectRole(group.id))
+        ) {
+            throw new BadDataError(
+                'This group already has a project role and cannot also be given a root role',
+            );
         }
     }
 

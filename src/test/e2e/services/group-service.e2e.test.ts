@@ -97,3 +97,31 @@ test('should not remove user from no SSO definition group', async () => {
     expect(groups.length).toBe(1);
     expect(groups[0].name).toEqual('no_mapping_group');
 });
+
+test('adding a root role to a group with a project role should fail', async () => {
+    const group = await groupStore.create({
+        name: 'root_group',
+        description: 'root_group',
+    });
+
+    stores.accessStore.addGroupToRole(group.id, 1, 'test', 'default');
+
+    try {
+        await groupService.updateGroup(
+            {
+                id: group.id,
+                name: group.name,
+                users: [],
+                rootRole: 1,
+                createdAt: new Date(),
+                createdBy: 'test',
+            },
+            'test',
+        );
+    } catch (any) {
+        expect(any.message).toContain(
+            'This group already has a project role and cannot also be given a root role',
+        );
+    }
+    expect.assertions(1);
+});

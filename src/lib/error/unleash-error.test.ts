@@ -369,6 +369,25 @@ describe('Error serialization special cases', () => {
         expect(json).toMatchObject({ path, type });
     });
 
+    it('AuthenticationRequired adds `options` if they are present', () => {
+        const config = {
+            type: 'password',
+            path: `base-path/auth/simple/login`,
+            message: 'You must sign in order to use Unleash',
+            options: [
+                {
+                    type: 'google',
+                    message: 'Sign in with Google',
+                    path: `base-path/auth/google/login`,
+                },
+            ],
+        };
+
+        const json = new AuthenticationRequired(config).toJSON();
+
+        expect(json).toMatchObject(config);
+    });
+
     it('NoAccessError: adds `permission`', () => {
         const permission = 'x';
         const error = new NoAccessError(permission);

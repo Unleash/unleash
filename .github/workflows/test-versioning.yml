@@ -1,4 +1,4 @@
-name: Lower null checks
+name: Test CI versioning
 
 on:
   pull_request:

@@ -6,23 +6,30 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { MessageBannerDialog } from './MessageBannerDialog/MessageBannerDialog';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { useVariant } from 'hooks/useVariant';
 
 const StyledBar = styled('aside', {
-    shouldForwardProp: prop => prop !== 'variant',
-})<{ variant: BannerVariant }>(({ theme, variant }) => ({
-    position: 'relative',
-    zIndex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing(1),
-    gap: theme.spacing(1),
-    borderBottom: '1px solid',
-    borderColor: theme.palette[variant].border,
-    background: theme.palette[variant].light,
-    color: theme.palette[variant].dark,
-    fontSize: theme.fontSizes.smallBody,
-}));
+    shouldForwardProp: prop => prop !== 'variant' && prop !== 'sticky',
+})<{ variant: BannerVariant; sticky?: boolean }>(
+    ({ theme, variant, sticky }) => ({
+        position: sticky ? 'sticky' : 'relative',
+        zIndex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: theme.spacing(1),
+        gap: theme.spacing(1),
+        borderBottom: '1px solid',
+        borderColor: theme.palette[variant].border,
+        background: theme.palette[variant].light,
+        color: theme.palette[variant].dark,
+        fontSize: theme.fontSizes.smallBody,
+        ...(sticky && {
+            top: 0,
+            zIndex: theme.zIndex.sticky,
+        }),
+    })
+);
 
 const StyledIcon = styled('div', {
     shouldForwardProp: prop => prop !== 'variant',
@@ -44,6 +51,7 @@ interface IMessageFlag {
     enabled: boolean;
     message: string;
     variant?: BannerVariant;
+    sticky?: boolean;
     icon?: string;
     link?: string;
     linkText?: string;
@@ -52,61 +60,30 @@ interface IMessageFlag {
     dialog?: string;
 }
 
-// TODO: Grab a real feature flag instead
-/* eslint-disable @typescript-eslint/no-unused-vars */
-const mockFlag: IMessageFlag = {
-    enabled: true,
-    message:
-        '**Heads up!** It seems like one of your client instances might be misbehaving.',
-    variant: 'warning',
-    link: '/admin/network',
-    linkText: 'View Network',
-    plausibleEvent: 'network_warning',
-};
-
-const mockFlag2: IMessageFlag = {
-    enabled: true,
-    message:
-        '**Unleash v5 is finally here!** Check out what changed in the newest major release.',
-    variant: 'secondary',
-    link: 'dialog',
-    linkText: "What's new?",
-    plausibleEvent: 'change_log_v5',
-    dialog: `![Unleash v5](https://www.getunleash.io/logos/unleash_pos.svg)
-## Unleash v5 🎉
-**Unleash v5 is finally here!**
-
-Check out what changed in the newest major release:
-
-- An Amazing Feature
-- Another Amazing Feature
-- We'll save the best for last
-- And the best is...
-- **Unleash v5 is finally here!**
-
-You can read more about it on our newest [blog post](https://www.getunleash.io/blog).`,
-};
-
 export const MessageBanner = () => {
     const { uiConfig } = useUiConfig();
     const [open, setOpen] = useState(false);
 
+    const messageBanner = useVariant<IMessageFlag>(
+        uiConfig.flags.messageBanner
+    );
+
+    if (!messageBanner) return null;
+
     const {
-        enabled,
         message,
         variant = 'neutral',
+        sticky,
         icon,
         link,
         linkText = 'More info',
         plausibleEvent,
         dialogTitle,
         dialog,
-    } = { ...mockFlag2, enabled: uiConfig.flags.messageBanner };
-
-    if (!enabled) return null;
+    } = messageBanner;
 
     return (
-        <StyledBar variant={variant}>
+        <StyledBar variant={variant} sticky={sticky}>
             <StyledIcon variant={variant}>
                 <BannerIcon icon={icon} variant={variant} />
             </StyledIcon>

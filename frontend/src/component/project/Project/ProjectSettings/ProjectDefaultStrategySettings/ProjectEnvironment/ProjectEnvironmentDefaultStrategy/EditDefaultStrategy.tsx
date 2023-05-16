@@ -3,11 +3,11 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
+import { IStrategy } from 'interfaces/strategy';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { ISegment } from 'interfaces/segment';
 import { useFormErrors } from 'hooks/useFormErrors';
@@ -42,7 +42,7 @@ const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
 
-    const [previousTitle, setPreviousTitle] = useState<string>('');
+    const [previousTitle] = useState<string>('');
     const { trackEvent } = usePlausibleTracker();
 
     const trackTitle = (title: string = '') => {

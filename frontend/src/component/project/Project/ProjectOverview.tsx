@@ -42,7 +42,6 @@ const ProjectOverview = () => {
         project;
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
-    const { uiConfig } = useUiConfig();
 
     useEffect(() => {
         setLastViewed(projectId);

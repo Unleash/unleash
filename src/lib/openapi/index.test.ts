@@ -27,7 +27,7 @@ test('removeJsonSchemaProps', () => {
 });
 
 describe('createOpenApiSchema', () => {
-    test('if no baseurl do not server a server', () => {
+    test('if no baseurl do not return servers', () => {
         expect(
             createOpenApiSchema({
                 unleashUrl: 'https://example.com',

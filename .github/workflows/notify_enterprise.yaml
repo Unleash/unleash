@@ -39,7 +39,7 @@ jobs:
           echo "::set-output name=COMMIT_HASH::$COMMIT_HASH"
       - name: Publish static assets to S3
         run: |
-          aws s3 cp frontend/build s3://getunleash-static/unleash/${{ steps.get_version.outputs.COMMIT_HASH }} --recursive
+          aws s3 cp frontend/build s3://getunleash-static/unleash/commits/${{ steps.get_version.outputs.COMMIT_HASH }} --recursive
       - name: Trigger sync
         uses: actions/github-script@v6
         with:

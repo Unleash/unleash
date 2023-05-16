@@ -14,6 +14,7 @@ import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMen
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import { DisableEnableStrategy } from './DisableEnableStrategy/DisableEnableStrategy';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import RemoveStrategyMenu from './RemoveStrategyMenu/RemoveStrategyMenu';
 
 interface IStrategyItemProps {
     environmentId: string;
@@ -84,20 +85,22 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                             uiConfig?.flags?.strategyImprovements
                         )}
                         show={() => (
-                            <DisableEnableStrategy
+                            <RemoveStrategyMenu
                                 projectId={projectId}
                                 featureId={featureId}
                                 environmentId={environmentId}
                                 strategy={strategy}
                             />
                         )}
-                    />
-                    <FeatureStrategyRemove
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        strategyId={strategy.id}
-                        icon
+                        elseShow={() => (
+                            <FeatureStrategyRemove
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environmentId}
+                                strategyId={strategy.id}
+                                icon
+                            />
+                        )}
                     />
                 </>
             }

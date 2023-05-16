@@ -10,8 +10,6 @@ import { ProjectMembersWidget } from './ProjectMembersWidget';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ChangeRequestsWidget } from './ChangeRequestsWidget';
 import { flexRow } from 'themes/themeStyles';
-import { LegacyHealthWidget } from './LegacyHealthWidget';
-import { LegacyProjectMembersWidget } from './LegacyProjectMembersWidget';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface IProjectInfoProps {
@@ -48,7 +46,7 @@ const ProjectInfo = ({
     features,
     stats,
 }: IProjectInfoProps) => {
-    const { uiConfig, isEnterprise } = useUiConfig();
+    const { isEnterprise } = useUiConfig();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(id);

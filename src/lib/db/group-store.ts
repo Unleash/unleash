@@ -287,4 +287,13 @@ export default class GroupStore implements IGroupStore {
             .where('user_id', userId);
         return rows.map(rowToGroup);
     }
+
+    async hasProjectRole(groupId: number): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1 FROM ${T.GROUP_ROLE} WHERE group_id = ?) AS present`,
+            [groupId],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
 }

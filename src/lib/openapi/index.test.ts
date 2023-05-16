@@ -27,25 +27,25 @@ test('removeJsonSchemaProps', () => {
 });
 
 describe('createOpenApiSchema', () => {
-    test('createOpenApiSchema url', () => {
+    test('if no baseurl do not return servers', () => {
         expect(
             createOpenApiSchema({
                 unleashUrl: 'https://example.com',
                 baseUriPath: '',
-            }).servers![0].url,
-        ).toEqual('https://example.com');
+            }).servers,
+        ).toEqual([]);
     });
 
-    test('if baseurl is set strips from serverUrl', () => {
+    test('if baseurl is set leave it in serverUrl', () => {
         expect(
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/demo2',
                 baseUriPath: '/demo2',
             }).servers![0].url,
-        ).toEqual('https://example.com');
+        ).toEqual('https://example.com/demo2');
     });
 
-    test('if baseurl does not end with suffix, cowardly refuses to strip', () => {
+    test('if baseurl does not start with /, cowardly refuses to strip', () => {
         expect(
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/demo2',
@@ -66,6 +66,6 @@ describe('createOpenApiSchema', () => {
                 unleashUrl: 'https://example.com/example/',
                 baseUriPath: '/example',
             }).servers![0].url,
-        ).toEqual('https://example.com');
+        ).toEqual('https://example.com/example');
     });
 });

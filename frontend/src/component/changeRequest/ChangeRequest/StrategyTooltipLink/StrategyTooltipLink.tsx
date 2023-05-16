@@ -56,53 +56,59 @@ interface IStrategyTooltipLinkProps {
     previousTitle?: string;
 }
 
+const StyledContainer: FC = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridAutoFlow: 'column',
+    gridTemplateColumns: 'auto 1fr',
+    gap: theme.spacing(1),
+    alignItems: 'center',
+}));
+
+const Truncated = styled('div')(() => ({
+    ...textTruncated,
+    maxWidth: 500,
+}));
+
 export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
     change,
     previousTitle,
     children,
 }) => (
-    <>
+    <StyledContainer>
         <GetFeatureStrategyIcon strategyName={change.payload.name} />
-        <ConditionallyRender
-            condition={Boolean(
-                previousTitle && previousTitle !== change.payload.title
-            )}
-            show={
-                <>
-                    <Typography
-                        component="s"
-                        color="action.disabled"
-                        sx={{
-                            ...textTruncated,
-                            maxWidth: '100px',
-                        }}
-                    >
-                        {previousTitle}
-                    </Typography>{' '}
-                </>
-            }
-        />
-        <TooltipLink
-            tooltip={children}
-            tooltipProps={{
-                maxWidth: 500,
-                maxHeight: 600,
-            }}
-        >
-            <Typography
-                component="span"
-                sx={{
-                    ...textTruncated,
-                    maxWidth:
-                        previousTitle === change.payload.title
-                            ? '300px'
-                            : '200px',
-                    display: 'block',
-                }}
-            >
-                {change.payload.title ||
-                    formatStrategyName(change.payload.name)}
-            </Typography>
-        </TooltipLink>
-    </>
+        <Truncated>
+            <ConditionallyRender
+                condition={Boolean(
+                    (previousTitle && previousTitle !== change.payload.title) ||
+                        true
+                )}
+                show={
+                    <Truncated>
+                        <Typography component="s" color="text.secondary">
+                            {previousTitle}
+                            PREVIOUS consectetur adipiscing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua.
+                        </Typography>{' '}
+                    </Truncated>
+                }
+            />
+            <Truncated>
+                <TooltipLink
+                    tooltip={children}
+                    tooltipProps={{
+                        maxWidth: 500,
+                        maxHeight: 600,
+                    }}
+                >
+                    <Typography component="span">
+                        {change.payload.title ||
+                            formatStrategyName(change.payload.name)}
+                        lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                        sed do eiusmod tempor incididunt ut labore et dolore
+                        magna aliqua.
+                    </Typography>
+                </TooltipLink>
+            </Truncated>
+        </Truncated>
+    </StyledContainer>
 );

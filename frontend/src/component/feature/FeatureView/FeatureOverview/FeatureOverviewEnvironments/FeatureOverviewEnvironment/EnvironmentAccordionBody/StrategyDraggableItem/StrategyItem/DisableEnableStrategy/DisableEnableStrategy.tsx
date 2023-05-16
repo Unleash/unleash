@@ -1,5 +1,5 @@
 import { VFC, useState } from 'react';
-import { Alert } from '@mui/material';
+import { Alert, Typography } from '@mui/material';
 import BlockIcon from '@mui/icons-material/Block';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
@@ -46,6 +46,18 @@ const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
                 type="button"
             >
                 <BlockIcon />
+                <ConditionallyRender
+                    condition={Boolean(props.text)}
+                    show={
+                        <Typography
+                            variant={'body1'}
+                            color={'text.secondary'}
+                            sx={{ ml: theme => theme.spacing(1) }}
+                        >
+                            Disable
+                        </Typography>
+                    }
+                />
             </PermissionIconButton>
             <Dialogue
                 title={
@@ -111,6 +123,18 @@ const EnableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
                 type="button"
             >
                 <TrackChangesIcon />
+                <ConditionallyRender
+                    condition={Boolean(props.text)}
+                    show={
+                        <Typography
+                            variant={'body1'}
+                            color={'text.secondary'}
+                            sx={{ ml: theme => theme.spacing(1) }}
+                        >
+                            Disable
+                        </Typography>
+                    }
+                />
             </PermissionIconButton>
             <Dialogue
                 title={

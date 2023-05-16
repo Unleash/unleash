@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Variant } from 'unleash-client';
 
 export interface IUiConfig {
     authenticationType?: string;
@@ -38,7 +39,7 @@ export interface IFlags {
     UG?: boolean;
     embedProxyFrontend?: boolean;
     maintenanceMode?: boolean;
-    messageBanner?: boolean;
+    messageBanner?: Variant;
     featuresExportImport?: boolean;
     caseInsensitiveInOperators?: boolean;
     proPlanAutoCharge?: boolean;

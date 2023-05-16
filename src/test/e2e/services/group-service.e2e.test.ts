@@ -106,8 +106,8 @@ test('adding a root role to a group with a project role should fail', async () =
 
     stores.accessStore.addGroupToRole(group.id, 1, 'test', 'default');
 
-    try {
-        await groupService.updateGroup(
+    await expect(() => {
+        return groupService.updateGroup(
             {
                 id: group.id,
                 name: group.name,
@@ -118,10 +118,9 @@ test('adding a root role to a group with a project role should fail', async () =
             },
             'test',
         );
-    } catch (any) {
-        expect(any.message).toContain(
-            'This group already has a project role and cannot also be given a root role',
-        );
-    }
+    }).rejects.toThrow(
+        'This group already has a project role and cannot also be given a root role',
+    );
+
     expect.assertions(1);
 });

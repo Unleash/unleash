@@ -12935,11 +12935,7 @@ If the provided project does not exist, the list of events will be empty.",
       "apiKey": [],
     },
   ],
-  "servers": [
-    {
-      "url": "http://localhost:4242",
-    },
-  ],
+  "servers": [],
   "tags": [
     {
       "description": "Create, update, and delete [Unleash addons](https://docs.getunleash.io/addons).",

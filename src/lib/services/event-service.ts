@@ -10,8 +10,6 @@ export default class EventService {
 
     private eventStore: IEventStore;
 
-    private revisionId: number;
-
     constructor(
         { eventStore }: Pick<IUnleashStores, 'eventStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
@@ -37,21 +35,4 @@ export default class EventService {
             totalEvents,
         };
     }
-
-    async getMaxRevisionId(): Promise<number> {
-        if (this.revisionId) {
-            return this.revisionId;
-        } else {
-            return this.updateMaxRevisionId();
-        }
-    }
-
-    async updateMaxRevisionId(): Promise<number> {
-        this.revisionId = await this.eventStore.getMaxRevisionId(
-            this.revisionId,
-        );
-        return this.revisionId;
-    }
 }
-
-module.exports = EventService;

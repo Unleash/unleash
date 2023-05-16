@@ -1315,10 +1315,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.18.tgz#8dfb97f0da23c2293e554c5a50d61ef134d7697f"
   integrity sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==
 
-"@types/node@16.18.25":
-  version "16.18.25"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.25.tgz#8863940fefa1234d3fcac7a4b7a48a6c992d67af"
-  integrity sha512-rUDO6s9Q/El1R1I21HG4qw/LstTHCPO/oQNAwI/4b2f9EWvMnqt4d3HJwPMawfZ3UvodB8516Yg+VAq54YM+eA==
+"@types/node@16.18.26":
+  version "16.18.26"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.26.tgz#a18b88726a67bc6a8a5bdac9a40c093ecb03ccd0"
+  integrity sha512-pCNBzNQqCXE4A6FWDmrn/o1Qu+qBf8tnorBlNoPNSBQJF+jXzvTKNI/aMiE+hGJbK5sDAD65g7OS/YwSHIEJdw==
 
 "@types/nodemailer@6.4.7":
   version "6.4.7"
@@ -2486,14 +2486,7 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-date-fns@^2.25.0:
-  version "2.30.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.30.0.tgz#f367e644839ff57894ec6ac480de40cae4b0f4d0"
-  integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
-  dependencies:
-    "@babel/runtime" "^7.21.0"
-
-date-fns@^2.29.3:
+date-fns@^2.25.0, date-fns@^2.29.3:
   version "2.30.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.30.0.tgz#f367e644839ff57894ec6ac480de40cae4b0f4d0"
   integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
@@ -2512,10 +2505,10 @@ db-migrate-base@^2.3.0:
   dependencies:
     bluebird "^3.1.1"
 
-db-migrate-pg@1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/db-migrate-pg/-/db-migrate-pg-1.2.2.tgz#66436dbad0ba398c05851d200f768db6b2e5bc1a"
-  integrity sha512-+rgrhGNWC2SzcfweopyZqOQ1Igz1RVFMUZwUs6SviHpOUzFwb0NZWkG0pw1GaO+JxTxS7VJjckUWkOwZbVYVag==
+db-migrate-pg@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/db-migrate-pg/-/db-migrate-pg-1.3.0.tgz#b2e81fbf727e62e7b17dc1aa27a4c7d411468786"
+  integrity sha512-WBf1CTpQUkkoqb+c2dOe3mvuCM8OMpUtC6zFqRqdvccdqqCsDyqOTMT4islRiCuzn1G1BQdrfVnB8OuVsddWRQ==
   dependencies:
     bluebird "^3.1.1"
     db-migrate-base "^2.3.0"
@@ -5606,10 +5599,10 @@ onetime@^6.0.0:
   dependencies:
     mimic-fn "^4.0.0"
 
-openapi-enforcer@1.22.2:
-  version "1.22.2"
-  resolved "https://registry.yarnpkg.com/openapi-enforcer/-/openapi-enforcer-1.22.2.tgz#a170ec6d129c1954c81c044d283ebb01a1fcae2b"
-  integrity sha512-uIG8xNKBVjJOreRylkSN0ATZafIZaGEm64t9PJm8Ty32b+Dh/4ls8Jwv1SHnMeQdC7LBPdxmcBD9hyOJado5Ug==
+openapi-enforcer@1.22.3:
+  version "1.22.3"
+  resolved "https://registry.yarnpkg.com/openapi-enforcer/-/openapi-enforcer-1.22.3.tgz#02ecb0fc17aee015161ced9c188cc92ed9eadd11"
+  integrity sha512-WNHm6oaW+I2SD4nn5U8N/vgKFxkhwRIRMKFdnA3XxPJpshESZpkJWRICNUoBLijhUye9IOnruVjSAEcaSeRx3A==
   dependencies:
     js-yaml "^4.1.0"
     randexp "^0.5.3"

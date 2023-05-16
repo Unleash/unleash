@@ -82,7 +82,7 @@ test('if caching is enabled should memoize', async () => {
     const openApiService = { respondWithValidation, validPath };
     const featureToggleServiceV2 = { getClientFeatures };
     const segmentService = { getActive };
-    const eventService = { getMaxRevisionId: () => 1 };
+    const configurationRevisionService = { getMaxRevisionId: () => 1 };
 
     const controller = new FeatureController(
         {
@@ -94,7 +94,7 @@ test('if caching is enabled should memoize', async () => {
             // @ts-expect-error due to partial implementation
             segmentService,
             // @ts-expect-error due to partial implementation
-            eventService,
+            configurationRevisionService,
         },
         {
             getLogger,
@@ -120,7 +120,7 @@ test('if caching is not enabled all calls goes to service', async () => {
     const featureToggleServiceV2 = { getClientFeatures };
     const segmentService = { getActive };
     const openApiService = { respondWithValidation, validPath };
-    const eventService = { getMaxRevisionId: () => 1 };
+    const configurationRevisionService = { getMaxRevisionId: () => 1 };
 
     const controller = new FeatureController(
         {
@@ -132,7 +132,7 @@ test('if caching is not enabled all calls goes to service', async () => {
             // @ts-expect-error due to partial implementation
             segmentService,
             // @ts-expect-error due to partial implementation
-            eventService,
+            configurationRevisionService,
         },
         {
             getLogger,

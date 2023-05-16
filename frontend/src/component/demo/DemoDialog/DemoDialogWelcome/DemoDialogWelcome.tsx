@@ -60,7 +60,7 @@ export const DemoDialogWelcome = ({
     const { trackEvent } = usePlausibleTracker();
 
     return (
-        <DemoDialog open={open} onClose={onClose}>
+        <DemoDialog open={open} onClose={onClose} preventCloseOnBackdropClick>
             <DemoDialog.Header>Explore Unleash</DemoDialog.Header>
             <Typography color="textSecondary" sx={{ mt: 2 }}>
                 You can explore Unleash on your own, however for the best

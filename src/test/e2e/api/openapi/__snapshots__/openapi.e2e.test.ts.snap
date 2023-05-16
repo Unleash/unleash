@@ -647,7 +647,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "environment": {
-            "description": "The environment the token has access to. * if it has access to all environments.",
+            "description": "The environment the token has access to. \`*\` if it has access to all environments.",
             "example": "development",
             "type": "string",
           },
@@ -664,7 +664,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "projects": {
-            "description": "The list of projects this token has access to. If the token has access to specific projects they will be listed here. If the token has access to all projects it will be represented as [\`*\`]",
+            "description": "The list of projects this token has access to. If the token has access to specific projects they will be listed here. If the token has access to all projects it will be represented as \`[*]\`",
             "example": [
               "developerexperience",
               "enterprisegrowth",
@@ -2672,7 +2672,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "array",
           },
           "favorite": {
-            "description": "Indicates if the project has been favourited by the current user requesting the project health overview.",
+            "description": "Indicates if the project has been marked as a favorite by the current user requesting the project health overview.",
             "example": true,
             "type": "boolean",
           },
@@ -2765,7 +2765,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "array",
           },
           "favorite": {
-            "description": "Indicates if the project has been favourited by the current user requesting the project health overview.",
+            "description": "Indicates if the project has been marked as a favorite by the current user requesting the project health overview.",
             "example": true,
             "type": "boolean",
           },

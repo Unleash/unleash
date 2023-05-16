@@ -5,4 +5,5 @@ export interface IDisableEnableStrategyProps {
     featureId: string;
     environmentId: string;
     strategy: IFeatureStrategy;
+    text?: boolean;
 }

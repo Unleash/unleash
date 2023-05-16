@@ -24,22 +24,34 @@ export const ChangeItemWrapper = styled(Box)({
 });
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
+    display: 'grid',
+    gridTemplateColumns: 'auto 40px',
+    gap: theme.spacing(1),
     alignItems: 'center',
     marginBottom: theme.spacing(2),
+    width: '100%',
 }));
 
 const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: '150px auto',
+    gridAutoFlow: 'column',
     alignItems: 'center',
+    flexGrow: 1,
     gap: theme.spacing(1),
 }));
 
 const hasNameField = (payload: unknown): payload is { name: string } =>
     typeof payload === 'object' && payload !== null && 'name' in payload;
 
-const DisabledEnabledState: VFC<{ disabled: boolean }> = ({ disabled }) => {
+const DisabledEnabledState: VFC<{ show?: boolean; disabled: boolean }> = ({
+    show = true,
+    disabled,
+}) => {
+    if (!show) {
+        return null;
+    }
+
     if (disabled) {
         return (
             <Tooltip
@@ -73,18 +85,16 @@ const EditHeader: VFC<{
 }> = ({ wasDisabled = false, willBeDisabled = false }) => {
     if (wasDisabled && willBeDisabled) {
         return (
-            <Typography color="action.disabled">
-                Editing disabled strategy
-            </Typography>
+            <Typography color="action.disabled">Editing strategy:</Typography>
         );
     }
 
     if (!wasDisabled && willBeDisabled) {
-        return <Typography color="error.dark">Editing strategy</Typography>;
+        return <Typography color="error.dark">Editing strategy:</Typography>;
     }
 
     if (wasDisabled && !willBeDisabled) {
-        return <Typography color="success.dark">Editing strategy</Typography>;
+        return <Typography color="success.dark">Editing strategy:</Typography>;
     }
 
     return <Typography>Editing strategy:</Typography>;
@@ -128,14 +138,14 @@ export const StrategyChange: VFC<{
                                     currentStrategy={currentStrategy}
                                 />
                             </StrategyTooltipLink>
-                            <ConditionallyRender
-                                condition={Boolean(
-                                    change.payload?.disabled === true
-                                )}
-                                show={<DisabledEnabledState disabled={true} />}
-                            />
+                            <div>
+                                <DisabledEnabledState
+                                    disabled
+                                    show={change.payload?.disabled === true}
+                                />
+                            </div>
                         </ChangeItemInfo>
-                        {discard}
+                        <div>{discard}</div>
                     </ChangeItemCreateEditWrapper>
                     <StrategyExecution strategy={change.payload} />
                 </>
@@ -144,9 +154,11 @@ export const StrategyChange: VFC<{
                 <ChangeItemWrapper>
                     <ChangeItemInfo>
                         <Typography
-                            sx={theme => ({ color: theme.palette.error.main })}
+                            sx={theme => ({
+                                color: theme.palette.error.main,
+                            })}
                         >
-                            - Deleting strategy
+                            - Deleting strategy:
                         </Typography>
                         {hasNameField(change.payload) && (
                             <StrategyTooltipLink change={change}>
@@ -157,7 +169,7 @@ export const StrategyChange: VFC<{
                             </StrategyTooltipLink>
                         )}
                     </ChangeItemInfo>
-                    {discard}
+                    <div>{discard}</div>
                 </ChangeItemWrapper>
             )}
             {change.action === 'updateStrategy' && (
@@ -178,9 +190,8 @@ export const StrategyChange: VFC<{
                                 />
                             </StrategyTooltipLink>
                         </ChangeItemInfo>
-                        {discard}
+                        <div>{discard}</div>
                     </ChangeItemCreateEditWrapper>
-                    <StrategyExecution strategy={change.payload} />
                     <ConditionallyRender
                         condition={
                             change.payload?.disabled !==
@@ -190,8 +201,7 @@ export const StrategyChange: VFC<{
                             <Typography
                                 sx={{
                                     marginTop: theme => theme.spacing(2),
-                                    paddingLeft: theme => theme.spacing(3),
-                                    paddingRight: theme => theme.spacing(3),
+                                    marginBottom: theme => theme.spacing(2),
                                     ...flexRow,
                                     gap: theme => theme.spacing(1),
                                 }}
@@ -203,6 +213,7 @@ export const StrategyChange: VFC<{
                             </Typography>
                         }
                     />
+                    <StrategyExecution strategy={change.payload} />
                 </>
             )}
         </>

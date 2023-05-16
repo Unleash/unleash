@@ -69,7 +69,7 @@
     "countries-and-timezones": "^3.4.0",
     "cypress": "12.11.0",
     "cypress-vite": "^1.4.0",
-    "date-fns": "2.29.3",
+    "date-fns": "2.30.0",
     "date-fns-tz": "^2.0.0",
     "debounce": "1.2.1",
     "deep-diff": "1.0.2",

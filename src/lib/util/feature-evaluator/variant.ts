@@ -3,10 +3,7 @@ import { Context } from './context';
 import { FeatureInterface } from './feature';
 import normalizedValue from './strategy/util';
 import { resolveContextValue } from './helpers';
-
-enum PayloadType {
-    STRING = 'string',
-}
+import { PayloadType } from 'unleash-client';
 
 interface Override {
     contextName: string;

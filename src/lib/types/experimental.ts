@@ -1,9 +1,5 @@
-import { Variant } from 'unleash-client';
+import { Variant, PayloadType } from 'unleash-client';
 import { parseEnvVarBoolean } from '../util';
-
-export enum PayloadType {
-    STRING = 'string',
-}
 
 export type IFlagKey =
     | 'anonymiseEventLog'
@@ -52,7 +48,7 @@ const flags: IFlags = {
             false,
         ),
         payload: {
-            type: 'json' as PayloadType,
+            type: PayloadType.JSON,
             value:
                 process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER_PAYLOAD ?? '',
         },

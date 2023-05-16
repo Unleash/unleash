@@ -2,7 +2,7 @@ import { start } from './lib/server-impl';
 import { createConfig } from './lib/create-config';
 import { LogLevel } from './lib/logger';
 import { ApiTokenType } from './lib/types/models/api-token';
-import { PayloadType } from 'lib/types';
+import { PayloadType } from 'unleash-client';
 
 process.nextTick(async () => {
     try {
@@ -45,7 +45,7 @@ process.nextTick(async () => {
                             name: 'message-banner',
                             enabled: true,
                             payload: {
-                                type: 'json' as PayloadType,
+                                type: PayloadType.JSON,
                                 value: `{
                                     "message": "**New message banner!** Check out this new feature.",
                                     "variant": "secondary",

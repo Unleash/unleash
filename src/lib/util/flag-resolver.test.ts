@@ -1,8 +1,5 @@
-import {
-    defaultExperimentalOptions,
-    IFlagKey,
-    PayloadType,
-} from '../types/experimental';
+import { PayloadType } from 'unleash-client';
+import { defaultExperimentalOptions, IFlagKey } from '../types/experimental';
 import FlagResolver, { getVariantValue } from './flag-resolver';
 import { IExperimentalOptions } from '../types/experimental';
 
@@ -113,7 +110,7 @@ test('should support variant flags', () => {
         enabled: true,
         name: 'variant',
         payload: {
-            type: 'string' as PayloadType,
+            type: PayloadType.STRING,
             value: 'variant-A',
         },
     };
@@ -145,7 +142,7 @@ test('should expose an helper to get variant value', () => {
             enabled: true,
             name: 'variant',
             payload: {
-                type: 'string' as PayloadType,
+                type: PayloadType.STRING,
                 value: 'variant-A',
             },
         }),
@@ -156,7 +153,7 @@ test('should expose an helper to get variant value', () => {
             enabled: true,
             name: 'variant',
             payload: {
-                type: 'json' as PayloadType,
+                type: PayloadType.JSON,
                 value: `{"foo": "bar"}`,
             },
         }),

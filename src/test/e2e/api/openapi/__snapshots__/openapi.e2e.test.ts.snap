@@ -3947,6 +3947,8 @@ Stats are divided into current and previous **windows**.
                   "type": {
                     "enum": [
                       "string",
+                      "json",
+                      "csv",
                     ],
                     "type": "string",
                   },

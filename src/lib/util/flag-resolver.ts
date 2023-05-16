@@ -1,4 +1,4 @@
-import { Variant } from 'unleash-client';
+import { Variant, PayloadType } from 'unleash-client';
 import {
     IExperimentalOptions,
     IExternalFlagResolver,
@@ -6,7 +6,6 @@ import {
     IFlags,
     IFlagResolver,
     IFlagKey,
-    PayloadType,
 } from '../types/experimental';
 
 export default class FlagResolver implements IFlagResolver {
@@ -64,7 +63,7 @@ export const getVariantValue = <T = string>(
     variant: Variant | undefined,
 ): T | undefined => {
     if (variant?.payload !== undefined) {
-        if (variant.payload.type === ('json' as PayloadType)) {
+        if (variant.payload.type === PayloadType.JSON) {
             return JSON.parse(variant.payload.value) as T;
         }
 

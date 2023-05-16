@@ -1,0 +1,24 @@
+name: Lower null checks
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      MAIN_BRANCH: main
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Get package.json version and commit hash
+        id: get_version_commit_hash
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          COMMIT_HASH=${{ github.event.pull_request.head.sha }}
+          VERSION_WITH_COMMIT="${VERSION}-${COMMIT_HASH}"
+          echo "Version with commit hash: $VERSION_WITH_COMMIT"
+          echo "::set-output name=VERSION_WITH_COMMIT::$VERSION_WITH_COMMIT"

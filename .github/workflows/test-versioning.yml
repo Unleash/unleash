@@ -14,11 +14,9 @@ jobs:
         node-version: [18.x]
 
     steps:
-      - name: Get package.json version and commit hash
-        id: get_version_commit_hash
+      - name: Get the commit hash
+        id: get_commit_hash
         run: |
-          VERSION=$(jq -r '.version' package.json)
           COMMIT_HASH=${{ github.event.pull_request.head.sha }}
-          VERSION_WITH_COMMIT="${VERSION}-${COMMIT_HASH}"
-          echo "Version with commit hash: $VERSION_WITH_COMMIT"
-          echo "::set-output name=VERSION_WITH_COMMIT::$VERSION_WITH_COMMIT"
+          echo "Commit hash: $COMMIT_HASH"
+          echo "::set-output name=COMMIT_HASH::$COMMIT_HASH"

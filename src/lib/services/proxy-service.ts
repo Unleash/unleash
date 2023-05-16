@@ -31,6 +31,7 @@ type Services = Pick<
     | 'segmentService'
     | 'clientMetricsServiceV2'
     | 'settingService'
+    | 'configurationRevisionService'
 >;
 
 export class ProxyService {

@@ -352,6 +352,7 @@ export const ServiceAccountModal = ({
                                         <Link
                                             href="https://docs.getunleash.io/reference/api-tokens-and-client-keys"
                                             target="_blank"
+                                            rel="noreferrer"
                                         >
                                             Read more about API tokens
                                         </Link>

@@ -4,13 +4,12 @@ This directory contains the Unleash Admin UI frontend app.
 
 ## Run with a local instance of the unleash-api
 
-First, start the unleash-api backend on port 4242.
-Then, start the frontend dev server:
+Refer to the [Contributing to Unleash](../CONTRIBUTING.md#how-to-run-the-project) guide for instructions.
+The frontend dev server runs (in port 3000) simultaneously with the backend dev server (in port 4242):
 
 ```
-cd ./frontend
 yarn install
-yarn run start
+yarn dev
 ```
 
 ## Run with a sandbox instance of the Unleash API

@@ -1,5 +1,5 @@
 import { Button, Divider, Typography, styled } from '@mui/material';
-import qrImage from 'assets/img/demo_qr_temp.svg';
+import qrImage from 'assets/img/demoQR.svg';
 import { formatAssetPath } from 'utils/formatPath';
 import { Launch } from '@mui/icons-material';
 import { DemoDialog } from '../DemoDialog';
@@ -60,7 +60,7 @@ export const DemoDialogWelcome = ({
     const { trackEvent } = usePlausibleTracker();
 
     return (
-        <DemoDialog open={open} onClose={onClose}>
+        <DemoDialog open={open} onClose={onClose} preventCloseOnBackdropClick>
             <DemoDialog.Header>Explore Unleash</DemoDialog.Header>
             <Typography color="textSecondary" sx={{ mt: 2 }}>
                 You can explore Unleash on your own, however for the best
@@ -79,8 +79,9 @@ export const DemoDialogWelcome = ({
                 <Typography>
                     Open demo website in another tab:{' '}
                     <StyledLink
-                        href="https://unleash-demo-app.vercel.app/"
+                        href="https://hello.unleash.run/"
                         target="_blank"
+                        rel="noreferrer"
                         onClick={() => {
                             trackEvent('demo', {
                                 props: {
@@ -89,7 +90,7 @@ export const DemoDialogWelcome = ({
                             });
                         }}
                     >
-                        unleash-demo-app.vercel.app <Launch />
+                        hello.unleash.run <Launch />
                     </StyledLink>
                 </Typography>
                 <Typography color="textSecondary">

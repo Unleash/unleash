@@ -120,7 +120,11 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
     const toggleEnvironment = async (e: React.ChangeEvent) => {
         if (isChangeRequestConfigured(name)) {
             e.preventDefault();
-            onChangeRequestToggle(featureId, name, !enabled);
+            if (featureHasOnlyDisabledStrategies()) {
+                setShowEnabledDialog(true);
+            } else {
+                onChangeRequestToggle(featureId, name, !enabled, false);
+            }
             return;
         }
         if (enabled) {
@@ -156,12 +160,20 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
     );
 
     const onActivateStrategies = async () => {
-        await handleToggleEnvironmentOn(true);
+        if (isChangeRequestConfigured(name)) {
+            onChangeRequestToggle(featureId, name, !enabled, true);
+        } else {
+            await handleToggleEnvironmentOn(true);
+        }
         setShowEnabledDialog(false);
     };
 
     const onAddDefaultStrategy = async () => {
-        await handleToggleEnvironmentOn();
+        if (isChangeRequestConfigured(name)) {
+            onChangeRequestToggle(featureId, name, !enabled, false);
+        } else {
+            await handleToggleEnvironmentOn();
+        }
         setShowEnabledDialog(false);
     };
 

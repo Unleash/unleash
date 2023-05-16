@@ -4823,7 +4823,14 @@ Stats are divided into current and previous **windows**.
           },
           "flags": {
             "additionalProperties": {
-              "type": "boolean",
+              "anyOf": [
+                {
+                  "type": "boolean",
+                },
+                {
+                  "$ref": "#/components/schemas/variantFlagSchema",
+                },
+              ],
             },
             "type": "object",
           },
@@ -5267,6 +5274,30 @@ Stats are divided into current and previous **windows**.
         "required": [
           "tokens",
         ],
+        "type": "object",
+      },
+      "variantFlagSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+          },
+          "name": {
+            "type": "string",
+          },
+          "payload": {
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "type": "string",
+              },
+              "value": {
+                "type": "string",
+              },
+            },
+            "type": "object",
+          },
+        },
         "type": "object",
       },
       "variantSchema": {

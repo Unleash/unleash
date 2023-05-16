@@ -64,11 +64,6 @@ jobs:
           CURRENT=$(grep "Found [0-9]* errors" .out-current | sed 's/Found \(.*\) errors in .* files./\1/')
           MAIN=$(grep "Found [0-9]* errors" .out-main | sed 's/Found \(.*\) errors in .* files./\1/')
 
-          if [[ -z $CURRENT ]] || [[ -z $MAIN ]]; then
-            comment "No null checks were emitted from this patch. This is likely because no backend code was changed."
-            exit 0
-          fi
-
           if [ $CURRENT -gt $MAIN ]; then
             comment "After enabling [\`strictNullChecks\`](https://www.typescriptlang.org/tsconfig#strictNullChecks) this PR would be **increasing** the number of null check errors from ${MAIN} to ${CURRENT}. <br /> Make sure your branch is up-to-date with ${MAIN_BRANCH} and **check the diff in the console output** to pinpoint the offending files."
             diff .out-current .out-main

@@ -10,8 +10,10 @@ import {
 } from '../util/offline-unleash-client';
 import { ALL_ENVS, ALL_PROJECTS } from '../util/constants';
 import { UnleashEvents } from 'unleash-client';
-import { ANY_EVENT } from '../util/anyEventEmitter';
 import { Logger } from '../logger';
+import ConfigurationRevisionService, {
+    UPDATE_REVISION,
+} from '../features/feature-toggle/configuration-revision-service';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi'>;
 
@@ -19,7 +21,7 @@ type Stores = Pick<IUnleashStores, 'projectStore' | 'eventStore'>;
 
 type Services = Pick<
     IUnleashServices,
-    'featureToggleServiceV2' | 'segmentService'
+    'featureToggleServiceV2' | 'segmentService' | 'configurationRevisionService'
 >;
 
 export class ProxyRepository
@@ -33,6 +35,8 @@ export class ProxyRepository
     private readonly stores: Stores;
 
     private readonly services: Services;
+
+    private readonly configurationRevisionService: ConfigurationRevisionService;
 
     private readonly token: ApiUser;
 
@@ -57,6 +61,8 @@ export class ProxyRepository
         this.logger = config.getLogger('proxy-repository.ts');
         this.stores = stores;
         this.services = services;
+        this.configurationRevisionService =
+            services.configurationRevisionService;
         this.token = token;
         this.onAnyEvent = this.onAnyEvent.bind(this);
         this.interval = config.frontendApi.refreshIntervalInMs;
@@ -67,6 +73,7 @@ export class ProxyRepository
     }
 
     getToggle(name: string): FeatureInterface {
+        //@ts-ignore (we must update the node SDK to allow undefined)
         return this.features.find((feature) => feature.name === name);
     }
 
@@ -80,14 +87,14 @@ export class ProxyRepository
 
         // Reload cached token data whenever something relevant has changed.
         // For now, simply reload all the data on any EventStore event.
-        this.stores.eventStore.on(ANY_EVENT, this.onAnyEvent);
+        this.configurationRevisionService.on(UPDATE_REVISION, this.onAnyEvent);
 
         this.emit(UnleashEvents.Ready);
         this.emit(UnleashEvents.Changed);
     }
 
     stop(): void {
-        this.stores.eventStore.off(ANY_EVENT, this.onAnyEvent);
+        this.configurationRevisionService.off(UPDATE_REVISION, this.onAnyEvent);
         this.running = false;
     }
 

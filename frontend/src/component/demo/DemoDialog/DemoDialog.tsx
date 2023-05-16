@@ -31,16 +31,25 @@ const StyledHeader = styled(Typography)(({ theme }) => ({
 interface IDemoDialogProps extends DialogProps {
     open: boolean;
     onClose: () => void;
+    preventCloseOnBackdropClick?: boolean;
     children: React.ReactNode;
 }
 
 export const DemoDialog = ({
     open,
     onClose,
+    preventCloseOnBackdropClick,
     children,
     ...props
 }: IDemoDialogProps) => (
-    <StyledDialog open={open} onClose={onClose} {...props}>
+    <StyledDialog
+        open={open}
+        onClose={(_, r) => {
+            if (preventCloseOnBackdropClick && r === 'backdropClick') return;
+            onClose();
+        }}
+        {...props}
+    >
         <StyledCloseButton aria-label="close" onClick={onClose}>
             <CloseIcon />
         </StyledCloseButton>

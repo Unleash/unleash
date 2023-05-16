@@ -431,7 +431,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const frontendApi = options.frontendApi || {
         refreshIntervalInMs: parseEnvVarNumber(
             process.env.FRONTEND_API_REFRESH_INTERVAL_MS,
-            10000,
+            20000,
         ),
     };
 

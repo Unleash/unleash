@@ -3,7 +3,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Badge } from 'component/common/Badge/Badge';
 import { Step } from 'react-joyride';
 import { gradualRollout, variants } from './demo-setup';
-import { basePath } from 'utils/formatPath';
+import { basePath, formatAssetPath } from 'utils/formatPath';
 import userIdImage from 'assets/img/userId-image.png';
 
 export interface ITutorialTopicStep extends Step {
@@ -49,6 +49,7 @@ export const TOPICS: ITutorialTopic[] = [
                             <a
                                 href="https://docs.getunleash.io/reference/feature-toggles"
                                 target="_blank"
+                                rel="noreferrer"
                             >
                                 Feature toggles
                             </a>{' '}
@@ -59,6 +60,7 @@ export const TOPICS: ITutorialTopic[] = [
                             <a
                                 href="https://docs.getunleash.io/reference/projects"
                                 target="_blank"
+                                rel="noreferrer"
                             >
                                 projects
                             </a>
@@ -99,6 +101,7 @@ export const TOPICS: ITutorialTopic[] = [
                             <a
                                 href="https://docs.getunleash.io/reference/activation-strategies"
                                 target="_blank"
+                                rel="noreferrer"
                             >
                                 Activation strategies
                             </a>{' '}
@@ -154,6 +157,7 @@ export const TOPICS: ITutorialTopic[] = [
                             <a
                                 href="https://docs.getunleash.io/reference/strategy-constraints"
                                 target="_blank"
+                                rel="noreferrer"
                             >
                                 Strategy constraints
                             </a>{' '}
@@ -161,6 +165,7 @@ export const TOPICS: ITutorialTopic[] = [
                             <a
                                 href="https://docs.getunleash.io/reference/activation-strategies"
                                 target="_blank"
+                                rel="noreferrer"
                             >
                                 activation strategy
                             </a>{' '}
@@ -181,6 +186,7 @@ export const TOPICS: ITutorialTopic[] = [
                             <a
                                 href="https://docs.getunleash.io/reference/unleash-context"
                                 target="_blank"
+                                rel="noreferrer"
                             >
                                 Unleash context
                             </a>{' '}
@@ -220,7 +226,7 @@ export const TOPICS: ITutorialTopic[] = [
                             You can find your userId on the demo page.
                         </Badge>
                         <StyledImg
-                            src={userIdImage}
+                            src={formatAssetPath(userIdImage)}
                             alt="You can find your userId on the demo page."
                         />
                         <Description sx={{ mt: 1 }}>
@@ -301,6 +307,7 @@ export const TOPICS: ITutorialTopic[] = [
                             <a
                                 href="https://docs.getunleash.io/reference/activation-strategies#gradual-rollout"
                                 target="_blank"
+                                rel="noreferrer"
                             >
                                 Gradual rollout
                             </a>{' '}
@@ -308,6 +315,7 @@ export const TOPICS: ITutorialTopic[] = [
                             <a
                                 href="https://docs.getunleash.io/reference/activation-strategies"
                                 target="_blank"
+                                rel="noreferrer"
                             >
                                 activation strategies
                             </a>
@@ -421,6 +429,7 @@ export const TOPICS: ITutorialTopic[] = [
                             <a
                                 href="https://docs.getunleash.io/reference/feature-toggle-variants"
                                 target="_blank"
+                                rel="noreferrer"
                             >
                                 Feature toggle variants
                             </a>{' '}
@@ -496,6 +505,7 @@ export const TOPICS: ITutorialTopic[] = [
                             <a
                                 href="https://developer.mozilla.org/en-US/docs/Web/CSS/named-color"
                                 target="_blank"
+                                rel="noreferrer"
                             >
                                 color
                             </a>{' '}
@@ -567,7 +577,7 @@ export const TOPICS: ITutorialTopic[] = [
                             You can find your userId on the demo page.
                         </Badge>
                         <StyledImg
-                            src={userIdImage}
+                            src={formatAssetPath(userIdImage)}
                             alt="You can find your userId on the demo page."
                         />
                         <Description sx={{ mt: 1 }}>

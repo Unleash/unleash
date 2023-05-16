@@ -5,10 +5,29 @@ export enum PayloadType {
     STRING = 'string',
 }
 
-export type IFlags = Partial<typeof flags>;
-export type IFlagKey = keyof IFlags;
+export type IFlagKey =
+    | 'anonymiseEventLog'
+    | 'embedProxy'
+    | 'embedProxyFrontend'
+    | 'responseTimeWithAppNameKillSwitch'
+    | 'maintenanceMode'
+    | 'messageBanner'
+    | 'featuresExportImport'
+    | 'caseInsensitiveInOperators'
+    | 'strictSchemaValidation'
+    | 'proPlanAutoCharge'
+    | 'personalAccessTokensKillSwitch'
+    | 'cleanClientApi'
+    | 'groupRootRoles'
+    | 'migrationLock'
+    | 'demo'
+    | 'strategyImprovements'
+    | 'googleAuthEnabled'
+    | 'variantMetrics';
 
-const flags: { [key: string]: boolean | Variant } = {
+export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
+
+const flags: IFlags = {
     anonymiseEventLog: false,
     embedProxy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,

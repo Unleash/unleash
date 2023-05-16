@@ -353,7 +353,8 @@ export const createOpenApiSchema = ({
     OpenAPIV3DocumentWithServers,
     'paths'
 > => {
-    const url = findRootUrl(unleashUrl, baseUriPath);
+    const rootUrl = findRootUrl(unleashUrl, baseUriPath);
+    const url = new URL(baseUriPath, rootUrl).toString();
     return {
         openapi: '3.0.3',
         servers: url ? [{ url }] : [],

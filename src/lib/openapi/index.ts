@@ -340,10 +340,14 @@ const findRootUrl: (unleashUrl: string, baseUriPath: string) => string = (
         return unleashUrl;
     }
     const baseUrl = new URL(unleashUrl);
-    if (baseUrl.pathname.indexOf(baseUriPath) >= 0) {
-        return `${baseUrl.protocol}//${baseUrl.host}`;
-    }
-    return baseUrl.toString();
+    const url =
+        baseUrl.pathname.indexOf(baseUriPath) >= 0
+            ? `${baseUrl.protocol}//${baseUrl.host}`
+            : baseUrl.toString();
+
+    return baseUriPath.startsWith('/')
+        ? new URL(baseUriPath, url).toString()
+        : url;
 };
 
 export const createOpenApiSchema = ({
@@ -354,9 +358,10 @@ export const createOpenApiSchema = ({
     'paths'
 > => {
     const url = findRootUrl(unleashUrl, baseUriPath);
+
     return {
         openapi: '3.0.3',
-        servers: url ? [{ url }] : [],
+        servers: baseUriPath ? [{ url }] : [],
         info: {
             title: 'Unleash API',
             version: apiVersion,

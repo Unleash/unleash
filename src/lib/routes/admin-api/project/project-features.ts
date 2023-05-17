@@ -20,6 +20,7 @@ import { extractUsername } from '../../../util';
 import { IAuthRequest } from '../../unleash-types';
 import {
     AdminFeaturesQuerySchema,
+    BulkToggleFeaturesSchema,
     CreateFeatureSchema,
     CreateFeatureStrategySchema,
     createRequestSchema,
@@ -47,6 +48,11 @@ interface FeatureStrategyParams {
     featureName: string;
     environment: string;
     sortOrder?: number;
+}
+
+interface BulkFeaturesStrategyParams {
+    projectId: string;
+    environment: string;
 }
 
 interface FeatureStrategyQuery {
@@ -78,6 +84,7 @@ const PATH_STALE = '/:projectId/stale';
 const PATH_FEATURE = `${PATH}/:featureName`;
 const PATH_FEATURE_CLONE = `${PATH_FEATURE}/clone`;
 const PATH_ENV = `${PATH_FEATURE}/environments/:environment`;
+const BULK_PATH_ENV = `/:projectId/bulk_features/environments/:environment`;
 const PATH_STRATEGIES = `${PATH_ENV}/strategies`;
 const PATH_STRATEGY = `${PATH_STRATEGIES}/:strategyId`;
 
@@ -147,6 +154,46 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     operationId: 'toggleFeatureEnvironmentOn',
                     responses: { 200: createResponseSchema('featureSchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: `${BULK_PATH_ENV}/on`,
+            handler: this.bulkToggleFeaturesEnvironmentOn,
+            permission: UPDATE_FEATURE_ENVIRONMENT,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Unstable'],
+                    description:
+                        'This endpoint enables multiple feature toggles.',
+                    summary: 'Bulk enable a list of features.',
+                    operationId: 'bulkToggleFeaturesEnvironmentOn',
+                    requestBody: createRequestSchema(
+                        'bulkToggleFeaturesSchema',
+                    ),
+                    responses: { 405: emptyResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: `${BULK_PATH_ENV}/off`,
+            handler: this.bulkToggleFeaturesEnvironmentOff,
+            permission: UPDATE_FEATURE_ENVIRONMENT,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Unstable'],
+                    description:
+                        'This endpoint disables multiple feature toggles.',
+                    summary: 'Bulk disabled a list of features.',
+                    operationId: 'bulkToggleFeaturesEnvironmentOff',
+                    requestBody: createRequestSchema(
+                        'bulkToggleFeaturesSchema',
+                    ),
+                    responses: { 405: emptyResponse },
                 }),
             ],
         });
@@ -660,6 +707,56 @@ export default class ProjectFeaturesController extends Controller {
             featureName,
             environment,
             true,
+            extractUsername(req),
+            req.user,
+            shouldActivateDisabledStrategies === 'true',
+        );
+        res.status(200).end();
+    }
+
+    async bulkToggleFeaturesEnvironmentOn(
+        req: IAuthRequest<
+            BulkFeaturesStrategyParams,
+            any,
+            BulkToggleFeaturesSchema,
+            FeatureStrategyQuery
+        >,
+        res: Response<void>,
+    ): Promise<void> {
+        const { environment, projectId } = req.params;
+        const { shouldActivateDisabledStrategies } = req.query;
+        const { features } = req.body;
+
+        await this.featureService.bulkUpdateEnabled(
+            projectId,
+            features,
+            environment,
+            true,
+            extractUsername(req),
+            req.user,
+            shouldActivateDisabledStrategies === 'true',
+        );
+        res.status(200).end();
+    }
+
+    async bulkToggleFeaturesEnvironmentOff(
+        req: IAuthRequest<
+            BulkFeaturesStrategyParams,
+            any,
+            BulkToggleFeaturesSchema,
+            FeatureStrategyQuery
+        >,
+        res: Response<void>,
+    ): Promise<void> {
+        const { environment, projectId } = req.params;
+        const { shouldActivateDisabledStrategies } = req.query;
+        const { features } = req.body;
+
+        await this.featureService.bulkUpdateEnabled(
+            projectId,
+            features,
+            environment,
+            false,
             extractUsername(req),
             req.user,
             shouldActivateDisabledStrategies === 'true',

@@ -372,6 +372,71 @@ test('Can enable/disable environment for feature with strategies', async () => {
     });
 });
 
+test('Can bulk enable/disable environment for feature with strategies', async () => {
+    const envName = 'bulk-enable-feature-environment';
+    const featureName = 'com.test.bulk.enable.environment';
+    const project = 'default';
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: envName,
+        type: 'production',
+    });
+    // Connect environment to project
+    await app.request
+        .post(`/api/admin/projects/${project}/environments`)
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+
+    // Create feature
+    await app.createFeature(featureName).expect((res) => {
+        expect(res.body.name).toBe(featureName);
+        expect(res.body.createdAt).toBeTruthy();
+    });
+
+    // Add strategy to it
+    await app.request
+        .post(
+            `/api/admin/projects/${project}/features/${featureName}/environments/${envName}/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200);
+    await app.request
+        .post(
+            `/api/admin/projects/${project}/bulk_features/environments/${envName}/on`,
+        )
+        .send({ features: [featureName] })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+    await app.getProjectFeatures(project, featureName).expect((res) => {
+        const enabledFeatureEnv = res.body.environments.find(
+            (e) => e.name === envName,
+        );
+        expect(enabledFeatureEnv).toBeTruthy();
+        expect(enabledFeatureEnv.enabled).toBe(true);
+    });
+
+    await app.request
+        .post(
+            `/api/admin/projects/${project}/bulk_features/environments/${envName}/off`,
+        )
+        .send({ features: [featureName] })
+        .expect(200);
+    await app.getProjectFeatures(project, featureName).expect((res) => {
+        const disabledFeatureEnv = res.body.environments.find(
+            (e) => e.name === envName,
+        );
+        expect(disabledFeatureEnv).toBeTruthy();
+        expect(disabledFeatureEnv.enabled).toBe(false);
+    });
+});
+
 test("Trying to get a project that doesn't exist yields 404", async () => {
     await app.request.get('/api/admin/projects/nonexisting').expect(404);
 });

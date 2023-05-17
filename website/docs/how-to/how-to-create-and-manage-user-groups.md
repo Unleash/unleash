@@ -20,7 +20,7 @@ This guide takes you through how to use user groups to manage permissions on you
 
 ![The groups screen with the new group button highlighted.](/img/create-ug-step-2.png)
 
-3. Give the group a name and an optional description and select the users you'd like to be in the group.
+3. Give the group a name, an optional description, an optional root role, and select the users you'd like to be in the group.
 
 ![The new group screen with the users drop down open and highlighted.](/img/create-ug-step-3.png)
 

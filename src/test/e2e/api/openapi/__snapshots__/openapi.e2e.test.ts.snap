@@ -927,6 +927,7 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "object",
       },
       "bulkToggleFeaturesSchema": {
+        "description": "The feature list used for bulk toggle operations",
         "properties": {
           "features": {
             "description": "The features that we want to bulk toggle",

@@ -1,5 +1,5 @@
 import { Button, Divider, Typography, styled } from '@mui/material';
-import qrImage from 'assets/img/demoQR.svg';
+import qrImage from 'assets/img/demoQR.png';
 import { formatAssetPath } from 'utils/formatPath';
 import { Launch } from '@mui/icons-material';
 import { DemoDialog } from '../DemoDialog';

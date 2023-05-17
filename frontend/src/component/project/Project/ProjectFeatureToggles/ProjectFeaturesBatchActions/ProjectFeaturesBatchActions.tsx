@@ -50,7 +50,6 @@ export const ProjectFeaturesBatchActions: FC<
                 condition={Boolean(uiConfig?.flags?.featuresExportImport)}
                 show={
                     <Button
-                        startIcon={<FileDownload />}
                         variant="outlined"
                         size="small"
                         onClick={() => setShowExportDialog(true)}

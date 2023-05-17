@@ -36,7 +36,6 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
                 {({ hasAccess }) => (
                     <Button
                         disabled={!hasAccess || isDialogOpen}
-                        startIcon={<Archive />}
                         variant="outlined"
                         size="small"
                         onClick={() => setIsDialogOpen(true)}

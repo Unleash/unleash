@@ -96,7 +96,6 @@ export const ManageTags: VFC<IManageTagsProps> = ({ projectId, data }) => {
                 {({ hasAccess }) => (
                     <Button
                         disabled={!hasAccess || isOpen}
-                        startIcon={<Label />}
                         variant="outlined"
                         size="small"
                         onClick={() => setIsOpen(true)}

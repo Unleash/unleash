@@ -723,17 +723,6 @@ export default class ProjectFeaturesController extends Controller {
         >,
         res: Response<void>,
     ): Promise<void> {
-        const { environment, projectId } = req.params;
-        const { shouldActivateDisabledStrategies } = req.query;
-        const { features } = req.body;
-
-        console.log(
-            environment,
-            projectId,
-            shouldActivateDisabledStrategies,
-            features,
-        );
-
         res.status(405).end();
     }
 
@@ -746,17 +735,6 @@ export default class ProjectFeaturesController extends Controller {
         >,
         res: Response<void>,
     ): Promise<void> {
-        const { environment, projectId } = req.params;
-        const { shouldActivateDisabledStrategies } = req.query;
-        const { features } = req.body;
-
-        console.log(
-            environment,
-            projectId,
-            shouldActivateDisabledStrategies,
-            features,
-        );
-
         res.status(405).end();
     }
 

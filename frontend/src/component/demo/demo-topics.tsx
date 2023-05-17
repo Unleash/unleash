@@ -4,7 +4,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { Step } from 'react-joyride';
 import { gradualRollout, variants } from './demo-setup';
 import { basePath, formatAssetPath } from 'utils/formatPath';
-import userIdImage from 'assets/img/userId-image.png';
+import demoUserId from 'assets/img/demo-userid.png';
 
 export interface ITutorialTopicStep extends Step {
     href?: string;
@@ -226,7 +226,7 @@ export const TOPICS: ITutorialTopic[] = [
                             You can find your userId on the demo page.
                         </Badge>
                         <StyledImg
-                            src={formatAssetPath(userIdImage)}
+                            src={formatAssetPath(demoUserId)}
                             alt="You can find your userId on the demo page."
                         />
                         <Description sx={{ mt: 1 }}>
@@ -577,7 +577,7 @@ export const TOPICS: ITutorialTopic[] = [
                             You can find your userId on the demo page.
                         </Badge>
                         <StyledImg
-                            src={formatAssetPath(userIdImage)}
+                            src={formatAssetPath(demoUserId)}
                             alt="You can find your userId on the demo page."
                         />
                         <Description sx={{ mt: 1 }}>

@@ -1,5 +1,5 @@
 import { Button, Divider, Typography, styled } from '@mui/material';
-import qrImage from 'assets/img/demoQR.png';
+import demoQR from 'assets/img/demo-qr.png';
 import { formatAssetPath } from 'utils/formatPath';
 import { Launch } from '@mui/icons-material';
 import { DemoDialog } from '../DemoDialog';
@@ -72,7 +72,7 @@ export const DemoDialogWelcome = ({
                     Scan the QR code with your phone
                 </StyledScanMessage>
                 <StyledQRCode
-                    src={formatAssetPath(qrImage)}
+                    src={formatAssetPath(demoQR)}
                     alt="Demo QR Code"
                 />
                 <StyledDivider>OR</StyledDivider>

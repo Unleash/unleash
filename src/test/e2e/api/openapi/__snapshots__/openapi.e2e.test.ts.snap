@@ -926,6 +926,26 @@ The provider you choose for your addon dictates what properties the \`parameters
         ],
         "type": "object",
       },
+      "bulkToggleFeaturesSchema": {
+        "properties": {
+          "features": {
+            "description": "The features that we want to bulk toggle",
+            "example": [
+              "feature-a",
+              "feature-b",
+            ],
+            "items": {
+              "description": "The feature name we want to toggle",
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "features",
+        ],
+        "type": "object",
+      },
       "changePasswordSchema": {
         "additionalProperties": false,
         "properties": {
@@ -9156,6 +9176,94 @@ If the provided project does not exist, the list of events will be empty.",
         "summary": "Archives a list of features",
         "tags": [
           "Features",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/bulk_features/environments/{environment}/off": {
+      "post": {
+        "description": "This endpoint disables multiple feature toggles.",
+        "operationId": "bulkToggleFeaturesEnvironmentOff",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "environment",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/bulkToggleFeaturesSchema",
+              },
+            },
+          },
+          "description": "bulkToggleFeaturesSchema",
+          "required": true,
+        },
+        "responses": {
+          "405": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Bulk disabled a list of features.",
+        "tags": [
+          "Unstable",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/bulk_features/environments/{environment}/on": {
+      "post": {
+        "description": "This endpoint enables multiple feature toggles.",
+        "operationId": "bulkToggleFeaturesEnvironmentOn",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+          {
+            "in": "path",
+            "name": "environment",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/bulkToggleFeaturesSchema",
+              },
+            },
+          },
+          "description": "bulkToggleFeaturesSchema",
+          "required": true,
+        },
+        "responses": {
+          "405": {
+            "description": "This response has no body.",
+          },
+        },
+        "summary": "Bulk enable a list of features.",
+        "tags": [
+          "Unstable",
         ],
       },
     },

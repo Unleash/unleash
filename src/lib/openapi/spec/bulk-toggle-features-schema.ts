@@ -4,6 +4,7 @@ export const bulkToggleFeaturesSchema = {
     $id: '#/components/schemas/bulkToggleFeaturesSchema',
     type: 'object',
     required: ['features'],
+    description: 'The feature list used for bulk toggle operations',
     properties: {
         features: {
             type: 'array',

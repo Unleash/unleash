@@ -723,21 +723,7 @@ export default class ProjectFeaturesController extends Controller {
         >,
         res: Response<void>,
     ): Promise<void> {
-        const { environment, projectId } = req.params;
-        const { shouldActivateDisabledStrategies } = req.query;
-        const { features } = req.body;
-
-        await this.featureService.bulkUpdateEnabled(
-            projectId,
-            features,
-            environment,
-            true,
-            extractUsername(req),
-            req.user,
-            shouldActivateDisabledStrategies === 'true',
-        );
-
-        res.status(200).end();
+        res.status(405).end();
     }
 
     async bulkToggleFeaturesEnvironmentOff(
@@ -749,21 +735,7 @@ export default class ProjectFeaturesController extends Controller {
         >,
         res: Response<void>,
     ): Promise<void> {
-        const { environment, projectId } = req.params;
-        const { shouldActivateDisabledStrategies } = req.query;
-        const { features } = req.body;
-
-        await this.featureService.bulkUpdateEnabled(
-            projectId,
-            features,
-            environment,
-            false,
-            extractUsername(req),
-            req.user,
-            shouldActivateDisabledStrategies === 'true',
-        );
-
-        res.status(200).end();
+        res.status(405).end();
     }
 
     async toggleFeatureEnvironmentOff(

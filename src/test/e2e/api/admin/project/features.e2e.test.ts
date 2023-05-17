@@ -413,28 +413,14 @@ test('Can bulk enable/disable environment for feature with strategies', async ()
         )
         .send({ features: [featureName] })
         .set('Content-Type', 'application/json')
-        .expect(200);
-    await app.getProjectFeatures(project, featureName).expect((res) => {
-        const enabledFeatureEnv = res.body.environments.find(
-            (e) => e.name === envName,
-        );
-        expect(enabledFeatureEnv).toBeTruthy();
-        expect(enabledFeatureEnv.enabled).toBe(true);
-    });
+        .expect(405);
 
     await app.request
         .post(
             `/api/admin/projects/${project}/bulk_features/environments/${envName}/off`,
         )
         .send({ features: [featureName] })
-        .expect(200);
-    await app.getProjectFeatures(project, featureName).expect((res) => {
-        const disabledFeatureEnv = res.body.environments.find(
-            (e) => e.name === envName,
-        );
-        expect(disabledFeatureEnv).toBeTruthy();
-        expect(disabledFeatureEnv.enabled).toBe(false);
-    });
+        .expect(405);
 });
 
 test("Trying to get a project that doesn't exist yields 404", async () => {

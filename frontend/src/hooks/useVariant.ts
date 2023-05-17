@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { PayloadType, Variant } from 'unleash-client';
+import { Variant, getVariantValue } from 'utils/variants';
 
 export const useVariant = <T = string>(variant?: Variant) => {
     return useMemo(() => {
@@ -7,16 +7,4 @@ export const useVariant = <T = string>(variant?: Variant) => {
             return getVariantValue<T>(variant);
         }
     }, [variant]);
-};
-
-const getVariantValue = <T = string>(
-    variant: Variant | undefined
-): T | undefined => {
-    if (variant?.payload !== undefined) {
-        if (variant.payload.type === PayloadType.JSON) {
-            return JSON.parse(variant.payload.value) as T;
-        }
-
-        return variant.payload.value as T;
-    }
 };

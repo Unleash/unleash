@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Variant } from 'unleash-client';
+import { Variant } from 'utils/variants';
 
 export interface IUiConfig {
     authenticationType?: string;

@@ -6,7 +6,8 @@ import useToast from 'hooks/useToast';
 import type { FeatureSchema } from 'openapi';
 
 import { formatUnknownError } from 'utils/formatUnknownError';
-import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import useProject from 'hooks/api/getters/useProject/useProject';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
@@ -32,6 +33,7 @@ export const BulkEnableDialog = ({
 }: IExportDialogProps) => {
     const [selected, setSelected] = useState(environments[0]);
     const { bulkToggleFeaturesEnvironmentOn } = useFeatureApi();
+    const { refetch } = useProject(projectId);
     const { setToastApiError } = useToast();
 
     const getOptions = () =>
@@ -40,8 +42,6 @@ export const BulkEnableDialog = ({
             label: env,
         }));
 
-    console.log(data);
-
     const onClick = async () => {
         try {
             await bulkToggleFeaturesEnvironmentOn(
@@ -49,6 +49,7 @@ export const BulkEnableDialog = ({
                 data.map(feature => feature.name),
                 selected
             );
+            refetch();
             onClose();
             onConfirm?.();
         } catch (e: unknown) {

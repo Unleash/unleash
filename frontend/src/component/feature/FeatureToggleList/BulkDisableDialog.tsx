@@ -7,6 +7,7 @@ import type { FeatureSchema } from 'openapi';
 
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
+import useProject from 'hooks/api/getters/useProject/useProject';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
@@ -32,6 +33,7 @@ export const BulkDisableDialog = ({
 }: IExportDialogProps) => {
     const [selected, setSelected] = useState(environments[0]);
     const { bulkToggleFeaturesEnvironmentOff } = useFeatureApi();
+    const { refetch } = useProject(projectId);
     const { setToastApiError } = useToast();
 
     const getOptions = () =>
@@ -47,6 +49,7 @@ export const BulkDisableDialog = ({
                 data.map(feature => feature.name),
                 selected
             );
+            refetch();
             onClose();
             onConfirm?.();
         } catch (e: unknown) {

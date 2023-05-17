@@ -1257,6 +1257,30 @@ class FeatureToggleService {
         );
     }
 
+    async bulkUpdateEnabled(
+        project: string,
+        featureNames: string[],
+        environment: string,
+        enabled: boolean,
+        createdBy: string,
+        user?: User,
+        shouldActivateDisabledStrategies = false,
+    ): Promise<void> {
+        await Promise.all(
+            featureNames.map((featureName) =>
+                this.updateEnabled(
+                    project,
+                    featureName,
+                    environment,
+                    enabled,
+                    createdBy,
+                    user,
+                    shouldActivateDisabledStrategies,
+                ),
+            ),
+        );
+    }
+
     async updateEnabled(
         project: string,
         featureName: string,

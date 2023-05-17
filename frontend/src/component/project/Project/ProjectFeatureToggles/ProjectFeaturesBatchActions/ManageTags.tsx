@@ -1,5 +1,4 @@
 import { useMemo, useState, VFC } from 'react';
-import { Label } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { ManageBulkTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageBulkTagsDialog';
 import type { FeatureSchema } from 'openapi';

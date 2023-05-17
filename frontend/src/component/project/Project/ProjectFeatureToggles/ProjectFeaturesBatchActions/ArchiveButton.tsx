@@ -1,6 +1,5 @@
 import { useState, VFC } from 'react';
 import { Button } from '@mui/material';
-import { Archive } from '@mui/icons-material';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import useProject from 'hooks/api/getters/useProject/useProject';

@@ -134,3 +134,4 @@ export * from './tags-bulk-add-schema';
 export * from './upsert-segment-schema';
 export * from './batch-features-schema';
 export * from './token-string-list-schema';
+export * from './bulk-toggle-features-schema';

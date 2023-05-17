@@ -289,7 +289,7 @@ const metaRules: Rule[] = [
 describe.each(metaRules)('OpenAPI schemas $name', (rule) => {
     const validateMetaSchema = ajv.compile(rule.metaSchema);
 
-    // test all schemas agaisnt the rule
+    // test all schemas against the rule
     Object.entries(schemas).forEach(([schemaName, schema]) => {
         if (!rule.match || rule.match(schemaName, schema)) {
             it(`${schemaName}`, () => {

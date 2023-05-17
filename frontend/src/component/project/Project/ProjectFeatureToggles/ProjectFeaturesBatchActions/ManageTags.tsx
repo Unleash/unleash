@@ -1,5 +1,4 @@
 import { useMemo, useState, VFC } from 'react';
-import { Label } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { ManageBulkTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageBulkTagsDialog';
 import type { FeatureSchema } from 'openapi';
@@ -96,7 +95,6 @@ export const ManageTags: VFC<IManageTagsProps> = ({ projectId, data }) => {
                 {({ hasAccess }) => (
                     <Button
                         disabled={!hasAccess || isOpen}
-                        startIcon={<Label />}
                         variant="outlined"
                         size="small"
                         onClick={() => setIsOpen(true)}

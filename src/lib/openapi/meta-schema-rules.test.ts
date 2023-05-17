@@ -168,6 +168,7 @@ const metaRules: Rule[] = [
             'validatePasswordSchema',
             'validateTagTypeSchema',
             'variantSchema',
+            'variantFlagSchema',
             'versionSchema',
             'projectOverviewSchema',
             'importTogglesSchema',

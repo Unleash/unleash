@@ -1,14 +1,13 @@
 import { FC, useMemo, useState } from 'react';
 import { Button } from '@mui/material';
-import { FileDownload } from '@mui/icons-material';
 import type { FeatureSchema } from 'openapi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ArchiveButton } from './ArchiveButton';
 import { MoreActions } from './MoreActions';
 import { ManageTags } from './ManageTags';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { BulkDisableDialog } from 'component/feature/FeatureToggleList/BulkDisableDialog';
+import { BulkEnableDialog } from 'component/feature/FeatureToggleList/BulkEnableDialog';
 
 interface IProjectFeaturesBatchActionsProps {
     selectedIds: string[];
@@ -19,8 +18,9 @@ interface IProjectFeaturesBatchActionsProps {
 export const ProjectFeaturesBatchActions: FC<
     IProjectFeaturesBatchActionsProps
 > = ({ selectedIds, data, projectId }) => {
-    const { uiConfig } = useUiConfig();
     const [showExportDialog, setShowExportDialog] = useState(false);
+    const [showBulkEnableDialog, setShowBulkEnableDialog] = useState(false);
+    const [showBulkDisableDialog, setShowBulkDisableDialog] = useState(false);
     const { trackEvent } = usePlausibleTracker();
     const selectedData = useMemo(
         () => data.filter(d => selectedIds.includes(d.name)),
@@ -42,9 +42,37 @@ export const ProjectFeaturesBatchActions: FC<
             },
         });
     };
+    const trackBulkEnabled = () => {
+        trackEvent('batch_operations', {
+            props: {
+                eventType: 'features enabled',
+            },
+        });
+    };
+    const trackBulkDisabled = () => {
+        trackEvent('batch_operations', {
+            props: {
+                eventType: 'features disabled',
+            },
+        });
+    };
 
     return (
         <>
+            <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setShowBulkEnableDialog(true)}
+            >
+                Enable
+            </Button>
+            <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setShowBulkDisableDialog(true)}
+            >
+                Disable
+            </Button>
             <ArchiveButton projectId={projectId} features={selectedIds} />
             <Button
                 variant="outlined"
@@ -61,6 +89,22 @@ export const ProjectFeaturesBatchActions: FC<
                 onClose={() => setShowExportDialog(false)}
                 environments={environments}
                 onConfirm={trackExport}
+            />
+            <BulkEnableDialog
+                showExportDialog={showBulkEnableDialog}
+                data={selectedData}
+                onClose={() => setShowBulkEnableDialog(false)}
+                environments={environments}
+                projectId={projectId}
+                onConfirm={trackBulkEnabled}
+            />
+            <BulkDisableDialog
+                showExportDialog={showBulkDisableDialog}
+                data={selectedData}
+                onClose={() => setShowBulkDisableDialog(false)}
+                environments={environments}
+                projectId={projectId}
+                onConfirm={trackBulkDisabled}
             />
         </>
     );

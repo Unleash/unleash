@@ -48,7 +48,7 @@ export const useChangeRequestToggle = (project: string) => {
                 action: 'updateEnabled',
                 payload: {
                     enabled: Boolean(changeRequestDialogDetails.enabled),
-                    shouldActivateDisbledStrategies: Boolean(
+                    shouldActivateDisabledStrategies: Boolean(
                         changeRequestDialogDetails.shouldActivateDisabledStrategies
                     ),
                 },

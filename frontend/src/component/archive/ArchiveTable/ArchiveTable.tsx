@@ -93,18 +93,24 @@ export const ArchiveTable = ({
 
     const columns = useMemo(
         () => [
-            {
-                id: 'Select',
-                Header: ({ getToggleAllRowsSelectedProps }: any) => (
-                    <Checkbox {...getToggleAllRowsSelectedProps()} />
-                ),
-                Cell: ({ row }: any) => (
-                    <RowSelectCell {...row?.getToggleRowSelectedProps?.()} />
-                ),
-                maxWidth: 50,
-                disableSortBy: true,
-                hideInMenu: true,
-            },
+            ...(projectId
+                ? [
+                      {
+                          id: 'Select',
+                          Header: ({ getToggleAllRowsSelectedProps }: any) => (
+                              <Checkbox {...getToggleAllRowsSelectedProps()} />
+                          ),
+                          Cell: ({ row }: any) => (
+                              <RowSelectCell
+                                  {...row?.getToggleRowSelectedProps?.()}
+                              />
+                          ),
+                          maxWidth: 50,
+                          disableSortBy: true,
+                          hideInMenu: true,
+                      },
+                  ]
+                : []),
             {
                 Header: 'Seen',
                 width: 85,
@@ -336,7 +342,7 @@ export const ArchiveTable = ({
                 />
                 <ArchivedFeatureDeleteConfirm
                     deletedFeatures={[deletedFeature?.name!]}
-                    projectId={projectId!}
+                    projectId={projectId ?? deletedFeature?.project!}
                     open={deleteModalOpen}
                     setOpen={setDeleteModalOpen}
                     refetch={refetch}

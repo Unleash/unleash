@@ -6,7 +6,7 @@ import useToast from 'hooks/useToast';
 import type { FeatureSchema } from 'openapi';
 
 import { formatUnknownError } from 'utils/formatUnknownError';
-import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useProject from 'hooks/api/getters/useProject/useProject';
 
 interface IExportDialogProps {

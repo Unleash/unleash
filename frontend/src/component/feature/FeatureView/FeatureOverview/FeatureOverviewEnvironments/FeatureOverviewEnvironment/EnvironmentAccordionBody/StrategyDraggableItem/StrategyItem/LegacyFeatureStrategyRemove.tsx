@@ -3,7 +3,7 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
-import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
+import { formatFeaturePath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Alert, styled, Typography } from '@mui/material';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -157,7 +157,11 @@ const useOnSuggestRemove = ({
     return onSuggestRemove;
 };
 
-export const FeatureStrategyRemove = ({
+/**
+ * @deprecated
+ * TODO: remove when strategyImprovements flag is removed
+ */
+export const LegacyFeatureStrategyRemove = ({
     projectId,
     featureId,
     environmentId,

@@ -6,15 +6,14 @@ import { IFeatureStrategy } from 'interfaces/strategy';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
-import { FeatureStrategyRemove } from 'component/feature/FeatureStrategy/FeatureStrategyRemove/FeatureStrategyRemove';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
-import { DisableEnableStrategy } from './DisableEnableStrategy/DisableEnableStrategy';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import RemoveStrategyMenu from './RemoveStrategyMenu/RemoveStrategyMenu';
+import MenuStrategyRemove from './MenuStrategyRemove/MenuStrategyRemove';
+import { LegacyFeatureStrategyRemove } from './LegacyFeatureStrategyRemove';
 
 interface IStrategyItemProps {
     environmentId: string;
@@ -85,7 +84,7 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                             uiConfig?.flags?.strategyImprovements
                         )}
                         show={() => (
-                            <RemoveStrategyMenu
+                            <MenuStrategyRemove
                                 projectId={projectId}
                                 featureId={featureId}
                                 environmentId={environmentId}
@@ -93,7 +92,7 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                             />
                         )}
                         elseShow={() => (
-                            <FeatureStrategyRemove
+                            <LegacyFeatureStrategyRemove
                                 projectId={projectId}
                                 featureId={featureId}
                                 environmentId={environmentId}

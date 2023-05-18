@@ -28,7 +28,7 @@ export const useChangeRequestApi = () => {
     const addChange = async (
         project: string,
         environment: string,
-        payload: IChangeSchema
+        payload: IChangeSchema | IChangeSchema[]
     ) => {
         trackEvent('change_request', {
             props: {

@@ -130,7 +130,7 @@ export const BulkEnableDialog = ({
                     condition={isChangeRequestConfigured(selected)}
                     show={
                         <SpacedAlert severity="warning">
-                            Change requests are enabled for this environment
+                            Change requests are enabled for this environment.
                         </SpacedAlert>
                     }
                 />

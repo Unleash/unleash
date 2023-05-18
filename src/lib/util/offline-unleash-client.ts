@@ -6,10 +6,7 @@ import { ISegment } from 'lib/types/model';
 import { serializeDates } from '../../lib/types/serialize-dates';
 import { Operator } from './feature-evaluator/constraint';
 import { FeatureInterface } from 'unleash-client/lib/feature';
-
-enum PayloadType {
-    STRING = 'string',
-}
+import { PayloadType } from 'unleash-client';
 
 type NonEmptyList<T> = [T, ...T[]];
 
@@ -24,7 +21,7 @@ export const mapFeaturesForClient = (
             ...variant,
             payload: variant.payload && {
                 ...variant.payload,
-                type: variant.payload.type as unknown as PayloadType,
+                type: variant.payload.type as PayloadType,
             },
         })),
         project: feature.project,

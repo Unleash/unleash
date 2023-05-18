@@ -1,9 +1,29 @@
+import { Variant, PayloadType } from 'unleash-client';
 import { parseEnvVarBoolean } from '../util';
 
-export type IFlags = Partial<typeof flags>;
-export type IFlagKey = keyof IFlags;
+export type IFlagKey =
+    | 'anonymiseEventLog'
+    | 'embedProxy'
+    | 'embedProxyFrontend'
+    | 'responseTimeWithAppNameKillSwitch'
+    | 'maintenanceMode'
+    | 'messageBanner'
+    | 'featuresExportImport'
+    | 'caseInsensitiveInOperators'
+    | 'strictSchemaValidation'
+    | 'proPlanAutoCharge'
+    | 'personalAccessTokensKillSwitch'
+    | 'cleanClientApi'
+    | 'groupRootRoles'
+    | 'migrationLock'
+    | 'demo'
+    | 'strategyImprovements'
+    | 'googleAuthEnabled'
+    | 'variantMetrics';
 
-const flags = {
+export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
+
+const flags: IFlags = {
     anonymiseEventLog: false,
     embedProxy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
@@ -21,10 +41,18 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE_MODE,
         false,
     ),
-    messageBanner: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER,
-        false,
-    ),
+    messageBanner: {
+        name: 'message-banner',
+        enabled: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER,
+            false,
+        ),
+        payload: {
+            type: PayloadType.JSON,
+            value:
+                process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER_PAYLOAD ?? '',
+        },
+    },
     featuresExportImport: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURES_EXPORT_IMPORT,
         true,
@@ -68,7 +96,10 @@ const flags = {
 
 export const defaultExperimentalOptions: IExperimentalOptions = {
     flags,
-    externalResolver: { isEnabled: (): boolean => false },
+    externalResolver: {
+        isEnabled: (): boolean => false,
+        getVariant: () => undefined,
+    },
 };
 
 export interface IExperimentalOptions {
@@ -83,8 +114,16 @@ export interface IFlagContext {
 export interface IFlagResolver {
     getAll: (context?: IFlagContext) => IFlags;
     isEnabled: (expName: IFlagKey, context?: IFlagContext) => boolean;
+    getVariant: (
+        expName: IFlagKey,
+        context?: IFlagContext,
+    ) => Variant | undefined;
 }
 
 export interface IExternalFlagResolver {
     isEnabled: (flagName: IFlagKey, context?: IFlagContext) => boolean;
+    getVariant: (
+        flagName: IFlagKey,
+        context?: IFlagContext,
+    ) => Variant | undefined;
 }

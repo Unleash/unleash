@@ -63,6 +63,7 @@ exports[`should create default config 1`] = `
   },
   "experimental": {
     "externalResolver": {
+      "getVariant": [Function],
       "isEnabled": [Function],
     },
     "flags": {
@@ -76,7 +77,14 @@ exports[`should create default config 1`] = `
       "googleAuthEnabled": false,
       "groupRootRoles": false,
       "maintenanceMode": false,
-      "messageBanner": false,
+      "messageBanner": {
+        "enabled": false,
+        "name": "message-banner",
+        "payload": {
+          "type": "json",
+          "value": "",
+        },
+      },
       "migrationLock": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
@@ -98,7 +106,14 @@ exports[`should create default config 1`] = `
       "googleAuthEnabled": false,
       "groupRootRoles": false,
       "maintenanceMode": false,
-      "messageBanner": false,
+      "messageBanner": {
+        "enabled": false,
+        "name": "message-banner",
+        "payload": {
+          "type": "json",
+          "value": "",
+        },
+      },
       "migrationLock": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
@@ -108,6 +123,7 @@ exports[`should create default config 1`] = `
       "variantMetrics": false,
     },
     "externalResolver": {
+      "getVariant": [Function],
       "isEnabled": [Function],
     },
   },

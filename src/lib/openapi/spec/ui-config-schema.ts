@@ -1,5 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { versionSchema } from './version-schema';
+import { variantFlagSchema } from './variant-flag-schema';
 
 export const uiConfigSchema = {
     $id: '#/components/schemas/uiConfigSchema',
@@ -52,7 +53,14 @@ export const uiConfigSchema = {
         flags: {
             type: 'object',
             additionalProperties: {
-                type: 'boolean',
+                anyOf: [
+                    {
+                        type: 'boolean',
+                    },
+                    {
+                        $ref: '#/components/schemas/variantFlagSchema',
+                    },
+                ],
             },
         },
         links: {
@@ -79,6 +87,7 @@ export const uiConfigSchema = {
     components: {
         schemas: {
             versionSchema,
+            variantFlagSchema,
         },
     },
 } as const;

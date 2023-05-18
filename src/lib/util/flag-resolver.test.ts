@@ -1,5 +1,6 @@
+import { PayloadType } from 'unleash-client';
 import { defaultExperimentalOptions, IFlagKey } from '../types/experimental';
-import FlagResolver from './flag-resolver';
+import FlagResolver, { getVariantValue } from './flag-resolver';
 import { IExperimentalOptions } from '../types/experimental';
 
 test('should produce empty exposed flags', () => {
@@ -29,6 +30,7 @@ test('should use external resolver for dynamic flags', () => {
                 return true;
             }
         },
+        getVariant: () => undefined,
     };
 
     const config = {
@@ -48,6 +50,7 @@ test('should not use external resolver for enabled experiments', () => {
         isEnabled: () => {
             return false;
         },
+        getVariant: () => undefined,
     };
 
     const config = {
@@ -67,6 +70,7 @@ test('should load experimental flags', () => {
         isEnabled: () => {
             return false;
         },
+        getVariant: () => undefined,
     };
 
     const config = {
@@ -87,6 +91,7 @@ test('should load experimental flags from external provider', () => {
                 return true;
             }
         },
+        getVariant: () => undefined,
     };
 
     const config = {
@@ -98,4 +103,61 @@ test('should load experimental flags from external provider', () => {
 
     expect(resolver.isEnabled('someFlag' as IFlagKey)).toBe(true);
     expect(resolver.isEnabled('extraFlag' as IFlagKey)).toBe(true);
+});
+
+test('should support variant flags', () => {
+    const variant = {
+        enabled: true,
+        name: 'variant',
+        payload: {
+            type: PayloadType.STRING,
+            value: 'variant-A',
+        },
+    };
+
+    const externalResolver = {
+        isEnabled: () => true,
+        getVariant: (name: string) => {
+            if (name === 'extraFlag') {
+                return variant;
+            }
+        },
+    };
+
+    const config = {
+        flags: { extraFlag: undefined, someFlag: true, otherflag: false },
+        externalResolver,
+    };
+
+    const resolver = new FlagResolver(config as IExperimentalOptions);
+
+    expect(resolver.getVariant('someFlag' as IFlagKey)).toBe(undefined);
+    expect(resolver.getVariant('otherFlag' as IFlagKey)).toBe(undefined);
+    expect(resolver.getVariant('extraFlag' as IFlagKey)).toStrictEqual(variant);
+});
+
+test('should expose an helper to get variant value', () => {
+    expect(
+        getVariantValue({
+            enabled: true,
+            name: 'variant',
+            payload: {
+                type: PayloadType.STRING,
+                value: 'variant-A',
+            },
+        }),
+    ).toBe('variant-A');
+
+    expect(
+        getVariantValue({
+            enabled: true,
+            name: 'variant',
+            payload: {
+                type: PayloadType.JSON,
+                value: `{"foo": "bar"}`,
+            },
+        }),
+    ).toStrictEqual({
+        foo: 'bar',
+    });
 });

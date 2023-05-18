@@ -134,6 +134,7 @@ import {
     validatePasswordSchema,
     validateTagTypeSchema,
     variantSchema,
+    variantFlagSchema,
     variantsSchema,
     versionSchema,
 } from './spec';
@@ -319,6 +320,7 @@ export const schemas: UnleashSchemas = {
     validatePasswordSchema,
     validateTagTypeSchema,
     variantSchema,
+    variantFlagSchema,
     variantsSchema,
     versionSchema,
     projectOverviewSchema,

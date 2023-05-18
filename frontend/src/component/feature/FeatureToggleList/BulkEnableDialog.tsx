@@ -88,13 +88,17 @@ export const BulkEnableDialog = ({
         }
     };
 
+    const buttonText = isChangeRequestConfigured(selected)
+        ? 'Add to change request'
+        : 'Enabled toggles';
+
     return (
         <Dialogue
             open={showExportDialog}
             title="Enable feature toggles"
             onClose={onClose}
             onClick={onClick}
-            primaryButtonText="Enable toggles"
+            primaryButtonText={buttonText}
             secondaryButtonText="Cancel"
         >
             <Box>

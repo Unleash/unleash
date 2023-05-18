@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Box, styled, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Alert, Box, styled, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import useToast from 'hooks/useToast';
@@ -11,10 +11,11 @@ import useProject from 'hooks/api/getters/useProject/useProject';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
-    data: Pick<FeatureSchema, 'name'>[];
+    data: Pick<FeatureSchema, 'name' | 'environments'>[];
     onClose: () => void;
     onConfirm?: () => void;
     environments: string[];
@@ -22,8 +23,13 @@ interface IExportDialogProps {
 }
 
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
-    minWidth: '250px',
+    minWidth: '450px',
     marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(1.5),
+}));
+
+const SpacedAlert = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(1.5),
 }));
 
 export const BulkEnableDialog = ({
@@ -42,6 +48,12 @@ export const BulkEnableDialog = ({
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
+    const alreadyEnabledCount = data.filter(
+        feature =>
+            feature.environments?.find(
+                environment => selected === environment.name
+            )?.enabled === true
+    ).length;
 
     const getOptions = () =>
         environments.map(env => ({
@@ -113,6 +125,26 @@ export const BulkEnableDialog = ({
                     options={getOptions()}
                     value={selected}
                     onChange={(option: string) => setSelected(option)}
+                />
+                <ConditionallyRender
+                    condition={isChangeRequestConfigured(selected)}
+                    show={
+                        <SpacedAlert severity="warning">
+                            Change requests are enabled for this environment.
+                        </SpacedAlert>
+                    }
+                />
+                <ConditionallyRender
+                    condition={alreadyEnabledCount > 0}
+                    show={
+                        <SpacedAlert severity="info">
+                            {alreadyEnabledCount} feature{' '}
+                            {alreadyEnabledCount > 1
+                                ? 'toggles are '
+                                : 'toggle is '}
+                            already enabled.
+                        </SpacedAlert>
+                    }
                 />
             </Box>
         </Dialogue>

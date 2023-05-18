@@ -7,6 +7,7 @@ import {
     IFlagResolver,
     IFlagKey,
 } from '../types/experimental';
+import { getDefaultVariant } from 'unleash-client/lib/variant';
 
 export default class FlagResolver implements IFlagResolver {
     private experiments: IFlags;
@@ -22,13 +23,16 @@ export default class FlagResolver implements IFlagResolver {
         const flags: IFlags = { ...this.experiments };
 
         Object.keys(flags).forEach((flagName: IFlagKey) => {
-            if (!this.experiments[flagName]) {
-                if (typeof flags[flagName] === 'boolean') {
+            const flag = flags[flagName];
+            if (typeof flag === 'boolean') {
+                if (!flag) {
                     flags[flagName] = this.externalResolver.isEnabled(
                         flagName,
                         context,
                     );
-                } else {
+                }
+            } else {
+                if (!flag?.enabled) {
                     flags[flagName] = this.externalResolver.getVariant(
                         flagName,
                         context,
@@ -49,10 +53,10 @@ export default class FlagResolver implements IFlagResolver {
         return this.externalResolver.isEnabled(expName, context);
     }
 
-    getVariant(expName: IFlagKey, context?: IFlagContext): Variant | undefined {
+    getVariant(expName: IFlagKey, context?: IFlagContext): Variant {
         const exp = this.experiments[expName];
         if (exp) {
-            if (typeof exp === 'boolean') return undefined;
+            if (typeof exp === 'boolean') return getDefaultVariant();
             else return exp;
         }
         return this.externalResolver.getVariant(expName, context);
@@ -62,7 +66,8 @@ export default class FlagResolver implements IFlagResolver {
 export const getVariantValue = <T = string>(
     variant: Variant | undefined,
 ): T | undefined => {
-    if (variant?.payload !== undefined) {
+    if (variant?.enabled) {
+        if (!variant.payload) return variant.name as T;
         if (variant.payload.type === PayloadType.JSON) {
             return JSON.parse(variant.payload.value) as T;
         }

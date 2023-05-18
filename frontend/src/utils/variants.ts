@@ -18,7 +18,8 @@ export interface Variant {
 export const getVariantValue = <T = string>(
     variant: Variant | undefined
 ): T | undefined => {
-    if (variant?.payload !== undefined) {
+    if (variant?.enabled) {
+        if (!variant.payload) return variant.name as T;
         if (variant.payload.type === PayloadType.JSON) {
             return JSON.parse(variant.payload.value) as T;
         }

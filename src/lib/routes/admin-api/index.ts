@@ -107,7 +107,7 @@ class AdminApi extends Controller {
             '/feedback',
             new UserFeedbackController(config, services).router,
         );
-        this.app.use('/projects', new ProjectApi(config, services).router);
+        this.app.use('/projects', new ProjectApi(config, services, db).router);
         this.app.use(
             '/environments',
             new EnvironmentsController(config, services).router,

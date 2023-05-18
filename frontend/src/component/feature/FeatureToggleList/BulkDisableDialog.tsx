@@ -8,6 +8,9 @@ import type { FeatureSchema } from 'openapi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useProject from 'hooks/api/getters/useProject/useProject';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
@@ -33,8 +36,12 @@ export const BulkDisableDialog = ({
 }: IExportDialogProps) => {
     const [selected, setSelected] = useState(environments[0]);
     const { bulkToggleFeaturesEnvironmentOff } = useFeatureApi();
-    const { refetch } = useProject(projectId);
-    const { setToastApiError } = useToast();
+    const { addChange } = useChangeRequestApi();
+    const { refetch: refetchProject } = useProject(projectId);
+    const { setToastApiError, setToastData } = useToast();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(projectId);
 
     const getOptions = () =>
         environments.map(env => ({
@@ -44,12 +51,35 @@ export const BulkDisableDialog = ({
 
     const onClick = async () => {
         try {
-            await bulkToggleFeaturesEnvironmentOff(
-                projectId,
-                data.map(feature => feature.name),
-                selected
-            );
-            refetch();
+            if (isChangeRequestConfigured(selected)) {
+                await addChange(
+                    projectId,
+                    selected,
+                    data.map(feature => ({
+                        action: 'updateEnabled',
+                        feature: feature.name,
+                        payload: { enabled: false },
+                    }))
+                );
+                refetchChangeRequests();
+                setToastData({
+                    text: 'Your disabled feature toggles changes have been added to change request',
+                    type: 'success',
+                    title: 'Changes added to a draft',
+                });
+            } else {
+                await bulkToggleFeaturesEnvironmentOff(
+                    projectId,
+                    data.map(feature => feature.name),
+                    selected
+                );
+                refetchProject();
+                setToastData({
+                    text: 'Your feature toggles have been disabled',
+                    type: 'success',
+                    title: 'Features disabled',
+                });
+            }
             onClose();
             onConfirm?.();
         } catch (e: unknown) {
@@ -57,13 +87,17 @@ export const BulkDisableDialog = ({
         }
     };
 
+    const buttonText = isChangeRequestConfigured(selected)
+        ? 'Add to change request'
+        : 'Disable toggles';
+
     return (
         <Dialogue
             open={showExportDialog}
             title="Disable feature toggles"
             onClose={onClose}
             onClick={onClick}
-            primaryButtonText="Disable toggles"
+            primaryButtonText={buttonText}
             secondaryButtonText="Cancel"
         >
             <Box>

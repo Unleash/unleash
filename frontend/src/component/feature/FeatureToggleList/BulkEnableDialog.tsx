@@ -102,7 +102,7 @@ export const BulkEnableDialog = ({
 
     const buttonText = isChangeRequestConfigured(selected)
         ? 'Add to change request'
-        : 'Enabled toggles';
+        : 'Enable toggles';
 
     return (
         <Dialogue

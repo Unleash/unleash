@@ -42,44 +42,7 @@ const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
 
-    const [previousTitle] = useState<string>('');
     const { trackEvent } = usePlausibleTracker();
-
-    const trackTitle = (title: string = '') => {
-        // don't expose the title, just if it was added, removed, or edited
-        if (title === previousTitle) {
-            trackEvent('strategyTitle', {
-                props: {
-                    action: 'none',
-                    on: 'edit',
-                },
-            });
-        }
-        if (previousTitle === '' && title !== '') {
-            trackEvent('strategyTitle', {
-                props: {
-                    action: 'added',
-                    on: 'edit',
-                },
-            });
-        }
-        if (previousTitle !== '' && title === '') {
-            trackEvent('strategyTitle', {
-                props: {
-                    action: 'removed',
-                    on: 'edit',
-                },
-            });
-        }
-        if (previousTitle !== '' && title !== '' && title !== previousTitle) {
-            trackEvent('strategyTitle', {
-                props: {
-                    action: 'edited',
-                    on: 'edit',
-                },
-            });
-        }
-    };
 
     const {
         segments: allSegments,
@@ -110,10 +73,12 @@ const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
     ) => {
         await updateDefaultStrategy(projectId, environmentId, payload);
 
-        if (uiConfig?.flags?.strategyImprovements && strategy.title) {
-            // NOTE: remove tracking when feature flag is removed
-            trackTitle(strategy.title);
-        }
+        trackEvent('default_strategy', {
+            props: {
+                action: 'edit',
+                hasTitle: Boolean(payload.title),
+            },
+        });
 
         await refetchSavedStrategySegments();
         setToastData({

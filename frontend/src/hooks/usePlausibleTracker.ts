@@ -25,7 +25,8 @@ export type CustomEvents =
     | 'notifications'
     | 'batch_operations'
     | 'strategyTitle'
-    | 'demo';
+    | 'demo'
+    | 'default_strategy';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

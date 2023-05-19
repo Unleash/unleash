@@ -1,5 +1,6 @@
 import { Variant, PayloadType } from 'unleash-client';
 import { parseEnvVarBoolean } from '../util';
+import { getDefaultVariant } from 'unleash-client/lib/variant';
 
 export type IFlagKey =
     | 'anonymiseEventLog'
@@ -98,7 +99,7 @@ export const defaultExperimentalOptions: IExperimentalOptions = {
     flags,
     externalResolver: {
         isEnabled: (): boolean => false,
-        getVariant: () => undefined,
+        getVariant: () => getDefaultVariant(),
     },
 };
 
@@ -114,16 +115,10 @@ export interface IFlagContext {
 export interface IFlagResolver {
     getAll: (context?: IFlagContext) => IFlags;
     isEnabled: (expName: IFlagKey, context?: IFlagContext) => boolean;
-    getVariant: (
-        expName: IFlagKey,
-        context?: IFlagContext,
-    ) => Variant | undefined;
+    getVariant: (expName: IFlagKey, context?: IFlagContext) => Variant;
 }
 
 export interface IExternalFlagResolver {
     isEnabled: (flagName: IFlagKey, context?: IFlagContext) => boolean;
-    getVariant: (
-        flagName: IFlagKey,
-        context?: IFlagContext,
-    ) => Variant | undefined;
+    getVariant: (flagName: IFlagKey, context?: IFlagContext) => Variant;
 }

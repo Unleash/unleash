@@ -57,6 +57,7 @@ import {
     createFakeChangeRequestAccessService,
 } from '../features/change-request-access-service/createChangeRequestAccessReadModel';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
+import { createFeatureToggleService } from '../features';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = (services: IUnleashServices): void => {
@@ -184,6 +185,8 @@ export const createServices = (
         : createFakeExportImportTogglesService(config);
     const transactionalExportImportService = (txDb: Knex.Transaction) =>
         createExportImportTogglesService(txDb, config);
+    const transactionalFeatureToggleService = (txDb: Knex.Transaction) =>
+        createFeatureToggleService(txDb, config);
     const userSplashService = new UserSplashService(stores, config);
     const openApiService = new OpenApiService(config);
     const clientSpecService = new ClientSpecService(config);
@@ -275,6 +278,7 @@ export const createServices = (
         transactionalExportImportService,
         schedulerService,
         configurationRevisionService,
+        transactionalFeatureToggleService,
     };
 };
 

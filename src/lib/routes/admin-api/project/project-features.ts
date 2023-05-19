@@ -42,6 +42,10 @@ import {
 import { OpenApiService, FeatureToggleService } from '../../../services';
 import { querySchema } from '../../../schema/feature-schema';
 import { BatchStaleSchema } from '../../../openapi/spec/batch-stale-schema';
+import {
+    TransactionCreator,
+    UnleashTransaction,
+} from '../../../db/transaction';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -90,11 +94,18 @@ const PATH_STRATEGY = `${PATH_STRATEGIES}/:strategyId`;
 
 type ProjectFeaturesServices = Pick<
     IUnleashServices,
-    'featureToggleServiceV2' | 'projectHealthService' | 'openApiService'
+    | 'featureToggleServiceV2'
+    | 'projectHealthService'
+    | 'openApiService'
+    | 'transactionalFeatureToggleService'
 >;
 
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleService;
+
+    private transactionalFeatureToggleService: (
+        db: UnleashTransaction,
+    ) => FeatureToggleService;
 
     private openApiService: OpenApiService;
 
@@ -102,12 +113,22 @@ export default class ProjectFeaturesController extends Controller {
 
     private readonly logger: Logger;
 
+    private readonly startTransaction: TransactionCreator<UnleashTransaction>;
+
     constructor(
         config: IUnleashConfig,
-        { featureToggleServiceV2, openApiService }: ProjectFeaturesServices,
+        {
+            featureToggleServiceV2,
+            openApiService,
+            transactionalFeatureToggleService,
+        }: ProjectFeaturesServices,
+        startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
         this.featureService = featureToggleServiceV2;
+        this.transactionalFeatureToggleService =
+            transactionalFeatureToggleService;
+        this.startTransaction = startTransaction;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/admin-api/project/features.ts');
@@ -727,14 +748,16 @@ export default class ProjectFeaturesController extends Controller {
         const { shouldActivateDisabledStrategies } = req.query;
         const { features } = req.body;
 
-        await this.featureService.bulkUpdateEnabled(
-            projectId,
-            features,
-            environment,
-            true,
-            extractUsername(req),
-            req.user,
-            shouldActivateDisabledStrategies === 'true',
+        await this.startTransaction(async (tx) =>
+            this.transactionalFeatureToggleService(tx).bulkUpdateEnabled(
+                projectId,
+                features,
+                environment,
+                true,
+                extractUsername(req),
+                req.user,
+                shouldActivateDisabledStrategies === 'true',
+            ),
         );
         res.status(200).end();
     }
@@ -752,14 +775,16 @@ export default class ProjectFeaturesController extends Controller {
         const { shouldActivateDisabledStrategies } = req.query;
         const { features } = req.body;
 
-        await this.featureService.bulkUpdateEnabled(
-            projectId,
-            features,
-            environment,
-            false,
-            extractUsername(req),
-            req.user,
-            shouldActivateDisabledStrategies === 'true',
+        await this.startTransaction(async (tx) =>
+            this.transactionalFeatureToggleService(tx).bulkUpdateEnabled(
+                projectId,
+                features,
+                environment,
+                false,
+                extractUsername(req),
+                req.user,
+                shouldActivateDisabledStrategies === 'true',
+            ),
         );
         res.status(200).end();
     }

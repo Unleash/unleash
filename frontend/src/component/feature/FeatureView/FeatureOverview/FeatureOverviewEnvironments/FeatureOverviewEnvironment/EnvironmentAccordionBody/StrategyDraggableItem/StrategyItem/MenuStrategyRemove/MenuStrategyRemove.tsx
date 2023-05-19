@@ -20,7 +20,10 @@ import {
     UPDATE_FEATURE_STRATEGY,
 } from '@server/types/permissions';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
-import { STRATEGY_FORM_REMOVE_ID } from 'utils/testIds';
+import {
+    STRATEGY_FORM_REMOVE_ID,
+    STRATEGY_REMOVE_MENU_BTN,
+} from 'utils/testIds';
 
 export interface IRemoveStrategyMenuProps {
     projectId: string;
@@ -74,6 +77,7 @@ const MenuStrategyRemove = ({
                         aria-controls={open ? 'actions-menu' : undefined}
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
+                        data-testid={STRATEGY_REMOVE_MENU_BTN}
                     >
                         <MoreVertIcon sx={{ width: 32, height: 32 }} />
                     </IconButton>

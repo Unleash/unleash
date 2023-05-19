@@ -24,6 +24,8 @@ import { OpenApiService, SettingService } from '../../../services';
 import { IAuthRequest } from '../../unleash-types';
 import { ProjectApiTokenController } from './api-token';
 import ProjectArchiveController from './project-archive';
+import { createKnexTransactionStarter } from '../../../db/transaction';
+import { Db } from '../../../db/db';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
@@ -32,7 +34,7 @@ export default class ProjectApi extends Controller {
 
     private openApiService: OpenApiService;
 
-    constructor(config: IUnleashConfig, services: IUnleashServices) {
+    constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
         super(config);
         this.projectService = services.projectService;
         this.openApiService = services.openApiService;
@@ -70,7 +72,14 @@ export default class ProjectApi extends Controller {
             ],
         });
 
-        this.use('/', new ProjectFeaturesController(config, services).router);
+        this.use(
+            '/',
+            new ProjectFeaturesController(
+                config,
+                services,
+                createKnexTransactionStarter(db),
+            ).router,
+        );
         this.use('/', new EnvironmentsController(config, services).router);
         this.use('/', new ProjectHealthReport(config, services).router);
         this.use('/', new VariantsController(config, services).router);

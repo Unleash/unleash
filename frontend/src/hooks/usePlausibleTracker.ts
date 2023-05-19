@@ -30,7 +30,7 @@ export type CustomEvents =
     | 'demo-start'
     | 'demo-close'
     | 'demo-finish'
-    | 'demo-plans'
+    | 'demo-see-plans'
     | 'demo-see-plan'
     | 'demo-restart'
     | 'demo-view-demo-link'

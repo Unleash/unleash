@@ -87,7 +87,7 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
 
                     setPlansOpen(true);
 
-                    trackEvent('demo-plans');
+                    trackEvent('demo-see-plans');
                 }}
             />
             {children}

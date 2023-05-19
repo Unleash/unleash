@@ -147,16 +147,6 @@ export const ProjectDefaultStrategyForm = ({
     return (
         <StyledForm onSubmit={onSubmitWithValidation}>
             <ConditionallyRender
-                condition={Boolean(uiConfig.flags.SE)}
-                show={
-                    <FeatureStrategySegment
-                        segments={segments}
-                        setSegments={setSegments}
-                        projectId={projectId}
-                    />
-                }
-            />
-            <ConditionallyRender
                 condition={Boolean(uiConfig?.flags?.strategyImprovements)}
                 show={
                     <FeatureStrategyTitle
@@ -167,6 +157,16 @@ export const ProjectDefaultStrategyForm = ({
                                 title,
                             }));
                         }}
+                    />
+                }
+            />
+            <ConditionallyRender
+                condition={Boolean(uiConfig.flags.SE)}
+                show={
+                    <FeatureStrategySegment
+                        segments={segments}
+                        setSegments={setSegments}
+                        projectId={projectId}
                     />
                 }
             />

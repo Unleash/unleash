@@ -1,4 +1,4 @@
-import { useCallback, useState, VFC } from 'react';
+import { useState, VFC } from 'react';
 import { Box, styled } from '@mui/material';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
@@ -68,45 +68,37 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             onToggle(projectId, feature.name, environmentName, !isChecked);
     };
 
-    const handleToggleEnvironmentOn = useCallback(
-        async (shouldActivateDisabled = false) => {
-            try {
-                setIsChecked(!isChecked);
-                await toggleFeatureEnvironmentOn(
-                    projectId,
-                    feature.name,
-                    environmentName,
-                    shouldActivateDisabled
-                );
-                setToastData({
-                    type: 'success',
-                    title: `Available in ${environmentName}`,
-                    text: `${feature.name} is now available in ${environmentName} based on its defined strategies.`,
-                });
-                callback();
-            } catch (error: unknown) {
-                if (
-                    error instanceof Error &&
-                    error.message === ENVIRONMENT_STRATEGY_ERROR
-                ) {
-                    showInfoBox && showInfoBox();
-                } else {
-                    setToastApiError(formatUnknownError(error));
-                }
-                rollbackIsChecked();
+    const handleToggleEnvironmentOn = async (
+        shouldActivateDisabled = false
+    ) => {
+        try {
+            setIsChecked(!isChecked);
+            await toggleFeatureEnvironmentOn(
+                projectId,
+                feature.name,
+                environmentName,
+                shouldActivateDisabled
+            );
+            setToastData({
+                type: 'success',
+                title: `Available in ${environmentName}`,
+                text: `${feature.name} is now available in ${environmentName} based on its defined strategies.`,
+            });
+            callback();
+        } catch (error: unknown) {
+            if (
+                error instanceof Error &&
+                error.message === ENVIRONMENT_STRATEGY_ERROR
+            ) {
+                showInfoBox && showInfoBox();
+            } else {
+                setToastApiError(formatUnknownError(error));
             }
-        },
-        [
-            rollbackIsChecked,
-            setToastApiError,
-            showInfoBox,
-            setToastData,
-            toggleFeatureEnvironmentOn,
-            setIsChecked,
-        ]
-    );
+            rollbackIsChecked();
+        }
+    };
 
-    const handleToggleEnvironmentOff = useCallback(async () => {
+    const handleToggleEnvironmentOff = async () => {
         try {
             setIsChecked(!isChecked);
             await toggleFeatureEnvironmentOff(
@@ -124,15 +116,54 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             setToastApiError(formatUnknownError(error));
             rollbackIsChecked();
         }
-    }, [
-        toggleFeatureEnvironmentOff,
-        setToastData,
-        setToastApiError,
-        rollbackIsChecked,
-        setIsChecked,
-    ]);
+    };
 
-    const featureHasOnlyDisabledStrategies = useCallback(() => {
+    const onClick = async (e: React.MouseEvent) => {
+        if (isChangeRequestConfigured(environmentName)) {
+            e.preventDefault();
+            if (featureHasOnlyDisabledStrategies()) {
+                setShowEnabledDialog(true);
+            } else {
+                onChangeRequestToggle(
+                    feature.name,
+                    environmentName,
+                    !value,
+                    false
+                );
+            }
+            return;
+        }
+        if (value) {
+            await handleToggleEnvironmentOff();
+            return;
+        }
+
+        if (featureHasOnlyDisabledStrategies()) {
+            setShowEnabledDialog(true);
+        } else {
+            await handleToggleEnvironmentOn();
+        }
+    };
+
+    const onActivateStrategies = async () => {
+        if (isChangeRequestConfigured(environmentName)) {
+            onChangeRequestToggle(feature.name, environmentName, !value, true);
+        } else {
+            await handleToggleEnvironmentOn(true);
+        }
+        setShowEnabledDialog(false);
+    };
+
+    const onAddDefaultStrategy = async () => {
+        if (isChangeRequestConfigured(environmentName)) {
+            onChangeRequestToggle(feature.name, environmentName, !value, false);
+        } else {
+            await handleToggleEnvironmentOn();
+        }
+        setShowEnabledDialog(false);
+    };
+
+    const featureHasOnlyDisabledStrategies = () => {
         const featureEnvironment = feature?.environments?.find(
             env => env.name === environmentName
         );
@@ -141,69 +172,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             featureEnvironment?.strategies?.length > 0 &&
             featureEnvironment?.strategies?.every(strategy => strategy.disabled)
         );
-    }, [environmentName]);
-
-    const onClick = useCallback(
-        async (e: React.MouseEvent) => {
-            if (isChangeRequestConfigured(environmentName)) {
-                e.preventDefault();
-                if (featureHasOnlyDisabledStrategies()) {
-                    setShowEnabledDialog(true);
-                } else {
-                    onChangeRequestToggle(
-                        feature.name,
-                        environmentName,
-                        !value,
-                        false
-                    );
-                }
-                return;
-            }
-            if (value) {
-                await handleToggleEnvironmentOff();
-                return;
-            }
-
-            if (featureHasOnlyDisabledStrategies()) {
-                setShowEnabledDialog(true);
-            } else {
-                await handleToggleEnvironmentOn();
-            }
-        },
-        [
-            isChangeRequestConfigured,
-            onChangeRequestToggle,
-            handleToggleEnvironmentOff,
-            setShowEnabledDialog,
-        ]
-    );
-
-    const onActivateStrategies = useCallback(async () => {
-        if (isChangeRequestConfigured(environmentName)) {
-            onChangeRequestToggle(feature.name, environmentName, !value, true);
-        } else {
-            await handleToggleEnvironmentOn(true);
-        }
-        setShowEnabledDialog(false);
-    }, [
-        handleToggleEnvironmentOn,
-        setShowEnabledDialog,
-        isChangeRequestConfigured,
-        onChangeRequestToggle,
-    ]);
-
-    const onAddDefaultStrategy = useCallback(async () => {
-        if (isChangeRequestConfigured(environmentName)) {
-            onChangeRequestToggle(feature.name, environmentName, !value, false);
-        } else {
-            await handleToggleEnvironmentOn();
-        }
-        setShowEnabledDialog(false);
-    }, [
-        isChangeRequestConfigured,
-        onChangeRequestToggle,
-        handleToggleEnvironmentOn,
-    ]);
+    };
 
     const key = `${feature.name}-${environmentName}`;
 
@@ -219,7 +188,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                             ? `Disable feature in ${environmentName}`
                             : `Enable feature in ${environmentName}`
                     }
-                    checked={isChecked}
+                    checked={value}
                     environmentId={environmentName}
                     projectId={projectId}
                     permission={UPDATE_FEATURE_ENVIRONMENT}

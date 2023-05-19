@@ -12,8 +12,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
     SortingRule,
     useFlexLayout,
-    useRowSelect,
     useSortBy,
+    useRowSelect,
     useTable,
 } from 'react-table';
 import type { FeatureSchema } from 'openapi';
@@ -28,11 +28,14 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { IProject } from 'interfaces/project';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import { createLocalStorage } from 'utils/createLocalStorage';
+import useToast from 'hooks/useToast';
+import { ENVIRONMENT_STRATEGY_ERROR } from 'constants/apiErrors';
 import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
@@ -41,6 +44,7 @@ import { Search } from 'component/common/Search/Search';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
@@ -48,6 +52,7 @@ import {
     ProjectEnvironmentType,
     useEnvironmentsRef,
 } from './hooks/useEnvironmentsRef';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { FeatureToggleSwitch } from './FeatureToggleSwitch/FeatureToggleSwitch';
 import { ActionsCell } from './ActionsCell/ActionsCell';
 import { ColumnsMenu } from './ColumnsMenu/ColumnsMenu';
@@ -141,26 +146,85 @@ export const ProjectFeatureToggles = ({
         useGlobalLocalStorage();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const environments = useEnvironmentsRef(
         loading
             ? [{ environment: 'a' }, { environment: 'b' }, { environment: 'c' }]
             : newEnvironments
     );
     const { refetch } = useProject(projectId);
+    const { setToastData, setToastApiError } = useToast();
     const { isFavoritesPinned, sortTypes, onChangeIsFavoritePinned } =
         usePinnedFavorites(
             searchParams.has('favorites')
                 ? searchParams.get('favorites') === 'true'
                 : globalStore.favorites
         );
+    const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
+        useFeatureApi();
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const {
+        onChangeRequestToggle,
         onChangeRequestToggleClose,
         onChangeRequestToggleConfirm,
         changeRequestDialogDetails,
     } = useChangeRequestToggle(projectId);
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { uiConfig } = useUiConfig();
+
+    const onToggle = useCallback(
+        async (
+            projectId: string,
+            featureName: string,
+            environment: string,
+            enabled: boolean
+        ) => {
+            if (isChangeRequestConfigured(environment)) {
+                onChangeRequestToggle(featureName, environment, enabled);
+                throw new Error('Additional approval required');
+            }
+            try {
+                if (enabled) {
+                    await toggleFeatureEnvironmentOn(
+                        projectId,
+                        featureName,
+                        environment
+                    );
+                } else {
+                    await toggleFeatureEnvironmentOff(
+                        projectId,
+                        featureName,
+                        environment
+                    );
+                }
+                refetch();
+            } catch (error) {
+                const message = formatUnknownError(error);
+                if (message === ENVIRONMENT_STRATEGY_ERROR) {
+                    setStrategiesDialogState({
+                        open: true,
+                        featureId: featureName,
+                        environmentName: environment,
+                    });
+                } else {
+                    setToastApiError(message);
+                }
+                throw error; // caught when reverting optimistic update
+            }
+
+            setToastData({
+                type: 'success',
+                title: 'Updated toggle status',
+                text: 'Successfully updated toggle status.',
+            });
+            refetch();
+        },
+        [
+            toggleFeatureEnvironmentOff,
+            toggleFeatureEnvironmentOn,
+            isChangeRequestConfigured,
+        ]
+    );
 
     const onFavorite = useCallback(
         async (feature: IFeatureToggleListItem) => {
@@ -291,8 +355,9 @@ export const ProjectFeatureToggles = ({
                                 <FeatureToggleSwitch
                                     value={value}
                                     projectId={projectId}
-                                    featureId={feature.name}
+                                    featureName={feature?.name}
                                     environmentName={name}
+                                    onToggle={onToggle}
                                 />
                                 <ConditionallyRender
                                     condition={hasWarning}
@@ -324,7 +389,7 @@ export const ProjectFeatureToggles = ({
                 hideInMenu: true,
             },
         ],
-        [projectId, environments, loading]
+        [projectId, environments, loading, onToggle]
     );
 
     const [searchValue, setSearchValue] = useState(

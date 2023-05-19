@@ -15,17 +15,33 @@ export const healthOverviewSchema = {
     $id: '#/components/schemas/healthOverviewSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['version', 'name'],
+    required: [
+        'version',
+        'name',
+        'defaultStickiness',
+        'mode',
+        'members',
+        'health',
+        'environments',
+        'features',
+    ],
+    description: `An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)`,
     properties: {
         version: {
-            type: 'number',
+            type: 'integer',
+            description: 'The project overview version.',
+            example: 1,
         },
         name: {
             type: 'string',
+            description: `The project's name`,
+            example: 'enterprisegrowth',
         },
         description: {
             type: 'string',
             nullable: true,
+            description: `The project's description`,
+            example: 'The project for all things enterprisegrowth',
         },
         defaultStickiness: {
             type: 'string',
@@ -41,30 +57,45 @@ export const healthOverviewSchema = {
                 "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
         },
         members: {
-            type: 'number',
+            type: 'integer',
+            description: 'The number of users/members in the project.',
+            example: 5,
+            minimum: 0,
         },
         health: {
-            type: 'number',
+            type: 'integer',
+            description:
+                'The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project.',
+            example: 95,
         },
         environments: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/projectEnvironmentSchema',
             },
+            description:
+                'An array containing the names of all the environments configured for the project.',
         },
         features: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/featureSchema',
             },
+            description:
+                'An array containing an overview of all the features of the project and their individual status',
         },
         updatedAt: {
             type: 'string',
             format: 'date-time',
             nullable: true,
+            description: 'When the project was last updated.',
+            example: '2023-04-19T08:15:14.000Z',
         },
         favorite: {
             type: 'boolean',
+            description:
+                'Indicates if the project has been marked as a favorite by the current user requesting the project health overview.',
+            example: true,
         },
         stats: {
             $ref: '#/components/schemas/projectStatsSchema',

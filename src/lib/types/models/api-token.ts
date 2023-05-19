@@ -16,7 +16,7 @@ export interface ILegacyApiTokenCreate {
      */
     username?: string;
     type: ApiTokenType;
-    environment: string;
+    environment?: string;
     project?: string;
     projects?: string[];
     expiresAt?: Date;
@@ -42,7 +42,7 @@ export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
     seenAt?: Date;
     environment: string;
     project: string;
-    alias: string | null;
+    alias?: string | null;
 }
 
 export const isAllProjects = (projects: string[]): boolean => {

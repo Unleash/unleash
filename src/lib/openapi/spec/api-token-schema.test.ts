@@ -5,6 +5,7 @@ import { ApiTokenSchema } from './api-token-schema';
 const defaultData: ApiTokenSchema = {
     secret: '',
     username: '',
+    tokenName: '',
     type: ApiTokenType.CLIENT,
     environment: '',
     projects: [],

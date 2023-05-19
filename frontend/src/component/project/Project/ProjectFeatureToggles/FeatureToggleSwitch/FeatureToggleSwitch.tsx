@@ -26,6 +26,12 @@ interface IFeatureToggleSwitchProps {
     projectId: string;
     value: boolean;
     showInfoBox?: () => void;
+    onToggle?: (
+        projectId: string,
+        feature: string,
+        env: string,
+        state: boolean
+    ) => void;
 }
 
 export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
@@ -33,6 +39,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     featureId,
     environmentName,
     value,
+    onToggle,
     showInfoBox,
 }) => {
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
@@ -56,41 +63,40 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             .find(env => env.name === environmentName)
             ?.strategies.filter(strategy => strategy.disabled).length ?? 0;
 
-    const handleToggleEnvironmentOn = useCallback(
-        async (shouldActivateDisabled = false) => {
-            try {
-                setIsChecked(!isChecked);
-                await toggleFeatureEnvironmentOn(
-                    projectId,
-                    feature.name,
-                    environmentName,
-                    shouldActivateDisabled
-                );
-                setToastData({
-                    type: 'success',
-                    title: `Available in ${environmentName}`,
-                    text: `${feature.name} is now available in ${environmentName} based on its defined strategies.`,
-                });
-            } catch (error: unknown) {
-                if (
-                    error instanceof Error &&
-                    error.message === ENVIRONMENT_STRATEGY_ERROR
-                ) {
-                    showInfoBox && showInfoBox();
-                } else {
-                    setToastApiError(formatUnknownError(error));
-                }
-                rollbackIsChecked();
+    const callback = () => {
+        onToggle &&
+            onToggle(projectId, feature.name, environmentName, !isChecked);
+    };
+
+    const handleToggleEnvironmentOn = async (
+        shouldActivateDisabled = false
+    ) => {
+        try {
+            setIsChecked(!isChecked);
+            await toggleFeatureEnvironmentOn(
+                projectId,
+                feature.name,
+                environmentName,
+                shouldActivateDisabled
+            );
+            setToastData({
+                type: 'success',
+                title: `Available in ${environmentName}`,
+                text: `${feature.name} is now available in ${environmentName} based on its defined strategies.`,
+            });
+            callback();
+        } catch (error: unknown) {
+            if (
+                error instanceof Error &&
+                error.message === ENVIRONMENT_STRATEGY_ERROR
+            ) {
+                showInfoBox && showInfoBox();
+            } else {
+                setToastApiError(formatUnknownError(error));
             }
-        },
-        [
-            rollbackIsChecked,
-            setToastApiError,
-            setToastData,
-            setIsChecked,
-            toggleFeatureEnvironmentOn,
-        ]
-    );
+            rollbackIsChecked();
+        }
+    };
 
     const handleToggleEnvironmentOff = useCallback(async () => {
         try {
@@ -105,6 +111,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                 title: `Unavailable in ${environmentName}`,
                 text: `${feature.name} is unavailable in ${environmentName} and its strategies will no longer have any effect.`,
             });
+            callback();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
             rollbackIsChecked();

@@ -632,59 +632,56 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "apiTokenSchema": {
         "additionalProperties": false,
-        "anyOf": [
-          {
-            "properties": {
-              "username": {
-                "type": "string",
-              },
-            },
-            "required": [
-              "username",
-            ],
-          },
-          {
-            "properties": {
-              "tokenName": {
-                "type": "string",
-              },
-            },
-            "required": [
-              "tokenName",
-            ],
-          },
-        ],
+        "description": "An overview of an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).",
         "properties": {
           "alias": {
+            "description": "Alias is no longer in active use and will often be NULL. It's kept around as a way of allowing old proxy tokens created with the old metadata format to keep working.",
+            "example": "randomid-or-some-alias",
             "nullable": true,
             "type": "string",
           },
           "createdAt": {
+            "description": "When the token was created.",
+            "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
-            "nullable": true,
             "type": "string",
           },
           "environment": {
+            "description": "The environment the token has access to. \`*\` if it has access to all environments.",
+            "example": "development",
             "type": "string",
           },
           "expiresAt": {
+            "description": "The token's expiration date. NULL if the token doesn't have an expiration set.",
+            "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "project": {
+            "description": "The project this token belongs to.",
+            "example": "developerexperience",
             "type": "string",
           },
           "projects": {
+            "description": "The list of projects this token has access to. If the token has access to specific projects they will be listed here. If the token has access to all projects it will be represented as \`[*]\`",
+            "example": [
+              "developerexperience",
+              "enterprisegrowth",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "secret": {
+            "description": "The token used for authentication.",
+            "example": "project:environment.xyzrandomstring",
             "type": "string",
           },
           "seenAt": {
+            "description": "When the token was last seen/used to authenticate with. NULL if the token has not yet been used for authentication.",
+            "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
@@ -695,28 +692,38 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "type": {
+            "description": "The type of API token",
             "enum": [
               "client",
               "admin",
               "frontend",
             ],
+            "example": "client",
             "type": "string",
           },
           "username": {
             "deprecated": true,
             "description": "This property was deprecated in Unleash v5. Prefer the \`tokenName\` property instead.",
+            "example": "a-name",
             "type": "string",
           },
         },
         "required": [
+          "secret",
+          "tokenName",
           "type",
+          "project",
+          "projects",
+          "createdAt",
         ],
         "type": "object",
       },
       "apiTokensSchema": {
         "additionalProperties": false,
+        "description": "Contains a list of API tokens.",
         "properties": {
           "tokens": {
+            "description": "A list of API tokens.",
             "items": {
               "$ref": "#/components/schemas/apiTokenSchema",
             },
@@ -2665,6 +2672,7 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "healthOverviewSchema": {
         "additionalProperties": false,
+        "description": "An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)",
         "properties": {
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
@@ -2672,29 +2680,40 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "description": {
+            "description": "The project's description",
+            "example": "The project for all things enterprisegrowth",
             "nullable": true,
             "type": "string",
           },
           "environments": {
+            "description": "An array containing the names of all the environments configured for the project.",
             "items": {
               "$ref": "#/components/schemas/projectEnvironmentSchema",
             },
             "type": "array",
           },
           "favorite": {
+            "description": "Indicates if the project has been marked as a favorite by the current user requesting the project health overview.",
+            "example": true,
             "type": "boolean",
           },
           "features": {
+            "description": "An array containing an overview of all the features of the project and their individual status",
             "items": {
               "$ref": "#/components/schemas/featureSchema",
             },
             "type": "array",
           },
           "health": {
-            "type": "number",
+            "description": "The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project.",
+            "example": 95,
+            "type": "integer",
           },
           "members": {
-            "type": "number",
+            "description": "The number of users/members in the project.",
+            "example": 5,
+            "minimum": 0,
+            "type": "integer",
           },
           "mode": {
             "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
@@ -2706,6 +2725,8 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "name": {
+            "description": "The project's name",
+            "example": "enterprisegrowth",
             "type": "string",
           },
           "stats": {
@@ -2713,24 +2734,37 @@ The provider you choose for your addon dictates what properties the \`parameters
             "description": "Project statistics",
           },
           "updatedAt": {
+            "description": "When the project was last updated.",
+            "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "version": {
-            "type": "number",
+            "description": "The project overview version.",
+            "example": 1,
+            "type": "integer",
           },
         },
         "required": [
           "version",
           "name",
+          "defaultStickiness",
+          "mode",
+          "members",
+          "health",
+          "environments",
+          "features",
         ],
         "type": "object",
       },
       "healthReportSchema": {
         "additionalProperties": false,
+        "description": "A report of the current health of the requested project, with datapoints like counters of currently active, stale, and potentially stale feature toggles.",
         "properties": {
           "activeCount": {
+            "description": "The number of active feature toggles.",
+            "example": 2,
             "type": "number",
           },
           "defaultStickiness": {
@@ -2739,29 +2773,40 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "description": {
+            "description": "The project's description",
+            "example": "The project for all things enterprisegrowth",
             "nullable": true,
             "type": "string",
           },
           "environments": {
+            "description": "An array containing the names of all the environments configured for the project.",
             "items": {
               "$ref": "#/components/schemas/projectEnvironmentSchema",
             },
             "type": "array",
           },
           "favorite": {
+            "description": "Indicates if the project has been marked as a favorite by the current user requesting the project health overview.",
+            "example": true,
             "type": "boolean",
           },
           "features": {
+            "description": "An array containing an overview of all the features of the project and their individual status",
             "items": {
               "$ref": "#/components/schemas/featureSchema",
             },
             "type": "array",
           },
           "health": {
-            "type": "number",
+            "description": "The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project.",
+            "example": 95,
+            "type": "integer",
           },
           "members": {
-            "type": "number",
+            "description": "The number of users/members in the project.",
+            "example": 5,
+            "minimum": 0,
+            "type": "integer",
           },
           "mode": {
             "description": "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
@@ -2773,12 +2818,18 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "name": {
+            "description": "The project's name",
+            "example": "enterprisegrowth",
             "type": "string",
           },
           "potentiallyStaleCount": {
+            "description": "The number of potentially stale feature toggles.",
+            "example": 5,
             "type": "number",
           },
           "staleCount": {
+            "description": "The number of stale feature toggles.",
+            "example": 10,
             "type": "number",
           },
           "stats": {
@@ -2786,17 +2837,27 @@ The provider you choose for your addon dictates what properties the \`parameters
             "description": "Project statistics",
           },
           "updatedAt": {
+            "description": "When the project was last updated.",
+            "example": "2023-04-19T08:15:14.000Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "version": {
-            "type": "number",
+            "description": "The project overview version.",
+            "example": 1,
+            "type": "integer",
           },
         },
         "required": [
           "version",
           "name",
+          "defaultStickiness",
+          "mode",
+          "members",
+          "health",
+          "environments",
+          "features",
           "potentiallyStaleCount",
           "activeCount",
           "staleCount",
@@ -3606,14 +3667,20 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "projectEnvironmentSchema": {
         "additionalProperties": false,
+        "description": "Add an environment to a project, optionally also sets if change requests are enabled for this environment on the project",
         "properties": {
           "changeRequestsEnabled": {
+            "description": "Whether change requests should be enabled or for this environment on the project or not",
+            "example": true,
             "type": "boolean",
           },
           "defaultStrategy": {
             "$ref": "#/components/schemas/createFeatureStrategySchema",
+            "description": "A default strategy to create for this environment on the project.",
           },
           "environment": {
+            "description": "The environment to add to the project",
+            "example": "development",
             "type": "string",
           },
         },
@@ -9017,6 +9084,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects": {
       "get": {
+        "description": "This endpoint returns an list of all the projects in the Unleash instance.",
         "operationId": "getProjects",
         "responses": {
           "200": {
@@ -9029,7 +9097,62 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "projectsSchema",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
+        "summary": "Get a list of all projects.",
         "tags": [
           "Projects",
         ],
@@ -9037,6 +9160,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}": {
       "get": {
+        "description": "This endpoint returns an overview of the specified projects stats, project health, number of members, which environments are configured, and the features in the project.",
         "operationId": "getProjectOverview",
         "parameters": [
           {
@@ -9059,7 +9183,89 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "projectOverviewSchema",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Get an overview of a project.",
         "tags": [
           "Projects",
         ],
@@ -9067,6 +9273,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/api-tokens": {
       "get": {
+        "description": "Returns the [project API tokens](https://docs.getunleash.io/how-to/how-to-create-project-api-tokens) that have been created for this project.",
         "operationId": "getProjectApiTokens",
         "parameters": [
           {
@@ -9089,12 +9296,95 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "apiTokensSchema",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Get api tokens for project.",
         "tags": [
           "Projects",
         ],
       },
       "post": {
+        "description": "Endpoint that allows creation of [project API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys#api-token-visibility) for the specified project.",
         "operationId": "createProjectApiToken",
         "parameters": [
           {
@@ -9138,9 +9428,88 @@ If the provided project does not exist, the list of events will be empty.",
             },
           },
           "400": {
-            "description": "This response has no body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "The request payload you provided doesn't conform to the schema. The .parameters property should be object. You sent [].",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ValidationError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
           },
         },
+        "summary": "Create a project API token.",
         "tags": [
           "Projects",
         ],
@@ -9148,6 +9517,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/api-tokens/{token}": {
       "delete": {
+        "description": "This operation deletes the API token specified in the request URL. If the token doesn't exist, returns an OK response (status code 200).",
         "operationId": "deleteProjectApiToken",
         "parameters": [
           {
@@ -9171,7 +9541,62 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
+        "summary": "Delete a project API token.",
         "tags": [
           "Projects",
         ],
@@ -9339,6 +9764,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/environments": {
       "post": {
+        "description": "This endpoint adds the provided environment to the specified project, with optional support for enabling and disabling change requests for the environment and project.",
         "operationId": "addEnvironmentToProject",
         "parameters": [
           {
@@ -9365,7 +9791,89 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "There is already a feature called "my-awesome-feature".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NameExistsError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.",
+          },
         },
+        "summary": "Add an environment to a project.",
         "tags": [
           "Projects",
         ],
@@ -9373,6 +9881,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/environments/{environment}": {
       "delete": {
+        "description": "This endpoint removes the specified environment from the project.",
         "operationId": "removeEnvironmentFromProject",
         "parameters": [
           {
@@ -9396,7 +9905,89 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "description": "This response has no body.",
           },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "The request payload you provided doesn't conform to the schema. The .parameters property should be object. You sent [].",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ValidationError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
+        "summary": "Remove an environment from a project.",
         "tags": [
           "Projects",
         ],
@@ -10862,6 +11453,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/projects/{projectId}/health-report": {
       "get": {
+        "description": "This endpoint returns a health report for the specified project. This data is used for [the technical debt dashboard](https://docs.getunleash.io/reference/technical-debt#the-technical-debt-dashboard)",
         "operationId": "getProjectHealthReport",
         "parameters": [
           {
@@ -10884,7 +11476,89 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "healthReportSchema",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Get a health report for a project.",
         "tags": [
           "Projects",
         ],

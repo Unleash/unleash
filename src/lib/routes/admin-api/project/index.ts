@@ -20,6 +20,7 @@ import {
     projectsSchema,
     ProjectsSchema,
 } from '../../../openapi';
+import { getStandardResponses } from '../../../openapi/util/standard-responses';
 import { OpenApiService, SettingService } from '../../../services';
 import { IAuthRequest } from '../../unleash-types';
 import { ProjectApiTokenController } from './api-token';
@@ -49,8 +50,12 @@ export default class ProjectApi extends Controller {
                 services.openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'getProjects',
+                    summary: 'Get a list of all projects.',
+                    description:
+                        'This endpoint returns an list of all the projects in the Unleash instance.',
                     responses: {
                         200: createResponseSchema('projectsSchema'),
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -65,8 +70,12 @@ export default class ProjectApi extends Controller {
                 services.openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'getProjectOverview',
+                    summary: 'Get an overview of a project.',
+                    description:
+                        'This endpoint returns an overview of the specified projects stats, project health, number of members, which environments are configured, and the features in the project.',
                     responses: {
                         200: createResponseSchema('projectOverviewSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],

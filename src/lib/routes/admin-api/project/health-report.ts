@@ -8,6 +8,7 @@ import { IProjectParam } from '../../../types/model';
 import { NONE } from '../../../types/permissions';
 import { OpenApiService } from '../../../services/openapi-service';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
+import { getStandardResponses } from '../../../openapi/util/standard-responses';
 import { serializeDates } from '../../../types/serialize-dates';
 import {
     healthReportSchema,
@@ -42,8 +43,12 @@ export default class ProjectHealthReport extends Controller {
                 openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'getProjectHealthReport',
+                    summary: 'Get a health report for a project.',
+                    description:
+                        'This endpoint returns a health report for the specified project. This data is used for [the technical debt dashboard](https://docs.getunleash.io/reference/technical-debt#the-technical-debt-dashboard)',
                     responses: {
                         200: createResponseSchema('healthReportSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],

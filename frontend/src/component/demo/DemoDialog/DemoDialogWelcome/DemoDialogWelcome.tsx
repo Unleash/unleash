@@ -83,11 +83,7 @@ export const DemoDialogWelcome = ({
                         target="_blank"
                         rel="noreferrer"
                         onClick={() => {
-                            trackEvent('demo', {
-                                props: {
-                                    eventType: 'open_demo_web',
-                                },
-                            });
+                            trackEvent('demo-open-demo-web');
                         }}
                     >
                         hello.unleash.run <Launch />

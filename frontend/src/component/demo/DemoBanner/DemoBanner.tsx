@@ -47,11 +47,7 @@ export const DemoBanner = ({ onPlans }: IDemoBannerProps) => {
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => {
-                    trackEvent('demo', {
-                        props: {
-                            eventType: 'ask_questions',
-                        },
-                    });
+                    trackEvent('demo-ask-questions');
                 }}
             >
                 Ask questions

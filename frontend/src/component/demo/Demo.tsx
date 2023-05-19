@@ -68,11 +68,7 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
     const onFinish = () => {
         setFinishOpen(true);
 
-        trackEvent('demo', {
-            props: {
-                eventType: 'finish',
-            },
-        });
+        trackEvent('demo-finish');
     };
 
     const closeGuide = () => {
@@ -91,11 +87,7 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
 
                     setPlansOpen(true);
 
-                    trackEvent('demo', {
-                        props: {
-                            eventType: 'see_plans',
-                        },
-                    });
+                    trackEvent('demo-see-plans');
                 }}
             />
             {children}
@@ -106,10 +98,10 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
 
                     setExpanded(false);
 
-                    trackEvent('demo', {
+                    trackEvent('demo-close', {
                         props: {
-                            eventType: 'close',
-                            topic: 'start',
+                            topic: 'welcome',
+                            step: 'welcome',
                         },
                     });
                 }}
@@ -118,11 +110,7 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
 
                     onStart();
 
-                    trackEvent('demo', {
-                        props: {
-                            eventType: 'start',
-                        },
-                    });
+                    trackEvent('demo-start');
                 }}
             />
             <DemoDialogFinish
@@ -135,11 +123,7 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                     setFinishOpen(false);
                     onStart();
 
-                    trackEvent('demo', {
-                        props: {
-                            eventType: 'restart',
-                        },
-                    });
+                    trackEvent('demo-restart');
                 }}
             />
             <DemoDialogPlans
@@ -158,10 +142,9 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                     setWelcomeOpen(false);
                     setPlansOpen(false);
 
-                    trackEvent('demo', {
+                    trackEvent('demo-start-topic', {
                         props: {
-                            eventType: 'start_topic',
-                            step: TOPICS[topic].title,
+                            topic: TOPICS[topic].title,
                         },
                     });
                 }}
@@ -172,11 +155,7 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
 
                     setWelcomeOpen(true);
 
-                    trackEvent('demo', {
-                        props: {
-                            eventType: 'view_demo_link',
-                        },
-                    });
+                    trackEvent('demo-view-demo-link');
                 }}
             />
             <DemoSteps

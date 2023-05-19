@@ -79,9 +79,8 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                         target="_blank"
                         rel="noreferrer"
                         onClick={() => {
-                            trackEvent('demo', {
+                            trackEvent('demo-see-plan', {
                                 props: {
-                                    eventType: 'see_plan',
                                     plan: 'open_source',
                                 },
                             });
@@ -113,9 +112,8 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                         target="_blank"
                         rel="noreferrer"
                         onClick={() => {
-                            trackEvent('demo', {
+                            trackEvent('demo-see-plan', {
                                 props: {
-                                    eventType: 'see_plan',
                                     plan: 'pro',
                                 },
                             });
@@ -145,9 +143,8 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                         target="_blank"
                         rel="noreferrer"
                         onClick={() => {
-                            trackEvent('demo', {
+                            trackEvent('demo-see-plan', {
                                 props: {
-                                    eventType: 'see_plan',
                                     plan: 'enterprise',
                                 },
                             });
@@ -162,9 +159,8 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => {
-                    trackEvent('demo', {
+                    trackEvent('demo-see-plan', {
                         props: {
-                            eventType: 'see_plan',
                             plan: 'compare_plans',
                         },
                     });

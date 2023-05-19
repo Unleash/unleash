@@ -25,8 +25,18 @@ export type CustomEvents =
     | 'notifications'
     | 'batch_operations'
     | 'strategyTitle'
+    | 'default_strategy'
     | 'demo'
-    | 'default_strategy';
+    | 'demo-start'
+    | 'demo-close'
+    | 'demo-finish'
+    | 'demo-plans'
+    | 'demo-see-plan'
+    | 'demo-restart'
+    | 'demo-view-demo-link'
+    | 'demo-start-topic'
+    | 'demo-ask-questions'
+    | 'demo-open-demo-web';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

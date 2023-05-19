@@ -61,9 +61,8 @@ export const DemoSteps = ({
         abortController.abort();
         setTopicStep(-1);
 
-        trackEvent('demo', {
+        trackEvent('demo-close', {
             props: {
-                eventType: 'close',
                 topic: topics[topic].title,
                 step: step + 1,
             },

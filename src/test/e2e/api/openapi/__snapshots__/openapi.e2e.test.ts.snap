@@ -608,6 +608,26 @@ The provider you choose for your addon dictates what properties the \`parameters
         ],
         "type": "object",
       },
+      "adminCountSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "no_password": {
+            "type": "number",
+          },
+          "password": {
+            "type": "number",
+          },
+          "service": {
+            "type": "number",
+          },
+        },
+        "required": [
+          "password",
+          "no_password",
+          "service",
+        ],
+        "type": "object",
+      },
       "adminFeaturesQuerySchema": {
         "additionalProperties": false,
         "properties": {
@@ -12515,6 +12535,26 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "usersGroupsBaseSchema",
+          },
+        },
+        "tags": [
+          "Users",
+        ],
+      },
+    },
+    "/api/admin/user-admin/admin-count": {
+      "get": {
+        "operationId": "getAdminCount",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/adminCountSchema",
+                },
+              },
+            },
+            "description": "adminCountSchema",
           },
         },
         "tags": [

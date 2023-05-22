@@ -94,6 +94,10 @@ const flags: IFlags = {
         process.env.UNLEASH_VARIANT_METRICS,
         false,
     ),
+    disableBulkToggle: parseEnvVarBoolean(
+        process.env.DISABLE_BULK_TOGGLE,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

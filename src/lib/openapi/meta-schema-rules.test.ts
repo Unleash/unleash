@@ -79,6 +79,7 @@ const metaRules: Rule[] = [
             },
         },
         knownExceptions: [
+            'adminCountSchema',
             'batchFeaturesSchema',
             'batchStaleSchema',
             'changePasswordSchema',
@@ -181,6 +182,7 @@ const metaRules: Rule[] = [
             required: ['description'],
         },
         knownExceptions: [
+            'adminCountSchema',
             'adminFeaturesQuerySchema',
             'applicationSchema',
             'applicationsSchema',

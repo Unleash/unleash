@@ -9,7 +9,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { BulkDisableDialog } from 'component/feature/FeatureToggleList/BulkDisableDialog';
 import { BulkEnableDialog } from 'component/feature/FeatureToggleList/BulkEnableDialog';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ConditionallyRender } from 'common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IProjectFeaturesBatchActionsProps {
     selectedIds: string[];

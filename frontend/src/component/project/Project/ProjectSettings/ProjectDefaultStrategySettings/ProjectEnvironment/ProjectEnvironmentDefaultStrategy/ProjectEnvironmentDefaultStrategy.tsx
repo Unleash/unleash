@@ -74,7 +74,7 @@ const ProjectEnvironmentDefaultStrategy = ({
                             tooltipProps={{
                                 title: `Edit default strategy for "${environmentId}"`,
                             }}
-                            data-testid={`STRATEGY_EDIT-${strategy.name}`}
+                            data-testid={`STRATEGY_EDIT-${strategy?.name}`}
                         >
                             <Edit />
                         </PermissionIconButton>
@@ -92,7 +92,7 @@ const ProjectEnvironmentDefaultStrategy = ({
                             onClose={onSidebarClose}
                             open
                         >
-                            <EditDefaultStrategy strategy={strategy} />
+                            <EditDefaultStrategy />
                         </SidebarModal>
                     }
                 />

@@ -50,6 +50,7 @@ export interface IFlags {
     googleAuthEnabled?: boolean;
     variantMetrics?: boolean;
     strategyImprovements?: boolean;
+    disableBulkToggle?: boolean;
 }
 
 export interface IVersionInfo {

@@ -13,24 +13,17 @@ export const useChangeRequestToggle = (project: string) => {
     const [changeRequestDialogDetails, setChangeRequestDialogDetails] =
         useState<{
             enabled?: boolean;
-            shouldActivateDisabledStrategies?: boolean;
             featureName?: string;
             environment?: string;
             isOpen: boolean;
         }>({ isOpen: false });
 
     const onChangeRequestToggle = useCallback(
-        (
-            featureName: string,
-            environment: string,
-            enabled: boolean,
-            shouldActivateDisabledStrategies: boolean
-        ) => {
+        (featureName: string, environment: string, enabled: boolean) => {
             setChangeRequestDialogDetails({
                 featureName,
                 environment,
                 enabled,
-                shouldActivateDisabledStrategies,
                 isOpen: true,
             });
         },
@@ -48,9 +41,6 @@ export const useChangeRequestToggle = (project: string) => {
                 action: 'updateEnabled',
                 payload: {
                     enabled: Boolean(changeRequestDialogDetails.enabled),
-                    shouldActivateDisabledStrategies: Boolean(
-                        changeRequestDialogDetails.shouldActivateDisabledStrategies
-                    ),
                 },
             });
             refetchChangeRequests();

@@ -120,8 +120,8 @@ describe('imports', () => {
         cy.get(
             "[data-testid='feature-toggle-status'] input[type='checkbox']:checked"
         )
-            .invoke('attr', 'aria-label')
-            .should('eq', 'development');
+            .closest('div')
+            .contains('development');
         cy.contains('50%');
     });
 });

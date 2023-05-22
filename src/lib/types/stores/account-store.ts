@@ -7,6 +7,12 @@ export interface IUserLookup {
     email?: string;
 }
 
+export interface IAdminCount {
+    password: number;
+    no_password: number;
+    service: number;
+}
+
 export interface IAccountStore extends Store<IUser, number> {
     hasAccount(idQuery: IUserLookup): Promise<number | undefined>;
     search(query: string): Promise<IUser[]>;
@@ -15,4 +21,5 @@ export interface IAccountStore extends Store<IUser, number> {
     count(): Promise<number>;
     getAccountByPersonalAccessToken(secret: string): Promise<IUser>;
     markSeenAt(secrets: string[]): Promise<void>;
+    getAdminCount(): Promise<IAdminCount>;
 }

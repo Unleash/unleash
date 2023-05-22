@@ -5,6 +5,7 @@ import {
     addonSchema,
     addonsSchema,
     addonTypeSchema,
+    adminCountSchema,
     adminFeaturesQuerySchema,
     apiTokenSchema,
     apiTokensSchema,
@@ -182,6 +183,7 @@ interface OpenAPIV3DocumentWithServers extends OpenAPIV3.Document {
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas: UnleashSchemas = {
+    adminCountSchema,
     adminFeaturesQuerySchema,
     addonParameterSchema,
     addonSchema,

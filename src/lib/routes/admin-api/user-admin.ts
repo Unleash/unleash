@@ -41,6 +41,10 @@ import { IGroup } from '../../types/group';
 import { IFlagResolver } from '../../types/experimental';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
+import {
+    AdminCountSchema,
+    adminCountSchema,
+} from '../../openapi/spec/admin-count-schema';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
@@ -187,6 +191,22 @@ export default class UserAdminController extends Controller {
                     operationId: 'getBaseUsersAndGroups',
                     responses: {
                         200: createResponseSchema('usersGroupsBaseSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/admin-count',
+            handler: this.getAdminCount,
+            permission: ADMIN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Users'],
+                    operationId: 'getAdminCount',
+                    responses: {
+                        200: createResponseSchema('adminCountSchema'),
                     },
                 }),
             ],
@@ -497,5 +517,20 @@ export default class UserAdminController extends Controller {
 
         await this.userService.changePassword(+id, password);
         res.status(200).send();
+    }
+
+    async getAdminCount(
+        req: Request,
+        res: Response<AdminCountSchema>,
+    ): Promise<void> {
+        console.log('user-admin controller');
+        const adminCount = await this.accountService.getAdminCount();
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            adminCountSchema.$id,
+            adminCount,
+        );
     }
 }

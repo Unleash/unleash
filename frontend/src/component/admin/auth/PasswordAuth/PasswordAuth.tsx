@@ -10,15 +10,22 @@ import useAuthSettingsApi, {
 } from 'hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useAdminCount } from 'hooks/api/getters/useAdminCount/useAdminCount';
+import { Link } from 'react-router-dom';
+import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import { PasswordAuthDialog } from './PasswordAuthDialog';
 
 export const PasswordAuth = () => {
     const { setToastData, setToastApiError } = useToast();
-    const { config } = useAuthSettings('simple');
+    const { config, refetch } = useAuthSettings('simple');
     const [disablePasswordAuth, setDisablePasswordAuth] =
         useState<boolean>(false);
     const { updateSettings, errors, loading } =
         useAuthSettingsApi<ISimpleAuthSettings>('simple');
     const { hasAccess } = useContext(AccessContext);
+    const [confirmationOpen, setConfirmationOpen] = useState(false);
+    const { data: adminCount } = useAdminCount();
+    const { tokens } = useApiTokens();
 
     useEffect(() => {
         setDisablePasswordAuth(!!config.disabled);
@@ -39,11 +46,20 @@ export const PasswordAuth = () => {
     const onSubmit = async (event: React.SyntheticEvent) => {
         event.preventDefault();
 
+        if (!config.disabled && disablePasswordAuth) {
+            setConfirmationOpen(true);
+        } else {
+            onConfirm();
+        }
+    };
+
+    const onConfirm = async () => {
         try {
             const settings: ISimpleAuthSettings = {
                 disabled: disablePasswordAuth,
             };
             await updateSettings(settings);
+            refetch();
             setToastData({
                 title: 'Successfully saved',
                 text: 'Password authentication settings stored.',
@@ -56,9 +72,30 @@ export const PasswordAuth = () => {
             setDisablePasswordAuth(config.disabled);
         }
     };
+
     return (
         <PageContent>
             <form onSubmit={onSubmit}>
+                <Alert severity="info" sx={{ mb: 3 }}>
+                    Overview of administrators on your Unleash instance:
+                    <br />
+                    <br />
+                    <strong>Password based administrators: </strong>{' '}
+                    <Link to="/admin/users">{adminCount?.password}</Link>
+                    <br />
+                    <strong>Other administrators: </strong>{' '}
+                    <Link to="/admin/users">{adminCount?.no_password}</Link>
+                    <br />
+                    <strong>Admin service accounts: </strong>{' '}
+                    <Link to="/admin/service-accounts">
+                        {adminCount?.service}
+                    </Link>
+                    <br />
+                    <strong>Admin API tokens: </strong>{' '}
+                    <Link to="/admin/api">
+                        {tokens.filter(({ type }) => type === 'admin').length}
+                    </Link>
+                </Alert>
                 <Grid container spacing={3} mb={2}>
                     <Grid item md={5}>
                         <strong>Password based login</strong>
@@ -97,6 +134,16 @@ export const PasswordAuth = () => {
                         </p>
                     </Grid>
                 </Grid>
+                <PasswordAuthDialog
+                    open={confirmationOpen}
+                    setOpen={setConfirmationOpen}
+                    onClick={() => {
+                        setConfirmationOpen(false);
+                        onConfirm();
+                    }}
+                    adminCount={adminCount!}
+                    tokens={tokens}
+                />
             </form>
         </PageContent>
     );

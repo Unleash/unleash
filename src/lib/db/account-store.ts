@@ -3,6 +3,7 @@ import User from '../types/user';
 
 import NotFoundError from '../error/notfound-error';
 import { IUserLookup } from '../types/stores/user-store';
+import { IAdminCount } from '../types/stores/account-store';
 import { IAccountStore } from '../types';
 import { Db } from './db';
 
@@ -168,5 +169,28 @@ export class AccountStore implements IAccountStore {
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);
         }
+    }
+
+    async getAdminCount(): Promise<IAdminCount> {
+        const adminCount = await this.activeAccounts()
+            .join('role_user as ru', 'users.id', 'ru.user_id')
+            .where(
+                'ru.role_id',
+                '=',
+                this.db.raw('(SELECT id FROM roles WHERE name = ?)', ['Admin']),
+            )
+            .select(
+                this.db.raw(
+                    'COUNT(CASE WHEN users.password_hash IS NOT NULL AND users.is_service = false THEN 1 END)::integer AS password',
+                ),
+                this.db.raw(
+                    'COUNT(CASE WHEN users.password_hash IS NULL AND users.is_service = false THEN 1 END)::integer AS no_password',
+                ),
+                this.db.raw(
+                    'COUNT(CASE WHEN users.is_service = true THEN 1 END)::integer AS service',
+                ),
+            );
+
+        return adminCount[0];
     }
 }

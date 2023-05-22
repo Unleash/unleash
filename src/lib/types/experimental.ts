@@ -20,7 +20,8 @@ export type IFlagKey =
     | 'demo'
     | 'strategyImprovements'
     | 'googleAuthEnabled'
-    | 'variantMetrics';
+    | 'variantMetrics'
+    | 'disableBulkToggle';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

@@ -49,7 +49,9 @@ export const DisableEnableStrategyDialog = ({
                     ? `Add ${
                           disabled ? 'enable' : 'disable'
                       } strategy to change request?`
-                    : 'Are you sure you want to enable this strategy?'
+                    : `Are you sure you want to ${
+                          disabled ? 'enable' : 'disable'
+                      } this strategy?`
             }
             open={isOpen}
             primaryButtonText={
@@ -70,8 +72,8 @@ export const DisableEnableStrategyDialog = ({
                 }
                 elseShow={
                     <Alert severity="error">
-                        Enabling the strategy will change which users receive
-                        access to the feature.
+                        {disabled ? 'Enabling' : 'Disabling'} the strategy will
+                        change which users receive access to the feature.
                     </Alert>
                 }
             />

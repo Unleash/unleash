@@ -186,7 +186,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Features'],
                     description:
                         'This endpoint enables multiple feature toggles.',
                     summary: 'Bulk enable a list of features.',
@@ -206,7 +206,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Features'],
                     description:
                         'This endpoint disables multiple feature toggles.',
                     summary: 'Bulk disabled a list of features.',
@@ -748,6 +748,11 @@ export default class ProjectFeaturesController extends Controller {
         const { shouldActivateDisabledStrategies } = req.query;
         const { features } = req.body;
 
+        if (this.flagResolver.isEnabled('disableBulkToggle')) {
+            res.status(409).end();
+            return;
+        }
+
         await this.startTransaction(async (tx) =>
             this.transactionalFeatureToggleService(tx).bulkUpdateEnabled(
                 projectId,
@@ -774,6 +779,11 @@ export default class ProjectFeaturesController extends Controller {
         const { environment, projectId } = req.params;
         const { shouldActivateDisabledStrategies } = req.query;
         const { features } = req.body;
+
+        if (this.flagResolver.isEnabled('disableBulkToggle')) {
+            res.status(409).end();
+            return;
+        }
 
         await this.startTransaction(async (tx) =>
             this.transactionalFeatureToggleService(tx).bulkUpdateEnabled(

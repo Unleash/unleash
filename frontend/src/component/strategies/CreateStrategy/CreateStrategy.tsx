@@ -10,6 +10,7 @@ import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { GO_BACK } from 'constants/navigate';
+import { CustomStrategyInfo } from '../CustomStrategyInfo/CustomStrategyInfo';
 
 export const CreateStrategy = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -78,6 +79,7 @@ export const CreateStrategy = () => {
             documentationLinkLabel="Custom strategies documentation"
             formatApiCode={formatApiCode}
         >
+            <CustomStrategyInfo alert />
             <StrategyForm
                 errors={errors}
                 handleSubmit={handleSubmit}

@@ -47,7 +47,9 @@ export const DisableEnableStrategyDialog = ({
                     ? `Add ${
                           disabled ? 'enable' : 'disable'
                       } strategy to change request?`
-                    : 'Are you sure you want to enable this strategy?'
+                    : `Are you sure you want to ${
+                          disabled ? 'enable' : 'disable'
+                      } this strategy?`
             }
             open={isOpen}
             primaryButtonText={

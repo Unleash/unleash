@@ -1,6 +1,6 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, styled } from '@mui/material';
+import { Box, Link, Typography, styled } from '@mui/material';
 import { Extension } from '@mui/icons-material';
 import {
     Table,
@@ -31,6 +31,8 @@ import { StrategyEditButton } from './StrategyEditButton/StrategyEditButton';
 import { StrategyDeleteButton } from './StrategyDeleteButton/StrategyDeleteButton';
 import { Search } from 'component/common/Search/Search';
 import { Badge } from 'component/common/Badge/Badge';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { CustomStrategyInfo } from '../CustomStrategyInfo/CustomStrategyInfo';
 
 interface IDialogueMetaData {
     show: boolean;
@@ -42,6 +44,62 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
     display: 'inline-block',
 }));
+
+const Subtitle: FC<{
+    title: string;
+    description: string;
+    link: string;
+}> = ({ title, description, link }) => (
+    <Typography component="h2" variant="subtitle1" sx={{ display: 'flex' }}>
+        {title}
+        <HelpIcon
+            htmlTooltip
+            tooltip={
+                <>
+                    <Typography
+                        variant="body2"
+                        component="p"
+                        sx={theme => ({ marginBottom: theme.spacing(1) })}
+                    >
+                        {description}
+                    </Typography>
+                    <Link href={link} target="_blank" variant="body2">
+                        Read more in the documentation
+                    </Link>
+                </>
+            }
+        />
+    </Typography>
+);
+
+const PredefinedStrategyTitle = () => (
+    <Box sx={theme => ({ marginBottom: theme.spacing(1.5) })}>
+        <Subtitle
+            title="Predefined strategies"
+            description="The next level of control comes when you are able to enable a feature for specific users or enable it for a small subset of users. We achieve this level of control with the help of activation strategies."
+            link="https://docs.getunleash.io/reference/activation-strategies"
+        />
+    </Box>
+);
+
+const CustomStrategyTitle: FC = () => (
+    <Box
+        sx={theme => ({
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: theme.spacing(1.5),
+        })}
+    >
+        <Subtitle
+            title="Custom strategies"
+            description="Custom activation strategies let you define your own activation strategies to use with Unleash."
+            link="https://docs.getunleash.io/reference/custom-activation-strategies"
+        />
+        <AddStrategyButton />
+    </Box>
+);
 
 export const StrategiesList = () => {
     const navigate = useNavigate();
@@ -60,13 +118,18 @@ export const StrategiesList = () => {
 
     const data = useMemo(() => {
         if (loading) {
-            return Array(5).fill({
+            const mock = Array(5).fill({
                 name: 'Context name',
                 description: 'Context description when loading',
             });
+            return {
+                all: mock,
+                predefined: mock,
+                custom: mock,
+            };
         }
 
-        return strategies.map(
+        const all = strategies.map(
             ({ name, description, editable, deprecated }) => ({
                 name,
                 description,
@@ -74,6 +137,11 @@ export const StrategiesList = () => {
                 deprecated,
             })
         );
+        return {
+            all,
+            predefined: all.filter(strategy => !strategy.editable),
+            custom: all.filter(strategy => strategy.editable),
+        };
     }, [strategies, loading]);
 
     const onToggle = useCallback(
@@ -181,24 +249,21 @@ export const StrategiesList = () => {
                 width: '90%',
                 Cell: ({
                     row: {
-                        original: { name, description, deprecated, editable },
+                        original: { name, description, deprecated },
                     },
                 }: any) => {
-                    const subTitleText = deprecated
-                        ? `${description} (deprecated)`
-                        : description;
                     return (
                         <LinkCell
                             data-loading
                             title={formatStrategyName(name)}
-                            subtitle={subTitleText}
+                            subtitle={description}
                             to={`/strategies/${name}`}
                         >
                             <ConditionallyRender
-                                condition={!editable}
+                                condition={deprecated}
                                 show={() => (
-                                    <StyledBadge color="success">
-                                        Predefined
+                                    <StyledBadge color="disabled">
+                                        Disabled
                                     </StyledBadge>
                                 )}
                             />
@@ -217,18 +282,28 @@ export const StrategiesList = () => {
                             deprecated={original.deprecated}
                             onToggle={onToggle(original)}
                         />
-                        <ActionCell.Divider />
-                        <StrategyEditButton
-                            strategy={original}
-                            onClick={() => onEditStrategy(original)}
-                        />
-                        <StrategyDeleteButton
-                            strategy={original}
-                            onClick={() => onDeleteStrategy(original)}
+                        <ConditionallyRender
+                            condition={original.editable}
+                            show={
+                                <>
+                                    <ActionCell.Divider />
+                                    <StrategyEditButton
+                                        strategy={original}
+                                        onClick={() => onEditStrategy(original)}
+                                    />
+                                    <StrategyDeleteButton
+                                        strategy={original}
+                                        onClick={() =>
+                                            onDeleteStrategy(original)
+                                        }
+                                    />
+                                </>
+                            }
                         />
                     </ActionCell>
                 ),
                 width: 150,
+                minWidth: 120,
                 disableGlobalFilter: true,
                 disableSortBy: true,
             },
@@ -264,7 +339,28 @@ export const StrategiesList = () => {
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
-            data,
+            data: data.predefined,
+            initialState,
+            sortTypes,
+            autoResetGlobalFilter: false,
+            autoResetSortBy: false,
+            disableSortRemove: true,
+        },
+        useGlobalFilter,
+        useSortBy
+    );
+
+    const {
+        getTableProps: customGetTableProps,
+        getTableBodyProps: customGetTableBodyProps,
+        headerGroups: customHeaderGroups,
+        rows: customRows,
+        prepareRow: customPrepareRow,
+        setGlobalFilter: customSetGlobalFilter,
+    } = useTable(
+        {
+            columns: columns as any[], // TODO: fix after `react-table` v8 update
+            data: data.custom,
             initialState,
             sortTypes,
             autoResetGlobalFilter: false,
@@ -292,58 +388,99 @@ export const StrategiesList = () => {
                 <PageHeader
                     title={`Strategy types (${strategyTypeCount})`}
                     actions={
-                        <>
-                            <Search
-                                initialValue={globalFilter}
-                                onChange={setGlobalFilter}
-                            />
-                            <PageHeader.Divider />
-                            <AddStrategyButton />
-                        </>
+                        <Search
+                            initialValue={globalFilter}
+                            onChange={(...props) => {
+                                setGlobalFilter(...props);
+                                customSetGlobalFilter(...props);
+                            }}
+                        />
                     }
                 />
             }
         >
             <SearchHighlightProvider value={globalFilter}>
-                <Table {...getTableProps()}>
-                    <SortableTableHeader headerGroups={headerGroups} />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map(row => {
-                            prepareRow(row);
-                            return (
-                                <TableRow hover {...row.getRowProps()}>
-                                    {row.cells.map(cell => (
-                                        <TableCell {...cell.getCellProps()}>
-                                            {cell.render('Cell')}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </SearchHighlightProvider>
-            <ConditionallyRender
-                condition={rows.length === 0}
-                show={
+                <Box sx={theme => ({ paddingBottom: theme.spacing(4) })}>
+                    <PredefinedStrategyTitle />
+                    <Table {...getTableProps()}>
+                        <SortableTableHeader headerGroups={headerGroups} />
+                        <TableBody {...getTableBodyProps()}>
+                            {rows.map(row => {
+                                prepareRow(row);
+                                return (
+                                    <TableRow hover {...row.getRowProps()}>
+                                        {row.cells.map(cell => (
+                                            <TableCell {...cell.getCellProps()}>
+                                                {cell.render('Cell')}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
                     <ConditionallyRender
-                        condition={globalFilter?.length > 0}
+                        condition={rows.length === 0}
                         show={
-                            <TablePlaceholder>
-                                No strategies found matching &ldquo;
-                                {globalFilter}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                No strategies available. Get started by adding
-                                one.
-                            </TablePlaceholder>
+                            <ConditionallyRender
+                                condition={globalFilter?.length > 0}
+                                show={
+                                    <TablePlaceholder>
+                                        No predefined strategies found matching
+                                        &ldquo;
+                                        {globalFilter}
+                                        &rdquo;
+                                    </TablePlaceholder>
+                                }
+                                elseShow={
+                                    <TablePlaceholder>
+                                        No strategies available.
+                                    </TablePlaceholder>
+                                }
+                            />
                         }
                     />
-                }
-            />
+                </Box>
+                <Box>
+                    <CustomStrategyTitle />
+                    <Table {...customGetTableProps()}>
+                        <SortableTableHeader
+                            headerGroups={customHeaderGroups}
+                        />
+                        <TableBody {...customGetTableBodyProps()}>
+                            {customRows.map(row => {
+                                customPrepareRow(row);
+                                return (
+                                    <TableRow hover {...row.getRowProps()}>
+                                        {row.cells.map(cell => (
+                                            <TableCell {...cell.getCellProps()}>
+                                                {cell.render('Cell')}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                    <ConditionallyRender
+                        condition={customRows.length === 0}
+                        show={
+                            <ConditionallyRender
+                                condition={globalFilter?.length > 0}
+                                show={
+                                    <TablePlaceholder>
+                                        No custom strategies found matching
+                                        &ldquo;
+                                        {globalFilter}
+                                        &rdquo;
+                                    </TablePlaceholder>
+                                }
+                                elseShow={<CustomStrategyInfo />}
+                            />
+                        }
+                    />
+                </Box>
+            </SearchHighlightProvider>
 
             <Dialogue
                 open={dialogueMetaData.show}

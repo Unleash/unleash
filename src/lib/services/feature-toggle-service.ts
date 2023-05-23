@@ -519,7 +519,7 @@ class FeatureToggleService {
         const feature = await this.getFeature({ featureName });
 
         const env = feature.environments.find((e) => e.name === environment);
-        const hasOnlyDisabledStrategies = env!.strategies.every(
+        const hasOnlyDisabledStrategies = env?.strategies.every(
             (strategy) => strategy.disabled,
         );
         if (hasOnlyDisabledStrategies) {

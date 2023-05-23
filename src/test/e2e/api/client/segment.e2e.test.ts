@@ -1,6 +1,9 @@
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import {
     IConstraint,
     IFeatureToggleClient,
@@ -180,7 +183,7 @@ const createTestSegments = async () => {
 
 beforeAll(async () => {
     db = await dbInit('segments', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
 });
 
 afterAll(async () => {

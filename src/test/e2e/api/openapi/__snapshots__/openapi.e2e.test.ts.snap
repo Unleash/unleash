@@ -610,14 +610,18 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "adminCountSchema": {
         "additionalProperties": false,
+        "description": "Contains total admin counts for an Unleash instance.",
         "properties": {
           "noPassword": {
+            "description": "Total number of admins that do not have a password set. May be SSO, but may also be users that did not set a password yet.",
             "type": "number",
           },
           "password": {
+            "description": "Total number of admins that have a password set.",
             "type": "number",
           },
           "service": {
+            "description": "Total number of service accounts that have the admin root role.",
             "type": "number",
           },
         },

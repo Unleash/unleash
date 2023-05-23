@@ -15,6 +15,7 @@ import { Typography, styled } from '@mui/material';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { textTruncated } from 'themes/themeStyles';
+import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -73,37 +74,47 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
     change,
     previousTitle,
     children,
-}) => (
-    <StyledContainer>
-        <GetFeatureStrategyIcon strategyName={change.payload.name} />
-        <Truncated>
-            <ConditionallyRender
-                condition={Boolean(
-                    (previousTitle && previousTitle !== change.payload.title) ||
-                        (!previousTitle && change.payload.title)
-                )}
-                show={
-                    <Truncated>
-                        <Typography component="s" color="text.secondary">
-                            {previousTitle}
-                        </Typography>{' '}
-                    </Truncated>
-                }
-            />
+}) => {
+    const { strategies } = useStrategies();
+    const titleHasChanged = Boolean(
+        (previousTitle && previousTitle !== change.payload.title) ||
+            (!previousTitle && change.payload.title)
+    );
+    const previousTitleOrDefault = () =>
+        (previousTitle ||
+            strategies.find(strategy => strategy.name === change.payload.name)
+                ?.displayName) ??
+        '';
+
+    return (
+        <StyledContainer>
+            <GetFeatureStrategyIcon strategyName={change.payload.name} />
             <Truncated>
-                <TooltipLink
-                    tooltip={children}
-                    tooltipProps={{
-                        maxWidth: 500,
-                        maxHeight: 600,
-                    }}
-                >
-                    <Typography component="span">
-                        {change.payload.title ||
-                            formatStrategyName(change.payload.name)}
-                    </Typography>
-                </TooltipLink>
+                <ConditionallyRender
+                    condition={titleHasChanged}
+                    show={
+                        <Truncated>
+                            <Typography component="s" color="text.secondary">
+                                {previousTitleOrDefault()}
+                            </Typography>{' '}
+                        </Truncated>
+                    }
+                />
+                <Truncated>
+                    <TooltipLink
+                        tooltip={children}
+                        tooltipProps={{
+                            maxWidth: 500,
+                            maxHeight: 600,
+                        }}
+                    >
+                        <Typography component="span">
+                            {change.payload.title ||
+                                formatStrategyName(change.payload.name)}
+                        </Typography>
+                    </TooltipLink>
+                </Truncated>
             </Truncated>
-        </Truncated>
-    </StyledContainer>
-);
+        </StyledContainer>
+    );
+};

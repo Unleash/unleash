@@ -120,7 +120,7 @@
     "joi": "^17.3.0",
     "js-sha256": "^0.9.0",
     "js-yaml": "^4.1.0",
-    "json-schema-to-ts": "2.7.2",
+    "json-schema-to-ts": "2.8.2",
     "json2csv": "^5.0.7",
     "knex": "^2.4.2",
     "lodash.get": "^4.4.2",

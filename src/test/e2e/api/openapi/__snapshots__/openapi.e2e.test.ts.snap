@@ -608,6 +608,30 @@ The provider you choose for your addon dictates what properties the \`parameters
         ],
         "type": "object",
       },
+      "adminCountSchema": {
+        "additionalProperties": false,
+        "description": "Contains total admin counts for an Unleash instance.",
+        "properties": {
+          "noPassword": {
+            "description": "Total number of admins that do not have a password set. May be SSO, but may also be users that did not set a password yet.",
+            "type": "number",
+          },
+          "password": {
+            "description": "Total number of admins that have a password set.",
+            "type": "number",
+          },
+          "service": {
+            "description": "Total number of service accounts that have the admin root role.",
+            "type": "number",
+          },
+        },
+        "required": [
+          "password",
+          "noPassword",
+          "service",
+        ],
+        "type": "object",
+      },
       "adminFeaturesQuerySchema": {
         "additionalProperties": false,
         "properties": {
@@ -12515,6 +12539,26 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "usersGroupsBaseSchema",
+          },
+        },
+        "tags": [
+          "Users",
+        ],
+      },
+    },
+    "/api/admin/user-admin/admin-count": {
+      "get": {
+        "operationId": "getAdminCount",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/adminCountSchema",
+                },
+              },
+            },
+            "description": "adminCountSchema",
           },
         },
         "tags": [

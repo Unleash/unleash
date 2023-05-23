@@ -5,6 +5,7 @@ import { IAccountStore, IUnleashStores } from '../types/stores';
 import { minutesToMilliseconds } from 'date-fns';
 import { AccessService } from './access-service';
 import { RoleName } from '../types/model';
+import { IAdminCount } from 'lib/types/stores/account-store';
 
 interface IUserWithRole extends IUser {
     rootRole: number;
@@ -50,6 +51,10 @@ export class AccountService {
 
     async getAccountByPersonalAccessToken(secret: string): Promise<IUser> {
         return this.store.getAccountByPersonalAccessToken(secret);
+    }
+
+    async getAdminCount(): Promise<IAdminCount> {
+        return this.store.getAdminCount();
     }
 
     async updateLastSeen(): Promise<void> {

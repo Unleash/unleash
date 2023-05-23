@@ -73,43 +73,38 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
     change,
     previousTitle,
     children,
-}) => {
-    const titleHasChanged = Boolean(
-        (previousTitle && previousTitle !== change.payload.title) ||
-            (!previousTitle && change.payload.title)
-    );
-    const previousTitleOrDefault = () =>
-        previousTitle || formatStrategyName(change.payload.name);
-
-    return (
-        <StyledContainer>
-            <GetFeatureStrategyIcon strategyName={change.payload.name} />
-            <Truncated>
-                <ConditionallyRender
-                    condition={titleHasChanged}
-                    show={
-                        <Truncated>
-                            <Typography component="s" color="text.secondary">
-                                {previousTitleOrDefault()}
-                            </Typography>{' '}
-                        </Truncated>
-                    }
-                />
-                <Truncated>
-                    <TooltipLink
-                        tooltip={children}
-                        tooltipProps={{
-                            maxWidth: 500,
-                            maxHeight: 600,
-                        }}
-                    >
-                        <Typography component="span">
-                            {change.payload.title ||
+}) => (
+    <StyledContainer>
+        <GetFeatureStrategyIcon strategyName={change.payload.name} />
+        <Truncated>
+            <ConditionallyRender
+                condition={Boolean(
+                    (previousTitle && previousTitle !== change.payload.title) ||
+                        (!previousTitle && change.payload.title)
+                )}
+                show={
+                    <Truncated>
+                        <Typography component="s" color="text.secondary">
+                            {previousTitle ||
                                 formatStrategyName(change.payload.name)}
-                        </Typography>
-                    </TooltipLink>
-                </Truncated>
+                        </Typography>{' '}
+                    </Truncated>
+                }
+            />
+            <Truncated>
+                <TooltipLink
+                    tooltip={children}
+                    tooltipProps={{
+                        maxWidth: 500,
+                        maxHeight: 600,
+                    }}
+                >
+                    <Typography component="span">
+                        {change.payload.title ||
+                            formatStrategyName(change.payload.name)}
+                    </Typography>
+                </TooltipLink>
             </Truncated>
-        </StyledContainer>
-    );
-};
+        </Truncated>
+    </StyledContainer>
+);

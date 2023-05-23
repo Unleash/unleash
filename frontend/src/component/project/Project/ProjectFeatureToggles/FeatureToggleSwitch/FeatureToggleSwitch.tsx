@@ -14,6 +14,7 @@ import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { EnableEnvironmentDialog } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitch/EnableEnvironmentDialog';
 import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
+import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledBoxContainer = styled(Box)<{ 'data-testid': string }>(() => ({
     mx: 'auto',
@@ -62,6 +63,11 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
         feature?.environments
             .find(env => env.name === environmentName)
             ?.strategies.filter(strategy => strategy.disabled).length ?? 0;
+
+    const { uiConfig } = useUiConfig();
+    const showStrategyImprovements = Boolean(
+        uiConfig.flags.strategyImprovements
+    );
 
     const handleToggleEnvironmentOn = async (
         shouldActivateDisabled = false
@@ -116,7 +122,10 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     const onClick = async (e: React.MouseEvent) => {
         if (isChangeRequestConfigured(environmentName)) {
             e.preventDefault();
-            if (featureHasOnlyDisabledStrategies()) {
+            if (
+                featureHasOnlyDisabledStrategies() &&
+                showStrategyImprovements
+            ) {
                 setShowEnabledDialog(true);
             } else {
                 onChangeRequestToggle(
@@ -133,7 +142,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             return;
         }
 
-        if (featureHasOnlyDisabledStrategies()) {
+        if (featureHasOnlyDisabledStrategies() && showStrategyImprovements) {
             setShowEnabledDialog(true);
         } else {
             await handleToggleEnvironmentOn();
@@ -192,14 +201,16 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                     disabled={isChecked !== value}
                 />
             </StyledBoxContainer>
-            <EnableEnvironmentDialog
-                isOpen={showEnabledDialog}
-                onClose={() => setShowEnabledDialog(false)}
-                environment={environmentName}
-                disabledStrategiesCount={disabledStrategiesCount}
-                onActivateDisabledStrategies={onActivateStrategies}
-                onAddDefaultStrategy={onAddDefaultStrategy}
-            />
+            {showStrategyImprovements && (
+                <EnableEnvironmentDialog
+                    isOpen={showEnabledDialog}
+                    onClose={() => setShowEnabledDialog(false)}
+                    environment={environmentName}
+                    disabledStrategiesCount={disabledStrategiesCount}
+                    onActivateDisabledStrategies={onActivateStrategies}
+                    onAddDefaultStrategy={onAddDefaultStrategy}
+                />
+            )}
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
                 onClose={onChangeRequestToggleClose}

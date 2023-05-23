@@ -11,6 +11,7 @@ const StyledStickyContainer = styled('div')(({ theme }) => ({
     marginTop: 'auto',
     bottom: 0,
     zIndex: theme.zIndex.mobileStepper,
+    pointerEvents: 'none'
 }));
 
 const StyledContainer = styled(Box)(({ theme }) => ({
@@ -34,6 +35,7 @@ const StyledBar = styled(Paper)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     gap: theme.spacing(1),
     flexWrap: 'wrap',
+    pointerEvents: 'auto'
 }));
 
 const StyledCount = styled('span')(({ theme }) => ({

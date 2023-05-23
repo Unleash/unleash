@@ -510,6 +510,29 @@ class FeatureToggleService {
         return this.unprotectedUpdateStrategy(id, updates, context, userName);
     }
 
+    async optionallyDisableFeature(
+        featureName: string,
+        environment: string,
+        projectId: string,
+        userName: string,
+    ): Promise<void> {
+        const feature = await this.getFeature({ featureName });
+
+        const env = feature.environments.find((e) => e.name === environment);
+        const hasOnlyDisabledStrategies = env!.strategies.every(
+            (strategy) => strategy.disabled,
+        );
+        if (hasOnlyDisabledStrategies) {
+            await this.updateEnabled(
+                projectId,
+                featureName,
+                environment,
+                false,
+                userName,
+            );
+        }
+    }
+
     async unprotectedUpdateStrategy(
         id: string,
         updates: Partial<IFeatureStrategy>,
@@ -564,6 +587,12 @@ class FeatureToggleService {
                     preData,
                     tags,
                 }),
+            );
+            await this.optionallyDisableFeature(
+                featureName,
+                environment,
+                projectId,
+                userName,
             );
             return data;
         }

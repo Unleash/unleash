@@ -887,13 +887,16 @@ export default class ProjectFeaturesController extends Controller {
             req.body.segmentIds = [];
         }
 
-        const updatedStrategy = await this.featureService.updateStrategy(
-            strategyId,
-            req.body,
-            { environment, projectId, featureName },
-            userName,
-            req.user,
+        const updatedStrategy = await this.startTransaction(async (tx) =>
+            this.transactionalFeatureToggleService(tx).updateStrategy(
+                strategyId,
+                req.body,
+                { environment, projectId, featureName },
+                userName,
+                req.user,
+            ),
         );
+
         res.status(200).json(updatedStrategy);
     }
 
@@ -907,28 +910,16 @@ export default class ProjectFeaturesController extends Controller {
         const strategy = await this.featureService.getStrategy(strategyId);
 
         const { newDocument } = applyPatch(strategy, patch);
-        const updatedStrategy = await this.featureService.updateStrategy(
-            strategyId,
-            newDocument,
-            { environment, projectId, featureName },
-            userName,
-            req.user,
-        );
-        const feature = await this.featureService.getFeature({ featureName });
-
-        const env = feature.environments.find((e) => e.name === environment);
-        const hasOnlyDisabledStrategies = env!.strategies.every(
-            (strat) => strat.disabled,
-        );
-        if (hasOnlyDisabledStrategies) {
-            await this.featureService.updateEnabled(
-                projectId,
-                featureName,
-                environment,
-                false,
+        const updatedStrategy = await this.startTransaction(async (tx) =>
+            this.transactionalFeatureToggleService(tx).updateStrategy(
+                strategyId,
+                newDocument,
+                { environment, projectId, featureName },
                 userName,
-            );
-        }
+                req.user,
+            ),
+        );
+
         res.status(200).json(updatedStrategy);
     }
 

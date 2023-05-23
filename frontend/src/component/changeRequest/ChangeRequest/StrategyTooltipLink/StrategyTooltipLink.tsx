@@ -15,7 +15,6 @@ import { Typography, styled } from '@mui/material';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { textTruncated } from 'themes/themeStyles';
-import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -75,16 +74,12 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
     previousTitle,
     children,
 }) => {
-    const { strategies } = useStrategies();
     const titleHasChanged = Boolean(
         (previousTitle && previousTitle !== change.payload.title) ||
             (!previousTitle && change.payload.title)
     );
     const previousTitleOrDefault = () =>
-        (previousTitle ||
-            strategies.find(strategy => strategy.name === change.payload.name)
-                ?.displayName) ??
-        '';
+        previousTitle || formatStrategyName(change.payload.name);
 
     return (
         <StyledContainer>

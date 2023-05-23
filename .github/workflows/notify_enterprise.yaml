@@ -40,6 +40,10 @@ jobs:
       - name: Publish static assets to S3
         run: |
           aws s3 cp frontend/build s3://getunleash-static/unleash/commits/${{ steps.get_commit_hash.outputs.COMMIT_HASH }} --recursive
+          echo ${{github.actor}}
+          echo ${{ github.event.head_commit.committer.username }}
+          git log -1 --pretty=%ae
+          git log -1 --pretty=%al
       - name: Trigger sync
         uses: actions/github-script@v6
         with:

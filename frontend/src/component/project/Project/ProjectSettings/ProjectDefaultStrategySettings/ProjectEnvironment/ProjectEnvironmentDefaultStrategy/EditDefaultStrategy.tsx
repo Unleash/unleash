@@ -20,6 +20,15 @@ import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm';
 import { CreateFeatureStrategySchema } from 'openapi';
 import useProject from 'hooks/api/getters/useProject/useProject';
 
+const DEFAULT_STRATEGY = {
+    name: 'flexibleRollout',
+    constraints: [],
+    parameters: {
+        rollout: '100%',
+        stickiness: 'default',
+        groupId: '',
+    },
+};
 const EditDefaultStrategy = () => {
     const projectId = useRequiredPathParam('projectId');
     const environmentId = useRequiredQueryParam('environmentId');
@@ -32,11 +41,11 @@ const EditDefaultStrategy = () => {
 
     const [defaultStrategy, setDefaultStrategy] = useState<
         CreateFeatureStrategySchema | undefined
-    >(strategy);
+    >(strategy || DEFAULT_STRATEGY);
 
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateDefaultStrategy, loading } = useProjectApi();
-    const { strategyDefinition } = useStrategy(strategy?.name);
+    const { strategyDefinition } = useStrategy(defaultStrategy?.name);
     const { setToastData, setToastApiError } = useToast();
     const errors = useFormErrors();
     const { uiConfig } = useUiConfig();
@@ -105,11 +114,10 @@ const EditDefaultStrategy = () => {
     }
 
     if (!defaultStrategy) return null;
-
     return (
         <FormTemplate
             modal
-            title={formatStrategyName(strategy?.name ?? '')}
+            title={formatStrategyName(defaultStrategy?.name ?? '')}
             description={projectDefaultStrategyHelp}
             documentationLink={projectDefaultStrategyDocsLink}
             documentationLinkLabel={projectDefaultStrategyDocsLinkLabel}

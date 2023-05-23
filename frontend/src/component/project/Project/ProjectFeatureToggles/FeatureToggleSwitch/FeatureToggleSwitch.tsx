@@ -15,6 +15,7 @@ import { EnableEnvironmentDialog } from 'component/feature/FeatureView/FeatureOv
 import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
 import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
 
 const StyledBoxContainer = styled(Box)<{ 'data-testid': string }>(() => ({
     mx: 'auto',
@@ -68,6 +69,8 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     const showStrategyImprovements = Boolean(
         uiConfig.flags.strategyImprovements
     );
+
+    const { trackEvent } = usePlausibleTracker();
 
     const handleToggleEnvironmentOn = async (
         shouldActivateDisabled = false
@@ -150,6 +153,11 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     };
 
     const onActivateStrategies = async () => {
+        await trackEvent('strategyImprovements', {
+            props: {
+                eventType: 'activate disabled strategies',
+            },
+        });
         if (isChangeRequestConfigured(environmentName)) {
             onChangeRequestToggle(feature.name, environmentName, !value, true);
         } else {
@@ -159,6 +167,11 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     };
 
     const onAddDefaultStrategy = async () => {
+        await trackEvent('strategyImprovements', {
+            props: {
+                eventType: 'add default strategy',
+            },
+        });
         if (isChangeRequestConfigured(environmentName)) {
             onChangeRequestToggle(feature.name, environmentName, !value, false);
         } else {

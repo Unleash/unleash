@@ -21,6 +21,26 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Trigger sync
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.UNLEASH_CI_BUILDER_GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'ivarconr',
+              repo: 'unleash-enterprise',
+              workflow_id: 'cicd.yaml',
+              ref: 'master',
+              inputs: {
+                 repository: "${{ github.repository }}",
+                 commit: "${{ github.event.head_commit.id }}",
+                 actor: "${{ github.actor }}",
+                 message: ${{ toJSON(github.event.head_commit.message) }},
+              }
+            })
+
+      # build static assets after triggering the sync workflow.
+      # Adding a validation step in the sync workflow will ensure that the static assets are built before deployment.
       - name: Build static assets
         run: |
           cd frontend
@@ -40,20 +60,3 @@ jobs:
       - name: Publish static assets to S3
         run: |
           aws s3 cp frontend/build s3://getunleash-static/unleash/commits/${{ steps.get_commit_hash.outputs.COMMIT_HASH }} --recursive
-      - name: Trigger sync
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.UNLEASH_CI_BUILDER_GITHUB_TOKEN }}
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: 'ivarconr',
-              repo: 'unleash-enterprise',
-              workflow_id: 'cicd.yaml',
-              ref: 'master',
-              inputs: {
-                 repository: "${{ github.repository }}",
-                 commit: "${{ github.event.head_commit.id }}",
-                 actor: "${{ github.actor }}",
-                 message: ${{ toJSON(github.event.head_commit.message) }},
-              }
-            })

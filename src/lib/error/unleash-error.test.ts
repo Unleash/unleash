@@ -1,7 +1,7 @@
 import owasp from 'owasp-password-strength-test';
 import { ErrorObject } from 'ajv';
 import AuthenticationRequired from '../types/authentication-required';
-import { ApiErrorSchema, fromLegacyError } from './unleash-error';
+import { ApiErrorSchema } from './unleash-error';
 import BadDataError, {
     fromOpenApiValidationError,
     fromOpenApiValidationErrors,
@@ -12,6 +12,8 @@ import IncompatibleProjectError from './incompatible-project-error';
 import PasswordUndefinedError from './password-undefined';
 import ProjectWithoutOwnerError from './project-without-owner-error';
 import NotFoundError from './notfound-error';
+import { validateString } from '../util/validators/constraint-types';
+import { fromLegacyError } from './from-legacy-error';
 
 describe('v5 deprecation: backwards compatibility', () => {
     it(`Adds details to error types that don't specify it`, () => {
@@ -351,6 +353,39 @@ describe('Error serialization special cases', () => {
                 },
             ],
         });
+    });
+
+    it('Converts Joi errors in a sensible fashion', async () => {
+        let validationThrewAnError = false;
+        try {
+            await validateString([]);
+        } catch (e) {
+            validationThrewAnError = true;
+            const ep = `
+[Error [ValidationError]: "value" must contain at least 1 items] {
+      _original: [],
+      details: [
+        {
+          message: '"value" must contain at least 1 items',
+          path: [],
+          type: 'array.min',
+          context: { limit: 1, value: [], label: 'value' }
+        }
+      ]
+    }
+`;
+            const expectedDetails = 'You provided ';
+            console.log(e, e.details[0].context, fromLegacyError(e));
+
+            // expect(convertedError.toJSON()).toMatchObject({
+            //     message: expect.matches("invalid") && expect.containsan
+            //     details: [{
+            //         message: '"value" must contain at least 1 items'
+            //     }]
+            // })
+        }
+
+        expect(validationThrewAnError).toBeTruthy();
     });
 });
 

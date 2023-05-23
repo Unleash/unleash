@@ -38,7 +38,7 @@ export const PasswordAuthDialog = ({
             <strong>Password based administrators: </strong>{' '}
             {adminCount?.password}
             <br />
-            <strong>Other administrators: </strong> {adminCount?.no_password}
+            <strong>Other administrators: </strong> {adminCount?.noPassword}
             <br />
             <strong>Admin service accounts: </strong> {adminCount?.service}
             <br />

@@ -9,7 +9,7 @@ export interface IUserLookup {
 
 export interface IAdminCount {
     password: number;
-    no_password: number;
+    noPassword: number;
     service: number;
 }
 

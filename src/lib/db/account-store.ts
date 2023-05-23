@@ -191,6 +191,10 @@ export class AccountStore implements IAccountStore {
                 ),
             );
 
-        return adminCount[0];
+        return {
+            password: adminCount[0].password,
+            noPassword: adminCount[0].no_password,
+            service: adminCount[0].service,
+        };
     }
 }

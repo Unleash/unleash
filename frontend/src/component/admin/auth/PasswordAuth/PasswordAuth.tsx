@@ -84,7 +84,7 @@ export const PasswordAuth = () => {
                     <Link to="/admin/users">{adminCount?.password}</Link>
                     <br />
                     <strong>Other administrators: </strong>{' '}
-                    <Link to="/admin/users">{adminCount?.no_password}</Link>
+                    <Link to="/admin/users">{adminCount?.noPassword}</Link>
                     <br />
                     <strong>Admin service accounts: </strong>{' '}
                     <Link to="/admin/service-accounts">

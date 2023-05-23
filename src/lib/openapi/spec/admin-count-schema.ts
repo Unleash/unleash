@@ -4,12 +4,12 @@ export const adminCountSchema = {
     $id: '#/components/schemas/adminCountSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['password', 'no_password', 'service'],
+    required: ['password', 'noPassword', 'service'],
     properties: {
         password: {
             type: 'number',
         },
-        no_password: {
+        noPassword: {
             type: 'number',
         },
         service: {

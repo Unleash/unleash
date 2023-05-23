@@ -611,7 +611,7 @@ The provider you choose for your addon dictates what properties the \`parameters
       "adminCountSchema": {
         "additionalProperties": false,
         "properties": {
-          "no_password": {
+          "noPassword": {
             "type": "number",
           },
           "password": {
@@ -623,7 +623,7 @@ The provider you choose for your addon dictates what properties the \`parameters
         },
         "required": [
           "password",
-          "no_password",
+          "noPassword",
           "service",
         ],
         "type": "object",

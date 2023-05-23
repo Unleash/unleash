@@ -523,7 +523,7 @@ class FeatureToggleService {
             (strategy) => strategy.disabled,
         );
         if (hasOnlyDisabledStrategies) {
-            await this.updateEnabled(
+            await this.unprotectedUpdateEnabled(
                 projectId,
                 featureName,
                 environment,

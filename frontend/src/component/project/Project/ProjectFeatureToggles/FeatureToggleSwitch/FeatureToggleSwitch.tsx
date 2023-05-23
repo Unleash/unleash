@@ -25,7 +25,7 @@ interface IFeatureToggleSwitchProps {
     environmentName: string;
     projectId: string;
     value: boolean;
-    showInfoBox?: () => void;
+    onError?: () => void;
     onToggle?: (
         projectId: string,
         feature: string,
@@ -40,7 +40,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     environmentName,
     value,
     onToggle,
-    showInfoBox,
+    onError,
 }) => {
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
@@ -85,7 +85,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                 error instanceof Error &&
                 error.message === ENVIRONMENT_STRATEGY_ERROR
             ) {
-                showInfoBox && showInfoBox();
+                onError?.();
             } else {
                 setToastApiError(formatUnknownError(error));
             }

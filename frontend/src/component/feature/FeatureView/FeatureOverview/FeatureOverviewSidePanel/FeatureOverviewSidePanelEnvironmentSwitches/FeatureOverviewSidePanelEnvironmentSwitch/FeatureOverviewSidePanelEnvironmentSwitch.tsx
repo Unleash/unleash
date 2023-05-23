@@ -66,7 +66,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
                     projectId={projectId}
                     environmentName={environment.name}
                     onToggle={handleToggle}
-                    showInfoBox={showInfoBox}
+                    onError={showInfoBox}
                     value={enabled}
                 />
                 {children ?? defaultContent}

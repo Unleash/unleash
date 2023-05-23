@@ -5,6 +5,9 @@ import version from '../util/version';
 import { Logger } from '../logger';
 import { ISettingStore } from '../types/stores/settings-store';
 import { hoursToMilliseconds } from 'date-fns';
+import { IUnleashServices } from 'lib/types';
+import { InstanceStatsService, InstanceStats } from './instance-stats-service';
+import StrategyStore from 'lib/db/strategy-store';
 
 export interface IVersionInfo {
     oss: string;
@@ -23,10 +26,19 @@ export interface IVersionResponse {
     latest: boolean;
 }
 
+export interface IFeatureUsageInfo extends InstanceStats {
+    customStrategies: number;
+    customStrategiesInUse: number;
+}
+
 export default class VersionService {
     private logger: Logger;
 
     private settingStore: ISettingStore;
+
+    private instanceStatsService: InstanceStatsService;
+
+    private strategyStore: StrategyStore;
 
     private current: IVersionInfo;
 
@@ -44,6 +56,7 @@ export default class VersionService {
 
     constructor(
         { settingStore }: Pick<IUnleashStores, 'settingStore'>,
+        { strategyStore }: Pick<IUnleashStores, 'strategyStore'>,
         {
             getLogger,
             versionCheck,
@@ -52,9 +65,14 @@ export default class VersionService {
             IUnleashConfig,
             'getLogger' | 'versionCheck' | 'enterpriseVersion'
         >,
+        {
+            instanceStatsService,
+        }: Pick<IUnleashServices, 'instanceStatsService'>,
     ) {
         this.logger = getLogger('lib/services/version-service.js');
         this.settingStore = settingStore;
+        this.instanceStatsService = instanceStatsService;
+        this.strategyStore = strategyStore;
         this.current = {
             oss: version,
             enterprise: enterpriseVersion || '',
@@ -87,11 +105,20 @@ export default class VersionService {
     async checkLatestVersion(): Promise<void> {
         if (this.enabled) {
             try {
+                const instanceStats =
+                    await this.instanceStatsService.getStats();
+                const customStrategies =
+                    await this.strategyStore.getEditableStrategies();
+                const featureInfo = {
+                    ...instanceStats,
+                    customStrategies: customStrategies.length,
+                };
                 const res = await fetch(this.versionCheckUrl, {
                     method: 'POST',
                     body: JSON.stringify({
                         versions: this.current,
                         instanceId: this.instanceId,
+                        featureInfo,
                     }),
                     headers: { 'Content-Type': 'application/json' },
                 });

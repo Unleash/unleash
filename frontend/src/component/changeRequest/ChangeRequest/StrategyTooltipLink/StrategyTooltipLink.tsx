@@ -86,8 +86,6 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     <Truncated>
                         <Typography component="s" color="text.secondary">
                             {previousTitle}
-                            PREVIOUS consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua.
                         </Typography>{' '}
                     </Truncated>
                 }
@@ -103,9 +101,6 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     <Typography component="span">
                         {change.payload.title ||
                             formatStrategyName(change.payload.name)}
-                        lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua.
                     </Typography>
                 </TooltipLink>
             </Truncated>

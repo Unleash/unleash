@@ -20,22 +20,23 @@ import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm';
 import { CreateFeatureStrategySchema } from 'openapi';
 import useProject from 'hooks/api/getters/useProject/useProject';
 
-interface EditDefaultStrategyProps {
-    strategy: CreateFeatureStrategySchema;
-}
-
-const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
+const EditDefaultStrategy = () => {
     const projectId = useRequiredPathParam('projectId');
     const environmentId = useRequiredQueryParam('environmentId');
 
-    const { refetch: refetchProject } = useProject(projectId);
+    const { project, refetch: refetchProject } = useProject(projectId);
 
-    const [defaultStrategy, setDefaultStrategy] =
-        useState<CreateFeatureStrategySchema>(strategy);
+    const strategy = project.environments.find(
+        env => env.environment === environmentId
+    )?.defaultStrategy;
+
+    const [defaultStrategy, setDefaultStrategy] = useState<
+        CreateFeatureStrategySchema | undefined
+    >(strategy);
 
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateDefaultStrategy, loading } = useProjectApi();
-    const { strategyDefinition } = useStrategy(strategy.name);
+    const { strategyDefinition } = useStrategy(strategy?.name);
     const { setToastData, setToastApiError } = useToast();
     const errors = useFormErrors();
     const { uiConfig } = useUiConfig();
@@ -60,7 +61,7 @@ const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
             }
             setSegments(temp);
         }
-    }, [JSON.stringify(allSegments), JSON.stringify(strategy.segments)]);
+    }, [JSON.stringify(allSegments), JSON.stringify(strategy?.segments)]);
 
     const segmentsToSubmit = uiConfig?.flags.SE ? segments : [];
     const payload = createStrategyPayload(
@@ -108,7 +109,7 @@ const EditDefaultStrategy = ({ strategy }: EditDefaultStrategyProps) => {
     return (
         <FormTemplate
             modal
-            title={formatStrategyName(strategy.name ?? '')}
+            title={formatStrategyName(strategy?.name ?? '')}
             description={projectDefaultStrategyHelp}
             documentationLink={projectDefaultStrategyDocsLink}
             documentationLinkLabel={projectDefaultStrategyDocsLinkLabel}

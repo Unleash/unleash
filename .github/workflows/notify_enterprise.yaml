@@ -52,7 +52,7 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
               owner: 'ivarconr',
               repo: 'unleash-enterprise',
-              workflow_id: 'continuous_version_sync.yaml',
+              workflow_id: 'cicd.yaml',
               ref: 'master',
               inputs: {
                  repository: "${{ github.repository }}",

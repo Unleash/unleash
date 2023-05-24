@@ -37,6 +37,7 @@ const COLUMNS = [
     'created_at',
     'disabled',
 ];
+const DEFAULT_ORDER = 9999;
 /*
 const mapperToColumnNames = {
     createdAt: 'created_at',
@@ -100,7 +101,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         parameters: input.parameters,
         constraints: JSON.stringify(input.constraints || []),
         created_at: input.createdAt,
-        sort_order: input.sortOrder,
+        sort_order: input.sortOrder || DEFAULT_ORDER,
         disabled: input.disabled,
     };
 }

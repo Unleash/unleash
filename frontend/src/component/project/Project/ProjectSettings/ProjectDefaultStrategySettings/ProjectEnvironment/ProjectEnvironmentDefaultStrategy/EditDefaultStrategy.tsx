@@ -24,7 +24,7 @@ const DEFAULT_STRATEGY = {
     name: 'flexibleRollout',
     constraints: [],
     parameters: {
-        rollout: '100%',
+        rollout: '100',
         stickiness: 'default',
         groupId: '',
     },

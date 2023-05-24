@@ -1,9 +1,11 @@
 import { Logger, LogProvider } from '../logger';
 
+export type SchedulerMode = 'active' | 'paused';
+
 export class SchedulerService {
     private intervalIds: NodeJS.Timer[] = [];
 
-    private mode: 'active' | 'paused';
+    private mode: SchedulerMode;
 
     private logger: Logger;
 
@@ -46,5 +48,9 @@ export class SchedulerService {
 
     resume(): void {
         this.mode = 'active';
+    }
+
+    getMode(): SchedulerMode {
+        return this.mode;
     }
 }

@@ -14,7 +14,7 @@ This guides shows you how to use [Unleash's Single-Sign-On (SSO) integration](..
 
 ## Basic configuration
 
-### Prequisites
+### Prerequisites
 
 This guide expects you to already have:
 

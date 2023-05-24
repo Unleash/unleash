@@ -9268,10 +9268,10 @@ vite-tsconfig-paths@4.2.0:
     globrex "^0.1.2"
     tsconfck "^2.1.0"
 
-vite@4.3.6:
-  version "4.3.6"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-4.3.6.tgz#d129487dd9edf10ec79314e2e7891c60a2f86051"
-  integrity sha512-cqIyLSbA6gornMS659AXTVKF7cvSHMdKmJJwQ9DXq3lwsT1uZSdktuBRlpHQ8VnOWx0QHtjDwxPpGtyo9Fh/Qg==
+vite@4.3.7:
+  version "4.3.7"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-4.3.7.tgz#04f98ab0f4689490545b2f6fa0515e95072bb298"
+  integrity sha512-MTIFpbIm9v7Hh5b0wSBgkcWzSBz7SAa6K/cBTwS4kUiQJfQLFlZZRJRQgqunCVzhTPCk674tW+0Qaqh3Q00dBg==
   dependencies:
     esbuild "^0.17.5"
     postcss "^8.4.23"

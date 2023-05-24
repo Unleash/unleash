@@ -13,7 +13,7 @@ export const Profile = () => {
     const { user } = useAuthUser();
     const location = useLocation();
     const navigate = useNavigate();
-    const { config: simpleAuthConfig } = useAuthSettings('simple');
+    const { config: simpleAuthConfig, loading } = useAuthSettings('simple');
 
     const { uiConfig } = useUiConfig();
 
@@ -51,6 +51,8 @@ export const Profile = () => {
     useEffect(() => {
         setTab(tabFromUrl());
     }, [location]);
+
+    if (loading) return null;
 
     return (
         <VerticalTabs tabs={tabs} value={tab} onChange={onChange}>

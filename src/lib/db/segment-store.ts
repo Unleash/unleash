@@ -30,6 +30,8 @@ interface ISegmentRow {
     segment_project_id?: string;
     created_by?: string;
     created_at?: Date;
+    used_in_projects?: number;
+    used_in_features?: number;
     constraints: IConstraint[];
 }
 
@@ -97,8 +99,29 @@ export default class SegmentStore implements ISegmentStore {
 
     async getAll(): Promise<ISegment[]> {
         const rows: ISegmentRow[] = await this.db
-            .select(this.prefixColumns())
+            .select(
+                this.prefixColumns(),
+                'used_in_projects',
+                'used_in_features',
+            )
+            .countDistinct(
+                `${T.featureStrategies}.project_name AS used_in_projects`,
+            )
+            .countDistinct(
+                `${T.featureStrategies}.feature_name AS used_in_features`,
+            )
             .from(T.segments)
+            .leftJoin(
+                T.featureStrategySegment,
+                `${T.segments}.id`,
+                `${T.featureStrategySegment}.segment_id`,
+            )
+            .leftJoin(
+                T.featureStrategies,
+                `${T.featureStrategies}.id`,
+                `${T.featureStrategySegment}.feature_strategy_id`,
+            )
+            .groupBy(this.prefixColumns())
             .orderBy('name', 'asc');
 
         return rows.map(this.mapRow);
@@ -207,6 +230,8 @@ export default class SegmentStore implements ISegmentStore {
             constraints: row.constraints,
             createdBy: row.created_by,
             createdAt: row.created_at,
+            usedInProjects: Number(row.used_in_projects),
+            usedInFeatures: Number(row.used_in_features),
         };
     }
 

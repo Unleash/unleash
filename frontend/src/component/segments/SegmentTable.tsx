@@ -11,7 +11,7 @@ import {
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { CreateSegmentButton } from 'component/segments/CreateSegmentButton/CreateSegmentButton';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useMediaQuery } from '@mui/material';
+import { Box, styled, Typography, useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useMemo, useState } from 'react';
@@ -182,8 +182,34 @@ const COLUMNS = [
         Header: 'Name',
         accessor: 'name',
         width: '60%',
+        Cell: ({
+            row: {
+                original: { name, description, id },
+            },
+        }: any) => (
+            <LinkCell
+                title={name}
+                to={`/segments/edit/${id}`}
+                subtitle={description}
+            />
+        ),
+    },
+    {
+        Header: 'Used in',
+        width: '60%',
         Cell: ({ value, row: { original } }: any) => (
-            <HighlightCell value={value} subtitle={original.description} />
+            <TextCell
+                sx={{
+                    color:
+                        original.usedInProjects == 0 &&
+                        original.usedInFeatures == 0
+                            ? theme.palette.text.disabled
+                            : 'inherit',
+                }}
+            >
+                <Box>{original.usedInProjects} projects</Box>
+                <Box>{original.usedInFeatures} feature toggles</Box>
+            </TextCell>
         ),
     },
     {

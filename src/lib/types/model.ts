@@ -402,6 +402,8 @@ export interface ISegment {
     description?: string;
     project?: string;
     constraints: IConstraint[];
+    usedInProjects?: number;
+    usedInFeatures?: number;
     createdBy?: string;
     createdAt: Date;
 }

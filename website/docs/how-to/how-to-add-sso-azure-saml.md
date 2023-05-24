@@ -61,9 +61,13 @@ Optionally, you can also provide a first name and a last name. If provided, thes
 ![Azure: The manage claim form with email configuration filled out](/img/sso-azure-saml-unique-id-email-id.png)
 ![Azure: The list of claims used by the SAML setup, including the optional claims for given name and surname](/img/sso-azure-saml-attributes-claim.png)
 
-> Please make sure to replace URLs with the public URL for your Unleash instance. This will require correct region prefix and the instance name.
->
-> The correct format is: https://**[region]**.app.unleash-hosted.com/**[instanceName]**/auth/saml/callback
+:::info URLs and formats
+
+Make sure to replace URLs with the public URL for your Unleash instance. This will require correct region prefix and the instance name.
+
+The correct format is: https://**[region]**.app.unleash-hosted.com/**[instanceName]**/auth/saml/callback
+
+:::
 
 **d) Sections 3 and 4: Azure AD setup details {#azure-details}**
 
@@ -72,8 +76,8 @@ You will need some details from section 3 and 4 of the SAML setup form to config
 - Login URL (from section 4)
 - X.509 Certificate (in the Federation Metadata XML from section 3)
 
-![Azure: Section 3 contains a download link for the Federation Metadata XML file. Section 4 lists the Azure AD identifier and the login URL](/img/sso-azure-saml-azure-details.png)
-![Azure: Within the Federation Metadata XML file, find the `X509Certificate` tag. You'll need the content within that tag.](/img/sso-azure-saml-x509cert.png)
+<Figure caption="Section 3 contains a download link for the Federation Metadata XML file. Section 4 lists the Azure AD identifier and the login URL" img="/img/sso-azure-saml-azure-details.png"/>
+<Figure caption="Within the Federation Metadata XML file, find the `X509Certificate` tag. You'll need the content within that tag." img="/img/sso-azure-saml-x509cert.png"/>
 
 ### Step 3: Configure SAML 2.0 provider in Unleash {#step-3}
 
@@ -96,7 +100,7 @@ If everything is set up correctly, you should now be able to sign in with the SA
 
 You can also test the integration in Azure by using the "test single sign on" step in the SAML setup wizard.
 
-![Azure: The SAML setup wizard contains a step that lets you test your SAML 2.0 integration. You can use this to verify that everything is configured correctly within Azure.](/img/sso-azure-saml-test-user.png)
+<Figure caption="The SAML setup wizard contains a step that lets you test your SAML 2.0 integration. You can use this to verify that everything is configured correctly within Azure." img="/img/sso-azure-saml-test-user.png"/>
 
 ### Group Syncing {#group-syncing}
 

@@ -25,7 +25,7 @@ This guide expects you to already have:
 
 **a) Sign in to your Azure AD and create a new Enterprise Application**.
 
-![In the Azure directory overview, use the add button and select the enterprise application option.](/img/sso-azure-saml-add-enterprise-app.png)
+<Figure caption="In the Azure directory overview, use the add button and select the enterprise application option." img="/img/sso-azure-saml-add-enterprise-app.png"/>
 
 **b) In the Azure AD gallery, select the option to create your own application.**
 

@@ -60,7 +60,9 @@ import ConfigurationRevisionService from '../features/feature-toggle/configurati
 import { createFeatureToggleService } from '../features';
 
 // TODO: will be moved to scheduler feature directory
-export const scheduleServices = (services: IUnleashServices): void => {
+export const scheduleServices = async (
+    services: IUnleashServices,
+): Promise<void> => {
     const {
         schedulerService,
         apiTokenService,
@@ -69,7 +71,12 @@ export const scheduleServices = (services: IUnleashServices): void => {
         projectService,
         projectHealthService,
         configurationRevisionService,
+        maintenanceService,
     } = services;
+
+    if (await maintenanceService.isMaintenanceMode()) {
+        schedulerService.pause();
+    }
 
     schedulerService.schedule(
         apiTokenService.fetchActiveTokens.bind(apiTokenService),
@@ -224,13 +231,14 @@ export const createServices = (
         versionService,
     );
 
+    const schedulerService = new SchedulerService(config.getLogger);
+
     const maintenanceService = new MaintenanceService(
         stores,
         config,
         settingService,
+        schedulerService,
     );
-
-    const schedulerService = new SchedulerService(config.getLogger);
 
     return {
         accessService,

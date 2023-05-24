@@ -374,6 +374,7 @@ describe('Error serialization special cases', () => {
             type: 'password',
             path: `base-path/auth/simple/login`,
             message: 'You must sign in order to use Unleash',
+            defaultHidden: true,
             options: [
                 {
                     type: 'google',

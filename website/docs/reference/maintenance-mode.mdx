@@ -25,3 +25,18 @@ Maintenance mode is controlled from the "maintenance" section of the Unleash adm
 When maintenance mode is enabled, a warning banner appears at the top of the Unleash dashboard, indicating that any changes made during this period will not be saved and may result in errors.
 
 ![Maintenance mode banner when maintenance mod is toggled on](/img/maintenance-banner.png)
+
+## Maintenance mode and scheduled jobs
+
+When maintenance mode is enabled all internal jobs performed by Unleash such as updating metrics and statistics are paused. When maintenance mode is toggled back to disabled later, all scheduled
+jobs are resumed.
+
+## Maintenance mode and read-only DB user
+
+When maintenance mode is enabled most DB operations are suspended so you can use even read-only DB user. There's one exception though.
+Unleash DB user role needs a DELETE and UPDATE permission on the unleash_session table.
+
+```
+GRANT DELETE ON unleash_session TO my_db_role;
+GRANT UPDATE ON unleash_session TO my_db_role;
+```

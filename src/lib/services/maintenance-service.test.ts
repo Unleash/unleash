@@ -10,7 +10,7 @@ test('Maintenance on should pause scheduler', async () => {
     const maintenanceService = new MaintenanceService(
         {} as IUnleashStores,
         config,
-        { insert() {} } as SettingService,
+        { insert() {} } as unknown as SettingService,
         schedulerService,
     );
 
@@ -30,7 +30,7 @@ test('Maintenance off should resume scheduler', async () => {
     const maintenanceService = new MaintenanceService(
         {} as IUnleashStores,
         config,
-        { insert() {} } as SettingService,
+        { insert() {} } as unknown as SettingService,
         schedulerService,
     );
 

@@ -1,5 +1,5 @@
 ---
-title: "ADR: Separation of Request and Response Schemas"
+title: "ADR: Separation of request and response schemas"
 ---
 
 ## Background

@@ -1,16 +1,31 @@
-import React, { ReactNode, VFC } from 'react';
+import { ReactNode, VFC } from 'react';
 import { Link } from 'react-router-dom';
-import { Divider, Drawer, List } from '@mui/material';
+import { Divider, Drawer, List, styled } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import ExitToApp from '@mui/icons-material/ExitToApp';
-import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
+import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
+import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
 import NavigationLink from '../NavigationLink/NavigationLink';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { basePath } from 'utils/formatPath';
 import { IFlags } from 'interfaces/uiConfig';
 import { INavigationMenuItem } from 'interfaces/route';
 import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
+import theme from 'themes/theme';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+
+const StyledDrawerHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'start',
+    '& svg': {
+        width: '100%',
+        height: '100%',
+        maxHeight: theme.spacing(8),
+        padding: theme.spacing(0.5),
+    },
+}));
 
 interface IDrawerMenuProps {
     title?: string;
@@ -33,7 +48,6 @@ interface IDrawerMenuProps {
 
 export const DrawerMenu: VFC<IDrawerMenuProps> = ({
     links = [],
-    title = 'Unleash',
     flags = {},
     open = false,
     toggleDrawer,
@@ -70,22 +84,26 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
             open={open}
             anchor="left"
             onClose={toggleDrawer}
+            style={{ zIndex: theme.zIndex.snackbar + 1 }}
         >
             <nav id="header-drawer" className={styles.drawerContainer}>
-                <div>
+                <StyledDrawerHeader>
                     <Link
                         to="/"
                         className={styles.drawerTitle}
                         aria-label="Home"
                         onClick={() => toggleDrawer()}
                     >
-                        <LogoIcon
-                            className={styles.drawerTitleLogo}
-                            aria-label="Unleash logo"
+                        <ThemeMode
+                            darkmode={
+                                <UnleashLogoWhite aria-label="Unleash logo" />
+                            }
+                            lightmode={
+                                <UnleashLogo aria-label="Unleash logo" />
+                            }
                         />
-                        <span className={styles.drawerTitleText}>{title}</span>
                     </Link>
-                </div>
+                </StyledDrawerHeader>
                 <Divider />
                 <List className={styles.drawerList}>
                     {routes.mobileRoutes.map(item => (

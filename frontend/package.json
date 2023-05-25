@@ -34,8 +34,8 @@
   },
   "devDependencies": {
     "@codemirror/lang-json": "6.0.1",
-    "@emotion/react": "11.10.8",
-    "@emotion/styled": "11.10.8",
+    "@emotion/react": "11.11.0",
+    "@emotion/styled": "11.11.0",
     "@mui/icons-material": "5.11.9",
     "@mui/lab": "5.0.0-alpha.120",
     "@mui/material": "5.11.10",
@@ -108,11 +108,11 @@
     "swr": "2.1.5",
     "tss-react": "4.8.3",
     "typescript": "4.8.4",
-    "vite": "4.3.6",
+    "vite": "4.3.7",
     "vite-plugin-env-compatible": "1.1.1",
     "vite-plugin-svgr": "2.4.0",
     "vite-tsconfig-paths": "4.2.0",
-    "vitest": "0.31.0",
+    "vitest": "0.31.1",
     "whatwg-fetch": "3.6.2"
   },
   "optionalDependencies": {

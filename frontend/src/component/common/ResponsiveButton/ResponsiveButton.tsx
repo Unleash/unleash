@@ -27,6 +27,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
     permission,
     environmentId,
     projectId,
+    endIcon,
     ...rest
 }) => {
     const smallScreen = useMediaQuery(`(max-width:${maxWidth})`);
@@ -56,6 +57,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
                     variant="contained"
                     disabled={disabled}
                     environmentId={environmentId}
+                    endIcon={endIcon}
                     data-loading
                     {...rest}
                 >

@@ -14,6 +14,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
         padding: theme.spacing(7.5),
         textAlign: 'center',
     },
+    zIndex: theme.zIndex.snackbar,
 }));
 
 const StyledCloseButton = styled(IconButton)(({ theme }) => ({

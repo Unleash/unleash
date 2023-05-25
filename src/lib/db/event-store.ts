@@ -1,4 +1,4 @@
-import { IEvent, IBaseEvent } from '../types/events';
+import { IEvent, IBaseEvent, SEGMENT_UPDATED } from '../types/events';
 import { LogProvider, Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { ITag } from '../types/model';
@@ -159,7 +159,7 @@ class EventStore implements IEventStore {
         const row = await this.db(TABLE)
             .max('id')
             .whereNotNull('feature_name')
-            .orWhere('type', 'segment-update')
+            .orWhere('type', SEGMENT_UPDATED)
             .andWhere('id', '>=', largerThan)
             .first();
         return row ? row.max : -1;

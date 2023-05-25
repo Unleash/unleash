@@ -1,10 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import { rewriteHTML } from './rewriteHTML';
-import { findPublicFolder } from './findPublicFolder';
 
 const input = fs
-    .readFileSync(path.join(findPublicFolder(), 'index.html'))
+    .readFileSync(path.join(__dirname, '../../test/examples', 'index.html'))
     .toString();
 
 test('rewriteHTML substitutes meta tag with existing rewrite value', () => {

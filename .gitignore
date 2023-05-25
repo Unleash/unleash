@@ -56,3 +56,4 @@ frontend/build
 # Generated docs
 website/docs/reference/api/**/sidebar.js
 website/docs/generated
+reports/jest-junit.xml

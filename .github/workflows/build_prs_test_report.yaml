@@ -1,21 +1,13 @@
-name: Build & Tests
-
+name: TestReport
 on:
-  push:
-    branches:
-      - main
+  pull_request:
     paths-ignore:
       - website/**
       - coverage/**
 
 jobs:
-  build:
+  testreport:
     runs-on: ubuntu-latest
-    name: build
-
-    strategy:
-      matrix:
-        node-version: [18.x]
     services:
       # Label used to access the service container
       postgres:
@@ -33,24 +25,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
           cache: 'yarn'
-      - run: yarn
-      - run: yarn build:frontend
-      - run: yarn lint
-      - run: yarn run test:report # This adds test results as github check to the workflow
+      - run: yarn install --frozen-lockfile --ignore-scripts
+      - run: yarn build:backend
+      - run: yarn test:report
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-      - uses: aws-actions/configure-aws-credentials@v1
+      - name: Upload test report to build # Done this way since external PRs would not be able to write the check. See https://github.com/marketplace/actions/test-reporter#recommended-setup-for-public-repositories
+        uses: actions/upload-artifact@v3
+        if: success() || failure()
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - name: Publish static assets to S3
-        run: |
-          aws s3 cp frontend/build s3://getunleash-static/unleash/main/$(git rev-parse HEAD) --recursive
+          name: test-results
+          path: ./reports/jest-junit.xml

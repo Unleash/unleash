@@ -20,4 +20,3 @@ jobs:
       - run: yarn install --frozen-lockfile --ignore-scripts
       - run: yarn lint
       - run: yarn build:backend
-      #- run: yarn build:frontend # not needed

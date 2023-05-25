@@ -20,7 +20,6 @@ jobs:
       - run: yarn install --frozen-lockfile --ignore-scripts
       - run: yarn lint
       - run: yarn build:backend
-      - run: yarn build:frontend
       - run: yarn test:report
       - name: Upload test report to build # Done this way since external PRs would not be able to write the check. See https://github.com/marketplace/actions/test-reporter#recommended-setup-for-public-repositories
         uses: actions/upload-artifact@v2

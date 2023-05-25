@@ -32,7 +32,6 @@ jobs:
           cache: 'yarn'
       - run: yarn install --frozen-lockfile --ignore-scripts
       - run: yarn build:backend
-      - run: yarn build:frontend
       - run: yarn test:report
         env:
           CI: true

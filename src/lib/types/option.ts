@@ -116,6 +116,7 @@ export interface IUnleashOptions {
     flagResolver?: IFlagResolver;
     accessControlMaxAge?: number;
     prometheusApi?: string;
+    publicFolder?: string;
 }
 
 export interface IEmailOption {
@@ -203,4 +204,5 @@ export interface IUnleashConfig {
     clientFeatureCaching: IClientCachingOption;
     accessControlMaxAge: number;
     prometheusApi?: string;
+    publicFolder?: string;
 }

@@ -497,6 +497,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         clientFeatureCaching,
         accessControlMaxAge,
         prometheusApi,
+        publicFolder: options.publicFolder,
     };
 }
 

@@ -40,7 +40,7 @@ export default async function getApp(
     const app = express();
 
     const baseUriPath = config.server.baseUriPath || '';
-    const publicFolder = findPublicFolder();
+    const publicFolder = config.publicFolder || findPublicFolder();
     let indexHTML = await loadIndexHTML(config, publicFolder);
 
     app.set('trust proxy', true);

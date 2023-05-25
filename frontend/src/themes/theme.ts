@@ -66,7 +66,7 @@ const theme = {
         tableRowHeightDense: 48,
     },
     zIndex: {
-        sticky: 2000,
+        sticky: 1400,
     },
 
     palette: {
@@ -267,7 +267,7 @@ export default createTheme({
         MuiCssBaseline: {
             styleOverrides: {
                 '#react-joyride-portal ~ .MuiDialog-root': {
-                    zIndex: 1500,
+                    zIndex: 1399,
                 },
 
                 '.skeleton': {

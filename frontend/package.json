@@ -99,7 +99,7 @@
     "react-joyride": "^2.5.3",
     "react-linkify": "^1.0.0-alpha",
     "react-markdown": "^8.0.4",
-    "react-router-dom": "6.11.1",
+    "react-router-dom": "6.11.2",
     "react-table": "7.8.0",
     "react-test-renderer": "17.0.2",
     "react-timeago": "7.1.0",

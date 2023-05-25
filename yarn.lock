@@ -4422,6 +4422,16 @@ jest-haste-map@^29.5.0:
   optionalDependencies:
     fsevents "^2.3.2"
 
+jest-junit@^16.0.0:
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/jest-junit/-/jest-junit-16.0.0.tgz#d838e8c561cf9fdd7eb54f63020777eee4136785"
+  integrity sha512-A94mmw6NfJab4Fg/BlvVOUXzXgF0XIH6EmTgJ5NDPp4xoKq0Kr7sErb+4Xs9nZvu58pJojz5RFGpqnZYJTrRfQ==
+  dependencies:
+    mkdirp "^1.0.4"
+    strip-ansi "^6.0.1"
+    uuid "^8.3.2"
+    xml "^1.0.1"
+
 jest-leak-detector@^29.5.0:
   version "29.5.0"
   resolved "https://registry.yarnpkg.com/jest-leak-detector/-/jest-leak-detector-29.5.0.tgz#cf4bdea9615c72bac4a3a7ba7e7930f9c0610c8c"
@@ -7258,6 +7268,11 @@ uuid@^3.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
+uuid@^8.3.2:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
 uuid@^9.0.0:
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
@@ -7411,6 +7426,11 @@ write-file-atomic@^4.0.2:
   dependencies:
     imurmurhash "^0.1.4"
     signal-exit "^3.0.7"
+
+xml@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/xml/-/xml-1.0.1.tgz#78ba72020029c5bc87b8a81a3cfcd74b4a2fc1e5"
+  integrity sha512-huCv9IH9Tcf95zuYCsQraZtWnJvBtLVE0QHMOs8bWyZAFZNDcYjsPq1nEx8jKA9y+Beo9v+7OBPRisQTjinQMw==
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.2"

@@ -22,6 +22,7 @@ jobs:
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
+
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -31,6 +32,7 @@ jobs:
           cache: 'yarn'
       - run: yarn install --frozen-lockfile --ignore-scripts
       - run: yarn build:backend
+      - run: yarn build:frontend
       - run: yarn test:report
         env:
           CI: true

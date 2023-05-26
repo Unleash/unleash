@@ -16,7 +16,7 @@ Separating the schemas will allow us to establish more precise and constrained r
 
 The separation of request and response schemas will provide the following benefits:
 
-1. **Enhanced clarity and correctness**: With dedicated schemas for requests and responses, we can define the precise structure and constraints for each interaction. This will help prevent situations where the schemas are overly permissive or restrictive, improving the accuracy and clarity of the API documentation.
+1. **Enhanced clarity and correctness**: With dedicated schemas for requests and responses, we can define the precise structure and constraints for each interaction. This will help prevent situations where the schemas are overly permissive or restrictive, reducing ambiguity and ensuring that the code handling the requests and responses is more reliable and easier to understand. By separating the schemas, we can define specific and precise structures for requests and responses, minimizing the use of undefined values and improving the overall correctness of the codebase and API implementation. The client knows exactly what data to send in the requests, and the server knows what to expect in the responses, ensuring that both parties are aligned in terms of data structures and expectations.
 
 2. **Improved maintainability**: By avoiding the reuse of schemas between requests and responses, we can modify and update them independently. This decoupling of schemas will simplify maintenance efforts and minimize the risk of unintended side effects caused by changes in one context affecting the other.
 

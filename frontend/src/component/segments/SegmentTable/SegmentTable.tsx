@@ -34,8 +34,7 @@ import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { RowSelectCell } from '../project/Project/ProjectFeatureToggles/RowSelectCell/RowSelectCell';
-import useUiConfig from '../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const SegmentTable = () => {
     const projectId = useOptionalPathParam('projectId');

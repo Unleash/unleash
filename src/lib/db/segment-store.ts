@@ -6,6 +6,7 @@ import NotFoundError from '../error/notfound-error';
 import { PartialSome } from '../types/partial';
 import User from '../types/user';
 import { Db } from './db';
+import { IFlagResolver } from '../types';
 
 const T = {
     segments: 'segments',
@@ -29,7 +30,9 @@ interface ISegmentRow {
     description?: string;
     segment_project_id?: string;
     created_by?: string;
-    created_at?: Date;
+    created_at: Date;
+    used_in_projects?: number;
+    used_in_features?: number;
     constraints: IConstraint[];
 }
 
@@ -46,9 +49,17 @@ export default class SegmentStore implements ISegmentStore {
 
     private db: Db;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
         this.eventBus = eventBus;
+        this.flagResolver = flagResolver;
         this.logger = getLogger('lib/db/segment-store.ts');
     }
 
@@ -96,12 +107,42 @@ export default class SegmentStore implements ISegmentStore {
     }
 
     async getAll(): Promise<ISegment[]> {
-        const rows: ISegmentRow[] = await this.db
-            .select(this.prefixColumns())
-            .from(T.segments)
-            .orderBy('name', 'asc');
+        if (this.flagResolver.isEnabled('segmentContextFieldUsage')) {
+            const rows: ISegmentRow[] = await this.db
+                .select(
+                    this.prefixColumns(),
+                    'used_in_projects',
+                    'used_in_features',
+                )
+                .countDistinct(
+                    `${T.featureStrategies}.project_name AS used_in_projects`,
+                )
+                .countDistinct(
+                    `${T.featureStrategies}.feature_name AS used_in_features`,
+                )
+                .from(T.segments)
+                .leftJoin(
+                    T.featureStrategySegment,
+                    `${T.segments}.id`,
+                    `${T.featureStrategySegment}.segment_id`,
+                )
+                .leftJoin(
+                    T.featureStrategies,
+                    `${T.featureStrategies}.id`,
+                    `${T.featureStrategySegment}.feature_strategy_id`,
+                )
+                .groupBy(this.prefixColumns())
+                .orderBy('name', 'asc');
 
-        return rows.map(this.mapRow);
+            return rows.map(this.mapRow);
+        } else {
+            const rows: ISegmentRow[] = await this.db
+                .select(this.prefixColumns())
+                .from(T.segments)
+                .orderBy('name', 'asc');
+
+            return rows.map(this.mapRow);
+        }
     }
 
     async getActive(): Promise<ISegment[]> {
@@ -199,7 +240,7 @@ export default class SegmentStore implements ISegmentStore {
             throw new NotFoundError('No row');
         }
 
-        return {
+        const segment: ISegment = {
             id: row.id,
             name: row.name,
             description: row.description,
@@ -207,7 +248,15 @@ export default class SegmentStore implements ISegmentStore {
             constraints: row.constraints,
             createdBy: row.created_by,
             createdAt: row.created_at,
+            usedInProjects: row.used_in_projects
+                ? Number(row.used_in_projects)
+                : 0,
+            usedInFeatures: row.used_in_projects
+                ? Number(row.used_in_features)
+                : 0,
         };
+
+        return segment;
     }
 
     destroy(): void {}

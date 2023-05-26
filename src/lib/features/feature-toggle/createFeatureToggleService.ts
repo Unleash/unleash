@@ -68,7 +68,12 @@ export const createFeatureToggleService = (
         eventBus,
         getLogger,
     );
-    const segmentStore = new SegmentStore(db, eventBus, getLogger);
+    const segmentStore = new SegmentStore(
+        db,
+        eventBus,
+        getLogger,
+        flagResolver,
+    );
     const contextFieldStore = new ContextFieldStore(db, getLogger);
     const groupStore = new GroupStore(db);
     const accountStore = new AccountStore(db, getLogger);

@@ -99,7 +99,12 @@ export const createStores = (
         ),
         userSplashStore: new UserSplashStore(db, eventBus, getLogger),
         roleStore: new RoleStore(db, eventBus, getLogger),
-        segmentStore: new SegmentStore(db, eventBus, getLogger),
+        segmentStore: new SegmentStore(
+            db,
+            eventBus,
+            getLogger,
+            config.flagResolver,
+        ),
         groupStore: new GroupStore(db),
         publicSignupTokenStore: new PublicSignupTokenStore(
             db,

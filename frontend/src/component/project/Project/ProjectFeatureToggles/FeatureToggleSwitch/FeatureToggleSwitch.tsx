@@ -134,13 +134,13 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                 onChangeRequestToggle(
                     feature.name,
                     environmentName,
-                    !value,
+                    !isChecked,
                     false
                 );
             }
             return;
         }
-        if (value) {
+        if (isChecked) {
             await handleToggleEnvironmentOff();
             return;
         }
@@ -159,7 +159,12 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             },
         });
         if (isChangeRequestConfigured(environmentName)) {
-            onChangeRequestToggle(feature.name, environmentName, !value, true);
+            onChangeRequestToggle(
+                feature.name,
+                environmentName,
+                !isChecked,
+                true
+            );
         } else {
             await handleToggleEnvironmentOn(true);
         }
@@ -173,7 +178,12 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             },
         });
         if (isChangeRequestConfigured(environmentName)) {
-            onChangeRequestToggle(feature.name, environmentName, !value, false);
+            onChangeRequestToggle(
+                feature.name,
+                environmentName,
+                !isChecked,
+                false
+            );
         } else {
             await handleToggleEnvironmentOn();
         }
@@ -201,7 +211,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             >
                 <PermissionSwitch
                     tooltip={
-                        value
+                        isChecked
                             ? `Disable feature in ${environmentName}`
                             : `Enable feature in ${environmentName}`
                     }
@@ -211,7 +221,6 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                     permission={UPDATE_FEATURE_ENVIRONMENT}
                     inputProps={{ 'aria-label': environmentName }}
                     onClick={onClick}
-                    disabled={isChecked !== value}
                 />
             </StyledBoxContainer>
             {showStrategyImprovements && (

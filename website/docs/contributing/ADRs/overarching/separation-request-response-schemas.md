@@ -35,6 +35,8 @@ While this decision brings several benefits, we acknowledge the following concer
 
 By implementing the separation of request and response schemas, we aim to improve the robustness and maintainability of our API documentation. This decision will empower developers to build more reliable integrations by providing clearer guidelines for both request and response data structures.
 
+Furthermore, this separation of schemas brings valuable benefits to our internal development process. It allows us to write more robust code and reduces the need for extensive manipulation of incoming requests to fit the correct shapes. By clearly defining the structure and constraints for each interaction, we minimize the likelihood of bugs and make the code significantly easier to reason about and work with.
+
 While a big bang migration replacing all schemas at once is not feasible, we will follow the Boy Scout Rule and aim to complete the migration to separated schemas by the release of version 6.0. This means that as developers make changes or additions to the code, they will incorporate the separation of schemas, gradually updating the existing codebase over time. This approach ensures a smooth transition to the separated schemas, allowing us to continually improve the code handling requests and responses, reducing reliance on undefined values and promoting clarity, correctness, and maintainability throughout the development process.
 
-Overall, this approach will facilitate better communication, reduce confusion, and enhance the overall developer experience when interacting with our APIs.
+Overall, this approach will facilitate better communication, reduce confusion, and enhance the overall developer experience when interacting with our APIs, while providing the aforementioned benefits of more robust code, correctness and improved maintainability.

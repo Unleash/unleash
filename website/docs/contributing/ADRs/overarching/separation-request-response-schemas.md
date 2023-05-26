@@ -30,10 +30,9 @@ While this decision brings several benefits, we acknowledge the following concer
 
 2. **Data duplication and redundancy**: With the separation of schemas, there might be instances where certain data fields or structures are duplicated between the request and response schemas. This redundancy could lead to code duplication and increase the risk of inconsistencies if changes are not carefully synchronized between the two schemas.
 
-3. **Complexity of migration**: Migrating existing API implementations to adopt the separated schemas might introduce complexities and challenges. Ensuring a smooth transition without disrupting ongoing development or existing integrations requires careful planning and coordination.
 
 ## Conclusion
 
 By implementing the separation of request and response schemas, we aim to improve the robustness and maintainability of our API documentation. This decision will empower developers to build more reliable integrations by providing clearer guidelines for both request and response data structures.
 
-Overall, this approach will facilitate better communication, reduce confusion, and enhance the overall developer experience when interacting with our APIs.
+Overall, this approach will facilitate better communication, reduce confusion, and enhance the overall developer experience when interacting with our APIs. By applying the Boy Scout Rule and gradually updating the existing codebase, we will address concerns such as increased schema maintenance, data duplication, and the complexity of migration, ensuring a smooth transition to the separated schemas by the release of version 6.0.

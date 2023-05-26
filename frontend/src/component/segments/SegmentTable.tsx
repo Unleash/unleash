@@ -65,7 +65,10 @@ export const SegmentTable = () => {
         return segments;
     }, [segments, projectId]);
 
-    const columns = getColumns(uiConfig.flags.segmentContextFieldUsage);
+    const columns = useMemo(
+        () => getColumns(uiConfig.flags.segmentContextFieldUsage),
+        [uiConfig.flags.segmentContextFieldUsage]
+    );
     const {
         getTableProps,
         getTableBodyProps,

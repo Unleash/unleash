@@ -211,7 +211,6 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                     permission={UPDATE_FEATURE_ENVIRONMENT}
                     inputProps={{ 'aria-label': environmentName }}
                     onClick={onClick}
-                    // disabled={isChecked !== value}
                 />
             </StyledBoxContainer>
             {showStrategyImprovements && (

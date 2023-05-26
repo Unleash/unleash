@@ -32,8 +32,6 @@ While this decision brings several benefits, we acknowledge the following concer
 
 3. **Complexity of migration**: Migrating existing API implementations to adopt the separated schemas might introduce complexities and challenges. Ensuring a smooth transition without disrupting ongoing development or existing integrations requires careful planning and coordination.
 
-4. **Developer adoption and understanding**: Developers who are accustomed to the previous unified schema approach may initially find it challenging to adapt to the new separation of schemas. This could potentially lead to confusion and frustration if the new approach is not clearly communicated and explained.
-
 ## Conclusion
 
 By implementing the separation of request and response schemas, we aim to improve the robustness and maintainability of our API documentation. This decision will empower developers to build more reliable integrations by providing clearer guidelines for both request and response data structures.

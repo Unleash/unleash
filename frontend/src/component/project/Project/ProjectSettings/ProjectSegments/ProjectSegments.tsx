@@ -4,7 +4,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
-import { SegmentTable } from '../../../../segments/SegmentTable/SegmentTable';
+import { SegmentTable } from 'component/segments/SegmentTable/SegmentTable';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';

@@ -50,6 +50,7 @@ const T = {
     featureStrategies: 'feature_strategies',
     featureStrategySegment: 'feature_strategy_segment',
     featureEnvs: 'feature_environments',
+    strategies: 'strategies',
 };
 
 interface IFeatureStrategiesTable {
@@ -647,6 +648,26 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
     prefixColumns(): string[] {
         return COLUMNS.map((c) => `${T.featureStrategies}.${c}`);
+    }
+
+    async getCustomStrategiesInUseCount(): Promise<number> {
+        const stopTimer = this.timer('getCustomStrategiesInUseCount');
+        const notBuiltIn = '0';
+        const columns = [
+            'count(fes.strategy_name) as times_used',
+            'fes.strategy_name',
+        ];
+        const rows = await this.db(`${T.strategies} as str`)
+            .select(columns)
+            .join(
+                `${T.featureStrategies} as fes`,
+                'fes.strategy_name',
+                'str.name',
+            )
+            .where(`str.built_in`, '=', notBuiltIn);
+
+        stopTimer();
+        return rows.length;
     }
 }
 

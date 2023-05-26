@@ -63,4 +63,5 @@ export interface IFeatureStrategiesStore
         features: string[],
         environment?: string,
     ): Promise<IFeatureStrategy[]>;
+    getCustomStrategiesInUseCount(): Promise<number>;
 }

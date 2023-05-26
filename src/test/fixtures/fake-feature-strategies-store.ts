@@ -323,6 +323,10 @@ export default class FakeFeatureStrategiesStore
             ),
         );
     }
+
+    getCustomStrategiesInUseCount(): Promise<number> {
+        throw new Error('Method not implemented.');
+    }
 }
 
 module.exports = FakeFeatureStrategiesStore;

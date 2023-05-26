@@ -118,7 +118,12 @@ export const createExportImportTogglesService = (
     const featureToggleStore = new FeatureToggleStore(db, eventBus, getLogger);
     const tagStore = new TagStore(db, eventBus, getLogger);
     const tagTypeStore = new TagTypeStore(db, eventBus, getLogger);
-    const segmentStore = new SegmentStore(db, eventBus, getLogger);
+    const segmentStore = new SegmentStore(
+        db,
+        eventBus,
+        getLogger,
+        flagResolver,
+    );
     const projectStore = new ProjectStore(
         db,
         eventBus,

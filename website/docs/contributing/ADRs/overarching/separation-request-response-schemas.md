@@ -4,7 +4,7 @@ title: "ADR: Separation of request and response schemas"
 
 ## Background
 
-During the updating of our OpenAPI documentation, we have encountered issues related to the width and strictness of our schemas for requests and responses. Currently, we are reusing the same schema for both request and response, which has led to situations where the schemas are either too wide for a response or too strict for a request. This has caused difficulties in accurately defining the expected data structures for API interactions.
+During the updating of our OpenAPI documentation, we have encountered issues related to the scope and strictness of our schemas for requests and responses. Currently, we are reusing the same schema for both request and response, which has led to situations where the schemas are either too broad for a response or too strict for a request. This has caused difficulties in accurately defining the expected data structures for API interactions.
 
 ## Decision
 

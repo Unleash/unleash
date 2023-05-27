@@ -228,5 +228,3 @@ test('project should not be favorited by default', async () => {
         favorite: false,
     });
 });
-
-test('app with two leading slashes should still deny access', async () => {});

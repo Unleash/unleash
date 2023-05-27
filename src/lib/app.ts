@@ -190,7 +190,7 @@ export default async function getApp(
         const error = new NotFoundError(
             `The path you were looking for (${baseUriPath}/api${req.path}) is not available.`,
         );
-        res.status(error.statusCode).send(error);
+        res.status(404).send(error);
         return;
     });
 

@@ -64,6 +64,11 @@ export default async function getApp(
     app.use(compression());
     app.use(cookieParser());
 
+    app.use((req, res, next) => {
+        req.url = req.url.replace(/\/+/g, '/');
+        next();
+    });
+
     app.use(
         `${baseUriPath}/api/admin/features-batch`,
         express.json({ strict: false, limit: '500kB' }),

@@ -49,7 +49,7 @@ test(`Access with API token is granted`, async () => {
     let token = await app.services.apiTokenService.createApiTokenWithProjects({
         environment: 'default',
         projects: ['default'],
-        tokenName: 'test',
+        username: 'test',
         type: ApiTokenType.CLIENT,
     });
     await app.request

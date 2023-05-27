@@ -29,7 +29,6 @@ import maintenanceMiddleware from './middleware/maintenance-middleware';
 import { unless } from './middleware/unless-middleware';
 import { catchAllErrorHandler } from './middleware/catch-all-error-handler';
 import NotFoundError from './error/notfound-error';
-import { rejectDoubleSlashesInPath } from './middleware/reject-double-slashes-in-path';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -93,7 +92,6 @@ export default async function getApp(
     if (config.enableOAS && services.openApiService) {
         services.openApiService.useDocs(app);
     }
-    app.use(`${baseUriPath}/`, rejectDoubleSlashesInPath);
     // Support CORS preflight requests for the frontend endpoints.
     // Preflight requests should not have Authorization headers,
     // so this must be handled before the API token middleware.

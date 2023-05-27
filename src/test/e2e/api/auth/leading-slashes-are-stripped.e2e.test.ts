@@ -19,7 +19,7 @@ beforeAll(async () => {
         authentication: { enableApiToken: true, type: IAuthType.DEMO },
     });
     appWithBaseUrl = await setupAppWithAuth(stores, {
-        server: { baseUriPath: '/demo' },
+        server: { unleashUrl: 'http://localhost:4242', basePathUri: '/demo' },
         authentication: { enableApiToken: true, type: IAuthType.DEMO },
     });
 });
@@ -31,17 +31,13 @@ afterAll(async () => {
 
 test('Access to /api/client/features are refused no matter how many leading slashes', async () => {
     await app.request.get('/api/client/features').expect(401);
-    await app.request.get('/////api/client/features').expect(404);
-    await app.request.get('//api/client/features').expect(404);
-});
-
-test('Multiple slashes anywhere in the path is not a URL that exists', async () => {
-    await app.request.get('/api/admin///projects/default/features').expect(404);
-    await app.request.get('/api/client///features').expect(404);
+    await app.request.get('/////api/client/features').expect(401);
+    await app.request.get('//api/client/features').expect(401);
 });
 
 test('multiple slashes after base path is also rejected with 404', async () => {
-    await appWithBaseUrl.request.get('/demo///api/client/features').expect(404);
+    await appWithBaseUrl.request.get('/demo///api/client/features').expect(401);
+    await appWithBaseUrl.request.get('/demo//api/client/features').expect(401);
     await appWithBaseUrl.request.get('/demo/api/client/features').expect(401);
 });
 

@@ -28,7 +28,8 @@ import { Knex } from 'knex';
 import maintenanceMiddleware from './middleware/maintenance-middleware';
 import { unless } from './middleware/unless-middleware';
 import { catchAllErrorHandler } from './middleware/catch-all-error-handler';
-import { UnleashError } from './error/api-error';
+import NotFoundError from './error/notfound-error';
+import { rejectDoubleSlashesInPath } from './middleware/reject-double-slashes-in-path';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -92,7 +93,7 @@ export default async function getApp(
     if (config.enableOAS && services.openApiService) {
         services.openApiService.useDocs(app);
     }
-
+    app.use(`${baseUriPath}/`, rejectDoubleSlashesInPath);
     // Support CORS preflight requests for the frontend endpoints.
     // Preflight requests should not have Authorization headers,
     // so this must be handled before the API token middleware.
@@ -186,10 +187,9 @@ export default async function getApp(
 
     // handle all API 404s
     app.use(`${baseUriPath}/api`, (req, res) => {
-        const error = new UnleashError({
-            name: 'NotFoundError',
-            message: `The path you were looking for (${baseUriPath}/api${req.path}) is not available.`,
-        });
+        const error = new NotFoundError(
+            `The path you were looking for (${baseUriPath}/api${req.path}) is not available.`,
+        );
         res.status(error.statusCode).send(error);
         return;
     });

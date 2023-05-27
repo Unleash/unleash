@@ -3,7 +3,11 @@ import supertest from 'supertest';
 import EventEmitter from 'events';
 import getApp from '../../../lib/app';
 import { createTestConfig } from '../../config/test-config';
-import { IAuthType, IUnleashConfig } from '../../../lib/types/option';
+import {
+    IAuthType,
+    IUnleashConfig,
+    IUnleashOptions,
+} from '../../../lib/types/option';
 import { createServices } from '../../../lib/services';
 import sessionDb from '../../../lib/middleware/session-db';
 import { DEFAULT_PROJECT, IUnleashStores } from '../../../lib/types';
@@ -168,7 +172,7 @@ async function createApp(
     stores,
     adminAuthentication = IAuthType.NONE,
     preHook?: Function,
-    customOptions?: any,
+    customOptions?: Partial<IUnleashOptions>,
     db?: Db,
 ): Promise<IUnleashTest> {
     const config = createTestConfig({
@@ -221,7 +225,7 @@ export async function setupAppWithCustomConfig(
 export async function setupAppWithAuth(
     stores: IUnleashStores,
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    customOptions?: any,
+    customOptions?: Partial<IUnleashOptions>,
     db?: Db,
 ): Promise<IUnleashTest> {
     return createApp(stores, IAuthType.DEMO, undefined, customOptions, db);
@@ -239,7 +243,7 @@ export async function setupAppWithBaseUrl(
     return createApp(stores, undefined, undefined, {
         server: {
             unleashUrl: 'http://localhost:4242',
-            basePathUri: '/hosted',
+            baseUriPath: '/hosted',
         },
     });
 }

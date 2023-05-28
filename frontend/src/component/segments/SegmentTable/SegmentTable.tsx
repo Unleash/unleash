@@ -11,13 +11,7 @@ import {
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { CreateSegmentButton } from 'component/segments/CreateSegmentButton/CreateSegmentButton';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import {
-    Box,
-    Checkbox,
-    styled,
-    Typography,
-    useMediaQuery,
-} from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useMemo, useState } from 'react';
@@ -34,8 +28,7 @@ import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { RowSelectCell } from '../project/Project/ProjectFeatureToggles/RowSelectCell/RowSelectCell';
-import useUiConfig from '../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const SegmentTable = () => {
     const projectId = useOptionalPathParam('projectId');
@@ -212,7 +205,7 @@ const getColumns = (segmentContextFieldUsage?: boolean) => [
               {
                   Header: 'Used in',
                   width: '60%',
-                  Cell: ({ value, row: { original } }: any) => (
+                  Cell: ({ row: { original } }: any) => (
                       <TextCell
                           sx={{
                               color:

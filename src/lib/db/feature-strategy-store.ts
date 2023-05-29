@@ -664,7 +664,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'fes.strategy_name',
                 'str.name',
             )
-            .where(`str.built_in`, '=', notBuiltIn);
+            .where(`str.built_in`, '=', notBuiltIn)
+            .groupBy('strategy_name');
 
         stopTimer();
         return rows.length;

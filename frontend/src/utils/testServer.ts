@@ -15,11 +15,13 @@ export const testServerRoute = (
     server: SetupServerApi,
     path: string,
     json: object,
-    method: 'get' | 'post' | 'put' | 'delete' = 'get'
+    method: 'get' | 'post' | 'put' | 'delete' = 'get',
+    status: number = 200
 ) => {
     server.use(
         rest[method](path, (req, res, ctx) => {
-            return res(ctx.json(json));
+            console.log('***', path);
+            return res(ctx.status(status), ctx.json(json));
         })
     );
 };

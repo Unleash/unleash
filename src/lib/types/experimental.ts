@@ -22,7 +22,8 @@ export type IFlagKey =
     | 'googleAuthEnabled'
     | 'variantMetrics'
     | 'disableBulkToggle'
-    | 'segmentContextFieldUsage';
+    | 'segmentContextFieldUsage'
+    | 'disableNotifications';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -101,6 +102,10 @@ const flags: IFlags = {
     ),
     segmentContextFieldUsage: parseEnvVarBoolean(
         process.env.UNLEASH_SSEGMENT_CONTEXT_FIELD_USAGE,
+        false,
+    ),
+    disableNotifications: parseEnvVarBoolean(
+        process.env.DISABLE_NOTIFICATIONS,
         false,
     ),
 };

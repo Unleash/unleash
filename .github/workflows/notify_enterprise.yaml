@@ -34,7 +34,7 @@ jobs:
               inputs: {
                  repository: "${{ github.repository }}",
                  commit: "${{ github.event.head_commit.id }}",
-                 actor: "${{ github.actor }}",
+                 actor: "${{ github.event.head_commit.committer.name || github.actor }} <${{ github.event.head_commit.committer.email }}>",
                  message: ${{ toJSON(github.event.head_commit.message) }},
               }
             })

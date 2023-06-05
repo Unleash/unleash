@@ -6,7 +6,6 @@ import { TOPICS } from './demo-topics';
 import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome';
 import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish';
 import { DemoDialogPlans } from './DemoDialog/DemoDialogPlans/DemoDialogPlans';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { DemoBanner } from './DemoBanner/DemoBanner';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useMediaQuery } from '@mui/material';
@@ -26,7 +25,6 @@ interface IDemoProps {
 }
 
 export const Demo = ({ children }: IDemoProps): JSX.Element => {
-    const { uiConfig } = useUiConfig();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down(768));
     const { trackEvent } = usePlausibleTracker();
 
@@ -79,8 +77,6 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
         setTopic(-1);
         setStep(0);
     };
-
-    if (!uiConfig.flags.demo) return children;
 
     return (
         <>

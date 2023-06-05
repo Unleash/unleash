@@ -13,7 +13,7 @@ import { CF_CREATE_BTN_ID } from 'utils/testIds';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 
-const CreateFeature = () => {
+export const CreateFeature = () => {
     const { setToastData, setToastApiError } = useToast();
     const { setShowFeedback } = useContext(UIContext);
     const { uiConfig } = useUiConfig();
@@ -112,5 +112,3 @@ const CreateFeature = () => {
         </FormTemplate>
     );
 };
-
-export default CreateFeature;

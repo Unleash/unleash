@@ -1,175 +1,264 @@
-import { lazy } from 'react';
+import { ComponentType, LazyExoticComponent, lazy } from 'react';
 import { EEA, P, RE, SE, UG } from 'component/common/flags';
 import Login from 'component/user/Login/Login';
 import { INavigationMenuItem, IRoute } from 'interfaces/route';
 import { SplashPage } from 'component/splash/SplashPage/SplashPage';
-import { LazyPlayground } from 'component/playground/Playground/LazyPlayground';
-import { LazyCreateProject } from 'component/project/Project/CreateProject/LazyCreateProject';
-import { LazyFeatureView } from 'component/feature/FeatureView/LazyFeatureView';
-import { LazyAdmin } from 'component/admin/LazyAdmin';
-import { LazyProject } from 'component/project/Project/LazyProject';
+import { AdminRedirect } from 'component/admin/AdminRedirect';
+import RedirectFeatureView from 'component/feature/RedirectFeatureView/RedirectFeatureView';
+import RedirectArchive from 'component/archive/RedirectArchive';
 
-const ResetPassword = lazy(
+function lazyWithPreload<T extends ComponentType<any>>(
+    factory: () => Promise<{ default: T }>
+) {
+    const Component: LazyExoticComponent<T> & { preload?: () => void } =
+        lazy(factory);
+    Component.preload = factory;
+    return Component;
+}
+
+const ForgottenPassword = lazyWithPreload(() =>
+    import('component/user/ForgottenPassword/ForgottenPassword').then(
+        module => ({ default: module.ForgottenPassword })
+    )
+);
+const CreateEnvironment = lazyWithPreload(() =>
+    import('component/environments/CreateEnvironment/CreateEnvironment').then(
+        module => ({ default: module.CreateEnvironment })
+    )
+);
+const EditEnvironment = lazyWithPreload(() =>
+    import('component/environments/EditEnvironment/EditEnvironment').then(
+        module => ({ default: module.EditEnvironment })
+    )
+);
+const EditTagType = lazyWithPreload(() =>
+    import('component/tags/EditTagType/EditTagType').then(module => ({
+        default: module.EditTagType,
+    }))
+);
+const CreateTagType = lazyWithPreload(() =>
+    import('component/tags/CreateTagType/CreateTagType').then(module => ({
+        default: module.CreateTagType,
+    }))
+);
+const EditProject = lazyWithPreload(() =>
+    import('component/project/Project/EditProject/EditProject').then(
+        module => ({ default: module.EditProject })
+    )
+);
+const CreateFeature = lazyWithPreload(() =>
+    import('component/feature/CreateFeature/CreateFeature').then(module => ({
+        default: module.CreateFeature,
+    }))
+);
+const EditFeature = lazyWithPreload(() =>
+    import('component/feature/EditFeature/EditFeature').then(module => ({
+        default: module.EditFeature,
+    }))
+);
+const ContextList = lazyWithPreload(() =>
+    import('component/context/ContextList/ContextList').then(module => ({
+        default: module.ContextList,
+    }))
+);
+const Playground = lazyWithPreload(() =>
+    import('component/playground/Playground/Playground').then(module => ({
+        default: module.Playground,
+    }))
+);
+const FeatureView = lazyWithPreload(() =>
+    import('component/feature/FeatureView/FeatureView').then(module => ({
+        default: module.FeatureView,
+    }))
+);
+const ResetPassword = lazyWithPreload(
     () => import('component/user/ResetPassword/ResetPassword')
 );
-const FeatureToggleListTable = lazy(() =>
+const FeatureToggleListTable = lazyWithPreload(() =>
     import('component/feature/FeatureToggleList/FeatureToggleListTable').then(
         module => ({ default: module.FeatureToggleListTable })
     )
 );
-const ForgottenPassword = lazy(
-    () => import('component/user/ForgottenPassword/ForgottenPassword')
-);
-const RedirectArchive = lazy(() => import('component/archive/RedirectArchive'));
-const CreateEnvironment = lazy(
-    () => import('component/environments/CreateEnvironment/CreateEnvironment')
-);
-const EditEnvironment = lazy(
-    () => import('component/environments/EditEnvironment/EditEnvironment')
-);
-const EditTagType = lazy(
-    () => import('component/tags/EditTagType/EditTagType')
-);
-const CreateTagType = lazy(
-    () => import('component/tags/CreateTagType/CreateTagType')
-);
-const EditProject = lazy(
-    () => import('component/project/Project/EditProject/EditProject')
-);
-const CreateFeature = lazy(
-    () => import('component/feature/CreateFeature/CreateFeature')
-);
-const EditFeature = lazy(
-    () => import('component/feature/EditFeature/EditFeature')
-);
-const ContextList = lazy(
-    () => import('component/context/ContextList/ContextList')
-);
-const RedirectFeatureView = lazy(
-    () => import('component/feature/RedirectFeatureView/RedirectFeatureView')
-);
-const StrategyView = lazy(() =>
+const StrategyView = lazyWithPreload(() =>
     import('component/strategies/StrategyView/StrategyView').then(module => ({
         default: module.StrategyView,
     }))
 );
-const StrategiesList = lazy(() =>
+const StrategiesList = lazyWithPreload(() =>
     import('component/strategies/StrategiesList/StrategiesList').then(
-        module => ({ default: module.StrategiesList })
+        module => ({ default: module.StrategiesList, preload: true })
     )
 );
-const TagTypeList = lazy(() =>
+const TagTypeList = lazyWithPreload(() =>
     import('component/tags/TagTypeList/TagTypeList').then(module => ({
         default: module.TagTypeList,
     }))
 );
-const AddonList = lazy(() =>
+const AddonList = lazyWithPreload(() =>
     import('component/addons/AddonList/AddonList').then(module => ({
         default: module.AddonList,
     }))
 );
-const NewUser = lazy(() =>
+const NewUser = lazyWithPreload(() =>
     import('component/user/NewUser/NewUser').then(module => ({
         default: module.NewUser,
     }))
 );
-const ProjectListNew = lazy(() =>
+const ProjectList = lazyWithPreload(() =>
     import('component/project/ProjectList/ProjectList').then(module => ({
-        default: module.ProjectListNew,
+        default: module.ProjectList,
     }))
 );
-const EditContext = lazy(() =>
+const EditContext = lazyWithPreload(() =>
     import('component/context/EditContext/EditContext').then(module => ({
         default: module.EditContext,
     }))
 );
-const ApplicationEdit = lazy(() =>
+const ApplicationEdit = lazyWithPreload(() =>
     import('component/application/ApplicationEdit/ApplicationEdit').then(
         module => ({ default: module.ApplicationEdit })
     )
 );
-const ApplicationList = lazy(() =>
+const ApplicationList = lazyWithPreload(() =>
     import('component/application/ApplicationList/ApplicationList').then(
         module => ({ default: module.ApplicationList })
     )
 );
-const CreateAddon = lazy(() =>
+const CreateAddon = lazyWithPreload(() =>
     import('component/addons/CreateAddon/CreateAddon').then(module => ({
         default: module.CreateAddon,
     }))
 );
-const EditAddon = lazy(() =>
+const EditAddon = lazyWithPreload(() =>
     import('component/addons/EditAddon/EditAddon').then(module => ({
         default: module.EditAddon,
     }))
 );
-const CopyFeatureToggle = lazy(() =>
+const CopyFeatureToggle = lazyWithPreload(() =>
     import('component/feature/CopyFeature/CopyFeature').then(module => ({
         default: module.CopyFeatureToggle,
     }))
 );
-const EventPage = lazy(() =>
+const EventPage = lazyWithPreload(() =>
     import('component/events/EventPage/EventPage').then(module => ({
         default: module.EventPage,
     }))
 );
-const CreateStrategy = lazy(() =>
+const CreateStrategy = lazyWithPreload(() =>
     import('component/strategies/CreateStrategy/CreateStrategy').then(
         module => ({ default: module.CreateStrategy })
     )
 );
-const EditStrategy = lazy(() =>
+const EditStrategy = lazyWithPreload(() =>
     import('component/strategies/EditStrategy/EditStrategy').then(module => ({
         default: module.EditStrategy,
     }))
 );
-const CreateUnleashContextPage = lazy(() =>
+const CreateUnleashContextPage = lazyWithPreload(() =>
     import(
         'component/context/CreateUnleashContext/CreateUnleashContextPage'
     ).then(module => ({ default: module.CreateUnleashContextPage }))
 );
-const CreateSegment = lazy(() =>
+const CreateSegment = lazyWithPreload(() =>
     import('component/segments/CreateSegment/CreateSegment').then(module => ({
         default: module.CreateSegment,
     }))
 );
-const EditSegment = lazy(() =>
+const EditSegment = lazyWithPreload(() =>
     import('component/segments/EditSegment/EditSegment').then(module => ({
         default: module.EditSegment,
     }))
 );
-const EnvironmentTable = lazy(() =>
+const EnvironmentTable = lazyWithPreload(() =>
     import('component/environments/EnvironmentTable/EnvironmentTable').then(
         module => ({ default: module.EnvironmentTable })
     )
 );
-const SegmentTable = lazy(() =>
+const SegmentTable = lazyWithPreload(() =>
     import('../segments/SegmentTable/SegmentTable').then(module => ({
         default: module.SegmentTable,
     }))
 );
-const FeaturesArchiveTable = lazy(() =>
+const FeaturesArchiveTable = lazyWithPreload(() =>
     import('../archive/FeaturesArchiveTable').then(module => ({
         default: module.FeaturesArchiveTable,
     }))
 );
-const Profile = lazy(() =>
+const Profile = lazyWithPreload(() =>
     import('component/user/Profile/Profile').then(module => ({
         default: module.Profile,
     }))
 );
-
-const AdminRedirect = lazy(() =>
-    import('component/admin/AdminRedirect').then(module => ({
-        default: module.AdminRedirect,
-    }))
-);
-
-const LoginHistory = lazy(() =>
+const LoginHistory = lazyWithPreload(() =>
     import('component/loginHistory/LoginHistory').then(module => ({
         default: module.LoginHistory,
+        preload: true,
     }))
 );
+const CreateProject = lazyWithPreload(() =>
+    import('component/project/Project/CreateProject/CreateProject').then(
+        module => ({ default: module.CreateProject })
+    )
+);
+const LazyAdmin = lazyWithPreload(() =>
+    import('component/admin/Admin').then(module => ({
+        default: module.Admin,
+    }))
+);
+const Project = lazyWithPreload(() =>
+    import('component/project/Project/Project').then(module => ({
+        default: module.Project,
+    }))
+);
+
+export const preload = () => {
+    const components = [
+        ForgottenPassword,
+        CreateEnvironment,
+        EditEnvironment,
+        EditTagType,
+        CreateTagType,
+        EditProject,
+        CreateFeature,
+        EditFeature,
+        ContextList,
+        Playground,
+        FeatureView,
+        ResetPassword,
+        FeatureToggleListTable,
+        StrategyView,
+        StrategiesList,
+        TagTypeList,
+        AddonList,
+        NewUser,
+        ProjectList,
+        EditContext,
+        ApplicationEdit,
+        ApplicationList,
+        CreateAddon,
+        EditAddon,
+        CopyFeatureToggle,
+        EventPage,
+        CreateStrategy,
+        EditStrategy,
+        CreateUnleashContextPage,
+        CreateSegment,
+        EditSegment,
+        EnvironmentTable,
+        SegmentTable,
+        FeaturesArchiveTable,
+        Profile,
+        LoginHistory,
+        CreateProject,
+        LazyAdmin,
+        Project,
+    ];
+    components.forEach(component => {
+        if (component.preload) {
+            component.preload();
+        }
+    });
+};
 
 export const routes: IRoute[] = [
     // Splash
@@ -187,7 +276,7 @@ export const routes: IRoute[] = [
         path: '/projects/create',
         parent: '/projects',
         title: 'Create',
-        component: LazyCreateProject,
+        component: CreateProject,
         type: 'protected',
         enterprise: true,
         menu: {},
@@ -229,7 +318,7 @@ export const routes: IRoute[] = [
         path: '/projects/:projectId/features/:featureId/*',
         parent: '/projects',
         title: 'FeatureView',
-        component: LazyFeatureView,
+        component: FeatureView,
         type: 'protected',
         menu: {},
     },
@@ -253,7 +342,7 @@ export const routes: IRoute[] = [
         path: '/projects/:projectId/*',
         parent: '/projects',
         title: ':projectId',
-        component: LazyProject,
+        component: Project,
         flag: P,
         type: 'protected',
         menu: {},
@@ -261,7 +350,7 @@ export const routes: IRoute[] = [
     {
         path: '/projects',
         title: 'Projects',
-        component: ProjectListNew,
+        component: ProjectList,
         type: 'protected',
         menu: { mobile: true },
     },
@@ -287,7 +376,7 @@ export const routes: IRoute[] = [
     {
         path: '/playground',
         title: 'Playground',
-        component: LazyPlayground,
+        component: Playground,
         hidden: false,
         type: 'protected',
         menu: { mobile: true },

@@ -99,7 +99,7 @@ function resolveCreateButtonData(
     }
 }
 
-export const ProjectListNew = () => {
+export const ProjectList = () => {
     const { hasAccess } = useContext(AccessContext);
     const navigate = useNavigate();
     const { projects, loading, error, refetch } = useProjects();

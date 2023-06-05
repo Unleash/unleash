@@ -18,7 +18,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import { ENV_LIMIT } from 'constants/values';
 
-const CreateEnvironment = () => {
+export const CreateEnvironment = () => {
     const { setToastApiError, setToastData } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
@@ -134,5 +134,3 @@ const CreateEnvironment = () => {
         />
     );
 };
-
-export default CreateEnvironment;

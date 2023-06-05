@@ -13,7 +13,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GO_BACK } from 'constants/navigate';
 
-const EditEnvironment = () => {
+export const EditEnvironment = () => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const id = useRequiredPathParam('id');
@@ -93,5 +93,3 @@ const EditEnvironment = () => {
         </FormTemplate>
     );
 };
-
-export default EditEnvironment;

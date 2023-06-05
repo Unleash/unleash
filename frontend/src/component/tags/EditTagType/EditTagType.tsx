@@ -12,7 +12,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GO_BACK } from 'constants/navigate';
 
-const EditTagType = () => {
+export const EditTagType = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
@@ -83,5 +83,3 @@ const EditTagType = () => {
         </FormTemplate>
     );
 };
-
-export default EditTagType;

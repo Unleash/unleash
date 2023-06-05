@@ -16,7 +16,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
 
-const CreateProject = () => {
+export const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
     const { refetchUser } = useAuthUser();
     const { uiConfig } = useUiConfig();
@@ -119,5 +119,3 @@ const CreateProject = () => {
         </FormTemplate>
     );
 };
-
-export default CreateProject;

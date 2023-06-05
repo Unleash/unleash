@@ -48,7 +48,7 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
     ...textCenter,
 }));
 
-const ForgottenPassword = () => {
+export const ForgottenPassword = () => {
     const [email, setEmail] = useState('');
     const [attempted, setAttempted] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -141,5 +141,3 @@ const ForgottenPassword = () => {
         </StandaloneLayout>
     );
 };
-
-export default ForgottenPassword;

@@ -25,7 +25,7 @@ import { Adjust } from '@mui/icons-material';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
 
-const ContextList: VFC = () => {
+export const ContextList: VFC = () => {
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [name, setName] = useState<string>();
     const { context, refetchUnleashContext, loading } = useUnleashContext();
@@ -227,5 +227,3 @@ const ContextList: VFC = () => {
         </PageContent>
     );
 };
-
-export default ContextList;

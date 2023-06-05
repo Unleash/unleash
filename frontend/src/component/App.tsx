@@ -10,7 +10,7 @@ import NotFound from 'component/common/NotFound/NotFound';
 import { ProtectedRoute } from 'component/common/ProtectedRoute/ProtectedRoute';
 import { SWRProvider } from 'component/providers/SWRProvider/SWRProvider';
 import { PlausibleProvider } from 'component/providers/PlausibleProvider/PlausibleProvider';
-import { routes } from 'component/menu/routes';
+import { preload, routes } from 'component/menu/routes';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
@@ -48,6 +48,14 @@ export const App = () => {
             refetchUiConfig();
         }
     }, [authDetails, user]);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            preload();
+        }, 3_000);
+
+        return () => clearTimeout(timeout);
+    });
 
     return (
         <ErrorBoundary FallbackComponent={Error}>

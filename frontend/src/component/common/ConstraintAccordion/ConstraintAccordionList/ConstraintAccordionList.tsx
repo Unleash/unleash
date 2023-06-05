@@ -1,8 +1,13 @@
-import React, { forwardRef, Fragment, useImperativeHandle } from 'react';
+import React, {
+    forwardRef,
+    Fragment,
+    lazy,
+    Suspense,
+    useImperativeHandle,
+} from 'react';
 import { Button, styled, Tooltip } from '@mui/material';
 import { HelpOutline } from '@mui/icons-material';
 import { IConstraint } from 'interfaces/strategy';
-import { ConstraintAccordion } from 'component/common/ConstraintAccordion/ConstraintAccordion';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { useWeakMap } from 'hooks/useWeakMap';
@@ -31,6 +36,12 @@ interface IConstraintAccordionListItemState {
     // Is the constraint currently being edited?
     editing?: boolean;
 }
+
+const ConstraintAccordion = lazy(() =>
+    import('component/common/ConstraintAccordion/ConstraintAccordion').then(
+        ({ ConstraintAccordion }) => ({ default: ConstraintAccordion })
+    )
+);
 
 export const constraintAccordionListId = 'constraintAccordionListId';
 
@@ -153,15 +164,21 @@ export const ConstraintAccordionList = forwardRef<
                             condition={index > 0}
                             show={<StrategySeparator text="AND" />}
                         />
-                        <ConstraintAccordion
-                            constraint={constraint}
-                            onEdit={onEdit && onEdit.bind(null, constraint)}
-                            onCancel={onCancel.bind(null, index)}
-                            onDelete={onRemove && onRemove.bind(null, index)}
-                            onSave={onSave && onSave.bind(null, index)}
-                            editing={Boolean(state.get(constraint)?.editing)}
-                            compact
-                        />
+                        <Suspense fallback={null}>
+                            <ConstraintAccordion
+                                constraint={constraint}
+                                onEdit={onEdit && onEdit.bind(null, constraint)}
+                                onCancel={onCancel.bind(null, index)}
+                                onDelete={
+                                    onRemove && onRemove.bind(null, index)
+                                }
+                                onSave={onSave && onSave.bind(null, index)}
+                                editing={Boolean(
+                                    state.get(constraint)?.editing
+                                )}
+                                compact
+                            />
+                        </Suspense>
                     </Fragment>
                 ))}
                 <ConditionallyRender

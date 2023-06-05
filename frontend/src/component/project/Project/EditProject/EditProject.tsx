@@ -21,7 +21,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const EDIT_PROJECT_BTN = 'EDIT_PROJECT_BTN';
 
-const EditProject = () => {
+export const EditProject = () => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const { hasAccess } = useContext(AccessContext);
@@ -138,5 +138,3 @@ const EditProject = () => {
         </FormTemplate>
     );
 };
-
-export default EditProject;

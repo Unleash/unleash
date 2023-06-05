@@ -7,6 +7,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import envCompatible from 'vite-plugin-env-compatible';
+import webfontDownload from 'vite-plugin-webfont-dl';
 
 const UNLEASH_API = process.env.UNLEASH_API || 'http://localhost:4242';
 const UNLEASH_BASE_PATH = process.env.UNLEASH_BASE_PATH || '/';
@@ -67,7 +68,13 @@ export default mergeConfig(
                 allow: ['..'],
             },
         },
-        plugins: [react(), tsconfigPaths(), svgr(), envCompatible()],
+        plugins: [
+            react(),
+            tsconfigPaths(),
+            svgr(),
+            envCompatible(),
+            webfontDownload(),
+        ],
         esbuild: {
             logOverride: { 'this-is-undefined-in-esm': 'silent' },
         },

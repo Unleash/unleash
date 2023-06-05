@@ -96,7 +96,7 @@ export const PasswordTab = () => {
                             value={oldPassword}
                             error={Boolean(authenticationError)}
                             helperText={authenticationError}
-                            autoComplete="new-password"
+                            autoComplete="current-password"
                             onChange={(
                                 e: React.ChangeEvent<HTMLInputElement>
                             ) => setOldPassword(e.target.value)}

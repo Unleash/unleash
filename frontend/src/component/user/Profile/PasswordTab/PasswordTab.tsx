@@ -40,18 +40,12 @@ export const PasswordTab = () => {
         if (password !== confirmPassword) {
             return;
         } else if (false && !validPassword) {
-            console.log('*** invalid password');
             setError(PASSWORD_FORMAT_MESSAGE);
         } else {
             setLoading(true);
             setError(undefined);
             setAuthenticationError(undefined);
             try {
-                console.log('**** changing', {
-                    password,
-                    confirmPassword,
-                    oldPassword,
-                });
                 await changePassword({
                     password,
                     confirmPassword,
@@ -63,7 +57,6 @@ export const PasswordTab = () => {
                     type: 'success',
                 });
             } catch (error: unknown) {
-                console.log('**** error', error);
                 const formattedError = formatUnknownError(error);
                 if (error instanceof AuthenticationError) {
                     setAuthenticationError(formattedError);

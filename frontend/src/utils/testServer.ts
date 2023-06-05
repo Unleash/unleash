@@ -20,7 +20,6 @@ export const testServerRoute = (
 ) => {
     server.use(
         rest[method](path, (req, res, ctx) => {
-            console.log('***', path);
             return res(ctx.status(status), ctx.json(json));
         })
     );

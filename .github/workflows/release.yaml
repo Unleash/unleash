@@ -53,7 +53,6 @@ jobs:
               workflow_id: 'cicd.yaml',
               ref: 'master',
               inputs: {
-                 repository: "${{ github.repository }}",
                  commit: "${{ github.event.head_commit.id }}",
                  actor: "${{ github.actor }}",
                  message: ${{ toJSON(github.event.head_commit.message) }},

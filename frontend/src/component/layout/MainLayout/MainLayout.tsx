@@ -14,7 +14,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
-import { Demo } from 'component/demo/Demo';
+import { LazyDemo } from 'component/demo/LazyDemo';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -85,7 +85,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         return (
             <>
                 <SkipNavLink />
-                <Demo>
+                <LazyDemo>
                     <>
                         <Header />
                         <SkipNavTarget />
@@ -128,7 +128,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             <Footer />
                         </MainLayoutContainer>
                     </>
-                </Demo>
+                </LazyDemo>
             </>
         );
     }

@@ -39,7 +39,7 @@ export const PasswordTab = () => {
 
         if (password !== confirmPassword) {
             return;
-        } else if (false && !validPassword) {
+        } else if (!validPassword) {
             setError(PASSWORD_FORMAT_MESSAGE);
         } else {
             setLoading(true);

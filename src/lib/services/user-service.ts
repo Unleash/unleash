@@ -362,6 +362,22 @@ class UserService {
         await this.resetTokenService.expireExistingTokensForUser(userId);
     }
 
+    async changePasswordWithVerification(
+        userId: number,
+        newPassword: string,
+        oldPassword: string,
+    ): Promise<void> {
+        const currentPasswordHash = await this.store.getPasswordHash(userId);
+        const match = await bcrypt.compare(oldPassword, currentPasswordHash);
+        if (!match) {
+            throw new PasswordMismatch(
+                `The old password you provided is invalid. If you have forgotten your password, visit ${this.baseUriPath}/forgotten-password or get in touch with your instance administrator.`,
+            );
+        }
+
+        await this.changePassword(userId, newPassword);
+    }
+
     async getUserForToken(token: string): Promise<TokenUserSchema> {
         const { createdBy, userId } = await this.resetTokenService.isValid(
             token,

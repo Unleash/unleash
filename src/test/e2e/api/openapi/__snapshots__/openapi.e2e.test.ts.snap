@@ -3146,6 +3146,9 @@ The provider you choose for your addon dictates what properties the \`parameters
           "confirmPassword": {
             "type": "string",
           },
+          "oldPassword": {
+            "type": "string",
+          },
           "password": {
             "type": "string",
           },
@@ -12784,7 +12787,10 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "This response has no body.",
           },
           "400": {
-            "description": "passwordMismatch",
+            "description": "password mismatch",
+          },
+          "401": {
+            "description": "incorrect old password",
           },
         },
         "tags": [

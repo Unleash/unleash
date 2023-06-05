@@ -11,6 +11,7 @@ import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useToast from 'hooks/useToast';
 import { SyntheticEvent, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { AuthenticationError } from 'utils/apiUtils';
 
 const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
@@ -27,8 +28,10 @@ export const PasswordTab = () => {
     const { setToastData, setToastApiError } = useToast();
     const [validPassword, setValidPassword] = useState(false);
     const [error, setError] = useState<string>();
+    const [authenticationError, setAuthenticationError] = useState<string>();
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [oldPassword, setOldPassword] = useState('');
     const { changePassword } = usePasswordApi();
 
     const submit = async (e: SyntheticEvent) => {
@@ -41,10 +44,12 @@ export const PasswordTab = () => {
         } else {
             setLoading(true);
             setError(undefined);
+            setAuthenticationError(undefined);
             try {
                 await changePassword({
                     password,
                     confirmPassword,
+                    oldPassword,
                 });
                 setToastData({
                     title: 'Password changed successfully',
@@ -53,7 +58,12 @@ export const PasswordTab = () => {
                 });
             } catch (error: unknown) {
                 const formattedError = formatUnknownError(error);
-                setError(formattedError);
+                if (error instanceof AuthenticationError) {
+                    setAuthenticationError(formattedError);
+                } else {
+                    setError(formattedError);
+                }
+
                 setToastApiError(formattedError);
             }
         }
@@ -78,6 +88,18 @@ export const PasswordTab = () => {
                             password={password}
                             callback={setValidPassword}
                             data-loading
+                        />
+                        <PasswordField
+                            data-loading
+                            label="Old password"
+                            name="oldPassword"
+                            value={oldPassword}
+                            error={Boolean(authenticationError)}
+                            helperText={authenticationError}
+                            autoComplete="current-password"
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) => setOldPassword(e.target.value)}
                         />
                         <PasswordField
                             data-loading

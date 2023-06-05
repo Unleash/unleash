@@ -102,7 +102,8 @@ class UserController extends Controller {
                     requestBody: createRequestSchema('passwordSchema'),
                     responses: {
                         200: emptyResponse,
-                        400: { description: 'passwordMismatch' },
+                        400: { description: 'password mismatch' },
+                        401: { description: 'incorrect old password' },
                     },
                 }),
             ],
@@ -167,10 +168,14 @@ class UserController extends Controller {
         res: Response,
     ): Promise<void> {
         const { user } = req;
-        const { password, confirmPassword } = req.body;
-        if (password === confirmPassword) {
+        const { password, confirmPassword, oldPassword } = req.body;
+        if (password === confirmPassword && oldPassword != null) {
             this.userService.validatePassword(password);
-            await this.userService.changePassword(user.id, password);
+            await this.userService.changePasswordWithVerification(
+                user.id,
+                password,
+                oldPassword,
+            );
             res.status(200).end();
         } else {
             res.status(400).end();

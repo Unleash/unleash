@@ -4,8 +4,9 @@ import React, {
     useMemo,
     useCallback,
     useEffect,
+    lazy,
+    Suspense,
 } from 'react';
-import { FeedbackCES } from 'component/feedback/FeedbackCES/FeedbackCES';
 import {
     feedbackCESContext,
     ShowFeedbackCES,
@@ -14,6 +15,12 @@ import {
 } from 'component/feedback/FeedbackCESContext/FeedbackCESContext';
 import { useFeedbackCESSeen } from 'component/feedback/FeedbackCESContext/useFeedbackCESSeen';
 import { useFeedbackCESEnabled } from 'component/feedback/FeedbackCESContext/useFeedbackCESEnabled';
+
+const FeedbackCES = lazy(() =>
+    import('component/feedback/FeedbackCES/FeedbackCES').then(module => ({
+        default: module.FeedbackCES,
+    }))
+);
 
 interface IFeedbackProviderProps {
     children: ReactNode;
@@ -54,7 +61,9 @@ export const FeedbackCESProvider = ({ children }: IFeedbackProviderProps) => {
     return (
         <feedbackCESContext.Provider value={value}>
             {children}
-            <FeedbackCES state={state} />
+            <Suspense fallback={null}>
+                <FeedbackCES state={state} />
+            </Suspense>
         </feedbackCESContext.Provider>
     );
 };

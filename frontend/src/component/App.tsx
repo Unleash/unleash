@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react';
+import { Fragment, Suspense, lazy, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Error } from 'component/layout/Error/Error';
@@ -10,7 +10,6 @@ import NotFound from 'component/common/NotFound/NotFound';
 import { ProtectedRoute } from 'component/common/ProtectedRoute/ProtectedRoute';
 import { SWRProvider } from 'component/providers/SWRProvider/SWRProvider';
 import { PlausibleProvider } from 'component/providers/PlausibleProvider/PlausibleProvider';
-import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 import { routes } from 'component/menu/routes';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
@@ -26,6 +25,10 @@ const StyledContainer = styled('div')(() => ({
         margin: 0,
     },
 }));
+
+const ToastRenderer = lazy(
+    () => import('component/common/ToastRenderer/ToastRenderer')
+);
 
 export const App = () => {
     const { authDetails } = useAuthDetails();
@@ -64,7 +67,9 @@ export const App = () => {
                                             show={<MaintenanceBanner />}
                                         />
                                         <StyledContainer>
-                                            <ToastRenderer />
+                                            <Suspense fallback={null}>
+                                                <ToastRenderer />
+                                            </Suspense>
                                             <Routes>
                                                 {availableRoutes.map(route => (
                                                     <Route

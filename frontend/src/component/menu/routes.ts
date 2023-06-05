@@ -1,49 +1,175 @@
-import { FeatureToggleListTable } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
-import { StrategyView } from 'component/strategies/StrategyView/StrategyView';
-import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesList';
-import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
-import { AddonList } from 'component/addons/AddonList/AddonList';
-import Login from 'component/user/Login/Login';
+import { lazy } from 'react';
 import { EEA, P, RE, SE, UG } from 'component/common/flags';
-import { NewUser } from 'component/user/NewUser/NewUser';
-import ResetPassword from 'component/user/ResetPassword/ResetPassword';
-import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
-import { ProjectListNew } from 'component/project/ProjectList/ProjectList';
-import RedirectArchive from 'component/archive/RedirectArchive';
-import CreateEnvironment from 'component/environments/CreateEnvironment/CreateEnvironment';
-import EditEnvironment from 'component/environments/EditEnvironment/EditEnvironment';
-import { EditContext } from 'component/context/EditContext/EditContext';
-import EditTagType from 'component/tags/EditTagType/EditTagType';
-import CreateTagType from 'component/tags/CreateTagType/CreateTagType';
-import EditProject from 'component/project/Project/EditProject/EditProject';
-import CreateFeature from 'component/feature/CreateFeature/CreateFeature';
-import EditFeature from 'component/feature/EditFeature/EditFeature';
-import { ApplicationEdit } from 'component/application/ApplicationEdit/ApplicationEdit';
-import { ApplicationList } from 'component/application/ApplicationList/ApplicationList';
-import ContextList from 'component/context/ContextList/ContextList';
-import RedirectFeatureView from 'component/feature/RedirectFeatureView/RedirectFeatureView';
-import { CreateAddon } from 'component/addons/CreateAddon/CreateAddon';
-import { EditAddon } from 'component/addons/EditAddon/EditAddon';
-import { CopyFeatureToggle } from 'component/feature/CopyFeature/CopyFeature';
-import { EventPage } from 'component/events/EventPage/EventPage';
-import { CreateStrategy } from 'component/strategies/CreateStrategy/CreateStrategy';
-import { EditStrategy } from 'component/strategies/EditStrategy/EditStrategy';
-import { SplashPage } from 'component/splash/SplashPage/SplashPage';
-import { CreateUnleashContextPage } from 'component/context/CreateUnleashContext/CreateUnleashContextPage';
-import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
-import { EditSegment } from 'component/segments/EditSegment/EditSegment';
+import Login from 'component/user/Login/Login';
 import { INavigationMenuItem, IRoute } from 'interfaces/route';
-import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
-import { SegmentTable } from '../segments/SegmentTable/SegmentTable';
-import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
+import { SplashPage } from 'component/splash/SplashPage/SplashPage';
 import { LazyPlayground } from 'component/playground/Playground/LazyPlayground';
-import { Profile } from 'component/user/Profile/Profile';
 import { LazyCreateProject } from 'component/project/Project/CreateProject/LazyCreateProject';
 import { LazyFeatureView } from 'component/feature/FeatureView/LazyFeatureView';
 import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
-import { AdminRedirect } from 'component/admin/AdminRedirect';
-import { LoginHistory } from 'component/loginHistory/LoginHistory';
+
+const ResetPassword = lazy(
+    () => import('component/user/ResetPassword/ResetPassword')
+);
+const FeatureToggleListTable = lazy(() =>
+    import('component/feature/FeatureToggleList/FeatureToggleListTable').then(
+        module => ({ default: module.FeatureToggleListTable })
+    )
+);
+const ForgottenPassword = lazy(
+    () => import('component/user/ForgottenPassword/ForgottenPassword')
+);
+const RedirectArchive = lazy(() => import('component/archive/RedirectArchive'));
+const CreateEnvironment = lazy(
+    () => import('component/environments/CreateEnvironment/CreateEnvironment')
+);
+const EditEnvironment = lazy(
+    () => import('component/environments/EditEnvironment/EditEnvironment')
+);
+const EditTagType = lazy(
+    () => import('component/tags/EditTagType/EditTagType')
+);
+const CreateTagType = lazy(
+    () => import('component/tags/CreateTagType/CreateTagType')
+);
+const EditProject = lazy(
+    () => import('component/project/Project/EditProject/EditProject')
+);
+const CreateFeature = lazy(
+    () => import('component/feature/CreateFeature/CreateFeature')
+);
+const EditFeature = lazy(
+    () => import('component/feature/EditFeature/EditFeature')
+);
+const ContextList = lazy(
+    () => import('component/context/ContextList/ContextList')
+);
+const RedirectFeatureView = lazy(
+    () => import('component/feature/RedirectFeatureView/RedirectFeatureView')
+);
+const StrategyView = lazy(() =>
+    import('component/strategies/StrategyView/StrategyView').then(module => ({
+        default: module.StrategyView,
+    }))
+);
+const StrategiesList = lazy(() =>
+    import('component/strategies/StrategiesList/StrategiesList').then(
+        module => ({ default: module.StrategiesList })
+    )
+);
+const TagTypeList = lazy(() =>
+    import('component/tags/TagTypeList/TagTypeList').then(module => ({
+        default: module.TagTypeList,
+    }))
+);
+const AddonList = lazy(() =>
+    import('component/addons/AddonList/AddonList').then(module => ({
+        default: module.AddonList,
+    }))
+);
+const NewUser = lazy(() =>
+    import('component/user/NewUser/NewUser').then(module => ({
+        default: module.NewUser,
+    }))
+);
+const ProjectListNew = lazy(() =>
+    import('component/project/ProjectList/ProjectList').then(module => ({
+        default: module.ProjectListNew,
+    }))
+);
+const EditContext = lazy(() =>
+    import('component/context/EditContext/EditContext').then(module => ({
+        default: module.EditContext,
+    }))
+);
+const ApplicationEdit = lazy(() =>
+    import('component/application/ApplicationEdit/ApplicationEdit').then(
+        module => ({ default: module.ApplicationEdit })
+    )
+);
+const ApplicationList = lazy(() =>
+    import('component/application/ApplicationList/ApplicationList').then(
+        module => ({ default: module.ApplicationList })
+    )
+);
+const CreateAddon = lazy(() =>
+    import('component/addons/CreateAddon/CreateAddon').then(module => ({
+        default: module.CreateAddon,
+    }))
+);
+const EditAddon = lazy(() =>
+    import('component/addons/EditAddon/EditAddon').then(module => ({
+        default: module.EditAddon,
+    }))
+);
+const CopyFeatureToggle = lazy(() =>
+    import('component/feature/CopyFeature/CopyFeature').then(module => ({
+        default: module.CopyFeatureToggle,
+    }))
+);
+const EventPage = lazy(() =>
+    import('component/events/EventPage/EventPage').then(module => ({
+        default: module.EventPage,
+    }))
+);
+const CreateStrategy = lazy(() =>
+    import('component/strategies/CreateStrategy/CreateStrategy').then(
+        module => ({ default: module.CreateStrategy })
+    )
+);
+const EditStrategy = lazy(() =>
+    import('component/strategies/EditStrategy/EditStrategy').then(module => ({
+        default: module.EditStrategy,
+    }))
+);
+const CreateUnleashContextPage = lazy(() =>
+    import(
+        'component/context/CreateUnleashContext/CreateUnleashContextPage'
+    ).then(module => ({ default: module.CreateUnleashContextPage }))
+);
+const CreateSegment = lazy(() =>
+    import('component/segments/CreateSegment/CreateSegment').then(module => ({
+        default: module.CreateSegment,
+    }))
+);
+const EditSegment = lazy(() =>
+    import('component/segments/EditSegment/EditSegment').then(module => ({
+        default: module.EditSegment,
+    }))
+);
+const EnvironmentTable = lazy(() =>
+    import('component/environments/EnvironmentTable/EnvironmentTable').then(
+        module => ({ default: module.EnvironmentTable })
+    )
+);
+const SegmentTable = lazy(() =>
+    import('../segments/SegmentTable/SegmentTable').then(module => ({
+        default: module.SegmentTable,
+    }))
+);
+const FeaturesArchiveTable = lazy(() =>
+    import('../archive/FeaturesArchiveTable').then(module => ({
+        default: module.FeaturesArchiveTable,
+    }))
+);
+const Profile = lazy(() =>
+    import('component/user/Profile/Profile').then(module => ({
+        default: module.Profile,
+    }))
+);
+
+const AdminRedirect = lazy(() =>
+    import('component/admin/AdminRedirect').then(module => ({
+        default: module.AdminRedirect,
+    }))
+);
+
+const LoginHistory = lazy(() =>
+    import('component/loginHistory/LoginHistory').then(module => ({
+        default: module.LoginHistory,
+    }))
+);
 
 export const routes: IRoute[] = [
     // Splash

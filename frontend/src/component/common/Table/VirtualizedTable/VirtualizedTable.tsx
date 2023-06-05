@@ -1,12 +1,8 @@
 import { useMemo } from 'react';
-import { useTheme } from '@mui/material';
-import {
-    SortableTableHeader,
-    Table,
-    TableBody,
-    TableRow,
-    TableCell,
-} from 'component/common/Table';
+import { TableBody, TableRow, useTheme } from '@mui/material';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
+import { TableCell } from 'component/common/Table/TableCell/TableCell';
+import { Table } from 'component/common/Table/Table/Table';
 import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
 import { HeaderGroup, Row } from 'react-table';
 

@@ -2,6 +2,7 @@ import 'whatwg-fetch';
 import 'themes/app.css';
 import 'regenerator-runtime/runtime';
 
+import { Fragment, Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'themes/ThemeProvider';
@@ -13,7 +14,12 @@ import { FeedbackCESProvider } from 'component/feedback/FeedbackCESContext/Feedb
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { InstanceStatus } from 'component/common/InstanceStatus/InstanceStatus';
 import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
-import { MessageBanner } from 'component/common/MessageBanner/MessageBanner';
+
+const MessageBanner = lazy(() =>
+    import('component/common/MessageBanner/MessageBanner').then(module => ({
+        default: module.MessageBanner,
+    }))
+);
 
 window.global ||= window;
 
@@ -25,7 +31,9 @@ ReactDOM.render(
                     <AnnouncerProvider>
                         <FeedbackCESProvider>
                             <InstanceStatus>
-                                <MessageBanner />
+                                <Suspense fallback={null}>
+                                    <MessageBanner />
+                                </Suspense>
                                 <ScrollTop />
                                 <App />
                             </InstanceStatus>

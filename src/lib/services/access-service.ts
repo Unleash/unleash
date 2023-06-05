@@ -158,6 +158,10 @@ export class AccessService {
         const bindablePermissions = await this.store.getAvailablePermissions();
         const environments = await this.environmentStore.getAll();
 
+        const rootPermissions = bindablePermissions.filter(
+            ({ type }) => type === 'root',
+        );
+
         const projectPermissions = bindablePermissions.filter((x) => {
             return x.type === 'project';
         });
@@ -176,6 +180,7 @@ export class AccessService {
         });
 
         return {
+            root: rootPermissions,
             project: projectPermissions,
             environments: allEnvironmentPermissions,
         };

@@ -272,6 +272,7 @@ export interface IRoleData {
 }
 
 export interface IAvailablePermissions {
+    root: IPermission[];
     project: IPermission[];
     environments: IEnvironmentPermission[];
 }

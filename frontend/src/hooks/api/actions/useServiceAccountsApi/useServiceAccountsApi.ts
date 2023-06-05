@@ -1,9 +1,11 @@
+import { IPermission } from 'interfaces/permissions';
 import useAPI from '../useApi/useApi';
 
 export interface IServiceAccountPayload {
     name: string;
     username: string;
     rootRole: number;
+    permissions: IPermission[];
 }
 
 export const useServiceAccountsApi = () => {

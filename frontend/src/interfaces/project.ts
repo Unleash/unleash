@@ -34,20 +34,3 @@ export interface IProjectHealthReport extends IProject {
     activeCount: number;
     updatedAt: string;
 }
-
-export interface IPermission {
-    id: number;
-    name: string;
-    displayName: string;
-    environment?: string;
-}
-
-export interface IProjectRolePermissions {
-    project: IPermission[];
-    environments: IProjectEnvironmentPermissions[];
-}
-
-export interface IProjectEnvironmentPermissions {
-    name: string;
-    permissions: IPermission[];
-}

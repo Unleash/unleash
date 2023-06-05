@@ -13,7 +13,7 @@ import {
     Typography,
 } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
-import { IPermission } from 'interfaces/project';
+import { IPermission } from 'interfaces/permissions';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ICheckedPermission } from 'component/admin/projectRoles/hooks/useProjectRoleForm';
 
@@ -23,7 +23,7 @@ interface IEnvironmentPermissionAccordionProps {
     title: string;
     Icon: ReactNode;
     isInitiallyExpanded?: boolean;
-    context: 'project' | 'environment';
+    context: 'root' | 'project' | 'environment';
     onPermissionChange: (permission: IPermission) => void;
     onCheckAll: () => void;
     getRoleKey: (permission: { id: number; environment?: string }) => string;

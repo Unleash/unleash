@@ -101,6 +101,7 @@ export class AccessStore implements IAccessStore {
             .select(['id', 'permission', 'type', 'display_name'])
             .where('type', 'project')
             .orWhere('type', 'environment')
+            .orWhere('type', 'root')
             .from(`${T.PERMISSIONS} as p`);
         return rows.map(this.mapPermission);
     }
@@ -172,7 +173,7 @@ export class AccessStore implements IAccessStore {
     }
 
     mapUserPermission(row: IPermissionRow): IUserPermission {
-        let project: string = undefined;
+        let project: string | undefined = undefined;
         // Since the editor should have access to the default project,
         // we map the project to the project and environment specific
         // permissions that are connected to the editor role.

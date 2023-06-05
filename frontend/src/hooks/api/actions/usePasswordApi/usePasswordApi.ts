@@ -3,6 +3,7 @@ import useAPI from '../useApi/useApi';
 interface IChangePasswordPayload {
     password: string;
     confirmPassword: string;
+    oldPassword: string;
 }
 
 export const usePasswordApi = () => {

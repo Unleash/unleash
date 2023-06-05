@@ -20,26 +20,19 @@ jobs:
         uses: docker/setup-qemu-action@v2
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v2
-      - name: Docker meta configuration for main
-        if: github.ref == 'ref/head/main'
+      - name: Docker meta configuration
         uses: docker/metadata-action@v4
-        id: meta-main
+        id: meta
         with:
           images: |
             unleashorg/unleash-server
           tags: |
-            type=edge,prefix=main-,suffix=-${{ matrix.version }}
-      - name: Docker meta configuration for tags
-        if: github.ref != 'ref/head/main'
-        uses: docker/metadata-action@v3
-        id: meta-tags
-        with:
-          images: |
-            unleashorg/unleash-server
-          tags: |
-            type=semver,pattern={{ version }}
-            type=semver,pattern={{ major.minor }}
-            type=semver,pattern={{ major }}
+            # only enabled for v* tags:
+            type=semver,pattern={{ version }},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern={{ major.minor }},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern={{ major }},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            # only enabled in main:
+            type=edge,prefix=main-,suffix=-${{ matrix.version }},enable=${{ github.ref == 'refs/heads/main' }}
       - name: Login to docker hub
         uses: docker/login-action@v2
         with:
@@ -50,6 +43,6 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ (steps.meta-main || steps.meta-tags).outputs.tags }}
-          labels: ${{ (steps.meta-main || steps.meta-tags).outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           build-args: NODE_VERSION=${{ matrix.version }}

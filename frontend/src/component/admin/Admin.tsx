@@ -15,6 +15,7 @@ import AdminMenu from './menu/AdminMenu';
 import { Network } from './network/Network';
 import CreateProjectRole from './projectRoles/CreateProjectRole/CreateProjectRole';
 import EditProjectRole from './projectRoles/EditProjectRole/EditProjectRole';
+import { Roles } from './roles/Roles';
 import ProjectRoles from './projectRoles/ProjectRoles/ProjectRoles';
 import { ServiceAccounts } from './serviceAccounts/ServiceAccounts';
 import CreateUser from './users/CreateUser/CreateUser';
@@ -42,7 +43,8 @@ export const Admin = () => (
                 element={<EditGroupContainer />}
             />
             <Route path="groups/:groupId" element={<Group />} />
-            <Route path="roles" element={<ProjectRoles />} />
+            <Route path="roles" element={<Roles />} />
+            <Route path="project-roles" element={<ProjectRoles />} />
             <Route path="instance" element={<InstanceAdmin />} />
             <Route path="network/*" element={<Network />} />
             <Route path="maintenance" element={<MaintenanceAdmin />} />

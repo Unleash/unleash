@@ -33,11 +33,11 @@ import { useServiceAccountTokensApi } from 'hooks/api/actions/useServiceAccountT
 import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import { ServiceAccountTokens } from './ServiceAccountTokens/ServiceAccountTokens';
 import { IServiceAccount } from 'interfaces/service-account';
-import { PermissionAccordion } from 'component/admin/projectRoles/ProjectRoleForm/PermissionAccordion/PermissionAccordion';
-import { Person as UserIcon } from '@mui/icons-material';
-import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
-import { ICheckedPermissions, IPermission } from 'interfaces/permissions';
-import cloneDeep from 'lodash.clonedeep';
+// import { PermissionAccordion } from 'component/admin/projectRoles/ProjectRoleForm/PermissionAccordion/PermissionAccordion';
+// import { Person as UserIcon } from '@mui/icons-material';
+// import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
+// import { ICheckedPermissions, IPermission } from 'interfaces/permissions';
+// import cloneDeep from 'lodash.clonedeep';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -133,7 +133,7 @@ export const ServiceAccountModal = ({
     const { addServiceAccount, updateServiceAccount, loading } =
         useServiceAccountsApi();
     const { createServiceAccountToken } = useServiceAccountTokensApi();
-    const { permissions } = usePermissions();
+    // const { permissions } = usePermissions();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
@@ -160,12 +160,12 @@ export const ServiceAccountModal = ({
         calculateExpirationDate(DEFAULT_EXPIRATION)
     );
     const [patErrors, setPatErrors] = useState<IPersonalAPITokenFormErrors>({});
-    const [checkedPermissions, setCheckedPermissions] =
-        useState<ICheckedPermissions>({});
+    // const [checkedPermissions, setCheckedPermissions] =
+    //     useState<ICheckedPermissions>({});
 
-    const granularPermissions = permissions.root.filter(
-        ({ name }) => name !== 'ADMIN'
-    );
+    // const granularPermissions = permissions.root.filter(
+    //     ({ name }) => name !== 'ADMIN'
+    // );
 
     const editing = serviceAccount !== undefined;
 
@@ -186,7 +186,6 @@ export const ServiceAccountModal = ({
         name,
         username,
         rootRole,
-        permissions: Object.values(checkedPermissions),
     });
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -271,39 +270,39 @@ export const ServiceAccountModal = ({
         setUsername(username);
     };
 
-    const handlePermissionChange = (permission: IPermission) => {
-        let checkedPermissionsCopy = cloneDeep(checkedPermissions);
+    // const handlePermissionChange = (permission: IPermission) => {
+    //     let checkedPermissionsCopy = cloneDeep(checkedPermissions);
 
-        if (checkedPermissionsCopy[permission.id]) {
-            delete checkedPermissionsCopy[permission.id];
-        } else {
-            checkedPermissionsCopy[permission.id] = { ...permission };
-        }
+    //     if (checkedPermissionsCopy[permission.id]) {
+    //         delete checkedPermissionsCopy[permission.id];
+    //     } else {
+    //         checkedPermissionsCopy[permission.id] = { ...permission };
+    //     }
 
-        setCheckedPermissions(checkedPermissionsCopy);
-    };
+    //     setCheckedPermissions(checkedPermissionsCopy);
+    // };
 
-    const onToggleAllPermissions = () => {
-        let checkedPermissionsCopy = cloneDeep(checkedPermissions);
+    // const onToggleAllPermissions = () => {
+    //     let checkedPermissionsCopy = cloneDeep(checkedPermissions);
 
-        const allChecked = granularPermissions.every(
-            (permission: IPermission) => checkedPermissionsCopy[permission.id]
-        );
+    //     const allChecked = granularPermissions.every(
+    //         (permission: IPermission) => checkedPermissionsCopy[permission.id]
+    //     );
 
-        if (allChecked) {
-            granularPermissions.forEach((permission: IPermission) => {
-                delete checkedPermissionsCopy[permission.id];
-            });
-        } else {
-            granularPermissions.forEach((permission: IPermission) => {
-                checkedPermissionsCopy[permission.id] = {
-                    ...permission,
-                };
-            });
-        }
+    //     if (allChecked) {
+    //         granularPermissions.forEach((permission: IPermission) => {
+    //             delete checkedPermissionsCopy[permission.id];
+    //         });
+    //     } else {
+    //         granularPermissions.forEach((permission: IPermission) => {
+    //             checkedPermissionsCopy[permission.id] = {
+    //                 ...permission,
+    //             };
+    //         });
+    //     }
 
-        setCheckedPermissions(checkedPermissionsCopy);
-    };
+    //     setCheckedPermissions(checkedPermissionsCopy);
+    // };
 
     return (
         <SidebarModal
@@ -385,7 +384,7 @@ export const ServiceAccountModal = ({
                                     ))}
                             </RadioGroup>
                         </FormControl>
-                        <StyledInputDescription>
+                        {/* <StyledInputDescription>
                             Would you like to specify extra granular
                             permissions?
                         </StyledInputDescription>
@@ -404,7 +403,7 @@ export const ServiceAccountModal = ({
                                 environment?: string;
                             }) => permission.id.toString()}
                             context="root"
-                        />
+                        /> */}
                         <ConditionallyRender
                             condition={!editing}
                             show={

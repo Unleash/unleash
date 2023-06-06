@@ -132,7 +132,11 @@ export const createExportImportTogglesService = (
     );
     const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
     const strategyStore = new StrategyStore(db, getLogger);
-    const contextFieldStore = new ContextFieldStore(db, getLogger);
+    const contextFieldStore = new ContextFieldStore(
+        db,
+        getLogger,
+        flagResolver,
+    );
     const featureStrategiesStore = new FeatureStrategiesStore(
         db,
         eventBus,

@@ -61,7 +61,11 @@ export const createStores = (
             getLogger,
             config.flagResolver,
         ),
-        contextFieldStore: new ContextFieldStore(db, getLogger),
+        contextFieldStore: new ContextFieldStore(
+            db,
+            getLogger,
+            config.flagResolver,
+        ),
         settingStore: new SettingStore(db, getLogger),
         userStore: new UserStore(db, getLogger),
         accountStore: new AccountStore(db, getLogger),

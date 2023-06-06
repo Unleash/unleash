@@ -1,9 +1,15 @@
 import dbInit from '../../helpers/database-init';
-import { setupApp } from '../../helpers/test-helper';
+import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
+import { randomId } from '../../../../lib/util';
 
 let db;
-let app;
+let app: IUnleashTest;
+
+export const mockFeatureToggle = (): any => ({
+    name: randomId(),
+    strategies: [{ name: randomId(), constraints: [], parameters: {} }],
+});
 
 beforeAll(async () => {
     db = await dbInit('context_api_serial', getLogger);

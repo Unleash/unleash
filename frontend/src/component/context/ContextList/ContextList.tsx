@@ -24,12 +24,17 @@ import { ContextActionsCell } from './ContextActionsCell/ContextActionsCell';
 import { Adjust } from '@mui/icons-material';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { TextCell } from '../../common/Table/cells/TextCell/TextCell';
+import theme from '../../../themes/theme';
+import { Box } from '@mui/material';
 
 const ContextList: VFC = () => {
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [name, setName] = useState<string>();
     const { context, refetchUnleashContext, loading } = useUnleashContext();
     const { removeContext } = useContextsApi();
+    const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
 
     const data = useMemo(() => {
@@ -41,11 +46,21 @@ const ContextList: VFC = () => {
         }
 
         return context
-            .map(({ name, description, sortOrder }) => ({
-                name,
-                description,
-                sortOrder,
-            }))
+            .map(
+                ({
+                    name,
+                    description,
+                    sortOrder,
+                    usedInProjects,
+                    usedInFeatures,
+                }) => ({
+                    name,
+                    description,
+                    sortOrder,
+                    usedInProjects,
+                    usedInFeatures,
+                })
+            )
             .sort((a, b) => a.sortOrder - b.sortOrder);
     }, [context, loading]);
 
@@ -59,7 +74,7 @@ const ContextList: VFC = () => {
             {
                 Header: 'Name',
                 accessor: 'name',
-                width: '90%',
+                width: '70%',
                 Cell: ({
                     row: {
                         original: { name, description },
@@ -73,6 +88,30 @@ const ContextList: VFC = () => {
                 ),
                 sortType: 'alphanumeric',
             },
+            ...(uiConfig.flags.segmentContextFieldUsage
+                ? [
+                      {
+                          Header: 'Used in',
+                          width: '60%',
+                          Cell: ({ row: { original } }: any) => (
+                              <TextCell
+                                  sx={{
+                                      color:
+                                          original.usedInProjects === 0 &&
+                                          original.usedInFeatures === 0
+                                              ? theme.palette.text.disabled
+                                              : 'inherit',
+                                  }}
+                              >
+                                  <Box>{original.usedInProjects} projects</Box>
+                                  <Box>
+                                      {original.usedInFeatures} feature toggles
+                                  </Box>
+                              </TextCell>
+                          ),
+                      },
+                  ]
+                : []),
             {
                 Header: 'Actions',
                 id: 'Actions',
@@ -104,7 +143,7 @@ const ContextList: VFC = () => {
                 sortType: 'number',
             },
         ],
-        []
+        [uiConfig.flags.segmentContextFieldUsage]
     );
 
     const initialState = useMemo(

@@ -55,6 +55,10 @@ export default async function getApp(
 
     app.use(compression());
     app.use(cookieParser());
+    app.use((req, res, next) => {
+        req.url = req.url.replace(/\/+/g, '/');
+        next();
+    });
     app.use(express.json({ strict: false }));
     if (unleashSession) {
         app.use(unleashSession);

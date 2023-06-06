@@ -50,6 +50,13 @@ const StyledDescription = styled('div')(({ theme }) => ({
         display: 'block',
     },
 }));
+const StyledCustomTitle = styled('div')(({ theme }) => ({
+    fontWeight: 'normal',
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+        display: 'block',
+    },
+}));
 const StyledHeaderContainer = styled('div')({
     flexDirection: 'column',
     justifyContent: 'center',
@@ -141,11 +148,19 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                         <StringTruncator
                             maxWidth="400"
                             maxLength={15}
-                            text={formatStrategyName(
-                                uiConfig?.flags?.strategyImprovements
-                                    ? strategy.title || strategy.name
-                                    : strategy.name
-                            )}
+                            text={formatStrategyName(strategy.name)}
+                        />
+                        <ConditionallyRender
+                            condition={
+                                Boolean(
+                                    uiConfig?.flags?.strategyImprovements
+                                ) && Boolean(strategy.title)
+                            }
+                            show={
+                                <StyledCustomTitle>
+                                    {formatStrategyName(String(strategy.title))}
+                                </StyledCustomTitle>
+                            }
                         />
                         <ConditionallyRender
                             condition={Boolean(description)}

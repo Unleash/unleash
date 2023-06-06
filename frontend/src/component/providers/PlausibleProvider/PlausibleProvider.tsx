@@ -20,7 +20,7 @@ export const PlausibleProvider: FC = ({ children }) => {
                         'meta[name="uiFlags"]'
                     ) as HTMLMetaElement
                 )?.content || '{}';
-            return JSON.parse(uiFlagsStr);
+            return JSON.parse(decodeURI(uiFlagsStr));
         } catch (e) {
             return {};
         }

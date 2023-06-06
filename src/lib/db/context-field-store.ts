@@ -18,7 +18,7 @@ const COLUMNS = [
     'created_at',
 ];
 const T = {
-    context_fields: 'context_fields',
+    contextFields: 'context_fields',
     featureStrategies: 'feature_strategies',
 };
 
@@ -67,7 +67,7 @@ class ContextFieldStore implements IContextFieldStore {
     }
 
     prefixColumns(columns: string[] = COLUMNS): string[] {
-        return columns.map((c) => `${T.context_fields}.${c}`);
+        return columns.map((c) => `${T.contextFields}.${c}`);
     }
 
     fieldToRow(
@@ -96,12 +96,12 @@ class ContextFieldStore implements IContextFieldStore {
                 .countDistinct(
                     `${T.featureStrategies}.feature_name AS used_in_features`,
                 )
-                .from(T.context_fields)
+                .from(T.contextFields)
                 .joinRaw(
-                    `JOIN feature_strategies ON EXISTS (
+                    `JOIN ${T.featureStrategies} ON EXISTS (
                         SELECT 1
-                        FROM jsonb_array_elements(feature_strategies.constraints) AS elem
-                        WHERE elem ->> 'contextName' = context_fields.name
+                        FROM jsonb_array_elements(${T.featureStrategies}.constraints) AS elem
+                        WHERE elem ->> 'contextName' = ${T.contextFields}.name
                       )`,
                 )
                 .groupBy(
@@ -114,7 +114,7 @@ class ContextFieldStore implements IContextFieldStore {
         } else {
             const rows = await this.db
                 .select(COLUMNS)
-                .from(T.context_fields)
+                .from(T.contextFields)
                 .orderBy('name', 'asc');
 
             return rows.map(mapRow);
@@ -124,7 +124,7 @@ class ContextFieldStore implements IContextFieldStore {
     async get(key: string): Promise<IContextField> {
         const row = await this.db
             .first(COLUMNS)
-            .from(T.context_fields)
+            .from(T.contextFields)
             .where({ name: key });
         if (!row) {
             throw new NotFoundError(
@@ -135,14 +135,14 @@ class ContextFieldStore implements IContextFieldStore {
     }
 
     async deleteAll(): Promise<void> {
-        await this.db(T.context_fields).del();
+        await this.db(T.contextFields).del();
     }
 
     destroy(): void {}
 
     async exists(key: string): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${T.context_fields} WHERE name = ?) AS present`,
+            `SELECT EXISTS (SELECT 1 FROM ${T.contextFields} WHERE name = ?) AS present`,
             [key],
         );
         const { present } = result.rows[0];
@@ -151,7 +151,7 @@ class ContextFieldStore implements IContextFieldStore {
 
     // TODO: write tests for the changes you made here?
     async create(contextField: IContextFieldDto): Promise<IContextField> {
-        const [row] = await this.db(T.context_fields)
+        const [row] = await this.db(T.contextFields)
             .insert(this.fieldToRow(contextField))
             .returning('*');
 
@@ -159,7 +159,7 @@ class ContextFieldStore implements IContextFieldStore {
     }
 
     async update(data: IContextFieldDto): Promise<IContextField> {
-        const [row] = await this.db(T.context_fields)
+        const [row] = await this.db(T.contextFields)
             .where({ name: data.name })
             .update(this.fieldToRow(data))
             .returning('*');
@@ -168,11 +168,11 @@ class ContextFieldStore implements IContextFieldStore {
     }
 
     async delete(name: string): Promise<void> {
-        return this.db(T.context_fields).where({ name }).del();
+        return this.db(T.contextFields).where({ name }).del();
     }
 
     async count(): Promise<number> {
-        return this.db(T.context_fields)
+        return this.db(T.contextFields)
             .count('*')
             .then((res) => Number(res[0].count));
     }

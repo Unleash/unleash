@@ -98,7 +98,7 @@ class ContextFieldStore implements IContextFieldStore {
                 )
                 .from(T.contextFields)
                 .joinRaw(
-                    `JOIN ${T.featureStrategies} ON EXISTS (
+                    `LEFT JOIN ${T.featureStrategies} ON EXISTS (
                         SELECT 1
                         FROM jsonb_array_elements(${T.featureStrategies}.constraints) AS elem
                         WHERE elem ->> 'contextName' = ${T.contextFields}.name

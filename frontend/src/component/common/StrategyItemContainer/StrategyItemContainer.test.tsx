@@ -10,7 +10,7 @@ testServerRoute(server, '/api/admin/ui-config', {
     flags: { strategyImprovements: true },
 });
 
-test('should render authorization error on missing old password', async () => {
+test('should render strategy name, custom title and description', async () => {
     const strategy: IFeatureStrategy = {
         id: 'irrelevant',
         name: 'strategy name',

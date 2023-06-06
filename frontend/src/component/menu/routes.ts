@@ -20,7 +20,7 @@ import CreateFeature from 'component/feature/CreateFeature/CreateFeature';
 import EditFeature from 'component/feature/EditFeature/EditFeature';
 import { ApplicationEdit } from 'component/application/ApplicationEdit/ApplicationEdit';
 import { ApplicationList } from 'component/application/ApplicationList/ApplicationList';
-import ContextList from 'component/context/ContextList/ContextList';
+import ContextList from 'component/context/ContextList/ContextList/ContextList';
 import RedirectFeatureView from 'component/feature/RedirectFeatureView/RedirectFeatureView';
 import { CreateAddon } from 'component/addons/CreateAddon/CreateAddon';
 import { EditAddon } from 'component/addons/EditAddon/EditAddon';

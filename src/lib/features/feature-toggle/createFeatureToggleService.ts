@@ -74,7 +74,11 @@ export const createFeatureToggleService = (
         getLogger,
         flagResolver,
     );
-    const contextFieldStore = new ContextFieldStore(db, getLogger);
+    const contextFieldStore = new ContextFieldStore(
+        db,
+        getLogger,
+        flagResolver,
+    );
     const groupStore = new GroupStore(db);
     const accountStore = new AccountStore(db, getLogger);
     const accessStore = new AccessStore(db, eventBus, getLogger);

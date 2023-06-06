@@ -29,6 +29,7 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { UsedInCell } from 'component/context/ContextList/UsedInCell';
 
 export const SegmentTable = () => {
     const projectId = useOptionalPathParam('projectId');
@@ -206,18 +207,7 @@ const getColumns = (segmentContextFieldUsage?: boolean) => [
                   Header: 'Used in',
                   width: '60%',
                   Cell: ({ row: { original } }: any) => (
-                      <TextCell
-                          sx={{
-                              color:
-                                  original.usedInProjects === 0 &&
-                                  original.usedInFeatures === 0
-                                      ? theme.palette.text.disabled
-                                      : 'inherit',
-                          }}
-                      >
-                          <Box>{original.usedInProjects} projects</Box>
-                          <Box>{original.usedInFeatures} feature toggles</Box>
-                      </TextCell>
+                      <UsedInCell original={original} />
                   ),
               },
           ]

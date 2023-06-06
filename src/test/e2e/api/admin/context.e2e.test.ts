@@ -1,9 +1,9 @@
 import dbInit from '../../helpers/database-init';
-import { setupApp } from '../../helpers/test-helper';
+import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 
 let db;
-let app;
+let app: IUnleashTest;
 
 beforeAll(async () => {
     db = await dbInit('context_api_serial', getLogger);

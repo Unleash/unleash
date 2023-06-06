@@ -5,6 +5,8 @@ export interface IContextFieldDto {
     description?: string;
     stickiness?: boolean;
     sortOrder?: number;
+    usedInProjects?: number;
+    usedInFeatures?: number;
     legalValues?: ILegalValue[];
 }
 

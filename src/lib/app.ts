@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import express, { Application, RequestHandler } from 'express';
 import compression from 'compression';
 import favicon from 'serve-favicon';
@@ -41,7 +42,8 @@ export default async function getApp(
 
     const baseUriPath = config.server.baseUriPath || '';
     const publicFolder = config.publicFolder || findPublicFolder();
-    let indexHTML = await loadIndexHTML(config, publicFolder);
+    const cspNonce = crypto.randomBytes(16).toString('hex');
+    let indexHTML = await loadIndexHTML(config, publicFolder, cspNonce);
 
     app.set('trust proxy', true);
     app.disable('x-powered-by');
@@ -84,7 +86,7 @@ export default async function getApp(
     if (unleashSession) {
         app.use(unleashSession);
     }
-    app.use(secureHeaders(config));
+    app.use(secureHeaders(config, cspNonce));
     app.use(express.urlencoded({ extended: true }));
     app.use(favicon(path.join(publicFolder, 'favicon.ico')));
     app.use(baseUriPath, favicon(path.join(publicFolder, 'favicon.ico')));

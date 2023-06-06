@@ -3,6 +3,7 @@ export const rewriteHTML = (
     rewriteValue: string,
     cdnPrefix?: string,
     uiFlags?: string,
+    cspNonce?: string,
 ): string => {
     let result = input;
     result = result.replace(/::baseUriPath::/gi, rewriteValue);
@@ -17,6 +18,15 @@ export const rewriteHTML = (
         /\/static/gi,
         `${cdnPrefix || rewriteValue}/static`,
     );
+
+    if (cspNonce) {
+        result = result.replace(/::cspNonce::/gi, cspNonce);
+    } else {
+        result = result.replace(
+            '<meta name="cspNonce" content="::cspNonce::" />',
+            '',
+        );
+    }
 
     return result;
 };

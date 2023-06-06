@@ -3,7 +3,10 @@ import { RequestHandler } from 'express';
 import { IUnleashConfig } from '../types';
 import { hoursToSeconds } from 'date-fns';
 
-const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
+const secureHeaders: (
+    config: IUnleashConfig,
+    cspNonce?: string,
+) => RequestHandler = (config, cspNonce) => {
     if (config.secureHeaders) {
         return helmet({
             hsts: {
@@ -28,7 +31,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                     ],
                     styleSrc: [
                         "'self'",
-                        "'unsafe-inline'",
+                        ...(cspNonce ? [`'nonce-${cspNonce}'`] : []),
                         'cdn.getunleash.io',
                         'fonts.googleapis.com',
                         'fonts.gstatic.com',

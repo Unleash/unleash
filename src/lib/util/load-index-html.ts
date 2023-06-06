@@ -7,6 +7,7 @@ import fetch from 'make-fetch-happen';
 export async function loadIndexHTML(
     config: IUnleashConfig,
     publicFolder: string,
+    cspNonce?: string,
 ): Promise<string> {
     const { cdnPrefix, baseUriPath = '' } = config.server;
     const uiFlags = JSON.stringify(config.ui.flags);
@@ -23,5 +24,11 @@ export async function loadIndexHTML(
             .toString();
     }
 
-    return rewriteHTML(indexHTML, baseUriPath, cdnPrefix, uiFlags);
+    return rewriteHTML(
+        indexHTML,
+        baseUriPath,
+        cdnPrefix,
+        uiFlags,
+        config.secureHeaders ? cspNonce : undefined,
+    );
 }

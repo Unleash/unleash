@@ -5,9 +5,14 @@ import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { useThemeMode } from 'hooks/useThemeMode';
 
+const nonce =
+    document.querySelector('meta[name=cspNonce]')?.getAttribute('content') ||
+    undefined;
+
 export const muiCache = createCache({
     key: 'mui',
     prepend: true,
+    nonce,
 });
 
 export const ThemeProvider: FC = ({ children }) => {

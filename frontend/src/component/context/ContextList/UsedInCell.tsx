@@ -1,16 +1,8 @@
 import { VFC } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Delete, Edit } from '@mui/icons-material';
-import {
-    DELETE_CONTEXT_FIELD,
-    UPDATE_CONTEXT_FIELD,
-} from '../../providers/AccessProvider/permissions';
-import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
-import { ActionCell } from '../../common/Table/cells/ActionCell/ActionCell';
-import { TextCell } from '../../common/Table/cells/TextCell/TextCell';
-import theme from '../../../themes/theme';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import theme from 'themes/theme';
 import { Box } from '@mui/material';
-import { IUnleashContextDefinition } from '../../../interfaces/context';
+import { IUnleashContextDefinition } from 'interfaces/context';
 
 interface IUsedInCellProps {
     original: IUnleashContextDefinition;

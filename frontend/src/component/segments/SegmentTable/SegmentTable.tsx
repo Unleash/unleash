@@ -29,7 +29,7 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { UsedInCell } from '../../context/ContextList/UsedInCell';
+import { UsedInCell } from 'component/context/ContextList/UsedInCell';
 
 export const SegmentTable = () => {
     const projectId = useOptionalPathParam('projectId');

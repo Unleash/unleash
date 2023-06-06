@@ -4,8 +4,8 @@ export interface IUnleashContextDefinition {
     createdAt: string;
     sortOrder: number;
     stickiness: boolean;
-    usedInProjects: number;
-    usedInFeatures: number;
+    usedInProjects?: number;
+    usedInFeatures?: number;
     legalValues?: ILegalValue[];
 }
 

@@ -24,9 +24,9 @@ import { ContextActionsCell } from './ContextActionsCell/ContextActionsCell';
 import { Adjust } from '@mui/icons-material';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { TextCell } from '../../common/Table/cells/TextCell/TextCell';
-import theme from '../../../themes/theme';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import theme from 'themes/theme';
 import { Box } from '@mui/material';
 
 const ContextList: VFC = () => {

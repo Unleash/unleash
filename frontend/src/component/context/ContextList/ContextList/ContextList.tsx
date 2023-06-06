@@ -16,18 +16,16 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { AddContextButton } from './AddContextButton/AddContextButton';
+import { AddContextButton } from '../AddContextButton';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { sortTypes } from 'utils/sortTypes';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { ContextActionsCell } from './ContextActionsCell/ContextActionsCell';
+import { ContextActionsCell } from '../ContextActionsCell';
 import { Adjust } from '@mui/icons-material';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import theme from 'themes/theme';
-import { Box } from '@mui/material';
+import { UsedInCell } from '../UsedInCell';
 
 const ContextList: VFC = () => {
     const [showDelDialogue, setShowDelDialogue] = useState(false);
@@ -94,20 +92,7 @@ const ContextList: VFC = () => {
                           Header: 'Used in',
                           width: '60%',
                           Cell: ({ row: { original } }: any) => (
-                              <TextCell
-                                  sx={{
-                                      color:
-                                          original.usedInProjects === 0 &&
-                                          original.usedInFeatures === 0
-                                              ? theme.palette.text.disabled
-                                              : 'inherit',
-                                  }}
-                              >
-                                  <Box>{original.usedInProjects} projects</Box>
-                                  <Box>
-                                      {original.usedInFeatures} feature toggles
-                                  </Box>
-                              </TextCell>
+                              <UsedInCell original={original} />
                           ),
                       },
                   ]

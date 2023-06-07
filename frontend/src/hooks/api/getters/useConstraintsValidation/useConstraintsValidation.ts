@@ -20,7 +20,7 @@ export const useConstraintsValidation = (
             .filter(constraint => {
                 const hasValues =
                     Array.isArray(constraint.values) &&
-                    Boolean(constraint.values.length > 0);
+                    constraint.values.length > 0;
                 const hasValue = Boolean(constraint.value);
 
                 return hasValues || hasValue;

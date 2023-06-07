@@ -51,11 +51,15 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
     const { updateFeatureTags, loading: featureLoading } = useFeatureApi();
     const { tags, refetch, loading: tagsLoading } = useFeatureTags(featureId);
     const { setToastData } = useToast();
-    const [tagType, setTagType] = useState<ITagType>({
-        name: 'simple',
-        description: 'Simple tag to get you started',
-        icon: '',
-    });
+    const initialTagType =
+        tagTypes && tagTypes.length > 0
+            ? tagTypes[0]
+            : {
+                  name: 'simple',
+                  description: 'Simple tag to get you started',
+                  icon: '',
+              };
+    const [tagType, setTagType] = useState<ITagType>(initialTagType);
 
     const loading = featureLoading || tagsLoading;
 

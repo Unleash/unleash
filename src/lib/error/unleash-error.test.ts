@@ -361,28 +361,19 @@ describe('Error serialization special cases', () => {
             await validateString([]);
         } catch (e) {
             validationThrewAnError = true;
-            const ep = `
-[Error [ValidationError]: "value" must contain at least 1 items] {
-      _original: [],
-      details: [
-        {
-          message: '"value" must contain at least 1 items',
-          path: [],
-          type: 'array.min',
-          context: { limit: 1, value: [], label: 'value' }
-        }
-      ]
-    }
-`;
-            const expectedDetails = 'You provided ';
-            console.log(e, e.details[0].context, fromLegacyError(e));
+            const convertedError = fromLegacyError(e);
 
-            // expect(convertedError.toJSON()).toMatchObject({
-            //     message: expect.matches("invalid") && expect.containsan
-            //     details: [{
-            //         message: '"value" must contain at least 1 items'
-            //     }]
-            // })
+            expect(convertedError.toJSON()).toMatchObject({
+                message:
+                    expect.stringContaining('validation error') &&
+                    expect.stringContaining('details'),
+                details: [
+                    {
+                        description:
+                            '"value" must contain at least 1 items. You provided [].',
+                    },
+                ],
+            });
         }
 
         expect(validationThrewAnError).toBeTruthy();

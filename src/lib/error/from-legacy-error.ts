@@ -1,3 +1,5 @@
+import { fromJoiError } from './bad-data-error';
+import { ValidationError as JoiValidationError } from 'joi';
 import {
     GenericUnleashError,
     UnleashApiErrorName,
@@ -18,6 +20,10 @@ export const fromLegacyError = (e: Error): UnleashError => {
             name: 'NoAccessError',
             message: e.message,
         });
+    }
+
+    if (e instanceof JoiValidationError) {
+        return fromJoiError(e);
     }
 
     if (name === 'ValidationError' || name === 'BadDataError') {

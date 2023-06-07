@@ -16,9 +16,18 @@ export const useConstraintsValidation = (
             return;
         }
 
-        const validationRequests = constraints.map(constraint => {
-            return validateConstraint(constraint);
-        });
+        const validationRequests = constraints
+            .filter(constraint => {
+                const hasValues =
+                    Array.isArray(constraint.values) &&
+                    Boolean(constraint.values.length > 0);
+                const hasValue = Boolean(constraint.value);
+
+                return hasValues || hasValue;
+            })
+            .map(constraint => {
+                return validateConstraint(constraint);
+            });
 
         Promise.all(validationRequests)
             .then(() => setValid(true))

@@ -356,6 +356,8 @@ describe('Error serialization special cases', () => {
     });
 
     it('Converts Joi errors in a sensible fashion', async () => {
+        // if the validation doesn't fail, this test does nothing, so ensure
+        // that an error is thrown.
         let validationThrewAnError = false;
         try {
             await validateString([]);

@@ -30,8 +30,8 @@ export const handleErrors: (
         error instanceof UnleashError ? error : fromLegacyError(error);
 
     if (!(error instanceof UnleashError)) {
-        logger.warn(
-            `I encountered an error that wasn't an instance of the \`UnleashError\` type. This probably means that we had an unexpected crash. The original error and what it was mapped to are:`,
+        logger.debug(
+            `I encountered an error that wasn't an instance of the \`UnleashError\` type. The original error and what it was mapped to are:`,
             error,
             finalError,
         );

@@ -1,6 +1,5 @@
 import fetch from 'make-fetch-happen';
 import {
-    IClientInstanceStore,
     IContextFieldStore,
     IEnvironmentStore,
     IEventStore,
@@ -26,8 +25,6 @@ export interface IVersionInfo {
     oss: string;
     enterprise?: string;
 }
-
-type TimeRange = 'allTime' | '30d' | '7d';
 
 export interface IVersionHolder {
     current: IVersionInfo;
@@ -58,7 +55,6 @@ export interface IFeatureUsageInfo {
     strategies: number;
     SAMLenabled: boolean;
     OIDCenabled: boolean;
-    clientApps: { range: TimeRange; count: number }[];
     customStrategies: number;
     customStrategiesInUse: number;
 }
@@ -87,8 +83,6 @@ export default class VersionService {
     private segmentStore: ISegmentStore;
 
     private eventStore: IEventStore;
-
-    private clientInstanceStore: IClientInstanceStore;
 
     private featureStrategiesStore: IFeatureStrategiesStore;
 
@@ -121,7 +115,6 @@ export default class VersionService {
             roleStore,
             segmentStore,
             eventStore,
-            clientInstanceStore,
             featureStrategiesStore,
         }: Pick<
             IUnleashStores,
@@ -136,7 +129,6 @@ export default class VersionService {
             | 'roleStore'
             | 'segmentStore'
             | 'eventStore'
-            | 'clientInstanceStore'
             | 'featureStrategiesStore'
         >,
         {
@@ -161,7 +153,6 @@ export default class VersionService {
         this.roleStore = roleStore;
         this.segmentStore = segmentStore;
         this.eventStore = eventStore;
-        this.clientInstanceStore = clientInstanceStore;
         this.featureStrategiesStore = featureStrategiesStore;
         this.current = {
             oss: version,
@@ -243,7 +234,6 @@ export default class VersionService {
             strategies,
             SAMLenabled,
             OIDCenabled,
-            clientApps,
             featureExports,
             featureImports,
         ] = await Promise.all([
@@ -260,7 +250,6 @@ export default class VersionService {
             this.strategyStore.count(),
             this.hasSAML(),
             this.hasOIDC(),
-            this.getLabeledAppCounts(),
             this.eventStore.filteredCount({ type: FEATURES_EXPORTED }),
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
         ]);
@@ -281,7 +270,6 @@ export default class VersionService {
             strategies,
             SAMLenabled,
             OIDCenabled,
-            clientApps,
             featureExports,
             featureImports,
             customStrategies: customStrategies.length,
@@ -307,29 +295,6 @@ export default class VersionService {
         );
 
         return settings?.enabled || false;
-    }
-
-    async getLabeledAppCounts(): Promise<
-        { range: TimeRange; count: number }[]
-    > {
-        return [
-            {
-                range: 'allTime',
-                count: await this.clientInstanceStore.getDistinctApplicationsCount(),
-            },
-            {
-                range: '30d',
-                count: await this.clientInstanceStore.getDistinctApplicationsCount(
-                    30,
-                ),
-            },
-            {
-                range: '7d',
-                count: await this.clientInstanceStore.getDistinctApplicationsCount(
-                    7,
-                ),
-            },
-        ];
     }
 
     getVersionInfo(): IVersionHolder {

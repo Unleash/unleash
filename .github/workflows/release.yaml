@@ -23,7 +23,6 @@ jobs:
       - name: Build
         run: |
           yarn install --frozen-lockfile
-          yarn build
       - name: Publish to npm
         run: |
           LATEST=$(npm show unleash-server version)

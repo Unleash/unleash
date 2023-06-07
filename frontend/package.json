@@ -119,7 +119,7 @@
     "orval": "^6.10.3"
   },
   "resolutions": {
-    "@codemirror/state": "6.2.0",
+    "@codemirror/state": "6.2.1",
     "@xmldom/xmldom": "^0.8.4",
     "json5": "^2.2.2",
     "@types/react": "17.0.59",

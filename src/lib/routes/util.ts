@@ -30,22 +30,24 @@ export const handleErrors: (
     const finalError =
         error instanceof UnleashError ? error : fromLegacyError(error);
 
+    const format = (thing: object) => JSON.stringify(thing, null, 2);
+
     if (!(error instanceof UnleashError)) {
         logger.debug(
-            `I encountered an error that wasn't an instance of the \`UnleashError\` type. The original error was:`,
-            error,
-            'It was mapped to:',
-            finalError.toJSON(),
+            `I encountered an error that wasn't an instance of the \`UnleashError\` type. The original error was: ${format(
+                error,
+            )}. It was mapped to ${format(finalError.toJSON())}`,
         );
     }
 
     logger.warn(
-        `Error message: "${finalError.message}" Error ID: "${finalError.id}". Full, serialized error:`,
-        finalError.toJSON(),
+        `Error message: "${finalError.message}" Error ID: "${
+            finalError.id
+        }". Full, serialized error: ${format(finalError.toJSON())}`,
     );
 
     if (['InternalError', 'UnknownError'].includes(finalError.name)) {
-        logger.error('Server failed executing request', error);
+        logger.error(`Server failed executing request: ${format(error)}`);
     }
 
     return res.status(finalError.statusCode).json(finalError).end();

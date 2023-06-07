@@ -1,7 +1,7 @@
 import { v4 as uuidV4 } from 'uuid';
 import { FromSchema } from 'json-schema-to-ts';
 
-const UnleashApiErrorTypes = [
+export const UnleashApiErrorTypes = [
     'ContentTypeError',
     'DisabledError',
     'FeatureHasTagError',
@@ -32,7 +32,7 @@ const UnleashApiErrorTypes = [
     'InternalError',
 ] as const;
 
-type UnleashApiErrorName = typeof UnleashApiErrorTypes[number];
+export type UnleashApiErrorName = typeof UnleashApiErrorTypes[number];
 
 const statusCode = (errorName: string): number => {
     switch (errorName) {
@@ -127,7 +127,7 @@ export abstract class UnleashError extends Error {
     }
 }
 
-class GenericUnleashError extends UnleashError {
+export class GenericUnleashError extends UnleashError {
     constructor({
         name,
         message,
@@ -167,47 +167,5 @@ export const apiErrorSchema = {
     },
     components: {},
 } as const;
-
-export const fromLegacyError = (e: Error): UnleashError => {
-    if (e instanceof UnleashError) {
-        return e;
-    }
-    const name = UnleashApiErrorTypes.includes(e.name as UnleashApiErrorName)
-        ? (e.name as UnleashApiErrorName)
-        : 'UnknownError';
-
-    if (name === 'NoAccessError') {
-        return new GenericUnleashError({
-            name: 'NoAccessError',
-            message: e.message,
-        });
-    }
-
-    if (name === 'ValidationError' || name === 'BadDataError') {
-        return new GenericUnleashError({
-            name: 'BadDataError',
-            message: e.message,
-        });
-    }
-
-    if (name === 'OwaspValidationError') {
-        return new GenericUnleashError({
-            name: 'OwaspValidationError',
-            message: e.message,
-        });
-    }
-
-    if (name === 'AuthenticationRequired') {
-        return new GenericUnleashError({
-            name: 'AuthenticationRequired',
-            message: `You must be authenticated to view this content. Please log in.`,
-        });
-    }
-
-    return new GenericUnleashError({
-        name: name as UnleashApiErrorName,
-        message: e.message,
-    });
-};
 
 export type ApiErrorSchema = FromSchema<typeof apiErrorSchema>;

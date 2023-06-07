@@ -1,4 +1,5 @@
 import { ErrorObject } from 'ajv';
+import { ValidationError } from 'joi';
 import getProp from 'lodash.get';
 import { ApiErrorSchema, UnleashError } from './unleash-error';
 
@@ -17,7 +18,7 @@ class BadDataError extends UnleashError {
         const topLevelMessage =
             'Request validation failed: your request body contains invalid data' +
             (errors
-                ? '. Refer to the `details` list to see what happened.'
+                ? '. Refer to the `details` list for more information.'
                 : `: ${message}`);
         super(topLevelMessage);
 
@@ -120,4 +121,30 @@ export const fromOpenApiValidationErrors = (
         "Request validation failed: the payload you provided doesn't conform to the schema. Check the `details` property for a list of errors that we found.",
         [firstDetail, ...remainingDetails],
     );
+};
+
+export const fromJoiError = (err: ValidationError): BadDataError => {
+    const details = err.details.map((detail) => {
+        const messageEnd = detail.context?.value
+            ? `. You provided ${JSON.stringify(detail.context.value)}.`
+            : '.';
+        const description = detail.message + messageEnd;
+        return {
+            description,
+            message: description,
+        };
+    });
+
+    const [first, ...rest] = details;
+
+    if (first) {
+        return new BadDataError(
+            'A validation error occurred while processing your request data. Refer to the `details` property for more information.',
+            [first, ...rest],
+        );
+    } else {
+        return new BadDataError(
+            'A validation error occurred while processing your request data. Please make sure it conforms to the request data schema.',
+        );
+    }
 };

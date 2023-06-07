@@ -1,7 +1,7 @@
 import owasp from 'owasp-password-strength-test';
 import { ErrorObject } from 'ajv';
 import AuthenticationRequired from '../types/authentication-required';
-import { ApiErrorSchema, fromLegacyError } from './unleash-error';
+import { ApiErrorSchema } from './unleash-error';
 import BadDataError, {
     fromOpenApiValidationError,
     fromOpenApiValidationErrors,
@@ -12,6 +12,8 @@ import IncompatibleProjectError from './incompatible-project-error';
 import PasswordUndefinedError from './password-undefined';
 import ProjectWithoutOwnerError from './project-without-owner-error';
 import NotFoundError from './notfound-error';
+import { validateString } from '../util/validators/constraint-types';
+import { fromLegacyError } from './from-legacy-error';
 
 describe('v5 deprecation: backwards compatibility', () => {
     it(`Adds details to error types that don't specify it`, () => {
@@ -351,6 +353,32 @@ describe('Error serialization special cases', () => {
                 },
             ],
         });
+    });
+
+    it('Converts Joi errors in a sensible fashion', async () => {
+        // if the validation doesn't fail, this test does nothing, so ensure
+        // that an error is thrown.
+        let validationThrewAnError = false;
+        try {
+            await validateString([]);
+        } catch (e) {
+            validationThrewAnError = true;
+            const convertedError = fromLegacyError(e);
+
+            expect(convertedError.toJSON()).toMatchObject({
+                message:
+                    expect.stringContaining('validation error') &&
+                    expect.stringContaining('details'),
+                details: [
+                    {
+                        description:
+                            '"value" must contain at least 1 items. You provided [].',
+                    },
+                ],
+            });
+        }
+
+        expect(validationThrewAnError).toBeTruthy();
     });
 });
 

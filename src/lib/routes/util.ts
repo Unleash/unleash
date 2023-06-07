@@ -1,7 +1,8 @@
 import joi from 'joi';
 import { Response } from 'express';
 import { Logger } from '../logger';
-import { fromLegacyError, UnleashError } from '../error/unleash-error';
+import { UnleashError } from '../error/unleash-error';
+import { fromLegacyError } from '../error/from-legacy-error';
 
 export const customJoi = joi.extend((j) => ({
     type: 'isUrlFriendly',

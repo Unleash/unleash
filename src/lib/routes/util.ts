@@ -32,13 +32,17 @@ export const handleErrors: (
 
     if (!(error instanceof UnleashError)) {
         logger.debug(
-            `I encountered an error that wasn't an instance of the \`UnleashError\` type. The original error and what it was mapped to are:`,
+            `I encountered an error that wasn't an instance of the \`UnleashError\` type. The original error was:`,
             error,
-            finalError,
+            'It was mapped to:',
+            finalError.toJSON(),
         );
     }
 
-    logger.warn(finalError.id, finalError.message);
+    logger.warn(
+        `Error message: "${finalError.message}" Error ID: "${finalError.id}". Full, serialized error:`,
+        finalError.toJSON(),
+    );
 
     if (['InternalError', 'UnknownError'].includes(finalError.name)) {
         logger.error('Server failed executing request', error);

@@ -41,13 +41,18 @@ export const handleErrors: (
     }
 
     logger.warn(
-        `Error message: "${finalError.message}" Error ID: "${
-            finalError.id
-        }". Full, serialized error: ${format(finalError.toJSON())}`,
+        `Original error message: ${error.message}. Processed error message: "${
+            finalError.message
+        }" Error ID: "${finalError.id}". Full, serialized error: ${format(
+            finalError.toJSON(),
+        )}`,
     );
 
     if (['InternalError', 'UnknownError'].includes(finalError.name)) {
-        logger.error(`Server failed executing request: ${format(error)}`);
+        logger.error(
+            `Server failed executing request: ${format(error)}`,
+            error,
+        );
     }
 
     return res.status(finalError.statusCode).json(finalError).end();

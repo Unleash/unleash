@@ -14,6 +14,21 @@ afterAll(() => {
     nock.enableNetConnect();
 });
 
+const getTestFlagResolver = (enabled: boolean) => {
+    return {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        isEnabled: () => {
+            return enabled;
+        },
+        getAll: () => {
+            return {};
+        },
+        getVariant: () => {
+            return { name: '', enabled: false };
+        },
+    };
+};
+
 test('yields current versions', async () => {
     const url = `https://${randomId()}.example.com`;
     const stores = createStores();
@@ -34,6 +49,7 @@ test('yields current versions', async () => {
     const service = new VersionService(stores, {
         getLogger,
         versionCheck: { url, enable: true },
+        flagResolver: getTestFlagResolver(true),
     });
     await service.checkLatestVersion();
     const versionInfo = service.getVersionInfo();
@@ -67,6 +83,7 @@ test('supports setting enterprise version as well', async () => {
         getLogger,
         versionCheck: { url, enable: true },
         enterpriseVersion,
+        flagResolver: getTestFlagResolver(true),
     });
     await service.checkLatestVersion();
     const versionInfo = service.getVersionInfo();
@@ -100,6 +117,7 @@ test('if version check is not enabled should not make any calls', async () => {
         getLogger,
         versionCheck: { url, enable: false },
         enterpriseVersion,
+        flagResolver: getTestFlagResolver(true),
     });
     await service.checkLatestVersion();
     const versionInfo = service.getVersionInfo();
@@ -141,6 +159,7 @@ test('sets featureinfo', async () => {
         getLogger,
         versionCheck: { url, enable: true },
         enterpriseVersion,
+        flagResolver: getTestFlagResolver(true),
     });
     await service.checkLatestVersion();
     expect(scope.isDone()).toEqual(true);
@@ -188,6 +207,7 @@ test('counts toggles', async () => {
         getLogger,
         versionCheck: { url, enable: true },
         enterpriseVersion,
+        flagResolver: getTestFlagResolver(true),
     });
     await service.checkLatestVersion();
     expect(scope.isDone()).toEqual(true);
@@ -249,6 +269,7 @@ test('counts custom strategies', async () => {
         getLogger,
         versionCheck: { url, enable: true },
         enterpriseVersion,
+        flagResolver: getTestFlagResolver(true),
     });
     await service.checkLatestVersion();
     expect(scope.isDone()).toEqual(true);

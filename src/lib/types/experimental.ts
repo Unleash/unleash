@@ -21,7 +21,8 @@ export type IFlagKey =
     | 'strategyImprovements'
     | 'googleAuthEnabled'
     | 'variantMetrics'
-    | 'disableBulkToggle';
+    | 'disableBulkToggle'
+    | 'experimentalExtendedTelemetry';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -92,6 +93,10 @@ const flags: IFlags = {
     ),
     variantMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_VARIANT_METRICS,
+        false,
+    ),
+    experimentalExtendedTelemetry: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EXTENDED_TELEMETRY,
         false,
     ),
 };

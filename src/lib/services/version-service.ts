@@ -20,6 +20,7 @@ import { ISettingStore } from '../types/stores/settings-store';
 import { hoursToMilliseconds } from 'date-fns';
 import { IStrategyStore } from 'lib/types';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
+import { IFlagResolver } from '../types';
 
 export interface IVersionInfo {
     oss: string;
@@ -105,6 +106,8 @@ export default class VersionService {
 
     private timer: NodeJS.Timeout;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         {
             settingStore,
@@ -140,9 +143,10 @@ export default class VersionService {
             getLogger,
             versionCheck,
             enterpriseVersion,
+            flagResolver,
         }: Pick<
             IUnleashConfig,
-            'getLogger' | 'versionCheck' | 'enterpriseVersion'
+            'getLogger' | 'versionCheck' | 'enterpriseVersion' | 'flagResolver'
         >,
     ) {
         this.logger = getLogger('lib/services/version-service.js');
@@ -166,6 +170,7 @@ export default class VersionService {
         this.enabled = versionCheck.enable;
         this.versionCheckUrl = versionCheck.url;
         this.isLatest = true;
+        this.flagResolver = flagResolver;
         process.nextTick(() => this.setup());
     }
 
@@ -191,14 +196,20 @@ export default class VersionService {
     async checkLatestVersion(): Promise<void> {
         if (this.enabled) {
             try {
-                const featureInfo = await this.getFeatureUsageInfo();
+                const versionPayload: any = {
+                    versions: this.current,
+                    instanceId: this.instanceId,
+                };
+
+                if (
+                    this.flagResolver.isEnabled('experimentalExtendedTelemetry')
+                ) {
+                    const featureInfo = await this.getFeatureUsageInfo();
+                    versionPayload.featureInfo = featureInfo;
+                }
                 const res = await fetch(this.versionCheckUrl, {
                     method: 'POST',
-                    body: JSON.stringify({
-                        versions: this.current,
-                        instanceId: this.instanceId,
-                        featureInfo,
-                    }),
+                    body: JSON.stringify(versionPayload),
                     headers: { 'Content-Type': 'application/json' },
                 });
                 if (res.ok) {

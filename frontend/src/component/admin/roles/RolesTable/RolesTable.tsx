@@ -25,6 +25,8 @@ import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { SupervisedUserCircle } from '@mui/icons-material';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { RolesActionsCell } from './RolesActionsCell/RolesActionsCell';
+import { RolesCell } from './RolesCell/RolesCell';
+import { RoleDeleteDialog } from './RoleDeleteDialog/RoleDeleteDialog';
 
 export const RolesTable = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -69,15 +71,11 @@ export const RolesTable = () => {
             {
                 Header: 'Role',
                 accessor: 'name',
-                Cell: HighlightCell,
+                Cell: ({ row: { original: role } }: any) => (
+                    <RolesCell role={role} />
+                ),
                 searchable: true,
-            },
-            {
-                Header: 'Description',
-                accessor: 'description',
-                Cell: HighlightCell,
-                minWidth: 200,
-                searchable: true,
+                minWidth: 100,
             },
             {
                 Header: 'Actions',
@@ -85,6 +83,7 @@ export const RolesTable = () => {
                 align: 'center',
                 Cell: ({ row: { original: role } }: any) => (
                     <RolesActionsCell
+                        role={role}
                         onEdit={() => {
                             setSelectedRole(role);
                             setModalOpen(true);
@@ -98,12 +97,19 @@ export const RolesTable = () => {
                 width: 150,
                 disableSortBy: true,
             },
+            // Always hidden -- for search
+            {
+                accessor: 'description',
+                Header: 'Description',
+                searchable: true,
+            },
         ],
         [roles]
     );
 
     const [initialState] = useState({
         sortBy: [{ id: 'name' }],
+        hiddenColumns: ['description'],
     });
 
     const { data, getSearchText } = useSearch(columns, searchValue, roles);
@@ -126,20 +132,16 @@ export const RolesTable = () => {
         useFlexLayout
     );
 
-    // useConditionallyHiddenColumns(
-    //     [
-    //         {
-    //             condition: isExtraSmallScreen,
-    //             columns: ['role', 'seenAt'],
-    //         },
-    //         {
-    //             condition: isSmallScreen,
-    //             columns: ['imageUrl', 'tokens', 'createdAt'],
-    //         },
-    //     ],
-    //     setHiddenColumns,
-    //     columns
-    // );
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isSmallScreen,
+                columns: ['Icon'],
+            },
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     return (
         <PageContent
@@ -217,13 +219,13 @@ export const RolesTable = () => {
                 role={selectedRole}
                 open={modalOpen}
                 setOpen={setModalOpen}
-            />
+            /> */}
             <RoleDeleteDialog
                 role={selectedRole}
                 open={deleteOpen}
                 setOpen={setDeleteOpen}
                 onConfirm={onDeleteConfirm}
-            /> */}
+            />
         </PageContent>
     );
 };

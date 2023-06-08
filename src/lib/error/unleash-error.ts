@@ -86,6 +86,8 @@ const statusCode = (errorName: string): number => {
             return 403;
         case 'AuthenticationRequired':
             return 401;
+        case 'BadRequestError': //thrown by express; do not remove
+            return 400;
         default:
             return 500;
     }

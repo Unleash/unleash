@@ -214,6 +214,45 @@ test('counts toggles', async () => {
     nock.cleanAll();
 });
 
+test('doesnt report featureinfo when flag off', async () => {
+    const url = `https://${randomId()}.example.com`;
+    const stores = createStores();
+    const enterpriseVersion = '4.0.0';
+    await stores.settingStore.insert('instanceInfo', { id: '1234abc' });
+    await stores.settingStore.insert('unleash.enterprise.auth.oidc', {
+        enabled: true,
+    });
+    await stores.featureToggleStore.create('project', { name: uuidv4() });
+    await stores.strategyStore.createStrategy({
+        name: uuidv4(),
+        editable: true,
+    });
+    const latest = {
+        oss: '4.0.0',
+        enterprise: '4.0.0',
+    };
+
+    const scope = nock(url)
+        .post('/', (body) => body.featureInfo === undefined)
+        .reply(() => [
+            200,
+            JSON.stringify({
+                latest: true,
+                versions: latest,
+            }),
+        ]);
+
+    const service = new VersionService(stores, {
+        getLogger,
+        versionCheck: { url, enable: true },
+        enterpriseVersion,
+        flagResolver: getTestFlagResolver(false),
+    });
+    await service.checkLatestVersion();
+    expect(scope.isDone()).toEqual(true);
+    nock.cleanAll();
+});
+
 test('counts custom strategies', async () => {
     const url = `https://${randomId()}.example.com`;
     const stores = createStores();

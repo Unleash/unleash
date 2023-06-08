@@ -32,6 +32,7 @@ import { serializeDates } from '../../types/serialize-dates';
 import NotFoundError from '../../error/notfound-error';
 import { NameSchema } from '../../openapi/spec/name-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
+import { contextFieldStrategiesSchema } from '../../openapi/spec/context-field-strategies-schema';
 
 interface ContextParam {
     contextField: string;
@@ -83,6 +84,24 @@ export class ContextController extends Controller {
                     operationId: 'getContextField',
                     responses: {
                         200: createResponseSchema('contextFieldSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:contextField/strategies',
+            handler: this.getStrategiesByContextField,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Strategies'],
+                    operationId: 'getStrategiesByContextField',
+                    responses: {
+                        200: createResponseSchema(
+                            'contextFieldStrategiesSchema',
+                        ),
                     },
                 }),
             ],
@@ -242,5 +261,32 @@ export class ContextController extends Controller {
 
         await this.contextService.validateName(name);
         res.status(200).end();
+    }
+
+    async getStrategiesByContextField(
+        req: IAuthRequest<{ contextField: string }>,
+        res: Response,
+    ): Promise<void> {
+        const { contextField } = req.params;
+        const contextFields =
+            await this.contextService.getStrategiesByContextField(contextField);
+
+        // Remove unnecessary IFeatureStrategy fields from the response.
+        const contextFieldStrategies = contextFields.map((strategy) => ({
+            id: strategy.id,
+            projectId: strategy.projectId,
+            featureName: strategy.featureName,
+            strategyName: strategy.strategyName,
+            environment: strategy.environment,
+        }));
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            contextFieldStrategiesSchema.$id,
+            serializeDates({
+                strategies: contextFieldStrategies,
+            }),
+        );
     }
 }

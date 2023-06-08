@@ -29,9 +29,16 @@ export const handleErrors: (
     error: Error,
 ) => void = (res, logger, error) => {
     if (createError.isHttpError(error)) {
-        // @ts-expect-error
-        return res.status(error.status).json(error).end();
+        return (
+            res
+                // @ts-expect-error http errors all have statuses, but there are no
+                // types provided
+                .status(error.status ?? 400)
+                .json({ message: error.message })
+                .end()
+        );
     }
+
     const finalError =
         error instanceof UnleashError ? error : fromLegacyError(error);
 

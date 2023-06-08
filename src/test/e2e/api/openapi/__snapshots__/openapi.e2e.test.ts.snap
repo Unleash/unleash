@@ -1414,6 +1414,53 @@ The provider you choose for your addon dictates what properties the \`parameters
         ],
         "type": "object",
       },
+      "contextFieldStrategiesSchema": {
+        "description": "A wrapper object containing all for strategies using a specific context field",
+        "properties": {
+          "strategies": {
+            "description": "List of strategies using the context field",
+            "items": {
+              "properties": {
+                "environment": {
+                  "description": "The ID of the environment where this strategy is in.",
+                  "type": "string",
+                },
+                "featureName": {
+                  "description": "The name of the feature that contains this strategy.",
+                  "example": "best-feature",
+                  "type": "string",
+                },
+                "id": {
+                  "description": "The ID of the strategy.",
+                  "example": "433ae8d9-dd69-4ad0-bc46-414aedbe9c55",
+                  "type": "string",
+                },
+                "projectId": {
+                  "description": "The ID of the project that contains this feature.",
+                  "type": "string",
+                },
+                "strategyName": {
+                  "description": "The name of the strategy.",
+                  "type": "string",
+                },
+              },
+              "required": [
+                "id",
+                "featureName",
+                "projectId",
+                "environment",
+                "strategyName",
+              ],
+              "type": "object",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "strategies",
+        ],
+        "type": "object",
+      },
       "contextFieldsSchema": {
         "items": {
           "$ref": "#/components/schemas/contextFieldSchema",
@@ -6709,6 +6756,36 @@ Note: passing \`null\` as a value for the description property will set it to an
         },
         "tags": [
           "Context",
+        ],
+      },
+    },
+    "/api/admin/context/{contextField}/strategies": {
+      "get": {
+        "operationId": "getStrategiesByContextField",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "contextField",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/contextFieldStrategiesSchema",
+                },
+              },
+            },
+            "description": "contextFieldStrategiesSchema",
+          },
+        },
+        "tags": [
+          "Strategies",
         ],
       },
     },

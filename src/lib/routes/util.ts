@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { Logger } from '../logger';
 import { UnleashError } from '../error/unleash-error';
 import { fromLegacyError } from '../error/from-legacy-error';
+import createError from 'http-errors';
 
 export const customJoi = joi.extend((j) => ({
     type: 'isUrlFriendly',
@@ -27,6 +28,10 @@ export const handleErrors: (
     logger: Logger,
     error: Error,
 ) => void = (res, logger, error) => {
+    if (createError.isHttpError(error)) {
+        // @ts-expect-error
+        return res.status(error.status).json(error).end();
+    }
     const finalError =
         error instanceof UnleashError ? error : fromLegacyError(error);
 

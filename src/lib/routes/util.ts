@@ -1,7 +1,9 @@
 import joi from 'joi';
 import { Response } from 'express';
 import { Logger } from '../logger';
-import { fromLegacyError, UnleashError } from '../error/unleash-error';
+import { UnleashError } from '../error/unleash-error';
+import { fromLegacyError } from '../error/from-legacy-error';
+import createError from 'http-errors';
 
 export const customJoi = joi.extend((j) => ({
     type: 'isUrlFriendly',
@@ -26,6 +28,17 @@ export const handleErrors: (
     logger: Logger,
     error: Error,
 ) => void = (res, logger, error) => {
+    if (createError.isHttpError(error)) {
+        return (
+            res
+                // @ts-expect-error http errors all have statuses, but there are no
+                // types provided
+                .status(error.status ?? 400)
+                .json({ message: error.message })
+                .end()
+        );
+    }
+
     const finalError =
         error instanceof UnleashError ? error : fromLegacyError(error);
 
@@ -39,15 +52,7 @@ export const handleErrors: (
         );
     }
 
-    logger.warn(
-        `Original error message: ${error.message}. Processed error message: "${
-            finalError.message
-        }" Error ID: "${finalError.id}". Full, serialized error: ${format(
-            finalError.toJSON(),
-        )}`,
-    );
-
-    if (['InternalError', 'UnknownError'].includes(finalError.name)) {
+    if (finalError.statusCode === 500) {
         logger.error(
             `Server failed executing request: ${format(error)}`,
             error,

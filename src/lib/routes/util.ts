@@ -48,7 +48,7 @@ export const handleErrors: (
         )}`,
     );
 
-    if (['InternalError', 'UnknownError'].includes(finalError.name)) {
+    if (finalError.statusCode === 500) {
         logger.error(
             `Server failed executing request: ${format(error)}`,
             error,

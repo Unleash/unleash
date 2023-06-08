@@ -79,7 +79,7 @@
     "@storybook/testing-library": "0.1.0",
     "@tsconfig/docusaurus": "1.0.7",
     "babel-loader": "9.1.2",
-    "enhanced-resolve": "5.14.0",
+    "enhanced-resolve": "5.14.1",
     "react-router": "6.11.2",
     "replace-in-file": "6.3.5",
     "storybook-addon-root-attribute": "1.0.2",

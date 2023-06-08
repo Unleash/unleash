@@ -52,14 +52,6 @@ export const handleErrors: (
         );
     }
 
-    logger.warn(
-        `Original error message: ${error.message}. Processed error message: "${
-            finalError.message
-        }" Error ID: "${finalError.id}". Full, serialized error: ${format(
-            finalError.toJSON(),
-        )}`,
-    );
-
     if (finalError.statusCode === 500) {
         logger.error(
             `Server failed executing request: ${format(error)}`,

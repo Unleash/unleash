@@ -40,7 +40,6 @@ process.nextTick(async () => {
                         responseTimeWithAppNameKillSwitch: false,
                         variantMetrics: true,
                         strategyImprovements: true,
-                        experimentalExtendedTelemetry: true,
                     },
                 },
                 authentication: {

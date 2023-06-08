@@ -172,7 +172,7 @@
     "@types/express-session": "1.17.7",
     "@types/faker": "5.5.9",
     "@types/hash-sum": "^1.0.0",
-    "@types/jest": "29.5.1",
+    "@types/jest": "29.5.2",
     "@types/js-yaml": "4.0.5",
     "@types/make-fetch-happen": "10.0.1",
     "@types/memoizee": "0.4.8",

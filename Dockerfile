@@ -16,7 +16,8 @@ RUN yarn build:backend
 
 RUN yarn local:package
 
-COPY ./frontend/build /unleash/build/frontend/build
+# frontend/build should already exist (it needs to be built in the local filesystem
+RUN mkdir -p /unleash/build/frontend && mv /unleash/frontend/build /unleash/build/frontend/build
 
 WORKDIR /unleash/docker
 

@@ -56,7 +56,7 @@ jobs:
               --data "{ \"body\": \"${1}\" }"
           }
 
-          echo "${{ toJSON(github.event.pull_request) }}"
+          echo "${{ toJSON(github.event) }}"
 
           set -x
           YARN_1="yarn --mutex network --cwd ./current"

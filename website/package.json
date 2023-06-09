@@ -43,7 +43,7 @@
   "resolutions": {
     "async": "^3.2.4",
     "trim": "^1.0.0",
-    "got": "^11.8.5",
+    "got": "^13.0.0",
     "glob-parent": "^6.0.0",
     "browserslist": "^4.16.5",
     "set-value": "^4.0.1",

@@ -2698,6 +2698,13 @@ The provider you choose for your addon dictates what properties the \`parameters
         "additionalProperties": false,
         "description": "An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)",
         "properties": {
+          "createdAt": {
+            "description": "When the project was last updated.",
+            "example": "2023-04-19T08:15:14.000Z",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
             "example": "userId",
@@ -2790,6 +2797,13 @@ The provider you choose for your addon dictates what properties the \`parameters
             "description": "The number of active feature toggles.",
             "example": 2,
             "type": "number",
+          },
+          "createdAt": {
+            "description": "When the project was last updated.",
+            "example": "2023-04-19T08:15:14.000Z",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
           },
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
@@ -3717,6 +3731,12 @@ The provider you choose for your addon dictates what properties the \`parameters
         "additionalProperties": false,
         "description": "A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.",
         "properties": {
+          "createdAt": {
+            "example": "2023-02-10T08:36:35.262Z",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
             "example": "userId",

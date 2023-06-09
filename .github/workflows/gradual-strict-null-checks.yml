@@ -1,6 +1,7 @@
 name: Lower null checks
 
 on:
+  pull_request:
   workflow_dispatch:
 
 concurrency:
@@ -46,7 +47,7 @@ jobs:
               -H "Authorization: token $GITHUB_TOKEN" \
               --data "{ \"body\": \"${1}\" }"
           }
-
+          set -x
           YARN_1="yarn --mutex network --cwd ./current"
           YARN_2="yarn --mutex network --cwd ./main"
 

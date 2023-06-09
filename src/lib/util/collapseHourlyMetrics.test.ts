@@ -108,3 +108,48 @@ test('collapseHourlyMetrics', () => {
         },
     ]);
 });
+
+test('collapseHourlyMetrics variants', () => {
+    const timestamp = startOfHour(new Date());
+
+    const metricAX1: IClientMetricsEnv = {
+        featureName: 'a',
+        appName: 'x',
+        environment: 'x',
+        timestamp: addMinutes(timestamp, 1),
+        yes: 1,
+        no: 11,
+    };
+
+    const metricAX2: IClientMetricsEnv = {
+        featureName: 'a',
+        appName: 'x',
+        environment: 'x',
+        timestamp: addMinutes(timestamp, 2),
+        yes: 2,
+        no: 12,
+        variants: { disabled: 3, red: 2 },
+    };
+
+    const metricAX3: IClientMetricsEnv = {
+        featureName: 'a',
+        appName: 'x',
+        environment: 'x',
+        timestamp: addMinutes(timestamp, 2),
+        yes: 2,
+        no: 12,
+        variants: { disabled: 1, red: 3 },
+    };
+
+    expect(collapseHourlyMetrics([metricAX1, metricAX2, metricAX3])).toEqual([
+        {
+            featureName: 'a',
+            appName: 'x',
+            environment: 'x',
+            timestamp,
+            yes: 5,
+            no: 35,
+            variants: { disabled: 4, red: 5 },
+        },
+    ]);
+});

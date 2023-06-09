@@ -13,6 +13,12 @@ import { Add } from '@mui/icons-material';
 import { ILegalValue } from 'interfaces/context';
 import { ContextFormChip } from 'component/context/ContectFormChip/ContextFormChip';
 import { ContextFormChipList } from 'component/context/ContectFormChip/ContextFormChipList';
+import { ContextFieldUsage } from '../ContextFieldUsage/ContextFieldUsage';
+import { useStrategiesByContext } from 'hooks/api/getters/useStrategiesByContext/useStrategiesByContext';
+import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
+import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
+import { FeatureStrategySegment } from '../../feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IContextForm {
     contextName: string;
@@ -101,6 +107,7 @@ export const ContextForm: React.FC<IContextForm> = ({
     const [value, setValue] = useState('');
     const [valueDesc, setValueDesc] = useState('');
     const [valueFocused, setValueFocused] = useState(false);
+    const { uiConfig } = useUiConfig();
 
     const isMissingValue = valueDesc.trim() && !value.trim();
 
@@ -263,6 +270,10 @@ export const ContextForm: React.FC<IContextForm> = ({
                     />
                     <Typography>{stickiness ? 'On' : 'Off'}</Typography>
                 </StyledSwitchContainer>
+                <ConditionallyRender
+                    condition={Boolean(uiConfig.flags.segmentContextFieldUsage)}
+                    show={<ContextFieldUsage contextName={contextName} />}
+                />
             </StyledContainer>
             <StyledButtonContainer>
                 {children}

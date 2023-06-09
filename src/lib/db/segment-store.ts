@@ -240,7 +240,7 @@ export default class SegmentStore implements ISegmentStore {
             throw new NotFoundError('No row');
         }
 
-        const segment: ISegment = {
+        return {
             id: row.id,
             name: row.name,
             description: row.description,
@@ -248,15 +248,13 @@ export default class SegmentStore implements ISegmentStore {
             constraints: row.constraints,
             createdBy: row.created_by,
             createdAt: row.created_at,
-            usedInProjects: row.used_in_projects
-                ? Number(row.used_in_projects)
-                : 0,
-            usedInFeatures: row.used_in_projects
-                ? Number(row.used_in_features)
-                : 0,
+            ...(row.used_in_projects && {
+                usedInProjects: Number(row.used_in_projects),
+            }),
+            ...(row.used_in_features && {
+                usedInFeatures: Number(row.used_in_features),
+            }),
         };
-
-        return segment;
     }
 
     destroy(): void {}

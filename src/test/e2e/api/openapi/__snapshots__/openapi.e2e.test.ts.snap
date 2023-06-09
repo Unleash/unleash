@@ -3720,6 +3720,12 @@ The provider you choose for your addon dictates what properties the \`parameters
         "additionalProperties": false,
         "description": "A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.",
         "properties": {
+          "createdAt": {
+            "example": "2023-02-10T08:36:35.262Z",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
             "example": "userId",

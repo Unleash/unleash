@@ -112,7 +112,7 @@ test('collapseHourlyMetrics', () => {
 test('collapseHourlyMetrics variants', () => {
     const timestamp = startOfHour(new Date());
 
-    const metricAX1: IClientMetricsEnv = {
+    const metricsWithoutVariant: IClientMetricsEnv = {
         featureName: 'a',
         appName: 'x',
         environment: 'x',
@@ -121,7 +121,7 @@ test('collapseHourlyMetrics variants', () => {
         no: 11,
     };
 
-    const metricAX2: IClientMetricsEnv = {
+    const metricsWithVariant1: IClientMetricsEnv = {
         featureName: 'a',
         appName: 'x',
         environment: 'x',
@@ -131,7 +131,7 @@ test('collapseHourlyMetrics variants', () => {
         variants: { disabled: 3, red: 2 },
     };
 
-    const metricAX3: IClientMetricsEnv = {
+    const metricsWithVariant2: IClientMetricsEnv = {
         featureName: 'a',
         appName: 'x',
         environment: 'x',
@@ -141,7 +141,13 @@ test('collapseHourlyMetrics variants', () => {
         variants: { disabled: 1, red: 3 },
     };
 
-    expect(collapseHourlyMetrics([metricAX1, metricAX2, metricAX3])).toEqual([
+    expect(
+        collapseHourlyMetrics([
+            metricsWithoutVariant,
+            metricsWithVariant1,
+            metricsWithVariant2,
+        ]),
+    ).toEqual([
         {
             featureName: 'a',
             appName: 'x',

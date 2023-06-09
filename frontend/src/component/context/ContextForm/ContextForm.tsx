@@ -14,11 +14,8 @@ import { ILegalValue } from 'interfaces/context';
 import { ContextFormChip } from 'component/context/ContectFormChip/ContextFormChip';
 import { ContextFormChipList } from 'component/context/ContectFormChip/ContextFormChipList';
 import { ContextFieldUsage } from '../ContextFieldUsage/ContextFieldUsage';
-import { useStrategiesByContext } from 'hooks/api/getters/useStrategiesByContext/useStrategiesByContext';
-import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
-import { FeatureStrategySegment } from '../../feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IContextForm {
     contextName: string;

@@ -1,10 +1,10 @@
 import { Alert, styled } from '@mui/material';
-import { formatEditStrategyPath } from '../../feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
-import { IFeatureStrategy } from '../../../interfaces/strategy';
+import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
+import { IFeatureStrategy } from 'interfaces/strategy';
 import { Link } from 'react-router-dom';
-import { formatStrategyName } from '../../../utils/strategyNames';
-import { useStrategiesByContext } from '../../../hooks/api/getters/useStrategiesByContext/useStrategiesByContext';
-import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
+import { formatStrategyName } from 'utils/strategyNames';
+import { useStrategiesByContext } from 'hooks/api/getters/useStrategiesByContext/useStrategiesByContext';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
 const StyledUl = styled('ul')(({ theme }) => ({
     listStyle: 'none',

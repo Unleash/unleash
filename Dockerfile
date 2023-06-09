@@ -8,9 +8,15 @@ COPY . /unleash
 
 RUN yarn config set network-timeout 300000
 
-RUN yarn install --frozen-lockfile && yarn local:package
+RUN yarn install --frozen-lockfile --ignore-scripts 
 
-RUN mkdir /unleash/build/frontend && cp -r /unleash/frontend/build /unleash/build/frontend/build
+RUN yarn copy-templates 
+
+RUN yarn build:backend 
+
+RUN yarn local:package
+
+COPY frontend/build /unleash/build/frontend/build
 
 WORKDIR /unleash/docker
 

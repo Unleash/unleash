@@ -1391,6 +1391,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "description": {
+            "nullable": true,
             "type": "string",
           },
           "legalValues": {
@@ -1407,6 +1408,18 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "stickiness": {
             "type": "boolean",
+          },
+          "usedInFeatures": {
+            "description": "Number of projects where this context field is used in",
+            "example": 3,
+            "nullable": true,
+            "type": "number",
+          },
+          "usedInProjects": {
+            "description": "Number of projects where this context field is used in",
+            "example": 2,
+            "nullable": true,
+            "type": "number",
           },
         },
         "required": [

@@ -98,6 +98,12 @@ export const projectOverviewSchema = {
             nullable: true,
             example: '2023-02-10T08:36:35.262Z',
         },
+        createdAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2023-02-10T08:36:35.262Z',
+        },
         favorite: {
             type: 'boolean',
             example: true,

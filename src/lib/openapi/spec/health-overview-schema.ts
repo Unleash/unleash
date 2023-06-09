@@ -91,6 +91,13 @@ export const healthOverviewSchema = {
             description: 'When the project was last updated.',
             example: '2023-04-19T08:15:14.000Z',
         },
+        createdAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            description: 'When the project was last updated.',
+            example: '2023-04-19T08:15:14.000Z',
+        },
         favorite: {
             type: 'boolean',
             description:

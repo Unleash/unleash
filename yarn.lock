@@ -7367,10 +7367,10 @@ universalify@^0.1.0:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
-unleash-client@3.20.0:
-  version "3.20.0"
-  resolved "https://registry.yarnpkg.com/unleash-client/-/unleash-client-3.20.0.tgz#1a6deb0e803eed0d0cefbed1bac17f3c3d3b0143"
-  integrity sha512-CXseZTHH+lfT3qZY7nufpPKbnNcWvdt61Pgc313spFnQBV63r24fhMmwvQcltc+pp2z/14p2mM6iq11R2PYw3g==
+unleash-client@3.21.0:
+  version "3.21.0"
+  resolved "https://registry.yarnpkg.com/unleash-client/-/unleash-client-3.21.0.tgz#a31ab30acb42abfb3a21180aa83e4415a3124ec1"
+  integrity sha512-I7eYhRyOia3oBZ9Tu1v+IlNO+XJgsjcMEO2+j+e4A7LTTKZvGoV8WPfDGGxiMPKBPHNUACkERB3YhCQ9jzTGoQ==
   dependencies:
     ip "^1.1.8"
     make-fetch-happen "^10.2.1"

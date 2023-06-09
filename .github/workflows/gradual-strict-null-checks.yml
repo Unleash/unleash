@@ -67,7 +67,9 @@ jobs:
 
           if [ $CURRENT -gt $MAIN ]; then
             comment "After enabling [\`strictNullChecks\`](https://www.typescriptlang.org/tsconfig#strictNullChecks) this PR would be **increasing** the number of null check errors from ${MAIN} to ${CURRENT}. <br /> Make sure your branch is up-to-date with ${MAIN_BRANCH} and **check the diff in the console output** to pinpoint the offending files."
-            diff .out-current .out-main
+            cat .out-current | sed 's/^/[out-current] /'
+            cat .out-main | sed 's/^/[out-main] /'
+            diff .out-current .out-main | sed 's/^/[diff] /'
             exit 1
           else
             echo "The PR has $CURRENT null check errors against $MAIN in main. You're good to go!"

@@ -75,7 +75,7 @@ const sharedDetails = {
         },
     ],
 };
-const shareEnv = [
+const sharedEnv = [
     {
         ...sharedDetails,
         context: {
@@ -122,8 +122,8 @@ export const fixedAdvancedPlaygroundResponse = {
     features: [
         {
             environments: {
-                development: shareEnv,
-                production: shareEnv,
+                development: sharedEnv,
+                production: sharedEnv,
             },
 
             projectId: 'default',
@@ -131,8 +131,8 @@ export const fixedAdvancedPlaygroundResponse = {
         },
         {
             environments: {
-                development: shareEnv,
-                production: shareEnv,
+                development: sharedEnv,
+                production: sharedEnv,
             },
 
             projectId: 'default',

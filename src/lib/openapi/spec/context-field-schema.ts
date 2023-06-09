@@ -12,6 +12,7 @@ export const contextFieldSchema = {
         },
         description: {
             type: 'string',
+            nullable: true,
         },
         stickiness: {
             type: 'boolean',
@@ -22,6 +23,20 @@ export const contextFieldSchema = {
         createdAt: {
             type: 'string',
             format: 'date-time',
+            nullable: true,
+        },
+        usedInFeatures: {
+            type: 'number',
+            description:
+                'Number of projects where this context field is used in',
+            example: 3,
+            nullable: true,
+        },
+        usedInProjects: {
+            type: 'number',
+            description:
+                'Number of projects where this context field is used in',
+            example: 2,
             nullable: true,
         },
         legalValues: {

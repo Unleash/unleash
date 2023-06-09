@@ -271,22 +271,11 @@ export class ContextController extends Controller {
         const contextFields =
             await this.contextService.getStrategiesByContextField(contextField);
 
-        // Remove unnecessary IFeatureStrategy fields from the response.
-        const contextFieldStrategies = contextFields.map((strategy) => ({
-            id: strategy.id,
-            projectId: strategy.projectId,
-            featureName: strategy.featureName,
-            strategyName: strategy.strategyName,
-            environment: strategy.environment,
-        }));
-
         this.openApiService.respondWithValidation(
             200,
             res,
             contextFieldStrategiesSchema.$id,
-            serializeDates({
-                strategies: contextFieldStrategies,
-            }),
+            serializeDates(contextFields),
         );
     }
 }

@@ -13,7 +13,7 @@ beforeAll(async () => {
     app = await setupAppWithCustomConfig(db.stores, {
         experimental: {
             flags: {
-                segmentContextFieldUsage: true,
+                strictSchemaValidation: true,
             },
         },
     });

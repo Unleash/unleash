@@ -8,7 +8,7 @@ import { IEventStore } from '../types/stores/event-store';
 import { IProjectStore } from '../types/stores/project-store';
 import { IFeatureStrategiesStore, IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
-import { IFeatureStrategy } from '../types';
+import { ContextFieldStrategiesSchema } from '../openapi/spec/context-field-strategies-schema';
 
 const { contextSchema, nameSchema } = require('./context-schema');
 const NameExistsError = require('../error/name-exists-error');
@@ -62,8 +62,18 @@ class ContextService {
 
     async getStrategiesByContextField(
         name: string,
-    ): Promise<IFeatureStrategy[]> {
-        return this.featureStrategiesStore.getStrategiesByContextField(name);
+    ): Promise<ContextFieldStrategiesSchema> {
+        const strategies =
+            await this.featureStrategiesStore.getStrategiesByContextField(name);
+        return {
+            strategies: strategies.map((strategy) => ({
+                id: strategy.id,
+                projectId: strategy.projectId,
+                featureName: strategy.featureName,
+                strategyName: strategy.strategyName,
+                environment: strategy.environment,
+            })),
+        };
     }
 
     async createContextField(

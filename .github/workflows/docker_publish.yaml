@@ -7,6 +7,11 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      ignore-push:
+        description: 'Ignore push to dockerhub. If not set the image will be pushed with the sha of the commit as tag'
+        required: false
+        type: boolean
 
 jobs:
   build:
@@ -34,6 +39,8 @@ jobs:
             type=semver,pattern={{ major }},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             # only enabled in main:
             type=edge,prefix=main-,suffix=-${{ matrix.version }},enable=${{ github.ref == 'refs/heads/main' }}
+            # only enabled on workflow_dispatch:
+            type=sha,suffix=-${{ matrix.version }},enable=${{ github.event_name == 'workflow_dispatch' }}
       - name: Login to docker hub
         uses: docker/login-action@v2
         with:
@@ -48,7 +55,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'workflow_dispatch' }}
+          push: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.ignore-push != 'true' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: NODE_VERSION=${{ matrix.version }}

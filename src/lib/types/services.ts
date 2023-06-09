@@ -26,7 +26,7 @@ import ClientMetricsServiceV2 from '../services/client-metrics/metrics-service-v
 import UserSplashService from '../services/user-splash-service';
 import { OpenApiService } from '../services/openapi-service';
 import { ClientSpecService } from '../services/client-spec-service';
-import { PlaygroundService } from 'lib/services/playground-service';
+import { PlaygroundService } from 'lib/features/playground/playground-service';
 import { GroupService } from '../services/group-service';
 import { ProxyService } from '../services/proxy-service';
 import EdgeService from '../services/edge-service';

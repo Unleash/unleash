@@ -29,4 +29,4 @@ export * from './validateJsonString';
 export * from './arraysHaveSameItems';
 export * from './constantTimeCompare';
 export * from './collapseHourlyMetrics';
-export * from './offline-unleash-client';
+export * from '../features/playground/offline-unleash-client';

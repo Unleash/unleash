@@ -7,7 +7,7 @@ import { IUnleashConfig, IUnleashServices, IUnleashStores } from '../types';
 import {
     mapFeaturesForClient,
     mapSegmentsForClient,
-} from '../util/offline-unleash-client';
+} from '../features/playground/offline-unleash-client';
 import { ALL_ENVS, ALL_PROJECTS } from '../util/constants';
 import { UnleashEvents } from 'unleash-client';
 import { Logger } from '../logger';

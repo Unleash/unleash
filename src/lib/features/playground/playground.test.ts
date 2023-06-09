@@ -10,9 +10,9 @@ import getApp from '../../app';
 import {
     playgroundRequestSchema,
     PlaygroundRequestSchema,
-} from '../../../lib/openapi/spec/playground-request-schema';
+} from '../../openapi/spec/playground-request-schema';
 
-import { generate as generateRequest } from '../../../lib/openapi/spec/playground-request-schema.test';
+import { generate as generateRequest } from '../../openapi/spec/playground-request-schema.test';
 import { clientFeatures } from '../../../test/arbitraries.test';
 
 async function getSetup() {

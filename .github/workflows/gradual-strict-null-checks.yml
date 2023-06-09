@@ -44,15 +44,20 @@ jobs:
           find_comment() {
             curl -L \
               -H "Accept: application/vnd.github+json" \
-              -H "Authorization: token $GITHUB_TOKEN"\
+              -H "Authorization: Bearer $GITHUB_TOKEN"\
               -H "X-GitHub-Api-Version: 2022-11-28" \
-              https://api.github.com/repos/OWNER/REPO/pulls/PULL_NUMBER/comments
+              $URL/comments
           }
 
           comment () {
+            if [ -z $URL ]; then
+              echo "Comment URL is not set"
+              exit 0
+            fi
+
             curl -X POST $URL \
-              -H "Content-Type: application/json" \
-              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
               --data "{ \"body\": \"${1}\" }"
           }
 
@@ -76,7 +81,7 @@ jobs:
           CURRENT=$(grep "Found [0-9]* errors" .out-current | sed 's/Found \(.*\) errors in .* files./\1/')
           MAIN=$(grep "Found [0-9]* errors" .out-main | sed 's/Found \(.*\) errors in .* files./\1/')
 
-          if [ $CURRENT -gt $MAIN ]; then
+          if [ $CURRENT -gt $MAIN ] || [ $MAIN -gt 5000 ]; then
             comment "After enabling [\`strictNullChecks\`](https://www.typescriptlang.org/tsconfig#strictNullChecks) this PR would be **increasing** the number of null check errors from ${MAIN} to ${CURRENT}. <br /> Make sure your branch is up-to-date with ${MAIN_BRANCH} and **check the diff in the console output** to pinpoint the offending files."
             cat .out-current | sed 's/^/[out-current] /'
             cat .out-main | sed 's/^/[out-main] /'

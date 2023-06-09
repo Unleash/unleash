@@ -16,7 +16,7 @@ RUN yarn build:backend
 
 RUN yarn local:package
 
-COPY frontend/build /unleash/build/frontend/build
+COPY ./frontend/build /unleash/build/frontend/build
 
 WORKDIR /unleash/docker
 

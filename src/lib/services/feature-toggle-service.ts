@@ -76,7 +76,7 @@ import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-o
 import {
     getDefaultStrategy,
     getProjectDefaultStrategy,
-} from '../util/feature-evaluator/helpers';
+} from '../features/playground/feature-evaluator/helpers';
 import { AccessService } from './access-service';
 import { User } from '../server-impl';
 import NoAccessError from '../error/no-access-error';

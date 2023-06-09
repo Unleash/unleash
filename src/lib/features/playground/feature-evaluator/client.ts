@@ -10,7 +10,7 @@ import {
 import { Context } from './context';
 import { SegmentForEvaluation } from './strategy/strategy';
 import { PlaygroundStrategySchema } from 'lib/openapi/spec/playground-strategy-schema';
-import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema';
+import { playgroundStrategyEvaluation } from '../../../openapi/spec/playground-strategy-schema';
 
 export type StrategyEvaluationResult = Pick<
     PlaygroundStrategySchema,

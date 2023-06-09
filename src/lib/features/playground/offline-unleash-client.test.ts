@@ -9,7 +9,7 @@ import {
     InMemStorageProvider as InMemStorageProviderNode,
 } from 'unleash-client';
 import { once } from 'events';
-import { playgroundStrategyEvaluation } from '../openapi/spec/playground-strategy-schema';
+import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema';
 
 export const offlineUnleashClientNode = async ({
     features,

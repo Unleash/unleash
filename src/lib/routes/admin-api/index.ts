@@ -5,7 +5,7 @@ import { FeatureTypeController } from './feature-type';
 import ArchiveController from './archive';
 import StrategyController from './strategy';
 import EventController from './event';
-import PlaygroundController from './playground';
+import PlaygroundController from '../../features/playground/playground';
 import MetricsController from './metrics';
 import UserController from './user/user';
 import ConfigController from './config';

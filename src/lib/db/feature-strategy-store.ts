@@ -646,6 +646,23 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return rows.map(mapRow);
     }
 
+    async getStrategiesByContextField(
+        contextFieldName: string,
+    ): Promise<IFeatureStrategy[]> {
+        const stopTimer = this.timer('getStrategiesByContextField');
+        const rows = await this.db
+            .select(this.prefixColumns())
+            .from<IFeatureStrategiesTable>(T.featureStrategies)
+            .where(
+                this.db.raw(
+                    "EXISTS (SELECT 1 FROM jsonb_array_elements(constraints) AS elem WHERE elem ->> 'contextName' = ?)",
+                    contextFieldName,
+                ),
+            );
+        stopTimer();
+        return rows.map(mapRow);
+    }
+
     prefixColumns(): string[] {
         return COLUMNS.map((c) => `${T.featureStrategies}.${c}`);
     }

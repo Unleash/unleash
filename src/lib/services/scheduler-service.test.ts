@@ -1,4 +1,5 @@
 import { SchedulerService } from './scheduler-service';
+import { LogProvider } from '../logger';
 
 function ms(timeMs) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));
@@ -6,7 +7,7 @@ function ms(timeMs) {
 
 const getLogger = () => {
     const records: any[] = [];
-    const logger = () => ({
+    const logger: LogProvider = () => ({
         error(...args: any[]) {
             records.push(args);
         },
@@ -14,17 +15,15 @@ const getLogger = () => {
         info() {},
         warn() {},
         fatal() {},
-        getRecords() {
-            return records;
-        },
     });
-    logger.getRecords = () => records;
+    const getRecords = () => records;
 
-    return logger;
+    return { logger, getRecords };
 };
 
 test('Schedules job immediately', async () => {
-    const schedulerService = new SchedulerService(getLogger());
+    const { logger } = getLogger();
+    const schedulerService = new SchedulerService(logger);
     const job = jest.fn();
 
     schedulerService.schedule(job, 10);
@@ -33,8 +32,21 @@ test('Schedules job immediately', async () => {
     schedulerService.stop();
 });
 
+test('Does not schedule job immediately when paused', async () => {
+    const { logger } = getLogger();
+    const schedulerService = new SchedulerService(logger);
+    const job = jest.fn();
+
+    schedulerService.pause();
+    schedulerService.schedule(job, 10);
+
+    expect(job).toBeCalledTimes(0);
+    schedulerService.stop();
+});
+
 test('Can schedule a single regular job', async () => {
-    const schedulerService = new SchedulerService(getLogger());
+    const { logger } = getLogger();
+    const schedulerService = new SchedulerService(logger);
     const job = jest.fn();
 
     schedulerService.schedule(job, 50);
@@ -44,8 +56,36 @@ test('Can schedule a single regular job', async () => {
     schedulerService.stop();
 });
 
+test('Scheduled job ignored in a paused mode', async () => {
+    const { logger } = getLogger();
+    const schedulerService = new SchedulerService(logger);
+    const job = jest.fn();
+
+    schedulerService.pause();
+    schedulerService.schedule(job, 50);
+    await ms(75);
+
+    expect(job).toBeCalledTimes(0);
+    schedulerService.stop();
+});
+
+test('Can resume paused job', async () => {
+    const { logger } = getLogger();
+    const schedulerService = new SchedulerService(logger);
+    const job = jest.fn();
+
+    schedulerService.pause();
+    schedulerService.schedule(job, 50);
+    schedulerService.resume();
+    await ms(75);
+
+    expect(job).toBeCalledTimes(1);
+    schedulerService.stop();
+});
+
 test('Can schedule multiple jobs at the same interval', async () => {
-    const schedulerService = new SchedulerService(getLogger());
+    const { logger } = getLogger();
+    const schedulerService = new SchedulerService(logger);
     const job = jest.fn();
     const anotherJob = jest.fn();
 
@@ -59,7 +99,8 @@ test('Can schedule multiple jobs at the same interval', async () => {
 });
 
 test('Can schedule multiple jobs at the different intervals', async () => {
-    const schedulerService = new SchedulerService(getLogger());
+    const { logger } = getLogger();
+    const schedulerService = new SchedulerService(logger);
     const job = jest.fn();
     const anotherJob = jest.fn();
 
@@ -73,7 +114,7 @@ test('Can schedule multiple jobs at the different intervals', async () => {
 });
 
 test('Can handle crash of a async job', async () => {
-    const logger = getLogger();
+    const { logger, getRecords } = getLogger();
     const schedulerService = new SchedulerService(logger);
     const job = async () => {
         await Promise.reject('async reason');
@@ -83,14 +124,14 @@ test('Can handle crash of a async job', async () => {
     await ms(75);
 
     schedulerService.stop();
-    expect(logger.getRecords()).toEqual([
+    expect(getRecords()).toEqual([
         ['scheduled job failed', 'async reason'],
         ['scheduled job failed', 'async reason'],
     ]);
 });
 
 test('Can handle crash of a sync job', async () => {
-    const logger = getLogger();
+    const { logger, getRecords } = getLogger();
     const schedulerService = new SchedulerService(logger);
     const job = () => {
         throw new Error('sync reason');
@@ -100,7 +141,7 @@ test('Can handle crash of a sync job', async () => {
     await ms(75);
 
     schedulerService.stop();
-    expect(logger.getRecords()).toEqual([
+    expect(getRecords()).toEqual([
         ['scheduled job failed', new Error('sync reason')],
         ['scheduled job failed', new Error('sync reason')],
     ]);

@@ -17,7 +17,9 @@ export async function loadIndexHTML(
         indexHTML = await res.text();
     } else {
         indexHTML = fs
-            .readFileSync(path.join(publicFolder, 'index.html'))
+            .readFileSync(
+                path.join(config.publicFolder || publicFolder, 'index.html'),
+            )
             .toString();
     }
 

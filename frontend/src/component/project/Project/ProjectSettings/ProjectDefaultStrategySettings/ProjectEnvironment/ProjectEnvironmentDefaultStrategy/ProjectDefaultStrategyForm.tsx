@@ -20,7 +20,6 @@ import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints';
 import { FeatureStrategyType } from 'component/feature/FeatureStrategy/FeatureStrategyType/FeatureStrategyType';
 import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle';
-import { CreateFeatureStrategySchema } from 'openapi';
 
 interface IProjectDefaultStrategyFormProps {
     projectId: string;
@@ -30,7 +29,7 @@ interface IProjectDefaultStrategyFormProps {
     onCancel?: () => void;
     loading: boolean;
     isChangeRequest?: boolean;
-    strategy: IFeatureStrategy | CreateFeatureStrategySchema;
+    strategy: Partial<IFeatureStrategy>;
     setStrategy: React.Dispatch<
         React.SetStateAction<Partial<IFeatureStrategy>>
     >;

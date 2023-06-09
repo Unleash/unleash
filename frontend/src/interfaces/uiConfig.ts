@@ -51,6 +51,8 @@ export interface IFlags {
     variantMetrics?: boolean;
     strategyImprovements?: boolean;
     disableBulkToggle?: boolean;
+    segmentContextFieldUsage?: boolean;
+    disableNotifications?: boolean;
 }
 
 export interface IVersionInfo {

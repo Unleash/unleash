@@ -140,6 +140,7 @@ module.exports = {
                         'how-to/how-to-add-sso-saml',
                         'how-to/how-to-add-sso-saml-keycloak',
                         'how-to/how-to-add-sso-google',
+                        'how-to/how-to-add-sso-azure-saml',
                         'how-to/how-to-setup-sso-keycloak-group-sync',
                     ],
                     type: 'category',

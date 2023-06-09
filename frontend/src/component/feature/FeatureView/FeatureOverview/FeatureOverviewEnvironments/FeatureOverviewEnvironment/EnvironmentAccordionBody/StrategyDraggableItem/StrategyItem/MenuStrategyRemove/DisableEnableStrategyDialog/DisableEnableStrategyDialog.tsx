@@ -18,7 +18,9 @@ export const DisableEnableStrategyDialog = ({
     const { projectId, environmentId } = props;
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const isChangeRequest = isChangeRequestConfigured(environmentId);
-    const { onSuggestEnable } = useSuggestEnableDisable({ ...props });
+    const { onSuggestEnable, onSuggestDisable } = useSuggestEnableDisable({
+        ...props,
+    });
     const { onEnable, onDisable } = useEnableDisable({ ...props });
     const disabled = Boolean(props.strategy?.disabled);
 
@@ -28,7 +30,7 @@ export const DisableEnableStrategyDialog = ({
             if (disabled) {
                 onSuggestEnable();
             } else {
-                onSuggestEnable();
+                onSuggestDisable();
             }
         } else {
             if (disabled) {
@@ -70,8 +72,8 @@ export const DisableEnableStrategyDialog = ({
                 }
                 elseShow={
                     <Alert severity="error">
-                        Enabling the strategy will change which users receive
-                        access to the feature.
+                        {disabled ? 'Enabling' : 'Disabling'} the strategy will
+                        change which users receive access to the feature.
                     </Alert>
                 }
             />

@@ -6,6 +6,7 @@ import {
 } from '../../lib/types/option';
 import getLogger from '../fixtures/no-logger';
 import { createConfig } from '../../lib/create-config';
+import path from 'path';
 
 function mergeAll<T>(objects: Partial<T>[]): T {
     return merge.all<T>(objects.filter((i) => i));
@@ -28,7 +29,8 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
                 embedProxyFrontend: true,
             },
         },
+        publicFolder: path.join(__dirname, '../examples'),
     };
-    const options = mergeAll<IUnleashOptions>([testConfig, config]);
+    const options = mergeAll<IUnleashOptions>([testConfig, config || {}]);
     return createConfig(options);
 }

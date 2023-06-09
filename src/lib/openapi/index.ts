@@ -5,6 +5,7 @@ import {
     addonSchema,
     addonsSchema,
     addonTypeSchema,
+    adminCountSchema,
     adminFeaturesQuerySchema,
     apiTokenSchema,
     apiTokensSchema,
@@ -151,6 +152,7 @@ import { clientMetricsEnvSchema } from './spec/client-metrics-env-schema';
 import { updateTagsSchema } from './spec/update-tags-schema';
 import { batchStaleSchema } from './spec/batch-stale-schema';
 import { createApplicationSchema } from './spec/create-application-schema';
+import { contextFieldStrategiesSchema } from './spec/context-field-strategies-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
@@ -182,6 +184,7 @@ interface OpenAPIV3DocumentWithServers extends OpenAPIV3.Document {
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas: UnleashSchemas = {
+    adminCountSchema,
     adminFeaturesQuerySchema,
     addonParameterSchema,
     addonSchema,
@@ -327,6 +330,7 @@ export const schemas: UnleashSchemas = {
     importTogglesSchema,
     importTogglesValidateSchema,
     importTogglesValidateItemSchema,
+    contextFieldStrategiesSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

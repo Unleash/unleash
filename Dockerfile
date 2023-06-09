@@ -8,7 +8,7 @@ COPY . /unleash
 
 RUN yarn config set network-timeout 300000
 
-RUN yarn install --frozen-lockfile && yarn run build && yarn run local:package
+RUN yarn install --frozen-lockfile && yarn local:package
 
 RUN mkdir /unleash/build/frontend && cp -r /unleash/frontend/build /unleash/build/frontend/build
 

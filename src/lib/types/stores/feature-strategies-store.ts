@@ -58,6 +58,9 @@ export interface IFeatureStrategiesStore
         newProjectId: string,
     ): Promise<void>;
     getStrategiesBySegment(segmentId: number): Promise<IFeatureStrategy[]>;
+    getStrategiesByContextField(
+        contextFieldName: string,
+    ): Promise<IFeatureStrategy[]>;
     updateSortOrder(id: string, sortOrder: number): Promise<void>;
     getAllByFeatures(
         features: string[],

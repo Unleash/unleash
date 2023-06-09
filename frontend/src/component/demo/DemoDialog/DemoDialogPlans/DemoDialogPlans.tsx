@@ -7,6 +7,17 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 const StyledDemoDialog = styled(DemoDialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
         maxWidth: theme.spacing(120),
+        [theme.breakpoints.down('md')]: {
+            padding: theme.spacing(3.75),
+            margin: theme.spacing(2.5),
+        },
+        [theme.breakpoints.down(768)]: {
+            padding: theme.spacing(6, 4, 4, 4),
+            margin: theme.spacing(2.5),
+            '& > p': {
+                fontSize: theme.typography.h1.fontSize,
+            },
+        },
     },
 }));
 
@@ -15,6 +26,14 @@ const StyledPlans = styled('div')(({ theme }) => ({
     gridTemplateColumns: 'auto auto auto',
     gap: theme.spacing(1),
     marginTop: theme.spacing(6),
+    justifyContent: 'center',
+    [theme.breakpoints.down('md')]: {
+        marginTop: theme.spacing(4.75),
+    },
+    [theme.breakpoints.down(768)]: {
+        gridTemplateColumns: 'auto',
+        marginTop: theme.spacing(3.5),
+    },
 }));
 
 const StyledPlan = styled('div')(({ theme }) => ({
@@ -26,9 +45,18 @@ const StyledPlan = styled('div')(({ theme }) => ({
     padding: theme.spacing(4, 3),
     '& > a': {
         whiteSpace: 'nowrap',
+        [theme.breakpoints.between(768, 'md')]: {
+            whiteSpace: 'normal',
+            height: theme.spacing(6.25),
+            lineHeight: 1.2,
+        },
     },
     height: theme.spacing(34),
     width: theme.spacing(34),
+    [theme.breakpoints.between(768, 'md')]: {
+        height: theme.spacing(36),
+        width: theme.spacing(27.5),
+    },
 }));
 
 const StyledCompareLink = styled('a')(({ theme }) => ({

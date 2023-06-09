@@ -39,6 +39,7 @@ class AuthenticationRequired extends UnleashError {
             ...super.toJSON(),
             path: this.path,
             type: this.type,
+            defaultHidden: this.defaultHidden,
             ...(this.options ? { options: this.options } : {}),
         };
     }

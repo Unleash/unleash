@@ -608,6 +608,30 @@ The provider you choose for your addon dictates what properties the \`parameters
         ],
         "type": "object",
       },
+      "adminCountSchema": {
+        "additionalProperties": false,
+        "description": "Contains total admin counts for an Unleash instance.",
+        "properties": {
+          "noPassword": {
+            "description": "Total number of admins that do not have a password set. May be SSO, but may also be users that did not set a password yet.",
+            "type": "number",
+          },
+          "password": {
+            "description": "Total number of admins that have a password set.",
+            "type": "number",
+          },
+          "service": {
+            "description": "Total number of service accounts that have the admin root role.",
+            "type": "number",
+          },
+        },
+        "required": [
+          "password",
+          "noPassword",
+          "service",
+        ],
+        "type": "object",
+      },
       "adminFeaturesQuerySchema": {
         "additionalProperties": false,
         "properties": {
@@ -1367,6 +1391,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "description": {
+            "nullable": true,
             "type": "string",
           },
           "legalValues": {
@@ -1384,9 +1409,68 @@ The provider you choose for your addon dictates what properties the \`parameters
           "stickiness": {
             "type": "boolean",
           },
+          "usedInFeatures": {
+            "description": "Number of projects where this context field is used in",
+            "example": 3,
+            "nullable": true,
+            "type": "number",
+          },
+          "usedInProjects": {
+            "description": "Number of projects where this context field is used in",
+            "example": 2,
+            "nullable": true,
+            "type": "number",
+          },
         },
         "required": [
           "name",
+        ],
+        "type": "object",
+      },
+      "contextFieldStrategiesSchema": {
+        "description": "A wrapper object containing all for strategies using a specific context field",
+        "properties": {
+          "strategies": {
+            "description": "List of strategies using the context field",
+            "items": {
+              "properties": {
+                "environment": {
+                  "description": "The ID of the environment where this strategy is in.",
+                  "type": "string",
+                },
+                "featureName": {
+                  "description": "The name of the feature that contains this strategy.",
+                  "example": "best-feature",
+                  "type": "string",
+                },
+                "id": {
+                  "description": "The ID of the strategy.",
+                  "example": "433ae8d9-dd69-4ad0-bc46-414aedbe9c55",
+                  "type": "string",
+                },
+                "projectId": {
+                  "description": "The ID of the project that contains this feature.",
+                  "type": "string",
+                },
+                "strategyName": {
+                  "description": "The name of the strategy.",
+                  "type": "string",
+                },
+              },
+              "required": [
+                "id",
+                "featureName",
+                "projectId",
+                "environment",
+                "strategyName",
+              ],
+              "type": "object",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "strategies",
         ],
         "type": "object",
       },
@@ -3120,6 +3204,9 @@ The provider you choose for your addon dictates what properties the \`parameters
         "additionalProperties": false,
         "properties": {
           "confirmPassword": {
+            "type": "string",
+          },
+          "oldPassword": {
             "type": "string",
           },
           "password": {
@@ -6682,6 +6769,36 @@ Note: passing \`null\` as a value for the description property will set it to an
         },
         "tags": [
           "Context",
+        ],
+      },
+    },
+    "/api/admin/context/{contextField}/strategies": {
+      "get": {
+        "operationId": "getStrategiesByContextField",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "contextField",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/contextFieldStrategiesSchema",
+                },
+              },
+            },
+            "description": "contextFieldStrategiesSchema",
+          },
+        },
+        "tags": [
+          "Strategies",
         ],
       },
     },
@@ -12522,6 +12639,26 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/user-admin/admin-count": {
+      "get": {
+        "operationId": "getAdminCount",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/adminCountSchema",
+                },
+              },
+            },
+            "description": "adminCountSchema",
+          },
+        },
+        "tags": [
+          "Users",
+        ],
+      },
+    },
     "/api/admin/user-admin/reset-password": {
       "post": {
         "operationId": "resetUserPassword",
@@ -12740,7 +12877,10 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "This response has no body.",
           },
           "400": {
-            "description": "passwordMismatch",
+            "description": "password mismatch",
+          },
+          "401": {
+            "description": "incorrect old password",
           },
         },
         "tags": [

@@ -72,6 +72,7 @@ export const createFakeExportImportTogglesService = (
             projectStore,
             eventStore,
             contextFieldStore,
+            featureStrategiesStore,
         },
         { getLogger },
     );
@@ -118,7 +119,12 @@ export const createExportImportTogglesService = (
     const featureToggleStore = new FeatureToggleStore(db, eventBus, getLogger);
     const tagStore = new TagStore(db, eventBus, getLogger);
     const tagTypeStore = new TagTypeStore(db, eventBus, getLogger);
-    const segmentStore = new SegmentStore(db, eventBus, getLogger);
+    const segmentStore = new SegmentStore(
+        db,
+        eventBus,
+        getLogger,
+        flagResolver,
+    );
     const projectStore = new ProjectStore(
         db,
         eventBus,
@@ -127,7 +133,11 @@ export const createExportImportTogglesService = (
     );
     const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
     const strategyStore = new StrategyStore(db, getLogger);
-    const contextFieldStore = new ContextFieldStore(db, getLogger);
+    const contextFieldStore = new ContextFieldStore(
+        db,
+        getLogger,
+        flagResolver,
+    );
     const featureStrategiesStore = new FeatureStrategiesStore(
         db,
         eventBus,
@@ -157,6 +167,7 @@ export const createExportImportTogglesService = (
             projectStore,
             eventStore,
             contextFieldStore,
+            featureStrategiesStore,
         },
         { getLogger },
     );

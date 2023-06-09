@@ -5,6 +5,7 @@ import { IEventStore } from '../types/stores/event-store';
 import SettingService from './setting-service';
 import { maintenanceSettingsKey } from '../types/settings/maintenance-settings';
 import { MaintenanceSchema } from '../openapi/spec/maintenance-schema';
+import { SchedulerService } from './scheduler-service';
 
 export default class MaintenanceService {
     private config: IUnleashConfig;
@@ -17,6 +18,8 @@ export default class MaintenanceService {
 
     private settingService: SettingService;
 
+    private schedulerService: SchedulerService;
+
     constructor(
         {
             patStore,
@@ -24,12 +27,14 @@ export default class MaintenanceService {
         }: Pick<IUnleashStores, 'patStore' | 'eventStore'>,
         config: IUnleashConfig,
         settingService: SettingService,
+        schedulerService: SchedulerService,
     ) {
         this.config = config;
         this.logger = config.getLogger('services/pat-service.ts');
         this.patStore = patStore;
         this.eventStore = eventStore;
         this.settingService = settingService;
+        this.schedulerService = schedulerService;
     }
 
     async isMaintenanceMode(): Promise<boolean> {
@@ -51,6 +56,11 @@ export default class MaintenanceService {
         setting: MaintenanceSchema,
         user: string,
     ): Promise<void> {
+        if (setting.enabled) {
+            this.schedulerService.pause();
+        } else {
+            this.schedulerService.resume();
+        }
         return this.settingService.insert(
             maintenanceSettingsKey,
             setting,

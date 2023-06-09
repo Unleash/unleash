@@ -85,7 +85,7 @@ export const SamlAuth = () => {
 
     return (
         <PageContent>
-            <Grid container style={{ marginBottom: '1rem' }}>
+            <Grid container sx={{ mb: 3 }}>
                 <Grid item md={12}>
                     <Alert severity="info">
                         Please read the{' '}

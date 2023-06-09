@@ -61,7 +61,11 @@ export const createStores = (
             getLogger,
             config.flagResolver,
         ),
-        contextFieldStore: new ContextFieldStore(db, getLogger),
+        contextFieldStore: new ContextFieldStore(
+            db,
+            getLogger,
+            config.flagResolver,
+        ),
         settingStore: new SettingStore(db, getLogger),
         userStore: new UserStore(db, getLogger),
         accountStore: new AccountStore(db, getLogger),
@@ -99,7 +103,12 @@ export const createStores = (
         ),
         userSplashStore: new UserSplashStore(db, eventBus, getLogger),
         roleStore: new RoleStore(db, eventBus, getLogger),
-        segmentStore: new SegmentStore(db, eventBus, getLogger),
+        segmentStore: new SegmentStore(
+            db,
+            eventBus,
+            getLogger,
+            config.flagResolver,
+        ),
         groupStore: new GroupStore(db),
         publicSignupTokenStore: new PublicSignupTokenStore(
             db,

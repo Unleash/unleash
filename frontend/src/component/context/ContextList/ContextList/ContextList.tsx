@@ -16,20 +16,23 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { AddContextButton } from './AddContextButton/AddContextButton';
+import { AddContextButton } from '../AddContextButton';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { sortTypes } from 'utils/sortTypes';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { ContextActionsCell } from './ContextActionsCell/ContextActionsCell';
+import { ContextActionsCell } from '../ContextActionsCell';
 import { Adjust } from '@mui/icons-material';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { UsedInCell } from '../UsedInCell';
 
 const ContextList: VFC = () => {
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [name, setName] = useState<string>();
     const { context, refetchUnleashContext, loading } = useUnleashContext();
     const { removeContext } = useContextsApi();
+    const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
 
     const data = useMemo(() => {
@@ -41,11 +44,21 @@ const ContextList: VFC = () => {
         }
 
         return context
-            .map(({ name, description, sortOrder }) => ({
-                name,
-                description,
-                sortOrder,
-            }))
+            .map(
+                ({
+                    name,
+                    description,
+                    sortOrder,
+                    usedInProjects,
+                    usedInFeatures,
+                }) => ({
+                    name,
+                    description,
+                    sortOrder,
+                    usedInProjects,
+                    usedInFeatures,
+                })
+            )
             .sort((a, b) => a.sortOrder - b.sortOrder);
     }, [context, loading]);
 
@@ -59,7 +72,7 @@ const ContextList: VFC = () => {
             {
                 Header: 'Name',
                 accessor: 'name',
-                width: '90%',
+                width: '70%',
                 Cell: ({
                     row: {
                         original: { name, description },
@@ -73,6 +86,17 @@ const ContextList: VFC = () => {
                 ),
                 sortType: 'alphanumeric',
             },
+            ...(uiConfig.flags.segmentContextFieldUsage
+                ? [
+                      {
+                          Header: 'Used in',
+                          width: '60%',
+                          Cell: ({ row: { original } }: any) => (
+                              <UsedInCell original={original} />
+                          ),
+                      },
+                  ]
+                : []),
             {
                 Header: 'Actions',
                 id: 'Actions',
@@ -104,7 +128,7 @@ const ContextList: VFC = () => {
                 sortType: 'number',
             },
         ],
-        []
+        [uiConfig.flags.segmentContextFieldUsage]
     );
 
     const initialState = useMemo(

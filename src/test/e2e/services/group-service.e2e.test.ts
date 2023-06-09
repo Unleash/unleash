@@ -104,7 +104,7 @@ test('adding a root role to a group with a project role should fail', async () =
         description: 'root_group',
     });
 
-    stores.accessStore.addGroupToRole(group.id, 1, 'test', 'default');
+    await stores.accessStore.addGroupToRole(group.id, 1, 'test', 'default');
 
     await expect(() => {
         return groupService.updateGroup(

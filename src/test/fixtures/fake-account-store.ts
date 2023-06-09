@@ -3,6 +3,7 @@ import {
     // ICreateUser,
     IUserLookup,
     IAccountStore,
+    IAdminCount,
 } from '../../lib/types/stores/account-store';
 
 export class FakeAccountStore implements IAccountStore {
@@ -91,6 +92,10 @@ export class FakeAccountStore implements IAccountStore {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async markSeenAt(secrets: string[]): Promise<void> {
+        throw new Error('Not implemented');
+    }
+
+    async getAdminCount(): Promise<IAdminCount> {
         throw new Error('Not implemented');
     }
 }

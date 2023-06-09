@@ -11,7 +11,7 @@ import {
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { CreateSegmentButton } from 'component/segments/CreateSegmentButton/CreateSegmentButton';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useMediaQuery } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useMemo, useState } from 'react';
@@ -28,10 +28,13 @@ import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { UsedInCell } from 'component/context/ContextList/UsedInCell';
 
 export const SegmentTable = () => {
     const projectId = useOptionalPathParam('projectId');
     const { segments, loading } = useSegments();
+    const { uiConfig } = useUiConfig();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [initialState] = useState({
         sortBy: [{ id: 'createdAt' }],
@@ -56,6 +59,10 @@ export const SegmentTable = () => {
         return segments;
     }, [segments, projectId]);
 
+    const columns = useMemo(
+        () => getColumns(uiConfig.flags.segmentContextFieldUsage),
+        [uiConfig.flags.segmentContextFieldUsage]
+    );
     const {
         getTableProps,
         getTableBodyProps,
@@ -68,7 +75,7 @@ export const SegmentTable = () => {
     } = useTable(
         {
             initialState,
-            columns: COLUMNS as any,
+            columns: columns as any,
             data: data as any,
             sortTypes,
             autoResetGlobalFilter: false,
@@ -95,7 +102,7 @@ export const SegmentTable = () => {
             },
         ],
         setHiddenColumns,
-        COLUMNS
+        columns
     );
 
     return (
@@ -170,7 +177,7 @@ export const SegmentTable = () => {
     );
 };
 
-const COLUMNS = [
+const getColumns = (segmentContextFieldUsage?: boolean) => [
     {
         id: 'Icon',
         width: '1%',
@@ -182,10 +189,30 @@ const COLUMNS = [
         Header: 'Name',
         accessor: 'name',
         width: '60%',
-        Cell: ({ value, row: { original } }: any) => (
-            <HighlightCell value={value} subtitle={original.description} />
+        Cell: ({
+            row: {
+                original: { name, description, id },
+            },
+        }: any) => (
+            <LinkCell
+                title={name}
+                to={`/segments/edit/${id}`}
+                subtitle={description}
+            />
         ),
     },
+    ...(segmentContextFieldUsage
+        ? [
+              {
+                  Header: 'Used in',
+                  width: '60%',
+                  Cell: ({ row: { original } }: any) => (
+                      <UsedInCell original={original} />
+                  ),
+              },
+          ]
+        : []),
+
     {
         Header: 'Project',
         accessor: 'project',

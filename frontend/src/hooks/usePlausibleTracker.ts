@@ -25,6 +25,7 @@ export type CustomEvents =
     | 'notifications'
     | 'batch_operations'
     | 'strategyTitle'
+    | 'strategyImprovements'
     | 'default_strategy'
     | 'demo'
     | 'demo-start'

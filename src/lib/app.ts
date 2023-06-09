@@ -40,7 +40,7 @@ export default async function getApp(
     const app = express();
 
     const baseUriPath = config.server.baseUriPath || '';
-    const publicFolder = findPublicFolder();
+    const publicFolder = config.publicFolder || findPublicFolder();
     let indexHTML = await loadIndexHTML(config, publicFolder);
 
     app.set('trust proxy', true);
@@ -65,6 +65,11 @@ export default async function getApp(
 
     app.use(compression());
     app.use(cookieParser());
+
+    app.use((req, res, next) => {
+        req.url = req.url.replace(/\/+/g, '/');
+        next();
+    });
 
     app.use(
         `${baseUriPath}/api/admin/features-batch`,
@@ -92,7 +97,6 @@ export default async function getApp(
     if (config.enableOAS && services.openApiService) {
         services.openApiService.useDocs(app);
     }
-
     // Support CORS preflight requests for the frontend endpoints.
     // Preflight requests should not have Authorization headers,
     // so this must be handled before the API token middleware.

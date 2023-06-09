@@ -11,7 +11,7 @@ export const rewriteHTML = (
     const faviconPrefix = cdnPrefix ? 'https://cdn.getunleash.io' : '';
     result = result.replace(/::faviconPrefix::/gi, faviconPrefix);
 
-    result = result.replace(/::uiFlags::/gi, uiFlags);
+    result = result.replace(/::uiFlags::/gi, uiFlags || '{}');
 
     result = result.replace(
         /\/static/gi,

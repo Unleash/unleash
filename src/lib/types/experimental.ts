@@ -22,7 +22,9 @@ export type IFlagKey =
     | 'googleAuthEnabled'
     | 'variantMetrics'
     | 'disableBulkToggle'
-    | 'experimentalExtendedTelemetry';
+    | 'experimentalExtendedTelemetry'
+    | 'segmentContextFieldUsage'
+    | 'disableNotifications';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -97,6 +99,18 @@ const flags: IFlags = {
     ),
     experimentalExtendedTelemetry: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_TELEMETRY,
+        false,
+    ),
+    disableBulkToggle: parseEnvVarBoolean(
+        process.env.DISABLE_BULK_TOGGLE,
+        false,
+    ),
+    segmentContextFieldUsage: parseEnvVarBoolean(
+        process.env.UNLEASH_SSEGMENT_CONTEXT_FIELD_USAGE,
+        false,
+    ),
+    disableNotifications: parseEnvVarBoolean(
+        process.env.DISABLE_NOTIFICATIONS,
         false,
     ),
 };

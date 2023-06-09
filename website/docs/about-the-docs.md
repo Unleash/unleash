@@ -4,10 +4,6 @@ slug: /
 sidebar_position: 1
 ---
 
-:::note
-The docs are currently undergoing some heavy restructuring and development 👷‍♀️👷🏽 If something is unclear, don't hesitate to [let us know on GitHub Discussions](https://github.com/orgs/Unleash/discussions)!
-:::
-
 Welcome to the Unleash documentation, your one-stop shop to everything Unleash. Whether you're just getting started or have been using Unleash for years, you should be able to find answers to all your questions here.
 
 ## Getting help

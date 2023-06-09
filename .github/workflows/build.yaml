@@ -41,12 +41,12 @@ jobs:
       - run: yarn
       - run: yarn build:frontend
       - run: yarn lint
-      - run: yarn run test
+      - run: yarn run test:report # This adds test results as github check to the workflow
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

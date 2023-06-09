@@ -1,7 +1,9 @@
 import joi from 'joi';
 import { Response } from 'express';
 import { Logger } from '../logger';
-import { fromLegacyError, UnleashError } from '../error/unleash-error';
+import { UnleashError } from '../error/unleash-error';
+import { fromLegacyError } from '../error/from-legacy-error';
+import createError from 'http-errors';
 
 export const customJoi = joi.extend((j) => ({
     type: 'isUrlFriendly',
@@ -26,21 +28,35 @@ export const handleErrors: (
     logger: Logger,
     error: Error,
 ) => void = (res, logger, error) => {
-    const finalError =
-        error instanceof UnleashError ? error : fromLegacyError(error);
-
-    if (!(error instanceof UnleashError)) {
-        logger.warn(
-            `I encountered an error that wasn't an instance of the \`UnleashError\` type. This probably means that we had an unexpected crash. The original error and what it was mapped to are:`,
-            error,
-            finalError,
+    if (createError.isHttpError(error)) {
+        return (
+            res
+                // @ts-expect-error http errors all have statuses, but there are no
+                // types provided
+                .status(error.status ?? 400)
+                .json({ message: error.message })
+                .end()
         );
     }
 
-    logger.warn(finalError.id, finalError.message);
+    const finalError =
+        error instanceof UnleashError ? error : fromLegacyError(error);
 
-    if (['InternalError', 'UnknownError'].includes(finalError.name)) {
-        logger.error('Server failed executing request', error);
+    const format = (thing: object) => JSON.stringify(thing, null, 2);
+
+    if (!(error instanceof UnleashError)) {
+        logger.debug(
+            `I encountered an error that wasn't an instance of the \`UnleashError\` type. The original error was: ${format(
+                error,
+            )}. It was mapped to ${format(finalError.toJSON())}`,
+        );
+    }
+
+    if (finalError.statusCode === 500) {
+        logger.error(
+            `Server failed executing request: ${format(error)}`,
+            error,
+        );
     }
 
     return res.status(finalError.statusCode).json(finalError).end();

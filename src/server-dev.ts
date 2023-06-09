@@ -40,6 +40,7 @@ process.nextTick(async () => {
                         responseTimeWithAppNameKillSwitch: false,
                         variantMetrics: true,
                         strategyImprovements: true,
+                        segmentContextFieldUsage: true,
                     },
                 },
                 authentication: {

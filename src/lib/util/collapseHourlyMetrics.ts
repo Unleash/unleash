@@ -51,7 +51,7 @@ export const collapseHourlyMetrics = (
             if (metric.variants) {
                 grouped[key].variants = mergeRecords(
                     metric.variants,
-                    grouped[key].variants,
+                    grouped[key].variants ?? {},
                 );
             }
         }

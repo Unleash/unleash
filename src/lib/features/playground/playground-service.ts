@@ -1,13 +1,13 @@
-import FeatureToggleService from './feature-toggle-service';
+import FeatureToggleService from '../../services/feature-toggle-service';
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { IUnleashServices } from 'lib/types/services';
-import { ALL } from '../../lib/types/models/api-token';
+import { ALL } from '../../types/models/api-token';
 import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
-import { Logger } from '../logger';
+import { Logger } from '../../logger';
 import { IUnleashConfig } from 'lib/types';
-import { offlineUnleashClient } from '../util/offline-unleash-client';
-import { FeatureInterface } from 'lib/util/feature-evaluator/feature';
-import { FeatureStrategiesEvaluationResult } from 'lib/util/feature-evaluator/client';
+import { offlineUnleashClient } from './offline-unleash-client';
+import { FeatureInterface } from 'lib/features/playground/feature-evaluator/feature';
+import { FeatureStrategiesEvaluationResult } from 'lib/features/playground/feature-evaluator/client';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 
 export class PlaygroundService {

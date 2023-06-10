@@ -193,6 +193,7 @@ export interface IProjectOverview {
     health: number;
     favorite?: boolean;
     updatedAt?: Date;
+    createdAt: Date | undefined;
     stats?: IProjectStats;
     mode: ProjectMode;
 

@@ -107,7 +107,7 @@ class ProjectStore implements IProjectStore {
         }
         let selectColumns = [
             this.db.raw(
-                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features',
+                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.created_at, count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features',
             ),
         ] as (string | Raw<any>)[];
 
@@ -164,6 +164,7 @@ class ProjectStore implements IProjectStore {
             featureCount: Number(row.number_of_features) || 0,
             memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,
+            createdAt: row.created_at,
             mode: 'open',
             defaultStickiness: 'default',
         };

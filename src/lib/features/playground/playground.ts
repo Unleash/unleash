@@ -2,18 +2,18 @@ import { Request, Response } from 'express';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { NONE } from '../../types/permissions';
-import Controller from '../controller';
+import Controller from '../../routes/controller';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { endpointDescriptions } from '../../openapi/endpoint-descriptions';
-import { getStandardResponses } from '../../../lib/openapi/util/standard-responses';
-import { createRequestSchema } from '../../../lib/openapi/util/create-request-schema';
+import { getStandardResponses } from '../../openapi/util/standard-responses';
+import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     PlaygroundResponseSchema,
     playgroundResponseSchema,
-} from '../../../lib/openapi/spec/playground-response-schema';
-import { PlaygroundRequestSchema } from '../../../lib/openapi/spec/playground-request-schema';
-import { PlaygroundService } from '../../../lib/services/playground-service';
+} from '../../openapi/spec/playground-response-schema';
+import { PlaygroundRequestSchema } from '../../openapi/spec/playground-request-schema';
+import { PlaygroundService } from './playground-service';
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;

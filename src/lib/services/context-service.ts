@@ -6,8 +6,9 @@ import {
 } from '../types/stores/context-field-store';
 import { IEventStore } from '../types/stores/event-store';
 import { IProjectStore } from '../types/stores/project-store';
-import { IUnleashStores } from '../types/stores';
+import { IFeatureStrategiesStore, IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
+import { ContextFieldStrategiesSchema } from '../openapi/spec/context-field-strategies-schema';
 
 const { contextSchema, nameSchema } = require('./context-schema');
 const NameExistsError = require('../error/name-exists-error');
@@ -25,6 +26,8 @@ class ContextService {
 
     private contextFieldStore: IContextFieldStore;
 
+    private featureStrategiesStore: IFeatureStrategiesStore;
+
     private logger: Logger;
 
     constructor(
@@ -32,15 +35,20 @@ class ContextService {
             projectStore,
             eventStore,
             contextFieldStore,
+            featureStrategiesStore,
         }: Pick<
             IUnleashStores,
-            'projectStore' | 'eventStore' | 'contextFieldStore'
+            | 'projectStore'
+            | 'eventStore'
+            | 'contextFieldStore'
+            | 'featureStrategiesStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
         this.projectStore = projectStore;
         this.eventStore = eventStore;
         this.contextFieldStore = contextFieldStore;
+        this.featureStrategiesStore = featureStrategiesStore;
         this.logger = getLogger('services/context-service.js');
     }
 
@@ -50,6 +58,22 @@ class ContextService {
 
     async getContextField(name: string): Promise<IContextField> {
         return this.contextFieldStore.get(name);
+    }
+
+    async getStrategiesByContextField(
+        name: string,
+    ): Promise<ContextFieldStrategiesSchema> {
+        const strategies =
+            await this.featureStrategiesStore.getStrategiesByContextField(name);
+        return {
+            strategies: strategies.map((strategy) => ({
+                id: strategy.id,
+                projectId: strategy.projectId,
+                featureName: strategy.featureName,
+                strategyName: strategy.strategyName,
+                environment: strategy.environment,
+            })),
+        };
     }
 
     async createContextField(

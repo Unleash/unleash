@@ -1,4 +1,4 @@
-import { IStrategyConfig } from '../../types';
+import { IStrategyConfig } from '../../../types';
 import { FeatureStrategiesEvaluationResult } from './client';
 import { Context } from './context';
 

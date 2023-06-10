@@ -35,6 +35,17 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(newStrat);
     }
 
+    async getStrategiesByContextField(
+        contextFieldName: string,
+    ): Promise<IFeatureStrategy[]> {
+        const strategies = this.featureStrategies.filter((strategy) =>
+            strategy.constraints.some(
+                (constraint) => constraint.contextName === contextFieldName,
+            ),
+        );
+        return Promise.resolve(strategies);
+    }
+
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async createFeature(feature: any): Promise<void> {
         this.featureToggles.push({

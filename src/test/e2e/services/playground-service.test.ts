@@ -1,4 +1,4 @@
-import { PlaygroundService } from '../../../lib/services/playground-service';
+import { PlaygroundService } from '../../../lib/features/playground/playground-service';
 import {
     clientFeaturesAndSegments,
     commonISOTimestamp,
@@ -12,7 +12,7 @@ import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { FeatureToggle, ISegment, WeightType } from '../../../lib/types/model';
 import { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
-import { offlineUnleashClientNode } from '../../../lib/util/offline-unleash-client.test';
+import { offlineUnleashClientNode } from '../../../lib/features/playground/offline-unleash-client.test';
 import { ClientFeatureSchema } from 'lib/openapi/spec/client-feature-schema';
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { SegmentSchema } from 'lib/openapi/spec/segment-schema';

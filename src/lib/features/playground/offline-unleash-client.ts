@@ -3,7 +3,7 @@ import { InMemStorageProvider, FeatureEvaluator } from './feature-evaluator';
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
 import { Segment } from './feature-evaluator/strategy/strategy';
 import { ISegment } from 'lib/types/model';
-import { serializeDates } from '../../lib/types/serialize-dates';
+import { serializeDates } from '../../types/serialize-dates';
 import { Operator } from './feature-evaluator/constraint';
 import { FeatureInterface } from 'unleash-client/lib/feature';
 import { PayloadType } from 'unleash-client';

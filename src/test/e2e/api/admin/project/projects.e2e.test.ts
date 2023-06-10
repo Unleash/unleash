@@ -42,3 +42,19 @@ test('Should ONLY return default project', async () => {
     expect(body.projects).toHaveLength(1);
     expect(body.projects[0].id).toBe('default');
 });
+
+test('response should include created_at', async () => {
+    const { body } = await app.request
+        .get('/api/admin/projects')
+        .expect('Content-Type', /json/)
+        .expect(200);
+    expect(body.projects[0].createdAt).toBeDefined();
+});
+
+test('response for default project should include created_at', async () => {
+    const { body } = await app.request
+        .get('/api/admin/projects/default')
+        .expect('Content-Type', /json/)
+        .expect(200);
+    expect(body.createdAt).toBeDefined();
+});

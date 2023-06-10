@@ -1,4 +1,4 @@
-import { playgroundStrategyEvaluation } from '../../../openapi/spec/playground-strategy-schema';
+import { playgroundStrategyEvaluation } from '../../../../openapi/spec/playground-strategy-schema';
 import { StrategyEvaluationResult } from '../client';
 import { Constraint } from '../constraint';
 import { Context } from '../context';

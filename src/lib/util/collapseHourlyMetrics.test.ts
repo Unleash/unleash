@@ -108,3 +108,54 @@ test('collapseHourlyMetrics', () => {
         },
     ]);
 });
+
+test('collapseHourlyMetrics variants', () => {
+    const timestamp = startOfHour(new Date());
+
+    const metricsWithoutVariant: IClientMetricsEnv = {
+        featureName: 'a',
+        appName: 'x',
+        environment: 'x',
+        timestamp: addMinutes(timestamp, 1),
+        yes: 1,
+        no: 11,
+    };
+
+    const metricsWithVariant1: IClientMetricsEnv = {
+        featureName: 'a',
+        appName: 'x',
+        environment: 'x',
+        timestamp: addMinutes(timestamp, 2),
+        yes: 2,
+        no: 12,
+        variants: { disabled: 3, red: 2 },
+    };
+
+    const metricsWithVariant2: IClientMetricsEnv = {
+        featureName: 'a',
+        appName: 'x',
+        environment: 'x',
+        timestamp: addMinutes(timestamp, 2),
+        yes: 2,
+        no: 12,
+        variants: { disabled: 1, red: 3 },
+    };
+
+    expect(
+        collapseHourlyMetrics([
+            metricsWithoutVariant,
+            metricsWithVariant1,
+            metricsWithVariant2,
+        ]),
+    ).toEqual([
+        {
+            featureName: 'a',
+            appName: 'x',
+            environment: 'x',
+            timestamp,
+            yes: 5,
+            no: 35,
+            variants: { disabled: 4, red: 5 },
+        },
+    ]);
+});

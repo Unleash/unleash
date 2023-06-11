@@ -5,7 +5,6 @@ export const createApplicationSchema = {
     type: 'object',
     additionalProperties: true,
     description: 'Reported application information from Unleash SDKs',
-    required: [],
     properties: {
         appName: {
             description: 'Name of the application',

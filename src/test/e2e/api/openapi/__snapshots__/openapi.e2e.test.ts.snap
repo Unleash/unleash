@@ -1576,7 +1576,6 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
         },
-        "required": [],
         "type": "object",
       },
       "createFeatureSchema": {

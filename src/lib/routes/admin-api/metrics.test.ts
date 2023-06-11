@@ -84,6 +84,20 @@ test('should store application', () => {
         .expect(202);
 });
 
+test('should store application coming from edit application form', () => {
+    expect.assertions(0);
+    const appName = '123!23';
+
+    return request
+        .post(`/api/admin/metrics/applications/${appName}`)
+        .send({
+            url: 'http://test.com',
+            description: 'This is an optional description',
+            icon: 'arrow-down',
+        })
+        .expect(202);
+});
+
 test('should store application details without strategies', () => {
     expect.assertions(0);
     const appName = '123!23';

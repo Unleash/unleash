@@ -2737,14 +2737,15 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "healthCheckSchema": {
         "additionalProperties": false,
-        "description": "Used by service orchestrators to decide if instance should be marked as healthy or unhealthy",
+        "description": "Used by service orchestrators to decide whether this Unleash instance should be marked as healthy or unhealthy",
         "properties": {
           "health": {
-            "description": "The state this instance is in. GOOD if everything is ok, BAD if instance should be restarted",
+            "description": "The state this Unleash instance is in. GOOD if everything is ok, BAD if the instance should be restarted",
             "enum": [
               "GOOD",
               "BAD",
             ],
+            "example": "GOOD",
             "type": "string",
           },
         },
@@ -13728,7 +13729,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/health": {
       "get": {
-        "description": "Tells operators if the instance is healthy and ready to serve requests or not",
+        "description": "This operation returns information about whether this Unleash instance is healthy and ready to serve requests or not. Typically used by your deployment orchestrator (e.g. Kubernetes, Docker Swarm, Mesos, et al.).",
         "operationId": "getHealth",
         "responses": {
           "200": {
@@ -13752,7 +13753,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "healthCheckSchema",
           },
         },
-        "summary": "The status of the instance",
+        "summary": "Get instance operational status",
         "tags": [
           "Operational",
         ],

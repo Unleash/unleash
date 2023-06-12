@@ -40,8 +40,12 @@ const mapRow = (row: ContextFieldDB): IContextField => ({
     sortOrder: row.sort_order,
     legalValues: row.legal_values || [],
     createdAt: row.created_at,
-    usedInProjects: row.used_in_projects ? Number(row.used_in_projects) : 0,
-    usedInFeatures: row.used_in_projects ? Number(row.used_in_features) : 0,
+    ...(row.used_in_projects && {
+        usedInProjects: Number(row.used_in_projects),
+    }),
+    ...(row.used_in_features && {
+        usedInFeatures: Number(row.used_in_features),
+    }),
 });
 
 interface ICreateContextField {

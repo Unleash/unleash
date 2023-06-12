@@ -207,10 +207,10 @@ class FeatureToggleService {
 
         if (id !== projectId) {
             throw new NotFoundError(
-                `There's no feature named ${featureName} in project ${projectId} ${
+                `There's no feature named "${featureName}" in project "${projectId}"${
                     id === undefined
                         ? '.'
-                        : `, but there's a feature by that name in project "${id}"`
+                        : `, but there's a feature with that name in project "${id}"`
                 }`,
             );
         }

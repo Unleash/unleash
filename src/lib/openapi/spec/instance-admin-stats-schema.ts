@@ -109,7 +109,7 @@ export const instanceAdminStatsSchema = {
                     count: {
                         type: 'number',
                         description:
-                            'The number of client applications that has been observed in this period',
+                            'The number of client applications that have been observed in this period',
                         example: 1,
                     },
                 },

@@ -63,7 +63,7 @@ class InstanceAdminController extends Controller {
                     summary:
                         'An overview of usage of various features of Unleash',
                     description:
-                        'Lists number of users, groups, features, strategies to allow for reporting of usage for self-hosted customers',
+                        'Provides statistics about various features of Unleash to allow for reporting of usage for self-hosted customers. The response contains data such as the number of users, groups, features, strategies, versions, etc.',
                     responses: {
                         200: createResponseSchema('instanceAdminStatsSchema'),
                     },

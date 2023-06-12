@@ -4,6 +4,7 @@ import { IProjectCard } from 'interfaces/project';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { Link } from 'react-router-dom';
 import { formatStrategyName } from 'utils/strategyNames';
+import { usePlausibleTracker } from '../../hooks/usePlausibleTracker';
 
 const StyledUl = styled('ul')(({ theme }) => ({
     listStyle: 'none',
@@ -27,10 +28,19 @@ export const SegmentProjectAlert = ({
     projectsUsed,
     availableProjects,
 }: ISegmentProjectAlertProps) => {
+    const { trackEvent } = usePlausibleTracker();
+
+    const trackClick = () => {
+        trackEvent('segment-usage', {
+            props: {
+                eventType: 'segment usage browsed',
+            },
+        });
+    };
     const projectList = (
         <StyledUl>
             {Array.from(projectsUsed).map(projectId => (
-                <li key={projectId}>
+                <li key={projectId} onClick={trackClick}>
                     <Link
                         to={`/projects/${projectId}`}
                         target="_blank"

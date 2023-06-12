@@ -11,7 +11,7 @@ export interface IFeatureToggleQuery {
 export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     count(query?: Partial<IFeatureToggleQuery>): Promise<number>;
     setLastSeen(toggleNames: string[]): Promise<void>;
-    getProjectId(name: string): Promise<string>;
+    getProjectId(name: string): Promise<string | undefined>;
     create(project: string, data: FeatureToggleDTO): Promise<FeatureToggle>;
     update(project: string, data: FeatureToggleDTO): Promise<FeatureToggle>;
     archive(featureName: string): Promise<FeatureToggle>;

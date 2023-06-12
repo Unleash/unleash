@@ -33,7 +33,7 @@ export class HealthCheckController extends Controller {
                     operationId: 'getHealth',
                     summary: 'Get instance operational status',
                     description:
-                        'This operation returns information about whether this Unleash instance is healthy and ready to serve requests or not. Typically used by operators.',
+                        'This operation returns information about whether this Unleash instance is healthy and ready to serve requests or not. Typically used by your deployment orchestrator (e.g. Kubernetes, Docker Swarm, Mesos, et al.).',
                     responses: {
                         200: createResponseSchema('healthCheckSchema'),
                         500: createResponseSchema('healthCheckSchema'),

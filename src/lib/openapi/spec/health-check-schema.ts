@@ -4,7 +4,7 @@ export const healthCheckSchema = {
     $id: '#/components/schemas/healthCheckSchema',
     type: 'object',
     description:
-        'Used by service orchestrators to decide if instance should be marked as healthy or unhealthy',
+        'Used by service orchestrators to decide whether this Unleash instance should be marked as healthy or unhealthy',
     additionalProperties: false,
     required: ['health'],
     properties: {

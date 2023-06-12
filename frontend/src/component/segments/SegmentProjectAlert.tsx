@@ -4,7 +4,7 @@ import { IProjectCard } from 'interfaces/project';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { Link } from 'react-router-dom';
 import { formatStrategyName } from 'utils/strategyNames';
-import { usePlausibleTracker } from '../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledUl = styled('ul')(({ theme }) => ({
     listStyle: 'none',
@@ -33,7 +33,7 @@ export const SegmentProjectAlert = ({
     const trackClick = () => {
         trackEvent('segment-usage', {
             props: {
-                eventType: 'segment usage browsed',
+                eventType: 'segment usage viewed',
             },
         });
     };

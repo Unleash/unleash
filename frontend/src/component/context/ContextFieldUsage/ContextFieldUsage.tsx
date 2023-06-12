@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useStrategiesByContext } from 'hooks/api/getters/useStrategiesByContext/useStrategiesByContext';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledUl = styled('ul')(({ theme }) => ({
     listStyle: 'none',
@@ -28,7 +28,7 @@ export const ContextFieldUsage = ({ contextName }: IContextFieldUsageProps) => {
     const trackClick = () => {
         trackEvent('context-usage', {
             props: {
-                eventType: 'context usage browsed',
+                eventType: 'context usage viewed',
             },
         });
     };

@@ -37,7 +37,9 @@ export type CustomEvents =
     | 'demo-view-demo-link'
     | 'demo-start-topic'
     | 'demo-ask-questions'
-    | 'demo-open-demo-web';
+    | 'demo-open-demo-web'
+    | 'context-usage'
+    | 'segment-usage';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

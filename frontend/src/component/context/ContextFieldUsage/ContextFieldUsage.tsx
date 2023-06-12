@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useStrategiesByContext } from 'hooks/api/getters/useStrategiesByContext/useStrategiesByContext';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledUl = styled('ul')(({ theme }) => ({
     listStyle: 'none',
@@ -22,6 +23,15 @@ interface IContextFieldUsageProps {
 export const ContextFieldUsage = ({ contextName }: IContextFieldUsageProps) => {
     const { strategies } = useStrategiesByContext(contextName);
     const { projects } = useProjects();
+    const { trackEvent } = usePlausibleTracker();
+
+    const trackClick = () => {
+        trackEvent('context-usage', {
+            props: {
+                eventType: 'context usage viewed',
+            },
+        });
+    };
 
     const projectsUsed = Array.from(
         new Set<string>(
@@ -32,7 +42,7 @@ export const ContextFieldUsage = ({ contextName }: IContextFieldUsageProps) => {
     const projectList = (
         <StyledUl>
             {projectsUsed.map(projectId => (
-                <li key={projectId}>
+                <li key={projectId} onClick={trackClick}>
                     <Link
                         to={`/projects/${projectId}`}
                         target="_blank"

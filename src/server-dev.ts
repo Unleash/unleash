@@ -41,6 +41,7 @@ process.nextTick(async () => {
                         variantMetrics: true,
                         strategyImprovements: true,
                         segmentContextFieldUsage: true,
+                        advancedPlayground: true,
                     },
                 },
                 authentication: {

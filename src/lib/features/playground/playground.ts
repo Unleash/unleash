@@ -14,11 +14,15 @@ import {
 } from '../../openapi/spec/playground-response-schema';
 import { PlaygroundRequestSchema } from '../../openapi/spec/playground-request-schema';
 import { PlaygroundService } from './playground-service';
+import { fixedAdvancedPlaygroundResponse } from './hardcodedReponse';
+import { IFlagResolver } from '../../types';
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;
 
     private playgroundService: PlaygroundService;
+
+    private flagResolver: IFlagResolver;
 
     constructor(
         config: IUnleashConfig,
@@ -30,6 +34,7 @@ export default class PlaygroundController extends Controller {
         super(config);
         this.openApiService = openApiService;
         this.playgroundService = playgroundService;
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'post',
@@ -49,6 +54,14 @@ export default class PlaygroundController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'post',
+            path: '/advanced',
+            handler: this.evaluateAdvancedContext,
+            permission: NONE,
+            middleware: [],
+        });
     }
 
     async evaluateContext(
@@ -58,7 +71,7 @@ export default class PlaygroundController extends Controller {
         const response = {
             input: req.body,
             features: await this.playgroundService.evaluateQuery(
-                req.body.projects,
+                req.body.projects || '*',
                 req.body.environment,
                 req.body.context,
             ),
@@ -70,5 +83,16 @@ export default class PlaygroundController extends Controller {
             playgroundResponseSchema.$id,
             response,
         );
+    }
+
+    async evaluateAdvancedContext(
+        req: Request<any, any, any>,
+        res: Response<any>,
+    ): Promise<void> {
+        if (this.flagResolver.isEnabled('advancedPlayground')) {
+            res.json(fixedAdvancedPlaygroundResponse);
+        } else {
+            res.status(409).end();
+        }
     }
 }

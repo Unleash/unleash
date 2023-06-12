@@ -53,6 +53,7 @@ export interface IFlags {
     disableBulkToggle?: boolean;
     segmentContextFieldUsage?: boolean;
     disableNotifications?: boolean;
+    advancedPlayground?: boolean;
 }
 
 export interface IVersionInfo {

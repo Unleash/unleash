@@ -23,7 +23,8 @@ export type IFlagKey =
     | 'variantMetrics'
     | 'disableBulkToggle'
     | 'segmentContextFieldUsage'
-    | 'disableNotifications';
+    | 'disableNotifications'
+    | 'advancedPlayground';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -106,6 +107,10 @@ const flags: IFlags = {
     ),
     disableNotifications: parseEnvVarBoolean(
         process.env.DISABLE_NOTIFICATIONS,
+        false,
+    ),
+    advancedPlayground: parseEnvVarBoolean(
+        process.env.ADVANCED_PLAYGROUND,
         false,
     ),
 };

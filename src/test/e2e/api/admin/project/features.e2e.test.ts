@@ -575,7 +575,7 @@ test('Trying to toggle environment that does not exist yields 404', async () => 
 test('Getting feature that does not exist should yield 404', async () => {
     await app.request
         .get('/api/admin/projects/default/features/non.existing.feature')
-        .expect(403);
+        .expect(404);
 });
 
 describe('Interacting with features using project IDs that belong to other projects', () => {
@@ -617,34 +617,34 @@ describe('Interacting with features using project IDs that belong to other proje
         await db.stores.userStore.deleteAll();
     });
 
-    test("Getting a feature yields 403 if the provided project id doesn't match the feature's project", async () => {
+    test("Getting a feature yields 404 if the provided project id doesn't match the feature's project", async () => {
         await app.request
             .get(`/api/admin/projects/${otherProject}/features/${featureName}`)
-            .expect(403);
+            .expect(404);
     });
 
-    test("Getting a feature yields 403 if the provided project doesn't exist", async () => {
+    test("Getting a feature yields 404 if the provided project doesn't exist", async () => {
         await app.request
             .get(
                 `/api/admin/projects/${nonExistingProject}/features/${featureName}`,
             )
-            .expect(403);
+            .expect(404);
     });
 
-    test("Archiving a feature yields 403 if the provided project id doesn't match the feature's project", async () => {
+    test("Archiving a feature yields 404 if the provided project id doesn't match the feature's project", async () => {
         await app.request
             .delete(
                 `/api/admin/projects/${otherProject}/features/${featureName}`,
             )
-            .expect(403);
+            .expect(404);
     });
 
-    test("Archiving a feature yields 403 if the provided project doesn't exist", async () => {
+    test("Archiving a feature yields 404 if the provided project doesn't exist", async () => {
         await app.request
             .delete(
                 `/api/admin/projects/${nonExistingProject}/features/${featureName}`,
             )
-            .expect(403);
+            .expect(404);
     });
 
     test("Trying to archive a feature that doesn't exist should yield a 404, regardless of whether the project exists or not.", async () => {
@@ -1055,7 +1055,7 @@ test('add strategy cannot use wrong projectId', async () => {
                 userIds: '',
             },
         })
-        .expect(403);
+        .expect(404);
 });
 
 test('update strategy on feature toggle cannot use wrong projectId', async () => {
@@ -2215,9 +2215,9 @@ test('should validate context when calling update with PUT', async () => {
         .put(`/api/admin/projects/another-project/features/${name}`)
         .send({ name, description: 'updated', type: 'kill-switch' })
         .expect((res) => {
-            expect(res.body.name).toBe('InvalidOperationError');
+            expect(res.body.name).toBe('NotFoundError');
         })
-        .expect(403);
+        .expect(404);
 });
 
 test('should validate context when calling update with PATCH', async () => {
@@ -2231,9 +2231,9 @@ test('should validate context when calling update with PATCH', async () => {
         .patch(`/api/admin/projects/another-project/features/${name}`)
         .send([])
         .expect((res) => {
-            expect(res.body.name).toBe('InvalidOperationError');
+            expect(res.body.name).toBe('NotFoundError');
         })
-        .expect(403);
+        .expect(404);
 });
 
 test('should not update project with PUT', async () => {

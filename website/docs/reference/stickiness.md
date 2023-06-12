@@ -38,10 +38,18 @@ To enable custom stickiness on a field, navigate to the Create Context screen in
 
 ## Project default stickiness
 
-To set a default stickiness for an existing project, navigate to the Edit Project screen in the UI and find the stickiness dropdown. The values that you see in the dropdown are the context fields with stickiness enabled.  Setting a default project stickiness means that every time a Gradual Rollout activation strategy or a variant is added or edited, the default (intial) setting for stickiness will be the value set at the project level.  This option is also available when creating a new project.
+:::info Availability
+
+Project default stickiness was introduced in **Unleash v5**.
+
+:::
+
+Each project in Unleash can have its own default stickiness context field. Whenever you add a gradual rollout strategy or variants to a feature in that project, Unleash will use the configured context field as the initial value. 
+
+Only context fields that have the [custom stickiness](unleash-context.md#custom-stickiness) option turned on can be used as default stickiness fields.
+
+If you don't specify a default custom stickiness, the project will use the "default" stickiness option, which works as described in the [calculation section](#calculation).
+
+You can configure project default stickiness when you create a project or by editing the project later. 
 
 ![The Edit Project screen.  There is a dropdown for setting the default stickiness](/img/project_default_stickiness.png)
-
-:::info
-Project default stickiness is available starting from Unleash v5.
-:::

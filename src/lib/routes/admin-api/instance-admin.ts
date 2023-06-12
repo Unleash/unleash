@@ -9,6 +9,7 @@ import { UiConfigSchema } from '../../openapi/spec/ui-config-schema';
 import {
     InstanceStats,
     InstanceStatsService,
+    InstanceStatsSigned,
 } from '../../services/instance-stats-service';
 import { OpenApiService } from '../../services/openapi-service';
 import {
@@ -21,6 +22,8 @@ class InstanceAdminController extends Controller {
 
     private openApiService: OpenApiService;
 
+    private jsonCsvParser: Parser;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -29,7 +32,7 @@ class InstanceAdminController extends Controller {
         }: Pick<IUnleashServices, 'instanceStatsService' | 'openApiService'>,
     ) {
         super(config);
-
+        this.jsonCsvParser = new Parser();
         this.openApiService = openApiService;
         this.instanceStatsService = instanceStatsService;
 
@@ -47,7 +50,10 @@ class InstanceAdminController extends Controller {
                     operationId: 'getInstanceAdminStatsCsv',
                     responses: {
                         200: createCsvResponseSchema(
-                            'instanceAdminStatsSchema',
+                            'instanceAdminStatsSchemaCsv',
+                            this.jsonCsvParser.parse(
+                                this.instanceStatsExample(),
+                            ),
                         ),
                     },
                 }),
@@ -73,6 +79,34 @@ class InstanceAdminController extends Controller {
                 }),
             ],
         });
+    }
+
+    instanceStatsExample(): InstanceStatsSigned {
+        return {
+            OIDCenabled: true,
+            SAMLenabled: false,
+            clientApps: [
+                { range: 'allTime', count: 15 },
+                { range: '30d', count: 9 },
+                { range: '7d', count: 5 },
+            ],
+            contextFields: 6,
+            environments: 2,
+            featureExports: 0,
+            featureImports: 0,
+            featureToggles: 29,
+            groups: 3,
+            instanceId: 'ed3861ae-78f9-4e8c-8e57-b57efc15f82b',
+            projects: 1,
+            roles: 5,
+            segments: 2,
+            strategies: 8,
+            sum: 'some-sha256-hash',
+            timestamp: new Date(),
+            users: 10,
+            versionEnterprise: '5.1.7',
+            versionOSS: '5.1.7',
+        };
     }
 
     async getStatistics(

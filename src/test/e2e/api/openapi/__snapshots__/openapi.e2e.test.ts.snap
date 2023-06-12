@@ -8405,12 +8405,14 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "content": {
               "text/csv": {
+                "example": ""OIDCenabled","SAMLenabled","clientApps","contextFields","environments","featureExports","featureImports","featureToggles","groups","instanceId","projects","roles","segments","strategies","sum","timestamp","users","versionEnterprise","versionOSS"
+true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9},{""range"":""7d"",""count"":5}]",6,2,0,0,29,3,"ed3861ae-78f9-4e8c-8e57-b57efc15f82b",1,5,2,8,"some-sha256-hash","2023-06-12T12:20:22.331Z",10,"5.1.7","5.1.7"",
                 "schema": {
-                  "$ref": "#/components/schemas/instanceAdminStatsSchema",
+                  "type": "string",
                 },
               },
             },
-            "description": "instanceAdminStatsSchema",
+            "description": "instanceAdminStatsSchemaCsv",
           },
         },
         "summary": "Instance usage statistics",

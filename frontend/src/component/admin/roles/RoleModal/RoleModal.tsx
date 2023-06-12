@@ -1,57 +1,20 @@
-import { Button, FormControlLabel, Radio, styled } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import Input from 'component/common/Input/Input';
 import IRole from 'interfaces/role';
 import { useRoleForm } from '../RoleForm/useRoleForm';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { RoleForm } from '../RoleForm/RoleForm';
+import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { FormEvent } from 'react';
+import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-}));
-
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    display: 'flex',
-    color: theme.palette.text.primary,
-    marginBottom: theme.spacing(1),
-    '&:not(:first-of-type)': {
-        marginTop: theme.spacing(4),
-    },
-}));
-
-const StyledInputSecondaryDescription = styled('p')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(1),
-}));
-
-const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-    maxWidth: theme.spacing(50),
-}));
-
-const StyledRoleBox = styled(FormControlLabel)(({ theme }) => ({
-    margin: theme.spacing(0.5, 0),
-    border: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing(2),
-}));
-
-const StyledRoleRadio = styled(Radio)(({ theme }) => ({
-    marginRight: theme.spacing(2),
-}));
-
-const StyledSecondaryContainer = styled('div')(({ theme }) => ({
-    padding: theme.spacing(3),
-    backgroundColor: theme.palette.background.elevation2,
-    borderRadius: theme.shape.borderRadiusMedium,
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(2),
-}));
-
-const StyledInlineContainer = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 4),
-    '& > p:not(:first-of-type)': {
-        marginTop: theme.spacing(2),
-    },
 }));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
@@ -65,19 +28,6 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
-enum TokenGeneration {
-    LATER = 'later',
-    NOW = 'now',
-}
-
-enum ErrorField {
-    USERNAME = 'username',
-}
-
-interface IServiceAccountModalErrors {
-    [ErrorField.USERNAME]?: string;
-}
-
 interface IRoleModalProps {
     role?: IRole;
     open: boolean;
@@ -85,41 +35,74 @@ interface IRoleModalProps {
 }
 
 export const RoleModal = ({ role, open, setOpen }: IRoleModalProps) => {
-    // const { name, description, permissions, getRolePayload } = useRoleForm();
+    const {
+        name,
+        setName,
+        description,
+        setDescription,
+        checkedPermissions,
+        handlePermissionChange,
+        onToggleAllPermissions,
+        getRolePayload,
+        isNameUnique,
+        isNotEmpty,
+        hasPermissions,
+        rootPermissions,
+        errors,
+        setError,
+        clearError,
+        ErrorField,
+    } = useRoleForm(role?.name, role?.description, role?.permissions);
+    const { refetch } = useRoles();
+    const { addRole, updateRole, loading } = useRolesApi();
+    const { setToastData, setToastApiError } = useToast();
+    const { uiConfig } = useUiConfig();
 
-    // const handlePermissionChange = (permission: IPermission) => {
-    //     let checkedPermissionsCopy = cloneDeep(checkedPermissions);
+    const editing = role !== undefined;
+    const isValid =
+        isNameUnique(name) &&
+        isNotEmpty(name) &&
+        isNotEmpty(description) &&
+        hasPermissions(checkedPermissions);
 
-    //     if (checkedPermissionsCopy[permission.id]) {
-    //         delete checkedPermissionsCopy[permission.id];
-    //     } else {
-    //         checkedPermissionsCopy[permission.id] = { ...permission };
-    //     }
+    const formatApiCode = () => {
+        return `curl --location --request ${editing ? 'PUT' : 'POST'} '${
+            uiConfig.unleashUrl
+        }/api/admin/roles${editing ? `/${role.id}` : ''}' \\
+    --header 'Authorization: INSERT_API_KEY' \\
+    --header 'Content-Type: application/json' \\
+    --data-raw '${JSON.stringify(getRolePayload(), undefined, 2)}'`;
+    };
 
-    //     setCheckedPermissions(checkedPermissionsCopy);
-    // };
+    const onSetName = (name: string) => {
+        clearError(ErrorField.NAME);
+        if (!isNameUnique(name)) {
+            setError(ErrorField.NAME, 'A role with that name already exists.');
+        }
+        setName(name);
+    };
 
-    // const onToggleAllPermissions = () => {
-    //     let checkedPermissionsCopy = cloneDeep(checkedPermissions);
+    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-    //     const allChecked = granularPermissions.every(
-    //         (permission: IPermission) => checkedPermissionsCopy[permission.id]
-    //     );
+        if (!isValid) return;
 
-    //     if (allChecked) {
-    //         granularPermissions.forEach((permission: IPermission) => {
-    //             delete checkedPermissionsCopy[permission.id];
-    //         });
-    //     } else {
-    //         granularPermissions.forEach((permission: IPermission) => {
-    //             checkedPermissionsCopy[permission.id] = {
-    //                 ...permission,
-    //             };
-    //         });
-    //     }
-
-    //     setCheckedPermissions(checkedPermissionsCopy);
-    // };
+        try {
+            if (editing) {
+                await updateRole(role.id, getRolePayload());
+            } else {
+                await addRole(getRolePayload());
+            }
+            setToastData({
+                title: `Role ${editing ? 'updated' : 'added'} successfully`,
+                type: 'success',
+            });
+            refetch();
+            setOpen(false);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
 
     return (
         <SidebarModal
@@ -127,172 +110,29 @@ export const RoleModal = ({ role, open, setOpen }: IRoleModalProps) => {
             onClose={() => {
                 setOpen(false);
             }}
-            label="TODO"
-            // label={editing ? 'Edit service account' : 'New service account'}
+            label={editing ? 'Edit role' : 'New role'}
         >
-            <div>TODO: Use RoleForm</div>
-            {/* <FormTemplate
+            <FormTemplate
                 loading={loading}
                 modal
-                title={editing ? 'Edit service account' : 'New service account'}
-                description="A service account is a special type of account that can only be used to authenticate with the Unleash API. Service accounts can be used to automate tasks."
-                documentationLink="https://docs.getunleash.io"
-                documentationLinkLabel="Service accounts documentation"
+                title={editing ? 'Edit role' : 'New role'}
+                description="Roles allow you to control access to global root resources. Besides the built-in roles, you can create and manage custom roles to fit your needs."
+                documentationLink="https://docs.getunleash.io/reference/rbac#standard-roles"
+                documentationLinkLabel="Roles documentation"
                 formatApiCode={formatApiCode}
             >
-                <StyledForm onSubmit={handleSubmit}>
-                    <div>
-                        <StyledInputDescription>
-                            What is your new service account name?
-                        </StyledInputDescription>
-                        <StyledInput
-                            autoFocus
-                            label="Service account name"
-                            value={name}
-                            onChange={e => setName(e.target.value)}
-                            onBlur={suggestUsername}
-                            autoComplete="off"
-                            required
-                        />
-                        <StyledInputDescription>
-                            What is your new service account username?
-                        </StyledInputDescription>
-                        <StyledInput
-                            label="Service account username"
-                            error={Boolean(errors.username)}
-                            errorText={errors.username}
-                            value={username}
-                            onChange={e => onSetUsername(e.target.value)}
-                            autoComplete="off"
-                            required
-                            disabled={editing}
-                        />
-                        <StyledInputDescription>
-                            What is your service account allowed to do?
-                        </StyledInputDescription>
-                        <FormControl>
-                            <RadioGroup
-                                name="rootRole"
-                                value={rootRole || ''}
-                                onChange={e => setRootRole(+e.target.value)}
-                                data-loading
-                            >
-                                {roles
-                                    .sort((a, b) => (a.name < b.name ? -1 : 1))
-                                    .map(role => (
-                                        <StyledRoleBox
-                                            key={`role-${role.id}`}
-                                            labelPlacement="end"
-                                            label={
-                                                <div>
-                                                    <strong>{role.name}</strong>
-                                                    <Typography variant="body2">
-                                                        {role.description}
-                                                    </Typography>
-                                                </div>
-                                            }
-                                            control={
-                                                <StyledRoleRadio
-                                                    checked={
-                                                        role.id === rootRole
-                                                    }
-                                                />
-                                            }
-                                            value={role.id}
-                                        />
-                                    ))}
-                            </RadioGroup>
-                        </FormControl>
-                        <ConditionallyRender
-                            condition={!editing}
-                            show={
-                                <StyledSecondaryContainer>
-                                    <StyledInputDescription>
-                                        Token
-                                    </StyledInputDescription>
-                                    <StyledInputSecondaryDescription>
-                                        In order to connect your newly created
-                                        service account, you will also need a
-                                        token.{' '}
-                                        <Link
-                                            href="https://docs.getunleash.io/reference/api-tokens-and-client-keys"
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            Read more about API tokens
-                                        </Link>
-                                        .
-                                    </StyledInputSecondaryDescription>
-                                    <FormControl>
-                                        <RadioGroup
-                                            value={tokenGeneration}
-                                            onChange={e =>
-                                                setTokenGeneration(
-                                                    e.target
-                                                        .value as TokenGeneration
-                                                )
-                                            }
-                                            name="token-generation"
-                                        >
-                                            <FormControlLabel
-                                                value={TokenGeneration.LATER}
-                                                control={<Radio />}
-                                                label="I want to generate a token later"
-                                            />
-                                            <FormControlLabel
-                                                value={TokenGeneration.NOW}
-                                                control={<Radio />}
-                                                label="Generate a token now"
-                                            />
-                                        </RadioGroup>
-                                    </FormControl>
-                                    <StyledInlineContainer>
-                                        <StyledInputSecondaryDescription>
-                                            A new personal access token (PAT)
-                                            will be generated for the service
-                                            account, so you can get started
-                                            right away.
-                                        </StyledInputSecondaryDescription>
-                                        <ConditionallyRender
-                                            condition={
-                                                tokenGeneration ===
-                                                TokenGeneration.NOW
-                                            }
-                                            show={
-                                                <PersonalAPITokenForm
-                                                    description={patDescription}
-                                                    setDescription={
-                                                        setPatDescription
-                                                    }
-                                                    expiration={patExpiration}
-                                                    setExpiration={
-                                                        setPatExpiration
-                                                    }
-                                                    expiresAt={patExpiresAt}
-                                                    setExpiresAt={
-                                                        setPatExpiresAt
-                                                    }
-                                                    errors={patErrors}
-                                                    setErrors={setPatErrors}
-                                                />
-                                            }
-                                        />
-                                    </StyledInlineContainer>
-                                </StyledSecondaryContainer>
-                            }
-                            elseShow={
-                                <>
-                                    <StyledInputDescription>
-                                        Service account tokens
-                                    </StyledInputDescription>
-                                    <ServiceAccountTokens
-                                        serviceAccount={serviceAccount!}
-                                    />
-                                </>
-                            }
-                        />
-                    </div>
-
+                <StyledForm onSubmit={onSubmit}>
+                    <RoleForm
+                        name={name}
+                        onSetName={onSetName}
+                        description={description}
+                        setDescription={setDescription}
+                        checkedPermissions={checkedPermissions}
+                        handlePermissionChange={handlePermissionChange}
+                        onToggleAllPermissions={onToggleAllPermissions}
+                        permissions={rootPermissions}
+                        errors={errors}
+                    />
                     <StyledButtonContainer>
                         <Button
                             type="submit"
@@ -300,7 +140,7 @@ export const RoleModal = ({ role, open, setOpen }: IRoleModalProps) => {
                             color="primary"
                             disabled={!isValid}
                         >
-                            {editing ? 'Save' : 'Add'} service account
+                            {editing ? 'Save' : 'Add'} role
                         </Button>
                         <StyledCancelButton
                             onClick={() => {
@@ -311,7 +151,7 @@ export const RoleModal = ({ role, open, setOpen }: IRoleModalProps) => {
                         </StyledCancelButton>
                     </StyledButtonContainer>
                 </StyledForm>
-            </FormTemplate> */}
+            </FormTemplate>
         </SidebarModal>
     );
 };

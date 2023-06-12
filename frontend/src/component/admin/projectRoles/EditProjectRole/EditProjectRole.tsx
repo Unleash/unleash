@@ -1,7 +1,7 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
+import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
 import useProjectRole from 'hooks/api/getters/useProjectRole/useProjectRole';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
@@ -15,8 +15,8 @@ import { GO_BACK } from 'constants/navigate';
 const EditProjectRole = () => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
-    const projectId = useRequiredPathParam('id');
-    const { role } = useProjectRole(projectId);
+    const roleId = useRequiredPathParam('id');
+    const { role } = useProjectRole(roleId);
 
     const navigate = useNavigate();
     const {
@@ -46,8 +46,8 @@ const EditProjectRole = () => {
 --data-raw '${JSON.stringify(getProjectRolePayload(), undefined, 2)}'`;
     };
 
-    const { refetch } = useProjectRole(projectId);
-    const { editRole, loading } = useProjectRolesApi();
+    const { refetch } = useProjectRole(roleId);
+    const { updateRole, loading } = useRolesApi();
 
     const onSubmit = async (e: Event) => {
         e.preventDefault();
@@ -58,9 +58,9 @@ const EditProjectRole = () => {
 
         if (validName && validPermissions) {
             try {
-                await editRole(projectId, payload);
+                await updateRole(+roleId, payload);
                 refetch();
-                navigate('/admin/roles');
+                navigate('/admin/project-roles');
                 setToastData({
                     type: 'success',
                     title: 'Project role updated',

@@ -10,29 +10,25 @@ import { Button, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
-import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useSearch } from 'hooks/useSearch';
-import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
-import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { IServiceAccount } from 'interfaces/service-account';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { SupervisedUserCircle } from '@mui/icons-material';
-import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { RolesActionsCell } from './RolesActionsCell/RolesActionsCell';
 import { RolesCell } from './RolesCell/RolesCell';
 import { RoleDeleteDialog } from './RoleDeleteDialog/RoleDeleteDialog';
+import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
+import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
+import { RoleModal } from '../RoleModal/RoleModal';
 
 export const RolesTable = () => {
     const { setToastData, setToastApiError } = useToast();
 
-    const { roles, refetch, loading } = useServiceAccounts(); // create useRoles() hook
-    // const { removeRole } = useRolesApi();
+    const { roles, refetch, loading } = useRoles();
+    const { removeRole } = useRolesApi();
 
     const [searchValue, setSearchValue] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
@@ -41,7 +37,7 @@ export const RolesTable = () => {
 
     const onDeleteConfirm = async (role: IRole) => {
         try {
-            // await removeRole(role.id);
+            await removeRole(role.id);
             setToastData({
                 title: `${role.name} has been deleted`,
                 type: 'success',
@@ -53,7 +49,6 @@ export const RolesTable = () => {
         }
     };
 
-    // const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const columns = useMemo(
@@ -215,11 +210,11 @@ export const RolesTable = () => {
                     />
                 }
             />
-            {/* <RoleModal
+            <RoleModal
                 role={selectedRole}
                 open={modalOpen}
                 setOpen={setModalOpen}
-            /> */}
+            />
             <RoleDeleteDialog
                 role={selectedRole}
                 open={deleteOpen}

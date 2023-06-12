@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { IPermission } from 'interfaces/permissions';
 import cloneDeep from 'lodash.clonedeep';
 import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
-import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
+import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 export interface ICheckedPermission {
@@ -53,7 +53,7 @@ const useProjectRoleForm = (
 
     const [errors, setErrors] = useState({});
 
-    const { validateRole } = useProjectRolesApi();
+    const { validateRole } = useRolesApi();
 
     useEffect(() => {
         setRoleName(initialRoleName);

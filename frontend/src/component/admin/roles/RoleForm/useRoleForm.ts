@@ -2,29 +2,42 @@ import { useEffect, useState } from 'react';
 import { IPermission, ICheckedPermissions } from 'interfaces/permissions';
 import cloneDeep from 'lodash.clonedeep';
 import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
-import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
-import { formatUnknownError } from 'utils/formatUnknownError';
+import IRole from 'interfaces/role';
+import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
+
+enum ErrorField {
+    NAME = 'name',
+}
+
+export interface IRoleFormErrors {
+    [ErrorField.NAME]?: string;
+}
 
 export const useRoleForm = (
-    initialRoleName = '',
-    initialRoleDesc = '',
-    initialCheckedPermissions: IPermission[] = []
+    initialName = '',
+    initialDescription = '',
+    initialPermissions: IPermission[] = []
 ) => {
+    const { roles } = useRoles();
     const { permissions } = usePermissions({
         revalidateIfStale: false,
         revalidateOnReconnect: false,
         revalidateOnFocus: false,
     });
 
-    const [roleName, setRoleName] = useState(initialRoleName);
-    const [roleDesc, setRoleDesc] = useState(initialRoleDesc);
+    const rootPermissions = permissions.root.filter(
+        ({ name }) => name !== 'ADMIN'
+    );
+
+    const [name, setName] = useState(initialName);
+    const [description, setDescription] = useState(initialDescription);
     const [checkedPermissions, setCheckedPermissions] =
         useState<ICheckedPermissions>({});
 
     useEffect(() => {
-        if (initialCheckedPermissions.length > 0) {
+        if (initialPermissions.length > 0) {
             setCheckedPermissions(
-                initialCheckedPermissions?.reduce(
+                initialPermissions.reduce(
                     (
                         acc: { [key: string]: IPermission },
                         curr: IPermission
@@ -36,137 +49,95 @@ export const useRoleForm = (
                 )
             );
         }
-    }, [initialCheckedPermissions?.length]);
+    }, [initialPermissions.length]);
 
-    const [errors, setErrors] = useState({});
-
-    const { validateRole } = useProjectRolesApi();
+    const [errors, setErrors] = useState<IRoleFormErrors>({});
 
     useEffect(() => {
-        setRoleName(initialRoleName);
-    }, [initialRoleName]);
+        setName(initialName);
+    }, [initialName]);
 
     useEffect(() => {
-        setRoleDesc(initialRoleDesc);
-    }, [initialRoleDesc]);
+        setDescription(initialDescription);
+    }, [initialDescription]);
 
-    // const handlePermissionChange = (permission: IPermission) => {
-    //     let checkedPermissionsCopy = cloneDeep(checkedPermissions);
+    const handlePermissionChange = (permission: IPermission) => {
+        let checkedPermissionsCopy = cloneDeep(checkedPermissions);
 
-    //     if (checkedPermissionsCopy[getRoleKey(permission)]) {
-    //         delete checkedPermissionsCopy[getRoleKey(permission)];
-    //     } else {
-    //         checkedPermissionsCopy[getRoleKey(permission)] = { ...permission };
-    //     }
+        if (checkedPermissionsCopy[permission.id]) {
+            delete checkedPermissionsCopy[permission.id];
+        } else {
+            checkedPermissionsCopy[permission.id] = { ...permission };
+        }
 
-    //     setCheckedPermissions(checkedPermissionsCopy);
-    // };
+        setCheckedPermissions(checkedPermissionsCopy);
+    };
 
-    // const onToggleAllProjectPermissions = () => {
-    //     const { project } = permissions;
-    //     let checkedPermissionsCopy = cloneDeep(checkedPermissions);
+    const onToggleAllPermissions = () => {
+        let checkedPermissionsCopy = cloneDeep(checkedPermissions);
 
-    //     const allChecked = project.every(
-    //         (permission: IPermission) =>
-    //             checkedPermissionsCopy[getRoleKey(permission)]
-    //     );
+        const allChecked = rootPermissions.every(
+            (permission: IPermission) => checkedPermissionsCopy[permission.id]
+        );
 
-    //     if (allChecked) {
-    //         project.forEach((permission: IPermission) => {
-    //             delete checkedPermissionsCopy[getRoleKey(permission)];
-    //         });
-    //     } else {
-    //         project.forEach((permission: IPermission) => {
-    //             checkedPermissionsCopy[getRoleKey(permission)] = {
-    //                 ...permission,
-    //             };
-    //         });
-    //     }
+        if (allChecked) {
+            rootPermissions.forEach((permission: IPermission) => {
+                delete checkedPermissionsCopy[permission.id];
+            });
+        } else {
+            rootPermissions.forEach((permission: IPermission) => {
+                checkedPermissionsCopy[permission.id] = {
+                    ...permission,
+                };
+            });
+        }
 
-    //     setCheckedPermissions(checkedPermissionsCopy);
-    // };
+        setCheckedPermissions(checkedPermissionsCopy);
+    };
 
-    // const onToggleAllEnvironmentPermissions = (envName: string) => {
-    //     const { environments } = permissions;
-    //     const checkedPermissionsCopy = cloneDeep(checkedPermissions);
-    //     const env = environments.find(env => env.name === envName);
-    //     if (!env) return;
+    const getRolePayload = () => ({
+        name,
+        description,
+        permissions: Object.values(checkedPermissions),
+    });
 
-    //     const allChecked = env.permissions.every(
-    //         (permission: IPermission) =>
-    //             checkedPermissionsCopy[getRoleKey(permission)]
-    //     );
+    const isNameUnique = (name: string) => {
+        return !roles.some(
+            (existingRole: IRole) =>
+                existingRole.name.toLowerCase() === name.toLowerCase()
+        );
+    };
 
-    //     if (allChecked) {
-    //         env.permissions.forEach((permission: IPermission) => {
-    //             delete checkedPermissionsCopy[getRoleKey(permission)];
-    //         });
-    //     } else {
-    //         env.permissions.forEach((permission: IPermission) => {
-    //             checkedPermissionsCopy[getRoleKey(permission)] = {
-    //                 ...permission,
-    //             };
-    //         });
-    //     }
+    const isNotEmpty = (value: string) => value.length;
 
-    //     setCheckedPermissions(checkedPermissionsCopy);
-    // };
+    const hasPermissions = (permissions: ICheckedPermissions) =>
+        Object.keys(checkedPermissions).length > 0;
 
-    // const getProjectRolePayload = () => ({
-    //     name: roleName,
-    //     description: roleDesc,
-    //     permissions: Object.values(checkedPermissions),
-    // });
+    const clearError = (field: ErrorField) => {
+        setErrors(errors => ({ ...errors, [field]: undefined }));
+    };
 
-    // const validateNameUniqueness = async () => {
-    //     const payload = getProjectRolePayload();
-
-    //     try {
-    //         await validateRole(payload);
-    //     } catch (error: unknown) {
-    //         setErrors(prev => ({ ...prev, name: formatUnknownError(error) }));
-    //     }
-    // };
-
-    // const validateName = () => {
-    //     if (roleName.length === 0) {
-    //         setErrors(prev => ({ ...prev, name: 'Name can not be empty.' }));
-    //         return false;
-    //     }
-    //     return true;
-    // };
-
-    // const validatePermissions = () => {
-    //     if (Object.keys(checkedPermissions).length === 0) {
-    //         setErrors(prev => ({
-    //             ...prev,
-    //             permissions: 'You must include at least one permission.',
-    //         }));
-    //         return false;
-    //     }
-    //     return true;
-    // };
-
-    // const clearErrors = () => {
-    //     setErrors({});
-    // };
+    const setError = (field: ErrorField, error: string) => {
+        setErrors(errors => ({ ...errors, [field]: error }));
+    };
 
     return {
-        roleName,
-        roleDesc,
+        name,
+        description,
         errors,
         checkedPermissions,
-        permissions,
-        setRoleName,
-        setRoleDesc,
-        // handlePermissionChange,
-        // onToggleAllProjectPermissions,
-        // onToggleAllEnvironmentPermissions,
-        // getProjectRolePayload,
-        // validatePermissions,
-        // validateName,
-        // clearErrors,
-        // validateNameUniqueness,
-        // getRoleKey,
+        rootPermissions,
+        setName,
+        setDescription,
+        setCheckedPermissions,
+        handlePermissionChange,
+        onToggleAllPermissions,
+        getRolePayload,
+        clearError,
+        setError,
+        isNameUnique,
+        isNotEmpty,
+        hasPermissions,
+        ErrorField,
     };
 };

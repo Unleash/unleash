@@ -10,7 +10,7 @@
     "start": "docusaurus start",
     "build": "yarn generate && docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "generate": "docusaurus gen-api-docs all && node clean-generated-docs.js",
+    "generate": "docusaurus gen-api-docs all",
     "deploy": "yarn generate && docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",

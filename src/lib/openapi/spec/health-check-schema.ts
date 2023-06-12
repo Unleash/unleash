@@ -13,6 +13,7 @@ export const healthCheckSchema = {
                 'The state this Unleash instance is in. GOOD if everything is ok, BAD if the instance should be restarted',
             type: 'string',
             enum: ['GOOD', 'BAD'],
+            example: 'GOOD',
         },
     },
     components: {},

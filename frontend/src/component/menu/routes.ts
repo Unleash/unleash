@@ -506,6 +506,11 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         title: 'Billing & invoices',
         menu: { adminSettings: true, mode: ['pro'] },
     },
+    {
+        path: '/admin/instance-privacy',
+        title: 'Instance privacy',
+        menu: { adminSettings: true },
+    }
 ];
 
 export const getRoute = (path: string) =>

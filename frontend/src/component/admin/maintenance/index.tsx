@@ -28,6 +28,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
     gap: theme.spacing(4),
 }));
+
 const MaintenancePage = () => {
     const { loading } = useUiConfig();
 

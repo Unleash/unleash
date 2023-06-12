@@ -31,6 +31,9 @@ export class HealthCheckController extends Controller {
                 openApiService.validPath({
                     tags: ['Operational'],
                     operationId: 'getHealth',
+                    summary: 'The status of the instance',
+                    description:
+                        'Tells operators if the instance is healthy and ready to serve requests or not',
                     responses: {
                         200: createResponseSchema('healthCheckSchema'),
                         500: createResponseSchema('healthCheckSchema'),

@@ -2737,8 +2737,10 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "healthCheckSchema": {
         "additionalProperties": false,
+        "description": "Used by service orchestrators to decide if instance should be marked as healthy or unhealthy",
         "properties": {
           "health": {
+            "description": "The state this instance is in. GOOD if everything is ok, BAD if instance should be restarted",
             "enum": [
               "GOOD",
               "BAD",
@@ -13726,6 +13728,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/health": {
       "get": {
+        "description": "Tells operators if the instance is healthy and ready to serve requests or not",
         "operationId": "getHealth",
         "responses": {
           "200": {
@@ -13749,6 +13752,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "healthCheckSchema",
           },
         },
+        "summary": "The status of the instance",
         "tags": [
           "Operational",
         ],

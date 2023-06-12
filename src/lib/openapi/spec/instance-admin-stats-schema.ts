@@ -37,47 +37,56 @@ export const instanceAdminStatsSchema = {
             type: 'number',
             description: 'The number of users this instance has',
             example: 8,
+            minimum: 0,
         },
         featureToggles: {
             type: 'number',
             description: 'The number of feature-toggles this instance has',
             example: 47,
+            minimum: 0,
         },
         projects: {
             type: 'number',
             description: 'The number of projects defined in this instance.',
             example: 3,
+            minimum: 0,
         },
         contextFields: {
             type: 'number',
             description:
                 'The number of context fields defined in this instance.',
             example: 7,
+            minimum: 0,
         },
         roles: {
             type: 'number',
             description: 'The number of roles defined in this instance',
             example: 5,
+            minimum: 0,
         },
         groups: {
             type: 'number',
             description: 'The number of groups defined in this instance',
             example: 12,
+            minimum: 0,
         },
         environments: {
             type: 'number',
             description: 'The number of environments defined in this instance',
             example: 3,
+            minimum: 0,
         },
         segments: {
             type: 'number',
             description: 'The number of segments defined in this instance',
             example: 19,
+            minimum: 0,
         },
         strategies: {
             type: 'number',
             description: 'The number of strategies defined in this instance',
             example: 8,
+            minimum: 0,
         },
         SAMLenabled: {
             type: 'boolean',

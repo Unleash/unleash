@@ -3061,7 +3061,7 @@ The provider you choose for your addon dictates what properties the \`parameters
               "description": "An entry describing how many client applications has been observed over the defined range",
               "properties": {
                 "count": {
-                  "description": "The number of client applications that has been observed in this period",
+                  "description": "The number of client applications that have been observed in this period",
                   "example": 1,
                   "type": "number",
                 },
@@ -3083,21 +3083,25 @@ The provider you choose for your addon dictates what properties the \`parameters
           "contextFields": {
             "description": "The number of context fields defined in this instance.",
             "example": 7,
+            "minimum": 0,
             "type": "number",
           },
           "environments": {
             "description": "The number of environments defined in this instance",
             "example": 3,
+            "minimum": 0,
             "type": "number",
           },
           "featureToggles": {
             "description": "The number of feature-toggles this instance has",
             "example": 47,
+            "minimum": 0,
             "type": "number",
           },
           "groups": {
             "description": "The number of groups defined in this instance",
             "example": 12,
+            "minimum": 0,
             "type": "number",
           },
           "instanceId": {
@@ -3108,21 +3112,25 @@ The provider you choose for your addon dictates what properties the \`parameters
           "projects": {
             "description": "The number of projects defined in this instance.",
             "example": 3,
+            "minimum": 0,
             "type": "number",
           },
           "roles": {
             "description": "The number of roles defined in this instance",
             "example": 5,
+            "minimum": 0,
             "type": "number",
           },
           "segments": {
             "description": "The number of segments defined in this instance",
             "example": 19,
+            "minimum": 0,
             "type": "number",
           },
           "strategies": {
             "description": "The number of strategies defined in this instance",
             "example": 8,
+            "minimum": 0,
             "type": "number",
           },
           "sum": {
@@ -3140,6 +3148,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           "users": {
             "description": "The number of users this instance has",
             "example": 8,
+            "minimum": 0,
             "type": "number",
           },
           "versionEnterprise": {
@@ -8368,7 +8377,7 @@ If the provided project does not exist, the list of events will be empty.",
     "/api/admin/instance-admin/statistics": {
       "get": {
         "deprecated": true,
-        "description": "Lists number of users, groups, features, strategies to allow for reporting of usage for self-hosted customers",
+        "description": "Provides statistics about various features of Unleash to allow for reporting of usage for self-hosted customers. The response contains data such as the number of users, groups, features, strategies, versions, etc.",
         "operationId": "getInstanceAdminStats",
         "responses": {
           "200": {
@@ -8382,7 +8391,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "instanceAdminStatsSchema",
           },
         },
-        "summary": "An overview of usage of various features of Unleash",
+        "summary": "Instance usage statistics",
         "tags": [
           "Instance Admin",
         ],
@@ -8390,6 +8399,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/instance-admin/statistics/csv": {
       "get": {
+        "description": "Provides statistics about various features of Unleash to allow for reporting of usage for self-hosted customers. The response contains data such as the number of users, groups, features, strategies, versions, etc.",
         "operationId": "getInstanceAdminStatsCsv",
         "responses": {
           "200": {
@@ -8403,6 +8413,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "instanceAdminStatsSchema",
           },
         },
+        "summary": "Instance usage statistics",
         "tags": [
           "Instance Admin",
         ],

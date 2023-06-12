@@ -41,6 +41,9 @@ class InstanceAdminController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Instance Admin'],
+                    summary: 'Instance usage statistics',
+                    description:
+                        'Provides statistics about various features of Unleash to allow for reporting of usage for self-hosted customers. The response contains data such as the number of users, groups, features, strategies, versions, etc.',
                     operationId: 'getInstanceAdminStatsCsv',
                     responses: {
                         200: createCsvResponseSchema(
@@ -60,8 +63,7 @@ class InstanceAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Instance Admin'],
                     operationId: 'getInstanceAdminStats',
-                    summary:
-                        'An overview of usage of various features of Unleash',
+                    summary: 'Instance usage statistics',
                     description:
                         'Provides statistics about various features of Unleash to allow for reporting of usage for self-hosted customers. The response contains data such as the number of users, groups, features, strategies, versions, etc.',
                     responses: {

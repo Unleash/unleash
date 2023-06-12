@@ -36,6 +36,14 @@ export const createResponseSchema = (
     });
 };
 
+export const createCsvResponseSchema = (
+    schemaName: string,
+): OpenAPIV3.ResponseObject => {
+    return createResponseSchemas(schemaName, {
+        'text/csv': schemaNamed(schemaName),
+    });
+};
+
 export const resourceCreatedResponseSchema = (
     schemaName: string,
 ): OpenAPIV3.ResponseObject => {

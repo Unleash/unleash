@@ -11,7 +11,10 @@ import {
     InstanceStatsService,
 } from '../../services/instance-stats-service';
 import { OpenApiService } from '../../services/openapi-service';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import {
+    createCsvResponseSchema,
+    createResponseSchema,
+} from '../../openapi/util/create-response-schema';
 
 class InstanceAdminController extends Controller {
     private instanceStatsService: InstanceStatsService;
@@ -35,6 +38,17 @@ class InstanceAdminController extends Controller {
             path: '/statistics/csv',
             handler: this.getStatisticsCSV,
             permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Instance Admin'],
+                    operationId: 'getInstanceAdminStatsCsv',
+                    responses: {
+                        200: createCsvResponseSchema(
+                            'instanceAdminStatsSchema',
+                        ),
+                    },
+                }),
+            ],
         });
 
         this.route({
@@ -46,6 +60,10 @@ class InstanceAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Instance Admin'],
                     operationId: 'getInstanceAdminStats',
+                    summary:
+                        'An overview of usage of various features of Unleash',
+                    description:
+                        'Lists number of users, groups, features, strategies to allow for reporting of usage for self-hosted customers',
                     responses: {
                         200: createResponseSchema('instanceAdminStatsSchema'),
                     },

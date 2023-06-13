@@ -22,17 +22,16 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { IStrategy } from 'interfaces/strategy';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { sortTypes } from 'utils/sortTypes';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
-import { AddStrategyButton } from './AddStrategyButton/AddStrategyButton';
 import { StrategySwitch } from './StrategySwitch/StrategySwitch';
 import { StrategyEditButton } from './StrategyEditButton/StrategyEditButton';
 import { StrategyDeleteButton } from './StrategyDeleteButton/StrategyDeleteButton';
-import { Search } from 'component/common/Search/Search';
 import { Badge } from 'component/common/Badge/Badge';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { SearchHighlightProvider } from '../../common/Table/SearchHighlightContext/SearchHighlightContext';
 import { CustomStrategyInfo } from '../CustomStrategyInfo/CustomStrategyInfo';
+import { AddStrategyButton } from './AddStrategyButton/AddStrategyButton';
 
 interface IDialogueMetaData {
     show: boolean;
@@ -40,9 +39,20 @@ interface IDialogueMetaData {
     onConfirm: () => void;
 }
 
+const StyledBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
+
 const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
     display: 'inline-block',
+}));
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+    display: 'flex',
+    fontSize: theme.fontSizes.mainHeader,
 }));
 
 const Subtitle: FC<{
@@ -50,7 +60,7 @@ const Subtitle: FC<{
     description: string;
     link: string;
 }> = ({ title, description, link }) => (
-    <Typography component="h2" variant="subtitle1" sx={{ display: 'flex' }}>
+    <StyledTypography>
         {title}
         <HelpIcon
             htmlTooltip
@@ -69,17 +79,7 @@ const Subtitle: FC<{
                 </>
             }
         />
-    </Typography>
-);
-
-const PredefinedStrategyTitle = () => (
-    <Box sx={theme => ({ marginBottom: theme.spacing(1.5) })}>
-        <Subtitle
-            title="Predefined strategies"
-            description="The next level of control comes when you are able to enable a feature for specific users or enable it for a small subset of users. We achieve this level of control with the help of activation strategies."
-            link="https://docs.getunleash.io/reference/activation-strategies"
-        />
-    </Box>
+    </StyledTypography>
 );
 
 const CustomStrategyTitle: FC = () => (
@@ -98,6 +98,16 @@ const CustomStrategyTitle: FC = () => (
             link="https://docs.getunleash.io/reference/custom-activation-strategies"
         />
         <AddStrategyButton />
+    </Box>
+);
+
+const PredefinedStrategyTitle = () => (
+    <Box>
+        <Subtitle
+            title="Predefined strategies"
+            description="The next level of control comes when you are able to enable a feature for specific users or enable it for a small subset of users. We achieve this level of control with the help of activation strategies."
+            link="https://docs.getunleash.io/reference/activation-strategies"
+        />
     </Box>
 );
 
@@ -335,7 +345,6 @@ export const StrategiesList = () => {
         rows,
         prepareRow,
         state: { globalFilter },
-        setGlobalFilter,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
@@ -356,7 +365,6 @@ export const StrategiesList = () => {
         headerGroups: customHeaderGroups,
         rows: customRows,
         prepareRow: customPrepareRow,
-        setGlobalFilter: customSetGlobalFilter,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
@@ -379,29 +387,17 @@ export const StrategiesList = () => {
         }));
     };
 
-    let strategyTypeCount = rows.length;
-
     return (
-        <PageContent
-            isLoading={loading}
-            header={
-                <PageHeader
-                    title={`Strategy types (${strategyTypeCount})`}
-                    actions={
-                        <Search
-                            initialValue={globalFilter}
-                            onChange={(...props) => {
-                                setGlobalFilter(...props);
-                                customSetGlobalFilter(...props);
-                            }}
-                        />
-                    }
-                />
-            }
-        >
-            <SearchHighlightProvider value={globalFilter}>
-                <Box sx={theme => ({ paddingBottom: theme.spacing(4) })}>
-                    <PredefinedStrategyTitle />
+        <StyledBox>
+            <PageContent
+                isLoading={loading}
+                header={
+                    <PageHeader>
+                        <PredefinedStrategyTitle />
+                    </PageHeader>
+                }
+            >
+                <Box>
                     <Table {...getTableProps()}>
                         <SortableTableHeader headerGroups={headerGroups} />
                         <TableBody {...getTableBodyProps()}>
@@ -441,58 +437,82 @@ export const StrategiesList = () => {
                         }
                     />
                 </Box>
-                <Box>
-                    <CustomStrategyTitle />
-                    <Table {...customGetTableProps()}>
-                        <SortableTableHeader
-                            headerGroups={customHeaderGroups}
-                        />
-                        <TableBody {...customGetTableBodyProps()}>
-                            {customRows.map(row => {
-                                customPrepareRow(row);
-                                return (
-                                    <TableRow hover {...row.getRowProps()}>
-                                        {row.cells.map(cell => (
-                                            <TableCell {...cell.getCellProps()}>
-                                                {cell.render('Cell')}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                    <ConditionallyRender
-                        condition={customRows.length === 0}
-                        show={
-                            <ConditionallyRender
-                                condition={globalFilter?.length > 0}
-                                show={
-                                    <TablePlaceholder>
-                                        No custom strategies found matching
-                                        &ldquo;
-                                        {globalFilter}
-                                        &rdquo;
-                                    </TablePlaceholder>
-                                }
-                                elseShow={<CustomStrategyInfo />}
-                            />
-                        }
-                    />
-                </Box>
-            </SearchHighlightProvider>
 
-            <Dialogue
-                open={dialogueMetaData.show}
-                onClick={onDialogConfirm}
-                title={dialogueMetaData?.title}
-                onClose={() =>
-                    setDialogueMetaData((prev: IDialogueMetaData) => ({
-                        ...prev,
-                        show: false,
-                    }))
+                <Dialogue
+                    open={dialogueMetaData.show}
+                    onClick={onDialogConfirm}
+                    title={dialogueMetaData?.title}
+                    onClose={() =>
+                        setDialogueMetaData((prev: IDialogueMetaData) => ({
+                            ...prev,
+                            show: false,
+                        }))
+                    }
+                />
+            </PageContent>
+            <PageContent
+                isLoading={loading}
+                header={
+                    <PageHeader>
+                        <CustomStrategyTitle />
+                    </PageHeader>
                 }
-            />
-        </PageContent>
+            >
+                <SearchHighlightProvider value={globalFilter}>
+                    <Box>
+                        <Table {...customGetTableProps()}>
+                            <SortableTableHeader
+                                headerGroups={customHeaderGroups}
+                            />
+                            <TableBody {...customGetTableBodyProps()}>
+                                {customRows.map(row => {
+                                    customPrepareRow(row);
+                                    return (
+                                        <TableRow hover {...row.getRowProps()}>
+                                            {row.cells.map(cell => (
+                                                <TableCell
+                                                    {...cell.getCellProps()}
+                                                >
+                                                    {cell.render('Cell')}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                        <ConditionallyRender
+                            condition={customRows.length === 0}
+                            show={
+                                <ConditionallyRender
+                                    condition={globalFilter?.length > 0}
+                                    show={
+                                        <TablePlaceholder>
+                                            No custom strategies found matching
+                                            &ldquo;
+                                            {globalFilter}
+                                            &rdquo;
+                                        </TablePlaceholder>
+                                    }
+                                    elseShow={<CustomStrategyInfo />}
+                                />
+                            }
+                        />
+                    </Box>
+                </SearchHighlightProvider>
+
+                <Dialogue
+                    open={dialogueMetaData.show}
+                    onClick={onDialogConfirm}
+                    title={dialogueMetaData?.title}
+                    onClose={() =>
+                        setDialogueMetaData((prev: IDialogueMetaData) => ({
+                            ...prev,
+                            show: false,
+                        }))
+                    }
+                />
+            </PageContent>
+        </StyledBox>
     );
 };

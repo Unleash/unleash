@@ -45,6 +45,13 @@ export class PlaygroundService {
             ),
             this.segmentService.getActive(),
         ]);
+        const featureProject: Record<string, string> = features.reduce(
+            (obj, feature) => {
+                obj[feature.name] = feature.project;
+                return obj;
+            },
+            {},
+        );
 
         const [head, ...rest] = features;
         if (!head) {
@@ -85,9 +92,7 @@ export class PlaygroundService {
                             result: strategyEvaluationResult.result,
                             data: strategyEvaluationResult.strategies,
                         },
-                        projectId:
-                            features.find((f) => f.name === feature.name)
-                                ?.project || 'unknown',
+                        projectId: featureProject[feature.name],
                         variant: client.getVariant(feature.name, clientContext),
                         name: feature.name,
                         variants: variantsMap[feature.name] || [],

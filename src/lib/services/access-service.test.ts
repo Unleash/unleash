@@ -3,9 +3,14 @@ import getLogger from '../../test/fixtures/no-logger';
 import createStores from '../../test/fixtures/store';
 import { AccessService, IRoleValidation } from './access-service';
 import { GroupService } from './group-service';
+import { createTestConfig } from 'test/config/test-config';
 
 function getSetup(withNameInUse: boolean) {
     const stores = createStores();
+
+    const config = createTestConfig({
+        getLogger,
+    });
 
     stores.roleStore = {
         ...stores.roleStore,
@@ -14,13 +19,7 @@ function getSetup(withNameInUse: boolean) {
         },
     };
     return {
-        accessService: new AccessService(
-            stores,
-            {
-                getLogger,
-            },
-            {} as GroupService,
-        ),
+        accessService: new AccessService(stores, config, {} as GroupService),
         stores,
     };
 }

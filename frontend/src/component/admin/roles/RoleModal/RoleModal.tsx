@@ -41,8 +41,8 @@ export const RoleModal = ({ role, open, setOpen }: IRoleModalProps) => {
         description,
         setDescription,
         checkedPermissions,
+        setCheckedPermissions,
         handlePermissionChange,
-        onToggleAllPermissions,
         getRolePayload,
         isNameUnique,
         isNotEmpty,
@@ -128,8 +128,8 @@ export const RoleModal = ({ role, open, setOpen }: IRoleModalProps) => {
                         description={description}
                         setDescription={setDescription}
                         checkedPermissions={checkedPermissions}
+                        setCheckedPermissions={setCheckedPermissions}
                         handlePermissionChange={handlePermissionChange}
-                        onToggleAllPermissions={onToggleAllPermissions}
                         permissions={rootPermissions}
                         errors={errors}
                     />

@@ -28,8 +28,11 @@ export const Admin = () => (
         <AdminMenu />
         <Routes>
             <Route path="users" element={<UsersAdmin />} />
-            <Route path="create-project-role" element={<CreateProjectRole />} />
-            <Route path="roles/:id/edit" element={<EditProjectRole />} />
+            <Route path="project-roles/new" element={<CreateProjectRole />} />
+            <Route
+                path="project-roles/:id/edit"
+                element={<EditProjectRole />}
+            />
             <Route path="api" element={<ApiTokenPage />} />
             <Route path="api/create-token" element={<CreateApiToken />} />
             <Route path="users/:id/edit" element={<EditUser />} />

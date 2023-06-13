@@ -95,7 +95,7 @@ const ProjectRoleList = () => {
                             data-loading
                             disabled={type === BUILTIN_ROLE_TYPE}
                             onClick={() => {
-                                navigate(`/admin/roles/${id}/edit`);
+                                navigate(`/admin/project-roles/${id}/edit`);
                             }}
                             permission={ADMIN}
                             tooltipProps={{
@@ -204,7 +204,7 @@ const ProjectRoleList = () => {
                                 variant="contained"
                                 color="primary"
                                 onClick={() =>
-                                    navigate('/admin/create-project-role')
+                                    navigate('/admin/project-roles/new')
                                 }
                             >
                                 New project role

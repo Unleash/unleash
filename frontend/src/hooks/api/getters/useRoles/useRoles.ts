@@ -5,6 +5,9 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
 
+const ROOT_ROLES = ['root', 'root-custom'];
+const PROJECT_ROLES = ['project', 'custom'];
+
 export const useRoles = () => {
     const { isEnterprise } = useUiConfig();
 
@@ -17,10 +20,11 @@ export const useRoles = () => {
 
     return useMemo(
         () => ({
-            roles: (data?.roles.filter(({ type }: IRole) => type === 'root') ??
-                []) as IRole[],
-            projectRoles: (data?.roles.filter(
-                ({ type }: IRole) => type !== 'root'
+            roles: (data?.roles.filter(({ type }: IRole) =>
+                ROOT_ROLES.includes(type)
+            ) ?? []) as IRole[],
+            projectRoles: (data?.roles.filter(({ type }: IRole) =>
+                PROJECT_ROLES.includes(type)
             ) ?? []) as IProjectRole[],
             loading: !error && !data,
             refetch: () => mutate(),

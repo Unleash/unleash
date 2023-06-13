@@ -6,7 +6,6 @@ import {
     Radio,
     RadioGroup,
     styled,
-    Typography,
 } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
@@ -33,6 +32,8 @@ import { useServiceAccountTokensApi } from 'hooks/api/actions/useServiceAccountT
 import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import { ServiceAccountTokens } from './ServiceAccountTokens/ServiceAccountTokens';
 import { IServiceAccount } from 'interfaces/service-account';
+import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
+import IRole from 'interfaces/role';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -59,14 +60,9 @@ const StyledInput = styled(Input)(({ theme }) => ({
     maxWidth: theme.spacing(50),
 }));
 
-const StyledRoleBox = styled(FormControlLabel)(({ theme }) => ({
-    margin: theme.spacing(0.5, 0),
-    border: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing(2),
-}));
-
-const StyledRoleRadio = styled(Radio)(({ theme }) => ({
-    marginRight: theme.spacing(2),
+const StyledRoleSelect = styled(RoleSelect)(({ theme }) => ({
+    width: '100%',
+    maxWidth: theme.spacing(50),
 }));
 
 const StyledSecondaryContainer = styled('div')(({ theme }) => ({
@@ -133,7 +129,7 @@ export const ServiceAccountModal = ({
 
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
-    const [rootRole, setRootRole] = useState(1);
+    const [rootRole, setRootRole] = useState<IRole | null>(null);
     const [tokenGeneration, setTokenGeneration] = useState<TokenGeneration>(
         TokenGeneration.LATER
     );
@@ -160,7 +156,9 @@ export const ServiceAccountModal = ({
     useEffect(() => {
         setName(serviceAccount?.name || '');
         setUsername(serviceAccount?.username || '');
-        setRootRole(serviceAccount?.rootRole || 1);
+        setRootRole(
+            roles.find(({ id }) => id === serviceAccount?.rootRole) || null
+        );
         setTokenGeneration(TokenGeneration.LATER);
         setErrors({});
 
@@ -173,7 +171,7 @@ export const ServiceAccountModal = ({
     const getServiceAccountPayload = (): IServiceAccountPayload => ({
         name,
         username,
-        rootRole,
+        rootRole: rootRole?.id || 0,
     });
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -226,6 +224,7 @@ export const ServiceAccountModal = ({
             (serviceAccount: IServiceAccount) =>
                 serviceAccount.username === value
         );
+    const isRoleValid = rootRole !== null;
     const isPATValid =
         tokenGeneration === TokenGeneration.LATER ||
         (isNotEmpty(patDescription) && patExpiresAt > new Date());
@@ -233,6 +232,7 @@ export const ServiceAccountModal = ({
         isNotEmpty(name) &&
         isNotEmpty(username) &&
         (editing || isUnique(username)) &&
+        isRoleValid &&
         isPATValid;
 
     const suggestUsername = () => {
@@ -305,39 +305,11 @@ export const ServiceAccountModal = ({
                         <StyledInputDescription>
                             What is your service account allowed to do?
                         </StyledInputDescription>
-                        <FormControl>
-                            <RadioGroup
-                                name="rootRole"
-                                value={rootRole || ''}
-                                onChange={e => setRootRole(+e.target.value)}
-                                data-loading
-                            >
-                                {roles
-                                    .sort((a, b) => (a.name < b.name ? -1 : 1))
-                                    .map(role => (
-                                        <StyledRoleBox
-                                            key={`role-${role.id}`}
-                                            labelPlacement="end"
-                                            label={
-                                                <div>
-                                                    <strong>{role.name}</strong>
-                                                    <Typography variant="body2">
-                                                        {role.description}
-                                                    </Typography>
-                                                </div>
-                                            }
-                                            control={
-                                                <StyledRoleRadio
-                                                    checked={
-                                                        role.id === rootRole
-                                                    }
-                                                />
-                                            }
-                                            value={role.id}
-                                        />
-                                    ))}
-                            </RadioGroup>
-                        </FormControl>
+                        <StyledRoleSelect
+                            value={rootRole}
+                            setValue={setRootRole}
+                            required
+                        />
                         <ConditionallyRender
                             condition={!editing}
                             show={

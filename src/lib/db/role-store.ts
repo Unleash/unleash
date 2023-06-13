@@ -160,7 +160,7 @@ export default class RoleStore implements IRoleStore {
         return this.db
             .select(['id', 'name', 'type', 'description'])
             .from<IRole>(T.ROLES)
-            .where('type', 'root');
+            .whereIn('type', ['root', 'root-custom']);
     }
 
     async removeRolesForProject(projectId: string): Promise<void> {
@@ -177,7 +177,7 @@ export default class RoleStore implements IRoleStore {
             .distinctOn('user_id')
             .from(`${T.ROLES} AS r`)
             .leftJoin(`${T.ROLE_USER} AS ru`, 'r.id', 'ru.role_id')
-            .where('r.type', '=', 'root');
+            .whereIn('r.type', ['root', 'root-custom']);
 
         return rows.map((row) => ({
             roleId: Number(row.id),

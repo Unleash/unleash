@@ -98,12 +98,14 @@ export const useRoleForm = (
     const getRolePayload = () => ({
         name,
         description,
+        type: 'root-custom',
         permissions: Object.values(checkedPermissions),
     });
 
     const isNameUnique = (name: string) => {
         return !roles.some(
             (existingRole: IRole) =>
+                existingRole.name !== initialName &&
                 existingRole.name.toLowerCase() === name.toLowerCase()
         );
     };
@@ -111,7 +113,7 @@ export const useRoleForm = (
     const isNotEmpty = (value: string) => value.length;
 
     const hasPermissions = (permissions: ICheckedPermissions) =>
-        Object.keys(checkedPermissions).length > 0;
+        Object.keys(permissions).length > 0;
 
     const clearError = (field: ErrorField) => {
         setErrors(errors => ({ ...errors, [field]: undefined }));

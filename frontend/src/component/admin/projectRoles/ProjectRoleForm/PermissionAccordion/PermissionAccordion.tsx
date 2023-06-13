@@ -23,10 +23,10 @@ interface IEnvironmentPermissionAccordionProps {
     title: string;
     Icon: ReactNode;
     isInitiallyExpanded?: boolean;
-    context: 'root' | 'project' | 'environment';
+    context: string;
     onPermissionChange: (permission: IPermission) => void;
     onCheckAll: () => void;
-    getRoleKey: (permission: { id: number; environment?: string }) => string;
+    getRoleKey?: (permission: { id: number; environment?: string }) => string;
 }
 
 const AccordionHeader = styled(Box)(({ theme }) => ({
@@ -52,7 +52,7 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
     context,
     onPermissionChange,
     onCheckAll,
-    getRoleKey,
+    getRoleKey = permission => permission.id.toString(),
 }) => {
     const [expanded, setExpanded] = useState(isInitiallyExpanded);
     const permissionMap = useMemo(

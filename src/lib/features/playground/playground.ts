@@ -14,7 +14,6 @@ import {
 } from '../../openapi/spec/playground-response-schema';
 import { PlaygroundRequestSchema } from '../../openapi/spec/playground-request-schema';
 import { PlaygroundService } from './playground-service';
-import { fixedAdvancedPlaygroundResponse } from './hardcodedReponse';
 import { IFlagResolver } from '../../types';
 
 export default class PlaygroundController extends Controller {
@@ -90,7 +89,14 @@ export default class PlaygroundController extends Controller {
         res: Response<any>,
     ): Promise<void> {
         if (this.flagResolver.isEnabled('advancedPlayground')) {
-            res.json(fixedAdvancedPlaygroundResponse);
+            res.json({
+                input: req.body,
+                features: await this.playgroundService.evaluateAdvancedQuery(
+                    req.body.projects || '*',
+                    req.body.environments,
+                    req.body.context,
+                ),
+            });
         } else {
             res.status(409).end();
         }

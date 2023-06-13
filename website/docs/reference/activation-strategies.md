@@ -56,10 +56,11 @@ This strategy has the following modelling name in the code:
 
 - **flexibleRollout**
 
-### Custom stickiness (beta) {#custom-stickiness}
+### Custom stickiness {#custom-stickiness}
 
-:::note
-This feature is currently in beta and is not yet supported by all our SDKs. Check out the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) to see what SDKs support it at the moment.
+:::note SDK compatibility
+
+Custom stickiness is supported by all of our SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) for the full overview.
 
 :::
 

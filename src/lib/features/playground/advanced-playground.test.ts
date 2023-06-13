@@ -85,9 +85,8 @@ test('advanced playground evaluation with no toggles', async () => {
 });
 
 test('advanced playground evaluation happy path', async () => {
-    const featureName = 'test-playground-feature';
-    await createFeatureToggleWithStrategy(featureName);
-    await enableToggle(featureName);
+    await createFeatureToggleWithStrategy('test-playground-feature');
+    await enableToggle('test-playground-feature');
 
     const { body: result } = await app.request
         .post('/api/admin/playground/advanced')

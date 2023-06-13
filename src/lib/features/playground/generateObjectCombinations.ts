@@ -7,7 +7,7 @@ export const splitByComma = <T extends Record<string, string>>(
         Object.entries(obj).map(([key, value]) => [key, value.split(',')]),
     ) as Dict<T>;
 
-export const generateCombinations = <T extends Record<string, string>>(
+export const generateCombinations = <T extends Record<string, any>>(
     obj: Dict<T>,
 ): T[] => {
     const keys = Object.keys(obj) as (keyof T)[];
@@ -21,7 +21,7 @@ export const generateCombinations = <T extends Record<string, string>>(
     ) as T[];
 };
 
-export const generateObjectCombinations = <T extends Record<string, string>>(
+export const generateObjectCombinations = <T extends Record<string, any>>(
     obj: T,
 ): T[] => {
     const splitObj = splitByComma(obj);

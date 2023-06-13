@@ -6,7 +6,6 @@ import { useTable, useSortBy, useFlexLayout, Column } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { IServiceAccount } from 'interfaces/service-account';
-import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { ServiceAccountTokensCell } from 'component/admin/serviceAccounts/ServiceAccountsTable/ServiceAccountTokensCell/ServiceAccountTokensCell';
 
 export type PageQueryType = Partial<
@@ -20,8 +19,6 @@ interface IRoleDeleteDialogServiceAccountsProps {
 export const RoleDeleteDialogServiceAccounts = ({
     serviceAccounts,
 }: IRoleDeleteDialogServiceAccountsProps) => {
-    const { roles } = useServiceAccounts();
-
     const [initialState] = useState(() => ({
         sortBy: [{ id: 'seenAt' }],
     }));
@@ -40,7 +37,6 @@ export const RoleDeleteDialogServiceAccounts = ({
                             subtitle={serviceAccount.username}
                         />
                     ),
-                    searchable: true,
                 },
                 {
                     id: 'tokens',
@@ -61,7 +57,6 @@ export const RoleDeleteDialogServiceAccounts = ({
                             value={value}
                         />
                     ),
-                    searchable: true,
                     maxWidth: 100,
                 },
                 {
@@ -86,7 +81,7 @@ export const RoleDeleteDialogServiceAccounts = ({
                     maxWidth: 150,
                 },
             ] as Column<IServiceAccount>[],
-        [roles]
+        []
     );
 
     const { headerGroups, rows, prepareRow } = useTable(

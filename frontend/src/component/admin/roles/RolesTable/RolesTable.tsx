@@ -23,6 +23,7 @@ import { RoleDeleteDialog } from './RoleDeleteDialog/RoleDeleteDialog';
 import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 import { RoleModal } from '../RoleModal/RoleModal';
+import { RolePermissionsCell } from './RolePermissionsCell/RolePermissionsCell';
 
 export const RolesTable = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -71,6 +72,12 @@ export const RolesTable = () => {
                 ),
                 searchable: true,
                 minWidth: 100,
+            },
+            {
+                id: 'permissions',
+                Header: 'Permissions',
+                Cell: RolePermissionsCell,
+                maxWidth: 140,
             },
             {
                 Header: 'Actions',
@@ -211,7 +218,7 @@ export const RolesTable = () => {
                 }
             />
             <RoleModal
-                role={selectedRole}
+                roleId={selectedRole?.id}
                 open={modalOpen}
                 setOpen={setModalOpen}
             />

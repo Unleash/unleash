@@ -1,6 +1,5 @@
 import { Button, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import IRole from 'interfaces/role';
 import { useRoleForm } from '../RoleForm/useRoleForm';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -10,6 +9,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { FormEvent } from 'react';
 import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
+import { useRole } from 'hooks/api/getters/useRole/useRole';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -29,12 +29,14 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 }));
 
 interface IRoleModalProps {
-    role?: IRole;
+    roleId?: number;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const RoleModal = ({ role, open, setOpen }: IRoleModalProps) => {
+export const RoleModal = ({ roleId, open, setOpen }: IRoleModalProps) => {
+    const { role, refetch: refetchRole } = useRole(roleId?.toString());
+
     const {
         name,
         setName,
@@ -53,7 +55,7 @@ export const RoleModal = ({ role, open, setOpen }: IRoleModalProps) => {
         clearError,
         ErrorField,
     } = useRoleForm(role?.name, role?.description, role?.permissions);
-    const { refetch } = useRoles();
+    const { refetch: refetchRoles } = useRoles();
     const { addRole, updateRole, loading } = useRolesApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
@@ -80,6 +82,11 @@ export const RoleModal = ({ role, open, setOpen }: IRoleModalProps) => {
             setError(ErrorField.NAME, 'A role with that name already exists.');
         }
         setName(name);
+    };
+
+    const refetch = () => {
+        refetchRoles();
+        refetchRole();
     };
 
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {

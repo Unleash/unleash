@@ -6,6 +6,8 @@ import {
 } from '@mui/material';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 import IRole from 'interfaces/role';
+import { RoleDescription } from '../RoleDescription/RoleDescription';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
 const StyledRoleOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -16,7 +18,7 @@ const StyledRoleOption = styled('div')(({ theme }) => ({
     },
 }));
 
-export interface IRoleSelectProps
+interface IRoleSelectProps
     extends Partial<AutocompleteProps<IRole, false, false, false>> {
     value: IRole | null;
     setValue: (role: IRole | null) => void;
@@ -57,6 +59,12 @@ export const RoleSelect = ({
                     <TextField {...params} label="Role" required={required} />
                 )}
                 {...rest}
+            />
+            <ConditionallyRender
+                condition={Boolean(value)}
+                show={() => (
+                    <RoleDescription sx={{ marginTop: 1 }} roleId={value!.id} />
+                )}
             />
         </>
     );

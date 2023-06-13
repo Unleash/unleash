@@ -6,6 +6,8 @@ import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import IRole from 'interfaces/role';
 import { RoleDeleteDialogUsers } from './RoleDeleteDialogUsers/RoleDeleteDialogUsers';
 import { RoleDeleteDialogServiceAccounts } from './RoleDeleteDialogServiceAccounts/RoleDeleteDialogServiceAccounts';
+import { useGroups } from 'hooks/api/getters/useGroups/useGroups';
+import { RoleDeleteDialogGroups } from './RoleDeleteDialogGroups/RoleDeleteDialogGroups';
 
 const StyledTableContainer = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1.5),
@@ -30,11 +32,13 @@ export const RoleDeleteDialog = ({
 }: IRoleDeleteDialogProps) => {
     const { users } = useUsers();
     const { serviceAccounts } = useServiceAccounts();
+    const { groups } = useGroups();
 
     const roleUsers = users.filter(({ rootRole }) => rootRole === role?.id);
     const roleServiceAccounts = serviceAccounts.filter(
         ({ rootRole }) => rootRole === role?.id
     );
+    const roleGroups = groups?.filter(({ rootRole }) => rootRole === role?.id);
 
     const deleteMessage = (
         <>
@@ -55,14 +59,16 @@ export const RoleDeleteDialog = ({
         >
             <ConditionallyRender
                 condition={Boolean(
-                    roleUsers.length || roleServiceAccounts.length
+                    roleUsers.length ||
+                        roleServiceAccounts.length ||
+                        roleGroups?.length
                 )}
                 show={
                     <>
                         <Alert severity="error">
-                            If you delete this role, all current accounts
+                            If you delete this role, all current entities
                             associated with it will be automatically assigned
-                            the preconfigured <strong>Viewer</strong> role.
+                            the predefined <strong>Viewer</strong> role.
                         </Alert>
                         <StyledLabel>{deleteMessage}</StyledLabel>
                         <ConditionallyRender
@@ -93,6 +99,21 @@ export const RoleDeleteDialog = ({
                                             serviceAccounts={
                                                 roleServiceAccounts
                                             }
+                                        />
+                                    </StyledTableContainer>
+                                </>
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={Boolean(roleGroups?.length)}
+                            show={
+                                <>
+                                    <StyledLabel>
+                                        Groups ({roleGroups?.length}):
+                                    </StyledLabel>
+                                    <StyledTableContainer>
+                                        <RoleDeleteDialogGroups
+                                            groups={roleGroups!}
                                         />
                                     </StyledTableContainer>
                                 </>

@@ -4,23 +4,25 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { useMemo, useState } from 'react';
 import { useTable, useSortBy, useFlexLayout, Column } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { IUser } from 'interfaces/user';
+import { IGroup } from 'interfaces/group';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
 
-interface IRoleDeleteDialogUsersProps {
-    users: IUser[];
+interface IRoleDeleteDialogGroupsProps {
+    groups: IGroup[];
 }
 
-export const RoleDeleteDialogUsers = ({
-    users,
-}: IRoleDeleteDialogUsersProps) => {
+export const RoleDeleteDialogGroups = ({
+    groups,
+}: IRoleDeleteDialogGroupsProps) => {
     const [initialState] = useState(() => ({
-        sortBy: [{ id: 'last-login' }],
+        sortBy: [{ id: 'createdAt' }],
     }));
+
+    console.log(groups);
 
     const columns = useMemo(
         () =>
@@ -30,10 +32,10 @@ export const RoleDeleteDialogUsers = ({
                     Header: 'Name',
                     accessor: (row: any) => row.name || '',
                     minWidth: 200,
-                    Cell: ({ row: { original: user } }: any) => (
+                    Cell: ({ row: { original: group } }: any) => (
                         <HighlightCell
-                            value={user.name}
-                            subtitle={user.email || user.username}
+                            value={group.name}
+                            subtitle={group.description}
                         />
                     ),
                 },
@@ -46,27 +48,23 @@ export const RoleDeleteDialogUsers = ({
                     maxWidth: 120,
                 },
                 {
-                    id: 'last-login',
-                    Header: 'Last login',
-                    accessor: (row: any) => row.seenAt || '',
-                    Cell: ({ row: { original: user } }: any) => (
-                        <TimeAgoCell
-                            value={user.seenAt}
-                            emptyText="Never"
-                            title={date => `Last login: ${date}`}
-                        />
-                    ),
-                    sortType: 'date',
+                    id: 'users',
+                    Header: 'Users',
+                    accessor: (row: IGroup) =>
+                        row.users.length === 1
+                            ? '1 user'
+                            : `${row.users.length} users`,
+                    Cell: TextCell,
                     maxWidth: 150,
                 },
-            ] as Column<IUser>[],
+            ] as Column<IGroup>[],
         []
     );
 
     const { headerGroups, rows, prepareRow } = useTable(
         {
             columns,
-            data: users,
+            data: groups,
             initialState,
             sortTypes,
             autoResetHiddenColumns: false,

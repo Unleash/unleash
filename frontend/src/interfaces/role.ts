@@ -6,7 +6,7 @@ interface IRole {
     project: string | null;
     description: string;
     type: string;
-    permissions: IPermission[];
+    permissions?: IPermission[];
 }
 
 export interface IProjectRole {

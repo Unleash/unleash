@@ -2,7 +2,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
-import useProjectRole from 'hooks/api/getters/useProjectRole/useProjectRole';
+import { useRole } from 'hooks/api/getters/useRole/useRole';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,7 @@ const EditProjectRole = () => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const roleId = useRequiredPathParam('id');
-    const { role } = useProjectRole(roleId);
+    const { role, refetch } = useRole(roleId);
 
     const navigate = useNavigate();
     const {
@@ -35,18 +35,17 @@ const EditProjectRole = () => {
         validateName,
         clearErrors,
         getRoleKey,
-    } = useProjectRoleForm(role.name, role.description, role?.permissions);
+    } = useProjectRoleForm(role?.name, role?.description, role?.permissions);
 
     const formatApiCode = () => {
         return `curl --location --request PUT '${
             uiConfig.unleashUrl
-        }/api/admin/roles/${role.id}' \\
+        }/api/admin/roles/${role?.id}' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getProjectRolePayload(), undefined, 2)}'`;
     };
 
-    const { refetch } = useProjectRole(roleId);
     const { updateRole, loading } = useRolesApi();
 
     const onSubmit = async (e: Event) => {

@@ -117,6 +117,7 @@ export const RoleForm = ({
             </StyledInputDescription>
             {[...categories].map(category => (
                 <PermissionAccordion
+                    key={category}
                     title={`${category} permissions`}
                     context={category.toLowerCase()}
                     Icon={<UserIcon color="disabled" sx={{ mr: 1 }} />}

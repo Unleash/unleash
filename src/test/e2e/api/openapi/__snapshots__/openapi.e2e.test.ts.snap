@@ -654,6 +654,202 @@ The provider you choose for your addon dictates what properties the \`parameters
         },
         "type": "object",
       },
+      "advancedPlaygroundEnvironmentFeatureSchema": {
+        "additionalProperties": false,
+        "description": "A simplified feature toggle model intended for the Unleash playground.",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/sdkContextSchema",
+            "description": "The context to use when evaluating toggles",
+          },
+          "environment": {
+            "description": "The feature's environment.",
+            "example": "development",
+            "type": "string",
+          },
+          "isEnabled": {
+            "description": "Whether this feature is enabled or not in the current environment.
+                          If a feature can't be fully evaluated (that is, \`strategies.result\` is \`unknown\`),
+                          this will be \`false\` to align with how client SDKs treat unresolved feature states.",
+            "example": true,
+            "type": "boolean",
+          },
+          "isEnabledInCurrentEnvironment": {
+            "description": "Whether the feature is active and would be evaluated in the provided environment in a normal SDK context.",
+            "type": "boolean",
+          },
+          "name": {
+            "description": "The feature's name.",
+            "example": "my-feature",
+            "type": "string",
+          },
+          "projectId": {
+            "description": "The ID of the project that contains this feature.",
+            "example": "my-project",
+            "type": "string",
+          },
+          "strategies": {
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "description": "The strategies that apply to this feature.",
+                "items": {
+                  "$ref": "#/components/schemas/playgroundStrategySchema",
+                },
+                "type": "array",
+              },
+              "result": {
+                "anyOf": [
+                  {
+                    "type": "boolean",
+                  },
+                  {
+                    "enum": [
+                      "unknown",
+                    ],
+                    "type": "string",
+                  },
+                ],
+                "description": "The cumulative results of all the feature's strategies. Can be \`true\`,
+                                  \`false\`, or \`unknown\`.
+                                  This property will only be \`unknown\`
+                                  if one or more of the strategies can't be fully evaluated and the rest of the strategies
+                                  all resolve to \`false\`.",
+              },
+            },
+            "required": [
+              "result",
+              "data",
+            ],
+            "type": "object",
+          },
+          "variant": {
+            "additionalProperties": false,
+            "description": "The feature variant you receive based on the provided context or the _disabled
+                          variant_. If a feature is disabled or doesn't have any
+                          variants, you would get the _disabled variant_.
+                          Otherwise, you'll get one of thefeature's defined variants.",
+            "example": {
+              "enabled": true,
+              "name": "green",
+            },
+            "nullable": true,
+            "properties": {
+              "enabled": {
+                "description": "Whether the variant is enabled or not. If the feature is disabled or if it doesn't have variants, this property will be \`false\`",
+                "type": "boolean",
+              },
+              "name": {
+                "description": "The variant's name. If there is no variant or if the toggle is disabled, this will be \`disabled\`",
+                "example": "red-variant",
+                "type": "string",
+              },
+              "payload": {
+                "additionalProperties": false,
+                "description": "An optional payload attached to the variant.",
+                "properties": {
+                  "type": {
+                    "description": "The format of the payload.",
+                    "enum": [
+                      "json",
+                      "csv",
+                      "string",
+                    ],
+                    "type": "string",
+                  },
+                  "value": {
+                    "description": "The payload value stringified.",
+                    "example": "{"property": "value"}",
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "type",
+                  "value",
+                ],
+                "type": "object",
+              },
+            },
+            "required": [
+              "name",
+              "enabled",
+            ],
+            "type": "object",
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "name",
+          "environment",
+          "context",
+          "projectId",
+          "isEnabled",
+          "isEnabledInCurrentEnvironment",
+          "variant",
+          "variants",
+          "strategies",
+        ],
+        "type": "object",
+      },
+      "advancedPlaygroundFeatureSchema": {
+        "additionalProperties": false,
+        "description": "A simplified feature toggle model intended for the Unleash playground.",
+        "properties": {
+          "environments": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/advancedPlaygroundEnvironmentFeatureSchema",
+              },
+              "type": "array",
+            },
+            "type": "object",
+          },
+          "name": {
+            "description": "The feature's name.",
+            "example": "my-feature",
+            "type": "string",
+          },
+          "projectId": {
+            "description": "The ID of the project that contains this feature.",
+            "example": "my-project",
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+          "projectId",
+          "environments",
+        ],
+        "type": "object",
+      },
+      "advancedPlaygroundRequestSchema": {},
+      "advancedPlaygroundResponseSchema": {
+        "additionalProperties": false,
+        "description": "The state of all features given the provided input.",
+        "properties": {
+          "features": {
+            "description": "The list of features that have been evaluated.",
+            "items": {
+              "$ref": "#/components/schemas/advancedPlaygroundFeatureSchema",
+            },
+            "type": "array",
+          },
+          "input": {
+            "$ref": "#/components/schemas/advancedPlaygroundRequestSchema",
+            "description": "The given input used to evaluate the features.",
+          },
+        },
+        "required": [
+          "features",
+          "input",
+        ],
+        "type": "object",
+      },
       "apiTokenSchema": {
         "additionalProperties": false,
         "description": "An overview of an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).",

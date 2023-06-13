@@ -15,6 +15,8 @@ import {
 import { PlaygroundRequestSchema } from '../../openapi/spec/playground-request-schema';
 import { PlaygroundService } from './playground-service';
 import { IFlagResolver } from '../../types';
+import { AdvancedPlaygroundRequestSchema } from '../../openapi/spec/advanced-playground-request-schema';
+import { AdvancedPlaygroundResponseSchema } from '../../openapi/spec/advanced-playgorund-response-schema';
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;
@@ -59,7 +61,22 @@ export default class PlaygroundController extends Controller {
             path: '/advanced',
             handler: this.evaluateAdvancedContext,
             permission: NONE,
-            middleware: [],
+            middleware: [
+                openApiService.validPath({
+                    operationId: 'getAdvancedPlayground',
+                    tags: ['Unstable'],
+                    responses: {
+                        ...getStandardResponses(400, 401),
+                        200: createResponseSchema(
+                            'advancedPlaygroundResponseSchema',
+                        ),
+                    },
+                    requestBody: createRequestSchema(
+                        'advancedPlaygroundRequestSchema',
+                    ),
+                    ...endpointDescriptions.admin.playground,
+                }),
+            ],
         });
     }
 
@@ -85,8 +102,8 @@ export default class PlaygroundController extends Controller {
     }
 
     async evaluateAdvancedContext(
-        req: Request<any, any, any>,
-        res: Response<any>,
+        req: Request<any, any, AdvancedPlaygroundRequestSchema>,
+        res: Response<AdvancedPlaygroundResponseSchema>,
     ): Promise<void> {
         if (this.flagResolver.isEnabled('advancedPlayground')) {
             res.json({

@@ -7,6 +7,7 @@ import {
     addonTypeSchema,
     adminCountSchema,
     adminFeaturesQuerySchema,
+    advancedPlaygroundRequestSchema,
     apiTokenSchema,
     apiTokensSchema,
     applicationSchema,
@@ -153,6 +154,9 @@ import { updateTagsSchema } from './spec/update-tags-schema';
 import { batchStaleSchema } from './spec/batch-stale-schema';
 import { createApplicationSchema } from './spec/create-application-schema';
 import { contextFieldStrategiesSchema } from './spec/context-field-strategies-schema';
+import { advancedPlaygroundResponseSchema } from './spec/advanced-playgorund-response-schema';
+import { advancedPlaygroundFeatureSchema } from './spec/advanced-playgorund-feature-schema';
+import { advancedPlaygroundEnvironmentFeatureSchema } from './spec/advanced-playgorund-environment-feature-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
@@ -191,6 +195,10 @@ export const schemas: UnleashSchemas = {
     addonCreateUpdateSchema,
     addonsSchema,
     addonTypeSchema,
+    advancedPlaygroundEnvironmentFeatureSchema,
+    advancedPlaygroundFeatureSchema,
+    advancedPlaygroundRequestSchema,
+    advancedPlaygroundResponseSchema,
     apiTokenSchema,
     apiTokensSchema,
     applicationSchema,

@@ -11,12 +11,20 @@ import { FeatureStrategiesEvaluationResult } from 'lib/features/playground/featu
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
 import { generateObjectCombinations } from './generateObjectCombinations';
+import groupBy from 'lodash.groupby';
+import { omitKeys } from '../../util';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
     segments: ISegment[];
     featureProject: Record<string, string>;
     context: SdkContextSchema;
+    environment: string;
+};
+
+type AdvancedPlaygroundFeatureSchema = PlaygroundFeatureSchema & {
+    context: SdkContextSchema;
+    environment: string;
 };
 
 export class PlaygroundService {
@@ -42,7 +50,7 @@ export class PlaygroundService {
         projects: typeof ALL | string[],
         environments: string[],
         context: SdkContextSchema,
-    ): Promise<PlaygroundFeatureSchema[]> {
+    ): Promise<any> {
         const segments = await this.segmentService.getActive();
         const environmentFeatures = await Promise.all(
             environments.map((env) => this.resolveFeatures(projects, env)),
@@ -50,18 +58,32 @@ export class PlaygroundService {
         const contexts = generateObjectCombinations(context);
 
         const results = await Promise.all(
-            environmentFeatures.flatMap(({ features, featureProject }) =>
-                contexts.map((singleContext) =>
-                    this.evaluate({
-                        features,
-                        featureProject,
-                        context: singleContext,
-                        segments,
-                    }),
-                ),
+            environmentFeatures.flatMap(
+                ({ features, featureProject, environment }) =>
+                    contexts.map((singleContext) =>
+                        this.evaluate({
+                            features,
+                            featureProject,
+                            context: singleContext,
+                            segments,
+                            environment,
+                        }),
+                    ),
             ),
         );
-        return results.flat();
+        const items = results.flat();
+        const itemsByName = groupBy(items, (item) => item.name);
+        return Object.entries(itemsByName).map(([name, entries]) => {
+            const groupedEnvironments = groupBy(
+                entries,
+                (entry) => entry.environment,
+            );
+            return {
+                name,
+                projectId: entries[0]?.projectId,
+                environments: groupedEnvironments,
+            };
+        });
     }
 
     private async evaluate({
@@ -69,7 +91,8 @@ export class PlaygroundService {
         features,
         segments,
         context,
-    }: EvaluationInput): Promise<PlaygroundFeatureSchema[]> {
+        environment,
+    }: EvaluationInput): Promise<AdvancedPlaygroundFeatureSchema[]> {
         const [head, ...rest] = features;
         if (!head) {
             return [];
@@ -92,7 +115,7 @@ export class PlaygroundService {
                     ? new Date(context.currentTime)
                     : undefined,
             };
-            const output: PlaygroundFeatureSchema[] = client
+            return client
                 .getFeatureToggleDefinitions()
                 .map((feature: FeatureInterface) => {
                     const strategyEvaluationResult: FeatureStrategiesEvaluationResult =
@@ -112,18 +135,22 @@ export class PlaygroundService {
                         projectId: featureProject[feature.name],
                         variant: client.getVariant(feature.name, clientContext),
                         name: feature.name,
+                        environment,
+                        context,
                         variants: variantsMap[feature.name] || [],
                     };
                 });
-
-            return output;
         }
     }
 
     private async resolveFeatures(
         projects: typeof ALL | string[],
         environment: string,
-    ): Promise<Pick<EvaluationInput, 'features' | 'featureProject'>> {
+    ): Promise<
+        Pick<EvaluationInput, 'features' | 'featureProject'> & {
+            environment: string;
+        }
+    > {
         const features = await this.featureToggleService.getClientFeatures(
             {
                 project: projects === ALL ? undefined : projects,
@@ -139,7 +166,7 @@ export class PlaygroundService {
             },
             {},
         );
-        return { features, featureProject };
+        return { features, featureProject, environment };
     }
 
     async evaluateQuery(
@@ -152,6 +179,13 @@ export class PlaygroundService {
             this.segmentService.getActive(),
         ]);
 
-        return this.evaluate({ features, featureProject, segments, context });
+        const result = await this.evaluate({
+            features,
+            featureProject,
+            segments,
+            context,
+            environment,
+        });
+        return result.map((item) => omitKeys(item, 'environment', 'context'));
     }
 }

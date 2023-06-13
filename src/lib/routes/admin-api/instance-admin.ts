@@ -102,7 +102,7 @@ class InstanceAdminController extends Controller {
             segments: 2,
             strategies: 8,
             sum: 'some-sha256-hash',
-            timestamp: new Date(),
+            timestamp: new Date(2023, 6, 12, 10, 0, 0, 0),
             users: 10,
             versionEnterprise: '5.1.7',
             versionOSS: '5.1.7',

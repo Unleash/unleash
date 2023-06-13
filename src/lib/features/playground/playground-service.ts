@@ -4,11 +4,20 @@ import { IUnleashServices } from 'lib/types/services';
 import { ALL } from '../../types/models/api-token';
 import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
 import { Logger } from '../../logger';
-import { IUnleashConfig } from 'lib/types';
+import { ISegment, IUnleashConfig } from 'lib/types';
 import { offlineUnleashClient } from './offline-unleash-client';
 import { FeatureInterface } from 'lib/features/playground/feature-evaluator/feature';
 import { FeatureStrategiesEvaluationResult } from 'lib/features/playground/feature-evaluator/client';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
+import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
+import { generateObjectCombinations } from './generateObjectCombinations';
+
+type EvaluationInput = {
+    features: FeatureConfigurationClient[];
+    segments: ISegment[];
+    featureProject: Record<string, string>;
+    context: SdkContextSchema;
+};
 
 export class PlaygroundService {
     private readonly logger: Logger;
@@ -29,30 +38,38 @@ export class PlaygroundService {
         this.segmentService = segmentService;
     }
 
-    async evaluateQuery(
+    async evaluateAdvancedQuery(
         projects: typeof ALL | string[],
-        environment: string,
+        environments: string[],
         context: SdkContextSchema,
     ): Promise<PlaygroundFeatureSchema[]> {
-        const [features, segments] = await Promise.all([
-            this.featureToggleService.getClientFeatures(
-                {
-                    project: projects === ALL ? undefined : projects,
-                    environment,
-                },
-                true,
-                false,
-            ),
-            this.segmentService.getActive(),
-        ]);
-        const featureProject: Record<string, string> = features.reduce(
-            (obj, feature) => {
-                obj[feature.name] = feature.project;
-                return obj;
-            },
-            {},
+        const segments = await this.segmentService.getActive();
+        const environmentFeatures = await Promise.all(
+            environments.map((env) => this.resolveFeatures(projects, env)),
         );
+        const contexts = generateObjectCombinations(context);
 
+        const results = await Promise.all(
+            environmentFeatures.flatMap(({ features, featureProject }) =>
+                contexts.map((singleContext) =>
+                    this.evaluate({
+                        features,
+                        featureProject,
+                        context: singleContext,
+                        segments,
+                    }),
+                ),
+            ),
+        );
+        return results.flat();
+    }
+
+    private async evaluate({
+        featureProject,
+        features,
+        segments,
+        context,
+    }: EvaluationInput): Promise<PlaygroundFeatureSchema[]> {
         const [head, ...rest] = features;
         if (!head) {
             return [];
@@ -101,5 +118,40 @@ export class PlaygroundService {
 
             return output;
         }
+    }
+
+    private async resolveFeatures(
+        projects: typeof ALL | string[],
+        environment: string,
+    ): Promise<Pick<EvaluationInput, 'features' | 'featureProject'>> {
+        const features = await this.featureToggleService.getClientFeatures(
+            {
+                project: projects === ALL ? undefined : projects,
+                environment,
+            },
+            true,
+            false,
+        );
+        const featureProject: Record<string, string> = features.reduce(
+            (obj, feature) => {
+                obj[feature.name] = feature.project;
+                return obj;
+            },
+            {},
+        );
+        return { features, featureProject };
+    }
+
+    async evaluateQuery(
+        projects: typeof ALL | string[],
+        environment: string,
+        context: SdkContextSchema,
+    ): Promise<PlaygroundFeatureSchema[]> {
+        const [{ features, featureProject }, segments] = await Promise.all([
+            this.resolveFeatures(projects, environment),
+            this.segmentService.getActive(),
+        ]);
+
+        return this.evaluate({ features, featureProject, segments, context });
     }
 }

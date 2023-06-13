@@ -65,11 +65,11 @@ test('counts custom strategies in use', async () => {
         db.stores.featureStrategiesStore;
     const strategyStore: StrategyStore = db.stores.strategyStore;
 
-    featureToggleStore.create('default', {
+    await featureToggleStore.create('default', {
         name: 'test-toggle',
     });
 
-    strategyStore.createStrategy({
+    await strategyStore.createStrategy({
         name: 'strategy-1',
         built_in: 0,
         parameters: [],
@@ -77,7 +77,7 @@ test('counts custom strategies in use', async () => {
         createdAt: '2023-06-09T09:00:12.242Z',
     });
 
-    featureStrategiesStore.createStrategyFeatureEnv({
+    await featureStrategiesStore.createStrategyFeatureEnv({
         projectId: 'default',
         featureName: 'test-toggle',
         strategyName: 'strategy-1',

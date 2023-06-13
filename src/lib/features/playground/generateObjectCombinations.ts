@@ -21,7 +21,7 @@ export const generateCombinations = <T extends Record<string, string>>(
     ) as T[];
 };
 
-export const generateObjectCombinations = <T extends Record<string, string>>(
+export const generateObjectCombinations = <T extends Record<string, any>>(
     obj: T,
 ): T[] => {
     const splitObj = splitByComma(obj);

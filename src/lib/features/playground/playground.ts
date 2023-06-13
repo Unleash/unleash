@@ -90,7 +90,13 @@ export default class PlaygroundController extends Controller {
         res: Response<any>,
     ): Promise<void> {
         if (this.flagResolver.isEnabled('advancedPlayground')) {
-            res.json(fixedAdvancedPlaygroundResponse);
+            res.json(
+                await this.playgroundService.evaluateAdvancedQuery(
+                    req.body.projects,
+                    req.body.environments,
+                    req.body.context,
+                ),
+            );
         } else {
             res.status(409).end();
         }

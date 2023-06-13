@@ -9,6 +9,7 @@ import { offlineUnleashClient } from './offline-unleash-client';
 import { FeatureInterface } from 'lib/features/playground/feature-evaluator/feature';
 import { FeatureStrategiesEvaluationResult } from 'lib/features/playground/feature-evaluator/client';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
+import { generateObjectCombinations } from './generateObjectCombinations';
 
 export class PlaygroundService {
     private readonly logger: Logger;
@@ -27,6 +28,27 @@ export class PlaygroundService {
         this.logger = config.getLogger('services/playground-service.ts');
         this.featureToggleService = featureToggleServiceV2;
         this.segmentService = segmentService;
+    }
+
+    async evaluateAdvancedQuery(
+        projects: typeof ALL | string[],
+        environments: string[],
+        context: SdkContextSchema,
+    ): Promise<any> {
+        const contexts = generateObjectCombinations(context);
+        const results = await Promise.all(
+            environments.map((environment) =>
+                Promise.all(
+                    contexts.map((context) =>
+                        this.evaluateQuery(projects, environment, context),
+                    ),
+                ),
+            ),
+        );
+
+        const flatResults = results.flat(2);
+        console.log(JSON.stringify(flatResults, null, 2));
+        return flatResults;
     }
 
     async evaluateQuery(
@@ -90,6 +112,9 @@ export class PlaygroundService {
                                 await this.featureToggleService.getProjectId(
                                     feature.name,
                                 ),
+                            fixedProjectId: features.find(
+                                (f) => f.name === feature.name,
+                            )?.project,
                             variant: client.getVariant(
                                 feature.name,
                                 clientContext,

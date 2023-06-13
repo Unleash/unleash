@@ -68,37 +68,31 @@ export class PlaygroundService {
                     ? new Date(context.currentTime)
                     : undefined,
             };
-            const output: PlaygroundFeatureSchema[] = await Promise.all(
-                client
-                    .getFeatureToggleDefinitions()
-                    .map(async (feature: FeatureInterface) => {
-                        const strategyEvaluationResult: FeatureStrategiesEvaluationResult =
-                            client.isEnabled(feature.name, clientContext);
+            const output: PlaygroundFeatureSchema[] = client
+                .getFeatureToggleDefinitions()
+                .map((feature: FeatureInterface) => {
+                    const strategyEvaluationResult: FeatureStrategiesEvaluationResult =
+                        client.isEnabled(feature.name, clientContext);
 
-                        const isEnabled =
-                            strategyEvaluationResult.result === true &&
-                            feature.enabled;
+                    const isEnabled =
+                        strategyEvaluationResult.result === true &&
+                        feature.enabled;
 
-                        return {
-                            isEnabled,
-                            isEnabledInCurrentEnvironment: feature.enabled,
-                            strategies: {
-                                result: strategyEvaluationResult.result,
-                                data: strategyEvaluationResult.strategies,
-                            },
-                            projectId:
-                                await this.featureToggleService.getProjectId(
-                                    feature.name,
-                                ),
-                            variant: client.getVariant(
-                                feature.name,
-                                clientContext,
-                            ),
-                            name: feature.name,
-                            variants: variantsMap[feature.name] || [],
-                        };
-                    }),
-            );
+                    return {
+                        isEnabled,
+                        isEnabledInCurrentEnvironment: feature.enabled,
+                        strategies: {
+                            result: strategyEvaluationResult.result,
+                            data: strategyEvaluationResult.strategies,
+                        },
+                        projectId:
+                            features.find((f) => f.name === feature.name)
+                                ?.project || 'unknown',
+                        variant: client.getVariant(feature.name, clientContext),
+                        name: feature.name,
+                        variants: variantsMap[feature.name] || [],
+                    };
+                });
 
             return output;
         }

@@ -6,7 +6,7 @@ import { playgroundStrategySchema } from './playground-strategy-schema';
 import { playgroundConstraintSchema } from './playground-constraint-schema';
 import { playgroundSegmentSchema } from './playground-segment-schema';
 import { sdkContextSchema } from './sdk-context-schema';
-import { advancedPlaygroundEnvironmentFeatureSchema } from './advanced-playgorund-environment-feature-schema';
+import { advancedPlaygroundEnvironmentFeatureSchema } from './advanced-playground-environment-feature-schema';
 
 export const advancedPlaygroundFeatureSchema = {
     $id: '#/components/schemas/advancedPlaygroundFeatureSchema',

@@ -8,8 +8,8 @@ import { playgroundConstraintSchema } from './playground-constraint-schema';
 import { playgroundSegmentSchema } from './playground-segment-schema';
 import { playgroundStrategySchema } from './playground-strategy-schema';
 import { advancedPlaygroundRequestSchema } from './advanced-playground-request-schema';
-import { advancedPlaygroundFeatureSchema } from './advanced-playgorund-feature-schema';
-import { advancedPlaygroundEnvironmentFeatureSchema } from './advanced-playgorund-environment-feature-schema';
+import { advancedPlaygroundFeatureSchema } from './advanced-playground-feature-schema';
+import { advancedPlaygroundEnvironmentFeatureSchema } from './advanced-playground-environment-feature-schema';
 
 export const advancedPlaygroundResponseSchema = {
     $id: '#/components/schemas/advancedPlaygroundResponseSchema',

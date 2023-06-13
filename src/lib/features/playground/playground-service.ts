@@ -13,8 +13,8 @@ import { FeatureConfigurationClient } from '../../types/stores/feature-strategie
 import { generateObjectCombinations } from './generateObjectCombinations';
 import groupBy from 'lodash.groupby';
 import { omitKeys } from '../../util';
-import { AdvancedPlaygroundFeatureSchema } from '../../openapi/spec/advanced-playgorund-feature-schema';
-import { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playgorund-environment-feature-schema';
+import { AdvancedPlaygroundFeatureSchema } from '../../openapi/spec/advanced-playground-feature-schema';
+import { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];

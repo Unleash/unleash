@@ -16,7 +16,7 @@ import { PlaygroundRequestSchema } from '../../openapi/spec/playground-request-s
 import { PlaygroundService } from './playground-service';
 import { IFlagResolver } from '../../types';
 import { AdvancedPlaygroundRequestSchema } from '../../openapi/spec/advanced-playground-request-schema';
-import { AdvancedPlaygroundResponseSchema } from '../../openapi/spec/advanced-playgorund-response-schema';
+import { AdvancedPlaygroundResponseSchema } from '../../openapi/spec/advanced-playground-response-schema';
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;

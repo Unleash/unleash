@@ -29,7 +29,6 @@ import { StrategyEditButton } from './StrategyEditButton/StrategyEditButton';
 import { StrategyDeleteButton } from './StrategyDeleteButton/StrategyDeleteButton';
 import { Badge } from 'component/common/Badge/Badge';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { SearchHighlightProvider } from '../../common/Table/SearchHighlightContext/SearchHighlightContext';
 import { CustomStrategyInfo } from '../CustomStrategyInfo/CustomStrategyInfo';
 import { AddStrategyButton } from './AddStrategyButton/AddStrategyButton';
 
@@ -458,48 +457,44 @@ export const StrategiesList = () => {
                     </PageHeader>
                 }
             >
-                <SearchHighlightProvider value={globalFilter}>
-                    <Box>
-                        <Table {...customGetTableProps()}>
-                            <SortableTableHeader
-                                headerGroups={customHeaderGroups}
-                            />
-                            <TableBody {...customGetTableBodyProps()}>
-                                {customRows.map(row => {
-                                    customPrepareRow(row);
-                                    return (
-                                        <TableRow hover {...row.getRowProps()}>
-                                            {row.cells.map(cell => (
-                                                <TableCell
-                                                    {...cell.getCellProps()}
-                                                >
-                                                    {cell.render('Cell')}
-                                                </TableCell>
-                                            ))}
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                        <ConditionallyRender
-                            condition={customRows.length === 0}
-                            show={
-                                <ConditionallyRender
-                                    condition={globalFilter?.length > 0}
-                                    show={
-                                        <TablePlaceholder>
-                                            No custom strategies found matching
-                                            &ldquo;
-                                            {globalFilter}
-                                            &rdquo;
-                                        </TablePlaceholder>
-                                    }
-                                    elseShow={<CustomStrategyInfo />}
-                                />
-                            }
+                <Box>
+                    <Table {...customGetTableProps()}>
+                        <SortableTableHeader
+                            headerGroups={customHeaderGroups}
                         />
-                    </Box>
-                </SearchHighlightProvider>
+                        <TableBody {...customGetTableBodyProps()}>
+                            {customRows.map(row => {
+                                customPrepareRow(row);
+                                return (
+                                    <TableRow hover {...row.getRowProps()}>
+                                        {row.cells.map(cell => (
+                                            <TableCell {...cell.getCellProps()}>
+                                                {cell.render('Cell')}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                    <ConditionallyRender
+                        condition={customRows.length === 0}
+                        show={
+                            <ConditionallyRender
+                                condition={globalFilter?.length > 0}
+                                show={
+                                    <TablePlaceholder>
+                                        No custom strategies found matching
+                                        &ldquo;
+                                        {globalFilter}
+                                        &rdquo;
+                                    </TablePlaceholder>
+                                }
+                                elseShow={<CustomStrategyInfo />}
+                            />
+                        }
+                    />
+                </Box>
 
                 <Dialogue
                     open={dialogueMetaData.show}

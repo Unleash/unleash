@@ -12,6 +12,7 @@ import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
 import { generateObjectCombinations } from './generateObjectCombinations';
 import groupBy from 'lodash.groupby';
+import { omitKeys } from '../../util';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -185,13 +186,6 @@ export class PlaygroundService {
             context,
             environment,
         });
-        return result.map((item) => {
-            const {
-                environment: excludeEnv,
-                context: excludeContext,
-                ...rest
-            } = item;
-            return rest;
-        });
+        return result.map((item) => omitKeys(item, 'environment', 'context'));
     }
 }

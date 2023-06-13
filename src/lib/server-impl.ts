@@ -83,7 +83,7 @@ async function createApp(
         services,
         app,
         config,
-        version: serverVersion,
+        version: config.enterpriseVersion ?? serverVersion,
     };
 
     if (config.import.file) {

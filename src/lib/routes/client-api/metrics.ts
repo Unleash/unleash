@@ -51,6 +51,9 @@ export default class ClientMetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Client'],
+                    summary: 'Register client usage metrics',
+                    description:
+                        'Registers usage metrics. Reported per feature toggle how many time seach toggle was evaluated to enabled/disabled as well as support for registering variant usage',
                     operationId: 'registerClientMetrics',
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {

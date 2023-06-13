@@ -21,6 +21,18 @@ exports[`featureSchema variant override values must be an array 1`] = `
 {
   "errors": [
     {
+      "instancePath": "/variants/0/weightType",
+      "keyword": "enum",
+      "message": "must be equal to one of the allowed values",
+      "params": {
+        "allowedValues": [
+          "fix",
+          "variable",
+        ],
+      },
+      "schemaPath": "#/properties/weightType/enum",
+    },
+    {
       "instancePath": "/variants/0/overrides/0/values",
       "keyword": "type",
       "message": "must be array",

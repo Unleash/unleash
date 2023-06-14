@@ -16,7 +16,7 @@ export const advancedPlaygroundRequestSchema = {
             description: 'The environments to evaluate toggles in.',
         },
         projects: {
-            description: 'A list of projects to check fro toggles in.',
+            description: 'A list of projects to check for toggles in.',
             oneOf: [
                 {
                     type: 'array',

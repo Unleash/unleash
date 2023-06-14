@@ -64,7 +64,7 @@ export const offlineUnleashClient = async ({
         },
     });
 
-    client.start();
+    await client.start();
 
     return client;
 };

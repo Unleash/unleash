@@ -2,7 +2,7 @@
 title: Activation Strategies
 ---
 
-It is powerful to be able to turn a feature on and off instantaneously, without redeploying the application. The next level of control comes when you are able to enable a feature for specific users or enable it for a small subset of users. We achieve this level of control with the help of activation strategies. The most straightforward strategy is the standard strategy, which basically means that the feature should be enabled to everyone.
+It is powerful to be able to turn a feature on and off instantaneously, without redeploying the application. Activation strategies let you enable a feature only for a specified audience. Different strategies use different parameters. Predefined strategies are bundled with Unleash. The recommended strategy is the gradual rollout strategy with 100% rollout, which basically means that the feature should be enabled to everyone.
 
 Unleash comes with a number of built-in strategies (described below) and also lets you add your own [custom activation strategies](../reference/custom-activation-strategies.md) if you need more control. However, while activation strategies are _defined_ on the server, the server does not _implement_ the strategies. Instead, activation strategy implementation is done client-side. This means that it is _the client_ that decides whether a feature should be enabled or not.
 
@@ -56,10 +56,11 @@ This strategy has the following modelling name in the code:
 
 - **flexibleRollout**
 
-### Custom stickiness (beta) {#custom-stickiness}
+### Custom stickiness {#custom-stickiness}
 
-:::note
-This feature is currently in beta and is not yet supported by all our SDKs. Check out the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) to see what SDKs support it at the moment.
+:::note SDK compatibility
+
+Custom stickiness is supported by all of our SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) for the full overview.
 
 :::
 

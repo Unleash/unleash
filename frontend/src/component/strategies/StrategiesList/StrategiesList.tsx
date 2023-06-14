@@ -104,7 +104,7 @@ const PredefinedStrategyTitle = () => (
     <Box>
         <Subtitle
             title="Predefined strategies"
-            description="The next level of control comes when you are able to enable a feature for specific users or enable it for a small subset of users. We achieve this level of control with the help of activation strategies."
+            description="Activation strategies let you enable a feature only for a specified audience. Different strategies use different parameters. Predefined strategies are bundled with Unleash."
             link="https://docs.getunleash.io/reference/activation-strategies"
         />
     </Box>

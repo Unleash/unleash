@@ -19,7 +19,7 @@ import VersionService from './version-service';
 import { ISettingStore } from '../types/stores/settings-store';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
 
-type TimeRange = 'allTime' | '30d' | '7d';
+export type TimeRange = 'allTime' | '30d' | '7d';
 
 export interface InstanceStats {
     instanceId: string;
@@ -42,7 +42,7 @@ export interface InstanceStats {
     clientApps: { range: TimeRange; count: number }[];
 }
 
-interface InstanceStatsSigned extends InstanceStats {
+export interface InstanceStatsSigned extends InstanceStats {
     sum: string;
 }
 

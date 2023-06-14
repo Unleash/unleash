@@ -25,7 +25,6 @@ export const variantSchema = {
             description:
                 'Set to fix if this variant must have exactly the weight allocated to it. If the type is variable, the weight will adjust so that the total weight of all variants adds up to 1000',
             type: 'string',
-            enum: ['fix', 'variable'],
             example: 'fix',
         },
         stickiness: {

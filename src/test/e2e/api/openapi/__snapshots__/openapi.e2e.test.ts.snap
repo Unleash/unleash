@@ -5652,10 +5652,6 @@ Stats are divided into current and previous **windows**.
           },
           "weightType": {
             "description": "Set to fix if this variant must have exactly the weight allocated to it. If the type is variable, the weight will adjust so that the total weight of all variants adds up to 1000",
-            "enum": [
-              "fix",
-              "variable",
-            ],
             "example": "fix",
             "type": "string",
           },

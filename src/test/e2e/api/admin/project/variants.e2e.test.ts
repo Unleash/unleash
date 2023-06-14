@@ -490,7 +490,7 @@ test('PUTing an invalid variant throws 400 exception', async () => {
         .expect((res) => {
             expect(res.body.details).toHaveLength(1);
             expect(res.body.details[0].description).toMatch(
-                /.*weightType property should be equal/,
+                /.*weightType" must be one of/,
             );
         });
 });

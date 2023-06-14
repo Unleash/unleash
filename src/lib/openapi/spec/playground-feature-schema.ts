@@ -41,6 +41,8 @@ export const playgroundFeatureSchema = {
             type: 'object',
             additionalProperties: false,
             required: ['result', 'data'],
+            description:
+                "Feature's applicable strategies and cumulative results of the strategies",
             properties: {
                 result: {
                     description: `The cumulative results of all the feature's strategies. Can be \`true\`,
@@ -119,7 +121,11 @@ export const playgroundFeatureSchema = {
             nullable: true,
             example: { name: 'green', enabled: true },
         },
-        variants: { type: 'array', items: { $ref: variantSchema.$id } },
+        variants: {
+            type: 'array',
+            description: 'The feature variants.',
+            items: { $ref: variantSchema.$id },
+        },
     },
     components: {
         schemas: {

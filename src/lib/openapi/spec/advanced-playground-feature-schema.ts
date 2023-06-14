@@ -28,6 +28,8 @@ export const advancedPlaygroundFeatureSchema = {
         },
         environments: {
             type: 'object',
+            description:
+                'The lists of features that have been evaluated grouped by environment.',
             additionalProperties: {
                 type: 'array',
                 items: { $ref: advancedPlaygroundEnvironmentFeatureSchema.$id },

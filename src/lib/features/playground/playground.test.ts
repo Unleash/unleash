@@ -20,6 +20,7 @@ async function getSetup() {
     const stores = createStores();
     const config = createTestConfig({
         server: { baseUriPath: base },
+        experimental: { flags: { strictSchemaValidation: true } },
     });
     const services = createServices(stores, config);
     const app = await getApp(config, stores, services);

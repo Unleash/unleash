@@ -690,6 +690,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "strategies": {
             "additionalProperties": false,
+            "description": "Feature's applicable strategies and cumulative results of the strategies",
             "properties": {
               "data": {
                 "description": "The strategies that apply to this feature.",
@@ -777,6 +778,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "object",
           },
           "variants": {
+            "description": "The feature variants.",
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -807,6 +809,7 @@ The provider you choose for your addon dictates what properties the \`parameters
               },
               "type": "array",
             },
+            "description": "The lists of features that have been evaluated grouped by environment.",
             "type": "object",
           },
           "name": {
@@ -827,7 +830,53 @@ The provider you choose for your addon dictates what properties the \`parameters
         ],
         "type": "object",
       },
-      "advancedPlaygroundRequestSchema": {},
+      "advancedPlaygroundRequestSchema": {
+        "description": "Data for the playground API to evaluate toggles in advanced mode with environment and context multi selection",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/sdkContextSchema",
+            "description": "The context to use when evaluating toggles",
+          },
+          "environments": {
+            "description": "The environments to evaluate toggles in.",
+            "example": [
+              "development",
+              "production",
+            ],
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "projects": {
+            "description": "A list of projects to check fro toggles in.",
+            "oneOf": [
+              {
+                "description": "A list of projects to check for toggles in.",
+                "example": [
+                  "my-project",
+                ],
+                "items": {
+                  "type": "string",
+                },
+                "type": "array",
+              },
+              {
+                "description": "Check toggles in all projects.",
+                "enum": [
+                  "*",
+                ],
+                "type": "string",
+              },
+            ],
+          },
+        },
+        "required": [
+          "environments",
+          "context",
+        ],
+        "type": "object",
+      },
       "advancedPlaygroundResponseSchema": {
         "additionalProperties": false,
         "description": "The state of all features given the provided input.",
@@ -3690,6 +3739,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "strategies": {
             "additionalProperties": false,
+            "description": "Feature's applicable strategies and cumulative results of the strategies",
             "properties": {
               "data": {
                 "description": "The strategies that apply to this feature.",
@@ -3777,6 +3827,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "object",
           },
           "variants": {
+            "description": "The feature variants.",
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -3807,6 +3858,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "projects": {
+            "description": "A list of projects to check for toggles in.",
             "oneOf": [
               {
                 "description": "A list of projects to check for toggles in.",
@@ -4690,17 +4742,20 @@ Stats are divided into current and previous **windows**.
         "description": "The Unleash context as modeled in client SDKs",
         "properties": {
           "appName": {
+            "description": "The name of the application.",
             "example": "My cool application.",
             "minLength": 1,
             "type": "string",
           },
           "currentTime": {
+            "description": "A DateTime (or similar) data class instance or a string in an RFC3339-compatible format. Defaults to the current time if not set by the user.",
             "example": "2022-07-05T12:56:41+02:00",
             "format": "date-time",
             "type": "string",
           },
           "environment": {
             "deprecated": true,
+            "description": "The environment the app is running in.",
             "type": "string",
           },
           "properties": {
@@ -4714,14 +4769,17 @@ Stats are divided into current and previous **windows**.
             "type": "object",
           },
           "remoteAddress": {
+            "description": "The app's IP address",
             "example": "192.168.1.1",
             "type": "string",
           },
           "sessionId": {
+            "description": "An identifier for the current session",
             "example": "b65e7b23-fec0-4814-a129-0e9861ef18fc",
             "type": "string",
           },
           "userId": {
+            "description": "an identifier for the current user",
             "example": "username@provider.com",
             "type": "string",
           },
@@ -9505,6 +9563,93 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
         "summary": "Evaluate an Unleash context against a set of environments and projects.",
         "tags": [
           "Playground",
+        ],
+      },
+    },
+    "/api/admin/playground/advanced": {
+      "post": {
+        "description": "Use the provided \`context\`, \`environment\`, and \`projects\` to evaluate toggles on this Unleash instance. Returns a list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.",
+        "operationId": "getAdvancedPlayground",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/advancedPlaygroundRequestSchema",
+              },
+            },
+          },
+          "description": "advancedPlaygroundRequestSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/advancedPlaygroundResponseSchema",
+                },
+              },
+            },
+            "description": "advancedPlaygroundResponseSchema",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "The request payload you provided doesn't conform to the schema. The .parameters property should be object. You sent [].",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ValidationError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+        },
+        "summary": "Evaluate an Unleash context against a set of environments and projects.",
+        "tags": [
+          "Unstable",
         ],
       },
     },

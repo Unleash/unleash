@@ -96,6 +96,7 @@ module.exports = {
                         'how-to/how-to-define-custom-context-fields',
                         'how-to/how-to-use-custom-strategies',
                         'how-to/how-to-schedule-feature-releases',
+                        'how-to/how-to-synchronize-unleash-instances',
                     ],
                     type: 'category',
                     link: {

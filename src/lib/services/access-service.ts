@@ -486,6 +486,7 @@ export class AccessService {
     }
 
     async createRole(role: IRoleCreation): Promise<ICustomRole> {
+        // CUSTOM_PROJECT_ROLE_TYPE is assumed by default for backward compatibility
         const roleType =
             role.type === CUSTOM_ROOT_ROLE_TYPE
                 ? CUSTOM_ROOT_ROLE_TYPE

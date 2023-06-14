@@ -112,8 +112,8 @@ export default class FeatureController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    summary: 'Get all toggles the API key has access to',
-                    description: 'Used by SDKs to configure local evaluation',
+                    summary: 'Get all toggles (SDK)', 
+                    description: 'Returns the SDK configuration for all feature toggles that are available to the provided API key. Used by SDKs to configure local evaluation',
                     operationId: 'getAllClientFeatures',
                     tags: ['Client'],
                     responses: {

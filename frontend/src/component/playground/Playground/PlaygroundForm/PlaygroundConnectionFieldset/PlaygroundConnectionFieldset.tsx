@@ -10,11 +10,11 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
 
 interface IPlaygroundConnectionFieldsetProps {
-    environment: string;
+    environments: string[];
     projects: string[];
     setProjects: (projects: string[]) => void;
-    setEnvironment: (environment: string) => void;
-    environmentOptions: string[];
+    setEnvironments: (environments: string[]) => void;
+    availableEnvironments: string[];
 }
 
 interface IOption {
@@ -27,11 +27,11 @@ const allOption: IOption = { label: 'ALL', id: '*' };
 export const PlaygroundConnectionFieldset: VFC<
     IPlaygroundConnectionFieldsetProps
 > = ({
-    environment,
+    environments,
     projects,
     setProjects,
-    setEnvironment,
-    environmentOptions,
+    setEnvironments,
+    availableEnvironments,
 }) => {
     const theme = useTheme();
 
@@ -41,6 +41,14 @@ export const PlaygroundConnectionFieldset: VFC<
         ...availableProjects.map(({ name: label, id }) => ({
             label,
             id,
+        })),
+    ];
+
+    const environmentOptions = [
+        allOption,
+        ...availableEnvironments.map(name => ({
+            label: name,
+            id: name,
         })),
     ];
 
@@ -71,8 +79,38 @@ export const PlaygroundConnectionFieldset: VFC<
         return setProjects([newProjects.id]);
     };
 
+    const onEnvironmentsChange: ComponentProps<
+        typeof Autocomplete
+    >['onChange'] = (event, value, reason) => {
+        const newEnvironments = value as IOption | IOption[];
+        if (reason === 'clear' || newEnvironments === null) {
+            return setEnvironments([allOption.id]);
+        }
+        if (Array.isArray(newEnvironments)) {
+            if (newEnvironments.length === 0) {
+                return setProjects([allOption.id]);
+            }
+            if (
+                newEnvironments.find(({ id }) => id === allOption.id) !==
+                undefined
+            ) {
+                return setEnvironments([allOption.id]);
+            }
+            return setEnvironments(newEnvironments.map(({ id }) => id));
+        }
+        if (newEnvironments.id === allOption.id) {
+            return setEnvironments([allOption.id]);
+        }
+
+        return setEnvironments([newEnvironments.id]);
+    };
+
     const isAllProjects =
         projects.length === 0 || (projects.length === 1 && projects[0] === '*');
+
+    const isAllEnvironments =
+        environments.length === 0 ||
+        (environments.length === 1 && environments[0] === '*');
 
     return (
         <Box sx={{ pb: 2 }}>
@@ -90,14 +128,21 @@ export const PlaygroundConnectionFieldset: VFC<
                 <Autocomplete
                     disablePortal
                     id="environment"
+                    multiple={!isAllEnvironments}
                     options={environmentOptions}
                     sx={{ width: 200, maxWidth: '100%' }}
                     renderInput={params => (
-                        <TextField {...params} label="Environment" required />
+                        <TextField {...params} label="Environments" />
                     )}
-                    value={environment}
-                    onChange={(event, value) => setEnvironment(value || '')}
                     size="small"
+                    value={
+                        isAllEnvironments
+                            ? allOption
+                            : environmentOptions.filter(({ id }) =>
+                                  environments.includes(id)
+                              )
+                    }
+                    onChange={onEnvironmentsChange}
                 />
                 <Autocomplete
                     disablePortal

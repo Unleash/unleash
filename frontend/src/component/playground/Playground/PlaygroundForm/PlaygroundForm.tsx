@@ -2,28 +2,27 @@ import { Box, Button, Divider, useTheme } from '@mui/material';
 import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
 import { IEnvironment } from 'interfaces/environments';
 import { FormEvent, VFC } from 'react';
-import { getEnvironmentOptions } from '../playground.utils';
 import { PlaygroundCodeFieldset } from './PlaygroundCodeFieldset/PlaygroundCodeFieldset';
 import { PlaygroundConnectionFieldset } from './PlaygroundConnectionFieldset/PlaygroundConnectionFieldset';
 
 interface IPlaygroundFormProps {
-    environments: IEnvironment[];
+    availableEnvironments: IEnvironment[];
     onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-    environment: string;
+    environments: string | string[];
     projects: string[];
     setProjects: React.Dispatch<React.SetStateAction<string[]>>;
-    setEnvironment: React.Dispatch<React.SetStateAction<string>>;
+    setEnvironments: React.Dispatch<React.SetStateAction<string[]>>;
     context: string | undefined;
     setContext: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
+    availableEnvironments,
     environments,
-    environment,
     onSubmit,
     projects,
     setProjects,
-    setEnvironment,
+    setEnvironments,
     context,
     setContext,
 }) => {
@@ -39,11 +38,15 @@ export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
             }}
         >
             <PlaygroundConnectionFieldset
-                environment={environment}
+                environments={
+                    Array.isArray(environments) ? environments : [environments]
+                }
                 projects={projects}
-                setEnvironment={setEnvironment}
+                setEnvironments={setEnvironments}
                 setProjects={setProjects}
-                environmentOptions={getEnvironmentOptions(environments)}
+                availableEnvironments={availableEnvironments.map(
+                    ({ name }) => name
+                )}
             />
             <Divider
                 variant="fullWidth"

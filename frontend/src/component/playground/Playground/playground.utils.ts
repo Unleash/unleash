@@ -1,5 +1,6 @@
 import { PlaygroundResponseSchema } from 'openapi';
 import { IEnvironment } from 'interfaces/environments';
+import { AdvancedPlaygroundResponse } from './AdvancedPlaygroundResultsTable/advancedPlayground';
 
 export const resolveProjects = (
     projects: string[] | string
@@ -17,6 +18,24 @@ export const resolveProjects = (
     }
 
     return [projects];
+};
+
+export const resolveEnvironments = (
+    envrironments: string[] | string
+): string[] | '*' => {
+    if (
+        !envrironments ||
+        envrironments.length === 0 ||
+        (envrironments.length === 1 && envrironments[0] === '*')
+    ) {
+        return '*';
+    }
+
+    if (Array.isArray(envrironments)) {
+        return envrironments;
+    }
+
+    return [envrironments];
 };
 
 export const resolveDefaultEnvironment = (
@@ -38,7 +57,7 @@ export const getEnvironmentOptions = (environments: IEnvironment[]) => {
 
 export const resolveResultsWidth = (
     matches: boolean,
-    results: PlaygroundResponseSchema | undefined
+    results: PlaygroundResponseSchema | AdvancedPlaygroundResponse | undefined
 ) => {
     if (matches) {
         return '100%';

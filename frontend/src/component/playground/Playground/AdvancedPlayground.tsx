@@ -5,22 +5,23 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { PlaygroundResultsTable } from './PlaygroundResultsTable/PlaygroundResultsTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePlaygroundApi } from 'hooks/api/actions/usePlayground/usePlayground';
-import { PlaygroundResponseSchema } from 'openapi';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { PlaygroundForm } from './PlaygroundForm/PlaygroundForm';
 import {
     resolveDefaultEnvironment,
+    resolveEnvironments,
     resolveProjects,
     resolveResultsWidth,
 } from './playground.utils';
 import { PlaygroundGuidance } from './PlaygroundGuidance/PlaygroundGuidance';
 import { PlaygroundGuidancePopper } from './PlaygroundGuidancePopper/PlaygroundGuidancePopper';
 import Loader from '../../common/Loader/Loader';
+import { AdvancedPlaygroundResultsTable } from './AdvancedPlaygroundResultsTable/AdvancedPlaygroundResultsTable';
+import { AdvancedPlaygroundResponse } from './AdvancedPlaygroundResultsTable/advancedPlayground';
 
-export const Playground: VFC<{}> = () => {
+export const AdvancedPlayground: VFC<{}> = () => {
     const { environments: availableEnvironments } = useEnvironments();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('lg'));
@@ -29,22 +30,24 @@ export const Playground: VFC<{}> = () => {
     const [projects, setProjects] = useState<string[]>([]);
     const [context, setContext] = useState<string>();
     const [results, setResults] = useState<
-        PlaygroundResponseSchema | undefined
+        AdvancedPlaygroundResponse | undefined
     >();
     const { setToastData } = useToast();
     const [searchParams, setSearchParams] = useSearchParams();
-    const { evaluatePlayground, loading } = usePlaygroundApi();
+    const { evaluateAdvancedPlayground, loading } = usePlaygroundApi();
 
     useEffect(() => {
         setEnvironments([resolveDefaultEnvironment(availableEnvironments)]);
-    }, [environments]);
+    }, [availableEnvironments]);
 
     useEffect(() => {
         // Load initial values from URL
         try {
-            const environmentFromUrl = searchParams.get('environment');
-            if (environmentFromUrl) {
-                setEnvironments([environmentFromUrl]);
+            let environmentArray: string[];
+            const environmentsFromUrl = searchParams.get('environments');
+            if (environmentsFromUrl) {
+                environmentArray = environmentsFromUrl.split(',');
+                setEnvironments(environmentArray);
             }
 
             let projectsArray: string[];
@@ -61,9 +64,9 @@ export const Playground: VFC<{}> = () => {
             }
 
             const makePlaygroundRequest = async () => {
-                if (environmentFromUrl && contextFromUrl) {
+                if (environmentsFromUrl && contextFromUrl) {
                     await evaluatePlaygroundContext(
-                        environmentFromUrl,
+                        environmentsFromUrl || '*',
                         projectsArray || '*',
                         contextFromUrl
                     );
@@ -83,15 +86,15 @@ export const Playground: VFC<{}> = () => {
     }, []);
 
     const evaluatePlaygroundContext = async (
-        environment: string,
+        environments: string[] | string,
         projects: string[] | string,
         context: string | undefined,
         action?: () => void
     ) => {
         try {
             const parsedContext = JSON.parse(context || '{}');
-            const response = await evaluatePlayground({
-                environment,
+            const response = await evaluateAdvancedPlayground({
+                environments: resolveEnvironments(environments),
                 projects: resolveProjects(projects),
                 context: {
                     appName: 'playground',
@@ -115,7 +118,7 @@ export const Playground: VFC<{}> = () => {
         event.preventDefault();
 
         await evaluatePlaygroundContext(
-            environments[0],
+            environments,
             projects,
             context,
             setURLParameters
@@ -124,7 +127,15 @@ export const Playground: VFC<{}> = () => {
 
     const setURLParameters = () => {
         searchParams.set('context', encodeURI(context || '')); // always set because of native validation
-        searchParams.set('environment', environments[0]);
+        if (
+            Array.isArray(environments) &&
+            environments.length > 0 &&
+            !(environments.length === 1 && environments[0] === '*')
+        ) {
+            searchParams.set('environments', environments.join(','));
+        } else {
+            searchParams.delete('projects');
+        }
         if (
             Array.isArray(projects) &&
             projects.length > 0 &&
@@ -204,7 +215,7 @@ export const Playground: VFC<{}> = () => {
                             <ConditionallyRender
                                 condition={Boolean(results)}
                                 show={
-                                    <PlaygroundResultsTable
+                                    <AdvancedPlaygroundResultsTable
                                         loading={loading}
                                         features={results?.features}
                                         input={results?.input}
@@ -220,4 +231,4 @@ export const Playground: VFC<{}> = () => {
     );
 };
 
-export default Playground;
+export default AdvancedPlayground;

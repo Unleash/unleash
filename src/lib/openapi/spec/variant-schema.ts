@@ -49,7 +49,7 @@ export const variantSchema = {
             example: { type: 'json', value: '{color: red}' },
         },
         overrides: {
-            description: `The weighting system automatically assigns users to a specific group for you. This list contains the overrides assigning a specific variant to a specific user`,
+            description: `Overrides assigning specific variants to specific users. The weighting system automatically assigns users to specific groups for you, but any overrides in this list will take precedence.`,
             type: 'array',
             items: {
                 $ref: '#/components/schemas/overrideSchema',

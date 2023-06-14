@@ -23,7 +23,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { IStrategy } from 'interfaces/strategy';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { sortTypes } from 'utils/sortTypes';
-import { useTable, useGlobalFilter, useSortBy } from 'react-table';
+import { useTable, useSortBy } from 'react-table';
 import { StrategySwitch } from './StrategySwitch/StrategySwitch';
 import { StrategyEditButton } from './StrategyEditButton/StrategyEditButton';
 import { StrategyDeleteButton } from './StrategyDeleteButton/StrategyDeleteButton';
@@ -249,7 +249,6 @@ export const StrategiesList = () => {
                         <Extension color="disabled" />
                     </Box>
                 ),
-                disableGlobalFilter: true,
             },
             {
                 id: 'Name',
@@ -313,7 +312,6 @@ export const StrategiesList = () => {
                 ),
                 width: 150,
                 minWidth: 120,
-                disableGlobalFilter: true,
                 disableSortBy: true,
             },
             {
@@ -322,7 +320,6 @@ export const StrategiesList = () => {
             },
             {
                 accessor: 'sortOrder',
-                disableGlobalFilter: true,
                 sortType: 'number',
             },
         ],
@@ -337,26 +334,18 @@ export const StrategiesList = () => {
         []
     );
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        state: { globalFilter },
-    } = useTable(
-        {
-            columns: columns as any[], // TODO: fix after `react-table` v8 update
-            data: data.predefined,
-            initialState,
-            sortTypes,
-            autoResetGlobalFilter: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-        },
-        useGlobalFilter,
-        useSortBy
-    );
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+        useTable(
+            {
+                columns: columns as any[], // TODO: fix after `react-table` v8 update
+                data: data.predefined,
+                initialState,
+                sortTypes,
+                autoResetSortBy: false,
+                disableSortRemove: true,
+            },
+            useSortBy
+        );
 
     const {
         getTableProps: customGetTableProps,
@@ -370,11 +359,9 @@ export const StrategiesList = () => {
             data: data.custom,
             initialState,
             sortTypes,
-            autoResetGlobalFilter: false,
             autoResetSortBy: false,
             disableSortRemove: true,
         },
-        useGlobalFilter,
         useSortBy
     );
 
@@ -417,22 +404,9 @@ export const StrategiesList = () => {
                     <ConditionallyRender
                         condition={rows.length === 0}
                         show={
-                            <ConditionallyRender
-                                condition={globalFilter?.length > 0}
-                                show={
-                                    <TablePlaceholder>
-                                        No predefined strategies found matching
-                                        &ldquo;
-                                        {globalFilter}
-                                        &rdquo;
-                                    </TablePlaceholder>
-                                }
-                                elseShow={
-                                    <TablePlaceholder>
-                                        No strategies available.
-                                    </TablePlaceholder>
-                                }
-                            />
+                            <TablePlaceholder>
+                                No strategies available.
+                            </TablePlaceholder>
                         }
                     />
                 </Box>
@@ -479,20 +453,7 @@ export const StrategiesList = () => {
                     </Table>
                     <ConditionallyRender
                         condition={customRows.length === 0}
-                        show={
-                            <ConditionallyRender
-                                condition={globalFilter?.length > 0}
-                                show={
-                                    <TablePlaceholder>
-                                        No custom strategies found matching
-                                        &ldquo;
-                                        {globalFilter}
-                                        &rdquo;
-                                    </TablePlaceholder>
-                                }
-                                elseShow={<CustomStrategyInfo />}
-                            />
-                        }
+                        show={<CustomStrategyInfo />}
                     />
                 </Box>
 

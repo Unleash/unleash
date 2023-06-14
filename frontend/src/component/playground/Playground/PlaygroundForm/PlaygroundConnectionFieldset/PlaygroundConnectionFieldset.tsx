@@ -89,16 +89,7 @@ export const PlaygroundConnectionFieldset: VFC<
             if (newEnvironments.length === 0) {
                 return setEnvironments([]);
             }
-            if (
-                newEnvironments.find(({ id }) => id === allOption.id) !==
-                undefined
-            ) {
-                return setEnvironments([]);
-            }
             return setEnvironments(newEnvironments.map(({ id }) => id));
-        }
-        if (newEnvironments.id === allOption.id) {
-            return setEnvironments([]);
         }
 
         return setEnvironments([newEnvironments.id]);

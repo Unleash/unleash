@@ -3,6 +3,7 @@ import {
     AdvancedPlaygroundResponseSchema,
 } from 'openapi';
 import { IEnvironment } from 'interfaces/environments';
+import { ensureArray } from '@server/util/ensureArray';
 
 export const resolveProjects = (
     projects: string[] | string
@@ -15,21 +16,13 @@ export const resolveProjects = (
         return '*';
     }
 
-    if (Array.isArray(projects)) {
-        return projects;
-    }
-
-    return [projects];
+    return ensureArray(projects);
 };
 
 export const resolveEnvironments = (
     envrironments: string[] | string
 ): string[] => {
-    if (Array.isArray(envrironments)) {
-        return envrironments;
-    }
-
-    return [envrironments];
+    return ensureArray(envrironments);
 };
 
 export const resolveDefaultEnvironment = (
@@ -61,7 +54,7 @@ export const resolveResultsWidth = (
     }
 
     if (results && !matches) {
-        return '60%';
+        return '65%';
     }
 
     return '50%';

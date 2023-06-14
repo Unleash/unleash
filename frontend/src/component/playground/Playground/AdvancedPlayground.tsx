@@ -41,34 +41,20 @@ export const AdvancedPlayground: VFC<{}> = () => {
     }, [availableEnvironments]);
 
     useEffect(() => {
-        // Load initial values from URL
+        loadInitialValuesFromUrl();
+    }, []);
+
+    const loadInitialValuesFromUrl = () => {
         try {
-            let environmentArray: string[];
-            const environmentsFromUrl = searchParams.get('environments');
-            if (environmentsFromUrl) {
-                environmentArray = environmentsFromUrl.split(',');
-                setEnvironments(environmentArray);
-            }
-
-            let projectsArray: string[];
-            let projectsFromUrl = searchParams.get('projects');
-            if (projectsFromUrl) {
-                projectsArray = projectsFromUrl.split(',');
-                setProjects(projectsArray);
-            }
-
-            let contextFromUrl = searchParams.get('context');
-            if (contextFromUrl) {
-                contextFromUrl = decodeURI(contextFromUrl);
-                setContext(contextFromUrl);
-            }
-
+            const environments = resolveEnvironmentsFromUrl();
+            const projects = resolveProjectsFromUrl();
+            const context = resolveContextFromUrl();
             const makePlaygroundRequest = async () => {
-                if (environmentsFromUrl && contextFromUrl) {
+                if (environments && context) {
                     await evaluatePlaygroundContext(
-                        environmentArray || [],
-                        projectsArray || '*',
-                        contextFromUrl
+                        environments || [],
+                        projects || '*',
+                        context
                     );
                 }
             };
@@ -82,8 +68,34 @@ export const AdvancedPlayground: VFC<{}> = () => {
                 )}`,
             });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    };
+
+    const resolveEnvironmentsFromUrl = (): string[] | null => {
+        let environmentArray: string[] = null;
+        const environmentsFromUrl = searchParams.get('environments');
+        if (environmentsFromUrl) {
+            environmentArray = environmentsFromUrl.split(',');
+            setEnvironments(environmentArray);
+        }
+        return environmentArray;
+    };
+    const resolveProjectsFromUrl = (): string[] | null => {
+        let projectsArray: string[] = null;
+        let projectsFromUrl = searchParams.get('projects');
+        if (projectsFromUrl) {
+            projectsArray = projectsFromUrl.split(',');
+            setProjects(projectsArray);
+        }
+        return projectsArray;
+    };
+    const resolveContextFromUrl = () => {
+        let contextFromUrl = searchParams.get('context');
+        if (contextFromUrl) {
+            contextFromUrl = decodeURI(contextFromUrl);
+            setContext(contextFromUrl);
+        }
+        return contextFromUrl;
+    };
 
     const evaluatePlaygroundContext = async (
         environments: string[] | string,

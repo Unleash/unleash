@@ -188,8 +188,7 @@ export const AdvancedPlaygroundResultsTable = ({
         if (loading) {
             return;
         }
-        const tableState: Record<string, string> =
-            Object.fromEntries(searchParams);
+        const tableState = Object.fromEntries(searchParams);
         tableState.sort = sortBy[0].id;
         if (sortBy[0].desc) {
             tableState.order = 'desc';

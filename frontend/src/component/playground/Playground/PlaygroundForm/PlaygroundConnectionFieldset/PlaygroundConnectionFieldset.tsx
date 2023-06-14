@@ -45,7 +45,6 @@ export const PlaygroundConnectionFieldset: VFC<
     ];
 
     const environmentOptions = [
-        allOption,
         ...availableEnvironments.map(name => ({
             label: name,
             id: name,

@@ -66,7 +66,7 @@ export const AdvancedPlayground: VFC<{}> = () => {
             const makePlaygroundRequest = async () => {
                 if (environmentsFromUrl && contextFromUrl) {
                     await evaluatePlaygroundContext(
-                        environmentsFromUrl || '*',
+                        environmentArray || [],
                         projectsArray || '*',
                         contextFromUrl
                     );

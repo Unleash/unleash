@@ -1,24 +1,26 @@
 import { AdvancedPlaygroundEnvironment } from '../advancedPlayground';
 import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
-import { IconButton, Popover, styled, useTheme } from '@mui/material';
+import { Box, IconButton, Popover, styled, useTheme } from '@mui/material';
 import { flexRow } from '../../../../../themes/themeStyles';
 import { PlaygroundResultChip } from '../../PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
 import { InfoOutlined } from '@mui/icons-material';
 import React, { useState } from 'react';
 import { AdvancedPlaygroundEnvironmentEvaluationDetails } from '../AdvancedPlaygroundEnvironmentEvaluationDetails/AdvancedPlaygroundEnvironmentEvaluationDetails';
 
-const SyledContainer = styled(
+const StyledContainer = styled(
     'div',
     {}
 )(({ theme }) => ({
     flexGrow: 0,
     ...flexRow,
-    justifyContent: 'center',
-    '::before': {
-        content: '""',
-        display: 'block',
-        width: theme.spacing(2),
-    },
+    justifyContent: 'flex-start',
+    margin: theme.spacing(0, 1.5),
+}));
+
+const StyledPlaygroundChipContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing(1),
 }));
 
 export interface IAdvancedPlaygroundEnvironmentCellProps {
@@ -42,27 +44,29 @@ export const AdvancedPlaygroundEnvironmentCell = ({
     const disabled = value?.filter(evaluation => !evaluation.isEnabled) || [];
 
     return (
-        <SyledContainer>
-            <ConditionallyRender
-                condition={enabled.length > 0}
-                show={
-                    <PlaygroundResultChip
-                        enabled={true}
-                        label={`${enabled.length}`}
-                        showIcon={true}
-                    />
-                }
-            />
-            <ConditionallyRender
-                condition={disabled.length > 0}
-                show={
-                    <PlaygroundResultChip
-                        enabled={false}
-                        label={`${disabled.length}`}
-                        showIcon={true}
-                    />
-                }
-            />
+        <StyledContainer>
+            <StyledPlaygroundChipContainer>
+                <ConditionallyRender
+                    condition={enabled.length > 0}
+                    show={
+                        <PlaygroundResultChip
+                            enabled={true}
+                            label={`${enabled.length}`}
+                            showIcon={true}
+                        />
+                    }
+                />
+                <ConditionallyRender
+                    condition={disabled.length > 0}
+                    show={
+                        <PlaygroundResultChip
+                            enabled={false}
+                            label={`${disabled.length}`}
+                            showIcon={true}
+                        />
+                    }
+                />
+            </StyledPlaygroundChipContainer>
             <>
                 <IconButton onClick={onOpen}>
                     <InfoOutlined />
@@ -88,6 +92,6 @@ export const AdvancedPlaygroundEnvironmentCell = ({
                     />
                 </Popover>
             </>
-        </SyledContainer>
+        </StyledContainer>
     );
 };

@@ -18,7 +18,14 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { useSearch } from 'hooks/useSearch';
 import { createLocalStorage } from 'utils/createLocalStorage';
 
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import {
+    Box,
+    Link,
+    styled,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import {
@@ -32,6 +39,13 @@ const { value, setValue } = createLocalStorage(
     'AdvancedPlaygroundResultsTable:v1',
     defaultSort
 );
+
+const StyledButton = styled(Link)(({ theme }) => ({
+    textAlign: 'left',
+    textDecorationStyle: 'dotted',
+    textUnderlineOffset: theme.spacing(0.75),
+    color: theme.palette.neutral.dark,
+}));
 
 interface IAdvancedPlaygroundResultsTableProps {
     features?: AdvancedPlaygroundFeature[];
@@ -50,7 +64,6 @@ export const AdvancedPlaygroundResultsTable = ({
         searchParams.get('search') || ''
     );
     const theme = useTheme();
-    const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const COLUMNS = useMemo(() => {
@@ -73,31 +86,31 @@ export const AdvancedPlaygroundResultsTable = ({
                 sortType: 'alphanumeric',
                 filterName: 'projectId',
                 searchable: true,
-                maxWidth: 170,
+                minWidth: 150,
                 Cell: ({ value }: any) => (
                     <LinkCell title={value} to={`/projects/${value}`} />
                 ),
             },
-            ...input?.environments?.map((name: string) => {
+            ...(input?.environments?.map((name: string) => {
                 return {
                     Header: loading ? () => '' : name,
-                    maxWidth: 160,
+                    maxWidth: 140,
                     id: `environments.${name}`,
-                    align: 'center',
-                    Cell: ({ row }) => (
+                    align: 'flex-start',
+                    Cell: ({ row }: any) => (
                         <AdvancedPlaygroundEnvironmentCell
                             value={row.original.environments[name]}
                         />
                     ),
                 };
-            }),
+            }) || []),
             {
                 Header: 'Diff',
-                maxWidth: 160,
-                id: 'info',
-                align: 'center',
+                minWidth: 150,
+                id: 'diff',
+                align: 'left',
                 Cell: ({ row }: any) => (
-                    <div style={{ textAlign: 'center' }}>Preview diff</div>
+                    <StyledButton variant={'body2'}>Preview diff</StyledButton>
                 ),
             },
         ];
@@ -113,8 +126,8 @@ export const AdvancedPlaygroundResultsTable = ({
         return loading
             ? Array(5).fill({
                   name: 'Feature name',
-                  projectId: 'FeatureProject',
-                  variant: { name: 'FeatureVariant', variants: [] },
+                  projectId: 'Feature Project',
+                  environments: { name: 'Feature Envrironments', variants: [] },
                   enabled: true,
               })
             : searchedData;
@@ -159,10 +172,6 @@ export const AdvancedPlaygroundResultsTable = ({
 
     useConditionallyHiddenColumns(
         [
-            {
-                condition: isExtraSmallScreen,
-                columns: ['variant'],
-            },
             {
                 condition: isSmallScreen,
                 columns: ['projectId'],
@@ -237,7 +246,7 @@ export const AdvancedPlaygroundResultsTable = ({
                     </TablePlaceholder>
                 )}
                 elseShow={() => (
-                    <Box ref={ref}>
+                    <Box ref={ref} sx={{ overflow: 'scroll' }}>
                         <SearchHighlightProvider
                             value={getSearchText(searchValue)}
                         >

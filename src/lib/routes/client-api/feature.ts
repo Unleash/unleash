@@ -96,7 +96,7 @@ export default class FeatureController extends Controller {
                     operationId: 'getClientFeature',
                     summary: 'Get a single feature toggle',
                     description:
-                        'Used to simplify reading/viewing configuration for a single toggle. All SDKs should use `/api/client/features`',
+                        'Gets all the client data for a single toggle. Contains the exact same information about a toggle as the `/api/client/features` endpoint does, but only contains data about the specified toggle. All SDKs should use `/api/client/features`',
                     tags: ['Client'],
                     responses: {
                         200: createResponseSchema('clientFeatureSchema'),

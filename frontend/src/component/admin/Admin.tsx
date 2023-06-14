@@ -15,6 +15,7 @@ import AdminMenu from './menu/AdminMenu';
 import { Network } from './network/Network';
 import CreateProjectRole from './projectRoles/CreateProjectRole/CreateProjectRole';
 import EditProjectRole from './projectRoles/EditProjectRole/EditProjectRole';
+import { Roles } from './roles/Roles';
 import ProjectRoles from './projectRoles/ProjectRoles/ProjectRoles';
 import { ServiceAccounts } from './serviceAccounts/ServiceAccounts';
 import CreateUser from './users/CreateUser/CreateUser';
@@ -27,8 +28,11 @@ export const Admin = () => (
         <AdminMenu />
         <Routes>
             <Route path="users" element={<UsersAdmin />} />
-            <Route path="create-project-role" element={<CreateProjectRole />} />
-            <Route path="roles/:id/edit" element={<EditProjectRole />} />
+            <Route path="project-roles/new" element={<CreateProjectRole />} />
+            <Route
+                path="project-roles/:id/edit"
+                element={<EditProjectRole />}
+            />
             <Route path="api" element={<ApiTokenPage />} />
             <Route path="api/create-token" element={<CreateApiToken />} />
             <Route path="users/:id/edit" element={<EditUser />} />
@@ -42,7 +46,8 @@ export const Admin = () => (
                 element={<EditGroupContainer />}
             />
             <Route path="groups/:groupId" element={<Group />} />
-            <Route path="roles" element={<ProjectRoles />} />
+            <Route path="roles" element={<Roles />} />
+            <Route path="project-roles" element={<ProjectRoles />} />
             <Route path="instance" element={<InstanceAdmin />} />
             <Route path="network/*" element={<Network />} />
             <Route path="maintenance" element={<MaintenanceAdmin />} />

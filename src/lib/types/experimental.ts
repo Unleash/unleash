@@ -25,7 +25,8 @@ export type IFlagKey =
     | 'experimentalExtendedTelemetry'
     | 'segmentContextFieldUsage'
     | 'disableNotifications'
-    | 'advancedPlayground';
+    | 'advancedPlayground'
+    | 'customRootRoles';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -116,6 +117,10 @@ const flags: IFlags = {
     ),
     advancedPlayground: parseEnvVarBoolean(
         process.env.ADVANCED_PLAYGROUND,
+        false,
+    ),
+    customRootRoles: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES,
         false,
     ),
 };

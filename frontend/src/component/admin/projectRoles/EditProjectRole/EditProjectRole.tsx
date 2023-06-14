@@ -1,8 +1,8 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
-import useProjectRole from 'hooks/api/getters/useProjectRole/useProjectRole';
+import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
+import { useRole } from 'hooks/api/getters/useRole/useRole';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useNavigate } from 'react-router-dom';
@@ -15,8 +15,8 @@ import { GO_BACK } from 'constants/navigate';
 const EditProjectRole = () => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
-    const projectId = useRequiredPathParam('id');
-    const { role } = useProjectRole(projectId);
+    const roleId = useRequiredPathParam('id');
+    const { role, refetch } = useRole(roleId);
 
     const navigate = useNavigate();
     const {
@@ -35,19 +35,18 @@ const EditProjectRole = () => {
         validateName,
         clearErrors,
         getRoleKey,
-    } = useProjectRoleForm(role.name, role.description, role?.permissions);
+    } = useProjectRoleForm(role?.name, role?.description, role?.permissions);
 
     const formatApiCode = () => {
         return `curl --location --request PUT '${
             uiConfig.unleashUrl
-        }/api/admin/roles/${role.id}' \\
+        }/api/admin/roles/${role?.id}' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getProjectRolePayload(), undefined, 2)}'`;
     };
 
-    const { refetch } = useProjectRole(projectId);
-    const { editRole, loading } = useProjectRolesApi();
+    const { updateRole, loading } = useRolesApi();
 
     const onSubmit = async (e: Event) => {
         e.preventDefault();
@@ -58,9 +57,9 @@ const EditProjectRole = () => {
 
         if (validName && validPermissions) {
             try {
-                await editRole(projectId, payload);
+                await updateRole(+roleId, payload);
                 refetch();
-                navigate('/admin/roles');
+                navigate('/admin/project-roles');
                 setToastData({
                     type: 'success',
                     title: 'Project role updated',

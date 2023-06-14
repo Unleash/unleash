@@ -181,7 +181,10 @@ class AccessStoreMock implements IAccessStore {
         return Promise.resolve([]);
     }
 
-    removeRolesOfTypeForUser(userId: number, roleType: string): Promise<void> {
+    removeRolesOfTypeForUser(
+        userId: number,
+        roleTypes: string[],
+    ): Promise<void> {
         return Promise.resolve(undefined);
     }
 

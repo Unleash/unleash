@@ -2,8 +2,18 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { IUser } from 'interfaces/user';
+import IRole from 'interfaces/role';
 
-export const useUsers = () => {
+interface IUseUsersOutput {
+    users: IUser[];
+    roles: IRole[];
+    loading: boolean;
+    refetch: () => void;
+    error?: Error;
+}
+
+export const useUsers = (): IUseUsersOutput => {
     const { data, error, mutate } = useSWR(
         formatApiPath(`api/admin/user-admin`),
         fetcher

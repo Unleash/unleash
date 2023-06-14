@@ -120,7 +120,10 @@ export interface IAccessStore extends Store<IRole, number> {
         projectId: string,
     ): Promise<void>;
 
-    removeRolesOfTypeForUser(userId: number, roleType: string): Promise<void>;
+    removeRolesOfTypeForUser(
+        userId: number,
+        roleTypes: string[],
+    ): Promise<void>;
 
     addPermissionsToRole(
         role_id: number,

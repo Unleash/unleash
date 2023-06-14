@@ -46,7 +46,7 @@ export const sdkContextSchema = {
         userId: {
             type: 'string',
             example: 'username@provider.com',
-            description: 'an identifier for the current user',
+            description: 'An identifier for the current user',
         },
     },
     components: {},

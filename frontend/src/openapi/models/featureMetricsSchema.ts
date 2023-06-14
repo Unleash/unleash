@@ -5,8 +5,14 @@
  */
 import type { FeatureEnvironmentMetricsSchema } from './featureEnvironmentMetricsSchema';
 
+/**
+ * A batch of feature metrics
+ */
 export interface FeatureMetricsSchema {
+    /** The version of this schema */
     version: number;
+    /** The maturity level of this API (alpha, beta, stable, deprecated) */
     maturity: string;
+    /** Metrics gathered per environment */
     data: FeatureEnvironmentMetricsSchema[];
 }

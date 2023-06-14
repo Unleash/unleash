@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Used for creating a [public invite link](https://docs.getunleash.io/reference/public-signup#public-sign-up-tokens)
+ */
 export interface PublicSignupTokenCreateSchema {
     /** The token's name. */
     name: string;

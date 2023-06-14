@@ -52,6 +52,9 @@ interface IAdvancedPlaygroundResultsTableProps {
     input?: AdvancedPlaygroundInput;
     loading: boolean;
 }
+const capitalizeFirst = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+};
 
 export const AdvancedPlaygroundResultsTable = ({
     features,
@@ -93,7 +96,7 @@ export const AdvancedPlaygroundResultsTable = ({
             },
             ...(input?.environments?.map((name: string) => {
                 return {
-                    Header: loading ? () => '' : name,
+                    Header: loading ? () => '' : capitalizeFirst(name),
                     maxWidth: 140,
                     id: `environments.${name}`,
                     align: 'flex-start',

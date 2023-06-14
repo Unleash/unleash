@@ -14,7 +14,7 @@ export const clientApplicationSchema = {
         },
         instanceId: {
             description:
-                'A unique identifier identifying the instance of the application running the SDK. Often changes based on execution environment, so that two pods in Kubernetes will have two different instanceIds',
+                'A unique identifier identifying the instance of the application running the SDK. Often changes based on execution environment. For instance: two pods in Kubernetes will have two different instanceIds',
             type: 'string',
             example: 'b77f3d13-5f48-4a7b-a3f4-a449b97ce43a',
         },

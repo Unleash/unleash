@@ -3,6 +3,7 @@ import { FC } from 'react';
 
 const Paragraph: FC = ({ children }) => (
     <Typography
+        component={'span'}
         variant="body2"
         sx={theme => ({
             marginBottom: theme.spacing(2),

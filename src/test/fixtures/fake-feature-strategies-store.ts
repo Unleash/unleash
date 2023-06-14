@@ -334,6 +334,10 @@ export default class FakeFeatureStrategiesStore
             ),
         );
     }
+
+    getCustomStrategiesInUseCount(): Promise<number> {
+        return Promise.resolve(3);
+    }
 }
 
 module.exports = FakeFeatureStrategiesStore;

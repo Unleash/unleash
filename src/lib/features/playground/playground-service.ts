@@ -13,16 +13,13 @@ import { FeatureConfigurationClient } from '../../types/stores/feature-strategie
 import { generateObjectCombinations } from './generateObjectCombinations';
 import groupBy from 'lodash.groupby';
 import { omitKeys } from '../../util';
+import { AdvancedPlaygroundFeatureSchema } from '../../openapi/spec/advanced-playground-feature-schema';
+import { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
     segments: ISegment[];
     featureProject: Record<string, string>;
-    context: SdkContextSchema;
-    environment: string;
-};
-
-type AdvancedPlaygroundFeatureSchema = PlaygroundFeatureSchema & {
     context: SdkContextSchema;
     environment: string;
 };
@@ -50,7 +47,7 @@ export class PlaygroundService {
         projects: typeof ALL | string[],
         environments: string[],
         context: SdkContextSchema,
-    ): Promise<any> {
+    ): Promise<AdvancedPlaygroundFeatureSchema[]> {
         const segments = await this.segmentService.getActive();
         const environmentFeatures = await Promise.all(
             environments.map((env) => this.resolveFeatures(projects, env)),
@@ -73,14 +70,14 @@ export class PlaygroundService {
         );
         const items = results.flat();
         const itemsByName = groupBy(items, (item) => item.name);
-        return Object.entries(itemsByName).map(([name, entries]) => {
+        return Object.values(itemsByName).map((entries) => {
             const groupedEnvironments = groupBy(
                 entries,
                 (entry) => entry.environment,
             );
             return {
-                name,
-                projectId: entries[0]?.projectId,
+                name: entries[0].name,
+                projectId: entries[0].projectId,
                 environments: groupedEnvironments,
             };
         });
@@ -92,7 +89,7 @@ export class PlaygroundService {
         segments,
         context,
         environment,
-    }: EvaluationInput): Promise<AdvancedPlaygroundFeatureSchema[]> {
+    }: EvaluationInput): Promise<AdvancedPlaygroundEnvironmentFeatureSchema[]> {
         const [head, ...rest] = features;
         if (!head) {
             return [];

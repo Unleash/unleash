@@ -8,17 +8,18 @@ import {
 } from './playground-strategy-schema';
 import { playgroundConstraintSchema } from './playground-constraint-schema';
 import { playgroundSegmentSchema } from './playground-segment-schema';
+import { sdkContextSchema } from './sdk-context-schema';
 
-export const unknownFeatureEvaluationResult = 'unevaluated' as const;
-
-export const playgroundFeatureSchema = {
-    $id: '#/components/schemas/playgroundFeatureSchema',
+export const advancedPlaygroundEnvironmentFeatureSchema = {
+    $id: '#/components/schemas/advancedPlaygroundEnvironmentFeatureSchema',
     description:
         'A simplified feature toggle model intended for the Unleash playground.',
     type: 'object',
     additionalProperties: false,
     required: [
         'name',
+        'environment',
+        'context',
         'projectId',
         'isEnabled',
         'isEnabledInCurrentEnvironment',
@@ -32,6 +33,15 @@ export const playgroundFeatureSchema = {
             example: 'my-feature',
             description: "The feature's name.",
         },
+        environment: {
+            type: 'string',
+            example: 'development',
+            description: "The feature's environment.",
+        },
+        context: {
+            description: 'The context to use when evaluating toggles',
+            $ref: sdkContextSchema.$id,
+        },
         projectId: {
             type: 'string',
             example: 'my-project',
@@ -42,7 +52,7 @@ export const playgroundFeatureSchema = {
             additionalProperties: false,
             required: ['result', 'data'],
             description:
-                "The feature's applicable strategies and cumulative results of the strategies",
+                "Feature's applicable strategies and cumulative results of the strategies",
             properties: {
                 result: {
                     description: `The cumulative results of all the feature's strategies. Can be \`true\`,
@@ -135,11 +145,12 @@ export const playgroundFeatureSchema = {
             parametersSchema,
             variantSchema,
             overrideSchema,
+            sdkContextSchema,
         },
         variants: { type: 'array', items: { $ref: variantSchema.$id } },
     },
 } as const;
 
-export type PlaygroundFeatureSchema = FromSchema<
-    typeof playgroundFeatureSchema
+export type AdvancedPlaygroundEnvironmentFeatureSchema = FromSchema<
+    typeof advancedPlaygroundEnvironmentFeatureSchema
 >;

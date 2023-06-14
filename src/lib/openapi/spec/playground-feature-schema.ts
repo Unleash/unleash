@@ -42,7 +42,7 @@ export const playgroundFeatureSchema = {
             additionalProperties: false,
             required: ['result', 'data'],
             description:
-                "Feature's applicable strategies and cumulative results of the strategies",
+                "The feature's applicable strategies and cumulative results of the strategies",
             properties: {
                 result: {
                     description: `The cumulative results of all the feature's strategies. Can be \`true\`,

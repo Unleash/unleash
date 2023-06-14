@@ -52,8 +52,7 @@ export default class ClientMetricsController extends Controller {
                 openApiService.validPath({
                     tags: ['Client'],
                     summary: 'Register client usage metrics',
-                    description:
-                        'Registers usage metrics. Stores information about how many times each toggle was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature toggle's variants were displayed to the end user.',
+                    description: `Registers usage metrics. Stores information about how many times each toggle was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature toggle's variants were displayed to the end user.`,
                     operationId: 'registerClientMetrics',
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {

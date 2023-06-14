@@ -21,7 +21,8 @@ export const clientFeatureSchema = {
         },
         type: {
             type: 'string',
-            description: 'What kind of feature flag is this. Refer to the documentation on [feature toggle types](https://docs.getunleash.io/reference/feature-toggle-types) for more information
+            description:
+                'What kind of feature flag is this. Refer to the documentation on [feature toggle types](https://docs.getunleash.io/reference/feature-toggle-types) for more information',
             example: 'release',
         },
         description: {

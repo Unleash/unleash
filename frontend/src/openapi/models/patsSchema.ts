@@ -5,6 +5,10 @@
  */
 import type { PatSchema } from './patSchema';
 
+/**
+ * Contains a collection of [Personal Access Tokens](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens).
+ */
 export interface PatsSchema {
+    /** A collection of Personal Access Tokens */
     pats?: PatSchema[];
 }

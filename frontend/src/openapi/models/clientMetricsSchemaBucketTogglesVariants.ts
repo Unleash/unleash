@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * How many times each variant was returned
+ */
 export type ClientMetricsSchemaBucketTogglesVariants = {
     [key: string]: number;
 };

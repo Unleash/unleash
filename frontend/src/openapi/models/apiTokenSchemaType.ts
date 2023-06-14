@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * The type of API token
+ */
 export type ApiTokenSchemaType =
     typeof ApiTokenSchemaType[keyof typeof ApiTokenSchemaType];
 

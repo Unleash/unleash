@@ -835,7 +835,6 @@ The provider you choose for your addon dictates what properties the \`parameters
         "properties": {
           "context": {
             "$ref": "#/components/schemas/sdkContextSchema",
-            "description": "The context to use when evaluating toggles",
           },
           "environments": {
             "description": "The environments to evaluate toggles in.",
@@ -1240,23 +1239,38 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "object",
       },
       "clientApplicationSchema": {
+        "description": "A client application is an instance of one of our SDKs",
         "properties": {
           "appName": {
+            "description": "An identifier for the app that uses the sdk, should be static across SDK restarts",
+            "example": "example-app",
             "type": "string",
           },
           "environment": {
+            "deprecated": true,
+            "description": "The SDK's configured 'environment' property. Deprecated. This property  does **not** control which Unleash environment the SDK gets toggles for. To control Unleash environments, use the SDKs API key.",
+            "example": "development",
             "type": "string",
           },
           "instanceId": {
+            "description": "A unique identifier identifying the instance of the application running the SDK. Often changes based on execution environment. For instance: two pods in Kubernetes will have two different instanceIds",
+            "example": "b77f3d13-5f48-4a7b-a3f4-a449b97ce43a",
             "type": "string",
           },
           "interval": {
+            "description": "How often (in seconds) does the client refresh its toggles",
+            "example": 10,
+            "minimum": 0,
             "type": "number",
           },
           "sdkVersion": {
+            "description": "An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>"",
+            "example": "unleash-client-java:7.0.0",
             "type": "string",
           },
           "started": {
+            "description": "Either an RFC-3339 timestamp or a unix timestamp in seconds",
+            "example": "2023-06-13T16:35:00.000Z",
             "oneOf": [
               {
                 "format": "date-time",
@@ -1268,6 +1282,12 @@ The provider you choose for your addon dictates what properties the \`parameters
             ],
           },
           "strategies": {
+            "description": "Which strategies the SDKs runtime knows about",
+            "example": [
+              "default",
+              "gradualRollout",
+              "remoteAddress",
+            ],
             "items": {
               "type": "string",
             },
@@ -1284,49 +1304,54 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "clientFeatureSchema": {
         "additionalProperties": false,
+        "description": "Feature toggle configuration used by SDKs to evaluate state of a toggle",
         "properties": {
-          "createdAt": {
-            "format": "date-time",
-            "nullable": true,
-            "type": "string",
-          },
           "description": {
+            "description": "A description of the toggle",
+            "example": "No variants here",
             "nullable": true,
             "type": "string",
           },
           "enabled": {
+            "description": "Whether the feature flag is enabled for the current API key or not. This is ANDed with the evaluation results of the strategies list, so if this is false, the evaluation result will always be false",
+            "example": true,
             "type": "boolean",
           },
           "impressionData": {
+            "description": "Set to true if SDKs should trigger [impression events](https://docs.getunleash.io/reference/impression-data) when this toggle is evaluated",
+            "example": false,
             "nullable": true,
             "type": "boolean",
           },
-          "lastSeenAt": {
-            "format": "date-time",
-            "nullable": true,
-            "type": "string",
-          },
           "name": {
+            "description": "The unique name of a feature toggle. Is validated to be URL safe on creation",
+            "example": "new.payment.flow.stripe",
             "type": "string",
           },
           "project": {
+            "description": "Which project this feature toggle belongs to",
+            "example": "new.payment.flow",
             "type": "string",
           },
           "stale": {
+            "description": "If this is true Unleash believes this feature toggle has been active longer than Unleash expects a toggle of this type to be active",
+            "example": false,
             "type": "boolean",
           },
           "strategies": {
-            "deprecated": true,
+            "description": "Evaluation strategies for this toggle. Each entry in this list will be evaluated and ORed together",
             "items": {
               "$ref": "#/components/schemas/featureStrategySchema",
             },
             "type": "array",
           },
           "type": {
+            "description": "What kind of feature flag is this. Refer to the documentation on [feature toggle types](https://docs.getunleash.io/reference/feature-toggle-types) for more information",
+            "example": "release",
             "type": "string",
           },
           "variants": {
-            "deprecated": true,
+            "description": "[Variants](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) configured for this toggle",
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -1342,23 +1367,42 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "clientFeaturesQuerySchema": {
         "additionalProperties": false,
+        "description": "Query parameters active for a client features request",
         "properties": {
           "environment": {
+            "deprecated": true,
+            "description": "Strategies for the feature toggle configured for this environment are included. (DEPRECATED) - Handled by API tokens",
             "type": "string",
           },
           "inlineSegmentConstraints": {
+            "description": "Set to true if requesting client does not support Unleash-Client-Specification 4.2.2 or newer. Modern SDKs will have this set to false, since they will be able to merge constraints and segments themselves",
+            "example": true,
             "type": "boolean",
           },
           "namePrefix": {
+            "description": "Features are filtered to only include features whose name starts with this prefix",
+            "example": "payment",
             "type": "string",
           },
           "project": {
+            "deprecated": true,
+            "description": "Features that are part of these projects are included in this response. (DEPRECATED) - Handled by API tokens",
+            "example": [
+              "new.payment.flow",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "tag": {
+            "description": "Features tagged with one of these tags are included",
+            "example": [
+              [
+                "simple:payment",
+                "simple:stripejourney",
+              ],
+            ],
             "items": {
               "items": {
                 "type": "string",
@@ -1371,8 +1415,10 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "object",
       },
       "clientFeaturesSchema": {
+        "description": "Configuration data for server-side SDKs for evaluating feature flags.",
         "properties": {
           "features": {
+            "description": "A list of feature toggles with their configuration",
             "items": {
               "$ref": "#/components/schemas/clientFeatureSchema",
             },
@@ -1380,14 +1426,19 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "query": {
             "$ref": "#/components/schemas/clientFeaturesQuerySchema",
+            "description": "A summary of filters and parameters sent to the endpoint. Used by the server to build the features and segments response",
           },
           "segments": {
+            "description": "A list of [Segments](https://docs.getunleash.io/reference/segments) configured for this Unleash instance",
             "items": {
               "$ref": "#/components/schemas/segmentSchema",
             },
             "type": "array",
           },
           "version": {
+            "description": "A version number for the format used in the response. Most Unleash instances now return version 2, which includes segments as a separate array",
+            "example": 2,
+            "minimum": 0,
             "type": "number",
           },
         },
@@ -2634,7 +2685,7 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "featureStrategySchema": {
         "additionalProperties": false,
-        "description": "A singles activation strategy configuration schema for a feature",
+        "description": "A single activation strategy configuration schema for a feature",
         "properties": {
           "constraints": {
             "description": "A list of the constraints attached to the strategy",
@@ -3503,11 +3554,19 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "overrideSchema": {
         "additionalProperties": false,
+        "description": "An override for deciding which variant should be assigned to a user based on the context name",
         "properties": {
           "contextName": {
+            "description": "The name of the context field used to determine overrides",
+            "example": "userId",
             "type": "string",
           },
           "values": {
+            "description": "Which values that should be overriden",
+            "example": [
+              "red",
+              "blue",
+            ],
             "items": {
               "type": "string",
             },
@@ -3850,7 +3909,6 @@ The provider you choose for your addon dictates what properties the \`parameters
         "properties": {
           "context": {
             "$ref": "#/components/schemas/sdkContextSchema",
-            "description": "The context to use when evaluating toggles",
           },
           "environment": {
             "description": "The environment to evaluate toggles in.",
@@ -5799,17 +5857,26 @@ Stats are divided into current and previous **windows**.
       },
       "variantSchema": {
         "additionalProperties": false,
+        "description": "A variant allows for further separation of users into segments. See [our excellent documentation](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) for a more detailed description",
         "properties": {
           "name": {
+            "description": "The variants name. Is unique for this feature toggle",
+            "example": "blue_group",
             "type": "string",
           },
           "overrides": {
+            "description": "Overrides assigning specific variants to specific users. The weighting system automatically assigns users to specific groups for you, but any overrides in this list will take precedence.",
             "items": {
               "$ref": "#/components/schemas/overrideSchema",
             },
             "type": "array",
           },
           "payload": {
+            "description": "Extra data configured for this variant",
+            "example": {
+              "type": "json",
+              "value": "{color: red}",
+            },
             "properties": {
               "type": {
                 "type": "string",
@@ -5825,12 +5892,19 @@ Stats are divided into current and previous **windows**.
             "type": "object",
           },
           "stickiness": {
+            "description": "[Stickiness](https://docs.getunleash.io/reference/feature-toggle-variants#variant-stickiness) is how Unleash guarantees that the same user gets the same variant every time",
+            "example": "custom.context.field",
             "type": "string",
           },
           "weight": {
+            "description": "The weight is the likelihood of any one user getting this variant. It is a number between 0 and 1000. See the section on [variant weights](https://docs.getunleash.io/reference/feature-toggle-variants#variant-weight) for more information",
+            "maximum": 1000,
+            "minimum": 0,
             "type": "number",
           },
           "weightType": {
+            "description": "Set to fix if this variant must have exactly the weight allocated to it. If the type is variable, the weight will adjust so that the total weight of all variants adds up to 1000",
+            "example": "fix",
             "type": "string",
           },
         },
@@ -13694,6 +13768,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/api/client/features": {
       "get": {
+        "description": "Returns the SDK configuration for all feature toggles that are available to the provided API key. Used by SDKs to configure local evaluation",
         "operationId": "getAllClientFeatures",
         "responses": {
           "200": {
@@ -13707,6 +13782,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             "description": "clientFeaturesSchema",
           },
         },
+        "summary": "Get all toggles (SDK)",
         "tags": [
           "Client",
         ],
@@ -13714,6 +13790,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/api/client/features/{featureName}": {
       "get": {
+        "description": "Gets all the client data for a single toggle. Contains the exact same information about a toggle as the \`/api/client/features\` endpoint does, but only contains data about the specified toggle. All SDKs should use \`/api/client/features\`",
         "operationId": "getClientFeature",
         "parameters": [
           {
@@ -13737,6 +13814,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             "description": "clientFeatureSchema",
           },
         },
+        "summary": "Get a single feature toggle",
         "tags": [
           "Client",
         ],
@@ -13744,6 +13822,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/api/client/metrics": {
       "post": {
+        "description": "Registers usage metrics. Stores information about how many times each toggle was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature toggle's variants were displayed to the end user.",
         "operationId": "registerClientMetrics",
         "requestBody": {
           "content": {
@@ -13788,6 +13867,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             "description": "The request data does not match what we expect.",
           },
         },
+        "summary": "Register client usage metrics",
         "tags": [
           "Client",
         ],
@@ -13795,6 +13875,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/api/client/register": {
       "post": {
+        "description": "Register a client SDK with Unleash. SDKs call this endpoint on startup to tell Unleash about their existence. Used to track custom strategies in use as well as SDK versions.",
         "operationId": "registerClientApplication",
         "requestBody": {
           "content": {
@@ -13812,6 +13893,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             "description": "This response has no body.",
           },
         },
+        "summary": "Register a client SDK",
         "tags": [
           "Client",
         ],

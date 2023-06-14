@@ -35,20 +35,15 @@ export const useRoleForm = (
         useState<ICheckedPermissions>({});
 
     useEffect(() => {
-        if (initialPermissions.length > 0) {
-            setCheckedPermissions(
-                initialPermissions.reduce(
-                    (
-                        acc: { [key: string]: IPermission },
-                        curr: IPermission
-                    ) => {
-                        acc[curr.id] = curr;
-                        return acc;
-                    },
-                    {}
-                )
-            );
-        }
+        setCheckedPermissions(
+            initialPermissions.reduce(
+                (acc: { [key: string]: IPermission }, curr: IPermission) => {
+                    acc[curr.id] = curr;
+                    return acc;
+                },
+                {}
+            )
+        );
     }, [initialPermissions.length]);
 
     const [errors, setErrors] = useState<IRoleFormErrors>({});

@@ -10,7 +10,7 @@ import { ItemList } from 'component/common/ItemList/ItemList';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import { Link } from 'react-router-dom';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import IRole, { IProjectRole } from 'interfaces/role';
+import IRole from 'interfaces/role';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
@@ -75,15 +75,6 @@ const StyledAutocompleteWrapper = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledRoleOption = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    '& > span:last-of-type': {
-        fontSize: theme.fontSizes.smallerBody,
-        color: theme.palette.text.secondary,
-    },
-}));
-
 interface IGroupForm {
     name: string;
     description: string;
@@ -132,18 +123,6 @@ export const GroupForm: FC<IGroupForm> = ({
     const roleIdToRole = (rootRoleId: number | null): IRole | null => {
         return roles.find((role: IRole) => role.id === rootRoleId) || null;
     };
-
-    const renderRoleOption = (
-        props: React.HTMLAttributes<HTMLLIElement>,
-        option: IProjectRole
-    ) => (
-        <li {...props}>
-            <StyledRoleOption>
-                <span>{option.name}</span>
-                <span>{option.description}</span>
-            </StyledRoleOption>
-        </li>
-    );
 
     return (
         <StyledForm onSubmit={handleSubmit}>

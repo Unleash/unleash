@@ -306,6 +306,7 @@ export enum RoleName {
 
 export enum RoleType {
     ROOT = 'root',
+    ROOT_CUSTOM = 'root-custom',
     PROJECT = 'project',
 }
 

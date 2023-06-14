@@ -40,10 +40,8 @@ export const RoleDeleteDialog = ({
     );
     const roleGroups = groups?.filter(({ rootRole }) => rootRole === role?.id);
 
-    const deleteMessage = (
-        <>
-            You are about to delete role: <strong>{role?.name}</strong>
-        </>
+    const entitiesWithRole = Boolean(
+        roleUsers.length || roleServiceAccounts.length || roleGroups?.length
     );
 
     return (
@@ -52,25 +50,21 @@ export const RoleDeleteDialog = ({
             open={open}
             primaryButtonText="Delete role"
             secondaryButtonText="Cancel"
+            disabledPrimaryButton={entitiesWithRole}
             onClick={() => onConfirm(role!)}
             onClose={() => {
                 setOpen(false);
             }}
         >
             <ConditionallyRender
-                condition={Boolean(
-                    roleUsers.length ||
-                        roleServiceAccounts.length ||
-                        roleGroups?.length
-                )}
+                condition={entitiesWithRole}
                 show={
                     <>
                         <Alert severity="error">
-                            If you delete this role, all current entities
-                            associated with it will be automatically assigned
-                            the predefined <strong>Viewer</strong> role.
+                            You are not allowed to delete a role that is
+                            currently in use. Please change the role of the
+                            following entities first:
                         </Alert>
-                        <StyledLabel>{deleteMessage}</StyledLabel>
                         <ConditionallyRender
                             condition={Boolean(roleUsers.length)}
                             show={
@@ -121,7 +115,12 @@ export const RoleDeleteDialog = ({
                         />
                     </>
                 }
-                elseShow={<p>{deleteMessage}</p>}
+                elseShow={
+                    <p>
+                        You are about to delete role:{' '}
+                        <strong>{role?.name}</strong>
+                    </p>
+                }
             />
         </Dialogue>
     );

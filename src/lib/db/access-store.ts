@@ -426,11 +426,11 @@ export class AccessStore implements IAccessStore {
 
     async removeRolesOfTypeForUser(
         userId: number,
-        roleType: string,
+        roleTypes: string[],
     ): Promise<void> {
         const rolesToRemove = this.db(T.ROLES)
             .select('id')
-            .where({ type: roleType });
+            .whereIn('type', roleTypes);
 
         return this.db(T.ROLE_USER)
             .where({ user_id: userId })

@@ -244,10 +244,10 @@ export class AccessService {
         const newRootRole = await this.resolveRootRole(role);
         if (newRootRole) {
             try {
-                await this.store.removeRolesOfTypeForUser(
-                    userId,
+                await this.store.removeRolesOfTypeForUser(userId, [
                     RoleType.ROOT,
-                ); // TODO
+                    RoleType.ROOT_CUSTOM,
+                ]);
 
                 await this.store.addUserToRole(
                     userId,

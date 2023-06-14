@@ -36,6 +36,7 @@ export const useRoles = () => {
                 roles: ossData?.rootRoles
                     .filter(({ type }: IRole) => type === ROOT_ROLE)
                     .sort(sortRoles) as IRole[],
+                projectRoles: [],
                 loading: !ossError && !ossData,
                 refetch: () => ossMutate(),
                 error: ossError,

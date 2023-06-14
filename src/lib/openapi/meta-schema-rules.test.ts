@@ -68,6 +68,7 @@ const metaRules: Rule[] = [
                 properties: {
                     type: 'object', // properties of the schema should be an object
                     additionalProperties: {
+                        // with the following shape
                         anyOf: [
                             {
                                 type: 'object',

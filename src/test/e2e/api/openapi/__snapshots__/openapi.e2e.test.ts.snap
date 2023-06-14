@@ -835,7 +835,6 @@ The provider you choose for your addon dictates what properties the \`parameters
         "properties": {
           "context": {
             "$ref": "#/components/schemas/sdkContextSchema",
-            "description": "The context to use when evaluating toggles",
           },
           "environments": {
             "description": "The environments to evaluate toggles in.",
@@ -3850,7 +3849,6 @@ The provider you choose for your addon dictates what properties the \`parameters
         "properties": {
           "context": {
             "$ref": "#/components/schemas/sdkContextSchema",
-            "description": "The context to use when evaluating toggles",
           },
           "environment": {
             "description": "The environment to evaluate toggles in.",

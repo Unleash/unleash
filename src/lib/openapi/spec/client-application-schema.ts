@@ -25,7 +25,8 @@ export const clientApplicationSchema = {
             example: 'unleash-client-java:7.0.0',
         },
         environment: {
-            description: 'Which environment the SDK is active for',
+            description: 'The SDK's configured `environment` property. Deprecated. This property  does **not** control which Unleash environment the SDK gets toggles for. To control Unleash environments, use the SDKs API key.',
+            deprecated: true,
             type: 'string',
             example: 'development',
         },

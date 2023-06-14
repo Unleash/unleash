@@ -383,9 +383,15 @@ export const ProjectFeatureToggles = ({
 
     const initialState = useMemo(
         () => {
-            const allColumnIds = columns.map(
-                (column: any) => column?.accessor || column?.id
-            );
+            const allColumnIds = columns
+                .map(
+                    (column: any) =>
+                        (column?.id as string) ||
+                        (typeof column?.accessor === 'string'
+                            ? column?.accessor as string
+                            : '')
+                )
+                .filter(Boolean);
             let hiddenColumns = environments
                 .filter((_, index) => index >= 3)
                 .map(environment => `environments.${environment}`);

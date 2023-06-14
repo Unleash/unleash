@@ -123,8 +123,6 @@ const metaRules: Rule[] = [
             'passwordSchema',
             'patchSchema',
             'permissionSchema',
-            'playgroundFeatureSchema',
-            'playgroundRequestSchema',
             'profileSchema',
             'projectSchema',
             'projectsSchema',

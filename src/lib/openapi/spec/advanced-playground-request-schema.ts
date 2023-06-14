@@ -2,16 +2,18 @@ import { FromSchema } from 'json-schema-to-ts';
 import { ALL } from '../../types/models/api-token';
 import { sdkContextSchema } from './sdk-context-schema';
 
-export const playgroundRequestSchema = {
-    $id: '#/components/schemas/playgroundRequestSchema',
-    description: 'Data for the playground API to evaluate toggles',
+export const advancedPlaygroundRequestSchema = {
+    $id: '#/components/schemas/advancedPlaygroundRequestSchema',
+    description:
+        'Data for the playground API to evaluate toggles in advanced mode with environment and context multi selection',
     type: 'object',
-    required: ['environment', 'context'],
+    required: ['environments', 'context'],
     properties: {
-        environment: {
-            type: 'string',
-            example: 'development',
-            description: 'The environment to evaluate toggles in.',
+        environments: {
+            type: 'array',
+            items: { type: 'string' },
+            example: ['development', 'production'],
+            description: 'The environments to evaluate toggles in.',
         },
         projects: {
             description: 'A list of projects to check for toggles in.',
@@ -41,6 +43,6 @@ export const playgroundRequestSchema = {
     },
 } as const;
 
-export type PlaygroundRequestSchema = FromSchema<
-    typeof playgroundRequestSchema
+export type AdvancedPlaygroundRequestSchema = FromSchema<
+    typeof advancedPlaygroundRequestSchema
 >;

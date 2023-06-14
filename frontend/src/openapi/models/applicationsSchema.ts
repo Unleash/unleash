@@ -6,5 +6,6 @@
 import type { ApplicationSchema } from './applicationSchema';
 
 export interface ApplicationsSchema {
+    /** Contains a list of applications that have connected via an SDK */
     applications?: ApplicationSchema[];
 }

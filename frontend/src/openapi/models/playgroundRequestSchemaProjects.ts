@@ -4,4 +4,7 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * A list of projects to check for toggles in.
+ */
 export type PlaygroundRequestSchemaProjects = string[] | '*';

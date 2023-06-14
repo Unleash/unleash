@@ -4,10 +4,18 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * An overview of a [Personal Access Token](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens).
+ */
 export interface PatSchema {
+    /** The unique identification number for this Personal Access Token. (This property is set by Unleash when the token is created and cannot be set manually: if you provide a value when creating a PAT, Unleash will ignore it.) */
     id?: number;
+    /** The token used for authentication. (This property is set by Unleash when the token is created and cannot be set manually: if you provide a value when creating a PAT, Unleash will ignore it.) */
     secret?: string;
-    expiresAt?: string | null;
-    createdAt?: string | null;
+    /** The token's expiration date. */
+    expiresAt?: string;
+    /** When the token was created. (This property is set by Unleash when the token is created and cannot be set manually: if you provide a value when creating a PAT, Unleash will ignore it.) */
+    createdAt?: string;
+    /** When the token was last seen/used to authenticate with. `null` if it has not been used yet. (This property is set by Unleash when the token is created and cannot be set manually: if you provide a value when creating a PAT, Unleash will ignore it.) */
     seenAt?: string | null;
 }

@@ -6,6 +6,10 @@ import { PlaygroundResultChip } from '../../PlaygroundResultsTable/PlaygroundRes
 import { InfoOutlined } from '@mui/icons-material';
 import React, { useState } from 'react';
 import { AdvancedPlaygroundEnvironmentEvaluationDetails } from '../AdvancedPlaygroundEnvironmentEvaluationDetails/AdvancedPlaygroundEnvironmentEvaluationDetails';
+import {
+    AdvancedPlaygroundEnvironmentFeatureSchema,
+    AdvancedPlaygroundFeatureSchemaEnvironments,
+} from 'openapi';
 
 const StyledContainer = styled(
     'div',
@@ -24,7 +28,7 @@ const StyledPlaygroundChipContainer = styled(Box)(({ theme }) => ({
 }));
 
 export interface IAdvancedPlaygroundEnvironmentCellProps {
-    value: AdvancedPlaygroundEnvironment;
+    value: AdvancedPlaygroundEnvironmentFeatureSchema[];
 }
 
 export const AdvancedPlaygroundEnvironmentCell = ({
@@ -40,8 +44,8 @@ export const AdvancedPlaygroundEnvironmentCell = ({
 
     const open = Boolean(anchor);
 
-    const enabled = value?.filter(evaluation => evaluation.isEnabled) || [];
-    const disabled = value?.filter(evaluation => !evaluation.isEnabled) || [];
+    const enabled = (value || []).filter(evaluation => evaluation.isEnabled);
+    const disabled = (value || []).filter(evaluation => !evaluation.isEnabled);
 
     return (
         <StyledContainer>

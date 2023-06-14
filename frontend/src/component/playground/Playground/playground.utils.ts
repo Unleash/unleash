@@ -1,6 +1,8 @@
-import { PlaygroundResponseSchema } from 'openapi';
+import {
+    PlaygroundResponseSchema,
+    AdvancedPlaygroundResponseSchema,
+} from 'openapi';
 import { IEnvironment } from 'interfaces/environments';
-import { AdvancedPlaygroundResponse } from './AdvancedPlaygroundResultsTable/advancedPlayground';
 
 export const resolveProjects = (
     projects: string[] | string
@@ -49,7 +51,10 @@ export const getEnvironmentOptions = (environments: IEnvironment[]) => {
 
 export const resolveResultsWidth = (
     matches: boolean,
-    results: PlaygroundResponseSchema | AdvancedPlaygroundResponse | undefined
+    results:
+        | PlaygroundResponseSchema
+        | AdvancedPlaygroundResponseSchema
+        | undefined
 ) => {
     if (matches) {
         return '100%';

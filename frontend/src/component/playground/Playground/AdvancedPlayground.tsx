@@ -19,7 +19,7 @@ import { PlaygroundGuidance } from './PlaygroundGuidance/PlaygroundGuidance';
 import { PlaygroundGuidancePopper } from './PlaygroundGuidancePopper/PlaygroundGuidancePopper';
 import Loader from '../../common/Loader/Loader';
 import { AdvancedPlaygroundResultsTable } from './AdvancedPlaygroundResultsTable/AdvancedPlaygroundResultsTable';
-import { AdvancedPlaygroundResponse } from './AdvancedPlaygroundResultsTable/advancedPlayground';
+import { AdvancedPlaygroundResponseSchema } from 'openapi';
 
 export const AdvancedPlayground: VFC<{}> = () => {
     const { environments: availableEnvironments } = useEnvironments();
@@ -30,7 +30,7 @@ export const AdvancedPlayground: VFC<{}> = () => {
     const [projects, setProjects] = useState<string[]>([]);
     const [context, setContext] = useState<string>();
     const [results, setResults] = useState<
-        AdvancedPlaygroundResponse | undefined
+        AdvancedPlaygroundResponseSchema | undefined
     >();
     const { setToastData } = useToast();
     const [searchParams, setSearchParams] = useSearchParams();

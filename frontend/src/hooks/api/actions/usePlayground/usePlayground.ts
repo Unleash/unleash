@@ -1,9 +1,9 @@
 import useAPI from '../useApi/useApi';
 import {
+    AdvancedPlaygroundResponseSchema,
     PlaygroundRequestSchema,
     PlaygroundResponseSchema,
-} from '../../../../openapi';
-import { AdvancedPlaygroundResponse } from '../../../../component/playground/Playground/AdvancedPlaygroundResultsTable/advancedPlayground';
+} from 'openapi';
 
 export const usePlaygroundApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -37,7 +37,7 @@ export const usePlaygroundApi = () => {
         try {
             const res = await makeRequest(req.caller, req.id);
 
-            return res.json() as Promise<AdvancedPlaygroundResponse>;
+            return res.json() as Promise<AdvancedPlaygroundResponseSchema>;
         } catch (error) {
             throw error;
         }

@@ -1,7 +1,7 @@
-import { AdvancedPlaygroundEnvironment } from '../advancedPlayground';
+import { AdvancedPlaygroundEnvironmentFeatureSchema } from 'openapi';
 
 interface IAdvancedPlaygroundEnvironmentEvaluationDetailsProps {
-    environment: AdvancedPlaygroundEnvironment;
+    environment: AdvancedPlaygroundEnvironmentFeatureSchema[];
 }
 
 export const AdvancedPlaygroundEnvironmentEvaluationDetails = ({

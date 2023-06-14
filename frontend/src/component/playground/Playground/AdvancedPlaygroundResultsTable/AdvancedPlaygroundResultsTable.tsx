@@ -28,11 +28,11 @@ import {
 } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-import {
-    AdvancedPlaygroundFeature,
-    AdvancedPlaygroundInput,
-} from './advancedPlayground';
 import { AdvancedPlaygroundEnvironmentCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentCell';
+import {
+    AdvancedPlaygroundRequestSchema,
+    AdvancedPlaygroundFeatureSchema,
+} from 'openapi';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -48,8 +48,8 @@ const StyledButton = styled(Link)(({ theme }) => ({
 }));
 
 interface IAdvancedPlaygroundResultsTableProps {
-    features?: AdvancedPlaygroundFeature[];
-    input?: AdvancedPlaygroundInput;
+    features?: AdvancedPlaygroundFeatureSchema[];
+    input?: AdvancedPlaygroundRequestSchema;
     loading: boolean;
 }
 const capitalizeFirst = (string: string) => {

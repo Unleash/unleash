@@ -69,11 +69,22 @@ const metaRules: Rule[] = [
                     type: 'object', // properties of the schema should be an object
                     additionalProperties: {
                         // with the following shape
-                        type: 'object',
-                        properties: {
-                            description: { type: 'string' },
-                        },
-                        required: ['description'],
+                        anyOf: [
+                            {
+                                type: 'object',
+                                properties: {
+                                    description: { type: 'string' },
+                                },
+                                required: ['description'],
+                            },
+                            {
+                                type: 'object',
+                                properties: {
+                                    $ref: { type: 'string' },
+                                },
+                                required: ['$ref'],
+                            },
+                        ],
                     },
                 },
             },
@@ -103,7 +114,6 @@ const metaRules: Rule[] = [
             'featureEventsSchema',
             'featureSchema',
             'featuresSchema',
-            'featureStrategySchema',
             'featureStrategySegmentSchema',
             'featureTypeSchema',
             'featureTypesSchema',
@@ -132,7 +142,6 @@ const metaRules: Rule[] = [
             'pushVariantsSchema',
             'resetPasswordSchema',
             'requestsPerSecondSchema',
-            'requestsPerSecondSegmentedSchema',
             'roleSchema',
             'sdkContextSchema',
             'searchEventsSchema',

@@ -249,7 +249,7 @@ export const AdvancedPlaygroundResultsTable = ({
                     </TablePlaceholder>
                 )}
                 elseShow={() => (
-                    <Box ref={ref} sx={{ overflow: 'scroll' }}>
+                    <Box ref={ref} sx={{ overflow: 'auto' }}>
                         <SearchHighlightProvider
                             value={getSearchText(searchValue)}
                         >

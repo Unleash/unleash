@@ -1152,8 +1152,10 @@ The provider you choose for your addon dictates what properties the \`parameters
           "tag": {
             "description": "Features tagged with one of these tags are included",
             "example": [
-              "simple:payment",
-              "simple:stripejourney",
+              [
+                "simple:payment",
+                "simple:stripejourney",
+              ],
             ],
             "items": {
               "items": {
@@ -1178,7 +1180,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "query": {
             "$ref": "#/components/schemas/clientFeaturesQuerySchema",
-            "description": "A summary of filters and parameters sent to the endpoint and used to build the features and segments responses",
+            "description": "A summary of filters and parameters sent to the endpoint. Used by the server to build the features and segments response",
           },
           "segments": {
             "description": "A list of [Segments](https://docs.getunleash.io/reference/segments) configured for this Unleash instance",
@@ -1190,6 +1192,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           "version": {
             "description": "A version number for the format used in the response. Most Unleash instances now return version 2, which includes segments as a separate array",
             "example": 2,
+            "minimum": 0,
             "type": "number",
           },
         },

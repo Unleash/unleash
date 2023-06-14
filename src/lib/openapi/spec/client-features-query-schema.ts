@@ -15,7 +15,7 @@ export const clientFeaturesQuerySchema = {
                     type: 'string',
                 },
             },
-            example: ['simple:payment', 'simple:stripejourney'],
+            example: [['simple:payment', 'simple:stripejourney']],
         },
         project: {
             type: 'array',

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { IEnvironment } from 'interfaces/environments';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
-import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
+import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useToast from 'hooks/useToast';
 import { EnvironmentActionCellPopover } from './EnvironmentActionCellPopover/EnvironmentActionCellPopover';
@@ -25,7 +25,7 @@ export const EnvironmentActionCell = ({
     const navigate = useNavigate();
     const { setToastApiError, setToastData } = useToast();
     const { environments, refetchEnvironments } = useEnvironments();
-    const { refetch: refetchPermissions } = useProjectRolePermissions();
+    const { refetch: refetchPermissions } = usePermissions();
     const { deleteEnvironment, toggleEnvironmentOn, toggleEnvironmentOff } =
         useEnvironmentApi();
 

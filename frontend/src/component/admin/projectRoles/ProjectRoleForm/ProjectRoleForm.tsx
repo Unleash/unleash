@@ -10,8 +10,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import {
     IPermission,
     IProjectEnvironmentPermissions,
-    IProjectRolePermissions,
-} from 'interfaces/project';
+    IPermissions,
+} from 'interfaces/permissions';
 import { ICheckedPermission } from '../hooks/useProjectRoleForm';
 
 interface IProjectRoleForm {
@@ -21,7 +21,7 @@ interface IProjectRoleForm {
     errors: { [key: string]: string };
     children: ReactNode;
     permissions:
-        | IProjectRolePermissions
+        | IPermissions
         | {
               project: IPermission[];
               environments: IProjectEnvironmentPermissions[];

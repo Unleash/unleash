@@ -1,5 +1,5 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
+import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
 import { useNavigate } from 'react-router-dom';
 import ProjectRoleForm from '../ProjectRoleForm/ProjectRoleForm';
 import useProjectRoleForm from '../hooks/useProjectRoleForm';
@@ -33,7 +33,7 @@ const CreateProjectRole = () => {
         getRoleKey,
     } = useProjectRoleForm();
 
-    const { createRole, loading } = useProjectRolesApi();
+    const { addRole, loading } = useRolesApi();
 
     const onSubmit = async (e: Event) => {
         e.preventDefault();
@@ -44,8 +44,8 @@ const CreateProjectRole = () => {
         if (validName && validPermissions) {
             const payload = getProjectRolePayload();
             try {
-                await createRole(payload);
-                navigate('/admin/roles');
+                await addRole(payload);
+                navigate('/admin/project-roles');
                 setToastData({
                     title: 'Project role created',
                     text: 'Now you can start assigning your project roles to project members.',

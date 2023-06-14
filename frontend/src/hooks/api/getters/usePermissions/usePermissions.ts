@@ -4,15 +4,16 @@ import { formatApiPath } from 'utils/formatPath';
 
 import {
     IProjectEnvironmentPermissions,
-    IProjectRolePermissions,
+    IPermissions,
     IPermission,
-} from 'interfaces/project';
+} from 'interfaces/permissions';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-interface IUseProjectRolePermissions {
+interface IUsePermissions {
     permissions:
-        | IProjectRolePermissions
+        | IPermissions
         | {
+              root: IPermission[];
               project: IPermission[];
               environments: IProjectEnvironmentPermissions[];
           };
@@ -21,9 +22,7 @@ interface IUseProjectRolePermissions {
     error: any;
 }
 
-const useProjectRolePermissions = (
-    options: SWRConfiguration = {}
-): IUseProjectRolePermissions => {
+const usePermissions = (options: SWRConfiguration = {}): IUsePermissions => {
     const fetcher = () => {
         const path = formatApiPath(`api/admin/permissions`);
         return fetch(path, {
@@ -35,7 +34,7 @@ const useProjectRolePermissions = (
 
     const KEY = `api/admin/permissions`;
 
-    const { data, error } = useSWR<{ permissions: IProjectRolePermissions }>(
+    const { data, error } = useSWR<{ permissions: IPermissions }>(
         KEY,
         fetcher,
         options
@@ -51,11 +50,15 @@ const useProjectRolePermissions = (
     }, [data, error]);
 
     return {
-        permissions: data?.permissions || { project: [], environments: [] },
+        permissions: data?.permissions || {
+            root: [],
+            project: [],
+            environments: [],
+        },
         error,
         loading,
         refetch,
     };
 };
 
-export default useProjectRolePermissions;
+export default usePermissions;

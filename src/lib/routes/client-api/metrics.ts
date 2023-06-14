@@ -53,7 +53,7 @@ export default class ClientMetricsController extends Controller {
                     tags: ['Client'],
                     summary: 'Register client usage metrics',
                     description:
-                        'Registers usage metrics. Reported per feature toggle how many time seach toggle was evaluated to enabled/disabled as well as support for registering variant usage',
+                        'Registers usage metrics. Stores information about how many times each toggle was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature toggle's variants were displayed to the end user.',
                     operationId: 'registerClientMetrics',
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {

@@ -22,8 +22,6 @@ export const RoleDeleteDialogGroups = ({
         sortBy: [{ id: 'createdAt' }],
     }));
 
-    console.log(groups);
-
     const columns = useMemo(
         () =>
             [

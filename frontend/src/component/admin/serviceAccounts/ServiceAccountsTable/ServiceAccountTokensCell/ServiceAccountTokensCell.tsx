@@ -24,11 +24,10 @@ export const ServiceAccountTokensCell: VFC<IServiceAccountTokensCellProps> = ({
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
-    if (
-        onCreateToken &&
-        (!serviceAccount.tokens || serviceAccount.tokens.length === 0)
-    )
-        return <LinkCell title="Create token" onClick={onCreateToken} />;
+    if (!serviceAccount.tokens || serviceAccount.tokens.length === 0) {
+        if (!onCreateToken) return <TextCell>0 tokens</TextCell>;
+        else return <LinkCell title="Create token" onClick={onCreateToken} />;
+    }
 
     return (
         <TextCell>

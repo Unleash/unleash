@@ -75,7 +75,9 @@ export const RoleDescription = ({
                 {description}
             </StyledDescriptionSubHeader>
             <ConditionallyRender
-                condition={role.type !== 'root'}
+                condition={
+                    categorizedPermissions.length > 0 && role.type !== 'root'
+                }
                 show={() =>
                     [...categories].map(category => (
                         <StyledDescriptionBlock key={category}>

@@ -1,5 +1,5 @@
-import { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect } from 'react';
+import { SWRConfiguration } from 'swr';
+import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import IRole from 'interfaces/role';
@@ -19,36 +19,49 @@ export const useRole = (
 ): IUseRoleOutput => {
     const { isEnterprise } = useUiConfig();
 
-    const fetcher = () => {
-        const path = formatApiPath(`api/admin/roles/${id}`);
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('role'))
-            .then(res => res.json());
-    };
-
-    const { data, error } = useConditionalSWR(
+    const { data, error, mutate } = useConditionalSWR(
         Boolean(id) && isEnterprise(),
         undefined,
-        `api/admin/roles/${id}`,
+        formatApiPath(`api/admin/roles/${id}`),
         fetcher,
         options
     );
-    const [loading, setLoading] = useState(!error && !data);
 
-    const refetch = () => {
-        mutate(`api/admin/roles/${id}`);
-    };
+    const {
+        data: ossData,
+        error: ossError,
+        mutate: ossMutate,
+    } = useConditionalSWR(
+        Boolean(id) && !isEnterprise(),
+        { rootRoles: [] },
+        formatApiPath(`api/admin/user-admin`),
+        fetcher,
+        options
+    );
 
-    useEffect(() => {
-        setLoading(!error && !data);
-    }, [data, error]);
+    return useMemo(() => {
+        if (!isEnterprise()) {
+            return {
+                role: ((ossData?.rootRoles ?? []) as IRole[]).find(
+                    ({ id: rId }) => rId === +id!
+                ),
+                loading: !ossError && !ossData,
+                refetch: () => ossMutate(),
+                error: ossError,
+            };
+        } else {
+            return {
+                role: data as IRole,
+                loading: !error && !data,
+                refetch: () => mutate(),
+                error,
+            };
+        }
+    }, [data, error, mutate, ossData, ossError, ossMutate]);
+};
 
-    return {
-        role: data as IRole,
-        error,
-        loading,
-        refetch,
-    };
+const fetcher = (path: string) => {
+    return fetch(path)
+        .then(handleErrorResponses('Role'))
+        .then(res => res.json());
 };

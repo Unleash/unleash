@@ -106,7 +106,7 @@ export const RolesTable = () => {
                 searchable: true,
             },
         ],
-        [roles]
+        []
     );
 
     const [initialState] = useState({

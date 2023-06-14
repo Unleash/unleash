@@ -15,7 +15,11 @@ export const RoleBadge = ({ roleId }: IRoleBadgeProps) => {
 
     return (
         <HtmlTooltip title={<RoleDescription roleId={roleId} tooltip />}>
-            <Badge color="success" icon={<UserIcon />}>
+            <Badge
+                color="success"
+                icon={<UserIcon />}
+                sx={{ cursor: 'pointer' }}
+            >
                 {role.name}
             </Badge>
         </HtmlTooltip>

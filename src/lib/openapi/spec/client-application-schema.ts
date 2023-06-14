@@ -35,6 +35,7 @@ export const clientApplicationSchema = {
             description:
                 'How often (in seconds) does the client refresh its toggles',
             example: 10,
+            minimum: 0,
         },
         started: {
             description:

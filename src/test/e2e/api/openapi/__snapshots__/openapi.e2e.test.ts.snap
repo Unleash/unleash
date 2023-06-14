@@ -9568,7 +9568,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/api/admin/playground/advanced": {
       "post": {
-        "description": "Use the provided \`context\`, \`environment\`, and \`projects\` to evaluate toggles on this Unleash instance. Returns a list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.",
+        "description": "Use the provided \`context\`, \`environments\`, and \`projects\` to evaluate toggles on this Unleash instance. Each context field allow for comma separated values. Returns a combinatorial list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.",
         "operationId": "getAdvancedPlayground",
         "requestBody": {
           "content": {
@@ -9647,7 +9647,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
           },
         },
-        "summary": "Evaluate an Unleash context against a set of environments and projects.",
+        "summary": "Batch evaluate an Unleash context against a set of environments and projects.",
         "tags": [
           "Unstable",
         ],

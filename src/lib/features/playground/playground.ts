@@ -74,7 +74,7 @@ export default class PlaygroundController extends Controller {
                     requestBody: createRequestSchema(
                         'advancedPlaygroundRequestSchema',
                     ),
-                    ...endpointDescriptions.admin.playground,
+                    ...endpointDescriptions.admin.advancedPlayground,
                 }),
             ],
         });

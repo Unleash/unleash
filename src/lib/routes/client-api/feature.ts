@@ -94,6 +94,9 @@ export default class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getClientFeature',
+                    summary: 'Get a single feature toggle',
+                    description:
+                        'Gets all the client data for a single toggle. Contains the exact same information about a toggle as the `/api/client/features` endpoint does, but only contains data about the specified toggle. All SDKs should use `/api/client/features`',
                     tags: ['Client'],
                     responses: {
                         200: createResponseSchema('clientFeatureSchema'),
@@ -109,6 +112,9 @@ export default class FeatureController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get all toggles (SDK)',
+                    description:
+                        'Returns the SDK configuration for all feature toggles that are available to the provided API key. Used by SDKs to configure local evaluation',
                     operationId: 'getAllClientFeatures',
                     tags: ['Client'],
                     responses: {

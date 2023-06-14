@@ -10,8 +10,6 @@ import { playgroundConstraintSchema } from './playground-constraint-schema';
 import { playgroundSegmentSchema } from './playground-segment-schema';
 import { sdkContextSchema } from './sdk-context-schema';
 
-export const unknownFeatureEvaluationResult = 'unevaluated' as const;
-
 export const advancedPlaygroundEnvironmentFeatureSchema = {
     $id: '#/components/schemas/advancedPlaygroundEnvironmentFeatureSchema',
     description:

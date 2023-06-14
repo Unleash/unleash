@@ -84,22 +84,22 @@ export const PlaygroundConnectionFieldset: VFC<
     >['onChange'] = (event, value, reason) => {
         const newEnvironments = value as IOption | IOption[];
         if (reason === 'clear' || newEnvironments === null) {
-            return setEnvironments([allOption.id]);
+            return setEnvironments([]);
         }
         if (Array.isArray(newEnvironments)) {
             if (newEnvironments.length === 0) {
-                return setProjects([allOption.id]);
+                return setEnvironments([]);
             }
             if (
                 newEnvironments.find(({ id }) => id === allOption.id) !==
                 undefined
             ) {
-                return setEnvironments([allOption.id]);
+                return setEnvironments([]);
             }
             return setEnvironments(newEnvironments.map(({ id }) => id));
         }
         if (newEnvironments.id === allOption.id) {
-            return setEnvironments([allOption.id]);
+            return setEnvironments([]);
         }
 
         return setEnvironments([newEnvironments.id]);
@@ -107,10 +107,6 @@ export const PlaygroundConnectionFieldset: VFC<
 
     const isAllProjects =
         projects.length === 0 || (projects.length === 1 && projects[0] === '*');
-
-    const isAllEnvironments =
-        environments.length === 0 ||
-        (environments.length === 1 && environments[0] === '*');
 
     return (
         <Box sx={{ pb: 2 }}>
@@ -127,21 +123,17 @@ export const PlaygroundConnectionFieldset: VFC<
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                 <Autocomplete
                     disablePortal
+                    multiple
                     id="environment"
-                    multiple={!isAllEnvironments}
                     options={environmentOptions}
                     sx={{ width: 200, maxWidth: '100%' }}
                     renderInput={params => (
                         <TextField {...params} label="Environments" />
                     )}
                     size="small"
-                    value={
-                        isAllEnvironments
-                            ? allOption
-                            : environmentOptions.filter(({ id }) =>
-                                  environments.includes(id)
-                              )
-                    }
+                    value={environmentOptions.filter(({ id }) =>
+                        environments.includes(id)
+                    )}
                     onChange={onEnvironmentsChange}
                 />
                 <Autocomplete

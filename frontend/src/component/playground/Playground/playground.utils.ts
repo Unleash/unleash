@@ -22,15 +22,7 @@ export const resolveProjects = (
 
 export const resolveEnvironments = (
     envrironments: string[] | string
-): string[] | '*' => {
-    if (
-        !envrironments ||
-        envrironments.length === 0 ||
-        (envrironments.length === 1 && envrironments[0] === '*')
-    ) {
-        return '*';
-    }
-
+): string[] => {
     if (Array.isArray(envrironments)) {
         return envrironments;
     }

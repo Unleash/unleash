@@ -19,7 +19,7 @@ export const endpointDescriptions = {
         },
         advancedPlayground: {
             description:
-                'Use the provided `context`, `environments`, and `projects` to evaluate toggles on this Unleash instance. Each context field allow for comma separated values. Returns a combinatorial list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.',
+                'Use the provided `context`, `environments`, and `projects` to evaluate toggles on this Unleash instance. Each context field allows for comma separated values. Returns a combinatorial list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.',
             summary:
                 'Batch evaluate an Unleash context against a set of environments and projects.',
         },

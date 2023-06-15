@@ -1,5 +1,12 @@
 import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
-import { Box, IconButton, Popover, styled, useTheme } from '@mui/material';
+import {
+    Box,
+    IconButton,
+    Popover,
+    styled,
+    Typography,
+    useTheme,
+} from '@mui/material';
 import { flexRow } from '../../../../../themes/themeStyles';
 import { PlaygroundResultChip } from '../../PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
 import { InfoOutlined } from '@mui/icons-material';
@@ -88,6 +95,9 @@ export const AdvancedPlaygroundEnvironmentCell = ({
                         horizontal: -320,
                     }}
                 >
+                    <Typography variant="subtitle2" sx={{ mb: 3 }}>
+                        {value[0].environment}
+                    </Typography>
                     <PlaygroundEnvironmentTable features={value} />
                 </Popover>
             </>

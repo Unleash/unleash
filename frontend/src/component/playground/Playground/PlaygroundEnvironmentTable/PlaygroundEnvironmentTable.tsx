@@ -18,6 +18,7 @@ import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/F
 import { FeatureResultInfoPopoverCell } from '../PlaygroundResultsTable/FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
 import { VariantCell } from '../PlaygroundResultsTable/VariantCell/VariantCell';
 import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
+import { capitalizeFirst } from '../playground.utils';
 
 interface IPlaygroundEnvironmentTableProps {
     features: AdvancedPlaygroundEnvironmentFeatureSchema[];
@@ -32,7 +33,7 @@ export const PlaygroundEnvironmentTable = ({
     const dynamicHeaders = Object.keys(features[0].context)
         .filter(contextField => contextField !== 'appName')
         .map(contextField => ({
-            Header: contextField,
+            Header: capitalizeFirst(contextField),
             accessor: `context.${contextField}`,
             minWidth: 160,
             Cell: HighlightCell,

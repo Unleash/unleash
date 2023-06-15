@@ -33,6 +33,7 @@ import {
     AdvancedPlaygroundRequestSchema,
     AdvancedPlaygroundFeatureSchema,
 } from 'openapi';
+import { capitalizeFirst } from '../playground.utils';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -52,9 +53,6 @@ interface IAdvancedPlaygroundResultsTableProps {
     input?: AdvancedPlaygroundRequestSchema;
     loading: boolean;
 }
-const capitalizeFirst = (string: string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-};
 
 export const AdvancedPlaygroundResultsTable = ({
     features,

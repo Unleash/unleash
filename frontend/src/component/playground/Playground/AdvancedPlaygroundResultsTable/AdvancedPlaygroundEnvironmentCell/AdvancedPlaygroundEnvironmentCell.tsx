@@ -4,8 +4,8 @@ import { flexRow } from '../../../../../themes/themeStyles';
 import { PlaygroundResultChip } from '../../PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
 import { InfoOutlined } from '@mui/icons-material';
 import React, { useState } from 'react';
-import { AdvancedPlaygroundEnvironmentEvaluationDetails } from '../AdvancedPlaygroundEnvironmentEvaluationDetails/AdvancedPlaygroundEnvironmentEvaluationDetails';
 import { AdvancedPlaygroundEnvironmentFeatureSchema } from 'openapi';
+import { PlaygroundEnvironmentTable } from '../../PlaygroundEnvironmentTable/PlaygroundEnvironmentTable';
 
 const StyledContainer = styled(
     'div',
@@ -87,9 +87,7 @@ export const AdvancedPlaygroundEnvironmentCell = ({
                         horizontal: -320,
                     }}
                 >
-                    <AdvancedPlaygroundEnvironmentEvaluationDetails
-                        environment={value}
-                    />
+                    <PlaygroundEnvironmentTable features={value} />
                 </Popover>
             </>
         </StyledContainer>

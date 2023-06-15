@@ -1,5 +1,6 @@
 import useAPI from '../useApi/useApi';
 import {
+    AdvancedPlaygroundRequestSchema,
     AdvancedPlaygroundResponseSchema,
     PlaygroundRequestSchema,
     PlaygroundResponseSchema,
@@ -27,7 +28,9 @@ export const usePlaygroundApi = () => {
         }
     };
 
-    const evaluateAdvancedPlayground = async (payload: any) => {
+    const evaluateAdvancedPlayground = async (
+        payload: AdvancedPlaygroundRequestSchema
+    ) => {
         const path = `${URI}/advanced`;
         const req = createRequest(path, {
             method: 'POST',

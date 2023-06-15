@@ -18,7 +18,7 @@ import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/F
 import { FeatureResultInfoPopoverCell } from '../PlaygroundResultsTable/FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
 import { VariantCell } from '../PlaygroundResultsTable/VariantCell/VariantCell';
 import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
-import { capitalizeFirst } from '../playground.utils';
+import { capitalizeFirst } from 'utils/capitalizeFirst';
 
 interface IPlaygroundEnvironmentTableProps {
     features: AdvancedPlaygroundEnvironmentFeatureSchema[];

@@ -33,7 +33,7 @@ import {
     AdvancedPlaygroundRequestSchema,
     AdvancedPlaygroundFeatureSchema,
 } from 'openapi';
-import { capitalizeFirst } from '../playground.utils';
+import { capitalizeFirst } from 'utils/capitalizeFirst';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(

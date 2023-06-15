@@ -11,8 +11,6 @@ import { IPermission } from '../../interfaces/user';
 import { ProjectMode } from '../project/Project/hooks/useProjectForm';
 import { SWRConfig } from 'swr';
 
-jest.retryTimes(3);
-
 const server = testServerSetup();
 
 const projectWithCollaborationMode = (mode: ProjectMode) =>

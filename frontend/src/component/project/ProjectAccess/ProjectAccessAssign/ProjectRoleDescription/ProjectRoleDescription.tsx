@@ -1,6 +1,6 @@
 import { styled, SxProps, Theme } from '@mui/material';
 import { ForwardedRef, forwardRef, useMemo, VFC } from 'react';
-import useProjectRole from 'hooks/api/getters/useProjectRole/useProjectRole';
+import { useRole } from 'hooks/api/getters/useRole/useRole';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProjectAccess from 'hooks/api/getters/useProjectAccess/useProjectAccess';
 import { ProjectRoleDescriptionProjectPermissions } from './ProjectRoleDescriptionProjectPermissions/ProjectRoleDescriptionProjectPermissions';
@@ -64,13 +64,13 @@ export const ProjectRoleDescription: VFC<IProjectRoleDescriptionProps> =
             }: IProjectRoleDescriptionProps,
             ref: ForwardedRef<HTMLDivElement>
         ) => {
-            const { role } = useProjectRole(roleId.toString());
+            const { role } = useRole(roleId.toString());
             const { access } = useProjectAccess(projectId);
             const accessRole = access?.roles.find(role => role.id === roleId);
 
             const environments = useMemo(() => {
                 const environments = new Set<string>();
-                role.permissions
+                role?.permissions
                     ?.filter((permission: any) => permission.environment)
                     .forEach((permission: any) => {
                         environments.add(permission.environment);
@@ -79,7 +79,7 @@ export const ProjectRoleDescription: VFC<IProjectRoleDescriptionProps> =
             }, [role]);
 
             const projectPermissions = useMemo(() => {
-                return role.permissions?.filter(
+                return role?.permissions?.filter(
                     (permission: any) => !permission.environment
                 );
             }, [role]);
@@ -92,7 +92,9 @@ export const ProjectRoleDescription: VFC<IProjectRoleDescriptionProps> =
                     ref={ref}
                 >
                     <ConditionallyRender
-                        condition={role.permissions?.length > 0}
+                        condition={Boolean(
+                            role?.permissions && role?.permissions?.length > 0
+                        )}
                         show={
                             <>
                                 <ConditionallyRender
@@ -107,7 +109,7 @@ export const ProjectRoleDescription: VFC<IProjectRoleDescriptionProps> =
                                             <StyledDescriptionBlock>
                                                 <ProjectRoleDescriptionProjectPermissions
                                                     permissions={
-                                                        role.permissions
+                                                        role?.permissions || []
                                                     }
                                                 />
                                             </StyledDescriptionBlock>
@@ -132,7 +134,8 @@ export const ProjectRoleDescription: VFC<IProjectRoleDescriptionProps> =
                                                                 environment
                                                             }
                                                             permissions={
-                                                                role.permissions
+                                                                role?.permissions ||
+                                                                []
                                                             }
                                                         />
                                                     </StyledDescriptionBlock>

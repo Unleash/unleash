@@ -5,10 +5,16 @@
  */
 import type { ClientMetricsSchemaBucketTogglesVariants } from './clientMetricsSchemaBucketTogglesVariants';
 
+/**
+ * an object containing feature names with yes/no plus variant usage
+ */
 export type ClientMetricsSchemaBucketToggles = {
     [key: string]: {
+        /** How many times the toggle evaluated to true */
         yes?: number;
+        /** How many times the toggle evaluated to false */
         no?: number;
+        /** How many times each variant was returned */
         variants?: ClientMetricsSchemaBucketTogglesVariants;
     };
 };

@@ -30,7 +30,6 @@ export const playgroundRequestSchema = {
             ],
         },
         context: {
-            description: 'The context to use when evaluating toggles',
             $ref: sdkContextSchema.$id,
         },
     },

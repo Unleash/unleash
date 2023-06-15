@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { CreateFeatureStrategySchema } from './createFeatureStrategySchema';
 
 /**
  * Describes a project's configuration in a given environment.
@@ -22,4 +23,6 @@ export interface EnvironmentProjectSchema {
     projectApiTokenCount?: number;
     /** The number of features enabled in this environment for this project */
     projectEnabledToggleCount?: number;
+    /** The strategy configuration to add when enabling a feature environment by default */
+    defaultStrategy?: CreateFeatureStrategySchema;
 }

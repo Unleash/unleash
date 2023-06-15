@@ -12,27 +12,38 @@ import { useEffect, useState } from 'react';
 export const useVirtualizedRange = (
     rowHeight: number,
     scrollOffset = 40,
-    dampening = 5
+    dampening = 5,
+    parentElement?: HTMLElement | null
 ) => {
+    const parent = parentElement ? parentElement : window;
+
     const [scrollIndex, setScrollIndex] = useState(
-        Math.floor(window.pageYOffset / rowHeight)
+        Math.floor(
+            (parent instanceof HTMLElement
+                ? parent.scrollTop
+                : parent.pageYOffset) / rowHeight
+        )
     );
 
     useEffect(() => {
         const handleScroll = () => {
             requestAnimationFrame(() => {
                 setScrollIndex(
-                    Math.floor(window.pageYOffset / (rowHeight * dampening)) *
-                        dampening
+                    Math.floor(
+                        (parent instanceof HTMLElement
+                            ? parent.scrollTop
+                            : parent.pageYOffset) /
+                            (rowHeight * dampening)
+                    ) * dampening
                 );
             });
         };
-        window.addEventListener('scroll', handleScroll, { passive: true });
+        parent.addEventListener('scroll', handleScroll, { passive: true });
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
+            parent.removeEventListener('scroll', handleScroll);
         };
-    }, [rowHeight, dampening]);
+    }, [rowHeight, dampening, parent]);
 
     return [scrollIndex - scrollOffset, scrollIndex + scrollOffset] as const;
 };

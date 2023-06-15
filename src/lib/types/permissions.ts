@@ -46,3 +46,51 @@ export const SKIP_CHANGE_REQUEST = 'SKIP_CHANGE_REQUEST';
 export const READ_PROJECT_API_TOKEN = 'READ_PROJECT_API_TOKEN';
 export const CREATE_PROJECT_API_TOKEN = 'CREATE_PROJECT_API_TOKEN';
 export const DELETE_PROJECT_API_TOKEN = 'DELETE_PROJECT_API_TOKEN';
+
+export const ROOT_PERMISSION_CATEGORIES = [
+    {
+        label: 'Addon',
+        permissions: [CREATE_ADDON, UPDATE_ADDON, DELETE_ADDON],
+    },
+    {
+        label: 'API token',
+        permissions: [
+            READ_API_TOKEN,
+            CREATE_API_TOKEN,
+            UPDATE_API_TOKEN,
+            DELETE_API_TOKEN,
+        ],
+    },
+    {
+        label: 'Application',
+        permissions: [UPDATE_APPLICATION],
+    },
+    {
+        label: 'Context field',
+        permissions: [
+            CREATE_CONTEXT_FIELD,
+            UPDATE_CONTEXT_FIELD,
+            DELETE_CONTEXT_FIELD,
+        ],
+    },
+    {
+        label: 'Project',
+        permissions: [CREATE_PROJECT],
+    },
+    {
+        label: 'Role',
+        permissions: [READ_ROLE, UPDATE_ROLE],
+    },
+    {
+        label: 'Segment',
+        permissions: [CREATE_SEGMENT, UPDATE_SEGMENT, DELETE_SEGMENT],
+    },
+    {
+        label: 'Strategy',
+        permissions: [CREATE_STRATEGY, UPDATE_STRATEGY, DELETE_STRATEGY],
+    },
+    {
+        label: 'Tag type',
+        permissions: [UPDATE_TAG_TYPE, DELETE_TAG_TYPE],
+    },
+];

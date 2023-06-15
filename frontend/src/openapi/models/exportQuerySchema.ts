@@ -3,9 +3,17 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { ExportQuerySchemaOneOf } from './exportQuerySchemaOneOf';
+import type { ExportQuerySchemaOneOfTwo } from './exportQuerySchemaOneOfTwo';
 
-export interface ExportQuerySchema {
-    features: string[];
-    environment: string;
-    downloadFile?: boolean;
-}
+export type ExportQuerySchema =
+    | (ExportQuerySchemaOneOf & {
+          environment: string;
+          downloadFile?: boolean;
+          [key: string]: any;
+      })
+    | (ExportQuerySchemaOneOfTwo & {
+          environment: string;
+          downloadFile?: boolean;
+          [key: string]: any;
+      });

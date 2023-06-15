@@ -6,11 +6,32 @@
 import type { _ExportFormat } from './_exportFormat';
 
 export type _ExportParams = {
+    /**
+     * Desired export format. Must be either `json` or `yaml`.
+     */
     format?: _ExportFormat;
+    /**
+     * Whether exported data should be downloaded as a file.
+     */
     download?: boolean | string | number;
+    /**
+     * Whether strategies should be included in the exported data.
+     */
     strategies?: boolean | string | number;
+    /**
+     * Whether feature toggles should be included in the exported data.
+     */
     featureToggles?: boolean | string | number;
+    /**
+     * Whether projects should be included in the exported data.
+     */
     projects?: boolean | string | number;
+    /**
+     * Whether tag types, tags, and feature_tags should be included in the exported data.
+     */
     tags?: boolean | string | number;
+    /**
+     * Whether environments should be included in the exported data.
+     */
     environments?: boolean | string | number;
 };

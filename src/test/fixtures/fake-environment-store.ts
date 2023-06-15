@@ -135,6 +135,10 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
     ): Promise<IProjectEnvironment[]> {
         return Promise.reject(new Error('Not implemented'));
     }
+
+    getMaxSortOrder(): Promise<number> {
+        return Promise.resolve(0);
+    }
 }
 
 module.exports = FakeEnvironmentStore;

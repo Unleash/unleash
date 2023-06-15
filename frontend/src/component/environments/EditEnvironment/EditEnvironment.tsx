@@ -2,7 +2,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import useEnvironment from 'hooks/api/getters/useEnvironment/useEnvironment';
-import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
+import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +23,7 @@ const EditEnvironment = () => {
     const navigate = useNavigate();
     const { name, type, setName, setType, errors, clearErrors } =
         useEnvironmentForm(environment.name, environment.type);
-    const { refetch } = useProjectRolePermissions();
+    const { refetch } = usePermissions();
 
     const editPayload = () => {
         return {

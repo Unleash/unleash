@@ -54,7 +54,7 @@ export const resolveResultsWidth = (
     }
 
     if (results && !matches) {
-        return '65%';
+        return '60%';
     }
 
     return '50%';

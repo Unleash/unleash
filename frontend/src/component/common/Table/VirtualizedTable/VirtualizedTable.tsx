@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { RefObject, useMemo } from 'react';
 import { useTheme, TableBody, TableRow } from '@mui/material';
 import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { TableCell } from 'component/common/Table/TableCell/TableCell';
@@ -21,11 +21,13 @@ export const VirtualizedTable = <T extends object>({
     headerGroups,
     rows,
     prepareRow,
+    parentRef,
 }: {
     rowHeight?: number;
     headerGroups: HeaderGroup<T>[];
     rows: Row<T>[];
     prepareRow: (row: Row<T>) => void;
+    parentRef?: RefObject<HTMLElement | null>;
 }) => {
     const theme = useTheme();
     const rowHeight = useMemo(
@@ -33,8 +35,12 @@ export const VirtualizedTable = <T extends object>({
         [rowHeightOverride, theme.shape.tableRowHeight]
     );
 
-    const [firstRenderedIndex, lastRenderedIndex] =
-        useVirtualizedRange(rowHeight);
+    const [firstRenderedIndex, lastRenderedIndex] = useVirtualizedRange(
+        rowHeight,
+        40,
+        5,
+        parentRef?.current
+    );
 
     const tableHeight = useMemo(
         () => rowHeight * rows.length + theme.shape.tableRowHeightCompact,

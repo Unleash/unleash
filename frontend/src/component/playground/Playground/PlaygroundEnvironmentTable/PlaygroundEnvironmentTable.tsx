@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import {
     useFlexLayout,
     useGlobalFilter,
@@ -12,7 +12,7 @@ import {
     AdvancedPlaygroundEnvironmentFeatureSchema,
     PlaygroundFeatureSchema,
 } from 'openapi';
-import { useMediaQuery, useTheme } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/FeatureStatusCell';
 import { FeatureResultInfoPopoverCell } from '../PlaygroundResultsTable/FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
@@ -125,11 +125,22 @@ export const PlaygroundEnvironmentTable = ({
         COLUMNS
     );
 
+    const parentRef = useRef<HTMLElement | null>(null);
+
     return (
-        <VirtualizedTable
-            rows={rows}
-            headerGroups={headerGroups}
-            prepareRow={prepareRow}
-        />
+        <Box
+            ref={parentRef}
+            sx={{
+                overflow: 'auto',
+                maxHeight: '800px',
+            }}
+        >
+            <VirtualizedTable
+                parentRef={parentRef}
+                rows={rows}
+                headerGroups={headerGroups}
+                prepareRow={prepareRow}
+            />
+        </Box>
     );
 };

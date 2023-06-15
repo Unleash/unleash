@@ -60,7 +60,7 @@ export const FeatureStrategyMenuCards = ({
         <List dense>
             <ConditionallyRender
                 condition={
-                    uiConfig.flags.strategyImprovements &&
+                    Boolean(uiConfig.flags.strategyImprovements) &&
                     defaultStrategy !== undefined
                 }
                 show={

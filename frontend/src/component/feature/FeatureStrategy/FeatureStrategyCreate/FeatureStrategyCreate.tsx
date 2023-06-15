@@ -30,14 +30,33 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import useQueryParams from 'hooks/useQueryParams';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
     const strategyName = useRequiredQueryParam('strategyName');
+    const useDefaultStrategy: boolean = JSON.parse(
+        useQueryParams().get('defaultStrategy') || 'false'
+    );
+    const { project } = useProject(projectId);
+
+    const defaultStrategy = project.environments.find(
+        env => env.environment === environmentId
+    )?.defaultStrategy;
+
+    const { segments: allSegments } = useSegments();
+    const strategySegments =
+        allSegments?.filter(segment => {
+            return defaultStrategy?.segments?.includes(segment.id);
+        }) || [];
+
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
-    const [segments, setSegments] = useState<ISegment[]>([]);
+
+    const [segments, setSegments] = useState<ISegment[]>(strategySegments);
     const { strategyDefinition } = useStrategy(strategyName);
     const errors = useFormErrors();
 
@@ -79,10 +98,12 @@ export const FeatureStrategyCreate = () => {
     }, [feature.name]);
 
     useEffect(() => {
-        if (strategyDefinition) {
+        if (useDefaultStrategy) {
+            setStrategy((defaultStrategy as any) || {});
+        } else if (strategyDefinition) {
             setStrategy(createFeatureStrategy(featureId, strategyDefinition));
         }
-    }, [featureId, strategyDefinition]);
+    }, [featureId, strategyDefinition, useDefaultStrategy]);
 
     const onAddStrategy = async (payload: IFeatureStrategyPayload) => {
         await addStrategyToFeature(
@@ -181,9 +202,14 @@ export const formatCreateStrategyPath = (
     projectId: string,
     featureId: string,
     environmentId: string,
-    strategyName: string
+    strategyName: string,
+    defaultStrategy: boolean = false
 ): string => {
-    const params = new URLSearchParams({ environmentId, strategyName });
+    const params = new URLSearchParams({
+        environmentId,
+        strategyName,
+        defaultStrategy: String(defaultStrategy),
+    });
 
     return `/projects/${projectId}/features/${featureId}/strategies/create?${params}`;
 };

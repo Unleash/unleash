@@ -134,7 +134,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                                 <DragIndicator
                                     titleAccess="Drag to reorder"
                                     cursor="grab"
-                                    sx={{ color: 'neutral.main' }}
+                                    sx={{ color: 'action.active' }}
                                 />
                             </DragIcon>
                         )}

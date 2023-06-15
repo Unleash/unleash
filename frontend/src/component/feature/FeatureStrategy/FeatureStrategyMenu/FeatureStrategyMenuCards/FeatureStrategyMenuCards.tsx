@@ -39,31 +39,28 @@ export const FeatureStrategyMenuCards = ({
         env => env.environment === environmentId
     )?.defaultStrategy;
 
-    const defaultStrategy: IStrategy | undefined = strategy
-        ? {
-              name: 'flexibleRollout',
-              displayName: 'Default strategy',
-              description:
-                  'This is the default strategy defined for this environment in the project',
-              parameters: [],
-              editable: false,
-              deprecated: false,
-          }
-        : undefined;
-
+    const defaultStrategy: IStrategy = {
+        name: 'flexibleRollout',
+        displayName: 'Default strategy',
+        description:
+            'This is the default strategy defined for this environment in the project',
+        parameters: [],
+        editable: false,
+        deprecated: false,
+    };
     return (
         <List dense>
             <ConditionallyRender
                 condition={
                     Boolean(uiConfig.flags.strategyImprovements) &&
-                    defaultStrategy !== undefined
+                    strategy !== undefined
                 }
                 show={
                     <>
                         <StyledTypography color="textSecondary">
                             {environmentId} environment default strategy
                         </StyledTypography>
-                        <ListItem key={strategy!.name}>
+                        <ListItem key={defaultStrategy.name}>
                             <FeatureStrategyMenuCard
                                 projectId={projectId}
                                 featureId={featureId}

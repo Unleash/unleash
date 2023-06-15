@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { IPermission, ICheckedPermissions } from 'interfaces/permissions';
-import cloneDeep from 'lodash.clonedeep';
-import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
 import IRole from 'interfaces/role';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
+import { permissionsToCheckedPermissions } from 'utils/permissions';
 
 enum ErrorField {
     NAME = 'name',
@@ -19,33 +18,11 @@ export const useRoleForm = (
     initialPermissions: IPermission[] = []
 ) => {
     const { roles } = useRoles();
-    const { permissions } = usePermissions({
-        revalidateIfStale: false,
-        revalidateOnReconnect: false,
-        revalidateOnFocus: false,
-    });
-
-    const rootPermissions = permissions.root.filter(
-        ({ name }) => name !== 'ADMIN'
-    );
 
     const [name, setName] = useState(initialName);
     const [description, setDescription] = useState(initialDescription);
     const [checkedPermissions, setCheckedPermissions] =
         useState<ICheckedPermissions>({});
-
-    useEffect(() => {
-        setCheckedPermissions(
-            initialPermissions.reduce(
-                (acc: { [key: string]: IPermission }, curr: IPermission) => {
-                    acc[curr.id] = curr;
-                    return acc;
-                },
-                {}
-            )
-        );
-    }, [initialPermissions.length]);
-
     const [errors, setErrors] = useState<IRoleFormErrors>({});
 
     useEffect(() => {
@@ -56,44 +33,16 @@ export const useRoleForm = (
         setDescription(initialDescription);
     }, [initialDescription]);
 
-    const handlePermissionChange = (permission: IPermission) => {
-        let checkedPermissionsCopy = cloneDeep(checkedPermissions);
+    useEffect(() => {
+        const newCheckedPermissions =
+            permissionsToCheckedPermissions(initialPermissions);
+        setCheckedPermissions(newCheckedPermissions);
+    }, [initialPermissions.length]);
 
-        if (checkedPermissionsCopy[permission.id]) {
-            delete checkedPermissionsCopy[permission.id];
-        } else {
-            checkedPermissionsCopy[permission.id] = { ...permission };
-        }
-
-        setCheckedPermissions(checkedPermissionsCopy);
-    };
-
-    const onToggleAllPermissions = () => {
-        let checkedPermissionsCopy = cloneDeep(checkedPermissions);
-
-        const allChecked = rootPermissions.every(
-            (permission: IPermission) => checkedPermissionsCopy[permission.id]
-        );
-
-        if (allChecked) {
-            rootPermissions.forEach((permission: IPermission) => {
-                delete checkedPermissionsCopy[permission.id];
-            });
-        } else {
-            rootPermissions.forEach((permission: IPermission) => {
-                checkedPermissionsCopy[permission.id] = {
-                    ...permission,
-                };
-            });
-        }
-
-        setCheckedPermissions(checkedPermissionsCopy);
-    };
-
-    const getRolePayload = () => ({
+    const getRolePayload = (type: 'root-custom' | 'custom' = 'custom') => ({
         name,
         description,
-        type: 'root-custom',
+        type,
         permissions: Object.values(checkedPermissions),
     });
 
@@ -121,14 +70,11 @@ export const useRoleForm = (
     return {
         name,
         description,
-        errors,
         checkedPermissions,
-        rootPermissions,
+        errors,
         setName,
         setDescription,
         setCheckedPermissions,
-        handlePermissionChange,
-        onToggleAllPermissions,
         getRolePayload,
         clearError,
         setError,

@@ -5,7 +5,7 @@ import { Person as UserIcon } from '@mui/icons-material';
 import { ICheckedPermissions, IPermission } from 'interfaces/permissions';
 import { IRoleFormErrors } from './useRoleForm';
 import { ROOT_PERMISSION_CATEGORIES } from '@server/types/permissions';
-import cloneDeep from 'lodash.clonedeep';
+import { toggleAllPermissions, togglePermission } from 'utils/permissions';
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
     display: 'flex',
@@ -30,7 +30,6 @@ interface IRoleFormProps {
     setCheckedPermissions: React.Dispatch<
         React.SetStateAction<ICheckedPermissions>
     >;
-    handlePermissionChange: (permission: IPermission) => void;
     permissions: IPermission[];
     errors: IRoleFormErrors;
 }
@@ -42,7 +41,6 @@ export const RoleForm = ({
     setDescription,
     checkedPermissions,
     setCheckedPermissions,
-    handlePermissionChange,
     permissions,
     errors,
 }: IRoleFormProps) => {
@@ -61,30 +59,25 @@ export const RoleForm = ({
         categorizedPermissions.map(({ category }) => category).sort()
     );
 
-    const onToggleAllPermissions = (category: string) => {
-        let checkedPermissionsCopy = cloneDeep(checkedPermissions);
+    const onPermissionChange = (permission: IPermission) => {
+        const newCheckedPermissions = togglePermission(
+            checkedPermissions,
+            permission
+        );
+        setCheckedPermissions(newCheckedPermissions);
+    };
 
+    const onCheckAll = (category: string) => {
         const categoryPermissions = categorizedPermissions
             .filter(({ category: pCategory }) => pCategory === category)
             .map(({ permission }) => permission);
 
-        const allChecked = categoryPermissions.every(
-            (permission: IPermission) => checkedPermissionsCopy[permission.id]
+        const newCheckedPermissions = toggleAllPermissions(
+            checkedPermissions,
+            categoryPermissions
         );
 
-        if (allChecked) {
-            categoryPermissions.forEach((permission: IPermission) => {
-                delete checkedPermissionsCopy[permission.id];
-            });
-        } else {
-            categoryPermissions.forEach((permission: IPermission) => {
-                checkedPermissionsCopy[permission.id] = {
-                    ...permission,
-                };
-            });
-        }
-
-        setCheckedPermissions(checkedPermissionsCopy);
+        setCheckedPermissions(newCheckedPermissions);
     };
 
     return (
@@ -128,9 +121,9 @@ export const RoleForm = ({
                         .map(({ permission }) => permission)}
                     checkedPermissions={checkedPermissions}
                     onPermissionChange={(permission: IPermission) =>
-                        handlePermissionChange(permission)
+                        onPermissionChange(permission)
                     }
-                    onCheckAll={() => onToggleAllPermissions(category)}
+                    onCheckAll={() => onCheckAll(category)}
                 />
             ))}
         </div>

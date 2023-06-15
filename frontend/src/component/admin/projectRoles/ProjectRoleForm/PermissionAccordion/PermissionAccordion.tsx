@@ -48,7 +48,7 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
     permissions,
     checkedPermissions,
     Icon,
-    isInitiallyExpanded,
+    isInitiallyExpanded = false,
     context,
     onPermissionChange,
     onCheckAll,

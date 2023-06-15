@@ -6,7 +6,10 @@ interface IRole {
     project: string | null;
     description: string;
     type: string;
-    permissions?: IPermission[];
+}
+
+export interface IRoleWithPermissions extends IRole {
+    permissions: IPermission[];
 }
 
 export interface IProjectRole {

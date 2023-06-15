@@ -76,7 +76,7 @@ exports[`should create default config 1`] = `
       "disableNotifications": false,
       "embedProxy": true,
       "embedProxyFrontend": true,
-      "experimentalExtendedTelemetry": false,
+      "experimentalExtendedTelemetry": true,
       "featuresExportImport": true,
       "googleAuthEnabled": false,
       "groupRootRoles": false,
@@ -110,7 +110,7 @@ exports[`should create default config 1`] = `
       "disableNotifications": false,
       "embedProxy": true,
       "embedProxyFrontend": true,
-      "experimentalExtendedTelemetry": false,
+      "experimentalExtendedTelemetry": true,
       "featuresExportImport": true,
       "googleAuthEnabled": false,
       "groupRootRoles": false,
@@ -183,12 +183,13 @@ exports[`should create default config 1`] = `
     "ttlHours": 48,
   },
   "strategySegmentsLimit": 5,
+  "telemetry": true,
   "ui": {
     "environment": "Open Source",
   },
   "versionCheck": {
     "enable": true,
-    "url": "https://version.unleash.run",
+    "url": "http://localhost:8080/",
   },
 }
 `;

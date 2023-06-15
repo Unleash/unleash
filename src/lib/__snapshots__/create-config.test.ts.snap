@@ -185,6 +185,7 @@ exports[`should create default config 1`] = `
     "ttlHours": 48,
   },
   "strategySegmentsLimit": 5,
+  "telemetry": true,
   "ui": {
     "environment": "Open Source",
   },

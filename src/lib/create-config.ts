@@ -397,6 +397,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.versionCheck || {},
     ]);
 
+    const telemetry: boolean =
+        options.telemetry ||
+        parseEnvVarBoolean(process.env.SEND_TELEMETRY, true);
     const initApiTokens = loadInitApiTokens();
 
     const authentication: IAuthOption = mergeAll([
@@ -475,6 +478,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         server,
         listen,
         versionCheck,
+        telemetry,
         authentication,
         ui,
         import: importSetting,

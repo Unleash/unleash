@@ -10,6 +10,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { FormEvent } from 'react';
 import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
 import { useRole } from 'hooks/api/getters/useRole/useRole';
+import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -44,12 +45,10 @@ export const RoleModal = ({ roleId, open, setOpen }: IRoleModalProps) => {
         setDescription,
         checkedPermissions,
         setCheckedPermissions,
-        handlePermissionChange,
         getRolePayload,
         isNameUnique,
         isNotEmpty,
         hasPermissions,
-        rootPermissions,
         errors,
         setError,
         clearError,
@@ -57,8 +56,17 @@ export const RoleModal = ({ roleId, open, setOpen }: IRoleModalProps) => {
     } = useRoleForm(role?.name, role?.description, role?.permissions);
     const { refetch: refetchRoles } = useRoles();
     const { addRole, updateRole, loading } = useRolesApi();
+    const { permissions } = usePermissions({
+        revalidateIfStale: false,
+        revalidateOnReconnect: false,
+        revalidateOnFocus: false,
+    });
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
+
+    const rootPermissions = permissions.root.filter(
+        ({ name }) => name !== 'ADMIN'
+    );
 
     const editing = role !== undefined;
     const isValid =
@@ -67,13 +75,15 @@ export const RoleModal = ({ roleId, open, setOpen }: IRoleModalProps) => {
         isNotEmpty(description) &&
         hasPermissions(checkedPermissions);
 
+    const payload = getRolePayload('root-custom');
+
     const formatApiCode = () => {
         return `curl --location --request ${editing ? 'PUT' : 'POST'} '${
             uiConfig.unleashUrl
         }/api/admin/roles${editing ? `/${role.id}` : ''}' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
-    --data-raw '${JSON.stringify(getRolePayload(), undefined, 2)}'`;
+    --data-raw '${JSON.stringify(payload, undefined, 2)}'`;
     };
 
     const onSetName = (name: string) => {
@@ -96,9 +106,9 @@ export const RoleModal = ({ roleId, open, setOpen }: IRoleModalProps) => {
 
         try {
             if (editing) {
-                await updateRole(role.id, getRolePayload());
+                await updateRole(role.id, payload);
             } else {
-                await addRole(getRolePayload());
+                await addRole(payload);
             }
             setToastData({
                 title: `Role ${editing ? 'updated' : 'added'} successfully`,
@@ -136,7 +146,6 @@ export const RoleModal = ({ roleId, open, setOpen }: IRoleModalProps) => {
                         setDescription={setDescription}
                         checkedPermissions={checkedPermissions}
                         setCheckedPermissions={setCheckedPermissions}
-                        handlePermissionChange={handlePermissionChange}
                         permissions={rootPermissions}
                         errors={errors}
                     />

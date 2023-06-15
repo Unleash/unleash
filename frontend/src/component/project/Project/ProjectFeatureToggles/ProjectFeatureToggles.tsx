@@ -388,7 +388,7 @@ export const ProjectFeatureToggles = ({
                     (column: any) =>
                         (column?.id as string) ||
                         (typeof column?.accessor === 'string'
-                            ? column?.accessor as string
+                            ? (column?.accessor as string)
                             : '')
                 )
                 .filter(Boolean);

@@ -1,4 +1,3 @@
-import { AdvancedPlaygroundEnvironment } from '../advancedPlayground';
 import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
 import { Box, IconButton, Popover, styled, useTheme } from '@mui/material';
 import { flexRow } from '../../../../../themes/themeStyles';
@@ -6,10 +5,7 @@ import { PlaygroundResultChip } from '../../PlaygroundResultsTable/PlaygroundRes
 import { InfoOutlined } from '@mui/icons-material';
 import React, { useState } from 'react';
 import { AdvancedPlaygroundEnvironmentEvaluationDetails } from '../AdvancedPlaygroundEnvironmentEvaluationDetails/AdvancedPlaygroundEnvironmentEvaluationDetails';
-import {
-    AdvancedPlaygroundEnvironmentFeatureSchema,
-    AdvancedPlaygroundFeatureSchemaEnvironments,
-} from 'openapi';
+import { AdvancedPlaygroundEnvironmentFeatureSchema } from 'openapi';
 
 const StyledContainer = styled(
     'div',

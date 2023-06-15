@@ -71,7 +71,7 @@ export const AdvancedPlayground: VFC<{}> = () => {
     };
 
     const resolveEnvironmentsFromUrl = (): string[] | null => {
-        let environmentArray: string[] = null;
+        let environmentArray: string[] | null = null;
         const environmentsFromUrl = searchParams.get('environments');
         if (environmentsFromUrl) {
             environmentArray = environmentsFromUrl.split(',');
@@ -80,7 +80,7 @@ export const AdvancedPlayground: VFC<{}> = () => {
         return environmentArray;
     };
     const resolveProjectsFromUrl = (): string[] | null => {
-        let projectsArray: string[] = null;
+        let projectsArray: string[] | null = null;
         let projectsFromUrl = searchParams.get('projects');
         if (projectsFromUrl) {
             projectsArray = projectsFromUrl.split(',');

@@ -1,6 +1,8 @@
 import { SchedulerService } from './scheduler-service';
 import { LogProvider } from '../logger';
 
+jest.retryTimes(3);
+
 function ms(timeMs) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));
 }

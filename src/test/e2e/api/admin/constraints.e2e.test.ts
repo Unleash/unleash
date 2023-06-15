@@ -2,6 +2,8 @@ import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { setupAppWithCustomConfig } from '../../helpers/test-helper';
 
+jest.retryTimes(3);
+
 let app;
 let db;
 

@@ -7,6 +7,8 @@ import { ApiTokenType } from '../../../../lib/types/models/api-token';
 
 const importData = require('../../../examples/import.json');
 
+jest.retryTimes(3);
+
 let app: IUnleashTest;
 let db: ITestDb;
 

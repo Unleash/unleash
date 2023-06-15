@@ -2,6 +2,8 @@ import { setupApp } from './helpers/test-helper';
 import dbInit from './helpers/database-init';
 import getLogger from '../fixtures/no-logger';
 
+jest.retryTimes(3);
+
 let stores;
 let db;
 

@@ -1,16 +1,30 @@
 import { IPermission, ICheckedPermissions } from 'interfaces/permissions';
 import cloneDeep from 'lodash.clonedeep';
 
-export const getRoleKey = (permission: IPermission): string => {
+const getRoleKey = (permission: IPermission): string => {
     return permission.environment
         ? `${permission.id}-${permission.environment}`
         : `${permission.id}`;
 };
 
+export const permissionsToCheckedPermissions = (
+    permissions: IPermission[]
+): ICheckedPermissions =>
+    permissions.reduce(
+        (
+            checkedPermissions: { [key: string]: IPermission },
+            permission: IPermission
+        ) => {
+            checkedPermissions[getRoleKey(permission)] = permission;
+            return checkedPermissions;
+        },
+        {}
+    );
+
 export const togglePermission = (
     checkedPermissions: ICheckedPermissions,
     permission: IPermission
-) => {
+): ICheckedPermissions => {
     let checkedPermissionsCopy = cloneDeep(checkedPermissions);
 
     if (checkedPermissionsCopy[getRoleKey(permission)]) {
@@ -25,7 +39,7 @@ export const togglePermission = (
 export const toggleAllPermissions = (
     checkedPermissions: ICheckedPermissions,
     toggledPermissions: IPermission[]
-) => {
+): ICheckedPermissions => {
     let checkedPermissionsCopy = cloneDeep(checkedPermissions);
 
     const allChecked = toggledPermissions.every(

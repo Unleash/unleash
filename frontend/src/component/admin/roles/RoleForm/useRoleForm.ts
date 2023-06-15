@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { IPermission, ICheckedPermissions } from 'interfaces/permissions';
 import IRole from 'interfaces/role';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
+import { permissionsToCheckedPermissions } from 'utils/permissions';
 
 enum ErrorField {
     NAME = 'name',
@@ -33,15 +34,9 @@ export const useRoleForm = (
     }, [initialDescription]);
 
     useEffect(() => {
-        setCheckedPermissions(
-            initialPermissions.reduce(
-                (acc: { [key: string]: IPermission }, curr: IPermission) => {
-                    acc[curr.id] = curr;
-                    return acc;
-                },
-                {}
-            )
-        );
+        const newCheckedPermissions =
+            permissionsToCheckedPermissions(initialPermissions);
+        setCheckedPermissions(newCheckedPermissions);
     }, [initialPermissions.length]);
 
     const getRolePayload = (type: 'root-custom' | 'custom' = 'custom') => ({

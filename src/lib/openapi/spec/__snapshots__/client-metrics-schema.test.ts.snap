@@ -12,6 +12,15 @@ exports[`clientMetricsSchema should fail when required field is missing 1`] = `
       },
       "schemaPath": "#/properties/bucket/required",
     },
+    {
+      "instancePath": "/bucket/toggles/someToggle",
+      "keyword": "required",
+      "message": "must have required property 'no'",
+      "params": {
+        "missingProperty": "no",
+      },
+      "schemaPath": "#/properties/bucket/properties/toggles/additionalProperties/required",
+    },
   ],
   "schema": "#/components/schemas/clientMetricsSchema",
 }

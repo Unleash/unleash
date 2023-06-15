@@ -2,21 +2,11 @@ import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 
-import {
-    IProjectEnvironmentPermissions,
-    IPermissions,
-    IPermission,
-} from 'interfaces/permissions';
+import { IPermissions } from 'interfaces/permissions';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
 interface IUsePermissions {
-    permissions:
-        | IPermissions
-        | {
-              root: IPermission[];
-              project: IPermission[];
-              environments: IProjectEnvironmentPermissions[];
-          };
+    permissions: IPermissions;
     loading: boolean;
     refetch: () => void;
     error: any;

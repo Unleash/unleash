@@ -2,12 +2,12 @@ import { SWRConfiguration } from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import IRole from 'interfaces/role';
+import IRole, { IRoleWithPermissions } from 'interfaces/role';
 import useUiConfig from '../useUiConfig/useUiConfig';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
 export interface IUseRoleOutput {
-    role?: IRole;
+    role?: IRoleWithPermissions;
     refetch: () => void;
     loading: boolean;
     error?: Error;
@@ -42,16 +42,19 @@ export const useRole = (
     return useMemo(() => {
         if (!isEnterprise()) {
             return {
-                role: ((ossData?.rootRoles ?? []) as IRole[]).find(
-                    ({ id: rId }) => rId === +id!
-                ),
+                role: {
+                    ...((ossData?.rootRoles ?? []) as IRole[]).find(
+                        ({ id: rId }) => rId === +id!
+                    ),
+                    permissions: [],
+                } as IRoleWithPermissions,
                 loading: !ossError && !ossData,
                 refetch: () => ossMutate(),
                 error: ossError,
             };
         } else {
             return {
-                role: data as IRole,
+                role: data as IRoleWithPermissions,
                 loading: !error && !data,
                 refetch: () => mutate(),
                 error,

@@ -1,11 +1,10 @@
-import { useMemo } from 'react';
 import { List, ListItem, styled, Typography } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import { IStrategy } from 'interfaces/strategy';
-import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
@@ -26,17 +25,13 @@ export const FeatureStrategyMenuCards = ({
     const { strategies } = useStrategies();
     const { uiConfig } = useUiConfig();
 
-    const preDefinedStrategies = useMemo(() => {
-        return strategies.filter(
-            strategy => !strategy.deprecated && !strategy.editable
-        );
-    }, [strategies]);
+    const preDefinedStrategies = strategies.filter(
+        strategy => !strategy.deprecated && !strategy.editable
+    );
 
-    const customStrategies = useMemo(() => {
-        return strategies.filter(
-            strategy => !strategy.deprecated && strategy.editable
-        );
-    }, [strategies]);
+    const customStrategies = strategies.filter(
+        strategy => !strategy.deprecated && strategy.editable
+    );
 
     const { project } = useProject(projectId);
 

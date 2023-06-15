@@ -14,7 +14,7 @@ export const RoleBadge = ({ roleId }: IRoleBadgeProps) => {
     if (!role) return null;
 
     return (
-        <HtmlTooltip title={<RoleDescription roleId={roleId} tooltip />}>
+        <HtmlTooltip title={<RoleDescription roleId={roleId} tooltip />} arrow>
             <Badge
                 color="success"
                 icon={<UserIcon />}

@@ -78,6 +78,7 @@ export const AdvancedPlaygroundEnvironmentCell = ({
                     PaperProps={{
                         sx: {
                             borderRadius: `${theme.shape.borderRadiusLarge}px`,
+                            padding: theme.spacing(3),
                         },
                     }}
                     onClose={onClose}

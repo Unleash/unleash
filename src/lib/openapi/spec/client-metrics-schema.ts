@@ -64,7 +64,6 @@ export const clientMetricsSchema = {
                     },
                     additionalProperties: {
                         type: 'object',
-                        required: ['yes', 'no'],
                         properties: {
                             yes: {
                                 description:

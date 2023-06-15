@@ -1555,10 +1555,6 @@ The provider you choose for your addon dictates what properties the \`parameters
                       "type": "number",
                     },
                   },
-                  "required": [
-                    "yes",
-                    "no",
-                  ],
                   "type": "object",
                 },
                 "description": "an object containing feature names with yes/no plus variant usage",

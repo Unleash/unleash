@@ -13,6 +13,7 @@ interface IFeatureStrategyMenuCardProps {
     featureId: string;
     environmentId: string;
     strategy: IStrategy;
+    defaultStrategy?: boolean;
 }
 
 const StyledIcon = styled('div')(({ theme }) => ({
@@ -60,6 +61,7 @@ export const FeatureStrategyMenuCard = ({
     featureId,
     environmentId,
     strategy,
+    defaultStrategy,
 }: IFeatureStrategyMenuCardProps) => {
     const StrategyIcon = getFeatureStrategyIcon(strategy.name);
     const strategyName = formatStrategyName(strategy.name);
@@ -68,7 +70,8 @@ export const FeatureStrategyMenuCard = ({
         projectId,
         featureId,
         environmentId,
-        strategy.name
+        strategy.name,
+        defaultStrategy
     );
 
     return (

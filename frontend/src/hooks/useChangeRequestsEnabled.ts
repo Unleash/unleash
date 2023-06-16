@@ -25,7 +25,7 @@ export const useChangeRequestsEnabled = (projectId: string) => {
         [JSON.stringify(data)]
     );
 
-    const isChangeRequestEnabledForReview = React.useCallback(
+    const isChangeRequestConfiguredForReview = React.useCallback(
         (environment: string): boolean => {
             return data.some(draft => {
                 return (
@@ -44,6 +44,6 @@ export const useChangeRequestsEnabled = (projectId: string) => {
     return {
         isChangeRequestConfigured,
         isChangeRequestConfiguredInAnyEnv,
-        isChangeRequestEnabledForReview,
+        isChangeRequestConfiguredForReview,
     };
 };

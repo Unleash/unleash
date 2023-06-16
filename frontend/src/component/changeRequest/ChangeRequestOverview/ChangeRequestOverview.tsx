@@ -83,14 +83,14 @@ export const ChangeRequestOverview: FC = () => {
     const { refetch: refetchChangeRequestOpen } =
         usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
-    const { isChangeRequestEnabledForReview } =
+    const { isChangeRequestConfiguredForReview } =
         useChangeRequestsEnabled(projectId);
 
     if (!changeRequest) {
         return null;
     }
 
-    const allowChangeRequestActions = isChangeRequestEnabledForReview(
+    const allowChangeRequestActions = isChangeRequestConfiguredForReview(
         changeRequest.environment
     );
 

@@ -123,10 +123,6 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { data, loading } = usePendingChangeRequests(project);
 
-    if ((!loading && !data) || data?.length === 0) {
-        return null;
-    }
-
     const drafts = useMemo(
         () =>
             data?.filter(changeRequest =>
@@ -134,6 +130,10 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
             ),
         [data]
     );
+
+    if ((!loading && !data) || data?.length === 0) {
+        return null;
+    }
 
     return (
         <StickyBanner>

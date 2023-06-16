@@ -1,5 +1,6 @@
 import { Delete, Edit } from '@mui/icons-material';
 import { Box, styled } from '@mui/material';
+import { PREDEFINED_ROLE_TYPES } from '@server/util/constants';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import IRole from 'interfaces/role';
@@ -9,8 +10,6 @@ const StyledBox = styled(Box)(() => ({
     display: 'flex',
     justifyContent: 'center',
 }));
-
-const DEFAULT_ROOT_ROLE = 'root';
 
 interface IRolesActionsCellProps {
     role: IRole;
@@ -23,7 +22,7 @@ export const RolesActionsCell: VFC<IRolesActionsCellProps> = ({
     onEdit,
     onDelete,
 }) => {
-    const defaultRole = role.type === DEFAULT_ROOT_ROLE;
+    const defaultRole = PREDEFINED_ROLE_TYPES.includes(role.type);
 
     return (
         <StyledBox>

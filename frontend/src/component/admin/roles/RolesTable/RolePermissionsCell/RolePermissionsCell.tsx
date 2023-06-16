@@ -4,6 +4,7 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import IRole from 'interfaces/role';
 import { useRole } from 'hooks/api/getters/useRole/useRole';
 import { RoleDescription } from 'component/common/RoleDescription/RoleDescription';
+import { PREDEFINED_ROLE_TYPES } from '@server/util/constants';
 
 interface IRolePermissionsCellProps {
     row: { original: IRole };
@@ -15,7 +16,7 @@ export const RolePermissionsCell: VFC<IRolePermissionsCellProps> = ({
     const { original: rowRole } = row;
     const { role } = useRole(rowRole.id.toString());
 
-    if (!role || role.type === 'root') return null;
+    if (!role || PREDEFINED_ROLE_TYPES.includes(role.type)) return null;
 
     return (
         <TextCell>

@@ -13,20 +13,19 @@ import {
     Typography,
 } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
-import { IPermission } from 'interfaces/permissions';
+import { ICheckedPermissions, IPermission } from 'interfaces/permissions';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { ICheckedPermission } from 'component/admin/projectRoles/hooks/useProjectRoleForm';
+import { getRoleKey } from 'utils/permissions';
 
 interface IEnvironmentPermissionAccordionProps {
     permissions: IPermission[];
-    checkedPermissions: ICheckedPermission;
+    checkedPermissions: ICheckedPermissions;
     title: string;
     Icon: ReactNode;
     isInitiallyExpanded?: boolean;
     context: string;
     onPermissionChange: (permission: IPermission) => void;
     onCheckAll: () => void;
-    getRoleKey?: (permission: { id: number; environment?: string }) => string;
 }
 
 const AccordionHeader = styled(Box)(({ theme }) => ({
@@ -52,7 +51,6 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
     context,
     onPermissionChange,
     onCheckAll,
-    getRoleKey = permission => permission.id.toString(),
 }) => {
     const [expanded, setExpanded] = useState(isInitiallyExpanded);
     const permissionMap = useMemo(
@@ -141,35 +139,32 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
                         all {context} permissions
                     </Button>
                     <Box>
-                        {permissions?.map((permission: IPermission) => {
-                            return (
-                                <FormControlLabel
-                                    sx={{
-                                        minWidth: {
-                                            sm: '300px',
-                                            xs: 'auto',
-                                        },
-                                    }}
-                                    key={getRoleKey(permission)}
-                                    control={
-                                        <Checkbox
-                                            checked={
-                                                checkedPermissions[
-                                                    getRoleKey(permission)
-                                                ]
-                                                    ? true
-                                                    : false
-                                            }
-                                            onChange={() =>
-                                                onPermissionChange(permission)
-                                            }
-                                            color="primary"
-                                        />
-                                    }
-                                    label={permission.displayName}
-                                />
-                            );
-                        })}
+                        {permissions?.map((permission: IPermission) => (
+                            <FormControlLabel
+                                sx={{
+                                    minWidth: {
+                                        sm: '300px',
+                                        xs: 'auto',
+                                    },
+                                }}
+                                data-testid={getRoleKey(permission)}
+                                key={getRoleKey(permission)}
+                                control={
+                                    <Checkbox
+                                        checked={Boolean(
+                                            checkedPermissions[
+                                                getRoleKey(permission)
+                                            ]
+                                        )}
+                                        onChange={() =>
+                                            onPermissionChange(permission)
+                                        }
+                                        color="primary"
+                                    />
+                                }
+                                label={permission.displayName}
+                            />
+                        ))}
                     </Box>
                 </AccordionDetails>
             </Accordion>

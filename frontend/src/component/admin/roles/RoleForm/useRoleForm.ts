@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { IPermission, ICheckedPermissions } from 'interfaces/permissions';
-import IRole from 'interfaces/role';
+import IRole, { PredefinedRoleType } from 'interfaces/role';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 import { permissionsToCheckedPermissions } from 'utils/permissions';
+import { ROOT_ROLE_TYPE } from '@server/util/constants';
 
 enum ErrorField {
     NAME = 'name',
@@ -39,10 +40,10 @@ export const useRoleForm = (
         setCheckedPermissions(newCheckedPermissions);
     }, [initialPermissions.length]);
 
-    const getRolePayload = (type: 'root-custom' | 'custom' = 'custom') => ({
+    const getRolePayload = (type: PredefinedRoleType = ROOT_ROLE_TYPE) => ({
         name,
         description,
-        type,
+        type: type === ROOT_ROLE_TYPE ? 'root-custom' : 'custom',
         permissions: Object.values(checkedPermissions),
     });
 

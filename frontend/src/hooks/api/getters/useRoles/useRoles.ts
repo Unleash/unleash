@@ -4,10 +4,12 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
-
-const ROOT_ROLE = 'root';
-const ROOT_ROLES = [ROOT_ROLE, 'root-custom'];
-const PROJECT_ROLES = ['project', 'custom'];
+import {
+    PROJECT_ROLE_TYPES,
+    ROOT_ROLE_TYPE,
+    ROOT_ROLE_TYPES,
+    PREDEFINED_ROLE_TYPES,
+} from '@server/util/constants';
 
 export const useRoles = () => {
     const { isEnterprise, uiConfig } = useUiConfig();
@@ -34,7 +36,7 @@ export const useRoles = () => {
         if (!isEnterprise()) {
             return {
                 roles: ossData?.rootRoles
-                    .filter(({ type }: IRole) => type === ROOT_ROLE)
+                    .filter(({ type }: IRole) => type === ROOT_ROLE_TYPE)
                     .sort(sortRoles) as IRole[],
                 projectRoles: [],
                 loading: !ossError && !ossData,
@@ -46,12 +48,14 @@ export const useRoles = () => {
                 roles: (data?.roles
                     .filter(({ type }: IRole) =>
                         uiConfig.flags.customRootRoles
-                            ? ROOT_ROLES.includes(type)
-                            : type === ROOT_ROLE
+                            ? ROOT_ROLE_TYPES.includes(type)
+                            : type === ROOT_ROLE_TYPE
                     )
                     .sort(sortRoles) ?? []) as IRole[],
                 projectRoles: (data?.roles
-                    .filter(({ type }: IRole) => PROJECT_ROLES.includes(type))
+                    .filter(({ type }: IRole) =>
+                        PROJECT_ROLE_TYPES.includes(type)
+                    )
                     .sort(sortRoles) ?? []) as IProjectRole[],
                 loading: !error && !data,
                 refetch: () => mutate(),
@@ -68,9 +72,15 @@ const fetcher = (path: string) => {
 };
 
 export const sortRoles = (a: IRole, b: IRole) => {
-    if (a.type === 'root' && b.type !== 'root') {
+    if (
+        PREDEFINED_ROLE_TYPES.includes(a.type) &&
+        !PREDEFINED_ROLE_TYPES.includes(b.type)
+    ) {
         return -1;
-    } else if (a.type !== 'root' && b.type === 'root') {
+    } else if (
+        !PREDEFINED_ROLE_TYPES.includes(a.type) &&
+        PREDEFINED_ROLE_TYPES.includes(b.type)
+    ) {
         return 1;
     } else {
         return a.name.localeCompare(b.name);

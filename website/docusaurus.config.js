@@ -636,4 +636,15 @@ module.exports = {
         'docusaurus-theme-openapi-docs', // Allows use of @theme/ApiItem and other components
         '@docusaurus/theme-mermaid',
     ],
+    scripts: [
+        {
+          src: "https://widget.kapa.ai/kapa-widget.bundle.js",
+          "data-website-id": "1d187510-1726-4011-b0f7-62742ae064ee",
+          "data-project-name": "Unleash",
+          "data-project-color": "#1A4049",
+          "data-project-logo":
+            "https://cdn.getunleash.io/uploads/2022/05/logo.png",
+          async: true,
+        },
+      ],
 };

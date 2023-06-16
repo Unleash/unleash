@@ -41,6 +41,10 @@ const DraftBannerContent: FC<{
     onClick: () => void;
 }> = ({ changeRequests, onClick }) => {
     const environments = changeRequests.map(({ environment }) => environment);
+    const count = changeRequests.reduce(
+        (acc, curr) => acc + changesCount(curr),
+        0
+    );
 
     return (
         <StyledBox>
@@ -97,12 +101,7 @@ const DraftBannerContent: FC<{
                     onClick={onClick}
                     sx={{ ml: 'auto' }}
                 >
-                    View changes (
-                    {changeRequests.reduce(
-                        (acc, curr) => acc + changesCount(curr),
-                        0
-                    )}
-                    )
+                    View changes ({count})
                 </Button>
             </DraftBannerContentWrapper>
         </StyledBox>

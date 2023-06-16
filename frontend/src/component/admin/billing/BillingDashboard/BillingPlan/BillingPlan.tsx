@@ -82,6 +82,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
         [InstancePlan.PRO]: 80,
         [InstancePlan.COMPANY]: 0,
         [InstancePlan.TEAM]: 0,
+        [InstancePlan.ENTERPRISE]: 0,
         [InstancePlan.UNKNOWN]: 0,
         user: 15,
     };

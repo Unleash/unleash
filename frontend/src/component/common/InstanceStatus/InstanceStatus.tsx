@@ -104,7 +104,7 @@ export const InstanceStatus: FC = ({ children }) => {
     return (
         <>
             <ConditionallyRender
-                condition={isBilling && Boolean(instanceStatus)}
+                condition={Boolean(instanceStatus)}
                 show={() => (
                     <>
                         <InstanceStatusBarMemo

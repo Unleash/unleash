@@ -95,6 +95,20 @@ test('InstanceStatusBar should warn when the trial has expired', async () => {
     expect(await screen.findByTestId(INSTANCE_STATUS_BAR_ID)).toMatchSnapshot();
 });
 
+test('InstanceStatusBar should warn when the trial has expired for enterprise', async () => {
+    render(
+        <InstanceStatusBar
+            instanceStatus={{
+                plan: InstancePlan.ENTERPRISE,
+                state: InstanceState.EXPIRED,
+            }}
+        />
+    );
+
+    expect(screen.getByTestId(INSTANCE_STATUS_BAR_ID)).toBeInTheDocument();
+    expect(await screen.findByTestId(INSTANCE_STATUS_BAR_ID)).toMatchSnapshot();
+});
+
 test('InstanceStatusBar should warn when the trial has churned', async () => {
     render(
         <InstanceStatusBar

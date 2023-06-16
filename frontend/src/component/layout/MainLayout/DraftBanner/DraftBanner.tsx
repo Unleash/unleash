@@ -1,4 +1,4 @@
-import { FC, useMemo, useState, VFC } from 'react';
+import { FC, Fragment, useMemo, useState, VFC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestSidebar } from 'component/changeRequest/ChangeRequestSidebar/ChangeRequestSidebar';
@@ -54,16 +54,16 @@ const DraftBannerContent: FC<{
                                 in{' '}
                                 {environments.map((env, i) =>
                                     i === 0 ? (
-                                        <>
+                                        <Fragment key={env}>
                                             <strong>{env}</strong>
-                                        </>
+                                        </Fragment>
                                     ) : (
-                                        <>
+                                        <Fragment key={env}>
                                             {i === environments.length - 1
                                                 ? ' and '
                                                 : ', '}
                                             <strong>{env}</strong>
-                                        </>
+                                        </Fragment>
                                     )
                                 )}
                             </>

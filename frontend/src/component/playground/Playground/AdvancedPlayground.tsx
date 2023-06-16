@@ -24,7 +24,7 @@ import { AdvancedPlaygroundResponseSchema } from 'openapi';
 export const AdvancedPlayground: VFC<{}> = () => {
     const { environments: availableEnvironments } = useEnvironments();
     const theme = useTheme();
-    const matches = useMediaQuery(theme.breakpoints.down('lg'));
+    const matches = true;
 
     const [environments, setEnvironments] = useState<string[]>([]);
     const [projects, setProjects] = useState<string[]>([]);

@@ -34,6 +34,7 @@ import {
     AdvancedPlaygroundFeatureSchema,
 } from 'openapi';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
+import { AdvancedPlaygroundEnvironmentDiffCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentDiffCell';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -111,7 +112,9 @@ export const AdvancedPlaygroundResultsTable = ({
                 id: 'diff',
                 align: 'left',
                 Cell: ({ row }: any) => (
-                    <StyledButton variant={'body2'}>Preview diff</StyledButton>
+                    <AdvancedPlaygroundEnvironmentDiffCell
+                        value={row.original.environments['development']}
+                    />
                 ),
             },
         ];

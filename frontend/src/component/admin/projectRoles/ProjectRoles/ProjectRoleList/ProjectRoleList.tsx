@@ -9,9 +9,9 @@ import {
 } from 'component/common/Table';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import useProjectRoles from 'hooks/api/getters/useProjectRoles/useProjectRoles';
-import IRole, { IProjectRole } from 'interfaces/role';
-import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
+import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
+import { IProjectRole } from 'interfaces/role';
+import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
 import useToast from 'hooks/useToast';
 import ProjectRoleDeleteConfirm from '../ProjectRoleDeleteConfirm/ProjectRoleDeleteConfirm';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -30,19 +30,15 @@ import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
-const ROOTROLE = 'root';
 const BUILTIN_ROLE_TYPE = 'project';
 
 const ProjectRoleList = () => {
     const navigate = useNavigate();
-    const { roles, refetch, loading } = useProjectRoles();
+    const { projectRoles: data, refetch, loading } = useRoles();
 
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const paginationFilter = (role: IRole) => role?.type !== ROOTROLE;
-    const data = roles.filter(paginationFilter);
-
-    const { deleteRole } = useProjectRolesApi();
+    const { removeRole } = useRolesApi();
     const [currentRole, setCurrentRole] = useState<IProjectRole | null>(null);
     const [delDialog, setDelDialog] = useState(false);
     const [confirmName, setConfirmName] = useState('');
@@ -51,7 +47,7 @@ const ProjectRoleList = () => {
     const deleteProjectRole = async () => {
         if (!currentRole?.id) return;
         try {
-            await deleteRole(currentRole?.id);
+            await removeRole(currentRole?.id);
             refetch();
             setToastData({
                 type: 'success',
@@ -99,7 +95,7 @@ const ProjectRoleList = () => {
                             data-loading
                             disabled={type === BUILTIN_ROLE_TYPE}
                             onClick={() => {
-                                navigate(`/admin/roles/${id}/edit`);
+                                navigate(`/admin/project-roles/${id}/edit`);
                             }}
                             permission={ADMIN}
                             tooltipProps={{
@@ -208,7 +204,7 @@ const ProjectRoleList = () => {
                                 variant="contained"
                                 color="primary"
                                 onClick={() =>
-                                    navigate('/admin/create-project-role')
+                                    navigate('/admin/project-roles/new')
                                 }
                             >
                                 New project role

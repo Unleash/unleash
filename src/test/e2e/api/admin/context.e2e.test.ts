@@ -1,5 +1,8 @@
 import dbInit from '../../helpers/database-init';
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 
 let db;
@@ -7,7 +10,13 @@ let app: IUnleashTest;
 
 beforeAll(async () => {
     db = await dbInit('context_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
 });
 
 afterAll(async () => {
@@ -224,4 +233,52 @@ test('should update context field with stickiness', async () => {
 
     expect(contextField.description).toBe('asd');
     expect(contextField.stickiness).toBe(true);
+});
+
+test('should show context field usage', async () => {
+    const context = 'appName';
+    const feature = 'contextFeature';
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: feature,
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${feature}/environments/default/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: '14',
+            },
+            constraints: [
+                {
+                    contextName: context,
+                    operator: 'IN',
+                    values: ['test'],
+                    caseInsensitive: false,
+                    inverted: false,
+                },
+            ],
+        })
+        .expect(200);
+
+    await app.request.post('/api/admin/context').send({
+        name: context,
+        description: context,
+    });
+
+    const { body } = await app.request.get(
+        `/api/admin/context/${context}/strategies`,
+    );
+
+    expect(body.strategies).toHaveLength(1);
+    expect(body).toMatchObject({
+        strategies: [{ environment: 'default', featureName: 'contextFeature' }],
+    });
 });

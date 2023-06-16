@@ -29,7 +29,7 @@ import UserSplashService from './user-splash-service';
 import { SegmentService } from './segment-service';
 import { OpenApiService } from './openapi-service';
 import { ClientSpecService } from './client-spec-service';
-import { PlaygroundService } from './playground-service';
+import { PlaygroundService } from '../features/playground/playground-service';
 import { GroupService } from './group-service';
 import { ProxyService } from './proxy-service';
 import EdgeService from './edge-service';

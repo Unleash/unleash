@@ -14,11 +14,11 @@ import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { IUser } from 'interfaces/user';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { useNavigate } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -134,21 +134,17 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                 <StyledSectionLabel>Access</StyledSectionLabel>
                 <StyledAccess>
                     <Box sx={{ width: '50%' }}>
-                        <Typography variant="body2">Your root role</Typography>
-                        <Tooltip
-                            title={profile?.rootRole.description || ''}
-                            arrow
-                            placement="bottom-end"
-                            describeChild
-                        >
-                            <Badge
-                                color="success"
-                                icon={<InfoOutlinedIcon />}
-                                iconRight
-                            >
-                                {profile?.rootRole.name}
-                            </Badge>
-                        </Tooltip>
+                        <ConditionallyRender
+                            condition={Boolean(profile?.rootRole)}
+                            show={() => (
+                                <>
+                                    <Typography variant="body2">
+                                        Your root role
+                                    </Typography>
+                                    <RoleBadge roleId={profile?.rootRole.id!} />
+                                </>
+                            )}
+                        />
                     </Box>
                     <Box>
                         <Typography variant="body2">Projects</Typography>

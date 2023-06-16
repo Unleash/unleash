@@ -72,6 +72,7 @@ export const createFakeExportImportTogglesService = (
             projectStore,
             eventStore,
             contextFieldStore,
+            featureStrategiesStore,
         },
         { getLogger },
     );
@@ -166,6 +167,7 @@ export const createExportImportTogglesService = (
             projectStore,
             eventStore,
             contextFieldStore,
+            featureStrategiesStore,
         },
         { getLogger },
     );

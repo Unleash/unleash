@@ -193,6 +193,7 @@ export interface IProjectOverview {
     health: number;
     favorite?: boolean;
     updatedAt?: Date;
+    createdAt: Date | undefined;
     stats?: IProjectStats;
     mode: ProjectMode;
 
@@ -271,6 +272,7 @@ export interface IRoleData {
 }
 
 export interface IAvailablePermissions {
+    root: IPermission[];
     project: IPermission[];
     environments: IEnvironmentPermission[];
 }
@@ -304,6 +306,7 @@ export enum RoleName {
 
 export enum RoleType {
     ROOT = 'root',
+    ROOT_CUSTOM = 'root-custom',
     PROJECT = 'project',
 }
 

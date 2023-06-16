@@ -4,4 +4,9 @@
  * See `gen:api` script in package.json
  */
 
-export type GetEventsParams = { project?: string };
+export type GetEventsParams = {
+    /**
+     * The name of the project whose events you want to retrieve
+     */
+    project?: string;
+};

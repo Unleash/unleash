@@ -69,8 +69,10 @@ Using a custom context field called _region_ as an example: if you define the fi
 
 ### Custom stickiness
 
-:::note
-This feature is currently in beta and is not yet supported by all our SDKs. Check out the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) to see what SDKs support it at the moment.
+:::note SDK compatibility
+
+Custom stickiness is supported by all of our SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) for the full overview.
+
 :::
 
 Any context field _can_ be used to [calculate custom stickiness](../reference/stickiness.md#custom-stickiness). However, you need to explicitly tell Unleash that you want a field to be used for custom stickiness for it to be possible. You can enable this functionality either when you create the context field or at any later point. For steps on how to do this, see [the _How to define custom context fields_ guide](../how-to/how-to-define-custom-context-fields).

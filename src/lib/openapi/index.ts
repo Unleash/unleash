@@ -7,6 +7,8 @@ import {
     addonTypeSchema,
     adminCountSchema,
     adminFeaturesQuerySchema,
+    advancedPlaygroundRequestSchema,
+    advancedPlaygroundResponseSchema,
     apiTokenSchema,
     apiTokensSchema,
     applicationSchema,
@@ -138,6 +140,7 @@ import {
     variantFlagSchema,
     variantsSchema,
     versionSchema,
+    advancedPlaygroundFeatureSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -152,6 +155,8 @@ import { clientMetricsEnvSchema } from './spec/client-metrics-env-schema';
 import { updateTagsSchema } from './spec/update-tags-schema';
 import { batchStaleSchema } from './spec/batch-stale-schema';
 import { createApplicationSchema } from './spec/create-application-schema';
+import { contextFieldStrategiesSchema } from './spec/context-field-strategies-schema';
+import { advancedPlaygroundEnvironmentFeatureSchema } from './spec/advanced-playground-environment-feature-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
@@ -190,6 +195,10 @@ export const schemas: UnleashSchemas = {
     addonCreateUpdateSchema,
     addonsSchema,
     addonTypeSchema,
+    advancedPlaygroundEnvironmentFeatureSchema,
+    advancedPlaygroundFeatureSchema,
+    advancedPlaygroundRequestSchema,
+    advancedPlaygroundResponseSchema,
     apiTokenSchema,
     apiTokensSchema,
     applicationSchema,
@@ -329,6 +338,7 @@ export const schemas: UnleashSchemas = {
     importTogglesSchema,
     importTogglesValidateSchema,
     importTogglesValidateItemSchema,
+    contextFieldStrategiesSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

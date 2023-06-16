@@ -76,7 +76,7 @@ import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-o
 import {
     getDefaultStrategy,
     getProjectDefaultStrategy,
-} from '../util/feature-evaluator/helpers';
+} from '../features/playground/feature-evaluator/helpers';
 import { AccessService } from './access-service';
 import { User } from '../server-impl';
 import NoAccessError from '../error/no-access-error';
@@ -206,8 +206,12 @@ class FeatureToggleService {
         const id = await this.featureToggleStore.getProjectId(featureName);
 
         if (id !== projectId) {
-            throw new InvalidOperationError(
-                `The operation could not be completed. The feature exists, but the provided project id ("${projectId}") does not match the project that the feature belongs to ("${id}"). Try using "${id}" in the request URL instead of "${projectId}".`,
+            throw new NotFoundError(
+                `There's no feature named "${featureName}" in project "${projectId}"${
+                    id === undefined
+                        ? '.'
+                        : `, but there's a feature with that name in project "${id}"`
+                }`,
             );
         }
     }

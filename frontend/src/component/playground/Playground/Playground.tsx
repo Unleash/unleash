@@ -21,11 +21,11 @@ import { PlaygroundGuidancePopper } from './PlaygroundGuidancePopper/PlaygroundG
 import Loader from '../../common/Loader/Loader';
 
 export const Playground: VFC<{}> = () => {
-    const { environments } = useEnvironments();
+    const { environments: availableEnvironments } = useEnvironments();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('lg'));
 
-    const [environment, setEnvironment] = useState<string>('');
+    const [environments, setEnvironments] = useState<string[]>([]);
     const [projects, setProjects] = useState<string[]>([]);
     const [context, setContext] = useState<string>();
     const [results, setResults] = useState<
@@ -36,7 +36,7 @@ export const Playground: VFC<{}> = () => {
     const { evaluatePlayground, loading } = usePlaygroundApi();
 
     useEffect(() => {
-        setEnvironment(resolveDefaultEnvironment(environments));
+        setEnvironments([resolveDefaultEnvironment(availableEnvironments)]);
     }, [environments]);
 
     useEffect(() => {
@@ -44,7 +44,7 @@ export const Playground: VFC<{}> = () => {
         try {
             const environmentFromUrl = searchParams.get('environment');
             if (environmentFromUrl) {
-                setEnvironment(environmentFromUrl);
+                setEnvironments([environmentFromUrl]);
             }
 
             let projectsArray: string[];
@@ -115,7 +115,7 @@ export const Playground: VFC<{}> = () => {
         event.preventDefault();
 
         await evaluatePlaygroundContext(
-            environment,
+            environments[0],
             projects,
             context,
             setURLParameters
@@ -124,7 +124,7 @@ export const Playground: VFC<{}> = () => {
 
     const setURLParameters = () => {
         searchParams.set('context', encodeURI(context || '')); // always set because of native validation
-        searchParams.set('environment', environment);
+        searchParams.set('environment', environments[0]);
         if (
             Array.isArray(projects) &&
             projects.length > 0 &&
@@ -182,11 +182,11 @@ export const Playground: VFC<{}> = () => {
                             onSubmit={onSubmit}
                             context={context}
                             setContext={setContext}
-                            environments={environments}
+                            availableEnvironments={availableEnvironments}
                             projects={projects}
-                            environment={environment}
+                            environments={environments}
                             setProjects={setProjects}
-                            setEnvironment={setEnvironment}
+                            setEnvironments={setEnvironments}
                         />
                     </Paper>
                 </Box>

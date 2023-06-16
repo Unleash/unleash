@@ -50,6 +50,7 @@ const T = {
     featureStrategies: 'feature_strategies',
     featureStrategySegment: 'feature_strategy_segment',
     featureEnvs: 'feature_environments',
+    strategies: 'strategies',
 };
 
 interface IFeatureStrategiesTable {
@@ -645,8 +646,46 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return rows.map(mapRow);
     }
 
+    async getStrategiesByContextField(
+        contextFieldName: string,
+    ): Promise<IFeatureStrategy[]> {
+        const stopTimer = this.timer('getStrategiesByContextField');
+        const rows = await this.db
+            .select(this.prefixColumns())
+            .from<IFeatureStrategiesTable>(T.featureStrategies)
+            .where(
+                this.db.raw(
+                    "EXISTS (SELECT 1 FROM jsonb_array_elements(constraints) AS elem WHERE elem ->> 'contextName' = ?)",
+                    contextFieldName,
+                ),
+            );
+        stopTimer();
+        return rows.map(mapRow);
+    }
+
     prefixColumns(): string[] {
         return COLUMNS.map((c) => `${T.featureStrategies}.${c}`);
+    }
+
+    async getCustomStrategiesInUseCount(): Promise<number> {
+        const stopTimer = this.timer('getCustomStrategiesInUseCount');
+        const notBuiltIn = '0';
+        const columns = [
+            this.db.raw('count(fes.strategy_name) as times_used'),
+            'fes.strategy_name',
+        ];
+        const rows = await this.db(`${T.strategies} as str`)
+            .select(columns)
+            .join(
+                `${T.featureStrategies} as fes`,
+                'fes.strategy_name',
+                'str.name',
+            )
+            .where(`str.built_in`, '=', notBuiltIn)
+            .groupBy('strategy_name');
+
+        stopTimer();
+        return rows.length;
     }
 }
 

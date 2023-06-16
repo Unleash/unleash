@@ -654,6 +654,250 @@ The provider you choose for your addon dictates what properties the \`parameters
         },
         "type": "object",
       },
+      "advancedPlaygroundEnvironmentFeatureSchema": {
+        "additionalProperties": false,
+        "description": "A simplified feature toggle model intended for the Unleash playground.",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/sdkContextSchema",
+            "description": "The context to use when evaluating toggles",
+          },
+          "environment": {
+            "description": "The feature's environment.",
+            "example": "development",
+            "type": "string",
+          },
+          "isEnabled": {
+            "description": "Whether this feature is enabled or not in the current environment.
+                          If a feature can't be fully evaluated (that is, \`strategies.result\` is \`unknown\`),
+                          this will be \`false\` to align with how client SDKs treat unresolved feature states.",
+            "example": true,
+            "type": "boolean",
+          },
+          "isEnabledInCurrentEnvironment": {
+            "description": "Whether the feature is active and would be evaluated in the provided environment in a normal SDK context.",
+            "type": "boolean",
+          },
+          "name": {
+            "description": "The feature's name.",
+            "example": "my-feature",
+            "type": "string",
+          },
+          "projectId": {
+            "description": "The ID of the project that contains this feature.",
+            "example": "my-project",
+            "type": "string",
+          },
+          "strategies": {
+            "additionalProperties": false,
+            "description": "Feature's applicable strategies and cumulative results of the strategies",
+            "properties": {
+              "data": {
+                "description": "The strategies that apply to this feature.",
+                "items": {
+                  "$ref": "#/components/schemas/playgroundStrategySchema",
+                },
+                "type": "array",
+              },
+              "result": {
+                "anyOf": [
+                  {
+                    "type": "boolean",
+                  },
+                  {
+                    "enum": [
+                      "unknown",
+                    ],
+                    "type": "string",
+                  },
+                ],
+                "description": "The cumulative results of all the feature's strategies. Can be \`true\`,
+                                  \`false\`, or \`unknown\`.
+                                  This property will only be \`unknown\`
+                                  if one or more of the strategies can't be fully evaluated and the rest of the strategies
+                                  all resolve to \`false\`.",
+              },
+            },
+            "required": [
+              "result",
+              "data",
+            ],
+            "type": "object",
+          },
+          "variant": {
+            "additionalProperties": false,
+            "description": "The feature variant you receive based on the provided context or the _disabled
+                          variant_. If a feature is disabled or doesn't have any
+                          variants, you would get the _disabled variant_.
+                          Otherwise, you'll get one of thefeature's defined variants.",
+            "example": {
+              "enabled": true,
+              "name": "green",
+            },
+            "nullable": true,
+            "properties": {
+              "enabled": {
+                "description": "Whether the variant is enabled or not. If the feature is disabled or if it doesn't have variants, this property will be \`false\`",
+                "type": "boolean",
+              },
+              "name": {
+                "description": "The variant's name. If there is no variant or if the toggle is disabled, this will be \`disabled\`",
+                "example": "red-variant",
+                "type": "string",
+              },
+              "payload": {
+                "additionalProperties": false,
+                "description": "An optional payload attached to the variant.",
+                "properties": {
+                  "type": {
+                    "description": "The format of the payload.",
+                    "enum": [
+                      "json",
+                      "csv",
+                      "string",
+                    ],
+                    "type": "string",
+                  },
+                  "value": {
+                    "description": "The payload value stringified.",
+                    "example": "{"property": "value"}",
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "type",
+                  "value",
+                ],
+                "type": "object",
+              },
+            },
+            "required": [
+              "name",
+              "enabled",
+            ],
+            "type": "object",
+          },
+          "variants": {
+            "description": "The feature variants.",
+            "items": {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "name",
+          "environment",
+          "context",
+          "projectId",
+          "isEnabled",
+          "isEnabledInCurrentEnvironment",
+          "variant",
+          "variants",
+          "strategies",
+        ],
+        "type": "object",
+      },
+      "advancedPlaygroundFeatureSchema": {
+        "additionalProperties": false,
+        "description": "A simplified feature toggle model intended for the Unleash playground.",
+        "properties": {
+          "environments": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/advancedPlaygroundEnvironmentFeatureSchema",
+              },
+              "type": "array",
+            },
+            "description": "The lists of features that have been evaluated grouped by environment.",
+            "type": "object",
+          },
+          "name": {
+            "description": "The feature's name.",
+            "example": "my-feature",
+            "type": "string",
+          },
+          "projectId": {
+            "description": "The ID of the project that contains this feature.",
+            "example": "my-project",
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+          "projectId",
+          "environments",
+        ],
+        "type": "object",
+      },
+      "advancedPlaygroundRequestSchema": {
+        "description": "Data for the playground API to evaluate toggles in advanced mode with environment and context multi selection",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/sdkContextSchema",
+          },
+          "environments": {
+            "description": "The environments to evaluate toggles in.",
+            "example": [
+              "development",
+              "production",
+            ],
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "projects": {
+            "description": "A list of projects to check for toggles in.",
+            "oneOf": [
+              {
+                "description": "A list of projects to check for toggles in.",
+                "example": [
+                  "my-project",
+                ],
+                "items": {
+                  "type": "string",
+                },
+                "type": "array",
+              },
+              {
+                "description": "Check toggles in all projects.",
+                "enum": [
+                  "*",
+                ],
+                "type": "string",
+              },
+            ],
+          },
+        },
+        "required": [
+          "environments",
+          "context",
+        ],
+        "type": "object",
+      },
+      "advancedPlaygroundResponseSchema": {
+        "additionalProperties": false,
+        "description": "The state of all features given the provided input.",
+        "properties": {
+          "features": {
+            "description": "The list of features that have been evaluated.",
+            "items": {
+              "$ref": "#/components/schemas/advancedPlaygroundFeatureSchema",
+            },
+            "type": "array",
+          },
+          "input": {
+            "$ref": "#/components/schemas/advancedPlaygroundRequestSchema",
+            "description": "The given input used to evaluate the features.",
+          },
+        },
+        "required": [
+          "features",
+          "input",
+        ],
+        "type": "object",
+      },
       "apiTokenSchema": {
         "additionalProperties": false,
         "description": "An overview of an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).",
@@ -995,23 +1239,38 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "object",
       },
       "clientApplicationSchema": {
+        "description": "A client application is an instance of one of our SDKs",
         "properties": {
           "appName": {
+            "description": "An identifier for the app that uses the sdk, should be static across SDK restarts",
+            "example": "example-app",
             "type": "string",
           },
           "environment": {
+            "deprecated": true,
+            "description": "The SDK's configured 'environment' property. Deprecated. This property  does **not** control which Unleash environment the SDK gets toggles for. To control Unleash environments, use the SDKs API key.",
+            "example": "development",
             "type": "string",
           },
           "instanceId": {
+            "description": "A unique identifier identifying the instance of the application running the SDK. Often changes based on execution environment. For instance: two pods in Kubernetes will have two different instanceIds",
+            "example": "b77f3d13-5f48-4a7b-a3f4-a449b97ce43a",
             "type": "string",
           },
           "interval": {
+            "description": "How often (in seconds) does the client refresh its toggles",
+            "example": 10,
+            "minimum": 0,
             "type": "number",
           },
           "sdkVersion": {
+            "description": "An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>"",
+            "example": "unleash-client-java:7.0.0",
             "type": "string",
           },
           "started": {
+            "description": "Either an RFC-3339 timestamp or a unix timestamp in seconds",
+            "example": "2023-06-13T16:35:00.000Z",
             "oneOf": [
               {
                 "format": "date-time",
@@ -1023,6 +1282,12 @@ The provider you choose for your addon dictates what properties the \`parameters
             ],
           },
           "strategies": {
+            "description": "Which strategies the SDKs runtime knows about",
+            "example": [
+              "default",
+              "gradualRollout",
+              "remoteAddress",
+            ],
             "items": {
               "type": "string",
             },
@@ -1039,49 +1304,54 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "clientFeatureSchema": {
         "additionalProperties": false,
+        "description": "Feature toggle configuration used by SDKs to evaluate state of a toggle",
         "properties": {
-          "createdAt": {
-            "format": "date-time",
-            "nullable": true,
-            "type": "string",
-          },
           "description": {
+            "description": "A description of the toggle",
+            "example": "No variants here",
             "nullable": true,
             "type": "string",
           },
           "enabled": {
+            "description": "Whether the feature flag is enabled for the current API key or not. This is ANDed with the evaluation results of the strategies list, so if this is false, the evaluation result will always be false",
+            "example": true,
             "type": "boolean",
           },
           "impressionData": {
+            "description": "Set to true if SDKs should trigger [impression events](https://docs.getunleash.io/reference/impression-data) when this toggle is evaluated",
+            "example": false,
             "nullable": true,
             "type": "boolean",
           },
-          "lastSeenAt": {
-            "format": "date-time",
-            "nullable": true,
-            "type": "string",
-          },
           "name": {
+            "description": "The unique name of a feature toggle. Is validated to be URL safe on creation",
+            "example": "new.payment.flow.stripe",
             "type": "string",
           },
           "project": {
+            "description": "Which project this feature toggle belongs to",
+            "example": "new.payment.flow",
             "type": "string",
           },
           "stale": {
+            "description": "If this is true Unleash believes this feature toggle has been active longer than Unleash expects a toggle of this type to be active",
+            "example": false,
             "type": "boolean",
           },
           "strategies": {
-            "deprecated": true,
+            "description": "Evaluation strategies for this toggle. Each entry in this list will be evaluated and ORed together",
             "items": {
               "$ref": "#/components/schemas/featureStrategySchema",
             },
             "type": "array",
           },
           "type": {
+            "description": "What kind of feature flag is this. Refer to the documentation on [feature toggle types](https://docs.getunleash.io/reference/feature-toggle-types) for more information",
+            "example": "release",
             "type": "string",
           },
           "variants": {
-            "deprecated": true,
+            "description": "[Variants](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) configured for this toggle",
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -1097,23 +1367,42 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "clientFeaturesQuerySchema": {
         "additionalProperties": false,
+        "description": "Query parameters active for a client features request",
         "properties": {
           "environment": {
+            "deprecated": true,
+            "description": "Strategies for the feature toggle configured for this environment are included. (DEPRECATED) - Handled by API tokens",
             "type": "string",
           },
           "inlineSegmentConstraints": {
+            "description": "Set to true if requesting client does not support Unleash-Client-Specification 4.2.2 or newer. Modern SDKs will have this set to false, since they will be able to merge constraints and segments themselves",
+            "example": true,
             "type": "boolean",
           },
           "namePrefix": {
+            "description": "Features are filtered to only include features whose name starts with this prefix",
+            "example": "payment",
             "type": "string",
           },
           "project": {
+            "deprecated": true,
+            "description": "Features that are part of these projects are included in this response. (DEPRECATED) - Handled by API tokens",
+            "example": [
+              "new.payment.flow",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "tag": {
+            "description": "Features tagged with one of these tags are included",
+            "example": [
+              [
+                "simple:payment",
+                "simple:stripejourney",
+              ],
+            ],
             "items": {
               "items": {
                 "type": "string",
@@ -1126,8 +1415,10 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "object",
       },
       "clientFeaturesSchema": {
+        "description": "Configuration data for server-side SDKs for evaluating feature flags.",
         "properties": {
           "features": {
+            "description": "A list of feature toggles with their configuration",
             "items": {
               "$ref": "#/components/schemas/clientFeatureSchema",
             },
@@ -1135,14 +1426,19 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "query": {
             "$ref": "#/components/schemas/clientFeaturesQuerySchema",
+            "description": "A summary of filters and parameters sent to the endpoint. Used by the server to build the features and segments response",
           },
           "segments": {
+            "description": "A list of [Segments](https://docs.getunleash.io/reference/segments) configured for this Unleash instance",
             "items": {
               "$ref": "#/components/schemas/segmentSchema",
             },
             "type": "array",
           },
           "version": {
+            "description": "A version number for the format used in the response. Most Unleash instances now return version 2, which includes segments as a separate array",
+            "example": 2,
+            "minimum": 0,
             "type": "number",
           },
         },
@@ -1244,7 +1540,7 @@ The provider you choose for your addon dictates what properties the \`parameters
                         "minimum": 0,
                         "type": "integer",
                       },
-                      "description": "How many times each variant was returned",
+                      "description": "An object describing how many times each variant was returned. Variant names are used as properties, and the number of times they were exposed is the corresponding value (i.e. \`{ [variantName]: number }\`).",
                       "example": {
                         "variantA": 15,
                         "variantB": 25,
@@ -1391,6 +1687,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "description": {
+            "nullable": true,
             "type": "string",
           },
           "legalValues": {
@@ -1408,9 +1705,68 @@ The provider you choose for your addon dictates what properties the \`parameters
           "stickiness": {
             "type": "boolean",
           },
+          "usedInFeatures": {
+            "description": "Number of projects where this context field is used in",
+            "example": 3,
+            "nullable": true,
+            "type": "number",
+          },
+          "usedInProjects": {
+            "description": "Number of projects where this context field is used in",
+            "example": 2,
+            "nullable": true,
+            "type": "number",
+          },
         },
         "required": [
           "name",
+        ],
+        "type": "object",
+      },
+      "contextFieldStrategiesSchema": {
+        "description": "A wrapper object containing all for strategies using a specific context field",
+        "properties": {
+          "strategies": {
+            "description": "List of strategies using the context field",
+            "items": {
+              "properties": {
+                "environment": {
+                  "description": "The ID of the environment where this strategy is in.",
+                  "type": "string",
+                },
+                "featureName": {
+                  "description": "The name of the feature that contains this strategy.",
+                  "example": "best-feature",
+                  "type": "string",
+                },
+                "id": {
+                  "description": "The ID of the strategy.",
+                  "example": "433ae8d9-dd69-4ad0-bc46-414aedbe9c55",
+                  "type": "string",
+                },
+                "projectId": {
+                  "description": "The ID of the project that contains this feature.",
+                  "type": "string",
+                },
+                "strategyName": {
+                  "description": "The name of the strategy.",
+                  "type": "string",
+                },
+              },
+              "required": [
+                "id",
+                "featureName",
+                "projectId",
+                "environment",
+                "strategyName",
+              ],
+              "type": "object",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "strategies",
         ],
         "type": "object",
       },
@@ -1516,9 +1872,6 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
         },
-        "required": [
-          "appName",
-        ],
         "type": "object",
       },
       "createFeatureSchema": {
@@ -2332,7 +2685,7 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "featureStrategySchema": {
         "additionalProperties": false,
-        "description": "A singles activation strategy configuration schema for a feature",
+        "description": "A single activation strategy configuration schema for a feature",
         "properties": {
           "constraints": {
             "description": "A list of the constraints attached to the strategy",
@@ -2680,12 +3033,15 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "healthCheckSchema": {
         "additionalProperties": false,
+        "description": "Used by service orchestrators to decide whether this Unleash instance should be marked as healthy or unhealthy",
         "properties": {
           "health": {
+            "description": "The state this Unleash instance is in. GOOD if everything is ok, BAD if the instance should be restarted",
             "enum": [
               "GOOD",
               "BAD",
             ],
+            "example": "GOOD",
             "type": "string",
           },
         },
@@ -2698,6 +3054,13 @@ The provider you choose for your addon dictates what properties the \`parameters
         "additionalProperties": false,
         "description": "An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)",
         "properties": {
+          "createdAt": {
+            "description": "When the project was last updated.",
+            "example": "2023-04-19T08:15:14.000Z",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
             "example": "userId",
@@ -2790,6 +3153,13 @@ The provider you choose for your addon dictates what properties the \`parameters
             "description": "The number of active feature toggles.",
             "example": 2,
             "type": "number",
+          },
+          "createdAt": {
+            "description": "When the project was last updated.",
+            "example": "2023-04-19T08:15:14.000Z",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
           },
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
@@ -2969,55 +3339,122 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "instanceAdminStatsSchema": {
         "additionalProperties": false,
+        "description": "Information about an instance and statistics about usage of various features of Unleash",
         "properties": {
           "OIDCenabled": {
-            "type": "number",
+            "description": "Whether or not OIDC authentication is enabled for this instance",
+            "example": true,
+            "type": "boolean",
           },
           "SAMLenabled": {
-            "type": "number",
+            "description": "Whether or not SAML authentication is enabled for this instance",
+            "example": false,
+            "type": "boolean",
+          },
+          "clientApps": {
+            "description": "A count of connected applications in the last week, last month and all time since last restart",
+            "items": {
+              "description": "An entry describing how many client applications has been observed over the defined range",
+              "properties": {
+                "count": {
+                  "description": "The number of client applications that have been observed in this period",
+                  "example": 1,
+                  "type": "number",
+                },
+                "range": {
+                  "description": "A description of a time range",
+                  "enum": [
+                    "allTime",
+                    "30d",
+                    "7d",
+                  ],
+                  "example": "30d",
+                  "type": "string",
+                },
+              },
+              "type": "object",
+            },
+            "type": "array",
           },
           "contextFields": {
+            "description": "The number of context fields defined in this instance.",
+            "example": 7,
+            "minimum": 0,
             "type": "number",
           },
           "environments": {
+            "description": "The number of environments defined in this instance",
+            "example": 3,
+            "minimum": 0,
             "type": "number",
           },
           "featureToggles": {
+            "description": "The number of feature-toggles this instance has",
+            "example": 47,
+            "minimum": 0,
             "type": "number",
           },
           "groups": {
+            "description": "The number of groups defined in this instance",
+            "example": 12,
+            "minimum": 0,
             "type": "number",
           },
           "instanceId": {
+            "description": "A unique identifier for this instance. Generated by the database migration scripts at first run. Typically a UUID.",
+            "example": "ed3861ae-78f9-4e8c-8e57-b57efc15f82b",
             "type": "string",
           },
           "projects": {
+            "description": "The number of projects defined in this instance.",
+            "example": 3,
+            "minimum": 0,
             "type": "number",
           },
           "roles": {
+            "description": "The number of roles defined in this instance",
+            "example": 5,
+            "minimum": 0,
             "type": "number",
           },
           "segments": {
+            "description": "The number of segments defined in this instance",
+            "example": 19,
+            "minimum": 0,
             "type": "number",
           },
           "strategies": {
+            "description": "The number of strategies defined in this instance",
+            "example": 8,
+            "minimum": 0,
             "type": "number",
           },
           "sum": {
+            "description": "A SHA-256 checksum of the instance statistics to be used to verify that the data in this object has not been tampered with",
+            "example": "b023323477abb1eb145bebf3cdb30a1c2063e3edc1f7ae474ed8ed6c80de9a3b",
             "type": "string",
           },
           "timestamp": {
+            "description": "When these statistics were produced",
+            "example": "2023-06-12T12:25:06Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "users": {
+            "description": "The number of users this instance has",
+            "example": 8,
+            "minimum": 0,
             "type": "number",
           },
           "versionEnterprise": {
+            "description": "The version of Unleash Enterprise that is bundled in this instance",
+            "example": "5.1.7",
             "type": "string",
           },
           "versionOSS": {
+            "description": "The version of Unleash OSS that is bundled in this instance",
+            "example": "5.1.7",
             "type": "string",
           },
         },
@@ -3117,11 +3554,19 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "overrideSchema": {
         "additionalProperties": false,
+        "description": "An override for deciding which variant should be assigned to a user based on the context name",
         "properties": {
           "contextName": {
+            "description": "The name of the context field used to determine overrides",
+            "example": "userId",
             "type": "string",
           },
           "values": {
+            "description": "Which values that should be overriden",
+            "example": [
+              "red",
+              "blue",
+            ],
             "items": {
               "type": "string",
             },
@@ -3353,6 +3798,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "strategies": {
             "additionalProperties": false,
+            "description": "The feature's applicable strategies and cumulative results of the strategies",
             "properties": {
               "data": {
                 "description": "The strategies that apply to this feature.",
@@ -3440,6 +3886,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "object",
           },
           "variants": {
+            "description": "The feature variants.",
             "items": {
               "$ref": "#/components/schemas/variantSchema",
             },
@@ -3462,7 +3909,6 @@ The provider you choose for your addon dictates what properties the \`parameters
         "properties": {
           "context": {
             "$ref": "#/components/schemas/sdkContextSchema",
-            "description": "The context to use when evaluating toggles",
           },
           "environment": {
             "description": "The environment to evaluate toggles in.",
@@ -3470,6 +3916,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "string",
           },
           "projects": {
+            "description": "A list of projects to check for toggles in.",
             "oneOf": [
               {
                 "description": "A list of projects to check for toggles in.",
@@ -3720,6 +4167,12 @@ The provider you choose for your addon dictates what properties the \`parameters
         "additionalProperties": false,
         "description": "A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.",
         "properties": {
+          "createdAt": {
+            "example": "2023-02-10T08:36:35.262Z",
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
           "defaultStickiness": {
             "description": "A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy",
             "example": "userId",
@@ -4347,17 +4800,20 @@ Stats are divided into current and previous **windows**.
         "description": "The Unleash context as modeled in client SDKs",
         "properties": {
           "appName": {
+            "description": "The name of the application.",
             "example": "My cool application.",
             "minLength": 1,
             "type": "string",
           },
           "currentTime": {
+            "description": "A DateTime (or similar) data class instance or a string in an RFC3339-compatible format. Defaults to the current time if not set by the user.",
             "example": "2022-07-05T12:56:41+02:00",
             "format": "date-time",
             "type": "string",
           },
           "environment": {
             "deprecated": true,
+            "description": "The environment the app is running in.",
             "type": "string",
           },
           "properties": {
@@ -4371,14 +4827,17 @@ Stats are divided into current and previous **windows**.
             "type": "object",
           },
           "remoteAddress": {
+            "description": "The app's IP address",
             "example": "192.168.1.1",
             "type": "string",
           },
           "sessionId": {
+            "description": "An identifier for the current session",
             "example": "b65e7b23-fec0-4814-a129-0e9861ef18fc",
             "type": "string",
           },
           "userId": {
+            "description": "An identifier for the current user",
             "example": "username@provider.com",
             "type": "string",
           },
@@ -5398,17 +5857,26 @@ Stats are divided into current and previous **windows**.
       },
       "variantSchema": {
         "additionalProperties": false,
+        "description": "A variant allows for further separation of users into segments. See [our excellent documentation](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) for a more detailed description",
         "properties": {
           "name": {
+            "description": "The variants name. Is unique for this feature toggle",
+            "example": "blue_group",
             "type": "string",
           },
           "overrides": {
+            "description": "Overrides assigning specific variants to specific users. The weighting system automatically assigns users to specific groups for you, but any overrides in this list will take precedence.",
             "items": {
               "$ref": "#/components/schemas/overrideSchema",
             },
             "type": "array",
           },
           "payload": {
+            "description": "Extra data configured for this variant",
+            "example": {
+              "type": "json",
+              "value": "{color: red}",
+            },
             "properties": {
               "type": {
                 "type": "string",
@@ -5424,12 +5892,19 @@ Stats are divided into current and previous **windows**.
             "type": "object",
           },
           "stickiness": {
+            "description": "[Stickiness](https://docs.getunleash.io/reference/feature-toggle-variants#variant-stickiness) is how Unleash guarantees that the same user gets the same variant every time",
+            "example": "custom.context.field",
             "type": "string",
           },
           "weight": {
+            "description": "The weight is the likelihood of any one user getting this variant. It is a number between 0 and 1000. See the section on [variant weights](https://docs.getunleash.io/reference/feature-toggle-variants#variant-weight) for more information",
+            "maximum": 1000,
+            "minimum": 0,
             "type": "number",
           },
           "weightType": {
+            "description": "Set to fix if this variant must have exactly the weight allocated to it. If the type is variable, the weight will adjust so that the total weight of all variants adds up to 1000",
+            "example": "fix",
             "type": "string",
           },
         },
@@ -6709,6 +7184,36 @@ Note: passing \`null\` as a value for the description property will set it to an
         },
         "tags": [
           "Context",
+        ],
+      },
+    },
+    "/api/admin/context/{contextField}/strategies": {
+      "get": {
+        "operationId": "getStrategiesByContextField",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "contextField",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/contextFieldStrategiesSchema",
+                },
+              },
+            },
+            "description": "contextFieldStrategiesSchema",
+          },
+        },
+        "tags": [
+          "Strategies",
         ],
       },
     },
@@ -8200,6 +8705,7 @@ If the provided project does not exist, the list of events will be empty.",
     "/api/admin/instance-admin/statistics": {
       "get": {
         "deprecated": true,
+        "description": "Provides statistics about various features of Unleash to allow for reporting of usage for self-hosted customers. The response contains data such as the number of users, groups, features, strategies, versions, etc.",
         "operationId": "getInstanceAdminStats",
         "responses": {
           "200": {
@@ -8213,6 +8719,31 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "instanceAdminStatsSchema",
           },
         },
+        "summary": "Instance usage statistics",
+        "tags": [
+          "Instance Admin",
+        ],
+      },
+    },
+    "/api/admin/instance-admin/statistics/csv": {
+      "get": {
+        "description": "Provides statistics about various features of Unleash to allow for reporting of usage for self-hosted customers. The response contains data such as the number of users, groups, features, strategies, versions, etc.",
+        "operationId": "getInstanceAdminStatsCsv",
+        "responses": {
+          "200": {
+            "content": {
+              "text/csv": {
+                "example": ""OIDCenabled","SAMLenabled","clientApps","contextFields","environments","featureExports","featureImports","featureToggles","groups","instanceId","projects","roles","segments","strategies","sum","timestamp","users","versionEnterprise","versionOSS"
+true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9},{""range"":""7d"",""count"":5}]",6,2,0,0,29,3,"ed3861ae-78f9-4e8c-8e57-b57efc15f82b",1,5,2,8,"some-sha256-hash","2023-07-12T10:00:00.000Z",10,"5.1.7","5.1.7"",
+                "schema": {
+                  "type": "string",
+                },
+              },
+            },
+            "description": "instanceAdminStatsSchemaCsv",
+          },
+        },
+        "summary": "Instance usage statistics",
         "tags": [
           "Instance Admin",
         ],
@@ -9106,6 +9637,93 @@ If the provided project does not exist, the list of events will be empty.",
         "summary": "Evaluate an Unleash context against a set of environments and projects.",
         "tags": [
           "Playground",
+        ],
+      },
+    },
+    "/api/admin/playground/advanced": {
+      "post": {
+        "description": "Use the provided \`context\`, \`environments\`, and \`projects\` to evaluate toggles on this Unleash instance. You can use comma-separated values to provide multiple values to each context field. Returns a combinatorial list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.",
+        "operationId": "getAdvancedPlayground",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/advancedPlaygroundRequestSchema",
+              },
+            },
+          },
+          "description": "advancedPlaygroundRequestSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/advancedPlaygroundResponseSchema",
+                },
+              },
+            },
+            "description": "advancedPlaygroundResponseSchema",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "The request payload you provided doesn't conform to the schema. The .parameters property should be object. You sent [].",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ValidationError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+        },
+        "summary": "Batch evaluate an Unleash context against a set of environments and projects.",
+        "tags": [
+          "Unstable",
         ],
       },
     },
@@ -13150,6 +13768,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/client/features": {
       "get": {
+        "description": "Returns the SDK configuration for all feature toggles that are available to the provided API key. Used by SDKs to configure local evaluation",
         "operationId": "getAllClientFeatures",
         "responses": {
           "200": {
@@ -13163,6 +13782,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "clientFeaturesSchema",
           },
         },
+        "summary": "Get all toggles (SDK)",
         "tags": [
           "Client",
         ],
@@ -13170,6 +13790,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/client/features/{featureName}": {
       "get": {
+        "description": "Gets all the client data for a single toggle. Contains the exact same information about a toggle as the \`/api/client/features\` endpoint does, but only contains data about the specified toggle. All SDKs should use \`/api/client/features\`",
         "operationId": "getClientFeature",
         "parameters": [
           {
@@ -13193,6 +13814,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "clientFeatureSchema",
           },
         },
+        "summary": "Get a single feature toggle",
         "tags": [
           "Client",
         ],
@@ -13200,6 +13822,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/client/metrics": {
       "post": {
+        "description": "Registers usage metrics. Stores information about how many times each toggle was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature toggle's variants were displayed to the end user.",
         "operationId": "registerClientMetrics",
         "requestBody": {
           "content": {
@@ -13244,6 +13867,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "The request data does not match what we expect.",
           },
         },
+        "summary": "Register client usage metrics",
         "tags": [
           "Client",
         ],
@@ -13251,6 +13875,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/client/register": {
       "post": {
+        "description": "Register a client SDK with Unleash. SDKs call this endpoint on startup to tell Unleash about their existence. Used to track custom strategies in use as well as SDK versions.",
         "operationId": "registerClientApplication",
         "requestBody": {
           "content": {
@@ -13268,6 +13893,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "This response has no body.",
           },
         },
+        "summary": "Register a client SDK",
         "tags": [
           "Client",
         ],
@@ -13619,6 +14245,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/health": {
       "get": {
+        "description": "This operation returns information about whether this Unleash instance is healthy and ready to serve requests or not. Typically used by your deployment orchestrator (e.g. Kubernetes, Docker Swarm, Mesos, et al.).",
         "operationId": "getHealth",
         "responses": {
           "200": {
@@ -13642,6 +14269,7 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "healthCheckSchema",
           },
         },
+        "summary": "Get instance operational status",
         "tags": [
           "Operational",
         ],

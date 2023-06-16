@@ -465,6 +465,12 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
     },
     {
         path: '/admin/roles',
+        title: 'Roles',
+        flag: 'customRootRoles',
+        menu: { adminSettings: true, mode: ['enterprise'] },
+    },
+    {
+        path: '/admin/project-roles',
         title: 'Project roles',
         flag: RE,
         menu: { adminSettings: true, mode: ['enterprise'] },

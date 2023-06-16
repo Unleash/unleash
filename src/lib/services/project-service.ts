@@ -840,6 +840,7 @@ export default class ProjectService {
             health: project.health || 0,
             favorite: favorite,
             updatedAt: project.updatedAt,
+            createdAt: project.createdAt,
             environments,
             features,
             members,

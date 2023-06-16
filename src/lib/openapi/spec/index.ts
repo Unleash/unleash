@@ -137,3 +137,6 @@ export * from './batch-features-schema';
 export * from './token-string-list-schema';
 export * from './bulk-toggle-features-schema';
 export * from './admin-count-schema';
+export * from './advanced-playground-feature-schema';
+export * from './advanced-playground-response-schema';
+export * from './advanced-playground-request-schema';

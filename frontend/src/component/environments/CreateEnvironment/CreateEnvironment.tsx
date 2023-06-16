@@ -9,7 +9,7 @@ import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmen
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
+import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
@@ -25,7 +25,7 @@ const CreateEnvironment = () => {
     const { environments } = useEnvironments();
     const canCreateMoreEnvs = environments.length < ENV_LIMIT;
     const { createEnvironment, loading } = useEnvironmentApi();
-    const { refetch } = useProjectRolePermissions();
+    const { refetch } = usePermissions();
     const {
         name,
         setName,

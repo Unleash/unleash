@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import IRole from 'interfaces/role';
+import IRole, { PredefinedRoleType } from 'interfaces/role';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -24,11 +24,16 @@ import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 import { RoleModal } from '../RoleModal/RoleModal';
 import { RolePermissionsCell } from './RolePermissionsCell/RolePermissionsCell';
+import { ROOT_ROLE_TYPE } from '@server/util/constants';
 
-export const RolesTable = () => {
+interface IRolesTableProps {
+    type?: PredefinedRoleType;
+}
+
+export const RolesTable = ({ type = ROOT_ROLE_TYPE }: IRolesTableProps) => {
     const { setToastData, setToastApiError } = useToast();
 
-    const { roles, refetch, loading } = useRoles();
+    const { roles, projectRoles, refetch, loading } = useRoles();
     const { removeRole } = useRolesApi();
 
     const [searchValue, setSearchValue] = useState('');
@@ -114,7 +119,11 @@ export const RolesTable = () => {
         hiddenColumns: ['description'],
     });
 
-    const { data, getSearchText } = useSearch(columns, searchValue, roles);
+    const { data, getSearchText } = useSearch(
+        columns,
+        searchValue,
+        type === ROOT_ROLE_TYPE ? roles : projectRoles
+    );
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
         {
@@ -145,12 +154,14 @@ export const RolesTable = () => {
         columns
     );
 
+    const titledCaseType = type[0].toUpperCase() + type.slice(1);
+
     return (
         <PageContent
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Roles (${rows.length})`}
+                    title={`${titledCaseType} roles (${rows.length})`}
                     actions={
                         <>
                             <ConditionallyRender
@@ -173,7 +184,7 @@ export const RolesTable = () => {
                                     setModalOpen(true);
                                 }}
                             >
-                                New role
+                                New {type} role
                             </Button>
                         </>
                     }
@@ -204,20 +215,22 @@ export const RolesTable = () => {
                         condition={searchValue?.length > 0}
                         show={
                             <TablePlaceholder>
-                                No roles found matching &ldquo;
+                                No {type} roles found matching &ldquo;
                                 {searchValue}
                                 &rdquo;
                             </TablePlaceholder>
                         }
                         elseShow={
                             <TablePlaceholder>
-                                No roles available. Get started by adding one.
+                                No {type} roles available. Get started by adding
+                                one.
                             </TablePlaceholder>
                         }
                     />
                 }
             />
             <RoleModal
+                type={type}
                 roleId={selectedRole?.id}
                 open={modalOpen}
                 setOpen={setModalOpen}

@@ -55,22 +55,12 @@ function AdminMenu() {
                         }
                     />
                 )}
-                {flags.customRootRoles && (
+                {isEnterprise() && (
                     <Tab
                         value="roles"
                         label={
                             <CenteredNavLink to="/admin/roles">
                                 <span>Roles</span>
-                            </CenteredNavLink>
-                        }
-                    />
-                )}
-                {flags.RE && (
-                    <Tab
-                        value="project-roles"
-                        label={
-                            <CenteredNavLink to="/admin/project-roles">
-                                <span>Project roles</span>
                             </CenteredNavLink>
                         }
                     />

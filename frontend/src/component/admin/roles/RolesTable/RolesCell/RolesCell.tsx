@@ -3,6 +3,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { styled } from '@mui/material';
 import IRole from 'interfaces/role';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
+import { PREDEFINED_ROLE_TYPES } from '@server/util/constants';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
@@ -18,7 +19,7 @@ export const RolesCell = ({ role }: IRolesCellProps) => (
         subtitle={role.description}
         afterTitle={
             <ConditionallyRender
-                condition={role.type === 'root'}
+                condition={PREDEFINED_ROLE_TYPES.includes(role.type)}
                 show={<StyledBadge color="success">Predefined</StyledBadge>}
             />
         }

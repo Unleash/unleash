@@ -88,6 +88,10 @@ export class ApiTokenService {
         }
     }
 
+    async getToken(secret: string): Promise<IApiToken> {
+        return this.store.get(secret);
+    }
+
     async updateLastSeen(): Promise<void> {
         if (this.lastSeenSecrets.size > 0) {
             const toStore = [...this.lastSeenSecrets];

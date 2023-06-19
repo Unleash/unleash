@@ -107,7 +107,7 @@ test('creates new admin token with expiry', async () => {
         });
 });
 
-test('update admin token with expiry', async () => {
+test('update client token with expiry', async () => {
     const tokenSecret = 'random-secret-update';
 
     await db.stores.apiTokenStore.insert({

@@ -3,10 +3,22 @@ import { Response } from 'express';
 import Controller from '../controller';
 import {
     ADMIN,
+    CREATE_ADMIN_API_TOKEN,
     CREATE_API_TOKEN,
+    CREATE_CLIENT_API_TOKEN,
+    CREATE_FRONTEND_API_TOKEN,
+    DELETE_ADMIN_API_TOKEN,
     DELETE_API_TOKEN,
+    DELETE_CLIENT_API_TOKEN,
+    DELETE_FRONTEND_API_TOKEN,
+    READ_ADMIN_API_TOKEN,
     READ_API_TOKEN,
+    READ_CLIENT_API_TOKEN,
+    READ_FRONTEND_API_TOKEN,
+    UPDATE_ADMIN_API_TOKEN,
     UPDATE_API_TOKEN,
+    UPDATE_CLIENT_API_TOKEN,
+    UPDATE_FRONTEND_API_TOKEN,
 } from '../../types/permissions';
 import { ApiTokenService } from '../../services/api-token-service';
 import { Logger } from '../../logger';
@@ -36,10 +48,100 @@ import { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema
 import { emptyResponse } from '../../openapi/util/standard-responses';
 import { ProxyService } from '../../services/proxy-service';
 import { extractUsername } from '../../util';
+import { OperationDeniedError } from '../../error';
 
 interface TokenParam {
     token: string;
 }
+const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string = (
+    tokenType,
+) => {
+    switch (tokenType) {
+        case ApiTokenType.ADMIN:
+            return CREATE_ADMIN_API_TOKEN;
+        case ApiTokenType.CLIENT:
+            return CREATE_CLIENT_API_TOKEN;
+        case ApiTokenType.FRONTEND:
+            return CREATE_FRONTEND_API_TOKEN;
+    }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const tokenTypeToReadPermission: (tokenType: ApiTokenType) => string = (
+    tokenType,
+) => {
+    console.log(`Checking read permission for ${tokenType}`);
+    switch (tokenType) {
+        case ApiTokenType.ADMIN:
+            return READ_ADMIN_API_TOKEN;
+        case ApiTokenType.CLIENT:
+            return READ_CLIENT_API_TOKEN;
+        case ApiTokenType.FRONTEND:
+            return READ_FRONTEND_API_TOKEN;
+    }
+};
+
+const permissionToTokenType: (
+    permission: string,
+) => ApiTokenType | undefined = (permission) => {
+    if (
+        [
+            CREATE_FRONTEND_API_TOKEN,
+            READ_FRONTEND_API_TOKEN,
+            DELETE_FRONTEND_API_TOKEN,
+            UPDATE_FRONTEND_API_TOKEN,
+        ].includes(permission)
+    ) {
+        return ApiTokenType.FRONTEND;
+    } else if (
+        [
+            CREATE_CLIENT_API_TOKEN,
+            READ_CLIENT_API_TOKEN,
+            DELETE_CLIENT_API_TOKEN,
+            UPDATE_CLIENT_API_TOKEN,
+        ].includes(permission)
+    ) {
+        return ApiTokenType.CLIENT;
+    } else if (
+        [
+            READ_ADMIN_API_TOKEN,
+            CREATE_ADMIN_API_TOKEN,
+            DELETE_ADMIN_API_TOKEN,
+            UPDATE_ADMIN_API_TOKEN,
+        ].includes(permission)
+    ) {
+        return ApiTokenType.ADMIN;
+    } else {
+        return undefined;
+    }
+};
+
+const tokenTypeToUpdatePermission: (tokenType: ApiTokenType) => string = (
+    tokenType,
+) => {
+    switch (tokenType) {
+        case ApiTokenType.ADMIN:
+            return UPDATE_ADMIN_API_TOKEN;
+        case ApiTokenType.CLIENT:
+            return UPDATE_CLIENT_API_TOKEN;
+        case ApiTokenType.FRONTEND:
+            return UPDATE_FRONTEND_API_TOKEN;
+    }
+};
+
+const tokenTypeToDeletePermission: (tokenType: ApiTokenType) => string = (
+    tokenType,
+) => {
+    switch (tokenType) {
+        case ApiTokenType.ADMIN:
+            return DELETE_ADMIN_API_TOKEN;
+        case ApiTokenType.CLIENT:
+            return DELETE_CLIENT_API_TOKEN;
+        case ApiTokenType.FRONTEND:
+            return DELETE_FRONTEND_API_TOKEN;
+    }
+};
+
 export class ApiTokenController extends Controller {
     private apiTokenService: ApiTokenService;
 
@@ -160,17 +262,30 @@ export class ApiTokenController extends Controller {
         res: Response<ApiTokenSchema>,
     ): Promise<any> {
         const createToken = await createApiToken.validateAsync(req.body);
-        const token = await this.apiTokenService.createApiToken(
-            createToken,
-            extractUsername(req),
+        const permissionRequired = tokenTypeToCreatePermission(
+            createToken.type,
         );
-        this.openApiService.respondWithValidation(
-            201,
-            res,
-            apiTokenSchema.$id,
-            serializeDates(token),
-            { location: `api-tokens` },
+        const hasPermission = await this.accessService.hasPermission(
+            req.user,
+            permissionRequired,
         );
+        if (hasPermission) {
+            const token = await this.apiTokenService.createApiToken(
+                createToken,
+                extractUsername(req),
+            );
+            this.openApiService.respondWithValidation(
+                201,
+                res,
+                apiTokenSchema.$id,
+                serializeDates(token),
+                { location: `api-tokens` },
+            );
+        } else {
+            throw new OperationDeniedError(
+                `You don't have the necessary access [${permissionRequired}] to perform this operation`,
+            );
+        }
     }
 
     async updateApiToken(
@@ -184,7 +299,21 @@ export class ApiTokenController extends Controller {
             this.logger.error(req.body);
             return res.status(400).send();
         }
-
+        let apiToken = await this.apiTokenService.getUserForToken(token);
+        if (apiToken) {
+            const permissionRequired = tokenTypeToUpdatePermission(
+                apiToken.type,
+            );
+            const hasPermission = await this.accessService.hasPermission(
+                req.user,
+                permissionRequired,
+            );
+            if (!hasPermission) {
+                throw new OperationDeniedError(
+                    `You do not have the required access [${permissionRequired}] to perform this operation`,
+                );
+            }
+        }
         await this.apiTokenService.updateExpiry(
             token,
             new Date(expiresAt),
@@ -198,7 +327,21 @@ export class ApiTokenController extends Controller {
         res: Response,
     ): Promise<void> {
         const { token } = req.params;
-
+        let apiToken = await this.apiTokenService.getUserForToken(token);
+        if (apiToken) {
+            const permissionRequired = tokenTypeToDeletePermission(
+                apiToken.type,
+            );
+            let hasPermission = await this.accessService.hasPermission(
+                req.user,
+                permissionRequired,
+            );
+            if (!hasPermission) {
+                throw new OperationDeniedError(
+                    `You do not have the required access [${permissionRequired}] to perform this operation`,
+                );
+            }
+        }
         await this.apiTokenService.delete(token, extractUsername(req));
         await this.proxyService.deleteClientForProxyToken(token);
         res.status(200).end();
@@ -210,11 +353,21 @@ export class ApiTokenController extends Controller {
         if (user.isAPI && user.permissions.includes(ADMIN)) {
             return allTokens;
         }
-
-        if (await this.accessService.hasPermission(user, UPDATE_API_TOKEN)) {
-            return allTokens;
-        }
-
-        return allTokens.filter((token) => token.type !== ApiTokenType.ADMIN);
+        const userPermissions = await this.accessService.getPermissionsForUser(
+            user,
+        );
+        let allowedTokenTypes = [
+            READ_ADMIN_API_TOKEN,
+            READ_CLIENT_API_TOKEN,
+            READ_FRONTEND_API_TOKEN,
+        ]
+            .filter((readPerm) =>
+                userPermissions.some((p) => p.permission === readPerm),
+            )
+            .map(permissionToTokenType)
+            .filter((t) => t);
+        return allTokens.filter((token) =>
+            allowedTokenTypes.includes(token.type),
+        );
     }
 }

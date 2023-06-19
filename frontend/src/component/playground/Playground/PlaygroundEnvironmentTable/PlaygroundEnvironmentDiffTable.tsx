@@ -36,14 +36,14 @@ export const PlaygroundEnvironmentDiffTable = ({
     );
     type RowType = typeof data[0];
 
-    const contextFieldsHeaders = Object.keys(firstContext)
-        .filter(contextField => contextField !== 'appName')
-        .map(contextField => ({
+    const contextFieldsHeaders = Object.keys(firstContext).map(
+        contextField => ({
             Header: capitalizeFirst(contextField),
             accessor: `${environments[0]}.context.${contextField}`,
             minWidth: 160,
             Cell: HighlightCell,
-        }));
+        })
+    );
 
     const environmentHeaders = environments.map(environment => ({
         Header: environment,

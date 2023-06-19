@@ -30,14 +30,14 @@ export const PlaygroundEnvironmentTable = ({
     const theme = useTheme();
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const dynamicHeaders = Object.keys(features[0].context)
-        .filter(contextField => contextField !== 'appName')
-        .map(contextField => ({
+    const dynamicHeaders = Object.keys(features[0].context).map(
+        contextField => ({
             Header: capitalizeFirst(contextField),
             accessor: `context.${contextField}`,
             minWidth: 160,
             Cell: HighlightCell,
-        }));
+        })
+    );
 
     const COLUMNS = useMemo(() => {
         return [

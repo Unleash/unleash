@@ -64,7 +64,7 @@ export const StrategyName: FC<{
                 )}
                 show={
                     <Truncated>
-                        <Typography component="s" color="text.secondary">
+                        <Typography color="text.secondary">
                             {previousTitle ||
                                 formatStrategyName(change.payload.name)}
                         </Typography>{' '}

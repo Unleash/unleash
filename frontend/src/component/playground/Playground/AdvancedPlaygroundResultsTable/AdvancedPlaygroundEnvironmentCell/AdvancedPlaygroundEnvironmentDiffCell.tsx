@@ -35,7 +35,7 @@ export const AdvancedPlaygroundEnvironmentDiffCell = ({
     const theme = useTheme();
     const [anchor, setAnchorEl] = useState<null | Element>(null);
 
-    const onOpen = (event: React.MouseEventHandler<HTMLAnchorElement>) =>
+    const onOpen = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) =>
         setAnchorEl(event.currentTarget);
 
     const onClose = () => setAnchorEl(null);

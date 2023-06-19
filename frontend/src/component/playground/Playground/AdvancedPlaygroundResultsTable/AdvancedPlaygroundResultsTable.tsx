@@ -113,7 +113,7 @@ export const AdvancedPlaygroundResultsTable = ({
                 align: 'left',
                 Cell: ({ row }: any) => (
                     <AdvancedPlaygroundEnvironmentDiffCell
-                        value={row.original.environments['development']}
+                        value={row.original.environments}
                     />
                 ),
             },

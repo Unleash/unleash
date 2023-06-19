@@ -8,16 +8,9 @@ import {
 
 import { VirtualizedTable } from 'component/common/Table';
 import { sortTypes } from 'utils/sortTypes';
-import {
-    AdvancedPlaygroundEnvironmentFeatureSchema,
-    AdvancedPlaygroundFeatureSchemaEnvironments,
-    PlaygroundFeatureSchema,
-} from 'openapi';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { AdvancedPlaygroundFeatureSchemaEnvironments } from 'openapi';
+import { Box } from '@mui/material';
 import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/FeatureStatusCell';
-import { FeatureResultInfoPopoverCell } from '../PlaygroundResultsTable/FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
-import { VariantCell } from '../PlaygroundResultsTable/VariantCell/VariantCell';
 import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 
@@ -28,63 +21,46 @@ interface IPlaygroundEnvironmentTableProps {
 export const PlaygroundEnvironmentDiffTable = ({
     features,
 }: IPlaygroundEnvironmentTableProps) => {
-    const theme = useTheme();
-    const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const environments = Object.keys(features);
     const firstEnvFeatures = features[environments[0]];
+    const firstContext = firstEnvFeatures[0].context;
 
-    const data = firstEnvFeatures.map((item, index) => ({
-        context: item.context,
-        ...environments.map(environment => ({
-            environment,
-            data: features[environment][index],
-        })),
-    }));
+    const data = useMemo(
+        () =>
+            firstEnvFeatures.map((item, index) => ({
+                ...Object.fromEntries(
+                    environments.map(env => [env, features[env][index]])
+                ),
+            })),
+        [JSON.stringify(features)]
+    );
 
-    const dynamicHeaders = Object.keys(context)
+    const contextFieldsHeaders = Object.keys(firstContext)
         .filter(contextField => contextField !== 'appName')
         .map(contextField => ({
             Header: capitalizeFirst(contextField),
-            accessor: `context.${contextField}`,
+            accessor: `${environments[0]}.context.${contextField}`,
             minWidth: 160,
             Cell: HighlightCell,
         }));
 
+    const environmentHeaders = environments.map(environment => ({
+        Header: environment,
+        accessor: (row: any) =>
+            row[environment]?.isEnabled
+                ? 'true'
+                : row[environment]?.strategies?.result === 'unknown'
+                ? 'unknown'
+                : 'false',
+        Cell: ({ row }: any) => {
+            return <FeatureStatusCell feature={row.original[environment]} />;
+        },
+        sortType: 'playgroundResultState',
+        maxWidth: 120,
+    }));
+
     const COLUMNS = useMemo(() => {
-        return [
-            ...dynamicHeaders,
-            // {
-            //     id: 'isEnabled',
-            //     Header: 'isEnabled',
-            //     filterName: 'isEnabled',
-            //     accessor: (row: PlaygroundFeatureSchema) =>
-            //         row?.isEnabled
-            //             ? 'true'
-            //             : row?.strategies?.result === 'unknown'
-            //             ? 'unknown'
-            //             : 'false',
-            //     Cell: ({ row }: any) => (
-            //         <FeatureStatusCell feature={row.original} />
-            //     ),
-            //     sortType: 'playgroundResultState',
-            //     maxWidth: 120,
-            //     sortInverted: true,
-            // },
-            // {
-            //     Header: '',
-            //     maxWidth: 70,
-            //     id: 'info',
-            //     Cell: ({ row }: any) => (
-            //         <FeatureResultInfoPopoverCell
-            //             feature={row.original}
-            //             input={{
-            //                 environment: row.original.environment,
-            //                 context: row.original.context,
-            //             }}
-            //         />
-            //     ),
-            // },
-        ];
+        return [...contextFieldsHeaders, ...environmentHeaders];
     }, []);
 
     const {
@@ -92,27 +68,20 @@ export const PlaygroundEnvironmentDiffTable = ({
         rows,
         state: { sortBy },
         prepareRow,
-        setHiddenColumns,
     } = useTable(
         {
             columns: COLUMNS as any,
             data,
             sortTypes,
+            autoResetGlobalFilter: false,
+            autoResetHiddenColumns: false,
+            autoResetSortBy: false,
+            disableSortRemove: true,
+            disableMultiSort: true,
         },
         useGlobalFilter,
         useFlexLayout,
         useSortBy
-    );
-
-    useConditionallyHiddenColumns(
-        [
-            {
-                condition: isExtraSmallScreen,
-                columns: ['variant'],
-            },
-        ],
-        setHiddenColumns,
-        COLUMNS
     );
 
     const parentRef = useRef<HTMLElement | null>(null);

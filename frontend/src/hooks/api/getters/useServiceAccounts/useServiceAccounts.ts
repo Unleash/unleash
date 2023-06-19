@@ -1,4 +1,4 @@
-import IRole from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import { IServiceAccount } from 'interfaces/service-account';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';

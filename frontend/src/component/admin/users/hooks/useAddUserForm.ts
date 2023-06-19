@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import IRole from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 
 const useCreateUserForm = (

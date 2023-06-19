@@ -55,7 +55,7 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
                 title={`Your free ${instanceStatus.plan} trial has expired!`}
             >
                 <Typography>
-                    Please contact your Unleash sales representative avoid 
+                    Please contact your Unleash sales representative to avoid{' '}
                     your <strong>Unleash account to be deleted.</strong>
                 </Typography>
             </Dialogue>

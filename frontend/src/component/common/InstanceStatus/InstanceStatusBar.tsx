@@ -1,5 +1,5 @@
 import { styled, Button, Typography } from '@mui/material';
-import { IInstanceStatus } from 'interfaces/instance';
+import { IInstanceStatus, InstancePlan } from 'interfaces/instance';
 import { INSTANCE_STATUS_BAR_ID } from 'utils/testIds';
 import { InfoOutlined, WarningAmber } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -86,7 +86,7 @@ const StatusBarExpired = ({ instanceStatus }: IInstanceStatusBarProps) => {
                 has expired. <strong>Upgrade trial</strong> otherwise your{' '}
                 <strong>account will be deleted.</strong>
             </Typography>
-            <BillingLink />
+            <BillingLink instanceStatus={instanceStatus} />
         </StyledWarningBar>
     );
 };
@@ -105,7 +105,7 @@ const StatusBarExpiresSoon = ({ instanceStatus }: IInstanceStatusBarProps) => {
                 <strong>{timeRemaining}</strong> left of your free{' '}
                 {instanceStatus.plan} trial.
             </Typography>
-            <BillingLink />
+            <BillingLink instanceStatus={instanceStatus} />
         </StyledInfoBar>
     );
 };
@@ -118,16 +118,20 @@ const StatusBarExpiresLater = ({ instanceStatus }: IInstanceStatusBarProps) => {
                 <strong>Heads up!</strong> You're currently on a free{' '}
                 {instanceStatus.plan} trial account.
             </Typography>
-            <BillingLink />
+            <BillingLink instanceStatus={instanceStatus} />
         </StyledInfoBar>
     );
 };
 
-const BillingLink = () => {
+const BillingLink = ({ instanceStatus }: IInstanceStatusBarProps) => {
     const { hasAccess } = useContext(AccessContext);
     const navigate = useNavigate();
 
     if (!hasAccess(ADMIN)) {
+        return null;
+    }
+
+    if(instanceStatus.plan === InstancePlan.ENTERPRISE) {
         return null;
     }
 

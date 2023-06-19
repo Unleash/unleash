@@ -5,7 +5,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { IInstanceStatus } from 'interfaces/instance';
+import { IInstanceStatus, InstancePlan } from 'interfaces/instance';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import useInstanceStatusApi from 'hooks/api/actions/useInstanceStatusApi/useInstanceStatusApi';
@@ -43,6 +43,25 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
         }, 60000);
         return () => clearInterval(interval);
     }, [expired]);
+
+    if(instanceStatus.plan === InstancePlan.ENTERPRISE) {
+        return (
+            <Dialogue
+                open={dialogOpen}
+                secondaryButtonText="Remind me later"
+                onClose={() => {
+                    setDialogOpen(false);
+                }}
+                title={`Your free ${instanceStatus.plan} trial has expired!`}
+            >
+                <Typography>
+                    Please contact your Unleash sales representative avoid 
+                    your <strong>Unleash account to be deleted.</strong>
+                </Typography>
+            </Dialogue>
+        );
+
+    }
 
     if (hasAccess(ADMIN)) {
         return (

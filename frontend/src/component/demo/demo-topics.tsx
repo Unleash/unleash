@@ -139,7 +139,7 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
             },
             {
-                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=default"]`,
+                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=default&defaultStrategy=false"]`,
                 content: (
                     <Description>
                         Select the <Badge as="span">Standard</Badge> strategy

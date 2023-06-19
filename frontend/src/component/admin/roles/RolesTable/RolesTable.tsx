@@ -5,14 +5,12 @@ import IRole, { PredefinedRoleType } from 'interfaces/role';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { PageContent } from 'component/common/PageContent/PageContent';
-import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Button, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import theme from 'themes/theme';
-import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useSearch } from 'hooks/useSearch';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
@@ -28,18 +26,27 @@ import { ROOT_ROLE_TYPE } from '@server/util/constants';
 
 interface IRolesTableProps {
     type?: PredefinedRoleType;
+    searchValue?: string;
+    modalOpen: boolean;
+    setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    selectedRole?: IRole;
+    setSelectedRole: React.Dispatch<React.SetStateAction<IRole | undefined>>;
 }
 
-export const RolesTable = ({ type = ROOT_ROLE_TYPE }: IRolesTableProps) => {
+export const RolesTable = ({
+    type = ROOT_ROLE_TYPE,
+    searchValue = '',
+    modalOpen,
+    setModalOpen,
+    selectedRole,
+    setSelectedRole,
+}: IRolesTableProps) => {
     const { setToastData, setToastApiError } = useToast();
 
     const { roles, projectRoles, refetch, loading } = useRoles();
     const { removeRole } = useRolesApi();
 
-    const [searchValue, setSearchValue] = useState('');
-    const [modalOpen, setModalOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
-    const [selectedRole, setSelectedRole] = useState<IRole>();
 
     const onDeleteConfirm = async (role: IRole) => {
         try {
@@ -154,53 +161,8 @@ export const RolesTable = ({ type = ROOT_ROLE_TYPE }: IRolesTableProps) => {
         columns
     );
 
-    const titledCaseType = type[0].toUpperCase() + type.slice(1);
-
     return (
-        <PageContent
-            isLoading={loading}
-            header={
-                <PageHeader
-                    title={`${titledCaseType} roles (${rows.length})`}
-                    actions={
-                        <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <>
-                                        <Search
-                                            initialValue={searchValue}
-                                            onChange={setSearchValue}
-                                        />
-                                        <PageHeader.Divider />
-                                    </>
-                                }
-                            />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => {
-                                    setSelectedRole(undefined);
-                                    setModalOpen(true);
-                                }}
-                            >
-                                New {type} role
-                            </Button>
-                        </>
-                    }
-                >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={searchValue}
-                                onChange={setSearchValue}
-                            />
-                        }
-                    />
-                </PageHeader>
-            }
-        >
+        <PageContent isLoading={loading}>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}

@@ -107,7 +107,6 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
     <StyledContainer>
         <GetFeatureStrategyIcon strategyName={change.payload.name} />
         <Truncated>
-            {/*<TitleChange change={change} previousTitle={previousTitle} />*/}
             <TooltipLink
                 tooltip={children}
                 tooltipProps={{

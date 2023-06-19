@@ -42,5 +42,5 @@ test('should render environment table', async () => {
     expect(screen.getByText('clientA')).toBeInTheDocument();
     expect(screen.getByText('variantName')).toBeInTheDocument();
     expect(screen.getByText('False')).toBeInTheDocument();
-    expect(screen.queryByText('myapp')).toBeInTheDocument();
+    expect(screen.getByText('myapp')).toBeInTheDocument();
 });

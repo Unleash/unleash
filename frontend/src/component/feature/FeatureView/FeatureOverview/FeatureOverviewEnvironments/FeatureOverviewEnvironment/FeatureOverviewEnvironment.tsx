@@ -17,11 +17,13 @@ import EnvironmentAccordionBody from './EnvironmentAccordionBody/EnvironmentAcco
 import { EnvironmentFooter } from './EnvironmentFooter/EnvironmentFooter';
 import FeatureOverviewEnvironmentMetrics from './FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
+import { LegacyFeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/LegacyFeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { Badge } from 'component/common/Badge/Badge';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;
@@ -104,13 +106,25 @@ const StyledStringTruncator = styled(StringTruncator)(({ theme }) => ({
     },
 }));
 
-const StyledContainer = styled('div')(({ theme }) => ({
+/**
+ * @deprecated
+ */
+const LegacyStyledButtonContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     marginLeft: '1.8rem',
     [theme.breakpoints.down(560)]: {
         flexDirection: 'column',
         marginLeft: '0',
+    },
+}));
+
+const StyledButtonContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(2),
+    [theme.breakpoints.down(560)]: {
+        flexDirection: 'column',
     },
 }));
 
@@ -122,6 +136,8 @@ const FeatureOverviewEnvironment = ({
     const { metrics } = useFeatureMetrics(projectId, featureId);
     const { feature } = useFeature(projectId, featureId);
     const { value: globalStore } = useGlobalLocalStorage();
+    const { uiConfig } = useUiConfig();
+    const strategySplittedButton = uiConfig?.flags?.strategySplittedButton;
 
     const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
     const environmentMetric = featureMetrics.find(
@@ -171,20 +187,37 @@ const FeatureOverviewEnvironment = ({
                                         }
                                     />
                                 </StyledHeaderTitle>
-                                <StyledContainer>
-                                    <FeatureStrategyMenu
-                                        label="Add strategy"
-                                        projectId={projectId}
-                                        featureId={featureId}
-                                        environmentId={env.name}
-                                        variant="text"
-                                    />
-                                    <FeatureStrategyIcons
-                                        strategies={
-                                            featureEnvironment?.strategies
-                                        }
-                                    />
-                                </StyledContainer>
+                                <ConditionallyRender
+                                    condition={Boolean(strategySplittedButton)}
+                                    show={
+                                        <StyledButtonContainer>
+                                            <FeatureStrategyMenu
+                                                label="Add strategy"
+                                                projectId={projectId}
+                                                featureId={featureId}
+                                                environmentId={env.name}
+                                                variant="outlined"
+                                                size="small"
+                                            />
+                                        </StyledButtonContainer>
+                                    }
+                                    elseShow={
+                                        <LegacyStyledButtonContainer>
+                                            <LegacyFeatureStrategyMenu
+                                                label="Add strategy"
+                                                projectId={projectId}
+                                                featureId={featureId}
+                                                environmentId={env.name}
+                                                variant="text"
+                                            />
+                                            <FeatureStrategyIcons
+                                                strategies={
+                                                    featureEnvironment?.strategies
+                                                }
+                                            />
+                                        </LegacyStyledButtonContainer>
+                                    }
+                                />
                             </StyledHeader>
 
                             <FeatureOverviewEnvironmentMetrics
@@ -215,7 +248,7 @@ const FeatureOverviewEnvironment = ({
                                                 py: 1,
                                             }}
                                         >
-                                            <FeatureStrategyMenu
+                                            <LegacyFeatureStrategyMenu
                                                 label="Add strategy"
                                                 projectId={projectId}
                                                 featureId={featureId}

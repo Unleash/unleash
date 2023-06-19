@@ -26,7 +26,8 @@ export type IFlagKey =
     | 'segmentContextFieldUsage'
     | 'disableNotifications'
     | 'advancedPlayground'
-    | 'customRootRoles';
+    | 'customRootRoles'
+    | 'strategySplittedButton';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -89,6 +90,10 @@ const flags: IFlags = {
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
     strategyImprovements: parseEnvVarBoolean(
         process.env.UNLEASH_STRATEGY_IMPROVEMENTS,
+        false,
+    ),
+    strategySplittedButton: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_SPLITTED_BUTTON,
         false,
     ),
     googleAuthEnabled: parseEnvVarBoolean(

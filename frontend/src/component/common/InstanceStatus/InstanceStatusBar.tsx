@@ -131,7 +131,7 @@ const BillingLink = ({ instanceStatus }: IInstanceStatusBarProps) => {
         return null;
     }
 
-    if(instanceStatus.plan === InstancePlan.ENTERPRISE) {
+    if (instanceStatus.plan === InstancePlan.ENTERPRISE) {
         return null;
     }
 

@@ -44,7 +44,7 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
         return () => clearInterval(interval);
     }, [expired]);
 
-    if(instanceStatus.plan === InstancePlan.ENTERPRISE) {
+    if (instanceStatus.plan === InstancePlan.ENTERPRISE) {
         return (
             <Dialogue
                 open={dialogOpen}
@@ -56,11 +56,10 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
             >
                 <Typography>
                     Please contact your Unleash sales representative to avoid{' '}
-                   <strong>deletion of your Unleash account.</strong>
+                    <strong>deletion of your Unleash account.</strong>
                 </Typography>
             </Dialogue>
         );
-
     }
 
     if (hasAccess(ADMIN)) {

@@ -45,13 +45,13 @@ The configuration of a new Project is now available. the following input is avai
 
 ![A project creation form. The "Create" button is highlighted.](/img/projects_save_new_project_v2.png)
 
-| Item               | Description                                                                                                                                                                                                                                                  |
-|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Project Id         | Id for this Project                                                                                                                                                                                                                                          |
-| Project name       | The name of the Project.                                                                                                                                                                                                                                     |
-| Description        | A short description of the project                                                                                                                                                                                                                           |
-| Mode               | The project [collaboration mode](/reference/project-collaboration-mode.md)                                                                                                                                                                                   |
-| Default Stickiness | The default stickiness for the project. This setting controls the default stickiness value for variants and for the gradual rollout strategy.                                                                                                                |
+| Item               | Description                                                                                 |
+|--------------------|---------------------------------------------------------------------------------------------|
+| Project Id         | Id for this Project                                                                         |
+| Project name       | The name of the Project.                                                                    |
+| Description        | A short description of the project                                                          |
+| Mode               | The project [collaboration mode](/reference/project-collaboration-mode.md)                  |
+| Default Stickiness | The default stickiness for the project. This setting controls the default stickiness value for variants and for the gradual rollout strategy.                                                                 |
 
 ## Deleting an existing project {#deleting-an-existing-project}
 

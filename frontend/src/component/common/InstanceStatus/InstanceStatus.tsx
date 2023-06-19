@@ -56,7 +56,7 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
             >
                 <Typography>
                     Please contact your Unleash sales representative to avoid{' '}
-                    your <strong>Unleash account to be deleted.</strong>
+                   <strong>deletion of your Unleash account.</strong>
                 </Typography>
             </Dialogue>
         );

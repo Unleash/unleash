@@ -52,7 +52,6 @@ The configuration of a new Project is now available. the following input is avai
 | Description        | A short description of the project                                                                                                                                                                                                                           |
 | Mode               | The project [collaboration mode](/reference/project-collaboration-mode.md)                                                                                                                                                                                   |
 | Default Stickiness | The default stickiness for the project. This setting controls the default stickiness value for variants and for the gradual rollout strategy.                                                                                                                |
-| Default Strategy   | The [project default strategy](/reference/project-default-strategy.md) for the project. This setting controls the default strategy that will be added when you turn a feature environment toggle on (only if the environments has no defined strategies. |
 
 ## Deleting an existing project {#deleting-an-existing-project}
 

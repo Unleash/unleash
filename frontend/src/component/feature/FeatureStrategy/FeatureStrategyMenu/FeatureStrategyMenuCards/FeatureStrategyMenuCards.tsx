@@ -2,8 +2,6 @@ import { List, ListItem, styled, Typography } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useProject from 'hooks/api/getters/useProject/useProject';
-import { IStrategy } from 'interfaces/strategy';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureStrategyMenuCardsProps {
@@ -33,28 +31,16 @@ export const FeatureStrategyMenuCards = ({
         strategy => !strategy.deprecated && strategy.editable
     );
 
-    const { project } = useProject(projectId);
-
-    const strategy = project.environments.find(
-        env => env.environment === environmentId
-    )?.defaultStrategy;
-
-    const defaultStrategy: IStrategy = {
+    const defaultStrategy = {
         name: 'flexibleRollout',
         displayName: 'Default strategy',
         description:
             'This is the default strategy defined for this environment in the project',
-        parameters: [],
-        editable: false,
-        deprecated: false,
     };
     return (
         <List dense>
             <ConditionallyRender
-                condition={
-                    Boolean(uiConfig.flags.strategyImprovements) &&
-                    strategy !== undefined
-                }
+                condition={Boolean(uiConfig.flags.strategyImprovements)}
                 show={
                     <>
                         <StyledTypography color="textSecondary">
@@ -65,7 +51,7 @@ export const FeatureStrategyMenuCards = ({
                                 projectId={projectId}
                                 featureId={featureId}
                                 environmentId={environmentId}
-                                strategy={defaultStrategy!}
+                                strategy={defaultStrategy}
                                 defaultStrategy={true}
                             />
                         </ListItem>

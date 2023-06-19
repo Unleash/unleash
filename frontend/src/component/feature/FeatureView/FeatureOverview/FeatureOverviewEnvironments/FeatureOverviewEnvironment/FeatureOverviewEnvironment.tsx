@@ -248,11 +248,26 @@ const FeatureOverviewEnvironment = ({
                                                 py: 1,
                                             }}
                                         >
-                                            <LegacyFeatureStrategyMenu
-                                                label="Add strategy"
-                                                projectId={projectId}
-                                                featureId={featureId}
-                                                environmentId={env.name}
+                                            <ConditionallyRender
+                                                condition={Boolean(
+                                                    strategySplittedButton
+                                                )}
+                                                show={
+                                                    <FeatureStrategyMenu
+                                                        label="Add strategy"
+                                                        projectId={projectId}
+                                                        featureId={featureId}
+                                                        environmentId={env.name}
+                                                    />
+                                                }
+                                                elseShow={
+                                                    <LegacyFeatureStrategyMenu
+                                                        label="Add strategy"
+                                                        projectId={projectId}
+                                                        featureId={featureId}
+                                                        environmentId={env.name}
+                                                    />
+                                                }
                                             />
                                         </Box>
                                         <EnvironmentFooter

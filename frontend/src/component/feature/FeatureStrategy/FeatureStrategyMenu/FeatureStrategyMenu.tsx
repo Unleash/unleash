@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PermissionButton, {
     IPermissionButtonProps,
 } from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Popover, styled } from '@mui/material';
 import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards';
+import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -36,6 +38,7 @@ export const FeatureStrategyMenu = ({
     matchWidth,
 }: IFeatureStrategyMenuProps) => {
     const [anchor, setAnchor] = useState<Element>();
+    const navigate = useNavigate();
     const isPopoverOpen = Boolean(anchor);
     const popoverId = isPopoverOpen ? 'FeatureStrategyMenuPopover' : undefined;
 
@@ -46,13 +49,22 @@ export const FeatureStrategyMenu = ({
     const onClick = (event: React.SyntheticEvent) => {
         setAnchor(event.currentTarget);
     };
+
+    const createStrategyPath = formatCreateStrategyPath(
+        projectId,
+        featureId,
+        environmentId,
+        'flexibleRollout',
+        true
+    );
+
     return (
         <div onClick={event => event.stopPropagation()}>
             <PermissionButton
                 permission={CREATE_FEATURE_STRATEGY}
                 projectId={projectId}
                 environmentId={environmentId}
-                onClick={onClick}
+                onClick={() => navigate(createStrategyPath)}
                 aria-labelledby={popoverId}
                 variant={variant}
                 size={size}
@@ -78,6 +90,11 @@ export const FeatureStrategyMenu = ({
                 anchorEl={anchor}
                 onClose={onClose}
                 onClick={onClose}
+                PaperProps={{
+                    sx: theme => ({
+                        paddingBottom: theme.spacing(1),
+                    }),
+                }}
             >
                 <FeatureStrategyMenuCards
                     projectId={projectId}

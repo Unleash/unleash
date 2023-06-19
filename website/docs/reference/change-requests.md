@@ -43,6 +43,7 @@ Once a change request flow is configured for a project and environment, you can 
 * Adding a strategy to the feature toggle in the environment
 * Updating a strategy of a feature toggle in the environment
 * Deleting a strategy from a feature toggle in the environment
+* Enabling/Disabling a strategy from a feature toggle in the environment
 
 The flow can be summarized as follows:
 

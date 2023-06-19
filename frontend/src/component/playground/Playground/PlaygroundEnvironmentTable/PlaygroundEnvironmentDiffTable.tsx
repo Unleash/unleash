@@ -34,6 +34,7 @@ export const PlaygroundEnvironmentDiffTable = ({
             })),
         [JSON.stringify(features)]
     );
+    type RowType = typeof data[0];
 
     const contextFieldsHeaders = Object.keys(firstContext)
         .filter(contextField => contextField !== 'appName')
@@ -46,13 +47,13 @@ export const PlaygroundEnvironmentDiffTable = ({
 
     const environmentHeaders = environments.map(environment => ({
         Header: environment,
-        accessor: (row: any) =>
+        accessor: (row: RowType) =>
             row[environment]?.isEnabled
                 ? 'true'
                 : row[environment]?.strategies?.result === 'unknown'
                 ? 'unknown'
                 : 'false',
-        Cell: ({ row }: any) => {
+        Cell: ({ row }: { row: { original: RowType } }) => {
             return <FeatureStatusCell feature={row.original[environment]} />;
         },
         sortType: 'playgroundResultState',
@@ -63,14 +64,9 @@ export const PlaygroundEnvironmentDiffTable = ({
         return [...contextFieldsHeaders, ...environmentHeaders];
     }, []);
 
-    const {
-        headerGroups,
-        rows,
-        state: { sortBy },
-        prepareRow,
-    } = useTable(
+    const { headerGroups, rows, prepareRow } = useTable(
         {
-            columns: COLUMNS as any,
+            columns: COLUMNS as any[],
             data,
             sortTypes,
             autoResetGlobalFilter: false,

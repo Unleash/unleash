@@ -261,7 +261,7 @@ export const AdvancedPlayground: VFC<{
                     <ConditionallyRender
                         condition={Boolean(configurationError)}
                         show={
-                            <StyledAlert severity="info">
+                            <StyledAlert severity="warning">
                                 {configurationError}
                             </StyledAlert>
                         }

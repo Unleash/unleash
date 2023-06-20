@@ -22,7 +22,9 @@ import { AdvancedPlaygroundResultsTable } from './AdvancedPlaygroundResultsTable
 import { AdvancedPlaygroundResponseSchema } from 'openapi';
 import { createLocalStorage } from '../../../utils/createLocalStorage';
 
-export const AdvancedPlayground: VFC<{}> = () => {
+export const AdvancedPlayground: VFC<{
+    FormComponent?: typeof PlaygroundForm;
+}> = ({ FormComponent = PlaygroundForm }) => {
     const defaultSettings: {
         projects: string[];
         environments: string[];
@@ -221,7 +223,7 @@ export const AdvancedPlayground: VFC<{}> = () => {
                             top: 0,
                         }}
                     >
-                        <PlaygroundForm
+                        <FormComponent
                             onSubmit={onSubmit}
                             context={context}
                             setContext={setContext}

@@ -52,7 +52,7 @@ exports[`should create default config 1`] = `
     "smtppass": undefined,
     "smtpuser": undefined,
   },
-  "enableOAS": false,
+  "enableOAS": true,
   "enterpriseVersion": undefined,
   "environmentEnableOverrides": [],
   "eventBus": EventEmitter {

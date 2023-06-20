@@ -22,11 +22,7 @@ import {
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
 import { formatBaseUri } from './util/format-base-uri';
-import {
-    hoursToMilliseconds,
-    minutesToMilliseconds,
-    secondsToMilliseconds,
-} from 'date-fns';
+import { hoursToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import EventEmitter from 'events';
 import {
     ApiTokenType,
@@ -170,7 +166,10 @@ const defaultServerOption: IServerOption = {
         process.env.ENABLE_HEAP_SNAPSHOT_ENPOINT,
         false,
     ),
-    keepAliveTimeout: minutesToMilliseconds(1),
+    keepAliveTimeout: parseEnvVarNumber(
+        process.env.SERVER_KEEPALIVE_TIMEOUT,
+        secondsToMilliseconds(15),
+    ),
     headersTimeout: secondsToMilliseconds(61),
     enableRequestLogger: false,
     gracefulShutdownEnable: parseEnvVarBoolean(

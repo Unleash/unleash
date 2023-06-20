@@ -1,13 +1,6 @@
 import { FormEventHandler, useEffect, useState, VFC } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import {
-    Alert,
-    Box,
-    Paper,
-    styled,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
+import { Box, Paper, useTheme, styled, Alert } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import useToast from 'hooks/useToast';
@@ -27,13 +20,26 @@ import { PlaygroundGuidancePopper } from './PlaygroundGuidancePopper/PlaygroundG
 import Loader from '../../common/Loader/Loader';
 import { AdvancedPlaygroundResultsTable } from './AdvancedPlaygroundResultsTable/AdvancedPlaygroundResultsTable';
 import { AdvancedPlaygroundResponseSchema } from 'openapi';
+import { createLocalStorage } from 'utils/createLocalStorage';
 import { BadRequestError } from '../../../utils/apiUtils';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
 }));
 
-export const AdvancedPlayground: VFC<{}> = () => {
+export const AdvancedPlayground: VFC<{
+    FormComponent?: typeof PlaygroundForm;
+}> = ({ FormComponent = PlaygroundForm }) => {
+    const defaultSettings: {
+        projects: string[];
+        environments: string[];
+        context?: string;
+    } = { projects: [], environments: [] };
+    const { value, setValue } = createLocalStorage(
+        'AdvancedPlayground:v1',
+        defaultSettings
+    );
+
     const { environments: availableEnvironments } = useEnvironments();
     const theme = useTheme();
     const matches = true;
@@ -47,14 +53,19 @@ export const AdvancedPlayground: VFC<{}> = () => {
     >();
     const { setToastData } = useToast();
     const [searchParams, setSearchParams] = useSearchParams();
+    const searchParamsLength = Array.from(searchParams.entries()).length;
     const { evaluateAdvancedPlayground, loading } = usePlaygroundApi();
 
     useEffect(() => {
-        setEnvironments([resolveDefaultEnvironment(availableEnvironments)]);
+        if (environments.length === 0) {
+            setEnvironments([resolveDefaultEnvironment(availableEnvironments)]);
+        }
     }, [availableEnvironments]);
 
     useEffect(() => {
-        loadInitialValuesFromUrl();
+        if (searchParamsLength > 0) {
+            loadInitialValuesFromUrl();
+        }
     }, []);
 
     const loadInitialValuesFromUrl = () => {
@@ -154,12 +165,14 @@ export const AdvancedPlayground: VFC<{}> = () => {
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
         event.preventDefault();
 
-        await evaluatePlaygroundContext(
-            environments,
-            projects,
-            context,
-            setURLParameters
-        );
+        await evaluatePlaygroundContext(environments, projects, context, () => {
+            setURLParameters();
+            setValue({
+                environments,
+                projects,
+                context,
+            });
+        });
     };
 
     const setURLParameters = () => {
@@ -226,7 +239,7 @@ export const AdvancedPlayground: VFC<{}> = () => {
                             top: 0,
                         }}
                     >
-                        <PlaygroundForm
+                        <FormComponent
                             onSubmit={onSubmit}
                             context={context}
                             setContext={setContext}

@@ -130,7 +130,6 @@ export class AccessService {
 
         try {
             const userP = await this.getPermissionsForUser(user);
-
             return userP
                 .filter(
                     (p) =>

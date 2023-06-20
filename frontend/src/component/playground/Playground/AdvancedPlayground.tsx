@@ -45,9 +45,11 @@ export const AdvancedPlayground: VFC<{
     const matches = true;
 
     const [configurationError, setConfigurationError] = useState<string>();
-    const [environments, setEnvironments] = useState<string[]>([]);
-    const [projects, setProjects] = useState<string[]>([]);
-    const [context, setContext] = useState<string>();
+    const [environments, setEnvironments] = useState<string[]>(
+        value.environments
+    );
+    const [projects, setProjects] = useState<string[]>(value.projects);
+    const [context, setContext] = useState<string | undefined>(value.context);
     const [results, setResults] = useState<
         AdvancedPlaygroundResponseSchema | undefined
     >();

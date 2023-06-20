@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { IPermission, ICheckedPermissions } from 'interfaces/permissions';
-import IRole, { PredefinedRoleType } from 'interfaces/role';
+import { IRole, PredefinedRoleType } from 'interfaces/role';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 import { permissionsToCheckedPermissions } from 'utils/permissions';
 import { ROOT_ROLE_TYPE } from '@server/util/constants';

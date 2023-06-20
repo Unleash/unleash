@@ -20,7 +20,7 @@ import { PlaygroundGuidancePopper } from './PlaygroundGuidancePopper/PlaygroundG
 import Loader from '../../common/Loader/Loader';
 import { AdvancedPlaygroundResultsTable } from './AdvancedPlaygroundResultsTable/AdvancedPlaygroundResultsTable';
 import { AdvancedPlaygroundResponseSchema } from 'openapi';
-import { createLocalStorage } from '../../../utils/createLocalStorage';
+import { createLocalStorage } from 'utils/createLocalStorage';
 
 export const AdvancedPlayground: VFC<{
     FormComponent?: typeof PlaygroundForm;

@@ -21,7 +21,8 @@ import {
 } from '../../openapi';
 import { IAuthRequest } from '../../routes/unleash-types';
 import { extractUsername } from '../../util';
-import { InvalidOperationError } from '../../error';
+import { BadDataError, InvalidOperationError } from '../../error';
+import ApiUser from '../../types/api-user';
 
 class ExportImportController extends Controller {
     private logger: Logger;
@@ -156,8 +157,16 @@ class ExportImportController extends Controller {
         res: Response,
     ): Promise<void> {
         this.verifyExportImportEnabled();
-        const dto = req.body;
         const { user } = req;
+
+        if (user instanceof ApiUser && user.type === 'admin') {
+            throw new BadDataError(
+                `You can't use an admin token to import features. Please use either a personal access token (https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens) or a service account (https://docs.getunleash.io/reference/service-accounts).`,
+            );
+        }
+
+        const dto = req.body;
+
         await this.startTransaction(async (tx) =>
             this.transactionalExportImportService(tx).import(dto, user),
         );

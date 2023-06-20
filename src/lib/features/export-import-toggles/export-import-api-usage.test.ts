@@ -57,21 +57,20 @@ test('reject API imports with admin tokens', async () => {
         preHook,
     );
 
-    await request
+    const { body } = await request
         .post('/api/admin/features-batch/import')
         .send(defaultImportPayload)
-        .expect(400)
-        .expect((res) => {
-            expect(res.body).toMatchObject({
-                message:
-                    // it tells the user that they used an admin token
-                    expect.stringContaining('admin') &&
-                    // it tells the user to use a personal access token
-                    expect.stringContaining('personal access token') &&
-                    // it tells the user to use a service account
-                    expect.stringContaining('service account'),
-            });
-        });
+        .expect(400);
+
+    expect(body).toMatchObject({
+        message:
+            // it tells the user that they used an admin token
+            expect.stringContaining('admin') &&
+            // it tells the user to use a personal access token
+            expect.stringContaining('personal access token') &&
+            // it tells the user to use a service account
+            expect.stringContaining('service account'),
+    });
 
     await destroy();
 });

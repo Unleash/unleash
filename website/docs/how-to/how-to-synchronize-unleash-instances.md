@@ -61,4 +61,10 @@ Here are some common issues you might encounter and how to resolve them:
 4. Check that the target project exists.
 5. If you have change requests enabled in the target project, ensure that there are no pending change requests for the same API token.
 
+:::info Feedback wanted
+
+If you would like to give feedback on this feature, experience issues or have questions, please feel free to open an issue on [GitHub](https://github.com/Unleash/unleash/).
+
+:::
+
 

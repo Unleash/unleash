@@ -284,7 +284,14 @@ export class ApiTokenController extends Controller {
             this.logger.error(req.body);
             return res.status(400).send();
         }
-        let tokenToUpdate = await this.apiTokenService.getToken(token);
+        let tokenToUpdate;
+        try {
+            tokenToUpdate = await this.apiTokenService.getToken(token);
+        } catch (error) {}
+        if (!tokenToUpdate) {
+            res.status(200).end();
+            return;
+        }
         const permissionRequired = tokenTypeToUpdatePermission(
             tokenToUpdate.type,
         );
@@ -303,6 +310,7 @@ export class ApiTokenController extends Controller {
             new Date(expiresAt),
             extractUsername(req),
         );
+
         return res.status(200).end();
     }
 
@@ -311,7 +319,14 @@ export class ApiTokenController extends Controller {
         res: Response,
     ): Promise<void> {
         const { token } = req.params;
-        let tokenToUpdate = await this.apiTokenService.getToken(token);
+        let tokenToUpdate;
+        try {
+            tokenToUpdate = await this.apiTokenService.getToken(token);
+        } catch (error) {}
+        if (!tokenToUpdate) {
+            res.status(200).end();
+            return;
+        }
         const permissionRequired = tokenTypeToDeletePermission(
             tokenToUpdate.type,
         );

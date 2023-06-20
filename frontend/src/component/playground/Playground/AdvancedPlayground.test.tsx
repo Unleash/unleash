@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { UIProviderContainer } from '../../providers/UIProvider/UIProviderContainer';
 import AdvancedPlayground from './AdvancedPlayground';
-import { createLocalStorage } from '../../../utils/createLocalStorage';
+import { createLocalStorage } from 'utils/createLocalStorage';
 
 const testComponent = (
     <UIProviderContainer>

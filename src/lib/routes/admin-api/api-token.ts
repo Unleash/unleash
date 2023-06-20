@@ -66,21 +66,6 @@ const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string = (
     }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const tokenTypeToReadPermission: (tokenType: ApiTokenType) => string = (
-    tokenType,
-) => {
-    console.log(`Checking read permission for ${tokenType}`);
-    switch (tokenType) {
-        case ApiTokenType.ADMIN:
-            return READ_ADMIN_API_TOKEN;
-        case ApiTokenType.CLIENT:
-            return READ_CLIENT_API_TOKEN;
-        case ApiTokenType.FRONTEND:
-            return READ_FRONTEND_API_TOKEN;
-    }
-};
-
 const permissionToTokenType: (
     permission: string,
 ) => ApiTokenType | undefined = (permission) => {
@@ -299,21 +284,20 @@ export class ApiTokenController extends Controller {
             this.logger.error(req.body);
             return res.status(400).send();
         }
-        let apiToken = await this.apiTokenService.getUserForToken(token);
-        if (apiToken) {
-            const permissionRequired = tokenTypeToUpdatePermission(
-                apiToken.type,
+        let tokenToUpdate = await this.apiTokenService.getToken(token);
+        const permissionRequired = tokenTypeToUpdatePermission(
+            tokenToUpdate.type,
+        );
+        const hasPermission = await this.accessService.hasPermission(
+            req.user,
+            permissionRequired,
+        );
+        if (!hasPermission) {
+            throw new OperationDeniedError(
+                `You do not have the required access [${permissionRequired}] to perform this operation`,
             );
-            const hasPermission = await this.accessService.hasPermission(
-                req.user,
-                permissionRequired,
-            );
-            if (!hasPermission) {
-                throw new OperationDeniedError(
-                    `You do not have the required access [${permissionRequired}] to perform this operation`,
-                );
-            }
         }
+
         await this.apiTokenService.updateExpiry(
             token,
             new Date(expiresAt),
@@ -327,20 +311,18 @@ export class ApiTokenController extends Controller {
         res: Response,
     ): Promise<void> {
         const { token } = req.params;
-        let apiToken = await this.apiTokenService.getUserForToken(token);
-        if (apiToken) {
-            const permissionRequired = tokenTypeToDeletePermission(
-                apiToken.type,
+        let tokenToUpdate = await this.apiTokenService.getToken(token);
+        const permissionRequired = tokenTypeToDeletePermission(
+            tokenToUpdate.type,
+        );
+        let hasPermission = await this.accessService.hasPermission(
+            req.user,
+            permissionRequired,
+        );
+        if (!hasPermission) {
+            throw new OperationDeniedError(
+                `You do not have the required access [${permissionRequired}] to perform this operation`,
             );
-            let hasPermission = await this.accessService.hasPermission(
-                req.user,
-                permissionRequired,
-            );
-            if (!hasPermission) {
-                throw new OperationDeniedError(
-                    `You do not have the required access [${permissionRequired}] to perform this operation`,
-                );
-            }
         }
         await this.apiTokenService.delete(token, extractUsername(req));
         await this.proxyService.deleteClientForProxyToken(token);

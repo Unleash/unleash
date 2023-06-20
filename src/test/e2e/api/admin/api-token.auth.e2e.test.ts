@@ -6,6 +6,8 @@ import { RoleName } from '../../../../lib/types/model';
 import {
     CREATE_API_TOKEN,
     CREATE_CLIENT_API_TOKEN,
+    DELETE_API_TOKEN,
+    DELETE_CLIENT_API_TOKEN,
     READ_ADMIN_API_TOKEN,
     READ_API_TOKEN,
     READ_CLIENT_API_TOKEN,
@@ -745,10 +747,188 @@ describe('Fine grained API token permissions', () => {
         });
     });
     describe('Delete operations', () => {
-        describe('UPDATE_CLIENT_API_TOKEN can', () => {
-            test('delete client_api token', async () => {});
-            test('NOT delete frontend_api token', async () => {});
-            test('NOT delete admin_api token', async () => {});
+        describe('DELETE_CLIENT_API_TOKEN can', () => {
+            test('DELETE client_api token', async () => {
+                const preHook = (
+                    app,
+                    config,
+                    { userService, accessService },
+                ) => {
+                    app.use('/api/admin/', async (req, res, next) => {
+                        const role = await accessService.getRootRole(
+                            RoleName.VIEWER,
+                        );
+                        const user = await userService.createUser({
+                            email: 'delete_client_token@example.com',
+                            rootRole: role.id,
+                        });
+                        req.user = user;
+                        const updateClientApiExpiry =
+                            await accessService.createRole({
+                                name: 'delete_client_token',
+                                description: 'Can delete client tokens',
+                                permissions: [],
+                                type: 'root-custom',
+                            });
+                        await accessService.addPermissionToRole(
+                            updateClientApiExpiry.id,
+                            DELETE_API_TOKEN,
+                        );
+                        await accessService.addPermissionToRole(
+                            updateClientApiExpiry.id,
+                            DELETE_CLIENT_API_TOKEN,
+                        );
+                        await accessService.addUserToRole(
+                            user.id,
+                            updateClientApiExpiry.id,
+                            'default',
+                        );
+                        next();
+                    });
+                };
+                const { request, destroy } = await setupAppWithCustomAuth(
+                    stores,
+                    preHook,
+                    {
+                        experimental: {
+                            flags: {
+                                customRootRoles: true,
+                            },
+                        },
+                    },
+                );
+                const token = await stores.apiTokenStore.insert({
+                    username: 'cilent',
+                    secret: 'delete_client_token',
+                    type: ApiTokenType.CLIENT,
+                });
+                await request
+                    .delete(`/api/admin/api-tokens/${token.secret}`)
+                    .send({ expiresAt: addDays(new Date(), 14) })
+                    .expect(200);
+                await destroy();
+            });
+            test('NOT DELETE frontend_api token', async () => {
+                const preHook = (
+                    app,
+                    config,
+                    { userService, accessService },
+                ) => {
+                    app.use('/api/admin/', async (req, res, next) => {
+                        const role = await accessService.getRootRole(
+                            RoleName.VIEWER,
+                        );
+                        const user = await userService.createUser({
+                            email: 'delete_frontend_token@example.com',
+                            rootRole: role.id,
+                        });
+                        req.user = user;
+                        const updateClientApiExpiry =
+                            await accessService.createRole({
+                                name: 'delete_client_token_not_frontend',
+                                description: 'Can not delete frontend tokens',
+                                permissions: [],
+                                type: 'root-custom',
+                            });
+                        await accessService.addPermissionToRole(
+                            updateClientApiExpiry.id,
+                            DELETE_API_TOKEN,
+                        );
+                        await accessService.addPermissionToRole(
+                            updateClientApiExpiry.id,
+                            DELETE_CLIENT_API_TOKEN,
+                        );
+                        await accessService.addUserToRole(
+                            user.id,
+                            updateClientApiExpiry.id,
+                            'default',
+                        );
+                        next();
+                    });
+                };
+                const { request, destroy } = await setupAppWithCustomAuth(
+                    stores,
+                    preHook,
+                    {
+                        experimental: {
+                            flags: {
+                                customRootRoles: true,
+                            },
+                        },
+                    },
+                );
+                const token = await stores.apiTokenStore.insert({
+                    username: 'frontend',
+                    secret: 'delete_frontend_token',
+                    type: ApiTokenType.FRONTEND,
+                });
+                await request
+                    .delete(`/api/admin/api-tokens/${token.secret}`)
+                    .send({ expiresAt: addDays(new Date(), 14) })
+                    .expect(403);
+                await destroy();
+            });
+            test('NOT DELETE admin_api token', async () => {
+                const preHook = (
+                    app,
+                    config,
+                    { userService, accessService },
+                ) => {
+                    app.use('/api/admin/', async (req, res, next) => {
+                        const role = await accessService.getRootRole(
+                            RoleName.VIEWER,
+                        );
+                        const user = await userService.createUser({
+                            email: 'delete_admin_token@example.com',
+                            rootRole: role.id,
+                        });
+                        req.user = user;
+                        const updateClientApiExpiry =
+                            await accessService.createRole({
+                                name: 'delete_client_token_not_admin',
+                                description: 'Can not delete admin tokens',
+                                permissions: [],
+                                type: 'root-custom',
+                            });
+                        await accessService.addPermissionToRole(
+                            updateClientApiExpiry.id,
+                            DELETE_API_TOKEN,
+                        );
+                        await accessService.addPermissionToRole(
+                            updateClientApiExpiry.id,
+                            DELETE_CLIENT_API_TOKEN,
+                        );
+                        await accessService.addUserToRole(
+                            user.id,
+                            updateClientApiExpiry.id,
+                            'default',
+                        );
+                        next();
+                    });
+                };
+                const { request, destroy } = await setupAppWithCustomAuth(
+                    stores,
+                    preHook,
+                    {
+                        experimental: {
+                            flags: {
+                                customRootRoles: true,
+                            },
+                        },
+                    },
+                );
+                const token = await stores.apiTokenStore.insert({
+                    username: 'admin',
+                    secret: 'delete_admin_token',
+                    type: ApiTokenType.ADMIN,
+                });
+                await request
+                    .delete(`/api/admin/api-tokens/${token.secret}`)
+                    .send({ expiresAt: addDays(new Date(), 14) })
+                    .expect(403);
+                await destroy();
+            });
         });
+        test('');
     });
 });

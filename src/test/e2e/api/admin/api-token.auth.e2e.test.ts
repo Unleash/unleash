@@ -929,6 +929,5 @@ describe('Fine grained API token permissions', () => {
                 await destroy();
             });
         });
-        test('');
     });
 });

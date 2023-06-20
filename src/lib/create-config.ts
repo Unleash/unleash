@@ -441,8 +441,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.secureHeaders ||
         parseEnvVarBoolean(process.env.SECURE_HEADERS, false);
 
-    const enableOAS =
-        options.enableOAS || parseEnvVarBoolean(process.env.ENABLE_OAS, true);
+    const enableOAS = parseEnvVarBoolean(process.env.ENABLE_OAS, true);
 
     const additionalCspAllowedDomains: ICspDomainConfig =
         parseCspConfig(options.additionalCspAllowedDomains) ||

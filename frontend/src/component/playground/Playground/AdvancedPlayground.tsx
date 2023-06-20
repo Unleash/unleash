@@ -1,6 +1,13 @@
 import { FormEventHandler, useEffect, useState, VFC } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Box, Paper, useMediaQuery, useTheme } from '@mui/material';
+import {
+    Alert,
+    Box,
+    Paper,
+    styled,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import useToast from 'hooks/useToast';
@@ -20,12 +27,18 @@ import { PlaygroundGuidancePopper } from './PlaygroundGuidancePopper/PlaygroundG
 import Loader from '../../common/Loader/Loader';
 import { AdvancedPlaygroundResultsTable } from './AdvancedPlaygroundResultsTable/AdvancedPlaygroundResultsTable';
 import { AdvancedPlaygroundResponseSchema } from 'openapi';
+import { BadRequestError } from '../../../utils/apiUtils';
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(3),
+}));
 
 export const AdvancedPlayground: VFC<{}> = () => {
     const { environments: availableEnvironments } = useEnvironments();
     const theme = useTheme();
     const matches = true;
 
+    const [configurationError, setConfigurationError] = useState<string>();
     const [environments, setEnvironments] = useState<string[]>([]);
     const [projects, setProjects] = useState<string[]>([]);
     const [context, setContext] = useState<string>();
@@ -117,12 +130,24 @@ export const AdvancedPlayground: VFC<{}> = () => {
             if (action && typeof action === 'function') {
                 action();
             }
+            setConfigurationError(undefined);
             setResults(response);
         } catch (error: unknown) {
-            setToastData({
-                type: 'error',
-                title: `Error parsing context: ${formatUnknownError(error)}`,
-            });
+            if (error instanceof BadRequestError) {
+                setConfigurationError(error.message);
+            } else if (error instanceof SyntaxError) {
+                setToastData({
+                    type: 'error',
+                    title: `Error parsing context: ${formatUnknownError(
+                        error
+                    )}`,
+                });
+            } else {
+                setToastData({
+                    type: 'error',
+                    title: formatUnknownError(error),
+                });
+            }
         }
     };
 
@@ -220,6 +245,14 @@ export const AdvancedPlayground: VFC<{}> = () => {
                         padding: theme.spacing(4, 2),
                     })}
                 >
+                    <ConditionallyRender
+                        condition={Boolean(configurationError)}
+                        show={
+                            <StyledAlert severity="info">
+                                {configurationError}
+                            </StyledAlert>
+                        }
+                    />
                     <ConditionallyRender
                         condition={loading}
                         show={<Loader />}

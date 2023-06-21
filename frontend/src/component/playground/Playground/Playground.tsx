@@ -37,7 +37,7 @@ export const Playground: VFC<{}> = () => {
 
     useEffect(() => {
         setEnvironments([resolveDefaultEnvironment(availableEnvironments)]);
-    }, [environments]);
+    }, [JSON.stringify(availableEnvironments)]);
 
     useEffect(() => {
         // Load initial values from URL

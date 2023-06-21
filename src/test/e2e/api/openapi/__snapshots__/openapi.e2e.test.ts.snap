@@ -5284,6 +5284,25 @@ Stats are divided into current and previous **windows**.
         ],
         "type": "object",
       },
+      "telemetrySettingsSchema": {
+        "additionalProperties": false,
+        "description": "Contains information about which settings are configured for version info collection and feature usage collection.",
+        "properties": {
+          "featureInfoCollectionEnabled": {
+            "description": "Whether collection of feature usage metrics is enabled/active.",
+            "type": "boolean",
+          },
+          "versionInfoCollectionEnabled": {
+            "description": "Whether collection of version info is enabled/active.",
+            "type": "boolean",
+          },
+        },
+        "required": [
+          "versionInfoCollectionEnabled",
+          "featureInfoCollectionEnabled",
+        ],
+        "type": "object",
+      },
       "toggleMaintenanceSchema": {
         "properties": {
           "enabled": {
@@ -13036,6 +13055,28 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
         ],
       },
     },
+    "/api/admin/telemetry/settings": {
+      "get": {
+        "description": "Provides the configured settings for telemetry information collection",
+        "operationId": "getTelemetrySettings",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/telemetrySettingsSchema",
+                },
+              },
+            },
+            "description": "telemetrySettingsSchema",
+          },
+        },
+        "summary": "Get settings for telemetry information collection",
+        "tags": [
+          "Telemetry",
+        ],
+      },
+    },
     "/api/admin/ui-config": {
       "get": {
         "operationId": "getUiConfig",
@@ -14534,6 +14575,10 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     {
       "description": "Create, update, and delete [tags and tag types](https://docs.getunleash.io/reference/tags).",
       "name": "Tags",
+    },
+    {
+      "description": "API for information about telemetry collection",
+      "name": "Telemetry",
     },
     {
       "description": "Experimental endpoints that may change or disappear at any time.",

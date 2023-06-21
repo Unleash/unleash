@@ -5,6 +5,17 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Box, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { InstancePrivacy } from './InstancePrivacy';
+import { useTelemetry } from 'hooks/api/getters/useTelemetry/useTelemetry';
+
+interface IFeatureActivenessManagementInfo {
+    enabled: IActivenessManagementInfo;
+    disabled: IActivenessManagementInfo;
+}
+
+interface IActivenessManagementInfo {
+    environmentVariables: String[];
+    changeInfoText: String;
+}
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -36,28 +47,68 @@ const featureCollectionDetails = {
         Environments: 'The number of environments in your instance',
         Segments: 'The number of segments defined in your instance',
         Strategies: 'The number of strategies defined in your instance',
-        SAML: 'Whether or not SAML SSO is in use',
-        OIDC: 'Whether or not OIDC SSO is in use',
+        /*SAML: 'Whether or not SAML SSO is in use',
+        OIDC: 'Whether or not OIDC SSO is in use',*/
         'Feature Exports': 'The number of feature exports performed',
         'Feature Imports': 'The number of feature imports performed',
         'Custom Strategies':
             'The number of custom strategies defined in your instance',
+        'Custom Strategies In Use':
+            'The number of custom strategies that are in use by feature toggles',
     },
 };
 
+const versionCollectionActivenessManagementTexts: IFeatureActivenessManagementInfo =
+    {
+        enabled: {
+            environmentVariables: ['CHECK_VERSION=false'],
+            changeInfoText:
+                'Version Info Collection can be disabled by setting the environment variable to anything other than true and restarting Unleash.',
+        },
+        disabled: {
+            environmentVariables: ['CHECK_VERSION=true'],
+            changeInfoText:
+                'Version Info Collection can be enabled by setting the environment variable to true and restarting Unleash.',
+
+        },
+    };
+
+const featureCollectionActivenessManagementTexts: IFeatureActivenessManagementInfo =
+    {
+        enabled: {
+            environmentVariables: ['SEND_TELEMETRY=false'],
+            changeInfoText: 'Feature Usage Collection can be disabled by setting the environment variable to false and restarting Unleash.',
+        },
+        disabled: {
+            environmentVariables: ['SEND_TELEMETRY=true'],
+            changeInfoText: 'To enable Feature Usage Collection set the environment variable to true and restart Unleash.',
+        },
+    };
+
 export const InstancePrivacyAdmin = () => {
     const { hasAccess } = useContext(AccessContext);
-
-    const [telemetryCollection, setTelemetryCollection] = useState({
-        versionCollectionEnabled: true,
-        featureCollectionEnabled: false,
-    });
+    const { settings } = useTelemetry();
 
     const { loading } = useUiConfig();
 
     if (loading) {
         return null;
     }
+
+    const versionActivenessInfo = settings?.versionInfoCollectionEnabled
+        ? versionCollectionActivenessManagementTexts.enabled
+        : versionCollectionActivenessManagementTexts.disabled;
+
+    const featureActivenessInfo = settings?.featureInfoCollectionEnabled
+        ? featureCollectionActivenessManagementTexts.enabled
+        : featureCollectionActivenessManagementTexts.disabled;
+
+    let dependsOnFeatureCollection: undefined | String = undefined;
+    if (!settings?.versionInfoCollectionEnabled)
+        dependsOnFeatureCollection =
+            settings?.featureInfoCollectionEnabled
+                ? 'For Feature Usage Collection to be enabled you must also enable Version Info Collection'
+                : 'When you enable Feature Usage Collection you must also enable Version Info Collection';
 
     return (
         <PageContent header={<PageHeader title="Instance Privacy" />}>
@@ -66,27 +117,18 @@ export const InstancePrivacyAdmin = () => {
                     title={versionCollectionDetails.title}
                     infoText={versionCollectionDetails.infoText}
                     concreteDetails={versionCollectionDetails.concreteDetails}
-                    onChange={() => {
-                        setTelemetryCollection({
-                            ...telemetryCollection,
-                            versionCollectionEnabled:
-                                !telemetryCollection.versionCollectionEnabled,
-                        });
-                    }}
-                    enabled={telemetryCollection.versionCollectionEnabled}
+                    enabled={settings?.versionInfoCollectionEnabled}
+                    changeInfoText={versionActivenessInfo.changeInfoText}
+                    variablesTexts={versionActivenessInfo.environmentVariables}
                 />
                 <InstancePrivacy
                     title={featureCollectionDetails.title}
                     infoText={featureCollectionDetails.infoText}
                     concreteDetails={featureCollectionDetails.concreteDetails}
-                    onChange={() => {
-                        setTelemetryCollection({
-                            ...telemetryCollection,
-                            featureCollectionEnabled:
-                                !telemetryCollection.featureCollectionEnabled,
-                        });
-                    }}
-                    enabled={telemetryCollection.featureCollectionEnabled}
+                    enabled={settings?.featureInfoCollectionEnabled}
+                    changeInfoText={featureActivenessInfo.changeInfoText}
+                    variablesTexts={featureActivenessInfo.environmentVariables}
+                    dependsOnText={dependsOnFeatureCollection}
                 />
             </StyledBox>
         </PageContent>

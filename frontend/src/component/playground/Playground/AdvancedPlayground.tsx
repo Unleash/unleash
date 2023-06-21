@@ -59,7 +59,7 @@ export const AdvancedPlayground: VFC<{
     const { evaluateAdvancedPlayground, loading } = usePlaygroundApi();
 
     useEffect(() => {
-        if (environments.length === 0) {
+        if (environments?.length === 0) {
             setEnvironments([resolveDefaultEnvironment(availableEnvironments)]);
         }
     }, [availableEnvironments]);

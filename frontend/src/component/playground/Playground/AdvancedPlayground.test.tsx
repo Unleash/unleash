@@ -3,8 +3,10 @@ import { render } from 'utils/testRenderer';
 import { UIProviderContainer } from '../../providers/UIProvider/UIProviderContainer';
 import AdvancedPlayground from './AdvancedPlayground';
 import { createLocalStorage } from 'utils/createLocalStorage';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import userEvent from '@testing-library/user-event';
 
-const testComponent = (
+const testDisplayComponent = (
     <UIProviderContainer>
         <AdvancedPlayground
             FormComponent={props => (
@@ -17,6 +19,18 @@ const testComponent = (
                     </div>
                     <div data-id="context">{JSON.stringify(props.context)}</div>
                 </div>
+            )}
+        />
+    </UIProviderContainer>
+);
+
+const testEvaluateComponent = (
+    <UIProviderContainer>
+        <AdvancedPlayground
+            FormComponent={props => (
+                <form onSubmit={props.onSubmit}>
+                    <button>Submit</button>
+                </form>
             )}
         />
     </UIProviderContainer>
@@ -35,7 +49,7 @@ test('should fetch initial form data from local storage', async () => {
         context: { userId: '1' },
     });
 
-    render(testComponent);
+    render(testDisplayComponent);
 
     expect(screen.getByText('Unleash playground')).toBeInTheDocument();
     expect(screen.getByText('["projectA","projectB"]')).toBeInTheDocument();
@@ -53,7 +67,7 @@ test('should fetch initial form data from url', async () => {
         context: { userId: '1' },
     });
 
-    render(testComponent, {
+    render(testDisplayComponent, {
         route: '/playground?context=customContext&environments=customEnv&projects=urlProject&sort=name',
     });
 
@@ -61,4 +75,27 @@ test('should fetch initial form data from url', async () => {
     expect(screen.getByText('["urlProject"]')).toBeInTheDocument();
     expect(screen.getByText('["customEnv"]')).toBeInTheDocument();
     expect(screen.getByText('"customContext"')).toBeInTheDocument();
+});
+
+const server = testServerSetup();
+
+test('should display error on submit', async () => {
+    testServerRoute(
+        server,
+        '/api/admin/playground/advanced',
+        {
+            name: 'BadDataError',
+            details: [{ message: 'some error about too many items' }],
+        },
+        'post',
+        400
+    );
+
+    render(testEvaluateComponent);
+
+    const user = userEvent.setup();
+    const submitButton = screen.getByText('Submit');
+    user.click(submitButton);
+
+    await screen.findByText('some error about too many items');
 });

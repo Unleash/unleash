@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
-import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];

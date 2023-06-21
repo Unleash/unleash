@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
+import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];
@@ -34,6 +35,9 @@ export const PlaygroundConnectionFieldset: VFC<
     availableEnvironments,
 }) => {
     const theme = useTheme();
+    const { uiConfig } = useUiConfig();
+
+    const isAdvancedPlayground = uiConfig.flags.advancedPlayground;
 
     const { projects: availableProjects = [] } = useProjects();
     const projectsOptions = [
@@ -98,6 +102,10 @@ export const PlaygroundConnectionFieldset: VFC<
     const isAllProjects =
         projects.length === 0 || (projects.length === 1 && projects[0] === '*');
 
+    const envValue = isAdvancedPlayground
+        ? environmentOptions.filter(({ id }) => environments.includes(id))
+        : environmentOptions.filter(({ id }) => environments.includes(id))[0];
+
     return (
         <Box sx={{ pb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -114,18 +122,16 @@ export const PlaygroundConnectionFieldset: VFC<
                 <Autocomplete
                     disablePortal
                     id="environment"
+                    multiple={isAdvancedPlayground}
                     options={environmentOptions}
                     sx={{ width: 200, maxWidth: '100%' }}
                     renderInput={params => (
                         <TextField {...params} label="Environments" />
                     )}
                     size="small"
-                    value={
-                        environmentOptions.filter(({ id }) =>
-                            environments.includes(id)
-                        )[0]
-                    }
+                    value={envValue}
                     onChange={onEnvironmentsChange}
+                    data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
                 />
                 <Autocomplete
                     disablePortal
@@ -145,6 +151,7 @@ export const PlaygroundConnectionFieldset: VFC<
                               )
                     }
                     onChange={onProjectsChange}
+                    data-testid={'PLAYGROUND_PROJECT_SELECT'}
                 />
             </Box>
         </Box>

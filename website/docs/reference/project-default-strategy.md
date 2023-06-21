@@ -8,7 +8,7 @@ The project default strategy feature is generally available starting with **Unle
 
 :::
 
-A project's environment's **default strategy** specifies **the activation strategy that will be used when you enable a feature in that environment, if the environment has no defined strategies)**. 
+You can define default strategies for each of a project's environments. The default strategy for an environment will be added to a feature when you enable it in an environment **if and only if** the feature has **no active strategies** defined. 
 
 ## Limitations
 

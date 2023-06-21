@@ -14,7 +14,7 @@ You can define default strategies for each of a project's environments. The defa
 
 The default project strategy uses the [Gradual Rollout activation strategy](/reference/activation-strategies.md) as it's base.  You can customise to your needs by using constraints or segments (enterprise only)
 
-## Setting up
+## Configuration
 
 When in project overview, go to the Project settings tab and click on Default strategy 
 

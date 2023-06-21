@@ -95,8 +95,8 @@ exports[`should create default config 1`] = `
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
       "segmentContextFieldUsage": false,
+      "strategySplittedButton": false,
       "strictSchemaValidation": false,
-      "variantMetrics": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -129,8 +129,8 @@ exports[`should create default config 1`] = `
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
       "segmentContextFieldUsage": false,
+      "strategySplittedButton": false,
       "strictSchemaValidation": false,
-      "variantMetrics": false,
     },
     "externalResolver": {
       "getVariant": [Function],

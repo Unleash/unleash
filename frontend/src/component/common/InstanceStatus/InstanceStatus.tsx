@@ -105,8 +105,7 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
 };
 
 export const InstanceStatus: FC = ({ children }) => {
-    const { instanceStatus, refetchInstanceStatus, isBilling } =
-        useInstanceStatus();
+    const { instanceStatus, refetchInstanceStatus } = useInstanceStatus();
     const { extendTrial } = useInstanceStatusApi();
     const { setToastApiError } = useToast();
 

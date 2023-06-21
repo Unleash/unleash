@@ -178,17 +178,15 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         const query = `${insert.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp) DO UPDATE SET "yes" = "client_metrics_env"."yes" + EXCLUDED.yes, "no" = "client_metrics_env"."no" + EXCLUDED.no`;
         await this.db.raw(query);
 
-        if (this.flagResolver.isEnabled('variantMetrics')) {
-            const variantRows = spreadVariants(metrics).map(toVariantRow);
-            if (variantRows.length > 0) {
-                const insertVariants = this.db<ClientMetricsEnvVariantTable>(
-                    TABLE_VARIANTS,
-                )
-                    .insert(variantRows)
-                    .toQuery();
-                const variantsQuery = `${insertVariants.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp, variant) DO UPDATE SET "count" = "client_metrics_env_variants"."count" + EXCLUDED.count`;
-                await this.db.raw(variantsQuery);
-            }
+        const variantRows = spreadVariants(metrics).map(toVariantRow);
+        if (variantRows.length > 0) {
+            const insertVariants = this.db<ClientMetricsEnvVariantTable>(
+                TABLE_VARIANTS,
+            )
+                .insert(variantRows)
+                .toQuery();
+            const variantsQuery = `${insertVariants.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp, variant) DO UPDATE SET "count" = "client_metrics_env_variants"."count" + EXCLUDED.count`;
+            await this.db.raw(variantsQuery);
         }
     }
 
@@ -196,40 +194,24 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         featureName: string,
         hoursBack: number = 24,
     ): Promise<IClientMetricsEnv[]> {
-        if (this.flagResolver.isEnabled('variantMetrics')) {
-            const rows = await this.db<ClientMetricsEnvTable>(TABLE)
-                .select([`${TABLE}.*`, 'variant', 'count'])
-                .leftJoin(TABLE_VARIANTS, function () {
-                    this.on(
-                        `${TABLE_VARIANTS}.feature_name`,
-                        `${TABLE}.feature_name`,
-                    )
-                        .on(`${TABLE_VARIANTS}.app_name`, `${TABLE}.app_name`)
-                        .on(
-                            `${TABLE_VARIANTS}.environment`,
-                            `${TABLE}.environment`,
-                        )
-                        .on(
-                            `${TABLE_VARIANTS}.timestamp`,
-                            `${TABLE}.timestamp`,
-                        );
-                })
-                .where(`${TABLE}.feature_name`, featureName)
-                .andWhereRaw(
-                    `${TABLE}.timestamp >= NOW() - INTERVAL '${hoursBack} hours'`,
-                );
+        const rows = await this.db<ClientMetricsEnvTable>(TABLE)
+            .select([`${TABLE}.*`, 'variant', 'count'])
+            .leftJoin(TABLE_VARIANTS, function () {
+                this.on(
+                    `${TABLE_VARIANTS}.feature_name`,
+                    `${TABLE}.feature_name`,
+                )
+                    .on(`${TABLE_VARIANTS}.app_name`, `${TABLE}.app_name`)
+                    .on(`${TABLE_VARIANTS}.environment`, `${TABLE}.environment`)
+                    .on(`${TABLE_VARIANTS}.timestamp`, `${TABLE}.timestamp`);
+            })
+            .where(`${TABLE}.feature_name`, featureName)
+            .andWhereRaw(
+                `${TABLE}.timestamp >= NOW() - INTERVAL '${hoursBack} hours'`,
+            );
 
-            const tokens = rows.reduce(variantRowReducer, {});
-            return Object.values(tokens);
-        } else {
-            const rows = await this.db<ClientMetricsEnvTable>(TABLE)
-                .select('*')
-                .where({ feature_name: featureName })
-                .andWhereRaw(
-                    `timestamp >= NOW() - INTERVAL '${hoursBack} hours'`,
-                );
-            return rows.map(fromRow);
-        }
+        const tokens = rows.reduce(variantRowReducer, {});
+        return Object.values(tokens);
     }
 
     async getSeenAppsForFeatureToggle(

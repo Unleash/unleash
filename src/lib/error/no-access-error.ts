@@ -1,16 +1,27 @@
 import { ApiErrorSchema, UnleashError } from './unleash-error';
 
-class NoAccessError extends UnleashError {
-    permission: string;
+type Permission = string | string[];
 
-    constructor(permission: string, environment?: string) {
+class NoAccessError extends UnleashError {
+    permission: Permission;
+
+    constructor(permission: Permission = [], environment?: string) {
+        const permissions = Array.isArray(permission)
+            ? permission
+            : [permission];
+
+        const permissionsMessage =
+            permissions.length === 1
+                ? `the ${permissions[0]} permission`
+                : `any of the following permissions: ${permissions.join(', ')}`;
+
         const message =
-            `You don't have the required permissions to perform this operation. You need the "${permission}" permission to perform this action` +
+            `You don't have the required permissions to perform this operation. You need ${permissionsMessage}" to perform this action` +
             (environment ? ` in the "${environment}" environment.` : `.`);
 
         super(message);
 
-        this.permission = permission;
+        this.permission = permissions;
     }
 
     toJSON(): ApiErrorSchema {

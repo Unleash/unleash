@@ -15,7 +15,6 @@ import { Search } from 'component/common/Search/Search';
 import theme from 'themes/theme';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Add } from '@mui/icons-material';
-import { UPDATE_ROLE } from '@server/types/permissions';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { IRole } from 'interfaces/role';
 
@@ -146,7 +145,7 @@ export const Roles = () => {
                                             }}
                                             maxWidth={`${theme.breakpoints.values['sm']}px`}
                                             Icon={Add}
-                                            permission={UPDATE_ROLE}
+                                            permission={ADMIN}
                                         >
                                             New {type} role
                                         </ResponsiveButton>

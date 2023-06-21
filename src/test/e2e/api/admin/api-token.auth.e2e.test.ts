@@ -4,15 +4,10 @@ import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
 import { RoleName } from '../../../../lib/types/model';
 import {
-    CREATE_API_TOKEN,
     CREATE_CLIENT_API_TOKEN,
-    DELETE_API_TOKEN,
     DELETE_CLIENT_API_TOKEN,
-    READ_ADMIN_API_TOKEN,
-    READ_API_TOKEN,
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
-    UPDATE_API_TOKEN,
     UPDATE_CLIENT_API_TOKEN,
 } from '../../../../lib/types';
 import { addDays } from 'date-fns';
@@ -198,10 +193,6 @@ describe('Fine grained API token permissions', () => {
                         });
                     await accessService.addPermissionToRole(
                         role.id,
-                        CREATE_API_TOKEN,
-                    );
-                    await accessService.addPermissionToRole(
-                        role.id,
                         CREATE_CLIENT_API_TOKEN,
                     );
                     await accessService.addUserToRole(
@@ -251,10 +242,6 @@ describe('Fine grained API token permissions', () => {
                             permissions: [],
                             type: 'root-custom',
                         });
-                    await accessService.addPermissionToRole(
-                        role.id,
-                        CREATE_API_TOKEN,
-                    );
                     await accessService.addPermissionToRole(
                         role.id,
                         CREATE_CLIENT_API_TOKEN,
@@ -308,10 +295,6 @@ describe('Fine grained API token permissions', () => {
                         });
                     await accessService.addPermissionToRole(
                         role.id,
-                        CREATE_API_TOKEN,
-                    );
-                    await accessService.addPermissionToRole(
-                        role.id,
                         CREATE_CLIENT_API_TOKEN,
                     );
                     await accessService.addUserToRole(
@@ -363,10 +346,6 @@ describe('Fine grained API token permissions', () => {
                             permissions: [],
                             type: 'root-custom',
                         },
-                    );
-                    await accessService.addPermissionToRole(
-                        readFrontendApiToken.id,
-                        READ_API_TOKEN,
                     );
                     await accessService.addPermissionToRole(
                         readFrontendApiToken.id,
@@ -439,10 +418,6 @@ describe('Fine grained API token permissions', () => {
                     });
                     await accessService.addPermissionToRole(
                         readClientTokenRole.id,
-                        READ_API_TOKEN,
-                    );
-                    await accessService.addPermissionToRole(
-                        readClientTokenRole.id,
                         READ_CLIENT_API_TOKEN,
                     );
                     await accessService.addUserToRole(
@@ -490,11 +465,11 @@ describe('Fine grained API token permissions', () => {
                 });
             await destroy();
         });
-        test('READ_ADMIN_API_TOKEN should be able to see ADMIN tokens', async () => {
+        test('ADMIN should be able to see ADMIN tokens', async () => {
             const preHook = (app, config, { userService, accessService }) => {
                 app.use('/api/admin/', async (req, res, next) => {
                     const role = await accessService.getRootRole(
-                        RoleName.VIEWER,
+                        RoleName.ADMIN,
                     );
                     const user = await userService.createUser({
                         email: 'read_admin_token@example.com',
@@ -507,14 +482,6 @@ describe('Fine grained API token permissions', () => {
                         permissions: [],
                         type: 'root-custom',
                     });
-                    await accessService.addPermissionToRole(
-                        readAdminApiToken.id,
-                        READ_API_TOKEN,
-                    );
-                    await accessService.addPermissionToRole(
-                        readAdminApiToken.id,
-                        READ_ADMIN_API_TOKEN,
-                    );
                     await accessService.addUserToRole(
                         user.id,
                         readAdminApiToken.id,
@@ -587,10 +554,6 @@ describe('Fine grained API token permissions', () => {
                             });
                         await accessService.addPermissionToRole(
                             updateClientApiExpiry.id,
-                            UPDATE_API_TOKEN,
-                        );
-                        await accessService.addPermissionToRole(
-                            updateClientApiExpiry.id,
                             UPDATE_CLIENT_API_TOKEN,
                         );
                         await accessService.addUserToRole(
@@ -645,10 +608,6 @@ describe('Fine grained API token permissions', () => {
                                 permissions: [],
                                 type: 'root-custom',
                             });
-                        await accessService.addPermissionToRole(
-                            updateClientApiExpiry.id,
-                            UPDATE_API_TOKEN,
-                        );
                         await accessService.addPermissionToRole(
                             updateClientApiExpiry.id,
                             UPDATE_CLIENT_API_TOKEN,
@@ -706,10 +665,6 @@ describe('Fine grained API token permissions', () => {
                                 permissions: [],
                                 type: 'root-custom',
                             });
-                        await accessService.addPermissionToRole(
-                            updateClientApiExpiry.id,
-                            UPDATE_API_TOKEN,
-                        );
                         await accessService.addPermissionToRole(
                             updateClientApiExpiry.id,
                             UPDATE_CLIENT_API_TOKEN,
@@ -772,10 +727,6 @@ describe('Fine grained API token permissions', () => {
                             });
                         await accessService.addPermissionToRole(
                             updateClientApiExpiry.id,
-                            DELETE_API_TOKEN,
-                        );
-                        await accessService.addPermissionToRole(
-                            updateClientApiExpiry.id,
                             DELETE_CLIENT_API_TOKEN,
                         );
                         await accessService.addUserToRole(
@@ -832,10 +783,6 @@ describe('Fine grained API token permissions', () => {
                             });
                         await accessService.addPermissionToRole(
                             updateClientApiExpiry.id,
-                            DELETE_API_TOKEN,
-                        );
-                        await accessService.addPermissionToRole(
-                            updateClientApiExpiry.id,
                             DELETE_CLIENT_API_TOKEN,
                         );
                         await accessService.addUserToRole(
@@ -890,10 +837,6 @@ describe('Fine grained API token permissions', () => {
                                 permissions: [],
                                 type: 'root-custom',
                             });
-                        await accessService.addPermissionToRole(
-                            updateClientApiExpiry.id,
-                            DELETE_API_TOKEN,
-                        );
                         await accessService.addPermissionToRole(
                             updateClientApiExpiry.id,
                             DELETE_CLIENT_API_TOKEN,

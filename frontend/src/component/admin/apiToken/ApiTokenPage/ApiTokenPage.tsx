@@ -1,11 +1,6 @@
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    CREATE_API_TOKEN,
-    DELETE_API_TOKEN,
-    READ_API_TOKEN,
-} from 'component/providers/AccessProvider/permissions';
 import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
 import { ApiTokenTable } from 'component/common/ApiTokenTable/ApiTokenTable';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -18,6 +13,13 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { CopyApiTokenButton } from 'component/common/ApiTokenTable/CopyApiTokenButton/CopyApiTokenButton';
 import { RemoveApiTokenButton } from 'component/common/ApiTokenTable/RemoveApiTokenButton/RemoveApiTokenButton';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
+import {
+    ADMIN,
+    DELETE_CLIENT_API_TOKEN,
+    DELETE_FRONTEND_API_TOKEN,
+    READ_CLIENT_API_TOKEN,
+    READ_FRONTEND_API_TOKEN,
+} from '@server/types/permissions';
 
 export const ApiTokenPage = () => {
     const { hasAccess } = useContext(AccessContext);
@@ -34,26 +36,45 @@ export const ApiTokenPage = () => {
         setGlobalFilter,
         setHiddenColumns,
         columns,
-    } = useApiTokenTable(tokens, props => (
-        <ActionCell>
-            <CopyApiTokenButton
-                token={props.row.original}
-                permission={READ_API_TOKEN}
-            />
-            <RemoveApiTokenButton
-                token={props.row.original}
-                permission={DELETE_API_TOKEN}
-                onRemove={async () => {
-                    await deleteToken(props.row.original.secret);
-                    refetch();
-                }}
-            />
-        </ActionCell>
-    ));
+    } = useApiTokenTable(tokens, props => {
+        const READ_PERMISSION =
+            props.row.original.type === 'client'
+                ? READ_CLIENT_API_TOKEN
+                : props.row.original.type === 'frontend'
+                ? READ_FRONTEND_API_TOKEN
+                : ADMIN;
+        const DELETE_PERMISSION =
+            props.row.original.type === 'client'
+                ? DELETE_CLIENT_API_TOKEN
+                : props.row.original.type === 'frontend'
+                ? DELETE_FRONTEND_API_TOKEN
+                : ADMIN;
+
+        return (
+            <ActionCell>
+                <CopyApiTokenButton
+                    token={props.row.original}
+                    permission={READ_PERMISSION}
+                />
+                <RemoveApiTokenButton
+                    token={props.row.original}
+                    permission={DELETE_PERMISSION}
+                    onRemove={async () => {
+                        await deleteToken(props.row.original.secret);
+                        refetch();
+                    }}
+                />
+            </ActionCell>
+        );
+    });
 
     return (
         <ConditionallyRender
-            condition={hasAccess(READ_API_TOKEN)}
+            condition={hasAccess([
+                READ_CLIENT_API_TOKEN,
+                READ_FRONTEND_API_TOKEN,
+                ADMIN,
+            ])}
             show={() => (
                 <PageContent
                     header={
@@ -67,7 +88,7 @@ export const ApiTokenPage = () => {
                                     />
                                     <PageHeader.Divider />
                                     <CreateApiTokenButton
-                                        permission={CREATE_API_TOKEN}
+                                        permission={ADMIN}
                                         path="/admin/api/create-token"
                                     />
                                 </>

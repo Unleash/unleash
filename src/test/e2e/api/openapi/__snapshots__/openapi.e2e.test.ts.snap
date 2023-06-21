@@ -4016,7 +4016,21 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "id": {
             "description": "The strategy's id.",
+            "example": "3AECCF7E-FF82-4174-8287-8EBE06079A50",
             "type": "string",
+          },
+          "links": {
+            "description": "A set of links to actions you can perform on this strategy",
+            "properties": {
+              "edit": {
+                "example": "/projects/some-project/features/some-feature/strategies/edit?environmentId=some-env&strategyId= 3AECCF7E-FF82-4174-8287-8EBE06079A50",
+                "type": "string",
+              },
+            },
+            "required": [
+              "edit",
+            ],
+            "type": "object",
           },
           "name": {
             "description": "The strategy's name.",
@@ -4110,6 +4124,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           "constraints",
           "parameters",
           "disabled",
+          "links",
         ],
         "type": "object",
       },

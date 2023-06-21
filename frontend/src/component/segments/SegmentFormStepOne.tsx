@@ -9,7 +9,6 @@ import {
     SEGMENT_NEXT_BTN_ID,
 } from 'utils/testIds';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { GO_BACK } from 'constants/navigate';
@@ -58,7 +57,6 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 }));
 
 export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
-    children,
     name,
     description,
     project,
@@ -66,12 +64,10 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     setDescription,
     setProject,
     errors,
-    clearErrors,
     setCurrentStep,
 }) => {
     const segmentId = useOptionalPathParam('segmentId');
     const projectId = useOptionalPathParam('projectId');
-    const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
     const { projects, loading: loadingProjects } = useProjects();
 

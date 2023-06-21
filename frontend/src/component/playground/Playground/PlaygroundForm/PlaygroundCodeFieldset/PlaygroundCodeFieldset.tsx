@@ -27,6 +27,7 @@ import useToast from 'hooks/useToast';
 import { PlaygroundEditor } from './PlaygroundEditor/PlaygroundEditor';
 import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
 import { parseDateValue, parseValidDate } from 'component/common/util';
+import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
 interface IPlaygroundCodeFieldsetProps {
     context: string | undefined;
     setContext: Dispatch<SetStateAction<string | undefined>>;
@@ -37,6 +38,9 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
     setContext,
 }) => {
     const theme = useTheme();
+    const { uiConfig } = useUiConfig();
+    const isAdvancedPlayground = Boolean(uiConfig.flags.advancedPlayground);
+
     const { setToastData } = useToast();
     const { context: contextData } = useUnleashContext();
     const contextOptions = contextData
@@ -103,6 +107,27 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
         }
     };
 
+    const handleAutocompleteOnChange = (e: FormEvent, newValue: any) => {
+        if (typeof newValue === 'string') {
+            return setContextValue(newValue);
+        }
+        if (Array.isArray(newValue)) {
+            const temp =
+                (newValue as Array<string>).length > 1
+                    ? newValue.join(',')
+                    : newValue[0];
+            return setContextValue(temp);
+        }
+    };
+
+    const resolveValue = isAdvancedPlayground
+        ? contextValue === ''
+            ? undefined
+            : contextValue?.includes(',')
+            ? contextValue.split(',')
+            : [contextValue]
+        : contextValue;
+
     const resolveInput = () => {
         if (contextField === 'currentTime') {
             const validDate = parseValidDate(contextValue);
@@ -146,12 +171,10 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                     disablePortal
                     id="context-legal-values"
                     size="small"
-                    onChange={(e: FormEvent, newValue) => {
-                        if (typeof newValue === 'string') {
-                            return setContextValue(newValue);
-                        }
-                    }}
+                    value={resolveValue}
+                    onChange={handleAutocompleteOnChange}
                     options={options}
+                    multiple={isAdvancedPlayground}
                     sx={{ width: 200, maxWidth: '100%' }}
                     renderInput={(params: any) => (
                         <TextField {...params} label="Value" />

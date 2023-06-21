@@ -83,6 +83,7 @@ export const playgroundStrategySchema = {
         id: {
             description: "The strategy's id.",
             type: 'string',
+            example: '3AECCF7E-FF82-4174-8287-8EBE06079A50',
         },
         result: {
             description: `The strategy's evaluation result. If the strategy is a custom strategy that Unleash can't evaluate, \`evaluationStatus\` will be \`${playgroundStrategyEvaluation.unknownResult}\`. Otherwise, it will be \`true\` or \`false\``,
@@ -120,10 +121,16 @@ export const playgroundStrategySchema = {
             $ref: parametersSchema.$id,
         },
         links: {
+            description:
+                'A set of links to actions you can perform on this strategy',
             type: 'object',
             required: ['edit'],
             properties: {
-                edit: { type: 'string' },
+                edit: {
+                    type: 'string',
+                    example:
+                        '/projects/some-project/features/some-feature/strategies/edit?environmentId=some-env&strategyId= 3AECCF7E-FF82-4174-8287-8EBE06079A50',
+                },
             },
         },
     },

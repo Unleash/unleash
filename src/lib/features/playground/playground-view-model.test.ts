@@ -2,6 +2,7 @@ import {
     addStrategyEditLink,
     advancedPlaygroundViewModel,
     buildStrategyLink,
+    playgroundViewModel,
 } from './playground-view-model';
 
 describe('strategy link building', () => {
@@ -50,7 +51,61 @@ describe('strategy link building', () => {
 });
 
 describe('playground result to view model', () => {
-    it('adds edit links to playground models', () => {});
+    it('adds edit links to playground models', () => {
+        const input = {
+            environment: 'development',
+            projects: '*' as '*',
+            context: { appName: 'playground', userId: '1' },
+        };
+        const featureResult = {
+            isEnabled: false,
+            isEnabledInCurrentEnvironment: false,
+            strategies: {
+                result: false,
+                data: [
+                    {
+                        name: 'flexibleRollout',
+                        id: 'ea2c22c1-07fc-4cbe-934d-ffff57cd774b',
+                        disabled: false,
+                        parameters: {
+                            groupId: 'test-playground',
+                            rollout: '32',
+                            stickiness: 'default',
+                        },
+                        result: {
+                            enabled: false,
+                            evaluationStatus: 'complete' as 'complete',
+                        },
+                        constraints: [],
+                        segments: [],
+                    },
+                ],
+            },
+            projectId: 'default',
+            variant: {
+                name: 'disabled',
+                enabled: false,
+            },
+            name: 'test-playground',
+            variants: [],
+        };
+
+        const viewModel = playgroundViewModel(input, [featureResult]);
+        const transformedStrategy = viewModel.features[0].strategies.data[0];
+
+        expect(transformedStrategy).toMatchObject({
+            links: {
+                edit:
+                    expect.stringMatching(
+                        `/projects/${featureResult.projectId}/features/${featureResult.name}/strategies/edit?`,
+                    ) &&
+                    expect.stringMatching(`environmentId=development`) &&
+                    expect.stringMatching(
+                        `strategyId=${transformedStrategy.id}`,
+                    ),
+            },
+        });
+    });
 
     it('adds edit links to advanced playground models', () => {
         const input = {
@@ -112,17 +167,15 @@ describe('playground result to view model', () => {
                 .data[0];
 
         expect(transformedStrategy).toMatchObject({
-            development: {
-                links: {
-                    edit:
-                        expect.stringMatching(
-                            `/projects/${featureResult.projectId}/features/${featureResult.name}/strategies/edit?`,
-                        ) &&
-                        expect.stringMatching(`environmentId=development`) &&
-                        expect.stringMatching(
-                            `strategyId=${transformedStrategy.id}`,
-                        ),
-                },
+            links: {
+                edit:
+                    expect.stringMatching(
+                        `/projects/${featureResult.projectId}/features/${featureResult.name}/strategies/edit?`,
+                    ) &&
+                    expect.stringMatching(`environmentId=development`) &&
+                    expect.stringMatching(
+                        `strategyId=${transformedStrategy.id}`,
+                    ),
             },
         });
     });

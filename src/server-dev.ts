@@ -38,7 +38,6 @@ process.nextTick(async () => {
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
                         variantMetrics: true,
-                        strategyImprovements: true,
                         segmentContextFieldUsage: true,
                         advancedPlayground: true,
                     },

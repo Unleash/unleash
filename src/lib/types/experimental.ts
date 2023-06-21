@@ -18,7 +18,6 @@ export type IFlagKey =
     | 'groupRootRoles'
     | 'migrationLock'
     | 'demo'
-    | 'strategyImprovements'
     | 'googleAuthEnabled'
     | 'variantMetrics'
     | 'disableBulkToggle'
@@ -87,10 +86,6 @@ const flags: IFlags = {
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
-    strategyImprovements: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_IMPROVEMENTS,
-        false,
-    ),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
         false,

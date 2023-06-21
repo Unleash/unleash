@@ -26,7 +26,6 @@ process.nextTick(async () => {
                     enableHeapSnapshotEnpoint: true,
                 },
                 logLevel: LogLevel.debug,
-                enableOAS: true,
                 // secureHeaders: true,
                 versionCheck: {
                     enable: false,

@@ -5,7 +5,7 @@ export type PredefinedRoleType =
     | typeof ROOT_ROLE_TYPE
     | typeof PROJECT_ROLE_TYPE;
 
-interface IRole {
+export interface IRole {
     id: number;
     name: string;
     project: string | null;
@@ -16,12 +16,3 @@ interface IRole {
 export interface IRoleWithPermissions extends IRole {
     permissions: IPermission[];
 }
-
-export interface IProjectRole {
-    id: number;
-    name: string;
-    description: string;
-    type: string;
-}
-
-export default IRole;

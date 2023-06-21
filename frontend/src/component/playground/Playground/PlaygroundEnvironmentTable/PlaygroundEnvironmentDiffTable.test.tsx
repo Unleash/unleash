@@ -21,7 +21,7 @@ const irrelevantDetails = {
     projectId: 'projectA',
 };
 
-test('should render environment table', async () => {
+test('should render environment diff table', async () => {
     render(
         <UIProviderContainer>
             <PlaygroundEnvironmentDiffTable

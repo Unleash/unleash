@@ -7,7 +7,7 @@ import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { IUser } from 'interfaces/user';
-import IRole from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUsersPlan } from 'hooks/useUsersPlan';

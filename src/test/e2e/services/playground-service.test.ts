@@ -1205,7 +1205,13 @@ describe('the playground service (e2e)', () => {
                     clientFeaturesAndSegments({ minLength: 1 }),
                     generateContext(),
                     urlFriendlyString(),
-                    async ({ features, segments }, context, environment) => {
+                    fc.context(),
+                    async (
+                        { features, segments },
+                        context,
+                        environment,
+                        ctx,
+                    ) => {
                         const serviceFeatures = await insertAndEvaluateFeatures(
                             {
                                 features,
@@ -1217,20 +1223,30 @@ describe('the playground service (e2e)', () => {
 
                         return serviceFeatures.every(
                             ({ strategies, projectId, name }) =>
-                                strategies.data.every((strategy) =>
-                                    [
-                                        // path to feature
-                                        `/projects/${projectId}/features/${name}/strategies/edit?`,
-                                        // environment id
-                                        `environmentId=${environment}`,
-                                        // strategy id
-                                        `strategyId=${strategy.id}`,
-                                    ].every((pathFragment) =>
-                                        strategy.links.edit.includes(
-                                            pathFragment,
-                                        ),
-                                    ),
-                                ),
+                                strategies.data.every((strategy) => {
+                                    const url = new URL(
+                                        strategy.links.edit,
+                                        'https://example.com',
+                                    );
+
+                                    ctx.log(
+                                        `Url: ${JSON.stringify(
+                                            url,
+                                        )}. Env: ${environment}. Strategy: ${
+                                            strategy.id
+                                        }, expected pathname: /projects/${projectId}/features/${name}/strategies/edit`,
+                                    );
+
+                                    return (
+                                        url.pathname ===
+                                            `/projects/${projectId}/features/${name}/strategies/edit` &&
+                                        url.searchParams.get(
+                                            'environmentId',
+                                        ) === environment &&
+                                        url.searchParams.get('strategyId') ===
+                                            strategy.id
+                                    );
+                                }),
                         );
                     },
                 )

@@ -465,7 +465,7 @@ describe('Fine grained API token permissions', () => {
                 });
             await destroy();
         });
-        test('ADMIN should be able to see ADMIN tokens', async () => {
+        test('Admin users should be able to see all tokens', async () => {
             const preHook = (app, config, { userService, accessService }) => {
                 app.use('/api/admin/', async (req, res, next) => {
                     const role = await accessService.getRootRole(
@@ -476,30 +476,12 @@ describe('Fine grained API token permissions', () => {
                         rootRole: role.id,
                     });
                     req.user = user;
-                    const readAdminApiToken = await accessService.createRole({
-                        name: 'admin_token_reader',
-                        description: 'Can read admin tokens',
-                        permissions: [],
-                        type: 'root-custom',
-                    });
-                    await accessService.addUserToRole(
-                        user.id,
-                        readAdminApiToken.id,
-                        'default',
-                    );
                     next();
                 });
             };
             const { request, destroy } = await setupAppWithCustomAuth(
                 stores,
                 preHook,
-                {
-                    experimental: {
-                        flags: {
-                            customRootRoles: true,
-                        },
-                    },
-                },
             );
             await stores.apiTokenStore.insert({
                 username: 'client',
@@ -522,8 +504,54 @@ describe('Fine grained API token permissions', () => {
                 .set('Content-Type', 'application/json')
                 .expect(200)
                 .expect((res) => {
-                    expect(res.body.tokens).toHaveLength(1);
-                    expect(res.body.tokens[0].type).toBe(ApiTokenType.ADMIN);
+                    expect(res.body.tokens).toHaveLength(3);
+                });
+            await destroy();
+        });
+        test('Editor users should be able to see all tokens except ADMIN tokens', async () => {
+            const preHook = (app, config, { userService, accessService }) => {
+                app.use('/api/admin/', async (req, res, next) => {
+                    const role = await accessService.getRootRole(
+                        RoleName.EDITOR,
+                    );
+                    const user = await userService.createUser({
+                        email: 'standard-editor-reads-tokens@example.com',
+                        rootRole: role.id,
+                    });
+                    req.user = user;
+                    next();
+                });
+            };
+            const { request, destroy } = await setupAppWithCustomAuth(
+                stores,
+                preHook,
+            );
+            await stores.apiTokenStore.insert({
+                username: 'client',
+                secret: 'client_secret_4321',
+                type: ApiTokenType.CLIENT,
+            });
+            await stores.apiTokenStore.insert({
+                username: 'admin',
+                secret: 'admin_secret_4321',
+                type: ApiTokenType.ADMIN,
+            });
+            await stores.apiTokenStore.insert({
+                username: 'frontender',
+                secret: 'frontend_secret_4321',
+                type: ApiTokenType.FRONTEND,
+            });
+            await request
+                .get('/api/admin/api-tokens')
+                .set('Content-Type', 'application/json')
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body.tokens).toHaveLength(2);
+                    expect(
+                        res.body.tokens.filter(
+                            ({ type }) => type === ApiTokenType.ADMIN,
+                        ),
+                    ).toHaveLength(0);
                 });
             await destroy();
         });

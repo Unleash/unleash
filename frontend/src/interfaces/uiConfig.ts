@@ -55,6 +55,7 @@ export interface IFlags {
     disableNotifications?: boolean;
     advancedPlayground?: boolean;
     customRootRoles?: boolean;
+    experimentalExtendedTelemetry?: boolean;
 }
 
 export interface IVersionInfo {

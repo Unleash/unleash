@@ -54,8 +54,11 @@ class TelemetryController extends Controller {
             res,
             telemetrySettingsSchema.$id,
             {
-                versionInfoCollectionEnabled: false,
-                featureInfoCollectionEnabled: true,
+                versionInfoCollectionEnabled: this.config.versionCheck.enable,
+                featureInfoCollectionEnabled:
+                    this.config.flagResolver.isEnabled(
+                        'experimentalExtendedTelemetry',
+                    ) && this.config.telemetry,
             },
         );
     }

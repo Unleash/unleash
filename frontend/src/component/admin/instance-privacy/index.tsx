@@ -6,6 +6,7 @@ import { Box, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { InstancePrivacy } from './InstancePrivacy';
 import { useTelemetry } from 'hooks/api/getters/useTelemetry/useTelemetry';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IFeatureActivenessManagementInfo {
     enabled: IActivenessManagementInfo;
@@ -69,7 +70,6 @@ const versionCollectionActivenessManagementTexts: IFeatureActivenessManagementIn
             environmentVariables: ['CHECK_VERSION=true'],
             changeInfoText:
                 'Version Info Collection can be enabled by setting the environment variable to true and restarting Unleash.',
-
         },
     };
 
@@ -77,17 +77,20 @@ const featureCollectionActivenessManagementTexts: IFeatureActivenessManagementIn
     {
         enabled: {
             environmentVariables: ['SEND_TELEMETRY=false'],
-            changeInfoText: 'Feature Usage Collection can be disabled by setting the environment variable to false and restarting Unleash.',
+            changeInfoText:
+                'Feature Usage Collection can be disabled by setting the environment variable to false and restarting Unleash.',
         },
         disabled: {
             environmentVariables: ['SEND_TELEMETRY=true'],
-            changeInfoText: 'To enable Feature Usage Collection set the environment variable to true and restart Unleash.',
+            changeInfoText:
+                'To enable Feature Usage Collection set the environment variable to true and restart Unleash.',
         },
     };
 
 export const InstancePrivacyAdmin = () => {
     const { hasAccess } = useContext(AccessContext);
     const { settings } = useTelemetry();
+    const { uiConfig } = useUiConfig();
 
     const { loading } = useUiConfig();
 
@@ -105,10 +108,9 @@ export const InstancePrivacyAdmin = () => {
 
     let dependsOnFeatureCollection: undefined | String = undefined;
     if (!settings?.versionInfoCollectionEnabled)
-        dependsOnFeatureCollection =
-            settings?.featureInfoCollectionEnabled
-                ? 'For Feature Usage Collection to be enabled you must also enable Version Info Collection'
-                : 'When you enable Feature Usage Collection you must also enable Version Info Collection';
+        dependsOnFeatureCollection = settings?.featureInfoCollectionEnabled
+            ? 'For Feature Usage Collection to be enabled you must also enable Version Info Collection'
+            : 'When you enable Feature Usage Collection you must also enable Version Info Collection';
 
     return (
         <PageContent header={<PageHeader title="Instance Privacy" />}>
@@ -121,14 +123,25 @@ export const InstancePrivacyAdmin = () => {
                     changeInfoText={versionActivenessInfo.changeInfoText}
                     variablesTexts={versionActivenessInfo.environmentVariables}
                 />
-                <InstancePrivacy
-                    title={featureCollectionDetails.title}
-                    infoText={featureCollectionDetails.infoText}
-                    concreteDetails={featureCollectionDetails.concreteDetails}
-                    enabled={settings?.featureInfoCollectionEnabled}
-                    changeInfoText={featureActivenessInfo.changeInfoText}
-                    variablesTexts={featureActivenessInfo.environmentVariables}
-                    dependsOnText={dependsOnFeatureCollection}
+                <ConditionallyRender
+                    condition={Boolean(uiConfig.flags.experimentalExtendedTelemetry)}
+                    show={
+                        <InstancePrivacy
+                            title={featureCollectionDetails.title}
+                            infoText={featureCollectionDetails.infoText}
+                            concreteDetails={
+                                featureCollectionDetails.concreteDetails
+                            }
+                            enabled={settings?.featureInfoCollectionEnabled}
+                            changeInfoText={
+                                featureActivenessInfo.changeInfoText
+                            }
+                            variablesTexts={
+                                featureActivenessInfo.environmentVariables
+                            }
+                            dependsOnText={dependsOnFeatureCollection}
+                        />
+                    }
                 />
             </StyledBox>
         </PageContent>

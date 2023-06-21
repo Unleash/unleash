@@ -27,9 +27,6 @@ process.nextTick(async () => {
                 },
                 logLevel: LogLevel.debug,
                 // secureHeaders: true,
-                versionCheck: {
-                    enable: false,
-                },
                 experimental: {
                     // externalResolver: unleash,
                     flags: {
@@ -41,6 +38,7 @@ process.nextTick(async () => {
                         strategyImprovements: true,
                         segmentContextFieldUsage: true,
                         advancedPlayground: true,
+                        experimentalExtendedTelemetry: true,
                     },
                 },
                 authentication: {

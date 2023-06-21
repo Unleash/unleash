@@ -24,8 +24,6 @@ This includes the following data points:
 - The number of environments defined in the system
 - The number of segments in active use by feature toggles
 - The number of custom strategies defined and in use
-- Whether the instance uses SAML (Security Assertion Markup Language) for Single Sign-On
-- Whether the instance uses OIDC (OpenID Connect) for Single Sign-On
 - The number of feature exports/imports made
 
 Please note that all collected data is anonymous, and we only collect usage counts. This data helps us understand how features are used in Unleash, enabling us to prioritize important features and make informed decisions about deprecating features that are no longer relevant to our users.
@@ -35,9 +33,9 @@ Please note that we do not collect personally identifiable information (PII) thr
 ## Managing data collection settings {#managing-data-collection-settings}
 We understand that privacy preferences may vary among our users. While the data collected by Unleash is limited and anonymous, we provide options to manage data collection settings:
 
-**Disabling All Telemetry**: If you have previously disabled the version telemetry by setting the environment variable `CHECK_VERSION` to anything other than "true," both the version telemetry and the feature telemetry will be disabled. This respects your choice to opt out of all telemetry data if you had previously disabled it.
+**Disabling All Telemetry**: If you have previously disabled the version telemetry by setting the environment variable `CHECK_VERSION` to anything other than "true", "t" or "1" both the version telemetry and the feature telemetry will be disabled. This respects your choice to opt out of all telemetry data if you had previously disabled it.
 
-**Turning Off Feature Telemetry**: To disable the collection of the new telemetry data while still allowing the version telemetry, set the environment variable `SEND_TELEMETRY` to anything other than "true" before starting Unleash. This will ensure that the new telemetry data is not sent, but the version information is still sent.
+**Turning Off Feature Telemetry**: To disable the collection of the new telemetry data while still allowing the version telemetry, set the environment variable `SEND_TELEMETRY` to anything other than "true", "t" or "1" before starting Unleash. This will ensure that the new telemetry data is not sent, but the version information is still sent.
 
 We respect your privacy choices, and we will continue to honor your decision regarding telemetry. If you have any questions or concerns about managing data collection settings or privacy, please reach out to our support team for assistance.
 

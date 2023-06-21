@@ -38,7 +38,11 @@ const rbacMiddleware = (
     logger.debug('Enabling RBAC middleware');
 
     return (req, res, next) => {
-        req.checkRbac = async (permissions: string[]) => {
+        req.checkRbac = async (permissions: string | string[]) => {
+            const permissionsArray = Array.isArray(permissions)
+                ? permissions
+                : [permissions];
+
             const { user, params } = req;
 
             if (!user) {
@@ -65,7 +69,7 @@ const rbacMiddleware = (
             // will be removed in Unleash v5.0
             if (
                 !projectId &&
-                permissions.some((permission) =>
+                permissionsArray.some((permission) =>
                     [DELETE_FEATURE, UPDATE_FEATURE].includes(permission),
                 )
             ) {
@@ -73,7 +77,7 @@ const rbacMiddleware = (
                 projectId = await featureToggleStore.getProjectId(featureName);
             } else if (
                 projectId === undefined &&
-                permissions.some(
+                permissionsArray.some(
                     (permission) =>
                         permission == CREATE_FEATURE ||
                         permission.endsWith('FEATURE_STRATEGY'),
@@ -84,7 +88,7 @@ const rbacMiddleware = (
 
             return accessService.hasPermission(
                 user,
-                permissions,
+                permissionsArray,
                 projectId,
                 environment,
             );

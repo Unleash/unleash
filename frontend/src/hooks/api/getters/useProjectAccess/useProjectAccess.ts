@@ -2,7 +2,7 @@ import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect, useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IProjectRole } from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import { IGroup } from 'interfaces/group';
 import { IUser } from 'interfaces/user';
 import { mapGroupUsers } from '../useGroup/useGroup';
@@ -30,7 +30,7 @@ export interface IProjectAccessGroup extends IGroup {
 export interface IProjectAccessOutput {
     users: IProjectAccessUser[];
     groups: IProjectAccessGroup[];
-    roles: IProjectRole[];
+    roles: IRole[];
     rows: IProjectAccess[];
 }
 

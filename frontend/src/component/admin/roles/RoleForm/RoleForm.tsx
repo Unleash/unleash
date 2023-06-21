@@ -1,11 +1,28 @@
 import { styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
-import { PermissionAccordion } from 'component/admin/projectRoles/ProjectRoleForm/PermissionAccordion/PermissionAccordion';
-import { Person as UserIcon } from '@mui/icons-material';
+import { PermissionAccordion } from './PermissionAccordion/PermissionAccordion';
+import {
+    Person as UserIcon,
+    Topic as TopicIcon,
+    CloudCircle as CloudCircleIcon,
+} from '@mui/icons-material';
 import { ICheckedPermissions, IPermission } from 'interfaces/permissions';
 import { IRoleFormErrors } from './useRoleForm';
-import { ROOT_PERMISSION_CATEGORIES } from '@server/types/permissions';
-import { toggleAllPermissions, togglePermission } from 'utils/permissions';
+import {
+    flattenProjectPermissions,
+    getCategorizedProjectPermissions,
+    getCategorizedRootPermissions,
+    toggleAllPermissions,
+    togglePermission,
+} from 'utils/permissions';
+import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
+import { PredefinedRoleType } from 'interfaces/role';
+import {
+    ENVIRONMENT_PERMISSION_TYPE,
+    PROJECT_PERMISSION_TYPE,
+    PROJECT_ROLE_TYPES,
+    ROOT_ROLE_TYPE,
+} from '@server/util/constants';
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
     display: 'flex',
@@ -22,6 +39,7 @@ const StyledInput = styled(Input)(({ theme }) => ({
 }));
 
 interface IRoleFormProps {
+    type?: PredefinedRoleType;
     name: string;
     onSetName: (name: string) => void;
     description: string;
@@ -30,34 +48,35 @@ interface IRoleFormProps {
     setCheckedPermissions: React.Dispatch<
         React.SetStateAction<ICheckedPermissions>
     >;
-    permissions: IPermission[];
     errors: IRoleFormErrors;
 }
 
 export const RoleForm = ({
+    type = ROOT_ROLE_TYPE,
     name,
     onSetName,
     description,
     setDescription,
     checkedPermissions,
     setCheckedPermissions,
-    permissions,
     errors,
 }: IRoleFormProps) => {
-    const categorizedPermissions = permissions.map(permission => {
-        const category = ROOT_PERMISSION_CATEGORIES.find(category =>
-            category.permissions.includes(permission.name)
-        );
-
-        return {
-            category: category ? category.label : 'Other',
-            permission,
-        };
+    const { permissions } = usePermissions({
+        revalidateIfStale: false,
+        revalidateOnReconnect: false,
+        revalidateOnFocus: false,
     });
 
-    const categories = new Set(
-        categorizedPermissions.map(({ category }) => category).sort()
-    );
+    const isProjectRole = PROJECT_ROLE_TYPES.includes(type);
+
+    const categories = isProjectRole
+        ? getCategorizedProjectPermissions(
+              flattenProjectPermissions(
+                  permissions.project,
+                  permissions.environments
+              )
+          )
+        : getCategorizedRootPermissions(permissions.root);
 
     const onPermissionChange = (permission: IPermission) => {
         const newCheckedPermissions = togglePermission(
@@ -67,14 +86,10 @@ export const RoleForm = ({
         setCheckedPermissions(newCheckedPermissions);
     };
 
-    const onCheckAll = (category: string) => {
-        const categoryPermissions = categorizedPermissions
-            .filter(({ category: pCategory }) => pCategory === category)
-            .map(({ permission }) => permission);
-
+    const onCheckAll = (permissions: IPermission[]) => {
         const newCheckedPermissions = toggleAllPermissions(
             checkedPermissions,
-            categoryPermissions
+            permissions
         );
 
         setCheckedPermissions(newCheckedPermissions);
@@ -108,22 +123,26 @@ export const RoleForm = ({
             <StyledInputDescription>
                 What is your role allowed to do?
             </StyledInputDescription>
-            {[...categories].map(category => (
+            {categories.map(({ label, type, permissions }) => (
                 <PermissionAccordion
-                    key={category}
-                    title={`${category} permissions`}
-                    context={category.toLowerCase()}
-                    Icon={<UserIcon color="disabled" sx={{ mr: 1 }} />}
-                    permissions={categorizedPermissions
-                        .filter(
-                            ({ category: pCategory }) => pCategory === category
+                    key={label}
+                    title={`${label} permissions`}
+                    context={label.toLowerCase()}
+                    Icon={
+                        type === PROJECT_PERMISSION_TYPE ? (
+                            <TopicIcon color="disabled" sx={{ mr: 1 }} />
+                        ) : type === ENVIRONMENT_PERMISSION_TYPE ? (
+                            <CloudCircleIcon color="disabled" sx={{ mr: 1 }} />
+                        ) : (
+                            <UserIcon color="disabled" sx={{ mr: 1 }} />
                         )
-                        .map(({ permission }) => permission)}
+                    }
+                    permissions={permissions}
                     checkedPermissions={checkedPermissions}
                     onPermissionChange={(permission: IPermission) =>
                         onPermissionChange(permission)
                     }
-                    onCheckAll={() => onCheckAll(category)}
+                    onCheckAll={() => onCheckAll(permissions)}
                 />
             ))}
         </div>

@@ -33,6 +33,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useQueryParams from 'hooks/useQueryParams';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
+import { DEFAULT_STRATEGY } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -98,7 +99,7 @@ export const FeatureStrategyCreate = () => {
 
     useEffect(() => {
         if (useDefaultStrategy) {
-            setStrategy((defaultStrategy as any) || {});
+            setStrategy((defaultStrategy as any) || DEFAULT_STRATEGY);
         } else if (strategyDefinition) {
             setStrategy(createFeatureStrategy(featureId, strategyDefinition));
         }

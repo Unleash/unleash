@@ -80,6 +80,46 @@ exports[`InstanceStatusBar should warn when the trial has expired 1`] = `
 </aside>
 `;
 
+exports[`InstanceStatusBar should warn when the trial has expired for enterprise 1`] = `
+<aside
+  class="css-163g6kh"
+  data-testid="INSTANCE_STATUS_BAR_ID"
+>
+  <svg
+    aria-hidden="true"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-prk1jy-MuiSvgIcon-root"
+    data-testid="WarningAmberIcon"
+    focusable="false"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M12 5.99 19.53 19H4.47L12 5.99M12 2 1 21h22L12 2z"
+    />
+    <path
+      d="M13 16h-2v2h2zm0-6h-2v5h2z"
+    />
+  </svg>
+  <p
+    class="MuiTypography-root MuiTypography-body1 css-rviqjc-MuiTypography-root"
+  >
+    <strong>
+      Warning!
+    </strong>
+     Your free 
+    Enterprise
+     trial has expired. 
+    <strong>
+      Upgrade trial
+    </strong>
+     otherwise your
+     
+    <strong>
+      account will be deleted.
+    </strong>
+  </p>
+</aside>
+`;
+
 exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
 <aside
   class="css-f22srx"

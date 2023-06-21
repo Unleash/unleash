@@ -107,6 +107,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 
 Here's some of the fantastic work our community has done to make Unleash work in even more contexts. If you still can't find your favorite language, let us know and we'd love to help you create the client for it!
 
+- Angular - TypeScript ([angular-unleash-proxy-client](https://github.com/Karelics/angular-unleash-proxy-client) by [Karelics](https://karelics.fi/unleash-feature-flags-with-gitlab/))
 - Angular - TypeScript ([ngx-unleash-proxy-client](https://github.com/snowfrogdev/snowfrogdev/tree/main/packages/ngx-unleash-proxy-client))
 - Clojure ([AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure))
 - C++ ([aruizs/unleash-client-cpp](https://github.com/aruizs/unleash-client-cpp))

@@ -113,7 +113,6 @@ export const PlaygroundConnectionFieldset: VFC<
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                 <Autocomplete
                     disablePortal
-                    multiple
                     id="environment"
                     options={environmentOptions}
                     sx={{ width: 200, maxWidth: '100%' }}
@@ -121,9 +120,11 @@ export const PlaygroundConnectionFieldset: VFC<
                         <TextField {...params} label="Environments" />
                     )}
                     size="small"
-                    value={environmentOptions.filter(({ id }) =>
-                        environments.includes(id)
-                    )}
+                    value={
+                        environmentOptions.filter(({ id }) =>
+                            environments.includes(id)
+                        )[0]
+                    }
                     onChange={onEnvironmentsChange}
                 />
                 <Autocomplete

@@ -43,7 +43,7 @@ import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton
 import { ProjectAccessCreate } from 'component/project/ProjectAccess/ProjectAccessCreate/ProjectAccessCreate';
 import { ProjectAccessEditUser } from 'component/project/ProjectAccess/ProjectAccessEditUser/ProjectAccessEditUser';
 import { ProjectAccessEditGroup } from 'component/project/ProjectAccess/ProjectAccessEditGroup/ProjectAccessEditGroup';
-import { ProjectAccessRoleCell } from './ProjectAccessRoleCell/ProjectAccessRoleCell';
+import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 import {
     PA_ASSIGN_BUTTON_ID,
     PA_EDIT_BUTTON_ID,
@@ -168,11 +168,7 @@ export const ProjectAccessTable: VFC = () => {
                     access?.roles.find(({ id }) => id === row.entity.roleId)
                         ?.name,
                 Cell: ({ value, row: { original: row } }: any) => (
-                    <ProjectAccessRoleCell
-                        roleId={row.entity.roleId}
-                        projectId={projectId}
-                        value={value}
-                    />
+                    <RoleCell roleId={row.entity.roleId} value={value} />
                 ),
                 maxWidth: 125,
                 filterName: 'role',

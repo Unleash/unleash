@@ -32,8 +32,14 @@ import { AdvancedPlaygroundEnvironmentCell } from './AdvancedPlaygroundEnvironme
 import {
     AdvancedPlaygroundRequestSchema,
     AdvancedPlaygroundFeatureSchema,
+    AdvancedPlaygroundFeatureSchemaEnvironments,
+    AdvancedPlaygroundEnvironmentFeatureSchema,
 } from 'openapi';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
+import {
+    AdvancedPlaygroundEnvironmentDiffCell,
+    IAdvancedPlaygroundEnvironmentCellProps,
+} from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentDiffCell';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -66,6 +72,10 @@ export const AdvancedPlaygroundResultsTable = ({
     );
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const environmentsCount =
+        features && features.length > 0
+            ? Object.keys(features[0].environments).length
+            : 0;
 
     const COLUMNS = useMemo(() => {
         return [
@@ -105,15 +115,29 @@ export const AdvancedPlaygroundResultsTable = ({
                     ),
                 };
             }) || []),
-            {
-                Header: 'Diff',
-                minWidth: 150,
-                id: 'diff',
-                align: 'left',
-                Cell: ({ row }: any) => (
-                    <StyledButton variant={'body2'}>Preview diff</StyledButton>
-                ),
-            },
+            ...(environmentsCount > 1
+                ? [
+                      {
+                          Header: 'Diff',
+                          minWidth: 150,
+                          id: 'diff',
+                          align: 'left',
+                          Cell: ({
+                              row,
+                          }: {
+                              row: {
+                                  original: {
+                                      environments: AdvancedPlaygroundFeatureSchemaEnvironments;
+                                  };
+                              };
+                          }) => (
+                              <AdvancedPlaygroundEnvironmentDiffCell
+                                  value={row.original.environments}
+                              />
+                          ),
+                      },
+                  ]
+                : []),
         ];
     }, [input]);
 
@@ -128,7 +152,7 @@ export const AdvancedPlaygroundResultsTable = ({
             ? Array(5).fill({
                   name: 'Feature name',
                   projectId: 'Feature Project',
-                  environments: { name: 'Feature Envrironments', variants: [] },
+                  environments: { name: 'Feature Environments', variants: [] },
                   enabled: true,
               })
             : searchedData;

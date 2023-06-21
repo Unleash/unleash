@@ -3,6 +3,7 @@ import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ALL, ApiTokenType } from '../../../../lib/types/models/api-token';
 import { DEFAULT_ENV } from '../../../../lib/util';
+import { addDays } from 'date-fns';
 
 let db;
 let app;
@@ -107,7 +108,7 @@ test('creates new admin token with expiry', async () => {
         });
 });
 
-test('update admin token with expiry', async () => {
+test('update client token with expiry', async () => {
     const tokenSecret = 'random-secret-update';
 
     await db.stores.apiTokenStore.insert({
@@ -393,4 +394,18 @@ test('should create token for disabled environment', async () => {
         })
         .set('Content-Type', 'application/json')
         .expect(201);
+});
+
+test('updating expiry of non existing token should yield 200', async () => {
+    return app.request
+        .put('/api/admin/api-tokens/randomnonexistingsecret')
+        .send({ expiresAt: addDays(new Date(), 14) })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+});
+
+test('Deleting non-existing token should yield 200', async () => {
+    return app.request
+        .delete('/api/admin/api-tokens/random-non-existing-token')
+        .expect(200);
 });

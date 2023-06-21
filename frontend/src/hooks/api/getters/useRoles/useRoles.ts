@@ -1,15 +1,25 @@
-import IRole, { IProjectRole } from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
+import {
+    PROJECT_ROLE_TYPES,
+    ROOT_ROLE_TYPE,
+    ROOT_ROLE_TYPES,
+    PREDEFINED_ROLE_TYPES,
+} from '@server/util/constants';
 
-const ROOT_ROLE = 'root';
-const ROOT_ROLES = [ROOT_ROLE, 'root-custom'];
-const PROJECT_ROLES = ['project', 'custom'];
+interface IUseRolesOutput {
+    roles: IRole[];
+    projectRoles: IRole[];
+    loading: boolean;
+    refetch: () => void;
+    error?: Error;
+}
 
-export const useRoles = () => {
+export const useRoles = (): IUseRolesOutput => {
     const { isEnterprise, uiConfig } = useUiConfig();
 
     const { data, error, mutate } = useConditionalSWR(
@@ -34,7 +44,7 @@ export const useRoles = () => {
         if (!isEnterprise()) {
             return {
                 roles: ossData?.rootRoles
-                    .filter(({ type }: IRole) => type === ROOT_ROLE)
+                    .filter(({ type }: IRole) => type === ROOT_ROLE_TYPE)
                     .sort(sortRoles) as IRole[],
                 projectRoles: [],
                 loading: !ossError && !ossData,
@@ -46,13 +56,15 @@ export const useRoles = () => {
                 roles: (data?.roles
                     .filter(({ type }: IRole) =>
                         uiConfig.flags.customRootRoles
-                            ? ROOT_ROLES.includes(type)
-                            : type === ROOT_ROLE
+                            ? ROOT_ROLE_TYPES.includes(type)
+                            : type === ROOT_ROLE_TYPE
                     )
                     .sort(sortRoles) ?? []) as IRole[],
                 projectRoles: (data?.roles
-                    .filter(({ type }: IRole) => PROJECT_ROLES.includes(type))
-                    .sort(sortRoles) ?? []) as IProjectRole[],
+                    .filter(({ type }: IRole) =>
+                        PROJECT_ROLE_TYPES.includes(type)
+                    )
+                    .sort(sortRoles) ?? []) as IRole[],
                 loading: !error && !data,
                 refetch: () => mutate(),
                 error,
@@ -68,9 +80,15 @@ const fetcher = (path: string) => {
 };
 
 export const sortRoles = (a: IRole, b: IRole) => {
-    if (a.type === 'root' && b.type !== 'root') {
+    if (
+        PREDEFINED_ROLE_TYPES.includes(a.type) &&
+        !PREDEFINED_ROLE_TYPES.includes(b.type)
+    ) {
         return -1;
-    } else if (a.type !== 'root' && b.type === 'root') {
+    } else if (
+        !PREDEFINED_ROLE_TYPES.includes(a.type) &&
+        PREDEFINED_ROLE_TYPES.includes(b.type)
+    ) {
         return 1;
     } else {
         return a.name.localeCompare(b.name);

@@ -1,7 +1,14 @@
 import { SxProps, Theme, styled } from '@mui/material';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
-import { ROOT_PERMISSION_CATEGORIES } from '@server/types/permissions';
 import { useRole } from 'hooks/api/getters/useRole/useRole';
+import {
+    PREDEFINED_ROLE_TYPES,
+    PROJECT_ROLE_TYPES,
+} from '@server/util/constants';
+import {
+    getCategorizedProjectPermissions,
+    getCategorizedRootPermissions,
+} from 'utils/permissions';
 
 const StyledDescription = styled('div', {
     shouldForwardProp: prop => prop !== 'tooltip',
@@ -49,22 +56,13 @@ export const RoleDescription = ({
 
     if (!role) return null;
 
-    const { name, description, permissions } = role;
+    const { name, description, permissions, type } = role;
 
-    const categorizedPermissions = [...new Set(permissions)].map(permission => {
-        const category = ROOT_PERMISSION_CATEGORIES.find(category =>
-            category.permissions.includes(permission.name)
-        );
+    const isProjectRole = PROJECT_ROLE_TYPES.includes(type);
 
-        return {
-            category: category ? category.label : 'Other',
-            permission,
-        };
-    });
-
-    const categories = new Set(
-        categorizedPermissions.map(({ category }) => category).sort()
-    );
+    const categories = isProjectRole
+        ? getCategorizedProjectPermissions(permissions)
+        : getCategorizedRootPermissions(permissions);
 
     return (
         <StyledDescription tooltip={tooltip} {...rest}>
@@ -75,22 +73,18 @@ export const RoleDescription = ({
                 {description}
             </StyledDescriptionSubHeader>
             <ConditionallyRender
-                condition={
-                    categorizedPermissions.length > 0 && role.type !== 'root'
-                }
+                condition={!PREDEFINED_ROLE_TYPES.includes(role.type)}
                 show={() =>
-                    [...categories].map(category => (
-                        <StyledDescriptionBlock key={category}>
+                    categories.map(({ label, permissions }) => (
+                        <StyledDescriptionBlock key={label}>
                             <StyledDescriptionHeader>
-                                {category}
+                                {label}
                             </StyledDescriptionHeader>
-                            {categorizedPermissions
-                                .filter(({ category: c }) => c === category)
-                                .map(({ permission }) => (
-                                    <p key={permission.id}>
-                                        {permission.displayName}
-                                    </p>
-                                ))}
+                            {permissions.map(permission => (
+                                <p key={permission.id}>
+                                    {permission.displayName}
+                                </p>
+                            ))}
                         </StyledDescriptionBlock>
                     ))
                 }

@@ -7,8 +7,13 @@ export const ROOT_PERMISSION_TYPE = 'root';
 export const ENVIRONMENT_PERMISSION_TYPE = 'environment';
 export const PROJECT_PERMISSION_TYPE = 'project';
 
+export const ROOT_ROLE_TYPE = 'root';
+export const PROJECT_ROLE_TYPE = 'project';
 export const CUSTOM_ROOT_ROLE_TYPE = 'root-custom';
 export const CUSTOM_PROJECT_ROLE_TYPE = 'custom';
+export const PREDEFINED_ROLE_TYPES = [ROOT_ROLE_TYPE, PROJECT_ROLE_TYPE];
+export const ROOT_ROLE_TYPES = [ROOT_ROLE_TYPE, CUSTOM_ROOT_ROLE_TYPE];
+export const PROJECT_ROLE_TYPES = [PROJECT_ROLE_TYPE, CUSTOM_PROJECT_ROLE_TYPE];
 
 /* CONTEXT FIELD OPERATORS */
 

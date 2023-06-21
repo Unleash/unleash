@@ -20,5 +20,6 @@ export enum InstancePlan {
     PRO = 'Pro',
     COMPANY = 'Company',
     TEAM = 'Team',
+    ENTERPRISE = 'Enterprise',
     UNKNOWN = 'Unknown',
 }

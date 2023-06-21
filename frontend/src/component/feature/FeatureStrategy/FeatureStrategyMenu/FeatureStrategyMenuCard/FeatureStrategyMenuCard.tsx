@@ -12,7 +12,8 @@ interface IFeatureStrategyMenuCardProps {
     projectId: string;
     featureId: string;
     environmentId: string;
-    strategy: IStrategy;
+    strategy: Pick<IStrategy, 'name' | 'displayName' | 'description'> &
+        Partial<IStrategy>;
     defaultStrategy?: boolean;
 }
 

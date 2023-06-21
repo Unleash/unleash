@@ -1,7 +1,17 @@
-import { IPermission, ICheckedPermissions } from 'interfaces/permissions';
+import { ROOT_PERMISSION_CATEGORIES } from '@server/types/permissions';
+import {
+    ENVIRONMENT_PERMISSION_TYPE,
+    PROJECT_PERMISSION_TYPE,
+} from '@server/util/constants';
+import {
+    IPermission,
+    ICheckedPermissions,
+    IPermissionCategory,
+    IProjectEnvironmentPermissions,
+} from 'interfaces/permissions';
 import cloneDeep from 'lodash.clonedeep';
 
-const getRoleKey = (permission: IPermission): string => {
+export const getRoleKey = (permission: IPermission): string => {
     return permission.environment
         ? `${permission.id}-${permission.environment}`
         : `${permission.id}`;
@@ -60,4 +70,102 @@ export const toggleAllPermissions = (
     }
 
     return checkedPermissionsCopy;
+};
+
+export const getCategorizedRootPermissions = (permissions: IPermission[]) => {
+    const rootPermissions = permissions.filter(({ name }) => name !== 'ADMIN');
+
+    return rootPermissions
+        .reduce((categories: IPermissionCategory[], permission) => {
+            const categoryLabel =
+                ROOT_PERMISSION_CATEGORIES.find(category =>
+                    category.permissions.includes(permission.name)
+                )?.label || 'Other';
+
+            const category = categories.find(
+                ({ label }) => label === categoryLabel
+            );
+
+            if (category) {
+                category.permissions.push(permission);
+            } else {
+                categories.push({
+                    label: categoryLabel,
+                    type: 'root',
+                    permissions: [permission],
+                });
+            }
+
+            return categories;
+        }, [])
+        .sort(sortCategories);
+};
+
+export const getCategorizedProjectPermissions = (
+    permissions: IPermission[]
+) => {
+    const projectPermissions = permissions.filter(
+        ({ type }) => type === PROJECT_PERMISSION_TYPE
+    );
+    const environmentPermissions = permissions.filter(
+        ({ type }) => type === ENVIRONMENT_PERMISSION_TYPE
+    );
+
+    const categories = [];
+
+    if (projectPermissions.length) {
+        categories.push({
+            label: 'Project',
+            type: 'project',
+            permissions: projectPermissions,
+        });
+    }
+
+    categories.push(
+        ...environmentPermissions.reduce(
+            (categories: IPermissionCategory[], permission) => {
+                const categoryLabel = permission.environment;
+
+                const category = categories.find(
+                    ({ label }) => label === categoryLabel
+                );
+
+                if (category) {
+                    category.permissions.push(permission);
+                } else {
+                    categories.push({
+                        label: categoryLabel!,
+                        type: 'environment',
+                        permissions: [permission],
+                    });
+                }
+
+                return categories;
+            },
+            []
+        )
+    );
+
+    return categories;
+};
+
+export const flattenProjectPermissions = (
+    projectPermissions: IPermission[],
+    environmentPermissions: IProjectEnvironmentPermissions[]
+) => [
+    ...projectPermissions,
+    ...environmentPermissions.flatMap(({ permissions }) => permissions),
+];
+
+const sortCategories = (
+    { label: aLabel }: IPermissionCategory,
+    { label: bLabel }: IPermissionCategory
+) => {
+    if (aLabel === 'Other' && bLabel !== 'Other') {
+        return 1;
+    } else if (aLabel !== 'Other' && bLabel === 'Other') {
+        return -1;
+    } else {
+        return aLabel.localeCompare(bLabel);
+    }
 };

@@ -10,7 +10,8 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { FormEvent } from 'react';
 import { useRolesApi } from 'hooks/api/actions/useRolesApi/useRolesApi';
 import { useRole } from 'hooks/api/getters/useRole/useRole';
-import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
+import { PredefinedRoleType } from 'interfaces/role';
+import { ROOT_ROLE_TYPE } from '@server/util/constants';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -30,12 +31,18 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 }));
 
 interface IRoleModalProps {
+    type?: PredefinedRoleType;
     roleId?: number;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const RoleModal = ({ roleId, open, setOpen }: IRoleModalProps) => {
+export const RoleModal = ({
+    type = ROOT_ROLE_TYPE,
+    roleId,
+    open,
+    setOpen,
+}: IRoleModalProps) => {
     const { role, refetch: refetchRole } = useRole(roleId?.toString());
 
     const {
@@ -56,17 +63,8 @@ export const RoleModal = ({ roleId, open, setOpen }: IRoleModalProps) => {
     } = useRoleForm(role?.name, role?.description, role?.permissions);
     const { refetch: refetchRoles } = useRoles();
     const { addRole, updateRole, loading } = useRolesApi();
-    const { permissions } = usePermissions({
-        revalidateIfStale: false,
-        revalidateOnReconnect: false,
-        revalidateOnFocus: false,
-    });
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-
-    const rootPermissions = permissions.root.filter(
-        ({ name }) => name !== 'ADMIN'
-    );
 
     const editing = role !== undefined;
     const isValid =
@@ -75,7 +73,7 @@ export const RoleModal = ({ roleId, open, setOpen }: IRoleModalProps) => {
         isNotEmpty(description) &&
         hasPermissions(checkedPermissions);
 
-    const payload = getRolePayload('root-custom');
+    const payload = getRolePayload(type);
 
     const formatApiCode = () => {
         return `curl --location --request ${editing ? 'PUT' : 'POST'} '${
@@ -121,32 +119,34 @@ export const RoleModal = ({ roleId, open, setOpen }: IRoleModalProps) => {
         }
     };
 
+    const titleCasedType = type[0].toUpperCase() + type.slice(1);
+
     return (
         <SidebarModal
             open={open}
             onClose={() => {
                 setOpen(false);
             }}
-            label={editing ? 'Edit role' : 'New role'}
+            label={editing ? `Edit ${type} role` : `New ${type} role`}
         >
             <FormTemplate
                 loading={loading}
                 modal
-                title={editing ? 'Edit role' : 'New role'}
-                description="Roles allow you to control access to global root resources. Besides the built-in roles, you can create and manage custom roles to fit your needs."
-                documentationLink="https://docs.getunleash.io/reference/rbac#standard-roles"
+                title={editing ? `Edit ${type} role` : `New ${type} role`}
+                description={`${titleCasedType} roles allow you to control access to ${type} resources. Besides the built-in ${type} roles, you can create and manage custom ${type} roles to fit your needs.`}
+                documentationLink="https://docs.getunleash.io/reference/rbac"
                 documentationLinkLabel="Roles documentation"
                 formatApiCode={formatApiCode}
             >
                 <StyledForm onSubmit={onSubmit}>
                     <RoleForm
+                        type={type}
                         name={name}
                         onSetName={onSetName}
                         description={description}
                         setDescription={setDescription}
                         checkedPermissions={checkedPermissions}
                         setCheckedPermissions={setCheckedPermissions}
-                        permissions={rootPermissions}
                         errors={errors}
                     />
                     <StyledButtonContainer>

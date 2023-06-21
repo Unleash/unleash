@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - website/**
+
 # not sure if we will have all the payload as the push to main has.
 #  workflow_run:
 #    workflows: [ 'Publish to npm' ]

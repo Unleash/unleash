@@ -2,6 +2,9 @@ name: PR -> Build & Lint
 
 on:
   pull_request:
+    paths-ignore:
+      - frontend/**
+      - website/**
 
 jobs:
   build:

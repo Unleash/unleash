@@ -48,6 +48,7 @@ export class PlaygroundService {
         projects: typeof ALL | string[],
         environments: string[],
         context: SdkContextSchema,
+        limit: number,
     ): Promise<AdvancedPlaygroundFeatureSchema[]> {
         const segments = await this.segmentService.getActive();
         const environmentFeatures = await Promise.all(
@@ -59,6 +60,7 @@ export class PlaygroundService {
             environments.length,
             environmentFeatures[0]?.features.length ?? 0,
             contexts.length,
+            limit,
         );
 
         const results = await Promise.all(

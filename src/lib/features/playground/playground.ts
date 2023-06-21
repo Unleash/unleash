@@ -106,12 +106,19 @@ export default class PlaygroundController extends Controller {
         res: Response<AdvancedPlaygroundResponseSchema>,
     ): Promise<void> {
         if (this.flagResolver.isEnabled('advancedPlayground')) {
+            const { payload } =
+                this.flagResolver.getVariant('advancedPlayground');
+            const limit =
+                payload?.value && Number.isInteger(parseInt(payload?.value))
+                    ? parseInt(payload?.value)
+                    : 15000;
             res.json({
                 input: req.body,
                 features: await this.playgroundService.evaluateAdvancedQuery(
                     req.body.projects || '*',
                     req.body.environments,
                     req.body.context,
+                    limit,
                 ),
             });
         } else {

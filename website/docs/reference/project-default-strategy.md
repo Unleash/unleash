@@ -16,7 +16,7 @@ The default project strategy uses the [Gradual Rollout activation strategy](/ref
 
 ## Configuration
 
-When in project overview, go to the Project settings tab and click on Default strategy 
+Custom strategies are configured from each project's project settings tab.
 
 ![project_settings_default_strategy.png](/img/project_settings_default_strategy.png)
 

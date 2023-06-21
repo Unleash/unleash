@@ -39,7 +39,6 @@ export interface IGroupStore extends Store<IGroup, number> {
     updateGroupUsers(
         groupId: number,
         newUsers: IGroupUserModel[],
-        existingUsers: IGroupUserModel[],
         deletableUsers: IGroupUser[],
         userName: string,
     ): Promise<void>;

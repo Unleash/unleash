@@ -40,7 +40,7 @@ export const FeatureStrategyCreate = () => {
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
     const strategyName = useRequiredQueryParam('strategyName');
-    const useDefaultStrategy: boolean = JSON.parse(
+    const shouldUseDefaultStrategy: boolean = JSON.parse(
         useQueryParams().get('defaultStrategy') || 'false'
     );
     const { project } = useProject(projectId);
@@ -57,7 +57,7 @@ export const FeatureStrategyCreate = () => {
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
 
     const [segments, setSegments] = useState<ISegment[]>(
-        useDefaultStrategy ? strategySegments : []
+        shouldUseDefaultStrategy ? strategySegments : []
     );
     const { strategyDefinition } = useStrategy(strategyName);
     const errors = useFormErrors();
@@ -100,12 +100,12 @@ export const FeatureStrategyCreate = () => {
     }, [feature.name]);
 
     useEffect(() => {
-        if (useDefaultStrategy) {
+        if (shouldUseDefaultStrategy) {
             setStrategy((defaultStrategy as any) || DEFAULT_STRATEGY);
         } else if (strategyDefinition) {
             setStrategy(createFeatureStrategy(featureId, strategyDefinition));
         }
-    }, [featureId, strategyDefinition, useDefaultStrategy]);
+    }, [featureId, strategyDefinition, shouldUseDefaultStrategy]);
 
     const onAddStrategy = async (payload: IFeatureStrategyPayload) => {
         await addStrategyToFeature(

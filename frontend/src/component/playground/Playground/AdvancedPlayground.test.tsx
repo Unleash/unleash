@@ -3,7 +3,7 @@ import { render } from 'utils/testRenderer';
 import { UIProviderContainer } from '../../providers/UIProvider/UIProviderContainer';
 import AdvancedPlayground from './AdvancedPlayground';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { testServerRoute, testServerSetup } from '../../../utils/testServer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 import userEvent from '@testing-library/user-event';
 
 const testDisplayComponent = (

@@ -17,6 +17,34 @@ import { PlaygroundService } from './playground-service';
 import { IFlagResolver } from '../../types';
 import { AdvancedPlaygroundRequestSchema } from '../../openapi/spec/advanced-playground-request-schema';
 import { AdvancedPlaygroundResponseSchema } from '../../openapi/spec/advanced-playground-response-schema';
+import { PlaygroundStrategySchema } from 'lib/openapi';
+
+export const buildStrategyLink = (
+    project: string,
+    feature: string,
+    environment: string,
+    strategyId: string,
+): string =>
+    `/projects/${project}/features/${feature}/strategies/edit?environmentId=${environment}&strategyId=${strategyId}`;
+
+export const addStrategyEditLink = (
+    environmentId: string,
+    projectId: string,
+    featureName: string,
+    strategy: Omit<PlaygroundStrategySchema, 'links'>,
+): PlaygroundStrategySchema => {
+    return {
+        ...strategy,
+        links: {
+            edit: buildStrategyLink(
+                projectId,
+                featureName,
+                environmentId,
+                strategy.id,
+            ),
+        },
+    };
+};
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;
@@ -84,12 +112,30 @@ export default class PlaygroundController extends Controller {
         req: Request<any, any, PlaygroundRequestSchema>,
         res: Response<PlaygroundResponseSchema>,
     ): Promise<void> {
-        const response = {
+        const result = await this.playgroundService.evaluateQuery(
+            req.body.projects || '*',
+            req.body.environment,
+            req.body.context,
+        );
+        const response: PlaygroundResponseSchema = {
             input: req.body,
-            features: await this.playgroundService.evaluateQuery(
-                req.body.projects || '*',
-                req.body.environment,
-                req.body.context,
+            features: result.map(
+                ({ name, strategies, projectId, ...rest }) => ({
+                    ...rest,
+                    name,
+                    projectId,
+                    strategies: {
+                        ...strategies,
+                        data: strategies.data.map((strategy) =>
+                            addStrategyEditLink(
+                                req.body.environment,
+                                projectId,
+                                name,
+                                strategy,
+                            ),
+                        ),
+                    },
+                }),
             ),
         };
 
@@ -106,14 +152,56 @@ export default class PlaygroundController extends Controller {
         res: Response<AdvancedPlaygroundResponseSchema>,
     ): Promise<void> {
         if (this.flagResolver.isEnabled('advancedPlayground')) {
-            res.json({
-                input: req.body,
-                features: await this.playgroundService.evaluateAdvancedQuery(
-                    req.body.projects || '*',
-                    req.body.environments,
-                    req.body.context,
-                ),
+            const result = await this.playgroundService.evaluateAdvancedQuery(
+                req.body.projects || '*',
+                req.body.environments,
+                req.body.context,
+            );
+
+            const features = result.map(({ environments, ...rest }) => {
+                const transformedEnvironments = Object.entries(
+                    environments,
+                ).map(([envName, envFeatures]) => {
+                    const transformedFeatures = envFeatures.map(
+                        ({
+                            name,
+                            strategies,
+                            environment,
+                            projectId,
+                            ...featRest
+                        }) => ({
+                            ...featRest,
+                            name,
+                            environment,
+                            projectId,
+                            strategies: {
+                                ...strategies,
+                                data: strategies.data.map((strategy) =>
+                                    addStrategyEditLink(
+                                        environment,
+                                        projectId,
+                                        name,
+                                        strategy,
+                                    ),
+                                ),
+                            },
+                        }),
+                    );
+                    return [envName, transformedFeatures];
+                });
+
+                return {
+                    ...rest,
+                    environments: Object.fromEntries(transformedEnvironments),
+                };
             });
+
+            const response: AdvancedPlaygroundResponseSchema = {
+                input: req.body,
+                features: features,
+            };
+
+            res.json(response);
         } else {
             res.status(409).end();
         }

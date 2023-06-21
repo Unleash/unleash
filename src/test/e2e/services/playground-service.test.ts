@@ -1,8 +1,10 @@
-import { PlaygroundService } from '../../../lib/features/playground/playground-service';
+import {
+    PlaygroundFeatureSchemaReadModel,
+    PlaygroundService,
+} from '../../../lib/features/playground/playground-service';
 import {
     clientFeaturesAndSegments,
     commonISOTimestamp,
-    urlFriendlyString,
 } from '../../arbitraries.test';
 import { generate as generateContext } from '../../../lib/openapi/spec/sdk-context-schema.test';
 import fc from 'fast-check';
@@ -197,7 +199,7 @@ describe('the playground service (e2e)', () => {
         context: SdkContextSchema;
         env?: string;
         segments?: SegmentSchema[];
-    }): Promise<PlaygroundFeatureSchema[]> => {
+    }): Promise<PlaygroundFeatureSchemaReadModel[]> => {
         await seedDatabaseForPlaygroundTest(db, features, env, segments);
 
         //     const activeSegments = await db.stores.segmentStore.getAllFeatureStrategySegments()
@@ -205,8 +207,11 @@ describe('the playground service (e2e)', () => {
 
         const projects = '*';
 
-        const serviceFeatures: PlaygroundFeatureSchema[] =
-            await service.evaluateQuery(projects, env, context);
+        const serviceFeatures = await service.evaluateQuery(
+            projects,
+            env,
+            context,
+        );
 
         return serviceFeatures;
     };
@@ -1191,63 +1196,6 @@ describe('the playground service (e2e)', () => {
                                 }
                             }
                         });
-                    },
-                )
-                .afterEach(cleanup),
-            testParams,
-        );
-    });
-
-    test('each strategy gets the correct edit link assigned', async () => {
-        await fc.assert(
-            fc
-                .asyncProperty(
-                    clientFeaturesAndSegments({ minLength: 1 }),
-                    generateContext(),
-                    urlFriendlyString(),
-                    fc.context(),
-                    async (
-                        { features, segments },
-                        context,
-                        environment,
-                        ctx,
-                    ) => {
-                        const serviceFeatures = await insertAndEvaluateFeatures(
-                            {
-                                features,
-                                segments,
-                                context,
-                                env: environment,
-                            },
-                        );
-
-                        return serviceFeatures.every(
-                            ({ strategies, projectId, name }) =>
-                                strategies.data.every((strategy) => {
-                                    const url = new URL(
-                                        strategy.links.edit,
-                                        'https://example.com',
-                                    );
-
-                                    ctx.log(
-                                        `Url: ${JSON.stringify(
-                                            url,
-                                        )}. Env: ${environment}. Strategy: ${
-                                            strategy.id
-                                        }, expected pathname: /projects/${projectId}/features/${name}/strategies/edit`,
-                                    );
-
-                                    return (
-                                        url.pathname ===
-                                            `/projects/${projectId}/features/${name}/strategies/edit` &&
-                                        url.searchParams.get(
-                                            'environmentId',
-                                        ) === environment &&
-                                        url.searchParams.get('strategyId') ===
-                                            strategy.id
-                                    );
-                                }),
-                        );
                     },
                 )
                 .afterEach(cleanup),

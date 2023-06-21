@@ -7,7 +7,10 @@ import { Logger } from '../../logger';
 import { ISegment, IUnleashConfig } from 'lib/types';
 import { offlineUnleashClient } from './offline-unleash-client';
 import { FeatureInterface } from 'lib/features/playground/feature-evaluator/feature';
-import { FeatureStrategiesEvaluationResult } from 'lib/features/playground/feature-evaluator/client';
+import {
+    EvaluatedPlaygroundStrategy,
+    FeatureStrategiesEvaluationResult,
+} from 'lib/features/playground/feature-evaluator/client';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
 import { generateObjectCombinations } from './generateObjectCombinations';
@@ -16,6 +19,7 @@ import { omitKeys } from '../../util';
 import { AdvancedPlaygroundFeatureSchema } from '../../openapi/spec/advanced-playground-feature-schema';
 import { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema';
 import { validateQueryComplexity } from './validateQueryComplexity';
+import { playgroundStrategyEvaluation } from 'lib/openapi';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -23,6 +27,36 @@ type EvaluationInput = {
     featureProject: Record<string, string>;
     context: SdkContextSchema;
     environment: string;
+};
+
+export type AdvancedPlaygroundEnvironmentEvaluationResultReadModel = Omit<
+    AdvancedPlaygroundEnvironmentFeatureSchema,
+    'strategies'
+> & {
+    strategies: {
+        result: boolean | typeof playgroundStrategyEvaluation.unknownResult;
+        data: EvaluatedPlaygroundStrategy[];
+    };
+};
+
+export type AdvancedPlaygroundFeatureSchemaReadModel = Omit<
+    AdvancedPlaygroundFeatureSchema,
+    'environments'
+> & {
+    environments: Record<
+        string,
+        AdvancedPlaygroundEnvironmentEvaluationResultReadModel[]
+    >;
+};
+
+export type PlaygroundFeatureSchemaReadModel = Omit<
+    PlaygroundFeatureSchema,
+    'strategies'
+> & {
+    strategies: {
+        result: boolean | typeof playgroundStrategyEvaluation.unknownResult;
+        data: EvaluatedPlaygroundStrategy[];
+    };
 };
 
 export class PlaygroundService {
@@ -48,7 +82,7 @@ export class PlaygroundService {
         projects: typeof ALL | string[],
         environments: string[],
         context: SdkContextSchema,
-    ): Promise<AdvancedPlaygroundFeatureSchema[]> {
+    ): Promise<AdvancedPlaygroundFeatureSchemaReadModel[]> {
         const segments = await this.segmentService.getActive();
         const environmentFeatures = await Promise.all(
             environments.map((env) => this.resolveFeatures(projects, env)),
@@ -96,7 +130,9 @@ export class PlaygroundService {
         segments,
         context,
         environment,
-    }: EvaluationInput): Promise<AdvancedPlaygroundEnvironmentFeatureSchema[]> {
+    }: EvaluationInput): Promise<
+        AdvancedPlaygroundEnvironmentEvaluationResultReadModel[]
+    > {
         const [head, ...rest] = features;
         if (!head) {
             return [];
@@ -119,6 +155,7 @@ export class PlaygroundService {
                     ? new Date(context.currentTime)
                     : undefined,
             };
+
             return client
                 .getFeatureToggleDefinitions()
                 .map((feature: FeatureInterface) => {
@@ -134,19 +171,7 @@ export class PlaygroundService {
                         isEnabledInCurrentEnvironment: feature.enabled,
                         strategies: {
                             result: strategyEvaluationResult.result,
-                            data: strategyEvaluationResult.strategies.map(
-                                (strategy) => ({
-                                    ...strategy,
-                                    links: {
-                                        edit: this.buildStrategyLink(
-                                            featureProject[feature.name],
-                                            feature.name,
-                                            environment,
-                                            strategy.id,
-                                        ),
-                                    },
-                                }),
-                            ),
+                            data: strategyEvaluationResult.strategies,
                         },
                         projectId: featureProject[feature.name],
                         variant: client.getVariant(feature.name, clientContext),
@@ -158,14 +183,6 @@ export class PlaygroundService {
                 });
         }
     }
-
-    private buildStrategyLink = (
-        project: string,
-        feature: string,
-        environment: string,
-        strategyId: string,
-    ) =>
-        `/projects/${project}/features/${feature}/strategies/edit?environmentId=${environment}&strategyId=${strategyId}`;
 
     private async resolveFeatures(
         projects: typeof ALL | string[],
@@ -197,7 +214,7 @@ export class PlaygroundService {
         projects: typeof ALL | string[],
         environment: string,
         context: SdkContextSchema,
-    ): Promise<PlaygroundFeatureSchema[]> {
+    ): Promise<PlaygroundFeatureSchemaReadModel[]> {
         const [{ features, featureProject }, segments] = await Promise.all([
             this.resolveFeatures(projects, environment),
             this.segmentService.getActive(),
@@ -210,6 +227,7 @@ export class PlaygroundService {
             context,
             environment,
         });
+
         return result.map((item) => omitKeys(item, 'environment', 'context'));
     }
 }

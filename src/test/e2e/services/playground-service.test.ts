@@ -1,5 +1,5 @@
 import {
-    PlaygroundFeatureSchemaReadModel,
+    PlaygroundFeatureEvaluationResult,
     PlaygroundService,
 } from '../../../lib/features/playground/playground-service';
 import {
@@ -199,7 +199,7 @@ describe('the playground service (e2e)', () => {
         context: SdkContextSchema;
         env?: string;
         segments?: SegmentSchema[];
-    }): Promise<PlaygroundFeatureSchemaReadModel[]> => {
+    }): Promise<PlaygroundFeatureEvaluationResult[]> => {
         await seedDatabaseForPlaygroundTest(db, features, env, segments);
 
         //     const activeSegments = await db.stores.segmentStore.getAllFeatureStrategySegments()

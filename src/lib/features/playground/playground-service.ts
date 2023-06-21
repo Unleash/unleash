@@ -29,7 +29,7 @@ type EvaluationInput = {
     environment: string;
 };
 
-export type AdvancedPlaygroundEnvironmentEvaluationResultReadModel = Omit<
+export type AdvancedPlaygroundEnvironmentFeatureEvaluationResult = Omit<
     AdvancedPlaygroundEnvironmentFeatureSchema,
     'strategies'
 > & {
@@ -39,17 +39,17 @@ export type AdvancedPlaygroundEnvironmentEvaluationResultReadModel = Omit<
     };
 };
 
-export type AdvancedPlaygroundFeatureSchemaReadModel = Omit<
+export type AdvancedPlaygroundFeatureEvaluationResult = Omit<
     AdvancedPlaygroundFeatureSchema,
     'environments'
 > & {
     environments: Record<
         string,
-        AdvancedPlaygroundEnvironmentEvaluationResultReadModel[]
+        AdvancedPlaygroundEnvironmentFeatureEvaluationResult[]
     >;
 };
 
-export type PlaygroundFeatureSchemaReadModel = Omit<
+export type PlaygroundFeatureEvaluationResult = Omit<
     PlaygroundFeatureSchema,
     'strategies'
 > & {
@@ -82,7 +82,7 @@ export class PlaygroundService {
         projects: typeof ALL | string[],
         environments: string[],
         context: SdkContextSchema,
-    ): Promise<AdvancedPlaygroundFeatureSchemaReadModel[]> {
+    ): Promise<AdvancedPlaygroundFeatureEvaluationResult[]> {
         const segments = await this.segmentService.getActive();
         const environmentFeatures = await Promise.all(
             environments.map((env) => this.resolveFeatures(projects, env)),
@@ -131,7 +131,7 @@ export class PlaygroundService {
         context,
         environment,
     }: EvaluationInput): Promise<
-        AdvancedPlaygroundEnvironmentEvaluationResultReadModel[]
+        AdvancedPlaygroundEnvironmentFeatureEvaluationResult[]
     > {
         const [head, ...rest] = features;
         if (!head) {
@@ -214,7 +214,7 @@ export class PlaygroundService {
         projects: typeof ALL | string[],
         environment: string,
         context: SdkContextSchema,
-    ): Promise<PlaygroundFeatureSchemaReadModel[]> {
+    ): Promise<PlaygroundFeatureEvaluationResult[]> {
         const [{ features, featureProject }, segments] = await Promise.all([
             this.resolveFeatures(projects, environment),
             this.segmentService.getActive(),

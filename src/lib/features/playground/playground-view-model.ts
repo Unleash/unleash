@@ -6,8 +6,8 @@ import {
     PlaygroundStrategySchema,
 } from 'lib/openapi';
 import {
-    AdvancedPlaygroundFeatureSchemaReadModel,
-    PlaygroundFeatureSchemaReadModel,
+    AdvancedPlaygroundFeatureEvaluationResult,
+    PlaygroundFeatureEvaluationResult,
 } from './playground-service';
 
 export const buildStrategyLink = (
@@ -39,7 +39,7 @@ export const addStrategyEditLink = (
 
 export const advancedPlaygroundViewModel = (
     input: AdvancedPlaygroundRequestSchema,
-    playgroundResult: AdvancedPlaygroundFeatureSchemaReadModel[],
+    playgroundResult: AdvancedPlaygroundFeatureEvaluationResult[],
 ): AdvancedPlaygroundResponseSchema => {
     const features = playgroundResult.map(({ environments, ...rest }) => {
         const transformedEnvironments = Object.entries(environments).map(
@@ -84,7 +84,7 @@ export const advancedPlaygroundViewModel = (
 
 export const playgroundViewModel = (
     input: PlaygroundRequestSchema,
-    playgroundResult: PlaygroundFeatureSchemaReadModel[],
+    playgroundResult: PlaygroundFeatureEvaluationResult[],
 ): PlaygroundResponseSchema => {
     const features = playgroundResult.map(
         ({ name, strategies, projectId, ...rest }) => ({

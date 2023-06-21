@@ -3,7 +3,7 @@ import { ApiErrorSchema, UnleashError } from './unleash-error';
 type Permission = string | string[];
 
 class NoAccessError extends UnleashError {
-    permission: Permission;
+    permissions: Permission;
 
     constructor(permission: Permission = [], environment?: string) {
         const permissions = Array.isArray(permission)
@@ -21,13 +21,13 @@ class NoAccessError extends UnleashError {
 
         super(message);
 
-        this.permission = permissions;
+        this.permissions = permissions;
     }
 
     toJSON(): ApiErrorSchema {
         return {
             ...super.toJSON(),
-            permission: this.permission,
+            permissions: this.permissions,
         };
     }
 }

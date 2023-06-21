@@ -20,7 +20,6 @@ export type IFlagKey =
     | 'demo'
     | 'strategyImprovements'
     | 'googleAuthEnabled'
-    | 'variantMetrics'
     | 'disableBulkToggle'
     | 'experimentalExtendedTelemetry'
     | 'segmentContextFieldUsage'
@@ -93,10 +92,6 @@ const flags: IFlags = {
     ),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
-        false,
-    ),
-    variantMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_VARIANT_METRICS,
         false,
     ),
     experimentalExtendedTelemetry: parseEnvVarBoolean(

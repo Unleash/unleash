@@ -21,9 +21,9 @@ Custom strategies are configured from each project's project settings tab.
 
 <Figure caption="The default strategy configuration page is available from the project settings tab." img="/img/project_settings_default_strategy.png" />
 
-You can customise the default strategy for each of the project's environments by clicking on the edit button
+The default strategies screen lists a strategy for each of the project's environments
 
-![edit_default_Strategy.png](/img/edit_default_Strategy.png)
+<Figure caption="Each strategy can be individually configured with the corresponding edit button." img="/img/edit_default_Strategy.png" />
 
 This will open up the familiar activation strategy form, where you can add your constraints and/or segments
 

@@ -7,6 +7,7 @@ import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/perm
 import { Popover, styled } from '@mui/material';
 import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards';
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate';
+import { MoreVert } from '@mui/icons-material';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -82,7 +83,7 @@ export const FeatureStrategyMenu = ({
                 variant="outlined"
                 size={size}
             >
-                <div>&hellip;</div>
+                <MoreVert sx={theme => ({ margin: theme.spacing(0.25, 0) })} />
             </StyledAdditionalMenuButton>
             <Popover
                 id={popoverId}

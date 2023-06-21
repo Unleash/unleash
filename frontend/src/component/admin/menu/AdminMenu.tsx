@@ -120,9 +120,9 @@ function AdminMenu() {
                 />
 
                 <Tab
-                    value="privacy"
+                    value="instance-privacy"
                     label={
-                        <CenteredNavLink to="/admin/privacy">
+                        <CenteredNavLink to="/admin/instance-privacy">
                             Instance privacy
                         </CenteredNavLink>
                     }

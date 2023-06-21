@@ -47,7 +47,7 @@ export const Admin = () => (
             <Route path="auth" element={<AuthSettings />} />
             <Route path="admin-invoices" element={<FlaggedBillingRedirect />} />
             <Route path="billing" element={<Billing />} />
-            <Route path="privacy" element={<InstancePrivacyAdmin />} />
+            <Route path="instance-privacy" element={<InstancePrivacyAdmin />} />
         </Routes>
     </>
 );

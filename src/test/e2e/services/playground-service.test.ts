@@ -2,6 +2,7 @@ import { PlaygroundService } from '../../../lib/features/playground/playground-s
 import {
     clientFeaturesAndSegments,
     commonISOTimestamp,
+    urlFriendlyString,
 } from '../../arbitraries.test';
 import { generate as generateContext } from '../../../lib/openapi/spec/sdk-context-schema.test';
 import fc from 'fast-check';
@@ -1190,6 +1191,47 @@ describe('the playground service (e2e)', () => {
                                 }
                             }
                         });
+                    },
+                )
+                .afterEach(cleanup),
+            testParams,
+        );
+    });
+
+    test('each strategy gets the correct edit link assigned', async () => {
+        await fc.assert(
+            fc
+                .asyncProperty(
+                    clientFeaturesAndSegments({ minLength: 1 }),
+                    generateContext(),
+                    urlFriendlyString(),
+                    async ({ features, segments }, context, environment) => {
+                        const serviceFeatures = await insertAndEvaluateFeatures(
+                            {
+                                features,
+                                segments,
+                                context,
+                                env: environment,
+                            },
+                        );
+
+                        return serviceFeatures.every(
+                            ({ strategies, projectId, name }) =>
+                                strategies.data.every((strategy) =>
+                                    [
+                                        // path to feature
+                                        `/projects/${projectId}/features/${name}/strategies/edit?`,
+                                        // environment id
+                                        `environmentId=${environment}`,
+                                        // strategy id
+                                        `strategyId=${strategy.id}`,
+                                    ].every((pathFragment) =>
+                                        strategy.links.edit.includes(
+                                            pathFragment,
+                                        ),
+                                    ),
+                                ),
+                        );
                     },
                 )
                 .afterEach(cleanup),

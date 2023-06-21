@@ -1,4 +1,4 @@
-import IRole from './role';
+import { IRole } from './role';
 import { IUser } from './user';
 
 export interface ICreateInvitedUser {

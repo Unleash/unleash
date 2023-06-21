@@ -1,7 +1,7 @@
 import { VFC } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
-import IRole from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import { useRole } from 'hooks/api/getters/useRole/useRole';
 import { RoleDescription } from 'component/common/RoleDescription/RoleDescription';
 import { PREDEFINED_ROLE_TYPES } from '@server/util/constants';

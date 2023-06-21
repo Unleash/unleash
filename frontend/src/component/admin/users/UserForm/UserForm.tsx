@@ -5,7 +5,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { EDIT } from 'constants/misc';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
-import IRole from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',

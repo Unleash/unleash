@@ -33,7 +33,7 @@ import { INewPersonalAPIToken } from 'interfaces/personalAPIToken';
 import { ServiceAccountTokens } from './ServiceAccountTokens/ServiceAccountTokens';
 import { IServiceAccount } from 'interfaces/service-account';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
-import IRole from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',

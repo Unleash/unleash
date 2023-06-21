@@ -15,6 +15,7 @@ import groupBy from 'lodash.groupby';
 import { omitKeys } from '../../util';
 import { AdvancedPlaygroundFeatureSchema } from '../../openapi/spec/advanced-playground-feature-schema';
 import { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema';
+import { validateQueryComplexity } from './validateQueryComplexity';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -53,6 +54,12 @@ export class PlaygroundService {
             environments.map((env) => this.resolveFeatures(projects, env)),
         );
         const contexts = generateObjectCombinations(context);
+
+        validateQueryComplexity(
+            environments.length,
+            environmentFeatures[0]?.features.length ?? 0,
+            contexts.length,
+        );
 
         const results = await Promise.all(
             environmentFeatures.flatMap(

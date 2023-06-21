@@ -39,9 +39,6 @@ export interface IVersionResponse {
 }
 
 export interface IFeatureUsageInfo {
-    instanceId: string;
-    versionOSS: string;
-    versionEnterprise?: string;
     users: number;
     featureToggles: number;
     projects: number;
@@ -53,8 +50,6 @@ export interface IFeatureUsageInfo {
     environments: number;
     segments: number;
     strategies: number;
-    SAMLenabled: boolean;
-    OIDCenabled: boolean;
     customStrategies: number;
     customStrategiesInUse: number;
 }
@@ -243,8 +238,6 @@ export default class VersionService {
             environments,
             segments,
             strategies,
-            SAMLenabled,
-            OIDCenabled,
             featureExports,
             featureImports,
         ] = await Promise.all([
@@ -259,12 +252,9 @@ export default class VersionService {
             this.environmentStore.count(),
             this.segmentStore.count(),
             this.strategyStore.count(),
-            this.hasSAML(),
-            this.hasOIDC(),
             this.eventStore.filteredCount({ type: FEATURES_EXPORTED }),
             this.eventStore.filteredCount({ type: FEATURES_IMPORTED }),
         ]);
-        const versionInfo = this.getVersionInfo();
         const customStrategies =
             await this.strategyStore.getEditableStrategies();
         const customStrategiesInUse =
@@ -279,15 +269,10 @@ export default class VersionService {
             environments,
             segments,
             strategies,
-            SAMLenabled,
-            OIDCenabled,
             featureExports,
             featureImports,
             customStrategies: customStrategies.length,
             customStrategiesInUse: customStrategiesInUse,
-            instanceId: versionInfo.instanceId,
-            versionOSS: versionInfo.current.oss,
-            versionEnterprise: versionInfo.current.enterprise,
         };
         return featureInfo;
     }

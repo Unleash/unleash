@@ -88,11 +88,8 @@ const featureCollectionActivenessManagementTexts: IFeatureActivenessManagementIn
     };
 
 export const InstancePrivacyAdmin = () => {
-    const { hasAccess } = useContext(AccessContext);
     const { settings } = useTelemetry();
-    const { uiConfig } = useUiConfig();
-
-    const { loading } = useUiConfig();
+    const { uiConfig, loading } = useUiConfig();
 
     if (loading) {
         return null;
@@ -109,7 +106,7 @@ export const InstancePrivacyAdmin = () => {
     let dependsOnFeatureCollection: undefined | String = undefined;
     if (!settings?.versionInfoCollectionEnabled)
         dependsOnFeatureCollection = settings?.featureInfoCollectionEnabled
-            ? 'For Feature Usage Collection to be enabled you must also enable Version Info Collection'
+            ? 'Note: Feature Usage Collection is enabled, but for it to be active you must also enable Version Info Collection'
             : 'When you enable Feature Usage Collection you must also enable Version Info Collection';
 
     return (
@@ -132,7 +129,7 @@ export const InstancePrivacyAdmin = () => {
                             concreteDetails={
                                 featureCollectionDetails.concreteDetails
                             }
-                            enabled={settings?.featureInfoCollectionEnabled}
+                            enabled={settings?.featureInfoCollectionEnabled && settings?.versionInfoCollectionEnabled}
                             changeInfoText={
                                 featureActivenessInfo.changeInfoText
                             }

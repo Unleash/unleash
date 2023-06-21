@@ -96,8 +96,8 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppNameKillSwitch": false,
       "segmentContextFieldUsage": false,
       "strategyImprovements": false,
+      "strategySplittedButton": false,
       "strictSchemaValidation": false,
-      "variantMetrics": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -131,8 +131,8 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppNameKillSwitch": false,
       "segmentContextFieldUsage": false,
       "strategyImprovements": false,
+      "strategySplittedButton": false,
       "strictSchemaValidation": false,
-      "variantMetrics": false,
     },
     "externalResolver": {
       "getVariant": [Function],

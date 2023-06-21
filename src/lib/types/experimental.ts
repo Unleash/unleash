@@ -20,13 +20,13 @@ export type IFlagKey =
     | 'demo'
     | 'strategyImprovements'
     | 'googleAuthEnabled'
-    | 'variantMetrics'
     | 'disableBulkToggle'
     | 'experimentalExtendedTelemetry'
     | 'segmentContextFieldUsage'
     | 'disableNotifications'
     | 'advancedPlayground'
-    | 'customRootRoles';
+    | 'customRootRoles'
+    | 'strategySplittedButton';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -91,12 +91,12 @@ const flags: IFlags = {
         process.env.UNLEASH_STRATEGY_IMPROVEMENTS,
         false,
     ),
-    googleAuthEnabled: parseEnvVarBoolean(
-        process.env.GOOGLE_AUTH_ENABLED,
+    strategySplittedButton: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_SPLITTED_BUTTON,
         false,
     ),
-    variantMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_VARIANT_METRICS,
+    googleAuthEnabled: parseEnvVarBoolean(
+        process.env.GOOGLE_AUTH_ENABLED,
         false,
     ),
     experimentalExtendedTelemetry: parseEnvVarBoolean(

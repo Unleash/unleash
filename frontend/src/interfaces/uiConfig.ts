@@ -48,13 +48,13 @@ export interface IFlags {
     demo?: boolean;
     groupRootRoles?: boolean;
     googleAuthEnabled?: boolean;
-    variantMetrics?: boolean;
     strategyImprovements?: boolean;
     disableBulkToggle?: boolean;
     segmentContextFieldUsage?: boolean;
     disableNotifications?: boolean;
     advancedPlayground?: boolean;
     customRootRoles?: boolean;
+    strategySplittedButton?: boolean;
     experimentalExtendedTelemetry?: boolean;
 }
 

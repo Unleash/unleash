@@ -38,6 +38,7 @@ export const useVirtualizedRange = (
                 );
             });
         };
+        handleScroll();
         parent.addEventListener('scroll', handleScroll, { passive: true });
 
         return () => {

@@ -1,6 +1,7 @@
 ---
 title: Project default strategy
 ---
+import Figure from '@site/src/components/Figure/Figure.tsx'
 
 :::info Availability
 

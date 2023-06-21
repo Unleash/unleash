@@ -79,7 +79,7 @@ const permissionToTokenType: (
         ].includes(permission)
     ) {
         return ApiTokenType.CLIENT;
-    } else if ([ADMIN].includes(permission)) {
+    } else if (ADMIN === permission) {
         return ApiTokenType.ADMIN;
     } else {
         return undefined;

@@ -17,9 +17,14 @@ export type StrategyEvaluationResult = Pick<
     'result' | 'segments' | 'constraints'
 >;
 
+export type EvaluatedPlaygroundStrategy = Omit<
+    PlaygroundStrategySchema,
+    'links'
+>;
+
 export type FeatureStrategiesEvaluationResult = {
     result: boolean | typeof playgroundStrategyEvaluation.unknownResult;
-    strategies: PlaygroundStrategySchema[];
+    strategies: EvaluatedPlaygroundStrategy[];
 };
 
 export default class UnleashClient {
@@ -83,7 +88,7 @@ export default class UnleashClient {
         }
 
         const strategies = feature.strategies.map(
-            (strategySelector): PlaygroundStrategySchema => {
+            (strategySelector): EvaluatedPlaygroundStrategy => {
                 const getStrategy = () => {
                     // the application hostname strategy relies on external
                     // variables to calculate its result. As such, we can't

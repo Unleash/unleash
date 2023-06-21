@@ -68,6 +68,7 @@ export const playgroundStrategySchema = {
         'constraints',
         'parameters',
         'disabled',
+        'links',
     ],
     properties: {
         name: {
@@ -117,6 +118,13 @@ export const playgroundStrategySchema = {
                 myParam1: 'param value',
             },
             $ref: parametersSchema.$id,
+        },
+        links: {
+            type: 'object',
+            required: ['edit'],
+            properties: {
+                edit: { type: 'string' },
+            },
         },
     },
     components: {

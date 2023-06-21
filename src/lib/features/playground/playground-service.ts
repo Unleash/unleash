@@ -134,7 +134,19 @@ export class PlaygroundService {
                         isEnabledInCurrentEnvironment: feature.enabled,
                         strategies: {
                             result: strategyEvaluationResult.result,
-                            data: strategyEvaluationResult.strategies,
+                            data: strategyEvaluationResult.strategies.map(
+                                (strategy) => ({
+                                    ...strategy,
+                                    links: {
+                                        edit: this.buildStrategyLink(
+                                            featureProject[feature.name],
+                                            feature.name,
+                                            environment,
+                                            strategy.id,
+                                        ),
+                                    },
+                                }),
+                            ),
                         },
                         projectId: featureProject[feature.name],
                         variant: client.getVariant(feature.name, clientContext),
@@ -146,6 +158,14 @@ export class PlaygroundService {
                 });
         }
     }
+
+    private buildStrategyLink = (
+        project: string,
+        feature: string,
+        environment: string,
+        strategyId: string,
+    ) =>
+        `/projects/${project}/features/${feature}/strategies/edit?environmentId=${environment}&strategyId=${strategyId}`;
 
     private async resolveFeatures(
         projects: typeof ALL | string[],

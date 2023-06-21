@@ -10,7 +10,7 @@ import {
     PlaygroundFeatureEvaluationResult,
 } from './playground-service';
 
-export const buildStrategyLink = (
+const buildStrategyLink = (
     project: string,
     feature: string,
     environment: string,
@@ -18,7 +18,7 @@ export const buildStrategyLink = (
 ): string =>
     `/projects/${project}/features/${feature}/strategies/edit?environmentId=${environment}&strategyId=${strategyId}`;
 
-export const addStrategyEditLink = (
+const addStrategyEditLink = (
     environmentId: string,
     projectId: string,
     featureName: string,

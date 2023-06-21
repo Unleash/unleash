@@ -20,6 +20,7 @@ export interface IPermissionButtonProps extends Omit<ButtonProps, 'title'> {
     projectId?: string;
     environmentId?: string;
     tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
+    hideLockIcon?: boolean;
 }
 
 interface IPermissionBaseButtonProps extends IPermissionButtonProps {
@@ -68,6 +69,7 @@ const BasePermissionButton: React.FC<IPermissionBaseButtonProps> =
                 projectId,
                 environmentId,
                 tooltipProps,
+                hideLockIcon,
                 ...rest
             },
             ref
@@ -92,7 +94,7 @@ const BasePermissionButton: React.FC<IPermissionBaseButtonProps> =
                             endIcon={
                                 <>
                                     <ConditionallyRender
-                                        condition={!access}
+                                        condition={!access && !hideLockIcon}
                                         show={<Lock titleAccess="Locked" />}
                                         elseShow={
                                             Boolean(rest.endIcon) &&

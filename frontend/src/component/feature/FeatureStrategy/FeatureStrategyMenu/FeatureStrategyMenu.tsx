@@ -82,6 +82,10 @@ export const FeatureStrategyMenu = ({
                 aria-labelledby={popoverId}
                 variant="outlined"
                 size={size}
+                hideLockIcon
+                tooltipProps={{
+                    title: 'More strategies',
+                }}
             >
                 <MoreVert sx={theme => ({ margin: theme.spacing(0.25, 0) })} />
             </StyledAdditionalMenuButton>

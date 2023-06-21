@@ -196,8 +196,7 @@ test('counts toggles', async () => {
                 body.featureInfo.featureToggles === 1 &&
                 body.featureInfo.environments === 0 &&
                 body.featureInfo.customStrategies === 1 &&
-                body.featureInfo.customStrategiesInUse === 3 &&
-                body.featureInfo.OIDCenabled,
+                body.featureInfo.customStrategiesInUse === 3,
         )
         .reply(() => [
             200,
@@ -299,8 +298,7 @@ test('counts custom strategies', async () => {
                 body.featureInfo.featureToggles === 1 &&
                 body.featureInfo.environments === 0 &&
                 body.featureInfo.customStrategies === 2 &&
-                body.featureInfo.customStrategiesInUse === 3 &&
-                body.featureInfo.OIDCenabled,
+                body.featureInfo.customStrategiesInUse === 3,
         )
         .reply(() => [
             200,

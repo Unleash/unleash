@@ -56,7 +56,9 @@ export const FeatureStrategyCreate = () => {
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
 
-    const [segments, setSegments] = useState<ISegment[]>(strategySegments);
+    const [segments, setSegments] = useState<ISegment[]>(
+        useDefaultStrategy ? strategySegments : []
+    );
     const { strategyDefinition } = useStrategy(strategyName);
     const errors = useFormErrors();
 

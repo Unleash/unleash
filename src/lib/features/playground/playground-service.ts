@@ -7,7 +7,10 @@ import { Logger } from '../../logger';
 import { ISegment, IUnleashConfig } from 'lib/types';
 import { offlineUnleashClient } from './offline-unleash-client';
 import { FeatureInterface } from 'lib/features/playground/feature-evaluator/feature';
-import { FeatureStrategiesEvaluationResult } from 'lib/features/playground/feature-evaluator/client';
+import {
+    EvaluatedPlaygroundStrategy,
+    FeatureStrategiesEvaluationResult,
+} from 'lib/features/playground/feature-evaluator/client';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
 import { generateObjectCombinations } from './generateObjectCombinations';
@@ -16,6 +19,7 @@ import { omitKeys } from '../../util';
 import { AdvancedPlaygroundFeatureSchema } from '../../openapi/spec/advanced-playground-feature-schema';
 import { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema';
 import { validateQueryComplexity } from './validateQueryComplexity';
+import { playgroundStrategyEvaluation } from 'lib/openapi';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -23,6 +27,36 @@ type EvaluationInput = {
     featureProject: Record<string, string>;
     context: SdkContextSchema;
     environment: string;
+};
+
+export type AdvancedPlaygroundEnvironmentFeatureEvaluationResult = Omit<
+    AdvancedPlaygroundEnvironmentFeatureSchema,
+    'strategies'
+> & {
+    strategies: {
+        result: boolean | typeof playgroundStrategyEvaluation.unknownResult;
+        data: EvaluatedPlaygroundStrategy[];
+    };
+};
+
+export type AdvancedPlaygroundFeatureEvaluationResult = Omit<
+    AdvancedPlaygroundFeatureSchema,
+    'environments'
+> & {
+    environments: Record<
+        string,
+        AdvancedPlaygroundEnvironmentFeatureEvaluationResult[]
+    >;
+};
+
+export type PlaygroundFeatureEvaluationResult = Omit<
+    PlaygroundFeatureSchema,
+    'strategies'
+> & {
+    strategies: {
+        result: boolean | typeof playgroundStrategyEvaluation.unknownResult;
+        data: EvaluatedPlaygroundStrategy[];
+    };
 };
 
 export class PlaygroundService {
@@ -49,7 +83,7 @@ export class PlaygroundService {
         environments: string[],
         context: SdkContextSchema,
         limit: number,
-    ): Promise<AdvancedPlaygroundFeatureSchema[]> {
+    ): Promise<AdvancedPlaygroundFeatureEvaluationResult[]> {
         const segments = await this.segmentService.getActive();
         const environmentFeatures = await Promise.all(
             environments.map((env) => this.resolveFeatures(projects, env)),
@@ -98,7 +132,9 @@ export class PlaygroundService {
         segments,
         context,
         environment,
-    }: EvaluationInput): Promise<AdvancedPlaygroundEnvironmentFeatureSchema[]> {
+    }: EvaluationInput): Promise<
+        AdvancedPlaygroundEnvironmentFeatureEvaluationResult[]
+    > {
         const [head, ...rest] = features;
         if (!head) {
             return [];
@@ -121,6 +157,7 @@ export class PlaygroundService {
                     ? new Date(context.currentTime)
                     : undefined,
             };
+
             return client
                 .getFeatureToggleDefinitions()
                 .map((feature: FeatureInterface) => {
@@ -179,7 +216,7 @@ export class PlaygroundService {
         projects: typeof ALL | string[],
         environment: string,
         context: SdkContextSchema,
-    ): Promise<PlaygroundFeatureSchema[]> {
+    ): Promise<PlaygroundFeatureEvaluationResult[]> {
         const [{ features, featureProject }, segments] = await Promise.all([
             this.resolveFeatures(projects, environment),
             this.segmentService.getActive(),
@@ -192,6 +229,7 @@ export class PlaygroundService {
             context,
             environment,
         });
+
         return result.map((item) => omitKeys(item, 'environment', 'context'));
     }
 }

@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Extra data configured for this variant
+ */
 export type VariantSchemaPayload = {
     type: string;
     value: string;

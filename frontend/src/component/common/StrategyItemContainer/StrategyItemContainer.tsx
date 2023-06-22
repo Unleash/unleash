@@ -107,12 +107,10 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     const Icon = getFeatureStrategyIcon(strategy.name);
     const { uiConfig } = useUiConfig();
 
-    // @ts-expect-error IFeatureStrategy doesn't have links
-    const link = strategy.links?.edit;
-
-    const StrategyHeaderLink: React.FC = link
-        ? ({ children }) => <Link to={link}>{children}</Link>
-        : ({ children }) => <> {children} </>;
+    const StrategyHeaderLink: React.FC =
+        'links' in strategy
+            ? ({ children }) => <Link to={strategy.links.edit}>{children}</Link>
+            : ({ children }) => <> {children} </>;
 
     return (
         <Box sx={{ position: 'relative' }}>

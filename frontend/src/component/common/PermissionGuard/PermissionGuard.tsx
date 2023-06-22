@@ -1,7 +1,13 @@
 import { useContext } from 'react';
-import { Alert } from '@mui/material';
+import { Alert, styled } from '@mui/material';
 import { ADMIN } from '@server/types/permissions';
 import AccessContext from 'contexts/AccessContext';
+
+const StyledList = styled('ul')(({ theme }) => ({
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+}));
 
 interface IPermissionGuardProps {
     permissions: string | string[];
@@ -38,13 +44,13 @@ export const PermissionGuard = ({
     return (
         <Alert severity="error">
             You need one of the following permissions to access this section:
-            <ul>
+            <StyledList>
                 {permissionsArray.sort().map(permission => (
                     <li key={permission}>
                         <strong>{permission}</strong>
                     </li>
                 ))}
-            </ul>
+            </StyledList>
         </Alert>
     );
 };

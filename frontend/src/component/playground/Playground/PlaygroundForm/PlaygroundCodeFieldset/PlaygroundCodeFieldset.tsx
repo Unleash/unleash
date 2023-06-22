@@ -130,7 +130,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
             const foundField = contextData.find(
                 contextData => contextData.name === contextField
             );
-            const hasLegalValues = (foundField?.legalValues?.length || 0) > 1;
+            const hasLegalValues = (foundField?.legalValues || []).length > 1;
             if (contextValue.includes(',') && hasLegalValues) {
                 return contextValue.split(',');
             }

@@ -12,8 +12,6 @@ import { IRoleStore } from 'lib/types';
 import FakeRoleStore from './fake-role-store';
 
 class AccessStoreMock implements IAccessStore {
-    userPermissions: IUserPermission[] = [];
-
     fakeRolesStore: IRoleStore;
 
     userToRoleMap: Map<number, number> = new Map();

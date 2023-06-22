@@ -117,12 +117,12 @@ export default class PlaygroundController extends Controller {
                 payload?.value && Number.isInteger(parseInt(payload?.value))
                     ? parseInt(payload?.value)
                     : 15000;
-          
+
             const result = await this.playgroundService.evaluateAdvancedQuery(
                 req.body.projects || '*',
                 req.body.environments,
                 req.body.context,
-                limit
+                limit,
             );
 
             const response: AdvancedPlaygroundResponseSchema =

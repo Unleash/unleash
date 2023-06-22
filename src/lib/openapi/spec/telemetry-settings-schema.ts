@@ -12,11 +12,13 @@ export const telemetrySettingsSchema = {
             type: 'boolean',
             description:
                 'Whether collection of version info is enabled/active.',
+            example: true,
         },
         featureInfoCollectionEnabled: {
             type: 'boolean',
             description:
                 'Whether collection of feature usage metrics is enabled/active.',
+            example: true,
         },
     },
     components: {},

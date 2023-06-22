@@ -17,6 +17,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Add } from '@mui/icons-material';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { IRole } from 'interfaces/role';
+import { READ_ROLE } from '@server/types/permissions';
 
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     '& .page-header': {
@@ -84,7 +85,7 @@ export const Roles = () => {
     return (
         <div>
             <ConditionallyRender
-                condition={hasAccess(ADMIN)}
+                condition={hasAccess(READ_ROLE)}
                 show={
                     <StyledPageContent
                         headerClass="page-header"

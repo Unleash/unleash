@@ -7,14 +7,6 @@ import {
     RadioGroup,
     Typography,
 } from '@mui/material';
-import { TokenType } from '../../../../../interfaces/token';
-import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { useOptionalPathParam } from '../../../../../hooks/useOptionalPathParam';
-import {
-    ADMIN,
-    CREATE_FRONTEND_API_TOKEN,
-    CREATE_CLIENT_API_TOKEN,
-} from '@server/types/permissions';
 import { useHasRootAccess } from 'hooks/useHasAccess';
 
 interface ITokenTypeSelectorProps {
@@ -25,6 +17,7 @@ interface ITokenTypeSelectorProps {
         label: string;
         title: string;
         permission: string | string[];
+        hasAccess: boolean;
     }[];
 }
 export const TokenTypeSelector = ({
@@ -45,35 +38,37 @@ export const TokenTypeSelector = ({
                     value={type}
                     onChange={(event, value) => setType(value)}
                 >
-                    {apiTokenTypes.map(({ key, label, title, permission }) => (
-                        <FormControlLabel
-                            key={key}
-                            value={key}
-                            sx={{ mb: 1 }}
-                            disabled={!useHasRootAccess(permission)}
-                            control={
-                                <Radio
-                                    sx={{
-                                        ml: 0.75,
-                                        alignSelf: 'flex-start',
-                                    }}
-                                />
-                            }
-                            label={
-                                <Box>
+                    {apiTokenTypes.map(
+                        ({ key, label, title, permission, hasAccess }) => (
+                            <FormControlLabel
+                                key={key}
+                                value={key}
+                                sx={{ mb: 1 }}
+                                disabled={!hasAccess}
+                                control={
+                                    <Radio
+                                        sx={{
+                                            ml: 0.75,
+                                            alignSelf: 'flex-start',
+                                        }}
+                                    />
+                                }
+                                label={
                                     <Box>
-                                        <Typography>{label}</Typography>
-                                        <Typography
-                                            variant="body2"
-                                            color="text.secondary"
-                                        >
-                                            {title}
-                                        </Typography>
+                                        <Box>
+                                            <Typography>{label}</Typography>
+                                            <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                            >
+                                                {title}
+                                            </Typography>
+                                        </Box>
                                     </Box>
-                                </Box>
-                            }
-                        />
-                    ))}
+                                }
+                            />
+                        )
+                    )}
                 </RadioGroup>
             </FormControl>
         </StyledContainer>

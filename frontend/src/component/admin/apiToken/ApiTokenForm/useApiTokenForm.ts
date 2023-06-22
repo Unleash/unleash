@@ -22,15 +22,19 @@ export const useApiTokenForm = (project?: string) => {
             label: `Server-side SDK (${TokenType.CLIENT})`,
             title: 'Connect server-side SDK or Unleash Proxy',
             permission: CREATE_CLIENT_API_TOKEN,
+            hasAccess: useHasRootAccess(CREATE_CLIENT_API_TOKEN),
         },
     ];
 
+    const hasAdminAccess = useHasRootAccess(ADMIN);
+    const hasCreateFrontendAccess = useHasRootAccess(CREATE_FRONTEND_API_TOKEN);
     if (!project) {
         apiTokenTypes.push({
             key: TokenType.ADMIN,
             label: TokenType.ADMIN,
             title: 'Full access for managing Unleash',
             permission: ADMIN,
+            hasAccess: hasAdminAccess,
         });
     }
 
@@ -40,12 +44,11 @@ export const useApiTokenForm = (project?: string) => {
             label: `Client-side SDK (${TokenType.FRONTEND})`,
             title: 'Connect web and mobile SDK directly to Unleash',
             permission: CREATE_FRONTEND_API_TOKEN,
+            hasAccess: hasCreateFrontendAccess,
         });
     }
 
-    const firstAccessibleType = apiTokenTypes.find(t =>
-        useHasRootAccess(t.permission)
-    )?.key;
+    const firstAccessibleType = apiTokenTypes.find(t => t.hasAccess)?.key;
 
     const [username, setUsername] = useState('');
     const [type, setType] = useState(firstAccessibleType || TokenType.CLIENT);

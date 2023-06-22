@@ -99,9 +99,7 @@ If you want to change which project a feature toggle belongs to, you can change 
 
 ![A feature toggle's settings tab. The project setting shows a dropdown to change projects.](/img/projects_existing_toggle_dropdown.png)
 
----
-title: Project default strategy
----
+## Project default strategy
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
 :::info Availability

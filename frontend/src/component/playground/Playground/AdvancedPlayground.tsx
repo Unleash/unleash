@@ -62,7 +62,7 @@ export const AdvancedPlayground: VFC<{
         if (environments?.length === 0) {
             setEnvironments([resolveDefaultEnvironment(availableEnvironments)]);
         }
-    }, [availableEnvironments]);
+    }, [JSON.stringify(environments), JSON.stringify(availableEnvironments)]);
 
     useEffect(() => {
         if (searchParamsLength > 0) {

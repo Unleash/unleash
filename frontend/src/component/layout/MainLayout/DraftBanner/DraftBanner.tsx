@@ -45,6 +45,17 @@ const DraftBannerContent: FC<{
         (acc, curr) => acc + changesCount(curr),
         0
     );
+    const showOneLongExplanation =
+        changeRequests.length === 1 &&
+        ['Draft', 'In review', 'Approved'].includes(changeRequests[0].state);
+    const explanation = showOneLongExplanation
+        ? {
+              Draft: ' that need to be reviewed',
+              'In review': ' that are in review',
+              Approved:
+                  ' that are approved. Adding more changes will clear the approvals and require a new review',
+          }[changeRequests[0].state as 'Draft' | 'In review' | 'Approved']
+        : '';
 
     return (
         <StyledBox>
@@ -73,28 +84,7 @@ const DraftBannerContent: FC<{
                             </>
                         }
                     />
-                    <ConditionallyRender
-                        condition={
-                            changeRequests.length === 1 &&
-                            ['Draft', 'In review', 'Approved'].includes(
-                                changeRequests[0].state
-                            )
-                        }
-                        show={
-                            {
-                                Draft: ' that need to be reviewed',
-                                'In review': ' that are in review',
-                                Approved:
-                                    ' that are approved. Adding more changes will clear the approvals and require a new review',
-                            }[
-                                changeRequests[0].state as
-                                    | 'Draft'
-                                    | 'In review'
-                                    | 'Approved'
-                            ]
-                        }
-                    />
-                    .
+                    {explanation}.
                 </Typography>
                 <Button
                     variant="contained"
@@ -122,7 +112,7 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { data, loading } = usePendingChangeRequests(project);
 
-    const drafts = useMemo(
+    const unfinishedChangeRequests = useMemo(
         () =>
             data?.filter(changeRequest =>
                 ['Draft', 'In review', 'Approved'].includes(changeRequest.state)
@@ -137,10 +127,12 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
     return (
         <StickyBanner>
             <ConditionallyRender
-                condition={Boolean(drafts?.length)}
+                condition={Boolean(unfinishedChangeRequests?.length)}
                 show={
                     <DraftBannerContent
-                        changeRequests={drafts as IChangeRequest[]}
+                        changeRequests={
+                            unfinishedChangeRequests as IChangeRequest[]
+                        }
                         onClick={() => {
                             setIsSidebarOpen(true);
                         }}

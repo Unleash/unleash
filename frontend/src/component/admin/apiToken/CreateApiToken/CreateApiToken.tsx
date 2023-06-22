@@ -7,7 +7,6 @@ import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useApiTokenForm } from 'component/admin/apiToken/ApiTokenForm/useApiTokenForm';
-import { CREATE_API_TOKEN } from 'component/providers/AccessProvider/permissions';
 import { ConfirmToken } from '../ConfirmToken/ConfirmToken';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -18,6 +17,7 @@ import { TokenInfo } from '../ApiTokenForm/TokenInfo/TokenInfo';
 import { TokenTypeSelector } from '../ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
 import { ProjectSelector } from '../ApiTokenForm/ProjectSelector/ProjectSelector';
 import { EnvironmentSelector } from '../ApiTokenForm/EnvironmentSelector/EnvironmentSelector';
+import { ADMIN } from '@server/types/permissions';
 
 const pageTitle = 'Create API token';
 interface ICreateApiTokenProps {
@@ -51,8 +51,6 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
     usePageTitle(pageTitle);
 
     const PATH = `api/admin/api-tokens`;
-
-    const permission = CREATE_API_TOKEN;
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -107,7 +105,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
                 mode="Create"
-                actions={<CreateButton name="token" permission={permission} />}
+                actions={<CreateButton name="token" permission={ADMIN} />}
             >
                 <TokenInfo
                     username={username}

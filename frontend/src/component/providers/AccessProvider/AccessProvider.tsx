@@ -40,16 +40,22 @@ export const checkAdmin = (permissions: IPermission[] | undefined): boolean => {
 
 export const hasAccess = (
     permissions: IPermission[] | undefined,
-    permission: string,
+    permission: string | string[],
     project?: string,
     environment?: string
 ): boolean => {
     if (!permissions) {
         return false;
     }
-    return permissions.some(p => {
-        return checkPermission(p, permission, project, environment);
-    });
+    const permissionsToCheck = Array.isArray(permission)
+        ? permission
+        : [permission];
+
+    return permissions.some(p =>
+        permissionsToCheck.some(permissionToCheck =>
+            checkPermission(p, permissionToCheck, project, environment)
+        )
+    );
 };
 
 const checkPermission = (

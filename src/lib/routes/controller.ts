@@ -18,9 +18,11 @@ interface IRequestHandler<
     ): Promise<void> | void;
 }
 
+type Permission = string | string[];
+
 interface IRouteOptionsBase {
     path: string;
-    permission: string;
+    permission: Permission;
     middleware?: RequestHandler[];
     handler: IRequestHandler;
     acceptedContentTypes?: string[];
@@ -37,15 +39,21 @@ interface IRouteOptionsNonGet extends IRouteOptionsBase {
 
 type IRouteOptions = IRouteOptionsNonGet | IRouteOptionsGet;
 
-const checkPermission = (permission) => async (req, res, next) => {
-    if (!permission || permission === NONE) {
-        return next();
-    }
-    if (req.checkRbac && (await req.checkRbac(permission))) {
-        return next();
-    }
-    return res.status(403).json(new NoAccessError(permission)).end();
-};
+const checkPermission =
+    (permission: Permission = []) =>
+    async (req, res, next) => {
+        const permissions = (
+            Array.isArray(permission) ? permission : [permission]
+        ).filter((p) => p !== NONE);
+
+        if (!permissions.length) {
+            return next();
+        }
+        if (req.checkRbac && (await req.checkRbac(permissions))) {
+            return next();
+        }
+        return res.status(403).json(new NoAccessError(permissions)).end();
+    };
 
 /**
  * Base class for Controllers to standardize binding to express Router.
@@ -97,7 +105,11 @@ export default class Controller {
         );
     }
 
-    get(path: string, handler: IRequestHandler, permission?: string): void {
+    get(
+        path: string,
+        handler: IRequestHandler,
+        permission: Permission = NONE,
+    ): void {
         this.route({
             method: 'get',
             path,
@@ -109,7 +121,7 @@ export default class Controller {
     post(
         path: string,
         handler: IRequestHandler,
-        permission: string,
+        permission: Permission = NONE,
         ...acceptedContentTypes: string[]
     ): void {
         this.route({
@@ -124,7 +136,7 @@ export default class Controller {
     put(
         path: string,
         handler: IRequestHandler,
-        permission: string,
+        permission: Permission = NONE,
         ...acceptedContentTypes: string[]
     ): void {
         this.route({
@@ -139,7 +151,7 @@ export default class Controller {
     patch(
         path: string,
         handler: IRequestHandler,
-        permission: string,
+        permission: Permission = NONE,
         ...acceptedContentTypes: string[]
     ): void {
         this.route({
@@ -151,7 +163,11 @@ export default class Controller {
         });
     }
 
-    delete(path: string, handler: IRequestHandler, permission: string): void {
+    delete(
+        path: string,
+        handler: IRequestHandler,
+        permission: Permission = NONE,
+    ): void {
         this.route({
             method: 'delete',
             path,
@@ -165,7 +181,7 @@ export default class Controller {
         path: string,
         filehandler: IRequestHandler,
         handler: Function,
-        permission: string,
+        permission: Permission = NONE,
     ): void {
         this.app.post(
             path,

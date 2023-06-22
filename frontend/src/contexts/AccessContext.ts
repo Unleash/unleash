@@ -3,7 +3,7 @@ import React from 'react';
 export interface IAccessContext {
     isAdmin: boolean;
     hasAccess: (
-        permission: string,
+        permission: string | string[],
         project?: string,
         environment?: string
     ) => boolean;

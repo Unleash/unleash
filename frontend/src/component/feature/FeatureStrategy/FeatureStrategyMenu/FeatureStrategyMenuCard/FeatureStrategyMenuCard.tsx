@@ -8,7 +8,7 @@ import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/Feat
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { styled } from '@mui/material';
 import React from 'react';
-import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IFeatureStrategyMenuCardProps {
     projectId: string;

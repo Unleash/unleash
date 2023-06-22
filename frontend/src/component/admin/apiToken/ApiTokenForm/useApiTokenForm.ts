@@ -1,14 +1,54 @@
 import { useEffect, useState } from 'react';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { IApiTokenCreate } from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
+import { TokenType } from 'interfaces/token';
+import {
+    ADMIN,
+    CREATE_FRONTEND_API_TOKEN,
+    CREATE_CLIENT_API_TOKEN,
+} from '@server/types/permissions';
+import { useHasRootAccess } from 'hooks/useHasAccess';
 
 export type ApiTokenFormErrorType = 'username' | 'projects';
 export const useApiTokenForm = (project?: string) => {
     const { environments } = useEnvironments();
+    const { uiConfig } = useUiConfig();
     const initialEnvironment = environments?.find(e => e.enabled)?.name;
 
+    const apiTokenTypes = [
+        {
+            key: TokenType.CLIENT,
+            label: `Server-side SDK (${TokenType.CLIENT})`,
+            title: 'Connect server-side SDK or Unleash Proxy',
+            permission: CREATE_CLIENT_API_TOKEN,
+        },
+    ];
+
+    if (!project) {
+        apiTokenTypes.push({
+            key: TokenType.ADMIN,
+            label: TokenType.ADMIN,
+            title: 'Full access for managing Unleash',
+            permission: ADMIN,
+        });
+    }
+
+    if (uiConfig.flags.embedProxyFrontend) {
+        apiTokenTypes.splice(1, 0, {
+            key: TokenType.FRONTEND,
+            label: `Client-side SDK (${TokenType.FRONTEND})`,
+            title: 'Connect web and mobile SDK directly to Unleash',
+            permission: CREATE_FRONTEND_API_TOKEN,
+        });
+    }
+
+    const firstAccessibleType = apiTokenTypes.find(t =>
+        useHasRootAccess(t.permission)
+    )?.key;
+
     const [username, setUsername] = useState('');
-    const [type, setType] = useState('CLIENT');
+    const [type, setType] = useState(firstAccessibleType || TokenType.CLIENT);
     const [projects, setProjects] = useState<string[]>([
         project ? project : '*',
     ]);
@@ -25,12 +65,12 @@ export const useApiTokenForm = (project?: string) => {
 
     const setTokenType = (value: string) => {
         if (value === 'ADMIN') {
-            setType(value);
+            setType(TokenType.ADMIN);
             setMemorizedProjects(projects);
             setProjects(['*']);
             setEnvironment('*');
         } else {
-            setType(value);
+            setType(TokenType[value as keyof typeof TokenType]);
             setProjects(memorizedProjects);
             setEnvironment(initialEnvironment);
         }
@@ -69,6 +109,7 @@ export const useApiTokenForm = (project?: string) => {
     return {
         username,
         type,
+        apiTokenTypes,
         projects,
         environment,
         setUsername,

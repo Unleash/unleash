@@ -47,6 +47,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
         isValid,
         errors,
         clearErrors,
+        apiTokenTypes,
     } = useApiTokenForm();
 
     const { createToken, loading } = useApiTokensApi();
@@ -126,7 +127,11 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                     errors={errors}
                     clearErrors={clearErrors}
                 />
-                <TokenTypeSelector type={type} setType={setTokenType} />
+                <TokenTypeSelector
+                    type={type}
+                    setType={setTokenType}
+                    apiTokenTypes={apiTokenTypes}
+                />
                 <ProjectSelector
                     type={type}
                     projects={projects}

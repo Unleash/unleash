@@ -120,7 +120,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
         }
     };
 
-    const resolveValue = isAdvancedPlayground
+    const resolvedValue = isAdvancedPlayground
         ? contextValue === ''
             ? undefined
             : contextValue?.includes(',')
@@ -171,7 +171,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                     disablePortal
                     id="context-legal-values"
                     size="small"
-                    value={resolveValue}
+                    value={resolvedValue}
                     onChange={handleAutocompleteOnChange}
                     options={options}
                     multiple={isAdvancedPlayground}

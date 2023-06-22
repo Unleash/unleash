@@ -40,7 +40,9 @@ export const PermissionGuard = ({
             You need one of the following permissions to access this section:
             <ul>
                 {permissionsArray.sort().map(permission => (
-                    <li key={permission}>{permission}</li>
+                    <li key={permission}>
+                        <strong>{permission}</strong>
+                    </li>
                 ))}
             </ul>
         </Alert>

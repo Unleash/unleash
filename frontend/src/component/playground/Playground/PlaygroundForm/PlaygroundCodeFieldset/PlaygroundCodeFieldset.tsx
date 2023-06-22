@@ -109,7 +109,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
         }
     };
 
-    const onAutoCompleteChange = (
+    const changeContextValue = (
         e: FormEvent,
         newValue: string | (string | string[])[] | null
     ) => {
@@ -193,7 +193,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                     filterSelectedOptions
                     size="small"
                     value={resolveAutocompleteValue()}
-                    onChange={onAutoCompleteChange}
+                    onChange={changeContextValue}
                     options={options}
                     multiple={isAdvancedPlayground}
                     sx={{ width: 200, maxWidth: '100%' }}
@@ -216,7 +216,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
         );
     };
 
-    const onContextFieldChange = (event: SelectChangeEvent) => {
+    const changeContextField = (event: SelectChangeEvent) => {
         setContextField(event.target.value || '');
 
         if (event.target.value === 'currentTime') {
@@ -249,7 +249,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                         labelId="context-field-label"
                         id="context-field"
                         value={contextField}
-                        onChange={onContextFieldChange}
+                        onChange={changeContextField}
                         variant="outlined"
                         size="small"
                         sx={{ width: 200, maxWidth: '100%' }}

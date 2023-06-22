@@ -27,6 +27,8 @@ import useToast from 'hooks/useToast';
 import { PlaygroundEditor } from './PlaygroundEditor/PlaygroundEditor';
 import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
 import { parseDateValue, parseValidDate } from 'component/common/util';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { isStringOrStringArray } from '../../playground.utils';
 interface IPlaygroundCodeFieldsetProps {
     context: string | undefined;
     setContext: Dispatch<SetStateAction<string | undefined>>;
@@ -37,6 +39,9 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
     setContext,
 }) => {
     const theme = useTheme();
+    const { uiConfig } = useUiConfig();
+    const isAdvancedPlayground = Boolean(uiConfig.flags.advancedPlayground);
+
     const { setToastData } = useToast();
     const { context: contextData } = useUnleashContext();
     const contextOptions = contextData
@@ -103,6 +108,44 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
         }
     };
 
+    const onAutoCompleteChange = (
+        e: FormEvent,
+        newValue: string | (string | string[])[] | null
+    ) => {
+        if (!isStringOrStringArray(newValue)) return;
+
+        if (Array.isArray(newValue)) {
+            const temp =
+                (newValue || []).length > 1 ? newValue.join(',') : newValue[0];
+            return setContextValue(temp);
+        }
+
+        setContextValue(newValue);
+    };
+
+    const resolveAutocompleteValue = (): string | string[] | undefined => {
+        //This is needed for clearing the Autocomplete Chips when changing the context field
+        //and the new field also has legal values
+        if (contextValue === '') {
+            return undefined;
+        }
+
+        if (isAdvancedPlayground) {
+            // Split comma separated strings to array for fields with legal values
+            const foundField = contextData.find(
+                contextData => contextData.name === contextField
+            );
+            const hasLegalValues = (foundField?.legalValues || []).length > 1;
+            if (contextValue.includes(',') && hasLegalValues) {
+                return contextValue.split(',');
+            }
+
+            return [contextValue as string];
+        }
+
+        return contextValue;
+    };
+
     const resolveInput = () => {
         if (contextField === 'currentTime') {
             const validDate = parseValidDate(contextValue);
@@ -146,12 +189,10 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                     disablePortal
                     id="context-legal-values"
                     size="small"
-                    onChange={(e: FormEvent, newValue) => {
-                        if (typeof newValue === 'string') {
-                            return setContextValue(newValue);
-                        }
-                    }}
+                    value={resolveAutocompleteValue()}
+                    onChange={onAutoCompleteChange}
                     options={options}
+                    multiple={isAdvancedPlayground}
                     sx={{ width: 200, maxWidth: '100%' }}
                     renderInput={(params: any) => (
                         <TextField {...params} label="Value" />

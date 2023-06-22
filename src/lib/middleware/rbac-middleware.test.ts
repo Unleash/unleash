@@ -152,7 +152,7 @@ test('should verify permission for root resource', async () => {
     expect(accessService.hasPermission).toHaveBeenCalledTimes(1);
     expect(accessService.hasPermission).toHaveBeenCalledWith(
         req.user,
-        perms.ADMIN,
+        [perms.ADMIN],
         undefined,
         undefined,
     );
@@ -182,7 +182,7 @@ test('should lookup projectId from params', async () => {
 
     expect(accessService.hasPermission).toHaveBeenCalledWith(
         req.user,
-        perms.UPDATE_PROJECT,
+        [perms.UPDATE_PROJECT],
         req.params.projectId,
         undefined,
     );
@@ -217,7 +217,7 @@ test('should lookup projectId from feature toggle', async () => {
 
     expect(accessService.hasPermission).toHaveBeenCalledWith(
         req.user,
-        perms.UPDATE_FEATURE,
+        [perms.UPDATE_FEATURE],
         projectId,
         undefined,
     );
@@ -252,7 +252,7 @@ test('should lookup projectId from data', async () => {
 
     expect(accessService.hasPermission).toHaveBeenCalledWith(
         req.user,
-        perms.CREATE_FEATURE,
+        [perms.CREATE_FEATURE],
         projectId,
         undefined,
     );
@@ -279,7 +279,7 @@ test('Does not double check permission if not changing project when updating tog
     expect(accessService.hasPermission).toHaveBeenCalledTimes(1);
     expect(accessService.hasPermission).toHaveBeenCalledWith(
         req.user,
-        perms.UPDATE_FEATURE,
+        [perms.UPDATE_FEATURE],
         oldProjectId,
         undefined,
     );
@@ -303,7 +303,7 @@ test('UPDATE_TAG_TYPE does not need projectId', async () => {
     expect(accessService.hasPermission).toHaveBeenCalledTimes(1);
     expect(accessService.hasPermission).toHaveBeenCalledWith(
         req.user,
-        perms.UPDATE_TAG_TYPE,
+        [perms.UPDATE_TAG_TYPE],
         undefined,
         undefined,
     );
@@ -327,7 +327,7 @@ test('DELETE_TAG_TYPE does not need projectId', async () => {
     expect(accessService.hasPermission).toHaveBeenCalledTimes(1);
     expect(accessService.hasPermission).toHaveBeenCalledWith(
         req.user,
-        perms.DELETE_TAG_TYPE,
+        [perms.DELETE_TAG_TYPE],
         undefined,
         undefined,
     );
@@ -360,7 +360,7 @@ test('should not expect featureName for UPDATE_FEATURE when projectId specified'
 
     expect(accessService.hasPermission).toHaveBeenCalledWith(
         req.user,
-        perms.UPDATE_FEATURE,
+        [perms.UPDATE_FEATURE],
         projectId,
         undefined,
     );

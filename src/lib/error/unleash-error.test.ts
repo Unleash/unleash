@@ -417,12 +417,20 @@ describe('Error serialization special cases', () => {
         expect(json).toMatchObject(config);
     });
 
-    it('NoAccessError: adds `permission`', () => {
+    it('NoAccessError: adds `permissions`', () => {
         const permission = 'x';
         const error = new NoAccessError(permission);
         const json = error.toJSON();
 
-        expect(json.permission).toBe(permission);
+        expect(json.permissions).toStrictEqual([permission]);
+    });
+
+    it('NoAccessError: supports multiple permissions', () => {
+        const permission = ['x', 'y', 'z'];
+        const error = new NoAccessError(permission);
+        const json = error.toJSON();
+
+        expect(json.permissions).toStrictEqual(permission);
     });
 
     it('BadDataError: adds `details` with error details', () => {

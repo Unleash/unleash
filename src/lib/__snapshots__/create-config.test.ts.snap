@@ -52,7 +52,7 @@ exports[`should create default config 1`] = `
     "smtppass": undefined,
     "smtpuser": undefined,
   },
-  "enableOAS": false,
+  "enableOAS": true,
   "enterpriseVersion": undefined,
   "environmentEnableOverrides": [],
   "eventBus": EventEmitter {
@@ -96,8 +96,8 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppNameKillSwitch": false,
       "segmentContextFieldUsage": false,
       "strategyImprovements": false,
+      "strategySplittedButton": false,
       "strictSchemaValidation": false,
-      "variantMetrics": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -131,8 +131,8 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppNameKillSwitch": false,
       "segmentContextFieldUsage": false,
       "strategyImprovements": false,
+      "strategySplittedButton": false,
       "strictSchemaValidation": false,
-      "variantMetrics": false,
     },
     "externalResolver": {
       "getVariant": [Function],
@@ -171,7 +171,7 @@ exports[`should create default config 1`] = `
     "gracefulShutdownTimeout": 1000,
     "headersTimeout": 61000,
     "host": undefined,
-    "keepAliveTimeout": 60000,
+    "keepAliveTimeout": 15000,
     "pipe": undefined,
     "port": 4242,
     "secret": "super-secret",

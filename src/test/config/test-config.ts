@@ -19,7 +19,6 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
         server: { secret: 'really-secret' },
         session: { db: false },
         versionCheck: { enable: false },
-        enableOAS: true,
         clientFeatureCaching: {
             enabled: false,
         },

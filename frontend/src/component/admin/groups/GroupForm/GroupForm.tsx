@@ -10,7 +10,7 @@ import { ItemList } from 'component/common/ItemList/ItemList';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import { Link } from 'react-router-dom';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import IRole from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';

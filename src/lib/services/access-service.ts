@@ -120,17 +120,25 @@ export class AccessService {
      */
     async hasPermission(
         user: Pick<IUser, 'id' | 'permissions' | 'isAPI'>,
-        permission: string,
+        permission: string | string[],
         projectId?: string,
         environment?: string,
     ): Promise<boolean> {
+        const permissionsArray = Array.isArray(permission)
+            ? permission
+            : [permission];
+
+        const permissionLogInfo =
+            permissionsArray.length === 1
+                ? `permission=${permissionsArray[0]}`
+                : `permissions=[${permissionsArray.join(',')}]`;
+
         this.logger.info(
-            `Checking permission=${permission}, userId=${user.id}, projectId=${projectId}, environment=${environment}`,
+            `Checking ${permissionLogInfo}, userId=${user.id}, projectId=${projectId}, environment=${environment}`,
         );
 
         try {
             const userP = await this.getPermissionsForUser(user);
-
             return userP
                 .filter(
                     (p) =>
@@ -146,11 +154,12 @@ export class AccessService {
                 )
                 .some(
                     (p) =>
-                        p.permission === permission || p.permission === ADMIN,
+                        permissionsArray.includes(p.permission) ||
+                        p.permission === ADMIN,
                 );
         } catch (e) {
             this.logger.error(
-                `Error checking permission=${permission}, userId=${user.id} projectId=${projectId}`,
+                `Error checking ${permissionLogInfo}, userId=${user.id} projectId=${projectId}`,
                 e,
             );
             return Promise.resolve(false);

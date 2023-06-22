@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import IRole, { PredefinedRoleType } from 'interfaces/role';
+import { IRole, PredefinedRoleType } from 'interfaces/role';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { PageContent } from 'component/common/PageContent/PageContent';

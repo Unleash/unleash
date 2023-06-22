@@ -16,7 +16,7 @@ import useProjectAccess, {
     ENTITY_TYPE,
     IProjectAccess,
 } from 'hooks/api/getters/useProjectAccess/useProjectAccess';
-import { IProjectRole } from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -25,7 +25,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { IUser } from 'interfaces/user';
 import { IGroup } from 'interfaces/group';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ProjectRoleDescription } from './ProjectRoleDescription/ProjectRoleDescription';
 import { useNavigate } from 'react-router-dom';
 import { GO_BACK } from 'constants/navigate';
 import {
@@ -36,6 +35,8 @@ import {
 } from 'utils/testIds';
 import { caseInsensitiveSearch } from 'utils/search';
 import { IServiceAccount } from 'interfaces/service-account';
+import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
+import { PROJECT_ROLE_TYPE } from '@server/util/constants';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -82,15 +83,6 @@ const StyledUserOption = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledRoleOption = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    '& > span:last-of-type': {
-        fontSize: theme.fontSizes.smallerBody,
-        color: theme.palette.text.secondary,
-    },
-}));
-
 interface IAccessOption {
     id: number;
     entity: IUser | IGroup;
@@ -103,7 +95,7 @@ interface IProjectAccessAssignProps {
     users: IUser[];
     serviceAccounts: IServiceAccount[];
     groups: IGroup[];
-    roles: IProjectRole[];
+    roles: IRole[];
 }
 
 export const ProjectAccessAssign = ({
@@ -190,7 +182,7 @@ export const ProjectAccessAssign = ({
                     id === selected?.entity.id && type === selected?.type
             )
     );
-    const [role, setRole] = useState<IProjectRole | null>(
+    const [role, setRole] = useState<IRole | null>(
         roles.find(({ id }) => id === selected?.entity.roleId) ?? null
     );
 
@@ -317,18 +309,6 @@ export const ProjectAccessAssign = ({
         );
     };
 
-    const renderRoleOption = (
-        props: React.HTMLAttributes<HTMLLIElement>,
-        option: IProjectRole
-    ) => (
-        <li {...props}>
-            <StyledRoleOption>
-                <span>{option.name}</span>
-                <span>{option.description}</span>
-            </StyledRoleOption>
-        </li>
-    );
-
     const isValid = selectedOptions.length > 0 && role;
 
     return (
@@ -451,29 +431,13 @@ export const ProjectAccessAssign = ({
                             Select the role to assign for this project
                         </StyledInputDescription>
                         <StyledAutocompleteWrapper>
-                            <Autocomplete
+                            <RoleSelect
                                 data-testid={PA_ROLE_ID}
-                                size="small"
-                                openOnFocus
+                                type={PROJECT_ROLE_TYPE}
                                 value={role}
-                                onChange={(_, newValue) => setRole(newValue)}
-                                options={roles}
-                                renderOption={renderRoleOption}
-                                getOptionLabel={option => option.name}
-                                renderInput={params => (
-                                    <TextField {...params} label="Role" />
-                                )}
+                                setValue={role => setRole(role || null)}
                             />
                         </StyledAutocompleteWrapper>
-                        <ConditionallyRender
-                            condition={Boolean(role?.id)}
-                            show={
-                                <ProjectRoleDescription
-                                    roleId={role?.id!}
-                                    projectId={projectId}
-                                />
-                            }
-                        />
                     </div>
 
                     <StyledButtonContainer>

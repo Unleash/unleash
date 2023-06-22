@@ -44,6 +44,7 @@ module.exports = {
                 'topics/a-b-testing',
                 'topics/managing-constraints',
                 'topics/proxy-hosting',
+                'topics/data-collection',
             ],
         },
         {

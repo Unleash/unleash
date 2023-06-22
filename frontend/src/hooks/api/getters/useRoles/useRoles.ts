@@ -1,4 +1,4 @@
-import IRole, { IProjectRole } from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
@@ -11,7 +11,15 @@ import {
     PREDEFINED_ROLE_TYPES,
 } from '@server/util/constants';
 
-export const useRoles = () => {
+interface IUseRolesOutput {
+    roles: IRole[];
+    projectRoles: IRole[];
+    loading: boolean;
+    refetch: () => void;
+    error?: Error;
+}
+
+export const useRoles = (): IUseRolesOutput => {
     const { isEnterprise, uiConfig } = useUiConfig();
 
     const { data, error, mutate } = useConditionalSWR(
@@ -56,7 +64,7 @@ export const useRoles = () => {
                     .filter(({ type }: IRole) =>
                         PROJECT_ROLE_TYPES.includes(type)
                     )
-                    .sort(sortRoles) ?? []) as IProjectRole[],
+                    .sort(sortRoles) ?? []) as IRole[],
                 loading: !error && !data,
                 refetch: () => mutate(),
                 error,

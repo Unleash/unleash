@@ -14,7 +14,7 @@ export type ClientMetricsSchemaBucketToggles = {
         yes?: number;
         /** How many times the toggle evaluated to false */
         no?: number;
-        /** How many times each variant was returned */
+        /** An object describing how many times each variant was returned. Variant names are used as properties, and the number of times they were exposed is the corresponding value (i.e. `{ [variantName]: number }`). */
         variants?: ClientMetricsSchemaBucketTogglesVariants;
     };
 };

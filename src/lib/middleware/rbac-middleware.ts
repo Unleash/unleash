@@ -11,7 +11,7 @@ import User from '../types/user';
 interface PermissionChecker {
     hasPermission(
         user: User,
-        permission: string,
+        permissions: string[],
         projectId?: string,
         environment?: string,
     ): Promise<boolean>;
@@ -38,7 +38,11 @@ const rbacMiddleware = (
     logger.debug('Enabling RBAC middleware');
 
     return (req, res, next) => {
-        req.checkRbac = async (permission: string) => {
+        req.checkRbac = async (permissions: string | string[]) => {
+            const permissionsArray = Array.isArray(permissions)
+                ? permissions
+                : [permissions];
+
             const { user, params } = req;
 
             if (!user) {
@@ -65,21 +69,26 @@ const rbacMiddleware = (
             // will be removed in Unleash v5.0
             if (
                 !projectId &&
-                [DELETE_FEATURE, UPDATE_FEATURE].includes(permission)
+                permissionsArray.some((permission) =>
+                    [DELETE_FEATURE, UPDATE_FEATURE].includes(permission),
+                )
             ) {
                 const { featureName } = params;
                 projectId = await featureToggleStore.getProjectId(featureName);
             } else if (
                 projectId === undefined &&
-                (permission == CREATE_FEATURE ||
-                    permission.endsWith('FEATURE_STRATEGY'))
+                permissionsArray.some(
+                    (permission) =>
+                        permission == CREATE_FEATURE ||
+                        permission.endsWith('FEATURE_STRATEGY'),
+                )
             ) {
                 projectId = 'default';
             }
 
             return accessService.hasPermission(
                 user,
-                permission,
+                permissionsArray,
                 projectId,
                 environment,
             );

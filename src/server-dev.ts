@@ -39,6 +39,7 @@ process.nextTick(async () => {
                         responseTimeWithAppNameKillSwitch: false,
                         segmentContextFieldUsage: true,
                         advancedPlayground: true,
+                        strategySplittedButton: true,
                     },
                 },
                 authentication: {

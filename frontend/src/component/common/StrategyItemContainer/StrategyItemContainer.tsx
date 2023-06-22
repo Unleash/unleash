@@ -9,7 +9,9 @@ import {
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PlaygroundStrategySchema } from 'openapi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Badge } from '../Badge/Badge';
+import { Link } from 'react-router-dom';
 
 interface IStrategyItemContainerProps {
     strategy: IFeatureStrategy | PlaygroundStrategySchema;
@@ -103,6 +105,12 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     description,
 }) => {
     const Icon = getFeatureStrategyIcon(strategy.name);
+    const { uiConfig } = useUiConfig();
+
+    const StrategyHeaderLink: React.FC =
+        'links' in strategy
+            ? ({ children }) => <Link to={strategy.links.edit}>{children}</Link>
+            : ({ children }) => <> {children} </>;
 
     return (
         <Box sx={{ position: 'relative' }}>
@@ -143,19 +151,27 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                         }}
                     />
                     <StyledHeaderContainer>
-                        <StringTruncator
-                            maxWidth="400"
-                            maxLength={15}
-                            text={formatStrategyName(strategy.name)}
-                        />
-                        <ConditionallyRender
-                            condition={Boolean(strategy.title)}
-                            show={
-                                <StyledCustomTitle>
-                                    {formatStrategyName(String(strategy.title))}
-                                </StyledCustomTitle>
-                            }
-                        />
+                        <StrategyHeaderLink>
+                            <StringTruncator
+                                maxWidth="400"
+                                maxLength={15}
+                                text={formatStrategyName(String(strategy.name))}
+                            />
+                            <ConditionallyRender
+                                condition={
+                                    Boolean(
+                                        uiConfig?.flags?.strategyImprovements
+                                    ) && Boolean(strategy.title)
+                                }
+                                show={
+                                    <StyledCustomTitle>
+                                        {formatStrategyName(
+                                            String(strategy.title)
+                                        )}
+                                    </StyledCustomTitle>
+                                }
+                            />
+                        </StrategyHeaderLink>
                         <ConditionallyRender
                             condition={Boolean(description)}
                             show={

@@ -6,11 +6,20 @@
 import type { VariantSchemaPayload } from './variantSchemaPayload';
 import type { OverrideSchema } from './overrideSchema';
 
+/**
+ * A variant allows for further separation of users into segments. See [our excellent documentation](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) for a more detailed description
+ */
 export interface VariantSchema {
+    /** The variants name. Is unique for this feature toggle */
     name: string;
+    /** The weight is the likelihood of any one user getting this variant. It is a number between 0 and 1000. See the section on [variant weights](https://docs.getunleash.io/reference/feature-toggle-variants#variant-weight) for more information */
     weight: number;
+    /** Set to fix if this variant must have exactly the weight allocated to it. If the type is variable, the weight will adjust so that the total weight of all variants adds up to 1000 */
     weightType?: string;
+    /** [Stickiness](https://docs.getunleash.io/reference/feature-toggle-variants#variant-stickiness) is how Unleash guarantees that the same user gets the same variant every time */
     stickiness?: string;
+    /** Extra data configured for this variant */
     payload?: VariantSchemaPayload;
+    /** Overrides assigning specific variants to specific users. The weighting system automatically assigns users to specific groups for you, but any overrides in this list will take precedence. */
     overrides?: OverrideSchema[];
 }

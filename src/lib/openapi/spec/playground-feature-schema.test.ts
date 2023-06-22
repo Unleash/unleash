@@ -65,6 +65,9 @@ const playgroundStrategy = (
         constraints: playgroundStrategyConstraints(),
         segments: fc.array(playgroundSegment()),
         disabled: fc.boolean(),
+        links: fc.constant({
+            edit: '/projects/some-project/features/some-feature/strategies/edit?environmentId=some-env&strategyId=some-strat',
+        }),
     });
 
 const playgroundStrategies = (): Arbitrary<PlaygroundStrategySchema[]> =>

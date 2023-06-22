@@ -49,7 +49,7 @@ export const FeatureStrategyMenu = ({
         setAnchor(undefined);
     };
 
-    const onClick = (event: React.SyntheticEvent) => {
+    const openDefaultStrategyCreationModal = (event: React.SyntheticEvent) => {
         trackEvent('strategy-add', {
             props: {
                 buttonTitle: label,
@@ -58,7 +58,7 @@ export const FeatureStrategyMenu = ({
         navigate(createStrategyPath);
     };
 
-    const onMoreClick = (event: React.SyntheticEvent) => {
+    const openMoreStrategies = (event: React.SyntheticEvent) => {
         setAnchor(event.currentTarget);
     };
 
@@ -76,7 +76,7 @@ export const FeatureStrategyMenu = ({
                 permission={CREATE_FEATURE_STRATEGY}
                 projectId={projectId}
                 environmentId={environmentId}
-                onClick={onClick}
+                onClick={openDefaultStrategyCreationModal}
                 aria-labelledby={popoverId}
                 variant={variant}
                 size={size}
@@ -89,7 +89,7 @@ export const FeatureStrategyMenu = ({
                 permission={CREATE_FEATURE_STRATEGY}
                 projectId={projectId}
                 environmentId={environmentId}
-                onClick={onMoreClick}
+                onClick={openMoreStrategies}
                 aria-labelledby={popoverId}
                 variant="outlined"
                 size={size}

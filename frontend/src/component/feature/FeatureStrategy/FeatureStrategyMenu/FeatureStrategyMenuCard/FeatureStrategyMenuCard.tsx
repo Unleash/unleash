@@ -7,7 +7,6 @@ import {
 import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { styled } from '@mui/material';
-import React from 'react';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IFeatureStrategyMenuCardProps {
@@ -78,7 +77,7 @@ export const FeatureStrategyMenuCard = ({
         defaultStrategy
     );
 
-    const onClick = (event: React.SyntheticEvent) => {
+    const openStrategyCreationModal = () => {
         trackEvent('strategy-add', {
             props: {
                 buttonTitle: strategy.displayName || strategyName,
@@ -87,7 +86,7 @@ export const FeatureStrategyMenuCard = ({
     };
 
     return (
-        <StyledCard to={createStrategyPath} onClick={onClick}>
+        <StyledCard to={createStrategyPath} onClick={openStrategyCreationModal}>
             <StyledIcon>
                 <StrategyIcon />
             </StyledIcon>

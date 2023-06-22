@@ -107,7 +107,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
         }
     };
 
-    const handleAutocompleteOnChange = (e: FormEvent, newValue: any) => {
+    const onAutoCompleteChange = (e: FormEvent, newValue: any) => {
         if (typeof newValue === 'string') {
             return setContextValue(newValue);
         }
@@ -120,13 +120,28 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
         }
     };
 
-    const resolvedValue = isAdvancedPlayground
-        ? contextValue === ''
-            ? undefined
-            : contextValue?.includes(',')
-            ? contextValue.split(',')
-            : [contextValue]
-        : contextValue;
+    const resolveAutocompleteValue = (): string | string[] | undefined => {
+        //This is needed for clearing the Autocomplete Chips when changing the context field
+        //and the new field also has legal values
+        if (contextValue === '') {
+            return undefined;
+        }
+
+        if (isAdvancedPlayground) {
+            // Split comma separated strings to array for fields with legal values
+            const foundField = contextData.find(
+                contextData => contextData.name === contextField
+            );
+            const hasLegalValues = (foundField?.legalValues?.length || 0) > 1;
+            if (contextValue.includes(',') && hasLegalValues) {
+                return contextValue.split(',');
+            }
+
+            return [contextValue];
+        }
+
+        return contextValue;
+    };
 
     const resolveInput = () => {
         if (contextField === 'currentTime') {
@@ -171,8 +186,8 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                     disablePortal
                     id="context-legal-values"
                     size="small"
-                    value={resolvedValue}
-                    onChange={handleAutocompleteOnChange}
+                    value={resolveAutocompleteValue()}
+                    onChange={onAutoCompleteChange}
                     options={options}
                     multiple={isAdvancedPlayground}
                     sx={{ width: 200, maxWidth: '100%' }}

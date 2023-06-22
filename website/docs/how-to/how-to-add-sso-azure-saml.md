@@ -124,3 +124,7 @@ In the Unleash Admin SSO section, enable the option to "Enable Group Syncing".
 Add the same "Name" you used from the previous section (eg. "groups") as the "Group Field JSON Path".
 
 ![Unleash: SAML 2.0 SSO setup, enabled group syncing with the Group Field JSON Path as 'groups'](/img/sso-azure-saml-unleash-group-settings.png)
+
+**Note that Azure only supports sending up to 150 groups.** If you have more groups than this, you can setup a filter in Azure to only send the relevant groups to Unleash.
+
+![Unleash: SAML 2.0 setup, filtering groups by name ](/img/sso-azure-saml-group-filtering.png)

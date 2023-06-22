@@ -8,6 +8,7 @@ import { Popover, styled } from '@mui/material';
 import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards';
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate';
 import { MoreVert } from '@mui/icons-material';
+import { usePlausibleTracker } from '../../../../hooks/usePlausibleTracker';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -40,6 +41,7 @@ export const FeatureStrategyMenu = ({
 }: IFeatureStrategyMenuProps) => {
     const [anchor, setAnchor] = useState<Element>();
     const navigate = useNavigate();
+    const { trackEvent } = usePlausibleTracker();
     const isPopoverOpen = Boolean(anchor);
     const popoverId = isPopoverOpen ? 'FeatureStrategyMenuPopover' : undefined;
 
@@ -48,6 +50,15 @@ export const FeatureStrategyMenu = ({
     };
 
     const onClick = (event: React.SyntheticEvent) => {
+        trackEvent('strategy-add', {
+            props: {
+                buttonTitle: label,
+            },
+        });
+        navigate(createStrategyPath);
+    };
+
+    const onMoreClick = (event: React.SyntheticEvent) => {
         setAnchor(event.currentTarget);
     };
 
@@ -65,7 +76,7 @@ export const FeatureStrategyMenu = ({
                 permission={CREATE_FEATURE_STRATEGY}
                 projectId={projectId}
                 environmentId={environmentId}
-                onClick={() => navigate(createStrategyPath)}
+                onClick={onClick}
                 aria-labelledby={popoverId}
                 variant={variant}
                 size={size}
@@ -78,7 +89,7 @@ export const FeatureStrategyMenu = ({
                 permission={CREATE_FEATURE_STRATEGY}
                 projectId={projectId}
                 environmentId={environmentId}
-                onClick={onClick}
+                onClick={onMoreClick}
                 aria-labelledby={popoverId}
                 variant="outlined"
                 size={size}

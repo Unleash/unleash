@@ -11,6 +11,12 @@ import React from 'react';
 import { TokenType } from '../../../../../interfaces/token';
 import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { useOptionalPathParam } from '../../../../../hooks/useOptionalPathParam';
+import {
+  ADMIN,
+  CREATE_FRONTEND_API_TOKEN,
+  CREATE_CLIENT_API_TOKEN,
+} from '@server/types/permissions';
+import { useHasRootAccess } from 'hooks/useHasAccess';
 
 interface ITokenTypeSelectorProps {
     type: string;
@@ -28,6 +34,7 @@ export const TokenTypeSelector = ({
             key: TokenType.CLIENT,
             label: `Server-side SDK (${TokenType.CLIENT})`,
             title: 'Connect server-side SDK or Unleash Proxy',
+            permission: CREATE_CLIENT_API_TOKEN,
         },
     ];
 
@@ -36,6 +43,7 @@ export const TokenTypeSelector = ({
             key: TokenType.ADMIN,
             label: TokenType.ADMIN,
             title: 'Full access for managing Unleash',
+            permission: ADMIN,
         });
     }
 
@@ -44,6 +52,7 @@ export const TokenTypeSelector = ({
             key: TokenType.FRONTEND,
             label: `Client-side SDK (${TokenType.FRONTEND})`,
             title: 'Connect web and mobile SDK directly to Unleash',
+            permission: CREATE_FRONTEND_API_TOKEN,
         });
     }
     return (
@@ -59,11 +68,12 @@ export const TokenTypeSelector = ({
                     value={type}
                     onChange={(event, value) => setType(value)}
                 >
-                    {selectableTypes.map(({ key, label, title }) => (
+                    {selectableTypes.map(({ key, label, title, permission }) => (
                         <FormControlLabel
                             key={key}
                             value={key}
                             sx={{ mb: 1 }}
+                            disabled={!useHasRootAccess(permission)}
                             control={
                                 <Radio
                                     sx={{

@@ -17,7 +17,11 @@ import { TokenInfo } from '../ApiTokenForm/TokenInfo/TokenInfo';
 import { TokenTypeSelector } from '../ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
 import { ProjectSelector } from '../ApiTokenForm/ProjectSelector/ProjectSelector';
 import { EnvironmentSelector } from '../ApiTokenForm/EnvironmentSelector/EnvironmentSelector';
-import { ADMIN } from '@server/types/permissions';
+import {
+    ADMIN,
+    CREATE_CLIENT_API_TOKEN,
+    CREATE_FRONTEND_API_TOKEN,
+} from '@server/types/permissions';
 
 const pageTitle = 'Create API token';
 interface ICreateApiTokenProps {
@@ -105,7 +109,16 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
                 mode="Create"
-                actions={<CreateButton name="token" permission={ADMIN} />}
+                actions={
+                    <CreateButton
+                        name="token"
+                        permission={[
+                            ADMIN,
+                            CREATE_CLIENT_API_TOKEN,
+                            CREATE_FRONTEND_API_TOKEN,
+                        ]}
+                    />
+                }
             >
                 <TokenInfo
                     username={username}

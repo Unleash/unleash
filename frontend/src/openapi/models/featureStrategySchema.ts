@@ -7,7 +7,7 @@ import type { ConstraintSchema } from './constraintSchema';
 import type { ParametersSchema } from './parametersSchema';
 
 /**
- * A singles activation strategy configuration schema for a feature
+ * A single activation strategy configuration schema for a feature
  */
 export interface FeatureStrategySchema {
     /** A uuid for the feature strategy */

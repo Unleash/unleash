@@ -99,9 +99,7 @@ If you want to change which project a feature toggle belongs to, you can change 
 
 ![A feature toggle's settings tab. The project setting shows a dropdown to change projects.](/img/projects_existing_toggle_dropdown.png)
 
----
-title: Project default strategy
----
+## Project default strategy
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
 :::info Availability
@@ -114,7 +112,7 @@ You can define default strategies for each of a project's environments. The defa
 
 All default project strategies use the [gradual rollout activation strategy](activation-strategies.md). By default, the rollout 100%. You can customize the strategies by changing the rollout percentage and adding [constraints](strategy-constraints.mdx) and [segments](segments.mdx) as you would for any other strategy.
 
-## Configuration
+### Configuration
 
 Custom strategies are configured from each project's project settings tab.
 

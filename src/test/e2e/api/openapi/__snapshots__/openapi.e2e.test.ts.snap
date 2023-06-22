@@ -5290,10 +5290,12 @@ Stats are divided into current and previous **windows**.
         "properties": {
           "featureInfoCollectionEnabled": {
             "description": "Whether collection of feature usage metrics is enabled/active.",
+            "example": true,
             "type": "boolean",
           },
           "versionInfoCollectionEnabled": {
             "description": "Whether collection of version info is enabled/active.",
+            "example": true,
             "type": "boolean",
           },
         },

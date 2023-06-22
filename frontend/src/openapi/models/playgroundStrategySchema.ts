@@ -7,6 +7,7 @@ import type { PlaygroundStrategySchemaResult } from './playgroundStrategySchemaR
 import type { PlaygroundSegmentSchema } from './playgroundSegmentSchema';
 import type { PlaygroundConstraintSchema } from './playgroundConstraintSchema';
 import type { ParametersSchema } from './parametersSchema';
+import type { PlaygroundStrategySchemaLinks } from './playgroundStrategySchemaLinks';
 
 export interface PlaygroundStrategySchema {
     /** The strategy's name. */
@@ -25,4 +26,6 @@ export interface PlaygroundStrategySchema {
     constraints: PlaygroundConstraintSchema[];
     /** The strategy's constraints and their evaluation results. */
     parameters: ParametersSchema;
+    /** A set of links to actions you can perform on this strategy */
+    links: PlaygroundStrategySchemaLinks;
 }

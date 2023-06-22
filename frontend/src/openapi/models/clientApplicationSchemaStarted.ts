@@ -4,4 +4,7 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Either an RFC-3339 timestamp or a unix timestamp in seconds
+ */
 export type ClientApplicationSchemaStarted = string | number;

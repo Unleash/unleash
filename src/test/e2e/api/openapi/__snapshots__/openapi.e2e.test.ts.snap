@@ -843,8 +843,11 @@ The provider you choose for your addon dictates what properties the \`parameters
               "production",
             ],
             "items": {
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9~_.-]+$",
               "type": "string",
             },
+            "minItems": 1,
             "type": "array",
           },
           "projects": {

@@ -62,7 +62,7 @@ export const AdvancedPlayground: VFC<{
         if (environments?.length === 0) {
             setEnvironments([resolveDefaultEnvironment(availableEnvironments)]);
         }
-    }, [availableEnvironments]);
+    }, [JSON.stringify(environments), JSON.stringify(availableEnvironments)]);
 
     useEffect(() => {
         if (searchParamsLength > 0) {
@@ -130,6 +130,7 @@ export const AdvancedPlayground: VFC<{
         action?: () => void
     ) => {
         try {
+            setConfigurationError(undefined);
             const parsedContext = JSON.parse(context || '{}');
             const response = await evaluateAdvancedPlayground({
                 environments: resolveEnvironments(environments),
@@ -143,7 +144,6 @@ export const AdvancedPlayground: VFC<{
             if (action && typeof action === 'function') {
                 action();
             }
-            setConfigurationError(undefined);
             setResults(response);
         } catch (error: unknown) {
             if (error instanceof BadRequestError) {

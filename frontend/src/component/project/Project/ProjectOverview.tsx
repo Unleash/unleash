@@ -8,7 +8,6 @@ import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ProjectStats } from './ProjectStats/ProjectStats';
 
 const refreshInterval = 15 * 1000;

@@ -353,13 +353,16 @@ export class ApiTokenController extends Controller {
         const userPermissions = await this.accessService.getPermissionsForUser(
             user,
         );
-        let allowedTokenTypes = [
+
+        const allowedTokenTypes = [
             READ_ADMIN_API_TOKEN,
             READ_CLIENT_API_TOKEN,
             READ_FRONTEND_API_TOKEN,
         ]
             .filter((readPerm) =>
-                userPermissions.some((p) => p.permission === readPerm),
+                userPermissions.some(
+                    (p) => p.permission === readPerm || p.permission === ADMIN,
+                ),
             )
             .map(permissionToTokenType)
             .filter((t) => t);

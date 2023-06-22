@@ -18,19 +18,12 @@ const fetchHoursBack = (hoursBack: number, feature: string = 'demo') => {
 };
 
 beforeAll(async () => {
-    db = await dbInit('client_metrics_serial', getLogger, {
-        experimental: {
-            flags: {
-                variantMetrics: true,
-            },
-        },
-    });
+    db = await dbInit('client_metrics_serial', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
             experimental: {
                 flags: {
-                    variantMetrics: true,
                     strictSchemaValidation: true,
                 },
             },

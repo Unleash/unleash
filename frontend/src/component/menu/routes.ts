@@ -509,7 +509,7 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         path: '/admin/instance-privacy',
         title: 'Instance privacy',
         menu: { adminSettings: true },
-    }
+    },
 ];
 
 export const getRoute = (path: string) =>

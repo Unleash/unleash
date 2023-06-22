@@ -121,7 +121,9 @@ export const InstancePrivacyAdmin = () => {
                     variablesTexts={versionActivenessInfo.environmentVariables}
                 />
                 <ConditionallyRender
-                    condition={Boolean(uiConfig.flags.experimentalExtendedTelemetry)}
+                    condition={Boolean(
+                        uiConfig.flags.experimentalExtendedTelemetry
+                    )}
                     show={
                         <InstancePrivacy
                             title={featureCollectionDetails.title}
@@ -129,7 +131,10 @@ export const InstancePrivacyAdmin = () => {
                             concreteDetails={
                                 featureCollectionDetails.concreteDetails
                             }
-                            enabled={settings?.featureInfoCollectionEnabled && settings?.versionInfoCollectionEnabled}
+                            enabled={
+                                settings?.featureInfoCollectionEnabled &&
+                                settings?.versionInfoCollectionEnabled
+                            }
                             changeInfoText={
                                 featureActivenessInfo.changeInfoText
                             }

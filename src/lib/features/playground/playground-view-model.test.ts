@@ -46,6 +46,7 @@ describe('playground result to view model', () => {
         const viewModel = playgroundViewModel(input, [featureResult]);
         const transformedStrategy = viewModel.features[0].strategies.data[0];
 
+        // check that we're adding links correctly
         expect(transformedStrategy).toMatchObject({
             links: {
                 edit:
@@ -58,6 +59,9 @@ describe('playground result to view model', () => {
                     ),
             },
         });
+
+        // check that we're not changing anything else
+        expect(viewModel).toMatchObject({ input, features: [featureResult] });
     });
 
     it('adds edit links to advanced playground models', () => {
@@ -119,6 +123,7 @@ describe('playground result to view model', () => {
             viewModel.features[0].environments.development[0].strategies
                 .data[0];
 
+        // ensure that we're adding the required data
         expect(transformedStrategy).toMatchObject({
             links: {
                 edit:
@@ -131,5 +136,8 @@ describe('playground result to view model', () => {
                     ),
             },
         });
+
+        // check that we're not changing anything else
+        expect(viewModel).toMatchObject({ input, features: [featureResult] });
     });
 });

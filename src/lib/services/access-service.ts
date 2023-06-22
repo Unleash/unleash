@@ -212,7 +212,7 @@ export class AccessService {
     async addUserToRole(
         userId: number,
         roleId: number,
-        projectId?: string,
+        projectId: string,
     ): Promise<void> {
         return this.store.addUserToRole(userId, roleId, projectId);
     }

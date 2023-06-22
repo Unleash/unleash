@@ -163,7 +163,7 @@ test('user with custom root role should get a user root role', async () => {
         id: 1,
         rootRole: customRootRole.id,
     };
-    await accessService.addUserToRole(user.id, customRootRole.id);
+    await accessService.setUserRootRole(user.id, customRootRole.id);
 
     const roles = await accessService.getUserRootRoles(user.id);
     expect(roles).toHaveLength(1);

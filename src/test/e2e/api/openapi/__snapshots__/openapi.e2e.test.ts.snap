@@ -844,7 +844,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             ],
             "items": {
               "minLength": 1,
-              "pattern": "^[^\\s]+$",
+              "pattern": "^[a-zA-Z0-9~_.-]+$",
               "type": "string",
             },
             "minItems": 1,

@@ -59,3 +59,17 @@ export const resolveResultsWidth = (
 
     return '50%';
 };
+
+export const isStringOrStringArray = (
+    value: unknown
+): value is string | string[] => {
+    if (typeof value === 'string') {
+        return true;
+    }
+
+    if (Array.isArray(value)) {
+        return value.every(item => typeof item === 'string');
+    }
+
+    return false;
+};

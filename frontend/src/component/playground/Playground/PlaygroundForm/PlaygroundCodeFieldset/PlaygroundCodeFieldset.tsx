@@ -28,6 +28,7 @@ import { PlaygroundEditor } from './PlaygroundEditor/PlaygroundEditor';
 import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
 import { parseDateValue, parseValidDate } from 'component/common/util';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { isStringOrStringArray } from '../../playground.utils';
 interface IPlaygroundCodeFieldsetProps {
     context: string | undefined;
     setContext: Dispatch<SetStateAction<string | undefined>>;
@@ -107,15 +108,19 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
         }
     };
 
-    const onAutoCompleteChange = (e: FormEvent, newValue: any) => {
-        if (typeof newValue === 'string') {
-            return setContextValue(newValue);
-        }
+    const onAutoCompleteChange = (
+        e: FormEvent,
+        newValue: string | (string | string[])[] | null
+    ) => {
+        if (!isStringOrStringArray(newValue)) return;
+
         if (Array.isArray(newValue)) {
             const temp =
                 (newValue || []).length > 1 ? newValue.join(',') : newValue[0];
             return setContextValue(temp);
         }
+
+        setContextValue(newValue);
     };
 
     const resolveAutocompleteValue = (): string | string[] | undefined => {
@@ -135,7 +140,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                 return contextValue.split(',');
             }
 
-            return [contextValue];
+            return [contextValue as string];
         }
 
         return contextValue;

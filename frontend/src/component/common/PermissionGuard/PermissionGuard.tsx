@@ -1,0 +1,48 @@
+import { useContext } from 'react';
+import { Alert } from '@mui/material';
+import { ADMIN } from '@server/types/permissions';
+import AccessContext from 'contexts/AccessContext';
+
+interface IPermissionGuardProps {
+    permissions: string | string[];
+    children: JSX.Element;
+}
+
+export const PermissionGuard = ({
+    permissions,
+    children,
+}: IPermissionGuardProps) => {
+    const { hasAccess } = useContext(AccessContext);
+
+    const permissionsArray = Array.isArray(permissions)
+        ? permissions
+        : [permissions];
+
+    if (!permissionsArray.includes(ADMIN)) {
+        permissionsArray.push(ADMIN);
+    }
+
+    if (hasAccess(permissionsArray)) {
+        return children;
+    }
+
+    if (permissionsArray.length === 1) {
+        return (
+            <Alert severity="error">
+                You need the <strong>{permissionsArray[0]}</strong> permission
+                to access this section.
+            </Alert>
+        );
+    }
+
+    return (
+        <Alert severity="error">
+            You need one of the following permissions to access this section:
+            <ul>
+                {permissionsArray.sort().map(permission => (
+                    <li key={permission}>{permission}</li>
+                ))}
+            </ul>
+        </Alert>
+    );
+};

@@ -386,11 +386,11 @@ export interface IProject {
     defaultStickiness: string;
 }
 
-export interface ICustomRole {
-    id: number;
-    name: string;
+/**
+ * Extends IRole making description mandatory
+ */
+export interface ICustomRole extends IRole {
     description: string;
-    type: string;
 }
 
 export interface IProjectWithCount extends IProject {

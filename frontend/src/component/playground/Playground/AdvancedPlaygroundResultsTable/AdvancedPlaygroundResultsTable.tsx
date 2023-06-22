@@ -33,13 +33,9 @@ import {
     AdvancedPlaygroundRequestSchema,
     AdvancedPlaygroundFeatureSchema,
     AdvancedPlaygroundFeatureSchemaEnvironments,
-    AdvancedPlaygroundEnvironmentFeatureSchema,
 } from 'openapi';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
-import {
-    AdvancedPlaygroundEnvironmentDiffCell,
-    IAdvancedPlaygroundEnvironmentCellProps,
-} from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentDiffCell';
+import { AdvancedPlaygroundEnvironmentDiffCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentDiffCell';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(

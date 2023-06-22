@@ -8,8 +8,18 @@ import {
     IUserRole,
 } from '../../lib/types/stores/access-store';
 import { IPermission } from 'lib/types/model';
+import { IRoleStore } from 'lib/types';
+import FakeRoleStore from './fake-role-store';
 
 class AccessStoreMock implements IAccessStore {
+    fakeRolesStore: IRoleStore;
+
+    userToRoleMap: Map<number, number> = new Map();
+
+    constructor(roleStore?: IRoleStore) {
+        this.fakeRolesStore = roleStore ?? new FakeRoleStore();
+    }
+
     addAccessToProject(
         users: IAccessInfo[],
         groups: IAccessInfo[],
@@ -88,12 +98,8 @@ class AccessStoreMock implements IAccessStore {
         role_id: number,
         permissions: IPermission[],
     ): Promise<void> {
-        throw new Error('Method not implemented.');
+        return Promise.resolve(undefined);
     }
-
-    userPermissions: IUserPermission[] = [];
-
-    roles: IRole[] = [];
 
     getAvailablePermissions(): Promise<IPermission[]> {
         throw new Error('Method not implemented.');
@@ -123,8 +129,17 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    getRolesForUserId(userId: number): Promise<IRoleWithProject[]> {
-        return Promise.resolve([]);
+    async getRolesForUserId(userId: number): Promise<IRoleWithProject[]> {
+        const roleId = this.userToRoleMap.get(userId);
+        const found =
+            roleId === undefined
+                ? undefined
+                : await this.fakeRolesStore.get(roleId);
+        if (found) {
+            return Promise.resolve([found as IRoleWithProject]);
+        } else {
+            return Promise.resolve([]);
+        }
     }
 
     getUserIdsForRole(roleId: number, projectId: string): Promise<number[]> {
@@ -132,7 +147,8 @@ class AccessStoreMock implements IAccessStore {
     }
 
     addUserToRole(userId: number, roleId: number): Promise<void> {
-        throw new Error('Method not implemented.');
+        this.userToRoleMap.set(userId, roleId);
+        return Promise.resolve(undefined);
     }
 
     addPermissionsToRole(
@@ -140,7 +156,8 @@ class AccessStoreMock implements IAccessStore {
         permissions: string[],
         projectId?: string,
     ): Promise<void> {
-        throw new Error('Method not implemented.');
+        // do nothing for now
+        return Promise.resolve(undefined);
     }
 
     removePermissionFromRole(

@@ -45,7 +45,7 @@ export const createFakeAccessService = (
     const accountStore = new FakeAccountStore();
     const roleStore = new FakeRoleStore();
     const environmentStore = new FakeEnvironmentStore();
-    const accessStore = new FakeAccessStore();
+    const accessStore = new FakeAccessStore(roleStore);
     const groupService = new GroupService(
         { groupStore, eventStore, accountStore },
         { getLogger },

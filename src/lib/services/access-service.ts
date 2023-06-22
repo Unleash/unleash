@@ -212,7 +212,7 @@ export class AccessService {
     async addUserToRole(
         userId: number,
         roleId: number,
-        projectId: string,
+        projectId?: string,
     ): Promise<void> {
         return this.store.addUserToRole(userId, roleId, projectId);
     }
@@ -275,7 +275,9 @@ export class AccessService {
 
     async getUserRootRoles(userId: number): Promise<IRoleWithProject[]> {
         const userRoles = await this.store.getRolesForUserId(userId);
-        return userRoles.filter((r) => r.type === RoleType.ROOT);
+        return userRoles.filter(
+            (r) => r.type === RoleType.ROOT || r.type === RoleType.ROOT_CUSTOM,
+        );
     }
 
     async removeUserFromRole(

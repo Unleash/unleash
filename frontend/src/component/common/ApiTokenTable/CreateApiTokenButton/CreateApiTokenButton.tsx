@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Add } from '@mui/icons-material';
 interface ICreateApiTokenButton {
     path: string;
-    permission: string;
+    permission: string | string[];
     project?: string;
 }
 

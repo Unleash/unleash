@@ -327,6 +327,7 @@ export * from './playgroundRequestSchemaProjects';
 export * from './playgroundResponseSchema';
 export * from './playgroundSegmentSchema';
 export * from './playgroundStrategySchema';
+export * from './playgroundStrategySchemaLinks';
 export * from './playgroundStrategySchemaResult';
 export * from './playgroundStrategySchemaResultAnyOf';
 export * from './playgroundStrategySchemaResultAnyOfEnabled';

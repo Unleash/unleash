@@ -845,6 +845,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "items": {
               "type": "string",
             },
+            "minItems": 1,
             "type": "array",
           },
           "projects": {

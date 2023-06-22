@@ -12,6 +12,7 @@ export const advancedPlaygroundRequestSchema = {
         environments: {
             type: 'array',
             items: { type: 'string' },
+            minItems: 1,
             example: ['development', 'production'],
             description: 'The environments to evaluate toggles in.',
         },

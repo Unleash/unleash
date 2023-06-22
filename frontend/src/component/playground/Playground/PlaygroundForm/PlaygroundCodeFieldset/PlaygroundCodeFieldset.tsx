@@ -113,9 +113,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
         }
         if (Array.isArray(newValue)) {
             const temp =
-                (newValue as Array<string>).length > 1
-                    ? newValue.join(',')
-                    : newValue[0];
+                (newValue || []).length > 1 ? newValue.join(',') : newValue[0];
             return setContextValue(temp);
         }
     };

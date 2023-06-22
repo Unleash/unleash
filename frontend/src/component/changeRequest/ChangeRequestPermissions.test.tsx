@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { FeatureView } from '../feature/FeatureView/FeatureView';
 import { ThemeProvider } from 'themes/ThemeProvider';
@@ -203,8 +203,21 @@ const strategiesAreDisplayed = async (
     await screen.findByText(secondStrategy);
 };
 
+const getDeleteButtons = async () => {
+    const removeMenus = screen.getAllByTestId('MENU_STRATEGY_REMOVE');
+    const deleteButtons: HTMLElement[] = [];
+
+    removeMenus.forEach(menu => {
+        deleteButtons.push(
+            ...within(menu).getAllByTestId('STRATEGY_FORM_REMOVE_ID')
+        );
+    });
+
+    return deleteButtons;
+};
+
 const deleteButtonsActiveInChangeRequestEnv = async () => {
-    const deleteButtons = screen.getAllByTestId('STRATEGY_FORM_REMOVE_ID');
+    const deleteButtons = await getDeleteButtons();
     expect(deleteButtons.length).toBe(2);
 
     // wait for change request config to be loaded
@@ -221,7 +234,7 @@ const deleteButtonsActiveInChangeRequestEnv = async () => {
 };
 
 const deleteButtonsInactiveInChangeRequestEnv = async () => {
-    const deleteButtons = screen.getAllByTestId('STRATEGY_FORM_REMOVE_ID');
+    const deleteButtons = await getDeleteButtons();
     expect(deleteButtons.length).toBe(2);
 
     // wait for change request config to be loaded

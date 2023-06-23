@@ -36,6 +36,7 @@ export const CreateProjectApiTokenForm = () => {
         getApiTokenPayload,
         username,
         type,
+        apiTokenTypes,
         environment,
         setUsername,
         setTokenType,
@@ -126,7 +127,11 @@ export const CreateProjectApiTokenForm = () => {
                     errors={errors}
                     clearErrors={clearErrors}
                 />
-                <TokenTypeSelector type={type} setType={setTokenType} />
+                <TokenTypeSelector
+                    type={type}
+                    setType={setTokenType}
+                    apiTokenTypes={apiTokenTypes}
+                />
                 <EnvironmentSelector
                     type={type}
                     environment={environment}

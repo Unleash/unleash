@@ -26,7 +26,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 const versionCollectionDetails = {
     title: 'Version data collection',
     infoText:
-        "We collect the version of Unleash that you're using. We use this information to inform your Unleash instance of latest updates and and critical security patches.",
+        "We collect the version of Unleash that you're using. We use this information to inform your Unleash instance of latest updates and critical security patches.",
 
     concreteDetails: {
         'Instance ID': 'A unique ID generated for your instance',

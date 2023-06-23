@@ -4,7 +4,6 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import CodeMirror from '@uiw/react-codemirror';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { duotoneDark, duotoneLight } from '@uiw/codemirror-theme-duotone';
 import UIContext from 'contexts/UIContext';
 import { useContext } from 'react';
 

@@ -57,6 +57,7 @@ export const AdvancedPlayground: VFC<{
     const [searchParams, setSearchParams] = useSearchParams();
     const searchParamsLength = Array.from(searchParams.entries()).length;
     const { evaluateAdvancedPlayground, loading } = usePlaygroundApi();
+    const [hasFormBeenSubmitted, setHasFormBeenSubmitted] = useState(false);
 
     useEffect(() => {
         if (environments?.length === 0) {
@@ -167,6 +168,8 @@ export const AdvancedPlayground: VFC<{
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
         event.preventDefault();
 
+        setHasFormBeenSubmitted(true);
+
         await evaluatePlaygroundContext(environments, projects, context, () => {
             setURLParameters();
             setValue({
@@ -272,17 +275,25 @@ export const AdvancedPlayground: VFC<{
                         condition={loading}
                         show={<Loader />}
                         elseShow={
-                            <ConditionallyRender
-                                condition={Boolean(results)}
-                                show={
-                                    <AdvancedPlaygroundResultsTable
-                                        loading={loading}
-                                        features={results?.features}
-                                        input={results?.input}
-                                    />
-                                }
-                                elseShow={<PlaygroundGuidance />}
-                            />
+                            <>
+                                <ConditionallyRender
+                                    condition={Boolean(results)}
+                                    show={
+                                        <AdvancedPlaygroundResultsTable
+                                            loading={loading}
+                                            features={results?.features}
+                                            input={results?.input}
+                                        />
+                                    }
+                                />
+                                <ConditionallyRender
+                                    condition={
+                                        !Boolean(results) &&
+                                        !hasFormBeenSubmitted
+                                    }
+                                    show={<PlaygroundGuidance />}
+                                />
+                            </>
                         }
                     />
                 </Box>

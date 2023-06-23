@@ -1,9 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
 import { Alert } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
-import AccessContext from 'contexts/AccessContext';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useAuthSettingsApi, {
     ISimpleAuthSettings,
@@ -22,7 +20,6 @@ export const PasswordAuth = () => {
         useState<boolean>(false);
     const { updateSettings, errors, loading } =
         useAuthSettingsApi<ISimpleAuthSettings>('simple');
-    const { hasAccess } = useContext(AccessContext);
     const [confirmationOpen, setConfirmationOpen] = useState(false);
     const { data: adminCount } = useAdminCount();
     const { tokens } = useApiTokens();
@@ -30,14 +27,6 @@ export const PasswordAuth = () => {
     useEffect(() => {
         setDisablePasswordAuth(!!config.disabled);
     }, [config.disabled]);
-
-    if (!hasAccess(ADMIN)) {
-        return (
-            <Alert severity="error">
-                You need to be a root admin to access this section.
-            </Alert>
-        );
-    }
 
     const updateDisabled = () => {
         setDisablePasswordAuth(!disablePasswordAuth);

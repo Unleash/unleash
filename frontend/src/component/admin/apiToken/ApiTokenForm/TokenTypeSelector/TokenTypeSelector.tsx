@@ -9,16 +9,17 @@ import {
 } from '@mui/material';
 import { TokenType } from 'interfaces/token';
 
+export type SelectOption = {
+    key: string;
+    label: string;
+    title: string;
+    enabled: boolean;
+};
+
 interface ITokenTypeSelectorProps {
     type: string;
     setType: (value: TokenType) => void;
-    apiTokenTypes: {
-        key: string;
-        label: string;
-        title: string;
-        permission: string | string[];
-        hasAccess: boolean;
-    }[];
+    apiTokenTypes: SelectOption[];
 }
 export const TokenTypeSelector = ({
     type,
@@ -36,10 +37,10 @@ export const TokenTypeSelector = ({
                     defaultValue="CLIENT"
                     name="radio-buttons-group"
                     value={type}
-                    onChange={(event, value) => setType(value as TokenType)}
+                    onChange={(_, value) => setType(value as TokenType)}
                 >
                     {apiTokenTypes.map(
-                        ({ key, label, title, permission, hasAccess }) => (
+                        ({ key, label, title, enabled: hasAccess }) => (
                             <FormControlLabel
                                 key={key}
                                 value={key}

@@ -9,6 +9,7 @@ import {
     CREATE_CLIENT_API_TOKEN,
 } from '@server/types/permissions';
 import { useHasRootAccess } from 'hooks/useHasAccess';
+import { SelectOption } from './TokenTypeSelector/TokenTypeSelector';
 
 export type ApiTokenFormErrorType = 'username' | 'projects';
 export const useApiTokenForm = (project?: string) => {
@@ -16,13 +17,12 @@ export const useApiTokenForm = (project?: string) => {
     const { uiConfig } = useUiConfig();
     const initialEnvironment = environments?.find(e => e.enabled)?.name;
 
-    const apiTokenTypes = [
+    const apiTokenTypes: SelectOption[] = [
         {
             key: TokenType.CLIENT,
             label: `Server-side SDK (${TokenType.CLIENT})`,
             title: 'Connect server-side SDK or Unleash Proxy',
-            permission: CREATE_CLIENT_API_TOKEN,
-            hasAccess: useHasRootAccess(CREATE_CLIENT_API_TOKEN),
+            enabled: useHasRootAccess(CREATE_CLIENT_API_TOKEN),
         },
     ];
 
@@ -33,8 +33,7 @@ export const useApiTokenForm = (project?: string) => {
             key: TokenType.ADMIN,
             label: TokenType.ADMIN,
             title: 'Full access for managing Unleash',
-            permission: ADMIN,
-            hasAccess: hasAdminAccess,
+            enabled: hasAdminAccess,
         });
     }
 
@@ -43,12 +42,11 @@ export const useApiTokenForm = (project?: string) => {
             key: TokenType.FRONTEND,
             label: `Client-side SDK (${TokenType.FRONTEND})`,
             title: 'Connect web and mobile SDK directly to Unleash',
-            permission: CREATE_FRONTEND_API_TOKEN,
-            hasAccess: hasCreateFrontendAccess,
+            enabled: hasCreateFrontendAccess,
         });
     }
 
-    const firstAccessibleType = apiTokenTypes.find(t => t.hasAccess)?.key;
+    const firstAccessibleType = apiTokenTypes.find(t => t.enabled)?.key;
 
     const [username, setUsername] = useState('');
     const [type, setType] = useState(firstAccessibleType || TokenType.CLIENT);

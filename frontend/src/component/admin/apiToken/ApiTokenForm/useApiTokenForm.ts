@@ -66,14 +66,14 @@ export const useApiTokenForm = (project?: string) => {
         setEnvironment(type === 'ADMIN' ? '*' : initialEnvironment);
     }, [type, initialEnvironment]);
 
-    const setTokenType = (value: string) => {
+    const setTokenType = (value: TokenType) => {
         if (value === 'ADMIN') {
             setType(TokenType.ADMIN);
             setMemorizedProjects(projects);
             setProjects(['*']);
             setEnvironment('*');
         } else {
-            setType(TokenType[value as keyof typeof TokenType]);
+            setType(value);
             setProjects(memorizedProjects);
             setEnvironment(initialEnvironment);
         }

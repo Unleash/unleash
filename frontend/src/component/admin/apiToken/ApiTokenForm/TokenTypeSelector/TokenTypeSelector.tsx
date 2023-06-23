@@ -7,11 +7,11 @@ import {
     RadioGroup,
     Typography,
 } from '@mui/material';
-import { useHasRootAccess } from 'hooks/useHasAccess';
+import { TokenType } from 'interfaces/token';
 
 interface ITokenTypeSelectorProps {
     type: string;
-    setType: (value: string) => void;
+    setType: (value: TokenType) => void;
     apiTokenTypes: {
         key: string;
         label: string;
@@ -36,7 +36,7 @@ export const TokenTypeSelector = ({
                     defaultValue="CLIENT"
                     name="radio-buttons-group"
                     value={type}
-                    onChange={(event, value) => setType(value)}
+                    onChange={(event, value) => setType(value as TokenType)}
                 >
                     {apiTokenTypes.map(
                         ({ key, label, title, permission, hasAccess }) => (

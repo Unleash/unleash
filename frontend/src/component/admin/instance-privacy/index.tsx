@@ -83,7 +83,7 @@ const featureCollectionActivenessManagementTexts: IFeatureActivenessManagementIn
         disabled: {
             environmentVariables: ['SEND_TELEMETRY=true'],
             changeInfoText:
-                'To enable Feature Usage Collection set the environment variable to true and restart Unleash.',
+                'To enable feature usage collection set the environment variable to true and restart Unleash.',
         },
     };
 

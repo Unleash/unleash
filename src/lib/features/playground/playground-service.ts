@@ -201,7 +201,9 @@ export class PlaygroundService {
             },
             true,
             false,
+            true,
         );
+
         const featureProject: Record<string, string> = features.reduce(
             (obj, feature) => {
                 obj[feature.name] = feature.project;

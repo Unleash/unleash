@@ -23,6 +23,7 @@ export interface IGetAllFeatures {
     includeStrategyIds?: boolean;
     includeDisabledStrategies?: boolean;
     userId?: number;
+    includeStrategyTitles?: boolean;
 }
 
 export interface IGetAdminFeatures {
@@ -56,6 +57,7 @@ export default class FeatureToggleClientStore
         isAdmin,
         includeStrategyIds,
         userId,
+        includeStrategyTitles,
     }: IGetAllFeatures): Promise<IFeatureToggleClient[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer('getFeatureAdmin');
@@ -74,6 +76,7 @@ export default class FeatureToggleClientStore
             'fe.environment as environment',
             'fs.id as strategy_id',
             'fs.strategy_name as strategy_name',
+            'fs.title as strategy_title',
             'fs.disabled as strategy_disabled',
             'fs.parameters as parameters',
             'fs.constraints as constraints',
@@ -204,6 +207,10 @@ export default class FeatureToggleClientStore
 
         const features: IFeatureToggleClient[] = Object.values(featureToggles);
 
+        if (!includeStrategyTitles) {
+            FeatureToggleClientStore.removeTitlesFromStrategies(features);
+        }
+
         if (!isAdmin && !includeStrategyIds) {
             // We should not send strategy IDs from the client API,
             // as this breaks old versions of the Go SDK (at least).
@@ -234,6 +241,16 @@ export default class FeatureToggleClientStore
         features.forEach((feature) => {
             feature.strategies.forEach((strategy) => {
                 delete strategy.id;
+            });
+        });
+    }
+
+    private static removeTitlesFromStrategies(
+        features: IFeatureToggleClient[],
+    ) {
+        features.forEach((feature) => {
+            feature.strategies.forEach((strategy) => {
+                delete strategy.title;
             });
         });
     }
@@ -300,6 +317,7 @@ export default class FeatureToggleClientStore
         featureQuery?: IFeatureToggleQuery,
         includeStrategyIds?: boolean,
         includeDisabledStrategies?: boolean,
+        includeStrategyTitles?: boolean,
     ): Promise<IFeatureToggleClient[]> {
         return this.getAll({
             featureQuery,
@@ -307,6 +325,7 @@ export default class FeatureToggleClientStore
             isAdmin: false,
             includeStrategyIds,
             includeDisabledStrategies,
+            includeStrategyTitles,
         });
     }
 

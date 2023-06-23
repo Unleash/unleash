@@ -830,11 +830,13 @@ class FeatureToggleService {
         query?: IFeatureToggleQuery,
         includeIds?: boolean,
         includeDisabledStrategies?: boolean,
+        includeStrategyTitles?: boolean,
     ): Promise<FeatureConfigurationClient[]> {
         const result = await this.featureToggleClientStore.getClient(
             query || {},
             includeIds,
             includeDisabledStrategies,
+            includeStrategyTitles,
         );
         if (this.flagResolver.isEnabled('cleanClientApi')) {
             return result.map(

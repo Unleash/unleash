@@ -6,6 +6,7 @@ export interface IFeatureToggleClientStore {
         featureQuery: Partial<IFeatureToggleQuery>,
         includeStrategyIds?: boolean,
         includeDisabledStrategies?: boolean,
+        includeStrategyTitles?: boolean,
     ): Promise<IFeatureToggleClient[]>;
 
     // @Deprecated

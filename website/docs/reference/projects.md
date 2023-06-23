@@ -98,3 +98,26 @@ All available projects are available from the drop-down menu.
 If you want to change which project a feature toggle belongs to, you can change that from the feature toggle's configuration page. Under the _settings_ tab, choose the _project_ option and choose the new project from the dropdown menu.
 
 ![A feature toggle's settings tab. The project setting shows a dropdown to change projects.](/img/projects_existing_toggle_dropdown.png)
+
+## Project default strategy
+import Figure from '@site/src/components/Figure/Figure.tsx'
+
+:::info Availability
+
+The project default strategy feature is generally available starting with **Unleash 5.2.0**.
+
+:::
+
+You can define default strategies for each of a project's environments. The default strategy for an environment will be added to a feature when you enable it in an environment **if and only if** the feature has **no active strategies** defined.
+
+All default project strategies use the [gradual rollout activation strategy](activation-strategies.md). By default, the rollout 100%. You can customize the strategies by changing the rollout percentage and adding [constraints](strategy-constraints.md) and [segments](segments.mdx) as you would for any other strategy.
+
+### Configuration
+
+Custom strategies are configured from each project's project settings tab.
+
+<Figure caption="The default strategy configuration page is available from the project settings tab." img="/img/project-settings-default-sstrategy.png" />
+
+The default strategies screen lists a strategy for each of the project's environments
+
+<Figure caption="Each strategy can be individually configured with the corresponding edit button." img="/img/edit-default-strategy.png" />

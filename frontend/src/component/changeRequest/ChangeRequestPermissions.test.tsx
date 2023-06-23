@@ -86,23 +86,27 @@ const setupOtherRoutes = (feature: string) => {
         version: 1,
         strategies: [
             {
-                displayName: 'Standard',
-                name: 'default',
+                displayName: 'Gradual Rollout',
+                name: 'flexibleRollout',
                 editable: false,
                 description:
                     'The standard strategy is strictly on / off for your entire userbase.',
-                parameters: [],
+                parameters: {
+                    rollout: '100',
+                    groupId: '',
+                    stickiness: 'default',
+                },
                 deprecated: false,
             },
             {
-                displayName: 'UserIDs',
-                name: 'userWithId',
+                displayName: 'Hosts',
+                name: 'hosts',
                 editable: false,
                 description:
                     'Enable the feature for a specific set of userIds.',
                 parameters: [
                     {
-                        name: 'userIds',
+                        name: 'hosts',
                         type: 'list',
                         description: '',
                         required: false,
@@ -268,7 +272,7 @@ test('open mode + non-project member can perform basic change request actions', 
     const featureName = 'test';
     featureEnvironments(featureName, [
         { name: 'development', strategies: [] },
-        { name: 'production', strategies: ['userWithId'] },
+        { name: 'production', strategies: ['hosts'] },
         { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([]);
@@ -286,7 +290,7 @@ test('open mode + non-project member can perform basic change request actions', 
         </UnleashUiSetup>
     );
 
-    await strategiesAreDisplayed('UserIDs', 'Standard');
+    await strategiesAreDisplayed('Hosts', 'Gradual Rollout');
     await deleteButtonsActiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
 });
@@ -296,7 +300,7 @@ test('protected mode + project member can perform basic change request actions',
     const featureName = 'test';
     featureEnvironments(featureName, [
         { name: 'development', strategies: [] },
-        { name: 'production', strategies: ['userWithId'] },
+        { name: 'production', strategies: ['hosts'] },
         { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([project]);
@@ -314,7 +318,7 @@ test('protected mode + project member can perform basic change request actions',
         </UnleashUiSetup>
     );
 
-    await strategiesAreDisplayed('UserIDs', 'Standard');
+    await strategiesAreDisplayed('Hosts', 'Gradual Rollout');
     await deleteButtonsActiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
 });
@@ -324,7 +328,7 @@ test('protected mode + non-project member cannot perform basic change request ac
     const featureName = 'test';
     featureEnvironments(featureName, [
         { name: 'development', strategies: [] },
-        { name: 'production', strategies: ['userWithId'] },
+        { name: 'production', strategies: ['hosts'] },
         { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([]);
@@ -342,7 +346,7 @@ test('protected mode + non-project member cannot perform basic change request ac
         </UnleashUiSetup>
     );
 
-    await strategiesAreDisplayed('UserIDs', 'Standard');
+    await strategiesAreDisplayed('Hosts', 'Gradual Rollout');
     await deleteButtonsInactiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
 });

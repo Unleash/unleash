@@ -36,6 +36,8 @@ import {
 } from 'openapi';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { AdvancedPlaygroundEnvironmentDiffCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentDiffCell';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { countCombinations } from './combinationCounter';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -61,6 +63,18 @@ export const AdvancedPlaygroundResultsTable = ({
     input,
     loading,
 }: IAdvancedPlaygroundResultsTableProps) => {
+    if (features) {
+        const { trackEvent } = usePlausibleTracker();
+        console.log('Got this many combinations', countCombinations(features));
+
+        trackEvent('playground', {
+            props: {
+                eventType: 'number-of-combinations',
+                count: countCombinations(features),
+            },
+        });
+    }
+
     const [searchParams, setSearchParams] = useSearchParams();
     const ref = useLoading(loading);
     const [searchValue, setSearchValue] = useState(

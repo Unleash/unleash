@@ -63,9 +63,8 @@ export const AdvancedPlaygroundResultsTable = ({
     input,
     loading,
 }: IAdvancedPlaygroundResultsTableProps) => {
+    const { trackEvent } = usePlausibleTracker();
     if (features) {
-        const { trackEvent } = usePlausibleTracker();
-
         trackEvent('playground', {
             props: {
                 eventType: 'number-of-combinations',

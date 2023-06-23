@@ -45,13 +45,6 @@ const { value, setValue } = createLocalStorage(
     defaultSort
 );
 
-const StyledButton = styled(Link)(({ theme }) => ({
-    textAlign: 'left',
-    textDecorationStyle: 'dotted',
-    textUnderlineOffset: theme.spacing(0.75),
-    color: theme.palette.neutral.dark,
-}));
-
 interface IAdvancedPlaygroundResultsTableProps {
     features?: AdvancedPlaygroundFeatureSchema[];
     input?: AdvancedPlaygroundRequestSchema;

@@ -105,7 +105,7 @@ export const FeatureStrategyCreate = () => {
             if (strategyTemplate.parameters?.groupId === '' && featureId) {
                 strategyTemplate.parameters.groupId = featureId;
             }
-            setStrategy(strategyTemplate);
+            setStrategy(strategyTemplate as any);
         } else if (strategyDefinition) {
             setStrategy(createFeatureStrategy(featureId, strategyDefinition));
         }

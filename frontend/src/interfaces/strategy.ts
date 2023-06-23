@@ -4,14 +4,14 @@ export interface IFeatureStrategy {
     id: string;
     strategyName?: string;
     name: string;
-    title?: string | null;
+    title?: string;
     constraints: IConstraint[];
     parameters: IFeatureStrategyParameters;
     featureName?: string;
     projectId?: string;
     environment?: string;
     segments?: number[];
-    disabled?: boolean | null;
+    disabled?: boolean;
 }
 
 export interface IFeatureStrategyParameters {

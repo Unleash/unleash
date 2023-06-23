@@ -69,7 +69,7 @@ const versionCollectionActivenessManagementTexts: IFeatureActivenessManagementIn
         disabled: {
             environmentVariables: ['CHECK_VERSION=true'],
             changeInfoText:
-                'Version Info Collection can be enabled by setting the environment variable to true and restarting Unleash.',
+                'Version info collection can be enabled by setting the environment variable to true and restarting Unleash.',
         },
     };
 

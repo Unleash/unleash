@@ -2,7 +2,6 @@ import { Box, styled, useTheme } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
-import CodeMirror from '@uiw/react-codemirror';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import UIContext from 'contexts/UIContext';
 import { useContext } from 'react';

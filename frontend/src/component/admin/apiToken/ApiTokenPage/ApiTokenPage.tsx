@@ -19,6 +19,8 @@ import {
     DELETE_FRONTEND_API_TOKEN,
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
+    CREATE_CLIENT_API_TOKEN,
+    CREATE_FRONTEND_API_TOKEN,
 } from '@server/types/permissions';
 
 export const ApiTokenPage = () => {
@@ -88,7 +90,11 @@ export const ApiTokenPage = () => {
                                     />
                                     <PageHeader.Divider />
                                     <CreateApiTokenButton
-                                        permission={ADMIN}
+                                        permission={[
+                                            CREATE_FRONTEND_API_TOKEN,
+                                            CREATE_CLIENT_API_TOKEN,
+                                            ADMIN,
+                                        ]}
                                         path="/admin/api/create-token"
                                     />
                                 </>

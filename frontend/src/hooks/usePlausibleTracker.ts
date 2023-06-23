@@ -39,7 +39,8 @@ export type CustomEvents =
     | 'demo-open-demo-web'
     | 'context-usage'
     | 'segment-usage'
-    | 'strategy-add';
+    | 'strategy-add'
+    | 'playground';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

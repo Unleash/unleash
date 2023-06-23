@@ -45,9 +45,9 @@ import { OperationDeniedError } from '../../error';
 interface TokenParam {
     token: string;
 }
-const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string = (
-    tokenType,
-) => {
+export const tokenTypeToCreatePermission: (
+    tokenType: ApiTokenType,
+) => string = (tokenType) => {
     switch (tokenType) {
         case ApiTokenType.ADMIN:
             return ADMIN;

@@ -62,6 +62,7 @@
     "@uiw/codemirror-theme-duotone": "4.21.3",
     "@uiw/react-codemirror": "4.21.1",
     "@vitejs/plugin-react": "3.1.0",
+    "cartesian": "^1.0.1",
     "chart.js": "3.9.1",
     "chartjs-adapter-date-fns": "3.0.0",
     "classnames": "2.3.2",

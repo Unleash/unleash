@@ -36,19 +36,14 @@ import {
 } from 'openapi';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { AdvancedPlaygroundEnvironmentDiffCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentDiffCell';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { countCombinations } from './combinationCounter';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
     'AdvancedPlaygroundResultsTable:v1',
     defaultSort
 );
-
-const StyledButton = styled(Link)(({ theme }) => ({
-    textAlign: 'left',
-    textDecorationStyle: 'dotted',
-    textUnderlineOffset: theme.spacing(0.75),
-    color: theme.palette.neutral.dark,
-}));
 
 interface IAdvancedPlaygroundResultsTableProps {
     features?: AdvancedPlaygroundFeatureSchema[];
@@ -61,6 +56,16 @@ export const AdvancedPlaygroundResultsTable = ({
     input,
     loading,
 }: IAdvancedPlaygroundResultsTableProps) => {
+    const { trackEvent } = usePlausibleTracker();
+    if (features) {
+        trackEvent('playground', {
+            props: {
+                eventType: 'number-of-combinations',
+                count: countCombinations(features),
+            },
+        });
+    }
+
     const [searchParams, setSearchParams] = useSearchParams();
     const ref = useLoading(loading);
     const [searchValue, setSearchValue] = useState(

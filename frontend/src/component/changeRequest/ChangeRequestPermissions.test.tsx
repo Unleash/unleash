@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { FeatureView } from '../feature/FeatureView/FeatureView';
 import { ThemeProvider } from 'themes/ThemeProvider';
@@ -86,27 +86,23 @@ const setupOtherRoutes = (feature: string) => {
         version: 1,
         strategies: [
             {
-                displayName: 'Gradual Rollout',
-                name: 'flexibleRollout',
+                displayName: 'Standard',
+                name: 'default',
                 editable: false,
                 description:
                     'The standard strategy is strictly on / off for your entire userbase.',
-                parameters: {
-                    rollout: '100',
-                    groupId: '',
-                    stickiness: 'default',
-                },
+                parameters: [],
                 deprecated: false,
             },
             {
-                displayName: 'Hosts',
-                name: 'applicationHostname',
+                displayName: 'UserIDs',
+                name: 'userWithId',
                 editable: false,
                 description:
                     'Enable the feature for a specific set of userIds.',
                 parameters: [
                     {
-                        name: 'applicationHostname',
+                        name: 'userIds',
                         type: 'list',
                         description: '',
                         required: false,
@@ -208,49 +204,53 @@ const strategiesAreDisplayed = async (
 };
 
 const getDeleteButtons = async () => {
-    const removeMenus = screen.getAllByTestId('MENU_STRATEGY_REMOVE');
+    const removeMenus = screen.getAllByTestId(`STRATEGY_REMOVE_MENU_BTN`);
     const deleteButtons: HTMLElement[] = [];
 
-    removeMenus.forEach(menu => {
-        deleteButtons.push(
-            ...within(menu).getAllByTestId('STRATEGY_FORM_REMOVE_ID')
-        );
-    });
-
+    await Promise.all(
+        removeMenus.map(async menu => {
+            menu.click();
+            const removeButton = screen.getAllByTestId(
+                'STRATEGY_FORM_REMOVE_ID'
+            );
+            deleteButtons.push(...removeButton);
+        })
+    );
+    console.log(deleteButtons);
     return deleteButtons;
 };
 
 const deleteButtonsActiveInChangeRequestEnv = async () => {
     const deleteButtons = await getDeleteButtons();
-    expect(deleteButtons.length).toBe(2);
+    expect(deleteButtons.length).toBe(3);
 
     // wait for change request config to be loaded
     await waitFor(() => {
         // production
-        const productionStrategyDeleteButton = deleteButtons[0];
-        expect(productionStrategyDeleteButton).not.toBeDisabled();
+        const productionStrategyDeleteButton = deleteButtons[1];
+        expect(productionStrategyDeleteButton).not.toHaveClass('Mui-disabled');
     });
     await waitFor(() => {
         // custom env
-        const customEnvStrategyDeleteButton = deleteButtons[1];
-        expect(customEnvStrategyDeleteButton).toBeDisabled();
+        const customEnvStrategyDeleteButton = deleteButtons[2];
+        expect(customEnvStrategyDeleteButton).toHaveClass('Mui-disabled');
     });
 };
 
 const deleteButtonsInactiveInChangeRequestEnv = async () => {
     const deleteButtons = await getDeleteButtons();
-    expect(deleteButtons.length).toBe(2);
+    expect(deleteButtons.length).toBe(3);
 
     // wait for change request config to be loaded
     await waitFor(() => {
         // production
-        const productionStrategyDeleteButton = deleteButtons[0];
-        expect(productionStrategyDeleteButton).toBeDisabled();
+        const productionStrategyDeleteButton = deleteButtons[1];
+        expect(productionStrategyDeleteButton).toHaveClass('Mui-disabled');
     });
     await waitFor(() => {
         // custom env
-        const customEnvStrategyDeleteButton = deleteButtons[1];
-        expect(customEnvStrategyDeleteButton).toBeDisabled();
+        const customEnvStrategyDeleteButton = deleteButtons[2];
+        expect(customEnvStrategyDeleteButton).toHaveClass('Mui-disabled');
     });
 };
 
@@ -272,7 +272,7 @@ test('open mode + non-project member can perform basic change request actions', 
     const featureName = 'test';
     featureEnvironments(featureName, [
         { name: 'development', strategies: [] },
-        { name: 'production', strategies: ['flexibleRollout'] },
+        { name: 'production', strategies: ['default'] },
         { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([]);
@@ -290,7 +290,7 @@ test('open mode + non-project member can perform basic change request actions', 
         </UnleashUiSetup>
     );
 
-    await strategiesAreDisplayed('Hosts', 'Gradual Rollout');
+    await strategiesAreDisplayed('UserIDs', 'Standard');
     await deleteButtonsActiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
 });
@@ -300,7 +300,7 @@ test('protected mode + project member can perform basic change request actions',
     const featureName = 'test';
     featureEnvironments(featureName, [
         { name: 'development', strategies: [] },
-        { name: 'production', strategies: ['applicationHostname'] },
+        { name: 'production', strategies: ['userWithId'] },
         { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([project]);
@@ -318,7 +318,7 @@ test('protected mode + project member can perform basic change request actions',
         </UnleashUiSetup>
     );
 
-    await strategiesAreDisplayed('Hosts', 'Gradual Rollout');
+    await strategiesAreDisplayed('UserIDs', 'Standard');
     await deleteButtonsActiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
 });
@@ -328,7 +328,7 @@ test('protected mode + non-project member cannot perform basic change request ac
     const featureName = 'test';
     featureEnvironments(featureName, [
         { name: 'development', strategies: [] },
-        { name: 'production', strategies: ['applicationHostname'] },
+        { name: 'production', strategies: ['userWithId'] },
         { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([]);
@@ -346,7 +346,7 @@ test('protected mode + non-project member cannot perform basic change request ac
         </UnleashUiSetup>
     );
 
-    await strategiesAreDisplayed('Hosts', 'Gradual Rollout');
+    await strategiesAreDisplayed('UserIDs', 'Standard');
     await deleteButtonsInactiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
 });

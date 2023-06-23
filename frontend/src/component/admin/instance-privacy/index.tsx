@@ -78,7 +78,7 @@ const featureCollectionActivenessManagementTexts: IFeatureActivenessManagementIn
         enabled: {
             environmentVariables: ['SEND_TELEMETRY=false'],
             changeInfoText:
-                'Feature Usage Collection can be disabled by setting the environment variable to false and restarting Unleash.',
+                'Feature usage collection can be disabled by setting the environment variable to false and restarting Unleash.',
         },
         disabled: {
             environmentVariables: ['SEND_TELEMETRY=true'],

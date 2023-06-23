@@ -102,15 +102,10 @@ export const FeatureStrategyCreate = () => {
     useEffect(() => {
         if (shouldUseDefaultStrategy) {
             const strategyTemplate = defaultStrategy || DEFAULT_STRATEGY;
-            if (
-                strategyTemplate.parameters &&
-                'groupId' in strategyTemplate.parameters &&
-                strategyTemplate.parameters.groupId === '' &&
-                featureId
-            ) {
+            if (strategyTemplate.parameters?.groupId === '' && featureId) {
                 strategyTemplate.parameters.groupId = featureId;
             }
-            setStrategy(strategyTemplate as any);
+            setStrategy(strategyTemplate);
         } else if (strategyDefinition) {
             setStrategy(createFeatureStrategy(featureId, strategyDefinition));
         }

@@ -3,8 +3,6 @@ import { Badge } from 'component/common/Badge/Badge';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import UIContext from 'contexts/UIContext';
-import { useContext } from 'react';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -14,57 +12,41 @@ const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-const CardTitleRow = styled(Box)(() => ({
+const StyledCardTitleRow = styled(Box)(() => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
 }));
 
-const CardDescription = styled(Box)(({ theme }) => ({
+const StyledCardDescription = styled(Box)(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallBody,
     marginTop: theme.spacing(2),
 }));
 
-const PropertyName = styled('p')(({ theme }) => ({
+const StyledPropertyName = styled('p')(({ theme }) => ({
     display: 'table-cell',
     fontWeight: theme.fontWeight.bold,
     paddingTop: theme.spacing(2),
 }));
 
-const PropertyDetails = styled('p')(({ theme }) => ({
+const StyledPropertyDetails = styled('p')(({ theme }) => ({
     display: 'table-cell',
     paddingTop: theme.spacing(2),
     paddingLeft: theme.spacing(4),
 }));
 
-const DataCollectionExplanation = styled('div')(({ theme }) => ({
+const StyledDataCollectionExplanation = styled('div')(({ theme }) => ({
     display: 'table-cell',
     width: '75%',
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
 }));
 
-const DataCollectionBadge = styled('div')(({ theme }) => ({
+const StyledDataCollectionBadge = styled('div')(({ theme }) => ({
     display: 'table-cell',
 }));
-
-interface IPrivacyProps {
-    title: String;
-    infoText: String;
-    concreteDetails: Record<string, string>;
-    enabled: boolean;
-    changeInfoText: String;
-    variablesTexts: String[];
-    dependsOnText?: String;
-}
-
-interface ICodeTooltip {
-    changeInfoText: String;
-    variablesTexts: String[];
-    dependsOnText?: String;
-}
 
 const StyledTag = styled('span')(({ theme }) => ({
     display: 'block',
@@ -80,13 +62,39 @@ const StyledDescription = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
+const StyledDataCollectionPropertyRow = styled('div')(() => ({
+    display: 'table-row',
+}));
+
+const StyledDataCollectionPropertyTable = styled('div')(() => ({
+    display: 'table',
+}));
+
+const StyledDataCollectionPropertyCell = styled('div')(() => ({
+    display: 'table-cell',
+}));
+
+interface IPrivacyProps {
+    title: string;
+    infoText: string;
+    concreteDetails: Record<string, string>;
+    enabled: boolean;
+    changeInfoText: string;
+    variablesTexts: string[];
+    dependsOnText?: string;
+}
+
+interface IToolTipInstructionContentProps {
+    changeInfoText: string;
+    variablesTexts: string[];
+    dependsOnText?: string;
+}
+
 const ToolTipInstructionContent = ({
     changeInfoText,
     variablesTexts,
     dependsOnText,
-}: ICodeTooltip) => {
-    const { themeMode } = useContext(UIContext);
-    const theme = useTheme();
+}: IToolTipInstructionContentProps) => {
     return (
         <StyledDescription>
             <ToolTipDescriptionText>{changeInfoText}</ToolTipDescriptionText>
@@ -126,13 +134,6 @@ const ToolTipDescriptionText = styled('p')(({ theme }) => ({
     marginTop: theme.spacing(1),
 }));
 
-const TooltipDescriptionHeader = styled('p')(({ theme }) => ({
-    color: theme.palette.text.primary,
-    fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.fontWeight.bold,
-    marginBottom: theme.spacing(1),
-}));
-
 export const InstancePrivacy = ({
     title,
     infoText,
@@ -144,9 +145,9 @@ export const InstancePrivacy = ({
 }: IPrivacyProps) => {
     return (
         <StyledContainer>
-            <CardTitleRow>
+            <StyledCardTitleRow>
                 <b>{title}</b>
-                <DataCollectionBadge>
+                <StyledDataCollectionBadge>
                     {enabled && (
                         <Badge color="success" icon={<CheckIcon />}>
                             Data is collected
@@ -157,15 +158,15 @@ export const InstancePrivacy = ({
                             No data is collected
                         </Badge>
                     )}
-                </DataCollectionBadge>
-            </CardTitleRow>
+                </StyledDataCollectionBadge>
+            </StyledCardTitleRow>
 
-            <CardDescription>
-                <div style={{ display: 'table' }}>
-                    <DataCollectionExplanation>
+            <StyledCardDescription>
+                <StyledDataCollectionPropertyTable>
+                    <StyledDataCollectionExplanation>
                         {infoText}
-                    </DataCollectionExplanation>
-                    <div style={{ display: 'table-cell' }}>
+                    </StyledDataCollectionExplanation>
+                    <StyledDataCollectionPropertyCell>
                         <StyledTag>
                             <HtmlTooltip
                                 title={
@@ -184,20 +185,22 @@ export const InstancePrivacy = ({
                                 </div>
                             </HtmlTooltip>
                         </StyledTag>
-                    </div>
-                </div>
+                    </StyledDataCollectionPropertyCell>
+                </StyledDataCollectionPropertyTable>
 
-                <div style={{ display: 'table' }}>
+                <StyledDataCollectionPropertyTable>
                     {Object.entries(concreteDetails).map(([key, value]) => {
                         return (
-                            <div key={key} style={{ display: 'table-row' }}>
-                                <PropertyName>{key}</PropertyName>
-                                <PropertyDetails>{value}</PropertyDetails>
-                            </div>
+                            <StyledDataCollectionPropertyRow>
+                                <StyledPropertyName>{key}</StyledPropertyName>
+                                <StyledPropertyDetails>
+                                    {value}
+                                </StyledPropertyDetails>
+                            </StyledDataCollectionPropertyRow>
                         );
                     })}
-                </div>
-            </CardDescription>
+                </StyledDataCollectionPropertyTable>
+            </StyledCardDescription>
         </StyledContainer>
     );
 };

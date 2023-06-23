@@ -1,5 +1,3 @@
-import AccessContext from 'contexts/AccessContext';
-import React, { useContext, useState } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Box, styled } from '@mui/material';
@@ -14,8 +12,8 @@ interface IFeatureActivenessManagementInfo {
 }
 
 interface IActivenessManagementInfo {
-    environmentVariables: String[];
-    changeInfoText: String;
+    environmentVariables: string[];
+    changeInfoText: string;
 }
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -48,8 +46,6 @@ const featureCollectionDetails = {
         Environments: 'The number of environments in your instance',
         Segments: 'The number of segments defined in your instance',
         Strategies: 'The number of strategies defined in your instance',
-        /*SAML: 'Whether or not SAML SSO is in use',
-        OIDC: 'Whether or not OIDC SSO is in use',*/
         'Feature Exports': 'The number of feature exports performed',
         'Feature Imports': 'The number of feature imports performed',
         'Custom Strategies':
@@ -103,7 +99,7 @@ export const InstancePrivacyAdmin = () => {
         ? featureCollectionActivenessManagementTexts.enabled
         : featureCollectionActivenessManagementTexts.disabled;
 
-    let dependsOnFeatureCollection: undefined | String = undefined;
+    let dependsOnFeatureCollection: undefined | string = undefined;
     if (!settings?.versionInfoCollectionEnabled)
         dependsOnFeatureCollection = settings?.featureInfoCollectionEnabled
             ? 'Note: Feature Usage Collection is enabled, but for it to be active you must also enable Version Info Collection'

@@ -2,7 +2,6 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
 export interface ITelemetrySettings {
     versionInfoCollectionEnabled: boolean;

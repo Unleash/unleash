@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Box,
     Button,
@@ -9,8 +9,6 @@ import {
 } from '@mui/material';
 import { Alert } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
-import AccessContext from 'contexts/AccessContext';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useAuthSettingsApi from 'hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
@@ -31,7 +29,6 @@ export const GoogleAuth = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const [data, setData] = useState(initialState);
-    const { hasAccess } = useContext(AccessContext);
     const { config } = useAuthSettings('google');
     const { updateSettings, errors, loading } = useAuthSettingsApi('google');
 
@@ -40,10 +37,6 @@ export const GoogleAuth = () => {
             setData(config);
         }
     }, [config]);
-
-    if (!hasAccess(ADMIN)) {
-        return <span>You need admin privileges to access this section.</span>;
-    }
 
     const updateField = (event: React.ChangeEvent<HTMLInputElement>) => {
         setData({

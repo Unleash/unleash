@@ -1,7 +1,4 @@
-import { useContext } from 'react';
-import AccessContext from 'contexts/AccessContext';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
+import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ApiTokenTable } from 'component/common/ApiTokenTable/ApiTokenTable';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -24,7 +21,6 @@ import {
 } from '@server/types/permissions';
 
 export const ApiTokenPage = () => {
-    const { hasAccess } = useContext(AccessContext);
     const { tokens, loading, refetch } = useApiTokens();
     const { deleteToken } = useApiTokensApi();
 
@@ -71,51 +67,49 @@ export const ApiTokenPage = () => {
     });
 
     return (
-        <ConditionallyRender
-            condition={hasAccess([
+        <PermissionGuard
+            permissions={[
                 READ_CLIENT_API_TOKEN,
                 READ_FRONTEND_API_TOKEN,
                 ADMIN,
-            ])}
-            show={() => (
-                <PageContent
-                    header={
-                        <PageHeader
-                            title={`API access (${rows.length})`}
-                            actions={
-                                <>
-                                    <Search
-                                        initialValue={globalFilter}
-                                        onChange={setGlobalFilter}
-                                    />
-                                    <PageHeader.Divider />
-                                    <CreateApiTokenButton
-                                        permission={[
-                                            CREATE_FRONTEND_API_TOKEN,
-                                            CREATE_CLIENT_API_TOKEN,
-                                            ADMIN,
-                                        ]}
-                                        path="/admin/api/create-token"
-                                    />
-                                </>
-                            }
-                        />
-                    }
-                >
-                    <ApiTokenTable
-                        loading={loading}
-                        headerGroups={headerGroups}
-                        setHiddenColumns={setHiddenColumns}
-                        prepareRow={prepareRow}
-                        getTableBodyProps={getTableBodyProps}
-                        getTableProps={getTableProps}
-                        rows={rows}
-                        columns={columns}
-                        globalFilter={globalFilter}
+            ]}
+        >
+            <PageContent
+                header={
+                    <PageHeader
+                        title={`API access (${rows.length})`}
+                        actions={
+                            <>
+                                <Search
+                                    initialValue={globalFilter}
+                                    onChange={setGlobalFilter}
+                                />
+                                <PageHeader.Divider />
+                                <CreateApiTokenButton
+                                    permission={[
+                                        CREATE_FRONTEND_API_TOKEN,
+                                        CREATE_CLIENT_API_TOKEN,
+                                        ADMIN,
+                                    ]}
+                                    path="/admin/api/create-token"
+                                />
+                            </>
+                        }
                     />
-                </PageContent>
-            )}
-            elseShow={() => <AdminAlert />}
-        />
+                }
+            >
+                <ApiTokenTable
+                    loading={loading}
+                    headerGroups={headerGroups}
+                    setHiddenColumns={setHiddenColumns}
+                    prepareRow={prepareRow}
+                    getTableBodyProps={getTableBodyProps}
+                    getTableProps={getTableProps}
+                    rows={rows}
+                    columns={columns}
+                    globalFilter={globalFilter}
+                />
+            </PageContent>
+        </PermissionGuard>
     );
 };

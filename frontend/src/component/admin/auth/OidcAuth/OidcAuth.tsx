@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     FormControl,
@@ -12,8 +12,6 @@ import {
 } from '@mui/material';
 import { Alert } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
-import AccessContext from 'contexts/AccessContext';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { AutoCreateForm } from '../AutoCreateForm/AutoCreateForm';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAuthSettingsApi from 'hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
@@ -41,7 +39,6 @@ export const OidcAuth = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const [data, setData] = useState(initialState);
-    const { hasAccess } = useContext(AccessContext);
     const { config } = useAuthSettings('oidc');
     const { updateSettings, errors, loading } = useAuthSettingsApi('oidc');
 
@@ -50,14 +47,6 @@ export const OidcAuth = () => {
             setData(config);
         }
     }, [config]);
-
-    if (!hasAccess(ADMIN)) {
-        return (
-            <Alert severity="error">
-                You need to be a root admin to access this section.
-            </Alert>
-        );
-    }
 
     const updateField = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.name, event.target.value);

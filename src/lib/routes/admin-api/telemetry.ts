@@ -33,7 +33,7 @@ class TelemetryController extends Controller {
                 openApiService.validPath({
                     tags: ['Telemetry'],
                     summary:
-                        'Get settings for telemetry information collection',
+                        'Get telemetry settings',
                     description:
                         'Provides the configured settings for telemetry information collection',
                     operationId: 'getTelemetrySettings',

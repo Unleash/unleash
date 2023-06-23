@@ -31,7 +31,7 @@ const CardDescription = styled(Box)(({ theme }) => ({
 
 const PropertyName = styled('p')(({ theme }) => ({
     display: 'table-cell',
-    fontWeight: 'bold',
+    fontWeight: theme.fontWeight.bold,
     paddingTop: theme.spacing(2),
 }));
 

@@ -7,54 +7,24 @@ import {
     RadioGroup,
     Typography,
 } from '@mui/material';
-import React from 'react';
-import { TokenType } from '../../../../../interfaces/token';
-import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { useOptionalPathParam } from '../../../../../hooks/useOptionalPathParam';
-import {
-    ADMIN,
-    CREATE_FRONTEND_API_TOKEN,
-    CREATE_CLIENT_API_TOKEN,
-} from '@server/types/permissions';
 import { useHasRootAccess } from 'hooks/useHasAccess';
 
 interface ITokenTypeSelectorProps {
     type: string;
     setType: (value: string) => void;
+    apiTokenTypes: {
+        key: string;
+        label: string;
+        title: string;
+        permission: string | string[];
+        hasAccess: boolean;
+    }[];
 }
 export const TokenTypeSelector = ({
     type,
     setType,
+    apiTokenTypes,
 }: ITokenTypeSelectorProps) => {
-    const projectId = useOptionalPathParam('projectId');
-    const { uiConfig } = useUiConfig();
-
-    const selectableTypes = [
-        {
-            key: TokenType.CLIENT,
-            label: `Server-side SDK (${TokenType.CLIENT})`,
-            title: 'Connect server-side SDK or Unleash Proxy',
-            permission: CREATE_CLIENT_API_TOKEN,
-        },
-    ];
-
-    if (!projectId) {
-        selectableTypes.push({
-            key: TokenType.ADMIN,
-            label: TokenType.ADMIN,
-            title: 'Full access for managing Unleash',
-            permission: ADMIN,
-        });
-    }
-
-    if (uiConfig.flags.embedProxyFrontend) {
-        selectableTypes.splice(1, 0, {
-            key: TokenType.FRONTEND,
-            label: `Client-side SDK (${TokenType.FRONTEND})`,
-            title: 'Connect web and mobile SDK directly to Unleash',
-            permission: CREATE_FRONTEND_API_TOKEN,
-        });
-    }
     return (
         <StyledContainer>
             <FormControl sx={{ mb: 2, width: '100%' }}>
@@ -68,13 +38,13 @@ export const TokenTypeSelector = ({
                     value={type}
                     onChange={(event, value) => setType(value)}
                 >
-                    {selectableTypes.map(
-                        ({ key, label, title, permission }) => (
+                    {apiTokenTypes.map(
+                        ({ key, label, title, permission, hasAccess }) => (
                             <FormControlLabel
                                 key={key}
                                 value={key}
                                 sx={{ mb: 1 }}
-                                disabled={!useHasRootAccess(permission)}
+                                disabled={!hasAccess}
                                 control={
                                     <Radio
                                         sx={{

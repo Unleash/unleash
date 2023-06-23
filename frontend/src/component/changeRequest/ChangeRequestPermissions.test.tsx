@@ -100,13 +100,13 @@ const setupOtherRoutes = (feature: string) => {
             },
             {
                 displayName: 'Hosts',
-                name: 'hosts',
+                name: 'applicationHostname',
                 editable: false,
                 description:
                     'Enable the feature for a specific set of userIds.',
                 parameters: [
                     {
-                        name: 'hosts',
+                        name: 'applicationHostname',
                         type: 'list',
                         description: '',
                         required: false,
@@ -272,7 +272,7 @@ test('open mode + non-project member can perform basic change request actions', 
     const featureName = 'test';
     featureEnvironments(featureName, [
         { name: 'development', strategies: [] },
-        { name: 'production', strategies: ['hosts'] },
+        { name: 'production', strategies: ['flexibleRollout'] },
         { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([]);
@@ -300,7 +300,7 @@ test('protected mode + project member can perform basic change request actions',
     const featureName = 'test';
     featureEnvironments(featureName, [
         { name: 'development', strategies: [] },
-        { name: 'production', strategies: ['hosts'] },
+        { name: 'production', strategies: ['applicationHostname'] },
         { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([project]);
@@ -328,7 +328,7 @@ test('protected mode + non-project member cannot perform basic change request ac
     const featureName = 'test';
     featureEnvironments(featureName, [
         { name: 'development', strategies: [] },
-        { name: 'production', strategies: ['hosts'] },
+        { name: 'production', strategies: ['applicationHostname'] },
         { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([]);

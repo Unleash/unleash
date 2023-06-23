@@ -4,9 +4,7 @@ import { ADMIN } from '@server/types/permissions';
 import AccessContext from 'contexts/AccessContext';
 
 const StyledList = styled('ul')(({ theme }) => ({
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
+    paddingInlineStart: theme.spacing(2),
 }));
 
 interface IPermissionGuardProps {

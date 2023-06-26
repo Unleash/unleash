@@ -199,9 +199,7 @@ export class PlaygroundService {
                 project: projects === ALL ? undefined : projects,
                 environment,
             },
-            true,
-            false,
-            true,
+            ['strategy IDs', 'strategy titles'],
         );
 
         const featureProject: Record<string, string> = features.reduce(

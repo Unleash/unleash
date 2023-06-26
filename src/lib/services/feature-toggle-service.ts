@@ -84,6 +84,7 @@ import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-f
 import { unique } from '../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
+import { OptionalClientFeatureData } from 'lib/types/stores/feature-toggle-client-store';
 
 interface IFeatureContext {
     featureName: string;
@@ -828,15 +829,11 @@ class FeatureToggleService {
 
     async getClientFeatures(
         query?: IFeatureToggleQuery,
-        includeIds?: boolean,
-        includeDisabledStrategies?: boolean,
-        includeStrategyTitles?: boolean,
+        optionalIncludes?: OptionalClientFeatureData[],
     ): Promise<FeatureConfigurationClient[]> {
         const result = await this.featureToggleClientStore.getClient(
             query || {},
-            includeIds,
-            includeDisabledStrategies,
-            includeStrategyTitles,
+            optionalIncludes,
         );
         if (this.flagResolver.isEnabled('cleanClientApi')) {
             return result.map(

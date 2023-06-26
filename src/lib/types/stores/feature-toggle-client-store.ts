@@ -1,12 +1,15 @@
 import { IFeatureToggleClient, IFeatureToggleQuery } from '../model';
 import { IGetAdminFeatures } from '../../db/feature-toggle-client-store';
 
+export type OptionalClientFeatureData =
+    | 'strategy IDs'
+    | 'disabled strategies'
+    | 'strategy titles';
+
 export interface IFeatureToggleClientStore {
     getClient(
         featureQuery: Partial<IFeatureToggleQuery>,
-        includeStrategyIds?: boolean,
-        includeDisabledStrategies?: boolean,
-        includeStrategyTitles?: boolean,
+        optionalIncludes?: OptionalClientFeatureData[],
     ): Promise<IFeatureToggleClient[]>;
 
     // @Deprecated

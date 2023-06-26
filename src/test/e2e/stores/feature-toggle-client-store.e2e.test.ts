@@ -43,9 +43,7 @@ describe('strategy title queries', () => {
     test('should add `title` to strategies when asked', async () => {
         const clientToggles = await featureToggleClientStore.getClient(
             undefined,
-            undefined,
-            undefined,
-            true,
+            ['strategy titles'],
         );
 
         expect(clientToggles[0].strategies[0].title).not.toBeUndefined();

@@ -89,4 +89,5 @@ export interface IFeatureMetricsRaw {
     yes: number;
     no: number;
     variants: Record<string, number>;
+    timings: { yes: number; no: number };
 }

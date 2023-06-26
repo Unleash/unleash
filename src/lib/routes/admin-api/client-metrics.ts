@@ -90,16 +90,29 @@ class ClientMetricsController extends Controller {
         });
     }
 
+    getRandomNumber(min: number, max: number): number {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     async getRawToggleMetrics(
         req: Request<any, IName, IHoursBack, any>,
         res: Response<FeatureMetricsSchema>,
     ): Promise<void> {
         const { name } = req.params;
         const { hoursBack } = req.query;
-        const data = await this.metrics.getClientMetricsForToggle(
-            name,
-            this.parseHoursBackQueryParam(hoursBack),
-        );
+        const data = (
+            await this.metrics.getClientMetricsForToggle(
+                name,
+                this.parseHoursBackQueryParam(hoursBack),
+            )
+        ).map((row) => ({
+            ...row,
+            timings: {
+                yes: this.getRandomNumber(100, 200),
+                no: this.getRandomNumber(20, 110),
+            },
+        }));
+
         this.openApiService.respondWithValidation(
             200,
             res,

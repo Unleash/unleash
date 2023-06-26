@@ -40,6 +40,11 @@ export const FeatureMetricsContent = ({
                     hoursBack={hoursBack}
                     statsSectionId={statsSectionId}
                 />
+                <LazyFeaturePerformanceChart
+                    metrics={metrics}
+                    hoursBack={hoursBack}
+                    statsSectionId={statsSectionId}
+                />
             </Box>
             <Box mt={4}>
                 <FeatureMetricsStatsRaw
@@ -61,4 +66,8 @@ export const FeatureMetricsContent = ({
 
 const LazyFeatureMetricsChart = React.lazy(
     () => import('../FeatureMetricsChart/FeatureMetricsChart')
+);
+
+const LazyFeaturePerformanceChart = React.lazy(
+    () => import('../FeaturePerformanceChart/FeaturePerformanceChart')
 );

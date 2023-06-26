@@ -173,9 +173,14 @@ export default class FeatureToggleClientStore
                 strategies: [],
             };
             if (this.isUnseenStrategyRow(feature, r) && !r.strategy_disabled) {
-                feature.strategies?.push(
-                    FeatureToggleClientStore.rowToStrategy(r),
-                );
+                const { id, title, ...strategy } =
+                    FeatureToggleClientStore.rowToStrategy(r);
+
+                feature.strategies?.push({
+                    ...strategy,
+                    ...(includeStrategyTitles && title ? { title } : {}),
+                    ...(includeStrategyIds ? { id } : {}),
+                });
             }
             if (this.isNewTag(feature, r)) {
                 this.addTag(feature, r);
@@ -207,16 +212,6 @@ export default class FeatureToggleClientStore
         }, {});
 
         const features: IFeatureToggleClient[] = Object.values(featureToggles);
-
-        if (!includeStrategyTitles) {
-            FeatureToggleClientStore.removeTitlesFromStrategies(features);
-        }
-
-        if (!isAdmin && !includeStrategyIds) {
-            // We should not send strategy IDs from the client API,
-            // as this breaks old versions of the Go SDK (at least).
-            FeatureToggleClientStore.removeIdsFromStrategies(features);
-        }
 
         return features;
     }

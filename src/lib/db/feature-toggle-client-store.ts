@@ -326,7 +326,6 @@ export default class FeatureToggleClientStore
             archived: false,
             isAdmin: false,
             includeStrategyIds: optional('strategy IDs'),
-            includeDisabledStrategies: optional('disabled strategies'),
             includeStrategyTitles: optional('strategy titles'),
         });
     }

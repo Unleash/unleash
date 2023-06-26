@@ -2,6 +2,7 @@ import Controller from '../controller';
 import FeatureController from './feature';
 import MetricsController from './metrics';
 import RegisterController from './register';
+import FeedbackController from './feedback';
 import { IUnleashConfig, IUnleashServices } from '../../types';
 
 export default class ClientApi extends Controller {
@@ -11,6 +12,7 @@ export default class ClientApi extends Controller {
         this.use('/features', new FeatureController(services, config).router);
         this.use('/metrics', new MetricsController(services, config).router);
         this.use('/register', new RegisterController(services, config).router);
+        this.use('/feedback', new FeedbackController(config).router);
     }
 }
 

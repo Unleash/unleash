@@ -71,10 +71,10 @@ export default class ClientMetricsServiceV2 {
             ...metrics,
         ]);
 
-        console.log(
-            'unsaved metrics',
-            JSON.stringify(this.unsavedMetrics, null, 2),
-        );
+        // console.log(
+        //     'unsaved metrics',
+        //     JSON.stringify(this.unsavedMetrics, null, 2),
+        // );
         this.lastSeenService.updateLastSeen(metrics);
     }
 
@@ -104,7 +104,20 @@ export default class ClientMetricsServiceV2 {
                 yes: value.bucket.toggles[name].yes,
                 no: value.bucket.toggles[name].no,
                 variants: value.bucket.toggles[name].variants,
-                extraData: data.bucket.toggles[name].extraData,
+                enabledExecutionTime:
+                    data.bucket.toggles[name].extraData?.yes.executionTime
+                        .totalMs,
+                disabledExecutionTime:
+                    data.bucket.toggles[name].extraData?.no.executionTime
+                        .totalMs,
+                enabledExecutionCount:
+                    data.bucket.toggles[name].extraData.yes.executionTime.count,
+                disabledExecutionCount:
+                    data.bucket.toggles[name].extraData.no.executionTime.count,
+                enabledErrorCount:
+                    data.bucket.toggles[name].extraData.yes.errors,
+                disabledErrorCount:
+                    data.bucket.toggles[name].extraData.no.errors,
             };
         });
         await this.registerBulkMetrics(clientMetrics);
@@ -187,6 +200,14 @@ export default class ClientMetricsServiceV2 {
                             item.appName === appName &&
                             item.environment === environment,
                     );
+                    if (metric) {
+                        if (metric.enabledExecutionTime) {
+                            console.log('metric', metric);
+                        } else {
+                            console.log("metric didn't have exc time");
+                        }
+                    }
+
                     return (
                         metric || {
                             timestamp: hourBucket.timestamp,

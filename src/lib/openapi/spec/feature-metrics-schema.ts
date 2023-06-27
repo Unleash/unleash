@@ -27,13 +27,6 @@ export const featureMetricsSchema = {
                 $ref: '#/components/schemas/featureEnvironmentMetricsSchema',
             },
         },
-        timings: {
-            type: 'object',
-            properties: {
-                yes: { type: 'number' },
-                no: { type: 'number' },
-            },
-        },
     },
     components: {
         schemas: {

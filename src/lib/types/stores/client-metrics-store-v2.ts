@@ -16,10 +16,12 @@ export interface IClientMetricsEnv extends IClientMetricsEnvKey {
     yes: number;
     no: number;
     variants?: Record<string, number>;
-    extraData?: {
-        yes: ExtraData;
-        no: ExtraData;
-    };
+    enabledExecutionTime?: number;
+    disabledExecutionTime?: number;
+    enabledExecutionCount?: number;
+    disabledExecutionCount?: number;
+    enabledErrorCount?: number;
+    disabledErrorCount?: number;
 }
 
 export interface IClientMetricsEnvVariant extends IClientMetricsEnvKey {

@@ -106,21 +106,35 @@ class ClientMetricsController extends Controller {
                 this.parseHoursBackQueryParam(hoursBack),
             )
         ).map((row) => {
-            console.log(row, row.extraData);
+            // console.log('toggle metrics', row);
 
-            const timings = row.extraData
-                ? {
-                      yes:
-                          row.extraData.yes.executionTime.totalMs /
-                          row.extraData.yes.executionTime.count,
-                      no:
-                          row.extraData.no.executionTime.totalMs /
-                          row.extraData.no.executionTime.count,
-                  }
-                : {
-                      yes: this.getRandomNumber(100, 200),
-                      no: this.getRandomNumber(20, 110),
-                  };
+            // const timings = row.extraData
+            //     ? {
+            //           yes:
+            //               row.extraData.yes.executionTime.totalMs /
+            //               row.extraData.yes.executionTime.count,
+            //           no:
+            //               row.extraData.no.executionTime.totalMs /
+            //               row.extraData.no.executionTime.count,
+            //       }
+            //     : {
+            //           yes: 0,
+            //           no: 0,
+            //       };
+
+            const timings = {
+                yes:
+                    (row.enabledExecutionTime ?? 0) /
+                    (row.enabledExecutionCount ?? 1),
+                no:
+                    (row.disabledExecutionTime ?? 0) /
+                    (row.disabledExecutionCount ?? 1),
+            };
+            if (row.enabledExecutionCount) {
+                console.log('timings', timings);
+            } else {
+                console.log("this row didn't have timings");
+            }
 
             return {
                 ...row,

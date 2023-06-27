@@ -24,7 +24,12 @@ interface ClientMetricsBaseTable {
 interface ClientMetricsEnvTable extends ClientMetricsBaseTable {
     yes: number;
     no: number;
-    extra_data?: any;
+    enabled_execution_time: number;
+    disabled_execution_time: number;
+    enabled_execution_count: number;
+    disabled_execution_count: number;
+    enabled_error_count: number;
+    disabled_error_count: number;
 }
 
 interface ClientMetricsEnvVariantTable extends ClientMetricsBaseTable {
@@ -51,7 +56,13 @@ const toRow = (metric: IClientMetricsEnv): ClientMetricsEnvTable => ({
     timestamp: startOfHour(metric.timestamp),
     yes: metric.yes,
     no: metric.no,
-    extra_data: metric.extraData,
+
+    enabled_execution_time: metric.enabledExecutionTime,
+    disabled_execution_time: metric.disabledExecutionTime,
+    enabled_execution_count: metric.enabledExecutionCount,
+    disabled_execution_count: metric.disabledExecutionCount,
+    enabled_error_count: metric.enabledErrorCount,
+    disabled_error_count: metric.disabledErrorCount,
 });
 
 const toVariantRow = (
@@ -75,6 +86,10 @@ const variantRowReducer = (acc, tokenRow) => {
         no,
         variant,
         count,
+        enabled_execution_time: enabledExecutionTime,
+        disabled_execution_time: disabledExecutionTime,
+        enabled_execution_count: enabledExecutionCount,
+        disabled_execution_count: disabledExecutionCount,
     } = tokenRow;
     const key = `${featureName}_${appName}_${environment}_${timestamp}_${yes}_${no}`;
     if (!acc[key]) {
@@ -86,6 +101,10 @@ const variantRowReducer = (acc, tokenRow) => {
             yes: Number(yes),
             no: Number(no),
             variants: {},
+            enabledExecutionTime: Number(enabledExecutionTime),
+            disabledExecutionTime: Number(disabledExecutionTime),
+            enabledExecutionCount: Number(enabledExecutionCount),
+            disabledExecutionCount: Number(disabledExecutionCount),
         };
     }
     if (variant) {
@@ -164,7 +183,6 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             return;
         }
         const rows = collapseHourlyMetrics(metrics).map(toRow);
-        console.log('rows', rows, 'metrics', JSON.stringify(metrics, null, 2));
 
         // Sort the rows to avoid deadlocks
         const sortedRows = rows.sort(
@@ -178,8 +196,14 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         const insert = this.db<ClientMetricsEnvTable>(TABLE)
             .insert(sortedRows)
             .toQuery();
-        const query = `${insert.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp) DO UPDATE SET "yes" = "client_metrics_env"."yes" + EXCLUDED.yes, "no" = "client_metrics_env"."no" + EXCLUDED.no, "extra_data" = EXCLUDED.extra_data`;
-        console.log(query);
+        const query =
+            `${insert.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp) DO UPDATE SET "yes" = "client_metrics_env"."yes" + EXCLUDED.yes, "no" = "client_metrics_env"."no" + EXCLUDED.no` +
+            `, "enabled_execution_time" = COALESCE("client_metrics_env"."enabled_execution_time", 0) + EXCLUDED.enabled_execution_time` +
+            `, "disabled_execution_time" = COALESCE("client_metrics_env"."disabled_execution_time", 0) + EXCLUDED.disabled_execution_time` +
+            `, "enabled_execution_count" = COALESCE("client_metrics_env"."enabled_execution_count", 0) + EXCLUDED.enabled_execution_count` +
+            `, "disabled_execution_count" = COALESCE("client_metrics_env"."disabled_execution_count", 0) + EXCLUDED.disabled_execution_count` +
+            `, "enabled_error_count" = COALESCE("client_metrics_env"."enabled_error_count", 0) + EXCLUDED.enabled_error_count` +
+            `, "disabled_error_count" = COALESCE("client_metrics_env"."disabled_error_count", 0) + EXCLUDED.disabled_error_count`;
 
         await this.db.raw(query);
 
@@ -216,6 +240,8 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             );
 
         const tokens = rows.reduce(variantRowReducer, {});
+        // console.log('tokens', tokens, 'rows', rows);
+
         return Object.values(tokens);
     }
 

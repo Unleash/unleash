@@ -55,16 +55,35 @@ export const collapseHourlyMetrics = (
                 );
             }
 
-            if (metric.extraData) {
-                grouped[key].extraData.yes.executionTime = mergeRecords(
-                    metric.extraData.yes.executionTime,
-                    grouped[key].extraData.yes.executionTime ?? {},
-                );
-
-                grouped[key].extraData.no.executionTime = mergeRecords(
-                    metric.extraData.no.executionTime,
-                    grouped[key].extraData.no.executionTime ?? {},
-                );
+            if (metric.disabledErrorCount) {
+                grouped[key].disabledErrorCount =
+                    metric.disabledErrorCount +
+                    (grouped[key].disabledErrorCount || 0);
+            }
+            if (metric.enabledErrorCount) {
+                grouped[key].enabledErrorCount =
+                    metric.enabledErrorCount +
+                    (grouped[key].enabledErrorCount || 0);
+            }
+            if (metric.disabledExecutionTime) {
+                grouped[key].disabledExecutionTime =
+                    metric.disabledExecutionTime +
+                    (grouped[key].disabledExecutionTime || 0);
+            }
+            if (metric.enabledExecutionTime) {
+                grouped[key].enabledExecutionTime =
+                    metric.enabledExecutionTime +
+                    (grouped[key].enabledExecutionTime || 0);
+            }
+            if (metric.disabledExecutionCount) {
+                grouped[key].disabledExecutionCount =
+                    metric.disabledExecutionCount +
+                    (grouped[key].disabledExecutionCount || 0);
+            }
+            if (metric.enabledExecutionCount) {
+                grouped[key].enabledExecutionCount =
+                    metric.enabledExecutionCount +
+                    (grouped[key].enabledExecutionCount || 0);
             }
         }
     });

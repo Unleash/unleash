@@ -58,6 +58,7 @@ import {
 } from '../features/change-request-access-service/createChangeRequestAccessReadModel';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import { createFeatureToggleService } from '../features';
+import FeedbackService from './feedback-service';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -240,6 +241,8 @@ export const createServices = (
         schedulerService,
     );
 
+    const feedbackService = new FeedbackService(stores, config);
+
     return {
         accessService,
         accountService,
@@ -287,6 +290,7 @@ export const createServices = (
         schedulerService,
         configurationRevisionService,
         transactionalFeatureToggleService,
+        feedbackService,
     };
 };
 
@@ -330,4 +334,5 @@ export {
     InstanceStatsService,
     FavoritesService,
     SchedulerService,
+    FeedbackService,
 };

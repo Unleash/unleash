@@ -1,15 +1,22 @@
-import { IUnleashConfig } from 'lib/types';
+import { IUnleashConfig, IUnleashServices } from 'lib/types';
 import Controller from '../controller';
 import { Logger } from '../../logger';
 import { NONE } from '../../types/permissions';
 import { IAuthRequest } from '../unleash-types';
 import { Response } from 'express';
+import { FeedbackService } from 'lib/services';
 
 export default class FeedbackController extends Controller {
     logger: Logger;
 
-    constructor(config: IUnleashConfig) {
+    feedbackService: FeedbackService;
+
+    constructor(
+        { feedbackService }: Pick<IUnleashServices, 'feedbackService'>,
+        config: IUnleashConfig,
+    ) {
         super(config);
+        this.feedbackService = feedbackService;
         const { getLogger } = config;
         this.logger = getLogger('/api/client/feedback');
 
@@ -40,9 +47,14 @@ export default class FeedbackController extends Controller {
     ): Promise<void> {
         const { body: data } = req;
         const { featureName, requestHash, payload } = data;
-        console.info(featureName);
-        console.info(requestHash);
-        console.info(payload);
+
+        await this.feedbackService.createFeatureFeedback({
+            featureName,
+            contextHash: requestHash,
+            metadata: {},
+            payload,
+        });
+
         res.status(202).end();
     }
 }

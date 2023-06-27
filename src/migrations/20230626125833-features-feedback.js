@@ -6,7 +6,7 @@ exports.up = function (db, cb) {
             feature_name VARCHAR (255) NOT NULL REFERENCES features(name) ON DELETE CASCADE,
             context_hash VARCHAR (255),
             payload text,
-            metadata JSON DEFAULT '{}',
+            metadata JSONB DEFAULT '{}',
             created_at TIMESTAMP DEFAULT NOW()
         );
         `,

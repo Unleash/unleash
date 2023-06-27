@@ -42,6 +42,7 @@ import { Knex } from 'knex';
 import ExportImportService from '../features/export-import-toggles/export-import-service';
 import { ISegmentService } from '../segments/segment-service-interface';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
+import FeedbackService from '../services/feedback-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -88,6 +89,7 @@ export interface IUnleashServices {
     exportImportService: ExportImportService;
     configurationRevisionService: ConfigurationRevisionService;
     schedulerService: SchedulerService;
+    feedbackService: FeedbackService;
     transactionalExportImportService: (
         db: Knex.Transaction,
     ) => ExportImportService;

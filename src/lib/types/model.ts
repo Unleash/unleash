@@ -415,3 +415,12 @@ export interface IFeatureStrategySegment {
     featureStrategyId: string;
     segmentId: number;
 }
+
+export interface IFeatureFeedback {
+    id: number;
+    featureName: string;
+    contextHash: string;
+    payload: string;
+    metadata: Record<string, any>;
+    createdAt: Date;
+}

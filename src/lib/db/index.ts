@@ -37,6 +37,7 @@ import { AccountStore } from './account-store';
 import ProjectStatsStore from './project-stats-store';
 import { Db } from './db';
 import { ImportTogglesStore } from '../features/export-import-toggles/import-toggles-store';
+import FeatureFeedbackStore from './feature-feedback-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -128,6 +129,7 @@ export const createStores = (
         ),
         projectStatsStore: new ProjectStatsStore(db, eventBus, getLogger),
         importTogglesStore: new ImportTogglesStore(db),
+        featureFeedbackStore: new FeatureFeedbackStore(db),
     };
 };
 

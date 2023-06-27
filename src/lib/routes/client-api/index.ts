@@ -12,7 +12,7 @@ export default class ClientApi extends Controller {
         this.use('/features', new FeatureController(services, config).router);
         this.use('/metrics', new MetricsController(services, config).router);
         this.use('/register', new RegisterController(services, config).router);
-        this.use('/feedback', new FeedbackController(config).router);
+        this.use('/feedback', new FeedbackController(services, config).router);
     }
 }
 

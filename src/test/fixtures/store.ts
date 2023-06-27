@@ -15,7 +15,11 @@ import FakeUserFeedbackStore from './fake-user-feedback-store';
 import FakeFeatureTagStore from './fake-feature-tag-store';
 import FakeEnvironmentStore from './fake-environment-store';
 import FakeStrategiesStore from './fake-strategies-store';
-import { IImportTogglesStore, IUnleashStores } from '../../lib/types';
+import {
+    IFeatureFeedbackStore,
+    IImportTogglesStore,
+    IUnleashStores,
+} from '../../lib/types';
 import FakeSessionStore from './fake-session-store';
 import FakeFeatureEnvironmentStore from './fake-feature-environment-store';
 import FakeApiTokenStore from './fake-api-token-store';
@@ -78,6 +82,7 @@ const createStores: () => IUnleashStores = () => {
         favoriteProjectsStore: new FakeFavoriteProjectsStore(),
         projectStatsStore: new FakeProjectStatsStore(),
         importTogglesStore: {} as IImportTogglesStore,
+        featureFeedbackStore: {} as IFeatureFeedbackStore,
     };
 };
 

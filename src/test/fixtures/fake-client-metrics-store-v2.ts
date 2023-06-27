@@ -6,6 +6,8 @@ import {
     IClientMetricsEnvKey,
     IClientMetricsStoreV2,
 } from '../../lib/types/stores/client-metrics-store-v2';
+import { Promise } from 'ts-toolbelt/out/Any/Promise';
+import { PerformanceProfile } from '../../lib/services/client-metrics/schema';
 
 export default class FakeClientMetricsStoreV2
     extends EventEmitter
@@ -68,4 +70,20 @@ export default class FakeClientMetricsStoreV2
     }
 
     destroy(): void {}
+
+    getPerformanceMetrics(
+        appName: string,
+        environment: string,
+        hoursBack?: number,
+    ): Promise<PerformanceProfile[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    insertPerformanceMetric(
+        appName: string,
+        environment: string,
+        metric: PerformanceProfile,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
 }

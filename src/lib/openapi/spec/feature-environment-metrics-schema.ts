@@ -4,7 +4,7 @@ import { dateSchema } from './date-schema';
 export const featureEnvironmentMetricsSchema = {
     $id: '#/components/schemas/featureEnvironmentMetricsSchema',
     type: 'object',
-    additionalProperties: false,
+    additionalProperties: true,
     required: ['environment', 'timestamp', 'yes', 'no'],
     description:
         'How many times `feautreName` was evaluated to `true` (yes) and `false` (no) for `appName` in `environmnet`',

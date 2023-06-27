@@ -15,6 +15,11 @@ class FakeEventStore implements IEventStore {
         this.events = [];
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getLastRevisionEvents(hoursBack?: number | undefined): Promise<IEvent[]> {
+        return Promise.resolve([]);
+    }
+
     getMaxRevisionId(): Promise<number> {
         return Promise.resolve(1);
     }

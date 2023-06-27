@@ -8,6 +8,7 @@ export interface IPoint {
     x: string;
     y: number;
     variants: Record<string, number>;
+    revisionEvents: any[];
 }
 
 export const createChartData = (
@@ -46,13 +47,13 @@ export const createChartData = (
     };
 
     const changeSeries = {
-        label: 'Configuration change',
+        label: 'Following:',
         borderColor: theme.palette.error.main,
         borderWidth: 0,
         yAxisID: 'y3',
         backgroundColor: theme.palette.error.main,
         data: createChartPoints(metrics, locationSettings, m =>
-            m.timings.change === 1 ? 'CHANGED' : NaN
+            m.revisionEvents.length > 0 ? 'EVENTS' : NaN
         ),
         elements: {
             point: {
@@ -77,5 +78,6 @@ const createChartPoints = (
         y: y ? y(metric) : NaN,
         variants: metric.variants,
         timings: metric.timings,
+        revisionEvents: metric.revisionEvents,
     }));
 };

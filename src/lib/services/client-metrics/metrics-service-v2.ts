@@ -1,5 +1,5 @@
 import { Logger } from '../../logger';
-import { IUnleashConfig } from '../../types';
+import { IEventStore, IUnleashConfig } from '../../types';
 import { IUnleashStores } from '../../types';
 import { ToggleMetricsSummary } from '../../types/models/metrics';
 import {
@@ -32,15 +32,21 @@ export default class ClientMetricsServiceV2 {
 
     private lastSeenService: LastSeenService;
 
+    private eventStore: IEventStore;
+
     private logger: Logger;
 
     constructor(
-        { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
+        {
+            clientMetricsStoreV2,
+            eventStore,
+        }: Pick<IUnleashStores, 'clientMetricsStoreV2' | 'eventStore'>,
         config: IUnleashConfig,
         lastSeenService: LastSeenService,
         bulkInterval = secondsToMilliseconds(5),
     ) {
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
+        this.eventStore = eventStore;
         this.lastSeenService = lastSeenService;
         this.config = config;
         this.logger = config.getLogger(
@@ -162,6 +168,8 @@ export default class ClientMetricsServiceV2 {
             100,
         );
 
+        const events = await this.eventStore.getLastRevisionEvents(hoursBack);
+        console.log('events', events);
         const result = environments.flatMap((environment) =>
             applications.flatMap((appName) =>
                 hours.flatMap((hourBucket) => {
@@ -172,16 +180,23 @@ export default class ClientMetricsServiceV2 {
                             item.appName === appName &&
                             item.environment === environment,
                     );
-                    return (
-                        metric || {
+                    return {
+                        ...(metric || {
                             timestamp: hourBucket.timestamp,
                             no: 0,
                             yes: 0,
                             appName,
                             environment,
                             featureName,
-                        }
-                    );
+                        }),
+                        revisionEvents: events.filter(
+                            (ev) =>
+                                ev.createdAt.getHours() ==
+                                    hourBucket.timestamp.getHours() &&
+                                ev.createdAt.getDate() ==
+                                    hourBucket.timestamp.getDate(),
+                        ),
+                    };
                 }),
             ),
         );

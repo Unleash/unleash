@@ -9,11 +9,12 @@ export interface IEventStore
         Pick<EventEmitter, 'on' | 'setMaxListeners' | 'emit' | 'off'> {
     store(event: IBaseEvent): Promise<void>;
     batchStore(events: IBaseEvent[]): Promise<void>;
-    getEvents(): Promise<IEvent[]>;
+    getEvents(query?: Object): Promise<IEvent[]>;
     count(): Promise<number>;
     filteredCount(search: SearchEventsSchema): Promise<number>;
     searchEvents(search: SearchEventsSchema): Promise<IEvent[]>;
     getMaxRevisionId(currentMax?: number): Promise<number>;
+    getLastRevisionEvents(hoursBack?: number): Promise<IEvent[]>;
     query(operations: IQueryOperations[]): Promise<IEvent[]>;
     queryCount(operations: IQueryOperations[]): Promise<number>;
 }

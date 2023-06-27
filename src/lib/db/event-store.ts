@@ -7,6 +7,7 @@ import { sharedEventEmitter } from '../util/anyEventEmitter';
 import { Db } from './db';
 import { Knex } from 'knex';
 import EventEmitter from 'events';
+import { subHours } from 'date-fns';
 
 const EVENT_COLUMNS = [
     'id',
@@ -166,6 +167,21 @@ class EventStore implements IEventStore {
             .andWhere('id', '>=', largerThan)
             .first();
         return row ? row.max : -1;
+    }
+
+    async getLastRevisionEvents(hoursBack: number = 24): Promise<IEvent[]> {
+        const dateMinusHoursBack = subHours(
+            new Date(),
+            hoursBack,
+        ).toISOString();
+        const rows = await this.db(TABLE)
+            .where('created_at', '>=', dateMinusHoursBack)
+            .where((builder) =>
+                builder
+                    .whereNotNull('feature_name')
+                    .orWhere('type', SEGMENT_UPDATED),
+            );
+        return rows.map(this.rowToEvent);
     }
 
     async delete(key: number): Promise<void> {

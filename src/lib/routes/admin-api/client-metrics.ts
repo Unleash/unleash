@@ -112,7 +112,6 @@ class ClientMetricsController extends Controller {
                 no: this.getRandomNumber(20, 35),
                 cpu: this.getRandomNumber(2, 15),
                 memory: this.getRandomNumber(25, 45),
-                change: this.getRandomNumber(0, 1),
             },
         }));
 

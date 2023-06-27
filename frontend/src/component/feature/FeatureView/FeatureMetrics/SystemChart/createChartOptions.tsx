@@ -16,20 +16,6 @@ const formatVariantEntry = (
     return `${value} (${percentage}%) - ${key}`;
 };
 
-const EventIndicator = ({ x, y, label, color }) => (
-    <div style={{ position: 'absolute', left: x, top: y, textAlign: 'center' }}>
-        <div
-            style={{
-                width: 12,
-                height: 12,
-                borderRadius: '50%',
-                backgroundColor: color,
-            }}
-        />
-        <span style={{ fontSize: 12, marginTop: -15 }}>{label}</span>
-    </div>
-);
-
 export const createChartOptions = (
     theme: Theme,
     metrics: IFeatureMetricsRaw[],
@@ -64,6 +50,19 @@ export const createChartOptions = (
                 callbacks: {
                     label: item => {
                         return `${item.formattedValue} - ${item.dataset.label}`;
+                    },
+                    afterLabel: item => {
+                        const data = item.dataset.data[
+                            item.dataIndex
+                        ] as unknown as IPoint;
+                        if (item.dataset.label !== 'Following:') {
+                            return '';
+                        }
+                        return data.revisionEvents
+                            .map(
+                                event => `${event.featureName} - ${event.type}`
+                            )
+                            .join('\n');
                     },
                     title: items =>
                         `Time: ${formatDateHM(
@@ -112,7 +111,7 @@ export const createChartOptions = (
             },
             y3: {
                 type: 'category',
-                labels: ['CHANGED'],
+                labels: ['EVENTS'],
                 offset: true,
                 position: 'left',
                 stack: 'demo',
@@ -140,7 +139,7 @@ export const createChartOptions = (
             },
             y4: {
                 type: 'category',
-                labels: ['CHANGED'],
+                labels: ['EVENTS'],
                 showLine: false,
                 offset: true,
                 position: 'right',

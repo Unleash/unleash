@@ -6,7 +6,7 @@ import {
     IClientMetricsEnv,
     IClientMetricsStoreV2,
 } from '../../types/stores/client-metrics-store-v2';
-import { clientMetricsSchema } from './schema';
+import { clientMetricsSchema, PerformanceProfile } from './schema';
 import {
     compareAsc,
     hoursToMilliseconds,
@@ -68,11 +68,24 @@ export default class ClientMetricsServiceV2 {
         this.lastSeenService.updateLastSeen(metrics);
     }
 
+    async registerPerformanceMetrics(
+        appName: string,
+        environment: string,
+        metric: PerformanceProfile,
+    ): Promise<void> {
+        await this.clientMetricsStoreV2.insertPerformanceMetric(
+            appName,
+            environment,
+            metric,
+        );
+    }
+
     async registerClientMetrics(
         data: ClientMetricsSchema,
         clientIp: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
+        const { performanceProfile } = value;
         const toggleNames = Object.keys(value.bucket.toggles).filter(
             (name) =>
                 !(
@@ -93,6 +106,11 @@ export default class ClientMetricsServiceV2 {
             variants: value.bucket.toggles[name].variants,
         }));
         await this.registerBulkMetrics(clientMetrics);
+        await this.registerPerformanceMetrics(
+            value.appName,
+            value.environment,
+            performanceProfile,
+        );
 
         this.config.eventBus.emit(CLIENT_METRICS, value);
     }

@@ -1,4 +1,5 @@
 import { Store } from './store';
+import { PerformanceProfile } from '../../services/client-metrics/schema';
 
 export interface IClientMetricsEnvKey {
     featureName: string;
@@ -34,4 +35,14 @@ export interface IClientMetricsStoreV2
         hoursBack?: number,
     ): Promise<string[]>;
     clearMetrics(hoursAgo: number): Promise<void>;
+    insertPerformanceMetric(
+        appName: string,
+        environment: string,
+        metric: PerformanceProfile,
+    ): Promise<void>;
+    getPerformanceMetrics(
+        appName: string,
+        environment: string,
+        hoursBack?: number,
+    ): Promise<PerformanceProfile[]>;
 }

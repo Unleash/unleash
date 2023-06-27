@@ -66,11 +66,11 @@ export default class FeedbackController extends Controller {
         res: Response,
     ): Promise<void> {
         const { body: data } = req;
-        const { featureName, requestHash, payload } = data;
+        const { featureName, contextHash, payload } = data;
 
         await this.feedbackService.createFeatureFeedback({
             featureName,
-            contextHash: requestHash,
+            contextHash,
             metadata: {},
             payload,
         });

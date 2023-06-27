@@ -20,6 +20,7 @@ import FeatureLog from './FeatureLog/FeatureLog';
 import FeatureOverview from './FeatureOverview/FeatureOverview';
 import { FeatureEnvironmentVariants } from './FeatureVariants/FeatureEnvironmentVariants/FeatureEnvironmentVariants';
 import { FeatureMetrics } from './FeatureMetrics/FeatureMetrics';
+import { FeatureFeedback } from './FeatureFeedback/FeatureFeedback';
 import { FeatureSettings } from './FeatureSettings/FeatureSettings';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -119,6 +120,11 @@ export const FeatureView = () => {
             title: 'Metrics',
             path: `${basePath}/metrics`,
             name: 'Metrics',
+        },
+        {
+            title: 'Feedback',
+            path: `${basePath}/feedback`,
+            name: 'Feedback',
         },
         { title: 'Variants', path: `${basePath}/variants`, name: 'Variants' },
         { title: 'Settings', path: `${basePath}/settings`, name: 'Settings' },
@@ -233,6 +239,7 @@ export const FeatureView = () => {
             </StyledHeader>
             <Routes>
                 <Route path="metrics" element={<FeatureMetrics />} />
+                <Route path="feedback" element={<FeatureFeedback />} />
                 <Route path="logs" element={<FeatureLog />} />
                 <Route
                     path="variants"

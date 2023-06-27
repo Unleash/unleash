@@ -24,6 +24,10 @@ class FeedbackService {
     ): Promise<IFeatureFeedback> {
         return this.featureFeedbackStore.createFeatureFeedback(feedback);
     }
+
+    getFeedbackForFeature(featureName: string): Promise<IFeatureFeedback[]> {
+        return this.featureFeedbackStore.getFeedbackForFeature(featureName);
+    }
 }
 
 module.exports = FeedbackService;

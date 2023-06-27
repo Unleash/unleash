@@ -10,13 +10,13 @@ import type { GetFeatureFeedbackSchemaMetadata } from './getFeatureFeedbackSchem
  */
 export interface GetFeatureFeedbackSchema {
     /** Unique id for this feedback. */
-    id?: number;
+    id: number;
     /** Timestamp for when this feedback was created. */
-    createdAt?: string;
+    createdAt: string;
     /** Number representing user feedback rating. 1-5. */
     payload: string;
     /** The name of the feature toggle this feedback applies to. */
-    featureName?: string;
+    featureName: string;
     /** A hash of the context that this feedback was provided for. */
     contextHash?: string | null;
     /** Metadata saved alongside the feedback. */

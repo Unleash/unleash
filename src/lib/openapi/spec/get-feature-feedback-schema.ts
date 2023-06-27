@@ -3,7 +3,7 @@ import { FromSchema } from 'json-schema-to-ts';
 export const getFeatureFeedbackSchema = {
     $id: '#/components/schemas/getFeatureFeedbackSchema',
     type: 'object',
-    required: ['payload'],
+    required: ['id', 'createdAt', 'featureName', 'payload'],
     description: 'Feedback passed from SDK to Unleash.',
     properties: {
         id: {

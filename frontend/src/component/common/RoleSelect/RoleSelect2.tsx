@@ -22,7 +22,7 @@ interface IRoleSelectProps
     extends Partial<AutocompleteProps<IRole, false, false, false>> {
     value: IRole | null;
     setValue: (role: IRole | null) => void;
-    roles: IRole[],
+    roles: IRole[];
     required?: boolean;
 }
 
@@ -33,7 +33,6 @@ export const RoleSelect = ({
     roles,
     ...rest
 }: IRoleSelectProps) => {
-
     const renderRoleOption = (
         props: React.HTMLAttributes<HTMLLIElement>,
         option: IRole

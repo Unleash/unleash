@@ -6,6 +6,11 @@ import { IUnleashConfig, IUnleashServices } from 'lib/types';
 import { IAuthRequest } from '../unleash-types';
 import { Response } from 'express';
 import { FeedbackService } from 'lib/services';
+import {
+    createRequestSchema,
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi';
 
 export class FeatureFeedbackController extends Controller {
     private openApiService: OpenApiService;
@@ -32,19 +37,21 @@ export class FeatureFeedbackController extends Controller {
             path: '/:featureName',
             handler: this.getFeedbackForFeature,
             permission: NONE,
-            // middleware: [
-            //     openApiService.validPath({
-            //         tags: ['Client'],
-            //         summary: 'Register client usage metrics',
-            //         description: `Registers usage metrics. Stores information about how many times each toggle was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature toggle's variants were displayed to the end user.`,
-            //         operationId: 'registerClientMetrics',
-            //         requestBody: createRequestSchema('clientMetricsSchema'),
-            //         responses: {
-            //             ...getStandardResponses(400),
-            //             202: emptyResponse,
-            //         },
-            //     }),
-            // ],
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Client'],
+                    summary: 'Load user feedback for feature.',
+                    description: ``,
+                    operationId: 'registerClientMetrics',
+                    requestBody: createRequestSchema(
+                        'getFeatureFeedbackSchema',
+                    ),
+                    responses: {
+                        ...getStandardResponses(400),
+                        202: emptyResponse,
+                    },
+                }),
+            ],
         });
     }
 

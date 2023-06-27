@@ -12,6 +12,7 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
+import { ClientMetricsSchema } from 'lib/openapi';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -64,10 +65,15 @@ export default class ClientMetricsController extends Controller {
         });
     }
 
-    async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
+    async registerMetrics(
+        req: IAuthRequest<ClientMetricsSchema>,
+        res: Response,
+    ): Promise<void> {
         const { body: data, ip: clientIp, user } = req;
         data.environment = this.metricsV2.resolveMetricsEnvironment(user, data);
         await this.clientInstanceService.registerInstance(data, clientIp);
+
+        // console.log('got data', JSON.stringify(data, null, 2));
 
         try {
             await this.metricsV2.registerClientMetrics(data, clientIp);

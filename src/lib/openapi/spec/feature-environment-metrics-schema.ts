@@ -55,6 +55,14 @@ export const featureEnvironmentMetricsSchema = {
                 variantC: 5,
             },
         },
+
+        timings: {
+            type: 'object',
+            properties: {
+                yes: { type: 'number' },
+                no: { type: 'number' },
+            },
+        },
     },
     components: {
         dateSchema,

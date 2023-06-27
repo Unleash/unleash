@@ -94,6 +94,60 @@ export const clientMetricsSchema = {
                                     variantC: 5,
                                 },
                             },
+                            extraData: {
+                                type: 'object',
+                                required: ['yes', 'no'],
+                                properties: {
+                                    yes: {
+                                        type: 'object',
+                                        required: ['executionTime'],
+                                        properties: {
+                                            executionTime: {
+                                                required: ['totalMs', 'count'],
+                                                type: 'object',
+                                                properties: {
+                                                    totalMs: {
+                                                        type: 'integer',
+                                                        minimum: 0,
+                                                    },
+                                                    count: {
+                                                        type: 'integer',
+                                                        minimum: 0,
+                                                    },
+                                                },
+                                            },
+                                            errors: {
+                                                type: 'integer',
+                                                minimum: 0,
+                                            },
+                                        },
+                                    },
+                                    no: {
+                                        type: 'object',
+                                        required: ['executionTime'],
+                                        properties: {
+                                            executionTime: {
+                                                type: 'object',
+                                                required: ['totalMs', 'count'],
+                                                properties: {
+                                                    totalMs: {
+                                                        type: 'integer',
+                                                        minimum: 0,
+                                                    },
+                                                    count: {
+                                                        type: 'integer',
+                                                        minimum: 0,
+                                                    },
+                                                },
+                                            },
+                                            errors: {
+                                                type: 'integer',
+                                                minimum: 0,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
                         },
                     },
                 },

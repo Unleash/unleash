@@ -67,10 +67,20 @@ export default class ClientMetricsServiceV2 {
     }
 
     async registerBulkMetrics(metrics: IClientMetricsEnv[]): Promise<void> {
+        // console.log(
+        //     'register bulk metrics: ',
+        //     JSON.stringify(metrics, null, 2),
+        // );
+
         this.unsavedMetrics = collapseHourlyMetrics([
             ...this.unsavedMetrics,
             ...metrics,
         ]);
+
+        // console.log(
+        //     'unsaved metrics',
+        //     JSON.stringify(this.unsavedMetrics, null, 2),
+        // );
         this.lastSeenService.updateLastSeen(metrics);
     }
 
@@ -102,15 +112,33 @@ export default class ClientMetricsServiceV2 {
 
         this.logger.debug(`got metrics from ${clientIp}`);
 
-        const clientMetrics: IClientMetricsEnv[] = toggleNames.map((name) => ({
-            featureName: name,
-            appName: value.appName,
-            environment: value.environment,
-            timestamp: value.bucket.start, //we might need to approximate between start/stop...
-            yes: value.bucket.toggles[name].yes,
-            no: value.bucket.toggles[name].no,
-            variants: value.bucket.toggles[name].variants,
-        }));
+        const clientMetrics: IClientMetricsEnv[] = toggleNames.map((name) => {
+            // console.log(value.bucket.toggles[name]);
+
+            return {
+                featureName: name,
+                appName: value.appName,
+                environment: value.environment,
+                timestamp: value.bucket.start, //we might need to approximate between start/stop...
+                yes: value.bucket.toggles[name].yes,
+                no: value.bucket.toggles[name].no,
+                variants: value.bucket.toggles[name].variants,
+                enabledExecutionTime:
+                    data.bucket.toggles[name].extraData?.yes.executionTime
+                        .totalMs,
+                disabledExecutionTime:
+                    data.bucket.toggles[name].extraData?.no.executionTime
+                        .totalMs,
+                enabledExecutionCount:
+                    data.bucket.toggles[name].extraData.yes.executionTime.count,
+                disabledExecutionCount:
+                    data.bucket.toggles[name].extraData.no.executionTime.count,
+                enabledErrorCount:
+                    data.bucket.toggles[name].extraData.yes.errors,
+                disabledErrorCount:
+                    data.bucket.toggles[name].extraData.no.errors,
+            };
+        });
         await this.registerBulkMetrics(clientMetrics);
         await this.registerPerformanceMetrics(
             value.appName,

@@ -20,10 +20,10 @@ interface IUseRolesOutput {
 }
 
 export const useRoles = (): IUseRolesOutput => {
-    const { isOss, isEnterprise, uiConfig } = useUiConfig();
+    const { isEnterprise, uiConfig } = useUiConfig();
 
     const { data, error, mutate } = useConditionalSWR(
-        !isOss(),
+        isEnterprise(),
         { roles: [], projectRoles: [] },
         formatApiPath(`api/admin/roles`),
         fetcher
@@ -34,14 +34,14 @@ export const useRoles = (): IUseRolesOutput => {
         error: ossError,
         mutate: ossMutate,
     } = useConditionalSWR(
-        isOss(),
-        { rootRoles: [] },
+        !isEnterprise(),
+        { rootRoles: [], projectRoles: [] },
         formatApiPath(`api/admin/user-admin`),
         fetcher
     );
 
     return useMemo(() => {
-        if (isOss()) {
+        if (!isEnterprise()) {
             return {
                 roles: ossData?.rootRoles
                     .filter(({ type }: IRole) => type === ROOT_ROLE_TYPE)

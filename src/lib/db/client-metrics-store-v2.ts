@@ -13,6 +13,7 @@ import {
 } from '../util/collapseHourlyMetrics';
 import { Db } from './db';
 import { IFlagResolver } from '../types';
+import { PerformanceProfile } from '../services/client-metrics/schema';
 
 interface ClientMetricsBaseTable {
     feature_name: string;
@@ -345,8 +346,15 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
     async insertPerformanceMetric(
         appName: string,
         environment: string,
-        metrics: ClientEnvPerformanceMetrics,
+        metric: PerformanceProfile,
     ): Promise<void> {
-        await this.db(TABLE_PERFORMANCE).insert(toPerformanceRow(metrics));
+        await this.db(TABLE_PERFORMANCE).insert(
+            toPerformanceRow({
+                timestamp: new Date(),
+                appName,
+                environment,
+                ...metric,
+            }),
+        );
     }
 }

@@ -17,10 +17,10 @@ export const useRole = (
     id?: string,
     options: SWRConfiguration = {}
 ): IUseRoleOutput => {
-    const { isEnterprise } = useUiConfig();
+    const { isOss } = useUiConfig();
 
     const { data, error, mutate } = useConditionalSWR(
-        Boolean(id) && isEnterprise(),
+        Boolean(id) && !isOss(),
         undefined,
         formatApiPath(`api/admin/roles/${id}`),
         fetcher,
@@ -32,7 +32,7 @@ export const useRole = (
         error: ossError,
         mutate: ossMutate,
     } = useConditionalSWR(
-        Boolean(id) && !isEnterprise(),
+        Boolean(id) && isOss(),
         { rootRoles: [] },
         formatApiPath(`api/admin/user-admin`),
         fetcher,
@@ -40,7 +40,7 @@ export const useRole = (
     );
 
     return useMemo(() => {
-        if (!isEnterprise()) {
+        if (isOss()) {
             return {
                 role: {
                     ...((ossData?.rootRoles ?? []) as IRole[]).find(

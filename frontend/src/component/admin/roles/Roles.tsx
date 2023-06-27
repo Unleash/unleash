@@ -43,7 +43,7 @@ const StyledActions = styled('div')({
 });
 
 export const Roles = () => {
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isEnterprise } = useUiConfig();
     const { pathname } = useLocation();
 
     const { roles, projectRoles, loading } = useRoles();
@@ -52,31 +52,34 @@ export const Roles = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedRole, setSelectedRole] = useState<IRole>();
 
-    const tabs = uiConfig.flags.customRootRoles
-        ? [
-              {
-                  label: 'Root roles',
-                  path: '/admin/roles',
-                  total: roles.length,
-              },
-              {
-                  label: 'Project roles',
-                  path: '/admin/roles/project-roles',
-                  total: projectRoles.length,
-              },
-          ]
-        : [
-              {
-                  label: 'Project roles',
-                  path: '/admin/roles',
-                  total: projectRoles.length,
-              },
-          ];
+    const tabs =
+        isEnterprise() && uiConfig.flags.customRootRoles
+            ? [
+                  {
+                      label: 'Root roles',
+                      path: '/admin/roles',
+                      total: roles.length,
+                  },
+                  {
+                      label: 'Project roles',
+                      path: '/admin/roles/project-roles',
+                      total: projectRoles.length,
+                  },
+              ]
+            : [
+                  {
+                      label: 'Project roles',
+                      path: '/admin/roles',
+                      total: projectRoles.length,
+                  },
+              ];
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const type =
-        !uiConfig.flags.customRootRoles || pathname.includes('project-roles')
+        !isEnterprise() ||
+        !uiConfig.flags.customRootRoles ||
+        pathname.includes('project-roles')
             ? PROJECT_ROLE_TYPE
             : ROOT_ROLE_TYPE;
 

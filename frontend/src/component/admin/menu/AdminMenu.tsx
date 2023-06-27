@@ -12,7 +12,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 function AdminMenu() {
-    const { uiConfig, isEnterprise } = useUiConfig();
+    const { uiConfig, isEnterprise, isOss } = useUiConfig();
     const { pathname } = useLocation();
     const { isBilling } = useInstanceStatus();
     const { flags, networkViewEnabled } = uiConfig;
@@ -55,7 +55,7 @@ function AdminMenu() {
                         }
                     />
                 )}
-                {isEnterprise() && (
+                {!isOss() && (
                     <Tab
                         value="roles"
                         label={

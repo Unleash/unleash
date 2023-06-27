@@ -52,26 +52,6 @@ export default class FeedbackController extends Controller {
                 }),
             ],
         });
-
-        this.route({
-            method: 'get',
-            path: '/:featureName',
-            handler: this.getFeedbackForFeature,
-            permission: NONE,
-            // middleware: [
-            //     openApiService.validPath({
-            //         tags: ['Client'],
-            //         summary: 'Register client usage metrics',
-            //         description: `Registers usage metrics. Stores information about how many times each toggle was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature toggle's variants were displayed to the end user.`,
-            //         operationId: 'registerClientMetrics',
-            //         requestBody: createRequestSchema('clientMetricsSchema'),
-            //         responses: {
-            //             ...getStandardResponses(400),
-            //             202: emptyResponse,
-            //         },
-            //     }),
-            // ],
-        });
     }
 
     async registerFeatureFeedback(
@@ -89,14 +69,5 @@ export default class FeedbackController extends Controller {
         });
 
         res.status(202).end();
-    }
-
-    async getFeedbackForFeature(
-        req: IAuthRequest<{ featureName: string }>,
-        res: Response,
-    ): Promise<void> {
-        const name = req.params.featureName;
-        const feedback = await this.feedbackService.getFeedbackForFeature(name);
-        res.status(200).json(feedback);
     }
 }

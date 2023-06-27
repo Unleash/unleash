@@ -28,6 +28,7 @@ import { PublicSignupController } from './public-signup';
 import InstanceAdminController from './instance-admin';
 import FavoritesController from './favorites';
 import MaintenanceController from './maintenance';
+import FeatureFeedbackController from './feature-feedback';
 import { createKnexTransactionStarter } from '../../db/transaction';
 import { Db } from '../../db/db';
 import ExportImportController from '../../features/export-import-toggles/export-import-controller';
@@ -136,6 +137,11 @@ class AdminApi extends Controller {
         this.app.use(
             '/maintenance',
             new MaintenanceController(config, services).router,
+        );
+
+        this.app.use(
+            '/featurefeedback',
+            new FeatureFeedbackController(config, services).router,
         );
     }
 }

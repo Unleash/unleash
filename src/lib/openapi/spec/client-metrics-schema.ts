@@ -7,6 +7,7 @@ export const clientMetricsSchema = {
     required: ['appName', 'bucket'],
     description:
         'Client usage metrics, accumulated in buckets of hour by hour by default',
+    additionalProperties: true,
     properties: {
         appName: {
             description:

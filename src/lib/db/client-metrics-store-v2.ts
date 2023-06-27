@@ -31,8 +31,33 @@ interface ClientMetricsEnvVariantTable extends ClientMetricsBaseTable {
     count: number;
 }
 
+export interface ClientEnvPerformanceMetrics {
+    appName: string;
+    environment: string;
+    cpu: number;
+    memory: MemoryMetric;
+    timestamp: Date;
+}
+
+interface ClientEnvPerformanceMetricsRow
+    extends Omit<ClientMetricsBaseTable, 'feature_name'> {
+    cpu: number;
+    total_memory: string;
+    heap_total: string;
+    heap_used: string;
+    external: string;
+}
+
+export interface MemoryMetric {
+    totalMemoryAllocated: string;
+    heapTotal: string;
+    heapUsed: string;
+    external: string;
+}
+
 const TABLE = 'client_metrics_env';
 const TABLE_VARIANTS = 'client_metrics_env_variants';
+const TABLE_PERFORMANCE = 'client_metrics_env_performance';
 
 const fromRow = (row: ClientMetricsEnvTable) => ({
     featureName: row.feature_name,
@@ -92,6 +117,34 @@ const variantRowReducer = (acc, tokenRow) => {
 
     return acc;
 };
+
+const fromPerformanceRow = (
+    row: ClientEnvPerformanceMetricsRow,
+): ClientEnvPerformanceMetrics => ({
+    appName: row.app_name,
+    environment: row.environment,
+    cpu: row.cpu,
+    memory: {
+        external: row.external,
+        heapTotal: row.heap_total,
+        heapUsed: row.heap_used,
+        totalMemoryAllocated: row.total_memory,
+    },
+    timestamp: row.timestamp,
+});
+
+const toPerformanceRow = (
+    metric: ClientEnvPerformanceMetrics,
+): ClientEnvPerformanceMetricsRow => ({
+    cpu: metric.cpu,
+    heap_used: metric.memory.heapUsed,
+    heap_total: metric.memory.heapTotal,
+    total_memory: metric.memory.totalMemoryAllocated,
+    external: metric.memory.external,
+    app_name: metric.appName,
+    environment: metric.environment,
+    timestamp: metric.timestamp,
+});
 
 export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
     private db: Db;
@@ -242,5 +295,28 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         return this.db<ClientMetricsEnvTable>(TABLE)
             .whereRaw(`timestamp <= NOW() - INTERVAL '${hoursAgo} hours'`)
             .del();
+    }
+
+    async getPerformanceMetrics(
+        appName: string,
+        environment: string,
+        hoursBack: number,
+    ): Promise<ClientEnvPerformanceMetrics[]> {
+        const rows = await this.db<ClientEnvPerformanceMetricsRow>(
+            TABLE_PERFORMANCE,
+        )
+            .where({ app_name: appName, environment })
+            .andWhereRaw(`timestamp >= NOW() - INTERVAL '${hoursBack} hours'`)
+            .select('*');
+
+        return rows.map(fromPerformanceRow);
+    }
+
+    async insertPerformanceMetric(
+        appName: string,
+        environment: string,
+        metrics: ClientEnvPerformanceMetrics,
+    ): Promise<void> {
+        await this.db(TABLE_PERFORMANCE).insert(toPerformanceRow(metrics));
     }
 }

@@ -10,12 +10,25 @@ const countSchema = joi
         variants: joi.object().pattern(joi.string(), joi.number().min(0)),
     });
 
+export interface PerformanceProfile {
+    cpu: number;
+    memory: MemoryMetric;
+}
+
+export interface MemoryMetric {
+    totalMemoryAllocated: string;
+    heapTotal: string;
+    heapUsed: string;
+    external: string;
+}
+
 // validated type from client-metrics-schema.ts with default values
 export type ValidatedClientMetrics = {
     environment?: string;
     appName: string;
     instanceId: string;
     bucket: IMetricsBucket;
+    performanceProfile: PerformanceProfile;
 };
 
 export const clientMetricsSchema = joi
@@ -24,6 +37,7 @@ export const clientMetricsSchema = joi
     .keys({
         environment: joi.string().optional(),
         appName: joi.string().required(),
+        performanceProfile: joi.object<PerformanceProfile>(),
         instanceId: joi.string().empty(['', null]).default('default'),
         bucket: joi
             .object()

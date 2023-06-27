@@ -140,3 +140,4 @@ export * from './admin-count-schema';
 export * from './advanced-playground-feature-schema';
 export * from './advanced-playground-response-schema';
 export * from './advanced-playground-request-schema';
+export * from './register-feature-feedback-schema';

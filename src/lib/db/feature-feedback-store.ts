@@ -17,7 +17,7 @@ const TABLE = 'feature_feedback';
 interface IFeatureFeedbackTable {
     id: number;
     feature_name: string;
-    context_hash: string;
+    context_hash?: string;
     payload: string;
     metadata: object;
     created_at: Date;

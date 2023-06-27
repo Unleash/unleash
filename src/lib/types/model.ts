@@ -419,7 +419,7 @@ export interface IFeatureStrategySegment {
 export interface IFeatureFeedback {
     id: number;
     featureName: string;
-    contextHash: string;
+    contextHash?: string;
     payload: string;
     metadata: Record<string, any>;
     createdAt: Date;

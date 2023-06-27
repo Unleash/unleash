@@ -124,6 +124,10 @@ const OPENAPI_TAGS = [
         description:
             'API for managing [change requests](https://docs.getunleash.io/reference/change-requests).',
     },
+    {
+        name: 'Feedback',
+        description: 'API for user feedback.',
+    },
 ] as const;
 
 // make the export mutable, so it can be used in a schema

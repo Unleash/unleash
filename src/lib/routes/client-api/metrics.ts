@@ -73,8 +73,6 @@ export default class ClientMetricsController extends Controller {
         data.environment = this.metricsV2.resolveMetricsEnvironment(user, data);
         await this.clientInstanceService.registerInstance(data, clientIp);
 
-        // console.log('got data', JSON.stringify(data, null, 2));
-
         try {
             await this.metricsV2.registerClientMetrics(data, clientIp);
             res.status(202).end();

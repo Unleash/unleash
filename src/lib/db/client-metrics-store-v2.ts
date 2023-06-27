@@ -293,7 +293,6 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             );
 
         const tokens = rows.reduce(variantRowReducer, {});
-        // console.log('tokens', tokens, 'rows', rows);
 
         return Object.values(tokens);
     }

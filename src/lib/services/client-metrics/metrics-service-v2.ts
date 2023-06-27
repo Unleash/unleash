@@ -130,13 +130,14 @@ export default class ClientMetricsServiceV2 {
                     data.bucket.toggles[name].extraData?.no.executionTime
                         .totalMs,
                 enabledExecutionCount:
-                    data.bucket.toggles[name].extraData.yes.executionTime.count,
+                    data.bucket.toggles[name].extraData?.yes.executionTime
+                        .count,
                 disabledExecutionCount:
-                    data.bucket.toggles[name].extraData.no.executionTime.count,
+                    data.bucket.toggles[name].extraData?.no.executionTime.count,
                 enabledErrorCount:
-                    data.bucket.toggles[name].extraData.yes.errors,
+                    data.bucket.toggles[name].extraData?.yes.errors,
                 disabledErrorCount:
-                    data.bucket.toggles[name].extraData.no.errors,
+                    data.bucket.toggles[name].extraData?.no.errors,
             };
         });
         await this.registerBulkMetrics(clientMetrics);

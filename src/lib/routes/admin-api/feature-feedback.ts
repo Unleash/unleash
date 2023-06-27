@@ -2,15 +2,11 @@ import Controller from '../controller';
 import { OpenApiService } from '../../services/openapi-service';
 import { Logger } from '../../logger';
 import { NONE } from '../../types/permissions';
-import { IUnleashConfig, IUnleashServices } from 'lib/types';
+import { IUnleashConfig, IUnleashServices, serializeDates } from '../../types';
 import { IAuthRequest } from '../unleash-types';
 import { Response } from 'express';
-import { FeedbackService } from 'lib/services';
-import {
-    createRequestSchema,
-    emptyResponse,
-    getStandardResponses,
-} from '../../openapi';
+import { FeedbackService } from '../../services';
+import { createResponseSchema, getFeatureFeedbackSchema } from '../../openapi';
 
 export class FeatureFeedbackController extends Controller {
     private openApiService: OpenApiService;
@@ -39,16 +35,10 @@ export class FeatureFeedbackController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Client'],
-                    summary: 'Load user feedback for feature.',
-                    description: ``,
-                    operationId: 'registerClientMetrics',
-                    requestBody: createRequestSchema(
-                        'getFeatureFeedbackSchema',
-                    ),
+                    tags: ['Feedback'],
+                    operationId: 'getFeatureFeedback',
                     responses: {
-                        ...getStandardResponses(400),
-                        202: emptyResponse,
+                        200: createResponseSchema('getFeatureFeedbackSchema'),
                     },
                 }),
             ],
@@ -61,7 +51,13 @@ export class FeatureFeedbackController extends Controller {
     ): Promise<void> {
         const name = req.params.featureName;
         const feedback = await this.feedbackService.getFeedbackForFeature(name);
-        res.status(200).json(feedback);
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            getFeatureFeedbackSchema.$id,
+            serializeDates(feedback),
+        );
     }
 }
 

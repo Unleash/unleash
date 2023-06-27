@@ -143,6 +143,7 @@ import {
     advancedPlaygroundFeatureSchema,
     getFeatureFeedbackSchema,
     registerFeatureFeedbackSchema,
+    featureFeedbackSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -343,6 +344,7 @@ export const schemas: UnleashSchemas = {
     contextFieldStrategiesSchema,
     registerFeatureFeedbackSchema,
     getFeatureFeedbackSchema,
+    featureFeedbackSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

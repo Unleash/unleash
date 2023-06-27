@@ -142,3 +142,4 @@ export * from './advanced-playground-response-schema';
 export * from './advanced-playground-request-schema';
 export * from './register-feature-feedback-schema';
 export * from './get-feature-feedback-schema';
+export * from './feature-feedback-schema';

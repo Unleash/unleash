@@ -12,30 +12,14 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GetFeatureFeedbackSchema } from 'openapi';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-
-const mock: GetFeatureFeedbackSchema[] = [
-    {
-        id: 1,
-        featureName: 'Feature 1',
-        payload: '3',
-        createdAt: '2021-09-01T00:00:00.000Z',
-    },
-    {
-        id: 2,
-        featureName: 'Feature 2',
-        payload: '2',
-        createdAt: '2021-09-01T00:00:00.000Z',
-    },
-    {
-        id: 3,
-        featureName: 'Feature 3',
-        payload: '4',
-        createdAt: '2021-09-01T00:00:00.000Z',
-    },
-];
+import { useFeedbackForFeature } from 'hooks/api/getters/useFeatureFeedback/useFeedbackForFeature';
 
 export const FeatureFeedback = () => {
     const featureId = useRequiredPathParam('featureId');
+    const { feedback } = useFeedbackForFeature(featureId);
+
+    console.log({ feedback });
+
     usePageTitle('Feature Feedback');
     const columns = useMemo(
         () => [
@@ -61,7 +45,7 @@ export const FeatureFeedback = () => {
         useTable(
             {
                 columns: columns as any[], // TODO: fix after `react-table` v8 update
-                data: mock,
+                data: feedback,
                 disableSortRemove: true,
             },
             useSortBy

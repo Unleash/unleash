@@ -16,12 +16,26 @@ const formatVariantEntry = (
     return `${value} (${percentage}%) - ${key}`;
 };
 
+const EventIndicator = ({ x, y, label, color }) => (
+    <div style={{ position: 'absolute', left: x, top: y, textAlign: 'center' }}>
+        <div
+            style={{
+                width: 12,
+                height: 12,
+                borderRadius: '50%',
+                backgroundColor: color,
+            }}
+        />
+        <span style={{ fontSize: 12, marginTop: -15 }}>{label}</span>
+    </div>
+);
+
 export const createChartOptions = (
     theme: Theme,
     metrics: IFeatureMetricsRaw[],
     hoursBack: number,
     locationSettings: ILocationSettings
-): ChartOptions<'line'> => {
+): any => {
     return {
         locale: locationSettings.locale,
         responsive: true,
@@ -84,16 +98,54 @@ export const createChartOptions = (
                 type: 'linear',
                 title: {
                     display: true,
-                    text: 'Feature load time (ms)',
+                    text: 'CPU(%)',
                     color: theme.palette.text.secondary,
                 },
-                // min: 0,
+                stackWeight: 4,
+                stack: 'demo',
                 suggestedMin: 0,
                 ticks: { precision: 0, color: theme.palette.text.secondary },
                 grid: {
                     color: theme.palette.divider,
                     borderColor: theme.palette.divider,
                 },
+            },
+            y3: {
+                type: 'category',
+                labels: ['CHANGED'],
+                offset: true,
+                position: 'left',
+                stack: 'demo',
+                suggestedMin: 0,
+                stackWeight: 1,
+                showLine: false,
+            },
+            y2: {
+                type: 'linear',
+                position: 'right',
+                title: {
+                    display: true,
+                    text: 'Memory (MB)',
+                    color: theme.palette.text.secondary,
+                },
+                stackWeight: 4,
+                weight: 1,
+                stack: 'rightStack',
+                // min: 0,
+                suggestedMin: 0,
+                ticks: { precision: 0, color: theme.palette.text.secondary },
+                grid: {
+                    display: false,
+                },
+            },
+            y4: {
+                type: 'category',
+                labels: ['CHANGED'],
+                showLine: false,
+                offset: true,
+                position: 'right',
+                stack: 'rightStack',
+                stackWeight: 1,
             },
             x: {
                 type: 'time',

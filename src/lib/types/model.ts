@@ -6,6 +6,7 @@ import { ALL_OPERATORS } from '../util';
 import { IProjectStats } from 'lib/services/project-service';
 import { CreateFeatureStrategySchema } from '../openapi';
 import { ProjectEnvironment } from './stores/project-store';
+import { ExtraData } from './stores/client-metrics-store-v2';
 
 export type Operator = typeof ALL_OPERATORS[number];
 
@@ -352,6 +353,10 @@ export interface IMetricCounts {
     yes?: number;
     no?: number;
     variants?: Record<string, number>;
+    extraData?: {
+        yes: ExtraData;
+        no: ExtraData;
+    };
 }
 
 export interface IMetricsBucket {

@@ -105,13 +105,28 @@ class ClientMetricsController extends Controller {
                 name,
                 this.parseHoursBackQueryParam(hoursBack),
             )
-        ).map((row) => ({
-            ...row,
-            timings: {
-                yes: this.getRandomNumber(100, 200),
-                no: this.getRandomNumber(20, 110),
-            },
-        }));
+        ).map((row) => {
+            console.log(row, row.extraData);
+
+            const timings = row.extraData
+                ? {
+                      yes:
+                          row.extraData.yes.executionTime.totalMs /
+                          row.extraData.yes.executionTime.count,
+                      no:
+                          row.extraData.no.executionTime.totalMs /
+                          row.extraData.no.executionTime.count,
+                  }
+                : {
+                      yes: this.getRandomNumber(100, 200),
+                      no: this.getRandomNumber(20, 110),
+                  };
+
+            return {
+                ...row,
+                timings,
+            };
+        });
 
         this.openApiService.respondWithValidation(
             200,

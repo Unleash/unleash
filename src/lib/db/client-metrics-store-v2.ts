@@ -24,6 +24,7 @@ interface ClientMetricsBaseTable {
 interface ClientMetricsEnvTable extends ClientMetricsBaseTable {
     yes: number;
     no: number;
+    extra_data?: any;
 }
 
 interface ClientMetricsEnvVariantTable extends ClientMetricsBaseTable {
@@ -50,6 +51,7 @@ const toRow = (metric: IClientMetricsEnv): ClientMetricsEnvTable => ({
     timestamp: startOfHour(metric.timestamp),
     yes: metric.yes,
     no: metric.no,
+    extra_data: metric.extraData,
 });
 
 const toVariantRow = (
@@ -162,6 +164,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             return;
         }
         const rows = collapseHourlyMetrics(metrics).map(toRow);
+        console.log('rows', rows, 'metrics', JSON.stringify(metrics, null, 2));
 
         // Sort the rows to avoid deadlocks
         const sortedRows = rows.sort(
@@ -175,7 +178,9 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         const insert = this.db<ClientMetricsEnvTable>(TABLE)
             .insert(sortedRows)
             .toQuery();
-        const query = `${insert.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp) DO UPDATE SET "yes" = "client_metrics_env"."yes" + EXCLUDED.yes, "no" = "client_metrics_env"."no" + EXCLUDED.no`;
+        const query = `${insert.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp) DO UPDATE SET "yes" = "client_metrics_env"."yes" + EXCLUDED.yes, "no" = "client_metrics_env"."no" + EXCLUDED.no, "extra_data" = EXCLUDED.extra_data`;
+        console.log(query);
+
         await this.db.raw(query);
 
         const variantRows = spreadVariants(metrics).map(toVariantRow);

@@ -54,6 +54,18 @@ export const collapseHourlyMetrics = (
                     grouped[key].variants ?? {},
                 );
             }
+
+            if (metric.extraData) {
+                grouped[key].extraData.yes.executionTime = mergeRecords(
+                    metric.extraData.yes.executionTime,
+                    grouped[key].extraData.yes.executionTime ?? {},
+                );
+
+                grouped[key].extraData.no.executionTime = mergeRecords(
+                    metric.extraData.no.executionTime,
+                    grouped[key].extraData.no.executionTime ?? {},
+                );
+            }
         }
     });
     return Object.values(grouped);

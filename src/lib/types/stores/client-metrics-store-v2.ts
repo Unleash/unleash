@@ -7,10 +7,19 @@ export interface IClientMetricsEnvKey {
     timestamp: Date;
 }
 
+export type ExtraData = {
+    executionTime: { totalMs: number; count: number };
+    errors?: number;
+};
+
 export interface IClientMetricsEnv extends IClientMetricsEnvKey {
     yes: number;
     no: number;
     variants?: Record<string, number>;
+    extraData?: {
+        yes: ExtraData;
+        no: ExtraData;
+    };
 }
 
 export interface IClientMetricsEnvVariant extends IClientMetricsEnvKey {

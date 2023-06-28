@@ -33,19 +33,16 @@ test('should be able to fetch client toggles', async () => {
     expect(clientToggles).toHaveLength(1);
 });
 
-describe('strategy title queries', () => {
+describe('optional includes', () => {
     test('should not add `title` by default', async () => {
         const clientToggles = await featureToggleClientStore.getClient();
 
         expect(clientToggles[0].strategies[0].title).toBeUndefined();
     });
 
-    test('should add `title` to strategies when asked', async () => {
-        const clientToggles = await featureToggleClientStore.getClient(
-            undefined,
-            ['strategy titles'],
-        );
+    test('should not add `id` by default', async () => {
+        const clientToggles = await featureToggleClientStore.getClient();
 
-        expect(clientToggles[0].strategies[0].title).not.toBeUndefined();
+        expect(clientToggles[0].strategies[0].id).toBeUndefined();
     });
 });

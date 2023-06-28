@@ -37,7 +37,6 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        strategyImprovements: true,
                         segmentContextFieldUsage: true,
                         advancedPlayground: true,
                         strategySplittedButton: true,

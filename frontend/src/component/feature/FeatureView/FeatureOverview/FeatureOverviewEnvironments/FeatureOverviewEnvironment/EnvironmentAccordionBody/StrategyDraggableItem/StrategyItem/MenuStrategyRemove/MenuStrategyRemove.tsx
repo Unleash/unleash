@@ -21,6 +21,7 @@ import {
 } from '@server/types/permissions';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import {
+    MENU_STRATEGY_REMOVE,
     STRATEGY_FORM_REMOVE_ID,
     STRATEGY_REMOVE_MENU_BTN,
 } from 'utils/testIds';
@@ -91,6 +92,7 @@ const MenuStrategyRemove = ({
                 onClick={handleClose}
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                data-testid={MENU_STRATEGY_REMOVE}
             >
                 <Tooltip
                     title={

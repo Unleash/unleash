@@ -272,7 +272,7 @@ test('open mode + non-project member can perform basic change request actions', 
     const featureName = 'test';
     featureEnvironments(featureName, [
         { name: 'development', strategies: [] },
-        { name: 'production', strategies: ['default'] },
+        { name: 'production', strategies: ['userWithId'] },
         { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([]);

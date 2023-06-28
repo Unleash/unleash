@@ -10,7 +10,7 @@ import { EditGroupContainer } from './groups/EditGroup/EditGroup';
 import { Group } from './groups/Group/Group';
 import { GroupsAdmin } from './groups/GroupsAdmin';
 import { InstanceAdmin } from './instance-admin/InstanceAdmin';
-import { InstancePrivacyAdmin } from './instance-privacy';
+import { InstancePrivacy } from './instance-privacy/InstancePrivacy';
 import { MaintenanceAdmin } from './maintenance';
 import AdminMenu from './menu/AdminMenu';
 import { Network } from './network/Network';
@@ -47,7 +47,7 @@ export const Admin = () => (
             <Route path="auth" element={<AuthSettings />} />
             <Route path="admin-invoices" element={<FlaggedBillingRedirect />} />
             <Route path="billing" element={<Billing />} />
-            <Route path="instance-privacy" element={<InstancePrivacyAdmin />} />
+            <Route path="instance-privacy" element={<InstancePrivacy />} />
         </Routes>
     </>
 );

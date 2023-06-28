@@ -83,7 +83,7 @@ const featureCollectionActivenessManagementTexts: IFeatureActivenessManagementIn
         },
     };
 
-export const InstancePrivacyAdmin = () => {
+export const InstancePrivacy = () => {
     const { settings } = useTelemetry();
     const { uiConfig, loading } = useUiConfig();
 

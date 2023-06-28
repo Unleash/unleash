@@ -199,32 +199,32 @@ export default class FeatureToggleClientStore
                 feature.lastSeenAt = r.last_seen_at;
                 feature.createdAt = r.created_at;
             }
-            if (feature.strategies) {
-                feature.strategies = feature.strategies.map(
-                    ({ id, title, ...strategy }) => ({
-                        ...strategy,
 
-                        ...(optionalIncludes?.has('strategy titles') && title
-                            ? { title }
-                            : {}),
-
-                        // We should not send strategy IDs from the client API,
-                        // as this breaks old versions of the Go SDK (at least).
-                        ...((isAdmin ||
-                            optionalIncludes?.includes('strategy IDs')) &&
-                        id
-                            ? { id }
-                            : {}),
-                    }),
-                );
-            }
             acc[r.name] = feature;
             return acc;
         }, {});
 
         const features: IFeatureToggleClient[] = Object.values(featureToggles);
 
-        return features;
+        // strip away unwanted properties
+        const cleanedFeatures = features.map(({ strategies, ...rest }) => ({
+            ...rest,
+            strategies: strategies?.map(({ id, title, ...strategy }) => ({
+                ...strategy,
+
+                ...(optionalIncludes?.has('strategy titles') && title
+                    ? { title }
+                    : {}),
+
+                // We should not send strategy IDs from the client API,
+                // as this breaks old versions of the Go SDK (at least).
+                ...(isAdmin || optionalIncludes?.has('strategy IDs')
+                    ? { id }
+                    : {}),
+            })),
+        }));
+
+        return cleanedFeatures;
     }
 
     private static rowToStrategy(row: Record<string, any>): IStrategyConfig {

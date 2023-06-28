@@ -592,3 +592,39 @@ test('If CRs are protected for any environment in the project stops bulk update 
         ),
     ).rejects.toThrowError(new NoAccessError(SKIP_CHANGE_REQUEST));
 });
+
+test('getClientFeatures should return titles on client strategies when asked', async () => {
+    const featureName = 'get-strategy-by-id';
+    const projectId = 'default';
+
+    const title = 'custom strategy title';
+    const userName = 'strategy';
+    const config: Omit<FeatureStrategySchema, 'id'> = {
+        name: 'default',
+        constraints: [],
+        parameters: {},
+        title,
+    };
+    await service.createFeatureToggle(
+        projectId,
+        {
+            name: featureName,
+        },
+        userName,
+    );
+
+    await service.createStrategy(
+        config,
+        { projectId, featureName, environment: DEFAULT_ENV },
+        userName,
+    );
+
+    const clientFeatures = await service.getClientFeatures(
+        undefined,
+        new Set(['strategy titles']),
+    );
+    expect(clientFeatures[0].strategies[0].title).toStrictEqual(title);
+
+    const clientFeaturesNoTitles = await service.getClientFeatures();
+    expect(clientFeaturesNoTitles[0].strategies[0].title).toBeUndefined();
+});

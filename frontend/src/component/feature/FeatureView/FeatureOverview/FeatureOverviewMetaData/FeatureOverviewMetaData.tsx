@@ -48,7 +48,6 @@ const StyledBody = styled('div')(({ theme }) => ({
 const StyledBodyItem = styled('span')(({ theme }) => ({
     margin: theme.spacing(1, 0),
     fontSize: theme.fontSizes.bodySize,
-    wordBreak: 'break-all',
 }));
 
 const StyledDescriptionContainer = styled('div')(({ theme }) => ({

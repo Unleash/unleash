@@ -133,7 +133,7 @@ const ToolTipDescriptionText = styled('p')(({ theme }) => ({
     marginTop: theme.spacing(1),
 }));
 
-export const InstancePrivacy = ({
+export const InstancePrivacySection = ({
     title,
     infoText,
     concreteDetails,

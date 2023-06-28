@@ -2,7 +2,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Box, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { InstancePrivacy } from './InstancePrivacy';
+import { InstancePrivacySection } from './InstancePrivacySection';
 import { useTelemetry } from 'hooks/api/getters/useTelemetry/useTelemetry';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -108,7 +108,7 @@ export const InstancePrivacyAdmin = () => {
     return (
         <PageContent header={<PageHeader title="Instance Privacy" />}>
             <StyledBox>
-                <InstancePrivacy
+                <InstancePrivacySection
                     title={versionCollectionDetails.title}
                     infoText={versionCollectionDetails.infoText}
                     concreteDetails={versionCollectionDetails.concreteDetails}
@@ -121,7 +121,7 @@ export const InstancePrivacyAdmin = () => {
                         uiConfig.flags.experimentalExtendedTelemetry
                     )}
                     show={
-                        <InstancePrivacy
+                        <InstancePrivacySection
                             title={featureCollectionDetails.title}
                             infoText={featureCollectionDetails.infoText}
                             concreteDetails={

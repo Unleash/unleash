@@ -174,9 +174,7 @@ export default class ClientMetricsServiceV2 {
                     const metric = applicationMetrics.find(
                         (item) =>
                             compareAsc(hourBucket.timestamp, item.timestamp) ===
-                                0 &&
-                            item.appName === appName &&
-                            item.environment === environment,
+                            0,
                     );
                     return (
                         metric || {

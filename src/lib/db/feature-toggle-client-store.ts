@@ -170,21 +170,9 @@ export default class FeatureToggleClientStore
                 strategies: [],
             };
             if (this.isUnseenStrategyRow(feature, r) && !r.strategy_disabled) {
-                const { id, title, ...strategy } =
-                    FeatureToggleClientStore.rowToStrategy(r);
-
-                feature.strategies?.push({
-                    ...strategy,
-                    ...(optionalIncludes?.includes('strategy titles') && title
-                        ? { title }
-                        : {}),
-
-                    // We should not send strategy IDs from the client API,
-                    // as this breaks old versions of the Go SDK (at least).
-                    ...(optionalIncludes?.includes('strategy IDs') || isAdmin
-                        ? { id }
-                        : {}),
-                });
+                feature.strategies?.push(
+                    FeatureToggleClientStore.rowToStrategy(r),
+                );
             }
             if (this.isNewTag(feature, r)) {
                 this.addTag(feature, r);
@@ -211,6 +199,26 @@ export default class FeatureToggleClientStore
                 feature.lastSeenAt = r.last_seen_at;
                 feature.createdAt = r.created_at;
             }
+            if (optionalIncludes?.length && feature.strategies) {
+                feature.strategies = feature.strategies.map(
+                    ({ id, title, ...strategy }) => ({
+                        ...strategy,
+
+                        ...(optionalIncludes?.includes('strategy titles') &&
+                        title
+                            ? { title }
+                            : {}),
+
+                        // We should not send strategy IDs from the client API,
+                        // as this breaks old versions of the Go SDK (at least).
+                        ...((isAdmin ||
+                            optionalIncludes?.includes('strategy IDs')) &&
+                        id
+                            ? { id }
+                            : {}),
+                    }),
+                );
+            }
             acc[r.name] = feature;
             return acc;
         }, {});
@@ -235,24 +243,6 @@ export default class FeatureToggleClientStore
             value: row.tag_value,
             type: row.tag_type,
         };
-    }
-
-    private static removeIdsFromStrategies(features: IFeatureToggleClient[]) {
-        features.forEach((feature) => {
-            feature.strategies.forEach((strategy) => {
-                delete strategy.id;
-            });
-        });
-    }
-
-    private static removeTitlesFromStrategies(
-        features: IFeatureToggleClient[],
-    ) {
-        features.forEach((feature) => {
-            feature.strategies.forEach((strategy) => {
-                delete strategy.title;
-            });
-        });
     }
 
     private isUnseenStrategyRow(

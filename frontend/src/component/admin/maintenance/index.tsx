@@ -1,8 +1,5 @@
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
+import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import AccessContext from 'contexts/AccessContext';
-import React, { useContext } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Box, styled } from '@mui/material';
@@ -10,19 +7,13 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { MaintenanceTooltip } from './MaintenanceTooltip';
 import { MaintenanceToggle } from './MaintenanceToggle';
 
-export const MaintenanceAdmin = () => {
-    const { hasAccess } = useContext(AccessContext);
-
-    return (
-        <div>
-            <ConditionallyRender
-                condition={hasAccess(ADMIN)}
-                show={<MaintenancePage />}
-                elseShow={<AdminAlert />}
-            />
-        </div>
-    );
-};
+export const MaintenanceAdmin = () => (
+    <div>
+        <PermissionGuard permissions={ADMIN}>
+            <MaintenancePage />
+        </PermissionGuard>
+    </div>
+);
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',

@@ -57,12 +57,13 @@ export const AdvancedPlayground: VFC<{
     const [searchParams, setSearchParams] = useSearchParams();
     const searchParamsLength = Array.from(searchParams.entries()).length;
     const { evaluateAdvancedPlayground, loading } = usePlaygroundApi();
+    const [hasFormBeenSubmitted, setHasFormBeenSubmitted] = useState(false);
 
     useEffect(() => {
         if (environments?.length === 0) {
             setEnvironments([resolveDefaultEnvironment(availableEnvironments)]);
         }
-    }, [availableEnvironments]);
+    }, [JSON.stringify(environments), JSON.stringify(availableEnvironments)]);
 
     useEffect(() => {
         if (searchParamsLength > 0) {
@@ -130,6 +131,7 @@ export const AdvancedPlayground: VFC<{
         action?: () => void
     ) => {
         try {
+            setConfigurationError(undefined);
             const parsedContext = JSON.parse(context || '{}');
             const response = await evaluateAdvancedPlayground({
                 environments: resolveEnvironments(environments),
@@ -143,7 +145,6 @@ export const AdvancedPlayground: VFC<{
             if (action && typeof action === 'function') {
                 action();
             }
-            setConfigurationError(undefined);
             setResults(response);
         } catch (error: unknown) {
             if (error instanceof BadRequestError) {
@@ -166,6 +167,8 @@ export const AdvancedPlayground: VFC<{
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
         event.preventDefault();
+
+        setHasFormBeenSubmitted(true);
 
         await evaluatePlaygroundContext(environments, projects, context, () => {
             setURLParameters();
@@ -272,17 +275,25 @@ export const AdvancedPlayground: VFC<{
                         condition={loading}
                         show={<Loader />}
                         elseShow={
-                            <ConditionallyRender
-                                condition={Boolean(results)}
-                                show={
-                                    <AdvancedPlaygroundResultsTable
-                                        loading={loading}
-                                        features={results?.features}
-                                        input={results?.input}
-                                    />
-                                }
-                                elseShow={<PlaygroundGuidance />}
-                            />
+                            <>
+                                <ConditionallyRender
+                                    condition={Boolean(results)}
+                                    show={
+                                        <AdvancedPlaygroundResultsTable
+                                            loading={loading}
+                                            features={results?.features}
+                                            input={results?.input}
+                                        />
+                                    }
+                                />
+                                <ConditionallyRender
+                                    condition={
+                                        !Boolean(results) &&
+                                        !hasFormBeenSubmitted
+                                    }
+                                    show={<PlaygroundGuidance />}
+                                />
+                            </>
                         }
                     />
                 </Box>

@@ -18,7 +18,6 @@ import {
     IRoleData,
     IUserWithRole,
     RoleName,
-    RoleType,
 } from '../types/model';
 import { IRoleStore } from 'lib/types/stores/role-store';
 import NameExistsError from '../error/name-exists-error';
@@ -30,6 +29,7 @@ import {
     ALL_PROJECTS,
     CUSTOM_ROOT_ROLE_TYPE,
     CUSTOM_PROJECT_ROLE_TYPE,
+    ROOT_ROLE_TYPES,
 } from '../util/constants';
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
@@ -120,12 +120,21 @@ export class AccessService {
      */
     async hasPermission(
         user: Pick<IUser, 'id' | 'permissions' | 'isAPI'>,
-        permission: string,
+        permission: string | string[],
         projectId?: string,
         environment?: string,
     ): Promise<boolean> {
+        const permissionsArray = Array.isArray(permission)
+            ? permission
+            : [permission];
+
+        const permissionLogInfo =
+            permissionsArray.length === 1
+                ? `permission=${permissionsArray[0]}`
+                : `permissions=[${permissionsArray.join(',')}]`;
+
         this.logger.info(
-            `Checking permission=${permission}, userId=${user.id}, projectId=${projectId}, environment=${environment}`,
+            `Checking ${permissionLogInfo}, userId=${user.id}, projectId=${projectId}, environment=${environment}`,
         );
 
         try {
@@ -145,11 +154,12 @@ export class AccessService {
                 )
                 .some(
                     (p) =>
-                        p.permission === permission || p.permission === ADMIN,
+                        permissionsArray.includes(p.permission) ||
+                        p.permission === ADMIN,
                 );
         } catch (e) {
             this.logger.error(
-                `Error checking permission=${permission}, userId=${user.id} projectId=${projectId}`,
+                `Error checking ${permissionLogInfo}, userId=${user.id} projectId=${projectId}`,
                 e,
             );
             return Promise.resolve(false);
@@ -243,10 +253,10 @@ export class AccessService {
         const newRootRole = await this.resolveRootRole(role);
         if (newRootRole) {
             try {
-                await this.store.removeRolesOfTypeForUser(userId, [
-                    RoleType.ROOT,
-                    RoleType.ROOT_CUSTOM,
-                ]);
+                await this.store.removeRolesOfTypeForUser(
+                    userId,
+                    ROOT_ROLE_TYPES,
+                );
 
                 await this.store.addUserToRole(
                     userId,
@@ -265,7 +275,7 @@ export class AccessService {
 
     async getUserRootRoles(userId: number): Promise<IRoleWithProject[]> {
         const userRoles = await this.store.getRolesForUserId(userId);
-        return userRoles.filter((r) => r.type === RoleType.ROOT);
+        return userRoles.filter(({ type }) => ROOT_ROLE_TYPES.includes(type));
     }
 
     async removeUserFromRole(

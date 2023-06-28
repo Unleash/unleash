@@ -18,6 +18,7 @@ import {
     Typography,
     useTheme,
     Autocomplete,
+    SelectChangeEvent,
 } from '@mui/material';
 
 import { debounce } from 'debounce';
@@ -27,6 +28,8 @@ import useToast from 'hooks/useToast';
 import { PlaygroundEditor } from './PlaygroundEditor/PlaygroundEditor';
 import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
 import { parseDateValue, parseValidDate } from 'component/common/util';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { isStringOrStringArray } from '../../playground.utils';
 interface IPlaygroundCodeFieldsetProps {
     context: string | undefined;
     setContext: Dispatch<SetStateAction<string | undefined>>;
@@ -37,6 +40,9 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
     setContext,
 }) => {
     const theme = useTheme();
+    const { uiConfig } = useUiConfig();
+    const isAdvancedPlayground = Boolean(uiConfig.flags.advancedPlayground);
+
     const { setToastData } = useToast();
     const { context: contextData } = useUnleashContext();
     const contextOptions = contextData
@@ -92,15 +98,53 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                 (foundContext?.legalValues &&
                     foundContext.legalValues.length > 0) ||
                 contextField === 'currentTime'
-            )
-                return;
-            setContextValue('');
+            ) {
+                return setContextValue('');
+            }
         } catch (error) {
             setToastData({
                 type: 'error',
                 title: `Error parsing context: ${formatUnknownError(error)}`,
             });
         }
+    };
+
+    const changeContextValue = (
+        e: FormEvent,
+        newValue: string | (string | string[])[] | null
+    ) => {
+        if (!isStringOrStringArray(newValue)) return;
+
+        if (Array.isArray(newValue)) {
+            const temp =
+                (newValue || []).length > 1 ? newValue.join(',') : newValue[0];
+            return setContextValue(temp);
+        }
+
+        setContextValue(newValue);
+    };
+
+    const resolveAutocompleteValue = (): string | string[] | null => {
+        //This is needed for clearing the Autocomplete Chips when changing the context field
+        //and the new field also has legal values
+        if (!contextValue || contextValue === '') {
+            return [];
+        }
+
+        if (isAdvancedPlayground) {
+            // Split comma separated strings to array for fields with legal values
+            const foundField = contextData.find(
+                contextData => contextData.name === contextField
+            );
+            const hasLegalValues = (foundField?.legalValues || []).length > 1;
+            if (contextValue.includes(',') && hasLegalValues) {
+                return contextValue.split(',');
+            }
+
+            return [contextValue as string];
+        }
+
+        return contextValue;
     };
 
     const resolveInput = () => {
@@ -145,13 +189,13 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                 <Autocomplete
                     disablePortal
                     id="context-legal-values"
+                    freeSolo
+                    filterSelectedOptions
                     size="small"
-                    onChange={(e: FormEvent, newValue) => {
-                        if (typeof newValue === 'string') {
-                            return setContextValue(newValue);
-                        }
-                    }}
+                    value={resolveAutocompleteValue()}
+                    onChange={changeContextValue}
                     options={options}
+                    multiple={isAdvancedPlayground}
                     sx={{ width: 200, maxWidth: '100%' }}
                     renderInput={(params: any) => (
                         <TextField {...params} label="Value" />
@@ -170,6 +214,16 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                 onChange={event => setContextValue(event.target.value || '')}
             />
         );
+    };
+
+    const changeContextField = (event: SelectChangeEvent) => {
+        setContextField(event.target.value || '');
+
+        if (event.target.value === 'currentTime') {
+            return setContextValue(new Date().toISOString());
+        }
+
+        setContextValue('');
     };
 
     return (
@@ -195,16 +249,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                         labelId="context-field-label"
                         id="context-field"
                         value={contextField}
-                        onChange={event => {
-                            setContextField(event.target.value || '');
-
-                            if (event.target.value === 'currentTime') {
-                                return setContextValue(
-                                    new Date().toISOString()
-                                );
-                            }
-                            setContextValue('');
-                        }}
+                        onChange={changeContextField}
                         variant="outlined"
                         size="small"
                         sx={{ width: 200, maxWidth: '100%' }}
@@ -221,7 +266,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                     variant="outlined"
                     disabled={!contextField || Boolean(error)}
                     onClick={onAddField}
-                    sx={{ width: '95px' }}
+                    sx={{ width: '95px', maxHeight: '40px' }}
                 >
                     {`${!fieldExist ? 'Add' : 'Replace'} `}
                 </Button>

@@ -94,7 +94,7 @@ export const FeatureStrategyEdit = () => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
-    const { setPreviousTitle, trackTitle } = useTitleTracking();
+    const { setPreviousTitle } = useTitleTracking();
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
 
@@ -152,11 +152,6 @@ export const FeatureStrategyEdit = () => {
             strategyId,
             payload
         );
-
-        if (uiConfig?.flags?.strategyImprovements) {
-            // NOTE: remove tracking when feature flag is removed
-            trackTitle(strategy.title);
-        }
 
         await refetchSavedStrategySegments();
         setToastData({

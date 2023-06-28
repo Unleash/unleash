@@ -1,6 +1,6 @@
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { TableBody, TableRow, useMediaQuery } from '@mui/material';
-import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
+import { DateTimeCell } from 'component/common/Table/cells/DateTimeCell/DateTimeCell';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { SortableTableHeader, TableCell, Table } from 'component/common/Table';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
@@ -89,7 +89,9 @@ const COLUMNS = [
     {
         Header: 'Time',
         accessor: 'timestamp',
-        Cell: (props: any) => <DateCell value={props.row.original.timestamp} />,
+        Cell: (props: any) => (
+            <DateTimeCell value={props.row.original.timestamp} />
+        ),
     },
     {
         Header: 'Application',

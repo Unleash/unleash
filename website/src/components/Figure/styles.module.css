@@ -1,5 +1,5 @@
 /* Figures (with captions) */
-figure {
+.main-wrapper figure {
     box-shadow: var(--ifm-global-shadow-lw);
     border-radius: var(--ifm-global-radius);
     border: var(--ifm-global-border-width) solid var(--unleash-color-gray);

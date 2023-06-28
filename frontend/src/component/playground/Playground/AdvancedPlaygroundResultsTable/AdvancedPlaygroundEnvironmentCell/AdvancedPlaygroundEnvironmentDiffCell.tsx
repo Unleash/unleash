@@ -1,11 +1,7 @@
 import { Link, Popover, styled, Typography, useTheme } from '@mui/material';
 import { flexRow } from '../../../../../themes/themeStyles';
 import React, { useState } from 'react';
-import {
-    AdvancedPlaygroundEnvironmentFeatureSchema,
-    AdvancedPlaygroundFeatureSchemaEnvironments,
-} from 'openapi';
-import { PlaygroundEnvironmentTable } from '../../PlaygroundEnvironmentTable/PlaygroundEnvironmentTable';
+import { AdvancedPlaygroundFeatureSchemaEnvironments } from 'openapi';
 import { PlaygroundEnvironmentDiffTable } from '../../PlaygroundEnvironmentTable/PlaygroundEnvironmentDiffTable';
 
 const StyledContainer = styled(

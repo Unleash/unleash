@@ -14,8 +14,9 @@ import {
 import { StickinessSelect } from './StickinessSelect/StickinessSelect';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import Loader from '../../../common/Loader/Loader';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useLocation } from 'react-router';
 
 interface IFlexibleStrategyProps {
     parameters: IFeatureStrategyParameters;
@@ -31,7 +32,9 @@ const FlexibleStrategy = ({
 }: IFlexibleStrategyProps) => {
     const projectId = useRequiredPathParam('projectId');
     const { defaultStickiness, loading } = useDefaultProjectSettings(projectId);
+    const { pathname } = useLocation();
 
+    const isDefaultStrategyEdit = pathname.includes('default-strategy');
     const onUpdate = (field: string) => (newValue: string) => {
         updateParameter(field, newValue);
     };
@@ -56,6 +59,12 @@ const FlexibleStrategy = ({
     if (parameters.stickiness === '') {
         onUpdate('stickiness')(stickiness);
     }
+
+    useEffect(() => {
+        if (isDefaultStrategyEdit && !parameters.groupId) {
+            onUpdate('groupId')('');
+        }
+    }, [isDefaultStrategyEdit]);
 
     if (loading) {
         return <Loader />;

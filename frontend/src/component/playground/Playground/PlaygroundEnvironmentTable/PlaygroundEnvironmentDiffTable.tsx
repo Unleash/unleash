@@ -13,6 +13,7 @@ import { Box } from '@mui/material';
 import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/FeatureStatusCell';
 import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
+import { FeatureResultInfoPopoverCell } from '../PlaygroundResultsTable/FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
 
 interface IPlaygroundEnvironmentTableProps {
     features: AdvancedPlaygroundFeatureSchemaEnvironments;
@@ -54,10 +55,21 @@ export const PlaygroundEnvironmentDiffTable = ({
                 ? 'unknown'
                 : 'false',
         Cell: ({ row }: { row: { original: RowType } }) => {
-            return <FeatureStatusCell feature={row.original[environment]} />;
+            return (
+                <Box sx={{ display: 'flex' }}>
+                    <FeatureStatusCell feature={row.original[environment]} />
+                    <FeatureResultInfoPopoverCell
+                        feature={row.original[environment]}
+                        input={{
+                            environment: row.original[environment].environment,
+                            context: row.original[environment].context,
+                        }}
+                    />
+                </Box>
+            );
         },
         sortType: 'playgroundResultState',
-        maxWidth: 120,
+        maxWidth: 140,
     }));
 
     const COLUMNS = useMemo(() => {

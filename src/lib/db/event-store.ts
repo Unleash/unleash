@@ -158,8 +158,11 @@ class EventStore implements IEventStore {
     async getMaxRevisionId(largerThan: number = 0): Promise<number> {
         const row = await this.db(TABLE)
             .max('id')
-            .whereNotNull('feature_name')
-            .orWhere('type', SEGMENT_UPDATED)
+            .where((builder) =>
+                builder
+                    .whereNotNull('feature_name')
+                    .orWhere('type', SEGMENT_UPDATED),
+            )
             .andWhere('id', '>=', largerThan)
             .first();
         return row ? row.max : -1;

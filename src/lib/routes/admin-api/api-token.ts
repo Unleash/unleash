@@ -3,20 +3,12 @@ import { Response } from 'express';
 import Controller from '../controller';
 import {
     ADMIN,
-    CREATE_ADMIN_API_TOKEN,
-    CREATE_API_TOKEN,
     CREATE_CLIENT_API_TOKEN,
     CREATE_FRONTEND_API_TOKEN,
-    DELETE_ADMIN_API_TOKEN,
-    DELETE_API_TOKEN,
     DELETE_CLIENT_API_TOKEN,
     DELETE_FRONTEND_API_TOKEN,
-    READ_ADMIN_API_TOKEN,
-    READ_API_TOKEN,
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
-    UPDATE_ADMIN_API_TOKEN,
-    UPDATE_API_TOKEN,
     UPDATE_CLIENT_API_TOKEN,
     UPDATE_FRONTEND_API_TOKEN,
 } from '../../types/permissions';
@@ -53,12 +45,12 @@ import { OperationDeniedError } from '../../error';
 interface TokenParam {
     token: string;
 }
-const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string = (
-    tokenType,
-) => {
+export const tokenTypeToCreatePermission: (
+    tokenType: ApiTokenType,
+) => string = (tokenType) => {
     switch (tokenType) {
         case ApiTokenType.ADMIN:
-            return CREATE_ADMIN_API_TOKEN;
+            return ADMIN;
         case ApiTokenType.CLIENT:
             return CREATE_CLIENT_API_TOKEN;
         case ApiTokenType.FRONTEND:
@@ -87,14 +79,7 @@ const permissionToTokenType: (
         ].includes(permission)
     ) {
         return ApiTokenType.CLIENT;
-    } else if (
-        [
-            READ_ADMIN_API_TOKEN,
-            CREATE_ADMIN_API_TOKEN,
-            DELETE_ADMIN_API_TOKEN,
-            UPDATE_ADMIN_API_TOKEN,
-        ].includes(permission)
-    ) {
+    } else if (ADMIN === permission) {
         return ApiTokenType.ADMIN;
     } else {
         return undefined;
@@ -106,7 +91,7 @@ const tokenTypeToUpdatePermission: (tokenType: ApiTokenType) => string = (
 ) => {
     switch (tokenType) {
         case ApiTokenType.ADMIN:
-            return UPDATE_ADMIN_API_TOKEN;
+            return ADMIN;
         case ApiTokenType.CLIENT:
             return UPDATE_CLIENT_API_TOKEN;
         case ApiTokenType.FRONTEND:
@@ -119,7 +104,7 @@ const tokenTypeToDeletePermission: (tokenType: ApiTokenType) => string = (
 ) => {
     switch (tokenType) {
         case ApiTokenType.ADMIN:
-            return DELETE_ADMIN_API_TOKEN;
+            return ADMIN;
         case ApiTokenType.CLIENT:
             return DELETE_CLIENT_API_TOKEN;
         case ApiTokenType.FRONTEND:
@@ -164,7 +149,7 @@ export class ApiTokenController extends Controller {
             method: 'get',
             path: '',
             handler: this.getAllApiTokens,
-            permission: READ_API_TOKEN,
+            permission: [ADMIN, READ_CLIENT_API_TOKEN, READ_FRONTEND_API_TOKEN],
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
@@ -180,7 +165,11 @@ export class ApiTokenController extends Controller {
             method: 'post',
             path: '',
             handler: this.createApiToken,
-            permission: CREATE_API_TOKEN,
+            permission: [
+                ADMIN,
+                CREATE_CLIENT_API_TOKEN,
+                CREATE_FRONTEND_API_TOKEN,
+            ],
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
@@ -197,7 +186,11 @@ export class ApiTokenController extends Controller {
             method: 'put',
             path: '/:token',
             handler: this.updateApiToken,
-            permission: UPDATE_API_TOKEN,
+            permission: [
+                ADMIN,
+                UPDATE_CLIENT_API_TOKEN,
+                UPDATE_FRONTEND_API_TOKEN,
+            ],
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
@@ -215,7 +208,11 @@ export class ApiTokenController extends Controller {
             path: '/:token',
             handler: this.deleteApiToken,
             acceptAnyContentType: true,
-            permission: DELETE_API_TOKEN,
+            permission: [
+                ADMIN,
+                DELETE_CLIENT_API_TOKEN,
+                DELETE_FRONTEND_API_TOKEN,
+            ],
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
@@ -355,7 +352,7 @@ export class ApiTokenController extends Controller {
         );
 
         const allowedTokenTypes = [
-            READ_ADMIN_API_TOKEN,
+            ADMIN,
             READ_CLIENT_API_TOKEN,
             READ_FRONTEND_API_TOKEN,
         ]

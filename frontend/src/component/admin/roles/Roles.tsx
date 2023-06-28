@@ -1,9 +1,8 @@
-import { useContext, useState } from 'react';
-import AccessContext from 'contexts/AccessContext';
+import { useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { RolesTable } from './RolesTable/RolesTable';
-import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
+import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { Tab, Tabs, styled, useMediaQuery } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router-dom';
@@ -15,9 +14,9 @@ import { Search } from 'component/common/Search/Search';
 import theme from 'themes/theme';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Add } from '@mui/icons-material';
-import { UPDATE_ROLE } from '@server/types/permissions';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { IRole } from 'interfaces/role';
+import { READ_ROLE } from '@server/types/permissions';
 
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     '& .page-header': {
@@ -45,7 +44,6 @@ const StyledActions = styled('div')({
 
 export const Roles = () => {
     const { uiConfig } = useUiConfig();
-    const { hasAccess } = useContext(AccessContext);
     const { pathname } = useLocation();
 
     const { roles, projectRoles, loading } = useRoles();
@@ -84,122 +82,109 @@ export const Roles = () => {
 
     return (
         <div>
-            <ConditionallyRender
-                condition={hasAccess(ADMIN)}
-                show={
-                    <StyledPageContent
-                        headerClass="page-header"
-                        bodyClass="page-body"
-                        isLoading={loading}
-                        header={
-                            <>
-                                <StyledHeader>
-                                    <StyledTabsContainer>
-                                        <Tabs
-                                            value={pathname}
-                                            indicatorColor="primary"
-                                            textColor="primary"
-                                            variant="scrollable"
-                                            allowScrollButtonsMobile
-                                        >
-                                            {tabs.map(
-                                                ({ label, path, total }) => (
-                                                    <Tab
-                                                        key={label}
-                                                        value={path}
-                                                        label={
-                                                            <CenteredNavLink
-                                                                to={path}
-                                                            >
-                                                                <span>
-                                                                    {label} (
-                                                                    {total})
-                                                                </span>
-                                                            </CenteredNavLink>
-                                                        }
-                                                    />
-                                                )
-                                            )}
-                                        </Tabs>
-                                    </StyledTabsContainer>
-                                    <StyledActions>
-                                        <ConditionallyRender
-                                            condition={!isSmallScreen}
-                                            show={
-                                                <>
-                                                    <Search
-                                                        initialValue={
-                                                            searchValue
-                                                        }
-                                                        onChange={
-                                                            setSearchValue
-                                                        }
-                                                    />
-                                                    <PageHeader.Divider />
-                                                </>
-                                            }
-                                        />
-                                        <ResponsiveButton
-                                            onClick={() => {
-                                                setSelectedRole(undefined);
-                                                setModalOpen(true);
-                                            }}
-                                            maxWidth={`${theme.breakpoints.values['sm']}px`}
-                                            Icon={Add}
-                                            permission={UPDATE_ROLE}
-                                        >
-                                            New {type} role
-                                        </ResponsiveButton>
-                                    </StyledActions>
-                                </StyledHeader>
-                                <ConditionallyRender
-                                    condition={isSmallScreen}
-                                    show={
-                                        <Search
-                                            initialValue={searchValue}
-                                            onChange={setSearchValue}
-                                        />
-                                    }
-                                />
-                            </>
-                        }
-                    >
-                        <Routes>
-                            <Route
-                                path="project-roles"
-                                element={
-                                    <RolesTable
-                                        type={PROJECT_ROLE_TYPE}
-                                        searchValue={searchValue}
-                                        modalOpen={modalOpen}
-                                        setModalOpen={setModalOpen}
-                                        selectedRole={selectedRole}
-                                        setSelectedRole={setSelectedRole}
-                                    />
-                                }
-                            />
-                            <Route
-                                path="*"
-                                element={
-                                    <RolesTable
-                                        type={
-                                            uiConfig.flags.customRootRoles
-                                                ? ROOT_ROLE_TYPE
-                                                : PROJECT_ROLE_TYPE
+            <PermissionGuard permissions={[READ_ROLE, ADMIN]}>
+                <StyledPageContent
+                    headerClass="page-header"
+                    bodyClass="page-body"
+                    isLoading={loading}
+                    header={
+                        <>
+                            <StyledHeader>
+                                <StyledTabsContainer>
+                                    <Tabs
+                                        value={pathname}
+                                        indicatorColor="primary"
+                                        textColor="primary"
+                                        variant="scrollable"
+                                        allowScrollButtonsMobile
+                                    >
+                                        {tabs.map(({ label, path, total }) => (
+                                            <Tab
+                                                key={label}
+                                                value={path}
+                                                label={
+                                                    <CenteredNavLink to={path}>
+                                                        <span>
+                                                            {label} ({total})
+                                                        </span>
+                                                    </CenteredNavLink>
+                                                }
+                                            />
+                                        ))}
+                                    </Tabs>
+                                </StyledTabsContainer>
+                                <StyledActions>
+                                    <ConditionallyRender
+                                        condition={!isSmallScreen}
+                                        show={
+                                            <>
+                                                <Search
+                                                    initialValue={searchValue}
+                                                    onChange={setSearchValue}
+                                                />
+                                                <PageHeader.Divider />
+                                            </>
                                         }
-                                        searchValue={searchValue}
-                                        modalOpen={modalOpen}
-                                        setModalOpen={setModalOpen}
-                                        selectedRole={selectedRole}
-                                        setSelectedRole={setSelectedRole}
+                                    />
+                                    <ResponsiveButton
+                                        onClick={() => {
+                                            setSelectedRole(undefined);
+                                            setModalOpen(true);
+                                        }}
+                                        maxWidth={`${theme.breakpoints.values['sm']}px`}
+                                        Icon={Add}
+                                        permission={ADMIN}
+                                    >
+                                        New {type} role
+                                    </ResponsiveButton>
+                                </StyledActions>
+                            </StyledHeader>
+                            <ConditionallyRender
+                                condition={isSmallScreen}
+                                show={
+                                    <Search
+                                        initialValue={searchValue}
+                                        onChange={setSearchValue}
                                     />
                                 }
                             />
-                        </Routes>
-                    </StyledPageContent>
-                }
-                elseShow={<AdminAlert />}
-            />
+                        </>
+                    }
+                >
+                    <Routes>
+                        <Route
+                            path="project-roles"
+                            element={
+                                <RolesTable
+                                    type={PROJECT_ROLE_TYPE}
+                                    searchValue={searchValue}
+                                    modalOpen={modalOpen}
+                                    setModalOpen={setModalOpen}
+                                    selectedRole={selectedRole}
+                                    setSelectedRole={setSelectedRole}
+                                />
+                            }
+                        />
+                        <Route
+                            path="*"
+                            element={
+                                <RolesTable
+                                    type={
+                                        uiConfig.flags.customRootRoles
+                                            ? ROOT_ROLE_TYPE
+                                            : PROJECT_ROLE_TYPE
+                                    }
+                                    searchValue={searchValue}
+                                    modalOpen={modalOpen}
+                                    setModalOpen={setModalOpen}
+                                    selectedRole={selectedRole}
+                                    setSelectedRole={setSelectedRole}
+                                />
+                            }
+                        />
+                    </Routes>
+                </StyledPageContent>
+            </PermissionGuard>
         </div>
     );
 };

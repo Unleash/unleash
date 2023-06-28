@@ -12,7 +12,7 @@ interface IFeatureActivenessManagementInfo {
 }
 
 interface IActivenessManagementInfo {
-    environmentVariables: string[];
+    environmentVariables: string;
     changeInfoText: string;
 }
 
@@ -58,12 +58,12 @@ const featureCollectionDetails = {
 const versionCollectionActivenessManagementTexts: IFeatureActivenessManagementInfo =
     {
         enabled: {
-            environmentVariables: ['CHECK_VERSION=false'],
+            environmentVariables: 'CHECK_VERSION=false',
             changeInfoText:
                 'Version info collection can be disabled by setting the environment variable `CHECK_VERSION` to `false` and restarting Unleash.',
         },
         disabled: {
-            environmentVariables: ['CHECK_VERSION=true'],
+            environmentVariables: 'CHECK_VERSION=true',
             changeInfoText:
                 'Version info collection can be enabled by setting the environment variable to true and restarting Unleash.',
         },
@@ -72,12 +72,12 @@ const versionCollectionActivenessManagementTexts: IFeatureActivenessManagementIn
 const featureCollectionActivenessManagementTexts: IFeatureActivenessManagementInfo =
     {
         enabled: {
-            environmentVariables: ['SEND_TELEMETRY=false'],
+            environmentVariables: 'SEND_TELEMETRY=false',
             changeInfoText:
                 'Feature usage collection can be disabled by setting the environment variable to false and restarting Unleash.',
         },
         disabled: {
-            environmentVariables: ['SEND_TELEMETRY=true'],
+            environmentVariables: 'SEND_TELEMETRY=true',
             changeInfoText:
                 'To enable feature usage collection set the environment variable to true and restart Unleash.',
         },
@@ -114,7 +114,7 @@ export const InstancePrivacyAdmin = () => {
                     concreteDetails={versionCollectionDetails.concreteDetails}
                     enabled={settings?.versionInfoCollectionEnabled}
                     changeInfoText={versionActivenessInfo.changeInfoText}
-                    variablesTexts={versionActivenessInfo.environmentVariables}
+                    variablesText={versionActivenessInfo.environmentVariables}
                 />
                 <ConditionallyRender
                     condition={Boolean(
@@ -134,7 +134,7 @@ export const InstancePrivacyAdmin = () => {
                             changeInfoText={
                                 featureActivenessInfo.changeInfoText
                             }
-                            variablesTexts={
+                            variablesText={
                                 featureActivenessInfo.environmentVariables
                             }
                             dependsOnText={dependsOnFeatureCollection}

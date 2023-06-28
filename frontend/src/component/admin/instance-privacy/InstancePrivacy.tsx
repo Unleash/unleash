@@ -1,8 +1,9 @@
-import { Box, styled, useTheme } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -80,19 +81,19 @@ interface IPrivacyProps {
     concreteDetails: Record<string, string>;
     enabled: boolean;
     changeInfoText: string;
-    variablesTexts: string[];
+    variablesText: string;
     dependsOnText?: string;
 }
 
 interface IToolTipInstructionContentProps {
     changeInfoText: string;
-    variablesTexts: string[];
+    variablesText: string;
     dependsOnText?: string;
 }
 
 const ToolTipInstructionContent = ({
     changeInfoText,
-    variablesTexts,
+    variablesText,
     dependsOnText,
 }: IToolTipInstructionContentProps) => {
     return (
@@ -100,9 +101,7 @@ const ToolTipInstructionContent = ({
             <ToolTipDescriptionText>{changeInfoText}</ToolTipDescriptionText>
 
             <ToolTipDescriptionCode>
-                {variablesTexts.map(text => (
-                    <div>{text}</div>
-                ))}
+                <div>{variablesText}</div>
             </ToolTipDescriptionCode>
 
             {dependsOnText && (
@@ -140,7 +139,7 @@ export const InstancePrivacy = ({
     concreteDetails,
     enabled,
     changeInfoText,
-    variablesTexts,
+    variablesText,
     dependsOnText,
 }: IPrivacyProps) => {
     return (
@@ -148,16 +147,22 @@ export const InstancePrivacy = ({
             <StyledCardTitleRow>
                 <b>{title}</b>
                 <StyledDataCollectionBadge>
-                    {enabled && (
-                        <Badge color="success" icon={<CheckIcon />}>
-                            Data is collected
-                        </Badge>
-                    )}
-                    {!enabled && (
-                        <Badge color="neutral" icon={<ClearIcon />}>
-                            No data is collected
-                        </Badge>
-                    )}
+                    <ConditionallyRender
+                        condition={enabled}
+                        show={
+                            <Badge color="success" icon={<CheckIcon />}>
+                                Data is collected
+                            </Badge>
+                        }
+                    />
+                    <ConditionallyRender
+                        condition={!enabled}
+                        show={
+                            <Badge color="neutral" icon={<ClearIcon />}>
+                                No data is collected
+                            </Badge>
+                        }
+                    />
                 </StyledDataCollectionBadge>
             </StyledCardTitleRow>
 
@@ -172,7 +177,7 @@ export const InstancePrivacy = ({
                                 title={
                                     <ToolTipInstructionContent
                                         changeInfoText={changeInfoText}
-                                        variablesTexts={variablesTexts}
+                                        variablesText={variablesText}
                                         dependsOnText={dependsOnText}
                                     />
                                 }

@@ -15,14 +15,14 @@ import EventEmitter from 'events';
 import FeatureToggleStore from './feature-toggle-store';
 import { Db } from './db';
 import Raw = Knex.Raw;
-import { OptionalClientFeatureData } from 'lib/types/stores/feature-toggle-client-store';
+import { OptionalClientFeatures } from 'lib/types/stores/feature-toggle-client-store';
 
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;
     archived: boolean;
     isAdmin: boolean;
     userId?: number;
-    optionalIncludes?: OptionalClientFeatureData[];
+    optionalIncludes?: OptionalClientFeatures;
 }
 
 export interface IGetAdminFeatures {
@@ -204,8 +204,7 @@ export default class FeatureToggleClientStore
                     ({ id, title, ...strategy }) => ({
                         ...strategy,
 
-                        ...(optionalIncludes?.includes('strategy titles') &&
-                        title
+                        ...(optionalIncludes?.has('strategy titles') && title
                             ? { title }
                             : {}),
 
@@ -305,7 +304,7 @@ export default class FeatureToggleClientStore
 
     async getClient(
         featureQuery?: IFeatureToggleQuery,
-        optionalIncludes?: OptionalClientFeatureData[],
+        optionalIncludes?: OptionalClientFeatures,
     ): Promise<IFeatureToggleClient[]> {
         return this.getAll({
             featureQuery,

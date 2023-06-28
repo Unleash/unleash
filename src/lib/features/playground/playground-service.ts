@@ -199,7 +199,7 @@ export class PlaygroundService {
                 project: projects === ALL ? undefined : projects,
                 environment,
             },
-            ['strategy IDs', 'strategy titles'],
+            new Set(['strategy IDs', 'strategy titles']),
         );
 
         const featureProject: Record<string, string> = features.reduce(

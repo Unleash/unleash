@@ -306,6 +306,7 @@ export const ServiceAccountModal = ({
                             What is your service account allowed to do?
                         </StyledInputDescription>
                         <StyledRoleSelect
+                            roles={roles}
                             value={rootRole}
                             setValue={setRootRole}
                             required

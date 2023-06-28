@@ -178,7 +178,10 @@ export default class FeatureToggleClientStore
                 feature.strategies?.push({
                     ...strategy,
                     ...(includeStrategyTitles && title ? { title } : {}),
-                    ...(includeStrategyIds ? { id } : {}),
+
+                    // We should not send strategy IDs from the client API,
+                    // as this breaks old versions of the Go SDK (at least).
+                    ...(includeStrategyIds || isAdmin ? { id } : {}),
                 });
             }
             if (this.isNewTag(feature, r)) {

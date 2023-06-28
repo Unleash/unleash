@@ -1,7 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { VFC } from 'react';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureStrategyTitleProps {
     title: string;
@@ -12,12 +11,6 @@ export const FeatureStrategyTitle: VFC<IFeatureStrategyTitleProps> = ({
     title,
     setTitle,
 }) => {
-    const { uiConfig } = useUiConfig();
-
-    if (!uiConfig.flags.strategyImprovements) {
-        return null;
-    }
-
     return (
         <Box sx={{ paddingBottom: theme => theme.spacing(2) }}>
             <Typography

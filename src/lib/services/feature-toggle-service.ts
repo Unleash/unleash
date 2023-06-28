@@ -1373,11 +1373,7 @@ class FeatureToggleService {
                 (strategy) => strategy.disabled,
             );
 
-            if (
-                this.flagResolver.isEnabled('strategyImprovements') &&
-                hasDisabledStrategies &&
-                shouldActivateDisabledStrategies
-            ) {
+            if (hasDisabledStrategies && shouldActivateDisabledStrategies) {
                 strategies.map(async (strategy) => {
                     return this.updateStrategy(
                         strategy.id,
@@ -1406,7 +1402,6 @@ class FeatureToggleService {
                         environment,
                     );
                 const strategy =
-                    this.flagResolver.isEnabled('strategyImprovements') &&
                     projectEnvironmentDefaultStrategy != null
                         ? getProjectDefaultStrategy(
                               projectEnvironmentDefaultStrategy,
@@ -1658,7 +1653,7 @@ class FeatureToggleService {
         return this.featureToggleStore.getAll({ archived, project });
     }
 
-    async getProjectId(name: string): Promise<string> {
+    async getProjectId(name: string): Promise<string | undefined> {
         return this.featureToggleStore.getProjectId(name);
     }
 

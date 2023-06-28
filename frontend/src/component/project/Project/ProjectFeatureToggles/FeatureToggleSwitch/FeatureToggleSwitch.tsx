@@ -14,8 +14,6 @@ import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { EnableEnvironmentDialog } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitch/EnableEnvironmentDialog';
 import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
-import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
 
 const StyledBoxContainer = styled(Box)<{ 'data-testid': string }>(() => ({
     mx: 'auto',
@@ -64,13 +62,6 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
         feature?.environments
             .find(env => env.name === environmentName)
             ?.strategies.filter(strategy => strategy.disabled).length ?? 0;
-
-    const { uiConfig } = useUiConfig();
-    const showStrategyImprovements = Boolean(
-        uiConfig.flags.strategyImprovements
-    );
-
-    const { trackEvent } = usePlausibleTracker();
 
     const handleToggleEnvironmentOn = async (
         shouldActivateDisabled = false
@@ -125,10 +116,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     const onClick = async (e: React.MouseEvent) => {
         if (isChangeRequestConfigured(environmentName)) {
             e.preventDefault();
-            if (
-                featureHasOnlyDisabledStrategies() &&
-                showStrategyImprovements
-            ) {
+            if (featureHasOnlyDisabledStrategies()) {
                 setShowEnabledDialog(true);
             } else {
                 onChangeRequestToggle(
@@ -145,7 +133,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             return;
         }
 
-        if (featureHasOnlyDisabledStrategies() && showStrategyImprovements) {
+        if (featureHasOnlyDisabledStrategies()) {
             setShowEnabledDialog(true);
         } else {
             await handleToggleEnvironmentOn();
@@ -153,11 +141,6 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     };
 
     const onActivateStrategies = async () => {
-        await trackEvent('strategyImprovements', {
-            props: {
-                eventType: 'activate disabled strategies',
-            },
-        });
         if (isChangeRequestConfigured(environmentName)) {
             onChangeRequestToggle(
                 feature.name,
@@ -172,11 +155,6 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     };
 
     const onAddDefaultStrategy = async () => {
-        await trackEvent('strategyImprovements', {
-            props: {
-                eventType: 'add default strategy',
-            },
-        });
         if (isChangeRequestConfigured(environmentName)) {
             onChangeRequestToggle(
                 feature.name,
@@ -223,16 +201,14 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                     onClick={onClick}
                 />
             </StyledBoxContainer>
-            {showStrategyImprovements && (
-                <EnableEnvironmentDialog
-                    isOpen={showEnabledDialog}
-                    onClose={() => setShowEnabledDialog(false)}
-                    environment={environmentName}
-                    disabledStrategiesCount={disabledStrategiesCount}
-                    onActivateDisabledStrategies={onActivateStrategies}
-                    onAddDefaultStrategy={onAddDefaultStrategy}
-                />
-            )}
+            <EnableEnvironmentDialog
+                isOpen={showEnabledDialog}
+                onClose={() => setShowEnabledDialog(false)}
+                environment={environmentName}
+                disabledStrategiesCount={disabledStrategiesCount}
+                onActivateDisabledStrategies={onActivateStrategies}
+                onAddDefaultStrategy={onAddDefaultStrategy}
+            />
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
                 onClose={onChangeRequestToggleClose}

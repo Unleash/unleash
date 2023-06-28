@@ -10,9 +10,9 @@ interface IRoleCellProps {
 }
 
 export const RoleCell: VFC<IRoleCellProps> = ({ roleId, value }) => {
-    const { isEnterprise, uiConfig } = useUiConfig();
+    const { isEnterprise } = useUiConfig();
 
-    if (isEnterprise() && uiConfig.flags.customRootRoles) {
+    if (isEnterprise()) {
         return (
             <TextCell>
                 <TooltipLink

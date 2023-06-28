@@ -35,8 +35,7 @@ import {
 } from 'utils/testIds';
 import { caseInsensitiveSearch } from 'utils/search';
 import { IServiceAccount } from 'interfaces/service-account';
-import { RoleSelect } from 'component/common/RoleSelect/RoleSelect2';
-import { PROJECT_ROLE_TYPE } from '@server/util/constants';
+import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',

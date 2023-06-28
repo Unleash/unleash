@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IRole } from 'interfaces/role';
-import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 
 const useCreateUserForm = (
     initialName = '',
@@ -10,7 +9,7 @@ const useCreateUserForm = (
     initialRootRole = null
 ) => {
     const { uiConfig } = useUiConfig();
-    const { roles } = useRoles();
+    const { users, roles } = useUsers();
     const [name, setName] = useState(initialName);
     const [email, setEmail] = useState(initialEmail);
     const [sendEmail, setSendEmail] = useState(false);
@@ -18,8 +17,6 @@ const useCreateUserForm = (
         roles.find(({ id }) => id === initialRootRole) || null
     );
     const [errors, setErrors] = useState({});
-
-    const { users } = useUsers();
 
     useEffect(() => {
         setName(initialName);

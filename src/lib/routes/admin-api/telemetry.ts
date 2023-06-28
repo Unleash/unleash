@@ -32,8 +32,7 @@ class TelemetryController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Telemetry'],
-                    summary:
-                        'Get telemetry settings',
+                    summary: 'Get telemetry settings',
                     description:
                         'Provides the configured settings for [telemetry information collection](https://docs.getunleash.io/topics/data-collection)',
                     operationId: 'getTelemetrySettings',

@@ -22,7 +22,6 @@ export interface IGetAllFeatures {
     archived: boolean;
     isAdmin: boolean;
     includeStrategyIds?: boolean;
-    includeDisabledStrategies?: boolean;
     userId?: number;
     includeStrategyTitles?: boolean;
 }
@@ -335,7 +334,6 @@ export default class FeatureToggleClientStore
             archived: Boolean(archived),
             isAdmin: true,
             userId,
-            includeDisabledStrategies: true,
         });
     }
 }

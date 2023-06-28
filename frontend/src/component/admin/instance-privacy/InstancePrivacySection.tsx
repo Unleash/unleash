@@ -2,8 +2,8 @@ import { Box, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -52,8 +52,6 @@ const StyledDataCollectionBadge = styled('div')(({ theme }) => ({
 const StyledTag = styled('span')(({ theme }) => ({
     display: 'block',
     textAlign: 'right',
-    textDecoration: 'underline',
-    textDecorationStyle: 'dotted',
     color: theme.palette.neutral.dark,
 }));
 
@@ -104,9 +102,14 @@ const ToolTipInstructionContent = ({
                 <div>{variablesText}</div>
             </ToolTipDescriptionCode>
 
-            {dependsOnText && (
-                <ToolTipDescriptionText>{dependsOnText}</ToolTipDescriptionText>
-            )}
+            <ConditionallyRender
+                condition={Boolean(dependsOnText)}
+                show={
+                    <ToolTipDescriptionText>
+                        {dependsOnText}
+                    </ToolTipDescriptionText>
+                }
+            />
         </StyledDescription>
     );
 };
@@ -173,22 +176,19 @@ export const InstancePrivacySection = ({
                     </StyledDataCollectionExplanation>
                     <StyledDataCollectionPropertyCell>
                         <StyledTag>
-                            <HtmlTooltip
-                                title={
+                            <TooltipLink
+                                tooltip={
                                     <ToolTipInstructionContent
                                         changeInfoText={changeInfoText}
                                         variablesText={variablesText}
                                         dependsOnText={dependsOnText}
                                     />
                                 }
-                                arrow
                             >
-                                <div>
-                                    {enabled
-                                        ? 'How to disable collecting data?'
-                                        : 'How to enable collecting data?'}
-                                </div>
-                            </HtmlTooltip>
+                                {enabled
+                                    ? 'How to disable collecting data?'
+                                    : 'How to enable collecting data?'}
+                            </TooltipLink>
                         </StyledTag>
                     </StyledDataCollectionPropertyCell>
                 </StyledDataCollectionPropertyTable>

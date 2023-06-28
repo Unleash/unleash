@@ -199,7 +199,7 @@ export default class FeatureToggleClientStore
                 feature.lastSeenAt = r.last_seen_at;
                 feature.createdAt = r.created_at;
             }
-            if (optionalIncludes?.length && feature.strategies) {
+            if (feature.strategies) {
                 feature.strategies = feature.strategies.map(
                     ({ id, title, ...strategy }) => ({
                         ...strategy,

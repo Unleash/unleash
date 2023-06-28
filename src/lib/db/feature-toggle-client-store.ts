@@ -21,9 +21,8 @@ export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;
     archived: boolean;
     isAdmin: boolean;
-    includeStrategyIds?: boolean;
     userId?: number;
-    includeStrategyTitles?: boolean;
+    optionalIncludes?: OptionalClientFeatureData[];
 }
 
 export interface IGetAdminFeatures {
@@ -55,9 +54,8 @@ export default class FeatureToggleClientStore
         featureQuery,
         archived,
         isAdmin,
-        includeStrategyIds,
         userId,
-        includeStrategyTitles,
+        optionalIncludes,
     }: IGetAllFeatures): Promise<IFeatureToggleClient[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer('getFeatureAdmin');
@@ -177,11 +175,15 @@ export default class FeatureToggleClientStore
 
                 feature.strategies?.push({
                     ...strategy,
-                    ...(includeStrategyTitles && title ? { title } : {}),
+                    ...(optionalIncludes?.includes('strategy titles') && title
+                        ? { title }
+                        : {}),
 
                     // We should not send strategy IDs from the client API,
                     // as this breaks old versions of the Go SDK (at least).
-                    ...(includeStrategyIds || isAdmin ? { id } : {}),
+                    ...(optionalIncludes?.includes('strategy IDs') || isAdmin
+                        ? { id }
+                        : {}),
                 });
             }
             if (this.isNewTag(feature, r)) {
@@ -315,15 +317,11 @@ export default class FeatureToggleClientStore
         featureQuery?: IFeatureToggleQuery,
         optionalIncludes?: OptionalClientFeatureData[],
     ): Promise<IFeatureToggleClient[]> {
-        const optional = (feature: OptionalClientFeatureData) =>
-            optionalIncludes?.includes(feature) ?? false;
-
         return this.getAll({
             featureQuery,
             archived: false,
             isAdmin: false,
-            includeStrategyIds: optional('strategy IDs'),
-            includeStrategyTitles: optional('strategy titles'),
+            optionalIncludes,
         });
     }
 

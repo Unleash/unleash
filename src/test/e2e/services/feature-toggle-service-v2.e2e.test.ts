@@ -594,7 +594,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
 });
 
 test('getClientFeatures should return titles on client strategies when asked', async () => {
-    const featureName = 'get-strategy-by-id';
+    const featureName = 'check-returned-strategy-configuration';
     const projectId = 'default';
 
     const title = 'custom strategy title';

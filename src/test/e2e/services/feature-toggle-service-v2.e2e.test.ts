@@ -594,9 +594,6 @@ test('If CRs are protected for any environment in the project stops bulk update 
 });
 
 test('getClientFeatures should return titles on client strategies when asked', async () => {
-    // clear stores
-    await stores.featureToggleStore.deleteAll();
-
     const featureName = 'check-returned-strategy-configuration';
     const projectId = 'default';
 
@@ -622,12 +619,14 @@ test('getClientFeatures should return titles on client strategies when asked', a
         userName,
     );
 
-    const clientFeatures = await service.getClientFeatures(
-        undefined,
-        new Set(['strategy titles']),
-    );
-    expect(clientFeatures[0].strategies[0].title).toStrictEqual(title);
+    const clientFeature = (
+        await service.getClientFeatures(undefined, new Set(['strategy titles']))
+    ).find((feature) => feature.name === featureName)!;
 
-    const clientFeaturesNoTitles = await service.getClientFeatures();
-    expect(clientFeaturesNoTitles[0].strategies[0].title).toBeUndefined();
+    expect(clientFeature.strategies[0].title).toStrictEqual(title);
+
+    const clientFeatureNoTitles = (await service.getClientFeatures()).find(
+        (feature) => feature.name === featureName,
+    )!;
+    expect(clientFeatureNoTitles.strategies[0].title).toBeUndefined();
 });

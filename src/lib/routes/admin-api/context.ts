@@ -103,8 +103,8 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Strategies'],
-                    summary: 'Gets strategies using this context field',
-                    description: `Used to see which strategies are using this context field. Can aid in cleanup of no longer used context fields, if this list is empty it's safe to delete the context field`,
+                    summary: 'Get strategies using this context field',
+                    description: `Returns all strategies that use the specified context field. Useful when cleaning up context fields: if this list is empty, it's safe to delete the context field.`,
                     operationId: 'getStrategiesByContextField',
                     responses: {
                         200: createResponseSchema(

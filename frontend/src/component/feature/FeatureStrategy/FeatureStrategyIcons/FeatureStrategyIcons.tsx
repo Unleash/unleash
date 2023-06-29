@@ -20,7 +20,6 @@ const StyledListItem = styled('li')(() => ({
 const StyledItem = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
     gap: theme.spacing(1),
 }));
@@ -44,17 +43,18 @@ export const FeatureStrategyIcons = ({
             <StyledList aria-label="Feature strategies">
                 {strategies.slice(0, MAX_WHEN_OVER).map(strategy => (
                     <StyledListItem key={strategy.id}>
-                        <FeatureStrategyIcon strategyName={strategy.name} />
+                        <FeatureStrategyIcon strategy={strategy} />
                     </StyledListItem>
                 ))}
                 <TooltipLink
                     tooltip={strategies.slice(MAX_WHEN_OVER).map(strategy => (
                         <StyledListItem key={strategy.id}>
                             <StyledItem>
-                                <FeatureStrategyIcon
-                                    strategyName={strategy.name}
-                                />{' '}
-                                {formatStrategyName(strategy.name)}
+                                <FeatureStrategyIcon strategy={strategy} />{' '}
+                                {formatStrategyName(strategy.name) +
+                                    (strategy.title
+                                        ? ` - ${strategy.title}`
+                                        : '')}
                             </StyledItem>
                         </StyledListItem>
                     ))}
@@ -69,7 +69,7 @@ export const FeatureStrategyIcons = ({
         <StyledList aria-label="Feature strategies">
             {strategies.map(strategy => (
                 <StyledListItem key={strategy.id}>
-                    <FeatureStrategyIcon strategyName={strategy.name} />
+                    <FeatureStrategyIcon strategy={strategy} />
                 </StyledListItem>
             ))}
         </StyledList>

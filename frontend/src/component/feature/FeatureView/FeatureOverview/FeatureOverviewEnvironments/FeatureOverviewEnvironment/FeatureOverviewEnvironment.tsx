@@ -123,6 +123,8 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     marginTop: theme.spacing(2),
+    gap: theme.spacing(1),
+    flexWrap: 'wrap',
     [theme.breakpoints.down(560)]: {
         flexDirection: 'column',
     },

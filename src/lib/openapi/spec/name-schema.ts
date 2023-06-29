@@ -5,8 +5,11 @@ export const nameSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['name'],
+    description: 'An object with a name',
     properties: {
         name: {
+            description: 'The name of the represented object.',
+            example: 'betaUser',
             type: 'string',
         },
     },

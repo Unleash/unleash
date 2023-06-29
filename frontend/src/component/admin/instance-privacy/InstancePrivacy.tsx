@@ -102,8 +102,8 @@ export const InstancePrivacy = () => {
     let dependsOnFeatureCollection: undefined | string = undefined;
     if (!settings?.versionInfoCollectionEnabled)
         dependsOnFeatureCollection = settings?.featureInfoCollectionEnabled
-            ? 'Note: Feature Usage Collection is enabled, but for it to be active you must also enable Version Info Collection'
-            : 'When you enable Feature Usage Collection you must also enable Version Info Collection';
+            ? 'Note: Feature usage collection is enabled, but for it to be active you must also enable version info collection'
+            : 'When you enable feature usage collection you must also enable version info collection';
 
     return (
         <PageContent header={<PageHeader title="Instance Privacy" />}>

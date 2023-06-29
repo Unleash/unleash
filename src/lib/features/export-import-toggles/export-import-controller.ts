@@ -23,6 +23,7 @@ import { IAuthRequest } from '../../routes/unleash-types';
 import { extractUsername } from '../../util';
 import { BadDataError, InvalidOperationError } from '../../error';
 import ApiUser from '../../types/api-user';
+import { endpointDescriptions } from '../../openapi/endpoint-descriptions';
 
 class ExportImportController extends Controller {
     private logger: Logger;
@@ -71,6 +72,7 @@ class ExportImportController extends Controller {
                     responses: {
                         200: createResponseSchema('exportResultSchema'),
                     },
+                    ...endpointDescriptions.admin.export,
                 }),
             ],
         });
@@ -81,9 +83,6 @@ class ExportImportController extends Controller {
             handler: this.validateImport,
             middleware: [
                 openApiService.validPath({
-                    summary:
-                        'Validate import of feature toggles for an environment in the project',
-                    description: `Unleash toggles exported from a different instance can be imported into a new project and environment`,
                     tags: ['Unstable'],
                     operationId: 'validateImport',
                     requestBody: createRequestSchema('importTogglesSchema'),
@@ -92,6 +91,7 @@ class ExportImportController extends Controller {
                             'importTogglesValidateSchema',
                         ),
                     },
+                    ...endpointDescriptions.admin.validateImport,
                 }),
             ],
         });
@@ -102,15 +102,13 @@ class ExportImportController extends Controller {
             handler: this.importData,
             middleware: [
                 openApiService.validPath({
-                    summary:
-                        'Import feature toggles for an environment in the project',
-                    description: `Unleash toggles exported from a different instance can be imported into a new project and environment`,
                     tags: ['Unstable'],
                     operationId: 'importToggles',
                     requestBody: createRequestSchema('importTogglesSchema'),
                     responses: {
                         200: emptyResponse,
                     },
+                    ...endpointDescriptions.admin.import,
                 }),
             ],
         });

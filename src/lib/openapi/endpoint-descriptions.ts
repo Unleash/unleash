@@ -23,5 +23,20 @@ export const endpointDescriptions = {
             summary:
                 'Batch evaluate an Unleash context against a set of environments and projects.',
         },
+        export: {
+            description:
+                'Specify the `environment` you would liket to export and use the optional `downloadFile` flag to get the file',
+            summary:
+                'Export all feature toggle definitions from an environment',
+        },
+        validateImport: {
+            summary:
+                'Validate import of feature toggles for an environment in the project',
+            description: `Unleash toggles exported from a different instance can be imported into a new project and environment`,
+        },
+        import: {
+            summary: 'Import feature toggles for an environment in the project',
+            description: `Unleash toggles exported from a different instance can be imported into a new project and environment`,
+        },
     },
 } as const;

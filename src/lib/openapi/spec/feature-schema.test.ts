@@ -8,7 +8,7 @@ test('featureSchema', () => {
             {
                 name: 'a',
                 weight: 1,
-                weightType: 'a',
+                weightType: 'fix',
                 stickiness: 'a',
                 overrides: [{ contextName: 'a', values: ['a'] }],
                 payload: { type: 'a', value: 'b' },

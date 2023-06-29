@@ -92,6 +92,8 @@ export default class VersionService {
 
     private enabled: boolean;
 
+    private telemetryEnabled: boolean;
+
     private versionCheckUrl: string;
 
     private instanceId?: string;
@@ -136,9 +138,14 @@ export default class VersionService {
             versionCheck,
             enterpriseVersion,
             flagResolver,
+            telemetry,
         }: Pick<
             IUnleashConfig,
-            'getLogger' | 'versionCheck' | 'enterpriseVersion' | 'flagResolver'
+            | 'getLogger'
+            | 'versionCheck'
+            | 'enterpriseVersion'
+            | 'flagResolver'
+            | 'telemetry'
         >,
     ) {
         this.logger = getLogger('lib/services/version-service.js');
@@ -159,6 +166,7 @@ export default class VersionService {
             enterprise: enterpriseVersion || '',
         };
         this.enabled = versionCheck.enable;
+        this.telemetryEnabled = telemetry;
         this.versionCheckUrl = versionCheck.url;
         this.isLatest = true;
         this.flagResolver = flagResolver;
@@ -193,7 +201,10 @@ export default class VersionService {
                 };
 
                 if (
-                    this.flagResolver.isEnabled('experimentalExtendedTelemetry')
+                    this.flagResolver.isEnabled(
+                        'experimentalExtendedTelemetry',
+                    ) &&
+                    this.telemetryEnabled
                 ) {
                     const featureInfo = await this.getFeatureUsageInfo();
                     versionPayload.featureInfo = featureInfo;

@@ -98,6 +98,7 @@ export interface IUnleashOptions {
     logLevel?: LogLevel;
     server?: Partial<IServerOption>;
     versionCheck?: Partial<IVersionOption>;
+    telemetry?: boolean;
     authentication?: Partial<IAuthOption>;
     ui?: object;
     frontendApi?: IFrontendApi;
@@ -182,6 +183,7 @@ export interface IUnleashConfig {
     server: IServerOption;
     listen: IListeningHost | IListeningPipe;
     versionCheck: IVersionOption;
+    telemetry: boolean;
     authentication: IAuthOption;
     ui: IUIConfig;
     import: IImportOption;

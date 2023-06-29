@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * The state this Unleash instance is in. GOOD if everything is ok, BAD if the instance should be restarted
+ */
 export type HealthCheckSchemaHealth =
     typeof HealthCheckSchemaHealth[keyof typeof HealthCheckSchemaHealth];
 

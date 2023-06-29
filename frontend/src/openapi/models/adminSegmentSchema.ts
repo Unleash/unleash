@@ -6,10 +6,21 @@
 import type { ConstraintSchema } from './constraintSchema';
 
 export interface AdminSegmentSchema {
+    /** The id of a segment */
     id: number;
+    /** The name of a segment */
     name: string;
+    /** The description for a segment */
     description?: string | null;
+    /** List of constraints that are used in this segment */
     constraints: ConstraintSchema[];
+    /** Number of projects where this segment is used in */
+    usedInFeatures?: number | null;
+    /** Number of projects where this segment is used in */
+    usedInProjects?: number | null;
+    project?: string | null;
+    /** The creator's email or username */
     createdBy?: string;
+    /** When the segment was created */
     createdAt: string;
 }

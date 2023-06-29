@@ -22,11 +22,7 @@ import {
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
 import { formatBaseUri } from './util/format-base-uri';
-import {
-    hoursToMilliseconds,
-    minutesToMilliseconds,
-    secondsToMilliseconds,
-} from 'date-fns';
+import { hoursToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import EventEmitter from 'events';
 import {
     ApiTokenType,
@@ -170,7 +166,10 @@ const defaultServerOption: IServerOption = {
         process.env.ENABLE_HEAP_SNAPSHOT_ENPOINT,
         false,
     ),
-    keepAliveTimeout: minutesToMilliseconds(1),
+    keepAliveTimeout: parseEnvVarNumber(
+        process.env.SERVER_KEEPALIVE_TIMEOUT,
+        secondsToMilliseconds(15),
+    ),
     headersTimeout: secondsToMilliseconds(61),
     enableRequestLogger: false,
     gracefulShutdownEnable: parseEnvVarBoolean(
@@ -210,7 +209,7 @@ const defaultEmail: IEmailOption = {
     host: process.env.EMAIL_HOST,
     secure: parseEnvVarBoolean(process.env.EMAIL_SECURE, false),
     port: parseEnvVarNumber(process.env.EMAIL_PORT, 587),
-    sender: process.env.EMAIL_SENDER || 'noreply@unleash-hosted.com',
+    sender: process.env.EMAIL_SENDER || 'noreply@getunleash.io',
     smtpuser: process.env.EMAIL_USER,
     smtppass: process.env.EMAIL_PASSWORD,
 };
@@ -397,6 +396,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.versionCheck || {},
     ]);
 
+    const telemetry: boolean =
+        options.telemetry ||
+        parseEnvVarBoolean(process.env.SEND_TELEMETRY, true);
     const initApiTokens = loadInitApiTokens();
 
     const authentication: IAuthOption = mergeAll([
@@ -439,8 +441,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.secureHeaders ||
         parseEnvVarBoolean(process.env.SECURE_HEADERS, false);
 
-    const enableOAS =
-        options.enableOAS || parseEnvVarBoolean(process.env.ENABLE_OAS, false);
+    const enableOAS = parseEnvVarBoolean(process.env.ENABLE_OAS, true);
 
     const additionalCspAllowedDomains: ICspDomainConfig =
         parseCspConfig(options.additionalCspAllowedDomains) ||
@@ -475,6 +476,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         server,
         listen,
         versionCheck,
+        telemetry,
         authentication,
         ui,
         import: importSetting,

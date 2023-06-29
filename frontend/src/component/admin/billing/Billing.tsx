@@ -1,9 +1,8 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import AccessContext from 'contexts/AccessContext';
-import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
+import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { Alert } from '@mui/material';
 import { BillingDashboard } from './BillingDashboard/BillingDashboard';
@@ -19,7 +18,6 @@ export const Billing = () => {
         loading,
     } = useInstanceStatus();
     const { invoices } = useInvoices();
-    const { hasAccess } = useContext(AccessContext);
 
     useEffect(() => {
         const hardRefresh = async () => {
@@ -35,18 +33,14 @@ export const Billing = () => {
                 <ConditionallyRender
                     condition={isBilling}
                     show={
-                        <ConditionallyRender
-                            condition={hasAccess(ADMIN)}
-                            show={() => (
-                                <>
-                                    <BillingDashboard
-                                        instanceStatus={instanceStatus!}
-                                    />
-                                    <BillingHistory data={invoices} />
-                                </>
-                            )}
-                            elseShow={() => <AdminAlert />}
-                        />
+                        <PermissionGuard permissions={ADMIN}>
+                            <>
+                                <BillingDashboard
+                                    instanceStatus={instanceStatus!}
+                                />
+                                <BillingHistory data={invoices} />
+                            </>
+                        </PermissionGuard>
                     }
                     elseShow={
                         <Alert severity="error">

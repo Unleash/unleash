@@ -26,7 +26,6 @@ process.nextTick(async () => {
                     enableHeapSnapshotEnpoint: true,
                 },
                 logLevel: LogLevel.debug,
-                enableOAS: true,
                 // secureHeaders: true,
                 versionCheck: {
                     enable: false,
@@ -38,10 +37,9 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        variantMetrics: true,
-                        strategyImprovements: true,
                         segmentContextFieldUsage: true,
                         advancedPlayground: true,
+                        strategySplittedButton: true,
                     },
                 },
                 authentication: {

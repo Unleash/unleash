@@ -5,12 +5,25 @@
  */
 import type { ClientApplicationSchemaStarted } from './clientApplicationSchemaStarted';
 
+/**
+ * A client application is an instance of one of our SDKs
+ */
 export interface ClientApplicationSchema {
+    /** An identifier for the app that uses the sdk, should be static across SDK restarts */
     appName: string;
+    /** A unique identifier identifying the instance of the application running the SDK. Often changes based on execution environment. For instance: two pods in Kubernetes will have two different instanceIds */
     instanceId?: string;
+    /** An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>" */
     sdkVersion?: string;
+    /**
+     * The SDK's configured 'environment' property. Deprecated. This property  does **not** control which Unleash environment the SDK gets toggles for. To control Unleash environments, use the SDKs API key.
+     * @deprecated
+     */
     environment?: string;
+    /** How often (in seconds) does the client refresh its toggles */
     interval: number;
+    /** Either an RFC-3339 timestamp or a unix timestamp in seconds */
     started: ClientApplicationSchemaStarted;
+    /** Which strategies the SDKs runtime knows about */
     strategies: string[];
 }

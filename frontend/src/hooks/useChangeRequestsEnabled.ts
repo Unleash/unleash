@@ -25,6 +25,18 @@ export const useChangeRequestsEnabled = (projectId: string) => {
         [JSON.stringify(data)]
     );
 
+    const isChangeRequestConfiguredForReview = React.useCallback(
+        (environment: string): boolean => {
+            return data.some(draft => {
+                return (
+                    draft.environment === environment &&
+                    draft.changeRequestEnabled
+                );
+            });
+        },
+        [JSON.stringify(data)]
+    );
+
     const isChangeRequestConfiguredInAnyEnv = React.useCallback((): boolean => {
         return data.some(draft => draft.changeRequestEnabled);
     }, [JSON.stringify(data)]);
@@ -32,5 +44,6 @@ export const useChangeRequestsEnabled = (projectId: string) => {
     return {
         isChangeRequestConfigured,
         isChangeRequestConfiguredInAnyEnv,
+        isChangeRequestConfiguredForReview,
     };
 };

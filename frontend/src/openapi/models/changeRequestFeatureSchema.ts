@@ -9,6 +9,7 @@ import type { ChangeRequestDefaultEventSchema } from './changeRequestDefaultEven
 export interface ChangeRequestFeatureSchema {
     name: string;
     conflict?: string;
+    /** List of changes inside change request. This list may be empty when listing all change requests for a project. */
     changes: ChangeRequestEventSchema[];
     defaultChange?: ChangeRequestDefaultEventSchema;
 }

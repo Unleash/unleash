@@ -17,7 +17,7 @@ export const createAccessService = (
     db: Db,
     config: IUnleashConfig,
 ): AccessService => {
-    const { eventBus, getLogger } = config;
+    const { eventBus, getLogger, flagResolver } = config;
     const eventStore = new EventStore(db, getLogger);
     const groupStore = new GroupStore(db);
     const accountStore = new AccountStore(db, getLogger);
@@ -31,7 +31,7 @@ export const createAccessService = (
 
     return new AccessService(
         { accessStore, accountStore, roleStore, environmentStore },
-        { getLogger },
+        { getLogger, flagResolver },
         groupService,
     );
 };
@@ -39,13 +39,13 @@ export const createAccessService = (
 export const createFakeAccessService = (
     config: IUnleashConfig,
 ): AccessService => {
-    const { getLogger } = config;
+    const { getLogger, flagResolver } = config;
     const eventStore = new FakeEventStore();
     const groupStore = new FakeGroupStore();
     const accountStore = new FakeAccountStore();
     const roleStore = new FakeRoleStore();
     const environmentStore = new FakeEnvironmentStore();
-    const accessStore = new FakeAccessStore();
+    const accessStore = new FakeAccessStore(roleStore);
     const groupService = new GroupService(
         { groupStore, eventStore, accountStore },
         { getLogger },
@@ -53,7 +53,7 @@ export const createFakeAccessService = (
 
     return new AccessService(
         { accessStore, accountStore, roleStore, environmentStore },
-        { getLogger },
+        { getLogger, flagResolver },
         groupService,
     );
 };

@@ -15,6 +15,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { getFeatureStrategyIcon } from 'utils/strategyNames';
 import { AddFromTemplateCard } from './AddFromTemplateCard/AddFromTemplateCard';
 import { FeatureStrategyMenu } from '../FeatureStrategyMenu/FeatureStrategyMenu';
+import { LegacyFeatureStrategyMenu } from '../FeatureStrategyMenu/LegacyFeatureStrategyMenu';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureStrategyEmptyProps {
     projectId: string;
@@ -75,6 +77,9 @@ export const FeatureStrategyEmpty = ({
         onChangeRequestAddStrategiesConfirm,
         onChangeRequestAddStrategyClose,
     } = useChangeRequestAddStrategy(projectId, featureId, 'addStrategy');
+
+    const { uiConfig } = useUiConfig();
+    const strategySplittedButton = uiConfig?.flags?.strategySplittedButton;
 
     const onAfterAddStrategy = (multiple = false) => {
         refetchFeature();
@@ -166,12 +171,26 @@ export const FeatureStrategyEmpty = ({
                         justifyContent: 'center',
                     }}
                 >
-                    <FeatureStrategyMenu
-                        label="Add your first strategy"
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        matchWidth={canCopyFromOtherEnvironment}
+                    <ConditionallyRender
+                        condition={Boolean(strategySplittedButton)}
+                        show={
+                            <FeatureStrategyMenu
+                                label="Add your first strategy"
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environmentId}
+                                matchWidth={canCopyFromOtherEnvironment}
+                            />
+                        }
+                        elseShow={
+                            <LegacyFeatureStrategyMenu
+                                label="Add your first strategy"
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environmentId}
+                                matchWidth={canCopyFromOtherEnvironment}
+                            />
+                        }
                     />
                     <ConditionallyRender
                         condition={canCopyFromOtherEnvironment}
@@ -186,55 +205,67 @@ export const FeatureStrategyEmpty = ({
                         }
                     />
                 </Box>
-                <Box sx={{ width: '100%', mt: 3 }}>
-                    <SectionSeparator>
-                        Or use a strategy template
-                    </SectionSeparator>
-                </Box>
-                <Box
-                    sx={{
-                        display: 'grid',
-                        width: '100%',
-                        gap: 2,
-                        gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
-                    }}
-                >
-                    <AddFromTemplateCard
-                        title="Standard strategy"
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        onAfterAddStrategy={onAfterAddStrategy}
-                        Icon={getFeatureStrategyIcon('default')}
-                        strategy={{
-                            name: 'default',
-                            parameters: {},
-                            constraints: [],
-                        }}
-                    >
-                        The standard strategy is strictly on/off for your entire
-                        userbase.
-                    </AddFromTemplateCard>
-                    <AddFromTemplateCard
-                        title="Gradual rollout"
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        onAfterAddStrategy={onAfterAddStrategy}
-                        Icon={getFeatureStrategyIcon('flexibleRollout')}
-                        strategy={{
-                            name: 'flexibleRollout',
-                            parameters: {
-                                rollout: '50',
-                                stickiness: 'default',
-                                groupId: feature.name,
-                            },
-                            constraints: [],
-                        }}
-                    >
-                        Roll out to a percentage of your userbase.
-                    </AddFromTemplateCard>
-                </Box>
+                <ConditionallyRender
+                    condition={strategySplittedButton === false}
+                    show={
+                        <>
+                            <Box sx={{ width: '100%', mt: 3 }}>
+                                <SectionSeparator>
+                                    Or use a strategy template
+                                </SectionSeparator>
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: 'grid',
+                                    width: '100%',
+                                    gap: 2,
+                                    gridTemplateColumns: {
+                                        xs: '1fr',
+                                        sm: '1fr 1fr',
+                                    },
+                                }}
+                            >
+                                <AddFromTemplateCard
+                                    title="Standard strategy"
+                                    projectId={projectId}
+                                    featureId={featureId}
+                                    environmentId={environmentId}
+                                    onAfterAddStrategy={onAfterAddStrategy}
+                                    Icon={getFeatureStrategyIcon('default')}
+                                    strategy={{
+                                        name: 'default',
+                                        parameters: {},
+                                        constraints: [],
+                                    }}
+                                >
+                                    The standard strategy is strictly on/off for
+                                    your entire userbase.
+                                </AddFromTemplateCard>
+                                <AddFromTemplateCard
+                                    title="Gradual rollout"
+                                    projectId={projectId}
+                                    featureId={featureId}
+                                    environmentId={environmentId}
+                                    onAfterAddStrategy={onAfterAddStrategy}
+                                    Icon={getFeatureStrategyIcon(
+                                        'flexibleRollout'
+                                    )}
+                                    strategy={{
+                                        name: 'flexibleRollout',
+                                        parameters: {
+                                            rollout: '50',
+                                            stickiness: 'default',
+                                            groupId: feature.name,
+                                        },
+                                        constraints: [],
+                                    }}
+                                >
+                                    Roll out to a percentage of your userbase.
+                                </AddFromTemplateCard>
+                            </Box>
+                        </>
+                    }
+                />
             </StyledContainer>
         </>
     );

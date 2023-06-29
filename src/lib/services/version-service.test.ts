@@ -50,6 +50,7 @@ test('yields current versions', async () => {
         getLogger,
         versionCheck: { url, enable: true },
         flagResolver: getTestFlagResolver(true),
+        telemetry: true,
     });
     await service.checkLatestVersion();
     const versionInfo = service.getVersionInfo();
@@ -84,6 +85,7 @@ test('supports setting enterprise version as well', async () => {
         versionCheck: { url, enable: true },
         enterpriseVersion,
         flagResolver: getTestFlagResolver(true),
+        telemetry: true,
     });
     await service.checkLatestVersion();
     const versionInfo = service.getVersionInfo();
@@ -118,6 +120,7 @@ test('if version check is not enabled should not make any calls', async () => {
         versionCheck: { url, enable: false },
         enterpriseVersion,
         flagResolver: getTestFlagResolver(true),
+        telemetry: true,
     });
     await service.checkLatestVersion();
     const versionInfo = service.getVersionInfo();
@@ -160,6 +163,7 @@ test('sets featureinfo', async () => {
         versionCheck: { url, enable: true },
         enterpriseVersion,
         flagResolver: getTestFlagResolver(true),
+        telemetry: true,
     });
     await service.checkLatestVersion();
     expect(scope.isDone()).toEqual(true);
@@ -208,6 +212,7 @@ test('counts toggles', async () => {
         versionCheck: { url, enable: true },
         enterpriseVersion,
         flagResolver: getTestFlagResolver(true),
+        telemetry: true,
     });
     await service.checkLatestVersion();
     expect(scope.isDone()).toEqual(true);
@@ -247,6 +252,7 @@ test('doesnt report featureinfo when flag off', async () => {
         versionCheck: { url, enable: true },
         enterpriseVersion,
         flagResolver: getTestFlagResolver(false),
+        telemetry: true,
     });
     await service.checkLatestVersion();
     expect(scope.isDone()).toEqual(true);
@@ -309,6 +315,7 @@ test('counts custom strategies', async () => {
         versionCheck: { url, enable: true },
         enterpriseVersion,
         flagResolver: getTestFlagResolver(true),
+        telemetry: true,
     });
     await service.checkLatestVersion();
     expect(scope.isDone()).toEqual(true);

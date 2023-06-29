@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import IRole from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -28,6 +28,7 @@ import { ServiceAccountTokenDialog } from './ServiceAccountTokenDialog/ServiceAc
 import { ServiceAccountTokensCell } from './ServiceAccountTokensCell/ServiceAccountTokensCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { IServiceAccount } from 'interfaces/service-account';
+import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 
 export const ServiceAccountsTable = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -92,6 +93,9 @@ export const ServiceAccountsTable = () => {
                 accessor: (row: any) =>
                     roles.find((role: IRole) => role.id === row.rootRole)
                         ?.name || '',
+                Cell: ({ row: { original: serviceAccount }, value }: any) => (
+                    <RoleCell value={value} roleId={serviceAccount.rootRole} />
+                ),
                 maxWidth: 120,
             },
             {

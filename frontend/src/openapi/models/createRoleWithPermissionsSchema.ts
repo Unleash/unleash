@@ -3,10 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { CreateRoleWithPermissionsSchemaType } from './createRoleWithPermissionsSchemaType';
 import type { CreateRoleWithPermissionsSchemaPermissionsItem } from './createRoleWithPermissionsSchemaPermissionsItem';
 
 export interface CreateRoleWithPermissionsSchema {
     name: string;
     description?: string;
+    type?: CreateRoleWithPermissionsSchemaType;
     permissions?: CreateRoleWithPermissionsSchemaPermissionsItem[];
 }

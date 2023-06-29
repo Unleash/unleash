@@ -4,8 +4,12 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Used by Unleash for updating a token's expiration date or, when deleting the invite link, it's status
+ */
 export interface PublicSignupTokenUpdateSchema {
     /** The token's expiration date. */
     expiresAt?: string;
+    /** Whether the token is active or not. */
     enabled?: boolean;
 }

@@ -43,6 +43,18 @@ interface IPermissionRow {
 }
 
 export class AccessStore implements IAccessStore {
+    private readonly DEPRECATED_PERMISSIONS = [
+        'CREATE_API_TOKEN',
+        'UPDATE_API_TOKEN',
+        'DELETE_API_TOKEN',
+        'READ_API_TOKEN',
+        'UPDATE_ROLE',
+        'CREATE_ADMIN_API_TOKEN',
+        'UPDATE_ADMIN_API_TOKEN',
+        'DELETE_ADMIN_API_TOKEN',
+        'READ_ADMIN_API_TOKEN',
+    ];
+
     private logger: Logger;
 
     private timer: Function;
@@ -101,8 +113,11 @@ export class AccessStore implements IAccessStore {
             .select(['id', 'permission', 'type', 'display_name'])
             .where('type', 'project')
             .orWhere('type', 'environment')
+            .orWhere('type', 'root')
             .from(`${T.PERMISSIONS} as p`);
-        return rows.map(this.mapPermission);
+        return rows
+            .map(this.mapPermission)
+            .filter((p) => !this.DEPRECATED_PERMISSIONS.includes(p.name));
     }
 
     mapPermission(permission: IPermissionRow): IPermission {
@@ -172,7 +187,7 @@ export class AccessStore implements IAccessStore {
     }
 
     mapUserPermission(row: IPermissionRow): IUserPermission {
-        let project: string = undefined;
+        let project: string | undefined = undefined;
         // Since the editor should have access to the default project,
         // we map the project to the project and environment specific
         // permissions that are connected to the editor role.
@@ -425,11 +440,11 @@ export class AccessStore implements IAccessStore {
 
     async removeRolesOfTypeForUser(
         userId: number,
-        roleType: string,
+        roleTypes: string[],
     ): Promise<void> {
         const rolesToRemove = this.db(T.ROLES)
             .select('id')
-            .where({ type: roleType });
+            .whereIn('type', roleTypes);
 
         return this.db(T.ROLE_USER)
             .where({ user_id: userId })

@@ -4,7 +4,7 @@ import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesLi
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { AddonList } from 'component/addons/AddonList/AddonList';
 import Login from 'component/user/Login/Login';
-import { EEA, P, RE, SE, UG } from 'component/common/flags';
+import { EEA, P, SE, UG } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -464,9 +464,8 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         flag: UG,
     },
     {
-        path: '/admin/roles',
-        title: 'Project roles',
-        flag: RE,
+        path: '/admin/roles/*',
+        title: 'Roles',
         menu: { adminSettings: true, mode: ['enterprise'] },
     },
     {

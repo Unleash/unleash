@@ -1,20 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { IRole } from 'interfaces/role';
 
 const useCreateUserForm = (
     initialName = '',
     initialEmail = '',
-    initialRootRole = 1
+    initialRootRole = null
 ) => {
     const { uiConfig } = useUiConfig();
+    const { users, roles } = useUsers();
     const [name, setName] = useState(initialName);
     const [email, setEmail] = useState(initialEmail);
     const [sendEmail, setSendEmail] = useState(false);
-    const [rootRole, setRootRole] = useState(initialRootRole);
+    const [rootRole, setRootRole] = useState<IRole | null>(
+        roles.find(({ id }) => id === initialRootRole) || null
+    );
     const [errors, setErrors] = useState({});
-
-    const { users } = useUsers();
 
     useEffect(() => {
         setName(initialName);
@@ -29,7 +31,7 @@ const useCreateUserForm = (
     }, [uiConfig?.emailEnabled]);
 
     useEffect(() => {
-        setRootRole(initialRootRole);
+        setRootRole(roles.find(({ id }) => id === initialRootRole) || null);
     }, [initialRootRole]);
 
     const getAddUserPayload = () => {
@@ -37,7 +39,7 @@ const useCreateUserForm = (
             name: name,
             email: email,
             sendEmail: sendEmail,
-            rootRole: rootRole,
+            rootRole: rootRole?.id || 0,
         };
     };
 
@@ -54,7 +56,6 @@ const useCreateUserForm = (
     };
 
     const validateEmail = () => {
-        // @ts-expect-error
         if (users.some(user => user['email'] === email)) {
             setErrors(prev => ({ ...prev, email: 'Email already exists' }));
             return false;

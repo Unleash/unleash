@@ -5,6 +5,10 @@
  */
 import type { ApiTokenSchema } from './apiTokenSchema';
 
+/**
+ * Contains a list of API tokens.
+ */
 export interface ApiTokensSchema {
+    /** A list of API tokens. */
     tokens: ApiTokenSchema[];
 }

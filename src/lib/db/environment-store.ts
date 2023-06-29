@@ -137,6 +137,13 @@ export default class EnvironmentStore implements IEnvironmentStore {
             .then((res) => Number(res[0].count));
     }
 
+    getMaxSortOrder(): Promise<number> {
+        return this.db
+            .from(TABLE)
+            .max('sort_order')
+            .then((res) => Number(res[0].max));
+    }
+
     async get(key: string): Promise<IEnvironment> {
         const row = await this.db<IEnvironmentsTable>(TABLE)
             .where({ name: key })

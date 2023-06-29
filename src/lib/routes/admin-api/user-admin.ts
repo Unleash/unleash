@@ -523,7 +523,6 @@ export default class UserAdminController extends Controller {
         req: Request,
         res: Response<AdminCountSchema>,
     ): Promise<void> {
-        console.log('user-admin controller');
         const adminCount = await this.accountService.getAdminCount();
 
         this.openApiService.respondWithValidation(

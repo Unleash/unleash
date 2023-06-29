@@ -18,19 +18,25 @@ import {
     IRoleData,
     IUserWithRole,
     RoleName,
-    RoleType,
 } from '../types/model';
 import { IRoleStore } from 'lib/types/stores/role-store';
 import NameExistsError from '../error/name-exists-error';
 import { IEnvironmentStore } from 'lib/types/stores/environment-store';
 import RoleInUseError from '../error/role-in-use-error';
 import { roleSchema } from '../schema/role-schema';
-import { ALL_ENVS, ALL_PROJECTS, CUSTOM_ROLE_TYPE } from '../util/constants';
+import {
+    ALL_ENVS,
+    ALL_PROJECTS,
+    CUSTOM_ROOT_ROLE_TYPE,
+    CUSTOM_PROJECT_ROLE_TYPE,
+    ROOT_ROLE_TYPES,
+} from '../util/constants';
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
 import { IGroupModelWithProjectRole } from '../types/group';
 import { GroupService } from './group-service';
+import { IFlagResolver, IUnleashConfig } from 'lib/types';
 
 const { ADMIN } = permissions;
 
@@ -45,6 +51,7 @@ const PROJECT_ADMIN = [
 interface IRoleCreation {
     name: string;
     description: string;
+    type?: 'root-custom' | 'custom';
     permissions?: IPermission[];
 }
 
@@ -58,6 +65,7 @@ interface IRoleUpdate {
     id: number;
     name: string;
     description: string;
+    type?: 'root-custom' | 'custom';
     permissions?: IPermission[];
 }
 
@@ -76,6 +84,8 @@ export class AccessService {
 
     private logger: Logger;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         {
             accessStore,
@@ -86,7 +96,10 @@ export class AccessService {
             IUnleashStores,
             'accessStore' | 'accountStore' | 'roleStore' | 'environmentStore'
         >,
-        { getLogger }: { getLogger: Function },
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
         groupService: GroupService,
     ) {
         this.store = accessStore;
@@ -95,6 +108,7 @@ export class AccessService {
         this.groupService = groupService;
         this.environmentStore = environmentStore;
         this.logger = getLogger('/services/access-service.ts');
+        this.flagResolver = flagResolver;
     }
 
     /**
@@ -106,17 +120,25 @@ export class AccessService {
      */
     async hasPermission(
         user: Pick<IUser, 'id' | 'permissions' | 'isAPI'>,
-        permission: string,
+        permission: string | string[],
         projectId?: string,
         environment?: string,
     ): Promise<boolean> {
+        const permissionsArray = Array.isArray(permission)
+            ? permission
+            : [permission];
+
+        const permissionLogInfo =
+            permissionsArray.length === 1
+                ? `permission=${permissionsArray[0]}`
+                : `permissions=[${permissionsArray.join(',')}]`;
+
         this.logger.info(
-            `Checking permission=${permission}, userId=${user.id}, projectId=${projectId}, environment=${environment}`,
+            `Checking ${permissionLogInfo}, userId=${user.id}, projectId=${projectId}, environment=${environment}`,
         );
 
         try {
             const userP = await this.getPermissionsForUser(user);
-
             return userP
                 .filter(
                     (p) =>
@@ -132,11 +154,12 @@ export class AccessService {
                 )
                 .some(
                     (p) =>
-                        p.permission === permission || p.permission === ADMIN,
+                        permissionsArray.includes(p.permission) ||
+                        p.permission === ADMIN,
                 );
         } catch (e) {
             this.logger.error(
-                `Error checking permission=${permission}, userId=${user.id} projectId=${projectId}`,
+                `Error checking ${permissionLogInfo}, userId=${user.id} projectId=${projectId}`,
                 e,
             );
             return Promise.resolve(false);
@@ -158,6 +181,10 @@ export class AccessService {
         const bindablePermissions = await this.store.getAvailablePermissions();
         const environments = await this.environmentStore.getAll();
 
+        const rootPermissions = bindablePermissions.filter(
+            ({ type }) => type === 'root',
+        );
+
         const projectPermissions = bindablePermissions.filter((x) => {
             return x.type === 'project';
         });
@@ -176,6 +203,7 @@ export class AccessService {
         });
 
         return {
+            root: rootPermissions,
             project: projectPermissions,
             environments: allEnvironmentPermissions,
         };
@@ -227,7 +255,7 @@ export class AccessService {
             try {
                 await this.store.removeRolesOfTypeForUser(
                     userId,
-                    RoleType.ROOT,
+                    ROOT_ROLE_TYPES,
                 );
 
                 await this.store.addUserToRole(
@@ -247,7 +275,7 @@ export class AccessService {
 
     async getUserRootRoles(userId: number): Promise<IRoleWithProject[]> {
         const userRoles = await this.store.getRolesForUserId(userId);
-        return userRoles.filter((r) => r.type === RoleType.ROOT);
+        return userRoles.filter(({ type }) => ROOT_ROLE_TYPES.includes(type));
     }
 
     async removeUserFromRole(
@@ -467,38 +495,81 @@ export class AccessService {
     }
 
     async createRole(role: IRoleCreation): Promise<ICustomRole> {
+        // CUSTOM_PROJECT_ROLE_TYPE is assumed by default for backward compatibility
+        const roleType =
+            role.type === CUSTOM_ROOT_ROLE_TYPE
+                ? CUSTOM_ROOT_ROLE_TYPE
+                : CUSTOM_PROJECT_ROLE_TYPE;
+
+        if (
+            roleType === CUSTOM_ROOT_ROLE_TYPE &&
+            !this.flagResolver.isEnabled('customRootRoles')
+        ) {
+            throw new InvalidOperationError(
+                'Custom root roles are not enabled.',
+            );
+        }
+
         const baseRole = {
             ...(await this.validateRole(role)),
-            roleType: CUSTOM_ROLE_TYPE,
+            roleType,
         };
 
         const rolePermissions = role.permissions;
         const newRole = await this.roleStore.create(baseRole);
         if (rolePermissions) {
-            await this.store.addEnvironmentPermissionsToRole(
-                newRole.id,
-                rolePermissions,
-            );
+            if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
+                await this.store.addPermissionsToRole(
+                    newRole.id,
+                    rolePermissions.map(({ name }) => name),
+                );
+            } else {
+                await this.store.addEnvironmentPermissionsToRole(
+                    newRole.id,
+                    rolePermissions,
+                );
+            }
         }
         return newRole;
     }
 
     async updateRole(role: IRoleUpdate): Promise<ICustomRole> {
+        const roleType =
+            role.type === CUSTOM_ROOT_ROLE_TYPE
+                ? CUSTOM_ROOT_ROLE_TYPE
+                : CUSTOM_PROJECT_ROLE_TYPE;
+
+        if (
+            roleType === CUSTOM_ROOT_ROLE_TYPE &&
+            !this.flagResolver.isEnabled('customRootRoles')
+        ) {
+            throw new InvalidOperationError(
+                'Custom root roles are not enabled.',
+            );
+        }
+
         await this.validateRole(role, role.id);
         const baseRole = {
             id: role.id,
             name: role.name,
             description: role.description,
-            roleType: CUSTOM_ROLE_TYPE,
+            roleType,
         };
         const rolePermissions = role.permissions;
         const newRole = await this.roleStore.update(baseRole);
         if (rolePermissions) {
             await this.store.wipePermissionsFromRole(newRole.id);
-            await this.store.addEnvironmentPermissionsToRole(
-                newRole.id,
-                rolePermissions,
-            );
+            if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
+                await this.store.addPermissionsToRole(
+                    newRole.id,
+                    rolePermissions.map(({ name }) => name),
+                );
+            } else {
+                await this.store.addEnvironmentPermissionsToRole(
+                    newRole.id,
+                    rolePermissions,
+                );
+            }
         }
         return newRole;
     }
@@ -532,7 +603,10 @@ export class AccessService {
 
     async validateRoleIsNotBuiltIn(roleId: number): Promise<void> {
         const role = await this.store.get(roleId);
-        if (role.type !== CUSTOM_ROLE_TYPE) {
+        if (
+            role.type !== CUSTOM_PROJECT_ROLE_TYPE &&
+            role.type !== CUSTOM_ROOT_ROLE_TYPE
+        ) {
             throw new InvalidOperationError(
                 'You cannot change built in roles.',
             );

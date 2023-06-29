@@ -5,7 +5,7 @@ import { parametersSchema } from './parameters-schema';
 export const featureStrategySchema = {
     $id: '#/components/schemas/featureStrategySchema',
     description:
-        'A singles activation strategy configuration schema for a feature',
+        'A single activation strategy configuration schema for a feature',
     type: 'object',
     additionalProperties: false,
     required: ['name'],

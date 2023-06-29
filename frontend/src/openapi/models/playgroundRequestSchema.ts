@@ -12,7 +12,7 @@ import type { SdkContextSchema } from './sdkContextSchema';
 export interface PlaygroundRequestSchema {
     /** The environment to evaluate toggles in. */
     environment: string;
+    /** A list of projects to check for toggles in. */
     projects?: PlaygroundRequestSchemaProjects;
-    /** The context to use when evaluating toggles */
     context: SdkContextSchema;
 }

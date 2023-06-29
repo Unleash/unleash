@@ -18,14 +18,14 @@ export type IFlagKey =
     | 'groupRootRoles'
     | 'migrationLock'
     | 'demo'
-    | 'strategyImprovements'
     | 'googleAuthEnabled'
-    | 'variantMetrics'
     | 'disableBulkToggle'
     | 'experimentalExtendedTelemetry'
     | 'segmentContextFieldUsage'
     | 'disableNotifications'
-    | 'advancedPlayground';
+    | 'advancedPlayground'
+    | 'customRootRoles'
+    | 'strategySplittedButton';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -86,16 +86,12 @@ const flags: IFlags = {
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
-    strategyImprovements: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_IMPROVEMENTS,
+    strategySplittedButton: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_SPLITTED_BUTTON,
         false,
     ),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
-        false,
-    ),
-    variantMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_VARIANT_METRICS,
         false,
     ),
     experimentalExtendedTelemetry: parseEnvVarBoolean(
@@ -116,6 +112,10 @@ const flags: IFlags = {
     ),
     advancedPlayground: parseEnvVarBoolean(
         process.env.ADVANCED_PLAYGROUND,
+        false,
+    ),
+    customRootRoles: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES,
         false,
     ),
 };

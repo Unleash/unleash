@@ -6,5 +6,6 @@
 
 export interface PasswordSchema {
     password: string;
+    oldPassword?: string;
     confirmPassword?: string;
 }

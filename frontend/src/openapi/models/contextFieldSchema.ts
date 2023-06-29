@@ -7,9 +7,13 @@ import type { LegalValueSchema } from './legalValueSchema';
 
 export interface ContextFieldSchema {
     name: string;
-    description?: string;
+    description?: string | null;
     stickiness?: boolean;
     sortOrder?: number;
     createdAt?: string | null;
+    /** Number of projects where this context field is used in */
+    usedInFeatures?: number | null;
+    /** Number of projects where this context field is used in */
+    usedInProjects?: number | null;
     legalValues?: LegalValueSchema[];
 }

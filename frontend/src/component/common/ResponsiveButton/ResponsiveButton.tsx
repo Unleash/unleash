@@ -11,7 +11,7 @@ interface IResponsiveButtonProps {
     tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
     onClick: () => void;
     disabled?: boolean;
-    permission: string;
+    permission: string | string[];
     projectId?: string;
     environmentId?: string;
     maxWidth: string;

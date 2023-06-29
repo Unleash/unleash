@@ -20,7 +20,7 @@ test('clientFeaturesSchema required fields', () => {
                     {
                         name: 'a',
                         weight: 1,
-                        weightType: 'b',
+                        weightType: 'fix',
                         stickiness: 'c',
                         payload: {
                             type: 'a',
@@ -50,7 +50,6 @@ test('clientFeaturesSchema java-sdk expected response', () => {
         {
           "id": 1,
           "name": "some-name",
-          "description": null,
           "constraints": [
             {
               "contextName": "some-name",
@@ -65,19 +64,16 @@ test('clientFeaturesSchema java-sdk expected response', () => {
       "features": [
         {
           "name": "Test.old",
-          "description": "No variants here!",
           "enabled": true,
           "strategies": [
             {
               "name": "default"
             }
           ],
-          "variants": null,
-          "createdAt": "2019-01-24T10:38:10.370Z"
+          "variants": null
         },
         {
           "name": "Test.variants",
-          "description": null,
           "enabled": true,
           "strategies": [
             {
@@ -96,8 +92,7 @@ test('clientFeaturesSchema java-sdk expected response', () => {
               "name": "variant2",
               "weight": 50
             }
-          ],
-          "createdAt": "2019-01-24T10:41:45.236Z"
+          ]
         },
         {
           "name": "featureX",
@@ -178,8 +173,7 @@ test('clientFeaturesSchema unleash-proxy expected response', () => {
               "name": "default"
             }
           ],
-          "variants": null,
-          "createdAt": "2019-01-24T10:38:10.370Z"
+          "variants": null
         },
         {
           "name": "Test.variants",
@@ -202,8 +196,7 @@ test('clientFeaturesSchema unleash-proxy expected response', () => {
               "name": "variant2",
               "weight": 50
             }
-          ],
-          "createdAt": "2019-01-24T10:41:45.236Z"
+          ]
         },
         {
           "name": "featureX",

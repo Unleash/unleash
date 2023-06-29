@@ -3,5 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { VariantFlagSchema } from './variantFlagSchema';
 
-export type UiConfigSchemaFlags = { [key: string]: boolean };
+export type UiConfigSchemaFlags = {
+    [key: string]: boolean | VariantFlagSchema;
+};

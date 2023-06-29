@@ -39,7 +39,7 @@ async function createApp(
 ): Promise<IUnleash> {
     // Database dependencies (stateful)
     const logger = config.getLogger('server-impl.js');
-    const serverVersion = version;
+    const serverVersion = config.enterpriseVersion ?? version;
     const db = createDb(config);
     const stores = createStores(config, db);
     const services = createServices(stores, config, db);

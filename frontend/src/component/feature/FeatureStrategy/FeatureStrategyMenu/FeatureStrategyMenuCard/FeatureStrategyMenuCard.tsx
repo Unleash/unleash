@@ -7,12 +7,15 @@ import {
 import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { styled } from '@mui/material';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IFeatureStrategyMenuCardProps {
     projectId: string;
     featureId: string;
     environmentId: string;
-    strategy: IStrategy;
+    strategy: Pick<IStrategy, 'name' | 'displayName' | 'description'> &
+        Partial<IStrategy>;
+    defaultStrategy?: boolean;
 }
 
 const StyledIcon = styled('div')(({ theme }) => ({
@@ -60,19 +63,30 @@ export const FeatureStrategyMenuCard = ({
     featureId,
     environmentId,
     strategy,
+    defaultStrategy,
 }: IFeatureStrategyMenuCardProps) => {
     const StrategyIcon = getFeatureStrategyIcon(strategy.name);
     const strategyName = formatStrategyName(strategy.name);
+    const { trackEvent } = usePlausibleTracker();
 
     const createStrategyPath = formatCreateStrategyPath(
         projectId,
         featureId,
         environmentId,
-        strategy.name
+        strategy.name,
+        defaultStrategy
     );
 
+    const openStrategyCreationModal = () => {
+        trackEvent('strategy-add', {
+            props: {
+                buttonTitle: strategy.displayName || strategyName,
+            },
+        });
+    };
+
     return (
-        <StyledCard to={createStrategyPath}>
+        <StyledCard to={createStrategyPath} onClick={openStrategyCreationModal}>
             <StyledIcon>
                 <StrategyIcon />
             </StyledIcon>

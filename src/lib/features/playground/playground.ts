@@ -15,6 +15,12 @@ import {
 import { PlaygroundRequestSchema } from '../../openapi/spec/playground-request-schema';
 import { PlaygroundService } from './playground-service';
 import { IFlagResolver } from '../../types';
+import { AdvancedPlaygroundRequestSchema } from '../../openapi/spec/advanced-playground-request-schema';
+import { AdvancedPlaygroundResponseSchema } from '../../openapi/spec/advanced-playground-response-schema';
+import {
+    advancedPlaygroundViewModel,
+    playgroundViewModel,
+} from './playground-view-model';
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;
@@ -59,7 +65,22 @@ export default class PlaygroundController extends Controller {
             path: '/advanced',
             handler: this.evaluateAdvancedContext,
             permission: NONE,
-            middleware: [],
+            middleware: [
+                openApiService.validPath({
+                    operationId: 'getAdvancedPlayground',
+                    tags: ['Unstable'],
+                    responses: {
+                        ...getStandardResponses(400, 401),
+                        200: createResponseSchema(
+                            'advancedPlaygroundResponseSchema',
+                        ),
+                    },
+                    requestBody: createRequestSchema(
+                        'advancedPlaygroundRequestSchema',
+                    ),
+                    ...endpointDescriptions.admin.advancedPlayground,
+                }),
+            ],
         });
     }
 
@@ -67,14 +88,15 @@ export default class PlaygroundController extends Controller {
         req: Request<any, any, PlaygroundRequestSchema>,
         res: Response<PlaygroundResponseSchema>,
     ): Promise<void> {
-        const response = {
-            input: req.body,
-            features: await this.playgroundService.evaluateQuery(
-                req.body.projects || '*',
-                req.body.environment,
-                req.body.context,
-            ),
-        };
+        const result = await this.playgroundService.evaluateQuery(
+            req.body.projects || '*',
+            req.body.environment,
+            req.body.context,
+        );
+        const response: PlaygroundResponseSchema = playgroundViewModel(
+            req.body,
+            result,
+        );
 
         this.openApiService.respondWithValidation(
             200,
@@ -85,18 +107,28 @@ export default class PlaygroundController extends Controller {
     }
 
     async evaluateAdvancedContext(
-        req: Request<any, any, any>,
-        res: Response<any>,
+        req: Request<any, any, AdvancedPlaygroundRequestSchema>,
+        res: Response<AdvancedPlaygroundResponseSchema>,
     ): Promise<void> {
         if (this.flagResolver.isEnabled('advancedPlayground')) {
-            res.json({
-                input: req.body,
-                features: await this.playgroundService.evaluateAdvancedQuery(
-                    req.body.projects || '*',
-                    req.body.environments,
-                    req.body.context,
-                ),
-            });
+            const { payload } =
+                this.flagResolver.getVariant('advancedPlayground');
+            const limit =
+                payload?.value && Number.isInteger(parseInt(payload?.value))
+                    ? parseInt(payload?.value)
+                    : 15000;
+
+            const result = await this.playgroundService.evaluateAdvancedQuery(
+                req.body.projects || '*',
+                req.body.environments,
+                req.body.context,
+                limit,
+            );
+
+            const response: AdvancedPlaygroundResponseSchema =
+                advancedPlaygroundViewModel(req.body, result);
+
+            res.json(response);
         } else {
             res.status(409).end();
         }

@@ -55,12 +55,12 @@ function AdminMenu() {
                         }
                     />
                 )}
-                {flags.RE && (
+                {isEnterprise() && (
                     <Tab
                         value="roles"
                         label={
                             <CenteredNavLink to="/admin/roles">
-                                <span>Project roles</span>
+                                <span>Roles</span>
                             </CenteredNavLink>
                         }
                     />

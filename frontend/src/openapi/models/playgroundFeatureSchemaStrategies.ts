@@ -6,6 +6,9 @@
 import type { PlaygroundFeatureSchemaStrategiesResult } from './playgroundFeatureSchemaStrategiesResult';
 import type { PlaygroundStrategySchema } from './playgroundStrategySchema';
 
+/**
+ * The feature's applicable strategies and cumulative results of the strategies
+ */
 export type PlaygroundFeatureSchemaStrategies = {
     /** The cumulative results of all the feature's strategies. Can be `true`,
                                   `false`, or `unknown`.

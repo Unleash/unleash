@@ -10,7 +10,7 @@ interface IFeatureStatusCellProps {
 const StyledCellBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    padding: theme.spacing(1, 2),
+    padding: theme.spacing(1, 0, 1, 2),
 }));
 
 const StyledChipWrapper = styled(Box)(() => ({

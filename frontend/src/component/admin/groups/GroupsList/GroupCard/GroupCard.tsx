@@ -6,7 +6,7 @@ import { GroupCardAvatars } from './GroupCardAvatars/GroupCardAvatars';
 import { Badge } from 'component/common/Badge/Badge';
 import { GroupCardActions } from './GroupCardActions/GroupCardActions';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
-import { IProjectRole } from 'interfaces/role';
+import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
@@ -86,14 +86,12 @@ const InfoBadgeDescription = styled('span')(({ theme }) => ({
 
 interface IGroupCardProps {
     group: IGroup;
-    rootRoles: IProjectRole[];
     onEditUsers: (group: IGroup) => void;
     onRemoveGroup: (group: IGroup) => void;
 }
 
 export const GroupCard = ({
     group,
-    rootRoles,
     onEditUsers,
     onRemoveGroup,
 }: IGroupCardProps) => {
@@ -117,17 +115,7 @@ export const GroupCard = ({
                         show={
                             <InfoBadgeDescription>
                                 <p>Root role:</p>
-                                <Badge
-                                    color="success"
-                                    icon={<TopicOutlinedIcon />}
-                                >
-                                    {
-                                        rootRoles.find(
-                                            (role: IProjectRole) =>
-                                                role.id === group.rootRole
-                                        )?.name
-                                    }
-                                </Badge>
+                                <RoleBadge roleId={group.rootRole!} />
                             </InfoBadgeDescription>
                         }
                     />

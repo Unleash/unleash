@@ -1,5 +1,9 @@
-import { PlaygroundResponseSchema } from 'openapi';
+import {
+    PlaygroundResponseSchema,
+    AdvancedPlaygroundResponseSchema,
+} from 'openapi';
 import { IEnvironment } from 'interfaces/environments';
+import { ensureArray } from '@server/util/ensureArray';
 
 export const resolveProjects = (
     projects: string[] | string
@@ -12,11 +16,13 @@ export const resolveProjects = (
         return '*';
     }
 
-    if (Array.isArray(projects)) {
-        return projects;
-    }
+    return ensureArray(projects);
+};
 
-    return [projects];
+export const resolveEnvironments = (
+    envrironments: string[] | string
+): string[] => {
+    return ensureArray(envrironments);
 };
 
 export const resolveDefaultEnvironment = (
@@ -38,15 +44,32 @@ export const getEnvironmentOptions = (environments: IEnvironment[]) => {
 
 export const resolveResultsWidth = (
     matches: boolean,
-    results: PlaygroundResponseSchema | undefined
+    results:
+        | PlaygroundResponseSchema
+        | AdvancedPlaygroundResponseSchema
+        | undefined
 ) => {
     if (matches) {
         return '100%';
     }
 
     if (results && !matches) {
-        return '65%';
+        return '60%';
     }
 
     return '50%';
+};
+
+export const isStringOrStringArray = (
+    value: unknown
+): value is string | string[] => {
+    if (typeof value === 'string') {
+        return true;
+    }
+
+    if (Array.isArray(value)) {
+        return value.every(item => typeof item === 'string');
+    }
+
+    return false;
 };

@@ -25,7 +25,6 @@ export type CustomEvents =
     | 'notifications'
     | 'batch_operations'
     | 'strategyTitle'
-    | 'strategyImprovements'
     | 'default_strategy'
     | 'demo'
     | 'demo-start'
@@ -39,7 +38,9 @@ export type CustomEvents =
     | 'demo-ask-questions'
     | 'demo-open-demo-web'
     | 'context-usage'
-    | 'segment-usage';
+    | 'segment-usage'
+    | 'strategy-add'
+    | 'playground';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

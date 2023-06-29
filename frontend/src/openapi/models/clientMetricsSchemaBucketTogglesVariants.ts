@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * An object describing how many times each variant was returned. Variant names are used as properties, and the number of times they were exposed is the corresponding value (i.e. `{ [variantName]: number }`).
+ */
 export type ClientMetricsSchemaBucketTogglesVariants = {
     [key: string]: number;
 };

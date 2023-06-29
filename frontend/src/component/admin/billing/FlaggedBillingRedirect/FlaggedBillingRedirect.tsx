@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import InvoiceAdminPage from 'component/admin/invoice/InvoiceAdminPage';
+import { InvoiceAdminPage } from 'component/admin/invoice/InvoiceAdminPage';
 
 const FlaggedBillingRedirect = () => {
     const { uiConfig, loading } = useUiConfig();

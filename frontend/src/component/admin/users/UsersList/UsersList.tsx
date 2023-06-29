@@ -7,7 +7,7 @@ import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { IUser } from 'interfaces/user';
-import IRole from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUsersPlan } from 'hooks/useUsersPlan';
@@ -34,6 +34,7 @@ import { Search } from 'component/common/Search/Search';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { UserLimitWarning } from './UserLimitWarning/UserLimitWarning';
+import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -126,6 +127,9 @@ const UsersList = () => {
                 accessor: (row: any) =>
                     roles.find((role: IRole) => role.id === row.rootRole)
                         ?.name || '',
+                Cell: ({ row: { original: user }, value }: any) => (
+                    <RoleCell value={value} roleId={user.rootRole} />
+                ),
                 disableGlobalFilter: true,
                 maxWidth: 120,
             },

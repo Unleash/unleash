@@ -10,14 +10,14 @@ const StyledCell = styled(Box)(({ theme }) => ({
     justifyContent: 'flex-end',
     paddingLeft: theme.spacing(0.5),
     minWidth: theme.spacing(6.5),
+    cursor: 'grab',
 }));
 
 const DragIcon = styled(IconButton)(({ theme }) => ({
     padding: theme.spacing(1.5, 0),
     cursor: 'inherit',
     transition: 'color 0.2s ease-in-out',
-    display: 'none',
-    color: theme.palette.neutral.main,
+    color: theme.palette.action.active,
 }));
 
 const StyledCloudCircle = styled(CloudCircle, {

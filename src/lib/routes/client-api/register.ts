@@ -41,6 +41,9 @@ export default class RegisterController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Client'],
+                    summary: 'Register a client SDK',
+                    description:
+                        'Register a client SDK with Unleash. SDKs call this endpoint on startup to tell Unleash about their existence. Used to track custom strategies in use as well as SDK versions.',
                     operationId: 'registerClientApplication',
                     requestBody: createRequestSchema('clientApplicationSchema'),
                     responses: { 202: emptyResponse },

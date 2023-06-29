@@ -15,6 +15,7 @@ export interface PlaygroundFeatureSchema {
     name: string;
     /** The ID of the project that contains this feature. */
     projectId: string;
+    /** The feature's applicable strategies and cumulative results of the strategies */
     strategies: PlaygroundFeatureSchemaStrategies;
     /** Whether the feature is active and would be evaluated in the provided environment in a normal SDK context. */
     isEnabledInCurrentEnvironment: boolean;
@@ -27,5 +28,6 @@ export interface PlaygroundFeatureSchema {
                           variants, you would get the _disabled variant_.
                           Otherwise, you'll get one of thefeature's defined variants. */
     variant: PlaygroundFeatureSchemaVariant;
+    /** The feature variants. */
     variants: VariantSchema[];
 }

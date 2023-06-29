@@ -65,6 +65,7 @@ export interface IHtmlTooltipProps extends TooltipProps {
     fontSize?: string;
 }
 
-export const HtmlTooltip = (props: IHtmlTooltipProps) => (
-    <StyledHtmlTooltip {...props}>{props.children}</StyledHtmlTooltip>
-);
+export const HtmlTooltip = (props: IHtmlTooltipProps) => {
+    if (!Boolean(props.title)) return props.children;
+    return <StyledHtmlTooltip {...props}>{props.children}</StyledHtmlTooltip>;
+};

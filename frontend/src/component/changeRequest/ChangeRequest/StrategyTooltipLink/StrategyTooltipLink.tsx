@@ -48,6 +48,36 @@ export const StrategyDiff: FC<{
         </StyledCodeSection>
     );
 };
+
+export const StrategyName: FC<{
+    change:
+        | IChangeRequestAddStrategy
+        | IChangeRequestUpdateStrategy
+        | IChangeRequestDeleteStrategy;
+    previousTitle: string | undefined;
+}> = ({ change, previousTitle }) => {
+    return (
+        <>
+            <ConditionallyRender
+                condition={Boolean(
+                    previousTitle && previousTitle !== change.payload.title
+                )}
+                show={
+                    <Truncated>
+                        <Typography component="span" color="text.secondary">
+                            {previousTitle ||
+                                formatStrategyName(change.payload.name)}
+                        </Typography>{' '}
+                    </Truncated>
+                }
+            />
+            <Truncated>
+                <Typography component="span">{change.payload.title}</Typography>
+            </Truncated>
+        </>
+    );
+};
+
 interface IStrategyTooltipLinkProps {
     change:
         | IChangeRequestAddStrategy
@@ -77,34 +107,18 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
     <StyledContainer>
         <GetFeatureStrategyIcon strategyName={change.payload.name} />
         <Truncated>
-            <ConditionallyRender
-                condition={Boolean(
-                    (previousTitle && previousTitle !== change.payload.title) ||
-                        (!previousTitle && change.payload.title)
-                )}
-                show={
-                    <Truncated>
-                        <Typography component="s" color="text.secondary">
-                            {previousTitle ||
-                                formatStrategyName(change.payload.name)}
-                        </Typography>{' '}
-                    </Truncated>
-                }
-            />
-            <Truncated>
-                <TooltipLink
-                    tooltip={children}
-                    tooltipProps={{
-                        maxWidth: 500,
-                        maxHeight: 600,
-                    }}
-                >
-                    <Typography component="span">
-                        {change.payload.title ||
-                            formatStrategyName(change.payload.name)}
-                    </Typography>
-                </TooltipLink>
-            </Truncated>
+            <TooltipLink
+                tooltip={children}
+                tooltipProps={{
+                    maxWidth: 500,
+                    maxHeight: 600,
+                }}
+            >
+                <Typography component="span">
+                    {formatStrategyName(change.payload.name)}
+                </Typography>
+            </TooltipLink>
+            {<StrategyName change={change} previousTitle={previousTitle} />}
         </Truncated>
     </StyledContainer>
 );

@@ -11,9 +11,7 @@ import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import MenuStrategyRemove from './MenuStrategyRemove/MenuStrategyRemove';
-import { LegacyFeatureStrategyRemove } from './LegacyFeatureStrategyRemove';
 
 interface IStrategyItemProps {
     environmentId: string;
@@ -34,7 +32,6 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
     orderNumber,
     headerChildren,
 }) => {
-    const { uiConfig } = useUiConfig();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
 
@@ -79,27 +76,11 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                     >
                         <Edit />
                     </PermissionIconButton>
-                    <ConditionallyRender
-                        condition={Boolean(
-                            uiConfig?.flags?.strategyImprovements
-                        )}
-                        show={() => (
-                            <MenuStrategyRemove
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environmentId}
-                                strategy={strategy}
-                            />
-                        )}
-                        elseShow={() => (
-                            <LegacyFeatureStrategyRemove
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environmentId}
-                                strategyId={strategy.id}
-                                icon
-                            />
-                        )}
+                    <MenuStrategyRemove
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                        strategy={strategy}
                     />
                 </>
             }

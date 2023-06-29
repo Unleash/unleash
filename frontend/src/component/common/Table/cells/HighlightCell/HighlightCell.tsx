@@ -7,6 +7,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 interface IHighlightCellProps {
     value: string;
     subtitle?: string;
+    afterTitle?: React.ReactNode;
 }
 
 const StyledContainer = styled(Box)(({ theme }) => ({
@@ -40,6 +41,7 @@ const StyledSubtitle = styled('span')(({ theme }) => ({
 export const HighlightCell: VFC<IHighlightCellProps> = ({
     value,
     subtitle,
+    afterTitle,
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
@@ -53,6 +55,7 @@ export const HighlightCell: VFC<IHighlightCellProps> = ({
                 data-loading
             >
                 <Highlighter search={searchQuery}>{value}</Highlighter>
+                {afterTitle}
             </StyledTitle>
             <ConditionallyRender
                 condition={Boolean(subtitle)}

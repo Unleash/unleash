@@ -1,7 +1,6 @@
 import { Button, ButtonProps } from '@mui/material';
 import { Lock } from '@mui/icons-material';
 import React from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     TooltipResolver,
     ITooltipResolverProps,
@@ -32,17 +31,17 @@ export interface IProjectPermissionButtonProps extends IPermissionButtonProps {
     environmentId: string;
 }
 
-const iconRender = (
+const getEndIcon = (
     access: boolean,
     fallBackIcon?: React.ReactNode,
     hideLockIcon?: boolean
 ): React.ReactNode => {
     if (!access && !hideLockIcon) {
-      return <Lock titleAccess="Locked" />;
+        return <Lock titleAccess="Locked" />;
     }
 
     if (fallBackIcon) {
-      return fallBackIcon;
+        return fallBackIcon;
     }
 
     return null;
@@ -91,7 +90,7 @@ const BasePermissionButton: React.FC<IPermissionBaseButtonProps> =
             ref
         ) => {
             const id = useId();
-            const icon = iconRender(access, rest.endIcon, hideLockIcon);
+            const endIcon = getEndIcon(access, rest.endIcon, hideLockIcon);
 
             return (
                 <TooltipResolver
@@ -108,7 +107,7 @@ const BasePermissionButton: React.FC<IPermissionBaseButtonProps> =
                             variant={variant}
                             color={color}
                             {...rest}
-                            endIcon={icon}
+                            endIcon={endIcon}
                         >
                             {children}
                         </Button>

@@ -84,7 +84,6 @@ import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-f
 import { unique } from '../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
-import { OptionalClientFeatures } from 'lib/types/stores/feature-toggle-client-store';
 
 interface IFeatureContext {
     featureName: string;
@@ -829,11 +828,9 @@ class FeatureToggleService {
 
     async getClientFeatures(
         query?: IFeatureToggleQuery,
-        optionalIncludes?: OptionalClientFeatures,
     ): Promise<FeatureConfigurationClient[]> {
         const result = await this.featureToggleClientStore.getClient(
             query || {},
-            optionalIncludes,
         );
         if (this.flagResolver.isEnabled('cleanClientApi')) {
             return result.map(
@@ -866,6 +863,15 @@ class FeatureToggleService {
         } else {
             return result;
         }
+    }
+
+    async getPlaygroundFeatures(
+        query?: IFeatureToggleQuery,
+    ): Promise<FeatureConfigurationClient[]> {
+        const result = await this.featureToggleClientStore.getPlayground(
+            query || {},
+        );
+        return result;
     }
 
     /**

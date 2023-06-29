@@ -7,7 +7,10 @@ export type OptionalClientFeatures = Set<OptionalClientFeatureData>;
 export interface IFeatureToggleClientStore {
     getClient(
         featureQuery: Partial<IFeatureToggleQuery>,
-        optionalIncludes?: OptionalClientFeatures,
+    ): Promise<IFeatureToggleClient[]>;
+
+    getPlayground(
+        featureQuery: Partial<IFeatureToggleQuery>,
     ): Promise<IFeatureToggleClient[]>;
 
     // @Deprecated

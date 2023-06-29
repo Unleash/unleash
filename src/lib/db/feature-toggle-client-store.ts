@@ -304,13 +304,22 @@ export default class FeatureToggleClientStore
 
     async getClient(
         featureQuery?: IFeatureToggleQuery,
-        optionalIncludes?: OptionalClientFeatures,
     ): Promise<IFeatureToggleClient[]> {
         return this.getAll({
             featureQuery,
             archived: false,
             isAdmin: false,
-            optionalIncludes,
+        });
+    }
+
+    async getPlayground(
+        featureQuery?: IFeatureToggleQuery,
+    ): Promise<IFeatureToggleClient[]> {
+        return this.getAll({
+            featureQuery,
+            archived: false,
+            isAdmin: false,
+            optionalIncludes: new Set(['strategy titles', 'strategy IDs']),
         });
     }
 

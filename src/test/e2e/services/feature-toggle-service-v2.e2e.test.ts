@@ -593,7 +593,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
     ).rejects.toThrowError(new NoAccessError(SKIP_CHANGE_REQUEST));
 });
 
-test('getClientFeatures should return titles on client strategies when asked', async () => {
+test('getPlaygroundFeatures should return ids and titles (if they exist) on client strategies', async () => {
     const featureName = 'check-returned-strategy-configuration';
     const projectId = 'default';
 
@@ -619,14 +619,17 @@ test('getClientFeatures should return titles on client strategies when asked', a
         userName,
     );
 
-    const clientFeature = (
-        await service.getClientFeatures(undefined, new Set(['strategy titles']))
-    ).find((feature) => feature.name === featureName)!;
+    const playgroundFeatures = await service.getPlaygroundFeatures();
 
-    expect(clientFeature.strategies[0].title).toStrictEqual(title);
-
-    const clientFeatureNoTitles = (await service.getClientFeatures()).find(
+    const strategyWithTitle = playgroundFeatures.find(
         (feature) => feature.name === featureName,
-    )!;
-    expect(clientFeatureNoTitles.strategies[0].title).toBeUndefined();
+    )!.strategies[0];
+
+    expect(strategyWithTitle.title).toStrictEqual(title);
+
+    for (const strategy of playgroundFeatures.flatMap(
+        (feature) => feature.strategies,
+    )) {
+        expect(strategy.id).not.toBeUndefined();
+    }
 });

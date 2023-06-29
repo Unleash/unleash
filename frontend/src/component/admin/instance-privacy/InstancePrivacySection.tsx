@@ -196,7 +196,7 @@ export const InstancePrivacySection = ({
                 <StyledDataCollectionPropertyTable>
                     {Object.entries(concreteDetails).map(([key, value]) => {
                         return (
-                            <StyledDataCollectionPropertyRow>
+                            <StyledDataCollectionPropertyRow key={key}>
                                 <StyledPropertyName>{key}</StyledPropertyName>
                                 <StyledPropertyDetails>
                                     {value}

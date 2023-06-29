@@ -28,7 +28,7 @@ export const contextFieldSchema = {
         },
         sortOrder: {
             description:
-                'Used to have deterministic sorting of a list of context fields. Can also be used as a draw-breaker if list of context fields is sorted alphabetically.',
+                'Used when sorting a list of context fields. Is also used as a tiebreaker if a list of context fields is sorted alphabetically.',
             type: 'number',
             example: 900,
         },

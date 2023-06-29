@@ -73,16 +73,6 @@ const StyledDataCollectionPropertyCell = styled('div')(() => ({
     display: 'table-cell',
 }));
 
-interface IPrivacyProps {
-    title: string;
-    infoText: string;
-    concreteDetails: Record<string, string>;
-    enabled: boolean;
-    changeInfoText: string;
-    variablesText: string;
-    dependsOnText?: string;
-}
-
 interface IToolTipInstructionContentProps {
     changeInfoText: string;
     variablesText: string;
@@ -136,6 +126,16 @@ const ToolTipDescriptionText = styled('p')(({ theme }) => ({
     marginTop: theme.spacing(1),
 }));
 
+interface IInstancePrivacySectionProps {
+    title: string;
+    infoText: string;
+    concreteDetails: Record<string, string>;
+    enabled: boolean;
+    changeInfoText: string;
+    variablesText: string;
+    dependsOnText?: string;
+}
+
 export const InstancePrivacySection = ({
     title,
     infoText,
@@ -144,7 +144,7 @@ export const InstancePrivacySection = ({
     changeInfoText,
     variablesText,
     dependsOnText,
-}: IPrivacyProps) => {
+}: IInstancePrivacySectionProps) => {
     return (
         <StyledContainer>
             <StyledCardTitleRow>
@@ -157,10 +157,7 @@ export const InstancePrivacySection = ({
                                 Data is collected
                             </Badge>
                         }
-                    />
-                    <ConditionallyRender
-                        condition={!enabled}
-                        show={
+                        elseShow={
                             <Badge color="neutral" icon={<ClearIcon />}>
                                 No data is collected
                             </Badge>

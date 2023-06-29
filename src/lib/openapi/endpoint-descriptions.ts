@@ -36,7 +36,7 @@ export const endpointDescriptions = {
         },
         import: {
             summary: 'Import feature toggles for an environment in the project',
-            description: `Unleash toggles exported from a different instance can be imported into a new project and environment`,
+            description: `[Import feature toggles](https://docs.getunleash.io/reference/deploy/environment-import-export#import) into a specific project and environment.`,
         },
     },
 } as const;

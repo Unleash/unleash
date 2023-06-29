@@ -16,14 +16,11 @@ import FeatureToggleStore from './feature-toggle-store';
 import { Db } from './db';
 import Raw = Knex.Raw;
 
-type OptionalClientFeatures = Set<'strategy IDs' | 'strategy titles'>;
-
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;
     archived: boolean;
-    isAdmin: boolean;
+    requestType: 'client' | 'admin' | 'playground';
     userId?: number;
-    optionalIncludes?: OptionalClientFeatures;
 }
 
 export interface IGetAdminFeatures {
@@ -54,10 +51,11 @@ export default class FeatureToggleClientStore
     private async getAll({
         featureQuery,
         archived,
-        isAdmin,
+        requestType,
         userId,
-        optionalIncludes,
     }: IGetAllFeatures): Promise<IFeatureToggleClient[]> {
+        const isAdmin = requestType === 'admin';
+        const isPlayground = requestType === 'playground';
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer('getFeatureAdmin');
 
@@ -213,15 +211,11 @@ export default class FeatureToggleClientStore
             strategies: strategies?.map(({ id, title, ...strategy }) => ({
                 ...strategy,
 
-                ...(optionalIncludes?.has('strategy titles') && title
-                    ? { title }
-                    : {}),
+                ...(isPlayground && title ? { title } : {}),
 
                 // We should not send strategy IDs from the client API,
                 // as this breaks old versions of the Go SDK (at least).
-                ...(isAdmin || optionalIncludes?.has('strategy IDs')
-                    ? { id }
-                    : {}),
+                ...(isAdmin || isPlayground ? { id } : {}),
             })),
         }));
 
@@ -309,7 +303,7 @@ export default class FeatureToggleClientStore
         return this.getAll({
             featureQuery,
             archived: false,
-            isAdmin: false,
+            requestType: 'client',
         });
     }
 
@@ -319,8 +313,7 @@ export default class FeatureToggleClientStore
         return this.getAll({
             featureQuery,
             archived: false,
-            isAdmin: false,
-            optionalIncludes: new Set(['strategy titles', 'strategy IDs']),
+            requestType: 'playground',
         });
     }
 
@@ -332,7 +325,7 @@ export default class FeatureToggleClientStore
         return this.getAll({
             featureQuery,
             archived: Boolean(archived),
-            isAdmin: true,
+            requestType: 'admin',
             userId,
         });
     }

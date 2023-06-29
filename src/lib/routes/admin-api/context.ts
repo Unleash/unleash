@@ -190,7 +190,7 @@ export class ContextController extends Controller {
                     tags: ['Context'],
                     summary: 'Validate a context field',
                     description:
-                        'Used by the Unleash frontend to validate that the form for creating a context field is valid (e.g. that the name of the context field is URL safe)',
+                        'Check whether the provided data can be used to create a context field. If the data is not valid, ...?',
                     operationId: 'validate',
                     requestBody: createRequestSchema('nameSchema'),
                     responses: {

@@ -29,7 +29,7 @@ export const contextFieldSchema = {
         sortOrder: {
             description:
                 'Used when sorting a list of context fields. Is also used as a tiebreaker if a list of context fields is sorted alphabetically.',
-            type: 'number',
+            type: 'integer',
             example: 900,
         },
         createdAt: {
@@ -40,7 +40,7 @@ export const contextFieldSchema = {
             example: '2023-06-29T10:19:00.000Z',
         },
         usedInFeatures: {
-            type: 'number',
+            type: 'integer',
             description:
                 'Number of projects where this context field is used in',
             example: 3,
@@ -48,7 +48,7 @@ export const contextFieldSchema = {
             minimum: 0,
         },
         usedInProjects: {
-            type: 'number',
+            type: 'integer',
             description:
                 'Number of projects where this context field is used in',
             example: 2,

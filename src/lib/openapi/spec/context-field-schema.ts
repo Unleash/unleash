@@ -6,7 +6,7 @@ export const contextFieldSchema = {
     type: 'object',
     additionalProperties: false,
     description:
-        'A [context field](https://docs.getunleash.io/reference/unleash-context) used to configure strategies with data used to evaluate isEnabled calls',
+        'A representation of a [context field](https://docs.getunleash.io/reference/unleash-context).',
     required: ['name'],
     properties: {
         name: {

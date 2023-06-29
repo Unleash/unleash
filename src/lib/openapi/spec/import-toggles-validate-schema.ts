@@ -6,6 +6,8 @@ export const importTogglesValidateSchema = {
     type: 'object',
     required: ['errors', 'warnings'],
     additionalProperties: false,
+    summary: 'Import toggles validation result schema',
+    description: 'The result of toggle validation after import',
     properties: {
         errors: {
             type: 'array',

@@ -8,9 +8,13 @@ export const exportQuerySchema = {
     properties: {
         environment: {
             type: 'string',
+            example: 'development',
+            description: 'The environment to export from',
         },
         downloadFile: {
             type: 'boolean',
+            example: 'development',
+            description: 'Whether to return a downloadable file',
         },
     },
     oneOf: [
@@ -19,6 +23,7 @@ export const exportQuerySchema = {
             properties: {
                 features: {
                     type: 'array',
+                    example: ['MyAwesomeFeature'],
                     items: {
                         type: 'string',
                         minLength: 1,
@@ -32,6 +37,7 @@ export const exportQuerySchema = {
             properties: {
                 tag: {
                     type: 'string',
+                    example: 'release',
                     description:
                         'Selects features to export by tag. Takes precedence over the features field.',
                 },

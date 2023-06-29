@@ -8,9 +8,12 @@ export const importTogglesValidateItemSchema = {
     properties: {
         message: {
             type: 'string',
+            description: 'The validation error message',
         },
         affectedItems: {
             type: 'array',
+            description: 'The items affected by this error message ',
+            example: ['some-feature-a', 'some-feature-b'],
             items: {
                 type: 'string',
             },

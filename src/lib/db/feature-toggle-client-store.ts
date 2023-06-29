@@ -15,7 +15,8 @@ import EventEmitter from 'events';
 import FeatureToggleStore from './feature-toggle-store';
 import { Db } from './db';
 import Raw = Knex.Raw;
-import { OptionalClientFeatures } from 'lib/types/stores/feature-toggle-client-store';
+
+type OptionalClientFeatures = Set<'strategy IDs' | 'strategy titles'>;
 
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;

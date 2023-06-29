@@ -32,6 +32,22 @@ export interface IProjectPermissionButtonProps extends IPermissionButtonProps {
     environmentId: string;
 }
 
+const iconRender = (
+    access: boolean,
+    fallBackIcon?: React.ReactNode,
+    hideLockIcon?: boolean
+): React.ReactNode => {
+    if (!access && !hideLockIcon) {
+      return <Lock titleAccess="Locked" />;
+    }
+
+    if (fallBackIcon) {
+      return fallBackIcon;
+    }
+
+    return null;
+};
+
 const ProjectEnvironmentPermissionButton: React.FC<IProjectPermissionButtonProps> =
     React.forwardRef((props, ref) => {
         const access = useHasProjectEnvironmentAccess(
@@ -75,6 +91,7 @@ const BasePermissionButton: React.FC<IPermissionBaseButtonProps> =
             ref
         ) => {
             const id = useId();
+            const icon = iconRender(access, rest.endIcon, hideLockIcon);
 
             return (
                 <TooltipResolver
@@ -91,18 +108,7 @@ const BasePermissionButton: React.FC<IPermissionBaseButtonProps> =
                             variant={variant}
                             color={color}
                             {...rest}
-                            endIcon={
-                                <>
-                                    <ConditionallyRender
-                                        condition={!access && !hideLockIcon}
-                                        show={<Lock titleAccess="Locked" />}
-                                        elseShow={
-                                            Boolean(rest.endIcon) &&
-                                            rest.endIcon
-                                        }
-                                    />
-                                </>
-                            }
+                            endIcon={icon}
                         >
                             {children}
                         </Button>

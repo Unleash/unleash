@@ -11,12 +11,12 @@ export const legalValueSchema = {
         value: {
             description: 'The valid value',
             type: 'string',
-            example: 'red',
+            example: '#c154c1',
         },
         description: {
-            description: 'Describes the intended usage of this value',
+            description: 'Describes this specific legal value',
             type: 'string',
-            example: 'We only carry these colors in our shop',
+            example: 'Deep fuchsia'
         },
     },
     components: {},

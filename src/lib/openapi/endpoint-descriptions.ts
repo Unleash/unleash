@@ -27,7 +27,7 @@ export const endpointDescriptions = {
             description:
                 'Specify the `environment` you would liket to export and use the optional `downloadFile` flag to get the file',
             summary:
-                'Export all feature toggle definitions from an environment',
+                'Export feature toggles from an environment',
         },
         validateImport: {
             summary:

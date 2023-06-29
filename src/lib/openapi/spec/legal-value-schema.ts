@@ -16,7 +16,7 @@ export const legalValueSchema = {
         description: {
             description: 'Describes this specific legal value',
             type: 'string',
-            example: 'Deep fuchsia'
+            example: 'Deep fuchsia',
         },
     },
     components: {},

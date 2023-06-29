@@ -188,7 +188,7 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    summary: 'Validates a context field',
+                    summary: 'Validate a context field',
                     description:
                         'Used by the Unleash frontend to validate that the form for creating a context field is valid (e.g. that the name of the context field is URL safe)',
                     operationId: 'validate',

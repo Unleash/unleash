@@ -39,7 +39,10 @@
       "description": null,
       "constraints": [
         {
-          "values": ["878a9f99-96a0-46", "894fc669-f53d-43"],
+          "values": [
+            "878a9f99-96a0-46",
+            "894fc669-f53d-43"
+          ],
           "operator": "IN",
           "contextName": "x"
         }
@@ -53,7 +56,10 @@
       "description": null,
       "constraints": [
         {
-          "values": ["894fc669-f53d-43", "15fecdbf-d3b6-48"],
+          "values": [
+            "894fc669-f53d-43",
+            "15fecdbf-d3b6-48"
+          ],
           "operator": "IN",
           "contextName": "x"
         }

@@ -199,6 +199,11 @@ const FeatureOverviewEnvironment = ({
                                                 variant="outlined"
                                                 size="small"
                                             />
+                                            <FeatureStrategyIcons
+                                                strategies={
+                                                    featureEnvironment?.strategies
+                                                }
+                                            />
                                         </StyledButtonContainer>
                                     }
                                     elseShow={

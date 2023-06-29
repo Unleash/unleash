@@ -1,28 +1,8 @@
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { FeatureStrategyIcon } from 'component/feature/FeatureStrategy/FeatureStrategyIcon/FeatureStrategyIcon';
 import { styled } from '@mui/material';
-
-interface IFeatureStrategyIconsProps {
-    strategies: IFeatureStrategy[] | undefined;
-}
-
-export const FeatureStrategyIcons = ({
-    strategies,
-}: IFeatureStrategyIconsProps) => {
-    if (!strategies?.length) {
-        return null;
-    }
-
-    return (
-        <StyledList aria-label="Feature strategies">
-            {strategies.map(strategy => (
-                <StyledListItem key={strategy.id}>
-                    <FeatureStrategyIcon strategyName={strategy.name} />
-                </StyledListItem>
-            ))}
-        </StyledList>
-    );
-};
+import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
+import { formatStrategyName } from 'utils/strategyNames';
 
 const StyledList = styled('ul')(() => ({
     all: 'unset',
@@ -36,3 +16,61 @@ const StyledListItem = styled('li')(() => ({
     minWidth: 30,
     textAlign: 'center',
 }));
+
+const StyledItem = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
+const THRESHOLD = 4;
+
+interface IFeatureStrategyIconsProps {
+    strategies: IFeatureStrategy[] | undefined;
+}
+
+export const FeatureStrategyIcons = ({
+    strategies,
+}: IFeatureStrategyIconsProps) => {
+    if (!strategies?.length) {
+        return null;
+    }
+
+    if (strategies.length > THRESHOLD) {
+        return (
+            <StyledList aria-label="Feature strategies">
+                {strategies.slice(0, THRESHOLD).map(strategy => (
+                    <StyledListItem key={strategy.id}>
+                        <FeatureStrategyIcon strategyName={strategy.name} />
+                    </StyledListItem>
+                ))}
+                <TooltipLink
+                    tooltip={strategies.slice(THRESHOLD).map(strategy => (
+                        <StyledListItem key={strategy.id}>
+                            <StyledItem>
+                                <FeatureStrategyIcon
+                                    strategyName={strategy.name}
+                                />{' '}
+                                {formatStrategyName(strategy.name)}
+                            </StyledItem>
+                        </StyledListItem>
+                    ))}
+                >
+                    (+{strategies.length - THRESHOLD})
+                </TooltipLink>
+            </StyledList>
+        );
+    }
+
+    return (
+        <StyledList aria-label="Feature strategies">
+            {strategies.map(strategy => (
+                <StyledListItem key={strategy.id}>
+                    <FeatureStrategyIcon strategyName={strategy.name} />
+                </StyledListItem>
+            ))}
+        </StyledList>
+    );
+};

@@ -24,8 +24,7 @@ const StyledItem = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const THRESHOLD = 4;
-const MAX_WHEN_OVER = 3;
+const THRESHOLD = 5;
 
 interface IFeatureStrategyIconsProps {
     strategies: IFeatureStrategy[] | undefined;
@@ -38,16 +37,16 @@ export const FeatureStrategyIcons = ({
         return null;
     }
 
-    if (strategies.length > THRESHOLD) {
+    if (strategies.length > THRESHOLD + 1) {
         return (
             <StyledList aria-label="Feature strategies">
-                {strategies.slice(0, MAX_WHEN_OVER).map(strategy => (
+                {strategies.slice(0, THRESHOLD).map(strategy => (
                     <StyledListItem key={strategy.id}>
                         <FeatureStrategyIcon strategy={strategy} />
                     </StyledListItem>
                 ))}
                 <TooltipLink
-                    tooltip={strategies.slice(MAX_WHEN_OVER).map(strategy => (
+                    tooltip={strategies.slice(THRESHOLD).map(strategy => (
                         <StyledListItem key={strategy.id}>
                             <StyledItem>
                                 <FeatureStrategyIcon strategy={strategy} />{' '}
@@ -59,7 +58,7 @@ export const FeatureStrategyIcons = ({
                         </StyledListItem>
                     ))}
                 >
-                    (+{strategies.length - MAX_WHEN_OVER})
+                    (+{strategies.length - THRESHOLD})
                 </TooltipLink>
             </StyledList>
         );

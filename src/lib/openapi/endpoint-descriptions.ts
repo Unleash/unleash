@@ -32,7 +32,7 @@ export const endpointDescriptions = {
         validateImport: {
             summary:
                 'Validate import of feature toggles for an environment in the project',
-            description: `Unleash toggles exported from a different instance can be imported into a new project and environment`,
+            description: `Validates a feature toggle data set. Checks whether the data can be imported into the specified project and environment. The returned value is an object that contains errors, warnings, and permissions required to perform the import, as described in the [import documentation](https://docs.getunleash.io/reference/deploy/environment-import-export#import).`,
         },
         import: {
             summary: 'Import feature toggles for an environment in the project',

@@ -7,6 +7,7 @@ import { PartialSome } from '../types/partial';
 import User from '../types/user';
 import { Db } from './db';
 import { IFlagResolver } from '../types';
+import { BadDataError } from '../error';
 
 const T = {
     segments: 'segments',
@@ -193,9 +194,19 @@ export default class SegmentStore implements ISegmentStore {
         const rows: ISegmentRow[] = await this.db
             .select(this.prefixColumns())
             .from(T.segments)
-            .where({ id });
+            .where({ id })
+            .catch((error) => {
+                const errorParts = error.message.split(' - ');
+                const message = errorParts[errorParts.length - 1];
+                throw new BadDataError(message);
+            });
 
-        return this.mapRow(rows[0]);
+        const row = rows[0];
+        if (!row) {
+            throw new NotFoundError(`No segment exists with ID "${id}"`);
+        }
+
+        return this.mapRow(row);
     }
 
     async addToStrategy(id: number, strategyId: string): Promise<void> {

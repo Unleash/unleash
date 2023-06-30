@@ -4,7 +4,6 @@ import { Box, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { InstancePrivacySection } from './InstancePrivacySection';
 import { useTelemetry } from 'hooks/api/getters/useTelemetry/useTelemetry';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IFeatureActivenessManagementInfo {
     enabled: IActivenessManagementInfo;

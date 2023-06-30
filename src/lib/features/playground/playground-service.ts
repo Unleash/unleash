@@ -194,14 +194,11 @@ export class PlaygroundService {
             environment: string;
         }
     > {
-        const features = await this.featureToggleService.getClientFeatures(
-            {
-                project: projects === ALL ? undefined : projects,
-                environment,
-            },
-            true,
-            false,
-        );
+        const features = await this.featureToggleService.getPlaygroundFeatures({
+            project: projects === ALL ? undefined : projects,
+            environment,
+        });
+
         const featureProject: Record<string, string> = features.reduce(
             (obj, feature) => {
                 obj[feature.name] = feature.project;

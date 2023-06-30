@@ -4,11 +4,9 @@ import {
     TextField,
     styled,
 } from '@mui/material';
-import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
-import { IRole, PredefinedRoleType } from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import { RoleDescription } from '../RoleDescription/RoleDescription';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
-import { ROOT_ROLE_TYPE } from '@server/util/constants';
 
 const StyledRoleOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -21,23 +19,19 @@ const StyledRoleOption = styled('div')(({ theme }) => ({
 
 interface IRoleSelectProps
     extends Partial<AutocompleteProps<IRole, false, false, false>> {
-    type?: PredefinedRoleType;
+    roles: IRole[];
     value: IRole | null;
     setValue: (role: IRole | null) => void;
     required?: boolean;
 }
 
 export const RoleSelect = ({
-    type = ROOT_ROLE_TYPE,
+    roles,
     value,
     setValue,
     required,
     ...rest
 }: IRoleSelectProps) => {
-    const { roles: rootRoles, projectRoles } = useRoles();
-
-    const roles = type === ROOT_ROLE_TYPE ? rootRoles : projectRoles;
-
     const renderRoleOption = (
         props: React.HTMLAttributes<HTMLLIElement>,
         option: IRole

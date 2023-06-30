@@ -20,6 +20,10 @@ interface IFeatureStrategyMenuProps {
     size?: IPermissionButtonProps['size'];
 }
 
+const StyledStrategyMenu = styled('div')({
+    flexShrink: 0,
+});
+
 const StyledAdditionalMenuButton = styled(PermissionButton)(({ theme }) => ({
     minWidth: 0,
     width: theme.spacing(4.5),
@@ -71,7 +75,7 @@ export const FeatureStrategyMenu = ({
     );
 
     return (
-        <div onClick={event => event.stopPropagation()}>
+        <StyledStrategyMenu onClick={event => event.stopPropagation()}>
             <PermissionButton
                 permission={CREATE_FEATURE_STRATEGY}
                 projectId={projectId}
@@ -118,6 +122,6 @@ export const FeatureStrategyMenu = ({
                     environmentId={environmentId}
                 />
             </Popover>
-        </div>
+        </StyledStrategyMenu>
     );
 };

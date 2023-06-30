@@ -103,9 +103,16 @@ export const FeatureStrategyCreate = () => {
         if (shouldUseDefaultStrategy) {
             const strategyTemplate = defaultStrategy || DEFAULT_STRATEGY;
             if (strategyTemplate.parameters?.groupId === '' && featureId) {
-                strategyTemplate.parameters.groupId = featureId;
+                setStrategy({
+                    ...strategyTemplate,
+                    parameters: {
+                        ...strategyTemplate.parameters,
+                        groupId: featureId,
+                    },
+                } as any);
+            } else {
+                setStrategy(strategyTemplate as any);
             }
-            setStrategy(strategyTemplate as any);
         } else if (strategyDefinition) {
             setStrategy(createFeatureStrategy(featureId, strategyDefinition));
         }

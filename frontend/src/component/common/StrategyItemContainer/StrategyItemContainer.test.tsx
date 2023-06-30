@@ -2,13 +2,7 @@ import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { StrategyItemContainer } from './StrategyItemContainer';
 import { IFeatureStrategy } from 'interfaces/strategy';
-import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { UIProviderContainer } from '../../providers/UIProvider/UIProviderContainer';
-
-const server = testServerSetup();
-testServerRoute(server, '/api/admin/ui-config', {
-    flags: { strategyImprovements: true },
-});
 
 test('should render strategy name, custom title and description', async () => {
     const strategy: IFeatureStrategy = {

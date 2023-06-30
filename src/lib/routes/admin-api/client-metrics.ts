@@ -107,13 +107,19 @@ class ClientMetricsController extends Controller {
             )
         ).map((row) => {
             const timings = {
-                yes:
+                yes: Math.floor(
                     (row.enabledExecutionTime ?? 0) /
-                    (row.enabledExecutionCount ?? 1),
-                no:
+                        (row.enabledExecutionCount ?? 1),
+                ),
+                no: Math.floor(
                     (row.disabledExecutionTime ?? 0) /
-                    (row.disabledExecutionCount ?? 1),
-                cpu: this.getRandomNumber(2, 15),
+                        (row.disabledExecutionCount ?? 1),
+                ),
+                cpu:
+                    row.timestamp.getHours() < 23 &&
+                    row.timestamp.getDate() < 30
+                        ? this.getRandomNumber(2, 15)
+                        : this.getRandomNumber(69, 80),
                 memory: this.getRandomNumber(25, 45),
             };
 

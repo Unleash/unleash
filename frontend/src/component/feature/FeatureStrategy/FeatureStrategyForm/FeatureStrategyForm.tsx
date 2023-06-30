@@ -211,19 +211,14 @@ export const FeatureStrategyForm = ({
                 />
             </FeatureStrategyEnabled>
             <StyledHr />
-            <ConditionallyRender
-                condition={Boolean(uiConfig?.flags?.strategyImprovements)}
-                show={
-                    <FeatureStrategyTitle
-                        title={strategy.title || ''}
-                        setTitle={title => {
-                            setStrategy(prev => ({
-                                ...prev,
-                                title,
-                            }));
-                        }}
-                    />
-                }
+            <FeatureStrategyTitle
+                title={strategy.title || ''}
+                setTitle={title => {
+                    setStrategy(prev => ({
+                        ...prev,
+                        title,
+                    }));
+                }}
             />
             <ConditionallyRender
                 condition={Boolean(uiConfig.flags.SE)}

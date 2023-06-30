@@ -12,13 +12,10 @@ import { ChangeRequestConfiguration } from './ChangeRequestConfiguration/ChangeR
 import { ProjectApiAccess } from 'component/project/Project/ProjectSettings/ProjectApiAccess/ProjectApiAccess';
 import { ProjectSegments } from './ProjectSegments/ProjectSegments';
 import { ProjectDefaultStrategySettings } from './ProjectDefaultStrategySettings/ProjectDefaultStrategySettings';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const ProjectSettings = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { uiConfig } = useUiConfig();
-    const { strategyImprovements } = uiConfig.flags;
 
     const tabs: ITab[] = [
         {
@@ -41,14 +38,11 @@ export const ProjectSettings = () => {
             id: 'api-access',
             label: 'API access',
         },
-    ];
-
-    if (Boolean(strategyImprovements)) {
-        tabs.push({
+        {
             id: 'default-strategy',
             label: 'Default strategy',
-        });
-    }
+        },
+    ];
 
     const onChange = (tab: ITab) => {
         navigate(tab.id);
@@ -76,12 +70,10 @@ export const ProjectSettings = () => {
                     element={<ChangeRequestConfiguration />}
                 />
                 <Route path="api-access/*" element={<ProjectApiAccess />} />
-                {Boolean(strategyImprovements) && (
-                    <Route
-                        path="default-strategy/*"
-                        element={<ProjectDefaultStrategySettings />}
-                    />
-                )}
+                <Route
+                    path="default-strategy/*"
+                    element={<ProjectDefaultStrategySettings />}
+                />
                 <Route
                     path="*"
                     element={<Navigate replace to={tabs[0].id} />}

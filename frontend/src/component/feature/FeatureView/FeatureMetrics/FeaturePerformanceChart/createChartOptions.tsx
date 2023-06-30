@@ -42,14 +42,14 @@ export const createChartOptions = (
                 boxPadding: 5,
                 usePointStyle: true,
                 itemSort: (a, b) => {
-                    const order = ['Exposed', 'Not exposed'];
+                    const order = ['Exposed', 'Not exposed', 'Difference'];
                     const aIndex = order.indexOf(a.dataset.label!);
                     const bIndex = order.indexOf(b.dataset.label!);
                     return aIndex - bIndex;
                 },
                 callbacks: {
                     label: item => {
-                        return `${item.formattedValue} - ${item.dataset.label}`;
+                        return `${item.formattedValue}ms - ${item.dataset.label}`;
                     },
                     title: items =>
                         `Time: ${formatDateHM(

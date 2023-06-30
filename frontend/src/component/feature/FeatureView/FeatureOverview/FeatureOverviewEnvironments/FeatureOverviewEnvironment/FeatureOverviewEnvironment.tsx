@@ -123,6 +123,8 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     marginTop: theme.spacing(2),
+    gap: theme.spacing(2),
+    flexWrap: 'wrap',
     [theme.breakpoints.down(560)]: {
         flexDirection: 'column',
     },
@@ -198,6 +200,11 @@ const FeatureOverviewEnvironment = ({
                                                 environmentId={env.name}
                                                 variant="outlined"
                                                 size="small"
+                                            />
+                                            <FeatureStrategyIcons
+                                                strategies={
+                                                    featureEnvironment?.strategies
+                                                }
                                             />
                                         </StyledButtonContainer>
                                     }

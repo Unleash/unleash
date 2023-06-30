@@ -119,6 +119,15 @@ function AdminMenu() {
                     }
                 />
 
+                <Tab
+                    value="instance-privacy"
+                    label={
+                        <CenteredNavLink to="/admin/instance-privacy">
+                            Instance privacy
+                        </CenteredNavLink>
+                    }
+                />
+
                 {isBilling && (
                     <Tab
                         value="billing"

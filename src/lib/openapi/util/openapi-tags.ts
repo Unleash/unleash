@@ -125,6 +125,10 @@ const OPENAPI_TAGS = [
             'API for managing [change requests](https://docs.getunleash.io/reference/change-requests).',
     },
     {
+        name: 'Telemetry',
+        description: 'API for information about telemetry collection',
+    },
+    {
         name: 'Notifications',
         description:
             'API for managing [notifications](https://docs.getunleash.io/reference/notifications).',

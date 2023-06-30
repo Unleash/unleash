@@ -116,30 +116,17 @@ export const InstancePrivacy = () => {
                     changeInfoText={versionActivenessInfo.changeInfoText}
                     variablesText={versionActivenessInfo.environmentVariables}
                 />
-                <ConditionallyRender
-                    condition={Boolean(
-                        uiConfig.flags.experimentalExtendedTelemetry
-                    )}
-                    show={
-                        <InstancePrivacySection
-                            title={featureCollectionDetails.title}
-                            infoText={featureCollectionDetails.infoText}
-                            concreteDetails={
-                                featureCollectionDetails.concreteDetails
-                            }
-                            enabled={
-                                settings?.featureInfoCollectionEnabled &&
-                                settings?.versionInfoCollectionEnabled
-                            }
-                            changeInfoText={
-                                featureActivenessInfo.changeInfoText
-                            }
-                            variablesText={
-                                featureActivenessInfo.environmentVariables
-                            }
-                            dependsOnText={dependsOnFeatureCollection}
-                        />
+                <InstancePrivacySection
+                    title={featureCollectionDetails.title}
+                    infoText={featureCollectionDetails.infoText}
+                    concreteDetails={featureCollectionDetails.concreteDetails}
+                    enabled={
+                        settings?.featureInfoCollectionEnabled &&
+                        settings?.versionInfoCollectionEnabled
                     }
+                    changeInfoText={featureActivenessInfo.changeInfoText}
+                    variablesText={featureActivenessInfo.environmentVariables}
+                    dependsOnText={dependsOnFeatureCollection}
                 />
             </StyledBox>
         </PageContent>

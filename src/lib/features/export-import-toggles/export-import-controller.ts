@@ -16,6 +16,7 @@ import {
     emptyResponse,
     ExportQuerySchema,
     exportResultSchema,
+    getStandardResponses,
     ImportTogglesSchema,
     importTogglesValidateSchema,
 } from '../../openapi';
@@ -66,11 +67,12 @@ class ExportImportController extends Controller {
             handler: this.export,
             middleware: [
                 this.openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Import/Export'],
                     operationId: 'exportFeatures',
                     requestBody: createRequestSchema('exportQuerySchema'),
                     responses: {
                         200: createResponseSchema('exportResultSchema'),
+                        ...getStandardResponses(404),
                     },
                     ...endpointDescriptions.admin.export,
                 }),
@@ -83,13 +85,14 @@ class ExportImportController extends Controller {
             handler: this.validateImport,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Import/Export'],
                     operationId: 'validateImport',
                     requestBody: createRequestSchema('importTogglesSchema'),
                     responses: {
                         200: createResponseSchema(
                             'importTogglesValidateSchema',
                         ),
+                        ...getStandardResponses(404),
                     },
                     ...endpointDescriptions.admin.validateImport,
                 }),
@@ -102,11 +105,12 @@ class ExportImportController extends Controller {
             handler: this.importData,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Import/Export'],
                     operationId: 'importToggles',
                     requestBody: createRequestSchema('importTogglesSchema'),
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(404),
                     },
                     ...endpointDescriptions.admin.import,
                 }),

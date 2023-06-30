@@ -43,8 +43,11 @@ export default class ArchiveController extends Controller {
                 openApiService.validPath({
                     tags: ['Archive'],
                     operationId: 'getArchivedFeatures',
-                    responses: { 200: createResponseSchema('featuresSchema') },
-                    ...getStandardResponses(401, 403),
+                    responses: {
+                        200: createResponseSchema('featuresSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
+
                     deprecated: true,
                 }),
             ],
@@ -59,8 +62,11 @@ export default class ArchiveController extends Controller {
                 openApiService.validPath({
                     tags: ['Archive'],
                     operationId: 'getArchivedFeaturesByProjectId',
-                    responses: { 200: createResponseSchema('featuresSchema') },
-                    ...getStandardResponses(401, 403),
+                    responses: {
+                        200: createResponseSchema('featuresSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
+
                     deprecated: true,
                 }),
             ],
@@ -79,8 +85,10 @@ export default class ArchiveController extends Controller {
                         'This endpoint archives the specified feature.',
                     summary: 'Archives a feature',
                     operationId: 'deleteFeature',
-                    ...getStandardResponses(401, 403),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403),
+                    },
                 }),
             ],
         });
@@ -98,7 +106,10 @@ export default class ArchiveController extends Controller {
                         'This endpoint revives the specified feature from archive.',
                     summary: 'Revives a feature',
                     operationId: 'reviveFeature',
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
+                    },
                 }),
             ],
         });

@@ -59,9 +59,11 @@ export default class ProjectArchiveController extends Controller {
                     description:
                         'This endpoint deletes the specified features, that are in archive.',
                     summary: 'Deletes a list of features',
-                    ...getStandardResponses(400, 401, 403),
                     requestBody: createRequestSchema('batchFeaturesSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
+                    },
                 }),
             ],
         });
@@ -79,9 +81,11 @@ export default class ProjectArchiveController extends Controller {
                     description:
                         'This endpoint revives the specified features.',
                     summary: 'Revives a list of features',
-                    ...getStandardResponses(400, 401, 403),
                     requestBody: createRequestSchema('batchFeaturesSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
+                    },
                 }),
             ],
         });
@@ -98,9 +102,11 @@ export default class ProjectArchiveController extends Controller {
                     description:
                         'This endpoint archives the specified features.',
                     summary: 'Archives a list of features',
-                    ...getStandardResponses(400, 401, 403),
                     requestBody: createRequestSchema('batchFeaturesSchema'),
-                    responses: { 202: emptyResponse },
+                    responses: {
+                        202: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
+                    },
                 }),
             ],
         });

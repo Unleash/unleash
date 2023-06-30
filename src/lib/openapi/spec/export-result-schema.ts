@@ -18,7 +18,6 @@ export const exportResultSchema = {
     additionalProperties: false,
     description:
         'The result of the export operation, providing you with the feature toggle definitions, strategy definitions and the rest of the elements relevant to the features (tags, environments etc.)',
-    summary: 'The export result schema',
     required: ['features', 'featureStrategies', 'tagTypes'],
     properties: {
         features: {

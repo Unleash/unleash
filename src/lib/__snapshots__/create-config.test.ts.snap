@@ -94,7 +94,7 @@ exports[`should create default config 1`] = `
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
       "segmentContextFieldUsage": false,
-      "strategySplittedButton": true,
+      "strategySplittedButton": false,
       "strictSchemaValidation": false,
     },
   },
@@ -127,7 +127,7 @@ exports[`should create default config 1`] = `
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
       "segmentContextFieldUsage": false,
-      "strategySplittedButton": true,
+      "strategySplittedButton": false,
       "strictSchemaValidation": false,
     },
     "externalResolver": {

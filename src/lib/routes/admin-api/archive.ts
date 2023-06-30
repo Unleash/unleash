@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types';
-import { Logger } from '../../logger';
 import Controller from '../controller';
 import { extractUsername } from '../../util/extract-user';
 import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
@@ -17,8 +16,6 @@ import { createResponseSchema } from '../../openapi/util/create-response-schema'
 import { emptyResponse } from '../../openapi/util/standard-responses';
 
 export default class ArchiveController extends Controller {
-    private readonly logger: Logger;
-
     private featureService: FeatureToggleService;
 
     private openApiService: OpenApiService;
@@ -31,7 +28,6 @@ export default class ArchiveController extends Controller {
         }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'openApiService'>,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/archive.js');
         this.featureService = featureToggleServiceV2;
         this.openApiService = openApiService;
 
@@ -74,6 +70,9 @@ export default class ArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Archive'],
+                    description:
+                        'This endpoint archives the specified feature.',
+                    summary: 'Archives a feature',
                     operationId: 'deleteFeature',
                     responses: { 200: emptyResponse },
                 }),
@@ -89,6 +88,9 @@ export default class ArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Archive'],
+                    description:
+                        'This endpoint revives the specified feature from archive.',
+                    summary: 'Revives a feature',
                     operationId: 'reviveFeature',
                     responses: { 200: emptyResponse },
                 }),

@@ -54,7 +54,6 @@ export interface IFlags {
     advancedPlayground?: boolean;
     customRootRoles?: boolean;
     strategySplittedButton?: boolean;
-    experimentalExtendedTelemetry?: boolean;
 }
 
 export interface IVersionInfo {

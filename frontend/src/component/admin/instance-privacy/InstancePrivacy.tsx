@@ -4,7 +4,6 @@ import { Box, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { InstancePrivacySection } from './InstancePrivacySection';
 import { useTelemetry } from 'hooks/api/getters/useTelemetry/useTelemetry';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IFeatureActivenessManagementInfo {
     enabled: IActivenessManagementInfo;
@@ -85,7 +84,7 @@ const featureCollectionActivenessManagementTexts: IFeatureActivenessManagementIn
 
 export const InstancePrivacy = () => {
     const { settings } = useTelemetry();
-    const { uiConfig, loading } = useUiConfig();
+    const { loading } = useUiConfig();
 
     if (loading) {
         return null;
@@ -116,30 +115,17 @@ export const InstancePrivacy = () => {
                     changeInfoText={versionActivenessInfo.changeInfoText}
                     variablesText={versionActivenessInfo.environmentVariables}
                 />
-                <ConditionallyRender
-                    condition={Boolean(
-                        uiConfig.flags.experimentalExtendedTelemetry
-                    )}
-                    show={
-                        <InstancePrivacySection
-                            title={featureCollectionDetails.title}
-                            infoText={featureCollectionDetails.infoText}
-                            concreteDetails={
-                                featureCollectionDetails.concreteDetails
-                            }
-                            enabled={
-                                settings?.featureInfoCollectionEnabled &&
-                                settings?.versionInfoCollectionEnabled
-                            }
-                            changeInfoText={
-                                featureActivenessInfo.changeInfoText
-                            }
-                            variablesText={
-                                featureActivenessInfo.environmentVariables
-                            }
-                            dependsOnText={dependsOnFeatureCollection}
-                        />
+                <InstancePrivacySection
+                    title={featureCollectionDetails.title}
+                    infoText={featureCollectionDetails.infoText}
+                    concreteDetails={featureCollectionDetails.concreteDetails}
+                    enabled={
+                        settings?.featureInfoCollectionEnabled &&
+                        settings?.versionInfoCollectionEnabled
                     }
+                    changeInfoText={featureActivenessInfo.changeInfoText}
+                    variablesText={featureActivenessInfo.environmentVariables}
+                    dependsOnText={dependsOnFeatureCollection}
                 />
             </StyledBox>
         </PageContent>

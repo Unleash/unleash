@@ -84,7 +84,7 @@ const featureCollectionActivenessManagementTexts: IFeatureActivenessManagementIn
 
 export const InstancePrivacy = () => {
     const { settings } = useTelemetry();
-    const { uiConfig, loading } = useUiConfig();
+    const { loading } = useUiConfig();
 
     if (loading) {
         return null;

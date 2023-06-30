@@ -191,7 +191,6 @@ const Header: VFC = () => {
                         links={uiConfig.links}
                         open={openDrawer}
                         toggleDrawer={toggleDrawer}
-                        admin={admin}
                         routes={filteredMainRoutes}
                     />
                     <StyledUserContainer>
@@ -273,29 +272,18 @@ const Header: VFC = () => {
                                 <MenuBookIcon />
                             </IconButton>
                         </Tooltip>
-                        <ConditionallyRender
-                            condition={admin}
-                            show={
-                                <Tooltip title="Settings" arrow>
-                                    <StyledIconButton
-                                        onClick={e =>
-                                            setAdminRef(e.currentTarget)
-                                        }
-                                        aria-controls={
-                                            adminRef ? adminId : undefined
-                                        }
-                                        aria-expanded={Boolean(adminRef)}
-                                        size="large"
-                                        disableRipple
-                                    >
-                                        <SettingsIcon />
-                                        <KeyboardArrowDown
-                                            sx={styledIconProps}
-                                        />
-                                    </StyledIconButton>
-                                </Tooltip>
-                            }
-                        />
+                        <Tooltip title="Settings" arrow>
+                            <StyledIconButton
+                                onClick={e => setAdminRef(e.currentTarget)}
+                                aria-controls={adminRef ? adminId : undefined}
+                                aria-expanded={Boolean(adminRef)}
+                                size="large"
+                                disableRipple
+                            >
+                                <SettingsIcon />
+                                <KeyboardArrowDown sx={styledIconProps} />
+                            </StyledIconButton>
+                        </Tooltip>
                         <NavigationMenu
                             id={adminId}
                             options={filteredMainRoutes.adminRoutes}

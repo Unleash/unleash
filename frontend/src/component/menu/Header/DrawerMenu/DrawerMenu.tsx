@@ -31,7 +31,6 @@ interface IDrawerMenuProps {
     title?: string;
     open?: boolean;
     toggleDrawer: () => void;
-    admin?: boolean;
     links: Array<{
         value: string;
         icon: ReactNode;
@@ -51,7 +50,6 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
     flags = {},
     open = false,
     toggleDrawer,
-    admin = false,
     routes,
 }) => {
     const renderLinks = () => {
@@ -115,25 +113,18 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
                         />
                     ))}
                 </List>
-                <ConditionallyRender
-                    condition={admin}
-                    show={
-                        <>
-                            <Divider />
+                <Divider />
 
-                            <List className={styles.drawerList}>
-                                {routes.adminRoutes.map(item => (
-                                    <NavigationLink
-                                        handleClose={() => toggleDrawer()}
-                                        path={item.path}
-                                        text={item.title}
-                                        key={item.path}
-                                    />
-                                ))}
-                            </List>
-                        </>
-                    }
-                />
+                <List className={styles.drawerList}>
+                    {routes.adminRoutes.map(item => (
+                        <NavigationLink
+                            handleClose={() => toggleDrawer()}
+                            path={item.path}
+                            text={item.title}
+                            key={item.path}
+                        />
+                    ))}
+                </List>
                 <Divider />
                 <div className={styles.iconLinkList}>
                     {renderLinks()}

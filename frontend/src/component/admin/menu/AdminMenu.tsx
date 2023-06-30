@@ -31,7 +31,7 @@ function AdminMenu() {
                     value="users"
                     label={
                         <CenteredNavLink to="/admin/users">
-                            <span>Users</span>
+                            <span>Ewsers</span>
                         </CenteredNavLink>
                     }
                 />

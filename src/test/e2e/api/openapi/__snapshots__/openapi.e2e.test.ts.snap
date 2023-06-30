@@ -5827,13 +5827,15 @@ Stats are divided into current and previous **windows**.
           },
           "isAPI": {
             "deprecated": true,
-            "description": "(Deprecated): Used internally to decide on response content type",
+            "description": "(Deprecated): Used internally to know which operations the user should be allowed to perform",
             "example": true,
             "type": "boolean",
           },
           "loginAttempts": {
             "description": "How many unsuccessful attempts at logging in has the user made",
-            "type": "number",
+            "example": 3,
+            "minimum": 0,
+            "type": "integer",
           },
           "name": {
             "description": "Name of the user",

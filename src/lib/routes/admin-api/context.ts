@@ -31,8 +31,14 @@ import {
 import { serializeDates } from '../../types/serialize-dates';
 import NotFoundError from '../../error/notfound-error';
 import { NameSchema } from '../../openapi/spec/name-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
-import { contextFieldStrategiesSchema } from '../../openapi/spec/context-field-strategies-schema';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
+import {
+    ContextFieldStrategiesSchema,
+    contextFieldStrategiesSchema,
+} from '../../openapi/spec/context-field-strategies-schema';
 
 interface ContextParam {
     contextField: string;
@@ -98,10 +104,14 @@ export class ContextController extends Controller {
                 openApiService.validPath({
                     tags: ['Strategies'],
                     operationId: 'getStrategiesByContextField',
+                    summary: 'Get strategies that use a context field',
+                    description:
+                        "Retrieves a list of all strategies that use the specified context field. If the context field doesn't exist, returns an empty list of strategies",
                     responses: {
                         200: createResponseSchema(
                             'contextFieldStrategiesSchema',
                         ),
+                        ...getStandardResponses(401),
                     },
                 }),
             ],
@@ -265,7 +275,7 @@ export class ContextController extends Controller {
 
     async getStrategiesByContextField(
         req: IAuthRequest<{ contextField: string }>,
-        res: Response,
+        res: Response<ContextFieldStrategiesSchema>,
     ): Promise<void> {
         const { contextField } = req.params;
         const contextFields =

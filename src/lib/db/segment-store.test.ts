@@ -23,7 +23,6 @@ describe('unexpected input handling for get segment', () => {
         try {
             await segmentStore.get(id);
         } catch (e) {
-            console.log(e.message);
             expect(e instanceof NotFoundError).toBeTruthy();
             expect(e.message).toEqual(expect.stringMatching(id.toString()));
         }

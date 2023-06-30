@@ -1727,7 +1727,7 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "object",
       },
       "contextFieldStrategiesSchema": {
-        "description": "A wrapper object containing all for strategies using a specific context field",
+        "description": "A wrapper object containing all strategies that use a specific context field",
         "properties": {
           "strategies": {
             "description": "List of strategies using the context field",
@@ -1986,6 +1986,66 @@ The provider you choose for your addon dictates what properties the \`parameters
           "email",
           "name",
           "password",
+        ],
+        "type": "object",
+      },
+      "createStrategySchema": {
+        "description": "The data required to create a strategy type. Refer to the docs on [custom strategy types](https://docs.getunleash.io/reference/custom-activation-strategies) for more information.",
+        "properties": {
+          "description": {
+            "description": "A description of the strategy type.",
+            "example": "Enable the feature for users who have not logged in before.",
+            "type": "string",
+          },
+          "name": {
+            "description": "The name of the strategy type. Must be unique.",
+            "example": "my-custom-strategy",
+            "type": "string",
+          },
+          "parameters": {
+            "description": "The parameter list lets you pass arguments to your custom activation strategy. These will be made available to your custom strategy implementation.",
+            "items": {
+              "properties": {
+                "description": {
+                  "description": "A description of this strategy parameter. Use this to indicate to the users what the parameter does.",
+                  "example": "How many percent of users should see this feature?",
+                  "type": "string",
+                },
+                "name": {
+                  "description": "The name of the parameter",
+                  "example": "Rollout percentage",
+                  "type": "string",
+                },
+                "required": {
+                  "description": "Whether this parameter must be configured when using the strategy. Defaults to \`false\`",
+                  "example": false,
+                  "type": "boolean",
+                },
+                "type": {
+                  "description": "The [type of the parameter](https://docs.getunleash.io/reference/custom-activation-strategies#parameter-types)",
+                  "enum": [
+                    "string",
+                    "percentage",
+                    "list",
+                    "number",
+                    "boolean",
+                  ],
+                  "example": "percentage",
+                  "type": "string",
+                },
+              },
+              "required": [
+                "name",
+                "type",
+              ],
+              "type": "object",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "name",
+          "parameters",
         ],
         "type": "object",
       },
@@ -5098,6 +5158,10 @@ Stats are divided into current and previous **windows**.
             "type": "array",
           },
           "version": {
+            "enum": [
+              1,
+            ],
+            "example": 1,
             "type": "integer",
           },
         },
@@ -5117,7 +5181,7 @@ Stats are divided into current and previous **windows**.
             "type": "boolean",
           },
           "description": {
-            "description": "A short description for the strategy",
+            "description": "A short description of the strategy",
             "example": "Gradual rollout to logged in users",
             "type": "string",
           },
@@ -5128,12 +5192,12 @@ Stats are divided into current and previous **windows**.
             "type": "string",
           },
           "editable": {
-            "description": "Determines whether the strategy allows for editing",
+            "description": "Whether the strategy can be edited or not. Strategies bundled with Unleash cannot be edited.",
             "example": true,
             "type": "boolean",
           },
           "name": {
-            "description": "The name or type of the strategy",
+            "description": "The name (type) of the strategy",
             "example": "flexibleRollout",
             "type": "string",
           },
@@ -5538,6 +5602,60 @@ Stats are divided into current and previous **windows**.
         },
         "type": "object",
       },
+      "updateStrategySchema": {
+        "description": "The data required to update a strategy type.",
+        "properties": {
+          "description": {
+            "description": "A description of the strategy type.",
+            "example": "Enable the feature for users who have not logged in before.",
+            "type": "string",
+          },
+          "parameters": {
+            "description": "The parameter list lets you pass arguments to your custom activation strategy. These will be made available to your custom strategy implementation.",
+            "items": {
+              "properties": {
+                "description": {
+                  "description": "A description of this strategy parameter. Use this to indicate to the users what the parameter does.",
+                  "example": "How many percent of users should see this feature?",
+                  "type": "string",
+                },
+                "name": {
+                  "description": "The name of the parameter",
+                  "example": "Rollout percentage",
+                  "type": "string",
+                },
+                "required": {
+                  "description": "Whether this parameter must be configured when using the strategy. Defaults to \`false\`",
+                  "example": false,
+                  "type": "boolean",
+                },
+                "type": {
+                  "description": "The [type of the parameter](https://docs.getunleash.io/reference/custom-activation-strategies#parameter-types)",
+                  "enum": [
+                    "string",
+                    "percentage",
+                    "list",
+                    "number",
+                    "boolean",
+                  ],
+                  "example": "percentage",
+                  "type": "string",
+                },
+              },
+              "required": [
+                "name",
+                "type",
+              ],
+              "type": "object",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "parameters",
+        ],
+        "type": "object",
+      },
       "updateTagTypeSchema": {
         "properties": {
           "description": {
@@ -5672,43 +5790,6 @@ Stats are divided into current and previous **windows**.
         "required": [
           "name",
           "constraints",
-        ],
-        "type": "object",
-      },
-      "upsertStrategySchema": {
-        "properties": {
-          "description": {
-            "type": "string",
-          },
-          "editable": {
-            "type": "boolean",
-          },
-          "name": {
-            "type": "string",
-          },
-          "parameters": {
-            "items": {
-              "properties": {
-                "description": {
-                  "type": "string",
-                },
-                "name": {
-                  "type": "string",
-                },
-                "required": {
-                  "type": "boolean",
-                },
-                "type": {
-                  "type": "string",
-                },
-              },
-              "type": "object",
-            },
-            "type": "array",
-          },
-        },
-        "required": [
-          "name",
         ],
         "type": "object",
       },
@@ -7210,6 +7291,7 @@ Note: passing \`null\` as a value for the description property will set it to an
     },
     "/api/admin/context/{contextField}/strategies": {
       "get": {
+        "description": "Retrieves a list of all strategies that use the specified context field. If the context field doesn't exist, returns an empty list of strategies",
         "operationId": "getStrategiesByContextField",
         "parameters": [
           {
@@ -7232,7 +7314,35 @@ Note: passing \`null\` as a value for the description property will set it to an
             },
             "description": "contextFieldStrategiesSchema",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
         },
+        "summary": "Get strategies that use a context field",
         "tags": [
           "Strategies",
         ],
@@ -12519,6 +12629,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/api/admin/strategies": {
       "get": {
+        "description": "Retrieves all strategy types ([predefined](https://docs.getunleash.io/reference/activation-strategies "predefined strategies") and [custom strategies](https://docs.getunleash.io/reference/custom-activation-strategies)) that are defined on this Unleash instance.",
         "operationId": "getAllStrategies",
         "responses": {
           "200": {
@@ -12531,22 +12642,51 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             },
             "description": "strategiesSchema",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
         },
+        "summary": "Get all strategies",
         "tags": [
           "Strategies",
         ],
       },
       "post": {
+        "description": "Creates a strategy type based on the supplied data.",
         "operationId": "createStrategy",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/upsertStrategySchema",
+                "$ref": "#/components/schemas/createStrategySchema",
               },
             },
           },
-          "description": "upsertStrategySchema",
+          "description": "createStrategySchema",
           "required": true,
         },
         "responses": {
@@ -12569,7 +12709,116 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
               },
             },
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "There is already a feature called "my-awesome-feature".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NameExistsError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.",
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "We do not accept the content-type you provided (application/xml). Try using one of the content-types we do accept instead (application/json) and make sure the body is in the corresponding format.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ContentTypeerror",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
+          },
         },
+        "summary": "Create a strategy",
         "tags": [
           "Strategies",
         ],
@@ -12577,6 +12826,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/api/admin/strategies/{name}": {
       "delete": {
+        "description": "Deletes the specified strategy definition",
         "operationId": "removeStrategy",
         "parameters": [
           {
@@ -12592,12 +12842,95 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Delete a strategy",
         "tags": [
           "Strategies",
         ],
       },
       "get": {
+        "description": "Retrieves the definition of the strategy specified in the URL",
         "operationId": "getStrategy",
         "parameters": [
           {
@@ -12620,7 +12953,62 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             },
             "description": "strategySchema",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Get a strategy definition",
         "tags": [
           "Strategies",
         ],
@@ -12628,6 +13016,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/api/admin/strategies/{strategyName}": {
       "put": {
+        "description": "Updates the specified strategy type. Any properties not specified in the request body are left untouched.",
         "operationId": "updateStrategy",
         "parameters": [
           {
@@ -12643,18 +13032,127 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/upsertStrategySchema",
+                "$ref": "#/components/schemas/updateStrategySchema",
               },
             },
           },
-          "description": "upsertStrategySchema",
+          "description": "updateStrategySchema",
           "required": true,
         },
         "responses": {
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "We do not accept the content-type you provided (application/xml). Try using one of the content-types we do accept instead (application/json) and make sure the body is in the corresponding format.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ContentTypeerror",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
+          },
         },
+        "summary": "Update a strategy type",
         "tags": [
           "Strategies",
         ],
@@ -12662,6 +13160,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/api/admin/strategies/{strategyName}/deprecate": {
       "post": {
+        "description": "Marks the specified strategy as deprecated.",
         "operationId": "deprecateStrategy",
         "parameters": [
           {
@@ -12677,7 +13176,89 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Deprecate a strategy",
         "tags": [
           "Strategies",
         ],
@@ -12685,6 +13266,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/api/admin/strategies/{strategyName}/reactivate": {
       "post": {
+        "description": "Marks the specified strategy as not deprecated. If the strategy wasn't already deprecated, nothing changes.",
         "operationId": "reactivateStrategy",
         "parameters": [
           {
@@ -12700,7 +13282,89 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Reactivate a strategy",
         "tags": [
           "Strategies",
         ],

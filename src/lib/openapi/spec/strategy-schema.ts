@@ -23,7 +23,7 @@ export const strategySchema = {
         },
         name: {
             type: 'string',
-            description: 'The name or type of the strategy',
+            description: 'The name (type) of the strategy',
             example: 'flexibleRollout',
         },
         displayName: {
@@ -34,12 +34,13 @@ export const strategySchema = {
         },
         description: {
             type: 'string',
-            description: 'A short description for the strategy',
+            description: 'A short description of the strategy',
             example: 'Gradual rollout to logged in users',
         },
         editable: {
             type: 'boolean',
-            description: 'Determines whether the strategy allows for editing',
+            description:
+                'Whether the strategy can be edited or not. Strategies bundled with Unleash cannot be edited.',
             example: true,
         },
         deprecated: {

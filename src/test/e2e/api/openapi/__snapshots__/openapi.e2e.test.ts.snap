@@ -1227,11 +1227,16 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "changePasswordSchema": {
         "additionalProperties": false,
+        "description": "Change password as long as the token is a valid token",
         "properties": {
           "password": {
+            "description": "The new password for the user",
+            "example": "correct horse battery staple",
             "type": "string",
           },
           "token": {
+            "description": "A reset token used to validate that the user is allowed to change the password.",
+            "example": "$2a$15$QzeW/y5/MEppCWVEkoX5euejobYOLSd4We21LQjjKlWH9l2I3wCke",
             "type": "string",
           },
         },
@@ -2082,8 +2087,11 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "emailSchema": {
         "additionalProperties": false,
+        "description": "Represents the email of a user. Used to send email communication (reset password, welcome mail etc)",
         "properties": {
           "email": {
+            "description": "The email address",
+            "example": "test@example.com",
             "type": "string",
           },
         },
@@ -3503,11 +3511,16 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "loginSchema": {
         "additionalProperties": false,
+        "description": "A username/password login request",
         "properties": {
           "password": {
+            "description": "The password of the user trying to login",
+            "example": "hunter2",
             "type": "string",
           },
           "username": {
+            "description": "The username trying to login",
+            "example": "user",
             "type": "string",
           },
         },
@@ -4812,17 +4825,27 @@ Stats are divided into current and previous **windows**.
       },
       "roleSchema": {
         "additionalProperties": false,
+        "description": "A role holds permissions to allow Unleash to decide what actions a roleholder is allowed to perform",
         "properties": {
           "description": {
+            "description": "A more detailed description of the role and what use it's intended for",
+            "example": "Users with the editor role have access to most features in Unleash but can not manage users and roles in the global scope. Editors will be added as project owners when creating projects and get superuser rights within the context of these projects. Users with the editor role will also get access to most permissions on the default project by default.",
             "type": "string",
           },
           "id": {
-            "type": "number",
+            "description": "The role id",
+            "example": 9,
+            "minimum": 0,
+            "type": "integer",
           },
           "name": {
+            "description": "The name of the role",
+            "example": "Editor",
             "type": "string",
           },
           "type": {
+            "description": "A role can either be a global role (applies to all projects) or a project role",
+            "example": "global",
             "type": "string",
           },
         },
@@ -5378,24 +5401,35 @@ Stats are divided into current and previous **windows**.
       },
       "tokenUserSchema": {
         "additionalProperties": false,
+        "description": "A user identified by a token",
         "properties": {
           "createdBy": {
+            "description": "A username or email identifying which user created this token",
+            "example": "admin@example.com",
             "nullable": true,
             "type": "string",
           },
           "email": {
+            "description": "The email of the user",
+            "example": "test@example.com",
             "type": "string",
           },
           "id": {
-            "type": "number",
+            "description": "The user id",
+            "example": 7,
+            "type": "integer",
           },
           "name": {
+            "description": "The name of the user",
+            "example": "Test McTest",
             "type": "string",
           },
           "role": {
             "$ref": "#/components/schemas/roleSchema",
           },
           "token": {
+            "description": "A token uniquely identifying a user",
+            "example": "user:xyzrandomstring",
             "type": "string",
           },
         },
@@ -5752,47 +5786,76 @@ Stats are divided into current and previous **windows**.
       },
       "userSchema": {
         "additionalProperties": false,
+        "description": "An Unleash user",
         "properties": {
           "accountType": {
+            "description": "A user is either an actual User or a Service Account",
+            "example": "User",
             "type": "string",
           },
           "createdAt": {
+            "description": "The user was created at this time",
+            "example": "2023-06-30T11:41:00.123Z",
             "format": "date-time",
             "type": "string",
           },
           "email": {
+            "description": "Email of the user",
+            "example": "user@example.com",
             "type": "string",
           },
           "emailSent": {
+            "description": "Is the welcome email sent to the user or not",
+            "example": false,
             "type": "boolean",
           },
           "id": {
-            "type": "number",
+            "description": "The user id",
+            "example": 123,
+            "minimum": 0,
+            "type": "integer",
           },
           "imageUrl": {
+            "description": "URL used for the userprofile image",
+            "example": "https://example.com/242x200.png",
             "type": "string",
           },
           "inviteLink": {
+            "description": "If the user is actively inviting other users, this is the link that can be shared with other users",
+            "example": "http://localhost:4242/invite-link/some-secret",
             "type": "string",
           },
           "isAPI": {
+            "deprecated": true,
+            "description": "(Deprecated): Used internally to decide on response content type",
+            "example": true,
             "type": "boolean",
           },
           "loginAttempts": {
+            "description": "How many unsuccessful attempts at logging in has the user made",
             "type": "number",
           },
           "name": {
+            "description": "Name of the user",
+            "example": "User",
             "type": "string",
           },
           "rootRole": {
-            "type": "number",
+            "description": "Which [root role](https://docs.getunleash.io/reference/rbac#standard-roles) this user is assigned",
+            "example": 1,
+            "minimum": 0,
+            "type": "integer",
           },
           "seenAt": {
+            "description": "The last time this user logged in",
+            "example": "2023-06-30T11:42:00.345Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "username": {
+            "description": "A unique username for the user",
+            "example": "hunter",
             "type": "string",
           },
         },
@@ -5848,8 +5911,11 @@ Stats are divided into current and previous **windows**.
       },
       "validatePasswordSchema": {
         "additionalProperties": false,
+        "description": "Used to validate passwords obeying [Unleash password guidelines](https://docs.getunleash.io/reference/deploy/securing-unleash#password-requirements)",
         "properties": {
           "password": {
+            "description": "The password to validate",
+            "example": "hunter2",
             "type": "string",
           },
         },
@@ -13996,6 +14062,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/auth/reset/password": {
       "post": {
+        "description": "Allows users with a valid reset token to reset their password without remembering their old password",
         "operationId": "changePassword",
         "requestBody": {
           "content": {
@@ -14013,6 +14080,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             "description": "This response has no body.",
           },
         },
+        "summary": "Changes a user password",
         "tags": [
           "Auth",
         ],
@@ -14020,6 +14088,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/auth/reset/password-email": {
       "post": {
+        "description": "Used to reset password for a user that has forgotten their password",
         "operationId": "sendResetPasswordEmail",
         "requestBody": {
           "content": {
@@ -14037,6 +14106,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             "description": "This response has no body.",
           },
         },
+        "summary": "Requests a password reset email",
         "tags": [
           "Auth",
         ],
@@ -14044,6 +14114,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/auth/reset/validate": {
       "get": {
+        "description": "If the token is valid returns the user that owns the token",
         "operationId": "validateToken",
         "responses": {
           "200": {
@@ -14057,6 +14128,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             "description": "tokenUserSchema",
           },
         },
+        "summary": "Validates a token",
         "tags": [
           "Auth",
         ],
@@ -14064,6 +14136,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/auth/reset/validate-password": {
       "post": {
+        "description": "Verifies that the password adheres to [Unleash password guidelines](https://docs.getunleash.io/reference/deploy/securing-unleash#password-requirements)",
         "operationId": "validatePassword",
         "requestBody": {
           "content": {
@@ -14081,6 +14154,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             "description": "This response has no body.",
           },
         },
+        "summary": "Validates password",
         "tags": [
           "Auth",
         ],
@@ -14088,6 +14162,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/auth/simple/login": {
       "post": {
+        "description": "Logs in the user and creates an active session",
         "operationId": "login",
         "requestBody": {
           "content": {
@@ -14112,6 +14187,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             "description": "userSchema",
           },
         },
+        "summary": "Login",
         "tags": [
           "Auth",
         ],

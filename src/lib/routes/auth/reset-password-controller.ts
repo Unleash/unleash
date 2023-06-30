@@ -56,6 +56,9 @@ class ResetPasswordController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Validates a token',
+                    description:
+                        'If the token is valid returns the user that owns the token',
                     tags: ['Auth'],
                     operationId: 'validateToken',
                     responses: { 200: createResponseSchema('tokenUserSchema') },
@@ -70,6 +73,9 @@ class ResetPasswordController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Auth'],
+                    summary: `Changes a user password`,
+                    description:
+                        'Allows users with a valid reset token to reset their password without remembering their old password',
                     operationId: 'changePassword',
                     requestBody: createRequestSchema('changePasswordSchema'),
                     responses: { 200: emptyResponse },
@@ -84,6 +90,9 @@ class ResetPasswordController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Auth'],
+                    summary: 'Validates password',
+                    description:
+                        'Verifies that the password adheres to [Unleash password guidelines](https://docs.getunleash.io/reference/deploy/securing-unleash#password-requirements)',
                     operationId: 'validatePassword',
                     requestBody: createRequestSchema('validatePasswordSchema'),
                     responses: { 200: emptyResponse },
@@ -98,6 +107,9 @@ class ResetPasswordController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Auth'],
+                    summary: 'Requests a password reset email',
+                    description:
+                        'Used to reset password for a user that has forgotten their password',
                     operationId: 'sendResetPasswordEmail',
                     requestBody: createRequestSchema('emailSchema'),
                     responses: { 200: emptyResponse },

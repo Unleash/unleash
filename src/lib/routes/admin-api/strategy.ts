@@ -187,6 +187,9 @@ class StrategyController extends Controller {
                 openApiService.validPath({
                     tags: ['Strategies'],
                     operationId: 'reactivateStrategy',
+                    summary: 'Reactivate a strategy',
+                    description:
+                        "Marks the specified strategy as not deprecated. If the strategy wasn't already deprecated, nothing changes.",
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403, 404),

@@ -98,9 +98,6 @@ exports[`renders an empty list correctly 1`] = `
                 >
                   New tag type
                   <span
-                    className="MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon"
-                  />
-                  <span
                     className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
                   />
                 </button>

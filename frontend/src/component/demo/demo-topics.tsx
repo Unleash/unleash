@@ -147,6 +147,7 @@ export const TOPICS: ITutorialTopic[] = [
                     </Description>
                 ),
                 placement: 'right',
+                optional: true,
                 backCloseModal: true,
             },
             {

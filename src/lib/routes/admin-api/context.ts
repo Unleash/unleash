@@ -71,6 +71,9 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
+                    summary: 'Gets configured context fields',
+                    description:
+                        'Returns all configured [Context fields](https://docs.getunleash.io/how-to/how-to-define-custom-context-fields) that have been created.',
                     operationId: 'getContextFields',
                     responses: {
                         200: createResponseSchema('contextFieldsSchema'),
@@ -87,6 +90,9 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
+                    summary: 'Gets context field',
+                    description:
+                        'Returns specific [context field](https://docs.getunleash.io/reference/unleash-context) identified by the name in the path',
                     operationId: 'getContextField',
                     responses: {
                         200: createResponseSchema('contextFieldSchema'),
@@ -103,6 +109,8 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Strategies'],
+                    summary: 'Get strategies using this context field',
+                    description: `Returns all strategies that use the specified context field. Useful when cleaning up context fields: if this list is empty, it's safe to delete the context field.`,
                     operationId: 'getStrategiesByContextField',
                     summary: 'Get strategies that use a context field',
                     description:
@@ -126,6 +134,9 @@ export class ContextController extends Controller {
                 openApiService.validPath({
                     tags: ['Context'],
                     operationId: 'createContextField',
+                    summary: 'Create a context field',
+                    description:
+                        'Endpoint that allows creation of [custom context fields](https://docs.getunleash.io/reference/unleash-context#custom-context-fields)',
                     requestBody: createRequestSchema(
                         'upsertContextFieldSchema',
                     ),
@@ -146,6 +157,8 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
+                    summary: 'Update an existing context field',
+                    description: `Endpoint that allows updating a custom context field. Used to toggle stickiness and add/remove legal values for this context field`,
                     operationId: 'updateContextField',
                     requestBody: createRequestSchema(
                         'upsertContextFieldSchema',
@@ -166,6 +179,9 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
+                    summary: 'Delete an existing context field',
+                    description:
+                        'Endpoint that allows deletion of a custom context field. Does not validate that context field is not in use, but since context field configuration is stored in a json blob for the strategy, existing strategies are safe.',
                     operationId: 'deleteContextField',
                     responses: {
                         200: emptyResponse,
@@ -182,6 +198,9 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
+                    summary: 'Validate a context field',
+                    description:
+                        'Check whether the provided data can be used to create a context field. If the data is not valid, ...?',
                     operationId: 'validate',
                     requestBody: createRequestSchema('nameSchema'),
                     responses: {

@@ -4,8 +4,10 @@ import { IGetAdminFeatures } from '../../db/feature-toggle-client-store';
 export interface IFeatureToggleClientStore {
     getClient(
         featureQuery: Partial<IFeatureToggleQuery>,
-        includeStrategyIds?: boolean,
-        includeDisabledStrategies?: boolean,
+    ): Promise<IFeatureToggleClient[]>;
+
+    getPlayground(
+        featureQuery: Partial<IFeatureToggleQuery>,
     ): Promise<IFeatureToggleClient[]>;
 
     // @Deprecated

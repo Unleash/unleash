@@ -43,18 +43,6 @@ interface IPermissionRow {
 }
 
 export class AccessStore implements IAccessStore {
-    private readonly DEPRECATED_PERMISSIONS = [
-        'CREATE_API_TOKEN',
-        'UPDATE_API_TOKEN',
-        'DELETE_API_TOKEN',
-        'READ_API_TOKEN',
-        'UPDATE_ROLE',
-        'CREATE_ADMIN_API_TOKEN',
-        'UPDATE_ADMIN_API_TOKEN',
-        'DELETE_ADMIN_API_TOKEN',
-        'READ_ADMIN_API_TOKEN',
-    ];
-
     private logger: Logger;
 
     private timer: Function;
@@ -115,9 +103,7 @@ export class AccessStore implements IAccessStore {
             .orWhere('type', 'environment')
             .orWhere('type', 'root')
             .from(`${T.PERMISSIONS} as p`);
-        return rows
-            .map(this.mapPermission)
-            .filter((p) => !this.DEPRECATED_PERMISSIONS.includes(p.name));
+        return rows.map(this.mapPermission);
     }
 
     mapPermission(permission: IPermissionRow): IPermission {

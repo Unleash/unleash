@@ -111,6 +111,7 @@ Here's some of the fantastic work our community has done to make Unleash work in
 - Angular - TypeScript ([ngx-unleash-proxy-client](https://github.com/snowfrogdev/snowfrogdev/tree/main/packages/ngx-unleash-proxy-client))
 - Clojure ([AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure))
 - C++ ([aruizs/unleash-client-cpp](https://github.com/aruizs/unleash-client-cpp))
+- ColdBox - CFML ([coldbox-modules/unleashsdk](https://github.com/coldbox-modules/unleashsdk))
 - Dart ([uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash))
 - Elixir ([afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex))
 - Haskell ([finn-no/unleash-client-haskell](https://github.com/finn-no/unleash-client-haskell))
@@ -132,15 +133,15 @@ If you can't find an SDK that fits your need, you can also develop your own SDK.
 
 ## Working offline
 
-Once they have been initialised, all Unleash clients will continue to work perfectly well without an internet connection or in the event that the Unleash Server has an outage.
+Once they have been initialized, all Unleash clients will continue to work perfectly well without an internet connection or in the event that the Unleash Server has an outage.
 
 Because the SDKs and the Unleash Proxy cache their feature toggle states locally and only communicate with the Unleash server (in the case of the server-side SDKs and the Proxy) or the Proxy (in the case of front-end SDKs) at predetermined intervals, a broken connection only means that they won't get any new updates.
 
-Unless the SDK supports [bootstrapping](#bootstrapping) it _will_ need to connect to Unleash at startup to get its initial feature toggle data set. If the SDK doesn't have a feature toggle data set available, all toggles will fall back to evaluating as disabled or as the specified default value (in SDKs that support that).
+Unless the SDK supports [bootstrapping](#bootstrapping), it _will_ need to connect to Unleash at startup to get its initial feature toggle data set. If the SDK doesn't have a feature toggle data set available, all toggles will fall back to evaluating as disabled or as the specified default value (in SDKs that support that).
 
 ### Bootstrapping
 
-By default, all SDKs reach out to the Unleash Server at startup to fetch their toggle configuration. Additionally some of the server-side SDKs and the Proxy (see the above [compatibility table](#server-side-sdk-compatibility-table)) also support _bootstrapping_, which allows them to get their toggle configuration from a file, the environment, or other local resources. These SDKs can work without any network connection whatsoever.
+By default, all SDKs reach out to the Unleash Server at startup to fetch their toggle configuration. Additionally, some of the server-side SDKs and the Proxy (see the above [compatibility table](#server-side-sdk-compatibility-table)) also support _bootstrapping_, which allows them to get their toggle configuration from a file, the environment, or other local resources. These SDKs can work without any network connection whatsoever.
 
 Bootstrapping is also supported by the following front-end client SDKs:
 

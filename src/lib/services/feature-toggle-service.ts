@@ -828,13 +828,9 @@ class FeatureToggleService {
 
     async getClientFeatures(
         query?: IFeatureToggleQuery,
-        includeIds?: boolean,
-        includeDisabledStrategies?: boolean,
     ): Promise<FeatureConfigurationClient[]> {
         const result = await this.featureToggleClientStore.getClient(
             query || {},
-            includeIds,
-            includeDisabledStrategies,
         );
         if (this.flagResolver.isEnabled('cleanClientApi')) {
             return result.map(
@@ -867,6 +863,15 @@ class FeatureToggleService {
         } else {
             return result;
         }
+    }
+
+    async getPlaygroundFeatures(
+        query?: IFeatureToggleQuery,
+    ): Promise<FeatureConfigurationClient[]> {
+        const result = await this.featureToggleClientStore.getPlayground(
+            query || {},
+        );
+        return result;
     }
 
     /**

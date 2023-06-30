@@ -9,7 +9,6 @@ import {
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PlaygroundStrategySchema } from 'openapi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Badge } from '../Badge/Badge';
 import { Link } from 'react-router-dom';
 
@@ -105,7 +104,6 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     description,
 }) => {
     const Icon = getFeatureStrategyIcon(strategy.name);
-    const { uiConfig } = useUiConfig();
 
     const StrategyHeaderLink: React.FC =
         'links' in strategy
@@ -158,11 +156,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                                 text={formatStrategyName(String(strategy.name))}
                             />
                             <ConditionallyRender
-                                condition={
-                                    Boolean(
-                                        uiConfig?.flags?.strategyImprovements
-                                    ) && Boolean(strategy.title)
-                                }
+                                condition={Boolean(strategy.title)}
                                 show={
                                     <StyledCustomTitle>
                                         {formatStrategyName(

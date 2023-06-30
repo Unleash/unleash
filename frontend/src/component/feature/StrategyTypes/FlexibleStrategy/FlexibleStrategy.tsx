@@ -61,7 +61,7 @@ const FlexibleStrategy = ({
     }
 
     useEffect(() => {
-        if (isDefaultStrategyEdit) {
+        if (isDefaultStrategyEdit && !parameters.groupId) {
             onUpdate('groupId')('');
         }
     }, [isDefaultStrategyEdit]);

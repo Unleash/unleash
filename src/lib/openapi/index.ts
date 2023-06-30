@@ -144,6 +144,7 @@ import {
     getFeatureFeedbackSchema,
     registerFeatureFeedbackSchema,
     featureFeedbackSchema,
+    telemetrySettingsSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -345,6 +346,7 @@ export const schemas: UnleashSchemas = {
     registerFeatureFeedbackSchema,
     getFeatureFeedbackSchema,
     featureFeedbackSchema,
+    telemetrySettingsSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

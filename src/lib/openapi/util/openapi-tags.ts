@@ -128,6 +128,10 @@ const OPENAPI_TAGS = [
         name: 'Feedback',
         description: 'API for user feedback.',
     },
+    {
+        name: 'Telemetry',
+        description: 'API for information about telemetry collection',
+    },
 ] as const;
 
 // make the export mutable, so it can be used in a schema

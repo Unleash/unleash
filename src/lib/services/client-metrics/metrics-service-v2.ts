@@ -162,15 +162,19 @@ export default class ClientMetricsServiceV2 {
             100,
         );
 
-        const result = environments.flatMap((environment) =>
-            applications.flatMap((appName) =>
-                hours.flatMap((hourBucket) => {
-                    const metric = metrics.find(
+        const result = environments.flatMap((environment) => {
+            const environmentMetrics = metrics.filter(
+                (metric) => metric.environment === environment,
+            );
+            return applications.flatMap((appName) => {
+                const applicationMetrics = environmentMetrics.filter(
+                    (metric) => metric.appName === appName,
+                );
+                return hours.flatMap((hourBucket) => {
+                    const metric = applicationMetrics.find(
                         (item) =>
                             compareAsc(hourBucket.timestamp, item.timestamp) ===
-                                0 &&
-                            item.appName === appName &&
-                            item.environment === environment,
+                            0,
                     );
                     return (
                         metric || {
@@ -182,10 +186,9 @@ export default class ClientMetricsServiceV2 {
                             featureName,
                         }
                     );
-                }),
-            ),
-        );
-
+                });
+            });
+        });
         return result.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
     }
 

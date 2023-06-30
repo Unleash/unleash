@@ -195,7 +195,12 @@ export default class SegmentStore implements ISegmentStore {
             .from(T.segments)
             .where({ id });
 
-        return this.mapRow(rows[0]);
+        const row = rows[0];
+        if (!row) {
+            throw new NotFoundError(`No segment exists with ID "${id}"`);
+        }
+
+        return this.mapRow(row);
     }
 
     async addToStrategy(id: number, strategyId: string): Promise<void> {

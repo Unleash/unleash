@@ -14,21 +14,6 @@ afterAll(() => {
     nock.enableNetConnect();
 });
 
-const getTestFlagResolver = (enabled: boolean) => {
-    return {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        isEnabled: () => {
-            return enabled;
-        },
-        getAll: () => {
-            return {};
-        },
-        getVariant: () => {
-            return { name: '', enabled: false };
-        },
-    };
-};
-
 test('yields current versions', async () => {
     const url = `https://${randomId()}.example.com`;
     const stores = createStores();
@@ -49,7 +34,6 @@ test('yields current versions', async () => {
     const service = new VersionService(stores, {
         getLogger,
         versionCheck: { url, enable: true },
-        flagResolver: getTestFlagResolver(true),
         telemetry: true,
     });
     await service.checkLatestVersion();
@@ -84,7 +68,6 @@ test('supports setting enterprise version as well', async () => {
         getLogger,
         versionCheck: { url, enable: true },
         enterpriseVersion,
-        flagResolver: getTestFlagResolver(true),
         telemetry: true,
     });
     await service.checkLatestVersion();
@@ -119,7 +102,6 @@ test('if version check is not enabled should not make any calls', async () => {
         getLogger,
         versionCheck: { url, enable: false },
         enterpriseVersion,
-        flagResolver: getTestFlagResolver(true),
         telemetry: true,
     });
     await service.checkLatestVersion();
@@ -162,7 +144,6 @@ test('sets featureinfo', async () => {
         getLogger,
         versionCheck: { url, enable: true },
         enterpriseVersion,
-        flagResolver: getTestFlagResolver(true),
         telemetry: true,
     });
     await service.checkLatestVersion();
@@ -211,47 +192,6 @@ test('counts toggles', async () => {
         getLogger,
         versionCheck: { url, enable: true },
         enterpriseVersion,
-        flagResolver: getTestFlagResolver(true),
-        telemetry: true,
-    });
-    await service.checkLatestVersion();
-    expect(scope.isDone()).toEqual(true);
-    nock.cleanAll();
-});
-
-test('doesnt report featureinfo when flag off', async () => {
-    const url = `https://${randomId()}.example.com`;
-    const stores = createStores();
-    const enterpriseVersion = '4.0.0';
-    await stores.settingStore.insert('instanceInfo', { id: '1234abc' });
-    await stores.settingStore.insert('unleash.enterprise.auth.oidc', {
-        enabled: true,
-    });
-    await stores.featureToggleStore.create('project', { name: uuidv4() });
-    await stores.strategyStore.createStrategy({
-        name: uuidv4(),
-        editable: true,
-    });
-    const latest = {
-        oss: '4.0.0',
-        enterprise: '4.0.0',
-    };
-
-    const scope = nock(url)
-        .post('/', (body) => body.featureInfo === undefined)
-        .reply(() => [
-            200,
-            JSON.stringify({
-                latest: true,
-                versions: latest,
-            }),
-        ]);
-
-    const service = new VersionService(stores, {
-        getLogger,
-        versionCheck: { url, enable: true },
-        enterpriseVersion,
-        flagResolver: getTestFlagResolver(false),
         telemetry: true,
     });
     await service.checkLatestVersion();
@@ -314,7 +254,6 @@ test('counts custom strategies', async () => {
         getLogger,
         versionCheck: { url, enable: true },
         enterpriseVersion,
-        flagResolver: getTestFlagResolver(true),
         telemetry: true,
     });
     await service.checkLatestVersion();

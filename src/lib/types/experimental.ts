@@ -18,10 +18,8 @@ export type IFlagKey =
     | 'groupRootRoles'
     | 'migrationLock'
     | 'demo'
-    | 'strategyImprovements'
     | 'googleAuthEnabled'
     | 'disableBulkToggle'
-    | 'experimentalExtendedTelemetry'
     | 'segmentContextFieldUsage'
     | 'disableNotifications'
     | 'advancedPlayground'
@@ -87,20 +85,12 @@ const flags: IFlags = {
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
-    strategyImprovements: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_IMPROVEMENTS,
-        false,
-    ),
     strategySplittedButton: parseEnvVarBoolean(
         process.env.UNLEASH_STRATEGY_SPLITTED_BUTTON,
         false,
     ),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
-        false,
-    ),
-    experimentalExtendedTelemetry: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EXTENDED_TELEMETRY,
         false,
     ),
     disableBulkToggle: parseEnvVarBoolean(

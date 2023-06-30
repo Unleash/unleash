@@ -2,7 +2,6 @@ import { List, ListItem, styled, Typography } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
@@ -21,7 +20,6 @@ export const FeatureStrategyMenuCards = ({
     environmentId,
 }: IFeatureStrategyMenuCardsProps) => {
     const { strategies } = useStrategies();
-    const { uiConfig } = useUiConfig();
 
     const preDefinedStrategies = strategies.filter(
         strategy => !strategy.deprecated && !strategy.editable
@@ -39,25 +37,20 @@ export const FeatureStrategyMenuCards = ({
     };
     return (
         <List dense>
-            <ConditionallyRender
-                condition={Boolean(uiConfig.flags.strategyImprovements)}
-                show={
-                    <>
-                        <StyledTypography color="textSecondary">
-                            {environmentId} environment default strategy
-                        </StyledTypography>
-                        <ListItem key={defaultStrategy.name}>
-                            <FeatureStrategyMenuCard
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environmentId}
-                                strategy={defaultStrategy}
-                                defaultStrategy={true}
-                            />
-                        </ListItem>
-                    </>
-                }
-            />
+            <>
+                <StyledTypography color="textSecondary">
+                    {environmentId} environment default strategy
+                </StyledTypography>
+                <ListItem key={defaultStrategy.name}>
+                    <FeatureStrategyMenuCard
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                        strategy={defaultStrategy}
+                        defaultStrategy={true}
+                    />
+                </ListItem>
+            </>
             <StyledTypography color="textSecondary">
                 Predefined strategy types
             </StyledTypography>

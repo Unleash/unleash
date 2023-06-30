@@ -36,7 +36,6 @@ import {
 import { caseInsensitiveSearch } from 'utils/search';
 import { IServiceAccount } from 'interfaces/service-account';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
-import { PROJECT_ROLE_TYPE } from '@server/util/constants';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -433,7 +432,7 @@ export const ProjectAccessAssign = ({
                         <StyledAutocompleteWrapper>
                             <RoleSelect
                                 data-testid={PA_ROLE_ID}
-                                type={PROJECT_ROLE_TYPE}
+                                roles={roles}
                                 value={role}
                                 setValue={role => setRole(role || null)}
                             />

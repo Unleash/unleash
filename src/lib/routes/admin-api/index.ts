@@ -26,6 +26,7 @@ import ConstraintsController from './constraints';
 import PatController from './user/pat';
 import { PublicSignupController } from './public-signup';
 import InstanceAdminController from './instance-admin';
+import TelemetryController from './telemetry';
 import FavoritesController from './favorites';
 import MaintenanceController from './maintenance';
 import FeatureFeedbackController from './feature-feedback';
@@ -142,6 +143,11 @@ class AdminApi extends Controller {
         this.app.use(
             '/featurefeedback',
             new FeatureFeedbackController(config, services).router,
+        );
+
+        this.app.use(
+            '/telemetry',
+            new TelemetryController(config, services).router,
         );
     }
 }

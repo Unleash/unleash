@@ -2330,6 +2330,9 @@ The provider you choose for your addon dictates what properties the \`parameters
             "properties": {
               "features": {
                 "description": "Selects features to export by name.",
+                "example": [
+                  "MyAwesomeFeature",
+                ],
                 "items": {
                   "minLength": 1,
                   "type": "string",
@@ -2345,6 +2348,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "properties": {
               "tag": {
                 "description": "Selects features to export by tag. Takes precedence over the features field.",
+                "example": "release",
                 "type": "string",
               },
             },
@@ -2355,9 +2359,13 @@ The provider you choose for your addon dictates what properties the \`parameters
         ],
         "properties": {
           "downloadFile": {
+            "description": "Whether to return a downloadable file",
+            "example": "development",
             "type": "boolean",
           },
           "environment": {
+            "description": "The environment to export from",
+            "example": "development",
             "type": "string",
           },
         },
@@ -2368,6 +2376,7 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "exportResultSchema": {
         "additionalProperties": false,
+        "description": "The result of the export operation, providing you with the feature toggle definitions, strategy definitions and the rest of the elements relevant to the features (tags, environments etc.)",
         "properties": {
           "contextFields": {
             "items": {
@@ -3290,14 +3299,19 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "importTogglesSchema": {
         "additionalProperties": false,
+        "description": "The result of the export operation for a project and environment, used at import",
         "properties": {
           "data": {
             "$ref": "#/components/schemas/exportResultSchema",
           },
           "environment": {
+            "description": "The exported [environment](https://docs.getunleash.io/reference/environments)",
+            "example": "development",
             "type": "string",
           },
           "project": {
+            "description": "The exported [project](https://docs.getunleash.io/reference/projects)",
+            "example": "My awesome project",
             "type": "string",
           },
         },
@@ -3312,12 +3326,18 @@ The provider you choose for your addon dictates what properties the \`parameters
         "additionalProperties": false,
         "properties": {
           "affectedItems": {
+            "description": "The items affected by this error message ",
+            "example": [
+              "some-feature-a",
+              "some-feature-b",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "message": {
+            "description": "The validation error message",
             "type": "string",
           },
         },
@@ -3329,6 +3349,7 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "importTogglesValidateSchema": {
         "additionalProperties": false,
+        "description": "The result of toggle validation after import",
         "properties": {
           "errors": {
             "items": {
@@ -8105,6 +8126,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/features-batch/export": {
       "post": {
+        "description": "Exports all features listed in the \`features\` property from the environment specified in the request body. If set to \`true\`, the \`downloadFile\` property will let you download a file with the exported data. Otherwise, the export data is returned directly as JSON. Refer to the documentation for more information about [Unleash's export functionality](https://docs.getunleash.io/reference/deploy/environment-import-export#export).",
         "operationId": "exportFeatures",
         "requestBody": {
           "content": {
@@ -8128,15 +8150,43 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "exportResultSchema",
           },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Export feature toggles from an environment",
         "tags": [
-          "Unstable",
+          "Import/Export",
         ],
       },
     },
     "/api/admin/features-batch/import": {
       "post": {
-        "description": "Unleash toggles exported from a different instance can be imported into a new project and environment",
+        "description": "[Import feature toggles](https://docs.getunleash.io/reference/deploy/environment-import-export#import) into a specific project and environment.",
         "operationId": "importToggles",
         "requestBody": {
           "content": {
@@ -8153,16 +8203,43 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "description": "This response has no body.",
           },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
-        "summary": "Import feature toggles for an environment in the project",
+        "summary": "Import feature toggles",
         "tags": [
-          "Unstable",
+          "Import/Export",
         ],
       },
     },
     "/api/admin/features-batch/validate": {
       "post": {
-        "description": "Unleash toggles exported from a different instance can be imported into a new project and environment",
+        "description": "Validates a feature toggle data set. Checks whether the data can be imported into the specified project and environment. The returned value is an object that contains errors, warnings, and permissions required to perform the import, as described in the [import documentation](https://docs.getunleash.io/reference/deploy/environment-import-export#import).",
         "operationId": "validateImport",
         "requestBody": {
           "content": {
@@ -8186,10 +8263,37 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "importTogglesValidateSchema",
           },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
-        "summary": "Validate import of feature toggles for an environment in the project",
+        "summary": "Validate feature import data",
         "tags": [
-          "Unstable",
+          "Import/Export",
         ],
       },
     },
@@ -14593,6 +14697,10 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     {
       "description": "Register, read, or delete metrics recorded by Unleash.",
       "name": "Metrics",
+    },
+    {
+      "description": "API for managing [notifications](https://docs.getunleash.io/reference/notifications).",
+      "name": "Notifications",
     },
     {
       "description": "Endpoints related to the operational status of this Unleash instance.",

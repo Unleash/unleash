@@ -166,8 +166,13 @@ class StrategyController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Strategies'],
+                    summary: 'Deprecate a strategy',
+                    description: 'Marks the specified strategy as deprecated.',
                     operationId: 'deprecateStrategy',
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -182,7 +187,10 @@ class StrategyController extends Controller {
                 openApiService.validPath({
                     tags: ['Strategies'],
                     operationId: 'reactivateStrategy',
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });

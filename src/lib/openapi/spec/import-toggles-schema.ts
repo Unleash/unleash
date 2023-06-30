@@ -19,7 +19,6 @@ export const importTogglesSchema = {
     type: 'object',
     required: ['project', 'environment', 'data'],
     additionalProperties: false,
-    summary: 'Import toggles schema',
     description:
         'The result of the export operation for a project and environment, used at import',
     properties: {

@@ -194,6 +194,7 @@ export const GroupForm: FC<IGroupForm> = ({
                             <StyledAutocompleteWrapper>
                                 <RoleSelect
                                     data-testid="GROUP_ROOT_ROLE"
+                                    roles={roles}
                                     value={roleIdToRole(rootRole)}
                                     setValue={role =>
                                         setRootRole(role?.id || null)

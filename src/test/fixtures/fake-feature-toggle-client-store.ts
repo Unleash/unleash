@@ -53,6 +53,19 @@ export default class FakeFeatureToggleClientStore
         return this.getFeatures(query);
     }
 
+    async getPlayground(
+        query?: IFeatureToggleQuery,
+    ): Promise<IFeatureToggleClient[]> {
+        const features = await this.getFeatures(query);
+        return features.map(({ strategies, ...rest }) => ({
+            ...rest,
+            strategies: strategies.map((strategy, index) => ({
+                ...strategy,
+                id: `strategy#${index}`,
+            })),
+        }));
+    }
+
     async getAdmin({
         featureQuery: query,
         archived,

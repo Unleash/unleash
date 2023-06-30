@@ -16,13 +16,14 @@ import FeatureToggleStore from './feature-toggle-store';
 import { Db } from './db';
 import Raw = Knex.Raw;
 
+type OptionalClientFeatures = Set<'strategy IDs' | 'strategy titles'>;
+
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;
     archived: boolean;
     isAdmin: boolean;
-    includeStrategyIds?: boolean;
-    includeDisabledStrategies?: boolean;
     userId?: number;
+    optionalIncludes?: OptionalClientFeatures;
 }
 
 export interface IGetAdminFeatures {
@@ -54,8 +55,8 @@ export default class FeatureToggleClientStore
         featureQuery,
         archived,
         isAdmin,
-        includeStrategyIds,
         userId,
+        optionalIncludes,
     }: IGetAllFeatures): Promise<IFeatureToggleClient[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer('getFeatureAdmin');
@@ -74,6 +75,7 @@ export default class FeatureToggleClientStore
             'fe.environment as environment',
             'fs.id as strategy_id',
             'fs.strategy_name as strategy_name',
+            'fs.title as strategy_title',
             'fs.disabled as strategy_disabled',
             'fs.parameters as parameters',
             'fs.constraints as constraints',
@@ -198,19 +200,32 @@ export default class FeatureToggleClientStore
                 feature.lastSeenAt = r.last_seen_at;
                 feature.createdAt = r.created_at;
             }
+
             acc[r.name] = feature;
             return acc;
         }, {});
 
         const features: IFeatureToggleClient[] = Object.values(featureToggles);
 
-        if (!isAdmin && !includeStrategyIds) {
-            // We should not send strategy IDs from the client API,
-            // as this breaks old versions of the Go SDK (at least).
-            FeatureToggleClientStore.removeIdsFromStrategies(features);
-        }
+        // strip away unwanted properties
+        const cleanedFeatures = features.map(({ strategies, ...rest }) => ({
+            ...rest,
+            strategies: strategies?.map(({ id, title, ...strategy }) => ({
+                ...strategy,
 
-        return features;
+                ...(optionalIncludes?.has('strategy titles') && title
+                    ? { title }
+                    : {}),
+
+                // We should not send strategy IDs from the client API,
+                // as this breaks old versions of the Go SDK (at least).
+                ...(isAdmin || optionalIncludes?.has('strategy IDs')
+                    ? { id }
+                    : {}),
+            })),
+        }));
+
+        return cleanedFeatures;
     }
 
     private static rowToStrategy(row: Record<string, any>): IStrategyConfig {
@@ -228,14 +243,6 @@ export default class FeatureToggleClientStore
             value: row.tag_value,
             type: row.tag_type,
         };
-    }
-
-    private static removeIdsFromStrategies(features: IFeatureToggleClient[]) {
-        features.forEach((feature) => {
-            feature.strategies.forEach((strategy) => {
-                delete strategy.id;
-            });
-        });
     }
 
     private isUnseenStrategyRow(
@@ -298,15 +305,22 @@ export default class FeatureToggleClientStore
 
     async getClient(
         featureQuery?: IFeatureToggleQuery,
-        includeStrategyIds?: boolean,
-        includeDisabledStrategies?: boolean,
     ): Promise<IFeatureToggleClient[]> {
         return this.getAll({
             featureQuery,
             archived: false,
             isAdmin: false,
-            includeStrategyIds,
-            includeDisabledStrategies,
+        });
+    }
+
+    async getPlayground(
+        featureQuery?: IFeatureToggleQuery,
+    ): Promise<IFeatureToggleClient[]> {
+        return this.getAll({
+            featureQuery,
+            archived: false,
+            isAdmin: false,
+            optionalIncludes: new Set(['strategy titles', 'strategy IDs']),
         });
     }
 
@@ -320,7 +334,6 @@ export default class FeatureToggleClientStore
             archived: Boolean(archived),
             isAdmin: true,
             userId,
-            includeDisabledStrategies: true,
         });
     }
 }

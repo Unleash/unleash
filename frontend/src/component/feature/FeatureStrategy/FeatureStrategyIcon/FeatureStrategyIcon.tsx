@@ -3,18 +3,25 @@ import {
     formatStrategyName,
 } from 'utils/strategyNames';
 import { styled, Tooltip } from '@mui/material';
+import { IFeatureStrategy } from 'interfaces/strategy';
 
 interface IFeatureStrategyIconProps {
-    strategyName: string;
+    strategy: IFeatureStrategy;
 }
 
 export const FeatureStrategyIcon = ({
-    strategyName,
+    strategy,
 }: IFeatureStrategyIconProps) => {
-    const Icon = getFeatureStrategyIcon(strategyName);
+    const Icon = getFeatureStrategyIcon(strategy.name);
 
     return (
-        <Tooltip title={formatStrategyName(strategyName)} arrow>
+        <Tooltip
+            title={
+                formatStrategyName(strategy.name) +
+                (strategy.title ? ` - ${strategy.title}` : '')
+            }
+            arrow
+        >
             <StyledIcon>
                 <Icon />
             </StyledIcon>

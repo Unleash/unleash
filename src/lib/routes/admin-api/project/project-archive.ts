@@ -59,7 +59,7 @@ export default class ProjectArchiveController extends Controller {
                     description:
                         'This endpoint deletes the specified features, that are in archive.',
                     summary: 'Deletes a list of features',
-                    ...getStandardResponses(401, 403),
+                    ...getStandardResponses(400, 401, 403),
                     requestBody: createRequestSchema('batchFeaturesSchema'),
                     responses: { 200: emptyResponse },
                 }),

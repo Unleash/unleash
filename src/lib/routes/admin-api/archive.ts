@@ -13,7 +13,10 @@ import {
 import { serializeDates } from '../../types/serialize-dates';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 
 export default class ArchiveController extends Controller {
     private featureService: FeatureToggleService;
@@ -41,6 +44,7 @@ export default class ArchiveController extends Controller {
                     tags: ['Archive'],
                     operationId: 'getArchivedFeatures',
                     responses: { 200: createResponseSchema('featuresSchema') },
+                    ...getStandardResponses(401, 403),
                     deprecated: true,
                 }),
             ],
@@ -56,6 +60,7 @@ export default class ArchiveController extends Controller {
                     tags: ['Archive'],
                     operationId: 'getArchivedFeaturesByProjectId',
                     responses: { 200: createResponseSchema('featuresSchema') },
+                    ...getStandardResponses(401, 403),
                     deprecated: true,
                 }),
             ],
@@ -74,6 +79,7 @@ export default class ArchiveController extends Controller {
                         'This endpoint archives the specified feature.',
                     summary: 'Archives a feature',
                     operationId: 'deleteFeature',
+                    ...getStandardResponses(401, 403),
                     responses: { 200: emptyResponse },
                 }),
             ],

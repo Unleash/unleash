@@ -443,18 +443,14 @@ export const routes: IRoute[] = [
 
 export const adminMenuRoutes: INavigationMenuItem[] = [
     {
-        path: '/history',
-        title: 'Event log',
+        path: '/admin/users',
+        title: 'Users',
         menu: { adminSettings: true },
     },
     {
-        path: '/admin/logins',
-        title: 'Login history',
-        menu: { adminSettings: true, mode: ['enterprise'] },
-    },
-    {
-        path: '/admin/users',
-        title: 'Users',
+        path: '/admin/cors',
+        title: 'CORS origins',
+        flag: 'embedProxyFrontend',
         menu: { adminSettings: true },
     },
     {
@@ -495,12 +491,6 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         menu: { adminSettings: true },
     },
     {
-        path: '/admin/cors',
-        title: 'CORS origins',
-        flag: 'embedProxyFrontend',
-        menu: { adminSettings: true },
-    },
-    {
         path: '/admin/admin-invoices',
         title: 'Billing & invoices',
         menu: { adminSettings: true, mode: ['pro'] },
@@ -509,6 +499,16 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         path: '/admin/instance-privacy',
         title: 'Instance privacy',
         menu: { adminSettings: true },
+    },
+    {
+        path: '/history',
+        title: 'Event log',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/logins',
+        title: 'Login history',
+        menu: { adminSettings: true, mode: ['enterprise'] },
     },
 ];
 

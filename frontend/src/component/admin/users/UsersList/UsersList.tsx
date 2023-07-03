@@ -35,6 +35,7 @@ import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { UserLimitWarning } from './UserLimitWarning/UserLimitWarning';
 import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
+import { useSearch } from 'hooks/useSearch';
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -50,6 +51,8 @@ const UsersList = () => {
     const [inviteLink, setInviteLink] = useState('');
     const [delUser, setDelUser] = useState<IUser>();
     const { planUsers, isBillingUsers } = useUsersPlan(users);
+
+    const [searchValue, setSearchValue] = useState('');
 
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -105,7 +108,6 @@ const UsersList = () => {
                         <UserAvatar user={user} />
                     </TextCell>
                 ),
-                disableGlobalFilter: true,
                 disableSortBy: true,
                 maxWidth: 80,
             },
@@ -120,6 +122,7 @@ const UsersList = () => {
                         subtitle={user.email || user.username}
                     />
                 ),
+                searchable: true,
             },
             {
                 id: 'role',
@@ -130,14 +133,12 @@ const UsersList = () => {
                 Cell: ({ row: { original: user }, value }: any) => (
                     <RoleCell value={value} roleId={user.rootRole} />
                 ),
-                disableGlobalFilter: true,
                 maxWidth: 120,
             },
             {
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
-                disableGlobalFilter: true,
                 sortType: 'date',
                 width: 120,
                 maxWidth: 120,
@@ -153,7 +154,6 @@ const UsersList = () => {
                         title={date => `Last login: ${date}`}
                     />
                 ),
-                disableGlobalFilter: true,
                 sortType: 'date',
                 maxWidth: 150,
             },
@@ -165,7 +165,6 @@ const UsersList = () => {
                 Cell: ({ row: { original: user } }: any) => (
                     <UserTypeCell value={isBillingUsers && user.paid} />
                 ),
-                disableGlobalFilter: true,
                 sortType: 'boolean',
             },
             {
@@ -182,8 +181,19 @@ const UsersList = () => {
                     />
                 ),
                 width: 150,
-                disableGlobalFilter: true,
                 disableSortBy: true,
+            },
+            // Always hidden -- for search
+            {
+                accessor: 'username',
+                Header: 'Username',
+                searchable: true,
+            },
+            // Always hidden -- for search
+            {
+                accessor: 'email',
+                Header: 'Email',
+                searchable: true,
             },
         ],
         [roles, navigate, isBillingUsers]
@@ -196,30 +206,26 @@ const UsersList = () => {
         };
     }, [isBillingUsers]);
 
-    const data = isBillingUsers ? planUsers : users;
+    const { data, getSearchText } = useSearch(
+        columns,
+        searchValue,
+        isBillingUsers ? planUsers : users
+    );
 
-    const {
-        headerGroups,
-        rows,
-        prepareRow,
-        state: { globalFilter },
-        setGlobalFilter,
-        setHiddenColumns,
-    } = useTable(
+    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
         {
             columns: columns as any,
             data,
             initialState,
             sortTypes,
-            autoResetGlobalFilter: false,
             autoResetHiddenColumns: false,
             autoResetSortBy: false,
             disableSortRemove: true,
+            disableMultiSort: true,
             defaultColumn: {
                 Cell: TextCell,
             },
         },
-        useGlobalFilter,
         useSortBy,
         useFlexLayout
     );
@@ -252,8 +258,8 @@ const UsersList = () => {
                     actions={
                         <>
                             <Search
-                                initialValue={globalFilter}
-                                onChange={setGlobalFilter}
+                                initialValue={searchValue}
+                                onChange={setSearchValue}
                             />
                             <PageHeader.Divider />
                             <Button
@@ -269,7 +275,7 @@ const UsersList = () => {
             }
         >
             <UserLimitWarning />
-            <SearchHighlightProvider value={globalFilter}>
+            <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}
                     headerGroups={headerGroups}
@@ -280,11 +286,11 @@ const UsersList = () => {
                 condition={rows.length === 0}
                 show={
                     <ConditionallyRender
-                        condition={globalFilter?.length > 0}
+                        condition={searchValue?.length > 0}
                         show={
                             <TablePlaceholder>
                                 No users found matching &ldquo;
-                                {globalFilter}
+                                {searchValue}
                                 &rdquo;
                             </TablePlaceholder>
                         }

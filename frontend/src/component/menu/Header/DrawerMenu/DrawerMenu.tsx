@@ -7,7 +7,6 @@ import ExitToApp from '@mui/icons-material/ExitToApp';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
 import NavigationLink from '../NavigationLink/NavigationLink';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { basePath } from 'utils/formatPath';
 import { IFlags } from 'interfaces/uiConfig';
 import { INavigationMenuItem } from 'interfaces/route';

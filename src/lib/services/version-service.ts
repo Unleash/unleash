@@ -19,7 +19,6 @@ import { ISettingStore } from '../types/stores/settings-store';
 import { hoursToMilliseconds } from 'date-fns';
 import { IStrategyStore } from 'lib/types';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
-import { IFlagResolver } from '../types';
 
 export interface IVersionInfo {
     oss: string;
@@ -102,8 +101,6 @@ export default class VersionService {
 
     private timer: NodeJS.Timeout;
 
-    private flagResolver: IFlagResolver;
-
     constructor(
         {
             settingStore,
@@ -137,15 +134,10 @@ export default class VersionService {
             getLogger,
             versionCheck,
             enterpriseVersion,
-            flagResolver,
             telemetry,
         }: Pick<
             IUnleashConfig,
-            | 'getLogger'
-            | 'versionCheck'
-            | 'enterpriseVersion'
-            | 'flagResolver'
-            | 'telemetry'
+            'getLogger' | 'versionCheck' | 'enterpriseVersion' | 'telemetry'
         >,
     ) {
         this.logger = getLogger('lib/services/version-service.js');
@@ -169,7 +161,6 @@ export default class VersionService {
         this.telemetryEnabled = telemetry;
         this.versionCheckUrl = versionCheck.url;
         this.isLatest = true;
-        this.flagResolver = flagResolver;
         process.nextTick(() => this.setup());
     }
 
@@ -200,12 +191,7 @@ export default class VersionService {
                     instanceId: this.instanceId,
                 };
 
-                if (
-                    this.flagResolver.isEnabled(
-                        'experimentalExtendedTelemetry',
-                    ) &&
-                    this.telemetryEnabled
-                ) {
+                if (this.telemetryEnabled) {
                     const featureInfo = await this.getFeatureUsageInfo();
                     versionPayload.featureInfo = featureInfo;
                 }

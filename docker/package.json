@@ -39,7 +39,8 @@
     "set-value": "^4.0.1",
     "ansi-regex": "^5.0.1",
     "ssh2": "^1.4.0",
-    "json-schema": "^0.4.0"
+    "json-schema": "^0.4.0",
+    "semver": "^7.5.3"
   },
   "version": "4.12.6"
 }

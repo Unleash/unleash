@@ -155,7 +155,7 @@
     "prom-client": "^14.0.0",
     "response-time": "^2.3.2",
     "sanitize-filename": "^1.6.3",
-    "semver": "^7.3.5",
+    "semver": "^7.5.3",
     "serve-favicon": "^2.5.0",
     "stoppable": "^1.1.0",
     "ts-toolbelt": "^9.6.0",
@@ -235,7 +235,8 @@
     "ansi-regex": "^5.0.1",
     "ssh2": "^1.4.0",
     "json-schema": "^0.4.0",
-    "minimatch": "^5.0.0"
+    "minimatch": "^5.0.0",
+    "semver": "^7.5.3"
   },
   "lint-staged": {
     "*.{js,ts}": [

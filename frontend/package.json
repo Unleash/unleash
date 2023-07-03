@@ -104,8 +104,8 @@
     "react-table": "7.8.0",
     "react-test-renderer": "17.0.2",
     "react-timeago": "7.1.0",
-    "sass": "1.63.4",
-    "semver": "7.5.2",
+    "sass": "1.63.5",
+    "semver": "7.5.3",
     "swr": "2.1.5",
     "tss-react": "4.8.6",
     "typescript": "4.8.4",
@@ -124,7 +124,8 @@
     "@xmldom/xmldom": "^0.8.4",
     "json5": "^2.2.2",
     "@types/react": "17.0.62",
-    "@types/react-dom": "17.0.20"
+    "@types/react-dom": "17.0.20",
+    "semver": "^7.5.3"
   },
   "jest": {
     "moduleNameMapper": {

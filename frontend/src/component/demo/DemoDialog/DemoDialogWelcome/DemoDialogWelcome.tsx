@@ -42,7 +42,15 @@ const StyledLink = styled('a')(({ theme }) => ({
     },
 }));
 
-const StyledStartButton = styled(Button)(({ theme }) => ({
+const StyledButtons = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: theme.spacing(4),
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    flex: 1,
     height: theme.spacing(7),
 }));
 
@@ -93,14 +101,23 @@ export const DemoDialogWelcome = ({
                     (we recommend you keep the pages open side by side)
                 </Typography>
             </StyledDemoPane>
-            <StyledStartButton
-                variant="contained"
-                color="primary"
-                onClick={onStart}
-                data-testid="DEMO_START_BUTTON"
-            >
-                Try Unleash demo
-            </StyledStartButton>
+            <StyledButtons>
+                <StyledButton
+                    variant="outlined"
+                    color="primary"
+                    onClick={onClose}
+                >
+                    Explore on your own
+                </StyledButton>
+                <StyledButton
+                    variant="contained"
+                    color="primary"
+                    onClick={onStart}
+                    data-testid="DEMO_START_BUTTON"
+                >
+                    Go for a guided tour
+                </StyledButton>
+            </StyledButtons>
         </DemoDialog>
     );
 };

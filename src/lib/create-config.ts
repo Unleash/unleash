@@ -166,9 +166,8 @@ const defaultServerOption: IServerOption = {
         process.env.ENABLE_HEAP_SNAPSHOT_ENPOINT,
         false,
     ),
-    keepAliveTimeout: parseEnvVarNumber(
-        process.env.SERVER_KEEPALIVE_TIMEOUT,
-        secondsToMilliseconds(15),
+    keepAliveTimeout: secondsToMilliseconds(
+        parseEnvVarNumber(process.env.SERVER_KEEPALIVE_TIMEOUT, 15),
     ),
     headersTimeout: secondsToMilliseconds(61),
     enableRequestLogger: false,

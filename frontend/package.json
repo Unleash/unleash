@@ -105,7 +105,7 @@
     "react-test-renderer": "17.0.2",
     "react-timeago": "7.1.0",
     "sass": "1.63.5",
-    "semver": "7.5.2",
+    "semver": "7.5.3",
     "swr": "2.1.5",
     "tss-react": "4.8.6",
     "typescript": "4.8.4",

@@ -1,4 +1,4 @@
-import { useEffect, useState, VFC } from 'react';
+import { useState, VFC } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -21,8 +21,6 @@ import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText
 import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { flexRow, focusable } from 'themes/themeStyles';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { IPermission } from 'interfaces/user';
 import { NavigationMenu } from './NavigationMenu/NavigationMenu';
 import {
     getRoutes,
@@ -35,7 +33,6 @@ import {
     LightModeOutlined,
 } from '@mui/icons-material';
 import { filterByConfig } from 'component/common/util';
-import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 import { useId } from 'hooks/useId';
 import { INavigationMenuItem } from 'interfaces/route';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
@@ -118,8 +115,6 @@ const Header: VFC = () => {
     const [adminRef, setAdminRef] = useState<HTMLButtonElement | null>(null);
     const [configRef, setConfigRef] = useState<HTMLButtonElement | null>(null);
 
-    const [admin, setAdmin] = useState(false);
-    const { permissions } = useAuthPermissions();
     const { uiConfig, isOss, isPro, isEnterprise } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -127,16 +122,6 @@ const Header: VFC = () => {
     const toggleDrawer = () => setOpenDrawer(prev => !prev);
     const onAdminClose = () => setAdminRef(null);
     const onConfigureClose = () => setConfigRef(null);
-
-    useEffect(() => {
-        const admin = permissions?.find(
-            (element: IPermission) => element.permission === ADMIN
-        );
-
-        if (admin) {
-            setAdmin(true);
-        }
-    }, [permissions]);
 
     const routes = getRoutes();
 
@@ -159,9 +144,15 @@ const Header: VFC = () => {
                 },
             ])
             .filter(filterByConfig(uiConfig)),
-        mobileRoutes: getCondensedRoutes(routes.mobileRoutes).filter(
-            filterByConfig(uiConfig)
-        ),
+        mobileRoutes: getCondensedRoutes(routes.mobileRoutes)
+            .concat([
+                {
+                    path: '/admin/api',
+                    title: 'API access',
+                    menu: {},
+                },
+            ])
+            .filter(filterByConfig(uiConfig)),
         adminRoutes: adminMenuRoutes
             .filter(filterByConfig(uiConfig))
             .filter(filterByMode)
@@ -191,7 +182,6 @@ const Header: VFC = () => {
                         links={uiConfig.links}
                         open={openDrawer}
                         toggleDrawer={toggleDrawer}
-                        admin={admin}
                         routes={filteredMainRoutes}
                     />
                     <StyledUserContainer>
@@ -273,29 +263,18 @@ const Header: VFC = () => {
                                 <MenuBookIcon />
                             </IconButton>
                         </Tooltip>
-                        <ConditionallyRender
-                            condition={admin}
-                            show={
-                                <Tooltip title="Settings" arrow>
-                                    <StyledIconButton
-                                        onClick={e =>
-                                            setAdminRef(e.currentTarget)
-                                        }
-                                        aria-controls={
-                                            adminRef ? adminId : undefined
-                                        }
-                                        aria-expanded={Boolean(adminRef)}
-                                        size="large"
-                                        disableRipple
-                                    >
-                                        <SettingsIcon />
-                                        <KeyboardArrowDown
-                                            sx={styledIconProps}
-                                        />
-                                    </StyledIconButton>
-                                </Tooltip>
-                            }
-                        />
+                        <Tooltip title="Settings" arrow>
+                            <StyledIconButton
+                                onClick={e => setAdminRef(e.currentTarget)}
+                                aria-controls={adminRef ? adminId : undefined}
+                                aria-expanded={Boolean(adminRef)}
+                                size="large"
+                                disableRipple
+                            >
+                                <SettingsIcon />
+                                <KeyboardArrowDown sx={styledIconProps} />
+                            </StyledIconButton>
+                        </Tooltip>
                         <NavigationMenu
                             id={adminId}
                             options={filteredMainRoutes.adminRoutes}

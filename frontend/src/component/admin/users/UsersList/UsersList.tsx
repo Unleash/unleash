@@ -16,12 +16,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Button, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { UserTypeCell } from './UserTypeCell/UserTypeCell';
-import {
-    useFlexLayout,
-    useGlobalFilter,
-    useSortBy,
-    useTable,
-} from 'react-table';
+import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';

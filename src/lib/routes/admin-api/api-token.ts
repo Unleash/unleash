@@ -182,8 +182,15 @@ export class ApiTokenController extends Controller {
                     tags: ['API tokens'],
                     operationId: 'createApiToken',
                     requestBody: createRequestSchema('createApiTokenSchema'),
+                    summary: 'Create API token',
+                    description: `Create an API token of a specific type: one of ${Object.values(
+                        ApiTokenType,
+                    ).join(', ')}. If the token type is not '${
+                        ApiTokenType.ADMIN
+                    }', you must also provide the projects it should be valid for.`,
                     responses: {
                         201: resourceCreatedResponseSchema('apiTokenSchema'),
+                        ...getStandardResponses(401, 403, 415),
                     },
                 }),
             ],

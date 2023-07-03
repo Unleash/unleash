@@ -70,12 +70,12 @@ export default class ProxyController extends Controller {
                     operationId: 'getFrontendFeatures',
                     responses: {
                         200: createResponseSchema('proxyFeaturesSchema'),
-                        ...getStandardResponses(401),
+                        ...getStandardResponses(401, 404),
                     },
                     summary:
                         'Retrieve enabled feature toggles for the provided context.',
                     description:
-                        'This endpoint returns the list of feature toggles that the proxy evaluates to enabled for the given context. Context values are provided as query parameters.',
+                        'This endpoint returns the list of feature toggles that the proxy evaluates to enabled for the given context. Context values are provided as query parameters. If the Frontend API is disabled 404 is returned.',
                 }),
             ],
         });
@@ -103,12 +103,12 @@ export default class ProxyController extends Controller {
                 this.services.openApiService.validPath({
                     tags: ['Frontend API'],
                     summary: 'Register client usage metrics',
-                    description: `Registers usage metrics. Stores information about how many times each toggle was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature toggle's variants were displayed to the end user.`,
+                    description: `Registers usage metrics. Stores information about how many times each toggle was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature toggle's variants were displayed to the end user. If the Frontend API is disabled 404 is returned.`,
                     operationId: 'registerFrontendMetrics',
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(400, 401),
+                        ...getStandardResponses(400, 401, 404),
                     },
                 }),
             ],
@@ -124,12 +124,12 @@ export default class ProxyController extends Controller {
                     tags: ['Frontend API'],
                     summary: 'Register a client SDK',
                     description:
-                        'This is for future use. Currently FRONTEND client registration is not supported. Returning 200 for clients that expect this status code.',
+                        'This is for future use. Currently Frontend client registration is not supported. Returning 200 for clients that expect this status code. If the Frontend API is disabled 404 is returned.',
                     operationId: 'registerFrontendClient',
                     requestBody: createRequestSchema('proxyClientSchema'),
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(400, 401),
+                        ...getStandardResponses(400, 401, 404),
                     },
                 }),
             ],

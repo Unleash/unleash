@@ -8,8 +8,13 @@ title: /api/admin/metrics
 # This document describes the metrics endpoint for admin ui
 
 ### Seen-toggles {#seen-toggles}
+:::caution Deprecation notice
 
-`GET http://unleash.host.com/api/admin/seen-toggles`
+This endpoint has been deprecated
+
+:::
+
+`GET http://unleash.host.com/api/admin/metrics/seen-toggles`
 
 This enpoints returns a list of applications and what toogles unleash has seen for each application. It will only guarantee toggles reported by client applications within the last hour, but will in most cases remember seen toggles for applications longer.
 
@@ -84,9 +89,9 @@ This endpoint gives _last minute_ and _last hour_ metrics for all active toggles
 
 ### Applications {#applications}
 
-`GET http://unleash.host.com/api/admin/applications`
+`GET http://unleash.host.com/api/admin/metrics/applications`
 
-This endpoint returns a list of known applications (seen the last two days) and a link to follow for more details.
+This endpoint returns a list of known applications (seen the last day) and a link to follow for more details.
 
 ```json
 {
@@ -115,11 +120,11 @@ This endpoint returns a list of known applications (seen the last two days) and 
 
 You can also specify the query param: _strategyName_, which will return all applications implementing the given strategy.
 
-`GET http://unleash.host.com/api/admin/applications?strategyName=someStrategyName`
+`GET http://unleash.host.com/api/admin/metrics/applications?strategyName=someStrategyName`
 
 ### Application Details {#application-details}
 
-`GET http://unleash.host.com/api/admin/applications/:appName`
+`GET http://unleash.host.com/api/admin/metrics/applications/:appName`
 
 This endpoint gives insight into details about a client application, such as instances, strategies implemented and seen toggles.
 
@@ -152,7 +157,13 @@ This endpoint gives insight into details about a client application, such as ins
 
 ### Seen applications {#seen-applications}
 
-`GET http://unleash.host.com/api/admin/seen-apps`
+:::caution Deprecation notice
+
+This endpoint has been deprecated
+
+:::
+
+`GET http://unleash.host.com/api/admin/metrics/seen-apps`
 
 This endpoint gives insight into details about application seen per feature toggle.
 

@@ -448,10 +448,9 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         menu: { adminSettings: true },
     },
     {
-        path: '/admin/cors',
-        title: 'CORS origins',
-        flag: 'embedProxyFrontend',
-        menu: { adminSettings: true },
+        path: '/admin/service-accounts',
+        title: 'Service accounts',
+        menu: { adminSettings: true, mode: ['enterprise'] },
     },
     {
         path: '/admin/groups',
@@ -465,6 +464,12 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         menu: { adminSettings: true, mode: ['enterprise'] },
     },
     {
+        path: '/admin/cors',
+        title: 'CORS origins',
+        flag: 'embedProxyFrontend',
+        menu: { adminSettings: true },
+    },
+    {
         path: '/admin/auth',
         title: 'Single sign-on',
         menu: { adminSettings: true },
@@ -473,11 +478,6 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         path: '/admin/instance',
         title: 'Instance stats',
         menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/service-accounts',
-        title: 'Service accounts',
-        menu: { adminSettings: true, mode: ['enterprise'] },
     },
     {
         path: '/admin/network/*',

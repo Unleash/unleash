@@ -37,7 +37,10 @@ import {
     ApiTokenSchema,
 } from '../../openapi/spec/api-token-schema';
 import { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import { ProxyService } from '../../services/proxy-service';
 import { extractUsername } from '../../util';
 import { OperationDeniedError } from '../../error';
@@ -154,8 +157,12 @@ export class ApiTokenController extends Controller {
                 openApiService.validPath({
                     tags: ['API tokens'],
                     operationId: 'getAllApiTokens',
+                    summary: 'Get API tokens',
+                    description:
+                        'Retrieves all API tokens that exists in the Unleash instance.',
                     responses: {
                         200: createResponseSchema('apiTokensSchema'),
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],

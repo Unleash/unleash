@@ -26,7 +26,6 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { PlaygroundEditor } from './PlaygroundEditor/PlaygroundEditor';
-import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
 import { parseDateValue, parseValidDate } from 'component/common/util';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { isStringOrStringArray } from '../../playground.utils';
@@ -188,6 +187,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
             return (
                 <Autocomplete
                     disablePortal
+                    limitTags={3}
                     id="context-legal-values"
                     freeSolo
                     filterSelectedOptions
@@ -196,10 +196,11 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                     onChange={changeContextValue}
                     options={options}
                     multiple={isAdvancedPlayground}
-                    sx={{ width: 200, maxWidth: '100%' }}
+                    sx={{ width: 370, maxWidth: '100%' }}
                     renderInput={(params: any) => (
                         <TextField {...params} label="Value" />
                     )}
+                    disableCloseOnSelect={isAdvancedPlayground!}
                 />
             );
         }
@@ -208,7 +209,10 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
             <TextField
                 label="Value"
                 id="context-value"
-                sx={{ width: 200, maxWidth: '100%' }}
+                sx={{ width: 370, maxWidth: '100%' }}
+                placeholder={
+                    isAdvancedPlayground ? 'value1,value2,value3' : 'value1'
+                }
                 size="small"
                 value={contextValue}
                 onChange={event => setContextValue(event.target.value || '')}
@@ -229,10 +233,9 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
     return (
         <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <GuidanceIndicator type="secondary">2</GuidanceIndicator>
                 <Typography
                     variant="body2"
-                    color={theme.palette.text.secondary}
+                    color={theme.palette.text.primary}
                     sx={{ ml: 1 }}
                 >
                     Unleash context

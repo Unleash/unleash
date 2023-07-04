@@ -234,8 +234,6 @@ export const AdvancedPlayground: VFC<{
                         sx={{
                             px: 4,
                             py: 3,
-                            mb: 4,
-                            mt: 2,
                             background: theme.palette.background.elevation2,
                             transition: 'width 0.4s ease',
                             minWidth: matches ? 'auto' : '500px',
@@ -260,7 +258,7 @@ export const AdvancedPlayground: VFC<{
                     sx={theme => ({
                         width: resultsWidth,
                         transition: 'width 0.4s ease',
-                        padding: theme.spacing(4, 2),
+                        padding: theme.spacing(4, 4),
                     })}
                 >
                     <ConditionallyRender

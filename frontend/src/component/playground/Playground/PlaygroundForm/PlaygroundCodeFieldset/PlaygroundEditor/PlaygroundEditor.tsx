@@ -114,7 +114,7 @@ export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
             </StyledEditorHeader>
             <CodeMirror
                 value={context}
-                height="200px"
+                height="150px"
                 theme={themeMode === 'dark' ? duotoneDark : duotoneLight}
                 extensions={[json()]}
                 onChange={onCodeFieldChange}

@@ -107,7 +107,7 @@ class ResetPasswordController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Auth'],
-                    summary: 'Requests a password reset email',
+                    summary: 'Reset password',
                     description:
                         'Used to reset password for a user that has forgotten their password',
                     operationId: 'sendResetPasswordEmail',

@@ -92,7 +92,7 @@ class ResetPasswordController extends Controller {
                     tags: ['Auth'],
                     summary: 'Validates password',
                     description:
-                        'Verifies that the password adheres to [Unleash password guidelines](https://docs.getunleash.io/reference/deploy/securing-unleash#password-requirements)',
+                        'Verifies that the password adheres to the [Unleash password guidelines](https://docs.getunleash.io/reference/deploy/securing-unleash#password-requirements)',
                     operationId: 'validatePassword',
                     requestBody: createRequestSchema('validatePasswordSchema'),
                     responses: { 200: emptyResponse },

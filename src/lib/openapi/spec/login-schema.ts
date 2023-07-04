@@ -8,7 +8,7 @@ export const loginSchema = {
     description: 'A username/password login request',
     properties: {
         username: {
-            description: 'The username trying to login',
+            description: 'The username trying to log in',
             type: 'string',
             example: 'user',
         },

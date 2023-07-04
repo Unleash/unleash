@@ -3514,12 +3514,12 @@ The provider you choose for your addon dictates what properties the \`parameters
         "description": "A username/password login request",
         "properties": {
           "password": {
-            "description": "The password of the user trying to login",
+            "description": "The password of the user trying to log in",
             "example": "hunter2",
             "type": "string",
           },
           "username": {
-            "description": "The username trying to login",
+            "description": "The username trying to log in",
             "example": "user",
             "type": "string",
           },
@@ -4825,7 +4825,7 @@ Stats are divided into current and previous **windows**.
       },
       "roleSchema": {
         "additionalProperties": false,
-        "description": "A role holds permissions to allow Unleash to decide what actions a roleholder is allowed to perform",
+        "description": "A role holds permissions to allow Unleash to decide what actions a role holder is allowed to perform",
         "properties": {
           "description": {
             "description": "A more detailed description of the role and what use it's intended for",
@@ -14081,6 +14081,60 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
         },
         "summary": "Changes a user password",
         "tags": [
@@ -14090,7 +14144,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/auth/reset/password-email": {
       "post": {
-        "description": "Used to reset password for a user that has forgotten their password",
+        "description": "Requests a password reset email for the user. This email can be used to reset the password for a user that has forgotten their password",
         "operationId": "sendResetPasswordEmail",
         "requestBody": {
           "content": {
@@ -14107,8 +14161,35 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
           "200": {
             "description": "This response has no body.",
           },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
-        "summary": "Requests a password reset email",
+        "summary": "Reset password",
         "tags": [
           "Auth",
         ],
@@ -14129,6 +14210,33 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             },
             "description": "tokenUserSchema",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
         },
         "summary": "Validates a token",
         "tags": [
@@ -14138,7 +14246,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/auth/reset/validate-password": {
       "post": {
-        "description": "Verifies that the password adheres to [Unleash password guidelines](https://docs.getunleash.io/reference/deploy/securing-unleash#password-requirements)",
+        "description": "Verifies that the password adheres to the [Unleash password guidelines](https://docs.getunleash.io/reference/deploy/securing-unleash#password-requirements)",
         "operationId": "validatePassword",
         "requestBody": {
           "content": {
@@ -14154,6 +14262,33 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
         "responses": {
           "200": {
             "description": "This response has no body.",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "The request payload you provided doesn't conform to the schema. The .parameters property should be object. You sent [].",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ValidationError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The request data does not match what we expect.",
           },
         },
         "summary": "Validates password",
@@ -14188,8 +14323,35 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             },
             "description": "userSchema",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
         },
-        "summary": "Login",
+        "summary": "Log in",
         "tags": [
           "Auth",
         ],

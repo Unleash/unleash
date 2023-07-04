@@ -179,7 +179,6 @@ class ExportImportController extends Controller {
     }
 
     private verifyExportImportEnabled() {
-        return true;
         if (!this.config.flagResolver.isEnabled('featuresExportImport')) {
             throw new InvalidOperationError(
                 'Feature export/import is not enabled',

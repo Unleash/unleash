@@ -66,7 +66,7 @@ class ResetPasswordController extends Controller {
                     operationId: 'validateToken',
                     responses: {
                         200: createResponseSchema('tokenUserSchema'),
-                        ...getStandardResponses(401),
+                        ...getStandardResponses(401, 415),
                     },
                 }),
             ],
@@ -86,7 +86,7 @@ class ResetPasswordController extends Controller {
                     requestBody: createRequestSchema('changePasswordSchema'),
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(401, 403),
+                        ...getStandardResponses(401, 403, 415),
                     },
                 }),
             ],
@@ -106,7 +106,7 @@ class ResetPasswordController extends Controller {
                     requestBody: createRequestSchema('validatePasswordSchema'),
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(400),
+                        ...getStandardResponses(400, 415),
                     },
                 }),
             ],
@@ -126,7 +126,7 @@ class ResetPasswordController extends Controller {
                     requestBody: createRequestSchema('emailSchema'),
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(404),
+                        ...getStandardResponses(401, 404, 415),
                     },
                 }),
             ],

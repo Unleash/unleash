@@ -122,8 +122,6 @@ class ExportImportController extends Controller {
         req: IAuthRequest<unknown, unknown, ExportQuerySchema, unknown>,
         res: Response,
     ): Promise<void> {
-        console.log('GOT HERE');
-
         this.verifyExportImportEnabled();
         const query = req.body;
         const userName = extractUsername(req);

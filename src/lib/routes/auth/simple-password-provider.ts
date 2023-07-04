@@ -40,7 +40,7 @@ export class SimplePasswordProvider extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Auth'],
-                    summary: 'Login',
+                    summary: 'Log in',
                     description:
                         'Logs in the user and creates an active session',
                     operationId: 'login',

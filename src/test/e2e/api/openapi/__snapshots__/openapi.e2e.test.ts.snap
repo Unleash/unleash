@@ -2325,6 +2325,7 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "exportQuerySchema": {
         "additionalProperties": true,
+        "description": "Available query parameters for  the [deprecated export/import](https://docs.getunleash.io/reference/deploy/import-export) functionality.",
         "oneOf": [
           {
             "properties": {
@@ -2360,7 +2361,7 @@ The provider you choose for your addon dictates what properties the \`parameters
         "properties": {
           "downloadFile": {
             "description": "Whether to return a downloadable file",
-            "example": "development",
+            "example": true,
             "type": "boolean",
           },
           "environment": {
@@ -2379,36 +2380,117 @@ The provider you choose for your addon dictates what properties the \`parameters
         "description": "The result of the export operation, providing you with the feature toggle definitions, strategy definitions and the rest of the elements relevant to the features (tags, environments etc.)",
         "properties": {
           "contextFields": {
+            "description": "A list of all the context fields that are in use by any of the strategies in the \`featureStrategies\` list.",
+            "example": [
+              {
+                "description": "Allows you to constrain on application name",
+                "legalValues": [],
+                "name": "appName",
+                "sortOrder": 2,
+                "stickiness": false,
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/contextFieldSchema",
             },
             "type": "array",
           },
           "featureEnvironments": {
+            "description": "Environment-specific configuration for all the features in the \`features\` list. Includes data such as whether the feature is enabled in the selected export environment, whether there are any variants assigned, etc.",
+            "example": [
+              {
+                "enabled": true,
+                "environment": "development",
+                "featureName": "my-feature",
+                "name": "variant-testing",
+                "variants": [
+                  {
+                    "name": "a",
+                    "overrides": [],
+                    "stickiness": "random",
+                    "weight": 500,
+                    "weightType": "variable",
+                  },
+                  {
+                    "name": "b",
+                    "overrides": [],
+                    "stickiness": "random",
+                    "weight": 500,
+                    "weightType": "variable",
+                  },
+                ],
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/featureEnvironmentSchema",
             },
             "type": "array",
           },
           "featureStrategies": {
+            "description": "All strategy instances that are used by the exported features in the \`features\` list.",
+            "example": [
+              {
+                "constraints": [],
+                "disabled": false,
+                "featureName": "my-feature",
+                "id": "924974d7-8003-43ee-87eb-c5f887c06fd1",
+                "name": "flexibleRollout",
+                "parameters": {
+                  "groupId": "default",
+                  "rollout": "50",
+                  "stickiness": "random",
+                },
+                "segments": [
+                  1,
+                ],
+                "title": "Rollout 50%",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/featureStrategySchema",
             },
             "type": "array",
           },
           "featureTags": {
+            "description": "A list of all the tags that have been applied to any of the features in the \`features\` list.",
+            "example": [
+              {
+                "featureName": "my-feature",
+                "tagType": "simple",
+                "tagValue": "user-facing",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/featureTagSchema",
             },
             "type": "array",
           },
           "features": {
+            "description": "All the exported features.",
+            "example": [
+              {
+                "archived": false,
+                "description": "best feature ever",
+                "impressionData": false,
+                "name": "my-feature",
+                "project": "default",
+                "stale": false,
+                "type": "release",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/featureSchema",
             },
             "type": "array",
           },
           "segments": {
+            "description": "A list of all the segments that are used by the strategies in the \`featureStrategies\` list.",
+            "example": [
+              {
+                "id": 1,
+                "name": "new-segment-name",
+              },
+            ],
             "items": {
               "additionalProperties": false,
               "properties": {
@@ -2427,6 +2509,14 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "array",
           },
           "tagTypes": {
+            "description": "A list of all of the tag types that are used in the \`featureTags\` list.",
+            "example": [
+              {
+                "description": "Used to simplify filtering of features",
+                "icon": "#",
+                "name": "simple",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/tagTypeSchema",
             },
@@ -3324,6 +3414,7 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "importTogglesValidateItemSchema": {
         "additionalProperties": false,
+        "description": "A description of an error or warning pertaining to a feature toggle import job.",
         "properties": {
           "affectedItems": {
             "description": "The items affected by this error message ",
@@ -3349,21 +3440,41 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "importTogglesValidateSchema": {
         "additionalProperties": false,
-        "description": "The result of toggle validation after import",
+        "description": "An object containing [feature import](https://docs.getunleash.io/reference/deploy/environment-import-export) validation results.",
         "properties": {
           "errors": {
+            "description": "A list of errors that prevent the provided data from being successfully imported.",
+            "example": [
+              {
+                "affectedItems": [
+                  "my-feature (in project project-854)",
+                ],
+                "message": "You cannot import a feature that already exist in other projects. You already have the following features defined outside of project default:",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/importTogglesValidateItemSchema",
             },
             "type": "array",
           },
           "permissions": {
+            "description": "Any additional permissions required to import the data. If the list is empty, you require no additional permissions beyond what your user already has.",
+            "example": [],
             "items": {
               "$ref": "#/components/schemas/importTogglesValidateItemSchema",
             },
             "type": "array",
           },
           "warnings": {
+            "description": "A list of warnings related to the provided data.",
+            "example": [
+              {
+                "affectedItems": [
+                  "custom-strategy-7",
+                ],
+                "message": "The following strategy types will be used in import. Please make sure the strategy type parameters are configured as in source environment:",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/importTogglesValidateItemSchema",
             },

@@ -91,7 +91,7 @@ This endpoint gives _last minute_ and _last hour_ metrics for all active toggles
 
 `GET http://unleash.host.com/api/admin/metrics/applications`
 
-This endpoint returns a list of known applications (seen the last day) and a link to follow for more details.
+This endpoint returns a list of known applications (seen in the last day) and a link to follow for more details.
 
 ```json
 {

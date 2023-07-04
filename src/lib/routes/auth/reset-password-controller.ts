@@ -109,7 +109,7 @@ class ResetPasswordController extends Controller {
                     tags: ['Auth'],
                     summary: 'Reset password',
                     description:
-                        'Used to reset password for a user that has forgotten their password',
+                        'Requests a password reset email for the user. This email can be used to reset the password for a user that has forgotten their password',
                     operationId: 'sendResetPasswordEmail',
                     requestBody: createRequestSchema('emailSchema'),
                     responses: { 200: emptyResponse },

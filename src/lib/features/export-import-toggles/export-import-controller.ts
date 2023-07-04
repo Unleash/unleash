@@ -16,6 +16,7 @@ import {
     emptyResponse,
     ExportQuerySchema,
     exportResultSchema,
+    getStandardResponses,
     ImportTogglesSchema,
     importTogglesValidateSchema,
 } from '../../openapi';
@@ -23,6 +24,7 @@ import { IAuthRequest } from '../../routes/unleash-types';
 import { extractUsername } from '../../util';
 import { BadDataError, InvalidOperationError } from '../../error';
 import ApiUser from '../../types/api-user';
+import { endpointDescriptions } from '../../openapi/endpoint-descriptions';
 
 class ExportImportController extends Controller {
     private logger: Logger;
@@ -65,12 +67,14 @@ class ExportImportController extends Controller {
             handler: this.export,
             middleware: [
                 this.openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Import/Export'],
                     operationId: 'exportFeatures',
                     requestBody: createRequestSchema('exportQuerySchema'),
                     responses: {
                         200: createResponseSchema('exportResultSchema'),
+                        ...getStandardResponses(404),
                     },
+                    ...endpointDescriptions.admin.export,
                 }),
             ],
         });
@@ -81,17 +85,16 @@ class ExportImportController extends Controller {
             handler: this.validateImport,
             middleware: [
                 openApiService.validPath({
-                    summary:
-                        'Validate import of feature toggles for an environment in the project',
-                    description: `Unleash toggles exported from a different instance can be imported into a new project and environment`,
-                    tags: ['Unstable'],
+                    tags: ['Import/Export'],
                     operationId: 'validateImport',
                     requestBody: createRequestSchema('importTogglesSchema'),
                     responses: {
                         200: createResponseSchema(
                             'importTogglesValidateSchema',
                         ),
+                        ...getStandardResponses(404),
                     },
+                    ...endpointDescriptions.admin.validateImport,
                 }),
             ],
         });
@@ -102,15 +105,14 @@ class ExportImportController extends Controller {
             handler: this.importData,
             middleware: [
                 openApiService.validPath({
-                    summary:
-                        'Import feature toggles for an environment in the project',
-                    description: `Unleash toggles exported from a different instance can be imported into a new project and environment`,
-                    tags: ['Unstable'],
+                    tags: ['Import/Export'],
                     operationId: 'importToggles',
                     requestBody: createRequestSchema('importTogglesSchema'),
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(404),
                     },
+                    ...endpointDescriptions.admin.import,
                 }),
             ],
         });

@@ -15,7 +15,7 @@ export const exportQuerySchema = {
         },
         downloadFile: {
             type: 'boolean',
-            example: 'development',
+            example: true,
             description: 'Whether to return a downloadable file',
         },
     },

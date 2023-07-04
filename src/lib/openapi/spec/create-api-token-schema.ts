@@ -12,7 +12,8 @@ export const createApiTokenSchema = {
     $id: '#/components/schemas/createApiTokenSchema',
     type: 'object',
     required: ['type'],
-
+    description:
+        'The data required to create an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).',
     properties: {
         expiresAt: {
             type: 'string',

@@ -11,6 +11,7 @@ export const apiTokensSchema = {
     properties: {
         tokens: {
             type: 'array',
+            description: 'A list of Unleash API tokens.',
             items: {
                 $ref: '#/components/schemas/apiTokenSchema',
             },

@@ -1795,22 +1795,6 @@ The provider you choose for your addon dictates what properties the \`parameters
         "type": "array",
       },
       "createApiTokenSchema": {
-        "anyOf": [
-          {
-            "properties": {
-              "username": {
-                "type": "string",
-              },
-            },
-          },
-          {
-            "properties": {
-              "tokenName": {
-                "type": "string",
-              },
-            },
-          },
-        ],
         "description": "The data required to create an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).",
         "oneOf": [
           {
@@ -1822,6 +1806,9 @@ The provider you choose for your addon dictates what properties the \`parameters
                 "type": "string",
               },
             },
+            "required": [
+              "type",
+            ],
           },
           {
             "properties": {
@@ -1832,12 +1819,15 @@ The provider you choose for your addon dictates what properties the \`parameters
               },
               "project": {
                 "description": "The project that the token should be valid for. Defaults to "*" meaning every project. This property is mutually incompatible with the \`projects\` property. If you specify one, you cannot specify the other.",
-                "example": "development",
+                "example": "project-851",
                 "type": "string",
               },
               "projects": {
                 "description": "A list of projects that the token should be valid for. This property is mutually incompatible with the \`project\` property. If you specify one, you cannot specify the other.",
-                "example": "development",
+                "example": [
+                  "project-851",
+                  "project-852",
+                ],
                 "items": {
                   "type": "string",
                 },
@@ -1850,6 +1840,9 @@ The provider you choose for your addon dictates what properties the \`parameters
                 "type": "string",
               },
             },
+            "required": [
+              "type",
+            ],
           },
         ],
         "properties": {
@@ -1859,10 +1852,18 @@ The provider you choose for your addon dictates what properties the \`parameters
             "format": "date-time",
             "type": "string",
           },
+          "tokenName": {
+            "description": "The name of the token.",
+            "example": "client-token-64522",
+            "type": "string",
+          },
+          "username": {
+            "deprecated": true,
+            "description": "The name of the token. This property is deprecated. Use \`tokenName\` instead.",
+            "example": "client-token-64523",
+            "type": "string",
+          },
         },
-        "required": [
-          "type",
-        ],
         "type": "object",
       },
       "createApplicationSchema": {

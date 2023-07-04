@@ -6,7 +6,9 @@ import { FromSchema } from 'json-schema-to-ts';
 // That is, when creating a token, you can provide either `project` _or_
 // `projects`, but *not* both.
 //
-// Because we allow additional properties, we cannot express the mutual exclusiveness in the schema (with OpenAPI 3.0). As such, it's mentioned in the description for now.
+// Because we allow additional properties, we cannot express the mutual
+// exclusiveness in the schema (with OpenAPI 3.0). As such, it's mentioned in
+// the description for now.
 export const createApiTokenSchema = {
     $id: '#/components/schemas/createApiTokenSchema',
     type: 'object',

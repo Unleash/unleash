@@ -9,6 +9,8 @@ export const strategiesSchema = {
     properties: {
         version: {
             type: 'integer',
+            enum: [1],
+            example: 1,
         },
         strategies: {
             type: 'array',

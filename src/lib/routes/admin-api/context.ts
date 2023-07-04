@@ -31,8 +31,14 @@ import {
 import { serializeDates } from '../../types/serialize-dates';
 import NotFoundError from '../../error/notfound-error';
 import { NameSchema } from '../../openapi/spec/name-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
-import { contextFieldStrategiesSchema } from '../../openapi/spec/context-field-strategies-schema';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
+import {
+    ContextFieldStrategiesSchema,
+    contextFieldStrategiesSchema,
+} from '../../openapi/spec/context-field-strategies-schema';
 
 interface ContextParam {
     contextField: string;
@@ -103,13 +109,15 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Strategies'],
-                    summary: 'Get strategies using this context field',
-                    description: `Returns all strategies that use the specified context field. Useful when cleaning up context fields: if this list is empty, it's safe to delete the context field.`,
                     operationId: 'getStrategiesByContextField',
+                    summary: 'Get strategies that use a context field',
+                    description:
+                        "Retrieves a list of all strategies that use the specified context field. If the context field doesn't exist, returns an empty list of strategies",
                     responses: {
                         200: createResponseSchema(
                             'contextFieldStrategiesSchema',
                         ),
+                        ...getStandardResponses(401),
                     },
                 }),
             ],
@@ -241,10 +249,14 @@ export class ContextController extends Controller {
             value,
             userName,
         );
-        res.status(201)
-            .header('location', `context/${result.name}`)
-            .json(serializeDates(result))
-            .end();
+
+        this.openApiService.respondWithValidation(
+            201,
+            res,
+            contextFieldSchema.$id,
+            serializeDates(result),
+            { location: `context/${result.name}` },
+        );
     }
 
     async updateContextField(
@@ -284,7 +296,7 @@ export class ContextController extends Controller {
 
     async getStrategiesByContextField(
         req: IAuthRequest<{ contextField: string }>,
-        res: Response,
+        res: Response<ContextFieldStrategiesSchema>,
     ): Promise<void> {
         const { contextField } = req.params;
         const contextFields =

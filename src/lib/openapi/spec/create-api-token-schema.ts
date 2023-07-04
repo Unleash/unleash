@@ -22,9 +22,6 @@ export const createApiTokenSchema = {
     type: 'object',
     required: ['type'],
     properties: {
-        secret: {
-            type: 'string',
-        },
         type: {
             type: 'string',
             description: `One of ${Object.values(ApiTokenType).join(', ')}`,

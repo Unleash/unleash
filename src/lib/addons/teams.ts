@@ -8,6 +8,10 @@ import {
 } from './feature-event-formatter-md';
 import { IEvent } from '../types/events';
 
+interface ITeamsParameters {
+    url: string;
+    customHeaders?: string;
+}
 export default class TeamsAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
@@ -17,8 +21,11 @@ export default class TeamsAddon extends Addon {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async handleEvent(event: IEvent, parameters: any): Promise<void> {
-        const { url } = parameters;
+    async handleEvent(
+        event: IEvent,
+        parameters: ITeamsParameters,
+    ): Promise<void> {
+        const { url, customHeaders } = parameters;
         const { createdBy } = event;
         const text = this.msgFormatter.format(event);
         const featureLink = this.msgFormatter.featureLink(event);
@@ -56,9 +63,20 @@ export default class TeamsAddon extends Addon {
             ],
         };
 
+        let extraHeaders = {};
+        if (typeof customHeaders === 'string' && customHeaders.length > 1) {
+            try {
+                extraHeaders = JSON.parse(customHeaders);
+            } catch (e) {
+                this.logger.warn(
+                    'Could not parse the json in the customHeaders parameters',
+                );
+            }
+        }
+
         const requestOpts = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...extraHeaders },
             body: JSON.stringify(body),
         };
         const res = await this.fetchRetry(url, requestOpts);

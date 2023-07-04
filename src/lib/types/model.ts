@@ -108,6 +108,10 @@ export interface ISortOrder {
     [index: string]: number;
 }
 
+export interface ICustomHeaders {
+    [name: string]: string;
+}
+
 export interface IFeatureEnvironment {
     environment: string;
     featureName: string;

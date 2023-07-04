@@ -231,11 +231,14 @@ export const ProjectFeatureToggles = ({
                 Header: 'Name',
                 accessor: 'name',
                 Cell: ({ value }: { value: string }) => (
-                    <LinkCell
-                        title={value}
-                        withTooltip
-                        to={`/projects/${projectId}/features/${value}`}
-                    />
+                    <Tooltip title={value} arrow describeChild>
+                        <span>
+                            <LinkCell
+                                title={value}
+                                to={`/projects/${projectId}/features/${value}`}
+                            />
+                        </span>
+                    </Tooltip>
                 ),
                 minWidth: 100,
                 sortType: 'alphanumeric',

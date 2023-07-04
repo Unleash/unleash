@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
@@ -10,14 +9,12 @@ import {
     StyledTitle,
     StyledDescription,
 } from './LinkCell.styles';
-import { Tooltip } from '@mui/material';
 
 interface ILinkCellProps {
     title?: string;
     to?: string;
     onClick?: () => void;
     subtitle?: string;
-    withTooltip?: boolean;
 }
 
 export const LinkCell: FC<ILinkCellProps> = ({
@@ -26,7 +23,6 @@ export const LinkCell: FC<ILinkCellProps> = ({
     onClick,
     subtitle,
     children,
-    withTooltip,
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
@@ -57,7 +53,7 @@ export const LinkCell: FC<ILinkCellProps> = ({
         </StyledContainer>
     );
 
-    const linkCell = to ? (
+    return to ? (
         <StyledLink component={RouterLink} to={to} underline="hover">
             {content}
         </StyledLink>
@@ -67,13 +63,5 @@ export const LinkCell: FC<ILinkCellProps> = ({
         </StyledLink>
     ) : (
         <StyledWrapper>{content}</StyledWrapper>
-    );
-
-    return withTooltip ? (
-        <Tooltip title={content} arrow describeChild>
-            {linkCell}
-        </Tooltip>
-    ) : (
-        linkCell
     );
 };

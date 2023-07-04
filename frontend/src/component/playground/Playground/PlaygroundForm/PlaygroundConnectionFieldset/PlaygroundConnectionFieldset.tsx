@@ -2,8 +2,6 @@ import React, { ComponentProps, VFC } from 'react';
 import {
     Autocomplete,
     Box,
-    Checkbox,
-    styled,
     TextField,
     Typography,
     useTheme,

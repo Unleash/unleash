@@ -249,10 +249,14 @@ export class ContextController extends Controller {
             value,
             userName,
         );
-        res.status(201)
-            .header('location', `context/${result.name}`)
-            .json(serializeDates(result))
-            .end();
+
+        this.openApiService.respondWithValidation(
+            201,
+            res,
+            contextFieldSchema.$id,
+            serializeDates(result),
+            { location: `context/${result.name}` },
+        );
     }
 
     async updateContextField(

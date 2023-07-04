@@ -247,10 +247,13 @@ class StrategyController extends Controller {
             req.body,
             userName,
         );
-        res.header('location', `strategies/${strategy.name}`)
-            .status(201)
-            .json(strategy)
-            .end();
+        this.openApiService.respondWithValidation(
+            201,
+            res,
+            strategySchema.$id,
+            strategy,
+            { location: `strategies/${strategy.name}` },
+        );
     }
 
     async updateStrategy(

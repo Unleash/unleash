@@ -12,6 +12,7 @@ import { createResponseSchema } from '../../openapi/util/create-response-schema'
 import { userSchema, UserSchema } from '../../openapi/spec/user-schema';
 import { LoginSchema } from '../../openapi/spec/login-schema';
 import { serializeDates } from '../../types/serialize-dates';
+import { getStandardResponses } from '../../openapi';
 
 export class SimplePasswordProvider extends Controller {
     private logger: Logger;
@@ -40,10 +41,14 @@ export class SimplePasswordProvider extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Auth'],
+                    summary: 'Log in',
+                    description:
+                        'Logs in the user and creates an active session',
                     operationId: 'login',
                     requestBody: createRequestSchema('loginSchema'),
                     responses: {
                         200: createResponseSchema('userSchema'),
+                        ...getStandardResponses(401),
                     },
                 }),
             ],

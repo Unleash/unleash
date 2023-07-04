@@ -1,4 +1,4 @@
-import { FC, useState, VFC } from 'react';
+import { FC, Fragment, useMemo, useState, VFC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestSidebar } from 'component/changeRequest/ChangeRequestSidebar/ChangeRequestSidebar';
@@ -37,43 +37,61 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 const DraftBannerContent: FC<{
-    changeRequest: IChangeRequest;
+    changeRequests: IChangeRequest[];
     onClick: () => void;
-}> = ({ changeRequest, onClick }) => {
+}> = ({ changeRequests, onClick }) => {
+    const environments = changeRequests.map(({ environment }) => environment);
+    const allChangesCount = changeRequests.reduce(
+        (acc, curr) => acc + changesCount(curr),
+        0
+    );
+    const showOneLongExplanation =
+        changeRequests.length === 1 &&
+        ['Draft', 'In review', 'Approved'].includes(changeRequests[0].state);
+    const explanation = showOneLongExplanation
+        ? {
+              Draft: ' that need to be reviewed',
+              'In review': ' that are in review',
+              Approved:
+                  ' that are approved. Adding more changes will clear the approvals and require a new review',
+          }[changeRequests[0].state as 'Draft' | 'In review' | 'Approved']
+        : '';
+
     return (
         <StyledBox>
             <DraftBannerContentWrapper>
                 <Typography variant="body2" sx={{ mr: 4 }}>
                     <strong>Change request mode</strong> – You have changes{' '}
                     <ConditionallyRender
-                        condition={Boolean(changeRequest.environment)}
+                        condition={Boolean(environments)}
                         show={
                             <>
-                                in <strong>{changeRequest.environment} </strong>
+                                in{' '}
+                                {environments.map((env, i) =>
+                                    i === 0 ? (
+                                        <Fragment key={env}>
+                                            <strong>{env}</strong>
+                                        </Fragment>
+                                    ) : (
+                                        <Fragment key={env}>
+                                            {i === environments.length - 1
+                                                ? ' and '
+                                                : ', '}
+                                            <strong>{env}</strong>
+                                        </Fragment>
+                                    )
+                                )}
                             </>
                         }
                     />
-                    <ConditionallyRender
-                        condition={changeRequest.state === 'Draft'}
-                        show={'that need to be reviewed'}
-                    />
-                    <ConditionallyRender
-                        condition={changeRequest.state === 'In review'}
-                        show={'that are in review'}
-                    />
-                    <ConditionallyRender
-                        condition={changeRequest.state === 'Approved'}
-                        show={
-                            'that are approved. Adding more changes will clear the approvals and require a new review'
-                        }
-                    />
+                    {explanation}.
                 </Typography>
                 <Button
                     variant="contained"
                     onClick={onClick}
                     sx={{ ml: 'auto' }}
                 >
-                    View changes ({changesCount(changeRequest)})
+                    View changes ({allChangesCount})
                 </Button>
             </DraftBannerContentWrapper>
         </StyledBox>
@@ -94,30 +112,33 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { data, loading } = usePendingChangeRequests(project);
 
+    const unfinishedChangeRequests = useMemo(
+        () =>
+            data?.filter(changeRequest =>
+                ['Draft', 'In review', 'Approved'].includes(changeRequest.state)
+            ),
+        [data]
+    );
+
     if ((!loading && !data) || data?.length === 0) {
         return null;
     }
 
     return (
         <StickyBanner>
-            {data?.length
-                ? data
-                      .filter(changeRequest =>
-                          ['Draft', 'In review', 'Approved'].includes(
-                              changeRequest.state
-                          )
-                      )
-                      .map(changeRequest => (
-                          <DraftBannerContent
-                              key={changeRequest.id}
-                              changeRequest={changeRequest}
-                              onClick={() => {
-                                  setIsSidebarOpen(true);
-                              }}
-                          />
-                      ))
-                : null}
-
+            <ConditionallyRender
+                condition={Boolean(unfinishedChangeRequests?.length)}
+                show={
+                    <DraftBannerContent
+                        changeRequests={
+                            unfinishedChangeRequests as IChangeRequest[]
+                        }
+                        onClick={() => {
+                            setIsSidebarOpen(true);
+                        }}
+                    />
+                }
+            />
             <ChangeRequestSidebar
                 project={project}
                 open={isSidebarOpen}

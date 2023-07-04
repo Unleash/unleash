@@ -1227,11 +1227,16 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "changePasswordSchema": {
         "additionalProperties": false,
+        "description": "Change password as long as the token is a valid token",
         "properties": {
           "password": {
+            "description": "The new password for the user",
+            "example": "correct horse battery staple",
             "type": "string",
           },
           "token": {
+            "description": "A reset token used to validate that the user is allowed to change the password.",
+            "example": "$2a$15$QzeW/y5/MEppCWVEkoX5euejobYOLSd4We21LQjjKlWH9l2I3wCke",
             "type": "string",
           },
         },
@@ -2082,8 +2087,11 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "emailSchema": {
         "additionalProperties": false,
+        "description": "Represents the email of a user. Used to send email communication (reset password, welcome mail etc)",
         "properties": {
           "email": {
+            "description": "The email address",
+            "example": "test@example.com",
             "type": "string",
           },
         },
@@ -3503,11 +3511,16 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "loginSchema": {
         "additionalProperties": false,
+        "description": "A username/password login request",
         "properties": {
           "password": {
+            "description": "The password of the user trying to log in",
+            "example": "hunter2",
             "type": "string",
           },
           "username": {
+            "description": "The username trying to log in",
+            "example": "user",
             "type": "string",
           },
         },
@@ -4509,27 +4522,43 @@ Stats are divided into current and previous **windows**.
         "additionalProperties": false,
         "properties": {
           "enabled": {
+            "description": "Always set to \`true\`.",
+            "example": true,
             "type": "boolean",
           },
           "impressionData": {
+            "description": "\`true\` if the impression data collection is enabled for the feature, otherwise \`false\`.",
+            "example": false,
             "type": "boolean",
           },
           "name": {
+            "description": "Unique feature name.",
+            "example": "disable-comments",
             "type": "string",
           },
           "variant": {
             "additionalProperties": false,
             "properties": {
               "enabled": {
+                "description": "Whether the variant is enabled or not.",
+                "example": true,
                 "type": "boolean",
               },
               "name": {
+                "description": "The variants name. Is unique for this feature toggle",
+                "example": "blue_group",
                 "type": "string",
               },
               "payload": {
                 "additionalProperties": false,
+                "description": "Extra data configured for this variant",
+                "example": {
+                  "type": "json",
+                  "value": "{color: red}",
+                },
                 "properties": {
                   "type": {
+                    "description": "The format of the payload.",
                     "enum": [
                       "string",
                       "json",
@@ -4538,6 +4567,7 @@ Stats are divided into current and previous **windows**.
                     "type": "string",
                   },
                   "value": {
+                    "description": "The payload value stringified.",
                     "type": "string",
                   },
                 },
@@ -4812,17 +4842,27 @@ Stats are divided into current and previous **windows**.
       },
       "roleSchema": {
         "additionalProperties": false,
+        "description": "A role holds permissions to allow Unleash to decide what actions a role holder is allowed to perform",
         "properties": {
           "description": {
+            "description": "A more detailed description of the role and what use it's intended for",
+            "example": "Users with the editor role have access to most features in Unleash but can not manage users and roles in the global scope. Editors will be added as project owners when creating projects and get superuser rights within the context of these projects. Users with the editor role will also get access to most permissions on the default project by default.",
             "type": "string",
           },
           "id": {
-            "type": "number",
+            "description": "The role id",
+            "example": 9,
+            "minimum": 0,
+            "type": "integer",
           },
           "name": {
+            "description": "The name of the role",
+            "example": "Editor",
             "type": "string",
           },
           "type": {
+            "description": "A role can either be a global role (applies to all projects) or a project role",
+            "example": "global",
             "type": "string",
           },
         },
@@ -5378,24 +5418,35 @@ Stats are divided into current and previous **windows**.
       },
       "tokenUserSchema": {
         "additionalProperties": false,
+        "description": "A user identified by a token",
         "properties": {
           "createdBy": {
+            "description": "A username or email identifying which user created this token",
+            "example": "admin@example.com",
             "nullable": true,
             "type": "string",
           },
           "email": {
+            "description": "The email of the user",
+            "example": "test@example.com",
             "type": "string",
           },
           "id": {
-            "type": "number",
+            "description": "The user id",
+            "example": 7,
+            "type": "integer",
           },
           "name": {
+            "description": "The name of the user",
+            "example": "Test McTest",
             "type": "string",
           },
           "role": {
             "$ref": "#/components/schemas/roleSchema",
           },
           "token": {
+            "description": "A token uniquely identifying a user",
+            "example": "user:xyzrandomstring",
             "type": "string",
           },
         },
@@ -5752,47 +5803,78 @@ Stats are divided into current and previous **windows**.
       },
       "userSchema": {
         "additionalProperties": false,
+        "description": "An Unleash user",
         "properties": {
           "accountType": {
+            "description": "A user is either an actual User or a Service Account",
+            "example": "User",
             "type": "string",
           },
           "createdAt": {
+            "description": "The user was created at this time",
+            "example": "2023-06-30T11:41:00.123Z",
             "format": "date-time",
             "type": "string",
           },
           "email": {
+            "description": "Email of the user",
+            "example": "user@example.com",
             "type": "string",
           },
           "emailSent": {
+            "description": "Is the welcome email sent to the user or not",
+            "example": false,
             "type": "boolean",
           },
           "id": {
-            "type": "number",
+            "description": "The user id",
+            "example": 123,
+            "minimum": 0,
+            "type": "integer",
           },
           "imageUrl": {
+            "description": "URL used for the userprofile image",
+            "example": "https://example.com/242x200.png",
             "type": "string",
           },
           "inviteLink": {
+            "description": "If the user is actively inviting other users, this is the link that can be shared with other users",
+            "example": "http://localhost:4242/invite-link/some-secret",
             "type": "string",
           },
           "isAPI": {
+            "deprecated": true,
+            "description": "(Deprecated): Used internally to know which operations the user should be allowed to perform",
+            "example": true,
             "type": "boolean",
           },
           "loginAttempts": {
-            "type": "number",
+            "description": "How many unsuccessful attempts at logging in has the user made",
+            "example": 3,
+            "minimum": 0,
+            "type": "integer",
           },
           "name": {
+            "description": "Name of the user",
+            "example": "User",
             "type": "string",
           },
           "rootRole": {
-            "type": "number",
+            "description": "Which [root role](https://docs.getunleash.io/reference/rbac#standard-roles) this user is assigned",
+            "example": 1,
+            "minimum": 0,
+            "type": "integer",
           },
           "seenAt": {
+            "description": "The last time this user logged in",
+            "example": "2023-06-30T11:42:00.345Z",
             "format": "date-time",
             "nullable": true,
             "type": "string",
           },
           "username": {
+            "description": "A unique username for the user",
+            "example": "hunter",
             "type": "string",
           },
         },
@@ -5848,8 +5930,11 @@ Stats are divided into current and previous **windows**.
       },
       "validatePasswordSchema": {
         "additionalProperties": false,
+        "description": "Used to validate passwords obeying [Unleash password guidelines](https://docs.getunleash.io/reference/deploy/securing-unleash#password-requirements)",
         "properties": {
           "password": {
+            "description": "The password to validate",
+            "example": "hunter2",
             "type": "string",
           },
         },
@@ -14484,8 +14569,299 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
         ],
       },
     },
+    "/api/frontend": {
+      "get": {
+        "description": "This endpoint returns the list of feature toggles that the proxy evaluates to enabled for the given context. Context values are provided as query parameters. If the Frontend API is disabled 404 is returned.",
+        "operationId": "getFrontendFeatures",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/proxyFeaturesSchema",
+                },
+              },
+            },
+            "description": "proxyFeaturesSchema",
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
+        },
+        "summary": "Retrieve enabled feature toggles for the provided context.",
+        "tags": [
+          "Frontend API",
+        ],
+      },
+    },
+    "/api/frontend/client/metrics": {
+      "post": {
+        "description": "Registers usage metrics. Stores information about how many times each toggle was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature toggle's variants were displayed to the end user. If the Frontend API is disabled 404 is returned.",
+        "operationId": "registerFrontendMetrics",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/clientMetricsSchema",
+              },
+            },
+          },
+          "description": "clientMetricsSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "The request payload you provided doesn't conform to the schema. The .parameters property should be object. You sent [].",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ValidationError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
+        },
+        "summary": "Register client usage metrics",
+        "tags": [
+          "Frontend API",
+        ],
+      },
+    },
+    "/api/frontend/client/register": {
+      "post": {
+        "description": "This is for future use. Currently Frontend client registration is not supported. Returning 200 for clients that expect this status code. If the Frontend API is disabled 404 is returned.",
+        "operationId": "registerFrontendClient",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/proxyClientSchema",
+              },
+            },
+          },
+          "description": "proxyClientSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "The request payload you provided doesn't conform to the schema. The .parameters property should be object. You sent [].",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ValidationError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The request data does not match what we expect.",
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
+        },
+        "summary": "Register a client SDK",
+        "tags": [
+          "Frontend API",
+        ],
+      },
+    },
     "/auth/reset/password": {
       "post": {
+        "description": "Allows users with a valid reset token to reset their password without remembering their old password",
         "operationId": "changePassword",
         "requestBody": {
           "content": {
@@ -14502,7 +14878,89 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "We do not accept the content-type you provided (application/xml). Try using one of the content-types we do accept instead (application/json) and make sure the body is in the corresponding format.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ContentTypeerror",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
+          },
         },
+        "summary": "Changes a user password",
         "tags": [
           "Auth",
         ],
@@ -14510,6 +14968,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/auth/reset/password-email": {
       "post": {
+        "description": "Requests a password reset email for the user. This email can be used to reset the password for a user that has forgotten their password",
         "operationId": "sendResetPasswordEmail",
         "requestBody": {
           "content": {
@@ -14526,7 +14985,89 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "We do not accept the content-type you provided (application/xml). Try using one of the content-types we do accept instead (application/json) and make sure the body is in the corresponding format.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ContentTypeerror",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
+          },
         },
+        "summary": "Reset password",
         "tags": [
           "Auth",
         ],
@@ -14534,6 +15075,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/auth/reset/validate": {
       "get": {
+        "description": "If the token is valid returns the user that owns the token",
         "operationId": "validateToken",
         "responses": {
           "200": {
@@ -14546,7 +15088,62 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             },
             "description": "tokenUserSchema",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "We do not accept the content-type you provided (application/xml). Try using one of the content-types we do accept instead (application/json) and make sure the body is in the corresponding format.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ContentTypeerror",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
+          },
         },
+        "summary": "Validates a token",
         "tags": [
           "Auth",
         ],
@@ -14554,6 +15151,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/auth/reset/validate-password": {
       "post": {
+        "description": "Verifies that the password adheres to the [Unleash password guidelines](https://docs.getunleash.io/reference/deploy/securing-unleash#password-requirements)",
         "operationId": "validatePassword",
         "requestBody": {
           "content": {
@@ -14570,7 +15168,62 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
           "200": {
             "description": "This response has no body.",
           },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "The request payload you provided doesn't conform to the schema. The .parameters property should be object. You sent [].",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ValidationError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The request data does not match what we expect.",
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "We do not accept the content-type you provided (application/xml). Try using one of the content-types we do accept instead (application/json) and make sure the body is in the corresponding format.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ContentTypeerror",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
+          },
         },
+        "summary": "Validates password",
         "tags": [
           "Auth",
         ],
@@ -14578,6 +15231,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     },
     "/auth/simple/login": {
       "post": {
+        "description": "Logs in the user and creates an active session",
         "operationId": "login",
         "requestBody": {
           "content": {
@@ -14601,7 +15255,35 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             },
             "description": "userSchema",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
         },
+        "summary": "Log in",
         "tags": [
           "Auth",
         ],

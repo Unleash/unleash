@@ -232,9 +232,13 @@ export class ApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
+                    summary: 'Delete API token',
+                    description:
+                        "Deletes an existing API token. The `token` path parameter is the token's `secret`. If the token does not exist, this endpoint returns a 200 OK, but does nothing.",
                     operationId: 'deleteApiToken',
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],

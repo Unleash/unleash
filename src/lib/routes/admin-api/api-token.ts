@@ -185,9 +185,7 @@ export class ApiTokenController extends Controller {
                     summary: 'Create API token',
                     description: `Create an API token of a specific type: one of ${Object.values(
                         ApiTokenType,
-                    ).join(', ')}. If the token type is not '${
-                        ApiTokenType.ADMIN
-                    }', you must also provide the projects it should be valid for.`,
+                    ).join(', ')}.`,
                     responses: {
                         201: resourceCreatedResponseSchema('apiTokenSchema'),
                         ...getStandardResponses(401, 403, 415),
@@ -209,9 +207,13 @@ export class ApiTokenController extends Controller {
                 openApiService.validPath({
                     tags: ['API tokens'],
                     operationId: 'updateApiToken',
+                    summary: 'Update API token',
+                    description:
+                        "Updates an existing API token with a new expiry date. The `token` path parameter is the token's `secret`. If the token does not exist, this endpoint returns a 200 OK, but does nothing.",
                     requestBody: createRequestSchema('updateApiTokenSchema'),
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(401, 403, 415),
                     },
                 }),
             ],

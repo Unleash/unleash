@@ -4,7 +4,7 @@ export const roleSchema = {
     $id: '#/components/schemas/roleSchema',
     type: 'object',
     description:
-        'A role holds permissions to allow Unleash to decide what actions a roleholder is allowed to perform',
+        'A role holds permissions to allow Unleash to decide what actions a role holder is allowed to perform',
     additionalProperties: false,
     required: ['id', 'type', 'name'],
     properties: {

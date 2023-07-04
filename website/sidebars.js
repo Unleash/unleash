@@ -188,6 +188,19 @@ module.exports = {
                     label: 'APIs',
                     items: [
                         {
+                            label: 'OpenAPI docs',
+                            collapsed: true,
+                            type: 'category',
+                            link: {
+                                title: 'Unleash Server APIs',
+                                type: 'generated-index',
+                                description:
+                                    'Generated API docs based on the Unleash OpenAPI schema. For the time being, some additional info can also be found in the older API docs.',
+                                slug: '/reference/api/unleash',
+                            },
+                            items: require('./docs/reference/api/unleash/sidebar.js'),
+                        },
+                        {
                             'Admin API': [
                                 'reference/api/legacy/unleash/admin/addons',
                                 'reference/api/legacy/unleash/admin/context',
@@ -213,19 +226,6 @@ module.exports = {
                                 'reference/api/legacy/unleash/internal/prometheus',
                                 'reference/api/legacy/unleash/internal/health',
                             ],
-                        },
-                        {
-                            label: 'OpenAPI docs',
-                            collapsed: true,
-                            type: 'category',
-                            link: {
-                                title: 'Unleash Server APIs',
-                                type: 'generated-index',
-                                description:
-                                    'Generated API docs based on the Unleash OpenAPI schema. For the time being, some additional info can also be found in the older API docs.',
-                                slug: '/reference/api/unleash',
-                            },
-                            items: require('./docs/reference/api/unleash/sidebar.js'),
                         },
                     ],
                 },

@@ -13,7 +13,7 @@ export const loginSchema = {
             example: 'user',
         },
         password: {
-            description: 'The password of the user trying to login',
+            description: 'The password of the user trying to log in',
             type: 'string',
             example: 'hunter2',
         },

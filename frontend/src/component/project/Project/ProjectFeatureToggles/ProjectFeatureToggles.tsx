@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     Checkbox,
     IconButton,
@@ -7,7 +7,7 @@ import {
     useMediaQuery,
     useTheme,
 } from '@mui/material';
-import { Add, MoreVert } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
     SortingRule,

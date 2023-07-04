@@ -159,7 +159,7 @@ export class ApiTokenController extends Controller {
                     operationId: 'getAllApiTokens',
                     summary: 'Get API tokens',
                     description:
-                        'Retrieves all API tokens that exists in the Unleash instance.',
+                        'Retrieves all API tokens that exist in the Unleash instance.',
                     responses: {
                         200: createResponseSchema('apiTokensSchema'),
                         ...getStandardResponses(401, 403),

@@ -11,6 +11,8 @@ export const importTogglesValidateItemSchema = {
         message: {
             type: 'string',
             description: 'The validation error message',
+            example:
+                'You cannot import a feature that already exist in other projects. You already have the following features defined outside of project default:',
         },
         affectedItems: {
             type: 'array',

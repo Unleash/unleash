@@ -3429,6 +3429,7 @@ The provider you choose for your addon dictates what properties the \`parameters
           },
           "message": {
             "description": "The validation error message",
+            "example": "You cannot import a feature that already exist in other projects. You already have the following features defined outside of project default:",
             "type": "string",
           },
         },

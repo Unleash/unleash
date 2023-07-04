@@ -991,10 +991,10 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "apiTokensSchema": {
         "additionalProperties": false,
-        "description": "Contains a list of API tokens.",
+        "description": "An object with [Unleash API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys)",
         "properties": {
           "tokens": {
-            "description": "A list of API tokens.",
+            "description": "A list of Unleash API tokens.",
             "items": {
               "$ref": "#/components/schemas/apiTokenSchema",
             },
@@ -1802,9 +1802,6 @@ The provider you choose for your addon dictates what properties the \`parameters
                 "type": "string",
               },
             },
-            "required": [
-              "username",
-            ],
           },
           {
             "properties": {
@@ -1812,34 +1809,54 @@ The provider you choose for your addon dictates what properties the \`parameters
                 "type": "string",
               },
             },
-            "required": [
-              "tokenName",
-            ],
+          },
+        ],
+        "description": "The data required to create an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).",
+        "oneOf": [
+          {
+            "properties": {
+              "type": {
+                "description": "An admin token. Must be the string "admin" (not case sensitive).",
+                "example": "admin",
+                "pattern": "[Aa][Dd][Mm][Ii][Nn]",
+                "type": "string",
+              },
+            },
+          },
+          {
+            "properties": {
+              "environment": {
+                "description": "The environment that the token should be valid for. Defaults to "default"",
+                "example": "development",
+                "type": "string",
+              },
+              "project": {
+                "description": "The project that the token should be valid for. Defaults to "*" meaning every project. This property is mutually incompatible with the \`projects\` property. If you specify one, you cannot specify the other.",
+                "example": "development",
+                "type": "string",
+              },
+              "projects": {
+                "description": "A list of projects that the token should be valid for. This property is mutually incompatible with the \`project\` property. If you specify one, you cannot specify the other.",
+                "example": "development",
+                "items": {
+                  "type": "string",
+                },
+                "type": "array",
+              },
+              "type": {
+                "description": "A client or frontend token. Must be one of the strings "client" or "frontend" (not case sensitive).",
+                "example": "frontend",
+                "pattern": "[Cc][Ll][Ii][Ee][Nn][Tt]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd]",
+                "type": "string",
+              },
+            },
           },
         ],
         "properties": {
-          "environment": {
-            "type": "string",
-          },
           "expiresAt": {
+            "description": "The time when this token should expire.",
+            "example": "2023-07-04T11:26:24+02:00",
             "format": "date-time",
-            "nullable": true,
-            "type": "string",
-          },
-          "project": {
-            "type": "string",
-          },
-          "projects": {
-            "items": {
-              "type": "string",
-            },
-            "type": "array",
-          },
-          "secret": {
-            "type": "string",
-          },
-          "type": {
-            "description": "One of client, admin, frontend",
             "type": "string",
           },
         },
@@ -5497,8 +5514,11 @@ Stats are divided into current and previous **windows**.
         "type": "object",
       },
       "updateApiTokenSchema": {
+        "description": "An object with fields to updated for a given API token.",
         "properties": {
           "expiresAt": {
+            "description": "The new time when this token should expire.",
+            "example": "2023-09-04T11:26:24+02:00",
             "format": "date-time",
             "type": "string",
           },
@@ -6187,7 +6207,7 @@ Stats are divided into current and previous **windows**.
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "413": {
             "content": {
@@ -6320,7 +6340,7 @@ Stats are divided into current and previous **windows**.
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -6528,7 +6548,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -6620,6 +6640,7 @@ Note: passing \`null\` as a value for the description property will set it to an
     },
     "/api/admin/api-tokens": {
       "get": {
+        "description": "Retrieves all API tokens that exists in the Unleash instance.",
         "operationId": "getAllApiTokens",
         "responses": {
           "200": {
@@ -6632,12 +6653,68 @@ Note: passing \`null\` as a value for the description property will set it to an
             },
             "description": "apiTokensSchema",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+          },
         },
+        "summary": "Get API tokens",
         "tags": [
           "API tokens",
         ],
       },
       "post": {
+        "description": "Create an API token of a specific type: one of client, admin, frontend.",
         "operationId": "createApiToken",
         "requestBody": {
           "content": {
@@ -6670,7 +6747,89 @@ Note: passing \`null\` as a value for the description property will set it to an
               },
             },
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "We do not accept the content-type you provided (application/xml). Try using one of the content-types we do accept instead (application/json) and make sure the body is in the corresponding format.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ContentTypeerror",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
+          },
         },
+        "summary": "Create API token",
         "tags": [
           "API tokens",
         ],
@@ -6678,6 +6837,7 @@ Note: passing \`null\` as a value for the description property will set it to an
     },
     "/api/admin/api-tokens/{token}": {
       "delete": {
+        "description": "Deletes an existing API token. The \`token\` path parameter is the token's \`secret\`. If the token does not exist, this endpoint returns a 200 OK, but does nothing.",
         "operationId": "deleteApiToken",
         "parameters": [
           {
@@ -6693,12 +6853,68 @@ Note: passing \`null\` as a value for the description property will set it to an
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+          },
         },
+        "summary": "Delete API token",
         "tags": [
           "API tokens",
         ],
       },
       "put": {
+        "description": "Updates an existing API token with a new expiry date. The \`token\` path parameter is the token's \`secret\`. If the token does not exist, this endpoint returns a 200 OK, but does nothing.",
         "operationId": "updateApiToken",
         "parameters": [
           {
@@ -6725,7 +6941,89 @@ Note: passing \`null\` as a value for the description property will set it to an
           "200": {
             "description": "This response has no body.",
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You must log in to use Unleash. Your request had no authorization header, so we could not authorize you. Try logging in at /auth/simple/login.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "AuthenticationRequired",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "You need the "UPDATE_ADDON" permission to perform this action in the "development" environment.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NoAccessError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "We do not accept the content-type you provided (application/xml). Try using one of the content-types we do accept instead (application/json) and make sure the body is in the corresponding format.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ContentTypeerror",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
+          },
         },
+        "summary": "Update API token",
         "tags": [
           "API tokens",
         ],
@@ -6798,7 +7096,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "tags": [
@@ -6883,7 +7181,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "tags": [
@@ -6988,7 +7286,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Revives a feature",
@@ -7067,7 +7365,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Archives a feature",
@@ -7153,7 +7451,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -7265,7 +7563,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -7604,7 +7902,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Get all environments",
@@ -7690,7 +7988,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -7797,7 +8095,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -7910,7 +8208,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -8016,7 +8314,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -8122,7 +8420,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -8530,7 +8828,7 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -8688,7 +8986,7 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -8846,7 +9144,7 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -9202,7 +9500,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Create a public signup token",
@@ -9288,7 +9586,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Retrieve a token",
@@ -9410,7 +9708,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Update a public signup token",
@@ -9486,7 +9784,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Get maintenance mode status",
@@ -9591,7 +9889,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Enabled/disabled maintenance mode",
@@ -9692,7 +9990,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Delete an application",
@@ -9864,7 +10162,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Create an application to connect reported metrics",
@@ -10114,7 +10412,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Get a list of all projects.",
@@ -10200,7 +10498,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -10313,7 +10611,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -10471,7 +10769,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Create a project API token.",
@@ -10558,7 +10856,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Delete a project API token.",
@@ -10675,7 +10973,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Archives a list of features",
@@ -10880,7 +11178,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Deletes a list of features",
@@ -10970,7 +11268,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "409": {
             "content": {
@@ -11111,7 +11409,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Remove an environment from a project.",
@@ -12655,7 +12953,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -12799,7 +13097,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
         },
         "summary": "Revives a list of features",
@@ -14088,7 +14386,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -14209,7 +14507,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {
@@ -14315,7 +14613,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "User credentials are valid but does not have enough privileges to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
           },
           "404": {
             "content": {

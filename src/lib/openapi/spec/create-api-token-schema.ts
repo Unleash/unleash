@@ -1,5 +1,4 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { ApiTokenType } from '../../types/models/api-token';
 
 // TODO: (openapi) this schema isn't entirely correct: `project` and `projects`
 // are mutually exclusive.
@@ -7,43 +6,66 @@ import { ApiTokenType } from '../../types/models/api-token';
 // That is, when creating a token, you can provide either `project` _or_
 // `projects`, but *not* both.
 //
-// We should be able to annotate this using `oneOf` and `allOf`, but making
-// `oneOf` only valid for _either_ `project` _or_ `projects` is tricky.
-//
-// I've opened an issue to get some help (thought it was a bug initially).
-// There's more info available at:
-//
-// https://github.com/ajv-validator/ajv/issues/2096
-//
-// This also applies to apiTokenSchema and potentially other related schemas.
+// Because we allow additional properties, we cannot express the mutual exclusiveness in the schema (with OpenAPI 3.0). As such, it's mentioned in the description for now.
 
 export const createApiTokenSchema = {
     $id: '#/components/schemas/createApiTokenSchema',
     type: 'object',
     required: ['type'],
+
     properties: {
-        type: {
-            type: 'string',
-            description: `One of ${Object.values(ApiTokenType).join(', ')}`,
-        },
-        environment: {
-            type: 'string',
-        },
-        project: {
-            type: 'string',
-        },
-        projects: {
-            type: 'array',
-            items: {
-                type: 'string',
-            },
-        },
         expiresAt: {
             type: 'string',
             format: 'date-time',
-            nullable: true,
+            description: 'The time when this token should expire.',
+            example: '2023-07-04T11:26:24+02:00',
         },
     },
+    oneOf: [
+        {
+            properties: {
+                type: {
+                    type: 'string',
+                    pattern: '[Aa][Dd][Mm][Ii][Nn]',
+                    description: `An admin token. Must be the string "admin" (not case sensitive).`,
+                    example: 'admin',
+                },
+            },
+        },
+        {
+            properties: {
+                type: {
+                    type: 'string',
+                    pattern:
+                        '[Cc][Ll][Ii][Ee][Nn][Tt]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd]',
+                    description: `A client or frontend token. Must be one of the strings "client" or "frontend" (not case sensitive).`,
+                    example: 'frontend',
+                },
+                environment: {
+                    type: 'string',
+                    description:
+                        'The environment that the token should be valid for. Defaults to "default"',
+                    example: 'development',
+                },
+                project: {
+                    type: 'string',
+                    description:
+                        'The project that the token should be valid for. Defaults to "*" meaning every project. This property is mutually incompatible with the `projects` property. If you specify one, you cannot specify the other.',
+                    example: 'development',
+                },
+                projects: {
+                    type: 'array',
+                    description:
+                        'A list of projects that the token should be valid for. This property is mutually incompatible with the `project` property. If you specify one, you cannot specify the other.',
+                    example: 'development',
+                    items: {
+                        type: 'string',
+                    },
+                },
+            },
+        },
+    ],
+
     anyOf: [
         {
             properties: {
@@ -51,7 +73,6 @@ export const createApiTokenSchema = {
                     type: 'string',
                 },
             },
-            required: ['username'],
         },
         {
             properties: {
@@ -59,7 +80,6 @@ export const createApiTokenSchema = {
                     type: 'string',
                 },
             },
-            required: ['tokenName'],
         },
     ],
     components: {},

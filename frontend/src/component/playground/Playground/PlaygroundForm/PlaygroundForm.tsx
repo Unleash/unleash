@@ -1,5 +1,4 @@
 import { Box, Button, Divider, useTheme } from '@mui/material';
-import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
 import { IEnvironment } from 'interfaces/environments';
 import { FormEvent, VFC } from 'react';
 import { PlaygroundCodeFieldset } from './PlaygroundCodeFieldset/PlaygroundCodeFieldset';
@@ -48,33 +47,17 @@ export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
                     ({ name }) => name
                 )}
             />
-            <Divider
-                variant="fullWidth"
-                sx={{
-                    mb: 2,
-                    borderColor: theme.palette.divider,
-                    borderStyle: 'dashed',
-                }}
-            />
+
             <PlaygroundCodeFieldset context={context} setContext={setContext} />
 
-            <Divider
-                variant="fullWidth"
-                sx={{
-                    mt: 3,
-                    mb: 2,
-                    borderColor: theme.palette.divider,
-                }}
-            />
             <Box
                 sx={{
+                    mt: 2,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
                 }}
             >
-                <GuidanceIndicator type="secondary">3</GuidanceIndicator>
-
                 <Button
                     variant="contained"
                     size="large"

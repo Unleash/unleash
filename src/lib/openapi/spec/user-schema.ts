@@ -85,6 +85,7 @@ export const userSchema = {
             example: 'User',
         },
         permissions: {
+            description: 'Deprecated',
             type: 'array',
             items: {
                 type: 'string',

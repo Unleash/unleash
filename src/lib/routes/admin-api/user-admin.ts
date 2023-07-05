@@ -339,7 +339,7 @@ export default class UserAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'deleteUser',
-                    summary: 'Deletes a user',
+                    summary: 'Delete a user',
                     description: 'Deletes the user with the given userId',
                     responses: {
                         200: emptyResponse,

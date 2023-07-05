@@ -163,7 +163,7 @@ export default class UserAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'resetUserPassword',
-                    summary: 'Reset user password as an admin',
+                    summary: 'Reset user password',
                     description: 'Reset user password as an admin',
                     requestBody: createRequestSchema('idSchema'),
                     responses: {
@@ -277,7 +277,7 @@ export default class UserAdminController extends Controller {
                     description: 'Creates a new user with the given root role.',
                     requestBody: createRequestSchema('createUserSchema'),
                     responses: {
-                        201: createResponseSchema('createUserResponseSchema'),
+                        200: createResponseSchema('createUserResponseSchema'),
                         ...getStandardResponses(400, 401, 403),
                     },
                 }),
@@ -537,7 +537,7 @@ export default class UserAdminController extends Controller {
         };
 
         this.openApiService.respondWithValidation(
-            201,
+            200,
             res,
             createUserResponseSchema.$id,
             responseData,

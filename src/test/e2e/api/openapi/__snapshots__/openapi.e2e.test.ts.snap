@@ -5954,7 +5954,7 @@ Stats are divided into current and previous **windows**.
               {
                 "example": 1,
                 "minimum": 0,
-                "type": "number",
+                "type": "integer",
               },
               {
                 "enum": [
@@ -14685,7 +14685,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
           "required": true,
         },
         "responses": {
-          "201": {
+          "200": {
             "content": {
               "application/json": {
                 "schema": {
@@ -15043,7 +15043,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             "description": "The requested resource was not found.",
           },
         },
-        "summary": "Reset user password as an admin",
+        "summary": "Reset user password",
         "tags": [
           "Users",
         ],

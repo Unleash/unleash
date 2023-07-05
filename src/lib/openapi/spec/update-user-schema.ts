@@ -22,7 +22,7 @@ export const updateUserSchema = {
                 "The role to assign to the user. Can be either the role's ID or its unique name.",
             oneOf: [
                 {
-                    type: 'number',
+                    type: 'integer',
                     example: 1,
                     minimum: 0,
                 },

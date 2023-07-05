@@ -197,7 +197,9 @@ const UsersList = () => {
     const initialState = useMemo(() => {
         return {
             sortBy: [{ id: 'createdAt' }],
-            hiddenColumns: isBillingUsers ? [] : ['type'],
+            hiddenColumns: isBillingUsers
+                ? ['username', 'email']
+                : ['type', 'username', 'email'],
         };
     }, [isBillingUsers]);
 

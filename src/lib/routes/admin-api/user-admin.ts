@@ -15,7 +15,10 @@ import { simpleAuthSettingsKey } from '../../types/settings/simple-auth-settings
 import { anonymise } from '../../util/anonymise';
 import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import {
+    createResponseSchema,
+    resourceCreatedResponseSchema,
+} from '../../openapi/util/create-response-schema';
 import { userSchema, UserSchema } from '../../openapi/spec/user-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import { usersSchema, UsersSchema } from '../../openapi/spec/users-schema';
@@ -277,7 +280,9 @@ export default class UserAdminController extends Controller {
                     description: 'Creates a new user with the given root role.',
                     requestBody: createRequestSchema('createUserSchema'),
                     responses: {
-                        201: createResponseSchema('createUserResponseSchema'),
+                        201: resourceCreatedResponseSchema(
+                            'createUserResponseSchema',
+                        ),
                         ...getStandardResponses(400, 401, 403),
                     },
                 }),

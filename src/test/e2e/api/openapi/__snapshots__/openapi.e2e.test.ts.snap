@@ -14923,7 +14923,16 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "createUserResponseSchema",
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
           "400": {
             "content": {

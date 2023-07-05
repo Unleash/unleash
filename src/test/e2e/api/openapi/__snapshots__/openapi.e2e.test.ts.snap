@@ -2519,11 +2519,15 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "exportQuerySchema": {
         "additionalProperties": true,
+        "description": "Available query parameters for  the [deprecated export/import](https://docs.getunleash.io/reference/deploy/import-export) functionality.",
         "oneOf": [
           {
             "properties": {
               "features": {
                 "description": "Selects features to export by name.",
+                "example": [
+                  "MyAwesomeFeature",
+                ],
                 "items": {
                   "minLength": 1,
                   "type": "string",
@@ -2539,6 +2543,7 @@ The provider you choose for your addon dictates what properties the \`parameters
             "properties": {
               "tag": {
                 "description": "Selects features to export by tag. Takes precedence over the features field.",
+                "example": "release",
                 "type": "string",
               },
             },
@@ -2549,9 +2554,13 @@ The provider you choose for your addon dictates what properties the \`parameters
         ],
         "properties": {
           "downloadFile": {
+            "description": "Whether to return a downloadable file",
+            "example": true,
             "type": "boolean",
           },
           "environment": {
+            "description": "The environment to export from",
+            "example": "development",
             "type": "string",
           },
         },
@@ -2562,38 +2571,120 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "exportResultSchema": {
         "additionalProperties": false,
+        "description": "The result of the export operation, providing you with the feature toggle definitions, strategy definitions and the rest of the elements relevant to the features (tags, environments etc.)",
         "properties": {
           "contextFields": {
+            "description": "A list of all the context fields that are in use by any of the strategies in the \`featureStrategies\` list.",
+            "example": [
+              {
+                "description": "Allows you to constrain on application name",
+                "legalValues": [],
+                "name": "appName",
+                "sortOrder": 2,
+                "stickiness": false,
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/contextFieldSchema",
             },
             "type": "array",
           },
           "featureEnvironments": {
+            "description": "Environment-specific configuration for all the features in the \`features\` list. Includes data such as whether the feature is enabled in the selected export environment, whether there are any variants assigned, etc.",
+            "example": [
+              {
+                "enabled": true,
+                "environment": "development",
+                "featureName": "my-feature",
+                "name": "variant-testing",
+                "variants": [
+                  {
+                    "name": "a",
+                    "overrides": [],
+                    "stickiness": "random",
+                    "weight": 500,
+                    "weightType": "variable",
+                  },
+                  {
+                    "name": "b",
+                    "overrides": [],
+                    "stickiness": "random",
+                    "weight": 500,
+                    "weightType": "variable",
+                  },
+                ],
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/featureEnvironmentSchema",
             },
             "type": "array",
           },
           "featureStrategies": {
+            "description": "All strategy instances that are used by the exported features in the \`features\` list.",
+            "example": [
+              {
+                "constraints": [],
+                "disabled": false,
+                "featureName": "my-feature",
+                "id": "924974d7-8003-43ee-87eb-c5f887c06fd1",
+                "name": "flexibleRollout",
+                "parameters": {
+                  "groupId": "default",
+                  "rollout": "50",
+                  "stickiness": "random",
+                },
+                "segments": [
+                  1,
+                ],
+                "title": "Rollout 50%",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/featureStrategySchema",
             },
             "type": "array",
           },
           "featureTags": {
+            "description": "A list of all the tags that have been applied to any of the features in the \`features\` list.",
+            "example": [
+              {
+                "featureName": "my-feature",
+                "tagType": "simple",
+                "tagValue": "user-facing",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/featureTagSchema",
             },
             "type": "array",
           },
           "features": {
+            "description": "All the exported features.",
+            "example": [
+              {
+                "archived": false,
+                "description": "best feature ever",
+                "impressionData": false,
+                "name": "my-feature",
+                "project": "default",
+                "stale": false,
+                "type": "release",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/featureSchema",
             },
             "type": "array",
           },
           "segments": {
+            "description": "A list of all the segments that are used by the strategies in the \`featureStrategies\` list.",
+            "example": [
+              {
+                "id": 1,
+                "name": "new-segment-name",
+              },
+            ],
             "items": {
               "additionalProperties": false,
               "properties": {
@@ -2612,6 +2703,14 @@ The provider you choose for your addon dictates what properties the \`parameters
             "type": "array",
           },
           "tagTypes": {
+            "description": "A list of all of the tag types that are used in the \`featureTags\` list.",
+            "example": [
+              {
+                "description": "Used to simplify filtering of features",
+                "icon": "#",
+                "name": "simple",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/tagTypeSchema",
             },
@@ -3487,14 +3586,19 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "importTogglesSchema": {
         "additionalProperties": false,
+        "description": "The result of the export operation for a project and environment, used at import",
         "properties": {
           "data": {
             "$ref": "#/components/schemas/exportResultSchema",
           },
           "environment": {
+            "description": "The exported [environment](https://docs.getunleash.io/reference/environments)",
+            "example": "development",
             "type": "string",
           },
           "project": {
+            "description": "The exported [project](https://docs.getunleash.io/reference/projects)",
+            "example": "My awesome project",
             "type": "string",
           },
         },
@@ -3507,14 +3611,22 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "importTogglesValidateItemSchema": {
         "additionalProperties": false,
+        "description": "A description of an error or warning pertaining to a feature toggle import job.",
         "properties": {
           "affectedItems": {
+            "description": "The items affected by this error message ",
+            "example": [
+              "some-feature-a",
+              "some-feature-b",
+            ],
             "items": {
               "type": "string",
             },
             "type": "array",
           },
           "message": {
+            "description": "The validation error message",
+            "example": "You cannot import a feature that already exist in other projects. You already have the following features defined outside of project default:",
             "type": "string",
           },
         },
@@ -3526,20 +3638,41 @@ The provider you choose for your addon dictates what properties the \`parameters
       },
       "importTogglesValidateSchema": {
         "additionalProperties": false,
+        "description": "An object containing [feature import](https://docs.getunleash.io/reference/deploy/environment-import-export) validation results.",
         "properties": {
           "errors": {
+            "description": "A list of errors that prevent the provided data from being successfully imported.",
+            "example": [
+              {
+                "affectedItems": [
+                  "my-feature (in project project-854)",
+                ],
+                "message": "You cannot import a feature that already exist in other projects. You already have the following features defined outside of project default:",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/importTogglesValidateItemSchema",
             },
             "type": "array",
           },
           "permissions": {
+            "description": "Any additional permissions required to import the data. If the list is empty, you require no additional permissions beyond what your user already has.",
+            "example": [],
             "items": {
               "$ref": "#/components/schemas/importTogglesValidateItemSchema",
             },
             "type": "array",
           },
           "warnings": {
+            "description": "A list of warnings related to the provided data.",
+            "example": [
+              {
+                "affectedItems": [
+                  "custom-strategy-7",
+                ],
+                "message": "The following strategy types will be used in import. Please make sure the strategy type parameters are configured as in source environment:",
+              },
+            ],
             "items": {
               "$ref": "#/components/schemas/importTogglesValidateItemSchema",
             },
@@ -8710,6 +8843,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/features-batch/export": {
       "post": {
+        "description": "Exports all features listed in the \`features\` property from the environment specified in the request body. If set to \`true\`, the \`downloadFile\` property will let you download a file with the exported data. Otherwise, the export data is returned directly as JSON. Refer to the documentation for more information about [Unleash's export functionality](https://docs.getunleash.io/reference/deploy/environment-import-export#export).",
         "operationId": "exportFeatures",
         "requestBody": {
           "content": {
@@ -8733,15 +8867,43 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "exportResultSchema",
           },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
+        "summary": "Export feature toggles from an environment",
         "tags": [
-          "Unstable",
+          "Import/Export",
         ],
       },
     },
     "/api/admin/features-batch/import": {
       "post": {
-        "description": "Unleash toggles exported from a different instance can be imported into a new project and environment",
+        "description": "[Import feature toggles](https://docs.getunleash.io/reference/deploy/environment-import-export#import) into a specific project and environment.",
         "operationId": "importToggles",
         "requestBody": {
           "content": {
@@ -8758,16 +8920,43 @@ If the provided project does not exist, the list of events will be empty.",
           "200": {
             "description": "This response has no body.",
           },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
-        "summary": "Import feature toggles for an environment in the project",
+        "summary": "Import feature toggles",
         "tags": [
-          "Unstable",
+          "Import/Export",
         ],
       },
     },
     "/api/admin/features-batch/validate": {
       "post": {
-        "description": "Unleash toggles exported from a different instance can be imported into a new project and environment",
+        "description": "Validates a feature toggle data set. Checks whether the data can be imported into the specified project and environment. The returned value is an object that contains errors, warnings, and permissions required to perform the import, as described in the [import documentation](https://docs.getunleash.io/reference/deploy/environment-import-export#import).",
         "operationId": "validateImport",
         "requestBody": {
           "content": {
@@ -8791,10 +8980,37 @@ If the provided project does not exist, the list of events will be empty.",
             },
             "description": "importTogglesValidateSchema",
           },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "Could not find the addon with ID "12345".",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "NotFoundError",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The requested resource was not found.",
+          },
         },
-        "summary": "Validate import of feature toggles for an environment in the project",
+        "summary": "Validate feature import data",
         "tags": [
-          "Unstable",
+          "Import/Export",
         ],
       },
     },
@@ -17380,6 +17596,10 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
     {
       "description": "Register, read, or delete metrics recorded by Unleash.",
       "name": "Metrics",
+    },
+    {
+      "description": "API for managing [notifications](https://docs.getunleash.io/reference/notifications).",
+      "name": "Notifications",
     },
     {
       "description": "Endpoints related to the operational status of this Unleash instance.",

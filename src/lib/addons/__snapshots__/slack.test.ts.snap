@@ -1,9 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should call slack webhook 1`] = `"{"username":"Unleash","icon_emoji":":unleash:","text":"some@user.com created feature toggle <http://some-url.com/projects/default/features/some-toggle|some-toggle> in project *default*","channel":"#undefined","attachments":[{"actions":[{"name":"featureToggle","text":"Open in Unleash","type":"button","value":"featureToggle","style":"primary","url":"http://some-url.com/projects/default/features/some-toggle"}]}]}"`;
+exports[`Should call slack webhook 1`] = `"{"username":"Unleash","icon_emoji":":unleash:","text":"some@user.com created feature toggle <http://some-url.com/projects/default/features/some-toggle|some-toggle> in project *default*","channel":"#general","attachments":[{"actions":[{"name":"featureToggle","text":"Open in Unleash","type":"button","value":"featureToggle","style":"primary","url":"http://some-url.com/projects/default/features/some-toggle"}]}]}"`;
 
-exports[`Should call slack webhook for archived toggle 1`] = `"{"username":"Unleash","icon_emoji":":unleash:","text":" some@user.com just archived feature toggle *<http://some-url.com/archive|some-toggle>*","channel":"#undefined","attachments":[{"actions":[{"name":"featureToggle","text":"Open in Unleash","type":"button","value":"featureToggle","style":"primary","url":"http://some-url.com/archive"}]}]}"`;
+exports[`Should call slack webhook for archived toggle 1`] = `"{"username":"Unleash","icon_emoji":":unleash:","text":" some@user.com just archived feature toggle *<http://some-url.com/archive|some-toggle>*","channel":"#general","attachments":[{"actions":[{"name":"featureToggle","text":"Open in Unleash","type":"button","value":"featureToggle","style":"primary","url":"http://some-url.com/archive"}]}]}"`;
 
-exports[`Should call slack webhook for archived toggle with project info 1`] = `"{"username":"Unleash","icon_emoji":":unleash:","text":" some@user.com just archived feature toggle *<http://some-url.com/projects/some-project/archive|some-toggle>*","channel":"#undefined","attachments":[{"actions":[{"name":"featureToggle","text":"Open in Unleash","type":"button","value":"featureToggle","style":"primary","url":"http://some-url.com/projects/some-project/archive"}]}]}"`;
+exports[`Should call slack webhook for archived toggle with project info 1`] = `"{"username":"Unleash","icon_emoji":":unleash:","text":" some@user.com just archived feature toggle *<http://some-url.com/projects/some-project/archive|some-toggle>*","channel":"#general","attachments":[{"actions":[{"name":"featureToggle","text":"Open in Unleash","type":"button","value":"featureToggle","style":"primary","url":"http://some-url.com/projects/some-project/archive"}]}]}"`;
 
-exports[`Should call webhook for toggled environment 1`] = `"{"username":"Unleash","icon_emoji":":unleash:","text":"some@user.com *disabled* <http://some-url.com/projects/default/features/some-toggle|some-toggle> in *development* environment in project *default*","channel":"#undefined","attachments":[{"actions":[{"name":"featureToggle","text":"Open in Unleash","type":"button","value":"featureToggle","style":"primary","url":"http://some-url.com/projects/default/features/some-toggle"}]}]}"`;
+exports[`Should call webhook for toggled environment 1`] = `"{"username":"Unleash","icon_emoji":":unleash:","text":"some@user.com *disabled* <http://some-url.com/projects/default/features/some-toggle|some-toggle> in *development* environment in project *default*","channel":"#general","attachments":[{"actions":[{"name":"featureToggle","text":"Open in Unleash","type":"button","value":"featureToggle","style":"primary","url":"http://some-url.com/projects/default/features/some-toggle"}]}]}"`;
+
+exports[`Should include custom headers from parameters in call to service 1`] = `"{"username":"Unleash","icon_emoji":":unleash:","text":"some@user.com *disabled* <http://some-url.com/projects/default/features/some-toggle|some-toggle> in *development* environment in project *default*","channel":"#general","attachments":[{"actions":[{"name":"featureToggle","text":"Open in Unleash","type":"button","value":"featureToggle","style":"primary","url":"http://some-url.com/projects/default/features/some-toggle"}]}]}"`;
+
+exports[`Should include custom headers from parameters in call to service 2`] = `
+{
+  "Content-Type": "application/json",
+  "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE",
+}
+`;

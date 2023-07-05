@@ -124,7 +124,8 @@
     "@xmldom/xmldom": "^0.8.4",
     "json5": "^2.2.2",
     "@types/react": "17.0.62",
-    "@types/react-dom": "17.0.20"
+    "@types/react-dom": "17.0.20",
+    "semver": "^7.5.3"
   },
   "jest": {
     "moduleNameMapper": {

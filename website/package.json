@@ -43,7 +43,7 @@
   "resolutions": {
     "async": "^3.2.4",
     "trim": "^1.0.0",
-    "got": "^11.8.5",
+    "got": "^13.0.0",
     "glob-parent": "^6.0.0",
     "browserslist": "^4.16.5",
     "set-value": "^4.0.1",
@@ -54,7 +54,8 @@
     "trim-newlines": "^4.0.0",
     "minimatch": "^5.0.0",
     "decode-uri-component": "^0.4.0",
-    "qs": "^6.9.7"
+    "qs": "^6.9.7",
+    "semver": "^7.5.3"
   },
   "browserslist": {
     "production": [

@@ -9,6 +9,12 @@ import {
 } from './feature-event-formatter-md';
 import { IEvent } from '../types/events';
 
+interface IDatadogParameters {
+    url: string;
+    apiKey: string;
+    customHeaders?: string;
+}
+
 export default class DatadogAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
@@ -21,9 +27,15 @@ export default class DatadogAddon extends Addon {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async handleEvent(event: IEvent, parameters: any): Promise<void> {
-        const { url = 'https://api.datadoghq.com/api/v1/events', apiKey } =
-            parameters;
+    async handleEvent(
+        event: IEvent,
+        parameters: IDatadogParameters,
+    ): Promise<void> {
+        const {
+            url = 'https://api.datadoghq.com/api/v1/events',
+            apiKey,
+            customHeaders,
+        } = parameters;
 
         const text = this.msgFormatter.format(event);
 
@@ -35,12 +47,22 @@ export default class DatadogAddon extends Addon {
             title: 'Unleash notification update',
             tags,
         };
-
+        let extraHeaders = {};
+        if (typeof customHeaders === 'string' && customHeaders.length > 1) {
+            try {
+                extraHeaders = JSON.parse(customHeaders);
+            } catch (e) {
+                this.logger.warn(
+                    `Could not parse the json in the customHeaders parameter. [${customHeaders}]`,
+                );
+            }
+        }
         const requestOpts = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'DD-API-KEY': apiKey,
+                ...extraHeaders,
             },
             body: JSON.stringify(body),
         };

@@ -1798,50 +1798,171 @@ The provider you choose for your addon dictates what properties the \`parameters
         "description": "The data required to create an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).",
         "oneOf": [
           {
-            "properties": {
-              "type": {
-                "description": "An admin token. Must be the string "admin" (not case sensitive).",
-                "example": "admin",
-                "pattern": "[Aa][Dd][Mm][Ii][Nn]",
-                "type": "string",
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "description": "An admin token. Must be the string "admin" (not case sensitive).",
+                    "example": "admin",
+                    "pattern": "^[Aa][Dd][Mm][Ii][Nn]$",
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "type",
+                ],
+                "type": "object",
               },
-            },
-            "required": [
-              "type",
+              {
+                "properties": {
+                  "tokenName": {
+                    "description": "The name of the token.",
+                    "example": "client-token-64522",
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "tokenName",
+                ],
+                "type": "object",
+              },
             ],
           },
           {
-            "properties": {
-              "environment": {
-                "description": "The environment that the token should be valid for. Defaults to "default"",
-                "example": "development",
-                "type": "string",
-              },
-              "project": {
-                "description": "The project that the token should be valid for. Defaults to "*" meaning every project. This property is mutually incompatible with the \`projects\` property. If you specify one, you cannot specify the other.",
-                "example": "project-851",
-                "type": "string",
-              },
-              "projects": {
-                "description": "A list of projects that the token should be valid for. This property is mutually incompatible with the \`project\` property. If you specify one, you cannot specify the other.",
-                "example": [
-                  "project-851",
-                  "project-852",
-                ],
-                "items": {
-                  "type": "string",
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "description": "An admin token. Must be the string "admin" (not case sensitive).",
+                    "example": "admin",
+                    "pattern": "^[Aa][Dd][Mm][Ii][Nn]$",
+                    "type": "string",
+                  },
                 },
-                "type": "array",
+                "required": [
+                  "type",
+                ],
+                "type": "object",
               },
-              "type": {
-                "description": "A client or frontend token. Must be one of the strings "client" or "frontend" (not case sensitive).",
-                "example": "frontend",
-                "pattern": "[Cc][Ll][Ii][Ee][Nn][Tt]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd]",
-                "type": "string",
+              {
+                "properties": {
+                  "username": {
+                    "deprecated": true,
+                    "description": "The name of the token. This property is deprecated. Use \`tokenName\` instead.",
+                    "example": "client-token-64523",
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "username",
+                ],
+                "type": "object",
               },
-            },
-            "required": [
-              "type",
+            ],
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "environment": {
+                    "description": "The environment that the token should be valid for. Defaults to "default"",
+                    "example": "development",
+                    "type": "string",
+                  },
+                  "project": {
+                    "description": "The project that the token should be valid for. Defaults to "*" meaning every project. This property is mutually incompatible with the \`projects\` property. If you specify one, you cannot specify the other.",
+                    "example": "project-851",
+                    "type": "string",
+                  },
+                  "projects": {
+                    "description": "A list of projects that the token should be valid for. This property is mutually incompatible with the \`project\` property. If you specify one, you cannot specify the other.",
+                    "example": [
+                      "project-851",
+                      "project-852",
+                    ],
+                    "items": {
+                      "type": "string",
+                    },
+                    "type": "array",
+                  },
+                  "type": {
+                    "description": "A client or frontend token. Must be one of the strings "client" or "frontend" (not case sensitive).",
+                    "example": "frontend",
+                    "pattern": "^([Cc][Ll][Ii][Ee][Nn][Tt]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd])$",
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "type",
+                ],
+                "type": "object",
+              },
+              {
+                "properties": {
+                  "tokenName": {
+                    "description": "The name of the token.",
+                    "example": "client-token-64522",
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "tokenName",
+                ],
+                "type": "object",
+              },
+            ],
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "environment": {
+                    "description": "The environment that the token should be valid for. Defaults to "default"",
+                    "example": "development",
+                    "type": "string",
+                  },
+                  "project": {
+                    "description": "The project that the token should be valid for. Defaults to "*" meaning every project. This property is mutually incompatible with the \`projects\` property. If you specify one, you cannot specify the other.",
+                    "example": "project-851",
+                    "type": "string",
+                  },
+                  "projects": {
+                    "description": "A list of projects that the token should be valid for. This property is mutually incompatible with the \`project\` property. If you specify one, you cannot specify the other.",
+                    "example": [
+                      "project-851",
+                      "project-852",
+                    ],
+                    "items": {
+                      "type": "string",
+                    },
+                    "type": "array",
+                  },
+                  "type": {
+                    "description": "A client or frontend token. Must be one of the strings "client" or "frontend" (not case sensitive).",
+                    "example": "frontend",
+                    "pattern": "^([Cc][Ll][Ii][Ee][Nn][Tt]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd])$",
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "type",
+                ],
+                "type": "object",
+              },
+              {
+                "properties": {
+                  "username": {
+                    "deprecated": true,
+                    "description": "The name of the token. This property is deprecated. Use \`tokenName\` instead.",
+                    "example": "client-token-64523",
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "username",
+                ],
+                "type": "object",
+              },
             ],
           },
         ],
@@ -1850,17 +1971,6 @@ The provider you choose for your addon dictates what properties the \`parameters
             "description": "The time when this token should expire.",
             "example": "2023-07-04T11:26:24+02:00",
             "format": "date-time",
-            "type": "string",
-          },
-          "tokenName": {
-            "description": "The name of the token.",
-            "example": "client-token-64522",
-            "type": "string",
-          },
-          "username": {
-            "deprecated": true,
-            "description": "The name of the token. This property is deprecated. Use \`tokenName\` instead.",
-            "example": "client-token-64523",
             "type": "string",
           },
         },
@@ -6641,7 +6751,7 @@ Note: passing \`null\` as a value for the description property will set it to an
     },
     "/api/admin/api-tokens": {
       "get": {
-        "description": "Retrieves all API tokens that exists in the Unleash instance.",
+        "description": "Retrieves all API tokens that exist in the Unleash instance.",
         "operationId": "getAllApiTokens",
         "responses": {
           "200": {

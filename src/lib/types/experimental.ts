@@ -15,7 +15,6 @@ export type IFlagKey =
     | 'proPlanAutoCharge'
     | 'personalAccessTokensKillSwitch'
     | 'cleanClientApi'
-    | 'groupRootRoles'
     | 'migrationLock'
     | 'demo'
     | 'googleAuthEnabled'
@@ -79,10 +78,6 @@ const flags: IFlags = {
         false,
     ),
     cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
-    groupRootRoles: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ROOT_ROLE_GROUPS,
-        false,
-    ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
     strategySplittedButton: parseEnvVarBoolean(

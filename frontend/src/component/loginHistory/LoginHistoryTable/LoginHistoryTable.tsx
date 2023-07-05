@@ -19,8 +19,6 @@ import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCel
 import { useLoginHistory } from 'hooks/api/getters/useLoginHistory/useLoginHistory';
 import { LoginHistorySuccessfulCell } from './LoginHistorySuccessfulCell/LoginHistorySuccessfulCell';
 import { ILoginEvent } from 'interfaces/loginEvent';
-import { LoginHistoryActionsCell } from './LoginHistoryActionsCell/LoginHistoryActionsCell';
-import { LoginHistoryDeleteDialog } from './LoginHistoryDeleteDialog/LoginHistoryDeleteDialog';
 import { useLoginHistoryApi } from 'hooks/api/actions/useLoginHistoryApi/useLoginHistoryApi';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useSearchParams } from 'react-router-dom';
@@ -50,7 +48,7 @@ export const LoginHistoryTable = () => {
     const { setToastData, setToastApiError } = useToast();
 
     const { events, loading, refetch } = useLoginHistory();
-    const { removeEvent, removeAllEvents, downloadCSV } = useLoginHistoryApi();
+    const { removeAllEvents, downloadCSV } = useLoginHistoryApi();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [initialState] = useState(() => ({
@@ -67,23 +65,7 @@ export const LoginHistoryTable = () => {
     }));
 
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
-    const [selectedEvent, setSelectedEvent] = useState<ILoginEvent>();
-    const [deleteOpen, setDeleteOpen] = useState(false);
     const [deleteAllOpen, setDeleteAllOpen] = useState(false);
-
-    const onDeleteConfirm = async (event: ILoginEvent) => {
-        try {
-            await removeEvent(event.id);
-            setToastData({
-                title: `Event has been deleted`,
-                type: 'success',
-            });
-            refetch();
-            setDeleteOpen(false);
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
 
     const onDeleteAllConfirm = async () => {
         try {
@@ -143,21 +125,6 @@ export const LoginHistoryTable = () => {
                 Cell: LoginHistorySuccessfulCell,
                 filterName: 'success',
                 filterParsing: (value: boolean) => value.toString(),
-            },
-            {
-                Header: 'Actions',
-                id: 'Actions',
-                align: 'center',
-                Cell: ({ row: { original: event } }: any) => (
-                    <LoginHistoryActionsCell
-                        onDelete={() => {
-                            setSelectedEvent(event);
-                            setDeleteOpen(true);
-                        }}
-                    />
-                ),
-                width: 150,
-                disableSortBy: true,
             },
             // Always hidden -- for search
             {
@@ -326,12 +293,6 @@ export const LoginHistoryTable = () => {
                         }
                     />
                 }
-            />
-            <LoginHistoryDeleteDialog
-                event={selectedEvent}
-                open={deleteOpen}
-                setOpen={setDeleteOpen}
-                onConfirm={onDeleteConfirm}
             />
             <LoginHistoryDeleteAllDialog
                 open={deleteAllOpen}

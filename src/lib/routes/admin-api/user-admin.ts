@@ -128,7 +128,7 @@ export default class UserAdminController extends Controller {
                     requestBody: createRequestSchema('passwordSchema'),
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(400, 401),
+                        ...getStandardResponses(400, 401, 415),
                     },
                 }),
             ],

@@ -20,7 +20,7 @@ const tokenNameSchema = {
         tokenName: {
             type: 'string',
             description: 'The name of the token.',
-            example: 'client-token-64522',
+            example: 'token-64522',
         },
     },
 } as const;
@@ -34,7 +34,7 @@ const usernameSchema = {
             type: 'string',
             description:
                 'The name of the token. This property is deprecated. Use `tokenName` instead.',
-            example: 'client-token-64523',
+            example: 'token-64523',
         },
     },
 } as const;

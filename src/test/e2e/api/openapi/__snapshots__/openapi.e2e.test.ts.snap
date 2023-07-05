@@ -1817,7 +1817,7 @@ The provider you choose for your addon dictates what properties the \`parameters
                 "properties": {
                   "tokenName": {
                     "description": "The name of the token.",
-                    "example": "client-token-64522",
+                    "example": "token-64522",
                     "type": "string",
                   },
                 },
@@ -1849,7 +1849,7 @@ The provider you choose for your addon dictates what properties the \`parameters
                   "username": {
                     "deprecated": true,
                     "description": "The name of the token. This property is deprecated. Use \`tokenName\` instead.",
-                    "example": "client-token-64523",
+                    "example": "token-64523",
                     "type": "string",
                   },
                 },
@@ -1901,7 +1901,7 @@ The provider you choose for your addon dictates what properties the \`parameters
                 "properties": {
                   "tokenName": {
                     "description": "The name of the token.",
-                    "example": "client-token-64522",
+                    "example": "token-64522",
                     "type": "string",
                   },
                 },
@@ -1954,7 +1954,7 @@ The provider you choose for your addon dictates what properties the \`parameters
                   "username": {
                     "deprecated": true,
                     "description": "The name of the token. This property is deprecated. Use \`tokenName\` instead.",
-                    "example": "client-token-64523",
+                    "example": "token-64523",
                     "type": "string",
                   },
                 },

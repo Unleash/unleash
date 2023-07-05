@@ -47,8 +47,8 @@ beforeAll(async () => {
     });
     userStore = stores.userStore;
     const rootRoles = await accessService.getRootRoles();
-    adminRole = rootRoles.find((r) => r.name === RoleName.ADMIN);
-    viewerRole = rootRoles.find((r) => r.name === RoleName.VIEWER);
+    adminRole = rootRoles.find((r) => r.name === RoleName.ADMIN)!!;
+    viewerRole = rootRoles.find((r) => r.name === RoleName.VIEWER)!!;
 });
 
 afterAll(async () => {
@@ -218,7 +218,6 @@ test('updating a user without an email should not strip the email', async () => 
 
     await userService.updateUser({
         id: user.id,
-        email: null,
         name: 'some',
     });
 

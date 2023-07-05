@@ -1,4 +1,9 @@
-import { IEvent, IBaseEvent, SEGMENT_UPDATED } from '../types/events';
+import {
+    IEvent,
+    IBaseEvent,
+    SEGMENT_UPDATED,
+    IEventType,
+} from '../types/events';
 import { LogProvider, Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { ITag } from '../types/model';
@@ -359,7 +364,7 @@ class EventStore implements IEventStore {
     rowToEvent(row: IEventTable): IEvent {
         return {
             id: row.id,
-            type: row.type,
+            type: row.type as IEventType,
             createdBy: row.created_by,
             createdAt: row.created_at,
             data: row.data,

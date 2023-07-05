@@ -6318,7 +6318,7 @@ Stats are divided into current and previous **windows**.
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "413": {
             "content": {
@@ -6451,7 +6451,7 @@ Stats are divided into current and previous **windows**.
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -6659,7 +6659,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -6816,7 +6816,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Get API tokens",
@@ -6910,7 +6910,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "415": {
             "content": {
@@ -7016,7 +7016,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Delete API token",
@@ -7104,7 +7104,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "415": {
             "content": {
@@ -7207,7 +7207,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "tags": [
@@ -7292,7 +7292,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "tags": [
@@ -7397,7 +7397,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Revives a feature",
@@ -7476,7 +7476,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Archives a feature",
@@ -7562,7 +7562,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -7674,7 +7674,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -8013,7 +8013,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Get all environments",
@@ -8099,7 +8099,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -8206,7 +8206,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -8319,7 +8319,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -8425,7 +8425,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -8531,7 +8531,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -8939,7 +8939,7 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -9097,7 +9097,7 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -9255,7 +9255,7 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -9611,7 +9611,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Create a public signup token",
@@ -9697,7 +9697,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Retrieve a token",
@@ -9819,7 +9819,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Update a public signup token",
@@ -9895,7 +9895,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Get maintenance mode status",
@@ -10000,7 +10000,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Enabled/disabled maintenance mode",
@@ -10101,7 +10101,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Delete an application",
@@ -10273,7 +10273,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Create an application to connect reported metrics",
@@ -10523,7 +10523,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Get a list of all projects.",
@@ -10609,7 +10609,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -10722,7 +10722,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -10880,7 +10880,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Create a project API token.",
@@ -10967,7 +10967,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Delete a project API token.",
@@ -11084,7 +11084,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Archives a list of features",
@@ -11289,7 +11289,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Deletes a list of features",
@@ -11379,7 +11379,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "409": {
             "content": {
@@ -11520,7 +11520,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Remove an environment from a project.",
@@ -13064,7 +13064,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -13208,7 +13208,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
         },
         "summary": "Revives a list of features",
@@ -14497,7 +14497,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -14618,7 +14618,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {
@@ -14724,7 +14724,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation",
+            "description": "The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation",
           },
           "404": {
             "content": {

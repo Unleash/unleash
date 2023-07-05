@@ -34,7 +34,7 @@ const unauthorizedResponse = {
 
 const forbiddenResponse = {
     description:
-        'The provided user credentials are valid, but the user does not have the necessary permissions to execute this operation',
+        'The provided user credentials are valid, but the user does not have the necessary permissions to perform this operation',
     content: {
         'application/json': {
             schema: {

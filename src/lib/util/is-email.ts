@@ -5,7 +5,7 @@ const matcher =
 
 /**
  * Loosely validate an email address.
- * Max lenght of an email address is 320 characters: 64 for the local part + 1 for the @ +
+ * Max length of an email address is 320 characters: 64 for the local part + 1 for the @ +
  * 255 for the domain part.
  * See https://datatracker.ietf.org/doc/html/rfc5321#section-4.5.3.1.1
  *

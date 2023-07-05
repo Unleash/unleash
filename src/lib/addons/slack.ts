@@ -10,6 +10,13 @@ import {
 } from './feature-event-formatter-md';
 import { IEvent } from '../types/events';
 
+interface ISlackAddonParameters {
+    url: string;
+    username?: string;
+    defaultChannel: string;
+    emojiIcon?: string;
+    customHeaders?: string;
+}
 export default class SlackAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
@@ -22,12 +29,16 @@ export default class SlackAddon extends Addon {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async handleEvent(event: IEvent, parameters: any): Promise<void> {
+    async handleEvent(
+        event: IEvent,
+        parameters: ISlackAddonParameters,
+    ): Promise<void> {
         const {
             url,
             defaultChannel,
             username = 'Unleash',
-            iconEmoji = ':unleash:',
+            emojiIcon = ':unleash:',
+            customHeaders,
         } = parameters;
 
         const slackChannels = this.findSlackChannels(event);
@@ -42,7 +53,7 @@ export default class SlackAddon extends Addon {
         const requests = slackChannels.map((channel) => {
             const body = {
                 username,
-                icon_emoji: iconEmoji, // eslint-disable-line camelcase
+                icon_emoji: emojiIcon, // eslint-disable-line camelcase
                 text,
                 channel: `#${channel}`,
                 attachments: [
@@ -60,10 +71,22 @@ export default class SlackAddon extends Addon {
                     },
                 ],
             };
-
+            let extraHeaders = {};
+            if (typeof customHeaders === 'string' && customHeaders.length > 1) {
+                try {
+                    extraHeaders = JSON.parse(customHeaders);
+                } catch (e) {
+                    this.logger.warn(
+                        `Could not parse the json in the customHeaders parameter. [${customHeaders}]`,
+                    );
+                }
+            }
             const requestOpts = {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...extraHeaders,
+                },
                 body: JSON.stringify(body),
             };
 

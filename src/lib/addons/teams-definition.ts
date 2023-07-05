@@ -30,6 +30,18 @@ const teamsDefinition: IAddonDefinition = {
             required: true,
             sensitive: true,
         },
+        {
+            name: 'customHeaders',
+            displayName: 'Extra HTTP Headers',
+            placeholder: `{
+                "ISTIO_USER_KEY": "hunter2",
+                "SOME_OTHER_CUSTOM_HTTP_HEADER": "SOMEVALUE"
+            }`,
+            description: `(Optional) Used to add extra HTTP Headers to the request the plugin fires off. Format here needs to be a valid json object of key value pairs where both key and value are strings`,
+            required: false,
+            sensitive: true,
+            type: 'textfield',
+        },
     ],
     events: [
         FEATURE_CREATED,

@@ -49,12 +49,6 @@ describe('feature', () => {
         });
     });
 
-    it('can add a userId strategy to the development environment', () => {
-        cy.addUserIdStrategyToFeature_UI(featureToggleName).then(() => {
-            cy.deleteFeatureStrategy_UI(featureToggleName, false);
-        });
-    });
-
     it('can add variants to the development environment', () => {
         cy.addVariantsToFeature_UI(featureToggleName, [variant1, variant2]);
     });

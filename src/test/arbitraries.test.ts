@@ -19,7 +19,9 @@ export const urlFriendlyString = (): Arbitrary<string> =>
             ),
             { minLength: 1 },
         )
-        .map((arr) => arr.join(''));
+        .map((arr) => arr.join(''))
+        // filter out strings that are only dots because they mess with url parsing
+        .filter((string) => ![...string].every((char) => char === '.'));
 
 export const commonISOTimestamp = (): Arbitrary<string> =>
     fc

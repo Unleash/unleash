@@ -4,7 +4,12 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * An override for deciding which variant should be assigned to a user based on the context name
+ */
 export interface OverrideSchema {
+    /** The name of the context field used to determine overrides */
     contextName: string;
+    /** Which values that should be overriden */
     values: string[];
 }

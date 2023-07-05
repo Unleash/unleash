@@ -13,7 +13,10 @@ import {
     TokenUserSchema,
 } from '../../openapi/spec/token-user-schema';
 import { EmailSchema } from '../../openapi/spec/email-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 
 interface IValidateQuery {
     token: string;
@@ -56,9 +59,15 @@ class ResetPasswordController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Validates a token',
+                    description:
+                        'If the token is valid returns the user that owns the token',
                     tags: ['Auth'],
                     operationId: 'validateToken',
-                    responses: { 200: createResponseSchema('tokenUserSchema') },
+                    responses: {
+                        200: createResponseSchema('tokenUserSchema'),
+                        ...getStandardResponses(401, 415),
+                    },
                 }),
             ],
         });
@@ -70,9 +79,15 @@ class ResetPasswordController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Auth'],
+                    summary: `Changes a user password`,
+                    description:
+                        'Allows users with a valid reset token to reset their password without remembering their old password',
                     operationId: 'changePassword',
                     requestBody: createRequestSchema('changePasswordSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 415),
+                    },
                 }),
             ],
         });
@@ -84,9 +99,15 @@ class ResetPasswordController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Auth'],
+                    summary: 'Validates password',
+                    description:
+                        'Verifies that the password adheres to the [Unleash password guidelines](https://docs.getunleash.io/reference/deploy/securing-unleash#password-requirements)',
                     operationId: 'validatePassword',
                     requestBody: createRequestSchema('validatePasswordSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 415),
+                    },
                 }),
             ],
         });
@@ -98,9 +119,15 @@ class ResetPasswordController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Auth'],
+                    summary: 'Reset password',
+                    description:
+                        'Requests a password reset email for the user. This email can be used to reset the password for a user that has forgotten their password',
                     operationId: 'sendResetPasswordEmail',
                     requestBody: createRequestSchema('emailSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 404, 415),
+                    },
                 }),
             ],
         });

@@ -1,4 +1,7 @@
-import { PlaygroundService } from '../../../lib/features/playground/playground-service';
+import {
+    PlaygroundFeatureEvaluationResult,
+    PlaygroundService,
+} from '../../../lib/features/playground/playground-service';
 import {
     clientFeaturesAndSegments,
     commonISOTimestamp,
@@ -196,7 +199,7 @@ describe('the playground service (e2e)', () => {
         context: SdkContextSchema;
         env?: string;
         segments?: SegmentSchema[];
-    }): Promise<PlaygroundFeatureSchema[]> => {
+    }): Promise<PlaygroundFeatureEvaluationResult[]> => {
         await seedDatabaseForPlaygroundTest(db, features, env, segments);
 
         //     const activeSegments = await db.stores.segmentStore.getAllFeatureStrategySegments()
@@ -204,8 +207,11 @@ describe('the playground service (e2e)', () => {
 
         const projects = '*';
 
-        const serviceFeatures: PlaygroundFeatureSchema[] =
-            await service.evaluateQuery(projects, env, context);
+        const serviceFeatures = await service.evaluateQuery(
+            projects,
+            env,
+            context,
+        );
 
         return serviceFeatures;
     };

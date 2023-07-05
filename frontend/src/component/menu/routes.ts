@@ -4,7 +4,7 @@ import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesLi
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { AddonList } from 'component/addons/AddonList/AddonList';
 import Login from 'component/user/Login/Login';
-import { EEA, P, RE, SE, UG } from 'component/common/flags';
+import { EEA, P, SE, UG } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -443,19 +443,14 @@ export const routes: IRoute[] = [
 
 export const adminMenuRoutes: INavigationMenuItem[] = [
     {
-        path: '/history',
-        title: 'Event log',
-        menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/logins',
-        title: 'Login history',
-        menu: { adminSettings: true, mode: ['enterprise'] },
-    },
-    {
         path: '/admin/users',
         title: 'Users',
         menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/service-accounts',
+        title: 'Service accounts',
+        menu: { adminSettings: true, mode: ['enterprise'] },
     },
     {
         path: '/admin/groups',
@@ -469,6 +464,12 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         menu: { adminSettings: true, mode: ['enterprise'] },
     },
     {
+        path: '/admin/cors',
+        title: 'CORS origins',
+        flag: 'embedProxyFrontend',
+        menu: { adminSettings: true },
+    },
+    {
         path: '/admin/auth',
         title: 'Single sign-on',
         menu: { adminSettings: true },
@@ -477,11 +478,6 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         path: '/admin/instance',
         title: 'Instance stats',
         menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/service-accounts',
-        title: 'Service accounts',
-        menu: { adminSettings: true, mode: ['enterprise'] },
     },
     {
         path: '/admin/network/*',
@@ -495,15 +491,24 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         menu: { adminSettings: true },
     },
     {
-        path: '/admin/cors',
-        title: 'CORS origins',
-        flag: 'embedProxyFrontend',
-        menu: { adminSettings: true },
-    },
-    {
         path: '/admin/admin-invoices',
         title: 'Billing & invoices',
         menu: { adminSettings: true, mode: ['pro'] },
+    },
+    {
+        path: '/admin/instance-privacy',
+        title: 'Instance privacy',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/history',
+        title: 'Event log',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/logins',
+        title: 'Login history',
+        menu: { adminSettings: true, mode: ['enterprise'] },
     },
 ];
 

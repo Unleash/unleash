@@ -16,6 +16,7 @@ import { addDays, minutesToMilliseconds } from 'date-fns';
 import { GroupService } from '../../../lib/services/group-service';
 import { randomId } from '../../../lib/util/random-id';
 import { BadDataError } from '../../../lib/error';
+import PasswordMismatch from '../../../lib/error/password-mismatch';
 
 let db;
 let stores;
@@ -114,7 +115,11 @@ test('should not be able to login with deleted user', async () => {
 
     await expect(
         userService.loginUser('deleted_user', 'unleash4all'),
-    ).rejects.toThrow(new NotFoundError(`No user found`));
+    ).rejects.toThrow(
+        new PasswordMismatch(
+            `The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.`,
+        ),
+    );
 });
 
 test('should not login user if simple auth is disabled', async () => {

@@ -13,7 +13,10 @@ import {
 import { Request, Response } from 'express';
 import { IAuthRequest } from '../unleash-types';
 import { OpenApiService } from '../../services/openapi-service';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     createResponseSchema,
@@ -27,7 +30,8 @@ import {
     strategiesSchema,
     StrategiesSchema,
 } from '../../openapi/spec/strategies-schema';
-import { UpsertStrategySchema } from '../../openapi/spec/upsert-strategy-schema';
+import { CreateStrategySchema } from '../../openapi/spec/create-strategy-schema';
+import { UpdateStrategySchema } from '../../openapi/spec/update-strategy-schema';
 
 const version = 1;
 
@@ -57,10 +61,14 @@ class StrategyController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get all strategies',
+                    description:
+                        'Retrieves all strategy types ([predefined](https://docs.getunleash.io/reference/activation-strategies "predefined strategies") and [custom strategies](https://docs.getunleash.io/reference/custom-activation-strategies)) that are defined on this Unleash instance.',
                     tags: ['Strategies'],
                     operationId: 'getAllStrategies',
                     responses: {
                         200: createResponseSchema('strategiesSchema'),
+                        ...getStandardResponses(401),
                     },
                 }),
             ],
@@ -73,9 +81,16 @@ class StrategyController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get a strategy definition',
+                    description:
+                        'Retrieves the definition of the strategy specified in the URL',
+
                     tags: ['Strategies'],
                     operationId: 'getStrategy',
-                    responses: { 200: createResponseSchema('strategySchema') },
+                    responses: {
+                        200: createResponseSchema('strategySchema'),
+                        ...getStandardResponses(401, 404),
+                    },
                 }),
             ],
         });
@@ -88,9 +103,14 @@ class StrategyController extends Controller {
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Delete a strategy',
+                    description: 'Deletes the specified strategy definition',
                     tags: ['Strategies'],
                     operationId: 'removeStrategy',
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -104,9 +124,13 @@ class StrategyController extends Controller {
                 openApiService.validPath({
                     tags: ['Strategies'],
                     operationId: 'createStrategy',
-                    requestBody: createRequestSchema('upsertStrategySchema'),
+                    summary: 'Create a strategy',
+                    description:
+                        'Creates a strategy type based on the supplied data.',
+                    requestBody: createRequestSchema('createStrategySchema'),
                     responses: {
                         201: resourceCreatedResponseSchema('strategySchema'),
+                        ...getStandardResponses(401, 403, 409, 415),
                     },
                 }),
             ],
@@ -120,9 +144,15 @@ class StrategyController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Strategies'],
+                    summary: 'Update a strategy type',
+                    description:
+                        'Updates the specified strategy type. Any properties not specified in the request body are left untouched.',
                     operationId: 'updateStrategy',
-                    requestBody: createRequestSchema('upsertStrategySchema'),
-                    responses: { 200: emptyResponse },
+                    requestBody: createRequestSchema('updateStrategySchema'),
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404, 415),
+                    },
                 }),
             ],
         });
@@ -136,8 +166,13 @@ class StrategyController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Strategies'],
+                    summary: 'Deprecate a strategy',
+                    description: 'Marks the specified strategy as deprecated.',
                     operationId: 'deprecateStrategy',
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -152,7 +187,13 @@ class StrategyController extends Controller {
                 openApiService.validPath({
                     tags: ['Strategies'],
                     operationId: 'reactivateStrategy',
-                    responses: { 200: emptyResponse },
+                    summary: 'Reactivate a strategy',
+                    description:
+                        "Marks the specified strategy as not deprecated. If the strategy wasn't already deprecated, nothing changes.",
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -197,7 +238,7 @@ class StrategyController extends Controller {
     }
 
     async createStrategy(
-        req: IAuthRequest<unknown, UpsertStrategySchema>,
+        req: IAuthRequest<unknown, CreateStrategySchema>,
         res: Response<StrategySchema>,
     ): Promise<void> {
         const userName = extractUsername(req);
@@ -206,19 +247,25 @@ class StrategyController extends Controller {
             req.body,
             userName,
         );
-        res.header('location', `strategies/${strategy.name}`)
-            .status(201)
-            .json(strategy)
-            .end();
+        this.openApiService.respondWithValidation(
+            201,
+            res,
+            strategySchema.$id,
+            strategy,
+            { location: `strategies/${strategy.name}` },
+        );
     }
 
     async updateStrategy(
-        req: IAuthRequest<unknown, UpsertStrategySchema>,
+        req: IAuthRequest<{ strategyName: string }, UpdateStrategySchema>,
         res: Response<void>,
     ): Promise<void> {
         const userName = extractUsername(req);
 
-        await this.strategyService.updateStrategy(req.body, userName);
+        await this.strategyService.updateStrategy(
+            { ...req.body, name: req.params.strategyName },
+            userName,
+        );
         res.status(200).end();
     }
 

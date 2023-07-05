@@ -1,5 +1,8 @@
 import dbInit, { ITestDb } from '../../helpers/database-init';
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 
 let app: IUnleashTest;
@@ -7,7 +10,13 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('archive_test_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
 });
 
 afterAll(async () => {

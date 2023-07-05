@@ -4,10 +4,24 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Query parameters active for a client features request
+ */
 export interface ClientFeaturesQuerySchema {
+    /** Features tagged with one of these tags are included */
     tag?: string[][];
+    /**
+     * Features that are part of these projects are included in this response. (DEPRECATED) - Handled by API tokens
+     * @deprecated
+     */
     project?: string[];
+    /** Features are filtered to only include features whose name starts with this prefix */
     namePrefix?: string;
+    /**
+     * Strategies for the feature toggle configured for this environment are included. (DEPRECATED) - Handled by API tokens
+     * @deprecated
+     */
     environment?: string;
+    /** Set to true if requesting client does not support Unleash-Client-Specification 4.2.2 or newer. Modern SDKs will have this set to false, since they will be able to merge constraints and segments themselves */
     inlineSegmentConstraints?: boolean;
 }

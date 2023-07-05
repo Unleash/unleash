@@ -166,9 +166,8 @@ const defaultServerOption: IServerOption = {
         process.env.ENABLE_HEAP_SNAPSHOT_ENPOINT,
         false,
     ),
-    keepAliveTimeout: parseEnvVarNumber(
-        process.env.SERVER_KEEPALIVE_TIMEOUT,
-        secondsToMilliseconds(15),
+    keepAliveTimeout: secondsToMilliseconds(
+        parseEnvVarNumber(process.env.SERVER_KEEPALIVE_TIMEOUT, 15),
     ),
     headersTimeout: secondsToMilliseconds(61),
     enableRequestLogger: false,
@@ -209,7 +208,7 @@ const defaultEmail: IEmailOption = {
     host: process.env.EMAIL_HOST,
     secure: parseEnvVarBoolean(process.env.EMAIL_SECURE, false),
     port: parseEnvVarNumber(process.env.EMAIL_PORT, 587),
-    sender: process.env.EMAIL_SENDER || 'noreply@unleash-hosted.com',
+    sender: process.env.EMAIL_SENDER || 'noreply@getunleash.io',
     smtpuser: process.env.EMAIL_USER,
     smtppass: process.env.EMAIL_PASSWORD,
 };

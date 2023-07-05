@@ -33,6 +33,8 @@ import { Logger } from '../../../logger';
 import { Response } from 'express';
 import { timingSafeEqual } from 'crypto';
 import { createApiToken } from '../../../schema/api-token-schema';
+import { OperationDeniedError } from '../../../error';
+import { tokenTypeToCreatePermission } from '../api-token';
 
 interface ProjectTokenParam {
     token: string;
@@ -157,6 +159,19 @@ export class ProjectApiTokenController extends Controller {
     ): Promise<any> {
         const createToken = await createApiToken.validateAsync(req.body);
         const { projectId } = req.params;
+        const permissionRequired = tokenTypeToCreatePermission(
+            createToken.type,
+        );
+        const hasPermission = await this.accessService.hasPermission(
+            req.user,
+            permissionRequired,
+            projectId,
+        );
+        if (!hasPermission) {
+            throw new OperationDeniedError(
+                `You don't have the necessary access [${permissionRequired}] to perform this operation]`,
+            );
+        }
         if (!createToken.project) {
             createToken.project = projectId;
         }

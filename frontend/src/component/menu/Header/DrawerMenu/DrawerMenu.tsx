@@ -7,7 +7,6 @@ import ExitToApp from '@mui/icons-material/ExitToApp';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
 import NavigationLink from '../NavigationLink/NavigationLink';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { basePath } from 'utils/formatPath';
 import { IFlags } from 'interfaces/uiConfig';
 import { INavigationMenuItem } from 'interfaces/route';
@@ -31,7 +30,6 @@ interface IDrawerMenuProps {
     title?: string;
     open?: boolean;
     toggleDrawer: () => void;
-    admin?: boolean;
     links: Array<{
         value: string;
         icon: ReactNode;
@@ -51,7 +49,6 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
     flags = {},
     open = false,
     toggleDrawer,
-    admin = false,
     routes,
 }) => {
     const renderLinks = () => {
@@ -115,25 +112,18 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
                         />
                     ))}
                 </List>
-                <ConditionallyRender
-                    condition={admin}
-                    show={
-                        <>
-                            <Divider />
+                <Divider />
 
-                            <List className={styles.drawerList}>
-                                {routes.adminRoutes.map(item => (
-                                    <NavigationLink
-                                        handleClose={() => toggleDrawer()}
-                                        path={item.path}
-                                        text={item.title}
-                                        key={item.path}
-                                    />
-                                ))}
-                            </List>
-                        </>
-                    }
-                />
+                <List className={styles.drawerList}>
+                    {routes.adminRoutes.map(item => (
+                        <NavigationLink
+                            handleClose={() => toggleDrawer()}
+                            path={item.path}
+                            text={item.title}
+                            key={item.path}
+                        />
+                    ))}
+                </List>
                 <Divider />
                 <div className={styles.iconLinkList}>
                     {renderLinks()}

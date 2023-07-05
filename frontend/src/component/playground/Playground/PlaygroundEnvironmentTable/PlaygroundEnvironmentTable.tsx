@@ -97,13 +97,7 @@ export const PlaygroundEnvironmentTable = ({
         ];
     }, []);
 
-    const {
-        headerGroups,
-        rows,
-        state: { sortBy },
-        prepareRow,
-        setHiddenColumns,
-    } = useTable(
+    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
         {
             columns: COLUMNS as any,
             data: features,

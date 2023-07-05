@@ -592,3 +592,44 @@ test('If CRs are protected for any environment in the project stops bulk update 
         ),
     ).rejects.toThrowError(new NoAccessError(SKIP_CHANGE_REQUEST));
 });
+
+test('getPlaygroundFeatures should return ids and titles (if they exist) on client strategies', async () => {
+    const featureName = 'check-returned-strategy-configuration';
+    const projectId = 'default';
+
+    const title = 'custom strategy title';
+    const userName = 'strategy';
+    const config: Omit<FeatureStrategySchema, 'id'> = {
+        name: 'default',
+        constraints: [],
+        parameters: {},
+        title,
+    };
+    await service.createFeatureToggle(
+        projectId,
+        {
+            name: featureName,
+        },
+        userName,
+    );
+
+    await service.createStrategy(
+        config,
+        { projectId, featureName, environment: DEFAULT_ENV },
+        userName,
+    );
+
+    const playgroundFeatures = await service.getPlaygroundFeatures();
+
+    const strategyWithTitle = playgroundFeatures.find(
+        (feature) => feature.name === featureName,
+    )!.strategies[0];
+
+    expect(strategyWithTitle.title).toStrictEqual(title);
+
+    for (const strategy of playgroundFeatures.flatMap(
+        (feature) => feature.strategies,
+    )) {
+        expect(strategy.id).not.toBeUndefined();
+    }
+});

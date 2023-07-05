@@ -7,3 +7,13 @@ exports[`Should call datadog webhook  for archived toggle with project info 1`] 
 exports[`Should call datadog webhook 1`] = `"{"text":"%%% \\n some@user.com created feature toggle [some-toggle](http://some-url.com/projects//features/some-toggle) in project *undefined* \\n %%% ","title":"Unleash notification update"}"`;
 
 exports[`Should call datadog webhook for toggled environment 1`] = `"{"text":"%%% \\n some@user.com *disabled* [some-toggle](http://some-url.com/projects/default/features/some-toggle) in *development* environment in project *default* \\n %%% ","title":"Unleash notification update"}"`;
+
+exports[`Should include customHeaders in headers when calling service 1`] = `"{"text":"%%% \\n some@user.com *disabled* [some-toggle](http://some-url.com/projects/default/features/some-toggle) in *development* environment in project *default* \\n %%% ","title":"Unleash notification update"}"`;
+
+exports[`Should include customHeaders in headers when calling service 2`] = `
+{
+  "Content-Type": "application/json",
+  "DD-API-KEY": "fakeKey",
+  "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE",
+}
+`;

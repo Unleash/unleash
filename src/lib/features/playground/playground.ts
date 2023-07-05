@@ -5,7 +5,6 @@ import { NONE } from '../../types/permissions';
 import Controller from '../../routes/controller';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { endpointDescriptions } from '../../openapi/endpoint-descriptions';
 import { getStandardResponses } from '../../openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
@@ -17,6 +16,10 @@ import { PlaygroundService } from './playground-service';
 import { IFlagResolver } from '../../types';
 import { AdvancedPlaygroundRequestSchema } from '../../openapi/spec/advanced-playground-request-schema';
 import { AdvancedPlaygroundResponseSchema } from '../../openapi/spec/advanced-playground-response-schema';
+import {
+    advancedPlaygroundViewModel,
+    playgroundViewModel,
+} from './playground-view-model';
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;
@@ -51,7 +54,10 @@ export default class PlaygroundController extends Controller {
                         200: createResponseSchema('playgroundResponseSchema'),
                     },
                     requestBody: createRequestSchema('playgroundRequestSchema'),
-                    ...endpointDescriptions.admin.playground,
+                    description:
+                        'Use the provided `context`, `environment`, and `projects` to evaluate toggles on this Unleash instance. Returns a list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.',
+                    summary:
+                        'Evaluate an Unleash context against a set of environments and projects.',
                 }),
             ],
         });
@@ -74,7 +80,10 @@ export default class PlaygroundController extends Controller {
                     requestBody: createRequestSchema(
                         'advancedPlaygroundRequestSchema',
                     ),
-                    ...endpointDescriptions.admin.advancedPlayground,
+                    description:
+                        'Use the provided `context`, `environments`, and `projects` to evaluate toggles on this Unleash instance. You can use comma-separated values to provide multiple values to each context field. Returns a combinatorial list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.',
+                    summary:
+                        'Batch evaluate an Unleash context against a set of environments and projects.',
                 }),
             ],
         });
@@ -84,14 +93,15 @@ export default class PlaygroundController extends Controller {
         req: Request<any, any, PlaygroundRequestSchema>,
         res: Response<PlaygroundResponseSchema>,
     ): Promise<void> {
-        const response = {
-            input: req.body,
-            features: await this.playgroundService.evaluateQuery(
-                req.body.projects || '*',
-                req.body.environment,
-                req.body.context,
-            ),
-        };
+        const result = await this.playgroundService.evaluateQuery(
+            req.body.projects || '*',
+            req.body.environment,
+            req.body.context,
+        );
+        const response: PlaygroundResponseSchema = playgroundViewModel(
+            req.body,
+            result,
+        );
 
         this.openApiService.respondWithValidation(
             200,
@@ -106,14 +116,24 @@ export default class PlaygroundController extends Controller {
         res: Response<AdvancedPlaygroundResponseSchema>,
     ): Promise<void> {
         if (this.flagResolver.isEnabled('advancedPlayground')) {
-            res.json({
-                input: req.body,
-                features: await this.playgroundService.evaluateAdvancedQuery(
-                    req.body.projects || '*',
-                    req.body.environments,
-                    req.body.context,
-                ),
-            });
+            const { payload } =
+                this.flagResolver.getVariant('advancedPlayground');
+            const limit =
+                payload?.value && Number.isInteger(parseInt(payload?.value))
+                    ? parseInt(payload?.value)
+                    : 15000;
+
+            const result = await this.playgroundService.evaluateAdvancedQuery(
+                req.body.projects || '*',
+                req.body.environments,
+                req.body.context,
+                limit,
+            );
+
+            const response: AdvancedPlaygroundResponseSchema =
+                advancedPlaygroundViewModel(req.body, result);
+
+            res.json(response);
         } else {
             res.status(409).end();
         }

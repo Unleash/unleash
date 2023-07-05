@@ -828,13 +828,9 @@ class FeatureToggleService {
 
     async getClientFeatures(
         query?: IFeatureToggleQuery,
-        includeIds?: boolean,
-        includeDisabledStrategies?: boolean,
     ): Promise<FeatureConfigurationClient[]> {
         const result = await this.featureToggleClientStore.getClient(
             query || {},
-            includeIds,
-            includeDisabledStrategies,
         );
         if (this.flagResolver.isEnabled('cleanClientApi')) {
             return result.map(
@@ -867,6 +863,15 @@ class FeatureToggleService {
         } else {
             return result;
         }
+    }
+
+    async getPlaygroundFeatures(
+        query?: IFeatureToggleQuery,
+    ): Promise<FeatureConfigurationClient[]> {
+        const result = await this.featureToggleClientStore.getPlayground(
+            query || {},
+        );
+        return result;
     }
 
     /**
@@ -1373,11 +1378,7 @@ class FeatureToggleService {
                 (strategy) => strategy.disabled,
             );
 
-            if (
-                this.flagResolver.isEnabled('strategyImprovements') &&
-                hasDisabledStrategies &&
-                shouldActivateDisabledStrategies
-            ) {
+            if (hasDisabledStrategies && shouldActivateDisabledStrategies) {
                 strategies.map(async (strategy) => {
                     return this.updateStrategy(
                         strategy.id,
@@ -1406,7 +1407,6 @@ class FeatureToggleService {
                         environment,
                     );
                 const strategy =
-                    this.flagResolver.isEnabled('strategyImprovements') &&
                     projectEnvironmentDefaultStrategy != null
                         ? getProjectDefaultStrategy(
                               projectEnvironmentDefaultStrategy,
@@ -1658,7 +1658,7 @@ class FeatureToggleService {
         return this.featureToggleStore.getAll({ archived, project });
     }
 
-    async getProjectId(name: string): Promise<string> {
+    async getProjectId(name: string): Promise<string | undefined> {
         return this.featureToggleStore.getProjectId(name);
     }
 

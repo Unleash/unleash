@@ -36,6 +36,9 @@ test('should render advanced playground table', async () => {
                                                 },
                                                 constraints: [],
                                                 segments: [],
+                                                links: {
+                                                    edit: '/projects/ChangeReqs/features/Infinite/strategies/edit?environmenId=development&strategyId=45971fe0-1122-40a7-a68c-3a1430c44062',
+                                                },
                                             },
                                             {
                                                 name: 'default',
@@ -49,6 +52,9 @@ test('should render advanced playground table', async () => {
                                                 },
                                                 constraints: [],
                                                 segments: [],
+                                                links: {
+                                                    edit: '/projects/ChangeReqs/features/Infinite/strategies/edit?environmenId=development&strategyId=bf5e35b6-edc1-4e54-8f7e-a6cc8d4f352a',
+                                                },
                                             },
                                         ],
                                     },

@@ -5,7 +5,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { EDIT } from 'constants/misc';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
-import IRole from 'interfaces/role';
+import { IRole } from 'interfaces/role';
+import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -78,6 +79,7 @@ const UserForm: React.FC<IUserForm> = ({
     mode,
 }) => {
     const { uiConfig } = useUiConfig();
+    const { roles } = useUsers();
 
     return (
         <StyledForm onSubmit={handleSubmit}>
@@ -106,7 +108,12 @@ const UserForm: React.FC<IUserForm> = ({
                 <StyledRoleSubtitle variant="subtitle1" data-loading>
                     What is your team member allowed to do?
                 </StyledRoleSubtitle>
-                <RoleSelect value={rootRole} setValue={setRootRole} required />
+                <RoleSelect
+                    roles={roles}
+                    value={rootRole}
+                    setValue={setRootRole}
+                    required
+                />
                 <ConditionallyRender
                     condition={mode !== EDIT && Boolean(uiConfig?.emailEnabled)}
                     show={

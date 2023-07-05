@@ -1,7 +1,6 @@
 import { Button, ButtonProps } from '@mui/material';
 import { Lock } from '@mui/icons-material';
 import React from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     TooltipResolver,
     ITooltipResolverProps,
@@ -20,6 +19,7 @@ export interface IPermissionButtonProps extends Omit<ButtonProps, 'title'> {
     projectId?: string;
     environmentId?: string;
     tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
+    hideLockIcon?: boolean;
 }
 
 interface IPermissionBaseButtonProps extends IPermissionButtonProps {
@@ -30,6 +30,22 @@ export interface IProjectPermissionButtonProps extends IPermissionButtonProps {
     projectId: string;
     environmentId: string;
 }
+
+const getEndIcon = (
+    access: boolean,
+    fallBackIcon?: React.ReactNode,
+    hideLockIcon?: boolean
+): React.ReactNode => {
+    if (!access && !hideLockIcon) {
+        return <Lock titleAccess="Locked" />;
+    }
+
+    if (fallBackIcon) {
+        return fallBackIcon;
+    }
+
+    return null;
+};
 
 const ProjectEnvironmentPermissionButton: React.FC<IProjectPermissionButtonProps> =
     React.forwardRef((props, ref) => {
@@ -68,11 +84,13 @@ const BasePermissionButton: React.FC<IPermissionBaseButtonProps> =
                 projectId,
                 environmentId,
                 tooltipProps,
+                hideLockIcon,
                 ...rest
             },
             ref
         ) => {
             const id = useId();
+            const endIcon = getEndIcon(access, rest.endIcon, hideLockIcon);
 
             return (
                 <TooltipResolver
@@ -89,18 +107,7 @@ const BasePermissionButton: React.FC<IPermissionBaseButtonProps> =
                             variant={variant}
                             color={color}
                             {...rest}
-                            endIcon={
-                                <>
-                                    <ConditionallyRender
-                                        condition={!access}
-                                        show={<Lock titleAccess="Locked" />}
-                                        elseShow={
-                                            Boolean(rest.endIcon) &&
-                                            rest.endIcon
-                                        }
-                                    />
-                                </>
-                            }
+                            endIcon={endIcon}
                         >
                             {children}
                         </Button>

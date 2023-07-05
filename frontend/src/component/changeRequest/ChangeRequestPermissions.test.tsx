@@ -203,37 +203,54 @@ const strategiesAreDisplayed = async (
     await screen.findByText(secondStrategy);
 };
 
+const getDeleteButtons = async () => {
+    const removeMenus = screen.getAllByTestId(`STRATEGY_REMOVE_MENU_BTN`);
+    const deleteButtons: HTMLElement[] = [];
+
+    await Promise.all(
+        removeMenus.map(async menu => {
+            menu.click();
+            const removeButton = screen.getAllByTestId(
+                'STRATEGY_FORM_REMOVE_ID'
+            );
+            deleteButtons.push(...removeButton);
+        })
+    );
+    console.log(deleteButtons);
+    return deleteButtons;
+};
+
 const deleteButtonsActiveInChangeRequestEnv = async () => {
-    const deleteButtons = screen.getAllByTestId('STRATEGY_FORM_REMOVE_ID');
-    expect(deleteButtons.length).toBe(2);
+    const deleteButtons = await getDeleteButtons();
+    expect(deleteButtons.length).toBe(3);
 
     // wait for change request config to be loaded
     await waitFor(() => {
         // production
-        const productionStrategyDeleteButton = deleteButtons[0];
-        expect(productionStrategyDeleteButton).not.toBeDisabled();
+        const productionStrategyDeleteButton = deleteButtons[1];
+        expect(productionStrategyDeleteButton).not.toHaveClass('Mui-disabled');
     });
     await waitFor(() => {
         // custom env
-        const customEnvStrategyDeleteButton = deleteButtons[1];
-        expect(customEnvStrategyDeleteButton).toBeDisabled();
+        const customEnvStrategyDeleteButton = deleteButtons[2];
+        expect(customEnvStrategyDeleteButton).toHaveClass('Mui-disabled');
     });
 };
 
 const deleteButtonsInactiveInChangeRequestEnv = async () => {
-    const deleteButtons = screen.getAllByTestId('STRATEGY_FORM_REMOVE_ID');
-    expect(deleteButtons.length).toBe(2);
+    const deleteButtons = await getDeleteButtons();
+    expect(deleteButtons.length).toBe(3);
 
     // wait for change request config to be loaded
     await waitFor(() => {
         // production
-        const productionStrategyDeleteButton = deleteButtons[0];
-        expect(productionStrategyDeleteButton).toBeDisabled();
+        const productionStrategyDeleteButton = deleteButtons[1];
+        expect(productionStrategyDeleteButton).toHaveClass('Mui-disabled');
     });
     await waitFor(() => {
         // custom env
-        const customEnvStrategyDeleteButton = deleteButtons[1];
-        expect(customEnvStrategyDeleteButton).toBeDisabled();
+        const customEnvStrategyDeleteButton = deleteButtons[2];
+        expect(customEnvStrategyDeleteButton).toHaveClass('Mui-disabled');
     });
 };
 

@@ -5,6 +5,7 @@ import { legalValueSchema } from './legal-value-schema';
 export const contextFieldsSchema = {
     $id: '#/components/schemas/contextFieldsSchema',
     type: 'array',
+    description: 'A list of context fields',
     items: {
         $ref: '#/components/schemas/contextFieldSchema',
     },

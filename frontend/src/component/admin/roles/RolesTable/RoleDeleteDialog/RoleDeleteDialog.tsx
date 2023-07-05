@@ -3,7 +3,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
-import IRole from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import { RoleDeleteDialogUsers } from './RoleDeleteDialogUsers/RoleDeleteDialogUsers';
 import { RoleDeleteDialogServiceAccounts } from './RoleDeleteDialogServiceAccounts/RoleDeleteDialogServiceAccounts';
 import { useGroups } from 'hooks/api/getters/useGroups/useGroups';

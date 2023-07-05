@@ -194,7 +194,7 @@ export default class GroupStore implements IGroupStore {
         userName: string,
         transaction?: Transaction,
     ): Promise<void> {
-        const rows = users.map((user) => {
+        const rows = (users || []).map((user) => {
             return {
                 group_id: groupId,
                 user_id: user.user.id,
@@ -219,7 +219,6 @@ export default class GroupStore implements IGroupStore {
     async updateGroupUsers(
         groupId: number,
         newUsers: IGroupUserModel[],
-        existingUsers: IGroupUserModel[],
         deletableUsers: IGroupUser[],
         userName: string,
     ): Promise<void> {

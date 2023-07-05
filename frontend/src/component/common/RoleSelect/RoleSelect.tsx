@@ -4,8 +4,7 @@ import {
     TextField,
     styled,
 } from '@mui/material';
-import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
-import IRole from 'interfaces/role';
+import { IRole } from 'interfaces/role';
 import { RoleDescription } from '../RoleDescription/RoleDescription';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
@@ -20,19 +19,19 @@ const StyledRoleOption = styled('div')(({ theme }) => ({
 
 interface IRoleSelectProps
     extends Partial<AutocompleteProps<IRole, false, false, false>> {
+    roles: IRole[];
     value: IRole | null;
     setValue: (role: IRole | null) => void;
     required?: boolean;
 }
 
 export const RoleSelect = ({
+    roles,
     value,
     setValue,
     required,
     ...rest
 }: IRoleSelectProps) => {
-    const { roles } = useRoles();
-
     const renderRoleOption = (
         props: React.HTMLAttributes<HTMLLIElement>,
         option: IRole

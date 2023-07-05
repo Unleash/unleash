@@ -12,7 +12,10 @@ import { DELETE_FEATURE } from '../../../types/permissions';
 import FeatureToggleService from '../../../services/feature-toggle-service';
 import { IAuthRequest } from '../../unleash-types';
 import { OpenApiService } from '../../../services/openapi-service';
-import { emptyResponse } from '../../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../../openapi/util/standard-responses';
 import { BatchFeaturesSchema, createRequestSchema } from '../../../openapi';
 import Controller from '../../controller';
 
@@ -57,7 +60,10 @@ export default class ProjectArchiveController extends Controller {
                         'This endpoint deletes the specified features, that are in archive.',
                     summary: 'Deletes a list of features',
                     requestBody: createRequestSchema('batchFeaturesSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
+                    },
                 }),
             ],
         });
@@ -76,7 +82,10 @@ export default class ProjectArchiveController extends Controller {
                         'This endpoint revives the specified features.',
                     summary: 'Revives a list of features',
                     requestBody: createRequestSchema('batchFeaturesSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
+                    },
                 }),
             ],
         });
@@ -94,7 +103,10 @@ export default class ProjectArchiveController extends Controller {
                         'This endpoint archives the specified features.',
                     summary: 'Archives a list of features',
                     requestBody: createRequestSchema('batchFeaturesSchema'),
-                    responses: { 202: emptyResponse },
+                    responses: {
+                        202: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
+                    },
                 }),
             ],
         });

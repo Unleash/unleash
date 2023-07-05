@@ -14,7 +14,7 @@ import {
     StyledTabContainer,
     StyledTopRow,
 } from './Project.styles';
-import { Tabs } from '@mui/material';
+import { Paper, Tabs, Typography } from '@mui/material';
 import { Delete, Edit, FileUpload } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
@@ -46,7 +46,7 @@ const NAVIGATE_TO_EDIT_PROJECT = 'NAVIGATE_TO_EDIT_PROJECT';
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
-    const { project, loading, refetch } = useProject(projectId);
+    const { project, loading, error, refetch } = useProject(projectId);
     const ref = useLoading(loading);
     const { setToastData } = useToast();
     const [modalOpen, setModalOpen] = useState(false);
@@ -109,6 +109,17 @@ export const Project = () => {
         }
         /* eslint-disable-next-line */
     }, []);
+
+    if (error?.status === 404) {
+        return (
+            <Paper sx={theme => ({ padding: theme.spacing(2, 4, 4) })}>
+                <Typography variant="h1">404 Not Found</Typography>
+                <Typography>
+                    Project <strong>{projectId}</strong> does not exist.
+                </Typography>
+            </Paper>
+        );
+    }
 
     const onFavorite = async () => {
         if (project?.favorite) {

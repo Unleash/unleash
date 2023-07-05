@@ -6,7 +6,7 @@ on:
       - main
     paths-ignore:
       - website/**
-
+      - coverage/**
 # not sure if we will have all the payload as the push to main has.
 #  workflow_run:
 #    workflows: [ 'Publish to npm' ]
@@ -36,7 +36,7 @@ jobs:
               ref: 'master',
               inputs: {
                  commit: "${{ github.event.head_commit.id }}",
-                 actor: "${{ github.event.head_commit.committer.name || github.actor }} <${{ github.event.head_commit.committer.email }}>",
+                 actor: "${{ github.event.commits[0].author.name }} <${{ github.event.commits[0].author.email }}>",
                  message: ${{ toJSON(github.event.head_commit.message) }},
               }
             })

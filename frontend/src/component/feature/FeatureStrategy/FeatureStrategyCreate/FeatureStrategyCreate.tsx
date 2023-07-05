@@ -33,14 +33,14 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useQueryParams from 'hooks/useQueryParams';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { DEFAULT_STRATEGY } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
+import { DEFAULT_STRATEGY } from 'component/project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
     const strategyName = useRequiredQueryParam('strategyName');
-    const useDefaultStrategy: boolean = JSON.parse(
+    const shouldUseDefaultStrategy: boolean = JSON.parse(
         useQueryParams().get('defaultStrategy') || 'false'
     );
     const { project } = useProject(projectId);
@@ -56,7 +56,9 @@ export const FeatureStrategyCreate = () => {
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
 
-    const [segments, setSegments] = useState<ISegment[]>(strategySegments);
+    const [segments, setSegments] = useState<ISegment[]>(
+        shouldUseDefaultStrategy ? strategySegments : []
+    );
     const { strategyDefinition } = useStrategy(strategyName);
     const errors = useFormErrors();
 
@@ -98,12 +100,27 @@ export const FeatureStrategyCreate = () => {
     }, [feature.name]);
 
     useEffect(() => {
-        if (useDefaultStrategy) {
-            setStrategy((defaultStrategy as any) || DEFAULT_STRATEGY);
+        if (shouldUseDefaultStrategy) {
+            const strategyTemplate = defaultStrategy || DEFAULT_STRATEGY;
+            if (strategyTemplate.parameters?.groupId === '' && featureId) {
+                setStrategy({
+                    ...strategyTemplate,
+                    parameters: {
+                        ...strategyTemplate.parameters,
+                        groupId: featureId,
+                    },
+                } as any);
+            } else {
+                setStrategy(strategyTemplate as any);
+            }
         } else if (strategyDefinition) {
             setStrategy(createFeatureStrategy(featureId, strategyDefinition));
         }
-    }, [featureId, strategyDefinition, useDefaultStrategy]);
+    }, [
+        featureId,
+        JSON.stringify(strategyDefinition),
+        shouldUseDefaultStrategy,
+    ]);
 
     const onAddStrategy = async (payload: IFeatureStrategyPayload) => {
         await addStrategyToFeature(

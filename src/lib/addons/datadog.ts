@@ -53,7 +53,7 @@ export default class DatadogAddon extends Addon {
                 extraHeaders = JSON.parse(customHeaders);
             } catch (e) {
                 this.logger.warn(
-                    'Could not parse the json in the customHeaders parameters',
+                    `Could not parse the json in the customHeaders parameter. [${customHeaders}]`,
                 );
             }
         }

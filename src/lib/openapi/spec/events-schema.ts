@@ -7,18 +7,24 @@ export const eventsSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'events'],
+    description: 'A list of events that has happened in the system',
     properties: {
         version: {
             type: 'integer',
             minimum: 1,
+            description:
+                'The api version of this response. A natural increasing number. Only increases if format changes',
         },
         events: {
+            description: 'The list of events',
             type: 'array',
             items: { $ref: eventSchema.$id },
         },
         totalEvents: {
             type: 'integer',
+            description: 'The total count of events',
             minimum: 0,
+            example: 842,
         },
     },
     components: {

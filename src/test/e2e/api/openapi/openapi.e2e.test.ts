@@ -59,7 +59,6 @@ test('the generated OpenAPI spec is valid', async () => {
         .get('/docs/openapi.json')
         .expect('Content-Type', /json/)
         .expect(200);
-
     // this throws if the swagger parser can't parse it correctly
     // also parses examples, but _does_ do some string coercion in examples
     try {
@@ -86,7 +85,6 @@ test('the generated OpenAPI spec is valid', async () => {
             ],
         },
     });
-
     if (enforcerWarning !== undefined) {
         console.warn(enforcerWarning);
     }

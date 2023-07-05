@@ -104,6 +104,9 @@ export default class EventController extends Controller {
                 openApiService.validPath({
                     operationId: 'searchEvents',
                     tags: ['Events'],
+                    summary: 'Search for events',
+                    description:
+                        'Allows searching for events matching the search criteria in the request body',
                     requestBody: createRequestSchema('searchEventsSchema'),
                     responses: { 200: createResponseSchema('eventsSchema') },
                 }),

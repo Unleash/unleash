@@ -40,7 +40,7 @@ test('Should include id and createdAt when saving', async () => {
             appName: 'test1',
         },
     };
-    const seen = [];
+    const seen: Array<IEvent> = [];
     eventStore.on(APPLICATION_CREATED, (e) => seen.push(e));
     await eventStore.store(event1);
     jest.advanceTimersByTime(100);

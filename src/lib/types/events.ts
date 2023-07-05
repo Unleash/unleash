@@ -3,115 +3,220 @@ import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 import { IApiToken } from './models/api-token';
 import { IUser } from './user';
 
-export const APPLICATION_CREATED = 'application-created';
+export const APPLICATION_CREATED = 'application-created' as const;
 
 // feature event types
-export const FEATURE_CREATED = 'feature-created';
-export const FEATURE_DELETED = 'feature-deleted';
-export const FEATURE_UPDATED = 'feature-updated';
-export const FEATURE_METADATA_UPDATED = 'feature-metadata-updated';
-export const FEATURE_VARIANTS_UPDATED = 'feature-variants-updated';
+export const FEATURE_CREATED = 'feature-created' as const;
+export const FEATURE_DELETED = 'feature-deleted' as const;
+export const FEATURE_UPDATED = 'feature-updated' as const;
+export const FEATURE_METADATA_UPDATED = 'feature-metadata-updated' as const;
+export const FEATURE_VARIANTS_UPDATED = 'feature-variants-updated' as const;
 export const FEATURE_ENVIRONMENT_VARIANTS_UPDATED =
-    'feature-environment-variants-updated';
-export const FEATURE_PROJECT_CHANGE = 'feature-project-change';
-export const FEATURE_ARCHIVED = 'feature-archived';
-export const FEATURE_REVIVED = 'feature-revived';
-export const FEATURE_IMPORT = 'feature-import';
-export const FEATURE_TAGGED = 'feature-tagged';
-export const FEATURE_TAG_IMPORT = 'feature-tag-import';
-export const FEATURE_STRATEGY_UPDATE = 'feature-strategy-update';
-export const FEATURE_STRATEGY_ADD = 'feature-strategy-add';
-export const FEATURE_STRATEGY_REMOVE = 'feature-strategy-remove';
-export const DROP_FEATURE_TAGS = 'drop-feature-tags';
-export const FEATURE_UNTAGGED = 'feature-untagged';
-export const FEATURE_STALE_ON = 'feature-stale-on';
-export const FEATURE_STALE_OFF = 'feature-stale-off';
-export const DROP_FEATURES = 'drop-features';
-export const FEATURE_ENVIRONMENT_ENABLED = 'feature-environment-enabled';
-export const FEATURE_ENVIRONMENT_DISABLED = 'feature-environment-disabled';
+    'feature-environment-variants-updated' as const;
+export const FEATURE_PROJECT_CHANGE = 'feature-project-change' as const;
+export const FEATURE_ARCHIVED = 'feature-archived' as const;
+export const FEATURE_REVIVED = 'feature-revived' as const;
+export const FEATURE_IMPORT = 'feature-import' as const;
+export const FEATURE_TAGGED = 'feature-tagged' as const;
+export const FEATURE_TAG_IMPORT = 'feature-tag-import' as const;
+export const FEATURE_STRATEGY_UPDATE = 'feature-strategy-update' as const;
+export const FEATURE_STRATEGY_ADD = 'feature-strategy-add' as const;
+export const FEATURE_STRATEGY_REMOVE = 'feature-strategy-remove' as const;
+export const DROP_FEATURE_TAGS = 'drop-feature-tags' as const;
+export const FEATURE_UNTAGGED = 'feature-untagged' as const;
+export const FEATURE_STALE_ON = 'feature-stale-on' as const;
+export const FEATURE_STALE_OFF = 'feature-stale-off' as const;
+export const DROP_FEATURES = 'drop-features' as const;
+export const FEATURE_ENVIRONMENT_ENABLED =
+    'feature-environment-enabled' as const;
+export const FEATURE_ENVIRONMENT_DISABLED =
+    'feature-environment-disabled' as const;
 
-export const STRATEGY_CREATED = 'strategy-created';
-export const STRATEGY_DELETED = 'strategy-deleted';
-export const STRATEGY_DEPRECATED = 'strategy-deprecated';
-export const STRATEGY_REACTIVATED = 'strategy-reactivated';
-export const STRATEGY_UPDATED = 'strategy-updated';
-export const STRATEGY_IMPORT = 'strategy-import';
-export const DROP_STRATEGIES = 'drop-strategies';
-export const CONTEXT_FIELD_CREATED = 'context-field-created';
-export const CONTEXT_FIELD_UPDATED = 'context-field-updated';
-export const CONTEXT_FIELD_DELETED = 'context-field-deleted';
-export const PROJECT_ACCESS_ADDED = 'project-access-added';
-export const PROJECT_CREATED = 'project-created';
-export const PROJECT_UPDATED = 'project-updated';
-export const PROJECT_DELETED = 'project-deleted';
-export const PROJECT_IMPORT = 'project-import';
-export const PROJECT_USER_ADDED = 'project-user-added';
-export const PROJECT_USER_REMOVED = 'project-user-removed';
-export const PROJECT_USER_ROLE_CHANGED = 'project-user-role-changed';
-export const PROJECT_GROUP_ADDED = 'project-group-added';
-export const PROJECT_GROUP_REMOVED = 'project-group-removed';
-export const PROJECT_GROUP_ROLE_CHANGED = 'project-group-role-changed';
-export const DROP_PROJECTS = 'drop-projects';
-export const TAG_CREATED = 'tag-created';
-export const TAG_DELETED = 'tag-deleted';
-export const TAG_IMPORT = 'tag-import';
-export const DROP_TAGS = 'drop-tags';
-export const TAG_TYPE_CREATED = 'tag-type-created';
-export const TAG_TYPE_DELETED = 'tag-type-deleted';
-export const TAG_TYPE_UPDATED = 'tag-type-updated';
-export const TAG_TYPE_IMPORT = 'tag-type-import';
-export const DROP_TAG_TYPES = 'drop-tag-types';
-export const ADDON_CONFIG_CREATED = 'addon-config-created';
-export const ADDON_CONFIG_UPDATED = 'addon-config-updated';
-export const ADDON_CONFIG_DELETED = 'addon-config-deleted';
-export const DB_POOL_UPDATE = 'db-pool-update';
-export const USER_CREATED = 'user-created';
-export const USER_UPDATED = 'user-updated';
-export const USER_DELETED = 'user-deleted';
-export const DROP_ENVIRONMENTS = 'drop-environments';
-export const ENVIRONMENT_IMPORT = 'environment-import';
-export const SEGMENT_CREATED = 'segment-created';
-export const SEGMENT_UPDATED = 'segment-updated';
-export const SEGMENT_DELETED = 'segment-deleted';
-export const GROUP_CREATED = 'group-created';
-export const GROUP_UPDATED = 'group-updated';
-export const SETTING_CREATED = 'setting-created';
-export const SETTING_UPDATED = 'setting-updated';
-export const SETTING_DELETED = 'setting-deleted';
+export const STRATEGY_CREATED = 'strategy-created' as const;
+export const STRATEGY_DELETED = 'strategy-deleted' as const;
+export const STRATEGY_DEPRECATED = 'strategy-deprecated' as const;
+export const STRATEGY_REACTIVATED = 'strategy-reactivated' as const;
+export const STRATEGY_UPDATED = 'strategy-updated' as const;
+export const STRATEGY_IMPORT = 'strategy-import' as const;
+export const DROP_STRATEGIES = 'drop-strategies' as const;
+export const CONTEXT_FIELD_CREATED = 'context-field-created' as const;
+export const CONTEXT_FIELD_UPDATED = 'context-field-updated' as const;
+export const CONTEXT_FIELD_DELETED = 'context-field-deleted' as const;
+export const PROJECT_ACCESS_ADDED = 'project-access-added' as const;
+export const PROJECT_CREATED = 'project-created' as const;
+export const PROJECT_UPDATED = 'project-updated' as const;
+export const PROJECT_DELETED = 'project-deleted' as const;
+export const PROJECT_IMPORT = 'project-import' as const;
+export const PROJECT_USER_ADDED = 'project-user-added' as const;
+export const PROJECT_USER_REMOVED = 'project-user-removed' as const;
+export const PROJECT_USER_ROLE_CHANGED = 'project-user-role-changed' as const;
+export const PROJECT_GROUP_ADDED = 'project-group-added' as const;
+export const PROJECT_GROUP_REMOVED = 'project-group-removed' as const;
+export const PROJECT_GROUP_ROLE_CHANGED = 'project-group-role-changed' as const;
+export const DROP_PROJECTS = 'drop-projects' as const;
+export const TAG_CREATED = 'tag-created' as const;
+export const TAG_DELETED = 'tag-deleted' as const;
+export const TAG_IMPORT = 'tag-import' as const;
+export const DROP_TAGS = 'drop-tags' as const;
+export const TAG_TYPE_CREATED = 'tag-type-created' as const;
+export const TAG_TYPE_DELETED = 'tag-type-deleted' as const;
+export const TAG_TYPE_UPDATED = 'tag-type-updated' as const;
+export const TAG_TYPE_IMPORT = 'tag-type-import' as const;
+export const DROP_TAG_TYPES = 'drop-tag-types' as const;
+export const ADDON_CONFIG_CREATED = 'addon-config-created' as const;
+export const ADDON_CONFIG_UPDATED = 'addon-config-updated' as const;
+export const ADDON_CONFIG_DELETED = 'addon-config-deleted' as const;
+export const DB_POOL_UPDATE = 'db-pool-update' as const;
+export const USER_CREATED = 'user-created' as const;
+export const USER_UPDATED = 'user-updated' as const;
+export const USER_DELETED = 'user-deleted' as const;
+export const DROP_ENVIRONMENTS = 'drop-environments' as const;
+export const ENVIRONMENT_IMPORT = 'environment-import' as const;
+export const SEGMENT_CREATED = 'segment-created' as const;
+export const SEGMENT_UPDATED = 'segment-updated' as const;
+export const SEGMENT_DELETED = 'segment-deleted' as const;
+export const GROUP_CREATED = 'group-created' as const;
+export const GROUP_UPDATED = 'group-updated' as const;
+export const SETTING_CREATED = 'setting-created' as const;
+export const SETTING_UPDATED = 'setting-updated' as const;
+export const SETTING_DELETED = 'setting-deleted' as const;
 
-export const CLIENT_METRICS = 'client-metrics';
-export const CLIENT_REGISTER = 'client-register';
+export const CLIENT_METRICS = 'client-metrics' as const;
+export const CLIENT_REGISTER = 'client-register' as const;
 
-export const PAT_CREATED = 'pat-created';
-export const PAT_DELETED = 'pat-deleted';
+export const PAT_CREATED = 'pat-created' as const;
+export const PAT_DELETED = 'pat-deleted' as const;
 
-export const PUBLIC_SIGNUP_TOKEN_CREATED = 'public-signup-token-created';
-export const PUBLIC_SIGNUP_TOKEN_USER_ADDED = 'public-signup-token-user-added';
-export const PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED = 'public-signup-token-updated';
+export const PUBLIC_SIGNUP_TOKEN_CREATED =
+    'public-signup-token-created' as const;
+export const PUBLIC_SIGNUP_TOKEN_USER_ADDED =
+    'public-signup-token-user-added' as const;
+export const PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED =
+    'public-signup-token-updated' as const;
 
-export const CHANGE_REQUEST_CREATED = 'change-request-created';
-export const CHANGE_REQUEST_DISCARDED = 'change-request-discarded';
-export const CHANGE_ADDED = 'change-added';
-export const CHANGE_DISCARDED = 'change-discarded';
-export const CHANGE_REQUEST_APPROVED = 'change-request-approved';
-export const CHANGE_REQUEST_APPROVAL_ADDED = 'change-request-approval-added';
-export const CHANGE_REQUEST_CANCELLED = 'change-request-cancelled';
-export const CHANGE_REQUEST_SENT_TO_REVIEW = 'change-request-sent-to-review';
-export const CHANGE_REQUEST_APPLIED = 'change-request-applied';
+export const CHANGE_REQUEST_CREATED = 'change-request-created' as const;
+export const CHANGE_REQUEST_DISCARDED = 'change-request-discarded' as const;
+export const CHANGE_ADDED = 'change-added' as const;
+export const CHANGE_DISCARDED = 'change-discarded' as const;
+export const CHANGE_REQUEST_APPROVED = 'change-request-approved' as const;
+export const CHANGE_REQUEST_APPROVAL_ADDED =
+    'change-request-approval-added' as const;
+export const CHANGE_REQUEST_CANCELLED = 'change-request-cancelled' as const;
+export const CHANGE_REQUEST_SENT_TO_REVIEW =
+    'change-request-sent-to-review' as const;
+export const CHANGE_REQUEST_APPLIED = 'change-request-applied' as const;
 
-export const API_TOKEN_CREATED = 'api-token-created';
-export const API_TOKEN_UPDATED = 'api-token-updated';
-export const API_TOKEN_DELETED = 'api-token-deleted';
+export const API_TOKEN_CREATED = 'api-token-created' as const;
+export const API_TOKEN_UPDATED = 'api-token-updated' as const;
+export const API_TOKEN_DELETED = 'api-token-deleted' as const;
 
-export const FEATURE_FAVORITED = 'feature-favorited';
-export const FEATURE_UNFAVORITED = 'feature-unfavorited';
-export const PROJECT_FAVORITED = 'project-favorited';
-export const PROJECT_UNFAVORITED = 'project-unfavorited';
-export const FEATURES_EXPORTED = 'features-exported';
-export const FEATURES_IMPORTED = 'features-imported';
+export const FEATURE_FAVORITED = 'feature-favorited' as const;
+export const FEATURE_UNFAVORITED = 'feature-unfavorited' as const;
+export const PROJECT_FAVORITED = 'project-favorited' as const;
+export const PROJECT_UNFAVORITED = 'project-unfavorited' as const;
+export const FEATURES_EXPORTED = 'features-exported' as const;
+export const FEATURES_IMPORTED = 'features-imported' as const;
+
+export const IEventTypes = [
+    APPLICATION_CREATED,
+    FEATURE_CREATED,
+    FEATURE_DELETED,
+    FEATURE_UPDATED,
+    FEATURE_METADATA_UPDATED,
+    FEATURE_VARIANTS_UPDATED,
+    FEATURE_ENVIRONMENT_VARIANTS_UPDATED,
+    FEATURE_PROJECT_CHANGE,
+    FEATURE_ARCHIVED,
+    FEATURE_REVIVED,
+    FEATURE_IMPORT,
+    FEATURE_TAGGED,
+    FEATURE_TAG_IMPORT,
+    FEATURE_STRATEGY_UPDATE,
+    FEATURE_STRATEGY_ADD,
+    FEATURE_STRATEGY_REMOVE,
+    DROP_FEATURE_TAGS,
+    FEATURE_UNTAGGED,
+    FEATURE_STALE_ON,
+    FEATURE_STALE_OFF,
+    DROP_FEATURES,
+    FEATURE_ENVIRONMENT_ENABLED,
+    FEATURE_ENVIRONMENT_DISABLED,
+    STRATEGY_CREATED,
+    STRATEGY_DELETED,
+    STRATEGY_DEPRECATED,
+    STRATEGY_REACTIVATED,
+    STRATEGY_UPDATED,
+    STRATEGY_IMPORT,
+    DROP_STRATEGIES,
+    CONTEXT_FIELD_CREATED,
+    CONTEXT_FIELD_UPDATED,
+    CONTEXT_FIELD_DELETED,
+    PROJECT_ACCESS_ADDED,
+    PROJECT_CREATED,
+    PROJECT_UPDATED,
+    PROJECT_DELETED,
+    PROJECT_IMPORT,
+    PROJECT_USER_ADDED,
+    PROJECT_USER_REMOVED,
+    PROJECT_USER_ROLE_CHANGED,
+    PROJECT_GROUP_ROLE_CHANGED,
+    DROP_PROJECTS,
+    TAG_CREATED,
+    TAG_DELETED,
+    TAG_IMPORT,
+    DROP_TAGS,
+    TAG_TYPE_CREATED,
+    TAG_TYPE_DELETED,
+    TAG_TYPE_UPDATED,
+    TAG_TYPE_IMPORT,
+    DROP_TAG_TYPES,
+    ADDON_CONFIG_CREATED,
+    ADDON_CONFIG_UPDATED,
+    ADDON_CONFIG_DELETED,
+    DB_POOL_UPDATE,
+    USER_CREATED,
+    USER_UPDATED,
+    USER_DELETED,
+    DROP_ENVIRONMENTS,
+    ENVIRONMENT_IMPORT,
+    SEGMENT_CREATED,
+    SEGMENT_UPDATED,
+    SEGMENT_DELETED,
+    GROUP_CREATED,
+    GROUP_UPDATED,
+    SETTING_CREATED,
+    SETTING_UPDATED,
+    SETTING_DELETED,
+    CLIENT_METRICS,
+    CLIENT_REGISTER,
+    PAT_CREATED,
+    PAT_DELETED,
+    PUBLIC_SIGNUP_TOKEN_CREATED,
+    PUBLIC_SIGNUP_TOKEN_USER_ADDED,
+    PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED,
+    CHANGE_REQUEST_CREATED,
+    CHANGE_REQUEST_DISCARDED,
+    CHANGE_ADDED,
+    CHANGE_DISCARDED,
+    CHANGE_REQUEST_APPROVED,
+    CHANGE_REQUEST_APPROVAL_ADDED,
+    CHANGE_REQUEST_CANCELLED,
+    CHANGE_REQUEST_SENT_TO_REVIEW,
+    CHANGE_REQUEST_APPLIED,
+    API_TOKEN_CREATED,
+    API_TOKEN_UPDATED,
+    API_TOKEN_DELETED,
+    FEATURE_FAVORITED,
+    FEATURE_UNFAVORITED,
+    PROJECT_FAVORITED,
+    PROJECT_UNFAVORITED,
+    FEATURES_EXPORTED,
+    FEATURES_IMPORTED,
+] as const;
+export type IEventType = typeof IEventTypes[number];
 
 export interface IBaseEvent {
-    type: string;
+    type: IEventType;
     createdBy: string;
     project?: string;
     environment?: string;
@@ -132,7 +237,7 @@ export interface IEventList {
 }
 
 class BaseEvent implements IBaseEvent {
-    readonly type: string;
+    readonly type: IEventType;
 
     readonly createdBy: string;
 
@@ -141,7 +246,11 @@ class BaseEvent implements IBaseEvent {
     /**
      * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
-    constructor(type: string, createdBy: string | IUser, tags: ITag[] = []) {
+    constructor(
+        type: IEventType,
+        createdBy: string | IUser,
+        tags: ITag[] = [],
+    ) {
         this.type = type;
         this.createdBy =
             typeof createdBy === 'string'

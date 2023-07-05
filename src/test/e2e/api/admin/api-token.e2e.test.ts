@@ -1,4 +1,4 @@
-import { setupApp } from '../../helpers/test-helper';
+import { setupAppWithCustomConfig } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { ALL, ApiTokenType } from '../../../../lib/types/models/api-token';
@@ -10,7 +10,13 @@ let app;
 
 beforeAll(async () => {
     db = await dbInit('token_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
 });
 
 afterAll(async () => {

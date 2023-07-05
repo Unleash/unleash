@@ -186,7 +186,7 @@ The payload **must** contain **at least one of** the `name` and `email` properti
 
 `PUT https://unleash.host.com/api/admin/user-admin/:userId`
 
-Updates use with new fields
+Updates user with new fields
 
 **Body**
 

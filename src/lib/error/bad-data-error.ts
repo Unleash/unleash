@@ -16,7 +16,7 @@ class BadDataError extends UnleashError {
         errors?: [ValidationErrorDescription, ...ValidationErrorDescription[]],
     ) {
         const topLevelMessage =
-            'Request validation failed: your request body contains invalid data' +
+            'Request validation failed: your request body or params contain invalid data' +
             (errors
                 ? '. Refer to the `details` list for more information.'
                 : `: ${message}`);

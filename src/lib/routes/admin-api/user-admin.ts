@@ -5,7 +5,7 @@ import UserService from '../../services/user-service';
 import { AccountService } from '../../services/account-service';
 import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
-import { IUnleashConfig, IUnleashServices } from '../../types';
+import { IUnleashConfig, IUnleashServices, RoleName } from '../../types';
 import { EmailService } from '../../services/email-service';
 import ResetTokenService from '../../services/reset-token-service';
 import { IAuthRequest } from '../unleash-types';
@@ -31,7 +31,10 @@ import {
     resetPasswordSchema,
     ResetPasswordSchema,
 } from '../../openapi/spec/reset-password-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import { GroupService } from '../../services/group-service';
 import {
     UsersGroupsBaseSchema,
@@ -45,6 +48,11 @@ import {
     AdminCountSchema,
     adminCountSchema,
 } from '../../openapi/spec/admin-count-schema';
+import { BadDataError } from '../../error';
+import {
+    createUserResponseSchema,
+    CreateUserResponseSchema,
+} from '../../openapi/spec/create-user-response-schema';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
@@ -114,8 +122,14 @@ export default class UserAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'validateUserPassword',
+                    summary: 'Validate password for a user',
+                    description:
+                        'Validate the password strength. Minimum 10 characters, uppercase letter, number, special character.',
                     requestBody: createRequestSchema('passwordSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401),
+                    },
                 }),
             ],
         });
@@ -129,8 +143,13 @@ export default class UserAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'changeUserPassword',
+                    summary: 'Change password for a user',
+                    description: 'Change password for a user as an admin',
                     requestBody: createRequestSchema('passwordSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
+                    },
                 }),
             ],
         });
@@ -144,9 +163,12 @@ export default class UserAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'resetUserPassword',
+                    summary: 'Reset user password as an admin',
+                    description: 'Reset user password as an admin',
                     requestBody: createRequestSchema('idSchema'),
                     responses: {
                         200: createResponseSchema('resetPasswordSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
             ],
@@ -161,7 +183,14 @@ export default class UserAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'getUsers',
-                    responses: { 200: createResponseSchema('usersSchema') },
+                    summary:
+                        'Get all users and [root roles](https://docs.getunleash.io/reference/rbac#standard-roles)',
+                    description:
+                        'Will return all users and all available root roles for the Unleash instance.',
+                    responses: {
+                        200: createResponseSchema('usersSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
                 }),
             ],
         });
@@ -175,7 +204,22 @@ export default class UserAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'searchUsers',
-                    responses: { 200: createResponseSchema('usersSchema') },
+                    summary: 'Search users',
+                    description:
+                        ' It will preform a simple search based on name and email matching the given query. Requires minimum 2 characters',
+                    parameters: [
+                        {
+                            name: 'q',
+                            description:
+                                'The pattern to search in the username or email',
+                            schema: { type: 'string' },
+                            in: 'query',
+                        },
+                    ],
+                    responses: {
+                        200: createResponseSchema('usersSchema'),
+                        ...getStandardResponses(401),
+                    },
                 }),
             ],
         });
@@ -189,8 +233,12 @@ export default class UserAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'getBaseUsersAndGroups',
+                    summary: 'Get basic user and group information',
+                    description:
+                        'Get a subset of user and group information eligible even for non-admin users',
                     responses: {
                         200: createResponseSchema('usersGroupsBaseSchema'),
+                        ...getStandardResponses(401),
                     },
                 }),
             ],
@@ -205,8 +253,12 @@ export default class UserAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'getAdminCount',
+                    summary: 'Get total count of admin accounts',
+                    description:
+                        'Get a total count of admins with password, without password and admin service accounts',
                     responses: {
                         200: createResponseSchema('adminCountSchema'),
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -221,8 +273,13 @@ export default class UserAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'createUser',
+                    summary: 'Create a new user',
+                    description: 'Creates a new user with the given root role.',
                     requestBody: createRequestSchema('createUserSchema'),
-                    responses: { 200: createResponseSchema('userSchema') },
+                    responses: {
+                        201: createResponseSchema('createUserResponseSchema'),
+                        ...getStandardResponses(400, 401, 403),
+                    },
                 }),
                 rateLimit({
                     windowMs: minutesToMilliseconds(1),
@@ -242,7 +299,12 @@ export default class UserAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'getUser',
-                    responses: { 200: createResponseSchema('userSchema') },
+                    summary: 'Get user',
+                    description: 'Will return a single user by id',
+                    responses: {
+                        200: createResponseSchema('userSchema'),
+                        ...getStandardResponses(400, 401, 404),
+                    },
                 }),
             ],
         });
@@ -256,8 +318,13 @@ export default class UserAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'updateUser',
+                    summary: 'Update a user',
+                    description: 'Updates use with new fields',
                     requestBody: createRequestSchema('updateUserSchema'),
-                    responses: { 200: createResponseSchema('userSchema') },
+                    responses: {
+                        200: createResponseSchema('createUserResponseSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -272,7 +339,12 @@ export default class UserAdminController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'deleteUser',
-                    responses: { 200: emptyResponse },
+                    summary: 'Deletes a user',
+                    description: 'Deletes the user with the given userId',
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -382,6 +454,9 @@ export default class UserAdminController extends Controller {
 
     async getUser(req: Request, res: Response<UserSchema>): Promise<void> {
         const { id } = req.params;
+        if (!Number.isInteger(Number(id))) {
+            throw new BadDataError('User id should be an integer');
+        }
         const user = await this.userService.getUser(Number(id));
 
         this.openApiService.respondWithValidation(
@@ -394,11 +469,14 @@ export default class UserAdminController extends Controller {
 
     async createUser(
         req: IAuthRequest<unknown, unknown, CreateUserSchema>,
-        res: Response<UserSchema>,
+        res: Response<CreateUserResponseSchema>,
     ): Promise<void> {
         const { username, email, name, rootRole, sendEmail, password } =
             req.body;
         const { user } = req;
+        const normalizedRootRole = Number.isInteger(Number(rootRole))
+            ? Number(rootRole)
+            : (rootRole as RoleName);
 
         const createdUser = await this.userService.createUser(
             {
@@ -406,7 +484,7 @@ export default class UserAdminController extends Controller {
                 email,
                 name,
                 password,
-                rootRole,
+                rootRole: normalizedRootRole,
             },
             user,
         );
@@ -451,48 +529,66 @@ export default class UserAdminController extends Controller {
             );
         }
 
-        const responseData: UserSchema = {
+        const responseData: CreateUserResponseSchema = {
             ...serializeDates(createdUser),
             inviteLink: inviteLink || this.unleashUrl,
             emailSent,
-            rootRole,
+            rootRole: normalizedRootRole,
         };
 
         this.openApiService.respondWithValidation(
             201,
             res,
-            userSchema.$id,
+            createUserResponseSchema.$id,
             responseData,
         );
     }
 
     async updateUser(
-        req: IAuthRequest<{ id: string }, UserSchema, UpdateUserSchema>,
-        res: Response<UserSchema>,
+        req: IAuthRequest<
+            { id: string },
+            CreateUserResponseSchema,
+            UpdateUserSchema
+        >,
+        res: Response<CreateUserResponseSchema>,
     ): Promise<void> {
         const { user, params, body } = req;
         const { id } = params;
         const { name, email, rootRole } = body;
+        if (!Number.isInteger(Number(id))) {
+            throw new BadDataError('User id should be an integer');
+        }
+        const normalizedRootRole = Number.isInteger(Number(rootRole))
+            ? Number(rootRole)
+            : (rootRole as RoleName);
 
         const updateUser = await this.userService.updateUser(
             {
                 id: Number(id),
                 name,
                 email,
-                rootRole,
+                rootRole: normalizedRootRole,
             },
             user,
         );
 
-        this.openApiService.respondWithValidation(200, res, userSchema.$id, {
-            ...serializeDates(updateUser),
-            rootRole,
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            createUserResponseSchema.$id,
+            {
+                ...serializeDates(updateUser),
+                rootRole: normalizedRootRole,
+            },
+        );
     }
 
     async deleteUser(req: IAuthRequest, res: Response): Promise<void> {
         const { user, params } = req;
         const { id } = params;
+        if (!Number.isInteger(Number(id))) {
+            throw new BadDataError('User id should be an integer');
+        }
 
         await this.userService.deleteUser(+id, user);
         res.status(200).send();

@@ -2127,6 +2127,12 @@ The provider you choose for your addon dictates what properties the \`parameters
             "example": "User",
             "type": "string",
           },
+          "permissions": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
+          },
           "rootRole": {
             "description": "Which [root role](https://docs.getunleash.io/reference/rbac#standard-roles) this user is assigned. Usually a numeric role ID, but can be a string when returning newly created user with an explicit string role.",
             "oneOf": [
@@ -6234,6 +6240,12 @@ Stats are divided into current and previous **windows**.
             "description": "Name of the user",
             "example": "User",
             "type": "string",
+          },
+          "permissions": {
+            "items": {
+              "type": "string",
+            },
+            "type": "array",
           },
           "rootRole": {
             "description": "Which [root role](https://docs.getunleash.io/reference/rbac#standard-roles) this user is assigned",
@@ -14901,7 +14913,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
           "required": true,
         },
         "responses": {
-          "200": {
+          "201": {
             "content": {
               "application/json": {
                 "schema": {
@@ -15397,6 +15409,33 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             },
             "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
           },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "description": "The ID of the error instance",
+                      "example": "9c40958a-daac-400e-98fb-3bb438567008",
+                      "type": "string",
+                    },
+                    "message": {
+                      "description": "A description of what went wrong.",
+                      "example": "We do not accept the content-type you provided (application/xml). Try using one of the content-types we do accept instead (application/json) and make sure the body is in the corresponding format.",
+                      "type": "string",
+                    },
+                    "name": {
+                      "description": "The name of the error kind",
+                      "example": "ContentTypeerror",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+            },
+            "description": "The operation does not support request payloads of the provided type. Please ensure that you're using one of the listed payload types and that you have specified the right content type in the "content-type" header.",
+          },
         },
         "summary": "Validate password for a user",
         "tags": [
@@ -15504,7 +15543,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
             "description": "The requested resource was not found.",
           },
         },
-        "summary": "Deletes a user",
+        "summary": "Delete a user",
         "tags": [
           "Users",
         ],
@@ -15621,7 +15660,7 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
         ],
       },
       "put": {
-        "description": "Updates use with new fields",
+        "description": "Only the explicitly specified fields get updated.",
         "operationId": "updateUser",
         "parameters": [
           {

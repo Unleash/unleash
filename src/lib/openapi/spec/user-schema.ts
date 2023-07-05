@@ -84,6 +84,12 @@ export const userSchema = {
             enum: AccountTypes,
             example: 'User',
         },
+        permissions: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
     },
     components: {},
 } as const;

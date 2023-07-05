@@ -277,7 +277,7 @@ export default class UserAdminController extends Controller {
                     description: 'Creates a new user with the given root role.',
                     requestBody: createRequestSchema('createUserSchema'),
                     responses: {
-                        200: createResponseSchema('createUserResponseSchema'),
+                        201: createResponseSchema('createUserResponseSchema'),
                         ...getStandardResponses(400, 401, 403),
                     },
                 }),
@@ -319,7 +319,8 @@ export default class UserAdminController extends Controller {
                     tags: ['Users'],
                     operationId: 'updateUser',
                     summary: 'Update a user',
-                    description: 'Updates use with new fields',
+                    description:
+                        'Only the explicitly specified fields get updated.',
                     requestBody: createRequestSchema('updateUserSchema'),
                     responses: {
                         200: createResponseSchema('createUserResponseSchema'),
@@ -537,10 +538,11 @@ export default class UserAdminController extends Controller {
         };
 
         this.openApiService.respondWithValidation(
-            200,
+            201,
             res,
             createUserResponseSchema.$id,
             responseData,
+            { location: `${responseData.id}` },
         );
     }
 

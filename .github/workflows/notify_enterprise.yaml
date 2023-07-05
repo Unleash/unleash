@@ -26,6 +26,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Trigger sync
         uses: actions/github-script@v6
+        env:
+          COMMIT_ACTOR: ${{ github.event.commits[0].author.name }} <${{ github.event.commits[0].author.email }}>
         with:
           github-token: ${{ secrets.UNLEASH_CI_BUILDER_GITHUB_TOKEN }}
           script: |
@@ -36,7 +38,7 @@ jobs:
               ref: 'master',
               inputs: {
                  commit: "${{ github.event.head_commit.id }}",
-                 actor: "${{ github.event.commits[0].author.name }} <${{ github.event.commits[0].author.email }}>",
+                 actor: "${{ env.COMMIT_ACTOR }}",
                  message: ${{ toJSON(github.event.head_commit.message) }},
               }
             })

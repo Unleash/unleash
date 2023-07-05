@@ -12,7 +12,6 @@ import { Link } from 'react-router-dom';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { IRole } from 'interfaces/role';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
 
 const StyledForm = styled('form')(() => ({
@@ -111,14 +110,11 @@ export const GroupForm: FC<IGroupForm> = ({
 }) => {
     const { config: oidcSettings } = useAuthSettings('oidc');
     const { config: samlSettings } = useAuthSettings('saml');
-    const { uiConfig } = useUiConfig();
     const { roles } = useUsers();
 
     const isGroupSyncingEnabled =
         (oidcSettings?.enabled && oidcSettings.enableGroupSyncing) ||
         (samlSettings?.enabled && samlSettings.enableGroupSyncing);
-
-    const groupRootRolesEnabled = Boolean(uiConfig.flags.groupRootRoles);
 
     const roleIdToRole = (rootRoleId: number | null): IRole | null => {
         return roles.find((role: IRole) => role.id === rootRoleId) || null;
@@ -180,30 +176,20 @@ export const GroupForm: FC<IGroupForm> = ({
                         </StyledDescriptionBlock>
                     )}
                 />
-                <ConditionallyRender
-                    condition={groupRootRolesEnabled}
-                    show={
-                        <>
-                            <StyledInputDescription>
-                                <Box sx={{ display: 'flex' }}>
-                                    Do you want to associate a root role with
-                                    this group?
-                                    <HelpIcon tooltip="When you associate an Admin or Editor role with this group, users in this group will automatically inherit the role globally. Note that groups with a root role association cannot be assigned to projects." />
-                                </Box>
-                            </StyledInputDescription>
-                            <StyledAutocompleteWrapper>
-                                <RoleSelect
-                                    data-testid="GROUP_ROOT_ROLE"
-                                    roles={roles}
-                                    value={roleIdToRole(rootRole)}
-                                    setValue={role =>
-                                        setRootRole(role?.id || null)
-                                    }
-                                />
-                            </StyledAutocompleteWrapper>
-                        </>
-                    }
-                />
+                <StyledInputDescription>
+                    <Box sx={{ display: 'flex' }}>
+                        Do you want to associate a root role with this group?
+                        <HelpIcon tooltip="When you associate an Admin or Editor role with this group, users in this group will automatically inherit the role globally. Note that groups with a root role association cannot be assigned to projects." />
+                    </Box>
+                </StyledInputDescription>
+                <StyledAutocompleteWrapper>
+                    <RoleSelect
+                        data-testid="GROUP_ROOT_ROLE"
+                        roles={roles}
+                        value={roleIdToRole(rootRole)}
+                        setValue={role => setRootRole(role?.id || null)}
+                    />
+                </StyledAutocompleteWrapper>
                 <ConditionallyRender
                     condition={mode === 'Create'}
                     show={

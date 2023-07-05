@@ -24,12 +24,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - run: |
-          echo "github.event.head_commit.committer.name: ${{ github.event.head_commit.committer.name }}"
-          echo "github.event.head_commit.committer.email: ${{ github.event.head_commit.committer.email }}"
-          echo "github.actor: ${{ github.actor }}"
-          echo "github.event.commits[0].author.name ${{ github.event.commits[0].author.name }}"
-          echo "github.event.commits[0].author.email ${{ github.event.commits[0].author.email }}"
       - name: Trigger sync
         uses: actions/github-script@v6
         with:

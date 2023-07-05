@@ -1,8 +1,35 @@
+import { IUnleashContextDefinition } from 'interfaces/context';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { formatApiPath } from 'utils/formatPath';
 
 const PROJECT = 'demo-app';
 const ENVIRONMENT = 'dev';
+
+const ensureUserIdContextExists = async () => {
+    const contextFields: IUnleashContextDefinition[] =
+        (await fetch(formatApiPath('api/admin/context')).then(res =>
+            res.json()
+        )) || [];
+
+    if (!contextFields.find(({ name }) => name === 'userId')) {
+        await fetch(formatApiPath('api/admin/context'), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: 'userId',
+                description: 'Allows you to constrain on userId',
+                legalValues: [],
+                stickiness: true,
+            }),
+        });
+    }
+};
+
+export const specificUser = async () => {
+    await ensureUserIdContextExists();
+};
 
 export const gradualRollout = async () => {
     const featureId = 'demoApp.step3';
@@ -42,6 +69,8 @@ export const gradualRollout = async () => {
 
 export const variants = async () => {
     const featureId = 'demoApp.step4';
+
+    await ensureUserIdContextExists();
 
     const { variants }: IFeatureToggle = await fetch(
         formatApiPath(

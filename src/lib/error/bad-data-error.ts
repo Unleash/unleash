@@ -83,27 +83,46 @@ const genericErrorMessage = (
     };
 };
 
+const oneOfMessage = (
+    propertyName: string,
+    errorMessage: string = 'is invalid',
+) => {
+    const errorPosition =
+        propertyName === '' ? 'root object' : `${propertyName} property`;
+
+    const description = `The ${errorPosition} ${errorMessage}. The data you provided matches more than one option in the schema. These options are mutually exclusive. Please refer back to the schema and remove any excess properties.`;
+
+    return {
+        description,
+        message: description,
+        path: propertyName,
+    };
+};
+
 export const fromOpenApiValidationError =
     (requestBody: object) =>
     (validationError: ErrorObject): ValidationErrorDescription => {
         // @ts-expect-error Unsure why, but the `dataPath` isn't listed on the type definition for error objects. However, it's always there. Suspect this is a bug in the library.
-        const dataPath = validationError.dataPath.substring('.body.'.length);
+        const dataPath = validationError.dataPath;
+        const propertyName = dataPath.substring('.body.'.length);
 
         switch (validationError.keyword) {
             case 'required':
                 return missingRequiredPropertyMessage(
-                    dataPath,
+                    propertyName,
                     validationError.params.missingProperty,
                 );
             case 'additionalProperties':
                 return additionalPropertiesMessage(
-                    dataPath,
+                    propertyName,
                     validationError.params.additionalProperty,
                 );
+            case 'oneOf':
+                return oneOfMessage(propertyName, validationError.message);
             default:
                 return genericErrorMessage(
                     requestBody,
-                    dataPath,
+                    propertyName,
                     validationError.message,
                 );
         }

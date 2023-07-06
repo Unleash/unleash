@@ -37,7 +37,10 @@ import {
     ApiTokenSchema,
 } from '../../openapi/spec/api-token-schema';
 import { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import { ProxyService } from '../../services/proxy-service';
 import { extractUsername } from '../../util';
 import { OperationDeniedError } from '../../error';
@@ -154,8 +157,12 @@ export class ApiTokenController extends Controller {
                 openApiService.validPath({
                     tags: ['API tokens'],
                     operationId: 'getAllApiTokens',
+                    summary: 'Get API tokens',
+                    description:
+                        'Retrieves all API tokens that exist in the Unleash instance.',
                     responses: {
                         200: createResponseSchema('apiTokensSchema'),
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -175,8 +182,13 @@ export class ApiTokenController extends Controller {
                     tags: ['API tokens'],
                     operationId: 'createApiToken',
                     requestBody: createRequestSchema('createApiTokenSchema'),
+                    summary: 'Create API token',
+                    description: `Create an API token of a specific type: one of ${Object.values(
+                        ApiTokenType,
+                    ).join(', ')}.`,
                     responses: {
                         201: resourceCreatedResponseSchema('apiTokenSchema'),
+                        ...getStandardResponses(401, 403, 415),
                     },
                 }),
             ],
@@ -195,9 +207,13 @@ export class ApiTokenController extends Controller {
                 openApiService.validPath({
                     tags: ['API tokens'],
                     operationId: 'updateApiToken',
+                    summary: 'Update API token',
+                    description:
+                        "Updates an existing API token with a new expiry date. The `token` path parameter is the token's `secret`. If the token does not exist, this endpoint returns a 200 OK, but does nothing.",
                     requestBody: createRequestSchema('updateApiTokenSchema'),
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(401, 403, 415),
                     },
                 }),
             ],
@@ -216,9 +232,13 @@ export class ApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
+                    summary: 'Delete API token',
+                    description:
+                        "Deletes an existing API token. The `token` path parameter is the token's `secret`. If the token does not exist, this endpoint returns a 200 OK, but does nothing.",
                     operationId: 'deleteApiToken',
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],

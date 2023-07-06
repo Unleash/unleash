@@ -94,7 +94,15 @@ test('the generated OpenAPI spec is valid', async () => {
         console.error(enforcerError);
     }
 
-    expect(enforcerWarning ?? enforcerError).toBe(undefined);
+    const enforcerResults = {
+        warnings: enforcerWarning?.toString(),
+        errors: enforcerError?.toString(),
+    };
+
+    expect(enforcerResults).toMatchObject({
+        warnings: undefined,
+        errors: undefined,
+    });
 });
 
 test('all root-level tags are "approved tags"', async () => {

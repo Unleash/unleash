@@ -99,6 +99,46 @@ describe('OpenAPI error conversion', () => {
         });
     });
 
+    it.each(['.body', '.body.subObject'])(
+        'Gives useful error messages for oneOf errors in %s',
+        (dataPath) => {
+            const error = {
+                keyword: 'oneOf',
+                instancePath: '',
+                dataPath,
+                schemaPath: '#/components/schemas/createApiTokenSchema/oneOf',
+                params: {
+                    passingSchemas: null,
+                },
+                message: 'should match exactly one schema in oneOf',
+            };
+
+            const result = fromOpenApiValidationError({
+                secret: 'blah',
+                username: 'string2',
+                type: 'admin',
+            })(error);
+
+            expect(result).toMatchObject({
+                description:
+                    // it provides the message
+                    expect.stringContaining(error.message),
+                path: dataPath.substring('.body.'.length),
+            });
+
+            // it tells the user what happened
+            expect(result.description).toContain(
+                'matches more than one option',
+            );
+            // it tells the user what part of the request body this pertains to
+            expect(result.description).toContain(
+                dataPath === '.body'
+                    ? 'root object'
+                    : `${dataPath.substring('.body.'.length)} property`,
+            );
+        },
+    );
+
     it('Gives useful pattern error messages', () => {
         const error = {
             instancePath: '',

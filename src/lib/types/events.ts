@@ -98,6 +98,7 @@ export const CHANGE_REQUEST_CREATED = 'change-request-created' as const;
 export const CHANGE_REQUEST_DISCARDED = 'change-request-discarded' as const;
 export const CHANGE_ADDED = 'change-added' as const;
 export const CHANGE_DISCARDED = 'change-discarded' as const;
+export const CHANGE_EDITED = 'change-edited' as const;
 export const CHANGE_REQUEST_APPROVED = 'change-request-approved' as const;
 export const CHANGE_REQUEST_APPROVAL_ADDED =
     'change-request-approval-added' as const;
@@ -204,6 +205,7 @@ export const IEventTypes = [
     CHANGE_REQUEST_DISCARDED,
     CHANGE_ADDED,
     CHANGE_DISCARDED,
+    CHANGE_EDITED,
     CHANGE_REQUEST_APPROVED,
     CHANGE_REQUEST_APPROVAL_ADDED,
     CHANGE_REQUEST_CANCELLED,

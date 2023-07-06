@@ -218,7 +218,7 @@ export const IEventTypes = [
 export type IEventType = typeof IEventTypes[number];
 
 export interface IBaseEvent {
-    type: IEventType;
+    type: string;
     createdBy: string;
     project?: string;
     environment?: string;

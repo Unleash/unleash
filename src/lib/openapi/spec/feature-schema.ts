@@ -12,6 +12,7 @@ export const featureSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['name'],
+    description: 'A feature toggle definition',
     properties: {
         name: {
             type: 'string',

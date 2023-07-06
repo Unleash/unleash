@@ -38,7 +38,7 @@ jobs:
               ref: 'master',
               inputs: {
                  commit: "${{ github.event.head_commit.id }}",
-                 actor: "${{ env.COMMIT_ACTOR }}",
+                 actor: ${{ toJSON(env.COMMIT_ACTOR) }},
                  message: ${{ toJSON(github.event.head_commit.message) }},
               }
             })

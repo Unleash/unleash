@@ -176,7 +176,6 @@ const metaRules: Rule[] = [
             'maintenanceSchema',
             'toggleMaintenanceSchema',
             'meSchema',
-            'parametersSchema',
             'patchesSchema',
             'patchSchema',
             'permissionSchema',

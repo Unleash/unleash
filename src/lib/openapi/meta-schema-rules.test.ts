@@ -90,7 +90,6 @@ const metaRules: Rule[] = [
             },
         },
         knownExceptions: [
-            'batchFeaturesSchema',
             'batchStaleSchema',
             'cloneFeatureSchema',
             'createFeatureSchema',
@@ -156,7 +155,6 @@ const metaRules: Rule[] = [
             'adminFeaturesQuerySchema',
             'applicationSchema',
             'applicationsSchema',
-            'batchFeaturesSchema',
             'batchStaleSchema',
             'cloneFeatureSchema',
             'createFeatureSchema',

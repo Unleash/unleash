@@ -1,4 +1,4 @@
-import { Box, Butto } from '@mui/material';
+import { Box } from '@mui/material';
 import { IEnvironment } from 'interfaces/environments';
 import { FormEvent, VFC } from 'react';
 import { PlaygroundCodeFieldset } from './PlaygroundCodeFieldset/PlaygroundCodeFieldset';

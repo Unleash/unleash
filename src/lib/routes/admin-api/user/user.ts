@@ -15,7 +15,10 @@ import { meSchema, MeSchema } from '../../../openapi/spec/me-schema';
 import { serializeDates } from '../../../types/serialize-dates';
 import { IUserPermission } from '../../../types/stores/access-store';
 import { PasswordSchema } from '../../../openapi/spec/password-schema';
-import { emptyResponse } from '../../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../../openapi/util/standard-responses';
 import {
     profileSchema,
     ProfileSchema,
@@ -71,7 +74,13 @@ class UserController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'getMe',
-                    responses: { 200: createResponseSchema('meSchema') },
+                    summary: 'Get your own user details',
+                    description:
+                        'Detailed information about the current user, user permissions and user feedback',
+                    responses: {
+                        200: createResponseSchema('meSchema'),
+                        ...getStandardResponses(401),
+                    },
                 }),
             ],
         });
@@ -85,7 +94,13 @@ class UserController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'getProfile',
-                    responses: { 200: createResponseSchema('profileSchema') },
+                    summary: 'Get your own user profile',
+                    description:
+                        'Detailed information about the current user root role and project membership',
+                    responses: {
+                        200: createResponseSchema('profileSchema'),
+                        ...getStandardResponses(401),
+                    },
                 }),
             ],
         });
@@ -99,11 +114,19 @@ class UserController extends Controller {
                 openApiService.validPath({
                     tags: ['Users'],
                     operationId: 'changeMyPassword',
+                    summary: 'Change your own password',
+                    description:
+                        'Requires specifying old password and confirming new password',
                     requestBody: createRequestSchema('passwordSchema'),
                     responses: {
                         200: emptyResponse,
-                        400: { description: 'password mismatch' },
-                        401: { description: 'incorrect old password' },
+                        400: {
+                            description: 'Old and new password do not match',
+                        },
+                        401: {
+                            description:
+                                'Old password is incorrect or user is not authenticated',
+                        },
                     },
                 }),
             ],

@@ -2,7 +2,7 @@ import { Typography, TypographyProps, styled } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Badge } from 'component/common/Badge/Badge';
 import { Step } from 'react-joyride';
-import { gradualRollout, variants } from './demo-setup';
+import { specificUser, gradualRollout, variants } from './demo-setup';
 import { basePath, formatAssetPath } from 'utils/formatPath';
 import demoUserId from 'assets/img/demo-userid.png';
 
@@ -90,6 +90,7 @@ export const TOPICS: ITutorialTopic[] = [
     },
     {
         title: 'Enable for a specific user',
+        setup: specificUser,
         steps: [
             {
                 href: `/projects/${PROJECT}?sort=name`,

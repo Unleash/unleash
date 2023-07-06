@@ -145,3 +145,34 @@ test(`Should call teams webhook for toggled environment`, async () => {
     expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
+
+test('Should include custom headers in call to teams', async () => {
+    const addon = new TeamsAddon({
+        getLogger: noLogger,
+        unleashUrl: 'http://some-url.com',
+    });
+    const event: IEvent = {
+        id: 2,
+        createdAt: new Date(),
+        type: FEATURE_ENVIRONMENT_DISABLED,
+        createdBy: 'some@user.com',
+        environment: 'development',
+        project: 'default',
+        featureName: 'some-toggle',
+        data: {
+            name: 'some-toggle',
+        },
+    };
+
+    const parameters = {
+        url: 'http://hooks.slack.com',
+        customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
+    };
+
+    await addon.handleEvent(event, parameters);
+    expect(fetchRetryCalls).toHaveLength(1);
+    expect(fetchRetryCalls[0].url).toBe(parameters.url);
+    expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
+    expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+    expect(fetchRetryCalls[0].options.headers).toMatchSnapshot();
+});

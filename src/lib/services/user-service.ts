@@ -192,7 +192,7 @@ class UserService {
 
         const exists = await this.store.hasUser({ username, email });
         if (exists) {
-            throw new Error('User already exists');
+            throw new BadDataError('User already exists');
         }
 
         const user = await this.store.insert({
@@ -295,15 +295,20 @@ class UserService {
         const idQuery = isEmail(usernameOrEmail)
             ? { email: usernameOrEmail }
             : { username: usernameOrEmail };
-        const user = await this.store.getByQuery(idQuery);
-        const passwordHash = await this.store.getPasswordHash(user.id);
 
-        const match = await bcrypt.compare(password, passwordHash);
-        if (match) {
-            await this.store.successfullyLogin(user);
-            return user;
+        let user;
+        try {
+            user = await this.store.getByQuery(idQuery);
+        } catch (error) {}
+        if (user) {
+            const passwordHash = await this.store.getPasswordHash(user.id);
+
+            const match = await bcrypt.compare(password, passwordHash);
+            if (match) {
+                await this.store.successfullyLogin(user);
+                return user;
+            }
         }
-
         throw new PasswordMismatch(
             `The combination of password and username you provided is invalid. If you have forgotten your password, visit ${this.baseUriPath}/forgotten-password or get in touch with your instance administrator.`,
         );

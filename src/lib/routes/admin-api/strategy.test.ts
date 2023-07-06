@@ -63,15 +63,14 @@ test('require a name when creating a new strategy', async () => {
 
 test('require parameters array when creating a new strategy', async () => {
     const { request, base } = await getSetup();
-    return request
+    const { body } = await request
         .post(`${base}/api/admin/strategies`)
         .send({ name: 'TestStrat' })
-        .expect(400)
-        .expect((res) => {
-            expect(res.body.details[0].description).toMatch(
-                '"parameters" is required',
-            );
-        });
+        .expect(400);
+
+    const detailsDescription = body.details[0].description;
+    expect(detailsDescription).toEqual(expect.stringMatching('parameters'));
+    expect(detailsDescription).toEqual(expect.stringMatching('required'));
 });
 
 test('create a new strategy with empty parameters', async () => {

@@ -57,6 +57,7 @@ test('Should call slack webhook', async () => {
 
     const parameters = {
         url: 'http://hooks.slack.com',
+        defaultChannel: 'general',
     };
 
     await addon.handleEvent(event, parameters);
@@ -83,6 +84,7 @@ test('Should call slack webhook for archived toggle', async () => {
 
     const parameters = {
         url: 'http://hooks.slack.com',
+        defaultChannel: 'general',
     };
 
     await addon.handleEvent(event, parameters);
@@ -110,6 +112,7 @@ test('Should call slack webhook for archived toggle with project info', async ()
 
     const parameters = {
         url: 'http://hooks.slack.com',
+        defaultChannel: 'general',
     };
 
     await addon.handleEvent(event, parameters);
@@ -138,6 +141,7 @@ test(`Should call webhook for toggled environment`, async () => {
 
     const parameters = {
         url: 'http://hooks.slack.com',
+        defaultChannel: 'general',
     };
 
     await addon.handleEvent(event, parameters);
@@ -254,4 +258,36 @@ test('Should post to all channels in tags', async () => {
     expect(fetchRetryCalls).toHaveLength(2);
     expect(req1.channel).toBe('#another-channel-1');
     expect(req2.channel).toBe('#another-channel-2');
+});
+
+test('Should include custom headers from parameters in call to service', async () => {
+    const addon = new SlackAddon({
+        getLogger: noLogger,
+        unleashUrl: 'http://some-url.com',
+    });
+    const event: IEvent = {
+        id: 2,
+        createdAt: new Date(),
+        type: FEATURE_ENVIRONMENT_DISABLED,
+        createdBy: 'some@user.com',
+        environment: 'development',
+        project: 'default',
+        featureName: 'some-toggle',
+        data: {
+            name: 'some-toggle',
+        },
+    };
+
+    const parameters = {
+        url: 'http://hooks.slack.com',
+        defaultChannel: 'general',
+        customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
+    };
+
+    await addon.handleEvent(event, parameters);
+    expect(fetchRetryCalls).toHaveLength(1);
+    expect(fetchRetryCalls[0].url).toBe(parameters.url);
+    expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
+    expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+    expect(fetchRetryCalls[0].options.headers).toMatchSnapshot();
 });

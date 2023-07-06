@@ -181,39 +181,8 @@ module.exports = {
                 },
                 {
                     type: 'category',
-                    link: {
-                        type: 'doc',
-                        id: 'reference/api/legacy/unleash/index',
-                    },
                     label: 'APIs',
                     items: [
-                        {
-                            'Admin API': [
-                                'reference/api/legacy/unleash/admin/addons',
-                                'reference/api/legacy/unleash/admin/context',
-                                'reference/api/legacy/unleash/admin/events',
-                                'reference/api/legacy/unleash/admin/features-v2',
-                                'reference/api/legacy/unleash/admin/feature-types',
-                                'reference/api/legacy/unleash/admin/features',
-                                'reference/api/legacy/unleash/admin/archive',
-                                'reference/api/legacy/unleash/admin/metrics',
-                                'reference/api/legacy/unleash/admin/projects',
-                                'reference/api/legacy/unleash/admin/segments',
-                                'reference/api/legacy/unleash/admin/state',
-                                'reference/api/legacy/unleash/admin/strategies',
-                                'reference/api/legacy/unleash/admin/tags',
-                                'reference/api/legacy/unleash/admin/user-admin',
-                            ],
-                            'Client API': [
-                                'reference/api/legacy/unleash/client/features',
-                                'reference/api/legacy/unleash/client/metrics',
-                                'reference/api/legacy/unleash/client/register',
-                            ],
-                            'System API': [
-                                'reference/api/legacy/unleash/internal/prometheus',
-                                'reference/api/legacy/unleash/internal/health',
-                            ],
-                        },
                         {
                             label: 'OpenAPI docs',
                             collapsed: true,
@@ -226,6 +195,43 @@ module.exports = {
                                 slug: '/reference/api/unleash',
                             },
                             items: require('./docs/reference/api/unleash/sidebar.js'),
+                        },
+                        {
+                            type: 'category',
+                            label: 'Legacy API docs',
+                            link: {
+                                type: 'doc',
+                                id: 'reference/api/legacy/unleash/index',
+                            },
+                            items: [
+                                {
+                                    'Admin API': [
+                                        'reference/api/legacy/unleash/admin/addons',
+                                        'reference/api/legacy/unleash/admin/context',
+                                        'reference/api/legacy/unleash/admin/events',
+                                        'reference/api/legacy/unleash/admin/features-v2',
+                                        'reference/api/legacy/unleash/admin/feature-types',
+                                        'reference/api/legacy/unleash/admin/features',
+                                        'reference/api/legacy/unleash/admin/archive',
+                                        'reference/api/legacy/unleash/admin/metrics',
+                                        'reference/api/legacy/unleash/admin/projects',
+                                        'reference/api/legacy/unleash/admin/segments',
+                                        'reference/api/legacy/unleash/admin/state',
+                                        'reference/api/legacy/unleash/admin/strategies',
+                                        'reference/api/legacy/unleash/admin/tags',
+                                        'reference/api/legacy/unleash/admin/user-admin',
+                                    ],
+                                    'Client API': [
+                                        'reference/api/legacy/unleash/client/features',
+                                        'reference/api/legacy/unleash/client/metrics',
+                                        'reference/api/legacy/unleash/client/register',
+                                    ],
+                                    'System API': [
+                                        'reference/api/legacy/unleash/internal/prometheus',
+                                        'reference/api/legacy/unleash/internal/health',
+                                    ],
+                                },
+                            ],
                         },
                     ],
                 },

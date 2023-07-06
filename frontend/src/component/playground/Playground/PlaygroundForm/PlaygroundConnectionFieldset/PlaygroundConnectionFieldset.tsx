@@ -1,4 +1,4 @@
-import { ComponentProps, VFC } from 'react';
+import React, { ComponentProps, VFC } from 'react';
 import {
     Autocomplete,
     Box,
@@ -7,8 +7,8 @@ import {
     useTheme,
 } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { renderOption } from '../renderOption';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];
@@ -109,10 +109,9 @@ export const PlaygroundConnectionFieldset: VFC<
     return (
         <Box sx={{ pb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <GuidanceIndicator type="secondary">1</GuidanceIndicator>
                 <Typography
                     variant="body2"
-                    color={theme.palette.text.secondary}
+                    color={theme.palette.text.primary}
                     sx={{ ml: 1 }}
                 >
                     Access configuration
@@ -121,13 +120,17 @@ export const PlaygroundConnectionFieldset: VFC<
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                 <Autocomplete
                     disablePortal
+                    limitTags={3}
                     id="environment"
                     multiple={isAdvancedPlayground}
                     options={environmentOptions}
-                    sx={{ width: 200, maxWidth: '100%' }}
+                    sx={{ flex: 1 }}
                     renderInput={params => (
                         <TextField {...params} label="Environments" />
                     )}
+                    renderOption={renderOption}
+                    getOptionLabel={({ label }) => label}
+                    disableCloseOnSelect={isAdvancedPlayground!}
                     size="small"
                     value={envValue}
                     onChange={onEnvironmentsChange}
@@ -136,12 +139,16 @@ export const PlaygroundConnectionFieldset: VFC<
                 <Autocomplete
                     disablePortal
                     id="projects"
+                    limitTags={3}
                     multiple={!isAllProjects}
                     options={projectsOptions}
-                    sx={{ width: 200, maxWidth: '100%' }}
+                    sx={{ flex: 1 }}
                     renderInput={params => (
                         <TextField {...params} label="Projects" />
                     )}
+                    renderOption={renderOption}
+                    getOptionLabel={({ label }) => label}
+                    disableCloseOnSelect
                     size="small"
                     value={
                         isAllProjects

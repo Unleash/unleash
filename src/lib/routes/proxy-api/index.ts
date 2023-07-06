@@ -13,6 +13,7 @@ import {
     createRequestSchema,
     createResponseSchema,
     emptyResponse,
+    getStandardResponses,
     ProxyClientSchema,
     proxyFeaturesSchema,
     ProxyFeaturesSchema,
@@ -21,6 +22,7 @@ import { Context } from 'unleash-client';
 import { enrichContextWithIp } from '../../proxy';
 import { corsOriginMiddleware } from '../../middleware';
 import NotImplementedError from '../../error/not-implemented-error';
+import NotFoundError from '../../error/notfound-error';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -68,7 +70,12 @@ export default class ProxyController extends Controller {
                     operationId: 'getFrontendFeatures',
                     responses: {
                         200: createResponseSchema('proxyFeaturesSchema'),
+                        ...getStandardResponses(401, 404),
                     },
+                    summary:
+                        'Retrieve enabled feature toggles for the provided context.',
+                    description:
+                        'This endpoint returns the list of feature toggles that the proxy evaluates to enabled for the given context. Context values are provided as query parameters. If the Frontend API is disabled 404 is returned.',
                 }),
             ],
         });
@@ -95,9 +102,14 @@ export default class ProxyController extends Controller {
             middleware: [
                 this.services.openApiService.validPath({
                     tags: ['Frontend API'],
+                    summary: 'Register client usage metrics',
+                    description: `Registers usage metrics. Stores information about how many times each toggle was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature toggle's variants were displayed to the end user. If the Frontend API is disabled 404 is returned.`,
                     operationId: 'registerFrontendMetrics',
                     requestBody: createRequestSchema('clientMetricsSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 404),
+                    },
                 }),
             ],
         });
@@ -105,14 +117,20 @@ export default class ProxyController extends Controller {
         this.route({
             method: 'post',
             path: '/client/register',
-            handler: ProxyController.registerProxyClient,
+            handler: this.registerProxyClient,
             permission: NONE,
             middleware: [
                 this.services.openApiService.validPath({
                     tags: ['Frontend API'],
+                    summary: 'Register a client SDK',
+                    description:
+                        'This is for future use. Currently Frontend client registration is not supported. Returning 200 for clients that expect this status code. If the Frontend API is disabled 404 is returned.',
                     operationId: 'registerFrontendClient',
                     requestBody: createRequestSchema('proxyClientSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 404),
+                    },
                 }),
             ],
         });
@@ -146,6 +164,9 @@ export default class ProxyController extends Controller {
         req: ApiUserRequest,
         res: Response<ProxyFeaturesSchema>,
     ) {
+        if (!this.config.flagResolver.isEnabled('embedProxy')) {
+            throw new NotFoundError();
+        }
         const toggles = await this.services.proxyService.getProxyFeatures(
             req.user,
             ProxyController.createContext(req),
@@ -165,6 +186,9 @@ export default class ProxyController extends Controller {
         req: ApiUserRequest<unknown, unknown, ClientMetricsSchema>,
         res: Response,
     ) {
+        if (!this.config.flagResolver.isEnabled('embedProxy')) {
+            throw new NotFoundError();
+        }
         await this.services.proxyService.registerProxyMetrics(
             req.user,
             req.body,
@@ -173,10 +197,13 @@ export default class ProxyController extends Controller {
         res.sendStatus(200);
     }
 
-    private static async registerProxyClient(
+    private async registerProxyClient(
         req: ApiUserRequest<unknown, unknown, ProxyClientSchema>,
         res: Response<string>,
     ) {
+        if (!this.config.flagResolver.isEnabled('embedProxy')) {
+            throw new NotFoundError();
+        }
         // Client registration is not yet supported by @unleash/proxy,
         // but proxy clients may still expect a 200 from this endpoint.
         res.sendStatus(200);

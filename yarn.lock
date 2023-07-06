@@ -1358,10 +1358,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.18.tgz#8dfb97f0da23c2293e554c5a50d61ef134d7697f"
   integrity sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==
 
-"@types/node@16.18.36":
-  version "16.18.36"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.36.tgz#0db5d7efc4760d36d0d1d22c85d1a53accd5dc27"
-  integrity sha512-8egDX8dE50XyXWH6C6PRCNkTP106DuUrvdrednFouDSmCi7IOvrqr0frznfZaHifHH/3aq/7a7v9N4wdXMqhBQ==
+"@types/node@16.18.37":
+  version "16.18.37"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.37.tgz#a1f8728e4dc30163deb41e9b7aba65d0c2d4eda1"
+  integrity sha512-ql+4dw4PlPFBP495k8JzUX/oMNRI2Ei4PrMHgj8oT4VhGlYUzF4EYr0qk2fW+XBVGIrq8Zzk13m4cvyXZuv4pA==
 
 "@types/nodemailer@6.4.8":
   version "6.4.8"
@@ -4988,10 +4988,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
-lint-staged@13.2.2:
-  version "13.2.2"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-13.2.2.tgz#5e711d3139c234f73402177be2f8dd312e6508ca"
-  integrity sha512-71gSwXKy649VrSU09s10uAT0rWCcY3aewhMaHyl2N84oBk4Xs9HgxvUp3AYu+bNsK4NrOYYxvSgg7FyGJ+jGcA==
+lint-staged@13.2.3:
+  version "13.2.3"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-13.2.3.tgz#f899aad6c093473467e9c9e316e3c2d8a28f87a7"
+  integrity sha512-zVVEXLuQIhr1Y7R7YAWx4TZLdvuzk7DnmrsTNL0fax6Z3jrpFcas+vKbzxhhvp6TA55m1SQuWkpzI1qbfDZbAg==
   dependencies:
     chalk "5.2.0"
     cli-truncate "^3.1.0"
@@ -6526,17 +6526,7 @@ scslre@^0.2.0:
     refa "^0.11.0"
     regexp-ast-analysis "^0.6.0"
 
-semver@^5.0.3, semver@^5.3.0:
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.1.tgz#a954f931aeba508d307bbf069eff0c01c96116f7"
-  integrity sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==
-
-semver@^6.0.0, semver@^6.3.0:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
-  integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
-
-semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.3.8:
+semver@^5.0.3, semver@^5.3.0, semver@^6.0.0, semver@^6.3.0, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.3.8, semver@^7.5.3:
   version "7.5.3"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.3.tgz#161ce8c2c6b4b3bdca6caadc9fa3317a4c4fe88e"
   integrity sha512-QBlUtyVk/5EeHbi7X0fw6liDZc7BBmEaSYn01fMU1OUYbf6GPsbTtd8WmnqbI20SeycoHSeiybkE/q1Q+qlThQ==

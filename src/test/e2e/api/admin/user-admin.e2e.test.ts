@@ -1,4 +1,4 @@
-import { setupApp, setupAppWithCustomConfig } from '../../helpers/test-helper';
+import { setupAppWithCustomConfig } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import {
@@ -29,7 +29,13 @@ let adminRole: IRole;
 beforeAll(async () => {
     db = await dbInit('user_admin_api_serial', getLogger);
     stores = db.stores;
-    app = await setupApp(stores);
+    app = await setupAppWithCustomConfig(stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
 
     userStore = stores.userStore;
     eventStore = stores.eventStore;

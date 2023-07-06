@@ -6,16 +6,20 @@ export const usersSchema = {
     $id: '#/components/schemas/usersSchema',
     type: 'object',
     additionalProperties: false,
+    description: 'Users and root roles',
     required: ['users'],
     properties: {
         users: {
             type: 'array',
+            description: 'A list of users in the Unleash instance.',
             items: {
                 $ref: '#/components/schemas/userSchema',
             },
         },
         rootRoles: {
             type: 'array',
+            description:
+                'A list of [root roles](https://docs.getunleash.io/reference/rbac#standard-roles) in the Unleash instance.',
             items: {
                 $ref: '#/components/schemas/roleSchema',
             },

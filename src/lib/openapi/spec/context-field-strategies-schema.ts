@@ -4,7 +4,7 @@ export const contextFieldStrategiesSchema = {
     $id: '#/components/schemas/segmentStrategiesSchema',
     type: 'object',
     description:
-        'A wrapper object containing all for strategies using a specific context field',
+        'A wrapper object containing all strategies that use a specific context field',
     required: ['strategies'],
     properties: {
         strategies: {

@@ -2,6 +2,9 @@ name: PR -> Test & Coverage
 
 on:
   pull_request:
+    paths-ignore:
+      - frontend/**
+      - website/**
 
 jobs:
   build:

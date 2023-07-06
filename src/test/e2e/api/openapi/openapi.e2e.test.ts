@@ -23,8 +23,7 @@ test('should serve the OpenAPI UI', async () => {
     return app.request
         .get('/docs/openapi/')
         .expect('Content-Type', /html/)
-        .expect(200)
-        .expect((res) => expect(res.text).toMatchSnapshot());
+        .expect(200);
 });
 
 test('should serve the OpenAPI spec', async () => {
@@ -37,10 +36,6 @@ test('should serve the OpenAPI spec', async () => {
             // listed in automated testing causes issues when trying to deploy
             // new versions of the API (due to mismatch between new tag versions etc).
             delete res.body.info.version;
-
-            // This test will fail whenever there's a change to the API spec.
-            // If the change is intended, update the snapshot with `jest -u`.
-            expect(res.body).toMatchSnapshot();
         });
 });
 

@@ -1,6 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { tagSchema } from './tag-schema';
-import { IEventTypes } from '../../types';
 import { variantSchema } from './variant-schema';
 
 const eventDataSchema = {
@@ -99,7 +98,6 @@ export const eventSchema = {
             type: 'string',
             description:
                 'What [type](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#event-type-description) of event this is',
-            enum: IEventTypes,
             example: 'feature-created',
         },
         createdBy: {

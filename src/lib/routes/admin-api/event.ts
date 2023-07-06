@@ -23,7 +23,7 @@ import { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
 import { IFlagResolver } from '../../types/experimental';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
-const version = 1;
+const version = 1 as const;
 export default class EventController extends Controller {
     private eventService: EventService;
 

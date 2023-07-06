@@ -24,7 +24,7 @@ export const proxyClientSchema = {
             type: 'string',
             deprecated: true,
             description: 'deprecated',
-            example: 'deprecated',
+            example: 'development',
         },
         interval: {
             type: 'number',

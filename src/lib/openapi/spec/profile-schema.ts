@@ -10,8 +10,6 @@ export const profileSchema = {
     required: ['rootRole', 'projects', 'features'],
     properties: {
         rootRole: {
-            description:
-                'Which [root role](https://docs.getunleash.io/reference/rbac#standard-roles) this user is assigned',
             $ref: '#/components/schemas/roleSchema',
         },
         projects: {

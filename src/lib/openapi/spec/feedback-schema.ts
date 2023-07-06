@@ -8,7 +8,7 @@ export const feedbackSchema = {
     properties: {
         userId: {
             description: 'Identifier of the current user giving feedback',
-            type: 'number',
+            type: 'integer',
             example: 2,
         },
         feedbackId: {
@@ -17,7 +17,8 @@ export const feedbackSchema = {
             example: 'pnps',
         },
         neverShow: {
-            description: 'Whether this feedback should be disabled',
+            description:
+                '`true` when user opts-in to never show the feedback again.',
             type: 'boolean',
             example: false,
         },

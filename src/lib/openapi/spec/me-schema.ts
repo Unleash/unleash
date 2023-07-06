@@ -11,7 +11,6 @@ export const meSchema = {
     description: 'Detailed user information',
     properties: {
         user: {
-            description: 'User details',
             $ref: '#/components/schemas/userSchema',
         },
         permissions: {

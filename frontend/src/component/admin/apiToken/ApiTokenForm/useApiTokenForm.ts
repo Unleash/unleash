@@ -19,20 +19,27 @@ export const useApiTokenForm = (project?: string) => {
     const initialEnvironment = environments?.find(e => e.enabled)?.name;
 
     const hasCreateTokenPermission = useHasRootAccess(CREATE_CLIENT_API_TOKEN);
-    const hasCreateProjectTokenPermission = useHasRootAccess(CREATE_PROJECT_API_TOKEN, project);
+    const hasCreateProjectTokenPermission = useHasRootAccess(
+        CREATE_PROJECT_API_TOKEN,
+        project
+    );
 
     const apiTokenTypes: SelectOption[] = [
         {
             key: TokenType.CLIENT,
             label: `Server-side SDK (${TokenType.CLIENT})`,
             title: 'Connect server-side SDK or Unleash Proxy',
-            enabled: hasCreateTokenPermission || hasCreateProjectTokenPermission,
+            enabled:
+                hasCreateTokenPermission || hasCreateProjectTokenPermission,
         },
     ];
 
     const hasAdminAccess = useHasRootAccess(ADMIN);
     const hasCreateFrontendAccess = useHasRootAccess(CREATE_FRONTEND_API_TOKEN);
-    const hasCreateFrontendTokenAccess = useHasRootAccess(CREATE_PROJECT_API_TOKEN, project);
+    const hasCreateFrontendTokenAccess = useHasRootAccess(
+        CREATE_PROJECT_API_TOKEN,
+        project
+    );
     if (!project) {
         apiTokenTypes.push({
             key: TokenType.ADMIN,

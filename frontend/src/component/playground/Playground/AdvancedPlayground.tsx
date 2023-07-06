@@ -56,7 +56,7 @@ export const AdvancedPlayground: VFC<{
     const { setToastData } = useToast();
     const [searchParams, setSearchParams] = useSearchParams();
     const searchParamsLength = Array.from(searchParams.entries()).length;
-    const { evaluateAdvancedPlayground, loading } = usePlaygroundApi();
+    const { evaluateAdvancedPlayground, loading, errors } = usePlaygroundApi();
     const [hasFormBeenSubmitted, setHasFormBeenSubmitted] = useState(false);
 
     useEffect(() => {
@@ -275,7 +275,10 @@ export const AdvancedPlayground: VFC<{
                         elseShow={
                             <>
                                 <ConditionallyRender
-                                    condition={Boolean(results)}
+                                    condition={
+                                        Boolean(results) &&
+                                        Object.values(errors).length === 0
+                                    }
                                     show={
                                         <AdvancedPlaygroundResultsTable
                                             loading={loading}

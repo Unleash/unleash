@@ -34,6 +34,7 @@ export const strategySchema = {
         },
         description: {
             type: 'string',
+            nullable: true,
             description: 'A short description of the strategy',
             example: 'Gradual rollout to logged in users',
         },

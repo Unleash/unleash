@@ -5519,6 +5519,7 @@ Stats are divided into current and previous **windows**.
           "description": {
             "description": "A short description of the strategy",
             "example": "Gradual rollout to logged in users",
+            "nullable": true,
             "type": "string",
           },
           "displayName": {

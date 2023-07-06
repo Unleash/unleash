@@ -8,6 +8,7 @@ export * from './pats-schema';
 export * from './role-schema';
 export * from './tags-schema';
 export * from './user-schema';
+export * from './create-user-response-schema';
 export * from './addon-schema';
 export * from './addon-create-update-schema';
 export * from './email-schema';

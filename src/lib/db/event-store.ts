@@ -97,14 +97,29 @@ class EventStore implements IEventStore {
     }
 
     async store(event: IBaseEvent): Promise<void> {
+        console.log('In src/lib/db/event-store.ts. Received event:', event);
+
         try {
             const rows = await this.db(TABLE)
                 .insert(this.eventToDbRow(event))
                 .returning(EVENT_COLUMNS);
             const savedEvent = this.rowToEvent(rows[0]);
-            process.nextTick(() =>
-                this.eventEmitter.emit(event.type, savedEvent),
+            console.log('Finished db transaction');
+
+            console.log(
+                'in src/lib/db/event-store.ts. Stored event with id:',
+                savedEvent.id,
+                'base event:',
+                event,
+                'saved event',
+                savedEvent,
             );
+
+            // use a separate db column to store announced/unannounced
+            // use the scheduler service to process events that haven't been announced yet
+            // process.nextTick(() =>
+            //     this.eventEmitter.emit(event.type, savedEvent),
+            // );
         } catch (error: unknown) {
             this.logger.warn(`Failed to store "${event.type}" event: ${error}`);
         }
@@ -148,13 +163,14 @@ class EventStore implements IEventStore {
 
     async batchStore(events: IBaseEvent[]): Promise<void> {
         try {
-            const savedRows = await this.db(TABLE)
+            // const savedRows =
+            await this.db(TABLE)
                 .insert(events.map(this.eventToDbRow))
                 .returning(EVENT_COLUMNS);
-            const savedEvents = savedRows.map(this.rowToEvent);
-            process.nextTick(() =>
-                savedEvents.forEach((e) => this.eventEmitter.emit(e.type, e)),
-            );
+            // const savedEvents = savedRows.map(this.rowToEvent);
+            // process.nextTick(() =>
+            //     savedEvents.forEach((e) => this.eventEmitter.emit(e.type, e)),
+            // );
         } catch (error: unknown) {
             this.logger.warn(`Failed to store events: ${error}`);
         }
@@ -410,6 +426,15 @@ class EventStore implements IEventStore {
         listener: (...args: any[]) => void,
     ): EventEmitter {
         return this.eventEmitter.off(eventName, listener);
+    }
+
+    async setUnannouncedToAnnounced(): Promise<IEvent[]> {
+        const rows = await this.db(TABLE)
+            .update({ announced: true })
+            .where('announced', false)
+            .whereNotNull('announced')
+            .returning(EVENT_COLUMNS);
+        return rows.map(this.rowToEvent);
     }
 }
 

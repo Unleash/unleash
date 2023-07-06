@@ -7,6 +7,7 @@ import { IQueryOperations } from 'lib/db/event-store';
 export interface IEventStore
     extends Store<IEvent, number>,
         Pick<EventEmitter, 'on' | 'setMaxListeners' | 'emit' | 'off'> {
+    setUnannouncedToAnnounced(): Promise<IEvent[]>;
     store(event: IBaseEvent): Promise<void>;
     batchStore(events: IBaseEvent[]): Promise<void>;
     getEvents(): Promise<IEvent[]>;

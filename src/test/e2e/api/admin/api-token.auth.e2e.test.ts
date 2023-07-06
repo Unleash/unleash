@@ -184,7 +184,7 @@ test('A role with only CREATE_PROJECT_API_TOKEN can create project tokens', asyn
             });
             req.user = user;
             const createClientApiTokenRole = await accessService.createRole({
-                name: 'client_token_creator',
+                name: 'project_client_token_creator',
                 description: 'Can create client tokens',
                 permissions: [],
                 type: 'root-custom',
@@ -199,7 +199,7 @@ test('A role with only CREATE_PROJECT_API_TOKEN can create project tokens', asyn
                 'default',
             );
             req.user = await userService.createUser({
-                email: 'admin@example.com',
+                email: 'someguyinplaces@example.com',
                 rootRole: role.id,
             });
             next();

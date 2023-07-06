@@ -1,4 +1,5 @@
 import express, { Application, RequestHandler } from 'express';
+import lusca from 'lusca';
 import compression from 'compression';
 import favicon from 'serve-favicon';
 import cookieParser from 'cookie-parser';
@@ -65,6 +66,7 @@ export default async function getApp(
 
     app.use(compression());
     app.use(cookieParser());
+    app.use(lusca.csrf());
 
     app.use((req, res, next) => {
         req.url = req.url.replace(/\/+/g, '/');
@@ -118,12 +120,14 @@ export default async function getApp(
         }
         case IAuthType.ENTERPRISE: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
-            config.authentication.customAuthHandler(app, config, services);
+            if (config.authentication.customAuthHandler)
+                config.authentication.customAuthHandler(app, config, services);
             break;
         }
         case IAuthType.HOSTED: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
-            config.authentication.customAuthHandler(app, config, services);
+            if (config.authentication.customAuthHandler)
+                config.authentication.customAuthHandler(app, config, services);
             break;
         }
         case IAuthType.DEMO: {
@@ -138,7 +142,8 @@ export default async function getApp(
         }
         case IAuthType.CUSTOM: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
-            config.authentication.customAuthHandler(app, config, services);
+            if (config.authentication.customAuthHandler)
+                config.authentication.customAuthHandler(app, config, services);
             break;
         }
         case IAuthType.NONE: {
@@ -172,7 +177,7 @@ export default async function getApp(
     }
 
     // Setup API routes
-    app.use(`${baseUriPath}/`, new IndexRouter(config, services, db).router);
+    app.use(`${baseUriPath}/`, new IndexRouter(config, services, db!).router);
 
     if (services.openApiService) {
         services.openApiService.useErrorHandler(app);

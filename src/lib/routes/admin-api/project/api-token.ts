@@ -34,7 +34,6 @@ import { Response } from 'express';
 import { timingSafeEqual } from 'crypto';
 import { createApiToken } from '../../../schema/api-token-schema';
 import { OperationDeniedError } from '../../../error';
-import { tokenTypeToCreatePermission } from '../api-token';
 
 interface ProjectTokenParam {
     token: string;
@@ -159,9 +158,7 @@ export class ProjectApiTokenController extends Controller {
     ): Promise<any> {
         const createToken = await createApiToken.validateAsync(req.body);
         const { projectId } = req.params;
-        const permissionRequired = tokenTypeToCreatePermission(
-            createToken.type,
-        );
+        const permissionRequired = CREATE_PROJECT_API_TOKEN;
         const hasPermission = await this.accessService.hasPermission(
             req.user,
             permissionRequired,

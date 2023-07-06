@@ -60,7 +60,7 @@ export const AdvancedPlayground: VFC<{
     const [hasFormBeenSubmitted, setHasFormBeenSubmitted] = useState(false);
 
     useEffect(() => {
-        if (environments?.length === 0) {
+        if (environments?.length === 0 && availableEnvironments.length > 0) {
             setEnvironments([resolveDefaultEnvironment(availableEnvironments)]);
         }
     }, [JSON.stringify(environments), JSON.stringify(availableEnvironments)]);

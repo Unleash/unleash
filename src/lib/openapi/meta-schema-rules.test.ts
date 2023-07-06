@@ -165,7 +165,6 @@ const metaRules: Rule[] = [
             'groupUserModelSchema',
             'maintenanceSchema',
             'toggleMaintenanceSchema',
-            'meSchema',
             'patchesSchema',
             'patchSchema',
             'playgroundSegmentSchema',

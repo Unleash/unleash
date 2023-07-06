@@ -23,6 +23,14 @@ test('strategySchema', () => {
         validateSchema('#/components/schemas/strategySchema', data),
     ).toBeUndefined();
 
+    // allow null descriptions
+    expect(
+        validateSchema('#/components/schemas/strategySchema', {
+            ...data,
+            description: null,
+        }),
+    ).toBeUndefined();
+
     expect(
         validateSchema('#/components/schemas/strategySchema', {}),
     ).toMatchSnapshot();

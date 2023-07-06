@@ -6,6 +6,7 @@ export const proxyFeatureSchema = {
     type: 'object',
     required: ['name', 'enabled', 'impressionData'],
     additionalProperties: false,
+    description: 'Frontend API feature',
     properties: {
         name: {
             type: 'string',
@@ -27,6 +28,7 @@ export const proxyFeatureSchema = {
             type: 'object',
             required: ['name', 'enabled'],
             additionalProperties: false,
+            description: 'Variant details',
             properties: {
                 name: {
                     type: 'string',

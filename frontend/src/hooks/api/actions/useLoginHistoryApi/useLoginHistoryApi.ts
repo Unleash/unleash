@@ -22,17 +22,6 @@ export const useLoginHistoryApi = () => {
         window.location.assign(url);
     };
 
-    const removeEvent = async (eventId: number) => {
-        const requestId = 'removeEvent';
-        const req = createRequest(
-            `api/admin/logins/${eventId}`,
-            { method: 'DELETE' },
-            requestId
-        );
-
-        await makeRequest(req.caller, req.id);
-    };
-
     const removeAllEvents = async () => {
         const requestId = 'removeAllEvents';
         const req = createRequest(
@@ -46,7 +35,6 @@ export const useLoginHistoryApi = () => {
 
     return {
         downloadCSV,
-        removeEvent,
         removeAllEvents,
         errors,
         loading,

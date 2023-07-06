@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/formatUnknownError';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
@@ -23,8 +21,7 @@ import { useLoginHistoryApi } from 'hooks/api/actions/useLoginHistoryApi/useLogi
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useSearchParams } from 'react-router-dom';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { Delete, Download } from '@mui/icons-material';
-import { LoginHistoryDeleteAllDialog } from './LoginHistoryDeleteAllDialog/LoginHistoryDeleteAllDialog';
+import { Download } from '@mui/icons-material';
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
@@ -45,10 +42,8 @@ const AUTH_TYPE_LABEL: { [key: string]: string } = {
 };
 
 export const LoginHistoryTable = () => {
-    const { setToastData, setToastApiError } = useToast();
-
-    const { events, loading, refetch } = useLoginHistory();
-    const { removeAllEvents, downloadCSV } = useLoginHistoryApi();
+    const { events, loading } = useLoginHistory();
+    const { downloadCSV } = useLoginHistoryApi();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [initialState] = useState(() => ({
@@ -65,21 +60,6 @@ export const LoginHistoryTable = () => {
     }));
 
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
-    const [deleteAllOpen, setDeleteAllOpen] = useState(false);
-
-    const onDeleteAllConfirm = async () => {
-        try {
-            await removeAllEvents();
-            setToastData({
-                title: `History has been cleared`,
-                type: 'success',
-            });
-            refetch();
-            setDeleteAllOpen(false);
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
 
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -235,18 +215,6 @@ export const LoginHistoryTable = () => {
                                                 <Download />
                                             </IconButton>
                                         </Tooltip>
-                                        <Tooltip
-                                            title="Clear login history"
-                                            arrow
-                                        >
-                                            <IconButton
-                                                onClick={() =>
-                                                    setDeleteAllOpen(true)
-                                                }
-                                            >
-                                                <Delete />
-                                            </IconButton>
-                                        </Tooltip>
                                     </>
                                 }
                             />
@@ -293,11 +261,6 @@ export const LoginHistoryTable = () => {
                         }
                     />
                 }
-            />
-            <LoginHistoryDeleteAllDialog
-                open={deleteAllOpen}
-                setOpen={setDeleteAllOpen}
-                onConfirm={onDeleteAllConfirm}
             />
         </PageContent>
     );

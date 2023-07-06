@@ -47,8 +47,8 @@ beforeAll(async () => {
     });
     userStore = stores.userStore;
     const rootRoles = await accessService.getRootRoles();
-    adminRole = rootRoles.find((r) => r.name === RoleName.ADMIN)!!;
-    viewerRole = rootRoles.find((r) => r.name === RoleName.VIEWER)!!;
+    adminRole = rootRoles.find((r) => r.name === RoleName.ADMIN)!;
+    viewerRole = rootRoles.find((r) => r.name === RoleName.VIEWER)!;
 });
 
 afterAll(async () => {

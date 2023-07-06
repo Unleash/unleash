@@ -13,6 +13,7 @@ export const featureEventsSchema = {
             type: 'integer',
             description: 'An API versioning number',
             minimum: 1,
+            enum: [1],
             example: 1,
         },
         toggleName: {

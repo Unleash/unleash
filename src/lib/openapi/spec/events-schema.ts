@@ -12,8 +12,10 @@ export const eventsSchema = {
         version: {
             type: 'integer',
             minimum: 1,
+            enum: [1],
             description:
                 'The api version of this response. A natural increasing number. Only increases if format changes',
+            example: 1,
         },
         events: {
             description: 'The list of events',

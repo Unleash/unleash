@@ -9,20 +9,33 @@ const eventDataSchema = {
     properties: {
         name: {
             type: 'string',
+            description:
+                'Name of the feature toggle/strategy/environment that this event relates to',
+            example: 'my.first.toggle',
         },
         description: {
             type: 'string',
+            description: 'The description of the object this event relates to',
+            example: 'Toggle description',
         },
         type: {
             type: 'string',
+            description:
+                'If this event relates to a feature toggle, the type of feature toggle.',
+            example: 'release',
         },
         project: {
             type: 'string',
+            description: 'The project this event relates to',
+            example: 'default',
         },
         stale: {
+            description: 'Is the feature toggle this event relates to stale',
             type: 'boolean',
+            example: true,
         },
         variants: {
+            description: 'Variants configured for this toggle',
             type: 'array',
             items: {
                 $ref: '#/components/schemas/variantSchema',
@@ -43,7 +56,10 @@ const eventDataSchema = {
             nullable: true,
         },
         impressionData: {
+            description:
+                'Should [impression events](https://docs.getunleash.io/reference/impression-data) activate for this feature toggle',
             type: 'boolean',
+            example: false,
         },
     },
     description:

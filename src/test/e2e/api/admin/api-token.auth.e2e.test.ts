@@ -5,6 +5,7 @@ import { ApiTokenType } from '../../../../lib/types/models/api-token';
 import { RoleName } from '../../../../lib/types/model';
 import {
     CREATE_CLIENT_API_TOKEN,
+    CREATE_PROJECT_API_TOKEN,
     DELETE_CLIENT_API_TOKEN,
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
@@ -168,6 +169,60 @@ test('Token-admin should be allowed to create token', async () => {
         .set('Content-Type', 'application/json')
         .expect(201);
 
+    await destroy();
+});
+
+test('A role with only CREATE_PROJECT_API_TOKEN can create project tokens', async () => {
+    expect.assertions(0);
+
+    const preHook = (app, config, { userService, accessService }) => {
+        app.use('/api/admin/', async (req, res, next) => {
+            const role = await accessService.getRootRole(RoleName.VIEWER);
+            const user = await userService.createUser({
+                email: 'powerpuffgirls_viewer@example.com',
+                rootRole: role.id,
+            });
+            req.user = user;
+            const createClientApiTokenRole = await accessService.createRole({
+                name: 'client_token_creator',
+                description: 'Can create client tokens',
+                permissions: [],
+                type: 'root-custom',
+            });
+            await accessService.addPermissionToRole(
+                role.id,
+                CREATE_PROJECT_API_TOKEN,
+            );
+            await accessService.addUserToRole(
+                user.id,
+                createClientApiTokenRole.id,
+                'default',
+            );
+            req.user = await userService.createUser({
+                email: 'admin@example.com',
+                rootRole: role.id,
+            });
+            next();
+        });
+    };
+
+    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook, {
+        experimental: {
+            flags: {
+                customRootRoles: true,
+            },
+        },
+    });
+
+    await request
+        .post('/api/admin/projects/default/api-tokens')
+        .send({
+            username: 'client-token-maker',
+            type: 'client',
+            projects: ['default'],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
     await destroy();
 });
 

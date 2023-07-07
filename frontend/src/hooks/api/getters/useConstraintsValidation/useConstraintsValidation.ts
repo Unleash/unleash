@@ -37,12 +37,8 @@ export const useConstraintsValidation = (
             });
 
         Promise.all(validationRequests)
-            .then(() => {
-                setValid(true);
-            })
-            .catch(() => {
-                setValid(false);
-            });
+            .then(() => setValid(true))
+            .catch(() => setValid(false));
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [JSON.stringify(constraints)]);

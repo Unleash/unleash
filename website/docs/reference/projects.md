@@ -116,8 +116,18 @@ All default project strategies use the [gradual rollout activation strategy](act
 
 Custom strategies are configured from each project's project settings tab.
 
-<Figure caption="The default strategy configuration page is available from the project settings tab." img="/img/project-settings-default-sstrategy.png" />
+<Figure caption="The default strategy configuration page is available from the project settings tab." img="/img/project-settings-default-strategy.png" />
 
 The default strategies screen lists a strategy for each of the project's environments
 
 <Figure caption="Each strategy can be individually configured with the corresponding edit button." img="/img/edit-default-strategy.png" />
+
+## Project overview
+
+Project overview gives statistics for a project, including:
+* number of all changes/events in the past 30 days compared to previous 30 days
+* the average time from when a feature was created to when it was enabled in the "production" environment in the project lifetime
+* number of features created in the past 30 days compared to previous 30 days
+* number of features archived in the past 30 days compared to previous 30 days
+
+![Project overview with 4 statistics for total changes, average time to production, features created and features archived.](/img/project_overview.png)

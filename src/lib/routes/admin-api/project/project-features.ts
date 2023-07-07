@@ -227,9 +227,13 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    summary: 'Get strategies defined for a feature toggle.',
                     operationId: 'getFeatureStrategies',
+                    description:
+                        'Get strategies defined for a feature toggle in the specified environment.',
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -243,12 +247,16 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    summary: 'Add a strategy to a feature toggle.',
+                    description:
+                        'Add a strategy to a feature toggle in the specified environment.',
                     operationId: 'addFeatureStrategy',
                     requestBody: createRequestSchema(
                         'createFeatureStrategySchema',
                     ),
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -262,6 +270,9 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    summary: 'Get a strategy configuration.',
+                    description:
+                        'Get a strategy configuration for an environment in a feature toggle.',
                     operationId: 'getFeatureStrategy',
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
@@ -278,12 +289,14 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    summary: 'Set the order of strategies on the list.',
                     operationId: 'setStrategySortOrder',
                     requestBody: createRequestSchema(
                         'setStrategySortOrderSchema',
                     ),
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -297,6 +310,9 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    summary: 'Update a strategy.',
+                    description:
+                        'Replace strategy configuration for a feature toggle in the specified environment.',
                     operationId: 'updateFeatureStrategy',
                     requestBody: createRequestSchema(
                         'updateFeatureStrategySchema',
@@ -316,6 +332,9 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    summary: 'Change specific properties of a strategy.',
+                    description:
+                        'Change specific properties of a strategy configuration in a feature toggle.',
                     operationId: 'patchFeatureStrategy',
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
@@ -333,9 +352,15 @@ export default class ProjectFeaturesController extends Controller {
             permission: DELETE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
-                    operationId: 'deleteFeatureStrategy',
                     tags: ['Features'],
-                    responses: { 200: emptyResponse },
+                    summary: 'Delete a strategy from a feature toggle.',
+                    description:
+                        'Delete a strategy configuration from a feature toggle in the specified environment.',
+                    operationId: 'deleteFeatureStrategy',
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
                 }),
             ],
         });

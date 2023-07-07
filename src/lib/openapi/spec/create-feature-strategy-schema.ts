@@ -6,10 +6,11 @@ export const createFeatureStrategySchema = {
     $id: '#/components/schemas/createFeatureStrategySchema',
     type: 'object',
     required: ['name'],
+    description: 'Create a strategy configuration in a feature',
     properties: {
         name: {
             type: 'string',
-            description: 'The name or type of strategy',
+            description: 'The name of the type of strategy',
             example: 'flexibleRollout',
         },
         title: {

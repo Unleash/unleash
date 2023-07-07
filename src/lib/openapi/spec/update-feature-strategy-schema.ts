@@ -5,18 +5,22 @@ import { constraintSchema } from './constraint-schema';
 export const updateFeatureStrategySchema = {
     $id: '#/components/schemas/updateFeatureStrategySchema',
     type: 'object',
+    description: 'Update a strategy configuration in a feature',
     properties: {
         name: {
             type: 'string',
+            description: 'The name of the type of strategy',
         },
         sortOrder: {
             type: 'number',
+            description: 'The order of the strategy in the list',
         },
         constraints: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/constraintSchema',
             },
+            description: 'A list of the constraints attached to the strategy',
         },
         title: {
             type: 'string',

@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { Fragment, VFC } from 'react';
 import { safeRegExp } from '@server/util/escape-regex';
 import { styled } from '@mui/material';
 
@@ -29,11 +29,18 @@ export const Highlighter: VFC<IHighlighterProps> = ({
 
     const regex = safeRegExp(search, caseSensitive ? 'g' : 'gi');
 
-    return (
-        <StyledSpan
-            dangerouslySetInnerHTML={{
-                __html: children?.replaceAll(regex, '<mark>$&</mark>') || '',
-            }}
-        />
+    const parts = children.split(regex);
+
+    const highlightedText = parts.map((part, index) =>
+        index < parts.length - 1 ? (
+            <Fragment key={index}>
+                {part}
+                <mark>{search}</mark>
+            </Fragment>
+        ) : (
+            part
+        )
     );
+
+    return <StyledSpan>{highlightedText}</StyledSpan>;
 };

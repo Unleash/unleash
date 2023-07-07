@@ -138,26 +138,12 @@ export const ProjectAccessTable: VFC = () => {
                             <HighlightCell
                                 value={value}
                                 subtitle={
-                                    row.entity?.username || row.entity?.email
+                                    row.entity?.email || row.entity?.username
                                 }
                             />
                         }
                     />
                 ),
-                minWidth: 100,
-                searchable: true,
-            },
-            {
-                id: 'username',
-                Header: 'Username',
-                accessor: (row: IProjectAccess) => {
-                    if (row.type !== ENTITY_TYPE.GROUP) {
-                        const userRow = row.entity as IUser;
-                        return userRow.username || userRow.email;
-                    }
-                    return '';
-                },
-                Cell: HighlightCell,
                 minWidth: 100,
                 searchable: true,
             },
@@ -259,6 +245,24 @@ export const ProjectAccessTable: VFC = () => {
                     </ActionCell>
                 ),
             },
+            // Always hidden -- for search
+            {
+                accessor: (row: IProjectAccess) =>
+                    row.type !== ENTITY_TYPE.GROUP
+                        ? (row.entity as IUser)?.username || ''
+                        : '',
+                Header: 'Username',
+                searchable: true,
+            },
+            // Always hidden -- for search
+            {
+                accessor: (row: IProjectAccess) =>
+                    row.type !== ENTITY_TYPE.GROUP
+                        ? (row.entity as IUser)?.email || ''
+                        : '',
+                Header: 'Email',
+                searchable: true,
+            },
         ],
         [access, projectId]
     );
@@ -273,6 +277,7 @@ export const ProjectAccessTable: VFC = () => {
                     : storedParams.desc,
             },
         ],
+        hiddenColumns: ['Username', 'Email'],
         globalFilter: searchParams.get('search') || '',
     }));
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);

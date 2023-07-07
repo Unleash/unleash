@@ -40,8 +40,7 @@ export const useConstraintsValidation = (
             .then(() => {
                 setValid(true);
             })
-            .catch(e => {
-                console.log('***', e);
+            .catch(() => {
                 setValid(false);
             });
 

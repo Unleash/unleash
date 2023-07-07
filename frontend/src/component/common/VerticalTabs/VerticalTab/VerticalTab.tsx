@@ -30,7 +30,14 @@ const StyledTab = styled(Button)<{ selected: boolean }>(
         '&.Mui-disabled': {
             pointerEvents: 'auto',
         },
+        '&:focus-visible': {
+            outline: `2px solid ${theme.palette.primary.main}`,
+        },
         justifyContent: 'space-between',
+        '& > span': {
+            borderTopLeftRadius: 0,
+            borderBottomLeftRadius: 0,
+        },
     })
 );
 
@@ -48,10 +55,8 @@ export const VerticalTab = ({
     <StyledTab
         selected={Boolean(selected)}
         onClick={onClick}
-        disableRipple
         disableElevation
         disableFocusRipple
-        disableTouchRipple
         fullWidth
     >
         {label}

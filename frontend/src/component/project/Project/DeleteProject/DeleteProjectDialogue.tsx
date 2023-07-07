@@ -8,7 +8,7 @@ import useToast from 'hooks/useToast';
 interface IDeleteProjectDialogueProps {
     project: string;
     open: boolean;
-    onClose?: () => void;
+    onClose?: (e: React.SyntheticEvent) => void;
     onSuccess?: () => void;
 }
 
@@ -36,14 +36,14 @@ export const DeleteProjectDialogue = ({
         } catch (ex: unknown) {
             setToastApiError(formatUnknownError(ex));
         }
-        onClose?.();
+        onClose?.(e);
     };
 
     return (
         <Dialogue
             open={open}
             onClick={onClick}
-            onClose={onClose}
+            onClose={e => onClose?.(e)}
             title="Really delete project"
         />
     );

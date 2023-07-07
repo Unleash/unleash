@@ -64,15 +64,9 @@ const columns = [
         id: 'name',
         Header: 'Name',
         accessor: (row: IGroupUser) => row.name || '',
-        Cell: HighlightCell,
-        minWidth: 100,
-        searchable: true,
-    },
-    {
-        id: 'username',
-        Header: 'Username',
-        accessor: (row: IGroupUser) => row.username || row.email,
-        Cell: HighlightCell,
+        Cell: ({ value, row: { original: row } }: any) => (
+            <HighlightCell value={value} subtitle={row.email || row.username} />
+        ),
         minWidth: 100,
         searchable: true,
     },
@@ -97,6 +91,18 @@ const columns = [
         ),
         sortType: 'date',
         maxWidth: 150,
+    },
+    // Always hidden -- for search
+    {
+        accessor: (row: IGroupUser) => row.username || '',
+        Header: 'Username',
+        searchable: true,
+    },
+    // Always hidden -- for search
+    {
+        accessor: (row: IGroupUser) => row.email || '',
+        Header: 'Email',
+        searchable: true,
     },
 ];
 
@@ -131,6 +137,7 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
                 desc: defaultSort.desc,
             },
         ],
+        hiddenColumns: ['Username', 'Email'],
     }));
     const [searchValue, setSearchValue] = useState('');
 

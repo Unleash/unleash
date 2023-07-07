@@ -36,10 +36,16 @@ import {
     getStandardResponses,
     ParametersSchema,
     SetStrategySortOrderSchema,
+    TagsBulkAddSchema,
+    TagSchema,
     UpdateFeatureSchema,
     UpdateFeatureStrategySchema,
 } from '../../../openapi';
-import { OpenApiService, FeatureToggleService } from '../../../services';
+import {
+    OpenApiService,
+    FeatureToggleService,
+    FeatureTagService,
+} from '../../../services';
 import { querySchema } from '../../../schema/feature-schema';
 import { BatchStaleSchema } from '../../../openapi/spec/batch-stale-schema';
 import {
@@ -85,6 +91,7 @@ export interface IFeatureProjectUserParams extends ProjectParam {
 
 const PATH = '/:projectId/features';
 const PATH_STALE = '/:projectId/stale';
+const PATH_TAGS = `/:projectId/tags`;
 const PATH_FEATURE = `${PATH}/:featureName`;
 const PATH_FEATURE_CLONE = `${PATH_FEATURE}/clone`;
 const PATH_ENV = `${PATH_FEATURE}/environments/:environment`;
@@ -98,10 +105,13 @@ type ProjectFeaturesServices = Pick<
     | 'projectHealthService'
     | 'openApiService'
     | 'transactionalFeatureToggleService'
+    | 'featureTagService'
 >;
 
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleService;
+
+    private featureTagService: FeatureTagService;
 
     private transactionalFeatureToggleService: (
         db: UnleashTransaction,
@@ -121,6 +131,7 @@ export default class ProjectFeaturesController extends Controller {
             featureToggleServiceV2,
             openApiService,
             transactionalFeatureToggleService,
+            featureTagService,
         }: ProjectFeaturesServices,
         startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
@@ -130,6 +141,7 @@ export default class ProjectFeaturesController extends Controller {
             transactionalFeatureToggleService;
         this.startTransaction = startTransaction;
         this.openApiService = openApiService;
+        this.featureTagService = featureTagService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
@@ -140,10 +152,14 @@ export default class ProjectFeaturesController extends Controller {
             handler: this.getFeatureEnvironment,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get a feature environment.',
+                    description:
+                        'Information about the enablement status and strategies for a feature toggle in specified environment.',
                     tags: ['Features'],
                     operationId: 'getFeatureEnvironment',
                     responses: {
                         200: createResponseSchema('featureEnvironmentSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -157,9 +173,15 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Disable a feature toggle.',
+                    description:
+                        'Disable a feature toggle in the specified environment.',
                     tags: ['Features'],
                     operationId: 'toggleFeatureEnvironmentOff',
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -172,9 +194,15 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Enable a feature toggle.',
+                    description:
+                        'Enable a feature toggle in the specified environment.',
                     tags: ['Features'],
                     operationId: 'toggleFeatureEnvironmentOn',
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -194,7 +222,10 @@ export default class ProjectFeaturesController extends Controller {
                     requestBody: createRequestSchema(
                         'bulkToggleFeaturesSchema',
                     ),
-                    responses: { 405: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403, 404, 413, 415),
+                    },
                 }),
             ],
         });
@@ -214,7 +245,10 @@ export default class ProjectFeaturesController extends Controller {
                     requestBody: createRequestSchema(
                         'bulkToggleFeaturesSchema',
                     ),
-                    responses: { 405: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403, 404, 413, 415),
+                    },
                 }),
             ],
         });
@@ -502,6 +536,21 @@ export default class ProjectFeaturesController extends Controller {
                     summary: 'Stales a list of features',
                     requestBody: createRequestSchema('batchStaleSchema'),
                     responses: { 202: emptyResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'put',
+            path: PATH_TAGS,
+            handler: this.updateFeaturesTags,
+            permission: UPDATE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Tags'],
+                    operationId: 'addTagToFeatures',
+                    requestBody: createRequestSchema('tagsBulkAddSchema'),
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });
@@ -999,6 +1048,21 @@ export default class ProjectFeaturesController extends Controller {
                 userName,
             );
         res.status(200).json(updatedStrategy);
+    }
+
+    async updateFeaturesTags(
+        req: IAuthRequest<void, void, TagsBulkAddSchema>,
+        res: Response<TagSchema>,
+    ): Promise<void> {
+        const { features, tags } = req.body;
+        const userName = extractUsername(req);
+        await this.featureTagService.updateTags(
+            features,
+            tags.addedTags,
+            tags.removedTags,
+            userName,
+        );
+        res.status(200).end();
     }
 
     async getStrategyParameters(

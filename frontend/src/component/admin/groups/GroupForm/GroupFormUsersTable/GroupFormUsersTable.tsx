@@ -1,4 +1,4 @@
-import { useMemo, VFC } from 'react';
+import { useMemo, useState, VFC } from 'react';
 import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { IGroupUser } from 'interfaces/group';
@@ -43,15 +43,12 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
                 id: 'name',
                 Header: 'Name',
                 accessor: (row: IGroupUser) => row.name || '',
-                Cell: HighlightCell,
-                minWidth: 100,
-                searchable: true,
-            },
-            {
-                id: 'username',
-                Header: 'Username',
-                accessor: (row: IGroupUser) => row.username || row.email,
-                Cell: HighlightCell,
+                Cell: ({ value, row: { original: row } }: any) => (
+                    <HighlightCell
+                        value={value}
+                        subtitle={row.email || row.username}
+                    />
+                ),
                 minWidth: 100,
                 searchable: true,
             },
@@ -83,14 +80,31 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
                 maxWidth: 100,
                 disableSortBy: true,
             },
+            // Always hidden -- for search
+            {
+                accessor: (row: IGroupUser) => row.username || '',
+                Header: 'Username',
+                searchable: true,
+            },
+            // Always hidden -- for search
+            {
+                accessor: (row: IGroupUser) => row.email || '',
+                Header: 'Email',
+                searchable: true,
+            },
         ],
         [setUsers]
     );
+
+    const [initialState] = useState(() => ({
+        hiddenColumns: ['Username', 'Email'],
+    }));
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
         {
             columns: columns as any[],
             data: users as any[],
+            initialState,
             sortTypes,
             autoResetHiddenColumns: false,
             autoResetSortBy: false,

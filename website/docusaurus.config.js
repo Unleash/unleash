@@ -647,4 +647,7 @@ module.exports = {
             async: true,
         },
     ],
+    clientModules: [
+        require.resolve('./global.js'),
+      ],
 };

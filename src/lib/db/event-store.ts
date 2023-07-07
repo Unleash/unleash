@@ -382,6 +382,28 @@ class EventStore implements IEventStore {
         };
     }
 
+    setMaxListeners(number: number): EventEmitter {
+        return this.eventEmitter.setMaxListeners(number);
+    }
+
+    on(
+        eventName: string | symbol,
+        listener: (...args: any[]) => void,
+    ): EventEmitter {
+        return this.eventEmitter.on(eventName, listener);
+    }
+
+    emit(eventName: string | symbol, ...args: any[]): boolean {
+        return this.eventEmitter.emit(eventName, ...args);
+    }
+
+    off(
+        eventName: string | symbol,
+        listener: (...args: any[]) => void,
+    ): EventEmitter {
+        return this.eventEmitter.off(eventName, listener);
+    }
+
     async setUnannouncedToAnnounced(): Promise<IEvent[]> {
         const rows = await this.db(TABLE)
             .update({ announced: true })

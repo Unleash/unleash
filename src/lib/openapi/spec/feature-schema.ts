@@ -12,6 +12,7 @@ export const featureSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['name'],
+    description: 'A feature toggle definition',
     properties: {
         name: {
             type: 'string',
@@ -44,6 +45,7 @@ export const featureSchema = {
         enabled: {
             type: 'boolean',
             example: true,
+            description: '`true` if the feature is enabled, otherwise `false`.',
         },
         stale: {
             type: 'boolean',
@@ -68,18 +70,22 @@ export const featureSchema = {
             format: 'date-time',
             nullable: true,
             example: '2023-01-28T15:21:39.975Z',
+            description: 'The date the feature was created',
         },
         archivedAt: {
             type: 'string',
             format: 'date-time',
             nullable: true,
             example: '2023-01-29T15:21:39.975Z',
+            description: 'The date the feature was archived',
         },
         lastSeenAt: {
             type: 'string',
             format: 'date-time',
             nullable: true,
             example: '2023-01-28T16:21:39.975Z',
+            description:
+                'The date when metrics where last collected for the feature',
         },
         environments: {
             type: 'array',

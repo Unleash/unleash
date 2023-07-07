@@ -152,10 +152,14 @@ export default class ProjectFeaturesController extends Controller {
             handler: this.getFeatureEnvironment,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get a feature environment.',
+                    description:
+                        'Information about the enablement status and strategies for a feature toggle in specified environment.',
                     tags: ['Features'],
                     operationId: 'getFeatureEnvironment',
                     responses: {
                         200: createResponseSchema('featureEnvironmentSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -169,9 +173,15 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Disable a feature toggle.',
+                    description:
+                        'Disable a feature toggle in the specified environment.',
                     tags: ['Features'],
                     operationId: 'toggleFeatureEnvironmentOff',
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -184,9 +194,15 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Enable a feature toggle.',
+                    description:
+                        'Enable a feature toggle in the specified environment.',
                     tags: ['Features'],
                     operationId: 'toggleFeatureEnvironmentOn',
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
+                    },
                 }),
             ],
         });
@@ -206,7 +222,10 @@ export default class ProjectFeaturesController extends Controller {
                     requestBody: createRequestSchema(
                         'bulkToggleFeaturesSchema',
                     ),
-                    responses: { 405: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403, 404, 413, 415),
+                    },
                 }),
             ],
         });
@@ -226,7 +245,10 @@ export default class ProjectFeaturesController extends Controller {
                     requestBody: createRequestSchema(
                         'bulkToggleFeaturesSchema',
                     ),
-                    responses: { 405: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403, 404, 413, 415),
+                    },
                 }),
             ],
         });

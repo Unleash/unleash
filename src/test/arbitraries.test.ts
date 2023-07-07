@@ -37,7 +37,7 @@ export const strategyConstraint = (): Arbitrary<ConstraintSchema> =>
         operator: fc.constantFrom(...ALL_OPERATORS),
         caseInsensitive: fc.boolean(),
         inverted: fc.boolean(),
-        values: fc.array(fc.string()),
+        values: fc.array(fc.string(), { minLength: 1 }),
         value: fc.string(),
     });
 

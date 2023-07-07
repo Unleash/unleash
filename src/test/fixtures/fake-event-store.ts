@@ -122,7 +122,7 @@ class FakeEventStore implements IEventStore {
         return this.eventEmitter.off(eventName, listener);
     }
 
-    setUnannouncedToAnnounced(): Promise<IEvent[]> {
+    publishUnannouncedEvents(): Promise<void> {
         throw new Error('Method not implemented.');
     }
 }

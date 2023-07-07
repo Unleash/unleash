@@ -22,8 +22,6 @@ export default class EventAnnouncer {
     }
 
     async publishUnannouncedEvents(): Promise<void> {
-        const events = await this.eventStore.setUnannouncedToAnnounced();
-
-        events.forEach((e) => this.eventEmitter.emit(e.type, e));
+        return this.eventStore.publishUnannouncedEvents();
     }
 }

@@ -404,7 +404,7 @@ class EventStore implements IEventStore {
         return this.eventEmitter.off(eventName, listener);
     }
 
-    async setUnannouncedToAnnounced(): Promise<IEvent[]> {
+    private async setUnannouncedToAnnounced(): Promise<IEvent[]> {
         const rows = await this.db(TABLE)
             .update({ announced: true })
             .where('announced', false)
@@ -412,6 +412,12 @@ class EventStore implements IEventStore {
             .returning(EVENT_COLUMNS);
 
         return rows.map(this.rowToEvent);
+    }
+
+    async publishUnannouncedEvents(): Promise<void> {
+        const events = await this.setUnannouncedToAnnounced();
+
+        events.forEach((e) => this.eventEmitter.emit(e.type, e));
     }
 }
 

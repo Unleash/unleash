@@ -434,6 +434,7 @@ class EventStore implements IEventStore {
             .where('announced', false)
             .whereNotNull('announced')
             .returning(EVENT_COLUMNS);
+
         return rows.map(this.rowToEvent);
     }
 }

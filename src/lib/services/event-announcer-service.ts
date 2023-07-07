@@ -23,9 +23,6 @@ export default class EventAnnouncer {
 
     async publishUnannouncedEvents(): Promise<void> {
         const events = await this.eventStore.setUnannouncedToAnnounced();
-        if (events.length) {
-            console.log('about to announce these events', events);
-        }
 
         events.forEach((e) => this.eventEmitter.emit(e.type, e));
     }

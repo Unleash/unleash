@@ -10,7 +10,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Admin UI',
         description:
-            'Configure the Unleash Admin UI. Why did you enable an experimental feature?',
+            'Configuration for the Unleash Admin UI. These endpoints should not be relied upon and can change at any point without prior notice.',
     },
     {
         name: 'API tokens',

@@ -39,7 +39,7 @@ export const requestsPerSecondSchema = {
                                 properties: {
                                     appName: {
                                         description:
-                                            'Name of the application this metric relate to',
+                                            'Name of the application this metric relates to',
                                         type: 'string',
                                         example: 'mySdk',
                                     },

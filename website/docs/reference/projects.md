@@ -126,7 +126,7 @@ The default strategies screen lists a strategy for each of the project's environ
 
 Project overview gives statistics for a project, including:
 * number of all changes/events in the past 30 days compared to previous 30 days
-* the average time from when a feature was created to when it was enabled in the "production" environment in the project lifetime
+* the average time from when a feature was created to when it was enabled in the "production" environment. This value is calculated for all features in the project lifetime.
 * number of features created in the past 30 days compared to previous 30 days
 * number of features archived in the past 30 days compared to previous 30 days
 

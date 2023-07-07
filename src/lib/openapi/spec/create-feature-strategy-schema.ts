@@ -10,7 +10,7 @@ export const createFeatureStrategySchema = {
     properties: {
         name: {
             type: 'string',
-            description: 'The name of the type of strategy',
+            description: 'The name of the strategy type',
             example: 'flexibleRollout',
         },
         title: {
@@ -33,7 +33,8 @@ export const createFeatureStrategySchema = {
         },
         constraints: {
             type: 'array',
-            description: 'A list of the constraints attached to the strategy',
+            description:
+                'A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/strategy-constraints',
             example: [
                 {
                     values: ['1', '2'],

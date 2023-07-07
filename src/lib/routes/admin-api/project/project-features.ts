@@ -261,7 +261,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    summary: 'Get strategies defined for a feature toggle.',
+                    summary: 'Get feature toggle strategies.',
                     operationId: 'getFeatureStrategies',
                     description:
                         'Get strategies defined for a feature toggle in the specified environment.',
@@ -823,7 +823,7 @@ export default class ProjectFeaturesController extends Controller {
         const { features } = req.body;
 
         if (this.flagResolver.isEnabled('disableBulkToggle')) {
-            res.status(409).end();
+            res.status(403).end();
             return;
         }
 
@@ -855,7 +855,7 @@ export default class ProjectFeaturesController extends Controller {
         const { features } = req.body;
 
         if (this.flagResolver.isEnabled('disableBulkToggle')) {
-            res.status(409).end();
+            res.status(403).end();
             return;
         }
 

@@ -9,18 +9,20 @@ export const updateFeatureStrategySchema = {
     properties: {
         name: {
             type: 'string',
-            description: 'The name of the type of strategy',
+            description: 'The name of the strategy type',
         },
         sortOrder: {
             type: 'number',
-            description: 'The order of the strategy in the list',
+            description:
+                'The order of the strategy in the list in feature environment configuration',
         },
         constraints: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/constraintSchema',
             },
-            description: 'A list of the constraints attached to the strategy',
+            description:
+                'A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/strategy-constraints',
         },
         title: {
             type: 'string',

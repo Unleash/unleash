@@ -143,7 +143,7 @@ test('Can tag features', async () => {
         strategies: [{ name: 'default' }],
     });
 
-    await app.request.put('/api/admin/tags/features').send({
+    await app.request.put('/api/admin/projects/default/tags').send({
         features: [featureName, featureName2],
         tags: {
             addedTags: [addedTag],
@@ -185,7 +185,7 @@ test('Can bulk remove tags', async () => {
     });
 
     await app.request
-        .put('/api/admin/tags/features')
+        .put('/api/admin/projects/default/tags')
         .send({
             features: [featureName, featureName2],
             tags: {
@@ -196,7 +196,7 @@ test('Can bulk remove tags', async () => {
         .expect(200);
 
     await app.request
-        .put('/api/admin/tags/features')
+        .put('/api/admin/projects/default/tags')
         .send({
             features: [featureName, featureName2],
             tags: {

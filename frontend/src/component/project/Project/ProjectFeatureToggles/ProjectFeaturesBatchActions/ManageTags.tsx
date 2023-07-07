@@ -59,7 +59,7 @@ export const ManageTags: VFC<IManageTagsProps> = ({ projectId, data }) => {
         const features = data.map(({ name }) => name);
         const payload = { features, tags: { addedTags, removedTags } };
         try {
-            await bulkUpdateTags(payload);
+            await bulkUpdateTags(payload, projectId);
             refetch();
             const added = addedTags.length
                 ? `Added tags: ${addedTags

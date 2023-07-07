@@ -2,6 +2,14 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useEffect, useState } from 'react';
 import { IConstraint } from 'interfaces/strategy';
 
+const isValid = (constraint: IConstraint) => {
+    const hasValues =
+        Array.isArray(constraint.values) && constraint.values.length > 0;
+    const hasValue = Boolean(constraint.value);
+
+    return hasValues || hasValue;
+};
+
 export const useConstraintsValidation = (
     constraints?: IConstraint[]
 ): boolean => {
@@ -16,25 +24,29 @@ export const useConstraintsValidation = (
             return;
         }
 
-        const validationRequests = constraints
-            .filter(constraint => {
-                const hasValues =
-                    Array.isArray(constraint.values) &&
-                    constraint.values.length > 0;
-                const hasValue = Boolean(constraint.value);
+        const invalidConstraints = constraints.find(item => !isValid(item));
+        if (invalidConstraints) {
+            setValid(false);
+            return;
+        }
 
-                return hasValues || hasValue;
-            })
+        const validationRequests = constraints
+            .filter(isValid)
             .map(constraint => {
                 return validateConstraint(constraint);
             });
 
         Promise.all(validationRequests)
-            .then(() => setValid(true))
-            .catch(() => setValid(false));
+            .then(() => {
+                setValid(true);
+            })
+            .catch(e => {
+                console.log('***', e);
+                setValid(false);
+            });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [constraints]);
+    }, [JSON.stringify(constraints)]);
 
     return valid;
 };

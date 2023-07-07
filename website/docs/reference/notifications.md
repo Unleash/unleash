@@ -23,10 +23,10 @@ Notifications can not be disabled.
 
 ## Notification events
 
-The following actions in your projects will trigger notifications:
+The following actions in your projects will trigger notifications for your project members:
 * Creating a feature
 * Archiving a feature
 * Enabling a feature in an environment
-* Submitting a change request (sent only to project members who can approve the change request)
+* Submitting a change request
 * Approving change request
 * Applying change request

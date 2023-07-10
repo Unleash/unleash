@@ -4,20 +4,19 @@ title: Proxy hosting strategies
 
 Because the [Unleash proxy](../generated/unleash-proxy.md) is a separate piece of the Unleash architecture and because it should sit close to your application, there are numerous ways of hosting it. Another important distinction is whether you're hosting Unleash yourself or you have a managed solution.
 
-This document describes the three main ways of hosting the proxy alongside the Unleash API and the tradeoffs between hosting the proxy yourself and having Unleash host it for you.
+This document describes the two main ways of hosting the proxy alongside the Unleash API and the tradeoffs between hosting the proxy yourself and using the Frontend API that Unleash hosts for you.
 
-## Unleash-hosted proxy vs self-hosted proxy {#unleash-hosted-or-self-hosted}
+## Unleash-hosted Frontend API vs self-hosted proxy {#unleash-hosted-or-self-hosted}
 
 Which way is right for you will depend on your setup and your needs. In general, we recommend that you host the proxy yourself, but we do recognize that self-hosting requires some extra work on your part and that not all our customers need it.
 
-If you want Unleash to host the proxy for you, you should be aware of the following limitations:
+If you want Unleash to host the Frontend API for you, you should be aware of the following limitations:
 
 -   This is only available to Pro and Enterprise customers who have signed up for a managed Unleash instance.
--   Pro customers will get a total of two (2) proxies: One for the "development" environment and one for the "production" environment.
--   We do allow short spikes in traffic and our adaptive infrastructure will automatically scale your needs.
--   Please check the [Fair Use Policy](https://www.getunleash.io/fair-use-policy) to see the limits of the Unleash-hosted proxy.
+-   We do allow short spikes in traffic and our adaptive infrastructure will automatically scale to your needs.
+-   Please check the [Fair Use Policy](https://www.getunleash.io/fair-use-policy) to see the limits of the Unleash-hosted Frontend API.
 -   There's no guarantee that it'll be close to your applications. This means you'll get higher response times.
--   When we host the proxy, we will also receive whatever end user data you put in the [Unleash context](../reference/unleash-context.md). This may or may not be an issue depending on your business requirements.
+-   When we host the frontend API, we will also receive whatever end user data you put in the [Unleash context](../reference/unleash-context.md). This may or may not be an issue depending on your business requirements.
 
 Hosting the proxy yourself requires a little more setup on your part than the Unleash-hosted proxy does, but it offers a number of benefits:
 
@@ -27,6 +26,7 @@ Hosting the proxy yourself requires a little more setup on your part than the Un
 -   You can arrange for the proxy to be close to your applications, minimizing response times.
 -   You have full control of all your user data. None of the data that the proxy receives is ever sent to the Unleash API. This keeps _your_ data in _your_ hands.
 -   You can easily add more proxies in different regions, as described in the [multi-region](#multi-region) section.
+-   If you have scaling challenges, it could be worth it to have a look at [Unleash Edge](../reference/unleash-edge)
 
 ## Unleash hosts everything
 
@@ -36,18 +36,21 @@ This setup is only available to Pro and Enterprise customers.
 
 :::
 
-![An architecture diagram of using the proxy in a setup where Unleash hosts both the API and the proxy.](/img/proxy-hosting-all-unleash.svg)
+Unleash no longer hosts instances of the proxy, but makes the [Frontend API](../reference/front-end-api) available to all Pro and Enterprise customers. The API is backed by an Amazon RDS database. Your applications can connect to the frontend API from your own cloud or other hosting solution.
 
-When Unleash hosts the proxy, it'll run alongside the Unleash API and the admin UI within Unleash's Kubernetes setup in AWS. The API is backed by an Amazon RDS database. Your applications can connect to the proxy from your own cloud or other hosting solution. You'll need to configure your proxy SDKs with the following details:
+In order to access the frontend API you'll need
+- to create a [Frontend API key](../reference/api-tokens-and-client-keys#front-end-tokens) for the environment you'd like to use.
+- The Frontend API URL. This will be the your Unleash instance's URL followed by "/api/frontend".
 
--   One of the [proxy's client keys](../reference/api-tokens-and-client-keys.mdx#proxy-client-keys). Unleash will provide you with the actual keys.
--   The proxy's endpoint. This will be the your Unleash instance's URL followed by "/api/proxy/development" or "/api/proxy/production" (depending on which environment you want to use).
-
-This is the simplest, but also most limited (by far) way to host the proxy. In this setup, Unleash hosts both the Unleash API and the Unleash proxy. With Unleash hosting the proxy, you'll only need to worry about the client keys and the URL the proxy is hosted at.
+This is the simplest, but also most limited (by far) way to use Unleash client SDKs. In this setup, Unleash hosts both the Unleash API and the Unleash frontend API. With Unleash hosting, you'll only need to worry about the Frontend API keys and the URL to access the endpoint.
 
 While this is easy to get started with, it comes with the limitations described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted).
 
 ## Unleash hosts the API, you host the proxy
+
+:::info Recommendation
+
+We recommend you use [Unleash Edge](../reference/unleash-edge) instead of Unleash Proxy. See our [Edge migration guide](https://github.com/Unleash/unleash-edge/blob/main/migration-guide.md) for a guide on how to migrate
 
 :::info Availability
 

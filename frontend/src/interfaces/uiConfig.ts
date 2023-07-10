@@ -53,6 +53,7 @@ export interface IFlags {
     advancedPlayground?: boolean;
     customRootRoles?: boolean;
     strategySplittedButton?: boolean;
+    strategyVariant?: boolean;
 }
 
 export interface IVersionInfo {

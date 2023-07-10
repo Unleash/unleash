@@ -23,7 +23,8 @@ export type IFlagKey =
     | 'disableNotifications'
     | 'advancedPlayground'
     | 'customRootRoles'
-    | 'strategySplittedButton';
+    | 'strategySplittedButton'
+    | 'strategyVariant';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -108,6 +109,7 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES,
         false,
     ),
+    strategyVariant: parseEnvVarBoolean(process.env.STRATEGY_VARIANT, false),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

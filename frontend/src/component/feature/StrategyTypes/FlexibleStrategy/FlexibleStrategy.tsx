@@ -17,6 +17,8 @@ import Loader from '../../../common/Loader/Loader';
 import { useEffect, useMemo } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLocation } from 'react-router';
+import { ConditionallyRender } from 'common/ConditionallyRender/ConditionallyRender';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFlexibleStrategyProps {
     parameters: IFeatureStrategyParameters;
@@ -33,6 +35,7 @@ const FlexibleStrategy = ({
     const projectId = useRequiredPathParam('projectId');
     const { defaultStickiness, loading } = useDefaultProjectSettings(projectId);
     const { pathname } = useLocation();
+    const { uiConfig } = useUiConfig();
 
     const isDefaultStrategyEdit = pathname.includes('default-strategy');
     const onUpdate = (field: string) => (newValue: string) => {
@@ -122,6 +125,35 @@ const FlexibleStrategy = ({
                     disabled={!editable}
                     onChange={e => onUpdate('groupId')(e.target.value)}
                     data-testid={FLEXIBLE_STRATEGY_GROUP_ID}
+                />
+                <br />
+                <ConditionallyRender
+                    condition={Boolean(uiConfig?.flags?.strategyVariant)}
+                    show={
+                        <>
+                            {' '}
+                            <Typography
+                                variant="subtitle2"
+                                style={{
+                                    marginBottom: '1rem',
+                                    display: 'flex',
+                                    gap: '1ch',
+                                }}
+                                component="h2"
+                            >
+                                Variant
+                            </Typography>
+                            <Input
+                                label="variant"
+                                id="variant-input"
+                                value={parseParameterString(parameters.variant)}
+                                disabled={!editable}
+                                onChange={e =>
+                                    onUpdate('variant')(e.target.value)
+                                }
+                            />
+                        </>
+                    }
                 />
             </div>
         </div>

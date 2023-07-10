@@ -37,7 +37,7 @@ export default class FavoritesController extends Controller {
                     summary: 'Add feature to favorites',
                     description:
                         'This endpoint marks the feature in the url as favorite',
-                    responses: { 200: emptyResponse },
+                    responses: { 200: emptyResponse, ...getStandardResponses(401, 404) },
                 }),
             ],
         });
@@ -56,7 +56,7 @@ export default class FavoritesController extends Controller {
                         'This endpoint removes the feature in the url from favorites',
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(401),
+                        ...getStandardResponses(401, 404),
                     },
                 }),
             ],
@@ -74,7 +74,7 @@ export default class FavoritesController extends Controller {
                     description:
                         'This endpoint marks the project in the url as favorite',
                     operationId: 'addFavoriteProject',
-                    responses: { 200: emptyResponse },
+                    responses: { 200: emptyResponse, ...getStandardResponses(401, 404) },
                 }),
             ],
         });
@@ -91,7 +91,7 @@ export default class FavoritesController extends Controller {
                     description:
                         'This endpoint removes the project in the url from favorites',
                     operationId: 'removeFavoriteProject',
-                    responses: { 200: emptyResponse },
+                    responses: { 200: emptyResponse, ...getStandardResponses(401, 404) },
                 }),
             ],
         });

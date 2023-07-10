@@ -179,3 +179,37 @@ test(`Should include customHeaders in headers when calling service`, async () =>
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
     expect(fetchRetryCalls[0].options.headers).toMatchSnapshot();
 });
+
+test(`Should not include source_type_name when included in the config`, async () => {
+    const addon = new DatadogAddon({
+        getLogger: noLogger,
+        unleashUrl: 'http://some-url.com',
+    });
+    const event: IEvent = {
+        id: 2,
+        createdAt: new Date(),
+        type: FEATURE_ENVIRONMENT_DISABLED,
+        createdBy: 'some@user.com',
+        environment: 'development',
+        project: 'default',
+        featureName: 'some-toggle',
+        data: {
+            name: 'some-toggle',
+        },
+    };
+
+    const parameters = {
+        url: 'http://hooks.slack.com',
+        apiKey: 'fakeKey',
+        sourceTypeName: 'my-custom-source-type',
+    };
+
+    await addon.handleEvent(event, parameters);
+    expect(fetchRetryCalls).toHaveLength(1);
+    expect(fetchRetryCalls[0].url).toBe(parameters.url);
+    expect(fetchRetryCalls[0].options.body).toMatch(
+        /"source_type_name":"my-custom-source-type"/,
+    );
+    expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+    expect(fetchRetryCalls[0].options.headers).toMatchSnapshot();
+});

@@ -47,7 +47,6 @@ import {
     IRoleDescriptor,
 } from '../types/stores/access-store';
 import FeatureToggleService from './feature-toggle-service';
-import NoAccessError from '../error/no-access-error';
 import IncompatibleProjectError from '../error/incompatible-project-error';
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
@@ -58,6 +57,7 @@ import { FavoritesService } from './favorites-service';
 import { calculateAverageTimeToProd } from '../features/feature-toggle/time-to-production/time-to-production';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 import { uniqueByKey } from '../util/unique';
+import { PermissionError } from '../error';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -259,7 +259,7 @@ export default class ProjectService {
         const feature = await this.featureToggleStore.get(featureName);
 
         if (feature.project !== currentProjectId) {
-            throw new NoAccessError(MOVE_FEATURE_TOGGLE);
+            throw new PermissionError(MOVE_FEATURE_TOGGLE);
         }
         const project = await this.getProject(newProjectId);
 
@@ -274,7 +274,7 @@ export default class ProjectService {
         );
 
         if (!authorized) {
-            throw new NoAccessError(MOVE_FEATURE_TOGGLE);
+            throw new PermissionError(MOVE_FEATURE_TOGGLE);
         }
 
         const isCompatibleWithTargetProject =

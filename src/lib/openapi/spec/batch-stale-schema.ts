@@ -19,7 +19,7 @@ export const batchStaleSchema = {
         },
         stale: {
             type: 'boolean',
-            example: 'true',
+            example: true,
             description:
                 'Whether the list of features should be marked as stale or not stale. If `true`, the features will be marked as stale. If `false`, the features will be marked as not stale.',
         },

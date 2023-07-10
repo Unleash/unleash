@@ -30,7 +30,7 @@ export const featureTypeSchema = {
             minimum: 0,
             description:
                 'How many days it takes before a feature toggle of this typed is flagged as [potentially stale](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles) by Unleash. If this value is `null`, Unleash will never mark it as potentially stale.',
-            example: 'release',
+            example: 40,
             nullable: true,
         },
     },

@@ -20,7 +20,6 @@ interface IProjectForm {
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
     handleSubmit: (e: any) => void;
-    handleCancel: () => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
     clearErrors: () => void;
@@ -67,7 +66,6 @@ const StyledButtonContainer = styled('div')(() => ({
 const ProjectForm: React.FC<IProjectForm> = ({
     children,
     handleSubmit,
-    handleCancel,
     projectId,
     projectName,
     projectDesc,

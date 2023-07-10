@@ -89,16 +89,11 @@ const EditProject = () => {
         }
     };
 
-    const handleCancel = () => {
-        navigate(GO_BACK);
-    };
-
     const accessDeniedAlert = !hasAccess(UPDATE_PROJECT, projectId) && (
         <Alert severity="error" sx={{ mb: 4 }}>
             You do not have the required permissions to edit this project.
         </Alert>
     );
-    console.log(project);
 
     return (
         <FormTemplate
@@ -114,7 +109,6 @@ const EditProject = () => {
                 <ProjectForm
                     errors={errors}
                     handleSubmit={handleSubmit}
-                    handleCancel={handleCancel}
                     projectId={projectId}
                     setProjectId={setProjectId}
                     projectName={projectName}

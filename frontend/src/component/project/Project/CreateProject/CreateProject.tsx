@@ -100,7 +100,6 @@ const CreateProject = () => {
             <ProjectForm
                 errors={errors}
                 handleSubmit={handleSubmit}
-                handleCancel={handleCancel}
                 projectId={projectId}
                 setProjectId={setProjectId}
                 projectName={projectName}

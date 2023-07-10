@@ -1,6 +1,8 @@
 import { ApiErrorSchema, UnleashError } from './unleash-error';
 
 export default class ProjectWithoutOwnerError extends UnleashError {
+    statusCode = 409;
+
     constructor() {
         super('A project must have at least one owner');
     }

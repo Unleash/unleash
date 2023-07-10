@@ -56,7 +56,7 @@ export default class FavoritesController extends Controller {
                         'This endpoint removes the feature in the url from favorites',
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(401),
+                        ...getStandardResponses(401, 404),
                     },
                 }),
             ],

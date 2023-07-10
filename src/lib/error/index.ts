@@ -7,13 +7,14 @@ import InvalidOperationError from './invalid-operation-error';
 import InvalidTokenError from './invalid-token-error';
 import MinimumOneEnvironmentError from './minimum-one-environment-error';
 import NameExistsError from './name-exists-error';
-import NoAccessError from './no-access-error';
+import PermissionError from './permission-error';
 import { OperationDeniedError } from './operation-denied-error';
 import UserTokenError from './used-token-error';
 import RoleInUseError from './role-in-use-error';
 import ProjectWithoutOwnerError from './project-without-owner-error';
 import PasswordUndefinedError from './password-undefined';
 import PasswordMismatchError from './password-mismatch';
+import ForbiddenError from './forbidden-error';
 
 export {
     BadDataError,
@@ -26,7 +27,8 @@ export {
     InvalidTokenError,
     MinimumOneEnvironmentError,
     NameExistsError,
-    NoAccessError,
+    PermissionError,
+    ForbiddenError,
     OperationDeniedError,
     UserTokenError,
     RoleInUseError,

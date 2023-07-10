@@ -44,7 +44,12 @@ import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
-import { FOREIGN_KEY_VIOLATION, OperationDeniedError } from '../error';
+import {
+    FOREIGN_KEY_VIOLATION,
+    OperationDeniedError,
+    PermissionError,
+    ForbiddenError,
+} from '../error';
 import {
     constraintSchema,
     featureMetadataSchema,
@@ -79,7 +84,6 @@ import {
 } from '../features/playground/feature-evaluator/helpers';
 import { AccessService } from './access-service';
 import { User } from '../server-impl';
-import NoAccessError from '../error/no-access-error';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
 import { unique } from '../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
@@ -976,7 +980,7 @@ class FeatureToggleService {
                 projectId,
             );
         if (changeRequestEnabled) {
-            throw new NoAccessError(
+            throw new ForbiddenError(
                 `Cloning not allowed. Project ${projectId} has change requests enabled.`,
             );
         }
@@ -1517,7 +1521,7 @@ class FeatureToggleService {
                 newProject,
             );
         if (changeRequestEnabled) {
-            throw new NoAccessError(
+            throw new ForbiddenError(
                 `Changing project not allowed. Project ${newProject} has change requests enabled.`,
             );
         }
@@ -1918,7 +1922,7 @@ class FeatureToggleService {
                 user,
             );
         if (!canBypass) {
-            throw new NoAccessError(SKIP_CHANGE_REQUEST);
+            throw new PermissionError(SKIP_CHANGE_REQUEST);
         }
     }
 
@@ -1950,7 +1954,7 @@ class FeatureToggleService {
                         environment,
                     ));
                 if (!canAddStrategies) {
-                    throw new NoAccessError(CREATE_FEATURE_STRATEGY);
+                    throw new PermissionError(CREATE_FEATURE_STRATEGY);
                 }
             }
         }

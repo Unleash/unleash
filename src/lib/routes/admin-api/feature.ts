@@ -161,7 +161,7 @@ class FeatureController extends Controller {
                     operationId: 'removeTag',
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(404),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],

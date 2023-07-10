@@ -53,7 +53,8 @@ export const featureStrategySchema = {
         },
         constraints: {
             type: 'array',
-            description: 'A list of the constraints attached to the strategy',
+            description:
+                'A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/strategy-constraints',
             items: {
                 $ref: '#/components/schemas/constraintSchema',
             },

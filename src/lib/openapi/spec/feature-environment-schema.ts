@@ -42,6 +42,7 @@ export const featureEnvironmentSchema = {
         },
         variantCount: {
             type: 'number',
+            description: 'The number of defined variants',
         },
         strategies: {
             type: 'array',

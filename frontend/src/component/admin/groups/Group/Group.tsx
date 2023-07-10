@@ -78,15 +78,12 @@ export const Group: VFC = () => {
                 id: 'name',
                 Header: 'Name',
                 accessor: (row: IGroupUser) => row.name || '',
-                Cell: HighlightCell,
-                minWidth: 100,
-                searchable: true,
-            },
-            {
-                id: 'username',
-                Header: 'Username',
-                accessor: (row: IGroupUser) => row.username || row.email,
-                Cell: HighlightCell,
+                Cell: ({ value, row: { original: row } }: any) => (
+                    <HighlightCell
+                        value={value}
+                        subtitle={row.email || row.username}
+                    />
+                ),
                 minWidth: 100,
                 searchable: true,
             },
@@ -146,6 +143,18 @@ export const Group: VFC = () => {
                 maxWidth: 100,
                 disableSortBy: true,
             },
+            // Always hidden -- for search
+            {
+                accessor: (row: IGroupUser) => row.username || '',
+                Header: 'Username',
+                searchable: true,
+            },
+            // Always hidden -- for search
+            {
+                accessor: (row: IGroupUser) => row.email || '',
+                Header: 'Email',
+                searchable: true,
+            },
         ],
         [setSelectedUser, setRemoveUserOpen]
     );
@@ -160,7 +169,7 @@ export const Group: VFC = () => {
                     : storedParams.desc,
             },
         ],
-        hiddenColumns: ['description'],
+        hiddenColumns: ['Username', 'Email'],
         globalFilter: searchParams.get('search') || '',
     }));
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);

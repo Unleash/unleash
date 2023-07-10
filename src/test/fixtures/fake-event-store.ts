@@ -121,6 +121,10 @@ class FakeEventStore implements IEventStore {
     ): EventEmitter {
         return this.eventEmitter.off(eventName, listener);
     }
+
+    publishUnannouncedEvents(): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
 }
 
 module.exports = FakeEventStore;

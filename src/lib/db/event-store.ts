@@ -98,13 +98,9 @@ class EventStore implements IEventStore {
 
     async store(event: IBaseEvent): Promise<void> {
         try {
-            const rows = await this.db(TABLE)
+            await this.db(TABLE)
                 .insert(this.eventToDbRow(event))
                 .returning(EVENT_COLUMNS);
-            const savedEvent = this.rowToEvent(rows[0]);
-            process.nextTick(() =>
-                this.eventEmitter.emit(event.type, savedEvent),
-            );
         } catch (error: unknown) {
             this.logger.warn(`Failed to store "${event.type}" event: ${error}`);
         }
@@ -148,13 +144,9 @@ class EventStore implements IEventStore {
 
     async batchStore(events: IBaseEvent[]): Promise<void> {
         try {
-            const savedRows = await this.db(TABLE)
+            await this.db(TABLE)
                 .insert(events.map(this.eventToDbRow))
                 .returning(EVENT_COLUMNS);
-            const savedEvents = savedRows.map(this.rowToEvent);
-            process.nextTick(() =>
-                savedEvents.forEach((e) => this.eventEmitter.emit(e.type, e)),
-            );
         } catch (error: unknown) {
             this.logger.warn(`Failed to store events: ${error}`);
         }
@@ -410,6 +402,22 @@ class EventStore implements IEventStore {
         listener: (...args: any[]) => void,
     ): EventEmitter {
         return this.eventEmitter.off(eventName, listener);
+    }
+
+    private async setUnannouncedToAnnounced(): Promise<IEvent[]> {
+        const rows = await this.db(TABLE)
+            .update({ announced: true })
+            .where('announced', false)
+            .whereNotNull('announced')
+            .returning(EVENT_COLUMNS);
+
+        return rows.map(this.rowToEvent);
+    }
+
+    async publishUnannouncedEvents(): Promise<void> {
+        const events = await this.setUnannouncedToAnnounced();
+
+        events.forEach((e) => this.eventEmitter.emit(e.type, e));
     }
 }
 

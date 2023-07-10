@@ -6,7 +6,7 @@ import BadDataError, {
     fromOpenApiValidationError,
     fromOpenApiValidationErrors,
 } from './bad-data-error';
-import NoAccessError from './no-access-error';
+import PermissionError from './permission-error';
 import OwaspValidationError from './owasp-validation-error';
 import IncompatibleProjectError from './incompatible-project-error';
 import PasswordUndefinedError from './password-undefined';
@@ -462,7 +462,7 @@ describe('Error serialization special cases', () => {
 
     it('NoAccessError: adds `permissions`', () => {
         const permission = 'x';
-        const error = new NoAccessError(permission);
+        const error = new PermissionError(permission);
         const json = error.toJSON();
 
         expect(json.permissions).toStrictEqual([permission]);
@@ -470,7 +470,7 @@ describe('Error serialization special cases', () => {
 
     it('NoAccessError: supports multiple permissions', () => {
         const permission = ['x', 'y', 'z'];
-        const error = new NoAccessError(permission);
+        const error = new PermissionError(permission);
         const json = error.toJSON();
 
         expect(json.permissions).toStrictEqual(permission);

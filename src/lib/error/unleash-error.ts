@@ -24,9 +24,10 @@ export const UnleashApiErrorTypes = [
     'ValidationError',
     'AuthenticationRequired',
     'UnauthorizedError',
-    'NoAccessError',
+    'PermissionError',
     'InvalidTokenError',
     'OwaspValidationError',
+    'ForbiddenError',
 
     // server errors; not the end user's fault
     'InternalError',
@@ -86,6 +87,10 @@ const statusCode = (errorName: string): number => {
             return 403;
         case 'AuthenticationRequired':
             return 401;
+        case 'ForbiddenError':
+            return 403;
+        case 'PermissionError':
+            return 403;
         case 'BadRequestError': //thrown by express; do not remove
             return 400;
         default:

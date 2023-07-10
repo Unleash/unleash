@@ -17,7 +17,7 @@ import { FeatureVariantsSchema } from '../../../openapi/spec/feature-variants-sc
 import { createRequestSchema } from '../../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { AccessService } from '../../../services';
-import { BadDataError, NoAccessError } from '../../../../lib/error';
+import { BadDataError, PermissionError } from '../../../../lib/error';
 import { User } from 'lib/server-impl';
 import { PushVariantsSchema } from 'lib/openapi/spec/push-variants-schema';
 
@@ -309,7 +309,7 @@ export default class VariantsController extends Controller {
                     environment,
                 ))
             ) {
-                throw new NoAccessError(
+                throw new PermissionError(
                     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
                     environment,
                 );

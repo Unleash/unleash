@@ -91,7 +91,7 @@ export default class FavoritesController extends Controller {
                     description:
                         'This endpoint removes the project in the url from favorites',
                     operationId: 'removeFavoriteProject',
-                    responses: { 200: emptyResponse },
+                    responses: { 200: emptyResponse, ...getStandardResponses(401, 404) },
                 }),
             ],
         });

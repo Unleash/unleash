@@ -64,7 +64,13 @@ class FeatureController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'getAllToggles',
-                    responses: { 200: createResponseSchema('featuresSchema') },
+                    responses: {
+                        200: createResponseSchema('featuresSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
+                    summary: 'Get all features (deprecated)',
+                    description:
+                        'Gets all feature toggles with their full configuration. This endpoint is **deprecated**. You should  use the project-based endpoint instead (`/api/admin/projects/<project-id>/features`).',
                     deprecated: true,
                 }),
             ],

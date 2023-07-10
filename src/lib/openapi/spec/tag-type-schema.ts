@@ -14,7 +14,6 @@ export const tagTypeSchema = {
         },
         description: {
             type: 'string',
-            nullable: true,
             description: 'The description of the tag type.',
             example: 'A tag type for describing the color of a tag.',
         },

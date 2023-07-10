@@ -165,7 +165,10 @@ export const Project = () => {
                                 }
                             />
                             <ConditionallyRender
-                                condition={!isOss()}
+                                condition={
+                                    !isOss() &&
+                                    !Boolean(uiConfig.flags.newProjectLayout)
+                                }
                                 show={
                                     <PermissionIconButton
                                         permission={UPDATE_PROJECT}
@@ -184,7 +187,10 @@ export const Project = () => {
                                 }
                             />
                             <ConditionallyRender
-                                condition={!isOss()}
+                                condition={
+                                    !isOss() &&
+                                    !Boolean(uiConfig.flags.newProjectLayout)
+                                }
                                 show={
                                     <PermissionIconButton
                                         permission={DELETE_PROJECT}

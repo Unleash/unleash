@@ -1,9 +1,9 @@
 import { useContext } from 'react';
-import { PageContent } from '../../../../common/PageContent/PageContent';
+import { PageContent } from 'component/common/PageContent/PageContent';
 import { Alert } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import AccessContext from '../../../../../contexts/AccessContext';
-import { UPDATE_PROJECT } from '../../../../providers/AccessProvider/permissions';
+import AccessContext from 'contexts/AccessContext';
+import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';

@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
@@ -10,7 +9,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
-import { Alert, styled } from '@mui/material';
+import { Alert } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -20,8 +19,8 @@ import useProjectForm, {
 } from '../../hooks/useProjectForm';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-
-const EDIT_PROJECT_BTN = 'EDIT_PROJECT_BTN';
+import { DeleteProject } from './DeleteProject';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -66,7 +65,6 @@ const EditProject = () => {
 --data-raw '${JSON.stringify(getProjectPayload(), undefined, 2)}'`;
     };
 
-    const { refetch } = useProject(id);
     const { editProject, loading } = useProjectApi();
 
     const handleSubmit = async (e: Event) => {
@@ -78,8 +76,6 @@ const EditProject = () => {
         if (validName) {
             try {
                 await editProject(id, payload);
-                refetch();
-                navigate(`/projects/${id}`);
                 setToastData({
                     title: 'Project information updated',
                     type: 'success',
@@ -102,6 +98,7 @@ const EditProject = () => {
             You do not have the required permissions to edit this project.
         </Alert>
     );
+    console.log(project);
 
     return (
         <FormTemplate
@@ -132,12 +129,18 @@ const EditProject = () => {
                     clearErrors={clearErrors}
                     validateProjectId={validateProjectId}
                 >
-                    <UpdateButton
+                    <PermissionButton
+                        type="submit"
                         permission={UPDATE_PROJECT}
                         projectId={projectId}
-                        data-testid={EDIT_PROJECT_BTN}
-                    />
+                    >
+                        Save changes
+                    </PermissionButton>
                 </ProjectForm>
+                <DeleteProject
+                    projectId={projectId}
+                    featureCount={project.features.length}
+                />
             </PageContent>
         </FormTemplate>
     );

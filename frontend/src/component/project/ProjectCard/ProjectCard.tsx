@@ -49,7 +49,7 @@ export const ProjectCard = ({
     isFavorite = false,
 }: IProjectCardProps) => {
     const { hasAccess } = useContext(AccessContext);
-    const { isOss } = useUiConfig();
+    const { isOss, uiConfig } = useUiConfig();
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const [showDelDialog, setShowDelDialog] = useState(false);
     const navigate = useNavigate();
@@ -117,24 +117,34 @@ export const ProjectCard = ({
                     <MenuItem
                         onClick={e => {
                             e.preventDefault();
-                            navigate(getProjectEditPath(id));
+                            navigate(
+                                getProjectEditPath(
+                                    id,
+                                    Boolean(uiConfig.flags.newProjectLayout)
+                                )
+                            );
                         }}
                     >
                         <StyledEditIcon />
                         Edit project
                     </MenuItem>
-                    <MenuItem
-                        onClick={e => {
-                            e.preventDefault();
-                            setShowDelDialog(true);
-                        }}
-                        disabled={!canDeleteProject}
-                    >
-                        <StyledDeleteIcon />
-                        {id === DEFAULT_PROJECT_ID && !canDeleteProject
-                            ? "You can't delete the default project"
-                            : 'Delete project'}
-                    </MenuItem>
+                    <ConditionallyRender
+                        condition={!Boolean(uiConfig.flags.newProjectLayout)}
+                        show={
+                            <MenuItem
+                                onClick={e => {
+                                    e.preventDefault();
+                                    setShowDelDialog(true);
+                                }}
+                                disabled={!canDeleteProject}
+                            >
+                                <StyledDeleteIcon />
+                                {id === DEFAULT_PROJECT_ID && !canDeleteProject
+                                    ? "You can't delete the default project"
+                                    : 'Delete project'}
+                            </MenuItem>
+                        }
+                    />
                 </Menu>
             </StyledDivHeader>
             <div data-loading>

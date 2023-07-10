@@ -12,6 +12,7 @@ export const batchFeaturesSchema = {
                 type: 'string',
             },
             description: 'List of feature toggle names',
+            example: ['my-feature-4', 'my-feature-5', 'my-feature-6'],
         },
     },
     components: {

@@ -58,6 +58,7 @@ import {
 } from '../features/change-request-access-service/createChangeRequestAccessReadModel';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import { createFeatureToggleService } from '../features';
+import EventAnnouncerService from './event-announcer-service';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -72,6 +73,7 @@ export const scheduleServices = async (
         projectHealthService,
         configurationRevisionService,
         maintenanceService,
+        eventAnnouncerService,
     } = services;
 
     if (await maintenanceService.isMaintenanceMode()) {
@@ -113,6 +115,13 @@ export const scheduleServices = async (
     schedulerService.schedule(
         configurationRevisionService.updateMaxRevisionId.bind(
             configurationRevisionService,
+        ),
+        secondsToMilliseconds(1),
+    );
+
+    schedulerService.schedule(
+        eventAnnouncerService.publishUnannouncedEvents.bind(
+            eventAnnouncerService,
         ),
         secondsToMilliseconds(1),
     );
@@ -240,10 +249,13 @@ export const createServices = (
         schedulerService,
     );
 
+    const eventAnnouncerService = new EventAnnouncerService(stores, config);
+
     return {
         accessService,
         accountService,
         addonService,
+        eventAnnouncerService,
         featureToggleService: featureToggleServiceV2,
         featureToggleServiceV2,
         featureTypeService,

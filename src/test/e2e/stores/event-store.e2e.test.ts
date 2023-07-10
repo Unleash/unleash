@@ -43,7 +43,7 @@ test('Should include id and createdAt when saving', async () => {
     const seen: Array<IEvent> = [];
     eventStore.on(APPLICATION_CREATED, (e) => seen.push(e));
     await eventStore.store(event1);
-    jest.advanceTimersByTime(100);
+    await eventStore.publishUnannouncedEvents();
     expect(seen).toHaveLength(1);
     expect(seen[0].id).toBeTruthy();
     expect(seen[0].createdAt).toBeTruthy();
@@ -74,6 +74,7 @@ test('Should include empty tags array for new event', async () => {
 
     // Trigger
     await eventStore.store(event);
+    await eventStore.publishUnannouncedEvents();
 
     return promise;
 });
@@ -108,7 +109,7 @@ test('Should be able to store multiple events at once', async () => {
     const seen = [];
     eventStore.on(APPLICATION_CREATED, (e) => seen.push(e));
     await eventStore.batchStore([event1, event2, event3]);
-    jest.advanceTimersByTime(100);
+    await eventStore.publishUnannouncedEvents();
     expect(seen.length).toBe(3);
     seen.forEach((e) => {
         expect(e.id).toBeTruthy();

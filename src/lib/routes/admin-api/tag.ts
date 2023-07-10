@@ -129,7 +129,7 @@ class TagController extends Controller {
                     operationId: 'getTag',
                     summary: 'Get a tag by type and value.',
                     description:
-                        "Get a tag by type and value. Can be used to check whether a given tag already exists in Unleash or not.",
+                        'Get a tag by type and value. Can be used to check whether a given tag already exists in Unleash or not.',
                     responses: {
                         200: createResponseSchema('tagWithVersionSchema'),
                         ...getStandardResponses(401, 403, 404),

@@ -13,8 +13,13 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { Button, styled } from '@mui/material';
 
 const CREATE_PROJECT_BTN = 'CREATE_PROJECT_BTN';
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(3),
+}));
 
 const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -115,6 +120,7 @@ const CreateProject = () => {
                     permission={CREATE_PROJECT}
                     data-testid={CREATE_PROJECT_BTN}
                 />
+                <StyledButton onClick={handleCancel}>Cancel</StyledButton>
             </ProjectForm>
         </FormTemplate>
     );

@@ -13,7 +13,6 @@ import { Alert } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import ProjectForm from './ProjectForm';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../hooks/useProjectForm';
@@ -21,6 +20,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { DeleteProject } from './DeleteProject';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import ProjectForm from '../../ProjectForm/ProjectForm';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -124,6 +124,7 @@ const EditProject = () => {
                     setProjectStickiness={setProjectStickiness}
                     setProjectMode={setProjectMode}
                     projectDesc={projectDesc}
+                    mode="Edit"
                     setProjectDesc={setProjectDesc}
                     clearErrors={clearErrors}
                     validateProjectId={validateProjectId}

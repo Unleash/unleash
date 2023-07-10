@@ -98,7 +98,7 @@ class TagTypeController extends Controller {
                     operationId: 'validateTagType',
                     summary: 'Validate a tag type',
                     description:
-                        'Validate if the body of the request is a valid tag schema and if the tame given to the tag type already exists, returning a 409 status code if it does.',
+                        'Validates whether if the body of the request is a valid tag and whether the a tag type with that name already exists or not. If a tag type with the same name exists, this operation will return a 409 status code.',
                     responses: {
                         200: createResponseSchema('validateTagTypeSchema'),
                         ...getStandardResponses(400, 401, 403, 409, 415),
@@ -136,7 +136,7 @@ class TagTypeController extends Controller {
                     operationId: 'updateTagType',
                     summary: 'Update a tag type',
                     description:
-                        'Update a tag type data except the name that cannot be changed.',
+                        'Update the configuration for the specified tag type.',
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(400, 401, 403, 415),
@@ -157,7 +157,7 @@ class TagTypeController extends Controller {
                     operationId: 'deleteTagType',
                     summary: 'Delete a tag type',
                     description:
-                        'Delete a tag type. This will remove the tags associated to that tag type from all features.',
+                        'Deletes a tag type. If any features have tags of this type, those tags will be deleted.',
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403),

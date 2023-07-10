@@ -74,7 +74,7 @@ export default class FavoritesController extends Controller {
                     description:
                         'This endpoint marks the project in the url as favorite',
                     operationId: 'addFavoriteProject',
-                    responses: { 200: emptyResponse },
+                    responses: { 200: emptyResponse, ...getStandardResponses(401, 404) },
                 }),
             ],
         });

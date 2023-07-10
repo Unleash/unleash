@@ -776,7 +776,7 @@ test('Should be denied move feature toggle to project where the user does not ha
             projectOrigin.id,
         );
     } catch (e) {
-        expect(e.name).toContain('NoAccess');
+        expect(e.name).toContain('Permission');
         expect(e.message.includes('permission')).toBeTruthy();
         expect(
             e.message.includes(permissions.MOVE_FEATURE_TOGGLE),

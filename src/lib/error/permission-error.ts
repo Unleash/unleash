@@ -2,7 +2,7 @@ import { ApiErrorSchema, UnleashError } from './unleash-error';
 
 type Permission = string | string[];
 
-class PermissionsError extends UnleashError {
+class PermissionError extends UnleashError {
     permissions: Permission;
 
     constructor(permission: Permission = [], environment?: string) {
@@ -34,5 +34,5 @@ class PermissionsError extends UnleashError {
     }
 }
 
-export default PermissionsError;
-module.exports = PermissionsError;
+export default PermissionError;
+module.exports = PermissionError;

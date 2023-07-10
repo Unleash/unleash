@@ -37,7 +37,7 @@ export default class FavoritesController extends Controller {
                     summary: 'Add feature to favorites',
                     description:
                         'This endpoint marks the feature in the url as favorite',
-                    responses: { 200: emptyResponse },
+                    responses: { 200: emptyResponse, ...getStandardResponses(401, 404) },
                 }),
             ],
         });

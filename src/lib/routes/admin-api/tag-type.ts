@@ -81,7 +81,7 @@ class TagTypeController extends Controller {
                     description: 'Create a new tag type.',
                     responses: {
                         201: resourceCreatedResponseSchema('tagTypeSchema'),
-                        ...getStandardResponses(400, 401, 403, 415),
+                        ...getStandardResponses(400, 401, 403, 409, 415),
                     },
                     requestBody: createRequestSchema('tagTypeSchema'),
                 }),

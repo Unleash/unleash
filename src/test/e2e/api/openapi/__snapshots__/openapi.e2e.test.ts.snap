@@ -12299,6 +12299,40 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
         ],
       },
     },
+    "/api/admin/projects/{projectId}/tags": {
+      "put": {
+        "operationId": "addTagToFeatures",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/tagsBulkAddSchema",
+              },
+            },
+          },
+          "description": "tagsBulkAddSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Tags",
+        ],
+      },
+    },
     "/api/admin/splash/{id}": {
       "post": {
         "operationId": "updateSplashSettings",
@@ -12926,30 +12960,6 @@ true,false,"[{""range"":""allTime"",""count"":15},{""range"":""30d"",""count"":9
                 },
               },
             },
-          },
-        },
-        "tags": [
-          "Tags",
-        ],
-      },
-    },
-    "/api/admin/tags/features": {
-      "put": {
-        "operationId": "addTagToFeatures",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/tagsBulkAddSchema",
-              },
-            },
-          },
-          "description": "tagsBulkAddSchema",
-          "required": true,
-        },
-        "responses": {
-          "200": {
-            "description": "This response has no body.",
           },
         },
         "tags": [

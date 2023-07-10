@@ -25,7 +25,10 @@ import {
 } from '../../openapi/spec/tag-type-schema';
 import { UpdateTagTypeSchema } from '../../openapi/spec/update-tag-type-schema';
 import { OpenApiService } from '../../services/openapi-service';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 
 const version = 1;
 
@@ -56,7 +59,10 @@ class TagTypeController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'getTagTypes',
-                    responses: { 200: createResponseSchema('tagTypesSchema') },
+                    responses: {
+                        200: createResponseSchema('tagTypesSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
                 }),
             ],
         });
@@ -71,6 +77,7 @@ class TagTypeController extends Controller {
                     operationId: 'createTagType',
                     responses: {
                         201: resourceCreatedResponseSchema('tagTypeSchema'),
+                        ...getStandardResponses(400, 401, 403),
                     },
                     requestBody: createRequestSchema('tagTypeSchema'),
                 }),
@@ -87,6 +94,7 @@ class TagTypeController extends Controller {
                     operationId: 'validateTagType',
                     responses: {
                         200: createResponseSchema('validateTagTypeSchema'),
+                        ...getStandardResponses(400, 401, 403),
                     },
                     requestBody: createRequestSchema('tagTypeSchema'),
                 }),
@@ -103,6 +111,7 @@ class TagTypeController extends Controller {
                     operationId: 'getTagType',
                     responses: {
                         200: createResponseSchema('tagTypeSchema'),
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -118,6 +127,7 @@ class TagTypeController extends Controller {
                     operationId: 'updateTagType',
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
                     },
                     requestBody: createRequestSchema('updateTagTypeSchema'),
                 }),
@@ -135,6 +145,7 @@ class TagTypeController extends Controller {
                     operationId: 'deleteTagType',
                     responses: {
                         200: emptyResponse,
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],

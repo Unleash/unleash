@@ -21,7 +21,10 @@ import {
     tagWithVersionSchema,
     TagWithVersionSchema,
 } from '../../openapi/spec/tag-with-version-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 import FeatureTagService from 'lib/services/feature-tag-service';
 import { IFlagResolver } from '../../types';
 
@@ -65,7 +68,12 @@ class TagController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'getTags',
-                    responses: { 200: createResponseSchema('tagsSchema') },
+                    summary: 'List all tags.',
+                    description: 'List all tags available in Unleash.',
+                    responses: {
+                        200: createResponseSchema('tagsSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
                 }),
             ],
         });
@@ -78,10 +86,13 @@ class TagController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'createTag',
+                    summary: 'Create a new tag.',
+                    description: 'Create a new tag.',
                     responses: {
                         201: resourceCreatedResponseSchema(
                             'tagWithVersionSchema',
                         ),
+                        ...getStandardResponses(400, 401, 403, 409, 415),
                     },
                     requestBody: createRequestSchema('tagSchema'),
                 }),
@@ -97,8 +108,12 @@ class TagController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'getTagsByType',
+                    summary: 'List all tags of a given type.',
+                    description:
+                        'List all tags of a given type. If the tag type does not exist it returns an empty list.',
                     responses: {
                         200: createResponseSchema('tagsSchema'),
+                        ...getStandardResponses(401, 403),
                     },
                 }),
             ],
@@ -112,8 +127,12 @@ class TagController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'getTag',
+                    summary: 'Get a tag by type and value.',
+                    description:
+                        "Get a tag by type and value. It's useful to check if a given tag type and tag value already exists.",
                     responses: {
                         200: createResponseSchema('tagWithVersionSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -128,6 +147,9 @@ class TagController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'deleteTag',
+                    summary: 'Delete a tag.',
+                    description:
+                        'Delete a tag by type and value. When a tag is deleted all references to the tag are removed.',
                     responses: {
                         200: emptyResponse,
                     },

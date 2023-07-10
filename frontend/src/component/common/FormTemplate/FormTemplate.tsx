@@ -205,7 +205,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                     elseShow={
                         <>
                             <ConditionallyRender
-                                condition={title}
+                                condition={title !== undefined}
                                 show={<StyledTitle>{title}</StyledTitle>}
                             />
                             {children}

@@ -103,7 +103,6 @@ const EditProject = () => {
     return (
         <FormTemplate
             loading={loading}
-            title=""
             disablePadding={true}
             description="Projects allows you to group feature toggles together in the management UI."
             documentationLink="https://docs.getunleash.io/reference/projects"

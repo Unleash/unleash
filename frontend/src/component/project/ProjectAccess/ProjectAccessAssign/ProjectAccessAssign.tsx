@@ -4,7 +4,6 @@ import {
     Button,
     capitalize,
     Checkbox,
-    createFilterOptions,
     styled,
     TextField,
     Tooltip,
@@ -311,10 +310,6 @@ export const ProjectAccessAssign = ({
 
     const isValid = selectedOptions.length > 0 && role;
 
-    const filterOptions = createFilterOptions({
-        limit: 1,
-    });
-
     return (
         <SidebarModal
             open
@@ -389,7 +384,36 @@ export const ProjectAccessAssign = ({
                                         return option.entity.name;
                                     }
                                 }}
-                                filterOptions={filterOptions}
+                                filterOptions={(options, { inputValue }) =>
+                                    options.filter((option: IAccessOption) => {
+                                        if (
+                                            option.type === ENTITY_TYPE.USER ||
+                                            option.type ===
+                                                ENTITY_TYPE.SERVICE_ACCOUNT
+                                        ) {
+                                            const optionUser =
+                                                option.entity as IUser;
+                                            return (
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.email
+                                                ) ||
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.name
+                                                ) ||
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.username
+                                                )
+                                            );
+                                        }
+                                        return caseInsensitiveSearch(
+                                            inputValue,
+                                            option.entity.name
+                                        );
+                                    })
+                                }
                                 isOptionEqualToValue={(option, value) =>
                                     option.type === value.type &&
                                     option.entity.id === value.entity.id

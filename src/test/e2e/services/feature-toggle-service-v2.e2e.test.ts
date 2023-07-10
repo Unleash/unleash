@@ -11,7 +11,7 @@ import { FeatureStrategySchema } from '../../../lib/openapi';
 import User from '../../../lib/types/user';
 import { IConstraint, IVariant, SKIP_CHANGE_REQUEST } from '../../../lib/types';
 import EnvironmentService from '../../../lib/services/environment-service';
-import { NoAccessError } from '../../../lib/error';
+import { ForbiddenError, PermissionError } from '../../../lib/error';
 import { ISegmentService } from '../../../lib/segments/segment-service-interface';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
@@ -350,7 +350,7 @@ test('cloning a feature toggle not allowed for change requests enabled', async (
             'test-user',
         ),
     ).rejects.toEqual(
-        new NoAccessError(
+        new ForbiddenError(
             `Cloning not allowed. Project default has change requests enabled.`,
         ),
     );
@@ -364,7 +364,7 @@ test('changing to a project with change requests enabled should not be allowed',
     await expect(
         service.changeProject('newToggleName', 'default', 'user'),
     ).rejects.toEqual(
-        new NoAccessError(
+        new ForbiddenError(
             `Changing project not allowed. Project default has change requests enabled.`,
         ),
     );
@@ -484,7 +484,7 @@ test('If change requests are enabled, cannot change variants without going via C
             },
             [],
         ),
-    ).rejects.toThrowError(new NoAccessError(SKIP_CHANGE_REQUEST));
+    ).rejects.toThrowError(new PermissionError(SKIP_CHANGE_REQUEST));
 });
 
 test('If CRs are protected for any environment in the project stops bulk update of variants', async () => {
@@ -590,7 +590,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
                 isAPI: true,
             },
         ),
-    ).rejects.toThrowError(new NoAccessError(SKIP_CHANGE_REQUEST));
+    ).rejects.toThrowError(new PermissionError(SKIP_CHANGE_REQUEST));
 });
 
 test('getPlaygroundFeatures should return ids and titles (if they exist) on client strategies', async () => {

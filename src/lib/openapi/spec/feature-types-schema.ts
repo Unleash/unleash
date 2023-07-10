@@ -13,6 +13,8 @@ export const featureTypesSchema = {
             type: 'integer',
             enum: [1],
             example: 1,
+            description:
+                'The schema version used to describe the feature toggle types listed in the `types` property.',
         },
         types: {
             type: 'array',

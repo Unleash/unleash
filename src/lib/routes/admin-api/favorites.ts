@@ -3,7 +3,7 @@ import Controller from '../controller';
 import { FavoritesService, OpenApiService } from '../../services';
 import { Logger } from '../../logger';
 import { IUnleashConfig, IUnleashServices, NONE } from '../../types';
-import { emptyResponse } from '../../openapi';
+import { emptyResponse, getStandardResponses } from '../../openapi';
 import { IAuthRequest } from '../unleash-types';
 
 export default class FavoritesController extends Controller {
@@ -34,6 +34,9 @@ export default class FavoritesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'addFavoriteFeature',
+                    summary: 'Add feature to favorites',
+                    description:
+                        'This endpoint marks the feature in the url as favorite',
                     responses: { 200: emptyResponse },
                 }),
             ],
@@ -48,7 +51,13 @@ export default class FavoritesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'removeFavoriteFeature',
-                    responses: { 200: emptyResponse },
+                    summary: 'Remove feature from favorites',
+                    description:
+                        'This endpoint removes the feature in the url from favorites',
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401),
+                    },
                 }),
             ],
         });
@@ -61,6 +70,9 @@ export default class FavoritesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    summary: 'Add project to favorites',
+                    description:
+                        'This endpoint marks the project in the url as favorite',
                     operationId: 'addFavoriteProject',
                     responses: { 200: emptyResponse },
                 }),
@@ -75,6 +87,9 @@ export default class FavoritesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    summary: 'Remove project from favorites',
+                    description:
+                        'This endpoint removes the project in the url from favorites',
                     operationId: 'removeFavoriteProject',
                     responses: { 200: emptyResponse },
                 }),

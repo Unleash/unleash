@@ -3,6 +3,8 @@ import { ApiErrorSchema, UnleashError } from './unleash-error';
 type Permission = string | string[];
 
 class PermissionError extends UnleashError {
+    statusCode = 403;
+
     permissions: Permission;
 
     constructor(permission: Permission = [], environment?: string) {

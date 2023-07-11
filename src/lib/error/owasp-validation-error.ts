@@ -7,6 +7,8 @@ type ValidationError = {
 };
 
 class OwaspValidationError extends UnleashError {
+    statusCode = 400;
+
     private details: [ValidationError];
 
     constructor(testResult: TestResult) {

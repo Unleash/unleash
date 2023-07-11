@@ -97,6 +97,7 @@ export * from './update-api-token-schema';
 export * from './users-groups-base-schema';
 export * from './validate-password-schema';
 export * from './validate-tag-type-schema';
+export * from './validate-feature-schema';
 export * from './client-application-schema';
 export * from './playground-feature-schema';
 export * from './playground-request-schema';

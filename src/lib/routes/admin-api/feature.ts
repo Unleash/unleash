@@ -29,6 +29,7 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
 import { UpdateTagsSchema } from '../../openapi/spec/update-tags-schema';
+import { ValidateFeatureSchema } from '../../openapi/spec/validate-feature-schema';
 
 const version = 1;
 
@@ -64,7 +65,13 @@ class FeatureController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'getAllToggles',
-                    responses: { 200: createResponseSchema('featuresSchema') },
+                    responses: {
+                        200: createResponseSchema('featuresSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
+                    summary: 'Get all features (deprecated)',
+                    description:
+                        'Gets all feature toggles with their full configuration. This endpoint is **deprecated**. You should  use the project-based endpoint instead (`/api/admin/projects/<project-id>/features`).',
                     deprecated: true,
                 }),
             ],
@@ -79,7 +86,14 @@ class FeatureController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'validateFeature',
-                    responses: { 200: emptyResponse },
+                    summary: 'Validate feature name',
+                    requestBody: createRequestSchema('validateFeatureSchema'),
+                    description:
+                        'Validates a feature toggle name: checks whether the name is URL-friendly and whether a feature with the given name already exists. Returns 200 if the feature name is compliant and unused.',
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 409, 415),
+                    },
                 }),
             ],
         });
@@ -290,7 +304,7 @@ class FeatureController extends Controller {
     }
 
     async validate(
-        req: Request<any, any, { name: string }, any>,
+        req: Request<any, any, ValidateFeatureSchema, any>,
         res: Response<void>,
     ): Promise<void> {
         const { name } = req.body;

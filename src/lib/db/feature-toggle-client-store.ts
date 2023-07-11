@@ -77,6 +77,7 @@ export default class FeatureToggleClientStore
             'fs.disabled as strategy_disabled',
             'fs.parameters as parameters',
             'fs.constraints as constraints',
+            'fs.sort_order as sort_order',
             'segments.id as segment_id',
             'segments.constraints as segment_constraints',
         ] as (string | Raw<any>)[];
@@ -208,15 +209,25 @@ export default class FeatureToggleClientStore
         // strip away unwanted properties
         const cleanedFeatures = features.map(({ strategies, ...rest }) => ({
             ...rest,
-            strategies: strategies?.map(({ id, title, ...strategy }) => ({
-                ...strategy,
+            strategies: strategies
+                ?.sort((strategy1, strategy2) => {
+                    if (
+                        typeof strategy1.sortOrder === 'number' &&
+                        typeof strategy2.sortOrder === 'number'
+                    ) {
+                        return strategy1.sortOrder - strategy2.sortOrder;
+                    }
+                    return 0;
+                })
+                .map(({ id, title, sortOrder, ...strategy }) => ({
+                    ...strategy,
 
-                ...(isPlayground && title ? { title } : {}),
+                    ...(isPlayground && title ? { title } : {}),
 
-                // We should not send strategy IDs from the client API,
-                // as this breaks old versions of the Go SDK (at least).
-                ...(isAdmin || isPlayground ? { id } : {}),
-            })),
+                    // We should not send strategy IDs from the client API,
+                    // as this breaks old versions of the Go SDK (at least).
+                    ...(isAdmin || isPlayground ? { id } : {}),
+                })),
         }));
 
         return cleanedFeatures;
@@ -229,6 +240,7 @@ export default class FeatureToggleClientStore
             title: row.strategy_title,
             constraints: row.constraints || [],
             parameters: mapValues(row.parameters || {}, ensureStringValue),
+            sortOrder: row.sort_order,
         };
     }
 

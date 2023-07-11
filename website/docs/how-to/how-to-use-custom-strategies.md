@@ -2,6 +2,14 @@
 title: How to use custom activation strategies
 ---
 
+:::tip
+
+Use custom activation strategies only for cases where [strategy constraints](https://docs.getunleash.io/reference/strategy-constraints) don't give you enough control. 
+
+The downside of using a custom activation strategy instead of constraints is that you need to distribute the code of your strategy with Unleash client SDK while on the other hand, [strategy constraints](https://docs.getunleash.io/reference/strategy-constraints) should work out of the box.
+:::
+
+
 This guide takes you through how to use [custom activation strategies](../reference/custom-activation-strategies.md) with Unleash. We'll go through how you define a custom strategy in the admin UI, how you add it to a toggle, and how you'd implement it in a [client SDK](../reference/sdks/index.md).
 
 In this example we want to define an activation strategy offers a scheduled release of a feature toggle. This means that we want the feature toggle to be activated after a given date and time.

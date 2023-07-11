@@ -84,7 +84,7 @@ export default class ClientMetricsServiceV2 {
         );
 
         for (const toggle of toggleNames) {
-            if (!(await nameSchema.validateAsync({ toggle }))) {
+            if (!(await nameSchema.validateAsync({ name: toggle }))) {
                 throw new BadDataError(
                     `Invalid feature toggle name "${toggle}"`,
                 );

@@ -109,7 +109,10 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES,
         false,
     ),
-    strategyVariant: parseEnvVarBoolean(process.env.STRATEGY_VARIANT, false),
+    strategyVariant: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_VARIANT,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

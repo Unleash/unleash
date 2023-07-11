@@ -17,7 +17,7 @@ import Loader from '../../../common/Loader/Loader';
 import { useEffect, useMemo } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLocation } from 'react-router';
-import { ConditionallyRender } from 'common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFlexibleStrategyProps {
@@ -126,12 +126,11 @@ const FlexibleStrategy = ({
                     onChange={e => onUpdate('groupId')(e.target.value)}
                     data-testid={FLEXIBLE_STRATEGY_GROUP_ID}
                 />
-                <br />
                 <ConditionallyRender
                     condition={Boolean(uiConfig?.flags?.strategyVariant)}
                     show={
                         <>
-                            {' '}
+                            <br />
                             <Typography
                                 variant="subtitle2"
                                 style={{

@@ -5,9 +5,12 @@ export const validateTagTypeSchema = {
     $id: '#/components/schemas/validateTagTypeSchema',
     type: 'object',
     required: ['valid', 'tagType'],
+    description: 'The result of validating a tag type.',
     properties: {
         valid: {
             type: 'boolean',
+            description: 'Whether or not the tag type is valid.',
+            example: true,
         },
         tagType: {
             $ref: '#/components/schemas/tagTypeSchema',

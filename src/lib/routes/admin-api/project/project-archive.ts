@@ -100,12 +100,12 @@ export default class ProjectArchiveController extends Controller {
                     tags: ['Features'],
                     operationId: 'archiveFeatures',
                     description:
-                        'This endpoint archives the specified features.',
+                        "This endpoint archives the specified features. Any features that are already archived or that don't exist are ignored. All existing features (whether already archived or not) that are provided must belong to the specified project.",
                     summary: 'Archives a list of features',
                     requestBody: createRequestSchema('batchFeaturesSchema'),
                     responses: {
                         202: emptyResponse,
-                        ...getStandardResponses(400, 401, 403),
+                        ...getStandardResponses(400, 401, 403, 415),
                     },
                 }),
             ],

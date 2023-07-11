@@ -8,6 +8,7 @@ import { NONE } from '../../types/permissions';
 import { FeatureTypesSchema } from '../../openapi/spec/feature-types-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import Controller from '../controller';
+import { getStandardResponses } from '../../openapi';
 
 const version = 1;
 
@@ -39,8 +40,12 @@ export class FeatureTypeController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'getAllFeatureTypes',
+                    summary: 'Get all feature types',
+                    description:
+                        'Retrieves all feature types that exist in this Unleash instance, along with their descriptions and lifetimes.',
                     responses: {
                         200: createResponseSchema('featureTypesSchema'),
+                        ...getStandardResponses(401),
                     },
                 }),
             ],

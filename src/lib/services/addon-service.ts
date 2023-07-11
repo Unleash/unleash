@@ -170,7 +170,7 @@ export default class AddonService {
             const tagTypes = provider.definition.tagTypes || [];
             const createTags = tagTypes.map(async (tagType) => {
                 try {
-                    await this.tagTypeService.validateUnique(tagType);
+                    await this.tagTypeService.validateUnique(tagType.name);
                     await this.tagTypeService.createTagType(
                         tagType,
                         providerName,

@@ -48,7 +48,7 @@ export default class TagTypeService {
         const data = (await tagTypeSchema.validateAsync(
             newTagType,
         )) as ITagType;
-        await this.validateUnique(data);
+        await this.validateUnique(data.name);
         await this.tagTypeStore.createTagType(data);
         await this.eventStore.store({
             type: TAG_TYPE_CREATED,
@@ -58,7 +58,7 @@ export default class TagTypeService {
         return data;
     }
 
-    async validateUnique({ name }: Pick<ITagType, 'name'>): Promise<boolean> {
+    async validateUnique(name: string): Promise<boolean> {
         const exists = await this.tagTypeStore.exists(name);
         if (exists) {
             throw new NameExistsError(
@@ -68,9 +68,11 @@ export default class TagTypeService {
         return Promise.resolve(true);
     }
 
-    async validate(tagType: ITagType): Promise<void> {
+    async validate(tagType: Partial<ITagType> | undefined): Promise<void> {
         await tagTypeSchema.validateAsync(tagType);
-        await this.validateUnique(tagType);
+        if (tagType && tagType.name) {
+            await this.validateUnique(tagType.name);
+        }
     }
 
     async deleteTagType(name: string, userName: string): Promise<void> {

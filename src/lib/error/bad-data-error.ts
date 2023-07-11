@@ -9,6 +9,8 @@ type ValidationErrorDescription = {
     path?: string;
 };
 class BadDataError extends UnleashError {
+    statusCode = 400;
+
     details: ValidationErrorDescription[];
 
     constructor(

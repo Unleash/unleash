@@ -547,11 +547,13 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'staleFeatures',
-                    summary: 'Stales a list of features',
-                    description:
-                        'This endpoint marks one or more feature toggles as stale.',
+                    summary: 'Mark features as stale / not stale',
+                    description: `This endpoint marks the provided list of features as either [stale](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles) or not stale depending on the request body you send. Any provided features that don't exist are ignored.`,
                     requestBody: createRequestSchema('batchStaleSchema'),
-                    responses: { 202: emptyResponse },
+                    responses: {
+                        202: emptyResponse,
+                        ...getStandardResponses(401, 403, 415),
+                    },
                 }),
             ],
         });

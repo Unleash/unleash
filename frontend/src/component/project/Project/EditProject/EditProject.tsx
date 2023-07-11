@@ -126,6 +126,8 @@ const EditProject = () => {
                 projectStickiness={projectStickiness}
                 setProjectStickiness={setProjectStickiness}
                 setProjectMode={setProjectMode}
+                setFeatureLimit={() => {}}
+                featureLimit={''}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}
                 mode="Edit"

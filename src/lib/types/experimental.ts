@@ -24,6 +24,7 @@ export type IFlagKey =
     | 'advancedPlayground'
     | 'customRootRoles'
     | 'strategySplittedButton'
+    | 'strategyVariant'
     | 'newProjectLayout';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -111,6 +112,10 @@ const flags: IFlags = {
     ),
     newProjectLayout: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_PROJECT_LAYOUT,
+        false,
+    ),
+    strategyVariant: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_VARIANT,
         false,
     ),
 };

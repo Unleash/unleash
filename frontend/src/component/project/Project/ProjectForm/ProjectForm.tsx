@@ -8,7 +8,7 @@ import { Box, styled, TextField } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IProjectForm {
     projectId: string;

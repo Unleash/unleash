@@ -8,7 +8,7 @@ interface IInputProps extends Omit<OutlinedTextFieldProps, 'variant'> {
     errorText?: string;
     style?: Object;
     className?: string;
-    value: string | number | undefined;
+    value: string;
     onChange: (e: any) => any;
     onFocus?: (e: any) => any;
     onBlur?: (e: any) => any;

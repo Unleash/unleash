@@ -590,16 +590,26 @@ module.exports = {
             },
         ],
         [
+            'docusaurus-plugin-remote-content',
+            {
+                name: 'openapi-schema',
+                sourceBaseUrl:
+                    process.env.OPENAPI_SOURCE === 'localhost'
+                        ? 'http://localhost:4242/docs/'
+                        : 'https://us.app.unleash-hosted.com/ushosted/docs/',
+                outDir: 'docs/generated',
+                documents: ['openapi.json'],
+                requestConfig: { responseType: 'text' },
+            },
+        ],
+        [
             'docusaurus-plugin-openapi-docs',
             {
                 id: 'api-operations',
                 docsPluginId: 'classic',
                 config: {
                     server: {
-                        specPath:
-                            process.env.OPENAPI_SOURCE === 'localhost'
-                                ? 'http://localhost:4242/docs/openapi.json'
-                                : 'https://us.app.unleash-hosted.com/ushosted/docs/openapi.json',
+                        specPath: 'docs/generated/openapi.json',
                         outputDir: 'docs/reference/api/unleash',
                         sidebarOptions: {
                             groupPathsBy: 'tag',
@@ -647,7 +657,5 @@ module.exports = {
             async: true,
         },
     ],
-    clientModules: [
-        require.resolve('./global.js'),
-      ],
+    clientModules: [require.resolve('./global.js')],
 };

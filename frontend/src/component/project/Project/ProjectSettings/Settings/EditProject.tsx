@@ -29,7 +29,6 @@ const EditProject = () => {
     const id = useRequiredPathParam('projectId');
     const { project } = useProject(id);
     const { defaultStickiness } = useDefaultProjectSettings(id);
-    const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
 
     const {
@@ -38,11 +37,13 @@ const EditProject = () => {
         projectDesc,
         projectStickiness,
         projectMode,
+        featureLimit,
         setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectStickiness,
         setProjectMode,
+        setFeatureLimit,
         getProjectPayload,
         clearErrors,
         validateProjectId,
@@ -113,6 +114,8 @@ const EditProject = () => {
                     setProjectId={setProjectId}
                     projectName={projectName}
                     projectMode={projectMode}
+                    featureLimit={featureLimit}
+                    featureCount={project.features.length}
                     setProjectName={setProjectName}
                     projectStickiness={projectStickiness}
                     setProjectStickiness={setProjectStickiness}
@@ -120,6 +123,7 @@ const EditProject = () => {
                     projectDesc={projectDesc}
                     mode="Edit"
                     setProjectDesc={setProjectDesc}
+                    setFeatureLimit={setFeatureLimit}
                     clearErrors={clearErrors}
                     validateProjectId={validateProjectId}
                 >

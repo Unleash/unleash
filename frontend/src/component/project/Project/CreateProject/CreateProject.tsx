@@ -32,6 +32,7 @@ const CreateProject = () => {
         projectName,
         projectMode,
         projectDesc,
+        featureLimit,
         setProjectId,
         setProjectName,
         setProjectDesc,
@@ -40,6 +41,7 @@ const CreateProject = () => {
         validateProjectId,
         validateName,
         setProjectStickiness,
+        setFeatureLimit,
         setProjectMode,
         projectStickiness,
         errors,
@@ -105,7 +107,9 @@ const CreateProject = () => {
                 projectName={projectName}
                 projectMode={projectMode}
                 projectStickiness={projectStickiness}
+                featureLimit={featureLimit}
                 setProjectStickiness={setProjectStickiness}
+                setFeatureLimit={setFeatureLimit}
                 setProjectMode={setProjectMode}
                 setProjectName={setProjectName}
                 projectDesc={projectDesc}

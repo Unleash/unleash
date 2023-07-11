@@ -7,6 +7,8 @@ import { ProjectMode } from '../hooks/useProjectForm';
 import { Box, styled, TextField } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 import Input from 'component/common/Input/Input';
+import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IProjectForm {
     projectId: string;
@@ -14,11 +16,14 @@ interface IProjectForm {
     projectDesc: string;
     projectStickiness?: string;
     projectMode?: string;
+    featureLimit: string;
+    featureCount?: number;
     setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
+    setFeatureLimit: React.Dispatch<React.SetStateAction<string>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
@@ -47,9 +52,17 @@ const StyledDescription = styled('p')(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
+const StyledSubtitle = styled('div')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.fontSizes.smallerBody,
+    lineHeight: 1.25,
+    paddingBottom: theme.spacing(1),
+}));
+
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
     marginBottom: theme.spacing(2),
+    paddingRight: theme.spacing(1),
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -57,10 +70,20 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
+const StyledSelect = styled(Select)(({ theme }) => ({
+    marginBottom: theme.spacing(2),
+    minWidth: '200px',
+}));
+
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
+}));
+
+const StyledInputContainer = styled('div')(() => ({
+    display: 'flex',
+    alignItems: 'center',
 }));
 
 const ProjectForm: React.FC<IProjectForm> = ({
@@ -71,16 +94,20 @@ const ProjectForm: React.FC<IProjectForm> = ({
     projectDesc,
     projectStickiness,
     projectMode,
+    featureLimit,
+    featureCount,
     setProjectId,
     setProjectName,
     setProjectDesc,
     setProjectStickiness,
     setProjectMode,
+    setFeatureLimit,
     errors,
     mode,
     validateProjectId,
     clearErrors,
 }) => {
+    const { uiConfig } = useUiConfig();
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
@@ -158,7 +185,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                         <p>What is your project collaboration mode?</p>
                         <CollaborationModeTooltip />
                     </Box>
-                    <Select
+                    <StyledSelect
                         id="project-mode"
                         value={projectMode}
                         label="Project collaboration mode"
@@ -170,11 +197,54 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             { key: 'open', label: 'open' },
                             { key: 'protected', label: 'protected' },
                         ]}
-                        style={{ minWidth: '200px' }}
-                    ></Select>
+                    ></StyledSelect>
                 </>
+                <ConditionallyRender
+                    condition={Boolean(uiConfig.flags.newProjectLayout)}
+                    show={
+                        <>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginBottom: 1,
+                                    gap: 1,
+                                }}
+                            >
+                                <p>Feature toggles limit?</p>
+                                <FeatureTogglesLimitTooltip />
+                            </Box>
+                            <StyledSubtitle>
+                                Leave it empty if you don’t want to add a limit
+                            </StyledSubtitle>
+                            <StyledInputContainer>
+                                <StyledInput
+                                    label={'Limit'}
+                                    name="value"
+                                    type={'number'}
+                                    value={featureLimit}
+                                    onChange={e =>
+                                        setFeatureLimit(e.target.value)
+                                    }
+                                />
+                                <ConditionallyRender
+                                    condition={
+                                        featureCount !== undefined &&
+                                        featureLimit !== undefined &&
+                                        featureLimit.length > 0
+                                    }
+                                    show={
+                                        <Box>
+                                            ({featureCount} of {featureLimit}{' '}
+                                            used)
+                                        </Box>
+                                    }
+                                />
+                            </StyledInputContainer>
+                        </>
+                    }
+                />
             </StyledContainer>
-
             <StyledButtonContainer>{children}</StyledButtonContainer>
         </StyledForm>
     );

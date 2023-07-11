@@ -62,6 +62,9 @@ class FeatureController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get all feature toggles.',
+                    description:
+                        'Retrieves all the feature toggles in the system. If the user is not an admin, it will only return the feature toggles the user has access to.',
                     tags: ['Features'],
                     operationId: 'getAllToggles',
                     responses: { 200: createResponseSchema('featuresSchema') },
@@ -78,6 +81,9 @@ class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    summary: 'Validate a feature toggle name.',
+                    description:
+                        'Validates that the feature toggle name is valid and unique – not alread in use.',
                     operationId: 'validateFeature',
                     responses: { 200: emptyResponse },
                 }),

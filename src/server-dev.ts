@@ -40,6 +40,7 @@ process.nextTick(async () => {
                         segmentContextFieldUsage: true,
                         advancedPlayground: true,
                         strategySplittedButton: true,
+                        strategyVariant: true,
                         newProjectLayout: true,
                     },
                 },

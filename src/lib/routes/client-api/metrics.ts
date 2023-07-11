@@ -65,11 +65,14 @@ export default class ClientMetricsController extends Controller {
     }
 
     async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
-        const { body: data, ip: clientIp, user } = req;
-        data.environment = this.metricsV2.resolveMetricsEnvironment(user, data);
-        await this.clientInstanceService.registerInstance(data, clientIp);
-
         try {
+            const { body: data, ip: clientIp, user } = req;
+            data.environment = this.metricsV2.resolveMetricsEnvironment(
+                user,
+                data,
+            );
+            await this.clientInstanceService.registerInstance(data, clientIp);
+
             await this.metricsV2.registerClientMetrics(data, clientIp);
             res.status(202).end();
         } catch (e) {

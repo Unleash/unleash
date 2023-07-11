@@ -14,12 +14,16 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
-import { Alert } from '@mui/material';
+import { Alert, Button, styled } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const EDIT_PROJECT_BTN = 'EDIT_PROJECT_BTN';
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(3),
+}));
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -114,7 +118,6 @@ const EditProject = () => {
             <ProjectForm
                 errors={errors}
                 handleSubmit={handleSubmit}
-                handleCancel={handleCancel}
                 projectId={projectId}
                 setProjectId={setProjectId}
                 projectName={projectName}
@@ -133,7 +136,8 @@ const EditProject = () => {
                     permission={UPDATE_PROJECT}
                     projectId={projectId}
                     data-testid={EDIT_PROJECT_BTN}
-                />
+                />{' '}
+                <StyledButton onClick={handleCancel}>Cancel</StyledButton>
             </ProjectForm>
         </FormTemplate>
     );

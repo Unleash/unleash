@@ -16,14 +16,14 @@ interface IProjectForm {
     projectDesc: string;
     projectStickiness?: string;
     projectMode?: string;
-    featureLimit?: number | undefined;
+    featureLimit?: string;
     featureCount?: number;
     setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
-    setFeatureLimit: React.Dispatch<React.SetStateAction<number | undefined>>;
+    setFeatureLimit: React.Dispatch<React.SetStateAction<string>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
@@ -85,10 +85,6 @@ const StyledInputContainer = styled('div')(() => ({
     display: 'flex',
     alignItems: 'center',
 }));
-
-// const StyledInput = styled(Input)(({ theme }) => ({
-//     paddingRight: theme.spacing(1),
-// }));
 
 const ProjectForm: React.FC<IProjectForm> = ({
     children,
@@ -234,7 +230,8 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 <ConditionallyRender
                                     condition={
                                         featureCount !== undefined &&
-                                        featureLimit !== undefined
+                                        featureLimit !== undefined &&
+                                        featureLimit.length > 0
                                     }
                                     show={
                                         <Box>

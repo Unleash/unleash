@@ -10,7 +10,7 @@ const useProjectForm = (
     initialProjectDesc = '',
     initialProjectStickiness = DEFAULT_PROJECT_STICKINESS,
     initialProjectMode: ProjectMode = 'open',
-    initialFeatureLimit: number | undefined = undefined
+    initialFeatureLimit = ''
 ) => {
     const [projectId, setProjectId] = useState(initialProjectId);
 
@@ -21,9 +21,8 @@ const useProjectForm = (
     );
     const [projectMode, setProjectMode] =
         useState<ProjectMode>(initialProjectMode);
-    const [featureLimit, setFeatureLimit] = useState<number | undefined>(
-        initialFeatureLimit
-    );
+    const [featureLimit, setFeatureLimit] =
+        useState<string>(initialFeatureLimit);
     const [errors, setErrors] = useState({});
 
     const { validateId } = useProjectApi();

@@ -1,20 +1,12 @@
 import React from 'react';
 import { trim } from 'component/common/util';
-import {
-    StyledButton,
-    StyledButtonContainer,
-    StyledContainer,
-    StyledDescription,
-    StyledForm,
-    StyledInput,
-    StyledTextField,
-} from './ProjectForm.styles';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Select from 'component/common/select';
 import { ProjectMode } from '../hooks/useProjectForm';
-import { Box } from '@mui/material';
+import { Box, styled, TextField } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
+import Input from 'component/common/Input/Input';
 
 interface IProjectForm {
     projectId: string;
@@ -28,7 +20,6 @@ interface IProjectForm {
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
     handleSubmit: (e: any) => void;
-    handleCancel: () => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
     clearErrors: () => void;
@@ -40,10 +31,41 @@ const PROJECT_ID_INPUT = 'PROJECT_ID_INPUT';
 const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
 const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
 
+const StyledForm = styled('form')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    paddingBottom: theme.spacing(4),
+}));
+
+const StyledContainer = styled('div')(() => ({
+    maxWidth: '400px',
+}));
+
+const StyledDescription = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+    marginRight: theme.spacing(1),
+}));
+
+const StyledInput = styled(Input)(({ theme }) => ({
+    width: '100%',
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    width: '100%',
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledButtonContainer = styled('div')(() => ({
+    marginTop: 'auto',
+    display: 'flex',
+    justifyContent: 'flex-end',
+}));
+
 const ProjectForm: React.FC<IProjectForm> = ({
     children,
     handleSubmit,
-    handleCancel,
     projectId,
     projectName,
     projectDesc,
@@ -153,10 +175,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 </>
             </StyledContainer>
 
-            <StyledButtonContainer>
-                {children}
-                <StyledButton onClick={handleCancel}>Cancel</StyledButton>
-            </StyledButtonContainer>
+            <StyledButtonContainer>{children}</StyledButtonContainer>
         </StyledForm>
     );
 };

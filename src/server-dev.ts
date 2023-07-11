@@ -41,6 +41,7 @@ process.nextTick(async () => {
                         advancedPlayground: true,
                         strategySplittedButton: true,
                         strategyVariant: true,
+                        newProjectLayout: true,
                     },
                 },
                 authentication: {

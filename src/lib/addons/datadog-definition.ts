@@ -41,6 +41,15 @@ const dataDogDefinition: IAddonDefinition = {
             sensitive: true,
         },
         {
+            name: 'sourceTypeName',
+            displayName: 'Datadog Source Type Name',
+            description:
+                '(Optional) source_type_name parameter to be included in Datadog events.',
+            type: 'text',
+            required: false,
+            sensitive: false,
+        },
+        {
             name: 'customHeaders',
             displayName: 'Extra HTTP Headers',
             placeholder: `{

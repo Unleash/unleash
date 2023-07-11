@@ -12,12 +12,23 @@ import { ChangeRequestConfiguration } from './ChangeRequestConfiguration/ChangeR
 import { ProjectApiAccess } from 'component/project/Project/ProjectSettings/ProjectApiAccess/ProjectApiAccess';
 import { ProjectSegments } from './ProjectSegments/ProjectSegments';
 import { ProjectDefaultStrategySettings } from './ProjectDefaultStrategySettings/ProjectDefaultStrategySettings';
+import { Settings } from './Settings/Settings';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const ProjectSettings = () => {
     const location = useLocation();
+    const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
 
     const tabs: ITab[] = [
+        ...(uiConfig.flags.newProjectLayout
+            ? [
+                  {
+                      id: '',
+                      label: 'Settings',
+                  },
+              ]
+            : []),
         {
             id: 'environments',
             label: 'Environments',
@@ -59,6 +70,9 @@ export const ProjectSettings = () => {
             onChange={onChange}
         >
             <Routes>
+                {uiConfig.flags.newProjectLayout ? (
+                    <Route path="/*" element={<Settings />} />
+                ) : null}
                 <Route
                     path="environments/*"
                     element={<ProjectEnvironmentList />}

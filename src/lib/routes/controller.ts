@@ -3,8 +3,8 @@ import { Logger } from 'lib/logger';
 import { IUnleashConfig } from '../types/option';
 import { NONE } from '../types/permissions';
 import { handleErrors } from './util';
-import NoAccessError from '../error/no-access-error';
 import requireContentType from '../middleware/content_type_checker';
+import { PermissionError } from '../error';
 
 interface IRequestHandler<
     P = any,
@@ -52,7 +52,7 @@ const checkPermission =
         if (req.checkRbac && (await req.checkRbac(permissions))) {
             return next();
         }
-        return res.status(403).json(new NoAccessError(permissions)).end();
+        return res.status(403).json(new PermissionError(permissions)).end();
     };
 
 /**

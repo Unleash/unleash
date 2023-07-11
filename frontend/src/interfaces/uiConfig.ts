@@ -54,6 +54,7 @@ export interface IFlags {
     customRootRoles?: boolean;
     strategySplittedButton?: boolean;
     strategyVariant?: boolean;
+    newProjectLayout?: boolean;
 }
 
 export interface IVersionInfo {

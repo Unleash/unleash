@@ -12,7 +12,15 @@ import { IEvent } from '../types/events';
 interface IDatadogParameters {
     url: string;
     apiKey: string;
+    sourceTypeName?: string;
     customHeaders?: string;
+}
+
+interface DDRequestBody {
+    text: string;
+    title: string;
+    tags?: string[];
+    source_type_name?: string;
 }
 
 export default class DatadogAddon extends Addon {
@@ -26,7 +34,6 @@ export default class DatadogAddon extends Addon {
         );
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async handleEvent(
         event: IEvent,
         parameters: IDatadogParameters,
@@ -34,6 +41,7 @@ export default class DatadogAddon extends Addon {
         const {
             url = 'https://api.datadoghq.com/api/v1/events',
             apiKey,
+            sourceTypeName,
             customHeaders,
         } = parameters;
 
@@ -42,11 +50,14 @@ export default class DatadogAddon extends Addon {
         const { tags: eventTags } = event;
         const tags =
             eventTags && eventTags.map((tag) => `${tag.type}:${tag.value}`);
-        const body = {
+        const body: DDRequestBody = {
             text: `%%% \n ${text} \n %%% `,
             title: 'Unleash notification update',
             tags,
         };
+        if (sourceTypeName) {
+            body.source_type_name = sourceTypeName;
+        }
         let extraHeaders = {};
         if (typeof customHeaders === 'string' && customHeaders.length > 1) {
             try {

@@ -81,7 +81,13 @@ const getProjects = async () => {
 
 beforeAll(async () => {
     db = await dbInit('favorites_api_serial', getLogger);
-    app = await setupAppWithAuth(db.stores);
+    app = await setupAppWithAuth(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
     stores = db.stores;
     accessService = app.services.accessService;
 

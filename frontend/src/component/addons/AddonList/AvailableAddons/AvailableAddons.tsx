@@ -27,6 +27,7 @@ interface IProvider {
     documentationUrl: string;
     parameters: object[];
     events: string[];
+    configureInstall?: string;
 }
 
 interface IAvailableAddonsProps {
@@ -46,11 +47,14 @@ export const AvailableAddons = ({
             });
         }
 
-        return providers.map(({ name, displayName, description }) => ({
-            name,
-            displayName,
-            description,
-        }));
+        return providers.map(
+            ({ name, displayName, description, configureInstall }) => ({
+                name,
+                displayName,
+                description,
+                configureInstall,
+            })
+        );
     }, [providers, loading]);
 
     const columns = useMemo(
@@ -73,13 +77,13 @@ export const AvailableAddons = ({
                 width: '90%',
                 Cell: ({
                     row: {
-                        original: { name, description },
+                        original: { displayName, description },
                     },
                 }: any) => {
                     return (
                         <LinkCell
                             data-loading
-                            title={name}
+                            title={displayName}
                             subtitle={description}
                         />
                     );
@@ -91,7 +95,7 @@ export const AvailableAddons = ({
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
                     <ActionCell>
-                        <ConfigureAddonButton name={original.name} />
+                        <ConfigureAddonButton provider={original} />
                     </ActionCell>
                 ),
                 width: 150,

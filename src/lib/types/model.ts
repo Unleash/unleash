@@ -248,6 +248,7 @@ export interface IAddonDefinition {
     parameters?: IAddonParameterDefinition[];
     events?: string[];
     tagTypes?: ITagType[];
+    configureInstall?: string;
 }
 
 export interface IAddonConfig {

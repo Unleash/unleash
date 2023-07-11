@@ -4,6 +4,7 @@ import TeamsAddon from './teams';
 import DatadogAddon from './datadog';
 import Addon from './addon';
 import { LogProvider } from '../logger';
+import SlackAppAddon from './slack-app';
 
 export interface IAddonProviders {
     [key: string]: Addon;
@@ -16,6 +17,7 @@ export const getAddons: (args: {
 }) => IAddonProviders = ({ getLogger, unleashUrl }) => {
     const addons = [
         new Webhook({ getLogger }),
+        new SlackAppAddon({ getLogger, unleashUrl }),
         new SlackAddon({ getLogger, unleashUrl }),
         new TeamsAddon({ getLogger, unleashUrl }),
         new DatadogAddon({ getLogger, unleashUrl }),

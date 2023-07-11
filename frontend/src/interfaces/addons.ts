@@ -19,6 +19,7 @@ export interface IAddonProvider {
     name: string;
     parameters: IAddonProviderParams[];
     tagTypes: ITagType[];
+    configureInstall?: string;
 }
 
 export interface IAddonProviderParams {

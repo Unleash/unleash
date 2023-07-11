@@ -16,7 +16,7 @@ interface IProjectForm {
     projectDesc: string;
     projectStickiness?: string;
     projectMode?: string;
-    featureLimit?: string;
+    featureLimit: string;
     featureCount?: number;
     setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;

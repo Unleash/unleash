@@ -19,12 +19,13 @@ import { formTemplateSidebarWidth } from './FormTemplate.styles';
 import { relative } from 'themes/themeStyles';
 
 interface ICreateProps {
-    title: string;
+    title?: string;
     description: string;
     documentationLink: string;
     documentationLinkLabel: string;
     loading?: boolean;
     modal?: boolean;
+    disablePadding?: boolean;
     formatApiCode: () => string;
 }
 
@@ -45,20 +46,22 @@ const StyledContainer = styled('section', {
 
 const StyledRelativeDiv = styled('div')(({ theme }) => relative);
 
-const StyledFormContent = styled('div')(({ theme }) => ({
+const StyledFormContent = styled('div', {
+    shouldForwardProp: prop => prop !== 'disablePadding',
+})<{ disablePadding?: boolean }>(({ theme, disablePadding }) => ({
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
-    padding: theme.spacing(6),
     flexGrow: 1,
+    padding: disablePadding ? 0 : theme.spacing(6),
     [theme.breakpoints.down('lg')]: {
-        padding: theme.spacing(4),
+        padding: disablePadding ? 0 : theme.spacing(4),
     },
     [theme.breakpoints.down(1100)]: {
         width: '100%',
     },
     [theme.breakpoints.down(500)]: {
-        padding: theme.spacing(4, 2),
+        padding: disablePadding ? 0 : theme.spacing(4, 2),
     },
 }));
 
@@ -157,6 +160,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     loading,
     modal,
     formatApiCode,
+    disablePadding,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
@@ -194,13 +198,16 @@ const FormTemplate: React.FC<ICreateProps> = ({
                     </StyledRelativeDiv>
                 }
             />
-            <StyledFormContent>
+            <StyledFormContent disablePadding={disablePadding}>
                 <ConditionallyRender
                     condition={loading || false}
                     show={<Loader />}
                     elseShow={
                         <>
-                            <StyledTitle>{title}</StyledTitle>
+                            <ConditionallyRender
+                                condition={title !== undefined}
+                                show={<StyledTitle>{title}</StyledTitle>}
+                            />
                             {children}
                         </>
                     }

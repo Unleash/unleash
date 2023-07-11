@@ -1,3 +1,5 @@
+import useUiConfig from '../hooks/api/getters/useUiConfig/useUiConfig';
+
 export const getTogglePath = (projectId: string, featureToggleName: string) => {
     return `/projects/${projectId}/features/${featureToggleName}`;
 };
@@ -23,6 +25,11 @@ export const getCreateTogglePath = (
     return path;
 };
 
-export const getProjectEditPath = (projectId: string) => {
-    return `/projects/${projectId}/edit`;
+export const getProjectEditPath = (
+    projectId: string,
+    newProjectPath: boolean
+) => {
+    return newProjectPath
+        ? `/projects/${projectId}/settings`
+        : `/projects/${projectId}/edit`;
 };

@@ -1,9 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import ProjectForm from '../ProjectForm/ProjectForm';
-import useProjectForm, {
-    DEFAULT_PROJECT_STICKINESS,
-} from '../hooks/useProjectForm';
-import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
@@ -14,16 +9,18 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
-import { Alert, Button, styled } from '@mui/material';
+import { Alert } from '@mui/material';
 import { GO_BACK } from 'constants/navigate';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-
-const EDIT_PROJECT_BTN = 'EDIT_PROJECT_BTN';
-
-const StyledButton = styled(Button)(({ theme }) => ({
-    marginLeft: theme.spacing(3),
-}));
+import useProjectForm, {
+    DEFAULT_PROJECT_STICKINESS,
+} from '../../hooks/useProjectForm';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { DeleteProject } from './DeleteProject';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import ProjectForm from '../../ProjectForm/ProjectForm';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -68,7 +65,6 @@ const EditProject = () => {
 --data-raw '${JSON.stringify(getProjectPayload(), undefined, 2)}'`;
     };
 
-    const { refetch } = useProject(id);
     const { editProject, loading } = useProjectApi();
 
     const handleSubmit = async (e: Event) => {
@@ -80,8 +76,6 @@ const EditProject = () => {
         if (validName) {
             try {
                 await editProject(id, payload);
-                refetch();
-                navigate(`/projects/${id}`);
                 setToastData({
                     title: 'Project information updated',
                     type: 'success',
@@ -95,10 +89,6 @@ const EditProject = () => {
         }
     };
 
-    const handleCancel = () => {
-        navigate(GO_BACK);
-    };
-
     const accessDeniedAlert = !hasAccess(UPDATE_PROJECT, projectId) && (
         <Alert severity="error" sx={{ mb: 4 }}>
             You do not have the required permissions to edit this project.
@@ -108,37 +98,44 @@ const EditProject = () => {
     return (
         <FormTemplate
             loading={loading}
-            title="Edit project"
+            disablePadding={true}
             description="Projects allows you to group feature toggles together in the management UI."
             documentationLink="https://docs.getunleash.io/reference/projects"
             documentationLinkLabel="Projects documentation"
             formatApiCode={formatApiCode}
         >
             {accessDeniedAlert}
-            <ProjectForm
-                errors={errors}
-                handleSubmit={handleSubmit}
-                projectId={projectId}
-                setProjectId={setProjectId}
-                projectName={projectName}
-                projectMode={projectMode}
-                setProjectName={setProjectName}
-                projectStickiness={projectStickiness}
-                setProjectStickiness={setProjectStickiness}
-                setProjectMode={setProjectMode}
-                projectDesc={projectDesc}
-                setProjectDesc={setProjectDesc}
-                mode="Edit"
-                clearErrors={clearErrors}
-                validateProjectId={validateProjectId}
-            >
-                <UpdateButton
-                    permission={UPDATE_PROJECT}
+            <PageContent header={<PageHeader title="Settings" />}>
+                <ProjectForm
+                    errors={errors}
+                    handleSubmit={handleSubmit}
                     projectId={projectId}
-                    data-testid={EDIT_PROJECT_BTN}
-                />{' '}
-                <StyledButton onClick={handleCancel}>Cancel</StyledButton>
-            </ProjectForm>
+                    setProjectId={setProjectId}
+                    projectName={projectName}
+                    projectMode={projectMode}
+                    setProjectName={setProjectName}
+                    projectStickiness={projectStickiness}
+                    setProjectStickiness={setProjectStickiness}
+                    setProjectMode={setProjectMode}
+                    projectDesc={projectDesc}
+                    mode="Edit"
+                    setProjectDesc={setProjectDesc}
+                    clearErrors={clearErrors}
+                    validateProjectId={validateProjectId}
+                >
+                    <PermissionButton
+                        type="submit"
+                        permission={UPDATE_PROJECT}
+                        projectId={projectId}
+                    >
+                        Save changes
+                    </PermissionButton>
+                </ProjectForm>
+                <DeleteProject
+                    projectId={projectId}
+                    featureCount={project.features.length}
+                />
+            </PageContent>
         </FormTemplate>
     );
 };

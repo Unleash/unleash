@@ -94,6 +94,7 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppNameKillSwitch": false,
       "segmentContextFieldUsage": false,
       "strategySplittedButton": false,
+      "strategyVariant": false,
       "strictSchemaValidation": false,
     },
   },
@@ -126,6 +127,7 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppNameKillSwitch": false,
       "segmentContextFieldUsage": false,
       "strategySplittedButton": false,
+      "strategyVariant": false,
       "strictSchemaValidation": false,
     },
     "externalResolver": {

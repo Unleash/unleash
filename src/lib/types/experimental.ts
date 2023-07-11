@@ -110,6 +110,14 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES,
         false,
     ),
+    newProjectLayout: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_PROJECT_LAYOUT,
+        false,
+    ),
+    strategyVariant: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_VARIANT,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

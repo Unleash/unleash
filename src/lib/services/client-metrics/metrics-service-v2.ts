@@ -20,6 +20,8 @@ import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 import { LastSeenService } from './last-seen-service';
 import { generateHourBuckets } from '../../util/time-utils';
 import { ClientMetricsSchema } from 'lib/openapi';
+import { nameSchema } from '../../schema/feature-schema';
+import { BadDataError } from '../../error';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -80,6 +82,14 @@ export default class ClientMetricsServiceV2 {
                     value.bucket.toggles[name].no === 0
                 ),
         );
+
+        for (const toggle of toggleNames) {
+            if (!(await nameSchema.validateAsync({ toggle }))) {
+                throw new BadDataError(
+                    `Invalid feature toggle name "${toggle}"`,
+                );
+            }
+        }
 
         this.logger.debug(`got metrics from ${clientIp}`);
 

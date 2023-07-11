@@ -23,4 +23,8 @@ export const addonDefinitionSchema = joi.object().keys({
         ),
     events: joi.array().optional().items(joi.string()),
     tagTypes: joi.array().optional().items(tagTypeSchema),
+    configureInstall: joi
+        .string()
+        .optional()
+        .uri({ scheme: [/https?/] }),
 });

@@ -18,7 +18,7 @@ import { AddonIcon } from '../AddonIcon/AddonIcon';
 import { ConfiguredAddonsActionsCell } from './ConfiguredAddonsActionCell/ConfiguredAddonsActionsCell';
 
 export const ConfiguredAddons = () => {
-    const { refetchAddons, addons, loading } = useAddons();
+    const { refetchAddons, addons, providers, loading } = useAddons();
     const { updateAddon, removeAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
     const [showDelete, setShowDelete] = useState(false);
@@ -88,7 +88,10 @@ export const ConfiguredAddons = () => {
                     return (
                         <LinkCell
                             data-loading
-                            title={provider}
+                            title={
+                                providers.find(({ name }) => name === provider)
+                                    ?.displayName || provider
+                            }
                             subtitle={description}
                         />
                     );

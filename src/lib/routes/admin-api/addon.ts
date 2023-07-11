@@ -147,6 +147,26 @@ Note: passing \`null\` as a value for the description property will set it to an
                 }),
             ],
         });
+
+        this.route({
+            method: 'get',
+            path: '/cb/slack',
+            handler: this.cbSlack,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Addons'],
+                    operationId: 'cbSlack',
+                    summary: 'Callback for Slack addon',
+                    description:
+                        'This endpoint serves as a callback for the Slack addon.',
+                    responses: {
+                        302: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
+                    },
+                }),
+            ],
+        });
     }
 
     async getAddons(req: Request, res: Response<AddonsSchema>): Promise<void> {
@@ -216,6 +236,46 @@ Note: passing \`null\` as a value for the description property will set it to an
         await this.addonService.removeAddon(id, username);
 
         res.status(200).end();
+    }
+
+    async cbSlack(req: IAuthRequest, res: Response): Promise<void> {
+        const createdBy = extractUsername(req);
+        const { code } = req.query;
+        if (!code) {
+            res.status(400).end();
+            return;
+        }
+        // const redirectUri = `${req.protocol}://${req.get('host')}${
+        //     req.baseUrl
+        // }${req.path}`;
+        // console.log(redirectUri);
+        const redirectUri =
+            'https://unleash-local.nunogois.com/api/admin/addons/cb/slack';
+        const response = await fetch('https://slack.com/api/oauth.v2.access', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `client_id=5551823334146.5564580941921&client_secret=CLIENT_SECRET&code=${code}&redirect_uri=${redirectUri}`, // TODO: Use `client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${code}` instead
+        });
+        const { access_token: accessToken } = await response.json();
+        if (!accessToken) {
+            res.status(400).end();
+            return;
+        }
+        const addon = await this.addonService.createAddon(
+            {
+                provider: 'slack-app',
+                description: '',
+                enabled: true,
+                parameters: {
+                    accessToken,
+                },
+                events: [],
+            },
+            createdBy,
+        );
+        res.redirect(`/addons/edit/${addon.id}`);
     }
 }
 export default AddonController;

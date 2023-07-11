@@ -1,21 +1,37 @@
+import { styled } from '@mui/material';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_ADDON } from 'component/providers/AccessProvider/permissions';
+import { IAddonProvider } from 'interfaces/addons';
 import { useNavigate } from 'react-router-dom';
 
+const StyledPermissionButton = styled(PermissionButton)(({ theme }) => ({
+    width: theme.spacing(15),
+}));
+
 interface IConfigureAddonButtonProps {
-    name: string;
+    provider: IAddonProvider;
 }
 
-export const ConfigureAddonButton = ({ name }: IConfigureAddonButtonProps) => {
+export const ConfigureAddonButton = ({
+    provider,
+}: IConfigureAddonButtonProps) => {
     const navigate = useNavigate();
 
+    const install = Boolean(provider.configureInstall);
+
     return (
-        <PermissionButton
+        <StyledPermissionButton
             permission={CREATE_ADDON}
             variant="outlined"
-            onClick={() => navigate(`/addons/create/${name}`)}
+            onClick={() => {
+                if (provider.configureInstall) {
+                    window.location.href = provider.configureInstall;
+                } else {
+                    navigate(`/addons/create/${provider.name}`);
+                }
+            }}
         >
-            Configure
-        </PermissionButton>
+            {install ? 'Install' : 'Configure'}
+        </StyledPermissionButton>
     );
 };

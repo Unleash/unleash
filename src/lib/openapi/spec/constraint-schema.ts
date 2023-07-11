@@ -39,7 +39,6 @@ export const constraintSchemaBase = {
             items: {
                 type: 'string',
             },
-            minItems: 1,
             example: ['my-app', 'my-other-app'],
         },
         value: {

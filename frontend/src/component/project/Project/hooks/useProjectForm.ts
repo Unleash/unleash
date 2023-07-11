@@ -9,7 +9,8 @@ const useProjectForm = (
     initialProjectName = '',
     initialProjectDesc = '',
     initialProjectStickiness = DEFAULT_PROJECT_STICKINESS,
-    initialProjectMode: ProjectMode = 'open'
+    initialProjectMode: ProjectMode = 'open',
+    initialFeatureLimit: number | undefined = undefined
 ) => {
     const [projectId, setProjectId] = useState(initialProjectId);
 
@@ -20,6 +21,9 @@ const useProjectForm = (
     );
     const [projectMode, setProjectMode] =
         useState<ProjectMode>(initialProjectMode);
+    const [featureLimit, setFeatureLimit] = useState<number | undefined>(
+        initialFeatureLimit
+    );
     const [errors, setErrors] = useState({});
 
     const { validateId } = useProjectApi();
@@ -41,6 +45,10 @@ const useProjectForm = (
     }, [initialProjectMode]);
 
     useEffect(() => {
+        setFeatureLimit(initialFeatureLimit);
+    }, [initialFeatureLimit]);
+
+    useEffect(() => {
         setProjectStickiness(initialProjectStickiness);
     }, [initialProjectStickiness]);
 
@@ -50,6 +58,7 @@ const useProjectForm = (
             name: projectName,
             description: projectDesc,
             defaultStickiness: projectStickiness,
+            featureLimit: featureLimit,
             mode: projectMode,
         };
     };
@@ -87,11 +96,13 @@ const useProjectForm = (
         projectDesc,
         projectStickiness,
         projectMode,
+        featureLimit,
         setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectStickiness,
         setProjectMode,
+        setFeatureLimit,
         getProjectPayload,
         validateName,
         validateProjectId,

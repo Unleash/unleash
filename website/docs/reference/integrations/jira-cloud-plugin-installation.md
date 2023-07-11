@@ -35,7 +35,9 @@ Start by visiting the [Landing page for the Unleash Enterprise For Jira plugin o
 
 ![Atlassian marketplace landing page for the Unleash Enterprise For Jira plugin.](/img/unleash-marketplace-for-unleash-enterprise-jira-plugin.png)
 
-Click the yellow button in the top right corner labeled Get it now, choose which site to install the app and click the blue button Install app located at the bottom right.
+1. Click the yellow button in the top right corner labeled "Get it now"
+2. Choose which site to install the app to.
+3. Click the blue "Install app" button located at the bottom right.
 
 ## Configuring the plugin {#configure-plugin}
 

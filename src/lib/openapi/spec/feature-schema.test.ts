@@ -84,7 +84,7 @@ test('featureSchema variant override values must be an array', () => {
             {
                 name: 'a',
                 weight: 1,
-                weightType: 'a',
+                weightType: 'fix',
                 stickiness: 'a',
                 overrides: [{ contextName: 'a', values: 'b' }],
                 payload: { type: 'a', value: 'b' },

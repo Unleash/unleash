@@ -29,7 +29,6 @@ import {
     ProjectGroupAddedEvent,
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
-    ProjectMode,
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
     ProjectUserUpdateRoleEvent,
@@ -37,11 +36,7 @@ import {
     IFlagResolver,
     ProjectAccessAddedEvent,
 } from '../types';
-import {
-    IProjectQuery,
-    IProjectSettings,
-    IProjectStore,
-} from '../types/stores/project-store';
+import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
 import {
     IProjectAccessModel,
     IRoleDescriptor,
@@ -831,11 +826,13 @@ export default class ProjectService {
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
         ]);
+        console.log('projectStats', project);
         return {
             stats: projectStats,
             name: project.name,
             description: project.description,
             mode: project.mode,
+            featureLimit: project.featureLimit,
             defaultStickiness: project.defaultStickiness,
             health: project.health || 0,
             favorite: favorite,
@@ -846,21 +843,5 @@ export default class ProjectService {
             members,
             version: 1,
         };
-    }
-
-    async getProjectSettings(projectId: string): Promise<IProjectSettings> {
-        return this.store.getProjectSettings(projectId);
-    }
-
-    async setProjectSettings(
-        projectId: string,
-        defaultStickiness: string,
-        mode: ProjectMode,
-    ): Promise<void> {
-        return this.store.setProjectSettings(
-            projectId,
-            defaultStickiness,
-            mode,
-        );
     }
 }

@@ -18,11 +18,13 @@ export interface IProjectInsert {
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
+    featureLimit?: number;
 }
 
 export interface IProjectSettings {
     mode: ProjectMode;
     defaultStickiness: string;
+    featureLimit?: number;
 }
 
 export interface IProjectSettingsRow {
@@ -107,13 +109,6 @@ export interface IProjectStore extends Store<IProject, string> {
     addEnvironmentToProjects(
         environment: string,
         projects: string[],
-    ): Promise<void>;
-
-    getProjectSettings(projectId: string): Promise<IProjectSettings>;
-    setProjectSettings(
-        projectId: string,
-        defaultStickiness: string,
-        mode: ProjectMode,
     ): Promise<void>;
 
     getDefaultStrategy(

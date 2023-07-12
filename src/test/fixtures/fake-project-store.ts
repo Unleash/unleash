@@ -1,16 +1,10 @@
 import {
     IProjectHealthUpdate,
     IProjectInsert,
-    IProjectSettings,
     IProjectStore,
     ProjectEnvironment,
 } from '../../lib/types/stores/project-store';
-import {
-    IEnvironment,
-    IProject,
-    IProjectWithCount,
-    ProjectMode,
-} from '../../lib/types';
+import { IEnvironment, IProject, IProjectWithCount } from '../../lib/types';
 import NotFoundError from '../../lib/error/notfound-error';
 import {
     IEnvironmentProjectLink,
@@ -165,22 +159,6 @@ export default class FakeProjectStore implements IProjectStore {
         date: string,
     ): Promise<number> {
         throw new Error('Method not implemented');
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getProjectSettings(projectId: string): Promise<IProjectSettings> {
-        throw new Error('Method not implemented.');
-    }
-
-    setProjectSettings(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        defaultStickiness: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        mode: ProjectMode,
-    ): Promise<void> {
-        throw new Error('Method not implemented.');
     }
 
     updateDefaultStrategy(

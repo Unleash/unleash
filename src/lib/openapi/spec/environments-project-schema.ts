@@ -10,12 +10,15 @@ export const environmentsProjectSchema = {
     properties: {
         version: {
             type: 'integer',
+            example: 1,
+            description: 'Version of the environments schema',
         },
         environments: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/environmentProjectSchema',
             },
+            description: 'List of environments',
         },
     },
     components: {

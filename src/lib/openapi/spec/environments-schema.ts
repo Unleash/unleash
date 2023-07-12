@@ -6,15 +6,19 @@ export const environmentsSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'environments'],
+    description: 'List of environments',
     properties: {
         version: {
             type: 'integer',
+            example: 1,
+            description: 'Version of the environments schema',
         },
         environments: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/environmentSchema',
             },
+            description: 'List of environments',
         },
     },
     components: {

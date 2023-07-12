@@ -263,8 +263,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .update(this.dtoToRow(project, data))
             .returning(FEATURE_COLUMNS);
 
+        const feature = this.rowToFeature(row[0]);
         // if a feature toggle's type or createdAt has changed, update its potentially stale status
-        if (data.type || data.createdAt) {
+        if (!feature.stale && (data.type || data.createdAt)) {
             await this.db(TABLE)
                 .where({ name: data.name })
                 .update(
@@ -280,7 +281,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
                 );
         }
 
-        return this.rowToFeature(row[0]);
+        return feature;
     }
 
     async archive(name: string): Promise<FeatureToggle> {

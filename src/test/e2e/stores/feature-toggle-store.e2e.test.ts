@@ -244,5 +244,31 @@ describe('potentially_stale marking', () => {
 
             expect(potentiallyStale).toBeTruthy();
         });
+
+        test('if a stale feature changes to a type that should be stale, it does not get marked as potentially stale', async () => {
+            const features: FeatureToggleDTO[] = [
+                {
+                    name: 'feature1',
+                    type: 'kill-switch',
+                    stale: true,
+                },
+            ];
+            await Promise.all(
+                features.map((feature) =>
+                    featureToggleStore.create('default', feature),
+                ),
+            );
+
+            await featureToggleStore.update('default', {
+                name: 'feature1',
+                type: 'release',
+                createdAt: getPastDate(40),
+            });
+
+            const potentiallyStale =
+                await featureToggleStore.getPotentiallyStaleStatus('feature1');
+
+            expect(potentiallyStale).toBeFalsy();
+        });
     });
 });

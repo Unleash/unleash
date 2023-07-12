@@ -377,6 +377,114 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
         return toggle;
     }
+
+    async markPotentiallyStaleFeatures(
+        currentTime?: string,
+    ): Promise<string[]> {
+        const query = this.db(TABLE)
+            .update('potentially_stale', true)
+            .whereRaw(
+                `? > (features.created_at + ((
+    SELECT feature_types.lifetime_days
+    FROM feature_types
+    WHERE feature_types.id = features.type
+  ) * INTERVAL '1 day'))`,
+                [currentTime || this.db.fn.now()],
+            );
+
+        const updatedFeatures = await query.returning(FEATURE_COLUMNS);
+        return updatedFeatures.map(({ name }) => name);
+
+        console.log(
+            this.db
+                .raw(
+                    `
+            UPDATE features
+            SET features.potentially_stale = TRUE
+            FROM feature_types
+            WHERE feature_types.id = features.type
+            AND current_time > (features.created_at + (feature_types.lifetime_days * INTERVAL '1 day'))
+            AND features.stale IS NOT TRUE;`,
+                )
+                .toSQL()
+                .toNative(),
+        );
+
+        console.log(
+            this.db(TABLE)
+                .update({ stale: true })
+                .where((builder) =>
+                    builder
+                        .join(
+                            'feature_types',
+                            'feature_types.id',
+                            '=',
+                            'features.type',
+                        )
+                        // .where('feature_types.id', '=', 'features.type')
+                        .where(
+                            this.db.fn.now(),
+                            '>',
+                            "(features.created_at + (feature_types.lifetime_days * INTERVAL '1 day'))",
+                        ),
+                )
+
+                // .join('feature_types', 'feature_types.id', '=', 'features.type')
+                // .from('feature_types')
+                // .whereRaw(
+                //     `CURRENT_TIMESTAMP > (features.created_at + (feature_types.lifetime_days * INTERVAL '1 day'))`,
+                // )
+                // .where(
+                //     'now()',
+                //     '>',
+                //     `(features.created_at + (feature_types.lifetime_days * INTERVAL '1 day'))`,
+                // )
+                .andWhere('features.stale', '!=', true)
+                .returning(FEATURE_COLUMNS)
+                .toSQL()
+                .toNative(),
+        );
+
+        console.log(x);
+
+        return [];
+
+        // const updatedFeatures = await this.db(TABLE)
+        //     .update({ stale: true })
+        //     .where((builder) =>
+        //         builder
+        //             // .from('feature_types')
+        //             .join(
+        //                 'feature_types',
+        //                 'feature_types.id',
+        //                 '=',
+        //                 'features.type',
+        //             )
+        //             // .where('feature_types.id', '=', 'features.type')
+        //             .where(
+        //                 this.db.fn.now(),
+        //                 '>',
+        //                 "(features.created_at + (feature_types.lifetime_days * INTERVAL '1 day'))",
+        //             ),
+        //     )
+
+        //     // .join('feature_types', 'feature_types.id', '=', 'features.type')
+        //     // .from('feature_types')
+        //     // .whereRaw(
+        //     //     `CURRENT_TIMESTAMP > (features.created_at + (feature_types.lifetime_days * INTERVAL '1 day'))`,
+        //     // )
+        //     // .where(
+        //     //     'now()',
+        //     //     '>',
+        //     //     `(features.created_at + (feature_types.lifetime_days * INTERVAL '1 day'))`,
+        //     // )
+        //     .andWhere('features.stale', '!=', true)
+        //     .returning(FEATURE_COLUMNS);
+
+        console.log('updated features:', updatedFeatures);
+
+        return updatedFeatures.map(({ name }) => name);
+    }
 }
 
 module.exports = FeatureToggleStore;

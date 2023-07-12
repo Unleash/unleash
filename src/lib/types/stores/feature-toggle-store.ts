@@ -32,6 +32,8 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
         range?: string[];
         dateAccessor: string;
     }): Promise<number>;
+    markPotentiallyStaleFeatures(currentTime?: string): Promise<string[]>;
+
     /**
      * @deprecated - Variants should be fetched from FeatureEnvironmentStore (since variants are now; since 4.18, connected to environments)
      * @param featureName

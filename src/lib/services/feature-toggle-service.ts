@@ -1959,6 +1959,15 @@ class FeatureToggleService {
             }
         }
     }
+
+    async markPotentiallyStaleFeatures(): Promise<void> {
+        const markedFeatures =
+            this.featureToggleStore.markPotentiallyStaleFeatures();
+        console.log(
+            'marked these feature as potentially stale',
+            markedFeatures,
+        );
+    }
 }
 
 export default FeatureToggleService;

@@ -9,6 +9,7 @@ interface IParameters {
     bodyTemplate?: string;
     contentType?: string;
     authorization?: string;
+    customHeaders?: string;
 }
 
 export default class Webhook extends Addon {
@@ -17,7 +18,8 @@ export default class Webhook extends Addon {
     }
 
     async handleEvent(event: IEvent, parameters: IParameters): Promise<void> {
-        const { url, bodyTemplate, contentType, authorization } = parameters;
+        const { url, bodyTemplate, contentType, authorization, customHeaders } =
+            parameters;
         const context = {
             event,
         };
@@ -30,11 +32,22 @@ export default class Webhook extends Addon {
             body = JSON.stringify(event);
         }
 
+        let extraHeaders = {};
+        if (typeof customHeaders === 'string' && customHeaders.length > 1) {
+            try {
+                extraHeaders = JSON.parse(customHeaders);
+            } catch (e) {
+                this.logger.warn(
+                    `Could not parse the json in the customHeaders parameter. [${customHeaders}]`,
+                );
+            }
+        }
         const requestOpts = {
             method: 'POST',
             headers: {
                 'Content-Type': contentType || 'application/json',
                 Authorization: authorization || undefined,
+                ...extraHeaders,
             },
             body,
         };

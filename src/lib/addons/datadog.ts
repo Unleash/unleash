@@ -9,6 +9,20 @@ import {
 } from './feature-event-formatter-md';
 import { IEvent } from '../types/events';
 
+interface IDatadogParameters {
+    url: string;
+    apiKey: string;
+    sourceTypeName?: string;
+    customHeaders?: string;
+}
+
+interface DDRequestBody {
+    text: string;
+    title: string;
+    tags?: string[];
+    source_type_name?: string;
+}
+
 export default class DatadogAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
@@ -20,27 +34,46 @@ export default class DatadogAddon extends Addon {
         );
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async handleEvent(event: IEvent, parameters: any): Promise<void> {
-        const { url = 'https://api.datadoghq.com/api/v1/events', apiKey } =
-            parameters;
+    async handleEvent(
+        event: IEvent,
+        parameters: IDatadogParameters,
+    ): Promise<void> {
+        const {
+            url = 'https://api.datadoghq.com/api/v1/events',
+            apiKey,
+            sourceTypeName,
+            customHeaders,
+        } = parameters;
 
         const text = this.msgFormatter.format(event);
 
         const { tags: eventTags } = event;
         const tags =
             eventTags && eventTags.map((tag) => `${tag.type}:${tag.value}`);
-        const body = {
+        const body: DDRequestBody = {
             text: `%%% \n ${text} \n %%% `,
             title: 'Unleash notification update',
             tags,
         };
-
+        if (sourceTypeName) {
+            body.source_type_name = sourceTypeName;
+        }
+        let extraHeaders = {};
+        if (typeof customHeaders === 'string' && customHeaders.length > 1) {
+            try {
+                extraHeaders = JSON.parse(customHeaders);
+            } catch (e) {
+                this.logger.warn(
+                    `Could not parse the json in the customHeaders parameter. [${customHeaders}]`,
+                );
+            }
+        }
         const requestOpts = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'DD-API-KEY': apiKey,
+                ...extraHeaders,
             },
             body: JSON.stringify(body),
         };

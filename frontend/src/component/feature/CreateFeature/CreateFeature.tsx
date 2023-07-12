@@ -87,7 +87,7 @@ const CreateFeature = () => {
         projectInfo.featureLimit !== null &&
         projectInfo.featureLimit !== undefined &&
         projectInfo.featureLimit <= projectInfo.features.length &&
-        uiConfig.flags.newProjectLayout;
+        Boolean(uiConfig.flags.newProjectLayout);
     return (
         <FormTemplate
             loading={loading}

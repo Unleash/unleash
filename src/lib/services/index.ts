@@ -74,6 +74,7 @@ export const scheduleServices = async (
         configurationRevisionService,
         maintenanceService,
         eventAnnouncerService,
+        featureToggleService,
     } = services;
 
     if (await maintenanceService.isMaintenanceMode()) {
@@ -125,6 +126,13 @@ export const scheduleServices = async (
         ),
         secondsToMilliseconds(1),
     );
+
+    // schedulerService.schedule(
+    //     featureToggleService.markPotentiallyStaleFeatures.bind(
+    //         featureToggleService,
+    //     ),
+    //     secondsToMilliseconds(10),
+    // );
 };
 
 export const createServices = (

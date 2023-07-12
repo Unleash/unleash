@@ -238,6 +238,7 @@ export interface IAddonParameterDefinition {
     placeholder?: string;
     required: boolean;
     sensitive: boolean;
+    position?: 'top' | 'bottom' | undefined;
 }
 
 export interface IAddonDefinition {
@@ -249,7 +250,14 @@ export interface IAddonDefinition {
     parameters?: IAddonParameterDefinition[];
     events?: string[];
     tagTypes?: ITagType[];
-    configureInstall?: string;
+    configureInstall?: IAddonInstallationDefinition;
+}
+
+export interface IAddonInstallationDefinition {
+    url: string;
+    warning: string;
+    title: string;
+    text: string;
 }
 
 export interface IAddonConfig {

@@ -1,4 +1,4 @@
-import React, {
+import {
     ChangeEventHandler,
     FormEventHandler,
     MouseEventHandler,
@@ -6,7 +6,13 @@ import React, {
     useState,
     VFC,
 } from 'react';
-import { Button, Divider, FormControlLabel, Switch } from '@mui/material';
+import {
+    Alert,
+    Button,
+    Divider,
+    FormControlLabel,
+    Switch,
+} from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
 import { IAddon, IAddonProvider } from 'interfaces/addons';
@@ -34,9 +40,11 @@ import {
     StyledContainer,
     StyledButtonContainer,
     StyledButtonSection,
+    StyledTitle,
 } from './AddonForm.styles';
 import { useTheme } from '@mui/system';
 import { GO_BACK } from 'constants/navigate';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IAddonFormProps {
     provider?: IAddonProvider;
@@ -253,6 +261,48 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         >
             <StyledForm onSubmit={onSubmit}>
                 <StyledContainer>
+                    <ConditionallyRender
+                        condition={Boolean(
+                            provider?.configureInstall && provider?.configureInstall?.warning
+                        )}
+                        show={
+                            <StyledFormSection>
+                                <Alert severity="warning">
+                                    {provider?.configureInstall?.warning}
+                                </Alert>
+                            </StyledFormSection>
+                        }
+                    />
+                    <ConditionallyRender
+                        condition={Boolean(provider?.configureInstall)}
+                        show={
+                            <StyledFormSection>
+                                <StyledTitle>
+                                    {provider?.configureInstall?.title ??
+                                        'Start addon installation'}
+                                </StyledTitle>
+                                <StyledHelpText>
+                                    {provider?.configureInstall?.text ??
+                                        'Clicking this button will start the installation procedure for this bot.'}
+                                </StyledHelpText>
+                                <Button
+                                    type="button"
+                                    variant="outlined"
+                                    onClick={() => {
+                                        if (
+                                            provider &&
+                                            provider.configureInstall
+                                        ) {
+                                            window.location.href =
+                                                provider.configureInstall?.url;
+                                        }
+                                    }}
+                                >
+                                    Install
+                                </Button>
+                            </StyledFormSection>
+                        }
+                    />
                     <StyledFormSection>
                         <StyledTextField
                             size="small"

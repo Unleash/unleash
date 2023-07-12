@@ -21,7 +21,12 @@ const slackAppDefinition: IAddonDefinition = {
     displayName: 'Slack App',
     description: 'Allows Unleash to post updates to Slack.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/slack-app',
-    configureInstall: 'https://unleash-slack-app.vercel.app/install',
+    configureInstall: {
+        url: 'https://unleash-slack-app.vercel.app/install',
+        warning: `Please ensure you have the Unleash Slack app installed in your instance if you haven't installed it already, and to invite the app to any channel you want it to communicate in.`,
+        title: 'Slack app installation',
+        text: 'Clicking the Install button will send you to Slack to initiate the installation procedure for the Unleash Slack app for your instance',
+    },
     parameters: [
         {
             name: 'accessToken',
@@ -30,6 +35,7 @@ const slackAppDefinition: IAddonDefinition = {
             type: 'text',
             required: true,
             sensitive: true,
+            position: 'top',
         },
     ],
     events: [

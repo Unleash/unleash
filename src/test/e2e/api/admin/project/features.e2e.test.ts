@@ -1031,7 +1031,7 @@ test('Can NOT delete strategy with wrong projectId', async () => {
         .delete(
             `/api/admin/projects/wrongId/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
         )
-        .expect(403);
+        .expect(400);
 });
 
 test('add strategy cannot use wrong projectId', async () => {

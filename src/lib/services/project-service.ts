@@ -826,7 +826,6 @@ export default class ProjectService {
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
         ]);
-        console.log('projectStats', project);
         return {
             stats: projectStats,
             name: project.name,

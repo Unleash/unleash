@@ -216,7 +216,6 @@ const getDeleteButtons = async () => {
             deleteButtons.push(...removeButton);
         })
     );
-    console.log(deleteButtons);
     return deleteButtons;
 };
 

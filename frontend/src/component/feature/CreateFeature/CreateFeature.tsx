@@ -13,8 +13,8 @@ import { CF_CREATE_BTN_ID } from 'utils/testIds';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import { Alert, styled } from '@mui/material';
-import useProject from '../../../hooks/api/getters/useProject/useProject';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(2),

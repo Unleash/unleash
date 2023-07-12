@@ -238,7 +238,6 @@ class ProjectStore implements IProjectStore {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async update(data): Promise<void> {
-        console.log(data);
         try {
             await this.db(TABLE)
                 .where({ id: data.id })

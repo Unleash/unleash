@@ -122,7 +122,7 @@ describe('potentially_stale marking', () => {
 
             for (const feature of expectedMarkedFeatures) {
                 expect(
-                    await featureToggleStore.getPotentiallyStaleStatus(feature),
+                    await featureToggleStore.isPotentiallyStale(feature),
                 ).toBeTruthy();
             }
         },
@@ -200,7 +200,7 @@ describe('potentially_stale marking', () => {
 
             expect(markedToggles).toStrictEqual(['feature1']);
             expect(
-                await featureToggleStore.getPotentiallyStaleStatus('feature1'),
+                await featureToggleStore.isPotentiallyStale('feature1'),
             ).toBeTruthy();
 
             await featureToggleStore.update('default', {
@@ -209,7 +209,7 @@ describe('potentially_stale marking', () => {
             });
 
             const potentiallyStale =
-                await featureToggleStore.getPotentiallyStaleStatus('feature1');
+                await featureToggleStore.isPotentiallyStale('feature1');
 
             expect(potentiallyStale).toBeFalsy();
         });
@@ -240,7 +240,7 @@ describe('potentially_stale marking', () => {
             });
 
             const potentiallyStale =
-                await featureToggleStore.getPotentiallyStaleStatus('feature1');
+                await featureToggleStore.isPotentiallyStale('feature1');
 
             expect(potentiallyStale).toBeTruthy();
         });
@@ -266,7 +266,7 @@ describe('potentially_stale marking', () => {
             });
 
             const potentiallyStale =
-                await featureToggleStore.getPotentiallyStaleStatus('feature1');
+                await featureToggleStore.isPotentiallyStale('feature1');
 
             expect(potentiallyStale).toBeFalsy();
         });

@@ -422,7 +422,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return updatedFeatures.map(({ name }) => name);
     }
 
-    async getPotentiallyStaleStatus(featureName: string): Promise<boolean> {
+    async isPotentiallyStale(featureName: string): Promise<boolean> {
         const result = await this.db(TABLE)
             .first([...FEATURE_COLUMNS, 'potentially_stale'])
             .from(TABLE)

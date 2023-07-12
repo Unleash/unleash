@@ -123,8 +123,13 @@ export const addonTypeSchema = {
             type: 'string',
             description:
                 'A URL to where the addon configuration should redirect to install addons of this type.',
-            example:
-                'https://slack.com/oauth/v2/authorize?scope=channels:read,chat:write,chat:write.public&client_id=123&redirect_uri=https://example.com/api/admin/addons/cb/slack',
+            example: 'https://unleash-slack-app.vercel.app/install',
+        },
+        deprecated: {
+            type: 'boolean',
+            description:
+                'Whether or not this addon type is deprecated. Deprecated addons will show a badge with this information on the UI.',
+            example: true,
         },
     },
     components: {

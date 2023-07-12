@@ -33,6 +33,8 @@ export default class SlackAppAddon extends Addon {
     ): Promise<void> {
         const { accessToken } = parameters;
 
+        if (!accessToken) return;
+
         if (!this.slackClient) {
             this.slackClient = new WebClient(accessToken);
         }

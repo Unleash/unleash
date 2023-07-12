@@ -11,7 +11,6 @@ import {
 } from 'component/common/Table';
 
 import { useTable, useSortBy } from 'react-table';
-import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { sortTypes } from 'utils/sortTypes';
@@ -19,6 +18,7 @@ import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { ConfigureAddonButton } from './ConfigureAddonButton/ConfigureAddonButton';
 import { AddonIcon } from '../AddonIcon/AddonIcon';
+import { AddonNameCell } from '../AddonNameCell/AddonNameCell';
 
 interface IProvider {
     name: string;
@@ -28,6 +28,7 @@ interface IProvider {
     parameters: object[];
     events: string[];
     configureInstall?: string;
+    deprecated?: boolean;
 }
 
 interface IAvailableAddonsProps {
@@ -48,10 +49,17 @@ export const AvailableAddons = ({
         }
 
         return providers.map(
-            ({ name, displayName, description, configureInstall }) => ({
+            ({
                 name,
                 displayName,
                 description,
+                deprecated,
+                configureInstall,
+            }) => ({
+                name,
+                displayName,
+                description,
+                deprecated,
                 configureInstall,
             })
         );
@@ -75,19 +83,9 @@ export const AvailableAddons = ({
                 Header: 'Name',
                 accessor: 'name',
                 width: '90%',
-                Cell: ({
-                    row: {
-                        original: { displayName, description },
-                    },
-                }: any) => {
-                    return (
-                        <LinkCell
-                            data-loading
-                            title={displayName}
-                            subtitle={description}
-                        />
-                    );
-                },
+                Cell: ({ row: { original } }: any) => (
+                    <AddonNameCell provider={original} />
+                ),
                 sortType: 'alphanumeric',
             },
             {

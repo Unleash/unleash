@@ -923,7 +923,7 @@ class FeatureToggleService {
         const exists = await this.projectStore.hasProject(projectId);
 
         if (
-            this.flagResolver.igsEnabled('newProjectLayout') &&
+            this.flagResolver.isEnabled('newProjectLayout') &&
             (await this.projectStore.isFeatureCreationLimitReached(projectId))
         ) {
             throw new InvalidOperationError(

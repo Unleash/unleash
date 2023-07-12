@@ -127,12 +127,12 @@ export const scheduleServices = async (
         secondsToMilliseconds(1),
     );
 
-    // schedulerService.schedule(
-    //     featureToggleService.markPotentiallyStaleFeatures.bind(
-    //         featureToggleService,
-    //     ),
-    //     secondsToMilliseconds(10),
-    // );
+    schedulerService.schedule(
+        featureToggleService.markPotentiallyStaleFeatures.bind(
+            featureToggleService,
+        ),
+        secondsToMilliseconds(10),
+    );
 };
 
 export const createServices = (

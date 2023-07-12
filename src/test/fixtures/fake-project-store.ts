@@ -180,4 +180,9 @@ export default class FakeProjectStore implements IProjectStore {
     ): Promise<CreateFeatureStrategySchema | undefined> {
         throw new Error('Method not implemented.');
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    isFeatureCreationLimitReached(id: string): Promise<boolean> {
+        return Promise.resolve(false);
+    }
 }

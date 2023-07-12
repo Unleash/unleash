@@ -57,11 +57,6 @@ export type ProjectEnvironment = {
     defaultStrategy?: CreateFeatureStrategySchema;
 };
 
-export interface IProjectEnvironmentWithChangeRequests {
-    environment: string;
-    changeRequestsEnabled: boolean;
-}
-
 export interface IProjectStore extends Store<IProject, string> {
     hasProject(id: string): Promise<boolean>;
 
@@ -120,4 +115,6 @@ export interface IProjectStore extends Store<IProject, string> {
         environment: string,
         strategy: CreateFeatureStrategySchema,
     ): Promise<CreateFeatureStrategySchema>;
+
+    isFeatureCreationLimitReached(id: string): Promise<boolean>;
 }

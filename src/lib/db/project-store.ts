@@ -96,6 +96,20 @@ class ProjectStore implements IProjectStore {
         return present;
     }
 
+    async isFeatureCreationLimitReached(id: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1
+             FROM project_settings
+             LEFT JOIN features ON project_settings.project = features.project
+             WHERE project_settings.project = ?
+             GROUP BY project_settings.project
+             HAVING project_settings.feature_limit <= COUNT(features.project)) AS present`,
+            [id],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
     async getProjectsWithCounts(
         query?: IProjectQuery,
         userId?: number,

@@ -262,7 +262,24 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .where({ name: data.name })
             .update(this.dtoToRow(project, data))
             .returning(FEATURE_COLUMNS);
-        // TODO if a feature toggle's type has changed, update its potentially stale status
+
+        // if a feature toggle's type or createdAt has changed, update its potentially stale status
+        if (data.type || data.createdAt) {
+            await this.db(TABLE)
+                .where({ name: data.name })
+                .update(
+                    'potentially_stale',
+                    this.db.raw(
+                        `COALESCE (? > (features.created_at + ((
+    SELECT feature_types.lifetime_days
+    FROM feature_types
+    WHERE feature_types.id = features.type
+) * INTERVAL '1 day')))`,
+                        this.db.fn.now(),
+                    ),
+                );
+        }
+
         return this.rowToFeature(row[0]);
     }
 

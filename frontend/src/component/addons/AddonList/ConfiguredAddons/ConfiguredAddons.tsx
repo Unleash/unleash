@@ -8,7 +8,6 @@ import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import { IAddon } from 'interfaces/addons';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { sortTypes } from 'utils/sortTypes';
 import { useTable, useSortBy } from 'react-table';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -16,6 +15,7 @@ import { SortableTableHeader, TablePlaceholder } from 'component/common/Table';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { AddonIcon } from '../AddonIcon/AddonIcon';
 import { ConfiguredAddonsActionsCell } from './ConfiguredAddonsActionCell/ConfiguredAddonsActionsCell';
+import { AddonNameCell } from '../AddonNameCell/AddonNameCell';
 
 export const ConfiguredAddons = () => {
     const { refetchAddons, addons, providers, loading } = useAddons();
@@ -84,18 +84,18 @@ export const ConfiguredAddons = () => {
                     row: {
                         original: { provider, description },
                     },
-                }: any) => {
-                    return (
-                        <LinkCell
-                            data-loading
-                            title={
-                                providers.find(({ name }) => name === provider)
-                                    ?.displayName || provider
-                            }
-                            subtitle={description}
-                        />
-                    );
-                },
+                }: any) => (
+                    <AddonNameCell
+                        provider={{
+                            ...(providers.find(
+                                ({ name }) => name === provider
+                            ) || {
+                                displayName: provider,
+                            }),
+                            description,
+                        }}
+                    />
+                ),
                 sortType: 'alphanumeric',
             },
             {

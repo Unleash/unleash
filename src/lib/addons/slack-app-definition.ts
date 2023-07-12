@@ -21,12 +21,11 @@ const slackAppDefinition: IAddonDefinition = {
     displayName: 'Slack App',
     description: 'Allows Unleash to post updates to Slack.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/slack-app',
-    configureInstall:
-        'https://slack.com/oauth/v2/authorize?scope=channels:read,groups:read,chat:write,chat:write.public&client_id=5551823334146.5564580941921&redirect_uri=https://unleash-local.nunogois.com/api/admin/addons/cb/slack',
+    configureInstall: 'https://unleash-slack-app.vercel.app/install',
     parameters: [
         {
             name: 'accessToken',
-            displayName: 'Access Token',
+            displayName: 'Access token',
             description: '(Required)',
             type: 'text',
             required: true,

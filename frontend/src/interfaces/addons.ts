@@ -20,6 +20,7 @@ export interface IAddonProvider {
     parameters: IAddonProviderParams[];
     tagTypes: ITagType[];
     configureInstall?: string;
+    deprecated?: boolean;
 }
 
 export interface IAddonProviderParams {

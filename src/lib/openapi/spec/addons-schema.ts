@@ -103,55 +103,12 @@ export const addonsSchema = {
                     ],
                 },
                 {
-                    name: 'slack-app',
-                    displayName: 'Slack App',
-                    description: 'Allows Unleash to post updates to Slack.',
-                    documentationUrl:
-                        'https://docs.getunleash.io/docs/addons/slack-app',
-                    configureInstall: {
-                        type: 'string',
-                    },
-                    parameters: [
-                        {
-                            name: 'accessToken',
-                            displayName: 'Access Token',
-                            description: '(Required)',
-                            type: 'text',
-                            required: true,
-                            sensitive: true,
-                        },
-                    ],
-                    events: [
-                        'feature-created',
-                        'feature-updated',
-                        'feature-archived',
-                        'feature-revived',
-                        'feature-stale-on',
-                        'feature-stale-off',
-                        'feature-environment-enabled',
-                        'feature-environment-disabled',
-                        'feature-strategy-remove',
-                        'feature-strategy-update',
-                        'feature-strategy-add',
-                        'feature-metadata-updated',
-                        'feature-variants-updated',
-                        'feature-project-change',
-                    ],
-                    tagTypes: [
-                        {
-                            name: 'slack-app',
-                            description:
-                                'Tag used by the Slack App addon to specify the Slack channel.',
-                            icon: 'S',
-                        },
-                    ],
-                },
-                {
                     name: 'slack',
                     displayName: 'Slack',
                     description: 'Allows Unleash to post updates to Slack.',
                     documentationUrl:
                         'https://docs.getunleash.io/docs/addons/slack',
+                    deprecated: true,
                     parameters: [
                         {
                             name: 'url',

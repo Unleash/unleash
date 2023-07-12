@@ -55,7 +55,7 @@ const EditProject = () => {
         project.description,
         defaultStickiness,
         project.mode,
-        String(project.featureLimit)
+        project.featureLimit ? String(project.featureLimit) : ''
     );
 
     const formatApiCode = () => {

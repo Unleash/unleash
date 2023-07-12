@@ -305,6 +305,25 @@ test('Can push variants to multiple environments', async () => {
         });
 });
 
+test("Returns proper error if project and/or feature toggle doesn't exist", async () => {
+    await app.request
+        .put(
+            `/api/admin/projects/nonexistent/features/undefined/variants-batch`,
+        )
+        .send({
+            variants: [
+                {
+                    name: 'new-variant-1',
+                    stickiness: 'default',
+                    weight: 500,
+                    weightType: WeightType.VARIABLE,
+                },
+            ],
+            environments: ['development', 'production'],
+        })
+        .expect(404);
+});
+
 test('Can add variant for a feature', async () => {
     const featureName = 'feature-variants-patch-add';
     const variantName = 'fancy-variant-patch';

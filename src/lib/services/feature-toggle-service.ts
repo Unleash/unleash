@@ -1837,17 +1837,14 @@ class FeatureToggleService {
     ): Promise<IVariant[]> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
-        const oldVariants: { [env: string]: IVariant[] } = environments.reduce(
-            async (result, environment) => {
-                result[environment] = await this.featureEnvironmentStore.get({
-                    featureName,
-                    environment,
-                });
-                return result;
-            },
-            {},
-        );
-
+        const oldVariants: { [env: string]: IVariant[] } = {};
+        for (const env of environments) {
+            const featureEnv = await this.featureEnvironmentStore.get({
+                featureName,
+                environment: env,
+            });
+            oldVariants[env] = featureEnv.variants || [];
+        }
         await this.eventStore.batchStore(
             environments.map(
                 (environment) =>

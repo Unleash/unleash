@@ -121,8 +121,6 @@ describe('potentially_stale marking', () => {
             expect(markedToggles.length).toEqual(expectedMarkedFeatures.length);
 
             for (const feature of expectedMarkedFeatures) {
-                console.log('checking feature', feature);
-
                 expect(
                     await featureToggleStore.getPotentiallyStaleStatus(feature),
                 ).toBeTruthy();

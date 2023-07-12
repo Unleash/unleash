@@ -271,10 +271,10 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
                     'potentially_stale',
                     this.db.raw(
                         `COALESCE (? > (features.created_at + ((
-    SELECT feature_types.lifetime_days
-    FROM feature_types
-    WHERE feature_types.id = features.type
-) * INTERVAL '1 day')))`,
+                            SELECT feature_types.lifetime_days
+                            FROM feature_types
+                            WHERE feature_types.id = features.type
+                        ) * INTERVAL '1 day')))`,
                         this.db.fn.now(),
                     ),
                 );
@@ -403,10 +403,10 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .update('potentially_stale', true)
             .whereRaw(
                 `? > (features.created_at + ((
-    SELECT feature_types.lifetime_days
-    FROM feature_types
-    WHERE feature_types.id = features.type
-  ) * INTERVAL '1 day'))`,
+                    SELECT feature_types.lifetime_days
+                    FROM feature_types
+                    WHERE feature_types.id = features.type
+                ) * INTERVAL '1 day'))`,
                 [currentTime || this.db.fn.now()],
             )
             .andWhere(function () {

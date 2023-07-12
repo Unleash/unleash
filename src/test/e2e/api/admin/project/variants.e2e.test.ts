@@ -321,7 +321,7 @@ test("Returns proper error if project and/or feature toggle doesn't exist", asyn
             ],
             environments: ['development', 'production'],
         })
-        .expect(400);
+        .expect(404);
 });
 
 test('Can add variant for a feature', async () => {

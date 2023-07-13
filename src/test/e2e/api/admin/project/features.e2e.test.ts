@@ -3181,13 +3181,6 @@ test('Updating feature strategy sort-order should trigger a FeatureStrategyUpdat
     });
 
     await app.request
-        .post('/api/admin/projects/default/environments')
-        .send({
-            environment: envName,
-        })
-        .expect(200);
-
-    await app.request
         .post('/api/admin/projects/default/features')
         .send({ name: featureName })
         .expect(201);

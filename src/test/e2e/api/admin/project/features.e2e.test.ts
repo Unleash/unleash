@@ -2350,6 +2350,80 @@ test('Can create toggle with impression data on different project', async () => 
         });
 });
 
+test('should handle strategy variants', async () => {
+    const feature = { name: uuidv4(), impressionData: false };
+    await app.createFeature(feature.name);
+
+    const strategyWithInvalidVariant = {
+        name: uuidv4(),
+        constraints: [],
+        variants: [
+            {
+                name: 'invalidVariant',
+                weight: 1000,
+                stickiness: 'default',
+                weightType: 'fix',
+            },
+        ], // it should be variable
+    };
+
+    const variant = {
+        name: 'variantName',
+        weight: 1,
+        weightType: 'variable',
+        stickiness: 'default',
+    };
+    const updatedVariant1 = {
+        name: 'updatedVariant1',
+        weight: 500,
+        weightType: 'variable',
+        stickiness: 'default',
+    };
+    const updatedVariant2 = {
+        name: 'updatedVariant2',
+        weight: 500,
+        weightType: 'variable',
+        stickiness: 'default',
+    };
+    const strategyWithValidVariant = {
+        name: uuidv4(),
+        constraints: [],
+        variants: [variant],
+    };
+
+    const featureStrategiesPath = `/api/admin/projects/default/features/${feature.name}/environments/default/strategies`;
+
+    await app.request
+        .post(featureStrategiesPath)
+        .send(strategyWithInvalidVariant)
+        .expect(400);
+
+    await createStrategy(feature.name, strategyWithValidVariant);
+
+    const { body: strategies } = await app.request.get(featureStrategiesPath);
+
+    expect(strategies).toMatchObject([
+        {
+            variants: [{ ...variant, weight: 1000 }], // weight was fixed
+        },
+    ]);
+
+    await updateStrategy(feature.name, strategies[0].id, {
+        ...strategies[0],
+        variants: [updatedVariant1, updatedVariant2],
+    });
+
+    const { body: updatedStrategies } = await app.request.get(
+        featureStrategiesPath,
+    );
+
+    expect(updatedStrategies).toMatchObject([
+        {
+            variants: [updatedVariant1, updatedVariant2],
+        },
+    ]);
+});
+
 test('should reject invalid constraint values for multi-valued constraints', async () => {
     const project = await db.stores.projectStore.create({
         id: uuidv4(),

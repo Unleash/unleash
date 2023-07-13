@@ -25,7 +25,9 @@ export type IFlagKey =
     | 'customRootRoles'
     | 'strategySplittedButton'
     | 'strategyVariant'
-    | 'newProjectLayout';
+    | 'newProjectLayout'
+    | 'slackAppAddon'
+    | 'emitPotentiallyStaleEvents';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -116,6 +118,15 @@ const flags: IFlags = {
     ),
     strategyVariant: parseEnvVarBoolean(
         process.env.UNLEASH_STRATEGY_VARIANT,
+        false,
+    ),
+    slackAppAddon: parseEnvVarBoolean(
+        process.env.UNLEASH_SLACK_APP_ADDON,
+        false,
+    ),
+
+    emitPotentiallyStaleEvents: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EMIT_POTENTIALLY_STALE_EVENTS,
         false,
     ),
 };

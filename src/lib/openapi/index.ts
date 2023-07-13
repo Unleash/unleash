@@ -54,7 +54,9 @@ import {
     featureTypesSchema,
     featureUsageSchema,
     featureVariantsSchema,
-    feedbackSchema,
+    feedbackCreateSchema,
+    feedbackUpdateSchema,
+    feedbackResponseSchema,
     groupSchema,
     groupsSchema,
     groupUserModelSchema,
@@ -108,7 +110,8 @@ import {
     setStrategySortOrderSchema,
     setUiConfigSchema,
     sortOrderSchema,
-    splashSchema,
+    splashRequestSchema,
+    splashResponseSchema,
     stateSchema,
     strategiesSchema,
     strategySchema,
@@ -145,6 +148,8 @@ import {
     versionSchema,
     advancedPlaygroundFeatureSchema,
     telemetrySettingsSchema,
+    strategyVariantSchema,
+    createStrategyVariantSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -253,7 +258,9 @@ export const schemas: UnleashSchemas = {
     featureTypesSchema,
     featureUsageSchema,
     featureVariantsSchema,
-    feedbackSchema,
+    feedbackCreateSchema,
+    feedbackUpdateSchema,
+    feedbackResponseSchema,
     groupSchema,
     groupsSchema,
     groupUserModelSchema,
@@ -305,7 +312,8 @@ export const schemas: UnleashSchemas = {
     setStrategySortOrderSchema,
     setUiConfigSchema,
     sortOrderSchema,
-    splashSchema,
+    splashRequestSchema,
+    splashResponseSchema,
     stateSchema,
     strategiesSchema,
     strategySchema,
@@ -347,6 +355,8 @@ export const schemas: UnleashSchemas = {
     importTogglesValidateItemSchema,
     contextFieldStrategiesSchema,
     telemetrySettingsSchema,
+    strategyVariantSchema,
+    createStrategyVariantSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

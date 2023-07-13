@@ -230,8 +230,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 <ConditionallyRender
                                     condition={
                                         featureCount !== undefined &&
-                                        featureLimit !== undefined &&
-                                        featureLimit.length > 0
+                                        Boolean(featureLimit)
                                     }
                                     show={
                                         <Box>

@@ -3,6 +3,7 @@ import { constraintSchema } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
 import { variantSchema } from './variant-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
 
 export const featureEnvironmentSchema = {
     $id: '#/components/schemas/featureEnvironmentSchema',
@@ -68,6 +69,7 @@ export const featureEnvironmentSchema = {
             constraintSchema,
             parametersSchema,
             featureStrategySchema,
+            strategyVariantSchema,
             variantSchema,
         },
     },

@@ -236,7 +236,6 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     </StyledRow>
                 </StyledFormControl>
             </StyledContainer>
-
             <StyledButtonContainer>
                 {children}
                 <StyledCancelButton onClick={handleCancel}>

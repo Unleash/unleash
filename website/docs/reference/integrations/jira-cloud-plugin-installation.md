@@ -21,9 +21,9 @@ For Jira Data Center, check out the [Jira Server plugin](jira-server-plugin-inst
 
 You will need an Unleash admin user to configure the access tokens needed to connect the plugin to Unleash.
 
-For Unleash Open Source this plugin requires the use of an [Admin API token](../api-tokens-and-client-keys.mdx) to connect.
+This plugin requires an Unleash Pro or an Unleash Enterprise instance.
 
-For Unleash Enterprise we recommend using a [service account](../service-accounts.md). Service accounts are also required to integrate with [Change Requests](../change-requests.md)
+We recommend using a [service account](../service-accounts.md) token for communicating with Unleash. Service accounts are also required to integrate with [Change Requests](../change-requests.md)
 
 ### Jira
 
@@ -31,7 +31,13 @@ You will need a Jira admin user.
 
 ## Installation
 
-If you have an Unleash enterprise license you're welcome to reach out to us at sales@getunleash.io for a free plugin license, otherwise you'll need to try the plugin for 30 days free or purchase a license through the marketplace.
+Start by visiting the [Landing page for the Unleash Enterprise For Jira plugin on Atlassian marketplace](https://marketplace.atlassian.com/apps/1231447/unleash-enterprise-for-jira?hosting=cloud&tab=overview).
+
+![Atlassian marketplace landing page for the Unleash Enterprise For Jira plugin.](/img/unleash-marketplace-for-unleash-enterprise-jira-plugin.png)
+
+1. Click the yellow button in the top right corner labeled "Get it now"
+2. Choose which site to install the app to.
+3. Click the blue "Install app" button located at the bottom right.
 
 ## Configuring the plugin {#configure-plugin}
 

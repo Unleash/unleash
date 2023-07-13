@@ -439,6 +439,14 @@ class FeatureToggleService {
             strategyConfig.parameters.stickiness = 'default';
         }
 
+        if (strategyConfig.variants && strategyConfig.variants.length > 0) {
+            await variantsArraySchema.validateAsync(strategyConfig.variants);
+            const fixedVariants = this.fixVariantWeights(
+                strategyConfig.variants,
+            );
+            strategyConfig.variants = fixedVariants;
+        }
+
         try {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
@@ -446,6 +454,7 @@ class FeatureToggleService {
                     title: strategyConfig.title,
                     disabled: strategyConfig.disabled,
                     constraints: strategyConfig.constraints || [],
+                    variants: strategyConfig.variants || [],
                     parameters: strategyConfig.parameters || {},
                     sortOrder: strategyConfig.sortOrder,
                     projectId,
@@ -560,6 +569,12 @@ class FeatureToggleService {
                 updates.constraints = await this.validateConstraints(
                     updates.constraints,
                 );
+            }
+
+            if (updates.variants && updates.variants.length > 0) {
+                await variantsArraySchema.validateAsync(updates.variants);
+                const fixedVariants = this.fixVariantWeights(updates.variants);
+                updates.variants = fixedVariants;
             }
 
             const strategy = await this.featureStrategiesStore.updateStrategy(
@@ -756,6 +771,7 @@ class FeatureToggleService {
                     name: strat.strategyName,
                     constraints: strat.constraints,
                     parameters: strat.parameters,
+                    variants: strat.variants,
                     title: strat.title,
                     disabled: strat.disabled,
                     sortOrder: strat.sortOrder,
@@ -921,6 +937,15 @@ class FeatureToggleService {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
         const exists = await this.projectStore.hasProject(projectId);
+
+        if (
+            this.flagResolver.isEnabled('newProjectLayout') &&
+            (await this.projectStore.isFeatureLimitReached(projectId))
+        ) {
+            throw new InvalidOperationError(
+                'You have reached the maximum number of feature toggles for this project.',
+            );
+        }
         if (exists) {
             let featureData;
             if (isValidated) {
@@ -1837,17 +1862,14 @@ class FeatureToggleService {
     ): Promise<IVariant[]> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
-        const oldVariants: { [env: string]: IVariant[] } = environments.reduce(
-            async (result, environment) => {
-                result[environment] = await this.featureEnvironmentStore.get({
-                    featureName,
-                    environment,
-                });
-                return result;
-            },
-            {},
-        );
-
+        const oldVariants: { [env: string]: IVariant[] } = {};
+        for (const env of environments) {
+            const featureEnv = await this.featureEnvironmentStore.get({
+                featureName,
+                environment: env,
+            });
+            oldVariants[env] = featureEnv.variants || [];
+        }
         await this.eventStore.batchStore(
             environments.map(
                 (environment) =>
@@ -1958,6 +1980,10 @@ class FeatureToggleService {
                 }
             }
         }
+    }
+
+    async markPotentiallyStaleFeatures(): Promise<void> {
+        await this.featureToggleStore.markPotentiallyStaleFeatures();
     }
 }
 

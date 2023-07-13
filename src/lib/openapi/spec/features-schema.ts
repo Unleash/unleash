@@ -7,6 +7,7 @@ import { constraintSchema } from './constraint-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
 import { environmentSchema } from './environment-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
 
 export const featuresSchema = {
     $id: '#/components/schemas/featuresSchema',
@@ -36,6 +37,7 @@ export const featuresSchema = {
             overrideSchema,
             featureEnvironmentSchema,
             featureStrategySchema,
+            strategyVariantSchema,
             parametersSchema,
             variantSchema,
         },

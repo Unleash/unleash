@@ -10,6 +10,8 @@ import { featureEnvironmentSchema } from './feature-environment-schema';
 import { projectStatsSchema } from './project-stats-schema';
 import { createFeatureStrategySchema } from './create-feature-strategy-schema';
 import { projectEnvironmentSchema } from './project-environment-schema';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
 
 export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',
@@ -50,6 +52,13 @@ export const projectOverviewSchema = {
             example: 'open',
             description:
                 "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+        },
+        featureLimit: {
+            type: 'number',
+            nullable: true,
+            example: 100,
+            description:
+                'A limit on the number of features allowed in the project. Null if no limit.',
         },
         members: {
             type: 'number',
@@ -116,12 +125,14 @@ export const projectOverviewSchema = {
             environmentSchema,
             projectEnvironmentSchema,
             createFeatureStrategySchema,
+            createStrategyVariantSchema,
             constraintSchema,
             featureSchema,
             featureEnvironmentSchema,
             overrideSchema,
             parametersSchema,
             featureStrategySchema,
+            strategyVariantSchema,
             variantSchema,
             projectStatsSchema,
         },

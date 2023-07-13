@@ -26,6 +26,7 @@ export interface IStrategyConfig {
     name: string;
     featureName?: string;
     constraints?: IConstraint[];
+    variants?: IStrategyVariant[];
     segments?: number[];
     parameters?: { [key: string]: string };
     sortOrder?: number;
@@ -41,6 +42,7 @@ export interface IFeatureStrategy {
     parameters: { [key: string]: string };
     sortOrder?: number;
     constraints: IConstraint[];
+    variants?: IStrategyVariant[];
     createdAt?: Date;
     segments?: number[];
     title?: string | null;
@@ -130,6 +132,8 @@ export interface IVariant {
     }[];
 }
 
+export type IStrategyVariant = Omit<IVariant, 'overrides'>;
+
 export interface IEnvironment {
     name: string;
     type: string;
@@ -196,7 +200,7 @@ export interface IProjectOverview {
     createdAt: Date | undefined;
     stats?: IProjectStats;
     mode: ProjectMode;
-
+    featureLimit?: number;
     defaultStickiness: string;
 }
 
@@ -384,6 +388,7 @@ export interface IProject {
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
     defaultStickiness: string;
+    featureLimit?: number;
 }
 
 /**

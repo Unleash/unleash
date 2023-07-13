@@ -1,24 +1,18 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const feedbackSchema = {
-    $id: '#/components/schemas/feedbackSchema',
+export const feedbackUpdateSchema = {
+    $id: '#/components/schemas/feedbackUpdateSchema',
     type: 'object',
-    additionalProperties: false,
-    description: 'User feedback information',
+    description: 'User feedback information to be updated.',
     properties: {
         userId: {
-            description: 'Identifier of the current user giving feedback',
+            description: 'The ID of the user that gave the feedback.',
             type: 'integer',
             example: 2,
         },
-        feedbackId: {
-            description: 'The name of the feedback session',
-            type: 'string',
-            example: 'pnps',
-        },
         neverShow: {
             description:
-                '`true` when user opts-in to never show the feedback again.',
+                '`true` if the user has asked never to see this feedback questionnaire again.',
             type: 'boolean',
             example: false,
         },
@@ -33,4 +27,4 @@ export const feedbackSchema = {
     components: {},
 } as const;
 
-export type FeedbackSchema = FromSchema<typeof feedbackSchema>;
+export type FeedbackUpdateSchema = FromSchema<typeof feedbackUpdateSchema>;

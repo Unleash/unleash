@@ -12,7 +12,7 @@ import {
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_TAG_TYPE,
 } from '../../types';
-import { InvalidOperationError } from '../../error';
+import { PermissionError } from '../../error';
 
 type Mode = 'regular' | 'change_request';
 
@@ -149,9 +149,7 @@ export class ImportPermissionsService {
             mode,
         );
         if (missingPermissions.length > 0) {
-            throw new InvalidOperationError(
-                'You are missing permissions to import',
-            );
+            throw new PermissionError(missingPermissions);
         }
     }
 }

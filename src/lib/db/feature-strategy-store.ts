@@ -582,7 +582,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     }
 
     async updateSortOrder(id: string, sortOrder: number): Promise<void> {
-        return this.db<IFeatureStrategiesTable>(T.featureStrategies)
+        await this.db<IFeatureStrategiesTable>(T.featureStrategies)
             .where({ id })
             .update({ sort_order: sortOrder });
     }

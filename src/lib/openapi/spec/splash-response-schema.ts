@@ -4,7 +4,7 @@ import { splashRequestSchema } from './splash-request-schema';
 export const splashResponseSchema = {
     ...splashRequestSchema,
     $id: '#/components/schemas/splashResponseSchema',
-    additionalProperties: true,
+    additionalProperties: false,
     description: 'Data related to a user having seen a splash screen.',
     required: [...splashRequestSchema.required, 'seen'],
     properties: {

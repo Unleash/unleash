@@ -410,22 +410,20 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             potentially_stale: boolean | null;
         }[] = await updateQuery.returning(['name', 'potentially_stale']);
 
-        const diff: { name: string; potentiallyStale: boolean }[] = currentState
+        const diff = currentState
             .map(({ name, potentially_stale }) => {
                 const previous = previousState[name] ?? false;
                 const hasChanged = previous !== (potentially_stale ?? false);
                 if (hasChanged) {
-                    const result: { name: string; potentiallyStale: boolean } =
-                        {
-                            name,
-                            potentiallyStale: potentially_stale ?? false,
-                        };
-                    return result;
+                    return {
+                        name,
+                        potentiallyStale: potentially_stale ?? false,
+                    };
                 } else {
                     return undefined;
                 }
             })
-            .filter(Boolean);
+            .filter(Boolean) as { name: string; potentiallyStale: boolean }[];
 
         return diff;
     }

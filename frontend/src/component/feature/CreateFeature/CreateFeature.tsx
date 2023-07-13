@@ -20,6 +20,17 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
+export const isFeatureLimitReached = (
+    featureLimit: number | null | undefined,
+    currentFeatureCount: number
+): boolean => {
+    return (
+        featureLimit !== null &&
+        featureLimit !== undefined &&
+        featureLimit <= currentFeatureCount
+    );
+};
+
 const CreateFeature = () => {
     const { setToastData, setToastApiError } = useToast();
     const { setShowFeedback } = useContext(UIContext);
@@ -84,10 +95,10 @@ const CreateFeature = () => {
     };
 
     const featureLimitReached =
-        projectInfo.featureLimit !== null &&
-        projectInfo.featureLimit !== undefined &&
-        projectInfo.featureLimit <= projectInfo.features.length &&
-        Boolean(uiConfig.flags.newProjectLayout);
+        isFeatureLimitReached(
+            projectInfo.featureLimit,
+            projectInfo.features.length
+        ) && Boolean(uiConfig.flags.newProjectLayout);
     return (
         <FormTemplate
             loading={loading}

@@ -7,7 +7,7 @@ export const featureVariantsSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'variants'],
-    description: 'A schema for feature toggle variants list.',
+    description: 'A versioned collection of feature toggle variants.',
     properties: {
         version: {
             type: 'integer',
@@ -19,7 +19,7 @@ export const featureVariantsSchema = {
             items: {
                 $ref: '#/components/schemas/variantSchema',
             },
-            description: 'The variants available for a feature toggle.',
+            description: 'All variants defined for a specific feature toggle.',
         },
     },
     components: {

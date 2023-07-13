@@ -13,8 +13,9 @@ export const cloneFeatureSchema = {
         },
         replaceGroupId: {
             type: 'boolean',
+            example: true,
             description:
-                'Use new feature name as group ID in order to create different hashing for stickiness',
+                'Whether to use the new feature name as its group ID or not. Group ID is used for calculating [stickiness](https://docs.getunleash.io/reference/stickiness#calculation). Defaults to true.',
         },
     },
     components: {},

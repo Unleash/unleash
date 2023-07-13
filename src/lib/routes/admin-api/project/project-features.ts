@@ -238,7 +238,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    summary: 'Bulk disabled a list of features',
+                    summary: 'Bulk disable a list of features',
                     description:
                         'This endpoint disables multiple feature toggles.',
                     operationId: 'bulkToggleFeaturesEnvironmentOff',

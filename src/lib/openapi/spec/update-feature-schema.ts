@@ -5,7 +5,7 @@ export const updateFeatureSchema = {
     $id: '#/components/schemas/updateFeatureSchema',
     type: 'object',
     required: ['name'],
-    description: 'Update a feature toggle',
+    description: 'Data used for updating a feature toggle',
     properties: {
         name: {
             type: 'string',

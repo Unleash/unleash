@@ -6,7 +6,7 @@ export const environmentsSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'environments'],
-    description: 'List of environments',
+    description: 'A versioned list of environments',
     properties: {
         version: {
             type: 'integer',

@@ -2370,7 +2370,7 @@ test('should handle strategy variants', async () => {
     const variant = {
         name: 'variantName',
         weight: 1,
-        weightType: 'variable',
+        weightType: 'variable' as const,
         stickiness: 'default',
     };
     const updatedVariant1 = {

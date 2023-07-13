@@ -44,108 +44,96 @@ class AddonController extends Controller {
         this.addonService = addonService;
         this.openApiService = openApiService;
 
-        this.route({
+        this.routeWithOpenApi(this.openApiService)({
             method: 'get',
             path: '',
             permission: NONE,
             handler: this.getAddons,
-            middleware: [
-                openApiService.validPath({
-                    summary: 'Get all addons and providers',
-                    description:
-                        'Retrieve all addons and providers that are defined on this Unleash instance.',
-                    tags: ['Addons'],
-                    operationId: 'getAddons',
-                    responses: {
-                        ...getStandardResponses(401),
-                        200: createResponseSchema('addonsSchema'),
-                    },
-                }),
-            ],
+            openApi: {
+                summary: 'Get all addons and providers',
+                description:
+                    'Retrieve all addons and providers that are defined on this Unleash instance.',
+                tags: ['Addons'],
+                operationId: 'getAddons',
+                responses: {
+                    ...getStandardResponses(401),
+                    200: createResponseSchema('addonsSchema'),
+                },
+            },
         });
 
-        this.route({
+        this.routeWithOpenApi(this.openApiService)({
             method: 'post',
             path: '',
             handler: this.createAddon,
             permission: CREATE_ADDON,
-            middleware: [
-                openApiService.validPath({
-                    summary: 'Create a new addon',
-                    description:
-                        'Create an addon instance. The addon must use one of the providers available on this Unleash instance.',
-                    tags: ['Addons'],
-                    operationId: 'createAddon',
-                    requestBody: createRequestSchema('addonCreateUpdateSchema'),
-                    responses: {
-                        200: createResponseSchema('addonSchema'),
-                        ...getStandardResponses(400, 401, 403, 413, 415),
-                    },
-                }),
-            ],
+            openApi: {
+                summary: 'Create a new addon',
+                description:
+                    'Create an addon instance. The addon must use one of the providers available on this Unleash instance.',
+                tags: ['Addons'],
+                operationId: 'createAddon',
+                requestBody: createRequestSchema('addonCreateUpdateSchema'),
+                responses: {
+                    200: createResponseSchema('addonSchema'),
+                },
+            },
         });
 
-        this.route({
+        this.routeWithOpenApi(this.openApiService)({
             method: 'get',
             path: `${PATH}:id`,
             handler: this.getAddon,
             permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    summary: 'Get a specific addon',
-                    description:
-                        'Retrieve information about the addon whose ID matches the ID in the request URL.',
-                    tags: ['Addons'],
-                    operationId: 'getAddon',
-                    responses: {
-                        200: createResponseSchema('addonSchema'),
-                        ...getStandardResponses(401),
-                    },
-                }),
-            ],
+            openApi: {
+                summary: 'Get a specific addon',
+                description:
+                    'Retrieve information about the addon whose ID matches the ID in the request URL.',
+                tags: ['Addons'],
+                operationId: 'getAddon',
+                responses: {
+                    200: createResponseSchema('addonSchema'),
+                },
+            },
         });
 
-        this.route({
+        this.routeWithOpenApi(this.openApiService)({
             method: 'put',
             path: `${PATH}:id`,
             handler: this.updateAddon,
             permission: UPDATE_ADDON,
-            middleware: [
-                openApiService.validPath({
-                    summary: 'Update an addon',
-                    description: `Update the addon with a specific ID. Any fields in the update object will be updated. Properties that are not included in the update object will not be affected. To empty a property, pass \`null\` as that property's value.
+            openApi: {
+                summary: 'Update an addon',
+                description: `Update the addon with a specific ID. Any fields in the update object will be updated. Properties that are not included in the update object will not be affected. To empty a property, pass \`null\` as that property's value.
 
 Note: passing \`null\` as a value for the description property will set it to an empty string.`,
-                    tags: ['Addons'],
-                    operationId: 'updateAddon',
-                    requestBody: createRequestSchema('addonCreateUpdateSchema'),
-                    responses: {
-                        200: createResponseSchema('addonSchema'),
-                        ...getStandardResponses(400, 401, 403, 404, 413, 415),
-                    },
-                }),
-            ],
+                tags: ['Addons'],
+                operationId: 'updateAddon',
+                requestBody: createRequestSchema('addonCreateUpdateSchema'),
+                responses: {
+                    200: createResponseSchema('addonSchema'),
+                    ...getStandardResponses(404),
+                },
+            },
         });
 
-        this.route({
+        this.routeWithOpenApi(this.openApiService)({
             method: 'delete',
             path: `${PATH}:id`,
             handler: this.deleteAddon,
             acceptAnyContentType: true,
             permission: DELETE_ADDON,
-            middleware: [
-                openApiService.validPath({
-                    summary: 'Delete an addon',
-                    description:
-                        'Delete the addon specified by the ID in the request path.',
-                    tags: ['Addons'],
-                    operationId: 'deleteAddon',
-                    responses: {
-                        200: emptyResponse,
-                        ...getStandardResponses(401, 403, 404),
-                    },
-                }),
-            ],
+            openApi: {
+                summary: 'Delete an addon',
+                description:
+                    'Delete the addon specified by the ID in the request path.',
+                tags: ['Addons'],
+                operationId: 'deleteAddon',
+                responses: {
+                    200: emptyResponse,
+                    ...getStandardResponses(404),
+                },
+            },
         });
     }
 

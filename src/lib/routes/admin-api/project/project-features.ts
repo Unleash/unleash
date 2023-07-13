@@ -310,6 +310,7 @@ export default class ProjectFeaturesController extends Controller {
                     operationId: 'getFeatureStrategy',
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -330,7 +331,7 @@ export default class ProjectFeaturesController extends Controller {
                     ),
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(401, 403),
+                        ...getStandardResponses(400, 401, 403),
                     },
                 }),
             ],
@@ -353,6 +354,7 @@ export default class ProjectFeaturesController extends Controller {
                     ),
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
+                        ...getStandardResponses(400, 401, 403, 404, 415),
                     },
                 }),
             ],
@@ -373,6 +375,7 @@ export default class ProjectFeaturesController extends Controller {
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
+                        ...getStandardResponses(400, 401, 403, 404, 415),
                     },
                 }),
             ],
@@ -411,7 +414,10 @@ export default class ProjectFeaturesController extends Controller {
                         'A list of all features for the specified project.',
                     tags: ['Features'],
                     operationId: 'getFeatures',
-                    responses: { 200: createResponseSchema('featuresSchema') },
+                    responses: {
+                        200: createResponseSchema('featuresSchema'),
+                        ...getStandardResponses(400, 401, 403),
+                    },
                 }),
             ],
         });
@@ -477,7 +483,7 @@ export default class ProjectFeaturesController extends Controller {
                             description:
                                 'You either do not have the required permissions or used an invalid URL.',
                         },
-                        ...getStandardResponses(401, 404),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -544,7 +550,7 @@ export default class ProjectFeaturesController extends Controller {
                             description:
                                 'You either do not have the required permissions or used an invalid URL.',
                         },
-                        ...getStandardResponses(401, 404),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],

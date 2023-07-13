@@ -21,7 +21,8 @@ export const getAddons: (args: {
     const slackAddon = new SlackAddon({ getLogger, unleashUrl });
 
     if (slackAppAddonEnabled) {
-        slackAddon.definition.deprecated = true;
+        slackAddon.definition.deprecated =
+            'This addon is deprecated. Please try the new Slack App addon instead.';
     }
 
     const addons: Addon[] = [

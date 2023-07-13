@@ -29,7 +29,7 @@ interface IProvider {
     parameters: object[];
     events: string[];
     installation?: IAddonInstallation;
-    deprecated?: boolean;
+    deprecated?: string;
 }
 
 interface IAvailableAddonsProps {

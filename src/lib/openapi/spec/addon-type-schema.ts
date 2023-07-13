@@ -173,10 +173,11 @@ export const addonTypeSchema = {
             },
         },
         deprecated: {
-            type: 'boolean',
+            type: 'string',
             description:
-                'Whether or not this addon type is deprecated. Deprecated addons will show a badge with this information on the UI.',
-            example: true,
+                'This should be used to inform the user that this addon type is deprecated and should not be used. Deprecated addons will show a badge with this information on the UI.',
+            example:
+                'This addon is deprecated. Please try the new addon instead.',
         },
     },
     components: {

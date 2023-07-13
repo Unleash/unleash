@@ -245,7 +245,7 @@ export interface IAddonDefinition {
     displayName: string;
     documentationUrl: string;
     description: string;
-    deprecated?: boolean;
+    deprecated?: string;
     parameters?: IAddonParameterDefinition[];
     events?: string[];
     tagTypes?: ITagType[];

@@ -19,13 +19,10 @@ import { IAddonDefinition } from '../types/model';
 const slackAppDefinition: IAddonDefinition = {
     name: 'slack-app',
     displayName: 'Slack App',
-    description: 'Allows Unleash to post updates to Slack.',
+    description:
+        'The Unleash Slack App posts messages to your Slack workspace. You can decide which channels to post to by configuring your feature toggles with "slack" tags. For example, if you\'d like the bot to post messages to the #general channel, you should configure your feature toggle with the "slack:general" tag.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/slack-app',
     alerts: [
-        {
-            type: 'info',
-            text: 'The Unleash Slack App posts messages to your Slack workspace. You can decide which channels to post to by configuring your feature toggles with "slack" tags. For example, if you\'d like the bot to post messages to the #general channel, you should configure your feature toggle with the "slack:general" tag.',
-        },
         {
             type: 'info',
             text: `The Unleash Slack App bot has access to public channels by default. If you want the bot to post messages to private channels, you'll need to invite it to those channels.`,

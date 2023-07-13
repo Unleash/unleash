@@ -21,7 +21,7 @@ export interface IAddonProvider {
     tagTypes: ITagType[];
     installation?: IAddonInstallation;
     alerts?: IAddonAlert[];
-    deprecated?: boolean;
+    deprecated?: string;
 }
 
 export interface IAddonInstallation {

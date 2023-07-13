@@ -382,12 +382,47 @@ class FeatureToggleService {
 
     async updateStrategiesSortOrder(
         featureName: string,
+        environment: string,
+        project: string,
+        createdBy: string,
         sortOrders: SetStrategySortOrderSchema,
     ): Promise<Saved<any>> {
         await Promise.all(
-            sortOrders.map(async ({ id, sortOrder }) =>
-                this.featureStrategiesStore.updateSortOrder(id, sortOrder),
-            ),
+            sortOrders.map(async ({ id, sortOrder }) => {
+                const strategyToUpdate =
+                    await this.featureStrategiesStore.getStrategyById(id);
+                await this.featureStrategiesStore.updateSortOrder(
+                    id,
+                    sortOrder,
+                );
+                const updatedStrategy =
+                    await this.featureStrategiesStore.getStrategyById(id);
+
+                const tags = await this.tagStore.getAllTagsForFeature(
+                    featureName,
+                );
+                const segments = await this.segmentService.getByStrategy(
+                    strategyToUpdate.id,
+                );
+                const strategy = this.featureStrategyToPublic(
+                    updatedStrategy,
+                    segments,
+                );
+                await this.eventStore.store(
+                    new FeatureStrategyUpdateEvent({
+                        featureName,
+                        environment,
+                        project,
+                        createdBy,
+                        preData: this.featureStrategyToPublic(
+                            strategyToUpdate,
+                            segments,
+                        ),
+                        data: strategy,
+                        tags: tags,
+                    }),
+                );
+            }),
         );
     }
 

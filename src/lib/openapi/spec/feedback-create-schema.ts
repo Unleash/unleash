@@ -4,6 +4,7 @@ export const feedbackCreateSchema = {
     $id: '#/components/schemas/feedbackCreateSchema',
     required: ['feedbackId'],
     type: 'object',
+    description: 'User feedback information to be created.',
     properties: {
         neverShow: {
             description:

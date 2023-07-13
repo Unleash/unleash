@@ -4,6 +4,7 @@ export const feedbackResponseSchema = {
     $id: '#/components/schemas/feedbackResponseSchema',
     additionalProperties: false,
     type: 'object',
+    description: 'User feedback information about a particular feedback item.',
     properties: {
         userId: {
             description: 'The ID of the user that gave the feedback.',

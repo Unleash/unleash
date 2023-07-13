@@ -3,7 +3,7 @@ import { FromSchema } from 'json-schema-to-ts';
 export const feedbackUpdateSchema = {
     $id: '#/components/schemas/feedbackUpdateSchema',
     type: 'object',
-    description: 'User feedback information',
+    description: 'User feedback information to be updated.',
     properties: {
         userId: {
             description: 'The ID of the user that gave the feedback.',

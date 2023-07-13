@@ -131,13 +131,6 @@ export const addonTypeSchema = {
                         'A URL to where the addon configuration should redirect to install addons of this type.',
                     example: 'https://unleash-slack-app.vercel.app/install',
                 },
-                warning: {
-                    type: 'string',
-                    description:
-                        'A warning message to display to the user when installing addons of this type.',
-                    example:
-                        "Please ensure you have the Unleash Slack App installed in your Slack workspace if you haven't installed it already. If you want the Unleash Slack App bot to post messages to private channels, you'll need to /invite it to those channels.",
-                },
                 title: {
                     type: 'string',
                     description:
@@ -150,6 +143,32 @@ export const addonTypeSchema = {
                         'The help text of the installation configuration. This will be displayed to the user when installing addons of this type.',
                     example:
                         'Clicking the Install button will send you to Slack to initiate the installation procedure for the Unleash Slack app for your workspace',
+                },
+            },
+        },
+        alerts: {
+            type: 'array',
+            description:
+                'A list of alerts to display to the user when installing addons of this type.',
+            items: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['type', 'text'],
+                properties: {
+                    type: {
+                        type: 'string',
+                        enum: ['success', 'info', 'warning', 'error'],
+                        description:
+                            'The type of alert. This determines the color of the alert.',
+                        example: 'info',
+                    },
+                    text: {
+                        type: 'string',
+                        description:
+                            'The text of the alert. This is what will be displayed to the user.',
+                        example:
+                            "Please ensure you have the Unleash Slack App installed in your Slack workspace if you haven't installed it already. If you want the Unleash Slack App bot to post messages to private channels, you'll need to /invite it to those channels.",
+                    },
                 },
             },
         },

@@ -6,7 +6,13 @@ import {
     useState,
     VFC,
 } from 'react';
-import { Button, Divider, FormControlLabel, Switch } from '@mui/material';
+import {
+    Alert,
+    Button,
+    Divider,
+    FormControlLabel,
+    Switch,
+} from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
 import { IAddon, IAddonProvider } from 'interfaces/addons';
@@ -30,6 +36,7 @@ import {
 import {
     StyledForm,
     StyledFormSection,
+    StyledAlerts,
     StyledHelpText,
     StyledTextField,
     StyledContainer,
@@ -244,6 +251,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         description,
         documentationUrl = 'https://unleash.github.io/docs/addons',
         installation,
+        alerts,
     } = provider ? provider : ({} as Partial<IAddonProvider>);
 
     return (
@@ -256,12 +264,16 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         >
             <StyledForm onSubmit={onSubmit}>
                 <StyledContainer>
+                    <StyledAlerts>
+                        {alerts?.map(({ type, text }) => (
+                            <Alert severity={type}>{text}</Alert>
+                        ))}
+                    </StyledAlerts>
                     <ConditionallyRender
                         condition={Boolean(installation)}
                         show={() => (
                             <AddonInstall
                                 url={installation!.url}
-                                warning={installation!.warning}
                                 title={installation!.title}
                                 helpText={installation!.helpText}
                             />

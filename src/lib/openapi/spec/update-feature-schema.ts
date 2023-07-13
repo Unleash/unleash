@@ -4,7 +4,6 @@ import { constraintSchema } from './constraint-schema';
 export const updateFeatureSchema = {
     $id: '#/components/schemas/updateFeatureSchema',
     type: 'object',
-    required: ['name'],
     description: 'Data used for updating a feature toggle',
     properties: {
         description: {

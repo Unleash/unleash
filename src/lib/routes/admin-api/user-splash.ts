@@ -8,8 +8,11 @@ import { IAuthRequest } from '../unleash-types';
 import { NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { splashSchema, SplashSchema } from '../../openapi/spec/splash-schema';
-import { getStandardResponses } from 'lib/openapi';
+import {
+    splashRequestSchema,
+    SplashSchema,
+} from '../../openapi/spec/splash-request-schema';
+import { getStandardResponses } from '../../openapi';
 
 class UserSplashController extends Controller {
     private logger: Logger;
@@ -68,7 +71,7 @@ class UserSplashController extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            splashSchema.$id,
+            splashRequestSchema.$id,
             await this.userSplashService.updateSplash(splash),
         );
     }

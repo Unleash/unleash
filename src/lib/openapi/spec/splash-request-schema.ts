@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const splashSchema = {
-    $id: '#/components/schemas/splashSchema',
+export const splashRequestSchema = {
+    $id: '#/components/schemas/splashRequestSchema',
     type: 'object',
     description: 'Data related to a user having seen a splash screen.',
     required: ['userId', 'splashId'],
@@ -20,4 +20,4 @@ export const splashSchema = {
     components: {},
 } as const;
 
-export type SplashSchema = FromSchema<typeof splashSchema>;
+export type SplashSchema = FromSchema<typeof splashRequestSchema>;

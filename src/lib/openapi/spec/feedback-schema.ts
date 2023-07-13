@@ -5,7 +5,6 @@ export const feedbackSchema = {
     type: 'object',
     additionalProperties: false,
     description: 'User feedback information',
-    required: ['userId', 'feedbackId'],
     properties: {
         userId: {
             description: 'Identifier of the current user giving feedback',

@@ -14,7 +14,7 @@ export const createFeatureSchema = {
             type: 'string',
             example: 'release',
             description:
-                'The feature toggle's [type](https://docs.getunleash.io/reference/feature-toggle-types). One of experiment, kill-switch, release, operational, or permission',
+                "The feature toggle's [type](https://docs.getunleash.io/reference/feature-toggle-types). One of experiment, kill-switch, release, operational, or permission",
         },
         description: {
             type: 'string',

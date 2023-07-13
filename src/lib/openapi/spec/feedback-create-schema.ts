@@ -5,6 +5,14 @@ export const feedbackCreateSchema = {
     ...feedbackUpdateSchema,
     $id: '#/components/schemas/feedbackCreateSchema',
     required: ['feedbackId'],
+    properties: {
+        ...feedbackUpdateSchema.properties,
+        feedbackId: {
+            description: 'The name of the feedback session',
+            type: 'string',
+            example: 'pnps',
+        },
+    },
     components: {},
 } as const;
 

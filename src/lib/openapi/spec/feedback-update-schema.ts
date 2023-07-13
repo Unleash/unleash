@@ -10,11 +10,6 @@ export const feedbackUpdateSchema = {
             type: 'integer',
             example: 2,
         },
-        feedbackId: {
-            description: 'The name of the feedback session',
-            type: 'string',
-            example: 'pnps',
-        },
         neverShow: {
             description:
                 '`true` when user opts-in to never show this feedback questionnaire again. Defaults to `false`.',

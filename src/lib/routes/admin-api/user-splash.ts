@@ -9,6 +9,7 @@ import { NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { splashSchema, SplashSchema } from '../../openapi/spec/splash-schema';
+import { getStandardResponses } from 'lib/openapi';
 
 class UserSplashController extends Controller {
     private logger: Logger;
@@ -39,7 +40,13 @@ class UserSplashController extends Controller {
                 openApiService.validPath({
                     tags: ['Admin UI'],
                     operationId: 'updateSplashSettings',
-                    responses: { 200: createResponseSchema('splashSchema') },
+                    summary: 'Update splash settings',
+                    description:
+                        'This operation updates splash settings for a user, indicating that they have seen a particualar splash screen.',
+                    responses: {
+                        200: createResponseSchema('splashSchema'),
+                        ...getStandardResponses(400, 401, 403, 415),
+                    },
                 }),
             ],
         });

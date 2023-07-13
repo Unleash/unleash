@@ -33,7 +33,13 @@ beforeAll(async () => {
         );
     };
 
-    app = await setupAppWithCustomAuth(stores, preHook);
+    app = await setupAppWithCustomAuth(stores, preHook, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
 });
 
 afterAll(async () => {

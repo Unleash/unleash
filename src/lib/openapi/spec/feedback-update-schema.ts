@@ -6,13 +6,13 @@ export const feedbackUpdateSchema = {
     description: 'User feedback information',
     properties: {
         userId: {
-            description: 'Identifier of the current user giving feedback',
+            description: 'The ID of the user that gave the feedback.',
             type: 'integer',
             example: 2,
         },
         neverShow: {
             description:
-                '`true` when user opts-in to never show this feedback questionnaire again. Defaults to `false`.',
+                '`true` if the user has asked never to see this feedback questionnaire again.',
             type: 'boolean',
             example: false,
         },

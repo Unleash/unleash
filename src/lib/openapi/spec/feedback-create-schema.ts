@@ -1,12 +1,16 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { feedbackUpdateSchema } from './feedback-update-schema';
 
 export const feedbackCreateSchema = {
-    ...feedbackUpdateSchema,
     $id: '#/components/schemas/feedbackCreateSchema',
     required: ['feedbackId'],
+    type: 'object',
     properties: {
-        ...feedbackUpdateSchema.properties,
+        neverShow: {
+            description:
+                '`true` if the user has asked never to see this feedback questionnaire again. Defaults to `false`.',
+            type: 'boolean',
+            example: false,
+        },
         feedbackId: {
             description: 'The name of the feedback session',
             type: 'string',

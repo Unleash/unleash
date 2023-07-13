@@ -10,6 +10,8 @@ import { featureEnvironmentSchema } from './feature-environment-schema';
 import { projectStatsSchema } from './project-stats-schema';
 import { createFeatureStrategySchema } from './create-feature-strategy-schema';
 import { projectEnvironmentSchema } from './project-environment-schema';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
 
 export const healthOverviewSchema = {
     $id: '#/components/schemas/healthOverviewSchema',
@@ -121,12 +123,14 @@ export const healthOverviewSchema = {
             environmentSchema,
             projectEnvironmentSchema,
             createFeatureStrategySchema,
+            createStrategyVariantSchema,
             constraintSchema,
             featureSchema,
             featureEnvironmentSchema,
             overrideSchema,
             parametersSchema,
             featureStrategySchema,
+            strategyVariantSchema,
             variantSchema,
             projectStatsSchema,
         },

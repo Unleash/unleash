@@ -147,3 +147,5 @@ export * from './advanced-playground-feature-schema';
 export * from './advanced-playground-response-schema';
 export * from './advanced-playground-request-schema';
 export * from './telemetry-settings-schema';
+export * from './create-strategy-variant-schema';
+export * from './strategy-variant-schema';

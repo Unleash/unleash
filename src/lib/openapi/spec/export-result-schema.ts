@@ -11,6 +11,7 @@ import { overrideSchema } from './override-schema';
 import { variantsSchema } from './variants-schema';
 import { constraintSchema } from './constraint-schema';
 import { tagTypeSchema } from './tag-type-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
 
 export const exportResultSchema = {
     $id: '#/components/schemas/exportResultSchema',
@@ -170,6 +171,7 @@ export const exportResultSchema = {
         schemas: {
             featureSchema,
             featureStrategySchema,
+            strategyVariantSchema,
             featureEnvironmentSchema,
             contextFieldSchema,
             featureTagSchema,

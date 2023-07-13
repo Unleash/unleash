@@ -271,7 +271,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
                 .update(
                     'potentially_stale',
                     this.db.raw(
-                        `COALESCE (? > (features.created_at + ((
+                        `(? > (features.created_at + ((
                             SELECT feature_types.lifetime_days
                             FROM feature_types
                             WHERE feature_types.id = features.type
@@ -424,7 +424,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     async isPotentiallyStale(featureName: string): Promise<boolean> {
         const result = await this.db(TABLE)
-            .first([...FEATURE_COLUMNS, 'potentially_stale'])
+            .first(['potentially_stale'])
             .from(TABLE)
             .where({ name: featureName });
 

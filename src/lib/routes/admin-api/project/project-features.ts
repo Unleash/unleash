@@ -429,7 +429,10 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     operationId: 'createFeature',
                     requestBody: createRequestSchema('createFeatureSchema'),
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        ...getStandardResponses(401, 403, 404, 415),
+                    },
                 }),
             ],
         });
@@ -444,11 +447,14 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     summary: 'Clone a feature toggle',
                     description:
-                        'Create a copy of a feature toggle from a specified project.',
+                        'Creates a copy of the specified feature toggle. The copy can be created in any project.',
                     tags: ['Features'],
                     operationId: 'cloneFeature',
                     requestBody: createRequestSchema('cloneFeatureSchema'),
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        ...getStandardResponses(401, 403, 404, 415),
+                    },
                 }),
             ],
         });
@@ -462,7 +468,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     operationId: 'getFeature',
                     tags: ['Features'],
-                    summary: 'Get a feature.',
+                    summary: 'Get a feature',
                     description:
                         'This endpoint returns the information about the requested feature if the feature belongs to the specified project.',
                     responses: {
@@ -490,7 +496,10 @@ export default class ProjectFeaturesController extends Controller {
                     description:
                         'Updates the specified feature if the feature belongs to the specified project.',
                     requestBody: createRequestSchema('updateFeatureSchema'),
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        ...getStandardResponses(401, 403, 404, 415),
+                    },
                 }),
             ],
         });
@@ -504,11 +513,14 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'patchFeature',
-                    summary: 'Modify properties of a feature toggle',
+                    summary: 'Modify a feature toggle',
                     description:
                         'Change specific properties of a feature toggle.',
                     requestBody: createRequestSchema('patchesSchema'),
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        ...getStandardResponses(401, 403, 404, 415),
+                    },
                 }),
             ],
         });
@@ -567,11 +579,14 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'addTagToFeatures',
-                    summary:
+                    summary: 'Adds a tag to the specified features',
+                    description:
                         'Add a tag to a list of features. Create tags if needed.',
-                    description: 'Adds a tag to the specified features.',
                     requestBody: createRequestSchema('tagsBulkAddSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404, 415),
+                    },
                 }),
             ],
         });
@@ -658,7 +673,10 @@ export default class ProjectFeaturesController extends Controller {
         const userName = extractUsername(req);
         const created = await this.featureService.createFeatureToggle(
             projectId,
-            req.body,
+            {
+                ...req.body,
+                description: req.body.description || undefined,
+            },
             userName,
         );
 
@@ -700,7 +718,10 @@ export default class ProjectFeaturesController extends Controller {
         const userName = extractUsername(req);
         const created = await this.featureService.updateFeatureToggle(
             projectId,
-            data,
+            {
+                ...data,
+                name: featureName,
+            },
             userName,
             featureName,
         );

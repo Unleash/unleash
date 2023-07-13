@@ -921,6 +921,15 @@ class FeatureToggleService {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
         const exists = await this.projectStore.hasProject(projectId);
+
+        if (
+            this.flagResolver.isEnabled('newProjectLayout') &&
+            (await this.projectStore.isFeatureLimitReached(projectId))
+        ) {
+            throw new InvalidOperationError(
+                'You have reached the maximum number of feature toggles for this project.',
+            );
+        }
         if (exists) {
             let featureData;
             if (isValidated) {

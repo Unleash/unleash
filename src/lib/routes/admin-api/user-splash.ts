@@ -8,7 +8,9 @@ import { IAuthRequest } from '../unleash-types';
 import { NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { splashSchema, SplashSchema } from '../../openapi/spec/splash-schema';
+import { splashRequestSchema } from '../../openapi/spec/splash-request-schema';
+import { getStandardResponses } from '../../openapi';
+import { SplashResponseSchema } from 'lib/openapi/spec/splash-response-schema';
 
 class UserSplashController extends Controller {
     private logger: Logger;
@@ -39,7 +41,13 @@ class UserSplashController extends Controller {
                 openApiService.validPath({
                     tags: ['Admin UI'],
                     operationId: 'updateSplashSettings',
-                    responses: { 200: createResponseSchema('splashSchema') },
+                    summary: 'Update splash settings',
+                    description:
+                        'This operation updates splash settings for a user, indicating that they have seen a particualar splash screen.',
+                    responses: {
+                        200: createResponseSchema('splashResponseSchema'),
+                        ...getStandardResponses(400, 401, 403, 415),
+                    },
                 }),
             ],
         });
@@ -47,7 +55,7 @@ class UserSplashController extends Controller {
 
     private async updateSplashSettings(
         req: IAuthRequest<{ id: string }>,
-        res: Response<SplashSchema>,
+        res: Response<SplashResponseSchema>,
     ): Promise<void> {
         const { user } = req;
         const { id } = req.params;
@@ -61,7 +69,7 @@ class UserSplashController extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            splashSchema.$id,
+            splashRequestSchema.$id,
             await this.userSplashService.updateSplash(splash),
         );
     }

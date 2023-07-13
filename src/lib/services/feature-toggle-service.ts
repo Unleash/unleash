@@ -1965,6 +1965,10 @@ class FeatureToggleService {
             }
         }
     }
+
+    async markPotentiallyStaleFeatures(): Promise<void> {
+        await this.featureToggleStore.markPotentiallyStaleFeatures();
+    }
 }
 
 export default FeatureToggleService;

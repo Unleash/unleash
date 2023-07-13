@@ -1076,10 +1076,10 @@ class FeatureToggleService {
 
         const preData = await this.featureToggleStore.get(featureName);
 
-        const featureToggle = await this.featureToggleStore.update(projectId, {
-            ...featureData,
-            name: featureName,
-        });
+        const featureToggle = await this.featureToggleStore.update(
+            projectId,
+            featureData,
+        );
 
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
 

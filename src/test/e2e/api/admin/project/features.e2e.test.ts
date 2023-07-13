@@ -2357,7 +2357,14 @@ test('should handle strategy variants', async () => {
     const strategyWithInvalidVariant = {
         name: uuidv4(),
         constraints: [],
-        variants: [{}],
+        variants: [
+            {
+                name: 'invalidVariant',
+                weight: 1000,
+                stickiness: 'default',
+                weightType: 'fix',
+            },
+        ], // it should be variable
     };
 
     const variant = {

@@ -26,7 +26,8 @@ export type IFlagKey =
     | 'strategySplittedButton'
     | 'strategyVariant'
     | 'newProjectLayout'
-    | 'slackAppAddon';
+    | 'slackAppAddon'
+    | 'emitPotentiallyStaleEvents';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -121,6 +122,11 @@ const flags: IFlags = {
     ),
     slackAppAddon: parseEnvVarBoolean(
         process.env.UNLEASH_SLACK_APP_ADDON,
+        false,
+    ),
+
+    emitPotentiallyStaleEvents: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EMIT_POTENTIALLY_STALE_EVENTS,
         false,
     ),
 };

@@ -42,6 +42,7 @@ process.nextTick(async () => {
                         strategySplittedButton: true,
                         strategyVariant: true,
                         newProjectLayout: true,
+                        emitPotentiallyStaleEvents: true,
                     },
                 },
                 authentication: {

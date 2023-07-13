@@ -10,7 +10,8 @@ export const createStrategyVariantSchema = {
     properties: {
         name: {
             type: 'string',
-            description: 'The variant name. Must be unique for this feature toggle',
+            description:
+                'The variant name. Must be unique for this feature toggle',
             example: 'blue_group',
         },
         weight: {
@@ -38,9 +39,12 @@ export const createStrategyVariantSchema = {
             description: 'Extra data configured for this variant',
             properties: {
                 type: {
+                    description:
+                        'The type of the value. Commonly used types are string, json and csv.',
                     type: 'string',
                 },
                 value: {
+                    description: 'The actual value of payload',
                     type: 'string',
                 },
             },

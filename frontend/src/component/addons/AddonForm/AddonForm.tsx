@@ -9,10 +9,7 @@ import {
 import { Button, Divider, FormControlLabel, Switch } from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
-import {
-    IAddon,
-    IAddonProvider,
-} from 'interfaces/addons';
+import { IAddon, IAddonProvider } from 'interfaces/addons';
 import { AddonParameters } from './AddonParameters/AddonParameters';
 import { AddonInstall } from './AddonInstall/AddonInstall';
 import cloneDeep from 'lodash.clonedeep';
@@ -245,7 +242,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         name,
         description,
         documentationUrl = 'https://unleash.github.io/docs/addons',
-        configureInstall,
+        installation,
     } = provider ? provider : ({} as Partial<IAddonProvider>);
 
     return (
@@ -258,15 +255,14 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         >
             <StyledForm onSubmit={onSubmit}>
                 <StyledContainer>
-                    {configureInstall && (
+                    {installation && (
                         <AddonInstall
-                            url={configureInstall.url}
-                            text={configureInstall.text}
-                            title={configureInstall.title}
-                            warning={configureInstall.warning}
+                            url={installation.url}
+                            text={installation.helpText}
+                            title={installation.title}
+                            warning={installation.warning}
                         />
                     )}
-
                     <StyledFormSection>
                         <StyledTextField
                             size="small"

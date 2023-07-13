@@ -21,11 +21,12 @@ const slackAppDefinition: IAddonDefinition = {
     displayName: 'Slack App',
     description: 'Allows Unleash to post updates to Slack.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/slack-app',
-    configureInstall: {
+    installation: {
         url: 'https://unleash-slack-app.vercel.app/install',
-        warning: `Please ensure you have the Unleash Slack app installed in your instance if you haven't installed it already, and to invite the app to any channel you want it to communicate in.`,
-        title: 'Slack app installation',
-        text: 'Clicking the Install button will send you to Slack to initiate the installation procedure for the Unleash Slack app for your instance',
+        warning: `Please ensure you have the Unleash Slack App installed in your Slack workspace if you haven't installed it already. If you want the Unleash Slack App bot to post messages to private channels, you'll need to /invite it to those channels.`,
+        title: 'Slack App installation',
+        helpText:
+            'After installing the Unleash Slack app in your Slack workspace, paste the access token into the appropriate field below in order to configure this addon.',
     },
     parameters: [
         {
@@ -56,9 +57,9 @@ const slackAppDefinition: IAddonDefinition = {
     ],
     tagTypes: [
         {
-            name: 'slack-app',
+            name: 'slack',
             description:
-                'Tag used by the Slack App addon to specify the Slack channel.',
+                'Slack tag used by the slack-addon to specify the slack channel.',
             icon: 'S',
         },
     ],

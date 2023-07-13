@@ -19,15 +19,15 @@ export interface IAddonProvider {
     name: string;
     parameters: IAddonProviderParams[];
     tagTypes: ITagType[];
-    configureInstall?: IAddonInstallationDescription;
+    installation?: IAddonInstallation;
     deprecated?: boolean;
 }
 
-export interface IAddonInstallationDescription {
+export interface IAddonInstallation {
     url: string;
-    warning: string;
-    title: string;
-    text: string;
+    warning?: string;
+    title?: string;
+    helpText?: string;
 }
 
 export interface IAddonProviderParams {

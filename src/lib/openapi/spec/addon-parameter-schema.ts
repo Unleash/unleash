@@ -49,6 +49,13 @@ export const addonParameterSchema = {
             example: false,
             description: `Indicates whether this parameter is **sensitive** or not. Unleash will not return sensitive parameters to API requests. It will instead use a number of asterisks to indicate that a value is set, e.g. "******". The number of asterisks does not correlate to the parameter\'s value.`,
         },
+        position: {
+            type: 'string',
+            enum: ['top', 'bottom'],
+            example: 'top',
+            description:
+                'Indicates whether this parameter should be shown at the top or bottom of the parameter list in the Addon configuration form. If not provided, the parameter will be shown at the bottom.',
+        },
     },
     components: {},
 } as const;

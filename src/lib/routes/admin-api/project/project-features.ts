@@ -946,12 +946,16 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { featureName, projectId: project, environment } = req.params;
         const createdBy = extractUsername(req);
-        await this.featureService.updateStrategiesSortOrder(
-            featureName,
-            environment,
-            project,
-            createdBy,
-            req.body,
+        await this.startTransaction(async (tx) =>
+            this.transactionalFeatureToggleService(
+                tx,
+            ).updateStrategiesSortOrder(
+                featureName,
+                environment,
+                project,
+                createdBy,
+                req.body,
+            ),
         );
 
         res.status(200).send();

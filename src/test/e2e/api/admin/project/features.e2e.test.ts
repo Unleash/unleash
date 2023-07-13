@@ -3209,13 +3209,14 @@ test('Updating feature strategy sort-order should trigger a FeatureStrategyUpdat
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/set-sort-order`,
         )
-        .send(sortOrders);
-    // .expect()
+        .send(sortOrders)
+        .expect(200);
+
     const response = await app.request.get(`/api/admin/events`);
     const { body: eventsBody } = response;
     let { events } = eventsBody;
 
-    for (let i = 0; i < strategies.length; i++) {
-        expect(events[i].type).toBe('feature-strategy-update');
-    }
+    expect(events[0].type).toBe('feature-strategy-update');
+    expect(events[1].type).toBe('feature-strategy-update');
+    expect(events[2].type).toBe('feature-strategy-update');
 });

@@ -12,29 +12,35 @@ const eventDataSchema = {
             description:
                 'Name of the feature toggle/strategy/environment that this event relates to',
             example: 'my.first.toggle',
+            nullable: true,
         },
         description: {
             type: 'string',
             description: 'The description of the object this event relates to',
             example: 'Toggle description',
+            nullable: true,
         },
         type: {
             type: 'string',
+            nullable: true,
             description:
                 'If this event relates to a feature toggle, the type of feature toggle.',
             example: 'release',
         },
         project: {
+            nullable: true,
             type: 'string',
             description: 'The project this event relates to',
             example: 'default',
         },
         stale: {
+            nullable: true,
             description: 'Is the feature toggle this event relates to stale',
             type: 'boolean',
             example: true,
         },
         variants: {
+            nullable: true,
             description: 'Variants configured for this toggle',
             type: 'array',
             items: {
@@ -42,6 +48,7 @@ const eventDataSchema = {
             },
         },
         createdAt: {
+            nullable: true,
             type: 'string',
             format: 'date-time',
             description:
@@ -49,11 +56,11 @@ const eventDataSchema = {
             example: '2023-07-05T12:56:00.000Z',
         },
         lastSeenAt: {
+            nullable: true,
             type: 'string',
             format: 'date-time',
             description: 'The time the feature was last seen',
             example: '2023-07-05T12:56:00.000Z',
-            nullable: true,
         },
         impressionData: {
             description:
@@ -127,7 +134,12 @@ export const eventSchema = {
                 'The name of the feature toggle the event relates to, if applicable.',
             example: 'my.first.feature',
         },
-        data: eventDataSchema,
+        data: {
+            ...eventDataSchema,
+            description:
+                "Data relating to the current state of the event's subject.",
+            nullable: true,
+        },
         preData: {
             ...eventDataSchema,
             description:

@@ -46,8 +46,6 @@ exports.up = function (db, callback) {
 exports.down = function (db, callback) {
     db.runSql(
         `
-          ALTER TABLE feature_strategies DROP COLUMN variants;
-
           DROP VIEW features_view;
 
           CREATE VIEW features_view AS
@@ -82,6 +80,8 @@ exports.down = function (db, callback) {
                   and feature_strategies.environment = feature_environments.environment
                   LEFT JOIN environments ON feature_environments.environment = environments.name
                   LEFT JOIN feature_strategy_segment as fss ON fss.feature_strategy_id = feature_strategies.id;
+
+          ALTER TABLE feature_strategies DROP COLUMN variants;
         `,
         callback,
     );

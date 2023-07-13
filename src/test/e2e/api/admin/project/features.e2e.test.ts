@@ -1031,7 +1031,7 @@ test('Can NOT delete strategy with wrong projectId', async () => {
         .delete(
             `/api/admin/projects/wrongId/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
         )
-        .expect(400);
+        .expect(403);
 });
 
 test('add strategy cannot use wrong projectId', async () => {
@@ -1093,7 +1093,7 @@ test('update strategy on feature toggle cannot use wrong projectId', async () =>
                 userIds: '1234',
             },
         })
-        .expect(400);
+        .expect(403);
 });
 
 test('Environments are returned in sortOrder', async () => {

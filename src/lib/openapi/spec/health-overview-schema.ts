@@ -61,7 +61,7 @@ export const healthOverviewSchema = {
             nullable: true,
             example: 100,
             description:
-                'A limit of the number of features allowed in the project. Null means no limit.',
+                'A limit on the number of features allowed in the project. Null if no limit.',
         },
         members: {
             type: 'integer',

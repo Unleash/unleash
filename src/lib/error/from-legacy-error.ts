@@ -21,13 +21,13 @@ const getStatusCode = (errorName: string): number => {
             return 400;
         case 'MinimumOneEnvironmentError':
             return 400;
-        case 'InvalidOperationError':
-            return 400;
         case 'InvalidTokenError':
             return 401;
         case 'NoAccessError':
             return 403;
         case 'UsedTokenError':
+            return 403;
+        case 'InvalidOperationError':
             return 403;
         case 'IncompatibleProjectError':
             return 403;

@@ -116,5 +116,5 @@ export interface IProjectStore extends Store<IProject, string> {
         strategy: CreateFeatureStrategySchema,
     ): Promise<CreateFeatureStrategySchema>;
 
-    isFeatureCreationLimitReached(id: string): Promise<boolean>;
+    isFeatureLimitReached(id: string): Promise<boolean>;
 }

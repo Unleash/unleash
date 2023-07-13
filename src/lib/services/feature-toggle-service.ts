@@ -924,7 +924,7 @@ class FeatureToggleService {
 
         if (
             this.flagResolver.isEnabled('newProjectLayout') &&
-            (await this.projectStore.isFeatureCreationLimitReached(projectId))
+            (await this.projectStore.isFeatureLimitReached(projectId))
         ) {
             throw new InvalidOperationError(
                 'You have reached the maximum number of feature toggles for this project.',

@@ -182,7 +182,7 @@ export default class FakeProjectStore implements IProjectStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isFeatureCreationLimitReached(id: string): Promise<boolean> {
+    isFeatureLimitReached(id: string): Promise<boolean> {
         return Promise.resolve(false);
     }
 }

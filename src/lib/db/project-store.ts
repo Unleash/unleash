@@ -96,7 +96,7 @@ class ProjectStore implements IProjectStore {
         return present;
     }
 
-    async isFeatureCreationLimitReached(id: string): Promise<boolean> {
+    async isFeatureLimitReached(id: string): Promise<boolean> {
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1
              FROM project_settings

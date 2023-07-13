@@ -3158,7 +3158,20 @@ test('Enabling a feature environment should add the default strategy when only d
         });
 });
 
-test('Updating feature strategy sort-order should trigger a FeatureStrategyUpdatedEvent', async () => {
+test('Updating feature strategy sort-order should trigger a FeatureStrategyUpdatedEvent when strategyVariant is true', async () => {
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                    strategyVariant: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
+
     const envName = 'sort-order-within-environment-one';
     const featureName = 'feature.sort.order.event.list';
     // Create environment

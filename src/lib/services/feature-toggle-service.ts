@@ -369,7 +369,7 @@ class FeatureToggleService {
         featureStrategy: IFeatureStrategy,
         segments: ISegment[] = [],
     ): Saved<IStrategyConfig> {
-        return {
+        let result: Saved<IStrategyConfig> = {
             id: featureStrategy.id,
             name: featureStrategy.strategyName,
             title: featureStrategy.title,
@@ -377,8 +377,12 @@ class FeatureToggleService {
             constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
             segments: segments.map((segment) => segment.id) ?? [],
-            sortOrder: featureStrategy.sortOrder,
         };
+
+        if (this.flagResolver.isEnabled('strategyVariant')) {
+            result.sortOrder = featureStrategy.sortOrder;
+        }
+        return result;
     }
 
     async updateStrategiesSortOrder(
@@ -499,24 +503,31 @@ class FeatureToggleService {
                 );
             }
 
-            const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
                 newFeatureStrategy.id,
             );
+
             const strategy = this.featureStrategyToPublic(
                 newFeatureStrategy,
                 segments,
             );
-            await this.eventStore.store(
-                new FeatureStrategyAddEvent({
-                    project: projectId,
+
+            if (this.flagResolver.isEnabled('strategyVariant')) {
+                const tags = await this.tagStore.getAllTagsForFeature(
                     featureName,
-                    createdBy,
-                    environment,
-                    data: strategy,
-                    tags,
-                }),
-            );
+                );
+
+                await this.eventStore.store(
+                    new FeatureStrategyAddEvent({
+                        project: projectId,
+                        featureName,
+                        createdBy,
+                        environment,
+                        data: strategy,
+                        tags,
+                    }),
+                );
+            }
             return strategy;
         } catch (e) {
             if (e.code === FOREIGN_KEY_VIOLATION) {

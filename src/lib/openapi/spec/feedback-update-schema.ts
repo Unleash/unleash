@@ -1,9 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const feedbackSchema = {
-    $id: '#/components/schemas/feedbackSchema',
+export const feedbackUpdateSchema = {
+    $id: '#/components/schemas/feedbackUpdateSchema',
     type: 'object',
-    additionalProperties: false,
     description: 'User feedback information',
     properties: {
         userId: {
@@ -33,4 +32,4 @@ export const feedbackSchema = {
     components: {},
 } as const;
 
-export type FeedbackSchema = FromSchema<typeof feedbackSchema>;
+export type FeedbackUpdateSchema = FromSchema<typeof feedbackUpdateSchema>;

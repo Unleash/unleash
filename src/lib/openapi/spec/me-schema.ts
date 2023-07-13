@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { userSchema } from './user-schema';
 import { permissionSchema } from './permission-schema';
-import { feedbackSchema } from './feedback-schema';
+import { feedbackResponseSchema } from './feedback-response-schema';
 
 export const meSchema = {
     $id: '#/components/schemas/meSchema',
@@ -24,7 +24,7 @@ export const meSchema = {
             description: 'User feedback information',
             type: 'array',
             items: {
-                $ref: '#/components/schemas/feedbackSchema',
+                $ref: '#/components/schemas/feedbackResponseSchema',
             },
         },
         splash: {
@@ -39,7 +39,7 @@ export const meSchema = {
         schemas: {
             userSchema,
             permissionSchema,
-            feedbackSchema,
+            feedbackResponseSchema,
         },
     },
 } as const;

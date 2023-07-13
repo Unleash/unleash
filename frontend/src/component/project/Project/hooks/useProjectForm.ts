@@ -57,9 +57,16 @@ const useProjectForm = (
             name: projectName,
             description: projectDesc,
             defaultStickiness: projectStickiness,
-            featureLimit: featureLimit,
+            featureLimit: getFeatureLimitAsNumber(),
             mode: projectMode,
         };
+    };
+
+    const getFeatureLimitAsNumber = () => {
+        if (featureLimit === '') {
+            return undefined;
+        }
+        return Number(featureLimit);
     };
 
     const validateProjectId = async () => {

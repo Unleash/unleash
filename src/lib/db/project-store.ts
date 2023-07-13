@@ -7,14 +7,12 @@ import {
     IFlagResolver,
     IProject,
     IProjectWithCount,
-    ProjectMode,
 } from '../types';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
     IProjectQuery,
     IProjectSettings,
-    IProjectSettingsRow,
     IProjectStore,
     ProjectEnvironment,
 } from '../types/stores/project-store';
@@ -35,7 +33,11 @@ const COLUMNS = [
     'updated_at',
 ];
 const TABLE = 'projects';
-const SETTINGS_COLUMNS = ['project_mode', 'default_stickiness'];
+const SETTINGS_COLUMNS = [
+    'project_mode',
+    'default_stickiness',
+    'feature_limit',
+];
 const SETTINGS_TABLE = 'project_settings';
 const PROJECT_ENVIRONMENTS = 'project_environments';
 
@@ -88,6 +90,20 @@ class ProjectStore implements IProjectStore {
     async exists(id: string): Promise<boolean> {
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            [id],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
+    async isFeatureLimitReached(id: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1
+             FROM project_settings
+             LEFT JOIN features ON project_settings.project = features.project
+             WHERE project_settings.project = ?
+             GROUP BY project_settings.project
+             HAVING project_settings.feature_limit <= COUNT(features.project)) AS present`,
             [id],
         );
         const { present } = result.rows[0];
@@ -219,6 +235,7 @@ class ProjectStore implements IProjectStore {
                 project: project.id,
                 project_mode: project.mode,
                 default_stickiness: project.defaultStickiness,
+                feature_limit: project.featureLimit,
             })
             .returning('*');
         return this.mapRow({ ...row[0], ...settingsRow[0] });
@@ -245,12 +262,14 @@ class ProjectStore implements IProjectStore {
                     .update({
                         project_mode: data.mode,
                         default_stickiness: data.defaultStickiness,
+                        feature_limit: data.featureLimit,
                     });
             } else {
                 await this.db(SETTINGS_TABLE).insert({
                     project: data.id,
                     project_mode: data.mode,
                     default_stickiness: data.defaultStickiness,
+                    feature_limit: data.featureLimit,
                 });
             }
         } catch (err) {
@@ -486,24 +505,6 @@ class ProjectStore implements IProjectStore {
         return Number(members.count);
     }
 
-    async getProjectSettings(projectId: string): Promise<IProjectSettings> {
-        const row = await this.db(SETTINGS_TABLE).where({ project: projectId });
-        return this.mapSettingsRow(row[0]);
-    }
-
-    async setProjectSettings(
-        projectId: string,
-        defaultStickiness: string,
-        mode: ProjectMode,
-    ): Promise<void> {
-        await this.db(SETTINGS_TABLE)
-            .update({
-                default_stickiness: defaultStickiness,
-                project_mode: mode,
-            })
-            .where({ project: projectId });
-    }
-
     async getDefaultStrategy(
         projectId: string,
         environment: string,
@@ -537,13 +538,6 @@ class ProjectStore implements IProjectStore {
             .then((res) => Number(res[0].count));
     }
 
-    mapSettingsRow(row?: IProjectSettingsRow): IProjectSettings {
-        return {
-            defaultStickiness: row?.default_stickiness || 'default',
-            mode: row?.project_mode || 'open',
-        };
-    }
-
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     mapLinkRow(row): IEnvironmentProjectLink {
         return {
@@ -567,6 +561,7 @@ class ProjectStore implements IProjectStore {
             updatedAt: row.updated_at || new Date(),
             mode: row.project_mode || 'open',
             defaultStickiness: row.default_stickiness || 'default',
+            featureLimit: row.feature_limit,
         };
     }
 

@@ -200,7 +200,7 @@ export interface IProjectOverview {
     createdAt: Date | undefined;
     stats?: IProjectStats;
     mode: ProjectMode;
-
+    featureLimit?: number;
     defaultStickiness: string;
 }
 
@@ -388,6 +388,7 @@ export interface IProject {
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
     defaultStickiness: string;
+    featureLimit?: number;
 }
 
 /**

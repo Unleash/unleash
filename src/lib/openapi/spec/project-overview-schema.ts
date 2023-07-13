@@ -53,6 +53,13 @@ export const projectOverviewSchema = {
             description:
                 "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
         },
+        featureLimit: {
+            type: 'number',
+            nullable: true,
+            example: 100,
+            description:
+                'A limit on the number of features allowed in the project. Null if no limit.',
+        },
         members: {
             type: 'number',
             example: 4,

@@ -5,31 +5,32 @@ export const createStrategyVariantSchema = {
     type: 'object',
     additionalProperties: true,
     description:
-        '[WIP] A strategy variant allows to attach any data to strategies instead of only returning `true`/`false`. Strategy variants take precedence over feature variants.',
+        "This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. A strategy variant allows you to attach any data to strategies instead of only returning `true`/`false`. Strategy variants take precedence over feature variants.",
     required: ['name', 'weight', 'weightType', 'stickiness'],
     properties: {
         name: {
             type: 'string',
-            description: 'The variants name. Is unique for this feature toggle',
+            description:
+                'The variant name. Must be unique for this feature toggle',
             example: 'blue_group',
         },
         weight: {
-            type: 'number',
+            type: 'integer',
             description:
-                'The weight is the likelihood of any one user getting this variant. It is a number between 0 and 1000. See the section on [variant weights](https://docs.getunleash.io/reference/feature-toggle-variants#variant-weight) for more information',
+                'The weight is the likelihood of any one user getting this variant. It is an integer between 0 and 1000. See the section on [variant weights](https://docs.getunleash.io/reference/feature-toggle-variants#variant-weight) for more information',
             minimum: 0,
             maximum: 1000,
         },
         weightType: {
             description:
-                'Set to fix if this variant must have exactly the weight allocated to it. If the type is variable, the weight will adjust so that the total weight of all variants adds up to 1000',
+                'Set to `fix` if this variant must have exactly the weight allocated to it. If the type is `variable`, the weight will adjust so that the total weight of all variants adds up to 1000. Refer to the [variant weight documentation](https://docs.getunleash.io/reference/feature-toggle-variants#variant-weight).',
             type: 'string',
             example: 'fix',
         },
         stickiness: {
             type: 'string',
             description:
-                '[Stickiness](https://docs.getunleash.io/reference/feature-toggle-variants#variant-stickiness) is how Unleash guarantees that the same user gets the same variant every time',
+                'The [stickiness](https://docs.getunleash.io/reference/feature-toggle-variants#variant-stickiness) to use for distribution of this variant. Stickiness is how Unleash guarantees that the same user gets the same variant every time',
             example: 'custom.context.field',
         },
         payload: {
@@ -38,9 +39,12 @@ export const createStrategyVariantSchema = {
             description: 'Extra data configured for this variant',
             properties: {
                 type: {
+                    description:
+                        'The type of the value. Commonly used types are string, json and csv.',
                     type: 'string',
                 },
                 value: {
+                    description: 'The actual value of payload',
                     type: 'string',
                 },
             },

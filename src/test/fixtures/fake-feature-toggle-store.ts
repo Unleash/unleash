@@ -252,4 +252,12 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         this.features.forEach((feature) => (feature.variants = []));
         return Promise.resolve();
     }
+
+    markPotentiallyStaleFeatures(): Promise<string[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    isPotentiallyStale(): Promise<boolean> {
+        throw new Error('Method not implemented.');
+    }
 }

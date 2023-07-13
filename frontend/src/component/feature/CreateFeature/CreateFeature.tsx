@@ -12,6 +12,24 @@ import UIContext from 'contexts/UIContext';
 import { CF_CREATE_BTN_ID } from 'utils/testIds';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
+import { Alert, styled } from '@mui/material';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(2),
+}));
+
+export const isFeatureLimitReached = (
+    featureLimit: number | null | undefined,
+    currentFeatureCount: number
+): boolean => {
+    return (
+        featureLimit !== null &&
+        featureLimit !== undefined &&
+        featureLimit <= currentFeatureCount
+    );
+};
 
 const CreateFeature = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -35,6 +53,8 @@ const CreateFeature = () => {
         clearErrors,
         errors,
     } = useFeatureForm();
+
+    const { project: projectInfo } = useProject(project);
 
     const { createFeatureToggle, loading } = useFeatureApi();
 
@@ -74,6 +94,11 @@ const CreateFeature = () => {
         navigate(GO_BACK);
     };
 
+    const featureLimitReached =
+        isFeatureLimitReached(
+            projectInfo.featureLimit,
+            projectInfo.features.length
+        ) && Boolean(uiConfig.flags.newProjectLayout);
     return (
         <FormTemplate
             loading={loading}
@@ -84,6 +109,18 @@ const CreateFeature = () => {
             documentationLinkLabel="Feature toggle types documentation"
             formatApiCode={formatApiCode}
         >
+            <ConditionallyRender
+                condition={featureLimitReached}
+                show={
+                    <StyledAlert severity="error">
+                        <strong>Feature toggle project limit reached. </strong>{' '}
+                        To be able to create more feature toggles in this
+                        project please increase the feature toggle upper limit
+                        in the project settings.
+                    </StyledAlert>
+                }
+            />
+
             <FeatureForm
                 type={type}
                 name={name}
@@ -104,6 +141,7 @@ const CreateFeature = () => {
             >
                 <CreateButton
                     name="feature toggle"
+                    disabled={featureLimitReached}
                     permission={CREATE_FEATURE}
                     projectId={project}
                     data-testid={CF_CREATE_BTN_ID}

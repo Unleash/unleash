@@ -49,7 +49,6 @@ const slackAppDefinition: IAddonDefinition = {
             type: 'text',
             required: true,
             sensitive: true,
-            position: 'top',
         },
     ],
     events: [

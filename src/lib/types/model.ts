@@ -238,7 +238,6 @@ export interface IAddonParameterDefinition {
     placeholder?: string;
     required: boolean;
     sensitive: boolean;
-    position?: 'top' | 'bottom';
 }
 
 export interface IAddonDefinition {

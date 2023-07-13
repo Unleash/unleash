@@ -379,7 +379,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return toggle;
     }
 
-    async markPotentiallyStaleFeatures(
+    async updatePotentiallyStaleFeatures(
         currentTime?: string,
     ): Promise<{ name: string; potentiallyStale: boolean }[]> {
         const previousState = (

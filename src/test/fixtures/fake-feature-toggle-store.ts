@@ -253,7 +253,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return Promise.resolve();
     }
 
-    markPotentiallyStaleFeatures(): Promise<
+    updatePotentiallyStaleFeatures(): Promise<
         { name: string; potentiallyStale: boolean }[]
     > {
         throw new Error('Method not implemented.');

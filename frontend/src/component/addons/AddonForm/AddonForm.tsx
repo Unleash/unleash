@@ -38,6 +38,7 @@ import {
 } from './AddonForm.styles';
 import { useTheme } from '@mui/system';
 import { GO_BACK } from 'constants/navigate';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IAddonFormProps {
     provider?: IAddonProvider;
@@ -255,14 +256,17 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         >
             <StyledForm onSubmit={onSubmit}>
                 <StyledContainer>
-                    {installation && (
-                        <AddonInstall
-                            url={installation.url}
-                            text={installation.helpText}
-                            title={installation.title}
-                            warning={installation.warning}
-                        />
-                    )}
+                    <ConditionallyRender
+                        condition={Boolean(installation)}
+                        show={() => (
+                            <AddonInstall
+                                url={installation!.url}
+                                warning={installation!.warning}
+                                title={installation!.title}
+                                helpText={installation!.helpText}
+                            />
+                        )}
+                    />
                     <StyledFormSection>
                         <StyledTextField
                             size="small"

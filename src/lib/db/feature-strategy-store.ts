@@ -15,6 +15,7 @@ import {
     IFeatureToggleClient,
     IFlagResolver,
     IStrategyConfig,
+    IStrategyVariant,
     ITag,
     PartialDeep,
     PartialSome,
@@ -34,6 +35,7 @@ const COLUMNS = [
     'title',
     'parameters',
     'constraints',
+    'variants',
     'created_at',
     'disabled',
 ];
@@ -62,6 +64,7 @@ interface IFeatureStrategiesTable {
     strategy_name: string;
     parameters: object;
     constraints: string;
+    variants: string;
     sort_order: number;
     created_at?: Date;
     disabled?: boolean | null;
@@ -84,6 +87,7 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
         title: row.title,
         parameters: mapValues(row.parameters || {}, ensureStringValue),
         constraints: (row.constraints as unknown as IConstraint[]) || [],
+        variants: (row.variants as unknown as IStrategyVariant[]) || [],
         createdAt: row.created_at,
         sortOrder: row.sort_order,
         disabled: row.disabled,
@@ -100,6 +104,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         title: input.title,
         parameters: input.parameters,
         constraints: JSON.stringify(input.constraints || []),
+        variants: JSON.stringify(input.variants || []),
         created_at: input.createdAt,
         sort_order: input.sortOrder,
         disabled: input.disabled,
@@ -110,6 +115,7 @@ interface StrategyUpdate {
     strategy_name: string;
     parameters: object;
     constraints: string;
+    variants: string;
     title?: string;
     disabled?: boolean;
 }
@@ -131,6 +137,7 @@ function mapStrategyUpdate(
         update.disabled = input.disabled;
     }
     update.constraints = JSON.stringify(input.constraints || []);
+    update.variants = JSON.stringify(input.variants || []);
     return update;
 }
 
@@ -599,6 +606,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const strategy = {
             name: r.strategy_name,
             constraints: r.constraints || [],
+            variants: r.strategy_variants || [],
             parameters: r.parameters,
             sortOrder: r.sort_order,
             id: r.strategy_id,

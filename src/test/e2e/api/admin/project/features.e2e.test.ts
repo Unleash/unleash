@@ -2350,6 +2350,67 @@ test('Can create toggle with impression data on different project', async () => 
         });
 });
 
+test('should handle strategy variants', async () => {
+    const feature = { name: uuidv4(), impressionData: false };
+    await app.createFeature(feature.name);
+
+    const strategyWithInvalidVariant = {
+        name: uuidv4(),
+        constraints: [],
+        variants: [{}],
+    };
+
+    const variant = {
+        name: uuidv4(),
+        weight: 1,
+        weightType: 'fix',
+        stickiness: 'default',
+    };
+    const updatedVariant = {
+        name: uuidv4(),
+        weight: 100,
+        weightType: 'fix',
+        stickiness: 'default',
+    };
+    const strategyWithValidVariant = {
+        name: uuidv4(),
+        constraints: [],
+        variants: [variant],
+    };
+
+    const featureStrategiesPath = `/api/admin/projects/default/features/${feature.name}/environments/default/strategies`;
+
+    await app.request
+        .post(featureStrategiesPath)
+        .send(strategyWithInvalidVariant)
+        .expect(400);
+
+    await createStrategy(feature.name, strategyWithValidVariant);
+
+    const { body: strategies } = await app.request.get(featureStrategiesPath);
+
+    expect(strategies).toMatchObject([
+        {
+            variants: [variant],
+        },
+    ]);
+
+    await updateStrategy(feature.name, strategies[0].id, {
+        ...strategies[0],
+        variants: [updatedVariant],
+    });
+
+    const { body: updatedStrategies } = await app.request.get(
+        featureStrategiesPath,
+    );
+
+    expect(updatedStrategies).toMatchObject([
+        {
+            variants: [updatedVariant],
+        },
+    ]);
+});
+
 test('should reject invalid constraint values for multi-valued constraints', async () => {
     const project = await db.stores.projectStore.create({
         id: uuidv4(),

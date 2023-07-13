@@ -84,6 +84,7 @@ test('counts custom strategies in use', async () => {
         environment: 'default',
         parameters: {},
         constraints: [],
+        variants: [],
     });
 
     // Act

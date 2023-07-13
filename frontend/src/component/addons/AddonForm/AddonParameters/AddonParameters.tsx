@@ -1,5 +1,5 @@
 import React from 'react';
-import { IAddonProvider, IAddonProviderParams } from 'interfaces/addons';
+import { IAddonProvider } from 'interfaces/addons';
 import {
     AddonParameter,
     IAddonParameterProps,

@@ -167,7 +167,7 @@ export const addonTypeSchema = {
                         description:
                             'The text of the alert. This is what will be displayed to the user.',
                         example:
-                            "Please ensure you have the Unleash Slack App installed in your Slack workspace if you haven't installed it already. If you want the Unleash Slack App bot to post messages to private channels, you'll need to /invite it to those channels.",
+                            "Please ensure you have the Unleash Slack App installed in your Slack workspace if you haven't installed it already. If you want the Unleash Slack App bot to post messages to private channels, you'll need to invite it to those channels.",
                     },
                 },
             },

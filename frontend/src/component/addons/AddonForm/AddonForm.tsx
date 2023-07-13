@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
-import { IAddon, IAddonProvider, IAddonProviderParams } from 'interfaces/addons';
+import { IAddon, IAddonProvider } from 'interfaces/addons';
 import { AddonParameters } from './AddonParameters/AddonParameters';
 import { AddonInstall } from './AddonInstall/AddonInstall';
 import cloneDeep from 'lodash.clonedeep';
@@ -279,7 +279,6 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                             />
                         )}
                     />
-
                     <StyledFormSection>
                         <StyledTextField
                             size="small"

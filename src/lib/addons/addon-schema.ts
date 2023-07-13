@@ -21,7 +21,6 @@ export const addonDefinitionSchema = joi.object().keys({
                 placeholder: joi.string().allow(''),
                 required: joi.boolean().default(false),
                 sensitive: joi.boolean().default(false),
-                position: joi.string().valid('top', 'bottom').optional(),
             }),
         ),
     events: joi.array().optional().items(joi.string()),

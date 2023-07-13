@@ -28,7 +28,7 @@ const slackAppDefinition: IAddonDefinition = {
         },
         {
             type: 'info',
-            text: `The Unleash Slack App bot has access to public channels by default. If you want the bot to post messages to private channels, you'll need to /invite it to those channels.`,
+            text: `The Unleash Slack App bot has access to public channels by default. If you want the bot to post messages to private channels, you'll need to invite it to those channels.`,
         },
         {
             type: 'warning',

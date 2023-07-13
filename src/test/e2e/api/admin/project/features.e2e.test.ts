@@ -3174,12 +3174,12 @@ test('Updating feature strategy sort-order should trigger a FeatureStrategyUpdat
 
     const envName = 'sort-order-within-environment-one';
     const featureName = 'feature.sort.order.event.list';
-    // Create environment
+
     await db.stores.environmentStore.create({
         name: envName,
         type: 'test',
     });
-    // Connect environment to project
+
     await app.request
         .post('/api/admin/projects/default/environments')
         .send({

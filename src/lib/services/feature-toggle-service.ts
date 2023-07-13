@@ -369,7 +369,7 @@ class FeatureToggleService {
         featureStrategy: IFeatureStrategy,
         segments: ISegment[] = [],
     ): Saved<IStrategyConfig> {
-        let result: Saved<IStrategyConfig> = {
+        const result: Saved<IStrategyConfig> = {
             id: featureStrategy.id,
             name: featureStrategy.strategyName,
             title: featureStrategy.title,

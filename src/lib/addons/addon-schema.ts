@@ -1,6 +1,7 @@
 import joi from 'joi';
 import { nameType } from '../routes/util';
 import { tagTypeSchema } from '../services/tag-type-schema';
+import { installationDefinitionSchema } from './installation-definition-schema';
 
 export const addonDefinitionSchema = joi.object().keys({
     name: nameType,
@@ -24,8 +25,14 @@ export const addonDefinitionSchema = joi.object().keys({
         ),
     events: joi.array().optional().items(joi.string()),
     tagTypes: joi.array().optional().items(tagTypeSchema),
-    configureInstall: joi
-        .string()
+    installation: installationDefinitionSchema.optional(),
+    alerts: joi
+        .array()
         .optional()
-        .uri({ scheme: [/https?/] }),
+        .items(
+            joi.object().keys({
+                type: joi.string().valid('success', 'info', 'warning', 'error'),
+                text: joi.string().required(),
+            }),
+        ),
 });

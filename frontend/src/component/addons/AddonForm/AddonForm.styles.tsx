@@ -12,6 +12,12 @@ export const StyledFormSection = styled('section')({
     marginBottom: '36px',
 });
 
+export const StyledAlerts = styled(StyledFormSection)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
+
 export const StyledHelpText = styled('p')({
     marginBottom: '0.5rem',
 });

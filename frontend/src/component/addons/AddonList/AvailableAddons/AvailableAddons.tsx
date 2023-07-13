@@ -19,6 +19,7 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { ConfigureAddonButton } from './ConfigureAddonButton/ConfigureAddonButton';
 import { AddonIcon } from '../AddonIcon/AddonIcon';
 import { AddonNameCell } from '../AddonNameCell/AddonNameCell';
+import { IAddonInstallation } from 'interfaces/addons';
 
 interface IProvider {
     name: string;
@@ -27,7 +28,7 @@ interface IProvider {
     documentationUrl: string;
     parameters: object[];
     events: string[];
-    configureInstall?: string;
+    installation?: IAddonInstallation;
     deprecated?: boolean;
 }
 
@@ -49,18 +50,12 @@ export const AvailableAddons = ({
         }
 
         return providers.map(
-            ({
+            ({ name, displayName, description, deprecated, installation }) => ({
                 name,
                 displayName,
                 description,
                 deprecated,
-                configureInstall,
-            }) => ({
-                name,
-                displayName,
-                description,
-                deprecated,
-                configureInstall,
+                installation,
             })
         );
     }, [providers, loading]);

@@ -249,7 +249,19 @@ export interface IAddonDefinition {
     parameters?: IAddonParameterDefinition[];
     events?: string[];
     tagTypes?: ITagType[];
-    configureInstall?: string;
+    installation?: IAddonInstallation;
+    alerts?: IAddonAlert[];
+}
+
+export interface IAddonInstallation {
+    url: string;
+    title?: string;
+    helpText?: string;
+}
+
+export interface IAddonAlert {
+    type: 'success' | 'info' | 'warning' | 'error';
+    text: string;
 }
 
 export interface IAddonConfig {

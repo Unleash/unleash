@@ -6,7 +6,7 @@ export const strategyVariantSchema = {
     type: 'object',
     additionalProperties: false,
     description:
-        '[WIP] A strategy variant allows to attach any data to strategies instead of only returning `true`/`false`. Strategy variants take precedence over feature variants.',
+        '[WIP] A strategy variant allows you to attach any data to strategies instead of only returning `true`/`false`. Strategy variants take precedence over feature variants.',
     required: ['name', 'weight', 'weightType', 'stickiness'],
     properties: {
         ...createStrategyVariantSchema.properties,

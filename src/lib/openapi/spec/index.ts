@@ -22,6 +22,7 @@ export * from './addons-schema';
 export * from './events-schema';
 export * from './groups-schema';
 export * from './splash-request-schema';
+export * from './splash-response-schema';
 export * from './feature-schema';
 export * from './patches-schema';
 export * from './profile-schema';

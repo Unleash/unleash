@@ -20,4 +20,4 @@ export const splashRequestSchema = {
     components: {},
 } as const;
 
-export type SplashSchema = FromSchema<typeof splashRequestSchema>;
+export type SplashRequestSchema = FromSchema<typeof splashRequestSchema>;

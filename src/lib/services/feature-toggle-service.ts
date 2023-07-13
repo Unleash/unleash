@@ -1973,18 +1973,16 @@ class FeatureToggleService {
         if (this.flagResolver.isEnabled('emitPotentiallyStaleEvents')) {
             if (potentiallyStaleFeatures.length) {
                 return this.eventStore.batchStore(
-                    potentiallyStaleFeatures.map((feature) => ({
-                        type: FEATURE_POTENTIALLY_STALE_UPDATED,
-                        createdBy: 'unleash-system',
-                        data: {
-                            name: feature,
-                            potentiallyStale: true,
-                        },
-                        preData: {
-                            name: feature,
-                            potentiallyStale: false,
-                        },
-                    })),
+                    potentiallyStaleFeatures.map(
+                        ({ name, potentiallyStale }) => ({
+                            type: FEATURE_POTENTIALLY_STALE_UPDATED,
+                            createdBy: 'unleash-system',
+                            data: {
+                                name,
+                                potentiallyStale,
+                            },
+                        }),
+                    ),
                 );
             }
         }

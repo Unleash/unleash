@@ -43,6 +43,11 @@ export const StickinessSelect = ({
             options.push({ key: 'random', label: 'random' });
         }
 
+        // Add existing value to the options
+        if (value && !options.find(option => option.key === value)) {
+            options.push({ key: value, label: value });
+        }
+
         return options;
     };
 

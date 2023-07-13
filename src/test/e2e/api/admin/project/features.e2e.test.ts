@@ -26,6 +26,10 @@ import { v4 as uuidv4 } from 'uuid';
 import supertest from 'supertest';
 import { randomId } from '../../../../../lib/util/random-id';
 import { DEFAULT_PROJECT } from '../../../../../lib/types';
+import {
+    FeatureStrategySchema,
+    SetStrategySortOrderSchema,
+} from '../../../../../lib/openapi';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -3152,4 +3156,53 @@ test('Enabling a feature environment should add the default strategy when only d
             expect(res.body.strategies[0].disabled).toBeTruthy();
             expect(res.body.strategies[1].disabled).toBeFalsy();
         });
+});
+
+test('Updating feature strategy sort-order should trigger a FeatureStrategyUpdatedEvent', async () => {
+    const envName = 'sort-order-within-environment-one';
+    const featureName = 'feature.sort.order.event.list';
+    // Create environment
+    await db.stores.environmentStore.create({
+        name: envName,
+        type: 'test',
+    });
+    // Connect environment to project
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName })
+        .expect(201);
+
+    await addStrategies(featureName, envName);
+    const { body } = await app.request.get(
+        `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+    );
+
+    const strategies: FeatureStrategySchema[] = body;
+    let order = 1;
+    const sortOrders: SetStrategySortOrderSchema = [];
+
+    strategies.forEach((strategy) => {
+        sortOrders.push({ id: strategy.id!, sortOrder: order++ });
+    });
+
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/set-sort-order`,
+        )
+        .send(sortOrders);
+    // .expect()
+    const response = await app.request.get(`/api/admin/events`);
+    const { body: eventsBody } = response;
+    let { events } = eventsBody;
+
+    for (let i = 0; i < strategies.length; i++) {
+        expect(events[i].type).toBe('feature-strategy-update');
+    }
 });

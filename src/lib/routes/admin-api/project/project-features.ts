@@ -936,7 +936,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async setStrategiesSortOrder(
-        req: Request<
+        req: IAuthRequest<
             FeatureStrategyParams,
             any,
             SetStrategySortOrderSchema,
@@ -944,9 +944,13 @@ export default class ProjectFeaturesController extends Controller {
         >,
         res: Response,
     ): Promise<void> {
-        const { featureName } = req.params;
+        const { featureName, projectId: project, environment } = req.params;
+        const createdBy = extractUsername(req);
         await this.featureService.updateStrategiesSortOrder(
             featureName,
+            environment,
+            project,
+            createdBy,
             req.body,
         );
 

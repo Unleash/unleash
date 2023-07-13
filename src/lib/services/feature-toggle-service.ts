@@ -377,6 +377,7 @@ class FeatureToggleService {
             constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
             segments: segments.map((segment) => segment.id) ?? [],
+            sortOrder: featureStrategy.sortOrder,
         };
     }
 

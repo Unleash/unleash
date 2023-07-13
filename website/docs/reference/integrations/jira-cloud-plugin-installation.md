@@ -21,9 +21,9 @@ For Jira Data Center, check out the [Jira Server plugin](jira-server-plugin-inst
 
 You will need an Unleash admin user to configure the access tokens needed to connect the plugin to Unleash.
 
-For Unleash Open Source this plugin requires the use of an [Admin API token](../api-tokens-and-client-keys.mdx) to connect.
+This plugin requires an Unleash Pro or an Unleash Enterprise instance.
 
-For Unleash Enterprise we recommend using a [service account](../service-accounts.md). Service accounts are also required to integrate with [Change Requests](../change-requests.md)
+We recommend using a [service account](../service-accounts.md) token for communicating with Unleash. Service accounts are also required to integrate with [Change Requests](../change-requests.md)
 
 ### Jira
 

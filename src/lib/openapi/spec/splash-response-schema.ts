@@ -13,7 +13,7 @@ export const splashResponseSchema = {
             type: 'boolean',
             description:
                 'Indicates whether the user has seen the splash screen or not.',
-            example: 'true',
+            example: true,
         },
     },
     components: {},

@@ -2363,13 +2363,19 @@ test('should handle strategy variants', async () => {
     const variant = {
         name: uuidv4(),
         weight: 1,
-        weightType: 'fix',
+        weightType: 'variable',
         stickiness: 'default',
     };
-    const updatedVariant = {
+    const updatedVariant1 = {
         name: uuidv4(),
-        weight: 100,
-        weightType: 'fix',
+        weight: 500,
+        weightType: 'variable',
+        stickiness: 'default',
+    };
+    const updatedVariant2 = {
+        name: uuidv4(),
+        weight: 500,
+        weightType: 'variable',
         stickiness: 'default',
     };
     const strategyWithValidVariant = {
@@ -2391,13 +2397,13 @@ test('should handle strategy variants', async () => {
 
     expect(strategies).toMatchObject([
         {
-            variants: [variant],
+            variants: [{ ...variant, weight: 1000 }], // weight was fixed
         },
     ]);
 
     await updateStrategy(feature.name, strategies[0].id, {
         ...strategies[0],
-        variants: [updatedVariant],
+        variants: [updatedVariant1, updatedVariant2],
     });
 
     const { body: updatedStrategies } = await app.request.get(
@@ -2406,7 +2412,7 @@ test('should handle strategy variants', async () => {
 
     expect(updatedStrategies).toMatchObject([
         {
-            variants: [updatedVariant],
+            variants: [updatedVariant1, updatedVariant2],
         },
     ]);
 });

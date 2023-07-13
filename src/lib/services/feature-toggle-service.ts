@@ -439,6 +439,14 @@ class FeatureToggleService {
             strategyConfig.parameters.stickiness = 'default';
         }
 
+        if (strategyConfig.variants && strategyConfig.variants.length > 0) {
+            await variantsArraySchema.validateAsync(strategyConfig.variants);
+            const fixedVariants = this.fixVariantWeights(
+                strategyConfig.variants,
+            );
+            strategyConfig.variants = fixedVariants;
+        }
+
         try {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
@@ -561,6 +569,12 @@ class FeatureToggleService {
                 updates.constraints = await this.validateConstraints(
                     updates.constraints,
                 );
+            }
+
+            if (updates.variants && updates.variants.length > 0) {
+                await variantsArraySchema.validateAsync(updates.variants);
+                const fixedVariants = this.fixVariantWeights(updates.variants);
+                updates.variants = fixedVariants;
             }
 
             const strategy = await this.featureStrategiesStore.updateStrategy(

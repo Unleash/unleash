@@ -6,7 +6,7 @@ export const createStrategyVariantSchema = {
     additionalProperties: true,
     description:
         "This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. A strategy variant allows you to attach any data to strategies instead of only returning `true`/`false`. Strategy variants take precedence over feature variants.",
-    required: ['name', 'weight', 'weightType', 'stickiness'],
+    required: ['name', 'weight'],
     properties: {
         name: {
             type: 'string',
@@ -23,14 +23,14 @@ export const createStrategyVariantSchema = {
         },
         weightType: {
             description:
-                'Set to `fix` if this variant must have exactly the weight allocated to it. If the type is `variable`, the weight will adjust so that the total weight of all variants adds up to 1000. Refer to the [variant weight documentation](https://docs.getunleash.io/reference/feature-toggle-variants#variant-weight).',
+                'Set to `fix` if this variant must have exactly the weight allocated to it. If the type is `variable`, the weight will adjust so that the total weight of all variants adds up to 1000. Refer to the [variant weight documentation](https://docs.getunleash.io/reference/feature-toggle-variants#variant-weight). Defaults to `variable`',
             type: 'string',
             example: 'fix',
         },
         stickiness: {
             type: 'string',
             description:
-                'The [stickiness](https://docs.getunleash.io/reference/feature-toggle-variants#variant-stickiness) to use for distribution of this variant. Stickiness is how Unleash guarantees that the same user gets the same variant every time',
+                'The [stickiness](https://docs.getunleash.io/reference/feature-toggle-variants#variant-stickiness) to use for distribution of this variant. Stickiness is how Unleash guarantees that the same user gets the same variant every time. Defaults to `default`',
             example: 'custom.context.field',
         },
         payload: {

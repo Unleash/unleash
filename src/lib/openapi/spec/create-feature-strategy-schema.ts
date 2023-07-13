@@ -1,6 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { parametersSchema } from './parameters-schema';
 import { constraintSchema } from './constraint-schema';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema';
 
 export const createFeatureStrategySchema = {
     $id: '#/components/schemas/createFeatureStrategySchema',
@@ -48,6 +49,13 @@ export const createFeatureStrategySchema = {
                 $ref: '#/components/schemas/constraintSchema',
             },
         },
+        variants: {
+            type: 'array',
+            description: 'Strategy level variants',
+            items: {
+                $ref: '#/components/schemas/createStrategyVariantSchema',
+            },
+        },
         parameters: {
             description: 'An object containing the parameters for the strategy',
             example: {
@@ -70,6 +78,7 @@ export const createFeatureStrategySchema = {
         schemas: {
             constraintSchema,
             parametersSchema,
+            createStrategyVariantSchema,
         },
     },
 } as const;

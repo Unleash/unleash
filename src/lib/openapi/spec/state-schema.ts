@@ -10,6 +10,7 @@ import { environmentSchema } from './environment-schema';
 import { segmentSchema } from './segment-schema';
 import { featureStrategySegmentSchema } from './feature-strategy-segment-schema';
 import { strategySchema } from './strategy-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
 
 export const stateSchema = {
     $id: '#/components/schemas/stateSchema',
@@ -98,6 +99,7 @@ export const stateSchema = {
             featureTagSchema,
             projectSchema,
             featureStrategySchema,
+            strategyVariantSchema,
             featureEnvironmentSchema,
             environmentSchema,
             segmentSchema,

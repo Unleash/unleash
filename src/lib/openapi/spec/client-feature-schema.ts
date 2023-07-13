@@ -4,6 +4,7 @@ import { parametersSchema } from './parameters-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
 import { variantSchema } from './variant-schema';
 import { overrideSchema } from './override-schema';
+import { strategyVariantSchema } from './strategy-variant-schema';
 
 export const clientFeatureSchema = {
     $id: '#/components/schemas/clientFeatureSchema',
@@ -78,6 +79,7 @@ export const clientFeatureSchema = {
             constraintSchema,
             parametersSchema,
             featureStrategySchema,
+            strategyVariantSchema,
             variantSchema,
             overrideSchema,
         },

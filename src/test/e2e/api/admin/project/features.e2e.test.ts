@@ -2361,19 +2361,19 @@ test('should handle strategy variants', async () => {
     };
 
     const variant = {
-        name: uuidv4(),
+        name: 'variantName',
         weight: 1,
         weightType: 'variable',
         stickiness: 'default',
     };
     const updatedVariant1 = {
-        name: uuidv4(),
+        name: 'updatedVariant1',
         weight: 500,
         weightType: 'variable',
         stickiness: 'default',
     };
     const updatedVariant2 = {
-        name: uuidv4(),
+        name: 'updatedVariant2',
         weight: 500,
         weightType: 'variable',
         stickiness: 'default',

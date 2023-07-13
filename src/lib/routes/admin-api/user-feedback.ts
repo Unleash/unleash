@@ -16,6 +16,7 @@ import { parseISO } from 'date-fns';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import BadDataError from '../../error/bad-data-error';
+import { getStandardResponses } from '../../openapi';
 
 class UserFeedbackController extends Controller {
     private logger: Logger;
@@ -45,8 +46,14 @@ class UserFeedbackController extends Controller {
                 openApiService.validPath({
                     tags: ['Admin UI'],
                     operationId: 'createFeedback',
+                    summary: 'Send Unleash feedback',
+                    description:
+                        'Sends feedback gathered from the Unleash UI to the Unleash server.',
                     requestBody: createRequestSchema('feedbackSchema'),
-                    responses: { 200: createResponseSchema('feedbackSchema') },
+                    responses: {
+                        200: createResponseSchema('feedbackSchema'),
+                        ...getStandardResponses(400, 401, 415),
+                    },
                 }),
             ],
         });
@@ -60,8 +67,14 @@ class UserFeedbackController extends Controller {
                 openApiService.validPath({
                     tags: ['Admin UI'],
                     operationId: 'updateFeedback',
+                    summary: 'Update Unleash feedback',
+                    description:
+                        'Updates the feedback with the provided ID. Only provided fields are updated. Fields left out are left untouched.',
                     requestBody: createRequestSchema('feedbackSchema'),
-                    responses: { 200: createResponseSchema('feedbackSchema') },
+                    responses: {
+                        200: createResponseSchema('feedbackSchema'),
+                        ...getStandardResponses(400, 401, 415),
+                    },
                 }),
             ],
         });

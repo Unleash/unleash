@@ -5,6 +5,7 @@ export const feedbackSchema = {
     type: 'object',
     additionalProperties: false,
     description: 'User feedback information',
+    required: ['userId', 'feedbackId'],
     properties: {
         userId: {
             description: 'Identifier of the current user giving feedback',
@@ -18,7 +19,7 @@ export const feedbackSchema = {
         },
         neverShow: {
             description:
-                '`true` when user opts-in to never show the feedback again.',
+                '`true` when user opts-in to never show this feedback questionnaire again. Defaults to `false`.',
             type: 'boolean',
             example: false,
         },

@@ -263,25 +263,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .update(this.dtoToRow(project, data))
             .returning(FEATURE_COLUMNS);
 
-        const feature = this.rowToFeature(row[0]);
-        // if a feature toggle's type or createdAt has changed, update its potentially stale status
-        if (!feature.stale && (data.type || data.createdAt)) {
-            await this.db(TABLE)
-                .where({ name: data.name })
-                .update(
-                    'potentially_stale',
-                    this.db.raw(
-                        `(? > (features.created_at + ((
-                            SELECT feature_types.lifetime_days
-                            FROM feature_types
-                            WHERE feature_types.id = features.type
-                        ) * INTERVAL '1 day')))`,
-                        this.db.fn.now(),
-                    ),
-                );
-        }
-
-        return feature;
+        return this.rowToFeature(row[0]);
     }
 
     async archive(name: string): Promise<FeatureToggle> {
@@ -399,27 +381,53 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     async markPotentiallyStaleFeatures(
         currentTime?: string,
-    ): Promise<string[]> {
-        const query = this.db(TABLE)
-            .update('potentially_stale', true)
-            .whereRaw(
-                `? > (features.created_at + ((
-                    SELECT feature_types.lifetime_days
-                    FROM feature_types
-                    WHERE feature_types.id = features.type
-                ) * INTERVAL '1 day'))`,
-                [currentTime || this.db.fn.now()],
-            )
-            .andWhere(function () {
-                this.where('potentially_stale', null).orWhere(
-                    'potentially_stale',
-                    false,
-                );
-            })
-            .andWhereNot('stale', true);
+    ): Promise<{ name: string; potentiallyStale: boolean }[]> {
+        const previousState = (
+            await this.db(TABLE)
+                .select(['name', 'potentially_stale'])
+                .whereNot('stale', true)
+        ).reduce((previousValue, current) => {
+            previousValue[current.name] = current.potentially_stale;
+            return previousValue;
+        }, {});
 
-        const updatedFeatures = await query.returning(FEATURE_COLUMNS);
-        return updatedFeatures.map(({ name }) => name);
+        const updateQuery = this.db(TABLE)
+            .update(
+                'potentially_stale',
+                this.db.raw(
+                    `(? > (features.created_at + ((
+                            SELECT feature_types.lifetime_days
+                            FROM feature_types
+                            WHERE feature_types.id = features.type
+                        ) * INTERVAL '1 day')))`,
+                    [currentTime || this.db.fn.now()],
+                ),
+            )
+            .whereNot('stale', true);
+
+        const currentState: {
+            name: string;
+            potentially_stale: boolean | null;
+        }[] = await updateQuery.returning(['name', 'potentially_stale']);
+
+        const diff: { name: string; potentiallyStale: boolean }[] = currentState
+            .map(({ name, potentially_stale }) => {
+                const previous = previousState[name] ?? false;
+                const hasChanged = previous !== (potentially_stale ?? false);
+                if (hasChanged) {
+                    const result: { name: string; potentiallyStale: boolean } =
+                        {
+                            name,
+                            potentiallyStale: potentially_stale ?? false,
+                        };
+                    return result;
+                } else {
+                    return undefined;
+                }
+            })
+            .filter(Boolean);
+
+        return diff;
     }
 
     async isPotentiallyStale(featureName: string): Promise<boolean> {

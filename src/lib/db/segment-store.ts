@@ -1,5 +1,10 @@
 import { ISegmentStore } from '../types/stores/segment-store';
-import { IConstraint, IFeatureStrategySegment, ISegment } from '../types/model';
+import {
+    IClientSegment,
+    IConstraint,
+    IFeatureStrategySegment,
+    ISegment,
+} from '../types/model';
 import { Logger, LogProvider } from '../logger';
 import EventEmitter from 'events';
 import NotFoundError from '../error/notfound-error';
@@ -148,6 +153,16 @@ export default class SegmentStore implements ISegmentStore {
             );
 
         return rows.map(this.mapRow);
+    }
+
+    async getActiveForClient(): Promise<IClientSegment[]> {
+        const fullSegments = await this.getActive();
+
+        return fullSegments.map((segments) => ({
+            id: segments.id,
+            name: segments.name,
+            constraints: segments.constraints,
+        }));
     }
 
     async getByStrategy(strategyId: string): Promise<ISegment[]> {

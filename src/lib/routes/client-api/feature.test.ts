@@ -34,7 +34,10 @@ const callGetAll = async (controller: FeatureController) => {
     await controller.getAll(
         // @ts-expect-error
         { query: {}, header: () => undefined, headers: {} },
-        { json: () => {}, setHeader: () => undefined },
+        {
+            json: () => {},
+            setHeader: () => undefined,
+        },
     );
 };
 
@@ -76,12 +79,13 @@ test('should get empty getFeatures via client', () => {
 test('if caching is enabled should memoize', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
     const getActive = jest.fn().mockReturnValue([]);
+    const getActiveForClient = jest.fn().mockReturnValue([]);
     const respondWithValidation = jest.fn().mockReturnValue({});
     const validPath = jest.fn().mockReturnValue(jest.fn());
     const clientSpecService = new ClientSpecService({ getLogger });
     const openApiService = { respondWithValidation, validPath };
     const featureToggleServiceV2 = { getClientFeatures };
-    const segmentService = { getActive };
+    const segmentService = { getActive, getActiveForClient };
     const configurationRevisionService = { getMaxRevisionId: () => 1 };
 
     const controller = new FeatureController(
@@ -114,11 +118,12 @@ test('if caching is enabled should memoize', async () => {
 test('if caching is not enabled all calls goes to service', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
     const getActive = jest.fn().mockReturnValue([]);
+    const getActiveForClient = jest.fn().mockReturnValue([]);
     const respondWithValidation = jest.fn().mockReturnValue({});
     const validPath = jest.fn().mockReturnValue(jest.fn());
     const clientSpecService = new ClientSpecService({ getLogger });
     const featureToggleServiceV2 = { getClientFeatures };
-    const segmentService = { getActive };
+    const segmentService = { getActive, getActiveForClient };
     const openApiService = { respondWithValidation, validPath };
     const configurationRevisionService = { getMaxRevisionId: () => 1 };
 

@@ -93,6 +93,7 @@ export const createStores = (
             db,
             eventBus,
             getLogger,
+            config.flagResolver,
         ),
         environmentStore: new EnvironmentStore(db, eventBus, getLogger),
         featureTagStore: new FeatureTagStore(db, eventBus, getLogger),

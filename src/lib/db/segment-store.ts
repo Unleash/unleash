@@ -1,5 +1,10 @@
 import { ISegmentStore } from '../types/stores/segment-store';
-import { IConstraint, IFeatureStrategySegment, ISegment } from '../types/model';
+import {
+    IClientSegment,
+    IConstraint,
+    IFeatureStrategySegment,
+    ISegment,
+} from '../types/model';
 import { Logger, LogProvider } from '../logger';
 import EventEmitter from 'events';
 import NotFoundError from '../error/notfound-error';
@@ -23,6 +28,8 @@ const COLUMNS = [
     'created_at',
     'constraints',
 ];
+
+const CLIENT_COLUMNS = ['id', 'name', 'constraints'];
 
 interface ISegmentRow {
     id: number;
@@ -159,6 +166,20 @@ export default class SegmentStore implements ISegmentStore {
         return rows.map(this.mapRow);
     }
 
+    async getActiveForClient(): Promise<IClientSegment[]> {
+        const rows: ISegmentRow[] = await this.db
+            .distinct(this.prefixClientColumns())
+            .from(T.segments)
+            .orderBy('name', 'asc')
+            .join(
+                T.featureStrategySegment,
+                `${T.featureStrategySegment}.segment_id`,
+                `${T.segments}.id`,
+            );
+
+        return rows.map(this.mapRow);
+    }
+
     async getByStrategy(strategyId: string): Promise<ISegment[]> {
         const rows = await this.db
             .select(this.prefixColumns())
@@ -238,6 +259,10 @@ export default class SegmentStore implements ISegmentStore {
 
     prefixColumns(): string[] {
         return COLUMNS.map((c) => `${T.segments}.${c}`);
+    }
+
+    prefixClientColumns(): string[] {
+        return CLIENT_COLUMNS.map((c) => `${T.segments}.${c}`);
     }
 
     mapRow(row?: ISegmentRow): ISegment {

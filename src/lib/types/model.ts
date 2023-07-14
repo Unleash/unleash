@@ -404,6 +404,11 @@ export interface IProjectWithCount extends IProject {
     favorite?: boolean;
 }
 
+export interface IClientSegment {
+    id: number;
+    constraints: IConstraint[];
+}
+
 export interface ISegment {
     id: number;
     name: string;

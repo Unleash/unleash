@@ -32,6 +32,24 @@ export const segmentSchema = {
                 $ref: '#/components/schemas/constraintSchema',
             },
         },
+        createdAt: {
+            type: 'string',
+            format: 'date-time',
+            description:
+                'The time the segment was created as a RFC 3339-conformant timestamp.',
+            example: '2023-07-05T12:56:00.000Z',
+        },
+        createdBy: {
+            type: 'string',
+            description: 'Which user created this segment',
+            example: 'johndoe',
+        },
+        project: {
+            type: 'string',
+            nullable: true,
+            description: 'The project the segment relates to, if applicable.',
+            example: 'default',
+        },
     },
     components: {
         schemas: {

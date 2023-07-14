@@ -1,6 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { clientFeaturesQuerySchema } from './client-features-query-schema';
-import { segmentSchema } from './segment-schema';
+import { clientSegmentSchema } from './client-segment-schema';
 import { constraintSchema } from './constraint-schema';
 import { environmentSchema } from './environment-schema';
 import { overrideSchema } from './override-schema';
@@ -36,7 +36,7 @@ export const clientFeaturesSchema = {
                 'A list of [Segments](https://docs.getunleash.io/reference/segments) configured for this Unleash instance',
             type: 'array',
             items: {
-                $ref: '#/components/schemas/segmentSchema',
+                $ref: '#/components/schemas/clientSegmentSchema',
             },
         },
         query: {
@@ -50,7 +50,7 @@ export const clientFeaturesSchema = {
             constraintSchema,
             clientFeatureSchema,
             environmentSchema,
-            segmentSchema,
+            clientSegmentSchema,
             clientFeaturesQuerySchema,
             overrideSchema,
             parametersSchema,

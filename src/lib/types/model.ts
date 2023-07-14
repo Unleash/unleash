@@ -407,6 +407,7 @@ export interface IProjectWithCount extends IProject {
 export interface IClientSegment {
     id: number;
     constraints: IConstraint[];
+    name: string;
 }
 
 export interface ISegment {

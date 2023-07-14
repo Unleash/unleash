@@ -1,20 +1,16 @@
-import {
-    VariantForm
-} from "../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm";
-import { updateWeightEdit } from "../../common/util";
-import React, { FC, useEffect, useState } from "react";
-import {
-    IFeatureVariantEdit
-} from "../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal";
-import PermissionButton from "../../common/PermissionButton/PermissionButton";
-import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from "../../providers/AccessProvider/permissions";
-import { v4 as uuidv4 } from "uuid";
-import { WeightType } from "../../../constants/variantTypes";
-import { useRequiredPathParam } from "hooks/useRequiredPathParam";
-import { useDefaultProjectSettings } from "hooks/useDefaultProjectSettings";
-import { styled } from "@mui/material";
-import { useRequiredQueryParam } from "hooks/useRequiredQueryParam";
-import { IFeatureStrategy } from "interfaces/strategy";
+import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm';
+import { updateWeightEdit } from '../../common/util';
+import React, { FC, useEffect, useState } from 'react';
+import { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
+import PermissionButton from '../../common/PermissionButton/PermissionButton';
+import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions';
+import { v4 as uuidv4 } from 'uuid';
+import { WeightType } from '../../../constants/variantTypes';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
+import { styled } from '@mui/material';
+import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
+import { IFeatureStrategy } from 'interfaces/strategy';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
@@ -24,7 +20,7 @@ const StyledVariantForms = styled('div')({
 export const StrategyVariants: FC<{
     setStrategy: React.Dispatch<
         React.SetStateAction<Partial<IFeatureStrategy>>
-        >;
+    >;
     strategy: Partial<IFeatureStrategy>;
 }> = ({ strategy, setStrategy }) => {
     const projectId = useRequiredPathParam('projectId');
@@ -40,7 +36,7 @@ export const StrategyVariants: FC<{
                 new: false,
                 isValid: true,
                 id: uuidv4(),
-                overrides: []
+                overrides: [],
             }))
         );
     }, []);

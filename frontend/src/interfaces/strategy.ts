@@ -1,5 +1,5 @@
 import { Operator } from 'constants/operators';
-import { IFeatureStrategyVariant } from "./featureToggle";
+import { IFeatureStrategyVariant } from './featureToggle';
 
 export interface IFeatureStrategy {
     id: string;

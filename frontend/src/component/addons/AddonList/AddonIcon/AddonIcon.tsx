@@ -21,6 +21,7 @@ interface IAddonIconProps {
 export const AddonIcon = ({ name }: IAddonIconProps) => {
     switch (name) {
         case 'slack':
+        case 'slack-app':
             return (
                 <img
                     style={style}

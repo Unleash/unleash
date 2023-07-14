@@ -249,9 +249,23 @@ export interface IAddonDefinition {
     displayName: string;
     documentationUrl: string;
     description: string;
+    deprecated?: string;
     parameters?: IAddonParameterDefinition[];
     events?: string[];
     tagTypes?: ITagType[];
+    installation?: IAddonInstallation;
+    alerts?: IAddonAlert[];
+}
+
+export interface IAddonInstallation {
+    url: string;
+    title?: string;
+    helpText?: string;
+}
+
+export interface IAddonAlert {
+    type: 'success' | 'info' | 'warning' | 'error';
+    text: string;
 }
 
 export interface IAddonConfig {

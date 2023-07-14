@@ -11,7 +11,6 @@ import {
 } from 'component/common/Table';
 
 import { useTable, useSortBy } from 'react-table';
-import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { sortTypes } from 'utils/sortTypes';
@@ -19,6 +18,8 @@ import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { ConfigureAddonButton } from './ConfigureAddonButton/ConfigureAddonButton';
 import { AddonIcon } from '../AddonIcon/AddonIcon';
+import { AddonNameCell } from '../AddonNameCell/AddonNameCell';
+import { IAddonInstallation } from 'interfaces/addons';
 
 interface IProvider {
     name: string;
@@ -27,6 +28,8 @@ interface IProvider {
     documentationUrl: string;
     parameters: object[];
     events: string[];
+    installation?: IAddonInstallation;
+    deprecated?: string;
 }
 
 interface IAvailableAddonsProps {
@@ -46,11 +49,15 @@ export const AvailableAddons = ({
             });
         }
 
-        return providers.map(({ name, displayName, description }) => ({
-            name,
-            displayName,
-            description,
-        }));
+        return providers.map(
+            ({ name, displayName, description, deprecated, installation }) => ({
+                name,
+                displayName,
+                description,
+                deprecated,
+                installation,
+            })
+        );
     }, [providers, loading]);
 
     const columns = useMemo(
@@ -71,19 +78,9 @@ export const AvailableAddons = ({
                 Header: 'Name',
                 accessor: 'name',
                 width: '90%',
-                Cell: ({
-                    row: {
-                        original: { name, description },
-                    },
-                }: any) => {
-                    return (
-                        <LinkCell
-                            data-loading
-                            title={name}
-                            subtitle={description}
-                        />
-                    );
-                },
+                Cell: ({ row: { original } }: any) => (
+                    <AddonNameCell provider={original} />
+                ),
                 sortType: 'alphanumeric',
             },
             {
@@ -91,7 +88,7 @@ export const AvailableAddons = ({
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
                     <ActionCell>
-                        <ConfigureAddonButton name={original.name} />
+                        <ConfigureAddonButton provider={original} />
                     </ActionCell>
                 ),
                 width: 150,

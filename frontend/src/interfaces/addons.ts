@@ -19,6 +19,21 @@ export interface IAddonProvider {
     name: string;
     parameters: IAddonProviderParams[];
     tagTypes: ITagType[];
+    installation?: IAddonInstallation;
+    alerts?: IAddonAlert[];
+    deprecated?: string;
+}
+
+export interface IAddonInstallation {
+    url: string;
+    warning?: string;
+    title?: string;
+    helpText?: string;
+}
+
+export interface IAddonAlert {
+    type: 'success' | 'info' | 'warning' | 'error';
+    text: string;
 }
 
 export interface IAddonProviderParams {

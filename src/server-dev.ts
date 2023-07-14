@@ -43,6 +43,7 @@ process.nextTick(async () => {
                         strategyVariant: true,
                         newProjectLayout: true,
                         emitPotentiallyStaleEvents: true,
+                        slackAppAddon: true,
                     },
                 },
                 authentication: {

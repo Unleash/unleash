@@ -13,6 +13,7 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 strictSchemaValidation: true,
+                slackAppAddon: true,
             },
         },
     });
@@ -32,7 +33,7 @@ test('gets all addons', async () => {
         .expect(200)
         .expect((res) => {
             expect(res.body.addons.length).toBe(0);
-            expect(res.body.providers.length).toBe(4);
+            expect(res.body.providers.length).toBe(5);
             expect(res.body.providers[0].name).toBe('webhook');
         });
 });

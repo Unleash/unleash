@@ -1,12 +1,14 @@
 import joi from 'joi';
 import { nameType } from '../routes/util';
 import { tagTypeSchema } from '../services/tag-type-schema';
+import { installationDefinitionSchema } from './installation-definition-schema';
 
 export const addonDefinitionSchema = joi.object().keys({
     name: nameType,
     displayName: joi.string(),
     documentationUrl: joi.string().uri({ scheme: [/https?/] }),
     description: joi.string().allow(''),
+    deprecated: joi.boolean().optional().default(false),
     parameters: joi
         .array()
         .optional()
@@ -23,4 +25,14 @@ export const addonDefinitionSchema = joi.object().keys({
         ),
     events: joi.array().optional().items(joi.string()),
     tagTypes: joi.array().optional().items(tagTypeSchema),
+    installation: installationDefinitionSchema.optional(),
+    alerts: joi
+        .array()
+        .optional()
+        .items(
+            joi.object().keys({
+                type: joi.string().valid('success', 'info', 'warning', 'error'),
+                text: joi.string().required(),
+            }),
+        ),
 });

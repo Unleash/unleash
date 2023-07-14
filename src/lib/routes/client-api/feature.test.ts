@@ -34,7 +34,10 @@ const callGetAll = async (controller: FeatureController) => {
     await controller.getAll(
         // @ts-expect-error
         { query: {}, header: () => undefined, headers: {} },
-        { json: () => {}, setHeader: () => undefined },
+        {
+            json: () => {},
+            setHeader: () => undefined,
+        },
     );
 };
 
@@ -158,16 +161,13 @@ test('fetch single feature', async () => {
         strategies: [{ name: 'default' }],
     });
 
-    return (
-        request
-            .get(`${base}/api/client/features/test_`)
-            .expect('Content-Type', /json/)
-            // .expect(200)
-            .expect((res) => {
-                console.log(res.body);
-                expect(res.body.name === 'test_').toBe(true);
-            })
-    );
+    return request
+        .get(`${base}/api/client/features/test_`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.name === 'test_').toBe(true);
+        });
 });
 
 test('support name prefix', async () => {

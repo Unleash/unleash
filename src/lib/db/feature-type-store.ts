@@ -67,6 +67,13 @@ class FeatureTypeStore implements IFeatureTypeStore {
         const { present } = result.rows[0];
         return present;
     }
+
+    updateLifetime(
+        name: string,
+        newLifetimeDays: number | null,
+    ): Promise<IFeatureType> {
+        throw new Error('Method not implemented.');
+    }
 }
 export default FeatureTypeStore;
 module.exports = FeatureTypeStore;

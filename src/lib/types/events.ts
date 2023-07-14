@@ -31,7 +31,8 @@ export const FEATURE_ENVIRONMENT_ENABLED =
     'feature-environment-enabled' as const;
 export const FEATURE_ENVIRONMENT_DISABLED =
     'feature-environment-disabled' as const;
-
+export const FEATURE_ENVIRONMENT_STRATEGY_EXECUTION_ORDER_UPDATED =
+    'feature-environment-strategy-execution-order-updated';
 export const STRATEGY_CREATED = 'strategy-created' as const;
 export const STRATEGY_DELETED = 'strategy-deleted' as const;
 export const STRATEGY_DEPRECATED = 'strategy-deprecated' as const;
@@ -139,6 +140,7 @@ export const IEventTypes = [
     FEATURE_STRATEGY_UPDATE,
     FEATURE_STRATEGY_ADD,
     FEATURE_STRATEGY_REMOVE,
+    FEATURE_ENVIRONMENT_STRATEGY_EXECUTION_ORDER_UPDATED,
     DROP_FEATURE_TAGS,
     FEATURE_UNTAGGED,
     FEATURE_STALE_ON,
@@ -324,6 +326,46 @@ export class FeatureEnvironmentEvent extends BaseEvent {
         this.project = p.project;
         this.featureName = p.featureName;
         this.environment = p.environment;
+    }
+}
+export type EnvironmentStrategyExecutionOrder = Pick<
+    IStrategyConfig,
+    'id' | 'title' | 'name' | 'sortOrder' | 'variants'
+>[];
+export class FeatureEnvironmentStrategyExecutionOrderUpdatedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly environment: string;
+
+    readonly data: EnvironmentStrategyExecutionOrder;
+
+    readonly preData: EnvironmentStrategyExecutionOrder;
+
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(p: {
+        project: string;
+        featureName: string;
+        environment: string;
+        createdBy: string | IUser;
+        data: EnvironmentStrategyExecutionOrder;
+        preData: EnvironmentStrategyExecutionOrder;
+        tags: ITag[];
+    }) {
+        super(
+            FEATURE_ENVIRONMENT_STRATEGY_EXECUTION_ORDER_UPDATED,
+            p.createdBy,
+            p.tags,
+        );
+        const { project, featureName, environment, data, preData } = p;
+        this.project = project;
+        this.featureName = featureName;
+        this.environment = environment;
+        this.data = data;
+        this.preData = preData;
     }
 }
 

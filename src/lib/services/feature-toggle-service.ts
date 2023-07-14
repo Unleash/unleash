@@ -1,5 +1,6 @@
 import {
     CREATE_FEATURE_STRATEGY,
+    EnvironmentStrategyExecutionOrder,
     EnvironmentVariantEvent,
     FEATURE_UPDATED,
     FeatureArchivedEvent,
@@ -7,6 +8,7 @@ import {
     FeatureCreatedEvent,
     FeatureDeletedEvent,
     FeatureEnvironmentEvent,
+    FeatureEnvironmentStrategyExecutionOrderUpdatedEvent,
     FeatureMetadataUpdateEvent,
     FeatureRevivedEvent,
     FeatureStaleEvent,
@@ -386,47 +388,70 @@ class FeatureToggleService {
     }
 
     async updateStrategiesSortOrder(
-        featureName: string,
-        environment: string,
-        project: string,
-        createdBy: string,
+        context: IFeatureStrategyContext,
         sortOrders: SetStrategySortOrderSchema,
+        createdBy: string,
+        user?: User,
     ): Promise<Saved<any>> {
+        await this.stopWhenChangeRequestsEnabled(
+            context.projectId,
+            context.environment,
+            user,
+        );
+
+        return this.unprotectedUpdateStrategiesSortOrder(
+            context,
+            sortOrders,
+            createdBy,
+        );
+    }
+
+    async unprotectedUpdateStrategiesSortOrder(
+        context: IFeatureStrategyContext,
+        sortOrders: SetStrategySortOrderSchema,
+        createdBy: string,
+    ): Promise<Saved<any>> {
+        const { featureName, environment, projectId: project } = context;
+        const eventPreData: EnvironmentStrategyExecutionOrder = [];
+        const eventData: EnvironmentStrategyExecutionOrder = [];
         await Promise.all(
             sortOrders.map(async ({ id, sortOrder }) => {
                 const strategyToUpdate =
                     await this.featureStrategiesStore.getStrategyById(id);
+                eventPreData.push({
+                    id: strategyToUpdate.id,
+                    name: strategyToUpdate.strategyName,
+                    title: strategyToUpdate.title,
+                    variants: strategyToUpdate.variants,
+                    sortOrder: strategyToUpdate.sortOrder,
+                });
                 await this.featureStrategiesStore.updateSortOrder(
                     id,
                     sortOrder,
                 );
-                const updatedStrategy =
-                    await this.featureStrategiesStore.getStrategyById(id);
+                strategyToUpdate.sortOrder = sortOrder;
 
-                const tags = await this.tagStore.getAllTagsForFeature(
-                    featureName,
-                );
-                const segments = await this.segmentService.getByStrategy(
-                    strategyToUpdate.id,
-                );
-                const strategy = this.featureStrategyToPublic(
-                    updatedStrategy,
-                    segments,
-                );
-                await this.eventStore.store(
-                    new FeatureStrategyUpdateEvent({
-                        featureName,
-                        environment,
-                        project,
-                        createdBy,
-                        preData: this.featureStrategyToPublic(
-                            strategyToUpdate,
-                            segments,
-                        ),
-                        data: strategy,
-                        tags: tags,
-                    }),
-                );
+                eventData.push({
+                    id: strategyToUpdate.id,
+                    name: strategyToUpdate.strategyName,
+                    title: strategyToUpdate.title,
+                    variants: strategyToUpdate.variants,
+                    sortOrder: strategyToUpdate.sortOrder,
+                });
+            }),
+        );
+
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+
+        await this.eventStore.store(
+            new FeatureEnvironmentStrategyExecutionOrderUpdatedEvent({
+                featureName,
+                environment,
+                project,
+                createdBy,
+                preData: eventPreData,
+                data: eventData,
+                tags: tags,
             }),
         );
     }

@@ -412,35 +412,49 @@ class FeatureToggleService {
         createdBy: string,
     ): Promise<Saved<any>> {
         const { featureName, environment, projectId: project } = context;
-        const eventPreData: EnvironmentStrategyExecutionOrder = [];
-        const eventData: EnvironmentStrategyExecutionOrder = [];
+        const existingOrder = (
+            await this.getStrategiesForEnvironment(
+                project,
+                featureName,
+                environment,
+            )
+        )
+            .sort((a, b) =>
+                !!a.sortOrder && !!b.sortOrder
+                    ? a.sortOrder > b.sortOrder
+                        ? 1
+                        : -1
+                    : 1,
+            )
+            .map((strategy) => strategy.id);
+
+        const eventPreData: EnvironmentStrategyExecutionOrder = existingOrder;
+
         await Promise.all(
             sortOrders.map(async ({ id, sortOrder }) => {
-                const strategyToUpdate =
-                    await this.featureStrategiesStore.getStrategyById(id);
-                eventPreData.push({
-                    id: strategyToUpdate.id,
-                    name: strategyToUpdate.strategyName,
-                    title: strategyToUpdate.title,
-                    variants: strategyToUpdate.variants,
-                    sortOrder: strategyToUpdate.sortOrder,
-                });
                 await this.featureStrategiesStore.updateSortOrder(
                     id,
                     sortOrder,
                 );
-                strategyToUpdate.sortOrder = sortOrder;
-
-                eventData.push({
-                    id: strategyToUpdate.id,
-                    name: strategyToUpdate.strategyName,
-                    title: strategyToUpdate.title,
-                    variants: strategyToUpdate.variants,
-                    sortOrder: strategyToUpdate.sortOrder,
-                });
             }),
         );
+        const newOrder = (
+            await this.getStrategiesForEnvironment(
+                project,
+                featureName,
+                environment,
+            )
+        )
+            .sort((a, b) =>
+                !!a.sortOrder && !!b.sortOrder
+                    ? a.sortOrder > b.sortOrder
+                        ? 1
+                        : -1
+                    : 1,
+            )
+            .map((strategy) => strategy.id);
 
+        const eventData: EnvironmentStrategyExecutionOrder = newOrder;
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
         const event = new FeatureEnvironmentStrategyExecutionOrderUpdatedEvent({
             featureName,
@@ -451,7 +465,6 @@ class FeatureToggleService {
             data: eventData,
             tags: tags,
         });
-        console.log(event);
         await this.eventStore.store(event);
     }
 

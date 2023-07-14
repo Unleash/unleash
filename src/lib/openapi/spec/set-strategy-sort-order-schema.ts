@@ -8,6 +8,7 @@ export const setStrategySortOrderSchema = {
         type: 'object',
         additionalProperties: false,
         required: ['id', 'sortOrder'],
+        description: 'A strategy with its new sort order',
         properties: {
             id: {
                 type: 'string',

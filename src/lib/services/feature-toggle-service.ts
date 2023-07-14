@@ -1127,7 +1127,7 @@ class FeatureToggleService {
             segments: [],
             title: strategy.title,
             disabled: strategy.disabled,
-            sortOrder: strategy.sortOrder,
+            // FIXME: Should we return sortOrder here, or adjust OpenAPI?
         };
 
         if (segments && segments.length > 0) {

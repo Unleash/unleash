@@ -142,7 +142,6 @@ const metaRules: Rule[] = [
             'playgroundStrategySchema',
             'pushVariantsSchema',
             'resetPasswordSchema',
-            'setStrategySortOrderSchema',
             'setUiConfigSchema',
             'sortOrderSchema',
             'uiConfigSchema',

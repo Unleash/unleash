@@ -1,5 +1,6 @@
 import {
     CREATE_FEATURE_STRATEGY,
+    EnvironmentStrategyExecutionOrder,
     EnvironmentVariantEvent,
     FEATURE_UPDATED,
     FeatureArchivedEvent,
@@ -7,6 +8,7 @@ import {
     FeatureCreatedEvent,
     FeatureDeletedEvent,
     FeatureEnvironmentEvent,
+    FeatureEnvironmentStrategyExecutionOrderUpdatedEvent,
     FeatureMetadataUpdateEvent,
     FeatureRevivedEvent,
     FeatureStaleEvent,
@@ -369,7 +371,7 @@ class FeatureToggleService {
         featureStrategy: IFeatureStrategy,
         segments: ISegment[] = [],
     ): Saved<IStrategyConfig> {
-        return {
+        const result: Saved<IStrategyConfig> = {
             id: featureStrategy.id,
             name: featureStrategy.strategyName,
             title: featureStrategy.title,
@@ -378,16 +380,79 @@ class FeatureToggleService {
             parameters: featureStrategy.parameters,
             segments: segments.map((segment) => segment.id) ?? [],
         };
+
+        if (this.flagResolver.isEnabled('strategyVariant')) {
+            result.sortOrder = featureStrategy.sortOrder;
+        }
+        return result;
     }
 
     async updateStrategiesSortOrder(
-        featureName: string,
+        context: IFeatureStrategyContext,
         sortOrders: SetStrategySortOrderSchema,
+        createdBy: string,
+        user?: User,
     ): Promise<Saved<any>> {
+        await this.stopWhenChangeRequestsEnabled(
+            context.projectId,
+            context.environment,
+            user,
+        );
+
+        return this.unprotectedUpdateStrategiesSortOrder(
+            context,
+            sortOrders,
+            createdBy,
+        );
+    }
+
+    async unprotectedUpdateStrategiesSortOrder(
+        context: IFeatureStrategyContext,
+        sortOrders: SetStrategySortOrderSchema,
+        createdBy: string,
+    ): Promise<Saved<any>> {
+        const { featureName, environment, projectId: project } = context;
+        const eventPreData: EnvironmentStrategyExecutionOrder = [];
+        const eventData: EnvironmentStrategyExecutionOrder = [];
         await Promise.all(
-            sortOrders.map(async ({ id, sortOrder }) =>
-                this.featureStrategiesStore.updateSortOrder(id, sortOrder),
-            ),
+            sortOrders.map(async ({ id, sortOrder }) => {
+                const strategyToUpdate =
+                    await this.featureStrategiesStore.getStrategyById(id);
+                eventPreData.push({
+                    id: strategyToUpdate.id,
+                    name: strategyToUpdate.strategyName,
+                    title: strategyToUpdate.title,
+                    variants: strategyToUpdate.variants,
+                    sortOrder: strategyToUpdate.sortOrder,
+                });
+                await this.featureStrategiesStore.updateSortOrder(
+                    id,
+                    sortOrder,
+                );
+                strategyToUpdate.sortOrder = sortOrder;
+
+                eventData.push({
+                    id: strategyToUpdate.id,
+                    name: strategyToUpdate.strategyName,
+                    title: strategyToUpdate.title,
+                    variants: strategyToUpdate.variants,
+                    sortOrder: strategyToUpdate.sortOrder,
+                });
+            }),
+        );
+
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+
+        await this.eventStore.store(
+            new FeatureEnvironmentStrategyExecutionOrderUpdatedEvent({
+                featureName,
+                environment,
+                project,
+                createdBy,
+                preData: eventPreData,
+                data: eventData,
+                tags: tags,
+            }),
         );
     }
 
@@ -472,24 +537,31 @@ class FeatureToggleService {
                 );
             }
 
-            const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
                 newFeatureStrategy.id,
             );
+
             const strategy = this.featureStrategyToPublic(
                 newFeatureStrategy,
                 segments,
             );
-            await this.eventStore.store(
-                new FeatureStrategyAddEvent({
-                    project: projectId,
+
+            if (this.flagResolver.isEnabled('strategyVariant')) {
+                const tags = await this.tagStore.getAllTagsForFeature(
                     featureName,
-                    createdBy,
-                    environment,
-                    data: strategy,
-                    tags,
-                }),
-            );
+                );
+
+                await this.eventStore.store(
+                    new FeatureStrategyAddEvent({
+                        project: projectId,
+                        featureName,
+                        createdBy,
+                        environment,
+                        data: strategy,
+                        tags,
+                    }),
+                );
+            }
             return strategy;
         } catch (e) {
             if (e.code === FOREIGN_KEY_VIOLATION) {

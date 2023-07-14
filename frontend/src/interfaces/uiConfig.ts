@@ -51,7 +51,6 @@ export interface IFlags {
     disableNotifications?: boolean;
     advancedPlayground?: boolean;
     customRootRoles?: boolean;
-    strategySplittedButton?: boolean;
     strategyVariant?: boolean;
     newProjectLayout?: boolean;
 }

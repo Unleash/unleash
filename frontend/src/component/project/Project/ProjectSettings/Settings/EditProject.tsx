@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
@@ -10,7 +9,6 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Alert } from '@mui/material';
-import { GO_BACK } from 'constants/navigate';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectForm, {

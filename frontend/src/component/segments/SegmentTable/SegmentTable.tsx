@@ -28,13 +28,11 @@ import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { UsedInCell } from 'component/context/ContextList/UsedInCell';
 
 export const SegmentTable = () => {
     const projectId = useOptionalPathParam('projectId');
     const { segments, loading } = useSegments();
-    const { uiConfig } = useUiConfig();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [initialState] = useState({
         sortBy: [{ id: 'createdAt' }],

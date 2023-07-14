@@ -59,7 +59,7 @@ export const SegmentTable = () => {
         return segments;
     }, [segments, projectId]);
 
-    const columns = getColumns();
+    const columns = useMemo(() => getColumns(), []);
     const {
         getTableProps,
         getTableBodyProps,

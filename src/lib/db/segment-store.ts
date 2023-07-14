@@ -107,42 +107,33 @@ export default class SegmentStore implements ISegmentStore {
     }
 
     async getAll(): Promise<ISegment[]> {
-        if (this.flagResolver.isEnabled('segmentContextFieldUsage')) {
-            const rows: ISegmentRow[] = await this.db
-                .select(
-                    this.prefixColumns(),
-                    'used_in_projects',
-                    'used_in_features',
-                )
-                .countDistinct(
-                    `${T.featureStrategies}.project_name AS used_in_projects`,
-                )
-                .countDistinct(
-                    `${T.featureStrategies}.feature_name AS used_in_features`,
-                )
-                .from(T.segments)
-                .leftJoin(
-                    T.featureStrategySegment,
-                    `${T.segments}.id`,
-                    `${T.featureStrategySegment}.segment_id`,
-                )
-                .leftJoin(
-                    T.featureStrategies,
-                    `${T.featureStrategies}.id`,
-                    `${T.featureStrategySegment}.feature_strategy_id`,
-                )
-                .groupBy(this.prefixColumns())
-                .orderBy('name', 'asc');
+        const rows: ISegmentRow[] = await this.db
+            .select(
+                this.prefixColumns(),
+                'used_in_projects',
+                'used_in_features',
+            )
+            .countDistinct(
+                `${T.featureStrategies}.project_name AS used_in_projects`,
+            )
+            .countDistinct(
+                `${T.featureStrategies}.feature_name AS used_in_features`,
+            )
+            .from(T.segments)
+            .leftJoin(
+                T.featureStrategySegment,
+                `${T.segments}.id`,
+                `${T.featureStrategySegment}.segment_id`,
+            )
+            .leftJoin(
+                T.featureStrategies,
+                `${T.featureStrategies}.id`,
+                `${T.featureStrategySegment}.feature_strategy_id`,
+            )
+            .groupBy(this.prefixColumns())
+            .orderBy('name', 'asc');
 
-            return rows.map(this.mapRow);
-        } else {
-            const rows: ISegmentRow[] = await this.db
-                .select(this.prefixColumns())
-                .from(T.segments)
-                .orderBy('name', 'asc');
-
-            return rows.map(this.mapRow);
-        }
+        return rows.map(this.mapRow);
     }
 
     async getActive(): Promise<ISegment[]> {

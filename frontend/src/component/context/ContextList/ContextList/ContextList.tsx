@@ -62,74 +62,67 @@ const ContextList: VFC = () => {
             .sort((a, b) => a.sortOrder - b.sortOrder);
     }, [context, loading]);
 
-    const columns = useMemo(
-        () => [
-            {
-                id: 'Icon',
-                Cell: () => <IconCell icon={<Adjust color="disabled" />} />,
-                disableGlobalFilter: true,
-            },
-            {
-                Header: 'Name',
-                accessor: 'name',
-                width: '70%',
-                Cell: ({
-                    row: {
-                        original: { name, description },
-                    },
-                }: any) => (
-                    <LinkCell
-                        title={name}
-                        to={`/context/edit/${name}`}
-                        subtitle={description}
-                    />
-                ),
-                sortType: 'alphanumeric',
-            },
-            ...(uiConfig.flags.segmentContextFieldUsage
-                ? [
-                      {
-                          Header: 'Used in',
-                          width: '60%',
-                          Cell: ({ row: { original } }: any) => (
-                              <UsedInCell original={original} />
-                          ),
-                      },
-                  ]
-                : []),
-            {
-                Header: 'Actions',
-                id: 'Actions',
-                align: 'center',
-                Cell: ({
-                    row: {
-                        original: { name },
-                    },
-                }: any) => (
-                    <ContextActionsCell
-                        name={name}
-                        onDelete={() => {
-                            setName(name);
-                            setShowDelDialogue(true);
-                        }}
-                    />
-                ),
-                width: 150,
-                disableGlobalFilter: true,
-                disableSortBy: true,
-            },
-            {
-                accessor: 'description',
-                disableSortBy: true,
-            },
-            {
-                accessor: 'sortOrder',
-                disableGlobalFilter: true,
-                sortType: 'number',
-            },
-        ],
-        [uiConfig.flags.segmentContextFieldUsage]
-    );
+    const columns = [
+        {
+            id: 'Icon',
+            Cell: () => <IconCell icon={<Adjust color="disabled" />} />,
+            disableGlobalFilter: true,
+        },
+        {
+            Header: 'Name',
+            accessor: 'name',
+            width: '70%',
+            Cell: ({
+                row: {
+                    original: { name, description },
+                },
+            }: any) => (
+                <LinkCell
+                    title={name}
+                    to={`/context/edit/${name}`}
+                    subtitle={description}
+                />
+            ),
+            sortType: 'alphanumeric',
+        },
+        {
+            Header: 'Used in',
+            width: '60%',
+            Cell: ({ row: { original } }: any) => (
+                <UsedInCell original={original} />
+            ),
+        },
+        {
+            Header: 'Actions',
+            id: 'Actions',
+            align: 'center',
+            Cell: ({
+                row: {
+                    original: { name },
+                },
+            }: any) => (
+                <ContextActionsCell
+                    name={name}
+                    onDelete={() => {
+                        setName(name);
+                        setShowDelDialogue(true);
+                    }}
+                />
+            ),
+            width: 150,
+            disableGlobalFilter: true,
+            disableSortBy: true,
+        },
+        {
+            accessor: 'description',
+            disableSortBy: true,
+        },
+        {
+            accessor: 'sortOrder',
+            disableGlobalFilter: true,
+            sortType: 'number',
+        },
+    ];
 
     const initialState = useMemo(
         () => ({

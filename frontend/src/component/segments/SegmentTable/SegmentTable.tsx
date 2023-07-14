@@ -59,10 +59,7 @@ export const SegmentTable = () => {
         return segments;
     }, [segments, projectId]);
 
-    const columns = useMemo(
-        () => getColumns(uiConfig.flags.segmentContextFieldUsage),
-        [uiConfig.flags.segmentContextFieldUsage]
-    );
+    const columns = getColumns();
     const {
         getTableProps,
         getTableBodyProps,
@@ -177,7 +174,7 @@ export const SegmentTable = () => {
     );
 };
 
-const getColumns = (segmentContextFieldUsage?: boolean) => [
+const getColumns = () => [
     {
         id: 'Icon',
         width: '1%',
@@ -201,18 +198,13 @@ const getColumns = (segmentContextFieldUsage?: boolean) => [
             />
         ),
     },
-    ...(segmentContextFieldUsage
-        ? [
-              {
-                  Header: 'Used in',
-                  width: '60%',
-                  Cell: ({ row: { original } }: any) => (
-                      <UsedInCell original={original} />
-                  ),
-              },
-          ]
-        : []),
-
+    {
+        Header: 'Used in',
+        width: '60%',
+        Cell: ({ row: { original } }: any) => (
+            <UsedInCell original={original} />
+        ),
+    },
     {
         Header: 'Project',
         accessor: 'project',

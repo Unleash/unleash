@@ -19,7 +19,6 @@ export type IFlagKey =
     | 'demo'
     | 'googleAuthEnabled'
     | 'disableBulkToggle'
-    | 'segmentContextFieldUsage'
     | 'disableNotifications'
     | 'advancedPlayground'
     | 'customRootRoles'
@@ -94,10 +93,6 @@ const flags: IFlags = {
     ),
     disableBulkToggle: parseEnvVarBoolean(
         process.env.DISABLE_BULK_TOGGLE,
-        false,
-    ),
-    segmentContextFieldUsage: parseEnvVarBoolean(
-        process.env.UNLEASH_SSEGMENT_CONTEXT_FIELD_USAGE,
         false,
     ),
     disableNotifications: parseEnvVarBoolean(

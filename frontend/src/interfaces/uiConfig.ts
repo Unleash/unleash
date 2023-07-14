@@ -48,7 +48,6 @@ export interface IFlags {
     demo?: boolean;
     googleAuthEnabled?: boolean;
     disableBulkToggle?: boolean;
-    segmentContextFieldUsage?: boolean;
     disableNotifications?: boolean;
     advancedPlayground?: boolean;
     customRootRoles?: boolean;

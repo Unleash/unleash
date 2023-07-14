@@ -339,9 +339,9 @@ export class FeatureEnvironmentStrategyExecutionOrderUpdatedEvent extends BaseEv
 
     readonly environment: string;
 
-    readonly data: EnvironmentStrategyExecutionOrder;
+    readonly data: string[];
 
-    readonly preData: EnvironmentStrategyExecutionOrder;
+    readonly preData: string[];
 
     /**
      * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
@@ -364,8 +364,18 @@ export class FeatureEnvironmentStrategyExecutionOrderUpdatedEvent extends BaseEv
         this.project = project;
         this.featureName = featureName;
         this.environment = environment;
-        this.data = data;
-        this.preData = preData;
+        this.data = data.map(
+            (executionOrder) =>
+                `${executionOrder.sortOrder} - ${
+                    executionOrder.name
+                } - ${JSON.stringify(executionOrder.variants)}`,
+        );
+        this.preData = preData.map(
+            (executionOrder) =>
+                `${executionOrder.sortOrder} - ${
+                    executionOrder.name
+                } - ${JSON.stringify(executionOrder.variants)}`,
+        );
     }
 }
 

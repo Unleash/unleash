@@ -10,11 +10,11 @@ import PermissionButton from "../../common/PermissionButton/PermissionButton";
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from "../../providers/AccessProvider/permissions";
 import { v4 as uuidv4 } from "uuid";
 import { WeightType } from "../../../constants/variantTypes";
-import { useRequiredPathParam } from "../../../hooks/useRequiredPathParam";
-import { useDefaultProjectSettings } from "../../../hooks/useDefaultProjectSettings";
+import { useRequiredPathParam } from "hooks/useRequiredPathParam";
+import { useDefaultProjectSettings } from "hooks/useDefaultProjectSettings";
 import { styled } from "@mui/material";
-import { useRequiredQueryParam } from "../../../hooks/useRequiredQueryParam";
-import { IFeatureStrategy } from "../../../interfaces/strategy";
+import { useRequiredQueryParam } from "hooks/useRequiredQueryParam";
+import { IFeatureStrategy } from "interfaces/strategy";
 
 const StyledVariantForms = styled('div')({
     display: 'flex',

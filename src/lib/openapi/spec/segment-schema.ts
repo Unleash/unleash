@@ -1,5 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { constraintSchema } from './constraint-schema';
+import { clientSegmentSchema } from './client-segment-schema';
 
 export const segmentSchema = {
     $id: '#/components/schemas/segmentSchema',
@@ -9,28 +10,12 @@ export const segmentSchema = {
     additionalProperties: false,
     required: ['id', 'constraints'],
     properties: {
-        id: {
-            type: 'number',
-            description: "The segment's id.",
-        },
-        name: {
-            type: 'string',
-            description: 'The name of the segment.',
-            example: 'segment A',
-        },
+        ...clientSegmentSchema.properties,
         description: {
             type: 'string',
             nullable: true,
             description: 'The description of the segment.',
             example: 'Segment A description',
-        },
-        constraints: {
-            type: 'array',
-            description:
-                'List of constraints that determine which users are part of the segment',
-            items: {
-                $ref: '#/components/schemas/constraintSchema',
-            },
         },
         createdAt: {
             type: 'string',

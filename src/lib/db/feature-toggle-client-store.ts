@@ -242,7 +242,7 @@ export default class FeatureToggleClientStore
     }
 
     private rowToStrategy(row: Record<string, any>): IStrategyConfig {
-        const strategy = {
+        const strategy: IStrategyConfig = {
             id: row.strategy_id,
             name: row.strategy_name,
             title: row.strategy_title,

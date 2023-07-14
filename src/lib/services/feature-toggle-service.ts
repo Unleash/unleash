@@ -1985,8 +1985,6 @@ class FeatureToggleService {
                     ),
                 );
             }
-        } else {
-            console.log('NOT ENABLED\n\n\n\n');
         }
     }
 }

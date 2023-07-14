@@ -150,7 +150,6 @@ interface IVariantFormProps {
     variants: IFeatureVariantEdit[];
     updateVariant: (updatedVariant: IFeatureVariantEdit) => void;
     removeVariant: (variantId: string) => void;
-    projectId: string;
     apiPayload: {
         patch: Operation[];
         error?: string;

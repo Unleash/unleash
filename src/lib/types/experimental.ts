@@ -22,7 +22,6 @@ export type IFlagKey =
     | 'disableNotifications'
     | 'advancedPlayground'
     | 'customRootRoles'
-    | 'strategySplittedButton'
     | 'strategyVariant'
     | 'newProjectLayout'
     | 'slackAppAddon'
@@ -83,10 +82,6 @@ const flags: IFlags = {
     cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
-    strategySplittedButton: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_SPLITTED_BUTTON,
-        false,
-    ),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
         false,

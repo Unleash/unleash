@@ -38,7 +38,6 @@ process.nextTick(async () => {
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
                         advancedPlayground: true,
-                        strategySplittedButton: true,
                         strategyVariant: true,
                         newProjectLayout: true,
                         emitPotentiallyStaleEvents: true,

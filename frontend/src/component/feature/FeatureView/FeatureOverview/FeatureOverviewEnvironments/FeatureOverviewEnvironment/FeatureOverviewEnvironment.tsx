@@ -105,19 +105,6 @@ const StyledStringTruncator = styled(StringTruncator)(({ theme }) => ({
     },
 }));
 
-/**
- * @deprecated
- */
-const LegacyStyledButtonContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    marginLeft: '1.8rem',
-    [theme.breakpoints.down(560)]: {
-        flexDirection: 'column',
-        marginLeft: '0',
-    },
-}));
-
 const StyledButtonContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -137,7 +124,6 @@ const FeatureOverviewEnvironment = ({
     const { metrics } = useFeatureMetrics(projectId, featureId);
     const { feature } = useFeature(projectId, featureId);
     const { value: globalStore } = useGlobalLocalStorage();
-    const { uiConfig } = useUiConfig();
 
     const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
     const environmentMetric = featureMetrics.find(

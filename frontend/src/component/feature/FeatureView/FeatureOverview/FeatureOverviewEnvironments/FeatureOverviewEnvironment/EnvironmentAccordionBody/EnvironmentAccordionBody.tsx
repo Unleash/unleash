@@ -9,6 +9,9 @@ import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { FeatureStrategyEmpty } from 'component/feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { useChangeRequestApi } from '../../../../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestsEnabled } from '../../../../../../../hooks/useChangeRequestsEnabled';
+import { usePendingChangeRequests } from '../../../../../../../hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -36,6 +39,10 @@ const EnvironmentAccordionBody = ({
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { setStrategiesSortOrder } = useFeatureStrategyApi();
+    const { addChange } = useChangeRequestApi();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
     const { refetchFeature } = useFeature(projectId, featureId);
     const [strategies, setStrategies] = useState(
@@ -68,6 +75,37 @@ const EnvironmentAccordionBody = ({
                 title: 'Order of strategies updated',
                 type: 'success',
             });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onChangeRequestReorder = async (
+        payload: { id: string; sortOrder: number }[]
+    ) => {
+        await addChange(projectId, featureEnvironment.name, {
+            action: 'updateEnvironmentStrategyExecutionOrder',
+            feature: featureId,
+            payload,
+        });
+
+        setToastData({
+            title: 'Strategy execution order added to draft',
+            type: 'success',
+            confetti: true,
+        });
+        refetchChangeRequests();
+    };
+
+    const onStrategyReorder = async (
+        payload: { id: string; sortOrder: number }[]
+    ) => {
+        try {
+            if (isChangeRequestConfigured(featureEnvironment.name)) {
+                await onChangeRequestReorder(payload);
+            } else {
+                await onReorder(payload);
+            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -129,7 +167,7 @@ const EnvironmentAccordionBody = ({
 
     const onDragEnd = () => {
         setDragItem(null);
-        onReorder(
+        onStrategyReorder(
             strategies.map((strategy, sortOrder) => ({
                 id: strategy.id,
                 sortOrder,

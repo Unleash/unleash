@@ -8,7 +8,8 @@ export interface IChangeSchema {
         | 'addStrategy'
         | 'updateStrategy'
         | 'deleteStrategy'
-        | 'patchVariant';
+        | 'patchVariant'
+        | 'updateEnvironmentStrategyExecutionOrder';
     payload: string | boolean | object | number;
 }
 

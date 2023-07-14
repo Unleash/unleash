@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import EventDiff from 'component/events/EventDiff/EventDiff';
-import { IFeatureVariant } from 'interfaces/featureToggle';
+import { IFeatureStrategySortOrder } from '../../../../../../interfaces/strategy';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -14,22 +14,16 @@ const StyledCodeSection = styled('div')(({ theme }) => ({
 }));
 
 interface IDiffProps {
-    preData: IFeatureVariant[];
-    data: IFeatureVariant[];
+    preData: string[];
+    data: string[];
 }
 
-const variantsArrayToObject = (variants: IFeatureVariant[]) =>
-    variants.reduce(
-        (object, { name, ...variant }) => ({ ...object, [name]: variant }),
-        {}
-    );
-
-export const Diff = ({ preData, data }: IDiffProps) => (
+export const EnvironmentStrategyOrderDiff = ({ preData, data }: IDiffProps) => (
     <StyledCodeSection>
         <EventDiff
             entry={{
-                preData: variantsArrayToObject(preData),
-                data: variantsArrayToObject(data),
+                preData: preData,
+                data: data,
             }}
             sort={(a, b) => a.index - b.index}
         />

@@ -29,8 +29,6 @@ const COLUMNS = [
     'constraints',
 ];
 
-const CLIENT_COLUMNS = ['id', 'name', 'constraints'];
-
 interface ISegmentRow {
     id: number;
     name: string;
@@ -167,17 +165,13 @@ export default class SegmentStore implements ISegmentStore {
     }
 
     async getActiveForClient(): Promise<IClientSegment[]> {
-        const rows: ISegmentRow[] = await this.db
-            .distinct(this.prefixClientColumns())
-            .from(T.segments)
-            .orderBy('name', 'asc')
-            .join(
-                T.featureStrategySegment,
-                `${T.featureStrategySegment}.segment_id`,
-                `${T.segments}.id`,
-            );
+        const fullSegments = await this.getActive();
 
-        return rows.map(this.mapRow);
+        return fullSegments.map((segments) => ({
+            id: segments.id,
+            name: segments.name,
+            constraints: segments.constraints,
+        }));
     }
 
     async getByStrategy(strategyId: string): Promise<ISegment[]> {
@@ -259,10 +253,6 @@ export default class SegmentStore implements ISegmentStore {
 
     prefixColumns(): string[] {
         return COLUMNS.map((c) => `${T.segments}.${c}`);
-    }
-
-    prefixClientColumns(): string[] {
-        return CLIENT_COLUMNS.map((c) => `${T.segments}.${c}`);
     }
 
     mapRow(row?: ISegmentRow): ISegment {

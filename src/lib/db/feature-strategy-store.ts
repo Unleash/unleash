@@ -106,7 +106,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         constraints: JSON.stringify(input.constraints || []),
         variants: JSON.stringify(input.variants || []),
         created_at: input.createdAt,
-        sort_order: input.sortOrder || 9999,
+        sort_order: input.sortOrder,
         disabled: input.disabled,
     };
 }

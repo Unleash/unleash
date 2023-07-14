@@ -52,6 +52,7 @@ import {
     TransactionCreator,
     UnleashTransaction,
 } from '../../../db/transaction';
+import { BadDataError } from '../../../error';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -722,6 +723,9 @@ export default class ProjectFeaturesController extends Controller {
         const { projectId, featureName } = req.params;
         const { createdAt, ...data } = req.body;
         const userName = extractUsername(req);
+        if (data.name && data.name !== featureName) {
+            throw new BadDataError('Cannot change name of feature toggle');
+        }
         const created = await this.featureService.updateFeatureToggle(
             projectId,
             {

@@ -49,7 +49,7 @@ export const createStrategyVariantSchema = {
                     type: 'string',
                 },
             },
-            example: { type: 'json', value: '{color: red}' },
+            example: { type: 'json', value: '{"color": "red"}' },
         },
     },
     components: {},

@@ -1127,6 +1127,7 @@ class FeatureToggleService {
             segments: [],
             title: strategy.title,
             disabled: strategy.disabled,
+            sortOrder: strategy.sortOrder,
         };
 
         if (segments && segments.length > 0) {

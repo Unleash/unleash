@@ -267,10 +267,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                     />
                     <Typography>{stickiness ? 'On' : 'Off'}</Typography>
                 </StyledSwitchContainer>
-                <ConditionallyRender
-                    condition={Boolean(uiConfig.flags.segmentContextFieldUsage)}
-                    show={<ContextFieldUsage contextName={contextName} />}
-                />
+                <ContextFieldUsage contextName={contextName} />
             </StyledContainer>
             <StyledButtonContainer>
                 {children}

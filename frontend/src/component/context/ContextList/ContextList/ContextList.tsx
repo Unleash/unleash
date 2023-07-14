@@ -86,17 +86,13 @@ const ContextList: VFC = () => {
                 ),
                 sortType: 'alphanumeric',
             },
-            ...(uiConfig.flags.segmentContextFieldUsage
-                ? [
-                      {
-                          Header: 'Used in',
-                          width: '60%',
-                          Cell: ({ row: { original } }: any) => (
-                              <UsedInCell original={original} />
-                          ),
-                      },
-                  ]
-                : []),
+            {
+                Header: 'Used in',
+                width: '60%',
+                Cell: ({ row: { original } }: any) => (
+                    <UsedInCell original={original} />
+                ),
+            },
             {
                 Header: 'Actions',
                 id: 'Actions',
@@ -128,7 +124,7 @@ const ContextList: VFC = () => {
                 sortType: 'number',
             },
         ],
-        [uiConfig.flags.segmentContextFieldUsage]
+        []
     );
 
     const initialState = useMemo(

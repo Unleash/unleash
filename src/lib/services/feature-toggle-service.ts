@@ -1971,7 +1971,7 @@ class FeatureToggleService {
         const potentiallyStaleFeatures =
             await this.featureToggleStore.updatePotentiallyStaleFeatures();
         if (this.flagResolver.isEnabled('emitPotentiallyStaleEvents')) {
-            if (potentiallyStaleFeatures.length) {
+            if (potentiallyStaleFeatures.length > 0) {
                 return this.eventStore.batchStore(
                     potentiallyStaleFeatures.map(
                         ({ name, potentiallyStale }) => ({

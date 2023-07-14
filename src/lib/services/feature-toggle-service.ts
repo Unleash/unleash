@@ -442,18 +442,17 @@ class FeatureToggleService {
         );
 
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
-
-        await this.eventStore.store(
-            new FeatureEnvironmentStrategyExecutionOrderUpdatedEvent({
-                featureName,
-                environment,
-                project,
-                createdBy,
-                preData: eventPreData,
-                data: eventData,
-                tags: tags,
-            }),
-        );
+        const event = new FeatureEnvironmentStrategyExecutionOrderUpdatedEvent({
+            featureName,
+            environment,
+            project,
+            createdBy,
+            preData: eventPreData,
+            data: eventData,
+            tags: tags,
+        });
+        console.log(event);
+        await this.eventStore.store(event);
     }
 
     async createStrategy(

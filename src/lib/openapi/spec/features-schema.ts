@@ -14,15 +14,19 @@ export const featuresSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'features'],
+    description: 'A list of features',
+    deprecated: true,
     properties: {
         version: {
             type: 'integer',
+            description: "The version of the feature's schema",
         },
         features: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/featureSchema',
             },
+            description: 'A list of features',
         },
     },
     components: {

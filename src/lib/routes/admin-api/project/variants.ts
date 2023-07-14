@@ -20,6 +20,7 @@ import { AccessService } from '../../../services';
 import { BadDataError, PermissionError } from '../../../../lib/error';
 import { User } from 'lib/server-impl';
 import { PushVariantsSchema } from 'lib/openapi/spec/push-variants-schema';
+import { getStandardResponses } from '../../../openapi';
 
 const PREFIX = '/:projectId/features/:featureName/variants';
 const ENV_PREFIX =
@@ -73,6 +74,7 @@ export default class VariantsController extends Controller {
                     operationId: 'getFeatureVariants',
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -87,13 +89,14 @@ export default class VariantsController extends Controller {
                     summary:
                         "Apply a patch to a feature's variants (in all environments).",
                     description: `Apply a list of patches patch to the specified feature's variants. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).
-                        
-                        ⚠️ **Warning**: This method is not atomic. If something fails in the middle of applying the patch, you can be left with a half-applied patch. We recommend that you instead [patch variants on a per-environment basis](/docs/reference/api/unleash/patch-environments-feature-variants.api.mdx), which **is** an atomic operation.`,
+
+⚠️ **Warning**: This method is not atomic. If something fails in the middle of applying the patch, you can be left with a half-applied patch. We recommend that you instead [patch variants on a per-environment basis](/docs/reference/api/unleash/patch-environments-feature-variants.api.mdx), which **is** an atomic operation.`,
                     tags: ['Features'],
                     operationId: 'patchFeatureVariants',
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
             ],
@@ -109,17 +112,18 @@ export default class VariantsController extends Controller {
                         'Create (overwrite) variants for a feature toggle in all environments',
                     description: `This overwrites the current variants for the feature specified in the :featureName parameter in all environments.
 
-                    The backend will validate the input for the following invariants
+The backend will validate the input for the following invariants
 
-                    * If there are variants, there needs to be at least one variant with \`weightType: variable\`
-                    * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
+* If there are variants, there needs to be at least one variant with \`weightType: variable\`
+* The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
 
-                    The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\``,
+The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\``,
                     tags: ['Features'],
                     operationId: 'overwriteFeatureVariants',
                     requestBody: createRequestSchema('variantsSchema'),
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
             ],
@@ -137,6 +141,7 @@ export default class VariantsController extends Controller {
                     operationId: 'getEnvironmentFeatureVariants',
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -155,6 +160,7 @@ export default class VariantsController extends Controller {
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),
+                        ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
             ],
@@ -169,18 +175,19 @@ export default class VariantsController extends Controller {
                     summary:
                         'Create (overwrite) variants for a feature in an environment',
                     description: `This overwrites the current variants for the feature toggle in the :featureName parameter for the :environment parameter.
-                        
-                        The backend will validate the input for the following invariants:
-                        
-                    * If there are variants, there needs to be at least one variant with \`weightType: variable\`
-                    * The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
 
-                    The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\``,
+The backend will validate the input for the following invariants:
+
+* If there are variants, there needs to be at least one variant with \`weightType: variable\`
+* The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
+
+The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\``,
                     tags: ['Features'],
                     operationId: 'overwriteEnvironmentFeatureVariants',
                     requestBody: createRequestSchema('variantsSchema'),
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),
+                        ...getStandardResponses(400, 401, 403),
                     },
                 }),
             ],
@@ -194,9 +201,14 @@ export default class VariantsController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'overwriteFeatureVariantsOnEnvironments',
+                    summary:
+                        'Create (overwrite) variants for a feature toggle in multiple environments',
+                    description:
+                        'This overwrites the current variants for the feature toggle in the :featureName parameter for the :environment parameter.',
                     requestBody: createRequestSchema('pushVariantsSchema'),
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),
+                        ...getStandardResponses(400, 401, 403),
                     },
                 }),
             ],
@@ -230,7 +242,7 @@ export default class VariantsController extends Controller {
         );
         res.status(200).json({
             version: 1,
-            variants: updatedFeature.variants,
+            variants: updatedFeature.variants || [],
         });
     }
 
@@ -248,7 +260,7 @@ export default class VariantsController extends Controller {
         );
         res.status(200).json({
             version: 1,
-            variants: updatedFeature.variants,
+            variants: updatedFeature.variants || [],
         });
     }
 
@@ -275,7 +287,7 @@ export default class VariantsController extends Controller {
             UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
         );
 
-        const variantsWithDefaults = variants.map((variant) => ({
+        const variantsWithDefaults = (variants || []).map((variant) => ({
             weightType: WeightType.VARIABLE,
             stickiness: 'default',
             ...variant,

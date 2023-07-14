@@ -179,7 +179,7 @@ test('Can patch variants for a feature patches all environments independently', 
             path: '/1',
             value: {
                 name: addedVariantName,
-                weightType: 'fix',
+                weightType: WeightType.FIX,
                 weight: 50,
             },
         },
@@ -509,7 +509,7 @@ test('PUTing an invalid variant throws 400 exception', async () => {
         .expect((res) => {
             expect(res.body.details).toHaveLength(1);
             expect(res.body.details[0].description).toMatch(
-                /.*weightType" must be one of/,
+                /.*weightType property should be equal to one of the allowed values/,
             );
         });
 });
@@ -1002,13 +1002,13 @@ test('PUT endpoint validates uniqueness of variant names', async () => {
         .send([
             {
                 name: 'variant1',
-                weightType: 'variable',
+                weightType: WeightType.VARIABLE,
                 weight: 500,
                 stickiness: 'default',
             },
             {
                 name: 'variant1',
-                weightType: 'variable',
+                weightType: WeightType.VARIABLE,
                 weight: 500,
                 stickiness: 'default',
             },
@@ -1038,25 +1038,25 @@ test('Variants should be sorted by their name when PUT', async () => {
         .send([
             {
                 name: 'zvariant',
-                weightType: 'variable',
+                weightType: WeightType.VARIABLE,
                 weight: 500,
                 stickiness: 'default',
             },
             {
                 name: 'variant-a',
-                weightType: 'variable',
+                weightType: WeightType.VARIABLE,
                 weight: 500,
                 stickiness: 'default',
             },
             {
                 name: 'g-variant',
-                weightType: 'variable',
+                weightType: WeightType.VARIABLE,
                 weight: 500,
                 stickiness: 'default',
             },
             {
                 name: 'variant-g',
-                weightType: 'variable',
+                weightType: WeightType.VARIABLE,
                 weight: 500,
                 stickiness: 'default',
             },
@@ -1086,13 +1086,13 @@ test('Variants should be sorted by name when PATCHed as well', async () => {
     const observer = jsonpatch.observe(variants);
     variants.push({
         name: 'g-variant',
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
         weight: 500,
         stickiness: 'default',
     });
     variants.push({
         name: 'a-variant',
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
         weight: 500,
         stickiness: 'default',
     });
@@ -1107,13 +1107,13 @@ test('Variants should be sorted by name when PATCHed as well', async () => {
         });
     variants.push({
         name: '00-variant',
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
         weight: 500,
         stickiness: 'default',
     });
     variants.push({
         name: 'z-variant',
-        weightType: 'variable',
+        weightType: WeightType.VARIABLE,
         weight: 500,
         stickiness: 'default',
     });

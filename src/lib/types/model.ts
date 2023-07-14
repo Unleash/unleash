@@ -120,7 +120,7 @@ export interface IFeatureEnvironment {
 export interface IVariant {
     name: string;
     weight: number;
-    weightType: string;
+    weightType: 'variable' | 'fix';
     payload?: {
         type: string;
         value: string;

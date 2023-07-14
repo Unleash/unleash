@@ -1,6 +1,7 @@
 import { IFeatureVariant } from 'interfaces/featureToggle';
 import { IFeatureStrategy } from '../../interfaces/strategy';
 import { IUser } from '../../interfaces/user';
+import { SetStrategySortOrderSchema } from '../../openapi';
 
 export interface IChangeRequest {
     id: number;
@@ -64,7 +65,8 @@ type ChangeRequestPayload =
     | ChangeRequestAddStrategy
     | ChangeRequestEditStrategy
     | ChangeRequestDeleteStrategy
-    | ChangeRequestVariantPatch;
+    | ChangeRequestVariantPatch
+    | SetStrategySortOrderSchema;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestBase {
     action: 'addStrategy';
@@ -91,12 +93,19 @@ export interface IChangeRequestPatchVariant extends IChangeRequestBase {
     payload: ChangeRequestVariantPatch;
 }
 
+export interface IChangeRequestUpdateEnvironmentStrategyExecutionOrder
+    extends IChangeRequestBase {
+    action: 'updateEnvironmentStrategyExecutionOrder';
+    payload: SetStrategySortOrderSchema;
+}
+
 export type IChange =
     | IChangeRequestAddStrategy
     | IChangeRequestDeleteStrategy
     | IChangeRequestUpdateStrategy
     | IChangeRequestEnabled
-    | IChangeRequestPatchVariant;
+    | IChangeRequestPatchVariant
+    | IChangeRequestUpdateEnvironmentStrategyExecutionOrder;
 
 type ChangeRequestVariantPatch = {
     variants: IFeatureVariant[];
@@ -123,4 +132,5 @@ export type ChangeRequestAction =
     | 'addStrategy'
     | 'updateStrategy'
     | 'deleteStrategy'
-    | 'patchVariant';
+    | 'patchVariant'
+    | 'updateEnvironmentStrategyExecutionOrder';

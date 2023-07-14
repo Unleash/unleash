@@ -501,7 +501,7 @@ export default class ProjectFeaturesController extends Controller {
                     operationId: 'updateFeature',
                     summary: 'Update a feature toggle',
                     description:
-                        'Updates the specified feature if the feature belongs to the specified project.',
+                        'Updates the specified feature if the feature belongs to the specified project. Only the provided properties are updated; any feature properties left out of the request body are left untouched.',
                     requestBody: createRequestSchema('updateFeatureSchema'),
                     responses: {
                         200: createResponseSchema('featureSchema'),

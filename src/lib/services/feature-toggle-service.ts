@@ -1,5 +1,6 @@
 import {
     CREATE_FEATURE_STRATEGY,
+    StrategyIds,
     EnvironmentVariantEvent,
     FEATURE_UPDATED,
     FeatureArchivedEvent,
@@ -40,6 +41,7 @@ import {
     Unsaved,
     WeightType,
     FEATURE_POTENTIALLY_STALE_UPDATED,
+    StrategiesOrderChangedEvent,
 } from '../types';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
@@ -370,7 +372,7 @@ class FeatureToggleService {
         featureStrategy: IFeatureStrategy,
         segments: ISegment[] = [],
     ): Saved<IStrategyConfig> {
-        return {
+        const result: Saved<IStrategyConfig> = {
             id: featureStrategy.id,
             name: featureStrategy.strategyName,
             title: featureStrategy.title,
@@ -379,17 +381,96 @@ class FeatureToggleService {
             parameters: featureStrategy.parameters,
             segments: segments.map((segment) => segment.id) ?? [],
         };
+
+        if (this.flagResolver.isEnabled('strategyVariant')) {
+            result.sortOrder = featureStrategy.sortOrder;
+        }
+        return result;
     }
 
     async updateStrategiesSortOrder(
-        featureName: string,
+        context: IFeatureStrategyContext,
         sortOrders: SetStrategySortOrderSchema,
+        createdBy: string,
+        user?: User,
     ): Promise<Saved<any>> {
-        await Promise.all(
-            sortOrders.map(async ({ id, sortOrder }) =>
-                this.featureStrategiesStore.updateSortOrder(id, sortOrder),
-            ),
+        await this.stopWhenChangeRequestsEnabled(
+            context.projectId,
+            context.environment,
+            user,
         );
+
+        return this.unprotectedUpdateStrategiesSortOrder(
+            context,
+            sortOrders,
+            createdBy,
+        );
+    }
+
+    async unprotectedUpdateStrategiesSortOrder(
+        context: IFeatureStrategyContext,
+        sortOrders: SetStrategySortOrderSchema,
+        createdBy: string,
+    ): Promise<Saved<any>> {
+        const { featureName, environment, projectId: project } = context;
+        const existingOrder = (
+            await this.getStrategiesForEnvironment(
+                project,
+                featureName,
+                environment,
+            )
+        )
+            .sort((strategy1, strategy2) => {
+                if (
+                    typeof strategy1.sortOrder === 'number' &&
+                    typeof strategy2.sortOrder === 'number'
+                ) {
+                    return strategy1.sortOrder - strategy2.sortOrder;
+                }
+                return 0;
+            })
+            .map((strategy) => strategy.id);
+
+        const eventPreData: StrategyIds = { strategyIds: existingOrder };
+
+        await Promise.all(
+            sortOrders.map(async ({ id, sortOrder }) => {
+                await this.featureStrategiesStore.updateSortOrder(
+                    id,
+                    sortOrder,
+                );
+            }),
+        );
+        const newOrder = (
+            await this.getStrategiesForEnvironment(
+                project,
+                featureName,
+                environment,
+            )
+        )
+            .sort((strategy1, strategy2) => {
+                if (
+                    typeof strategy1.sortOrder === 'number' &&
+                    typeof strategy2.sortOrder === 'number'
+                ) {
+                    return strategy1.sortOrder - strategy2.sortOrder;
+                }
+                return 0;
+            })
+            .map((strategy) => strategy.id);
+
+        const eventData: StrategyIds = { strategyIds: newOrder };
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+        const event = new StrategiesOrderChangedEvent({
+            featureName,
+            environment,
+            project,
+            createdBy,
+            preData: eventPreData,
+            data: eventData,
+            tags: tags,
+        });
+        await this.eventStore.store(event);
     }
 
     async createStrategy(
@@ -473,24 +554,31 @@ class FeatureToggleService {
                 );
             }
 
-            const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
                 newFeatureStrategy.id,
             );
+
             const strategy = this.featureStrategyToPublic(
                 newFeatureStrategy,
                 segments,
             );
-            await this.eventStore.store(
-                new FeatureStrategyAddEvent({
-                    project: projectId,
+
+            if (this.flagResolver.isEnabled('strategyVariant')) {
+                const tags = await this.tagStore.getAllTagsForFeature(
                     featureName,
-                    createdBy,
-                    environment,
-                    data: strategy,
-                    tags,
-                }),
-            );
+                );
+
+                await this.eventStore.store(
+                    new FeatureStrategyAddEvent({
+                        project: projectId,
+                        featureName,
+                        createdBy,
+                        environment,
+                        data: strategy,
+                        tags,
+                    }),
+                );
+            }
             return strategy;
         } catch (e) {
             if (e.code === FOREIGN_KEY_VIOLATION) {

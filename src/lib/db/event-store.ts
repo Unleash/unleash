@@ -372,8 +372,10 @@ class EventStore implements IEventStore {
         return {
             type: e.type,
             created_by: e.createdBy,
-            data: e.data,
-            pre_data: e.preData,
+            data: Array.isArray(e.data) ? JSON.stringify(e.data) : e.data,
+            pre_data: Array.isArray(e.preData)
+                ? JSON.stringify(e.preData)
+                : e.preData,
             // @ts-expect-error workaround for json-array
             tags: JSON.stringify(e.tags),
             feature_name: e.featureName,

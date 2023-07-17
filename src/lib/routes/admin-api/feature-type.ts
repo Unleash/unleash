@@ -77,10 +77,15 @@ export class FeatureTypeController extends Controller {
         req: Request,
         res: Response<FeatureTypesSchema>,
     ): Promise<void> {
-        res.json({
-            version,
-            types: await this.featureTypeService.getAll(),
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featureTypesSchema.$id,
+            {
+                version,
+                types: await this.featureTypeService.getAll(),
+            },
+        );
     }
 
     async updateLifetime(

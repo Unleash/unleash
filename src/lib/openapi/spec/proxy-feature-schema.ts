@@ -46,7 +46,7 @@ export const proxyFeatureSchema = {
                     additionalProperties: false,
                     required: ['type', 'value'],
                     description: 'Extra data configured for this variant',
-                    example: { type: 'json', value: '{color: red}' },
+                    example: { type: 'json', value: '{"color": "red"}' },
                     properties: {
                         type: {
                             type: 'string',

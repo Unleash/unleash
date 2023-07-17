@@ -1,5 +1,5 @@
 import { UpsertSegmentSchema } from 'lib/openapi';
-import { IFeatureStrategy, ISegment, IUser } from 'lib/types';
+import { IClientSegment, IFeatureStrategy, ISegment, IUser } from 'lib/types';
 
 export interface ISegmentService {
     updateStrategySegments: (
@@ -18,6 +18,8 @@ export interface ISegmentService {
     validateName(name: string): Promise<void>;
 
     getActive(): Promise<ISegment[]>;
+
+    getActiveForClient(): Promise<IClientSegment[]>;
 
     getAll(): Promise<ISegment[]>;
 

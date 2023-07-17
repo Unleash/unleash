@@ -24,7 +24,6 @@ import { ContextActionsCell } from '../ContextActionsCell';
 import { Adjust } from '@mui/icons-material';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { UsedInCell } from '../UsedInCell';
 
 const ContextList: VFC = () => {
@@ -32,7 +31,6 @@ const ContextList: VFC = () => {
     const [name, setName] = useState<string>();
     const { context, refetchUnleashContext, loading } = useUnleashContext();
     const { removeContext } = useContextsApi();
-    const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
 
     const data = useMemo(() => {
@@ -86,17 +84,13 @@ const ContextList: VFC = () => {
                 ),
                 sortType: 'alphanumeric',
             },
-            ...(uiConfig.flags.segmentContextFieldUsage
-                ? [
-                      {
-                          Header: 'Used in',
-                          width: '60%',
-                          Cell: ({ row: { original } }: any) => (
-                              <UsedInCell original={original} />
-                          ),
-                      },
-                  ]
-                : []),
+            {
+                Header: 'Used in',
+                width: '60%',
+                Cell: ({ row: { original } }: any) => (
+                    <UsedInCell original={original} />
+                ),
+            },
             {
                 Header: 'Actions',
                 id: 'Actions',
@@ -128,7 +122,7 @@ const ContextList: VFC = () => {
                 sortType: 'number',
             },
         ],
-        [uiConfig.flags.segmentContextFieldUsage]
+        []
     );
 
     const initialState = useMemo(

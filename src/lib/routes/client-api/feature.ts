@@ -3,11 +3,11 @@ import { Response } from 'express';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hashSum from 'hash-sum';
 import Controller from '../controller';
-import { IUnleashConfig, IUnleashServices } from '../../types';
+import { IClientSegment, IUnleashConfig, IUnleashServices } from '../../types';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { Logger } from '../../logger';
 import { querySchema } from '../../schema/feature-schema';
-import { IFeatureToggleQuery, ISegment } from '../../types/model';
+import { IFeatureToggleQuery } from '../../types/model';
 import NotFoundError from '../../error/notfound-error';
 import { IAuthRequest } from '../unleash-types';
 import ApiUser from '../../types/api-user';
@@ -58,7 +58,7 @@ export default class FeatureController extends Controller {
     private featuresAndSegments: (
         query: IFeatureToggleQuery,
         etag: string,
-    ) => Promise<[FeatureConfigurationClient[], ISegment[]]>;
+    ) => Promise<[FeatureConfigurationClient[], IClientSegment[]]>;
 
     constructor(
         {
@@ -145,10 +145,10 @@ export default class FeatureController extends Controller {
 
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
-    ): Promise<[FeatureConfigurationClient[], ISegment[]]> {
+    ): Promise<[FeatureConfigurationClient[], IClientSegment[]]> {
         return Promise.all([
             this.featureToggleServiceV2.getClientFeatures(query),
-            this.segmentService.getActive(),
+            this.segmentService.getActiveForClient(),
         ]);
     }
 

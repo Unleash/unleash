@@ -20,12 +20,6 @@ const setupRoutes = () => {
             createdAt: '2023-05-24T06:23:07.797Z',
         },
     ]);
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            SE: true,
-            segmentContextFieldUsage: true,
-        },
-    });
 };
 
 test('should show the count of projects and features used in', async () => {

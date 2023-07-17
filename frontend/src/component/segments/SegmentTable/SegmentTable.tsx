@@ -28,13 +28,11 @@ import { Search } from 'component/common/Search/Search';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { UsedInCell } from 'component/context/ContextList/UsedInCell';
 
 export const SegmentTable = () => {
     const projectId = useOptionalPathParam('projectId');
     const { segments, loading } = useSegments();
-    const { uiConfig } = useUiConfig();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [initialState] = useState({
         sortBy: [{ id: 'createdAt' }],
@@ -59,10 +57,7 @@ export const SegmentTable = () => {
         return segments;
     }, [segments, projectId]);
 
-    const columns = useMemo(
-        () => getColumns(uiConfig.flags.segmentContextFieldUsage),
-        [uiConfig.flags.segmentContextFieldUsage]
-    );
+    const columns = useMemo(() => getColumns(), []);
     const {
         getTableProps,
         getTableBodyProps,
@@ -177,7 +172,7 @@ export const SegmentTable = () => {
     );
 };
 
-const getColumns = (segmentContextFieldUsage?: boolean) => [
+const getColumns = () => [
     {
         id: 'Icon',
         width: '1%',
@@ -201,18 +196,13 @@ const getColumns = (segmentContextFieldUsage?: boolean) => [
             />
         ),
     },
-    ...(segmentContextFieldUsage
-        ? [
-              {
-                  Header: 'Used in',
-                  width: '60%',
-                  Cell: ({ row: { original } }: any) => (
-                      <UsedInCell original={original} />
-                  ),
-              },
-          ]
-        : []),
-
+    {
+        Header: 'Used in',
+        width: '60%',
+        Cell: ({ row: { original } }: any) => (
+            <UsedInCell original={original} />
+        ),
+    },
     {
         Header: 'Project',
         accessor: 'project',

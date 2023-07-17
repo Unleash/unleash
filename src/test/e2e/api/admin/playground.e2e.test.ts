@@ -663,7 +663,7 @@ describe('Playground API E2E', () => {
                         {
                             name: 'a',
                             weight: 1000,
-                            weightType: 'variable',
+                            weightType: 'variable' as const,
                             stickiness: 'default',
                             overrides: [],
                         },

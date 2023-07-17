@@ -6,6 +6,7 @@ import {
     IFeatureToggleClient,
     IFeatureToggleClientStore,
     IFeatureToggleQuery,
+    IFlagResolver,
     IStrategyConfig,
     ITag,
     PartialDeep,
@@ -38,7 +39,14 @@ export default class FeatureToggleClientStore
 
     private timer: Function;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-client-store.ts');
         this.timer = (action) =>
@@ -46,6 +54,7 @@ export default class FeatureToggleClientStore
                 store: 'feature-toggle',
                 action,
             });
+        this.flagResolver = flagResolver;
     }
 
     private async getAll({
@@ -78,6 +87,7 @@ export default class FeatureToggleClientStore
             'fs.parameters as parameters',
             'fs.constraints as constraints',
             'fs.sort_order as sort_order',
+            'fs.variants as strategy_variants',
             'segments.id as segment_id',
             'segments.constraints as segment_constraints',
         ] as (string | Raw<any>)[];
@@ -170,9 +180,7 @@ export default class FeatureToggleClientStore
                 strategies: [],
             };
             if (this.isUnseenStrategyRow(feature, r) && !r.strategy_disabled) {
-                feature.strategies?.push(
-                    FeatureToggleClientStore.rowToStrategy(r),
-                );
+                feature.strategies?.push(this.rowToStrategy(r));
             }
             if (this.isNewTag(feature, r)) {
                 this.addTag(feature, r);
@@ -233,8 +241,8 @@ export default class FeatureToggleClientStore
         return cleanedFeatures;
     }
 
-    private static rowToStrategy(row: Record<string, any>): IStrategyConfig {
-        return {
+    private rowToStrategy(row: Record<string, any>): IStrategyConfig {
+        const strategy: IStrategyConfig = {
             id: row.strategy_id,
             name: row.strategy_name,
             title: row.strategy_title,
@@ -242,6 +250,10 @@ export default class FeatureToggleClientStore
             parameters: mapValues(row.parameters || {}, ensureStringValue),
             sortOrder: row.sort_order,
         };
+        if (this.flagResolver.isEnabled('strategyVariant')) {
+            strategy.variants = row.strategy_variants || [];
+        }
+        return strategy;
     }
 
     private static rowToTag(row: Record<string, any>): ITag {

@@ -390,7 +390,6 @@ export const EnvironmentVariantsModal = ({
                                         )
                                     )
                                 }
-                                projectId={projectId}
                                 apiPayload={apiPayload}
                             />
                         ))}

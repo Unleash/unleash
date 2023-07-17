@@ -382,50 +382,47 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     async updatePotentiallyStaleFeatures(
         currentTime?: string,
     ): Promise<{ name: string; potentiallyStale: boolean }[]> {
-        const previousState = (
-            await this.db(TABLE)
-                .select(['name', 'potentially_stale'])
-                .whereNot('stale', true)
-        ).reduce((previousValue, current) => {
-            previousValue[current.name] = current.potentially_stale;
-            return previousValue;
-        }, {});
-
-        const updateQuery = this.db(TABLE)
-            .update(
-                'potentially_stale',
-                this.db.raw(
-                    `(? > (features.created_at + ((
+        const query = this.db.raw(
+            `SELECT name, potentially_stale, (? > (features.created_at + ((
                             SELECT feature_types.lifetime_days
                             FROM feature_types
                             WHERE feature_types.id = features.type
-                        ) * INTERVAL '1 day')))`,
-                    [currentTime || this.db.fn.now()],
-                ),
+                        ) * INTERVAL '1 day'))) as current_staleness
+            FROM features
+            WHERE NOT stale = true`,
+            [currentTime || this.db.fn.now()],
+        );
+
+        const featuresToUpdate = (await query).rows
+            .filter(
+                ({ potentially_stale, current_staleness }) =>
+                    (potentially_stale ?? false) !==
+                    (current_staleness ?? false),
             )
-            .whereNot('stale', true);
+            .map(({ current_staleness, name }) => ({
+                potentiallyStale: current_staleness ?? false,
+                name,
+            }));
 
-        const currentState: {
-            name: string;
-            potentially_stale: boolean | null;
-        }[] = await updateQuery.returning(['name', 'potentially_stale']);
+        await this.db(TABLE)
+            .update('potentially_stale', true)
+            .whereIn(
+                'name',
+                featuresToUpdate
+                    .filter((feature) => feature.potentiallyStale === true)
+                    .map((feature) => feature.name),
+            );
 
-        const diff = currentState
-            .map(({ name, potentially_stale }) => {
-                const previous = previousState[name] ?? false;
-                const hasChanged = previous !== (potentially_stale ?? false);
-                if (hasChanged) {
-                    return {
-                        name,
-                        potentiallyStale: potentially_stale ?? false,
-                    };
-                } else {
-                    return undefined;
-                }
-            })
-            .filter(Boolean) as { name: string; potentiallyStale: boolean }[];
+        await this.db(TABLE)
+            .update('potentially_stale', false)
+            .whereIn(
+                'name',
+                featuresToUpdate
+                    .filter((feature) => feature.potentiallyStale !== true)
+                    .map((feature) => feature.name),
+            );
 
-        return diff;
+        return featuresToUpdate;
     }
 
     async isPotentiallyStale(featureName: string): Promise<boolean> {

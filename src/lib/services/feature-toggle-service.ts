@@ -440,6 +440,14 @@ class FeatureToggleService {
             strategyConfig.parameters.stickiness = 'default';
         }
 
+        if (strategyConfig.variants && strategyConfig.variants.length > 0) {
+            await variantsArraySchema.validateAsync(strategyConfig.variants);
+            const fixedVariants = this.fixVariantWeights(
+                strategyConfig.variants,
+            );
+            strategyConfig.variants = fixedVariants;
+        }
+
         try {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
@@ -447,6 +455,7 @@ class FeatureToggleService {
                     title: strategyConfig.title,
                     disabled: strategyConfig.disabled,
                     constraints: strategyConfig.constraints || [],
+                    variants: strategyConfig.variants || [],
                     parameters: strategyConfig.parameters || {},
                     sortOrder: strategyConfig.sortOrder,
                     projectId,
@@ -561,6 +570,12 @@ class FeatureToggleService {
                 updates.constraints = await this.validateConstraints(
                     updates.constraints,
                 );
+            }
+
+            if (updates.variants && updates.variants.length > 0) {
+                await variantsArraySchema.validateAsync(updates.variants);
+                const fixedVariants = this.fixVariantWeights(updates.variants);
+                updates.variants = fixedVariants;
             }
 
             const strategy = await this.featureStrategiesStore.updateStrategy(
@@ -757,6 +772,7 @@ class FeatureToggleService {
                     name: strat.strategyName,
                     constraints: strat.constraints,
                     parameters: strat.parameters,
+                    variants: strat.variants,
                     title: strat.title,
                     disabled: strat.disabled,
                     sortOrder: strat.sortOrder,
@@ -1112,6 +1128,7 @@ class FeatureToggleService {
             segments: [],
             title: strategy.title,
             disabled: strategy.disabled,
+            // FIXME: Should we return sortOrder here, or adjust OpenAPI?
         };
 
         if (segments && segments.length > 0) {

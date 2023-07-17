@@ -25,7 +25,6 @@ const setupRoutes = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             SE: true,
-            segmentContextFieldUsage: true,
         },
     });
 };

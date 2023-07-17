@@ -31,6 +31,7 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle';
 import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled';
+import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -244,6 +245,16 @@ export const FeatureStrategyForm = ({
                 validateParameter={validateParameter}
                 errors={errors}
                 hasAccess={access}
+            />
+            <StyledHr />
+            <ConditionallyRender
+                condition={Boolean(uiConfig?.flags?.strategyVariant)}
+                show={
+                    <StrategyVariants
+                        strategy={strategy}
+                        setStrategy={setStrategy}
+                    />
+                }
             />
             <StyledHr />
             <FeatureStrategyEnabledDisabled

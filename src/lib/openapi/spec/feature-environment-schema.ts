@@ -20,9 +20,12 @@ export const featureEnvironmentSchema = {
         featureName: {
             type: 'string',
             example: 'disable-comments',
+            description: 'The name of the feature',
         },
         environment: {
             type: 'string',
+            example: 'development',
+            description: 'The name of the environment',
         },
         type: {
             type: 'string',

@@ -564,7 +564,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
         {
             name: 'cr-enabled-2',
             weight: 500,
-            weightType: 'fix',
+            weightType: 'fix' as const,
             stickiness: 'default',
         },
     ];

@@ -26,6 +26,7 @@ export interface IStrategyConfig {
     name: string;
     featureName?: string;
     constraints?: IConstraint[];
+    variants?: IStrategyVariant[];
     segments?: number[];
     parameters?: { [key: string]: string };
     sortOrder?: number;
@@ -41,6 +42,7 @@ export interface IFeatureStrategy {
     parameters: { [key: string]: string };
     sortOrder?: number;
     constraints: IConstraint[];
+    variants?: IStrategyVariant[];
     createdAt?: Date;
     segments?: number[];
     title?: string | null;
@@ -118,7 +120,7 @@ export interface IFeatureEnvironment {
 export interface IVariant {
     name: string;
     weight: number;
-    weightType: string;
+    weightType: 'variable' | 'fix';
     payload?: {
         type: string;
         value: string;
@@ -129,6 +131,8 @@ export interface IVariant {
         values: string[];
     }[];
 }
+
+export type IStrategyVariant = Omit<IVariant, 'overrides'>;
 
 export interface IEnvironment {
     name: string;
@@ -245,9 +249,23 @@ export interface IAddonDefinition {
     displayName: string;
     documentationUrl: string;
     description: string;
+    deprecated?: string;
     parameters?: IAddonParameterDefinition[];
     events?: string[];
     tagTypes?: ITagType[];
+    installation?: IAddonInstallation;
+    alerts?: IAddonAlert[];
+}
+
+export interface IAddonInstallation {
+    url: string;
+    title?: string;
+    helpText?: string;
+}
+
+export interface IAddonAlert {
+    type: 'success' | 'info' | 'warning' | 'error';
+    text: string;
 }
 
 export interface IAddonConfig {
@@ -398,6 +416,12 @@ export interface IProjectWithCount extends IProject {
     featureCount: number;
     memberCount: number;
     favorite?: boolean;
+}
+
+export interface IClientSegment {
+    id: number;
+    constraints: IConstraint[];
+    name: string;
 }
 
 export interface ISegment {

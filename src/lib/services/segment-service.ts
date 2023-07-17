@@ -1,6 +1,6 @@
 import { IUnleashConfig } from '../types/option';
 import { IEventStore } from '../types/stores/event-store';
-import { IUnleashStores } from '../types';
+import { IClientSegment, IUnleashStores } from '../types';
 import { Logger } from '../logger';
 import NameExistsError from '../error/name-exists-error';
 import { ISegmentStore } from '../types/stores/segment-store';
@@ -55,6 +55,10 @@ export class SegmentService implements ISegmentService {
 
     async getActive(): Promise<ISegment[]> {
         return this.segmentStore.getActive();
+    }
+
+    async getActiveForClient(): Promise<IClientSegment[]> {
+        return this.segmentStore.getActiveForClient();
     }
 
     // Used by unleash-enterprise.

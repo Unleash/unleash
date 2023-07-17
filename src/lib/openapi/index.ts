@@ -150,6 +150,7 @@ import {
     telemetrySettingsSchema,
     strategyVariantSchema,
     createStrategyVariantSchema,
+    clientSegmentSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -357,6 +358,7 @@ export const schemas: UnleashSchemas = {
     telemetrySettingsSchema,
     strategyVariantSchema,
     createStrategyVariantSchema,
+    clientSegmentSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

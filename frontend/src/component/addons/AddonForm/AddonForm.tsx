@@ -1,4 +1,4 @@
-import React, {
+import {
     ChangeEventHandler,
     FormEventHandler,
     MouseEventHandler,
@@ -6,11 +6,18 @@ import React, {
     useState,
     VFC,
 } from 'react';
-import { Button, Divider, FormControlLabel, Switch } from '@mui/material';
+import {
+    Alert,
+    Button,
+    Divider,
+    FormControlLabel,
+    Switch,
+} from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
 import { IAddon, IAddonProvider } from 'interfaces/addons';
 import { AddonParameters } from './AddonParameters/AddonParameters';
+import { AddonInstall } from './AddonInstall/AddonInstall';
 import cloneDeep from 'lodash.clonedeep';
 import { useNavigate } from 'react-router-dom';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
@@ -29,6 +36,7 @@ import {
 import {
     StyledForm,
     StyledFormSection,
+    StyledAlerts,
     StyledHelpText,
     StyledTextField,
     StyledContainer,
@@ -37,6 +45,7 @@ import {
 } from './AddonForm.styles';
 import { useTheme } from '@mui/system';
 import { GO_BACK } from 'constants/navigate';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IAddonFormProps {
     provider?: IAddonProvider;
@@ -241,6 +250,8 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         name,
         description,
         documentationUrl = 'https://unleash.github.io/docs/addons',
+        installation,
+        alerts,
     } = provider ? provider : ({} as Partial<IAddonProvider>);
 
     return (
@@ -253,6 +264,21 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         >
             <StyledForm onSubmit={onSubmit}>
                 <StyledContainer>
+                    <StyledAlerts>
+                        {alerts?.map(({ type, text }) => (
+                            <Alert severity={type}>{text}</Alert>
+                        ))}
+                    </StyledAlerts>
+                    <ConditionallyRender
+                        condition={Boolean(installation)}
+                        show={() => (
+                            <AddonInstall
+                                url={installation!.url}
+                                title={installation!.title}
+                                helpText={installation!.helpText}
+                            />
+                        )}
+                    />
                     <StyledFormSection>
                         <StyledTextField
                             size="small"

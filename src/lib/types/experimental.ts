@@ -25,7 +25,8 @@ export type IFlagKey =
     | 'strategyVariant'
     | 'newProjectLayout'
     | 'slackAppAddon'
-    | 'emitPotentiallyStaleEvents';
+    | 'emitPotentiallyStaleEvents'
+    | 'configurableFeatureTypeLifetimes';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -117,6 +118,11 @@ const flags: IFlags = {
 
     emitPotentiallyStaleEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMIT_POTENTIALLY_STALE_EVENTS,
+        false,
+    ),
+
+    configurableFeatureTypeLifetimes: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CONFIGURABLE_FEATURE_TYPE_LIFETIMES,
         false,
     ),
 };

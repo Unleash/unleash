@@ -5,11 +5,21 @@ import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../types/option';
 import { OpenApiService } from '../../services/openapi-service';
 import { ADMIN, NONE } from '../../types/permissions';
-import { FeatureTypesSchema } from '../../openapi/spec/feature-types-schema';
+import {
+    featureTypesSchema,
+    FeatureTypesSchema,
+} from '../../openapi/spec/feature-types-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import Controller from '../controller';
-import { FeatureTypeSchema, getStandardResponses } from '../../openapi';
+import {
+    createRequestSchema,
+    FeatureTypeSchema,
+    getStandardResponses,
+    UpdateFeatureTypeLifetimeSchema,
+} from '../../openapi';
 import { IAuthRequest } from '../unleash-types';
+import { IFlagResolver } from '../../types';
+import NotImplementedError from '../../error/not-implemented-error';
 
 const version = 1;
 
@@ -19,6 +29,8 @@ export class FeatureTypeController extends Controller {
     private openApiService: OpenApiService;
 
     private logger: Logger;
+
+    private flagResolver: IFlagResolver;
 
     constructor(
         config: IUnleashConfig,
@@ -30,6 +42,7 @@ export class FeatureTypeController extends Controller {
         super(config);
         this.featureTypeService = featureTypeService;
         this.openApiService = openApiService;
+        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/admin-api/feature-type.js');
 
         this.route({
@@ -59,15 +72,19 @@ export class FeatureTypeController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Features'],
+                    tags: ['Unstable'],
                     operationId: 'updateFeatureTypeLifetime',
                     summary: 'Update feature type lifetime',
-                    description:
-                        'Allows you to update the lifetime configuration for the specified lifetime.',
+                    description: `Updates the lifetime configuration for the specified [feature toggle type](https://docs.getunleash.io/reference/feature-toggle-types). The expected lifetime is an integer representing the number of days before Unleash marks a feature toggle of that type as potentially stale. If set to \`null\`, then feature toggles of that particular type will never be marked as potentially stale.
+
+When a feature toggle type's expected lifetime is changed, this will also cause any feature toggles of this type to be reevaluated for potential staleness.`,
                     responses: {
                         200: createResponseSchema('featureTypeSchema'),
                         ...getStandardResponses(400, 401, 403, 404, 415),
                     },
+                    requestBody: createRequestSchema(
+                        'updateFeatureTypeLifetimeSchema',
+                    ),
                 }),
             ],
         });
@@ -95,5 +112,13 @@ export class FeatureTypeController extends Controller {
             UpdateFeatureTypeLifetimeSchema
         >,
         res: Response<FeatureTypeSchema>,
-    ): Promise<void> {}
+    ): Promise<void> {
+        if (this.flagResolver.isEnabled('configurableFeatureTypeLifetimes')) {
+            throw new NotImplementedError(
+                "This operation isn't implemented yet",
+            );
+        } else {
+            res.status(409).end();
+        }
+    }
 }

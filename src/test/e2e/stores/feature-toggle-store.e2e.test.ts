@@ -60,6 +60,7 @@ describe('potentially_stale marking', () => {
 
         expect(markedToggles).toStrictEqual([]);
     });
+
     test('it returns only updated toggles', async () => {
         const features: FeatureToggleDTO[] = [
             {

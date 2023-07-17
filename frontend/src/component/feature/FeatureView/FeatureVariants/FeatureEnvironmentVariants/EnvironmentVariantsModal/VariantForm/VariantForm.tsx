@@ -150,6 +150,7 @@ interface IVariantFormProps {
     updateVariant: (updatedVariant: IFeatureVariantEdit) => void;
     removeVariant: (variantId: string) => void;
     error?: string;
+    disableOverrides?: boolean;
 }
 
 export const VariantForm = ({
@@ -158,6 +159,7 @@ export const VariantForm = ({
     updateVariant,
     removeVariant,
     error,
+    disableOverrides = false,
 }: IVariantFormProps) => {
     const [name, setName] = useState(variant.name);
     const [customPercentage, setCustomPercentage] = useState(
@@ -168,8 +170,9 @@ export const VariantForm = ({
         variant.payload || EMPTY_PAYLOAD
     );
     const [overrides, overridesDispatch] = useOverrides(
-        variant.overrides || []
+        'overrides' in variant ? variant.overrides || [] : []
     );
+
     const { context } = useUnleashContext();
 
     const [errors, setErrors] = useState<IVariantFormErrors>({});
@@ -269,7 +272,7 @@ export const VariantForm = ({
     };
 
     useEffect(() => {
-        updateVariant({
+        const newVariant: IFeatureVariantEdit = {
             ...variant,
             name,
             weight: Number(customPercentage ? percentage : 100) * 10,
@@ -277,19 +280,22 @@ export const VariantForm = ({
             stickiness:
                 variants?.length > 0 ? variants[0].stickiness : 'default',
             payload: payload.value ? payload : undefined,
-            overrides: overrides
-                .map(o => ({
-                    contextName: o.contextName,
-                    values: o.values,
-                }))
-                .filter(o => o.values && o.values.length > 0),
             isValid:
                 isNameNotEmpty(name) &&
                 isNameUnique(name, variant.id) &&
                 isValidPercentage(percentage) &&
                 isValidPayload(payload) &&
                 !error,
-        });
+        };
+        if (!disableOverrides) {
+            newVariant['overrides'] = overrides
+                .map(o => ({
+                    contextName: o.contextName,
+                    values: o.values,
+                }))
+                .filter(o => o.values && o.values.length > 0);
+        }
+        updateVariant(newVariant);
     }, [name, customPercentage, percentage, payload, overrides]);
 
     useEffect(() => {
@@ -423,24 +429,28 @@ export const VariantForm = ({
                     />
                 </StyledFieldColumn>
             </StyledRow>
-            <StyledMarginLabel>
-                Overrides
-                <HelpIcon tooltip="Here you can specify which users should get this variant." />
-            </StyledMarginLabel>
-            <OverrideConfig
-                overrides={overrides}
-                overridesDispatch={overridesDispatch}
-            />
-            <div>
-                <StyledAddOverrideButton
-                    onClick={onAddOverride}
-                    variant="text"
-                    color="primary"
-                    data-testid="VARIANT_ADD_OVERRIDE_BUTTON"
-                >
-                    Add override
-                </StyledAddOverrideButton>
-            </div>
+            {!disableOverrides ? (
+                <>
+                    <StyledMarginLabel>
+                        Overrides
+                        <HelpIcon tooltip="Here you can specify which users should get this variant." />
+                    </StyledMarginLabel>
+                    <OverrideConfig
+                        overrides={overrides}
+                        overridesDispatch={overridesDispatch}
+                    />
+                    <div>
+                        <StyledAddOverrideButton
+                            onClick={onAddOverride}
+                            variant="text"
+                            color="primary"
+                            data-testid="VARIANT_ADD_OVERRIDE_BUTTON"
+                        >
+                            Add override
+                        </StyledAddOverrideButton>
+                    </div>
+                </>
+            ) : null}
         </StyledVariantForm>
     );
 };

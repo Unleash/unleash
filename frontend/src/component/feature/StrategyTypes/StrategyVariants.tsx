@@ -7,8 +7,7 @@ import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvi
 import { v4 as uuidv4 } from 'uuid';
 import { WeightType } from '../../../constants/variantTypes';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
-import { styled } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { IFeatureStrategy } from 'interfaces/strategy';
 
@@ -26,8 +25,10 @@ export const StrategyVariants: FC<{
     const projectId = useRequiredPathParam('projectId');
     const environment = useRequiredQueryParam('environmentId');
     const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
-    const [newVariant, setNewVariant] = useState<string>();
-    const { defaultStickiness, loading } = useDefaultProjectSettings(projectId);
+    const stickiness =
+        strategy?.parameters && 'stickiness' in strategy?.parameters
+            ? String(strategy.parameters.stickiness)
+            : 'default';
 
     useEffect(() => {
         setVariantsEdit(
@@ -47,12 +48,12 @@ export const StrategyVariants: FC<{
             variants: variantsEdit.map(variant => ({
                 name: variant.name,
                 weight: variant.weight,
-                stickiness: variant.stickiness,
+                stickiness,
                 payload: variant.payload,
                 weightType: variant.weightType,
             })),
         }));
-    }, [JSON.stringify(variantsEdit)]);
+    }, [JSON.stringify(variantsEdit), stickiness]);
 
     const updateVariant = (updatedVariant: IFeatureVariantEdit, id: string) => {
         setVariantsEdit(prevVariants =>
@@ -73,24 +74,23 @@ export const StrategyVariants: FC<{
                 name: '',
                 weightType: WeightType.VARIABLE,
                 weight: 0,
-                overrides: [],
-                stickiness:
-                    variantsEdit?.length > 0
-                        ? variantsEdit[0].stickiness
-                        : defaultStickiness,
+                stickiness,
                 new: true,
                 isValid: false,
                 id,
             },
         ]);
-        setNewVariant(id);
     };
 
     return (
         <>
+            <Typography component="h3" sx={{ m: 0 }} variant="h3">
+                Variants
+            </Typography>
             <StyledVariantForms>
                 {variantsEdit.map(variant => (
                     <VariantForm
+                        disableOverrides={true}
                         key={variant.id}
                         variant={variant}
                         variants={variantsEdit}

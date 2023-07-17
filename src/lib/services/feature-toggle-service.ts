@@ -1,6 +1,6 @@
 import {
     CREATE_FEATURE_STRATEGY,
-    EnvironmentStrategyExecutionOrder,
+    StrategyIds,
     EnvironmentVariantEvent,
     FEATURE_UPDATED,
     FeatureArchivedEvent,
@@ -8,7 +8,6 @@ import {
     FeatureCreatedEvent,
     FeatureDeletedEvent,
     FeatureEnvironmentEvent,
-    FeatureEnvironmentStrategyExecutionOrderUpdatedEvent,
     FeatureMetadataUpdateEvent,
     FeatureRevivedEvent,
     FeatureStaleEvent,
@@ -42,6 +41,7 @@ import {
     Unsaved,
     WeightType,
     FEATURE_POTENTIALLY_STALE_UPDATED,
+    StrategiesOrderChangedEvent,
 } from '../types';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
@@ -420,16 +420,18 @@ class FeatureToggleService {
                 environment,
             )
         )
-            .sort((a, b) =>
-                !!a.sortOrder && !!b.sortOrder
-                    ? a.sortOrder > b.sortOrder
-                        ? 1
-                        : -1
-                    : 1,
-            )
+            .sort((strategy1, strategy2) => {
+                if (
+                    typeof strategy1.sortOrder === 'number' &&
+                    typeof strategy2.sortOrder === 'number'
+                ) {
+                    return strategy1.sortOrder - strategy2.sortOrder;
+                }
+                return 0;
+            })
             .map((strategy) => strategy.id);
 
-        const eventPreData: EnvironmentStrategyExecutionOrder = existingOrder;
+        const eventPreData: StrategyIds = existingOrder;
 
         await Promise.all(
             sortOrders.map(async ({ id, sortOrder }) => {
@@ -446,18 +448,20 @@ class FeatureToggleService {
                 environment,
             )
         )
-            .sort((a, b) =>
-                !!a.sortOrder && !!b.sortOrder
-                    ? a.sortOrder > b.sortOrder
-                        ? 1
-                        : -1
-                    : 1,
-            )
+            .sort((strategy1, strategy2) => {
+                if (
+                    typeof strategy1.sortOrder === 'number' &&
+                    typeof strategy2.sortOrder === 'number'
+                ) {
+                    return strategy1.sortOrder - strategy2.sortOrder;
+                }
+                return 0;
+            })
             .map((strategy) => strategy.id);
 
-        const eventData: EnvironmentStrategyExecutionOrder = newOrder;
+        const eventData: StrategyIds = newOrder;
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
-        const event = new FeatureEnvironmentStrategyExecutionOrderUpdatedEvent({
+        const event = new StrategiesOrderChangedEvent({
             featureName,
             environment,
             project,

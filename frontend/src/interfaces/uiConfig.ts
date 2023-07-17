@@ -53,6 +53,7 @@ export interface IFlags {
     customRootRoles?: boolean;
     strategyVariant?: boolean;
     newProjectLayout?: boolean;
+    configurableFeatureTypeLifetimes?: boolean;
 }
 
 export interface IVersionInfo {

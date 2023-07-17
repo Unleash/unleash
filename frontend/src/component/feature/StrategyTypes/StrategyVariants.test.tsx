@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { StrategyVariants } from './StrategyVariants';
 import { Route, Routes } from 'react-router-dom';
@@ -7,24 +7,30 @@ import { IFeatureStrategy } from '../../../interfaces/strategy';
 import React, { useState } from 'react';
 
 test('should render variants', async () => {
-    const Parent = () => {
-        const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({
-            name: '',
-            constraints: [],
-            parameters: { stickiness: 'clientId' },
-            variants: [
-                {
-                    name: 'variantName',
-                    stickiness: 'default',
-                    weight: 1000,
-                    weightType: 'variable',
-                    payload: {
-                        type: 'string',
-                        value: 'variantValue',
-                    },
+    let currentStrategy: Partial<IFeatureStrategy> = {};
+    const initialStrategy = {
+        name: '',
+        constraints: [],
+        parameters: { stickiness: 'clientId' },
+        variants: [
+            {
+                name: 'variantName',
+                stickiness: 'default',
+                weight: 1000,
+                weightType: 'variable',
+                payload: {
+                    type: 'string',
+                    value: 'variantValue',
                 },
-            ],
-        });
+            },
+        ],
+    };
+    const Parent = () => {
+        const [strategy, setStrategy] =
+            useState<Partial<IFeatureStrategy>>(initialStrategy);
+
+        currentStrategy = strategy;
+
         return (
             <StrategyVariants strategy={strategy} setStrategy={setStrategy} />
         );
@@ -64,4 +70,24 @@ test('should render variants', async () => {
     const matchedElements = screen.getAllByText('Custom percentage');
 
     expect(matchedElements.length).toBe(2);
+    await waitFor(() => {
+        expect(currentStrategy).toMatchObject({
+            ...initialStrategy,
+            variants: [
+                {
+                    name: 'variantName',
+                    payload: { type: 'string', value: 'variantValue' },
+                    stickiness: 'clientId',
+                    weight: 500,
+                    weightType: 'variable',
+                },
+                {
+                    name: '',
+                    stickiness: 'clientId',
+                    weight: 500,
+                    weightType: 'variable',
+                },
+            ],
+        });
+    });
 });

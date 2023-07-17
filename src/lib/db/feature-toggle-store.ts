@@ -382,25 +382,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     async updatePotentiallyStaleFeatures(
         currentTime?: string,
     ): Promise<{ name: string; potentiallyStale: boolean }[]> {
-        const previousState = (
-            await this.db(TABLE)
-                .select(['name', 'potentially_stale'])
-                .whereNot('stale', true)
-        ).reduce((previousValue, current) => {
-            previousValue[current.name] = current.potentially_stale;
-            return previousValue;
-        }, {});
-
-        const isPotentiallyStale = this.db.raw(
-            `(? > (features.created_at + ((
-                            SELECT feature_types.lifetime_days
-                            FROM feature_types
-                            WHERE feature_types.id = features.type
-                        ) * INTERVAL '1 day')))`,
-            [currentTime || this.db.fn.now()],
-        );
-
-        const simpleQuery = this.db.raw(
+        const query = this.db.raw(
             `SELECT name, potentially_stale, (? > (features.created_at + ((
                             SELECT feature_types.lifetime_days
                             FROM feature_types
@@ -411,14 +393,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             [currentTime || this.db.fn.now()],
         );
 
-        const features = (await simpleQuery).rows;
-        // console.log(
-        //     'q5',
-        //     simpleQuery.toSQL().toNative(),
-        //     (await simpleQuery).rows,
-        // );
-
-        const needUpdates = features
+        const featuresToUpdate = (await query).rows
             .filter(
                 ({ potentially_stale, current_staleness }) =>
                     (potentially_stale ?? false) !==
@@ -429,200 +404,25 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
                 name,
             }));
 
-        console.log('need updates', needUpdates);
-
-        const update2 = await this.db(TABLE)
+        await this.db(TABLE)
             .update('potentially_stale', true)
             .whereIn(
                 'name',
-                needUpdates
+                featuresToUpdate
                     .filter((feature) => feature.potentiallyStale === true)
                     .map((feature) => feature.name),
-            )
-            .returning(['name', 'potentially_stale']);
+            );
 
-        // console.log(
-        //     'update2',
-        //     update2,
-        //     'need updates',
-        //     needUpdates.filter((f) => f.current_staleness === true),
-        // );
-
-        const update3 = await this.db(TABLE)
+        await this.db(TABLE)
             .update('potentially_stale', false)
             .whereIn(
                 'name',
-                needUpdates
+                featuresToUpdate
                     .filter((feature) => feature.potentiallyStale !== true)
                     .map((feature) => feature.name),
-            )
-            .returning(['name', 'potentially_stale']);
+            );
 
-        console.log('update3', update3);
-
-        return needUpdates;
-        // const q4 = this.db(TABLE)
-        //     .select(['name,', 'potentially_stale'])
-        //     .(
-        //         `(? > (features.created_at + ((
-        //                     SELECT feature_types.lifetime_days
-        //                     FROM feature_types
-        //                     WHERE feature_types.id = features.type
-        //                 ) * INTERVAL '1 day')))`,
-        //     )
-        //     .as('current_staleness')
-        //     .whereNot('stale', true);
-
-        // console.log('q4', q4.toSQL().toNative(), await q4);
-
-        // const needsUpdated
-
-        const updateQuery = this.db(TABLE)
-            // .with('mark', isPotentiallyStale)
-            .update('potentially_stale', isPotentiallyStale)
-            .where(
-                (builder) => builder.where(isPotentiallyStale),
-                // .andWhereNot('potentially_stale', true)
-                // .or.where('potentially_stale', true),
-            )
-            // .andWhereNot('potentially_stale', true)
-            // .where((builder) =>
-            //     builder.where((subBuilder) =>
-            //         subBuilder
-            //             .where(isPotentiallyStale)
-            //             .andWhereNot('potentially_stale', true),
-            //     ),
-            // )
-            .whereNot('potentially_stale', true)
-            .whereNot('stale', true);
-
-        const currentState: {
-            name: string;
-            potentially_stale: boolean | null;
-        }[] = await updateQuery.returning(['name', 'potentially_stale']);
-
-        // console.log(updateQuery.toSQL().toNative(), currentState);
-
-        // const time = [currentTime || this.db.fn.now()];
-
-        // const rawQ = this.db.raw(
-        //     `
-        //             WITH
-        //             feature_types_data AS (
-        //                 SELECT id, lifetime_days
-        //                 FROM feature_types),
-        //             current_ts AS (
-        //                 SELECT ? AS current_ts),
-        //             comparison AS (
-        //                 SELECT
-        //                 features.name,
-        //                 (current_ts.current_ts > (features.created_at + (feature_types_data.lifetime_days * INTERVAL '1 day'))) AS is_stale
-        //                 FROM
-        //                 features
-        //                 JOIN
-        //                 feature_types_data ON features.type = feature_types_data.id
-        //                 CROSS JOIN
-        //                 current_ts)
-        //             UPDATE features
-        //             SET potentially_stale = comparison.is_stale
-        //             FROM comparison
-        //             WHERE features.name = comparison.name
-        //             AND (
-        //                 (comparison.is_stale AND NOT potentially_stale = TRUE)
-        //                 OR (NOT comparison.is_stale AND potentially_stale = TRUE)
-        //             )
-        //             AND NOT stale = TRUE
-        //             RETURNING features.name, potentially_stale;
-        // `,
-        //     time,
-        // );
-
-        // console.log(rawQ.toSQL().toNative(), await rawQ);
-
-        // const newQ = this.db(TABLE)
-        //     .with('feature_types_data', (qb) => {
-        //         qb.select('id', 'lifetime_days').from('feature_types');
-        //     })
-        //     .with('current_ts', (qb) => {
-        //         qb.select(this.db.raw('? AS current_ts', time));
-        //     })
-        //     .with('comparison', (qb) => {
-        //         qb.select('features.name')
-        //             .select(
-        //                 this.db.raw(
-        //                     "(current_ts.current_ts > (features.created_at + (feature_types_data.lifetime_days * INTERVAL '1 day'))) AS is_stale",
-        //                 ),
-        //             )
-        //             .from('features')
-        //             .join(
-        //                 'feature_types_data',
-        //                 'features.type',
-        //                 'feature_types_data.id',
-        //             )
-        //             .crossJoin('current_ts');
-        //     })
-        //     .update({ potentially_stale: this.db.raw('comparison.is_stale') })
-        //     .from('features')
-        //     .join('comparison', 'features.name', 'comparison.name')
-        //     .where(function () {
-        //         this.where(function () {
-        //             this.where('comparison.is_stale', true).andWhereNot(
-        //                 'potentially_stale',
-        //                 true,
-        //             );
-        //         })
-        //             .orWhere(function () {
-        //                 this.where('comparison.is_stale', false).andWhere(
-        //                     'potentially_stale',
-        //                     true,
-        //                 );
-        //             })
-        //             .andWhereNot('stale', true);
-        //     })
-        //     .returning(['features.name', 'potentially_stale']);
-
-        // console.log(newQ.toSQL().toNative(), await newQ);
-
-        const q3 = this.db(TABLE)
-            .update({
-                potentially_stale: isPotentiallyStale,
-            })
-            .where((qb) =>
-                qb
-                    .where((builder) =>
-                        builder
-                            // update rows that are potentially stale but not marked as such
-                            .where(isPotentiallyStale)
-                            .andWhereNot('potentially_stale', true),
-                    )
-                    .orWhere((builder) =>
-                        builder
-                            // update rows that are not potentially stale but **are** marked as such
-                            .whereNot(isPotentiallyStale)
-                            .andWhere('potentially_stale', true),
-                    ),
-            )
-            .whereNot('stale', true)
-            .returning(['name', 'potentially_stale']);
-
-        console.log(q3.toSQL().toNative(), await q3);
-
-        const diff = currentState
-            .map(({ name, potentially_stale }) => {
-                const previous = previousState[name] ?? false;
-                const hasChanged = previous !== (potentially_stale ?? false);
-                if (hasChanged) {
-                    return {
-                        name,
-                        potentiallyStale: potentially_stale ?? false,
-                    };
-                } else {
-                    return undefined;
-                }
-            })
-            .filter(Boolean) as { name: string; potentiallyStale: boolean }[];
-
-        return diff;
+        return featuresToUpdate;
     }
 
     async isPotentiallyStale(featureName: string): Promise<boolean> {

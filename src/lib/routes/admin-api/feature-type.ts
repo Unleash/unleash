@@ -4,11 +4,12 @@ import FeatureTypeService from '../../services/feature-type-service';
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../types/option';
 import { OpenApiService } from '../../services/openapi-service';
-import { NONE } from '../../types/permissions';
+import { ADMIN, NONE } from '../../types/permissions';
 import { FeatureTypesSchema } from '../../openapi/spec/feature-types-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import Controller from '../controller';
-import { getStandardResponses } from '../../openapi';
+import { FeatureTypeSchema, getStandardResponses } from '../../openapi';
+import { IAuthRequest } from '../unleash-types';
 
 const version = 1;
 
@@ -50,6 +51,26 @@ export class FeatureTypeController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'put',
+            path: '/:id/lifetime',
+            handler: this.updateLifetime,
+            permission: ADMIN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    operationId: 'updateFeatureTypeLifetime',
+                    summary: 'Update feature type lifetime',
+                    description:
+                        'Allows you to update the lifetime configuration for the specified lifetime.',
+                    responses: {
+                        200: createResponseSchema('featureTypeSchema'),
+                        ...getStandardResponses(400, 401, 403, 404, 415),
+                    },
+                }),
+            ],
+        });
     }
 
     async getAllFeatureTypes(
@@ -61,4 +82,13 @@ export class FeatureTypeController extends Controller {
             types: await this.featureTypeService.getAll(),
         });
     }
+
+    async updateLifetime(
+        req: IAuthRequest<
+            { id: string },
+            unknown,
+            UpdateFeatureTypeLifetimeSchema
+        >,
+        res: Response<FeatureTypeSchema>,
+    ): Promise<void> {}
 }

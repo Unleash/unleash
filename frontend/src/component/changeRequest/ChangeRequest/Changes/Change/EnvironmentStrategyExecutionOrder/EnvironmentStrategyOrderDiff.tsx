@@ -11,18 +11,18 @@ const StyledCodeSection = styled('div')(({ theme }) => ({
         fontSize: theme.fontSizes.smallBody,
     },
 }));
-
+type StrategyIds = { strategyIds: string[] };
 interface IDiffProps {
-    preData: string[];
-    data: string[];
+    preData: StrategyIds;
+    data: StrategyIds;
 }
 
 export const EnvironmentStrategyOrderDiff = ({ preData, data }: IDiffProps) => (
     <StyledCodeSection>
         <EventDiff
             entry={{
-                preData: preData,
-                data: data,
+                preData: preData.strategyIds,
+                data: data.strategyIds,
             }}
             sort={(a, b) => a.index - b.index}
         />

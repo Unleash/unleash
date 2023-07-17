@@ -1,9 +1,4 @@
-import {
-    FEATURE_CREATED,
-    FEATURE_ARCHIVED,
-    FEATURE_ENVIRONMENT_DISABLED,
-    IEvent,
-} from '../types/events';
+import { IEvent, FEATURE_ENVIRONMENT_ENABLED } from '../types/events';
 
 import SlackAppAddon from './slack-app';
 
@@ -41,7 +36,7 @@ beforeEach(() => {
     slackApiCalls.length = 0;
 });
 
-test('Should call Slack API', async () => {
+test('Should post message when feature is toggled', async () => {
     const addon = new SlackAppAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
@@ -49,63 +44,16 @@ test('Should call Slack API', async () => {
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
-        type: FEATURE_CREATED,
+        type: FEATURE_ENVIRONMENT_ENABLED,
         createdBy: 'some@user.com',
         project: 'default',
         featureName: 'some-toggle',
+        environment: 'development',
         data: {
             name: 'some-toggle',
             enabled: false,
             type: 'release',
             strategies: [{ name: 'default' }],
-        },
-        tags: [{ type: 'slack', value: 'general' }],
-    };
-
-    await addon.handleEvent(event, { accessToken });
-    expect(slackApiCalls.length).toBe(1);
-    expect(slackApiCalls[0].channel).toBe(1);
-    expect(slackApiCalls[0]).toMatchSnapshot();
-});
-
-test('Should call Slack API for archived toggle', async () => {
-    const addon = new SlackAppAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
-    const event: IEvent = {
-        id: 2,
-        createdAt: new Date(),
-        type: FEATURE_ARCHIVED,
-        createdBy: 'some@user.com',
-        project: 'default',
-        featureName: 'some-toggle',
-        data: {
-            name: 'some-toggle',
-        },
-        tags: [{ type: 'slack', value: 'general' }],
-    };
-
-    await addon.handleEvent(event, { accessToken });
-    expect(slackApiCalls.length).toBe(1);
-    expect(slackApiCalls[0].channel).toBe(1);
-    expect(slackApiCalls[0]).toMatchSnapshot();
-});
-
-test(`Should call Slack API for toggled environment`, async () => {
-    const addon = new SlackAppAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
-    const event: IEvent = {
-        id: 3,
-        createdAt: new Date(),
-        type: FEATURE_ENVIRONMENT_DISABLED,
-        createdBy: 'some@user.com',
-        project: 'default',
-        featureName: 'some-toggle',
-        data: {
-            name: 'some-toggle',
         },
         tags: [{ type: 'slack', value: 'general' }],
     };
@@ -122,12 +70,13 @@ test('Should post to all channels in tags', async () => {
         unleashUrl: 'http://some-url.com',
     });
     const event: IEvent = {
-        id: 4,
+        id: 2,
         createdAt: new Date(),
-        type: FEATURE_ENVIRONMENT_DISABLED,
+        type: FEATURE_ENVIRONMENT_ENABLED,
         createdBy: 'some@user.com',
         project: 'default',
         featureName: 'some-toggle',
+        environment: 'development',
         data: {
             name: 'some-toggle',
         },
@@ -151,12 +100,13 @@ test('Should not post to unexisting tagged channels', async () => {
         unleashUrl: 'http://some-url.com',
     });
     const event: IEvent = {
-        id: 5,
+        id: 3,
         createdAt: new Date(),
-        type: FEATURE_ENVIRONMENT_DISABLED,
+        type: FEATURE_ENVIRONMENT_ENABLED,
         createdBy: 'some@user.com',
         project: 'default',
         featureName: 'some-toggle',
+        environment: 'development',
         data: {
             name: 'some-toggle',
         },

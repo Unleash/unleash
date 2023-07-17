@@ -331,7 +331,7 @@ export class FeatureEnvironmentEvent extends BaseEvent {
         this.environment = p.environment;
     }
 }
-export type StrategyIds = string[];
+export type StrategyIds = { strategyIds: string[] };
 export class StrategiesOrderChangedEvent extends BaseEvent {
     readonly project: string;
 

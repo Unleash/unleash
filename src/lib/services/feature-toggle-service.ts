@@ -431,7 +431,7 @@ class FeatureToggleService {
             })
             .map((strategy) => strategy.id);
 
-        const eventPreData: StrategyIds = existingOrder;
+        const eventPreData: StrategyIds = { strategyIds: existingOrder };
 
         await Promise.all(
             sortOrders.map(async ({ id, sortOrder }) => {
@@ -459,7 +459,7 @@ class FeatureToggleService {
             })
             .map((strategy) => strategy.id);
 
-        const eventData: StrategyIds = newOrder;
+        const eventData: StrategyIds = { strategyIds: newOrder };
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
         const event = new StrategiesOrderChangedEvent({
             featureName,

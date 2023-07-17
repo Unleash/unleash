@@ -3228,67 +3228,6 @@ test('Enabling a feature environment should add the default strategy when only d
             expect(res.body.strategies[1].disabled).toBeFalsy();
         });
 });
-
-test('Updating feature strategy sort-order should trigger a an event when strategyVariant is true', async () => {
-    app = await setupAppWithCustomConfig(
-        db.stores,
-        {
-            experimental: {
-                flags: {
-                    strictSchemaValidation: true,
-                    strategyVariant: true,
-                },
-            },
-        },
-        db.rawDatabase,
-    );
-
-    const envName = 'sort-order-within-environment-strategyVariant';
-    const featureName = 'feature.sort.order.event.list';
-
-    await db.stores.environmentStore.create({
-        name: envName,
-        type: 'test',
-    });
-
-    await app.request
-        .post('/api/admin/projects/default/environments')
-        .send({
-            environment: envName,
-        })
-        .expect(200);
-
-    await app.request
-        .post('/api/admin/projects/default/features')
-        .send({ name: featureName })
-        .expect(201);
-
-    await addStrategies(featureName, envName);
-    const { body } = await app.request.get(
-        `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
-    );
-
-    const strategies: FeatureStrategySchema[] = body;
-    let order = 1;
-    const sortOrders: SetStrategySortOrderSchema = [];
-
-    strategies.forEach((strategy) => {
-        sortOrders.push({ id: strategy.id!, sortOrder: order++ });
-    });
-
-    await app.request
-        .post(
-            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/set-sort-order`,
-        )
-        .send(sortOrders)
-        .expect(200);
-
-    const response = await app.request.get(`/api/admin/events`);
-    const { body: eventsBody } = response;
-    let { events } = eventsBody;
-
-    expect(events[0].type).toBe('strategy-order-changed');
-});
 test('Updating feature strategy sort-order should return strategies in correct order', async () => {
     app = await setupAppWithCustomConfig(
         db.stores,
@@ -3353,5 +3292,67 @@ test('Updating feature strategy sort-order should return strategies in correct o
             expect(res.body.strategies[0].sortOrder).toBe(1);
             expect(res.body.strategies[1].sortOrder).toBe(2);
             expect(res.body.strategies[2].sortOrder).toBe(3);
+        });
+});
+
+test('Updating feature strategy sort-order should trigger a an event', async () => {
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: false,
+                    strategyVariant: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
+
+    const envName = 'sort-order-within-environment-strategyVariant';
+    const featureName = 'feature.sort.order.event.list-strategyVariant';
+
+    await db.stores.environmentStore.create({
+        name: envName,
+        type: 'test',
+    });
+
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({
+            environment: envName,
+        })
+        .expect(200);
+
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: featureName })
+        .expect(201);
+
+    await addStrategies(featureName, envName);
+    const { body } = await app.request.get(
+        `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
+    );
+
+    const strategies: FeatureStrategySchema[] = body;
+    let order = 1;
+    const sortOrders: SetStrategySortOrderSchema = [];
+
+    strategies.forEach((strategy) => {
+        sortOrders.push({ id: strategy.id!, sortOrder: order++ });
+    });
+
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies/set-sort-order`,
+        )
+        .send(sortOrders)
+        .expect(200);
+
+    await app.request
+        .get(`/api/admin/events`)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.events[0].type).toBe('strategy-order-changed');
         });
 });

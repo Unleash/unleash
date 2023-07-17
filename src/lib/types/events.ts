@@ -31,7 +31,7 @@ export const FEATURE_ENVIRONMENT_ENABLED =
     'feature-environment-enabled' as const;
 export const FEATURE_ENVIRONMENT_DISABLED =
     'feature-environment-disabled' as const;
-
+export const STRATEGY_ORDER_CHANGED = 'strategy-order-changed';
 export const STRATEGY_CREATED = 'strategy-created' as const;
 export const STRATEGY_DELETED = 'strategy-deleted' as const;
 export const STRATEGY_DEPRECATED = 'strategy-deprecated' as const;
@@ -142,6 +142,7 @@ export const IEventTypes = [
     FEATURE_STRATEGY_UPDATE,
     FEATURE_STRATEGY_ADD,
     FEATURE_STRATEGY_REMOVE,
+    STRATEGY_ORDER_CHANGED,
     DROP_FEATURE_TAGS,
     FEATURE_UNTAGGED,
     FEATURE_STALE_ON,
@@ -328,6 +329,39 @@ export class FeatureEnvironmentEvent extends BaseEvent {
         this.project = p.project;
         this.featureName = p.featureName;
         this.environment = p.environment;
+    }
+}
+export type StrategyIds = { strategyIds: string[] };
+export class StrategiesOrderChangedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly environment: string;
+
+    readonly data: StrategyIds;
+
+    readonly preData: StrategyIds;
+
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(p: {
+        project: string;
+        featureName: string;
+        environment: string;
+        createdBy: string | IUser;
+        data: StrategyIds;
+        preData: StrategyIds;
+        tags: ITag[];
+    }) {
+        super(STRATEGY_ORDER_CHANGED, p.createdBy, p.tags);
+        const { project, featureName, environment, data, preData } = p;
+        this.project = project;
+        this.featureName = featureName;
+        this.environment = environment;
+        this.data = data;
+        this.preData = preData;
     }
 }
 

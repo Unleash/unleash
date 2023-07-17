@@ -1,0 +1,127 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should call Slack API 1`] = `
+{
+  "attachments": [
+    {
+      "actions": [
+        {
+          "name": "featureToggle",
+          "style": "primary",
+          "text": "Open in Unleash",
+          "type": "button",
+          "url": "http://some-url.com/projects/default/features/some-toggle",
+          "value": "featureToggle",
+        },
+      ],
+    },
+  ],
+  "channel": 1,
+  "text": "some@user.com created feature toggle <http://some-url.com/projects/default/features/some-toggle|some-toggle> in project *default*",
+}
+`;
+
+exports[`Should call Slack API for archived toggle 1`] = `
+{
+  "attachments": [
+    {
+      "actions": [
+        {
+          "name": "featureToggle",
+          "style": "primary",
+          "text": "Open in Unleash",
+          "type": "button",
+          "url": "http://some-url.com/projects/default/archive",
+          "value": "featureToggle",
+        },
+      ],
+    },
+  ],
+  "channel": 1,
+  "text": " some@user.com just archived feature toggle *<http://some-url.com/projects/default/archive|some-toggle>*",
+}
+`;
+
+exports[`Should call Slack API for toggled environment 1`] = `
+{
+  "attachments": [
+    {
+      "actions": [
+        {
+          "name": "featureToggle",
+          "style": "primary",
+          "text": "Open in Unleash",
+          "type": "button",
+          "url": "http://some-url.com/projects/default/features/some-toggle",
+          "value": "featureToggle",
+        },
+      ],
+    },
+  ],
+  "channel": 1,
+  "text": "some@user.com *disabled* <http://some-url.com/projects/default/features/some-toggle|some-toggle> in *undefined* environment in project *default*",
+}
+`;
+
+exports[`Should not post to unexisting tagged channels 1`] = `
+{
+  "attachments": [
+    {
+      "actions": [
+        {
+          "name": "featureToggle",
+          "style": "primary",
+          "text": "Open in Unleash",
+          "type": "button",
+          "url": "http://some-url.com/projects/default/features/some-toggle",
+          "value": "featureToggle",
+        },
+      ],
+    },
+  ],
+  "channel": 2,
+  "text": "some@user.com *disabled* <http://some-url.com/projects/default/features/some-toggle|some-toggle> in *undefined* environment in project *default*",
+}
+`;
+
+exports[`Should post to all channels in tags 1`] = `
+{
+  "attachments": [
+    {
+      "actions": [
+        {
+          "name": "featureToggle",
+          "style": "primary",
+          "text": "Open in Unleash",
+          "type": "button",
+          "url": "http://some-url.com/projects/default/features/some-toggle",
+          "value": "featureToggle",
+        },
+      ],
+    },
+  ],
+  "channel": 1,
+  "text": "some@user.com *disabled* <http://some-url.com/projects/default/features/some-toggle|some-toggle> in *undefined* environment in project *default*",
+}
+`;
+
+exports[`Should post to all channels in tags 2`] = `
+{
+  "attachments": [
+    {
+      "actions": [
+        {
+          "name": "featureToggle",
+          "style": "primary",
+          "text": "Open in Unleash",
+          "type": "button",
+          "url": "http://some-url.com/projects/default/features/some-toggle",
+          "value": "featureToggle",
+        },
+      ],
+    },
+  ],
+  "channel": 2,
+  "text": "some@user.com *disabled* <http://some-url.com/projects/default/features/some-toggle|some-toggle> in *undefined* environment in project *default*",
+}
+`;

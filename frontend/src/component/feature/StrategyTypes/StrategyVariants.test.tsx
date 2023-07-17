@@ -65,11 +65,14 @@ test('should render variants', async () => {
     // overrides disabled
     expect(screen.queryByText('Overrides')).not.toBeInTheDocument();
 
+    // add second variant
     button.click();
 
+    // UI allows to adjust percentages
     const matchedElements = screen.getAllByText('Custom percentage');
-
     expect(matchedElements.length).toBe(2);
+
+    // correct variants set on the parent
     await waitFor(() => {
         expect(currentStrategy).toMatchObject({
             ...initialStrategy,

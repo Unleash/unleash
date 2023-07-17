@@ -42,7 +42,15 @@ export const StrategyVariants: FC<{
         );
     }, []);
 
-    useEffect(() => {
+    const updateVariant = (updatedVariant: IFeatureVariantEdit, id: string) => {
+        setVariantsEdit(prevVariants =>
+            updateWeightEdit(
+                prevVariants.map(prevVariant =>
+                    prevVariant.id === id ? updatedVariant : prevVariant
+                ),
+                1000
+            )
+        );
         setStrategy(prev => ({
             ...prev,
             variants: variantsEdit.map(variant => ({
@@ -53,17 +61,6 @@ export const StrategyVariants: FC<{
                 weightType: variant.weightType,
             })),
         }));
-    }, [JSON.stringify(variantsEdit), stickiness]);
-
-    const updateVariant = (updatedVariant: IFeatureVariantEdit, id: string) => {
-        setVariantsEdit(prevVariants =>
-            updateWeightEdit(
-                prevVariants.map(prevVariant =>
-                    prevVariant.id === id ? updatedVariant : prevVariant
-                ),
-                1000
-            )
-        );
     };
 
     const addVariant = () => {

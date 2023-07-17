@@ -18,7 +18,6 @@ import { useOverrides } from 'component/feature/FeatureView/FeatureVariants/Feat
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { WeightType } from 'constants/variantTypes';
 import { IFeatureVariantEdit } from '../EnvironmentVariantsModal';
-import { Operation } from 'fast-json-patch';
 import { Delete } from '@mui/icons-material';
 
 const StyledVariantForm = styled('div')(({ theme }) => ({
@@ -150,10 +149,7 @@ interface IVariantFormProps {
     variants: IFeatureVariantEdit[];
     updateVariant: (updatedVariant: IFeatureVariantEdit) => void;
     removeVariant: (variantId: string) => void;
-    apiPayload: {
-        patch: Operation[];
-        error?: string;
-    };
+    error?: string;
 }
 
 export const VariantForm = ({
@@ -161,7 +157,7 @@ export const VariantForm = ({
     variants,
     updateVariant,
     removeVariant,
-    apiPayload,
+    error,
 }: IVariantFormProps) => {
     const [name, setName] = useState(variant.name);
     const [customPercentage, setCustomPercentage] = useState(
@@ -188,10 +184,10 @@ export const VariantForm = ({
 
     useEffect(() => {
         clearError(ErrorField.PERCENTAGE);
-        if (apiPayload.error?.includes('%')) {
+        if (error?.includes('%')) {
             setError(ErrorField.PERCENTAGE, 'Total weight must equal 100%');
         }
-    }, [apiPayload.error]);
+    }, [error]);
 
     const editing = !variant.new;
     const customPercentageVisible =
@@ -292,7 +288,7 @@ export const VariantForm = ({
                 isNameUnique(name, variant.id) &&
                 isValidPercentage(percentage) &&
                 isValidPayload(payload) &&
-                !apiPayload.error,
+                !error,
         });
     }, [name, customPercentage, percentage, payload, overrides]);
 

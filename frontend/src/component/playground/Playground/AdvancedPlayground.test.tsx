@@ -82,7 +82,7 @@ const server = testServerSetup();
 test('should display error on submit', async () => {
     testServerRoute(
         server,
-        '/api/admin/playground/advanced',
+        '/api/admin/playground',
         {
             name: 'BadDataError',
             details: [{ message: 'some error about too many items' }],

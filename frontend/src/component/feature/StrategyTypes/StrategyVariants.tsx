@@ -42,6 +42,19 @@ export const StrategyVariants: FC<{
         );
     }, []);
 
+    useEffect(() => {
+        setStrategy(prev => ({
+            ...prev,
+            variants: variantsEdit.map(variant => ({
+                stickiness,
+                name: variant.name,
+                weight: variant.weight,
+                payload: variant.payload,
+                weightType: variant.weightType,
+            })),
+        }));
+    }, [stickiness, JSON.stringify(variantsEdit)]);
+
     const updateVariant = (updatedVariant: IFeatureVariantEdit, id: string) => {
         setVariantsEdit(prevVariants =>
             updateWeightEdit(
@@ -51,16 +64,6 @@ export const StrategyVariants: FC<{
                 1000
             )
         );
-        setStrategy(prev => ({
-            ...prev,
-            variants: variantsEdit.map(variant => ({
-                name: variant.name,
-                weight: variant.weight,
-                stickiness,
-                payload: variant.payload,
-                weightType: variant.weightType,
-            })),
-        }));
     };
 
     const addVariant = () => {

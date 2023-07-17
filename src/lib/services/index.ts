@@ -128,7 +128,7 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
-        featureToggleService.markPotentiallyStaleFeatures.bind(
+        featureToggleService.updatePotentiallyStaleFeatures.bind(
             featureToggleService,
         ),
         minutesToMilliseconds(1),

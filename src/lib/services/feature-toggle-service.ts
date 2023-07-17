@@ -1983,8 +1983,8 @@ class FeatureToggleService {
         }
     }
 
-    async markPotentiallyStaleFeatures(): Promise<void> {
-        await this.featureToggleStore.markPotentiallyStaleFeatures();
+    async updatePotentiallyStaleFeatures(): Promise<void> {
+        await this.featureToggleStore.updatePotentiallyStaleFeatures();
     }
 }
 

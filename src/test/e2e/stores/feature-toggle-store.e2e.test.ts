@@ -42,7 +42,7 @@ describe('potentially_stale marking', () => {
         ).toISOString();
     };
 
-    test('it returns an empty list of no toggles were updated', async () => {
+    test('it returns an empty list if no toggles were updated', async () => {
         const features: FeatureToggleDTO[] = [
             {
                 name: 'feature1',
@@ -56,11 +56,12 @@ describe('potentially_stale marking', () => {
         );
 
         const markedToggles =
-            await featureToggleStore.markPotentiallyStaleFeatures();
+            await featureToggleStore.updatePotentiallyStaleFeatures();
 
         expect(markedToggles).toStrictEqual([]);
     });
-    test('it returns the names of only the marked toggles', async () => {
+
+    test('it returns only updated toggles', async () => {
         const features: FeatureToggleDTO[] = [
             {
                 name: 'feature1',
@@ -78,11 +79,13 @@ describe('potentially_stale marking', () => {
         );
 
         const markedToggles =
-            await featureToggleStore.markPotentiallyStaleFeatures(
+            await featureToggleStore.updatePotentiallyStaleFeatures(
                 getFutureTimestamp(41),
             );
 
-        expect(markedToggles).toStrictEqual(['feature1']);
+        expect(markedToggles).toStrictEqual([
+            { name: 'feature1', potentiallyStale: true },
+        ]);
     });
 
     test.each([
@@ -111,12 +114,17 @@ describe('potentially_stale marking', () => {
             }
 
             const markedToggles =
-                await featureToggleStore.markPotentiallyStaleFeatures(
+                await featureToggleStore.updatePotentiallyStaleFeatures(
                     getFutureTimestamp(daysElapsed),
                 );
 
             expect(markedToggles).toEqual(
-                expect.arrayContaining(expectedMarkedFeatures),
+                expect.arrayContaining(
+                    expectedMarkedFeatures.map((name: string) => ({
+                        name,
+                        potentiallyStale: true,
+                    })),
+                ),
             );
             expect(markedToggles.length).toEqual(expectedMarkedFeatures.length);
 
@@ -141,11 +149,12 @@ describe('potentially_stale marking', () => {
             ),
         );
         const markedToggles =
-            await featureToggleStore.markPotentiallyStaleFeatures(
+            await featureToggleStore.updatePotentiallyStaleFeatures(
                 getFutureTimestamp(1000),
             );
         expect(markedToggles).toStrictEqual([]);
     });
+
     test('it does not return toggles previously marked as potentially_stale', async () => {
         const features: FeatureToggleDTO[] = [
             {
@@ -159,28 +168,27 @@ describe('potentially_stale marking', () => {
             ),
         );
         const markedToggles =
-            await featureToggleStore.markPotentiallyStaleFeatures(
+            await featureToggleStore.updatePotentiallyStaleFeatures(
                 getFutureTimestamp(50),
             );
-        expect(markedToggles).toStrictEqual(['feature1']);
+
+        expect(markedToggles).toStrictEqual([
+            { name: 'feature1', potentiallyStale: true },
+        ]);
+
+        expect(
+            await featureToggleStore.isPotentiallyStale('feature1'),
+        ).toBeTruthy();
 
         const secondPass =
-            await featureToggleStore.markPotentiallyStaleFeatures(
+            await featureToggleStore.updatePotentiallyStaleFeatures(
                 getFutureTimestamp(100),
             );
+
         expect(secondPass).toStrictEqual([]);
     });
 
     describe('changing feature types', () => {
-        const getPastDate = (days: number) => {
-            return new Date(
-                new Date().getTime() -
-                    days * 24 * 60 * 60 * 1000 -
-                    // subtract an extra second
-                    1000,
-            );
-        };
-
         test("if a potentially stale feature changes to a type that shouldn't be stale, it's 'potentially_stale' marker is removed.", async () => {
             const features: FeatureToggleDTO[] = [
                 {
@@ -194,11 +202,14 @@ describe('potentially_stale marking', () => {
                 ),
             );
             const markedToggles =
-                await featureToggleStore.markPotentiallyStaleFeatures(
+                await featureToggleStore.updatePotentiallyStaleFeatures(
                     getFutureTimestamp(50),
                 );
 
-            expect(markedToggles).toStrictEqual(['feature1']);
+            expect(markedToggles).toStrictEqual([
+                { name: 'feature1', potentiallyStale: true },
+            ]);
+
             expect(
                 await featureToggleStore.isPotentiallyStale('feature1'),
             ).toBeTruthy();
@@ -207,6 +218,10 @@ describe('potentially_stale marking', () => {
                 name: 'feature1',
                 type: 'kill-switch',
             });
+
+            expect(
+                await featureToggleStore.updatePotentiallyStaleFeatures(),
+            ).toStrictEqual([{ name: 'feature1', potentiallyStale: false }]);
 
             const potentiallyStale =
                 await featureToggleStore.isPotentiallyStale('feature1');
@@ -227,7 +242,7 @@ describe('potentially_stale marking', () => {
                 ),
             );
             const markedToggles =
-                await featureToggleStore.markPotentiallyStaleFeatures(
+                await featureToggleStore.updatePotentiallyStaleFeatures(
                     getFutureTimestamp(50),
                 );
 
@@ -236,9 +251,11 @@ describe('potentially_stale marking', () => {
             await featureToggleStore.update('default', {
                 name: 'feature1',
                 type: 'release',
-                createdAt: getPastDate(40),
             });
 
+            await featureToggleStore.updatePotentiallyStaleFeatures(
+                getFutureTimestamp(40),
+            );
             const potentiallyStale =
                 await featureToggleStore.isPotentiallyStale('feature1');
 
@@ -262,8 +279,11 @@ describe('potentially_stale marking', () => {
             await featureToggleStore.update('default', {
                 name: 'feature1',
                 type: 'release',
-                createdAt: getPastDate(40),
             });
+
+            await featureToggleStore.updatePotentiallyStaleFeatures(
+                getFutureTimestamp(40),
+            );
 
             const potentiallyStale =
                 await featureToggleStore.isPotentiallyStale('feature1');

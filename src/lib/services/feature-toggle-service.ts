@@ -39,6 +39,7 @@ import {
     SKIP_CHANGE_REQUEST,
     Unsaved,
     WeightType,
+    FEATURE_POTENTIALLY_STALE_UPDATED,
 } from '../types';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
@@ -1983,8 +1984,25 @@ class FeatureToggleService {
         }
     }
 
-    async markPotentiallyStaleFeatures(): Promise<void> {
-        await this.featureToggleStore.markPotentiallyStaleFeatures();
+    async updatePotentiallyStaleFeatures(): Promise<void> {
+        const potentiallyStaleFeatures =
+            await this.featureToggleStore.updatePotentiallyStaleFeatures();
+        if (this.flagResolver.isEnabled('emitPotentiallyStaleEvents')) {
+            if (potentiallyStaleFeatures.length > 0) {
+                return this.eventStore.batchStore(
+                    potentiallyStaleFeatures.map(
+                        ({ name, potentiallyStale }) => ({
+                            type: FEATURE_POTENTIALLY_STALE_UPDATED,
+                            createdBy: 'unleash-system',
+                            data: {
+                                name,
+                                potentiallyStale,
+                            },
+                        }),
+                    ),
+                );
+            }
+        }
     }
 }
 

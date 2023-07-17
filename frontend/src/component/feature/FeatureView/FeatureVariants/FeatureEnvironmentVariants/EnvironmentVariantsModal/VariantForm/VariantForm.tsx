@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react";
-import Input from "component/common/Input/Input";
-import { HelpIcon } from "component/common/HelpIcon/HelpIcon";
-import SelectMenu from "component/common/select";
+import { useEffect, useState } from 'react';
+import Input from 'component/common/Input/Input';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import SelectMenu from 'component/common/select';
+import { OverrideConfig } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/VariantOverrides';
 import {
-    OverrideConfig
-} from "component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/VariantOverrides";
-import { Button, FormControlLabel, IconButton, InputAdornment, styled, Switch, Tooltip } from "@mui/material";
-import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
-import { IPayload } from "interfaces/featureToggle";
-import {
-    useOverrides
-} from "component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/useOverrides";
-import useUnleashContext from "hooks/api/getters/useUnleashContext/useUnleashContext";
-import { WeightType } from "constants/variantTypes";
-import { IFeatureVariantEdit } from "../EnvironmentVariantsModal";
-import { Delete } from "@mui/icons-material";
+    Button,
+    FormControlLabel,
+    IconButton,
+    InputAdornment,
+    styled,
+    Switch,
+    Tooltip,
+} from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { IPayload } from 'interfaces/featureToggle';
+import { useOverrides } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/useOverrides';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { WeightType } from 'constants/variantTypes';
+import { IFeatureVariantEdit } from '../EnvironmentVariantsModal';
+import { Delete } from '@mui/icons-material';
 
 const StyledVariantForm = styled('div')(({ theme }) => ({
     position: 'relative',

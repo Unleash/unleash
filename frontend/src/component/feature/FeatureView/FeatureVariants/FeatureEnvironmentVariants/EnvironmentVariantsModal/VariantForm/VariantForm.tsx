@@ -1,25 +1,20 @@
-import { useEffect, useState } from 'react';
-import Input from 'component/common/Input/Input';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import SelectMenu from 'component/common/select';
-import { OverrideConfig } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/VariantOverrides';
+import { useEffect, useState } from "react";
+import Input from "component/common/Input/Input";
+import { HelpIcon } from "component/common/HelpIcon/HelpIcon";
+import SelectMenu from "component/common/select";
 import {
-    Button,
-    FormControlLabel,
-    IconButton,
-    InputAdornment,
-    styled,
-    Switch,
-    Tooltip,
-} from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IPayload } from 'interfaces/featureToggle';
-import { useOverrides } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/useOverrides';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import { WeightType } from 'constants/variantTypes';
-import { IFeatureVariantEdit } from '../EnvironmentVariantsModal';
-import { Operation } from 'fast-json-patch';
-import { Delete } from '@mui/icons-material';
+    OverrideConfig
+} from "component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/VariantOverrides";
+import { Button, FormControlLabel, IconButton, InputAdornment, styled, Switch, Tooltip } from "@mui/material";
+import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
+import { IPayload } from "interfaces/featureToggle";
+import {
+    useOverrides
+} from "component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/useOverrides";
+import useUnleashContext from "hooks/api/getters/useUnleashContext/useUnleashContext";
+import { WeightType } from "constants/variantTypes";
+import { IFeatureVariantEdit } from "../EnvironmentVariantsModal";
+import { Delete } from "@mui/icons-material";
 
 const StyledVariantForm = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -150,10 +145,7 @@ interface IVariantFormProps {
     variants: IFeatureVariantEdit[];
     updateVariant: (updatedVariant: IFeatureVariantEdit) => void;
     removeVariant: (variantId: string) => void;
-    apiPayload: {
-        patch: Operation[];
-        error?: string;
-    };
+    error?: string;
 }
 
 export const VariantForm = ({
@@ -161,7 +153,7 @@ export const VariantForm = ({
     variants,
     updateVariant,
     removeVariant,
-    apiPayload,
+    error,
 }: IVariantFormProps) => {
     const [name, setName] = useState(variant.name);
     const [customPercentage, setCustomPercentage] = useState(
@@ -188,10 +180,10 @@ export const VariantForm = ({
 
     useEffect(() => {
         clearError(ErrorField.PERCENTAGE);
-        if (apiPayload.error?.includes('%')) {
+        if (error?.includes('%')) {
             setError(ErrorField.PERCENTAGE, 'Total weight must equal 100%');
         }
-    }, [apiPayload.error]);
+    }, [error]);
 
     const editing = !variant.new;
     const customPercentageVisible =
@@ -292,7 +284,7 @@ export const VariantForm = ({
                 isNameUnique(name, variant.id) &&
                 isValidPercentage(percentage) &&
                 isValidPayload(payload) &&
-                !apiPayload.error,
+                !error,
         });
     }, [name, customPercentage, percentage, payload, overrides]);
 

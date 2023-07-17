@@ -107,7 +107,6 @@ export const StrategyVariants: FC<{
                                 )
                             )
                         }
-                        apiPayload={{ patch: [] }}
                     />
                 ))}
             </StyledVariantForms>

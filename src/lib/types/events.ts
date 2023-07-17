@@ -123,6 +123,9 @@ export const SERVICE_ACCOUNT_CREATED = 'service-account-created' as const;
 export const SERVICE_ACCOUNT_UPDATED = 'service-account-updated' as const;
 export const SERVICE_ACCOUNT_DELETED = 'service-account-deleted' as const;
 
+export const FEATURE_POTENTIALLY_STALE_UPDATED =
+    'feature-potentially-stale-updated' as const;
+
 export const IEventTypes = [
     APPLICATION_CREATED,
     FEATURE_CREATED,
@@ -225,6 +228,7 @@ export const IEventTypes = [
     SERVICE_ACCOUNT_CREATED,
     SERVICE_ACCOUNT_DELETED,
     SERVICE_ACCOUNT_UPDATED,
+    FEATURE_POTENTIALLY_STALE_UPDATED,
 ] as const;
 export type IEventType = typeof IEventTypes[number];
 

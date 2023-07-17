@@ -1,6 +1,5 @@
 import { styled } from '@mui/material';
 import EventDiff from 'component/events/EventDiff/EventDiff';
-import { IFeatureStrategySortOrder } from '../../../../../../interfaces/strategy';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',

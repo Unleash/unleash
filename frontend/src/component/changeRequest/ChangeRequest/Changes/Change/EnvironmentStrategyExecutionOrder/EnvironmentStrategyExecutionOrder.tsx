@@ -49,24 +49,24 @@ export const EnvironmentStrategyExecutionOrder = ({
     const featureEnvironment = featureData.environments.find(
         ({ name }) => environment === name
     );
-    const environementStrategies = featureEnvironment?.strategies || [];
+    const environmentStrategies = featureEnvironment?.strategies || [];
 
     const preData =
-        environementStrategies
-            .sort((a, b) =>
-                !!a.sortOrder && !!b.sortOrder
-                    ? a.sortOrder > b.sortOrder
-                        ? 1
-                        : -1
-                    : 1
-            )
+        environmentStrategies
+            .sort((strategy1, strategy2) => {
+                if (
+                    typeof strategy1.sortOrder === 'number' &&
+                    typeof strategy2.sortOrder === 'number'
+                ) {
+                    return strategy1.sortOrder - strategy2.sortOrder;
+                }
+                return 0;
+            })
             .map(strategy => strategy.id) ?? [];
 
     const updatedStategies = change.payload.map(({ id }) => {
-        return environementStrategies.find(s => s.id === id);
+        return environmentStrategies.find(s => s.id === id);
     });
-
-    console.log(updatedStategies);
 
     return (
         <ChangeItemInfo>

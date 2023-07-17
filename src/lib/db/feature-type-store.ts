@@ -68,11 +68,20 @@ class FeatureTypeStore implements IFeatureTypeStore {
         return present;
     }
 
-    updateLifetime(
+    async updateLifetime(
         name: string,
         newLifetimeDays: number | null,
-    ): Promise<IFeatureType> {
-        throw new Error('Method not implemented.');
+    ): Promise<IFeatureType | undefined> {
+        const [updatedType] = await this.db(TABLE)
+            .update({ lifetime_days: newLifetimeDays })
+            .where({ name })
+            .returning(['*']);
+
+        if (updatedType) {
+            return this.rowToFeatureType(updatedType);
+        } else {
+            return undefined;
+        }
     }
 }
 export default FeatureTypeStore;

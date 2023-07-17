@@ -44,16 +44,16 @@ describe('update lifetimes', () => {
     test.each([null, 5])('it sets lifetimeDays to %s', async (newLifetime) => {
         const featureTypes = await featureTypeStore.getAll();
 
-        for (const type in featureTypes) {
+        for (const type of featureTypes) {
             const updated = await featureTypeStore.updateLifetime(
-                type,
+                type.name,
                 newLifetime,
             );
 
             expect(updated?.lifetimeDays).toBe(newLifetime);
 
             expect(updated).toMatchObject(
-                await featureTypeStore.getByName(type),
+                await featureTypeStore.getByName(type.name),
             );
         }
     });

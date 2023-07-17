@@ -151,7 +151,6 @@ test('clientFeaturesSchema unleash-proxy expected response', () => {
         {
           "id": 1,
           "name": "some-name",
-          "description": null,
           "constraints": [
             {
               "contextName": "some-name",

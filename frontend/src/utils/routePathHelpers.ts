@@ -1,5 +1,3 @@
-import useUiConfig from '../hooks/api/getters/useUiConfig/useUiConfig';
-
 export const getTogglePath = (projectId: string, featureToggleName: string) => {
     return `/projects/${projectId}/features/${featureToggleName}`;
 };

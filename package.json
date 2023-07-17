@@ -104,6 +104,7 @@
     ]
   },
   "dependencies": {
+    "@slack/web-api": "^6.8.1",
     "@unleash/express-openapi": "^0.3.0",
     "ajv": "^8.11.0",
     "ajv-formats": "^2.1.1",

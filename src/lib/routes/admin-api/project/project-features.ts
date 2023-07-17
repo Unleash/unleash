@@ -52,6 +52,7 @@ import {
     TransactionCreator,
     UnleashTransaction,
 } from '../../../db/transaction';
+import { BadDataError } from '../../../error';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -152,7 +153,7 @@ export default class ProjectFeaturesController extends Controller {
             handler: this.getFeatureEnvironment,
             middleware: [
                 openApiService.validPath({
-                    summary: 'Get a feature environment.',
+                    summary: 'Get a feature environment',
                     description:
                         'Information about the enablement status and strategies for a feature toggle in specified environment.',
                     tags: ['Features'],
@@ -173,7 +174,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
-                    summary: 'Disable a feature toggle.',
+                    summary: 'Disable a feature toggle',
                     description:
                         'Disable a feature toggle in the specified environment.',
                     tags: ['Features'],
@@ -194,7 +195,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
-                    summary: 'Enable a feature toggle.',
+                    summary: 'Enable a feature toggle',
                     description:
                         'Enable a feature toggle in the specified environment.',
                     tags: ['Features'],
@@ -215,9 +216,9 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    summary: 'Bulk enable a list of features',
                     description:
                         'This endpoint enables multiple feature toggles.',
-                    summary: 'Bulk enable a list of features.',
                     operationId: 'bulkToggleFeaturesEnvironmentOn',
                     requestBody: createRequestSchema(
                         'bulkToggleFeaturesSchema',
@@ -238,9 +239,9 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    summary: 'Bulk disable a list of features',
                     description:
                         'This endpoint disables multiple feature toggles.',
-                    summary: 'Bulk disabled a list of features.',
                     operationId: 'bulkToggleFeaturesEnvironmentOff',
                     requestBody: createRequestSchema(
                         'bulkToggleFeaturesSchema',
@@ -261,7 +262,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    summary: 'Get feature toggle strategies.',
+                    summary: 'Get feature toggle strategies',
                     operationId: 'getFeatureStrategies',
                     description:
                         'Get strategies defined for a feature toggle in the specified environment.',
@@ -281,7 +282,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    summary: 'Add a strategy to a feature toggle.',
+                    summary: 'Add a strategy to a feature toggle',
                     description:
                         'Add a strategy to a feature toggle in the specified environment.',
                     operationId: 'addFeatureStrategy',
@@ -304,12 +305,13 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    summary: 'Get a strategy configuration.',
+                    summary: 'Get a strategy configuration',
                     description:
                         'Get a strategy configuration for an environment in a feature toggle.',
                     operationId: 'getFeatureStrategy',
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -323,14 +325,14 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    summary: 'Set the order of strategies on the list.',
+                    summary: 'Set the order of strategies on the list',
                     operationId: 'setStrategySortOrder',
                     requestBody: createRequestSchema(
                         'setStrategySortOrderSchema',
                     ),
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(401, 403),
+                        ...getStandardResponses(400, 401, 403),
                     },
                 }),
             ],
@@ -344,7 +346,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    summary: 'Update a strategy.',
+                    summary: 'Update a strategy',
                     description:
                         'Replace strategy configuration for a feature toggle in the specified environment.',
                     operationId: 'updateFeatureStrategy',
@@ -353,6 +355,7 @@ export default class ProjectFeaturesController extends Controller {
                     ),
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
+                        ...getStandardResponses(400, 401, 403, 404, 415),
                     },
                 }),
             ],
@@ -366,13 +369,14 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    summary: 'Change specific properties of a strategy.',
+                    summary: 'Change specific properties of a strategy',
                     description:
                         'Change specific properties of a strategy configuration in a feature toggle.',
                     operationId: 'patchFeatureStrategy',
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
+                        ...getStandardResponses(400, 401, 403, 404, 415),
                     },
                 }),
             ],
@@ -387,7 +391,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    summary: 'Delete a strategy from a feature toggle.',
+                    summary: 'Delete a strategy from a feature toggle',
                     description:
                         'Delete a strategy configuration from a feature toggle in the specified environment.',
                     operationId: 'deleteFeatureStrategy',
@@ -406,9 +410,15 @@ export default class ProjectFeaturesController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Get all features in a project',
+                    description:
+                        'A list of all features for the specified project.',
                     tags: ['Features'],
                     operationId: 'getFeatures',
-                    responses: { 200: createResponseSchema('featuresSchema') },
+                    responses: {
+                        200: createResponseSchema('featuresSchema'),
+                        ...getStandardResponses(400, 401, 403),
+                    },
                 }),
             ],
         });
@@ -420,10 +430,16 @@ export default class ProjectFeaturesController extends Controller {
             permission: CREATE_FEATURE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Add a new feature toggle',
+                    description:
+                        'Create a new feature toggle in a specified project.',
                     tags: ['Features'],
                     operationId: 'createFeature',
                     requestBody: createRequestSchema('createFeatureSchema'),
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        ...getStandardResponses(401, 403, 404, 415),
+                    },
                 }),
             ],
         });
@@ -436,10 +452,16 @@ export default class ProjectFeaturesController extends Controller {
             permission: CREATE_FEATURE,
             middleware: [
                 openApiService.validPath({
+                    summary: 'Clone a feature toggle',
+                    description:
+                        'Creates a copy of the specified feature toggle. The copy can be created in any project.',
                     tags: ['Features'],
                     operationId: 'cloneFeature',
                     requestBody: createRequestSchema('cloneFeatureSchema'),
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        ...getStandardResponses(401, 403, 404, 415),
+                    },
                 }),
             ],
         });
@@ -453,16 +475,16 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     operationId: 'getFeature',
                     tags: ['Features'],
+                    summary: 'Get a feature',
                     description:
                         'This endpoint returns the information about the requested feature if the feature belongs to the specified project.',
-                    summary: 'Get a feature.',
                     responses: {
                         200: createResponseSchema('featureSchema'),
                         403: {
                             description:
                                 'You either do not have the required permissions or used an invalid URL.',
                         },
-                        ...getStandardResponses(401, 404),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -477,8 +499,14 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'updateFeature',
+                    summary: 'Update a feature toggle',
+                    description:
+                        'Updates the specified feature if the feature belongs to the specified project. Only the provided properties are updated; any feature properties left out of the request body are left untouched.',
                     requestBody: createRequestSchema('updateFeatureSchema'),
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        ...getStandardResponses(401, 403, 404, 415),
+                    },
                 }),
             ],
         });
@@ -492,8 +520,14 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'patchFeature',
+                    summary: 'Modify a feature toggle',
+                    description:
+                        'Change specific properties of a feature toggle.',
                     requestBody: createRequestSchema('patchesSchema'),
-                    responses: { 200: createResponseSchema('featureSchema') },
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                        ...getStandardResponses(401, 403, 404, 415),
+                    },
                 }),
             ],
         });
@@ -508,16 +542,16 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'archiveFeature',
+                    summary: 'Archive a feature toggle',
                     description:
                         'This endpoint archives the specified feature if the feature belongs to the specified project.',
-                    summary: 'Archive a feature.',
                     responses: {
                         202: emptyResponse,
                         403: {
                             description:
                                 'You either do not have the required permissions or used an invalid URL.',
                         },
-                        ...getStandardResponses(401, 404),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -552,8 +586,14 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Tags'],
                     operationId: 'addTagToFeatures',
+                    summary: 'Adds a tag to the specified features',
+                    description:
+                        'Add a tag to a list of features. Create tags if needed.',
                     requestBody: createRequestSchema('tagsBulkAddSchema'),
-                    responses: { 200: emptyResponse },
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404, 415),
+                    },
                 }),
             ],
         });
@@ -640,7 +680,10 @@ export default class ProjectFeaturesController extends Controller {
         const userName = extractUsername(req);
         const created = await this.featureService.createFeatureToggle(
             projectId,
-            req.body,
+            {
+                ...req.body,
+                description: req.body.description || undefined,
+            },
             userName,
         );
 
@@ -680,9 +723,15 @@ export default class ProjectFeaturesController extends Controller {
         const { projectId, featureName } = req.params;
         const { createdAt, ...data } = req.body;
         const userName = extractUsername(req);
+        if (data.name && data.name !== featureName) {
+            throw new BadDataError('Cannot change name of feature toggle');
+        }
         const created = await this.featureService.updateFeatureToggle(
             projectId,
-            data,
+            {
+                ...data,
+                name: featureName,
+            },
             userName,
             featureName,
         );
@@ -936,7 +985,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async setStrategiesSortOrder(
-        req: IAuthRequest<
+        req: Request<
             FeatureStrategyParams,
             any,
             SetStrategySortOrderSchema,
@@ -944,18 +993,10 @@ export default class ProjectFeaturesController extends Controller {
         >,
         res: Response,
     ): Promise<void> {
-        const { featureName, projectId: project, environment } = req.params;
-        const createdBy = extractUsername(req);
-        await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(
-                tx,
-            ).updateStrategiesSortOrder(
-                featureName,
-                environment,
-                project,
-                createdBy,
-                req.body,
-            ),
+        const { featureName } = req.params;
+        await this.featureService.updateStrategiesSortOrder(
+            featureName,
+            req.body,
         );
 
         res.status(200).send();

@@ -69,7 +69,7 @@ class FeatureController extends Controller {
                         200: createResponseSchema('featuresSchema'),
                         ...getStandardResponses(401, 403),
                     },
-                    summary: 'Get all features (deprecated)',
+                    summary: 'Get all feature toggles (deprecated)',
                     description:
                         'Gets all feature toggles with their full configuration. This endpoint is **deprecated**. You should  use the project-based endpoint instead (`/api/admin/projects/<project-id>/features`).',
                     deprecated: true,
@@ -86,7 +86,7 @@ class FeatureController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     operationId: 'validateFeature',
-                    summary: 'Validate feature name',
+                    summary: 'Validate a feature toggle name.',
                     requestBody: createRequestSchema('validateFeatureSchema'),
                     description:
                         'Validates a feature toggle name: checks whether the name is URL-friendly and whether a feature with the given name already exists. Returns 200 if the feature name is compliant and unused.',

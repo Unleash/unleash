@@ -25,7 +25,8 @@ export const variantSchema = {
             description:
                 'Set to fix if this variant must have exactly the weight allocated to it. If the type is variable, the weight will adjust so that the total weight of all variants adds up to 1000',
             type: 'string',
-            example: 'fix',
+            example: 'variable',
+            enum: ['variable', 'fix'],
         },
         stickiness: {
             type: 'string',
@@ -48,7 +49,7 @@ export const variantSchema = {
                     type: 'string',
                 },
             },
-            example: { type: 'json', value: '{color: red}' },
+            example: { type: 'json', value: '{"color": "red"}' },
         },
         overrides: {
             description: `Overrides assigning specific variants to specific users. The weighting system automatically assigns users to specific groups for you, but any overrides in this list will take precedence.`,

@@ -17,7 +17,6 @@ import EnvironmentAccordionBody from './EnvironmentAccordionBody/EnvironmentAcco
 import { EnvironmentFooter } from './EnvironmentFooter/EnvironmentFooter';
 import FeatureOverviewEnvironmentMetrics from './FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
-import { LegacyFeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/LegacyFeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
@@ -106,19 +105,6 @@ const StyledStringTruncator = styled(StringTruncator)(({ theme }) => ({
     },
 }));
 
-/**
- * @deprecated
- */
-const LegacyStyledButtonContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    marginLeft: '1.8rem',
-    [theme.breakpoints.down(560)]: {
-        flexDirection: 'column',
-        marginLeft: '0',
-    },
-}));
-
 const StyledButtonContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -138,8 +124,6 @@ const FeatureOverviewEnvironment = ({
     const { metrics } = useFeatureMetrics(projectId, featureId);
     const { feature } = useFeature(projectId, featureId);
     const { value: globalStore } = useGlobalLocalStorage();
-    const { uiConfig } = useUiConfig();
-    const strategySplittedButton = uiConfig?.flags?.strategySplittedButton;
 
     const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
     const environmentMetric = featureMetrics.find(
@@ -189,42 +173,21 @@ const FeatureOverviewEnvironment = ({
                                         }
                                     />
                                 </StyledHeaderTitle>
-                                <ConditionallyRender
-                                    condition={Boolean(strategySplittedButton)}
-                                    show={
-                                        <StyledButtonContainer>
-                                            <FeatureStrategyMenu
-                                                label="Add strategy"
-                                                projectId={projectId}
-                                                featureId={featureId}
-                                                environmentId={env.name}
-                                                variant="outlined"
-                                                size="small"
-                                            />
-                                            <FeatureStrategyIcons
-                                                strategies={
-                                                    featureEnvironment?.strategies
-                                                }
-                                            />
-                                        </StyledButtonContainer>
-                                    }
-                                    elseShow={
-                                        <LegacyStyledButtonContainer>
-                                            <LegacyFeatureStrategyMenu
-                                                label="Add strategy"
-                                                projectId={projectId}
-                                                featureId={featureId}
-                                                environmentId={env.name}
-                                                variant="text"
-                                            />
-                                            <FeatureStrategyIcons
-                                                strategies={
-                                                    featureEnvironment?.strategies
-                                                }
-                                            />
-                                        </LegacyStyledButtonContainer>
-                                    }
-                                />
+                                <StyledButtonContainer>
+                                    <FeatureStrategyMenu
+                                        label="Add strategy"
+                                        projectId={projectId}
+                                        featureId={featureId}
+                                        environmentId={env.name}
+                                        variant="outlined"
+                                        size="small"
+                                    />
+                                    <FeatureStrategyIcons
+                                        strategies={
+                                            featureEnvironment?.strategies
+                                        }
+                                    />
+                                </StyledButtonContainer>
                             </StyledHeader>
 
                             <FeatureOverviewEnvironmentMetrics
@@ -255,26 +218,11 @@ const FeatureOverviewEnvironment = ({
                                                 py: 1,
                                             }}
                                         >
-                                            <ConditionallyRender
-                                                condition={Boolean(
-                                                    strategySplittedButton
-                                                )}
-                                                show={
-                                                    <FeatureStrategyMenu
-                                                        label="Add strategy"
-                                                        projectId={projectId}
-                                                        featureId={featureId}
-                                                        environmentId={env.name}
-                                                    />
-                                                }
-                                                elseShow={
-                                                    <LegacyFeatureStrategyMenu
-                                                        label="Add strategy"
-                                                        projectId={projectId}
-                                                        featureId={featureId}
-                                                        environmentId={env.name}
-                                                    />
-                                                }
+                                            <FeatureStrategyMenu
+                                                label="Add strategy"
+                                                projectId={projectId}
+                                                featureId={featureId}
+                                                environmentId={env.name}
                                             />
                                         </Box>
                                         <EnvironmentFooter

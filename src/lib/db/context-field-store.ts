@@ -87,42 +87,33 @@ class ContextFieldStore implements IContextFieldStore {
     }
 
     async getAll(): Promise<IContextField[]> {
-        if (this.flagResolver.isEnabled('segmentContextFieldUsage')) {
-            const rows = await this.db
-                .select(
-                    this.prefixColumns(),
-                    'used_in_projects',
-                    'used_in_features',
-                )
-                .countDistinct(
-                    `${T.featureStrategies}.project_name AS used_in_projects`,
-                )
-                .countDistinct(
-                    `${T.featureStrategies}.feature_name AS used_in_features`,
-                )
-                .from(T.contextFields)
-                .joinRaw(
-                    `LEFT JOIN ${T.featureStrategies} ON EXISTS (
+        const rows = await this.db
+            .select(
+                this.prefixColumns(),
+                'used_in_projects',
+                'used_in_features',
+            )
+            .countDistinct(
+                `${T.featureStrategies}.project_name AS used_in_projects`,
+            )
+            .countDistinct(
+                `${T.featureStrategies}.feature_name AS used_in_features`,
+            )
+            .from(T.contextFields)
+            .joinRaw(
+                `LEFT JOIN ${T.featureStrategies} ON EXISTS (
                         SELECT 1
                         FROM jsonb_array_elements(${T.featureStrategies}.constraints) AS elem
                         WHERE elem ->> 'contextName' = ${T.contextFields}.name
                       )`,
-                )
-                .groupBy(
-                    this.prefixColumns(
-                        COLUMNS.filter((column) => column !== 'legal_values'),
-                    ),
-                )
-                .orderBy('name', 'asc');
-            return rows.map(mapRow);
-        } else {
-            const rows = await this.db
-                .select(COLUMNS)
-                .from(T.contextFields)
-                .orderBy('name', 'asc');
-
-            return rows.map(mapRow);
-        }
+            )
+            .groupBy(
+                this.prefixColumns(
+                    COLUMNS.filter((column) => column !== 'legal_values'),
+                ),
+            )
+            .orderBy('name', 'asc');
+        return rows.map(mapRow);
     }
 
     async get(key: string): Promise<IContextField> {

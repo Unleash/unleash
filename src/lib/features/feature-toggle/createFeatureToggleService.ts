@@ -55,6 +55,7 @@ export const createFeatureToggleService = (
         db,
         eventBus,
         getLogger,
+        flagResolver,
     );
     const projectStore = new ProjectStore(
         db,

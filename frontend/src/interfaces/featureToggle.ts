@@ -57,6 +57,14 @@ export interface IFeatureVariant {
     payload?: IPayload;
 }
 
+export interface IFeatureStrategyVariant {
+    name: string;
+    stickiness: string;
+    weight: number;
+    weightType: string;
+    payload?: IPayload;
+}
+
 export interface IOverride {
     contextName: string;
     values: string[];

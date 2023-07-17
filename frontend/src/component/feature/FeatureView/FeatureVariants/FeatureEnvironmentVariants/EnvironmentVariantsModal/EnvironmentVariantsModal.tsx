@@ -390,8 +390,7 @@ export const EnvironmentVariantsModal = ({
                                         )
                                     )
                                 }
-                                projectId={projectId}
-                                apiPayload={apiPayload}
+                                error={apiPayload.error}
                             />
                         ))}
                     </StyledVariantForms>

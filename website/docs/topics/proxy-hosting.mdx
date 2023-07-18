@@ -6,8 +6,11 @@ Because [Unleash Edge](../generated/unleash-edge.md) (or alternatively [Unleash 
 
 This document describes the main ways of hosting edge or the proxy alongside the Unleash API and the tradeoffs between self-hosting these compared to using the Frontend API that Unleash hosts for you.
 
-:::info Note that Edge is the next-gen replacement of the Unleash proxy and is recommended to be used over the proxy in all cases. 
+:::info Warning
 
+Edge is the next-gen replacement of the Unleash proxy and is recommended to be used over the proxy in all cases.
+
+:::
 
 ## Unleash-hosted Frontend API vs self-hosted edge/proxy {#unleash-hosted-or-self-hosted}
 
@@ -66,7 +69,7 @@ You'll need to configure Edge and the SDKs.
 
 The following video provides for details on the Edge architecture, setup and demo: https://www.youtube.com/watch?v=6uIdF-yByWs&t=738s
 
-**On Unleash:**
+**On Unleash**
 
 - Create one or multiple [client API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens) scoped to the projects/environments you wish to leverage the Edge instance for. (Refer to [how to create API tokens](https://docs.getunleash.io/how-to/how-to-create-api-tokens) for the steps to create one)
 - Create frontend tokens for the frontend apps that will retrieve feature toggles from Edge
@@ -78,11 +81,13 @@ Edge will fetch feature toggles from the specified upstream Unleash instance in 
 It will then accept frontend / backend tokens from application SDKs. 
 
 :::info Warning 
+
 Make sure to use the correct token type for the use case:
     - Frontend API: Frontend facing apps only, Edge returns app specific context
     - Client API: For backend SDKs, Edge returns entire toggle payload for scope of token (project/environment)
 
-- Bootstrap Edge & populate toggle cache
+:::
+Bootstrap Edge & populate toggle cache
 - This initial command will populate toggle cache on startup using the client token specified in the environment variable:
 
 `docker run -p 3063:3063 -e TOKENS='CLIENT_API_TOKEN' -e UPSTREAM_URL='UPSTREAM_URL' unleashorg/unleash-edge:v8.1 edge`
@@ -110,7 +115,7 @@ This setup is only available open-source and Enterprise customers.
 
 You host everything yourself. Everything runs where and how you configure it to.
 
-*To configure Edge and the SDKs, follow steps in the [previous section on Unleash hosts the API, you host Edge](#unleash-hosts-the-api-you-host-edge)*
+**To configure Edge and the SDKs, follow steps in the [previous section on Unleash hosts the API, you host Edge](#unleash-hosts-the-api-you-host-edge)**
 
 As you might expect, doing everything yourself _is_ going to give you the most flexibility, but it's also going to be the most work. If you're already hosting Unleash yourself, though, this shouldn't be any more difficult than the previous section.
 

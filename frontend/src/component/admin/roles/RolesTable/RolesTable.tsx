@@ -5,12 +5,11 @@ import { IRole, PredefinedRoleType } from 'interfaces/role';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { PageContent } from 'component/common/PageContent/PageContent';
-import { useMediaQuery } from '@mui/material';
+import { useTheme, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import theme from 'themes/theme';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useSearch } from 'hooks/useSearch';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
@@ -42,6 +41,7 @@ export const RolesTable = ({
     setSelectedRole,
 }: IRolesTableProps) => {
     const { setToastData, setToastApiError } = useToast();
+    const theme = useTheme();
 
     const { roles, projectRoles, refetch, loading } = useRoles();
     const { removeRole } = useRolesApi();

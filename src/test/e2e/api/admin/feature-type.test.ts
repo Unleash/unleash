@@ -1,6 +1,6 @@
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
-import { setupApp } from '../../helpers/test-helper';
+import { setupAppWithCustomConfig } from '../../helpers/test-helper';
 import { validateSchema } from '../../../../lib/openapi/validate';
 import { featureTypesSchema } from '../../../../lib/openapi/spec/feature-types-schema';
 
@@ -9,7 +9,14 @@ let db;
 
 beforeAll(async () => {
     db = await dbInit('feature_type_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                configurableFeatureTypeLifetimes: true,
+                strictSchemaValidation: true,
+            },
+        },
+    });
 });
 
 afterAll(async () => {
@@ -31,4 +38,45 @@ test('Should get all defined feature types', async () => {
                 validateSchema(featureTypesSchema.$id, res.body),
             ).toBeUndefined();
         });
+});
+
+describe('updating lifetimes', () => {
+    test.each([null, 5])(
+        'it updates to the lifetime correctly: `%s`',
+        async (lifetimeDays) => {
+            const { body } = await app.request
+                .put(`/api/admin/feature-types/release/lifetime`)
+                .send({ lifetimeDays })
+                .expect(200);
+
+            expect(body.lifetimeDays).toEqual(lifetimeDays);
+        },
+    );
+    test("if the feature type doesn't exist, you get a 404", async () => {
+        await app.request
+            .put(`/api/admin/feature-types/bogus-feature-type/lifetime`)
+            .send({ lifetimeDays: 45 })
+            .expect(404);
+    });
+
+    test('Setting lifetime to `null` is the same as setting it to `0`', async () => {
+        const setLifetime = async (lifetimeDays) => {
+            const { body } = await app.request
+                .put('/api/admin/feature-types/release/lifetime')
+                .send({ lifetimeDays })
+                .expect(200);
+            return body;
+        };
+
+        expect(await setLifetime(0)).toMatchObject(await setLifetime(null));
+    });
+    test('the :id parameter is not case sensitive', async () => {
+        const lifetimeDays = 45;
+        const { body } = await app.request
+            .put(`/api/admin/feature-types/kIlL-SwItCh/lifetime`)
+            .send({ lifetimeDays })
+            .expect(200);
+
+        expect(body.lifetimeDays).toEqual(lifetimeDays);
+    });
 });

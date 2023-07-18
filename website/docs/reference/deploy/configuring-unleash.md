@@ -299,7 +299,7 @@ const unleashOptions = {
 <TabItem value="env" label="Environment variables (bash)">
 
 ```bash title="Reading from the file system with bash"
-DATABASE_SSL="{ \"key\": \"$(cat /path/to/server-certificates/root.crt)\" }"
+DATABASE_SSL="{ \"ca\": \"$(cat /path/to/server-certificates/root.crt)\" }"
 ```
 
 </TabItem>
@@ -331,7 +331,7 @@ const unleashOptions = {
 <TabItem value="env" label="Environment variables (bash)">
 
 ```bash title="Enable self-signed certificates"
-DATABASE_SSL="{ \"rejectUnauthorized\": false, \"key\": \"$(cat /path/to/server-certificates/root.crt)\" }"
+DATABASE_SSL="{ \"rejectUnauthorized\": false, \"ca\": \"$(cat /path/to/server-certificates/root.crt)\" }"
 ```
 
 </TabItem>

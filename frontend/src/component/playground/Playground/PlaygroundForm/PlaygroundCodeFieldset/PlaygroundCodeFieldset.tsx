@@ -27,7 +27,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { PlaygroundEditor } from './PlaygroundEditor/PlaygroundEditor';
 import { parseDateValue, parseValidDate } from 'component/common/util';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { isStringOrStringArray } from '../../playground.utils';
 interface IPlaygroundCodeFieldsetProps {
     context: string | undefined;
@@ -39,8 +38,6 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
     setContext,
 }) => {
     const theme = useTheme();
-    const { uiConfig } = useUiConfig();
-    const isAdvancedPlayground = Boolean(uiConfig.flags.advancedPlayground);
 
     const { setToastData } = useToast();
     const { context: contextData } = useUnleashContext();
@@ -123,27 +120,23 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
         setContextValue(newValue);
     };
 
-    const resolveAutocompleteValue = (): string | string[] | null => {
+    const resolveAutocompleteValue = (): string[] => {
         //This is needed for clearing the Autocomplete Chips when changing the context field
         //and the new field also has legal values
         if (!contextValue || contextValue === '') {
             return [];
         }
 
-        if (isAdvancedPlayground) {
-            // Split comma separated strings to array for fields with legal values
-            const foundField = contextData.find(
-                contextData => contextData.name === contextField
-            );
-            const hasLegalValues = (foundField?.legalValues || []).length > 1;
-            if (contextValue.includes(',') && hasLegalValues) {
-                return contextValue.split(',');
-            }
-
-            return [contextValue as string];
+        // Split comma separated strings to array for fields with legal values
+        const foundField = contextData.find(
+            contextData => contextData.name === contextField
+        );
+        const hasLegalValues = (foundField?.legalValues || []).length > 1;
+        if (contextValue.includes(',') && hasLegalValues) {
+            return contextValue.split(',');
         }
 
-        return contextValue;
+        return [contextValue as string];
     };
 
     const resolveInput = () => {
@@ -195,12 +188,12 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                     value={resolveAutocompleteValue()}
                     onChange={changeContextValue}
                     options={options}
-                    multiple={isAdvancedPlayground}
+                    multiple={true}
                     sx={{ width: 370, maxWidth: '100%' }}
                     renderInput={(params: any) => (
                         <TextField {...params} label="Value" />
                     )}
-                    disableCloseOnSelect={isAdvancedPlayground!}
+                    disableCloseOnSelect={false}
                 />
             );
         }
@@ -210,9 +203,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                 label="Value"
                 id="context-value"
                 sx={{ width: 370, maxWidth: '100%' }}
-                placeholder={
-                    isAdvancedPlayground ? 'value1,value2,value3' : 'value1'
-                }
+                placeholder={'value1,value2,value3'}
                 size="small"
                 value={contextValue}
                 onChange={event => setContextValue(event.target.value || '')}

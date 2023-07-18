@@ -441,36 +441,39 @@ class FeatureToggleService {
                 );
             }),
         );
-        const newOrder = (
-            await this.getStrategiesForEnvironment(
-                project,
+        if (this.flagResolver.isEnabled('strategyVariant')) {
+            const newOrder = (
+                await this.getStrategiesForEnvironment(
+                    project,
+                    featureName,
+                    environment,
+                )
+            )
+                .sort((strategy1, strategy2) => {
+                    if (
+                        typeof strategy1.sortOrder === 'number' &&
+                        typeof strategy2.sortOrder === 'number'
+                    ) {
+                        return strategy1.sortOrder - strategy2.sortOrder;
+                    }
+                    return 0;
+                })
+                .map((strategy) => strategy.id);
+
+            const eventData: StrategyIds = { strategyIds: newOrder };
+
+            const tags = await this.tagStore.getAllTagsForFeature(featureName);
+            const event = new StrategiesOrderChangedEvent({
                 featureName,
                 environment,
-            )
-        )
-            .sort((strategy1, strategy2) => {
-                if (
-                    typeof strategy1.sortOrder === 'number' &&
-                    typeof strategy2.sortOrder === 'number'
-                ) {
-                    return strategy1.sortOrder - strategy2.sortOrder;
-                }
-                return 0;
-            })
-            .map((strategy) => strategy.id);
-
-        const eventData: StrategyIds = { strategyIds: newOrder };
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
-        const event = new StrategiesOrderChangedEvent({
-            featureName,
-            environment,
-            project,
-            createdBy,
-            preData: eventPreData,
-            data: eventData,
-            tags: tags,
-        });
-        await this.eventStore.store(event);
+                project,
+                createdBy,
+                preData: eventPreData,
+                data: eventData,
+                tags: tags,
+            });
+            await this.eventStore.store(event);
+        }
     }
 
     async createStrategy(
@@ -563,22 +566,18 @@ class FeatureToggleService {
                 segments,
             );
 
-            if (this.flagResolver.isEnabled('strategyVariant')) {
-                const tags = await this.tagStore.getAllTagsForFeature(
-                    featureName,
-                );
+            const tags = await this.tagStore.getAllTagsForFeature(featureName);
 
-                await this.eventStore.store(
-                    new FeatureStrategyAddEvent({
-                        project: projectId,
-                        featureName,
-                        createdBy,
-                        environment,
-                        data: strategy,
-                        tags,
-                    }),
-                );
-            }
+            await this.eventStore.store(
+                new FeatureStrategyAddEvent({
+                    project: projectId,
+                    featureName,
+                    createdBy,
+                    environment,
+                    data: strategy,
+                    tags,
+                }),
+            );
             return strategy;
         } catch (e) {
             if (e.code === FOREIGN_KEY_VIOLATION) {

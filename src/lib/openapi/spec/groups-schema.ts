@@ -7,8 +7,11 @@ export const groupsSchema = {
     $id: '#/components/schemas/groupsSchema',
     type: 'object',
     additionalProperties: false,
+    description:
+        'A list of [user groups](https://docs.getunleash.io/reference/rbac#user-groups)',
     properties: {
         groups: {
+            description: 'A list of groups',
             type: 'array',
             items: {
                 $ref: '#/components/schemas/groupSchema',

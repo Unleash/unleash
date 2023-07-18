@@ -95,10 +95,6 @@ const flags: IFlags = {
         process.env.DISABLE_NOTIFICATIONS,
         false,
     ),
-    advancedPlayground: parseEnvVarBoolean(
-        process.env.ADVANCED_PLAYGROUND,
-        false,
-    ),
     customRootRoles: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES,
         false,

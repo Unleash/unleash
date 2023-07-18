@@ -21,9 +21,10 @@ const StyledButtons = styled(Box)(({ theme }) => ({
     justifyContent: 'flex-end',
     marginTop: 'auto',
     gap: theme.spacing(2),
+    paddingTop: theme.spacing(4),
 }));
 
-const StyledForm = styled(Box)(({ theme }) => ({
+const StyledForm = styled(Box)(() => ({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
@@ -64,8 +65,13 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
         }
     };
 
+    const isIncorrect =
+        !doesntExpire && (Number.isNaN(lifetime) || lifetime < 0);
+
     const onSubmit: FormEventHandler = e => {
         e.preventDefault();
+        if (isIncorrect) return;
+
         const value = doesntExpire ? 0 : lifetime;
         console.log('FIXME: onSubmit', value);
     };
@@ -140,6 +146,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                     id="feature-toggle-lifetime"
                     value={doesntExpire ? '0' : `${lifetime}`}
                     onChange={onChangeLifetime}
+                    error={isIncorrect}
                 />
                 <StyledButtons>
                     <PermissionButton
@@ -147,10 +154,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                         variant="contained"
                         color="primary"
                         type="submit"
-                        disabled={
-                            loading || false
-                            // FIXME: validation? errors.hasFormErrors() ?
-                        }
+                        disabled={loading || isIncorrect}
                     >
                         Save feature toggle type
                     </PermissionButton>

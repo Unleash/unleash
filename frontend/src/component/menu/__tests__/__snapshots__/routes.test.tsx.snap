@@ -133,7 +133,14 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
+    "component": {
+      "$$typeof": Symbol(react.lazy),
+      "_init": [Function],
+      "_payload": {
+        "_result": [Function],
+        "_status": -1,
+      },
+    },
     "hidden": false,
     "menu": {
       "mobile": true,

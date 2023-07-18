@@ -21,7 +21,6 @@ import {
 import { IAuthRequest } from '../unleash-types';
 import { IFlagResolver } from '../../types';
 
-
 const version = 1;
 
 export class FeatureTypeController extends Controller {

@@ -39,7 +39,7 @@ export const groupSchema = {
             nullable: true,
             description:
                 'A role id that is used as the root role for all users in this group. This can be either the id of the Viewer, Editor or Admin role.',
-            example: '1',
+            example: 1,
         },
         createdBy: {
             description: 'A user who created this group',

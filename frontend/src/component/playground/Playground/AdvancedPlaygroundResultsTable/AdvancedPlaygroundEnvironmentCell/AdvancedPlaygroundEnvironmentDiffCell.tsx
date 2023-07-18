@@ -1,4 +1,4 @@
-import { Link, Popover, styled, Typography, useTheme } from '@mui/material';
+import { Button, Popover, styled, Typography, useTheme } from '@mui/material';
 import { flexRow } from '../../../../../themes/themeStyles';
 import React, { useState } from 'react';
 import { AdvancedPlaygroundFeatureSchemaEnvironments } from 'openapi';
@@ -14,11 +14,14 @@ const StyledContainer = styled(
     margin: theme.spacing(0, 1.5),
 }));
 
-const StyledButton = styled(Link)(({ theme }) => ({
+const StyledButton = styled(Button)(({ theme }) => ({
     textAlign: 'left',
     textDecorationStyle: 'dotted',
+    textDecorationLine: 'underline',
     textUnderlineOffset: theme.spacing(0.75),
     color: theme.palette.neutral.dark,
+    padding: 0,
+    fontWeight: 'normal',
 }));
 
 export interface IAdvancedPlaygroundEnvironmentCellProps {
@@ -31,7 +34,7 @@ export const AdvancedPlaygroundEnvironmentDiffCell = ({
     const theme = useTheme();
     const [anchor, setAnchorEl] = useState<null | Element>(null);
 
-    const onOpen = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) =>
+    const onOpen = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
         setAnchorEl(event.currentTarget);
 
     const onClose = () => setAnchorEl(null);
@@ -41,8 +44,8 @@ export const AdvancedPlaygroundEnvironmentDiffCell = ({
     return (
         <StyledContainer>
             <>
-                <StyledButton variant={'body2'} onClick={onOpen}>
-                    Preview diff
+                <StyledButton variant={'text'} onClick={onOpen}>
+                    View diff
                 </StyledButton>
 
                 <Popover

@@ -110,5 +110,5 @@ test('should render advanced playground table', async () => {
     expect(screen.getByText('ChangeReqs')).toBeInTheDocument();
     expect(screen.getByText('Development')).toBeInTheDocument();
     expect(screen.getByText('Production')).toBeInTheDocument();
-    expect(screen.getByText('Preview diff')).toBeInTheDocument();
+    expect(screen.getByText('View diff')).toBeInTheDocument();
 });

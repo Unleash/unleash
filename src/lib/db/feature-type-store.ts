@@ -69,12 +69,12 @@ class FeatureTypeStore implements IFeatureTypeStore {
     }
 
     async updateLifetime(
-        name: string,
+        id: string,
         newLifetimeDays: number | null,
     ): Promise<IFeatureType | undefined> {
         const [updatedType] = await this.db(TABLE)
             .update({ lifetime_days: newLifetimeDays })
-            .where({ name })
+            .where({ id })
             .returning(['*']);
 
         if (updatedType) {

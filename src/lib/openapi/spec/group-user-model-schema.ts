@@ -6,16 +6,16 @@ export const groupUserModelSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['user'],
-    description: 'Details for the single user belonging to a group',
+    description: 'Details for a single user belonging to a group',
     properties: {
         joinedAt: {
-            description: 'A date when the user join the group',
+            description: 'The date when the user joined the group',
             type: 'string',
             format: 'date-time',
             example: '2023-06-30T11:41:00.123Z',
         },
         createdBy: {
-            description: 'A user who added the group user',
+            description: 'The username of the user who added this user to this group',
             type: 'string',
             nullable: true,
             example: 'admin',

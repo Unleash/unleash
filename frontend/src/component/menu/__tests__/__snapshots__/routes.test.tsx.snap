@@ -195,6 +195,17 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "flag": "configurableFeatureTypeLifetimes",
+    "menu": {
+      "advanced": true,
+      "mobile": true,
+    },
+    "path": "/feature-toggle-type",
+    "title": "Feature toggle types",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
     "menu": {},
     "parent": "/strategies",
     "path": "/strategies/create",

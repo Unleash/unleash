@@ -44,6 +44,7 @@ import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
 import { AdminRedirect } from 'component/admin/AdminRedirect';
 import { LoginHistory } from 'component/loginHistory/LoginHistory';
+import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
 
 export const routes: IRoute[] = [
     // Splash
@@ -207,6 +208,16 @@ export const routes: IRoute[] = [
         component: ContextList,
         type: 'protected',
         menu: { mobile: true, advanced: true },
+    },
+
+    // Feature types
+    {
+        path: '/feature-toggle-type',
+        title: 'Feature toggle types',
+        component: FeatureTypesList,
+        type: 'protected',
+        menu: { mobile: true, advanced: true },
+        flag: 'configurableFeatureTypeLifetimes',
     },
 
     // Strategies

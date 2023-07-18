@@ -708,7 +708,7 @@ This event fires when you drop all existing tags as part of a configuration impo
 
 This event fires when Unleash marks a feature toggle as either potentially stale or as no longer potentially stale. This event is only emitted when the feature toggle's status is changed.
 
-Feature toggles are marked as potentially stale when they exceed the expected lifetime of their [feature toggle type](feature-toggle-types.md). Feature toggles can be marked as no longer potentially stale if you change the toggle's type to one with a longer expected lifetime, or if you change the expected lifetime of the feature toggle's type.
+Feature toggles are marked as potentially stale when they exceed the expected lifetime of their [feature toggle type](/reference/feature-toggle-types.md). Feature toggles can be marked as no longer potentially stale if you change the toggle's type to one with a longer expected lifetime, or if you change the expected lifetime of the feature toggle's type.
 
 The event's `data` property contains the name of the feature whose status changed and the new `potentiallyStale` status.
 

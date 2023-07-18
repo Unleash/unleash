@@ -7,7 +7,6 @@ import {
     useTheme,
 } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { renderOption } from '../renderOption';
 
 interface IPlaygroundConnectionFieldsetProps {
@@ -35,9 +34,6 @@ export const PlaygroundConnectionFieldset: VFC<
     availableEnvironments,
 }) => {
     const theme = useTheme();
-    const { uiConfig } = useUiConfig();
-
-    const isAdvancedPlayground = uiConfig.flags.advancedPlayground;
 
     const { projects: availableProjects = [] } = useProjects();
     const projectsOptions = [
@@ -102,9 +98,9 @@ export const PlaygroundConnectionFieldset: VFC<
     const isAllProjects =
         projects.length === 0 || (projects.length === 1 && projects[0] === '*');
 
-    const envValue = isAdvancedPlayground
-        ? environmentOptions.filter(({ id }) => environments.includes(id))
-        : environmentOptions.filter(({ id }) => environments.includes(id))[0];
+    const envValue = environmentOptions.filter(({ id }) =>
+        environments.includes(id)
+    );
 
     return (
         <Box sx={{ pb: 2 }}>
@@ -122,7 +118,7 @@ export const PlaygroundConnectionFieldset: VFC<
                     disablePortal
                     limitTags={3}
                     id="environment"
-                    multiple={isAdvancedPlayground}
+                    multiple={true}
                     options={environmentOptions}
                     sx={{ flex: 1 }}
                     renderInput={params => (
@@ -130,7 +126,7 @@ export const PlaygroundConnectionFieldset: VFC<
                     )}
                     renderOption={renderOption}
                     getOptionLabel={({ label }) => label}
-                    disableCloseOnSelect={isAdvancedPlayground!}
+                    disableCloseOnSelect={false}
                     size="small"
                     value={envValue}
                     onChange={onEnvironmentsChange}

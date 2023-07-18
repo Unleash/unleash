@@ -204,7 +204,10 @@ export const FeatureTypesList = () => {
                             onClose={() => navigate(basePath)}
                             open
                         >
-                            <FeatureTypeForm featureTypes={featureTypes} />
+                            <FeatureTypeForm
+                                featureTypes={featureTypes}
+                                loading={loading}
+                            />
                         </SidebarModal>
                     }
                 />

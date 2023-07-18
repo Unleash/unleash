@@ -34,7 +34,7 @@ export const AdvancedPlaygroundEnvironmentDiffCell = ({
     const theme = useTheme();
     const [anchor, setAnchorEl] = useState<null | Element>(null);
 
-    const onOpen = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) =>
+    const onOpen = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
         setAnchorEl(event.currentTarget);
 
     const onClose = () => setAnchorEl(null);
@@ -44,7 +44,7 @@ export const AdvancedPlaygroundEnvironmentDiffCell = ({
     return (
         <StyledContainer>
             <>
-                <StyledButton variant={'body2'} onClick={onOpen}>
+                <StyledButton variant={'text'} onClick={onOpen}>
                     View diff
                 </StyledButton>
 

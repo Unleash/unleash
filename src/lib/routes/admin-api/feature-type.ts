@@ -80,7 +80,7 @@ export class FeatureTypeController extends Controller {
 When a feature toggle type's expected lifetime is changed, this will also cause any feature toggles of this type to be reevaluated for potential staleness.`,
                     responses: {
                         200: createResponseSchema('featureTypeSchema'),
-                        ...getStandardResponses(400, 401, 403, 404, 415),
+                        ...getStandardResponses(400, 401, 403, 404, 409, 415),
                     },
                     requestBody: createRequestSchema(
                         'updateFeatureTypeLifetimeSchema',

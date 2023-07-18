@@ -15,7 +15,8 @@ export const groupUserModelSchema = {
             example: '2023-06-30T11:41:00.123Z',
         },
         createdBy: {
-            description: 'The username of the user who added this user to this group',
+            description:
+                'The username of the user who added this user to this group',
             type: 'string',
             nullable: true,
             example: 'admin',

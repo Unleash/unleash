@@ -4,7 +4,7 @@ import { sortTypes } from 'utils/sortTypes';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import {
     Table,
     TableBody,
@@ -19,11 +19,13 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { Edit } from '@mui/icons-material';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 export const FeatureTypesList = () => {
-    const { featureTypes, error, loading } = useFeatureTypes();
+    const { featureTypes, loading } = useFeatureTypes();
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    // FIXME: hide description on small screens?
     const columns = useMemo(
         () => [
             {
@@ -41,12 +43,13 @@ export const FeatureTypesList = () => {
                         />
                     );
                 },
+                width: 50,
                 disableSortBy: true,
             },
             {
                 Header: 'Name',
                 accessor: 'name',
-                minWidth: 150,
+                minWidth: 125,
                 Cell: TextCell,
             },
             {
@@ -120,17 +123,34 @@ export const FeatureTypesList = () => {
         [loading, featureTypes]
     );
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-        useTable(
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        setHiddenColumns,
+    } = useTable(
+        {
+            columns: columns as any[],
+            data,
+            sortTypes,
+            autoResetSortBy: false,
+            disableSortRemove: true,
+        },
+        useSortBy
+    );
+
+    useConditionallyHiddenColumns(
+        [
             {
-                columns: columns as any[],
-                data,
-                sortTypes,
-                autoResetSortBy: false,
-                disableSortRemove: true,
+                condition: isSmallScreen,
+                columns: ['description'],
             },
-            useSortBy
-        );
+        ],
+        setHiddenColumns,
+        columns
+    );
 
     return (
         <PageContent

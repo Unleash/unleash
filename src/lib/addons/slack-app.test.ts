@@ -1,16 +1,17 @@
 import { IEvent, FEATURE_ENVIRONMENT_ENABLED } from '../types/events';
-
 import SlackAppAddon from './slack-app';
-
 import noLogger from '../../test/fixtures/no-logger';
 import { ChatPostMessageArguments } from '@slack/web-api';
 
+let addon;
 const accessToken = 'test-access-token';
 const slackApiCalls: ChatPostMessageArguments[] = [];
+let conversationsList = jest.fn();
+
 jest.mock('@slack/web-api', () => ({
     WebClient: jest.fn().mockImplementation(() => ({
         conversations: {
-            list: () => ({
+            list: conversationsList.mockImplementation(() => ({
                 channels: [
                     {
                         id: 1,
@@ -21,7 +22,7 @@ jest.mock('@slack/web-api', () => ({
                         name: 'another-channel-1',
                     },
                 ],
-            }),
+            })),
         },
         chat: {
             postMessage: jest.fn().mockImplementation((options) => {
@@ -33,14 +34,21 @@ jest.mock('@slack/web-api', () => ({
 }));
 
 beforeEach(() => {
+    jest.useFakeTimers();
     slackApiCalls.length = 0;
-});
-
-test('Should post message when feature is toggled', async () => {
-    const addon = new SlackAppAddon({
+    conversationsList.mockClear();
+    addon = new SlackAppAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
     });
+});
+
+afterEach(() => {
+    jest.useRealTimers();
+    addon.destroy();
+});
+
+test('Should post message when feature is toggled', async () => {
     const event: IEvent = {
         id: 1,
         createdAt: new Date(),
@@ -65,10 +73,6 @@ test('Should post message when feature is toggled', async () => {
 });
 
 test('Should post to all channels in tags', async () => {
-    const addon = new SlackAppAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
     const event: IEvent = {
         id: 2,
         createdAt: new Date(),
@@ -95,10 +99,6 @@ test('Should post to all channels in tags', async () => {
 });
 
 test('Should not post to unexisting tagged channels', async () => {
-    const addon = new SlackAppAddon({
-        getLogger: noLogger,
-        unleashUrl: 'http://some-url.com',
-    });
     const event: IEvent = {
         id: 3,
         createdAt: new Date(),
@@ -120,4 +120,47 @@ test('Should not post to unexisting tagged channels', async () => {
     expect(slackApiCalls.length).toBe(1);
     expect(slackApiCalls[0].channel).toBe(2);
     expect(slackApiCalls[0]).toMatchSnapshot();
+});
+
+test('Should cache Slack channels', async () => {
+    const event: IEvent = {
+        id: 4,
+        createdAt: new Date(),
+        type: FEATURE_ENVIRONMENT_ENABLED,
+        createdBy: 'some@user.com',
+        project: 'default',
+        featureName: 'some-toggle',
+        environment: 'development',
+        data: {
+            name: 'some-toggle',
+        },
+        tags: [{ type: 'slack', value: 'general' }],
+    };
+
+    await addon.handleEvent(event, { accessToken });
+    await addon.handleEvent(event, { accessToken });
+    expect(slackApiCalls.length).toBe(2);
+    expect(conversationsList).toHaveBeenCalledTimes(1);
+});
+
+test('Should refresh Slack channels cache after 30 seconds', async () => {
+    const event: IEvent = {
+        id: 5,
+        createdAt: new Date(),
+        type: FEATURE_ENVIRONMENT_ENABLED,
+        createdBy: 'some@user.com',
+        project: 'default',
+        featureName: 'some-toggle',
+        environment: 'development',
+        data: {
+            name: 'some-toggle',
+        },
+        tags: [{ type: 'slack', value: 'general' }],
+    };
+
+    await addon.handleEvent(event, { accessToken });
+    jest.advanceTimersByTime(30000);
+    await addon.handleEvent(event, { accessToken });
+    expect(slackApiCalls.length).toBe(2);
+    expect(conversationsList).toHaveBeenCalledTimes(2);
 });

@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should not post to unexisting tagged channels 1`] = `
+{
+  "attachments": [
+    {
+      "actions": [
+        {
+          "name": "featureToggle",
+          "style": "primary",
+          "text": "Open in Unleash",
+          "type": "button",
+          "url": "http://some-url.com/projects/default/features/some-toggle",
+          "value": "featureToggle",
+        },
+      ],
+    },
+  ],
+  "channel": 2,
+  "text": "some@user.com *enabled* <http://some-url.com/projects/default/features/some-toggle|some-toggle> in *development* environment in project *default*",
+}
+`;
+
+exports[`Should post message when feature is toggled 1`] = `
+{
+  "attachments": [
+    {
+      "actions": [
+        {
+          "name": "featureToggle",
+          "style": "primary",
+          "text": "Open in Unleash",
+          "type": "button",
+          "url": "http://some-url.com/projects/default/features/some-toggle",
+          "value": "featureToggle",
+        },
+      ],
+    },
+  ],
+  "channel": 1,
+  "text": "some@user.com *enabled* <http://some-url.com/projects/default/features/some-toggle|some-toggle> in *development* environment in project *default*",
+}
+`;
+
+exports[`Should post to all channels in tags 1`] = `
+{
+  "attachments": [
+    {
+      "actions": [
+        {
+          "name": "featureToggle",
+          "style": "primary",
+          "text": "Open in Unleash",
+          "type": "button",
+          "url": "http://some-url.com/projects/default/features/some-toggle",
+          "value": "featureToggle",
+        },
+      ],
+    },
+  ],
+  "channel": 1,
+  "text": "some@user.com *enabled* <http://some-url.com/projects/default/features/some-toggle|some-toggle> in *development* environment in project *default*",
+}
+`;
+
+exports[`Should post to all channels in tags 2`] = `
+{
+  "attachments": [
+    {
+      "actions": [
+        {
+          "name": "featureToggle",
+          "style": "primary",
+          "text": "Open in Unleash",
+          "type": "button",
+          "url": "http://some-url.com/projects/default/features/some-toggle",
+          "value": "featureToggle",
+        },
+      ],
+    },
+  ],
+  "channel": 2,
+  "text": "some@user.com *enabled* <http://some-url.com/projects/default/features/some-toggle|some-toggle> in *development* environment in project *default*",
+}
+`;

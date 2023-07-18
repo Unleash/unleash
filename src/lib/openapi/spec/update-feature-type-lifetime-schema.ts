@@ -9,7 +9,7 @@ export const updateFeatureTypeLifetimeSchema = {
     properties: {
         lifetimeDays: {
             description:
-                'The new lifetime (in days) that you want to assign to the feature toggle type. If the value is `null`, then the feature toggles of that type will never be marked as potentially stale. If the value is `0`, then Unleash will consider them potentially stale immediately. Otherwise, they will be considered potentially stale after the number of days indicated by this property.',
+                'The new lifetime (in days) that you want to assign to the feature toggle type. If the value is `null` or `0`, then the feature toggles of that type will never be marked as potentially stale. Otherwise, they will be considered potentially stale after the number of days indicated by this property.',
             example: 7,
             type: 'integer',
             nullable: true,

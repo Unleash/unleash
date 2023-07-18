@@ -20,7 +20,7 @@ export const groupSchema = {
             example: 'DX team',
         },
         description: {
-            description: 'Custom description of the group',
+            description: 'A custom description of the group',
             type: 'string',
             nullable: true,
             example: 'Current members of the DX squad',
@@ -38,8 +38,8 @@ export const groupSchema = {
             type: 'number',
             nullable: true,
             description:
-                'A role id that is used as the root role for all users in this group. This can be either the id of the Editor or Admin role.',
-            example: 'Editor',
+                'A role id that is used as the root role for all users in this group. This can be either the id of the Viewer, Editor or Admin role.',
+            example: '1',
         },
         createdBy: {
             description: 'A user who created this group',

@@ -563,22 +563,18 @@ class FeatureToggleService {
                 segments,
             );
 
-            if (this.flagResolver.isEnabled('strategyVariant')) {
-                const tags = await this.tagStore.getAllTagsForFeature(
-                    featureName,
-                );
+            const tags = await this.tagStore.getAllTagsForFeature(featureName);
 
-                await this.eventStore.store(
-                    new FeatureStrategyAddEvent({
-                        project: projectId,
-                        featureName,
-                        createdBy,
-                        environment,
-                        data: strategy,
-                        tags,
-                    }),
-                );
-            }
+            await this.eventStore.store(
+                new FeatureStrategyAddEvent({
+                    project: projectId,
+                    featureName,
+                    createdBy,
+                    environment,
+                    data: strategy,
+                    tags,
+                }),
+            );
             return strategy;
         } catch (e) {
             if (e.code === FOREIGN_KEY_VIOLATION) {

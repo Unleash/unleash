@@ -13,13 +13,13 @@ import { createResponseSchema } from '../../openapi/util/create-response-schema'
 import Controller from '../controller';
 import {
     createRequestSchema,
+    featureTypeSchema,
     FeatureTypeSchema,
     getStandardResponses,
     UpdateFeatureTypeLifetimeSchema,
 } from '../../openapi';
 import { IAuthRequest } from '../unleash-types';
 import { IFlagResolver } from '../../types';
-import NotImplementedError from '../../error/not-implemented-error';
 
 const version = 1;
 
@@ -114,8 +114,16 @@ When a feature toggle type's expected lifetime is changed, this will also cause 
         res: Response<FeatureTypeSchema>,
     ): Promise<void> {
         if (this.flagResolver.isEnabled('configurableFeatureTypeLifetimes')) {
-            throw new NotImplementedError(
-                "This operation isn't implemented yet",
+            const result = await this.featureTypeService.updateLifetime(
+                req.params.id.toLowerCase(),
+                req.body.lifetimeDays,
+            );
+
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                featureTypeSchema.$id,
+                result,
             );
         } else {
             res.status(409).end();

@@ -27,18 +27,25 @@ export const FeatureTypesList = () => {
     const columns = useMemo(
         () => [
             {
-                // Header: 'Icon',
                 accessor: 'id',
                 Cell: ({ value }: { value: string }) => {
                     const IconComponent = getFeatureTypeIcons(value);
-                    return <IconCell icon={<IconComponent color="action" />} />;
+                    return (
+                        <IconCell
+                            icon={
+                                <IconComponent
+                                    data-loading="true"
+                                    color="action"
+                                />
+                            }
+                        />
+                    );
                 },
                 disableSortBy: true,
             },
             {
                 Header: 'Name',
                 accessor: 'name',
-                // width: '20%',
                 minWidth: 150,
                 Cell: TextCell,
             },
@@ -81,8 +88,9 @@ export const FeatureTypesList = () => {
                     <Box sx={theme => ({ padding: theme.spacing(0.5, 0) })}>
                         <ActionCell>
                             <PermissionIconButton
+                                disabled={!featureType.id}
+                                data-loading="true"
                                 onClick={() => {}}
-                                // projectId={project}
                                 permission={ADMIN}
                                 tooltipProps={{
                                     title: 'Edit feature toggle type',
@@ -99,22 +107,30 @@ export const FeatureTypesList = () => {
         []
     );
 
+    const data = useMemo(
+        () =>
+            loading
+                ? Array(5).fill({
+                      id: '',
+                      name: 'Loading...',
+                      description: 'Loading...',
+                      lifetimeDays: 1,
+                  })
+                : featureTypes,
+        [loading, featureTypes]
+    );
+
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable(
             {
                 columns: columns as any[],
-                data: featureTypes,
+                data,
                 sortTypes,
                 autoResetSortBy: false,
                 disableSortRemove: true,
             },
             useSortBy
         );
-
-    if (loading) {
-        return <div>Loading...</div>;
-        // FIXME: loading data
-    }
 
     return (
         <PageContent

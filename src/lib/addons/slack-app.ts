@@ -1,4 +1,4 @@
-import { WebClient } from '@slack/web-api';
+import { WebClient, ConversationsListResponse } from '@slack/web-api';
 import Addon from './addon';
 
 import slackAppDefinition from './slack-app-definition';
@@ -17,7 +17,13 @@ interface ISlackAppAddonParameters {
 export default class SlackAppAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
+    private accessToken?: string;
+
     private slackClient?: WebClient;
+
+    private slackChannels?: ConversationsListResponse['channels'];
+
+    private slackChannelsCacheTimeout?: NodeJS.Timeout;
 
     constructor(args: IAddonConfig) {
         super(slackAppDefinition, args);
@@ -25,56 +31,67 @@ export default class SlackAppAddon extends Addon {
             args.unleashUrl,
             LinkStyle.SLACK,
         );
+        this.startCacheInvalidation();
     }
 
     async handleEvent(
         event: IEvent,
         parameters: ISlackAppAddonParameters,
     ): Promise<void> {
-        const { accessToken } = parameters;
+        try {
+            const { accessToken } = parameters;
 
-        if (!accessToken) return;
+            if (!accessToken) return;
 
-        if (!this.slackClient) {
-            this.slackClient = new WebClient(accessToken);
-        }
+            if (!this.slackClient || this.accessToken !== accessToken) {
+                this.slackClient = new WebClient(accessToken);
+            }
 
-        const slackChannels = await this.slackClient.conversations.list({
-            types: 'public_channel,private_channel',
-        });
-        const taggedChannels = this.findTaggedChannels(event);
+            if (!this.slackChannels) {
+                const slackConversationsList =
+                    await this.slackClient.conversations.list({
+                        types: 'public_channel,private_channel',
+                    });
+                this.slackChannels = slackConversationsList.channels;
+            }
 
-        if (slackChannels.channels?.length && taggedChannels.length) {
-            const slackChannelsToPostTo = slackChannels.channels.filter(
-                ({ id, name }) => id && name && taggedChannels.includes(name),
-            );
+            const taggedChannels = this.findTaggedChannels(event);
 
-            const text = this.msgFormatter.format(event);
-            const featureLink = this.msgFormatter.featureLink(event);
+            if (this.slackChannels?.length && taggedChannels.length) {
+                const slackChannelsToPostTo = this.slackChannels.filter(
+                    ({ id, name }) =>
+                        id && name && taggedChannels.includes(name),
+                );
 
-            const requests = slackChannelsToPostTo.map(({ id }) =>
-                this.slackClient!.chat.postMessage({
-                    channel: id!,
-                    text,
-                    attachments: [
-                        {
-                            actions: [
-                                {
-                                    name: 'featureToggle',
-                                    text: 'Open in Unleash',
-                                    type: 'button',
-                                    value: 'featureToggle',
-                                    style: 'primary',
-                                    url: featureLink,
-                                },
-                            ],
-                        },
-                    ],
-                }),
-            );
+                const text = this.msgFormatter.format(event);
+                const featureLink = this.msgFormatter.featureLink(event);
 
-            await Promise.all(requests);
-            this.logger.info(`Handled event ${event.type}.`);
+                const requests = slackChannelsToPostTo.map(({ id }) =>
+                    this.slackClient!.chat.postMessage({
+                        channel: id!,
+                        text,
+                        attachments: [
+                            {
+                                actions: [
+                                    {
+                                        name: 'featureToggle',
+                                        text: 'Open in Unleash',
+                                        type: 'button',
+                                        value: 'featureToggle',
+                                        style: 'primary',
+                                        url: featureLink,
+                                    },
+                                ],
+                            },
+                        ],
+                    }),
+                );
+
+                await Promise.all(requests);
+                this.logger.info(`Handled event ${event.type}.`);
+            }
+        } catch (e) {
+            this.logger.error(`Error handling event ${event.type}.`, e);
         }
     }
 
@@ -85,6 +102,19 @@ export default class SlackAppAddon extends Addon {
                 .map((t) => t.value);
         }
         return [];
+    }
+
+    startCacheInvalidation(): void {
+        this.slackChannelsCacheTimeout = setInterval(() => {
+            this.slackChannels = undefined;
+        }, 30000);
+    }
+
+    destroy(): void {
+        if (this.slackChannelsCacheTimeout) {
+            clearInterval(this.slackChannelsCacheTimeout);
+            this.slackChannelsCacheTimeout = undefined;
+        }
     }
 }
 

@@ -301,4 +301,12 @@ export default class AddonService {
         }
         return true;
     }
+
+    destroy(): void {
+        Object.values(this.addonProviders).forEach((addon) => {
+            if (addon.destroy) {
+                addon.destroy();
+            }
+        });
+    }
 }

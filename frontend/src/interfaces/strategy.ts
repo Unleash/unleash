@@ -1,5 +1,5 @@
 import { Operator } from 'constants/operators';
-import { IFeatureStrategyVariant } from './featureToggle';
+import { IFeatureVariant } from './featureToggle';
 
 export interface IFeatureStrategy {
     id: string;
@@ -8,7 +8,7 @@ export interface IFeatureStrategy {
     title?: string;
     constraints: IConstraint[];
     parameters: IFeatureStrategyParameters;
-    variants?: IFeatureStrategyVariant[];
+    variants?: IFeatureVariant[];
     featureName?: string;
     projectId?: string;
     environment?: string;
@@ -27,7 +27,7 @@ export interface IFeatureStrategyPayload {
     title?: string;
     constraints: IConstraint[];
     parameters: IFeatureStrategyParameters;
-    variants?: IFeatureStrategyVariant[];
+    variants?: IFeatureVariant[];
     segments?: number[];
     disabled?: boolean;
 }

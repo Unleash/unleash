@@ -13,21 +13,6 @@ export const usePlaygroundApi = () => {
 
     const URI = 'api/admin/playground';
 
-    const evaluatePlayground = async (payload: PlaygroundRequestSchema) => {
-        const req = createRequest(URI, {
-            method: 'POST',
-            body: JSON.stringify(payload),
-        });
-
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res.json() as Promise<PlaygroundResponseSchema>;
-        } catch (error) {
-            throw error;
-        }
-    };
-
     const evaluateAdvancedPlayground = async (
         payload: AdvancedPlaygroundRequestSchema
     ) => {
@@ -47,7 +32,6 @@ export const usePlaygroundApi = () => {
     };
 
     return {
-        evaluatePlayground,
         evaluateAdvancedPlayground,
         errors,
         loading,

@@ -67,10 +67,10 @@ exports[`should create default config 1`] = `
       "isEnabled": [Function],
     },
     "flags": {
-      "advancedPlayground": false,
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
       "cleanClientApi": false,
+      "configurableFeatureTypeLifetimes": false,
       "customRootRoles": false,
       "demo": false,
       "disableBulkToggle": false,
@@ -101,10 +101,10 @@ exports[`should create default config 1`] = `
   },
   "flagResolver": FlagResolver {
     "experiments": {
-      "advancedPlayground": false,
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
       "cleanClientApi": false,
+      "configurableFeatureTypeLifetimes": false,
       "customRootRoles": false,
       "demo": false,
       "disableBulkToggle": false,

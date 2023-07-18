@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -20,11 +21,16 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { Edit } from '@mui/icons-material';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { FeatureTypeForm } from './FeatureTypeForm/FeatureTypeForm';
+
+const basePath = '/feature-toggle-type';
 
 export const FeatureTypesList = () => {
     const { featureTypes, loading } = useFeatureTypes();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const navigate = useNavigate();
 
     const columns = useMemo(
         () => [
@@ -93,10 +99,14 @@ export const FeatureTypesList = () => {
                             <PermissionIconButton
                                 disabled={!featureType.id}
                                 data-loading="true"
-                                onClick={() => {}}
+                                onClick={() =>
+                                    navigate(
+                                        `/feature-toggle-type/edit/${featureType.id}`
+                                    )
+                                }
                                 permission={ADMIN}
                                 tooltipProps={{
-                                    title: 'Edit feature toggle type',
+                                    title: `Edit ${featureType.name} feature toggle type`,
                                 }}
                             >
                                 <Edit />
@@ -107,7 +117,7 @@ export const FeatureTypesList = () => {
                 disableSortBy: true,
             },
         ],
-        []
+        [navigate]
     );
 
     const data = useMemo(
@@ -185,6 +195,20 @@ export const FeatureTypesList = () => {
                     })}
                 </TableBody>
             </Table>
+            <Routes>
+                <Route
+                    path="edit/:featureTypeId"
+                    element={
+                        <SidebarModal
+                            label="Edit feature toggle type"
+                            onClose={() => navigate(basePath)}
+                            open
+                        >
+                            <FeatureTypeForm featureTypes={featureTypes} />
+                        </SidebarModal>
+                    }
+                />
+            </Routes>
         </PageContent>
     );
 };

@@ -1,4 +1,4 @@
-import { Link, Popover, styled, Typography, useTheme } from '@mui/material';
+import { Button, Popover, styled, Typography, useTheme } from '@mui/material';
 import { flexRow } from '../../../../../themes/themeStyles';
 import React, { useState } from 'react';
 import { AdvancedPlaygroundFeatureSchemaEnvironments } from 'openapi';
@@ -14,11 +14,14 @@ const StyledContainer = styled(
     margin: theme.spacing(0, 1.5),
 }));
 
-const StyledButton = styled(Link)(({ theme }) => ({
+const StyledButton = styled(Button)(({ theme }) => ({
     textAlign: 'left',
     textDecorationStyle: 'dotted',
+    textDecorationLine: 'underline',
     textUnderlineOffset: theme.spacing(0.75),
     color: theme.palette.neutral.dark,
+    padding: 0,
+    fontWeight: 'normal',
 }));
 
 export interface IAdvancedPlaygroundEnvironmentCellProps {

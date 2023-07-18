@@ -45,7 +45,7 @@ export const AdvancedPlaygroundEnvironmentDiffCell = ({
         <StyledContainer>
             <>
                 <StyledButton variant={'body2'} onClick={onOpen}>
-                    Preview diff
+                    View diff
                 </StyledButton>
 
                 <Popover

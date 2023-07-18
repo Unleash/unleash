@@ -2,6 +2,8 @@
 title: Edge & Proxy hosting strategies
 ---
 
+import VideoContent from '@site/src/components/VideoContent.jsx'
+
 Because [Unleash Edge](../generated/unleash-edge.md) (or alternatively [Unleash Proxy](../generated/unleash-proxy.md)) is a separate piece of the Unleash architecture and because it should sit close to your application, there are numerous ways of hosting it. Another important distinction is whether you're hosting Unleash yourself or you have a managed solution.
 
 This document describes the main ways of hosting edge or the proxy alongside the Unleash API and the tradeoffs between self-hosting these compared to using the Frontend API that Unleash hosts for you.
@@ -67,7 +69,13 @@ You host Edge yourself. It runs in a standalone container alongside your other a
 
 You'll need to configure Edge and the SDKs.
 
-The following video provides for details on the Edge architecture, setup and demo: https://www.youtube.com/watch?v=6uIdF-yByWs&t=738s
+<VideoContent videoUrls={["https://www.youtube.com/watch?v=6uIdF-yByWs" , "https://www.youtube.com/embed/6uIdF-yByWs"]}>
+
+In addition to the written reference below, the following video provides for details on the Edge architecture, setup and demo 🍿
+
+</VideoContent>
+
+
 
 **On Unleash**
 
@@ -83,24 +91,25 @@ It will then accept frontend / backend tokens from application SDKs.
 :::info Warning 
 
 Make sure to use the correct token type for the use case:
-    - Frontend API: Frontend facing apps only, Edge returns app specific context
-    - Client API: For backend SDKs, Edge returns entire toggle payload for scope of token (project/environment)
+Frontend API: Frontend facing apps only, Edge returns app specific context
+Client API: For backend SDKs, Edge returns entire toggle payload for scope of token (project/environment)
 
 :::
 Bootstrap Edge & populate toggle cache
 - This initial command will populate toggle cache on startup using the client token specified in the environment variable:
 
-`docker run -p 3063:3063 -e TOKENS='CLIENT_API_TOKEN' -e UPSTREAM_URL='UPSTREAM_URL' unleashorg/unleash-edge:v8.1 edge`
+```docker run -p 3063:3063 -e TOKENS='CLIENT_API_TOKEN' -e UPSTREAM_URL='UPSTREAM_URL' unleashorg/unleash-edge:v8.1 edge```
 
 The following can be used to pass new tokens to Edge for different project/environment scopes:
 
-`curl --location --request GET 'http://0.0.0.0:3063/api/client/features' \ --header 'Content-Type: application/json' \ --header 'Authorization: NEW_TOKEN' \ --data-raw ''`
+```curl --location --request GET 'http://0.0.0.0:3063/api/client/features' \ --header 'Content-Type: application/json' \ --header 'Authorization: NEW_TOKEN' \ --data-raw ''```
 
 **On SDKs**
 
 - Point frontend/client SDKs to Edge endpoints
     - **Backend SDKs:** /api/client
     - **Frontend SDKs:** /api/frontend, /api/proxy
+
 
 
 ## You host everything
@@ -134,6 +143,8 @@ You can also use Edge for a multi-region setup. You can run Edge in a different 
 
 This approach is no longer recommended. You should use [Unleash Edge](../reference/unleash-edge) instead of the Unleash proxy. 
 If you are an existing Proxy user, see our [Edge migration guide](https://github.com/Unleash/unleash-edge/blob/main/migration-guide.md) for a guide on how to migrate
+
+:::
 
 :::info Availability
 

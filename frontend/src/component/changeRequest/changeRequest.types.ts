@@ -93,9 +93,8 @@ export interface IChangeRequestPatchVariant extends IChangeRequestBase {
     payload: ChangeRequestVariantPatch;
 }
 
-export interface IChangeRequestUpdateEnvironmentStrategyExecutionOrder
-    extends IChangeRequestBase {
-    action: 'updateEnvironmentStrategyExecutionOrder';
+export interface IChangeRequestReorderStrategy extends IChangeRequestBase {
+    action: 'reorderStrategy';
     payload: SetStrategySortOrderSchema;
 }
 
@@ -105,7 +104,7 @@ export type IChange =
     | IChangeRequestUpdateStrategy
     | IChangeRequestEnabled
     | IChangeRequestPatchVariant
-    | IChangeRequestUpdateEnvironmentStrategyExecutionOrder;
+    | IChangeRequestReorderStrategy;
 
 type ChangeRequestVariantPatch = {
     variants: IFeatureVariant[];
@@ -133,4 +132,4 @@ export type ChangeRequestAction =
     | 'updateStrategy'
     | 'deleteStrategy'
     | 'patchVariant'
-    | 'updateEnvironmentStrategyExecutionOrder';
+    | 'reorderStrategy';

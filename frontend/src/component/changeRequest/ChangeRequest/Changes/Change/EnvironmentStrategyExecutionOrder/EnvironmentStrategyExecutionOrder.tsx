@@ -1,4 +1,4 @@
-import { IChangeRequestUpdateEnvironmentStrategyExecutionOrder } from '../../../../changeRequest.types';
+import { IChangeRequestReorderStrategy } from '../../../../changeRequest.types';
 import { ReactNode } from 'react';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
@@ -34,7 +34,7 @@ interface IEnvironmentStrategyExecutionOrderProps {
     feature: string;
     project: string;
     environment: string;
-    change: IChangeRequestUpdateEnvironmentStrategyExecutionOrder;
+    change: IChangeRequestReorderStrategy;
     discard?: ReactNode;
 }
 
@@ -66,12 +66,12 @@ export const EnvironmentStrategyExecutionOrder = ({
                 .map(strategy => strategy.id) ?? [],
     };
 
-    const updatedStategies = change.payload.map(({ id }) => {
+    const updatedStrategies = change.payload.map(({ id }) => {
         return environmentStrategies.find(s => s.id === id);
     });
 
     const data = {
-        strategyIds: updatedStategies.map(strategy => strategy!.id),
+        strategyIds: updatedStrategies.map(strategy => strategy!.id),
     };
 
     return (
@@ -92,7 +92,7 @@ export const EnvironmentStrategyExecutionOrder = ({
                     Updating strategy execution order to:
                 </TooltipLink>
                 <StyledStrategyExecutionWrapper>
-                    {updatedStategies.map(strategy => (
+                    {updatedStrategies.map(strategy => (
                         <StrategyExecution strategy={strategy!} />
                     ))}
                 </StyledStrategyExecutionWrapper>

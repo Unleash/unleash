@@ -109,8 +109,7 @@ export const Change: FC<{
                         discard={discard}
                     />
                 )}
-                {change.action ===
-                    'updateEnvironmentStrategyExecutionOrder' && (
+                {change.action === 'reorderStrategy' && (
                     <EnvironmentStrategyExecutionOrder
                         feature={feature.name}
                         project={changeRequest.project}

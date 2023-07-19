@@ -6,6 +6,7 @@ import { variantSchema } from './variant-schema';
 const eventDataSchema = {
     type: 'object',
     nullable: true,
+    'x-enforcer-exception-skip-codes': 'WSCH006', // allow additional properties in example (openapi enforcer)
     additionalProperties: true,
     description:
         'Extra associated data related to the event, such as feature toggle state, segment configuration, etc., if applicable.',

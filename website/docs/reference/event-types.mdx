@@ -572,38 +572,6 @@ This event fires when you drop all existing tags as part of a configuration impo
 }
 ```
 
-### `feature-potentially-stale-updated`
-
-:::info Availability
-
-`feature-potentially-stale-updated` events are currently in development and expected to be stabilized in one of the upcoming releases.
-
-:::
-
-This event fires when Unleash marks a feature toggle as either potentially stale or as no longer potentially stale. This event is only emitted when the feature toggle's status is changed.
-
-Feature toggles are marked as potentially stale when they exceed the expected lifetime of their [feature toggle type](feature-toggle-types.md). Feature toggles can be marked as no longer potentially stale if you change the toggle's type to one with a longer expected lifetime, or if you change the expected lifetime of the feature toggle's type.
-
-The event's `data` property contains the name of the feature whose status changed and the new `potentiallyStale` status.
-
-``` json title="Example event when my-feature is marked as potentially stale"
-{
-  "id": 440,
-  "type": "feature-potentially-stale-updated",
-  "createdBy": "unleash-system",
-  "createdAt": "2023-07-13T13:40:00.838Z",
-  "data": {
-    "name": "my-feature",
-    "potentiallyStale": true
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
-
 ## Strategy events
 
 ### `strategy-created`

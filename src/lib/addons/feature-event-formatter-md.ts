@@ -4,7 +4,7 @@ import {
     FEATURE_ENVIRONMENT_DISABLED,
     FEATURE_ENVIRONMENT_ENABLED,
     FEATURE_METADATA_UPDATED,
-    FEATURE_POTENTIALLY_STALE,
+    FEATURE_POTENTIALLY_STALE_ON,
     FEATURE_PROJECT_CHANGE,
     FEATURE_REVIVED,
     FEATURE_STALE_OFF,
@@ -302,7 +302,7 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         return `${createdBy} moved ${featureName} to ${project}`;
     }
 
-    generateFeaturePotentiallyStaleText(event: IEvent): string {
+    generateFeaturePotentiallyStaleOnText(event: IEvent): string {
         const { project, createdBy } = event;
         const feature = this.generateFeatureLink(event);
 
@@ -362,8 +362,8 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                 return this.generateMetadataText(event);
             case FEATURE_PROJECT_CHANGE:
                 return this.generateProjectChangeText(event);
-            case FEATURE_POTENTIALLY_STALE:
-                return this.generateFeaturePotentiallyStaleText(event);
+            case FEATURE_POTENTIALLY_STALE_ON:
+                return this.generateFeaturePotentiallyStaleOnText(event);
             default:
                 return this.defaultText(event);
         }

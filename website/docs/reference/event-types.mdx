@@ -572,6 +572,31 @@ This event fires when you drop all existing tags as part of a configuration impo
 }
 ```
 
+### `feature-potentially-stale-on`
+
+:::info Availability
+
+`feature-potentially-stale-on` events are currently in development and expected to be stabilized in one of the upcoming releases.
+
+:::
+
+This event fires when Unleash marks a feature toggle as potentially stale. Feature toggles are marked as potentially stale when they exceed the expected lifetime of their [feature toggle type](/reference/feature-toggle-types.md).
+
+``` json title="Example event when my-feature is marked as potentially stale"
+{
+  "id": 561,
+  "type": "feature-potentially-stale-on",
+  "createdBy": "unleash-system",
+  "createdAt": "2023-07-19T09:12:31.313Z",
+  "data": null,
+  "preData": null,
+  "tags": [],
+  "featureName": "helix",
+  "project": "viridian-forest",
+  "environment": null
+}
+```
+
 ## Strategy events
 
 ### `strategy-created`

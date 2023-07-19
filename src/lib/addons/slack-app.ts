@@ -1,4 +1,8 @@
-import { WebClient, ConversationsListResponse } from '@slack/web-api';
+import {
+    WebClient,
+    ConversationsListResponse,
+    ErrorCode,
+} from '@slack/web-api';
 import Addon from './addon';
 
 import slackAppDefinition from './slack-app-definition';
@@ -90,8 +94,29 @@ export default class SlackAppAddon extends Addon {
                 await Promise.all(requests);
                 this.logger.info(`Handled event ${event.type}.`);
             }
-        } catch (e) {
-            this.logger.error(`Error handling event ${event.type}.`, e);
+        } catch (error) {
+            if (error.code === ErrorCode.PlatformError) {
+                this.logger.error(
+                    `Error handling event ${event.type}. A platform error occurred: ${error.data}`,
+                    error,
+                );
+            } else if (error.code === ErrorCode.RequestError) {
+                this.logger.error(
+                    `Error handling event ${event.type}. A request error occurred: ${error.original}`,
+                    error,
+                );
+            } else if (error.code === ErrorCode.RateLimitedError) {
+                this.logger.error(
+                    `Error handling event ${event.type}. A rate limit error occurred: retry after ${error.retryAfter} seconds`,
+                    error,
+                );
+            } else if (error.code === ErrorCode.HTTPError) {
+                this.logger.error(
+                    `Error handling event ${event.type}. An HTTP error occurred: status code ${error.statusCode}`,
+                    error,
+                );
+            }
+            this.logger.error(`Error handling event ${event.type}.`, error);
         }
     }
 

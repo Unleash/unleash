@@ -38,6 +38,7 @@ export const variantSchema = {
             type: 'object',
             required: ['type', 'value'],
             description: 'Extra data configured for this variant',
+            additionalProperties: false,
             properties: {
                 type: {
                     description:

@@ -2078,16 +2078,18 @@ class FeatureToggleService {
             if (potentiallyStaleFeatures.length > 0) {
                 return this.eventStore.batchStore(
                     await Promise.all(
-                        potentiallyStaleFeatures.map(
-                            async ({ name, project }) =>
-                                new PotentiallyStaleEvent({
-                                    featureName: name,
-                                    project,
-                                    tags: await this.tagStore.getAllTagsForFeature(
-                                        name,
-                                    ),
-                                }),
-                        ),
+                        potentiallyStaleFeatures
+                            .filter((feature) => feature.potentiallyStale)
+                            .map(
+                                async ({ name, project }) =>
+                                    new PotentiallyStaleEvent({
+                                        featureName: name,
+                                        project,
+                                        tags: await this.tagStore.getAllTagsForFeature(
+                                            name,
+                                        ),
+                                    }),
+                            ),
                     ),
                 );
             }

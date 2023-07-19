@@ -1,5 +1,8 @@
 import dbInit, { ITestDb } from '../../helpers/database-init';
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { simpleAuthSettingsKey } from '../../../../lib/types/settings/simple-auth-settings';
 import { randomId } from '../../../../lib/util/random-id';
@@ -9,7 +12,13 @@ let app: IUnleashTest;
 
 beforeAll(async () => {
     db = await dbInit('config_api_serial', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+            },
+        },
+    });
 });
 
 afterAll(async () => {

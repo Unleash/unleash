@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { useSortBy, useTable } from 'react-table';
+import { IdType, Row, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
@@ -88,8 +88,8 @@ export const FeatureTypesList = () => {
 
                     return <TextCell>doesn't expire</TextCell>;
                 },
-                sortInverted: true,
                 minWidth: 150,
+                sortType: 'numericZeroLast',
             },
             {
                 Header: 'Actions',
@@ -147,6 +147,13 @@ export const FeatureTypesList = () => {
             sortTypes,
             autoResetSortBy: false,
             disableSortRemove: true,
+            initialState: {
+                sortBy: [
+                    {
+                        id: 'lifetimeDays',
+                    },
+                ],
+            },
         },
         useSortBy
     );

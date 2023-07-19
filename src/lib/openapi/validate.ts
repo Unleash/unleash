@@ -13,7 +13,7 @@ const ajv = new Ajv({
     ),
     // example was superseded by examples in openapi 3.1, but we're still on 3.0, so
     // let's add it back in!
-    keywords: ['example'],
+    keywords: ['example', 'x-enforcer-exception-skip-codes'],
     formats: {
         'date-time': true,
         uri: true,

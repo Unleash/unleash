@@ -381,9 +381,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     async updatePotentiallyStaleFeatures(
         currentTime?: string,
-    ): Promise<{ name: string; potentiallyStale: boolean }[]> {
+    ): Promise<{ name: string; potentiallyStale: boolean; project: string }[]> {
         const query = this.db.raw(
-            `SELECT name, potentially_stale, (? > (features.created_at + ((
+            `SELECT name, project, potentially_stale, (? > (features.created_at + ((
                             SELECT feature_types.lifetime_days
                             FROM feature_types
                             WHERE feature_types.id = features.type
@@ -399,9 +399,10 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
                     (potentially_stale ?? false) !==
                     (current_staleness ?? false),
             )
-            .map(({ current_staleness, name }) => ({
+            .map(({ current_staleness, name, project }) => ({
                 potentiallyStale: current_staleness ?? false,
                 name,
+                project,
             }));
 
         await this.db(TABLE)

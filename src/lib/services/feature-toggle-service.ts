@@ -40,8 +40,8 @@ import {
     SKIP_CHANGE_REQUEST,
     Unsaved,
     WeightType,
-    FEATURE_POTENTIALLY_STALE_UPDATED,
     StrategiesOrderChangedEvent,
+    PotentiallyStaleOnEvent,
 } from '../types';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
@@ -2077,15 +2077,19 @@ class FeatureToggleService {
         if (this.flagResolver.isEnabled('emitPotentiallyStaleEvents')) {
             if (potentiallyStaleFeatures.length > 0) {
                 return this.eventStore.batchStore(
-                    potentiallyStaleFeatures.map(
-                        ({ name, potentiallyStale }) => ({
-                            type: FEATURE_POTENTIALLY_STALE_UPDATED,
-                            createdBy: 'unleash-system',
-                            data: {
-                                name,
-                                potentiallyStale,
-                            },
-                        }),
+                    await Promise.all(
+                        potentiallyStaleFeatures
+                            .filter((feature) => feature.potentiallyStale)
+                            .map(
+                                async ({ name, project }) =>
+                                    new PotentiallyStaleOnEvent({
+                                        featureName: name,
+                                        project,
+                                        tags: await this.tagStore.getAllTagsForFeature(
+                                            name,
+                                        ),
+                                    }),
+                            ),
                     ),
                 );
             }

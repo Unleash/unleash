@@ -40,8 +40,8 @@ import {
     SKIP_CHANGE_REQUEST,
     Unsaved,
     WeightType,
-    FEATURE_POTENTIALLY_STALE_UPDATED,
     StrategiesOrderChangedEvent,
+    PotentiallyStaleEvent,
 } from '../types';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
@@ -2078,14 +2078,11 @@ class FeatureToggleService {
             if (potentiallyStaleFeatures.length > 0) {
                 return this.eventStore.batchStore(
                     potentiallyStaleFeatures.map(
-                        ({ name, potentiallyStale }) => ({
-                            type: FEATURE_POTENTIALLY_STALE_UPDATED,
-                            createdBy: 'unleash-system',
-                            data: {
-                                name,
-                                potentiallyStale,
-                            },
-                        }),
+                        ({ name, project }) =>
+                            new PotentiallyStaleEvent({
+                                featureName: name,
+                                project,
+                            }),
                     ),
                 );
             }

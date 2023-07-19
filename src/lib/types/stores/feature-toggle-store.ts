@@ -34,7 +34,7 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     }): Promise<number>;
     updatePotentiallyStaleFeatures(
         currentTime?: string,
-    ): Promise<{ name: string; potentiallyStale: boolean }[]>;
+    ): Promise<{ name: string; potentiallyStale: boolean; project: string }[]>;
     isPotentiallyStale(featureName: string): Promise<boolean>;
 
     /**

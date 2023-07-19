@@ -5,7 +5,7 @@ export const versionSchema = {
     type: 'object',
     additionalProperties: false,
     description: 'Detailed information about an Unleash version',
-    required: ['current', 'latest', 'isLatest', 'instanceId'],
+    required: ['current', 'latest', 'isLatest'],
     properties: {
         current: {
             type: 'object',

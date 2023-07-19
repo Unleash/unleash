@@ -115,8 +115,9 @@ export default class SlackAppAddon extends Addon {
                     `Error handling event ${event.type}. An HTTP error occurred: status code ${error.statusCode}`,
                     error,
                 );
+            } else {
+                this.logger.error(`Error handling event ${event.type}.`, error);
             }
-            this.logger.error(`Error handling event ${event.type}.`, error);
         }
     }
 

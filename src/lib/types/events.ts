@@ -959,8 +959,12 @@ export class PotentiallyStaleEvent extends BaseEvent {
 
     readonly project: string;
 
-    constructor(eventData: { featureName: string; project: string }) {
-        super(FEATURE_POTENTIALLY_STALE_ON, 'unleash-system');
+    constructor(eventData: {
+        featureName: string;
+        project: string;
+        tags: ITag[];
+    }) {
+        super(FEATURE_POTENTIALLY_STALE_ON, 'unleash-system', eventData.tags);
         this.featureName = eventData.featureName;
         this.project = eventData.project;
     }

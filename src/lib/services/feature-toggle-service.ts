@@ -2077,12 +2077,17 @@ class FeatureToggleService {
         if (this.flagResolver.isEnabled('emitPotentiallyStaleEvents')) {
             if (potentiallyStaleFeatures.length > 0) {
                 return this.eventStore.batchStore(
-                    potentiallyStaleFeatures.map(
-                        ({ name, project }) =>
-                            new PotentiallyStaleEvent({
-                                featureName: name,
-                                project,
-                            }),
+                    await Promise.all(
+                        potentiallyStaleFeatures.map(
+                            async ({ name, project }) =>
+                                new PotentiallyStaleEvent({
+                                    featureName: name,
+                                    project,
+                                    tags: await this.tagStore.getAllTagsForFeature(
+                                        name,
+                                    ),
+                                }),
+                        ),
                     ),
                 );
             }

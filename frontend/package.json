@@ -117,7 +117,7 @@
     "whatwg-fetch": "3.6.2"
   },
   "optionalDependencies": {
-    "orval": "^6.10.3"
+    "orval": "^6.17.0"
   },
   "resolutions": {
     "@codemirror/state": "6.2.1",

@@ -24,7 +24,7 @@ import {
     CHANGE_REQUEST_CANCELLED,
     CHANGE_REQUEST_SENT_TO_REVIEW,
     CHANGE_REQUEST_APPLIED,
-    FEATURE_POTENTIALLY_STALE_UPDATED,
+    FEATURE_POTENTIALLY_STALE,
 } from '../types/events';
 import { IAddonDefinition } from '../types/model';
 
@@ -118,7 +118,7 @@ const webhookDefinition: IAddonDefinition = {
         CHANGE_REQUEST_CANCELLED,
         CHANGE_REQUEST_SENT_TO_REVIEW,
         CHANGE_REQUEST_APPLIED,
-        FEATURE_POTENTIALLY_STALE_UPDATED,
+        FEATURE_POTENTIALLY_STALE,
     ],
 };
 

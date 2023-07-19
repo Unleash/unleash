@@ -5,7 +5,11 @@
  */
 import type { TagTypeSchema } from './tagTypeSchema';
 
+/**
+ * The result of validating a tag type.
+ */
 export interface ValidateTagTypeSchema {
+    /** Whether or not the tag type is valid. */
     valid: boolean;
     tagType: TagTypeSchema;
 }

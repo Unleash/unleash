@@ -3,12 +3,22 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { CreateUserSchemaRootRole } from './createUserSchemaRootRole';
 
+/**
+ * The payload must contain at least one of the name and email properties, though which one is up to you. For the user to be able to log in to the system, the user must have an email.
+ */
 export interface CreateUserSchema {
+    /** The user's username. Must be provided if email is not provided. */
     username?: string;
+    /** The user's email address. Must be provided if username is not provided. */
     email?: string;
+    /** The user's name (not the user's username). */
     name?: string;
+    /** Password for the user */
     password?: string;
-    rootRole: number;
+    /** The role to assign to the user. Can be either the role's ID or its unique name. */
+    rootRole: CreateUserSchemaRootRole;
+    /** Whether to send a welcome email with a login link to the user or not. Defaults to `true`. */
     sendEmail?: boolean;
 }

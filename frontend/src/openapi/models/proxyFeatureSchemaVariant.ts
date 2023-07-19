@@ -5,8 +5,14 @@
  */
 import type { ProxyFeatureSchemaVariantPayload } from './proxyFeatureSchemaVariantPayload';
 
+/**
+ * Variant details
+ */
 export type ProxyFeatureSchemaVariant = {
+    /** The variants name. Is unique for this feature toggle */
     name: string;
+    /** Whether the variant is enabled or not. */
     enabled: boolean;
+    /** Extra data configured for this variant */
     payload?: ProxyFeatureSchemaVariantPayload;
 };

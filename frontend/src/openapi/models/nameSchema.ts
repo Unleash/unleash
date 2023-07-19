@@ -4,6 +4,10 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * An object with a name
+ */
 export interface NameSchema {
+    /** The name of the represented object. */
     name: string;
 }

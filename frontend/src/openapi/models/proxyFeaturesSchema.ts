@@ -5,6 +5,10 @@
  */
 import type { ProxyFeatureSchema } from './proxyFeatureSchema';
 
+/**
+ * Frontend SDK features list
+ */
 export interface ProxyFeaturesSchema {
+    /** The actual features returned to the Frontend SDK */
     toggles: ProxyFeatureSchema[];
 }

@@ -3,10 +3,38 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectSchema } from './projectSchema';
+import type { ProjectStatsSchema } from './projectStatsSchema';
+import type { ProjectOverviewSchemaMode } from './projectOverviewSchemaMode';
+import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
+import type { FeatureSchema } from './featureSchema';
 
+/**
+ * A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.
+ */
 export interface ProjectOverviewSchema {
-    featureCount: number;
-    memberCount: number;
-    projects: ProjectSchema[];
+    /** Project statistics */
+    stats?: ProjectStatsSchema;
+    version: number;
+    /** The name of this project */
+    name: string;
+    /** Additional information about the project */
+    description?: string | null;
+    /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
+    defaultStickiness?: string;
+    /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
+    mode?: ProjectOverviewSchemaMode;
+    /** A limit on the number of features allowed in the project. Null if no limit. */
+    featureLimit?: number | null;
+    /** The number of members this project has */
+    members?: number;
+    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100 */
+    health?: number;
+    /** The environments that are enabled for this project */
+    environments?: ProjectEnvironmentSchema[];
+    /** The full list of features in this project (excluding archived features) */
+    features?: FeatureSchema[];
+    updatedAt?: string | null;
+    createdAt?: string | null;
+    /** `true` if the project was favorited, otherwise `false`. */
+    favorite?: boolean;
 }

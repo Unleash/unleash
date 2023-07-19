@@ -6,14 +6,21 @@
 import type { ExportQuerySchemaOneOf } from './exportQuerySchemaOneOf';
 import type { ExportQuerySchemaOneOfTwo } from './exportQuerySchemaOneOfTwo';
 
+/**
+ * Available query parameters for  the [deprecated export/import](https://docs.getunleash.io/reference/deploy/import-export) functionality.
+ */
 export type ExportQuerySchema =
     | (ExportQuerySchemaOneOf & {
+          /** The environment to export from */
           environment: string;
+          /** Whether to return a downloadable file */
           downloadFile?: boolean;
           [key: string]: any;
       })
     | (ExportQuerySchemaOneOfTwo & {
+          /** The environment to export from */
           environment: string;
+          /** Whether to return a downloadable file */
           downloadFile?: boolean;
           [key: string]: any;
       });

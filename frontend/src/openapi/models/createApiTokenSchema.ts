@@ -3,25 +3,28 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateApiTokenSchemaAnyOf } from './createApiTokenSchemaAnyOf';
-import type { CreateApiTokenSchemaAnyOfTwo } from './createApiTokenSchemaAnyOfTwo';
+import type { CreateApiTokenSchemaOneOf } from './createApiTokenSchemaOneOf';
+import type { CreateApiTokenSchemaOneOfFour } from './createApiTokenSchemaOneOfFour';
+import type { CreateApiTokenSchemaOneOfSeven } from './createApiTokenSchemaOneOfSeven';
+import type { CreateApiTokenSchemaOneOfOnezero } from './createApiTokenSchemaOneOfOnezero';
 
+/**
+ * The data required to create an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).
+ */
 export type CreateApiTokenSchema =
-    | (CreateApiTokenSchemaAnyOf & {
-          secret?: string;
-          /** One of client, admin, frontend */
-          type: string;
-          environment?: string;
-          project?: string;
-          projects?: string[];
-          expiresAt?: string | null;
+    | (CreateApiTokenSchemaOneOf & {
+          /** The time when this token should expire. */
+          expiresAt?: string;
       })
-    | (CreateApiTokenSchemaAnyOfTwo & {
-          secret?: string;
-          /** One of client, admin, frontend */
-          type: string;
-          environment?: string;
-          project?: string;
-          projects?: string[];
-          expiresAt?: string | null;
+    | (CreateApiTokenSchemaOneOfFour & {
+          /** The time when this token should expire. */
+          expiresAt?: string;
+      })
+    | (CreateApiTokenSchemaOneOfSeven & {
+          /** The time when this token should expire. */
+          expiresAt?: string;
+      })
+    | (CreateApiTokenSchemaOneOfOnezero & {
+          /** The time when this token should expire. */
+          expiresAt?: string;
       });

@@ -4,4 +4,7 @@
  * See `gen:api` script in package.json
  */
 
-export type EventSchemaPreData = { [key: string]: any };
+/**
+ * Data relating to the previous state of the event's subject.
+ */
+export type EventSchemaPreData = { [key: string]: any } | null;

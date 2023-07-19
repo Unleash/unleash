@@ -4,8 +4,14 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Project and environment permissions
+ */
 export interface PermissionSchema {
+    /** [Project](https://docs.getunleash.io/reference/rbac#project-permissions) or [environment](https://docs.getunleash.io/reference/rbac#environment-permissions) permission name */
     permission: string;
+    /** The project this permission applies to */
     project?: string;
+    /** The environment this permission applies to */
     environment?: string;
 }

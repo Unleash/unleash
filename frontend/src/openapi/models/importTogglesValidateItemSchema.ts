@@ -4,7 +4,12 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * A description of an error or warning pertaining to a feature toggle import job.
+ */
 export interface ImportTogglesValidateItemSchema {
+    /** The validation error message */
     message: string;
+    /** The items affected by this error message  */
     affectedItems: string[];
 }

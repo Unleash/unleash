@@ -4,6 +4,10 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Email id used for password reset
+ */
 export interface IdSchema {
+    /** User email */
     id: string;
 }

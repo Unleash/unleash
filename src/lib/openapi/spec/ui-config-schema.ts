@@ -28,7 +28,7 @@ export const uiConfigSchema = {
         },
         environment: {
             type: 'string',
-            environment:
+            description:
                 'What kind of Unleash instance it is: Enterprise, Pro, or Open source',
             example: 'Enterprise',
         },

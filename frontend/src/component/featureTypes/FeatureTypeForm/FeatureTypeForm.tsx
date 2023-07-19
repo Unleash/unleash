@@ -1,4 +1,4 @@
-import { type FormEventHandler, type VFC, useState } from 'react';
+import { type FormEventHandler, type VFC, useState, useMemo } from 'react';
 import { Box, Button, Typography, Checkbox, styled } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -10,6 +10,7 @@ import Input from 'component/common/Input/Input';
 import { FeatureTypeSchema } from 'openapi';
 import { trim } from 'component/common/util';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 type FeatureTypeFormProps = {
     featureTypes: FeatureTypeSchema[];
@@ -36,6 +37,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
 }) => {
     const { featureTypeId } = useParams();
     const navigate = useNavigate();
+    const { uiConfig } = useUiConfig();
     const featureType = featureTypes.find(
         featureType => featureType.id === featureTypeId
     );
@@ -76,6 +78,17 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
         console.log('FIXME: onSubmit', value);
     };
 
+    const apiCode = useMemo(
+        () =>
+            [
+                `curl --location --request PUT '${uiConfig.unleashUrl}/api/admin/feature-types/${featureTypeId}/lifetime`,
+                "--header 'Authorization: INSERT_API_KEY'",
+                "--header 'Content-Type: application/json'",
+                '--data-raw \'{\n  "lifetimeDays": 7\n}\'',
+            ].join(' \\\n'),
+        [uiConfig, featureTypeId]
+    );
+
     return (
         <FormTemplate
             modal
@@ -87,7 +100,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
             description={featureType?.description || ''}
             documentationLink="https://docs.getunleash.io/reference/feature-toggle-types"
             documentationLinkLabel="Feature toggle types documentation"
-            formatApiCode={() => 'FIXME: formatApiCode'}
+            formatApiCode={() => apiCode}
         >
             <StyledForm component="form" onSubmit={onSubmit}>
                 <Typography

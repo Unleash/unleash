@@ -954,7 +954,7 @@ export class ApiTokenUpdatedEvent extends BaseEvent {
     }
 }
 
-export class PotentiallyStaleEvent extends BaseEvent {
+export class PotentiallyStaleOnEvent extends BaseEvent {
     readonly featureName: string;
 
     readonly project: string;

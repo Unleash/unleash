@@ -41,7 +41,7 @@ import {
     Unsaved,
     WeightType,
     StrategiesOrderChangedEvent,
-    PotentiallyStaleEvent,
+    PotentiallyStaleOnEvent,
 } from '../types';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
@@ -2082,7 +2082,7 @@ class FeatureToggleService {
                             .filter((feature) => feature.potentiallyStale)
                             .map(
                                 async ({ name, project }) =>
-                                    new PotentiallyStaleEvent({
+                                    new PotentiallyStaleOnEvent({
                                         featureName: name,
                                         project,
                                         tags: await this.tagStore.getAllTagsForFeature(

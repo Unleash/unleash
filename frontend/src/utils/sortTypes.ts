@@ -51,4 +51,16 @@ export const sortTypes = {
         if (b === 'false') return 1;
         return 0;
     },
+    numericZeroLast: <D extends object>(
+        a: Row<D>,
+        b: Row<D>,
+        id: IdType<D>,
+        _desc?: boolean
+    ) => {
+        let aVal =
+            parseInt(`${a?.values?.[id] || 0}`, 10) || Number.MAX_SAFE_INTEGER;
+        let bVal =
+            parseInt(`${b?.values?.[id] || 0}`, 10) || Number.MAX_SAFE_INTEGER;
+        return aVal - bVal;
+    },
 };

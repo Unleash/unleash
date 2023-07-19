@@ -4,7 +4,6 @@ import {
     FEATURE_ENVIRONMENT_DISABLED,
     FEATURE_ENVIRONMENT_ENABLED,
     FEATURE_METADATA_UPDATED,
-    FEATURE_POTENTIALLY_STALE_ON,
     FEATURE_PROJECT_CHANGE,
     FEATURE_REVIVED,
     FEATURE_STALE_OFF,
@@ -302,13 +301,6 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         return `${createdBy} moved ${featureName} to ${project}`;
     }
 
-    generateFeaturePotentiallyStaleOnText(event: IEvent): string {
-        const { project, createdBy } = event;
-        const feature = this.generateFeatureLink(event);
-
-        return `${createdBy} marked feature toggle *${feature}* (in project *${project}*) as *potentially stale*.`;
-    }
-
     featureLink(event: IEvent): string {
         const { type, project = '', featureName } = event;
         if (type === FEATURE_ARCHIVED) {
@@ -362,8 +354,6 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                 return this.generateMetadataText(event);
             case FEATURE_PROJECT_CHANGE:
                 return this.generateProjectChangeText(event);
-            case FEATURE_POTENTIALLY_STALE_ON:
-                return this.generateFeaturePotentiallyStaleOnText(event);
             default:
                 return this.defaultText(event);
         }

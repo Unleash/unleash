@@ -123,6 +123,7 @@ export const uiConfigSchema = {
                     title: 'Source code on GitHub',
                 },
             ],
+            'x-enforcer-exception-skip-codes': 'WSCH006', // allow additional properties in example (openapi enforcer)
             type: 'array',
             items: {
                 type: 'object',

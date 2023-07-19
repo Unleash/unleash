@@ -105,8 +105,6 @@ const metaRules: Rule[] = [
             'upsertStrategySchema',
             'usersGroupsBaseSchema',
             'validateEdgeTokensSchema',
-            'variantFlagSchema',
-            'versionSchema',
             'projectOverviewSchema',
         ],
     },
@@ -140,9 +138,7 @@ const metaRules: Rule[] = [
             'usersGroupsBaseSchema',
             'usersSearchSchema',
             'validateEdgeTokensSchema',
-            'variantFlagSchema',
             'variantsSchema',
-            'versionSchema',
         ],
     },
 ];

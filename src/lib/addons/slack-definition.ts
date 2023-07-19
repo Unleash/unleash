@@ -13,6 +13,7 @@ import {
     FEATURE_METADATA_UPDATED,
     FEATURE_PROJECT_CHANGE,
     FEATURE_VARIANTS_UPDATED,
+    FEATURE_POTENTIALLY_STALE_ON,
 } from '../types/events';
 import { IAddonDefinition } from '../types/model';
 
@@ -87,6 +88,7 @@ const slackDefinition: IAddonDefinition = {
         FEATURE_METADATA_UPDATED,
         FEATURE_VARIANTS_UPDATED,
         FEATURE_PROJECT_CHANGE,
+        FEATURE_POTENTIALLY_STALE_ON,
     ],
     tagTypes: [
         {

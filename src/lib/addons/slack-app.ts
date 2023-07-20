@@ -2,6 +2,7 @@ import {
     WebClient,
     ConversationsListResponse,
     ErrorCode,
+    WebClientEvent,
 } from '@slack/web-api';
 import Addon from './addon';
 
@@ -48,7 +49,13 @@ export default class SlackAppAddon extends Addon {
             if (!accessToken) return;
 
             if (!this.slackClient || this.accessToken !== accessToken) {
-                this.slackClient = new WebClient(accessToken);
+                const client = new WebClient(accessToken);
+                client.on(WebClientEvent.RATE_LIMITED, (numSeconds) => {
+                    this.logger.warn(
+                        `Rate limit reached for event ${event.type}. Retry scheduled after ${numSeconds} seconds`,
+                    );
+                });
+                this.slackClient = client;
                 this.accessToken = accessToken;
             }
 
@@ -104,27 +111,27 @@ export default class SlackAppAddon extends Addon {
             }
         } catch (error) {
             if (error.code === ErrorCode.PlatformError) {
-                this.logger.error(
+                this.logger.warn(
                     `Error handling event ${event.type}. A platform error occurred: ${error.data}`,
                     error,
                 );
             } else if (error.code === ErrorCode.RequestError) {
-                this.logger.error(
+                this.logger.warn(
                     `Error handling event ${event.type}. A request error occurred: ${error.original}`,
                     error,
                 );
             } else if (error.code === ErrorCode.RateLimitedError) {
-                this.logger.error(
+                this.logger.warn(
                     `Error handling event ${event.type}. A rate limit error occurred: retry after ${error.retryAfter} seconds`,
                     error,
                 );
             } else if (error.code === ErrorCode.HTTPError) {
-                this.logger.error(
+                this.logger.warn(
                     `Error handling event ${event.type}. An HTTP error occurred: status code ${error.statusCode}`,
                     error,
                 );
             } else {
-                this.logger.error(`Error handling event ${event.type}.`, error);
+                this.logger.warn(`Error handling event ${event.type}.`, error);
             }
         }
     }

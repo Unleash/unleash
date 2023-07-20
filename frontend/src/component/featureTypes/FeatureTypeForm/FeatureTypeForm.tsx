@@ -1,4 +1,4 @@
-import { type FormEventHandler, type VFC, useState, useMemo } from 'react';
+import { type FormEventHandler, type VFC, useState, useCallback } from 'react';
 import { Box, Button, Typography, Checkbox, styled } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -93,7 +93,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
         }
     };
 
-    const apiCode = useMemo(
+    const formatApiCode = useCallback(
         () =>
             [
                 `curl --location --request PUT '${uiConfig.unleashUrl}/api/admin/feature-types/${featureTypeId}/lifetime`,
@@ -119,7 +119,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
             description={featureType?.description || ''}
             documentationLink="https://docs.getunleash.io/reference/feature-toggle-types"
             documentationLinkLabel="Feature toggle types documentation"
-            formatApiCode={() => apiCode}
+            formatApiCode={formatApiCode}
         >
             <StyledForm component="form" onSubmit={onSubmit}>
                 <Typography

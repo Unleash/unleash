@@ -11,7 +11,7 @@ test('featureSchema', () => {
                 weightType: 'fix',
                 stickiness: 'a',
                 overrides: [{ contextName: 'a', values: ['a'] }],
-                payload: { type: 'a', value: 'b' },
+                payload: { type: 'string', value: 'b' },
             },
         ],
         environments: [

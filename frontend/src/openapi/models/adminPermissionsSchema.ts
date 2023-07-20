@@ -4,8 +4,14 @@
  * See `gen:api` script in package.json
  */
 import type { AdminPermissionsSchemaPermissions } from './adminPermissionsSchemaPermissions';
+import type { AdminPermissionsSchemaVersion } from './adminPermissionsSchemaVersion';
 
+/**
+ * What kind of permissions are available
+ */
 export interface AdminPermissionsSchema {
+    /** Returns permissions available at all three levels (root|project|environment) */
     permissions: AdminPermissionsSchemaPermissions;
-    version: number;
+    /** The api version of this response. A natural increasing number. Only increases if format changes */
+    version: AdminPermissionsSchemaVersion;
 }

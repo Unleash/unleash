@@ -4,6 +4,10 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Does the server allow username/password authentication
+ */
 export interface PasswordAuthSchema {
+    /** Is username/password authentication enabled */
     enabled?: boolean;
 }

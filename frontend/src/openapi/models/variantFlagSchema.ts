@@ -5,8 +5,14 @@
  */
 import type { VariantFlagSchemaPayload } from './variantFlagSchemaPayload';
 
+/**
+ * A representation of an evaluated Unleash feature variant.
+ */
 export interface VariantFlagSchema {
+    /** The name of the variant. Will always be disabled if `enabled` is false. */
     name?: string;
+    /** Whether the variant is enabled or not. */
     enabled?: boolean;
+    /** Additional data associated with this variant. */
     payload?: VariantFlagSchemaPayload;
 }

@@ -9,6 +9,8 @@ import type { EnvironmentProjectSchema } from './environmentProjectSchema';
  * Environments defined for a given project
  */
 export interface EnvironmentsProjectSchema {
+    /** Version of the environments schema */
     version: number;
+    /** List of environments */
     environments: EnvironmentProjectSchema[];
 }

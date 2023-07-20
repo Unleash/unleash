@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * A list of parameters for a strategy
+ */
 export interface ParametersSchema {
     [key: string]: string;
 }

@@ -3,9 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { StrategiesSchemaVersion } from './strategiesSchemaVersion';
 import type { StrategySchema } from './strategySchema';
 
+/**
+ * List of strategies
+ */
 export interface StrategiesSchema {
-    version: number;
+    /** Version of the strategies schema */
+    version: StrategiesSchemaVersion;
+    /** List of strategies */
     strategies: StrategySchema[];
 }

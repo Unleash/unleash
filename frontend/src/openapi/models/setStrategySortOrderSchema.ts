@@ -5,4 +5,7 @@
  */
 import type { SetStrategySortOrderSchemaItem } from './setStrategySortOrderSchemaItem';
 
+/**
+ * An array of strategies with their new sort order
+ */
 export type SetStrategySortOrderSchema = SetStrategySortOrderSchemaItem[];

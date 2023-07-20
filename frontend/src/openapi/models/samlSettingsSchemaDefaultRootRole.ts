@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Assign this root role to auto created users
+ */
 export type SamlSettingsSchemaDefaultRootRole =
     typeof SamlSettingsSchemaDefaultRootRole[keyof typeof SamlSettingsSchemaDefaultRootRole];
 

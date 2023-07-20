@@ -6,8 +6,13 @@
 import type { RoleSchema } from './roleSchema';
 import type { FeatureSchema } from './featureSchema';
 
+/**
+ * User profile overview
+ */
 export interface ProfileSchema {
     rootRole: RoleSchema;
+    /** Which projects this user is a member of */
     projects: string[];
+    /** Deprecated, always returns empty array */
     features: FeatureSchema[];
 }

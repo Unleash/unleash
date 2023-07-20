@@ -5,18 +5,52 @@
  */
 import type { PatSchema } from './patSchema';
 
+/**
+ * Represents a [service account](https://docs.getunleash.io/reference/service-accounts). Service accounts are used to let systems interact with the Unleash API.
+ */
 export interface ServiceAccountSchema {
+    /** The service account id */
     id: number;
+    /**
+     * Deprecated: for internal use only, should not be exposed through the API
+     * @deprecated
+     */
     isAPI?: boolean;
+    /** The name of the service account */
     name?: string;
+    /**
+     * Deprecated: service accounts don't have emails associated with them
+     * @deprecated
+     */
     email?: string;
+    /** The service account username */
     username?: string;
+    /** The service account image url */
     imageUrl?: string;
+    /**
+     * Deprecated: service accounts cannot be invited via an invitation link
+     * @deprecated
+     */
     inviteLink?: string;
+    /**
+     * Deprecated: service accounts cannot log in to Unleash
+     * @deprecated
+     */
     loginAttempts?: number;
+    /**
+     * Deprecated: internal use only
+     * @deprecated
+     */
     emailSent?: boolean;
+    /** The root role id associated with the service account */
     rootRole?: number;
+    /**
+     * Deprecated. This property is always `null`. To find out when a service account was last seen, check its `tokens` list and refer to each token's `lastSeen` property instead.
+     * @deprecated
+     */
     seenAt?: string | null;
+    /** The service account creation date */
     createdAt?: string;
+    /** The list of tokens associated with the service account */
     tokens?: PatSchema[];
 }

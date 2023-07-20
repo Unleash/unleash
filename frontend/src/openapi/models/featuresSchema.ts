@@ -5,7 +5,13 @@
  */
 import type { FeatureSchema } from './featureSchema';
 
+/**
+ * A list of features
+ * @deprecated
+ */
 export interface FeaturesSchema {
+    /** The version of the feature's schema */
     version: number;
+    /** A list of features */
     features: FeatureSchema[];
 }

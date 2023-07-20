@@ -6,7 +6,7 @@
 import type { ContextFieldStrategiesSchemaStrategiesItem } from './contextFieldStrategiesSchemaStrategiesItem';
 
 /**
- * A wrapper object containing all for strategies using a specific context field
+ * A wrapper object containing all strategies that use a specific context field
  */
 export interface ContextFieldStrategiesSchema {
     /** List of strategies using the context field */

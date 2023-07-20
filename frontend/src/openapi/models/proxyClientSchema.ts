@@ -5,6 +5,9 @@
  */
 import type { ProxyClientSchemaStarted } from './proxyClientSchemaStarted';
 
+/**
+ * Frontend SDK client registration information
+ */
 export interface ProxyClientSchema {
     /** Name of the application using Unleash */
     appName: string;
@@ -12,7 +15,10 @@ export interface ProxyClientSchema {
     instanceId?: string;
     /** Optional field that describes the sdk version (name:version) */
     sdkVersion?: string;
-    /** @deprecated */
+    /**
+     * deprecated
+     * @deprecated
+     */
     environment?: string;
     /** At which interval, in milliseconds, will this client be expected to send metrics */
     interval: number;

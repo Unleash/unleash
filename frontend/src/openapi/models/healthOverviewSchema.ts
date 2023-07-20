@@ -22,6 +22,8 @@ export interface HealthOverviewSchema {
     defaultStickiness: string;
     /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
     mode: HealthOverviewSchemaMode;
+    /** A limit on the number of features allowed in the project. Null if no limit. */
+    featureLimit?: number | null;
     /** The number of users/members in the project. */
     members: number;
     /** The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project. */

@@ -12,7 +12,9 @@ import type { VariantSchema } from './variantSchema';
 export interface FeatureEnvironmentSchema {
     /** The name of the environment */
     name: string;
+    /** The name of the feature */
     featureName?: string;
+    /** The name of the environment */
     environment?: string;
     /** The type of the environment */
     type?: string;
@@ -20,6 +22,7 @@ export interface FeatureEnvironmentSchema {
     enabled: boolean;
     /** The sort order of the feature environment in the feature environments list */
     sortOrder?: number;
+    /** The number of defined variants */
     variantCount?: number;
     /** A list of activation strategies for the feature environment */
     strategies?: FeatureStrategySchema[];

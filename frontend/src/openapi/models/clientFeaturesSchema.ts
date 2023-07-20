@@ -4,7 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { ClientFeatureSchema } from './clientFeatureSchema';
-import type { SegmentSchema } from './segmentSchema';
+import type { ClientSegmentSchema } from './clientSegmentSchema';
 import type { ClientFeaturesQuerySchema } from './clientFeaturesQuerySchema';
 
 /**
@@ -16,7 +16,7 @@ export interface ClientFeaturesSchema {
     /** A list of feature toggles with their configuration */
     features: ClientFeatureSchema[];
     /** A list of [Segments](https://docs.getunleash.io/reference/segments) configured for this Unleash instance */
-    segments?: SegmentSchema[];
+    segments?: ClientSegmentSchema[];
     /** A summary of filters and parameters sent to the endpoint. Used by the server to build the features and segments response */
     query?: ClientFeaturesQuerySchema;
 }

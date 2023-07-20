@@ -3,7 +3,7 @@ spec:
   services:
     - name: unleash-server
       git:
-        branch: HEAD
+        branch: 4.22
         repo_clone_url: https://github.com/Unleash/unleash.git
       build_command: 'yarn build'
       run_command: 'yarn start'

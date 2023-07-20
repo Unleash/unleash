@@ -5,7 +5,7 @@ spec:
       git:
         branch: 'fix-do-template'
         repo_clone_url: https://github.com/Unleash/unleash.git
-      dockerfile_path: Dockerfile
+      dockerfile_path: .do/Dockerfile
       envs:
         - key: DATABASE_URL
           scope: RUN_TIME

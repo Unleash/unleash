@@ -5,8 +5,7 @@ spec:
       git:
         branch: 'fix-do-template'
         repo_clone_url: https://github.com/Unleash/unleash.git
-      build_command: 'yarn build'
-      run_command: 'yarn start'
+      dockerfile_path: Dockerfile
       envs:
         - key: DATABASE_URL
           scope: RUN_TIME

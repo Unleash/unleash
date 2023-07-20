@@ -7143,10 +7143,10 @@ micromatch@^4.0.2, micromatch@^4.0.4, micromatch@^4.0.5:
     braces "^3.0.2"
     picomatch "^2.3.1"
 
-millify@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/millify/-/millify-5.0.1.tgz#f3f2cebf4d3071e127c05942f827c49754a03754"
-  integrity sha512-1IacXjRDMbRevt2++mBnrI2iFxljWlQapMUT9Bs+uAF3o/TrYdE46Uf6CqlmoOWMX1JDAlMorXPv4/hM1eE/kw==
+millify@^6.0.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/millify/-/millify-6.1.0.tgz#6919d09377c28923624f9e4f41493d9706b8aadf"
+  integrity sha512-H/E3J6t+DQs/F2YgfDhxUVZz/dF8JXPPKTLHL/yHCcLZLtCXJDUaqvhJXQwqOVBvbyNn4T0WjLpIHd7PAw7fBA==
   dependencies:
     yargs "^17.0.1"
 

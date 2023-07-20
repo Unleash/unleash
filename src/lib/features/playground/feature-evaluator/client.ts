@@ -210,7 +210,7 @@ export default class UnleashClient {
         context: Context,
         fallbackVariant?: Variant,
     ): Variant {
-        return this.resolveVariant(name, context, true, fallbackVariant);
+        return this.resolveVariant(name, context, false, fallbackVariant);
     }
 
     private resolveVariant(
@@ -242,10 +242,10 @@ export default class UnleashClient {
         }
 
         if (
-            !enabled ||
             !feature.variants ||
             !Array.isArray(feature.variants) ||
-            feature.variants.length === 0
+            feature.variants.length === 0 ||
+            !feature.enabled
         ) {
             return fallback;
         }

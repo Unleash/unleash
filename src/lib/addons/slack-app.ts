@@ -70,7 +70,7 @@ export default class SlackAppAddon extends Addon {
             if (!this.slackClient || this.accessToken !== accessToken) {
                 const client = new WebClient(accessToken);
                 client.on(WebClientEvent.RATE_LIMITED, (numSeconds) => {
-                    this.logger.warn(
+                    this.logger.debug(
                         `Rate limit reached for event ${event.type}. Retry scheduled after ${numSeconds} seconds`,
                     );
                 });

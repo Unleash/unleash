@@ -6,15 +6,15 @@ import VideoContent from '@site/src/components/VideoContent.jsx'
 
 Because [Unleash Edge](../generated/unleash-edge.md) (or alternatively [Unleash Proxy](../generated/unleash-proxy.md)) is a separate piece of the Unleash architecture and because it should sit close to your application, there are numerous ways of hosting it. Another important distinction is whether you're hosting Unleash yourself or you have a managed solution.
 
-This document describes the main ways of hosting edge or the proxy alongside the Unleash API and the tradeoffs between self-hosting these compared to using the Frontend API that Unleash hosts for you.
+This document describes the main ways of hosting Edge or the proxy alongside the Unleash API and the tradeoffs between self-hosting these compared to using the Frontend API that Unleash hosts for you.
 
 :::info Warning
 
-Edge is the next-gen replacement of the Unleash proxy and is recommended to be used over the proxy in all cases.
+Edge is the next-gen replacement of the Unleash proxy and is recommended to be used over the proxy in all cases.  
 
-:::
 
-## Unleash-hosted Frontend API vs self-hosted edge/proxy {#unleash-hosted-or-self-hosted}
+:::  
+## Unleash-hosted Frontend API vs self-hosted Edge/proxy {#unleash-hosted-or-self-hosted}
 
 Which way is right for you will depend on your setup and your needs.
 
@@ -35,7 +35,8 @@ Hosting Edge yourself requires a little more setup on your part than the Unleash
 -   Edge can handle multiple sets of API tokens and sync these automatically. Compared to the legacy proxy, it is not necessary to setup single instances per token.
 -   You can arrange for Edge to be close to your applications, minimizing response times.
 -   You have full control of all your user data. None of the data that Edge receives is ever sent to the Unleash API. This keeps _your_ data in _your_ hands.
--   You can easily add more Edge instances in different regions, as described in the [multi-region](#multi-region) section.
+-   You can easily add more Edge instances in different regions, as described in the [multi-region](#multi-region) section.  
+
 
 ## Unleash hosts everything
 
@@ -53,7 +54,8 @@ In order to access the frontend API you'll need
 
 This is the simplest, but also most limited (by far) way to use Unleash client SDKs. In this setup, Unleash hosts both the Unleash API and the Unleash frontend API. With Unleash hosting, you'll only need to worry about the Frontend API keys and the URL to access the endpoint.
 
-While this is easy to get started with, it comes with the limitations described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted).
+While this is easy to get started with, it comes with the limitations described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted).  
+
 
 ## Unleash hosts the API, you host Edge
 
@@ -63,11 +65,14 @@ This setup is only available to Pro and Enterprise customers.
 
 :::
 
-![An architecture diagram of using edge in a setup where Unleash hosts the API and you host the proxy.](/img/proxy-hosting-unleash-api-customer-proxy.svg)
+![An architecture diagram of using Edge in a setup where Unleash hosts the API and you host the proxy.](/img/proxy-hosting-unleash-api-customer-proxy-edge.svg)
+
+
 
 You host Edge yourself. It runs in a standalone container alongside your other applications in your cloud or hosting setup. Unleash manages the Unleash API, the admin UI, and the backing database in our AWS setup: the API and the UI run together in a Kubernetes deployment and connect to an Amazon RDS database.
 
-You'll need to configure Edge and the SDKs.
+You'll need to configure Edge and the SDKs.  
+
 
 <VideoContent videoUrls={["https://www.youtube.com/watch?v=6uIdF-yByWs" , "https://www.youtube.com/embed/6uIdF-yByWs"]}>
 
@@ -77,12 +82,12 @@ In addition to the written reference below, the following video provides for det
 
 
 
-**On Unleash**
+### On Unleash
 
 - Create one or multiple [client API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens) scoped to the projects/environments you wish to leverage the Edge instance for. (Refer to [how to create API tokens](https://docs.getunleash.io/how-to/how-to-create-api-tokens) for the steps to create one)
 - Create frontend tokens for the frontend apps that will retrieve feature toggles from Edge
 
-**On Edge**
+### On Edge
 
 Edge will fetch feature toggles from the specified upstream Unleash instance in context to the client API keys it has been made aware of, either during bootstrapping (recommended) or separate endpoint requests. It will then periodically refresh tokens with upstream.
 
@@ -95,7 +100,7 @@ Frontend API: Frontend facing apps only, Edge returns app specific context
 Client API: For backend SDKs, Edge returns entire toggle payload for scope of token (project/environment)
 
 :::
-Bootstrap Edge & populate toggle cache
+**Bootstrap Edge & populate toggle cache**
 - This initial command will populate toggle cache on startup using the client token specified in the environment variable:
 
 ```docker run -p 3063:3063 -e TOKENS='CLIENT_API_TOKEN' -e UPSTREAM_URL='UPSTREAM_URL' unleashorg/unleash-edge:v8.1 edge```
@@ -104,13 +109,11 @@ The following can be used to pass new tokens to Edge for different project/envir
 
 ```curl --location --request GET 'http://0.0.0.0:3063/api/client/features' \ --header 'Content-Type: application/json' \ --header 'Authorization: NEW_TOKEN' \ --data-raw ''```
 
-**On SDKs**
+### On SDKs
 
 - Point frontend/client SDKs to Edge endpoints
     - **Backend SDKs:** /api/client
-    - **Frontend SDKs:** /api/frontend, /api/proxy
-
-
+    - **Frontend SDKs:** /api/frontend, /api/proxy  
 
 ## You host everything
 
@@ -120,7 +123,7 @@ This setup is only available open-source and Enterprise customers.
 
 :::
 
-![An architecture diagram of using the proxy in a single-region, self-hosted setup.](/img/proxy-hosting-customer-single.svg)
+![An architecture diagram of using the proxy in a single-region, self-hosted setup.](/img/proxy-hosting-customer-single-edge.svg)
 
 You host everything yourself. Everything runs where and how you configure it to.
 
@@ -128,22 +131,21 @@ You host everything yourself. Everything runs where and how you configure it to.
 
 As you might expect, doing everything yourself _is_ going to give you the most flexibility, but it's also going to be the most work. If you're already hosting Unleash yourself, though, this shouldn't be any more difficult than the previous section.
 
-As described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted), running the Edge yourself gives you a number of benefits.
+As described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted), running the Edge yourself gives you a number of benefits.  
 
 ## Multi-region
 
-![An architecture diagram of using the proxy in a multi-region, self-hosted setup.](/img/proxy-hosting-customer-multi.svg)
+![An architecture diagram of using the proxy in a multi-region, self-hosted setup.](/img/proxy-hosting-customer-multi-edge.svg)
 
 You can also use Edge for a multi-region setup. You can run Edge in a different region to the API and still connect to the API. Because Edge runs closer to your applications it still provides you benefits in terms of quicker response times. Everything should be configured as described in the [you host everything section](#you-host-everything) or the [Unleash hosts the API, you host Edge section](#unleash-hosts-the-api-you-host-edge). You can add as many Edge instances in as many extra regions as you want.
 
 
-## Unleash hosts the API, you host the Proxy
+## Legacy: Unleash hosts the API, you host the Proxy
 
 :::info Recommendation
 
 This approach is no longer recommended. You should use [Unleash Edge](../reference/unleash-edge) instead of the Unleash proxy. 
 If you are an existing Proxy user, see our [Edge migration guide](https://github.com/Unleash/unleash-edge/blob/main/migration-guide.md) for a guide on how to migrate
-
 :::
 
 :::info Availability

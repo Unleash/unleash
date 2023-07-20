@@ -107,6 +107,11 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     borderRadius: 100,
 }));
 
+const mapRouteLink = (route: INavigationMenuItem) => ({
+    ...route,
+    path: route.path.replace('/*', ''),
+});
+
 const Header: VFC = () => {
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
@@ -143,7 +148,8 @@ const Header: VFC = () => {
                     menu: {},
                 },
             ])
-            .filter(filterByConfig(uiConfig)),
+            .filter(filterByConfig(uiConfig))
+            .map(mapRouteLink),
         mobileRoutes: getCondensedRoutes(routes.mobileRoutes)
             .concat([
                 {
@@ -152,14 +158,12 @@ const Header: VFC = () => {
                     menu: {},
                 },
             ])
-            .filter(filterByConfig(uiConfig)),
+            .filter(filterByConfig(uiConfig))
+            .map(mapRouteLink),
         adminRoutes: adminMenuRoutes
             .filter(filterByConfig(uiConfig))
             .filter(filterByMode)
-            .map(route => ({
-                ...route,
-                path: route.path.replace('/*', ''),
-            })),
+            .map(mapRouteLink),
     };
 
     if (smallScreen) {

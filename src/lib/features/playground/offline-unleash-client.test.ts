@@ -258,7 +258,35 @@ describe('offline client', () => {
                     strategies: [
                         {
                             name: 'default',
-                            constraints: [],
+                            constraints: [
+                                {
+                                    values: ['my-app-name'],
+                                    inverted: false,
+                                    operator: 'IN' as 'IN',
+                                    contextName: 'appName',
+                                    caseInsensitive: false,
+                                },
+                            ],
+                            variants: [
+                                {
+                                    name: 'ignoreNonMatchingStrategyVariant',
+                                    weightType: 'variable',
+                                    weight: 1000,
+                                    stickiness: 'default',
+                                },
+                            ],
+                        },
+                        {
+                            name: 'default',
+                            constraints: [
+                                {
+                                    values: ['client-test'],
+                                    inverted: false,
+                                    operator: 'IN' as 'IN',
+                                    contextName: 'appName',
+                                    caseInsensitive: false,
+                                },
+                            ],
                             variants: [
                                 {
                                     name: 'strategyVariant',
@@ -276,7 +304,7 @@ describe('offline client', () => {
                     type: 'experiment',
                     variants: [
                         {
-                            name: 'ignoreStrategyVariant',
+                            name: 'ignoreFeatureStrategyVariant',
                             weightType: 'variable',
                             weight: 1000,
                             stickiness: 'default',

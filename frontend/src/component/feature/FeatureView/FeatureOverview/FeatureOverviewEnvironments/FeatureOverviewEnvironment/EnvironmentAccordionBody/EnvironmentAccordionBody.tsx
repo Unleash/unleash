@@ -84,7 +84,7 @@ const EnvironmentAccordionBody = ({
         payload: { id: string; sortOrder: number }[]
     ) => {
         await addChange(projectId, featureEnvironment.name, {
-            action: 'updateEnvironmentStrategyExecutionOrder',
+            action: 'reorderStrategy',
             feature: featureId,
             payload,
         });

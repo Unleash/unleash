@@ -9,7 +9,7 @@ export interface IChangeSchema {
         | 'updateStrategy'
         | 'deleteStrategy'
         | 'patchVariant'
-        | 'updateEnvironmentStrategyExecutionOrder';
+        | 'reorderStrategy';
     payload: string | boolean | object | number;
 }
 

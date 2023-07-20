@@ -5,8 +5,13 @@
  */
 import type { ExportResultSchema } from './exportResultSchema';
 
+/**
+ * The result of the export operation for a project and environment, used at import
+ */
 export interface ImportTogglesSchema {
+    /** The exported [project](https://docs.getunleash.io/reference/projects) */
     project: string;
+    /** The exported [environment](https://docs.getunleash.io/reference/environments) */
     environment: string;
     data: ExportResultSchema;
 }

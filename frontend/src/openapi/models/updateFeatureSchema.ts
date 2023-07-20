@@ -3,15 +3,19 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConstraintSchema } from './constraintSchema';
 
+/**
+ * Data used for updating a feature toggle
+ */
 export interface UpdateFeatureSchema {
-    name: string;
+    /** Detailed description of the feature */
     description?: string;
+    /** Type of the toggle e.g. experiment, kill-switch, release, operational, permission */
     type?: string;
+    /** `true` if the feature is archived */
     stale?: boolean;
+    /** If `true` the feature toggle will be moved to the [archive](https://docs.getunleash.io/reference/archived-toggles) with a property `archivedAt` set to current time */
     archived?: boolean;
-    createdAt?: string;
+    /** `true` if the impression data collection is enabled for the feature */
     impressionData?: boolean;
-    constraints?: ConstraintSchema[];
 }

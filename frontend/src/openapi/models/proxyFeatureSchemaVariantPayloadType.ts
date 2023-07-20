@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * The format of the payload.
+ */
 export type ProxyFeatureSchemaVariantPayloadType =
     typeof ProxyFeatureSchemaVariantPayloadType[keyof typeof ProxyFeatureSchemaVariantPayloadType];
 

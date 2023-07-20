@@ -8,6 +8,9 @@ import type { VariantSchema } from './variantSchema';
 import type { FeatureSchemaStrategiesItem } from './featureSchemaStrategiesItem';
 import type { TagSchema } from './tagSchema';
 
+/**
+ * A feature toggle definition
+ */
 export interface FeatureSchema {
     /** Unique feature name */
     name: string;
@@ -19,6 +22,7 @@ export interface FeatureSchema {
     archived?: boolean;
     /** Name of the project the feature belongs to */
     project?: string;
+    /** `true` if the feature is enabled, otherwise `false`. */
     enabled?: boolean;
     /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */
     stale?: boolean;
@@ -26,8 +30,11 @@ export interface FeatureSchema {
     favorite?: boolean;
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData?: boolean;
+    /** The date the feature was created */
     createdAt?: string | null;
+    /** The date the feature was archived */
     archivedAt?: string | null;
+    /** The date when metrics where last collected for the feature */
     lastSeenAt?: string | null;
     /** The list of environments where the feature can be used */
     environments?: FeatureEnvironmentSchema[];

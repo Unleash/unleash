@@ -6,9 +6,9 @@
 import type { ApiTokenSchema } from './apiTokenSchema';
 
 /**
- * Contains a list of API tokens.
+ * An object with [Unleash API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys)
  */
 export interface ApiTokensSchema {
-    /** A list of API tokens. */
+    /** A list of Unleash API tokens. */
     tokens: ApiTokenSchema[];
 }

@@ -2,11 +2,11 @@ spec:
   name: unleash
   services:
     - name: unleash-server
-      git:
-        branch: main
-        repo_clone_url: https://github.com/Unleash/unleash.git
-      build_command: 'yarn build'
-      run_command: 'yarn start'
+      image:
+        registry_type: DOCKER_HUB
+        registry: unleashorg
+        repository: unleash-server
+        tag: latest
       envs:
         - key: DATABASE_URL
           scope: RUN_TIME

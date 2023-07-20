@@ -4,6 +4,10 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * A list of feature toggle names for batch operations
+ */
 export interface BatchFeaturesSchema {
+    /** List of feature toggle names */
     features: string[];
 }

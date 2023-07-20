@@ -4,4 +4,7 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Splash screen configuration
+ */
 export type MeSchemaSplash = { [key: string]: boolean };

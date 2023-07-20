@@ -4,4 +4,7 @@
  * See `gen:api` script in package.json
  */
 
-export type EventSchemaData = { [key: string]: any };
+/**
+ * Extra associated data related to the event, such as feature toggle state, segment configuration, etc., if applicable.
+ */
+export type EventSchemaData = { [key: string]: any } | null;

@@ -212,7 +212,7 @@ export const routes: IRoute[] = [
 
     // Feature types
     {
-        path: '/feature-toggle-type',
+        path: '/feature-toggle-type/*',
         title: 'Feature toggle types',
         component: FeatureTypesList,
         type: 'protected',

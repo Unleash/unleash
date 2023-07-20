@@ -5,4 +5,7 @@
  */
 import type { ContextFieldSchema } from './contextFieldSchema';
 
+/**
+ * A list of context fields
+ */
 export type ContextFieldsSchema = ContextFieldSchema[];

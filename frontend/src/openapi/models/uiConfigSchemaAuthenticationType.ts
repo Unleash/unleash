@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * The type of authentication enabled for this Unleash instance
+ */
 export type UiConfigSchemaAuthenticationType =
     typeof UiConfigSchemaAuthenticationType[keyof typeof UiConfigSchemaAuthenticationType];
 

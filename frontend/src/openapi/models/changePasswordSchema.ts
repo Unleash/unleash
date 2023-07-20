@@ -4,7 +4,12 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Change password as long as the token is a valid token
+ */
 export interface ChangePasswordSchema {
+    /** A reset token used to validate that the user is allowed to change the password. */
     token: string;
+    /** The new password for the user */
     password: string;
 }

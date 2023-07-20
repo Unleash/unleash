@@ -84,7 +84,7 @@ describe('potentially_stale marking', () => {
             );
 
         expect(markedToggles).toStrictEqual([
-            { name: 'feature1', potentiallyStale: true },
+            { name: 'feature1', potentiallyStale: true, project: 'default' },
         ]);
     });
 
@@ -123,6 +123,7 @@ describe('potentially_stale marking', () => {
                     expectedMarkedFeatures.map((name: string) => ({
                         name,
                         potentiallyStale: true,
+                        project: 'default',
                     })),
                 ),
             );
@@ -173,7 +174,7 @@ describe('potentially_stale marking', () => {
             );
 
         expect(markedToggles).toStrictEqual([
-            { name: 'feature1', potentiallyStale: true },
+            { name: 'feature1', potentiallyStale: true, project: 'default' },
         ]);
 
         expect(
@@ -207,7 +208,11 @@ describe('potentially_stale marking', () => {
                 );
 
             expect(markedToggles).toStrictEqual([
-                { name: 'feature1', potentiallyStale: true },
+                {
+                    name: 'feature1',
+                    potentiallyStale: true,
+                    project: 'default',
+                },
             ]);
 
             expect(
@@ -221,7 +226,13 @@ describe('potentially_stale marking', () => {
 
             expect(
                 await featureToggleStore.updatePotentiallyStaleFeatures(),
-            ).toStrictEqual([{ name: 'feature1', potentiallyStale: false }]);
+            ).toStrictEqual([
+                {
+                    name: 'feature1',
+                    potentiallyStale: false,
+                    project: 'default',
+                },
+            ]);
 
             const potentiallyStale =
                 await featureToggleStore.isPotentiallyStale('feature1');

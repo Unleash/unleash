@@ -5,12 +5,18 @@
  */
 import type { UserSchema } from './userSchema';
 import type { PermissionSchema } from './permissionSchema';
-import type { FeedbackSchema } from './feedbackSchema';
+import type { FeedbackResponseSchema } from './feedbackResponseSchema';
 import type { MeSchemaSplash } from './meSchemaSplash';
 
+/**
+ * Detailed user information
+ */
 export interface MeSchema {
     user: UserSchema;
+    /** User permissions for projects and environments */
     permissions: PermissionSchema[];
-    feedback: FeedbackSchema[];
+    /** User feedback information */
+    feedback: FeedbackResponseSchema[];
+    /** Splash screen configuration */
     splash: MeSchemaSplash;
 }

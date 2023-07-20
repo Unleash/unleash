@@ -75,6 +75,9 @@ class ConfigController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Admin UI'],
+                    summary: 'Get UI configuration',
+                    description:
+                        'Retrieves the full configuration used to set up the Unleash Admin UI.',
                     operationId: 'getUiConfig',
                     responses: {
                         200: createResponseSchema('uiConfigSchema'),
@@ -91,6 +94,9 @@ class ConfigController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Admin UI'],
+                    summary: 'Set UI configuration',
+                    description:
+                        'Sets the UI configuration for this Unleash instance.',
                     operationId: 'setUiConfig',
                     requestBody: createRequestSchema('setUiConfigSchema'),
                     responses: { 200: emptyResponse },

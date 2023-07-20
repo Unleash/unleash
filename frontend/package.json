@@ -80,11 +80,11 @@
     "fast-json-patch": "3.1.1",
     "http-proxy-middleware": "2.0.6",
     "immer": "9.0.21",
-    "jsdom": "21.1.2",
+    "jsdom": "22.1.0",
     "lodash.clonedeep": "4.5.0",
     "lodash.omit": "4.5.0",
     "mermaid": "^9.3.0",
-    "millify": "^5.0.1",
+    "millify": "^6.0.0",
     "msw": "0.49.3",
     "pkginfo": "0.4.1",
     "plausible-tracker": "0.3.8",
@@ -117,7 +117,7 @@
     "whatwg-fetch": "3.6.2"
   },
   "optionalDependencies": {
-    "orval": "^6.10.3"
+    "orval": "^6.17.0"
   },
   "resolutions": {
     "@codemirror/state": "6.2.1",

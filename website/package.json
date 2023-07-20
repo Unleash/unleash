@@ -70,7 +70,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.22.5",
+    "@babel/core": "7.22.9",
     "@docusaurus/module-type-aliases": "2.3.1",
     "@storybook/addon-actions": "6.5.16",
     "@storybook/addon-essentials": "6.5.16",
@@ -78,7 +78,7 @@
     "@storybook/addon-links": "6.5.16",
     "@storybook/react": "6.5.16",
     "@storybook/testing-library": "0.2.0",
-    "@tsconfig/docusaurus": "1.0.7",
+    "@tsconfig/docusaurus": "2.0.0",
     "babel-loader": "9.1.2",
     "enhanced-resolve": "5.15.0",
     "react-router": "6.13.0",

@@ -5,70 +5,9 @@ import { variantSchema } from './variant-schema';
 
 const eventDataSchema = {
     type: 'object',
+    nullable: true,
+    'x-enforcer-exception-skip-codes': 'WSCH006', // allow additional properties in example (openapi enforcer)
     additionalProperties: true,
-    properties: {
-        name: {
-            type: 'string',
-            description:
-                'Name of the feature toggle/strategy/environment that this event relates to',
-            example: 'my.first.toggle',
-            nullable: true,
-        },
-        description: {
-            type: 'string',
-            description: 'The description of the object this event relates to',
-            example: 'Toggle description',
-            nullable: true,
-        },
-        type: {
-            type: 'string',
-            description:
-                'If this event relates to a feature toggle, the type of feature toggle.',
-            example: 'release',
-            nullable: true,
-        },
-        project: {
-            type: 'string',
-            description: 'The project this event relates to',
-            example: 'default',
-            nullable: true,
-        },
-        stale: {
-            description: 'Is the feature toggle this event relates to stale',
-            type: 'boolean',
-            example: true,
-            nullable: true,
-        },
-        variants: {
-            description: 'Variants configured for this toggle',
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/variantSchema',
-            },
-            nullable: true,
-        },
-        createdAt: {
-            type: 'string',
-            format: 'date-time',
-            description:
-                'The time the event happened as a RFC 3339-conformant timestamp.',
-            example: '2023-07-05T12:56:00.000Z',
-            nullable: true,
-        },
-        lastSeenAt: {
-            type: 'string',
-            format: 'date-time',
-            description: 'The time the feature was last seen',
-            example: '2023-07-05T12:56:00.000Z',
-            nullable: true,
-        },
-        impressionData: {
-            description:
-                'Should [impression events](https://docs.getunleash.io/reference/impression-data) activate for this feature toggle',
-            type: 'boolean',
-            example: false,
-        },
-    },
     description:
         'Extra associated data related to the event, such as feature toggle state, segment configuration, etc., if applicable.',
     example: {
@@ -139,7 +78,6 @@ export const eventSchema = {
             ...eventDataSchema,
             description:
                 "Data relating to the previous state of the event's subject.",
-            nullable: true,
         },
         tags: {
             type: 'array',

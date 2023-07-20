@@ -74,8 +74,10 @@ export default class SlackAppAddon extends Addon {
                 );
             }
 
-            if (this.slackChannels?.length) {
-                const slackChannelsToPostTo = this.slackChannels.filter(
+            const currentSlackChannels = [...this.slackChannels];
+
+            if (currentSlackChannels.length) {
+                const slackChannelsToPostTo = currentSlackChannels.filter(
                     ({ id, name }) =>
                         id && name && taggedChannels.includes(name),
                 );

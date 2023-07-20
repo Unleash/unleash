@@ -93,7 +93,7 @@ export default class SlackAppAddon extends Addon {
                 );
 
                 await Promise.all(requests);
-                this.logger.info(`Handled event ${event.type}.`);
+                this.logger.info(`Handled event ${event.type} dispatching ${requests.length} messages`);
             }
         } catch (error) {
             if (error.code === ErrorCode.PlatformError) {

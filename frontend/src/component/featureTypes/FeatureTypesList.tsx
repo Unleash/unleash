@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { IdType, Row, useSortBy, useTable } from 'react-table';
+import { useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
@@ -22,7 +22,7 @@ import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { Edit } from '@mui/icons-material';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { FeatureTypeForm } from './FeatureTypeForm/FeatureTypeForm';
+import { FeatureTypeEdit } from './FeatureTypeEdit/FeatureTypeEdit';
 
 const basePath = '/feature-toggle-type';
 
@@ -211,7 +211,7 @@ export const FeatureTypesList = () => {
                             onClose={() => navigate(basePath)}
                             open
                         >
-                            <FeatureTypeForm
+                            <FeatureTypeEdit
                                 featureTypes={featureTypes}
                                 loading={loading}
                             />

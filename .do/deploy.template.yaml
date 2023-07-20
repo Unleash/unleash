@@ -2,10 +2,11 @@ spec:
   name: unleash
   services:
     - name: unleash-server
-      git:
-        branch: 'fix-do-template'
-        repo_clone_url: https://github.com/Unleash/unleash.git
-      dockerfile_path: .do/Dockerfile
+      image:
+        registry_type: DOCKER_HUB
+        registry: unleashorg
+        repository: unleash-server
+        tag: latest
       envs:
         - key: DATABASE_URL
           scope: RUN_TIME

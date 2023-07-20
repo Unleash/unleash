@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should not post to unexisting tagged channels 1`] = `
+exports[`SlackAppAddon should not post to unexisting tagged channels 1`] = `
 {
   "attachments": [
     {
@@ -21,7 +21,7 @@ exports[`Should not post to unexisting tagged channels 1`] = `
 }
 `;
 
-exports[`Should post message when feature is toggled 1`] = `
+exports[`SlackAppAddon should post message when feature is toggled 1`] = `
 {
   "attachments": [
     {
@@ -42,7 +42,7 @@ exports[`Should post message when feature is toggled 1`] = `
 }
 `;
 
-exports[`Should post to all channels in tags 1`] = `
+exports[`SlackAppAddon should post to all channels in tags 1`] = `
 {
   "attachments": [
     {
@@ -63,7 +63,7 @@ exports[`Should post to all channels in tags 1`] = `
 }
 `;
 
-exports[`Should post to all channels in tags 2`] = `
+exports[`SlackAppAddon should post to all channels in tags 2`] = `
 {
   "attachments": [
     {

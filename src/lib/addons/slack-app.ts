@@ -49,6 +49,7 @@ export default class SlackAppAddon extends Addon {
 
             if (!this.slackClient || this.accessToken !== accessToken) {
                 this.slackClient = new WebClient(accessToken);
+                this.accessToken = accessToken;
             }
 
             if (!this.slackChannels) {

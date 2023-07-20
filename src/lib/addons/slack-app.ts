@@ -57,7 +57,10 @@ export default class SlackAppAddon extends Addon {
                     await this.slackClient.conversations.list({
                         types: 'public_channel,private_channel',
                     });
-                this.slackChannels = slackConversationsList.channels;
+                this.slackChannels = slackConversationsList.channels || [];
+                this.logger.debug(
+                    `Fetched ${this.slackChannels.length} Slack channels`,
+                );
             }
 
             const taggedChannels = this.findTaggedChannels(event);
@@ -93,7 +96,9 @@ export default class SlackAppAddon extends Addon {
                 );
 
                 await Promise.all(requests);
-                this.logger.info(`Handled event ${event.type} dispatching ${requests.length} messages`);
+                this.logger.info(
+                    `Handled event ${event.type} dispatching ${requests.length} messages`,
+                );
             }
         } catch (error) {
             if (error.code === ErrorCode.PlatformError) {

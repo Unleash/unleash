@@ -52,6 +52,10 @@ export default class SlackAppAddon extends Addon {
                 this.accessToken = accessToken;
             }
 
+            const taggedChannels = this.findTaggedChannels(event);
+
+            if (!taggedChannels.length) return;
+
             if (!this.slackChannels) {
                 const slackConversationsList =
                     await this.slackClient.conversations.list({
@@ -63,9 +67,7 @@ export default class SlackAppAddon extends Addon {
                 );
             }
 
-            const taggedChannels = this.findTaggedChannels(event);
-
-            if (this.slackChannels?.length && taggedChannels.length) {
+            if (this.slackChannels?.length) {
                 const slackChannelsToPostTo = this.slackChannels.filter(
                     ({ id, name }) =>
                         id && name && taggedChannels.includes(name),

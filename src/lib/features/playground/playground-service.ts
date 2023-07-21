@@ -180,7 +180,10 @@ export class PlaygroundService {
                         name: feature.name,
                         environment,
                         context,
-                        variants: variantsMap[feature.name] || [],
+                        variants:
+                            strategyEvaluationResult.variants ||
+                            variantsMap[feature.name] ||
+                            [],
                     };
                 });
         }

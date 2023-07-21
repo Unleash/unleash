@@ -250,6 +250,77 @@ describe('offline client', () => {
         expect(client.isEnabled(name, {}).result).toBeTruthy();
     });
 
+    it('returns strategy variant over feature variant', async () => {
+        const name = 'toggle-name';
+        const client = await offlineUnleashClient({
+            features: [
+                {
+                    strategies: [
+                        {
+                            name: 'default',
+                            constraints: [
+                                {
+                                    values: ['my-app-name'],
+                                    inverted: false,
+                                    operator: 'IN' as 'IN',
+                                    contextName: 'appName',
+                                    caseInsensitive: false,
+                                },
+                            ],
+                            variants: [
+                                {
+                                    name: 'ignoreNonMatchingStrategyVariant',
+                                    weightType: 'variable',
+                                    weight: 1000,
+                                    stickiness: 'default',
+                                },
+                            ],
+                        },
+                        {
+                            name: 'default',
+                            constraints: [
+                                {
+                                    values: ['client-test'],
+                                    inverted: false,
+                                    operator: 'IN' as 'IN',
+                                    contextName: 'appName',
+                                    caseInsensitive: false,
+                                },
+                            ],
+                            variants: [
+                                {
+                                    name: 'strategyVariant',
+                                    weightType: 'variable',
+                                    weight: 1000,
+                                    stickiness: 'default',
+                                },
+                            ],
+                        },
+                    ],
+                    project: 'default',
+                    stale: false,
+                    enabled: true,
+                    name,
+                    type: 'experiment',
+                    variants: [
+                        {
+                            name: 'ignoreFeatureStrategyVariant',
+                            weightType: 'variable',
+                            weight: 1000,
+                            stickiness: 'default',
+                        },
+                    ],
+                },
+            ],
+            context: { appName: 'client-test' },
+            logError: console.log,
+        });
+
+        expect(client.getVariant(name, {}).name).toEqual('strategyVariant');
+        expect(client.getVariant(name, {}).enabled).toBeTruthy();
+        expect(client.isEnabled(name, {}).result).toBeTruthy();
+    });
+
     it(`returns '${playgroundStrategyEvaluation.unknownResult}' if it can't evaluate a feature`, async () => {
         const name = 'toggle-name';
         const context = { appName: 'client-test' };

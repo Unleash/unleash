@@ -2,10 +2,10 @@ import { Strategy } from './strategy';
 import { FeatureInterface } from './feature';
 import { RepositoryInterface } from './repository';
 import {
-    Variant,
     getDefaultVariant,
-    VariantDefinition,
     selectVariant,
+    Variant,
+    VariantDefinition,
 } from './variant';
 import { Context } from './context';
 import { SegmentForEvaluation } from './strategy/strategy';
@@ -24,6 +24,8 @@ export type EvaluatedPlaygroundStrategy = Omit<
 
 export type FeatureStrategiesEvaluationResult = {
     result: boolean | typeof playgroundStrategyEvaluation.unknownResult;
+    variant?: Variant;
+    variants?: VariantDefinition[];
     strategies: EvaluatedPlaygroundStrategy[];
 };
 
@@ -110,30 +112,45 @@ export default class UnleashClient {
                         ?.map(this.getSegment(this.repository))
                         .filter(Boolean) ?? [];
 
+                const evaluationResult = strategy.isEnabledWithConstraints(
+                    strategySelector.parameters,
+                    context,
+                    strategySelector.constraints,
+                    segments,
+                    strategySelector.disabled,
+                    strategySelector.variants,
+                );
+
                 return {
                     name: strategySelector.name,
                     id: strategySelector.id,
                     title: strategySelector.title,
                     disabled: strategySelector.disabled || false,
                     parameters: strategySelector.parameters,
-                    ...strategy.isEnabledWithConstraints(
-                        strategySelector.parameters,
-                        context,
-                        strategySelector.constraints,
-                        segments,
-                        strategySelector.disabled,
-                    ),
+                    ...evaluationResult,
                 };
             },
         );
 
         // Feature evaluation
-        const overallStrategyResult = () => {
+        const overallStrategyResult = (): [
+            boolean | typeof playgroundStrategyEvaluation.unknownResult,
+            VariantDefinition[] | undefined,
+            Variant | undefined | null,
+        ] => {
             // if at least one strategy is enabled, then the feature is enabled
+            const enabledStrategy = strategies.find(
+                (strategy) => strategy.result.enabled === true,
+            );
             if (
-                strategies.some((strategy) => strategy.result.enabled === true)
+                enabledStrategy &&
+                enabledStrategy.result.evaluationStatus === 'complete'
             ) {
-                return true;
+                return [
+                    true,
+                    enabledStrategy.result.variants,
+                    enabledStrategy.result.variant,
+                ];
             }
 
             // if at least one strategy is unknown, then the feature _may_ be enabled
@@ -142,14 +159,21 @@ export default class UnleashClient {
                     (strategy) => strategy.result.enabled === 'unknown',
                 )
             ) {
-                return playgroundStrategyEvaluation.unknownResult;
+                return [
+                    playgroundStrategyEvaluation.unknownResult,
+                    undefined,
+                    undefined,
+                ];
             }
 
-            return false;
+            return [false, undefined, undefined];
         };
 
+        const [result, variants, variant] = overallStrategyResult();
         const evalResults: FeatureStrategiesEvaluationResult = {
-            result: overallStrategyResult(),
+            result,
+            variant,
+            variants,
             strategies,
         };
 
@@ -197,25 +221,33 @@ export default class UnleashClient {
     ): Variant {
         const fallback = fallbackVariant || getDefaultVariant();
         const feature = this.repository.getToggle(name);
+
+        if (typeof feature === 'undefined') {
+            return fallback;
+        }
+
+        let enabled = true;
+        if (checkToggle) {
+            const result = this.isFeatureEnabled(feature, context, () =>
+                fallbackVariant ? fallbackVariant.enabled : false,
+            );
+            enabled = result.result === true;
+            const strategyVariant = result.variant;
+            if (enabled && strategyVariant) {
+                return strategyVariant;
+            }
+            if (!enabled) {
+                return fallback;
+            }
+        }
+
         if (
-            typeof feature === 'undefined' ||
             !feature.variants ||
             !Array.isArray(feature.variants) ||
             feature.variants.length === 0 ||
             !feature.enabled
         ) {
             return fallback;
-        }
-
-        let enabled = true;
-        if (checkToggle) {
-            enabled =
-                this.isFeatureEnabled(feature, context, () =>
-                    fallbackVariant ? fallbackVariant.enabled : false,
-                ).result === true;
-            if (!enabled) {
-                return fallback;
-            }
         }
 
         const variant: VariantDefinition | null = selectVariant(

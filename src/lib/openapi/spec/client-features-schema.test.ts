@@ -23,7 +23,7 @@ test('clientFeaturesSchema required fields', () => {
                         weightType: 'fix',
                         stickiness: 'c',
                         payload: {
-                            type: 'a',
+                            type: 'string',
                             value: 'b',
                         },
                         overrides: [

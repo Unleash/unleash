@@ -93,7 +93,7 @@ export const advancedPlaygroundEnvironmentFeatureSchema = {
             description: `The feature variant you receive based on the provided context or the _disabled
                           variant_. If a feature is disabled or doesn't have any
                           variants, you would get the _disabled variant_.
-                          Otherwise, you'll get one of thefeature's defined variants.`,
+                          Otherwise, you'll get one of the feature's defined variants.`,
             type: 'object',
             additionalProperties: false,
             required: ['name', 'enabled'],
@@ -118,7 +118,6 @@ export const advancedPlaygroundEnvironmentFeatureSchema = {
                         type: {
                             description: 'The format of the payload.',
                             type: 'string',
-                            enum: ['json', 'csv', 'string'],
                         },
                         value: {
                             type: 'string',

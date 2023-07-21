@@ -67,7 +67,7 @@ export const ConfiguredAddons = () => {
     const columns = useMemo(
         () => [
             {
-                id: 'Icon',
+                accessor: 'id',
                 Cell: ({
                     row: {
                         original: { provider },
@@ -75,6 +75,7 @@ export const ConfiguredAddons = () => {
                 }: any) => (
                     <IconCell icon={<AddonIcon name={provider as string} />} />
                 ),
+                disableSortBy: true,
             },
             {
                 Header: 'Name',
@@ -108,6 +109,7 @@ export const ConfiguredAddons = () => {
                     row: { original: IAddon };
                 }) => (
                     <ConfiguredAddonsActionsCell
+                        key={original.id}
                         setShowDelete={setShowDelete}
                         toggleAddon={toggleAddon}
                         setDeletedAddon={setDeletedAddon}
@@ -127,7 +129,10 @@ export const ConfiguredAddons = () => {
 
     const initialState = useMemo(
         () => ({
-            sortBy: [{ id: 'provider', desc: false }],
+            sortBy: [
+                { id: 'provider', desc: false },
+                { id: 'id', desc: false },
+            ],
             hiddenColumns: ['description'],
         }),
         []

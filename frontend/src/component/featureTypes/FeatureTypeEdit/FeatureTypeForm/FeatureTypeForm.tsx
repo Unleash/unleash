@@ -15,6 +15,7 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 type FeatureTypeFormProps = {
     featureType?: FeatureTypeSchema;
@@ -51,6 +52,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
         !featureType?.lifetimeDays
     );
     const { setToastData, setToastApiError } = useToast();
+    const tracker = usePlausibleTracker();
 
     const onChangeLifetime = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(trim(e.target.value), 10);
@@ -84,6 +86,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                 type: 'success',
             });
             navigate('/feature-toggle-type');
+            tracker.trackEvent('feature-type-edit');
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

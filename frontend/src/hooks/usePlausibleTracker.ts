@@ -40,7 +40,8 @@ export type CustomEvents =
     | 'context-usage'
     | 'segment-usage'
     | 'strategy-add'
-    | 'playground';
+    | 'playground'
+    | 'feature-type-edit';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

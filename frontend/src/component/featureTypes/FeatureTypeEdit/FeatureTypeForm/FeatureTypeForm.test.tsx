@@ -19,9 +19,7 @@ describe('FeatureTypeForm', () => {
     });
 
     it('should render 404 if feature type is not found', () => {
-        render(
-            <FeatureTypeForm featureType={undefined} loading={false} />
-        );
+        render(<FeatureTypeForm featureType={undefined} loading={false} />);
         expect(screen.getByTestId('404_NOT_FOUND')).toBeInTheDocument();
     });
 

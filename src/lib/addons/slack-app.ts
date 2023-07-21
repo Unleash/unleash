@@ -65,7 +65,7 @@ export default class SlackAppAddon extends Addon {
                 : this.getDefaultChannels(defaultChannels);
 
             if (!eventChannels.length) {
-                this.logger.warn(
+                this.logger.debug(
                     `No Slack channels found for event ${event.type}.`,
                 );
                 return;

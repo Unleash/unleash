@@ -38,6 +38,7 @@ Hosting Edge yourself requires a little more setup on your part than the Unleash
 -   You can scale Edge instances horizontally and automatically.
 -   There's no request cap or extra charges.
 -   Edge can handle multiple sets of API tokens and sync these automatically. Compared to the legacy proxy, it is not necessary to setup single instances per token.
+-   A key benefit of Edge is its ability to dynamically update new tokens while running. This greatly simplifies scaling up additional application workloads that leverage new tokens without the need to restart the instance or make large changes to infra, as was the prior requirement with the proxy.
 -   You can arrange for Edge to be close to your applications, minimizing response times.
 -   You have full control of all your user data. None of the data that Edge receives is ever sent to the Unleash API. This keeps _your_ data in _your_ hands.
 -   You can easily add more Edge instances in different regions, as described in the [multi-region](#multi-region) section.  

@@ -107,7 +107,7 @@
     "sass": "1.63.6",
     "semver": "7.5.4",
     "swr": "2.2.0",
-    "tss-react": "4.8.6",
+    "tss-react": "4.8.8",
     "typescript": "4.8.4",
     "vite": "4.4.4",
     "vite-plugin-env-compatible": "1.1.1",

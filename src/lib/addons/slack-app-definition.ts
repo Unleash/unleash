@@ -48,6 +48,15 @@ const slackAppDefinition: IAddonDefinition = {
             required: true,
             sensitive: true,
         },
+        {
+            name: 'defaultChannels',
+            displayName: 'Default channels',
+            description:
+                'A comma-separated list of channels to post to if no tagged channels are found (e.g. a toggle without tags, or an event with no tags associated).',
+            type: 'text',
+            required: false,
+            sensitive: false,
+        },
     ],
     events: [
         FEATURE_CREATED,

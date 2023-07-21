@@ -79,6 +79,7 @@ describe('SlackAppAddon', () => {
         jest.useFakeTimers();
         slackApiCalls.length = 0;
         conversationsList.mockClear();
+        postMessage.mockClear();
         addon = new SlackAppAddon({
             getLogger,
             unleashUrl: 'http://some-url.com',
@@ -151,6 +152,37 @@ describe('SlackAppAddon', () => {
 
         expect(slackApiCalls.length).toBe(2);
         expect(conversationsList).toHaveBeenCalledTimes(2);
+    });
+
+    it('should not post a message if there are no tagged channels and no defaultChannels', async () => {
+        const eventWithoutTags: IEvent = {
+            ...event,
+            tags: [],
+        };
+
+        await addon.handleEvent(eventWithoutTags, {
+            accessToken,
+        });
+
+        expect(slackApiCalls.length).toBe(0);
+    });
+
+    it('should use defaultChannels if no tagged channels are found', async () => {
+        const eventWithoutTags: IEvent = {
+            ...event,
+            tags: [],
+        };
+
+        await addon.handleEvent(eventWithoutTags, {
+            accessToken,
+            defaultChannels: 'general, another-channel-1',
+        });
+
+        expect(slackApiCalls.length).toBe(2);
+        expect(slackApiCalls[0].channel).toBe(1);
+        expect(slackApiCalls[0]).toMatchSnapshot();
+        expect(slackApiCalls[1].channel).toBe(2);
+        expect(slackApiCalls[1]).toMatchSnapshot();
     });
 
     it('should log error when an API call fails', async () => {

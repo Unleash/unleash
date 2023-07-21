@@ -106,7 +106,7 @@
     "react-timeago": "7.1.0",
     "sass": "1.63.6",
     "semver": "7.5.4",
-    "swr": "2.1.5",
+    "swr": "2.2.0",
     "tss-react": "4.8.6",
     "typescript": "4.8.4",
     "vite": "4.3.9",

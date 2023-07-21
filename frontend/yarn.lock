@@ -8821,10 +8821,10 @@ swagger2openapi@^7.0.8:
     yaml "^1.10.0"
     yargs "^17.0.1"
 
-swr@2.1.5:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/swr/-/swr-2.1.5.tgz#688effa719c03f6d35c66decbb0f8e79c7190399"
-  integrity sha512-/OhfZMcEpuz77KavXST5q6XE9nrOBOVcBLWjMT+oAE/kQHyE3PASrevXCtQDZ8aamntOfFkbVJp7Il9tNBQWrw==
+swr@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-2.2.0.tgz#575c6ac1bec087847f4c86a39ccbc0043c834d6a"
+  integrity sha512-AjqHOv2lAhkuUdIiBu9xbuettzAzWXmCEcLONNKJRba87WAefz8Ca9d6ds/SzrPc235n1IxWYdhJ2zF3MNUaoQ==
   dependencies:
     use-sync-external-store "^1.2.0"
 

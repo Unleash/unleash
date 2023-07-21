@@ -199,7 +199,7 @@
     "del-cli": "5.0.0",
     "eslint": "^8.38.0",
     "eslint-config-airbnb-base": "15.0.0",
-    "eslint-config-airbnb-typescript": "17.0.0",
+    "eslint-config-airbnb-typescript": "17.1.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-no-only-tests": "^3.1.0",

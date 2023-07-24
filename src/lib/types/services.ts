@@ -96,4 +96,5 @@ export interface IUnleashServices {
     transactionalFeatureToggleService: (
         db: Knex.Transaction,
     ) => FeatureToggleService;
+    transactionalGroupService: (db: Knex.Transaction) => GroupService;
 }

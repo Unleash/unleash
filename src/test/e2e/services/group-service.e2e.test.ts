@@ -124,3 +124,26 @@ test('adding a root role to a group with a project role should fail', async () =
 
     expect.assertions(1);
 });
+
+test('adding a nonexistent role to a group should fail', async () => {
+    const group = await groupStore.create({
+        name: 'root_group',
+        description: 'root_group',
+    });
+
+    await expect(() => {
+        return groupService.updateGroup(
+            {
+                id: group.id,
+                name: group.name,
+                users: [],
+                rootRole: 100,
+                createdAt: new Date(),
+                createdBy: 'test',
+            },
+            'test',
+        );
+    }).rejects.toThrow(
+        'Request validation failed: your request body or params contain invalid data: Incorrect role id 100',
+    );
+});

@@ -16,9 +16,9 @@ export const roleSchema = {
         },
         type: {
             description:
-                'A role can either be a global role (applies to all projects) or a project role',
+                'A role can either be a global root role (applies to all projects) or a project role',
             type: 'string',
-            example: 'global',
+            example: 'root',
         },
         name: {
             description: `The name of the role`,

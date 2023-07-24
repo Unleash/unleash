@@ -1,11 +1,11 @@
 import { IGroupStore, IStoreGroup } from '../../lib/types/stores/group-store';
 import Group, {
+    ICreateGroupModel,
+    ICreateGroupUserModel,
     IGroup,
-    IGroupModel,
     IGroupProject,
     IGroupRole,
     IGroupUser,
-    IGroupUserModel,
 } from '../../lib/types/group';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default class FakeGroupStore implements IGroupStore {
@@ -48,7 +48,7 @@ export default class FakeGroupStore implements IGroupStore {
 
     addUsersToGroup(
         id: number,
-        users: IGroupUserModel[],
+        users: ICreateGroupUserModel[],
         userName: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
@@ -62,13 +62,13 @@ export default class FakeGroupStore implements IGroupStore {
         throw new Error('Method not implemented.');
     }
 
-    update(group: IGroupModel): Promise<IGroup> {
+    update(group: ICreateGroupModel): Promise<IGroup> {
         throw new Error('Method not implemented.');
     }
 
     updateGroupUsers(
         groupId: number,
-        newUsers: IGroupUserModel[],
+        newUsers: ICreateGroupUserModel[],
         deletableUsers: IGroupUser[],
         userName: string,
     ): Promise<void> {

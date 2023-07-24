@@ -33,6 +33,11 @@ export interface IGroupModel extends IGroup {
     projects?: string[];
 }
 
+export interface ICreateGroupModel extends IGroup {
+    users?: ICreateGroupUserModel[];
+    projects?: string[];
+}
+
 export interface IGroupProject {
     groupId: number;
     project: string;
@@ -42,6 +47,10 @@ export interface IGroupUserModel {
     user: IUser;
     joinedAt?: Date;
     createdBy?: string;
+}
+
+export interface ICreateGroupUserModel {
+    user: Pick<IUser, 'id'>;
 }
 
 export interface IGroupModelWithProjectRole extends IGroupModel {

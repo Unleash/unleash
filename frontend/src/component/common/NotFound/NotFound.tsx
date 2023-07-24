@@ -13,7 +13,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(4),
     position: 'fixed',
     inset: 0,
-    backgroundColor: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.background.paper,
     width: '100%',
 }));
 

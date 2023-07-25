@@ -28,6 +28,13 @@ export const mapFeaturesForClient = (
         strategies: feature.strategies.map((strategy) => ({
             parameters: {},
             ...strategy,
+            variants: (strategy.variants || []).map((variant) => ({
+                ...variant,
+                payload: variant.payload && {
+                    ...variant.payload,
+                    type: variant.payload.type as PayloadType,
+                },
+            })),
             constraints:
                 strategy.constraints &&
                 strategy.constraints.map((constraint) => ({

@@ -1,5 +1,4 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { PayloadType } from 'unleash-client';
 
 export const proxyFeatureSchema = {
     $id: '#/components/schemas/proxyFeatureSchema',
@@ -51,7 +50,7 @@ export const proxyFeatureSchema = {
                         type: {
                             type: 'string',
                             description: 'The format of the payload.',
-                            enum: Object.values(PayloadType),
+                            enum: ['json', 'csv', 'string'],
                         },
                         value: {
                             type: 'string',

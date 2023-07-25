@@ -151,3 +151,4 @@ export * from './create-strategy-variant-schema';
 export * from './strategy-variant-schema';
 export * from './client-segment-schema';
 export * from './update-feature-type-lifetime-schema';
+export * from './create-group-schema';

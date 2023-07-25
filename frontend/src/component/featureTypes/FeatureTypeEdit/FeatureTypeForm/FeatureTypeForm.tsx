@@ -1,6 +1,8 @@
-import { type FormEventHandler, type VFC, useState } from 'react';
+import { type FormEventHandler, type VFC, useState, useCallback } from 'react';
 import { Box, Button, Typography, Checkbox, styled } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useFeatureTypeApi } from 'hooks/api/actions/useFeatureTypeApi/useFeatureTypeApi';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import NotFound from 'component/common/NotFound/NotFound';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -10,9 +12,13 @@ import Input from 'component/common/Input/Input';
 import { FeatureTypeSchema } from 'openapi';
 import { trim } from 'component/common/util';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 type FeatureTypeFormProps = {
-    featureTypes: FeatureTypeSchema[];
+    featureType?: FeatureTypeSchema;
     loading: boolean;
 };
 
@@ -31,24 +37,22 @@ const StyledForm = styled(Box)(() => ({
 }));
 
 export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
-    featureTypes,
+    featureType,
     loading,
 }) => {
-    const { featureTypeId } = useParams();
     const navigate = useNavigate();
-    const featureType = featureTypes.find(
-        featureType => featureType.id === featureTypeId
-    );
+    const { uiConfig } = useUiConfig();
+    const { refetch } = useFeatureTypes();
+    const { updateFeatureTypeLifetime, loading: actionLoading } =
+        useFeatureTypeApi();
     const [lifetime, setLifetime] = useState<number>(
         featureType?.lifetimeDays || 0
     );
     const [doesntExpire, setDoesntExpire] = useState<boolean>(
         !featureType?.lifetimeDays
     );
-
-    if (!loading && !featureType) {
-        return <NotFound />;
-    }
+    const { setToastData, setToastApiError } = useToast();
+    const tracker = usePlausibleTracker();
 
     const onChangeLifetime = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(trim(e.target.value), 10);
@@ -68,13 +72,44 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
     const isIncorrect =
         !doesntExpire && (Number.isNaN(lifetime) || lifetime < 0);
 
-    const onSubmit: FormEventHandler = e => {
+    const onSubmit: FormEventHandler = async e => {
         e.preventDefault();
-        if (isIncorrect) return;
+        try {
+            if (!featureType?.id)
+                throw new Error('No feature toggle type loaded');
 
-        const value = doesntExpire ? 0 : lifetime;
-        console.log('FIXME: onSubmit', value);
+            const value = doesntExpire ? 0 : lifetime;
+            await updateFeatureTypeLifetime(featureType?.id, value);
+            refetch();
+            setToastData({
+                title: 'Feature type updated',
+                type: 'success',
+            });
+            navigate('/feature-toggle-type');
+            tracker.trackEvent('feature-type-edit');
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
+
+    const formatApiCode = useCallback(
+        () =>
+            [
+                `curl --location --request PUT '${uiConfig.unleashUrl}/api/admin/feature-types/${featureType?.id}/lifetime`,
+                "--header 'Authorization: INSERT_API_KEY'",
+                "--header 'Content-Type: application/json'",
+                '--data-raw \'{\n  "lifetimeDays": 7\n}\'',
+            ].join(' \\\n'),
+        [uiConfig, featureType?.id]
+    );
+
+    if (!loading && !featureType) {
+        return (
+            <NotFound>
+                <div data-testid="404_NOT_FOUND" />
+            </NotFound>
+        );
+    }
 
     return (
         <FormTemplate
@@ -87,7 +122,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
             description={featureType?.description || ''}
             documentationLink="https://docs.getunleash.io/reference/feature-toggle-types"
             documentationLinkLabel="Feature toggle types documentation"
-            formatApiCode={() => 'FIXME: formatApiCode'}
+            formatApiCode={formatApiCode}
         >
             <StyledForm component="form" onSubmit={onSubmit}>
                 <Typography
@@ -135,12 +170,13 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                         checked={doesntExpire || lifetime === 0}
                         id="feature-toggle-expire"
                         onChange={onChangeDoesntExpire}
+                        disabled={loading}
                     />
                     <Box>doesn't expire</Box>
                 </Box>
                 <Input
                     autoFocus
-                    disabled={doesntExpire}
+                    disabled={doesntExpire || loading}
                     type="number"
                     label="Lifetime in days"
                     id="feature-toggle-lifetime"
@@ -154,7 +190,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                         variant="contained"
                         color="primary"
                         type="submit"
-                        disabled={loading || isIncorrect}
+                        disabled={loading || actionLoading}
                     >
                         Save feature toggle type
                     </PermissionButton>
@@ -162,7 +198,6 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                         type="button"
                         color="primary"
                         onClick={() => navigate(GO_BACK)}
-                        disabled={loading}
                     >
                         Cancel
                     </Button>

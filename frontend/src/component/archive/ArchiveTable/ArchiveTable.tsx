@@ -173,15 +173,6 @@ export const ArchiveTable = ({
                   ]
                 : []),
             {
-                Header: 'State',
-                accessor: 'stale',
-                Cell: FeatureStaleCell,
-                sortType: 'boolean',
-                maxWidth: 120,
-                filterName: 'state',
-                filterParsing: (value: any) => (value ? 'stale' : 'active'),
-            },
-            {
                 Header: 'Actions',
                 id: 'Actions',
                 align: 'center',

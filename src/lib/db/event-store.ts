@@ -371,7 +371,7 @@ class EventStore implements IEventStore {
     eventToDbRow(e: IBaseEvent): Omit<IEventTable, 'id' | 'created_at'> {
         return {
             type: e.type,
-            created_by: e.createdBy,
+            created_by: e.createdBy ?? 'admin',
             data: Array.isArray(e.data) ? JSON.stringify(e.data) : e.data,
             pre_data: Array.isArray(e.preData)
                 ? JSON.stringify(e.preData)

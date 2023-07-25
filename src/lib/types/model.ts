@@ -122,7 +122,7 @@ export interface IVariant {
     weight: number;
     weightType: 'variable' | 'fix';
     payload?: {
-        type: string;
+        type: 'json' | 'csv' | 'string';
         value: string;
     };
     stickiness: string;

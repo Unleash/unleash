@@ -5,7 +5,7 @@ import { sortTypes } from 'utils/sortTypes';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import {
     Table,
     TableBody,
@@ -20,16 +20,14 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { Edit } from '@mui/icons-material';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { FeatureTypeForm } from './FeatureTypeForm/FeatureTypeForm';
+import { FeatureTypeEdit } from './FeatureTypeEdit/FeatureTypeEdit';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 
 const basePath = '/feature-toggle-type';
 
 export const FeatureTypesList = () => {
     const { featureTypes, loading } = useFeatureTypes();
-    const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const navigate = useNavigate();
 
     const columns = useMemo(
@@ -55,24 +53,21 @@ export const FeatureTypesList = () => {
             {
                 Header: 'Name',
                 accessor: 'name',
-                minWidth: 125,
-                Cell: TextCell,
-            },
-            {
-                Header: 'Description',
-                accessor: 'description',
-                width: '80%',
-                Cell: ({ value }: { value: string }) => (
-                    <Typography
-                        component="div"
-                        variant="body2"
-                        color="text.secondary"
-                        lineHeight={2}
-                    >
-                        <TextCell lineClamp={1}>{value}</TextCell>
-                    </Typography>
-                ),
-                disableSortBy: true,
+                width: '90%',
+                Cell: ({
+                    row: {
+                        original: { name, description },
+                    },
+                }: any) => {
+                    return (
+                        <LinkCell
+                            data-loading
+                            title={name}
+                            subtitle={description}
+                        />
+                    );
+                },
+                sortType: 'alphanumeric',
             },
             {
                 Header: 'Lifetime',
@@ -88,8 +83,8 @@ export const FeatureTypesList = () => {
 
                     return <TextCell>doesn't expire</TextCell>;
                 },
-                sortInverted: true,
                 minWidth: 150,
+                sortType: 'numericZeroLast',
             },
             {
                 Header: 'Actions',
@@ -133,34 +128,24 @@ export const FeatureTypesList = () => {
         [loading, featureTypes]
     );
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        setHiddenColumns,
-    } = useTable(
-        {
-            columns: columns as any[],
-            data,
-            sortTypes,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-        },
-        useSortBy
-    );
-
-    useConditionallyHiddenColumns(
-        [
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+        useTable(
             {
-                condition: isSmallScreen,
-                columns: ['description'],
+                columns: columns as any[],
+                data,
+                sortTypes,
+                autoResetSortBy: false,
+                disableSortRemove: true,
+                initialState: {
+                    sortBy: [
+                        {
+                            id: 'lifetimeDays',
+                        },
+                    ],
+                },
             },
-        ],
-        setHiddenColumns,
-        columns
-    );
+            useSortBy
+        );
 
     return (
         <PageContent
@@ -204,7 +189,7 @@ export const FeatureTypesList = () => {
                             onClose={() => navigate(basePath)}
                             open
                         >
-                            <FeatureTypeForm
+                            <FeatureTypeEdit
                                 featureTypes={featureTypes}
                                 loading={loading}
                             />

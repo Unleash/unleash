@@ -25,6 +25,7 @@ const CACHE_SECONDS = 30;
 
 interface ISlackAppAddonParameters {
     accessToken: string;
+    defaultChannels: string;
 }
 
 export default class SlackAppAddon extends Addon {
@@ -52,17 +53,20 @@ export default class SlackAppAddon extends Addon {
         parameters: ISlackAppAddonParameters,
     ): Promise<void> {
         try {
-            const { accessToken } = parameters;
+            const { accessToken, defaultChannels } = parameters;
             if (!accessToken) {
                 this.logger.warn('No access token provided.');
                 return;
             }
 
             const taggedChannels = this.findTaggedChannels(event);
-            if (!taggedChannels.length) {
+            const eventChannels = taggedChannels.length
+                ? taggedChannels
+                : this.getDefaultChannels(defaultChannels);
+
+            if (!eventChannels.length) {
                 this.logger.debug(
-                    `No Slack channels tagged for event ${event.type}`,
-                    event,
+                    `No Slack channels found for event ${event.type}.`,
                 );
                 return;
             }
@@ -99,7 +103,7 @@ export default class SlackAppAddon extends Addon {
             const url = this.msgFormatter.featureLink(event);
 
             const slackChannelsToPostTo = currentSlackChannels.filter(
-                ({ id, name }) => id && name && taggedChannels.includes(name),
+                ({ id, name }) => id && name && eventChannels.includes(name),
             );
 
             const requests = slackChannelsToPostTo.map(({ id }) =>
@@ -147,6 +151,13 @@ export default class SlackAppAddon extends Addon {
             return tags
                 .filter((tag) => tag.type === 'slack')
                 .map((t) => t.value);
+        }
+        return [];
+    }
+
+    getDefaultChannels(defaultChannels?: string): string[] {
+        if (defaultChannels) {
+            return defaultChannels.split(',').map((c) => c.trim());
         }
         return [];
     }

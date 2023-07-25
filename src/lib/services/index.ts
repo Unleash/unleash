@@ -59,6 +59,7 @@ import {
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import { createFeatureToggleService } from '../features';
 import EventAnnouncerService from './event-announcer-service';
+import { createGroupService } from '../features/group/createGroupService';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -211,6 +212,8 @@ export const createServices = (
         createExportImportTogglesService(txDb, config);
     const transactionalFeatureToggleService = (txDb: Knex.Transaction) =>
         createFeatureToggleService(txDb, config);
+    const transactionalGroupService = (txDb: Knex.Transaction) =>
+        createGroupService(txDb, config);
     const userSplashService = new UserSplashService(stores, config);
     const openApiService = new OpenApiService(config);
     const clientSpecService = new ClientSpecService(config);
@@ -307,6 +310,7 @@ export const createServices = (
         schedulerService,
         configurationRevisionService,
         transactionalFeatureToggleService,
+        transactionalGroupService,
     };
 };
 

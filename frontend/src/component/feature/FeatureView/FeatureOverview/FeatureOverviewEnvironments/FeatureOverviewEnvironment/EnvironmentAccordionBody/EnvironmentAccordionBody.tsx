@@ -9,9 +9,9 @@ import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { FeatureStrategyEmpty } from 'component/feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { useChangeRequestApi } from '../../../../../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { useChangeRequestsEnabled } from '../../../../../../../hooks/useChangeRequestsEnabled';
-import { usePendingChangeRequests } from '../../../../../../../hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;

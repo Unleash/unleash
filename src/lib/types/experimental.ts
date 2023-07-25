@@ -26,7 +26,8 @@ export type IFlagKey =
     | 'newProjectLayout'
     | 'slackAppAddon'
     | 'emitPotentiallyStaleEvents'
-    | 'configurableFeatureTypeLifetimes';
+    | 'configurableFeatureTypeLifetimes'
+    | 'filterInvalidClientMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -119,6 +120,10 @@ const flags: IFlags = {
 
     configurableFeatureTypeLifetimes: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CONFIGURABLE_FEATURE_TYPE_LIFETIMES,
+        false,
+    ),
+    filterInvalidClientMetrics: parseEnvVarBoolean(
+        process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
     ),
 };

@@ -5,6 +5,7 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Box, styled } from '@mui/material';
 import { EnvironmentStrategyOrderDiff } from './EnvironmentStrategyOrderDiff';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
+import { formatStrategyName } from '../../../../../../utils/strategyNames';
 
 const ChangeItemInfo = styled(Box)({
     display: 'flex',
@@ -14,7 +15,7 @@ const ChangeItemInfo = styled(Box)({
 const StyledChangeHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    flexDirection: 'column',
+    flexDirection: 'row',
     alignItems: 'start',
     marginBottom: theme.spacing(2),
     lineHeight: theme.spacing(3),
@@ -28,6 +29,11 @@ const StyledStrategyExecutionWrapper = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(2),
     lineHeight: theme.spacing(3),
     gap: theme.spacing(1),
+}));
+
+const StyledStrategyContainer = styled('div')(({ theme }) => ({
+    flexDirection: 'row',
+    marginBottom: theme.spacing(2),
 }));
 
 interface IEnvironmentStrategyExecutionOrderProps {
@@ -91,13 +97,18 @@ export const EnvironmentStrategyExecutionOrder = ({
                 >
                     Updating strategy execution order to:
                 </TooltipLink>
-                <StyledStrategyExecutionWrapper>
-                    {updatedStrategies.map(strategy => (
-                        <StrategyExecution strategy={strategy!} />
-                    ))}
-                </StyledStrategyExecutionWrapper>
                 {discard}
             </StyledChangeHeader>
+            <StyledStrategyExecutionWrapper>
+                {updatedStrategies.map((strategy, index) => (
+                    <StyledStrategyContainer>
+                        {`${index + 1}: `}
+                        {formatStrategyName(strategy?.name || '')}
+                        {strategy?.title && ` - ${strategy.title}`}
+                        <StrategyExecution strategy={strategy!} />
+                    </StyledStrategyContainer>
+                ))}
+            </StyledStrategyExecutionWrapper>
         </ChangeItemInfo>
     );
 };

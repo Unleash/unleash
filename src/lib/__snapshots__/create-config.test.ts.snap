@@ -79,6 +79,7 @@ exports[`should create default config 1`] = `
       "embedProxyFrontend": true,
       "emitPotentiallyStaleEvents": false,
       "featuresExportImport": true,
+      "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
       "maintenanceMode": false,
       "messageBanner": {
@@ -113,6 +114,7 @@ exports[`should create default config 1`] = `
       "embedProxyFrontend": true,
       "emitPotentiallyStaleEvents": false,
       "featuresExportImport": true,
+      "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
       "maintenanceMode": false,
       "messageBanner": {

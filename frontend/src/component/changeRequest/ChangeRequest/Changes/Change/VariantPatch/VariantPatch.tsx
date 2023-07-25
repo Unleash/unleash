@@ -6,7 +6,7 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ReactNode } from 'react';
-import { Diff } from './Diff';
+import { VariantDiff } from './VariantDiff';
 
 const ChangeItemInfo = styled(Box)({
     display: 'flex',
@@ -56,7 +56,7 @@ export const VariantPatch = ({
             <StyledChangeHeader>
                 <TooltipLink
                     tooltip={
-                        <Diff
+                        <VariantDiff
                             preData={preData}
                             data={change.payload.variants}
                         />

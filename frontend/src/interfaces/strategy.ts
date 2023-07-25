@@ -14,6 +14,7 @@ export interface IFeatureStrategy {
     environment?: string;
     segments?: number[];
     disabled?: boolean;
+    sortOrder?: number;
 }
 
 export interface IFeatureStrategyParameters {

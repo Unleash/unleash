@@ -1,5 +1,5 @@
 import { Logger } from '../../logger';
-import { IUnleashConfig } from '../../types';
+import { IFlagResolver, IUnleashConfig } from '../../types';
 import { IUnleashStores } from '../../types';
 import { ToggleMetricsSummary } from '../../types/models/metrics';
 import {
@@ -21,7 +21,6 @@ import { LastSeenService } from './last-seen-service';
 import { generateHourBuckets } from '../../util/time-utils';
 import { ClientMetricsSchema } from 'lib/openapi';
 import { nameSchema } from '../../schema/feature-schema';
-import { BadDataError } from '../../error';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -34,16 +33,20 @@ export default class ClientMetricsServiceV2 {
 
     private lastSeenService: LastSeenService;
 
+    private flagResolver: Pick<IFlagResolver, 'isEnabled'>;
+
     private logger: Logger;
 
     constructor(
         { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
         config: IUnleashConfig,
         lastSeenService: LastSeenService,
+        flagResolver: Pick<IFlagResolver, 'isEnabled'>,
         bulkInterval = secondsToMilliseconds(5),
     ) {
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
         this.lastSeenService = lastSeenService;
+        this.flagResolver = flagResolver;
         this.config = config;
         this.logger = config.getLogger(
             '/services/client-metrics/client-metrics-service-v2.ts',
@@ -60,6 +63,33 @@ export default class ClientMetricsServiceV2 {
                 this.clientMetricsStoreV2.clearMetrics(48).catch(console.error);
             }, hoursToMilliseconds(12)).unref(),
         );
+    }
+
+    async validate(toggleNames: string[]): Promise<string[]> {
+        const nameValidations: Promise<
+            PromiseFulfilledResult<{ name: string }> | PromiseRejectedResult
+        >[] = [];
+        for (const toggle of toggleNames) {
+            nameValidations.push(nameSchema.validateAsync({ name: toggle }));
+        }
+        const badNames = (await Promise.allSettled(nameValidations)).filter(
+            (r) => r.status === 'rejected',
+        );
+        if (badNames.length > 0) {
+            this.logger.warn(
+                `Got a few toggles with invalid names: ${JSON.stringify(
+                    badNames,
+                )}`,
+            );
+
+            if (this.flagResolver.isEnabled('filterInvalidClientMetrics')) {
+                const justNames = badNames.map(
+                    (r: PromiseRejectedResult) => r.reason._original.name,
+                );
+                return toggleNames.filter((name) => !justNames.includes(name));
+            }
+        }
+        return toggleNames;
     }
 
     async registerBulkMetrics(metrics: IClientMetricsEnv[]): Promise<void> {
@@ -83,28 +113,28 @@ export default class ClientMetricsServiceV2 {
                 ),
         );
 
-        for (const toggle of toggleNames) {
-            if (!(await nameSchema.validateAsync({ name: toggle }))) {
-                throw new BadDataError(
-                    `Invalid feature toggle name "${toggle}"`,
-                );
-            }
+        const validatedToggleNames = await this.validate(toggleNames);
+
+        this.logger.debug(
+            `Got ${toggleNames.length} (${validatedToggleNames.length} valid) metrics from ${clientIp}`,
+        );
+
+        if (validatedToggleNames.length > 0) {
+            const clientMetrics: IClientMetricsEnv[] = validatedToggleNames.map(
+                (name) => ({
+                    featureName: name,
+                    appName: value.appName,
+                    environment: value.environment,
+                    timestamp: value.bucket.start, //we might need to approximate between start/stop...
+                    yes: value.bucket.toggles[name].yes,
+                    no: value.bucket.toggles[name].no,
+                    variants: value.bucket.toggles[name].variants,
+                }),
+            );
+            await this.registerBulkMetrics(clientMetrics);
+
+            this.config.eventBus.emit(CLIENT_METRICS, value);
         }
-
-        this.logger.debug(`got metrics from ${clientIp}`);
-
-        const clientMetrics: IClientMetricsEnv[] = toggleNames.map((name) => ({
-            featureName: name,
-            appName: value.appName,
-            environment: value.environment,
-            timestamp: value.bucket.start, //we might need to approximate between start/stop...
-            yes: value.bucket.toggles[name].yes,
-            no: value.bucket.toggles[name].no,
-            variants: value.bucket.toggles[name].variants,
-        }));
-        await this.registerBulkMetrics(clientMetrics);
-
-        this.config.eventBus.emit(CLIENT_METRICS, value);
     }
 
     async bulkAdd(): Promise<void> {

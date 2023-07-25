@@ -31,7 +31,7 @@ export const useDefaultStrategy = (
         constraints: [],
         parameters: {
             rollout: '100',
-            stickiness: project.defaultStickiness,
+            stickiness: project.defaultStickiness || 'default',
             groupId: '',
         },
     };

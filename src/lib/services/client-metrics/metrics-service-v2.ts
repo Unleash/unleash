@@ -123,10 +123,10 @@ export default class ClientMetricsServiceV2 {
                 (name) => ({
                     featureName: name,
                     appName: value.appName,
-                    environment: value.environment,
+                    environment: value.environment ?? 'default',
                     timestamp: value.bucket.start, //we might need to approximate between start/stop...
-                    yes: value.bucket.toggles[name].yes,
-                    no: value.bucket.toggles[name].no,
+                    yes: value.bucket.toggles[name].yes ?? 0,
+                    no: value.bucket.toggles[name].no ?? 0,
                     variants: value.bucket.toggles[name].variants,
                 }),
             );

@@ -106,7 +106,7 @@ function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
         constraints: JSON.stringify(input.constraints || []),
         variants: JSON.stringify(input.variants || []),
         created_at: input.createdAt,
-        sort_order: input.sortOrder,
+        sort_order: input.sortOrder ?? 9999,
         disabled: input.disabled,
     };
 }
@@ -197,10 +197,30 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return mapRow(row);
     }
 
+    private async nextSortOrder(featureName: string, environment: string) {
+        const [{ max }] = await this.db(T.featureStrategies)
+            .max('sort_order as max')
+            .where({
+                feature_name: featureName,
+                environment,
+            });
+        return Number.isInteger(max) ? max + 1 : 0;
+    }
+
     async createStrategyFeatureEnv(
         strategyConfig: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy> {
-        const strategyRow = mapInput({ id: uuidv4(), ...strategyConfig });
+        const sortOrder =
+            strategyConfig.sortOrder ??
+            (await this.nextSortOrder(
+                strategyConfig.featureName,
+                strategyConfig.environment,
+            ));
+        const strategyRow = mapInput({
+            id: uuidv4(),
+            ...strategyConfig,
+            sortOrder,
+        });
         const rows = await this.db<IFeatureStrategiesTable>(T.featureStrategies)
             .insert(strategyRow)
             .returning('*');

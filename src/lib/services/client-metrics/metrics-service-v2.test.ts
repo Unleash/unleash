@@ -14,23 +14,20 @@ function testSClientMetrics(flagEnabled = true) {
     eventBus.emit = jest.fn();
 
     // @ts-ignore only add config we care about
-    const config = { eventBus, getLogger } as IUnleashConfig;
+    const config = {
+        eventBus,
+        getLogger,
+        flagResolver: {
+            isEnabled: () => {
+                return flagEnabled;
+            },
+        },
+    } as IUnleashConfig;
 
     const lastSeenService = new LastSeenService(stores, config);
     lastSeenService.updateLastSeen = jest.fn();
 
-    const flagResolver = {
-        isEnabled: () => {
-            return flagEnabled;
-        },
-    };
-
-    const service = new ClientMetricsServiceV2(
-        stores,
-        config,
-        lastSeenService,
-        flagResolver,
-    );
+    const service = new ClientMetricsServiceV2(stores, config, lastSeenService);
     return { clientMetricsService: service, eventBus, lastSeenService };
 }
 

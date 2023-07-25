@@ -41,16 +41,15 @@ export default class ClientMetricsServiceV2 {
         { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
         config: IUnleashConfig,
         lastSeenService: LastSeenService,
-        flagResolver: Pick<IFlagResolver, 'isEnabled'>,
         bulkInterval = secondsToMilliseconds(5),
     ) {
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
         this.lastSeenService = lastSeenService;
-        this.flagResolver = flagResolver;
         this.config = config;
         this.logger = config.getLogger(
             '/services/client-metrics/client-metrics-service-v2.ts',
         );
+        this.flagResolver = config.flagResolver;
 
         this.timers.push(
             setInterval(() => {
@@ -65,7 +64,7 @@ export default class ClientMetricsServiceV2 {
         );
     }
 
-    async validate(toggleNames: string[]): Promise<string[]> {
+    async validToggleNames(toggleNames: string[]): Promise<string[]> {
         const nameValidations: Promise<
             PromiseFulfilledResult<{ name: string }> | PromiseRejectedResult
         >[] = [];
@@ -113,7 +112,7 @@ export default class ClientMetricsServiceV2 {
                 ),
         );
 
-        const validatedToggleNames = await this.validate(toggleNames);
+        const validatedToggleNames = await this.validToggleNames(toggleNames);
 
         this.logger.debug(
             `Got ${toggleNames.length} (${validatedToggleNames.length} valid) metrics from ${clientIp}`,

@@ -10,6 +10,7 @@ import { Alert, Box, styled } from '@mui/material';
 import { ToggleStatusChange } from './ToggleStatusChange';
 import { StrategyChange } from './StrategyChange';
 import { VariantPatch } from './VariantPatch/VariantPatch';
+import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),
@@ -101,6 +102,15 @@ export const Change: FC<{
                 ) : null}
                 {change.action === 'patchVariant' && (
                     <VariantPatch
+                        feature={feature.name}
+                        project={changeRequest.project}
+                        environment={changeRequest.environment}
+                        change={change}
+                        discard={discard}
+                    />
+                )}
+                {change.action === 'reorderStrategy' && (
+                    <EnvironmentStrategyExecutionOrder
                         feature={feature.name}
                         project={changeRequest.project}
                         environment={changeRequest.environment}

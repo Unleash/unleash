@@ -7,7 +7,7 @@ title: Feature Strategy Variants
 :::
 
 Gradual rollout strategies in Unleash can have _strategy variants_. _Strategy variants_ allow each matching activation strategy to return not just simple enabled/disabled status, but
-also attach any custom data or even multiples data items. 
+also attach any custom data or even multiple data items. 
 
 ## What are strategy variants?
 

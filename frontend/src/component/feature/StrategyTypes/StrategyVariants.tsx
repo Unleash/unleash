@@ -10,6 +10,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { styled, Typography } from '@mui/material';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { IFeatureStrategy } from 'interfaces/strategy';
+import SplitPreviewSlider from './SplitPreviewSlider/SplitPreviewSlider';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
@@ -119,6 +120,7 @@ export const StrategyVariants: FC<{
             >
                 Add variant
             </PermissionButton>
+            <SplitPreviewSlider value={[50]} />
         </>
     );
 };

@@ -20,28 +20,42 @@ import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm';
 import { CreateFeatureStrategySchema } from 'openapi';
 import useProject from 'hooks/api/getters/useProject/useProject';
 
-export const DEFAULT_STRATEGY = {
-    name: 'flexibleRollout',
-    constraints: [],
-    parameters: {
-        rollout: '100',
-        stickiness: 'default',
-        groupId: '',
-    },
-};
-const EditDefaultStrategy = () => {
-    const projectId = useRequiredPathParam('projectId');
-    const environmentId = useRequiredQueryParam('environmentId');
+export const useDefaultStrategy = (
+    projectId: string,
+    environmentId: string
+) => {
+    const { project, refetch } = useProject(projectId);
 
-    const { project, refetch: refetchProject } = useProject(projectId);
+    const defaultStrategyFallback = {
+        name: 'flexibleRollout',
+        constraints: [],
+        parameters: {
+            rollout: '100',
+            stickiness: project.defaultStickiness,
+            groupId: '',
+        },
+    };
 
     const strategy = project.environments.find(
         env => env.environment === environmentId
     )?.defaultStrategy;
 
+    return { defaultStrategyFallback, strategy, refetch };
+};
+
+const EditDefaultStrategy = () => {
+    const projectId = useRequiredPathParam('projectId');
+    const environmentId = useRequiredQueryParam('environmentId');
+
+    const {
+        defaultStrategyFallback,
+        strategy,
+        refetch: refetchProject,
+    } = useDefaultStrategy(projectId, environmentId);
+
     const [defaultStrategy, setDefaultStrategy] = useState<
         CreateFeatureStrategySchema | undefined
-    >(strategy || DEFAULT_STRATEGY);
+    >(strategy || defaultStrategyFallback);
 
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateDefaultStrategy, loading } = useProjectApi();

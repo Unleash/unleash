@@ -20,16 +20,6 @@ import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm';
 import { CreateFeatureStrategySchema } from 'openapi';
 import useProject from 'hooks/api/getters/useProject/useProject';
 
-export const DEFAULT_STRATEGY = {
-    name: 'flexibleRollout',
-    constraints: [],
-    parameters: {
-        rollout: '100',
-        stickiness: 'default',
-        groupId: '',
-    },
-};
-
 export const useDefaultStrategy = (
     projectId: string,
     environmentId: string

@@ -32,8 +32,6 @@ const FlexibleStrategy = ({
 }: IFlexibleStrategyProps) => {
     const projectId = useRequiredPathParam('projectId');
     const { defaultStickiness, loading } = useDefaultProjectSettings(projectId);
-    console.log(defaultStickiness, '***');
-    console.log('flexible', parameters);
     const { pathname } = useLocation();
 
     const isDefaultStrategyEdit = pathname.includes('default-strategy');

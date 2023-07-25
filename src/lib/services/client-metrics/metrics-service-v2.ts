@@ -64,13 +64,12 @@ export default class ClientMetricsServiceV2 {
         );
     }
 
-    async validToggleNames(toggleNames: string[]): Promise<string[]> {
+    async filterValidToggleNames(toggleNames: string[]): Promise<string[]> {
         const nameValidations: Promise<
             PromiseFulfilledResult<{ name: string }> | PromiseRejectedResult
-        >[] = [];
-        for (const toggle of toggleNames) {
-            nameValidations.push(nameSchema.validateAsync({ name: toggle }));
-        }
+        >[] = toggleNames.map((toggleName) =>
+            nameSchema.validateAsync({ name: toggleName }),
+        );
         const badNames = (await Promise.allSettled(nameValidations)).filter(
             (r) => r.status === 'rejected',
         );
@@ -112,7 +111,9 @@ export default class ClientMetricsServiceV2 {
                 ),
         );
 
-        const validatedToggleNames = await this.validToggleNames(toggleNames);
+        const validatedToggleNames = await this.filterValidToggleNames(
+            toggleNames,
+        );
 
         this.logger.debug(
             `Got ${toggleNames.length} (${validatedToggleNames.length} valid) metrics from ${clientIp}`,

@@ -7,13 +7,12 @@ import EventEmitter from 'events';
 import { LastSeenService } from './last-seen-service';
 import { IUnleashConfig } from 'lib/types';
 
-function testSClientMetrics(flagEnabled = true) {
+function initClientMetrics(flagEnabled = true) {
     const stores = createStores();
 
     const eventBus = new EventEmitter();
     eventBus.emit = jest.fn();
 
-    // @ts-ignore only add config we care about
     const config = {
         eventBus,
         getLogger,
@@ -22,7 +21,7 @@ function testSClientMetrics(flagEnabled = true) {
                 return flagEnabled;
             },
         },
-    } as IUnleashConfig;
+    } as unknown as IUnleashConfig;
 
     const lastSeenService = new LastSeenService(stores, config);
     lastSeenService.updateLastSeen = jest.fn();
@@ -33,7 +32,7 @@ function testSClientMetrics(flagEnabled = true) {
 
 test('process metrics properly', async () => {
     const { clientMetricsService, eventBus, lastSeenService } =
-        testSClientMetrics();
+        initClientMetrics();
     await clientMetricsService.registerClientMetrics(
         {
             appName: 'test',
@@ -65,9 +64,9 @@ test('process metrics properly', async () => {
     expect(lastSeenService.updateLastSeen).toHaveBeenCalledTimes(1);
 });
 
-test('flag on: process metrics properly even when some names are not url friendly, filtering out invalid names', async () => {
+test('process metrics properly even when some names are not url friendly, filtering out invalid names when flag is on', async () => {
     const { clientMetricsService, eventBus, lastSeenService } =
-        testSClientMetrics();
+        initClientMetrics();
     await clientMetricsService.registerClientMetrics(
         {
             appName: 'test',
@@ -91,9 +90,9 @@ test('flag on: process metrics properly even when some names are not url friendl
     expect(lastSeenService.updateLastSeen).not.toHaveBeenCalled();
 });
 
-test('flag off: process metrics properly even when some names are not url friendly, with default behavior', async () => {
+test('process metrics properly even when some names are not url friendly, with default behavior when flag is off', async () => {
     const { clientMetricsService, eventBus, lastSeenService } =
-        testSClientMetrics(false);
+        initClientMetrics(false);
     await clientMetricsService.registerClientMetrics(
         {
             appName: 'test',

@@ -15,16 +15,7 @@ exports[`should create default config 1`] = `
     "createAdminUser": true,
     "customAuthHandler": [Function],
     "enableApiToken": true,
-    "initApiTokens": [
-      {
-        "createdAt": undefined,
-        "environment": "*",
-        "project": "*",
-        "secret": "*:*.unleash-insecure-admin-api-token",
-        "tokenName": "admin",
-        "type": "admin",
-      },
-    ],
+    "initApiTokens": [],
     "type": "open-source",
   },
   "clientFeatureCaching": {

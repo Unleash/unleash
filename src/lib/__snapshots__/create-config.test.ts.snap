@@ -15,7 +15,16 @@ exports[`should create default config 1`] = `
     "createAdminUser": true,
     "customAuthHandler": [Function],
     "enableApiToken": true,
-    "initApiTokens": [],
+    "initApiTokens": [
+      {
+        "createdAt": undefined,
+        "environment": "*",
+        "project": "*",
+        "secret": "*:*.unleash-insecure-admin-api-token",
+        "tokenName": "admin",
+        "type": "admin",
+      },
+    ],
     "type": "open-source",
   },
   "clientFeatureCaching": {
@@ -79,6 +88,7 @@ exports[`should create default config 1`] = `
       "embedProxyFrontend": true,
       "experimentalExtendedTelemetry": false,
       "featuresExportImport": true,
+      "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
       "groupRootRoles": false,
       "maintenanceMode": false,
@@ -113,6 +123,7 @@ exports[`should create default config 1`] = `
       "embedProxyFrontend": true,
       "experimentalExtendedTelemetry": false,
       "featuresExportImport": true,
+      "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
       "groupRootRoles": false,
       "maintenanceMode": false,

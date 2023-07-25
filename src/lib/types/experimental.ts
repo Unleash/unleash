@@ -25,7 +25,8 @@ export type IFlagKey =
     | 'disableNotifications'
     | 'advancedPlayground'
     | 'customRootRoles'
-    | 'strategySplittedButton';
+    | 'strategySplittedButton'
+    | 'filterInvalidClientMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -116,6 +117,10 @@ const flags: IFlags = {
     ),
     customRootRoles: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES,
+        false,
+    ),
+    filterInvalidClientMetrics: parseEnvVarBoolean(
+        process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
     ),
 };

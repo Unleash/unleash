@@ -98,11 +98,12 @@ export function updateWeightEdit(
     if (variants.length === 0) {
         return [];
     }
-    const { remainingPercentage, variableVariantCount } = variants.reduce(
+    let { remainingPercentage, variableVariantCount } = variants.reduce(
         ({ remainingPercentage, variableVariantCount }, variant) => {
             if (variant.weight && variant.weightType === weightTypes.FIX) {
                 remainingPercentage -= Number(variant.weight);
-            } else {
+            }
+            if (variant.weightType === weightTypes.VARIABLE) {
                 variableVariantCount += 1;
             }
             return {
@@ -113,14 +114,18 @@ export function updateWeightEdit(
         { remainingPercentage: totalWeight, variableVariantCount: 0 }
     );
 
-    const percentage = parseInt(
-        String(remainingPercentage / variableVariantCount)
-    );
+    const getPercentage = () =>
+        Math.round(remainingPercentage / variableVariantCount);
 
     return variants.map(variant => {
         if (variant.weightType !== weightTypes.FIX) {
+            const percentage = getPercentage(); // round "as we go" - clean best effort approach
+            remainingPercentage -= percentage;
+            variableVariantCount -= 1;
+
             variant.weight = percentage;
         }
+
         return variant;
     });
 }

@@ -32,7 +32,6 @@ let app: IUnleashTest;
 let db: ITestDb;
 const sortOrderFirst = 0;
 const sortOrderSecond = 10;
-const sortOrderDefault = 9999;
 
 const createSegment = async (segmentName: string) => {
     const segment = await app.services.segmentService.create(
@@ -1629,9 +1628,9 @@ test('List of strategies should respect sortOrder', async () => {
         `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
     );
     const strategies = body;
-    expect(strategies[0].sortOrder).toBe(sortOrderFirst);
-    expect(strategies[1].sortOrder).toBe(sortOrderSecond);
-    expect(strategies[2].sortOrder).toBe(sortOrderDefault);
+    expect(strategies[0].sortOrder).toBe(0);
+    expect(strategies[1].sortOrder).toBe(0);
+    expect(strategies[2].sortOrder).toBe(10);
 });
 
 test('Feature strategies list should respect strategy sortorders for each environment', async () => {
@@ -1674,13 +1673,13 @@ test('Feature strategies list should respect strategy sortorders for each enviro
     );
     const { body } = response;
     let { strategies } = body.environments.find((e) => e.name === envName);
-    expect(strategies[0].sortOrder).toBe(sortOrderFirst);
-    expect(strategies[1].sortOrder).toBe(sortOrderSecond);
-    expect(strategies[2].sortOrder).toBe(sortOrderDefault);
+    expect(strategies[0].sortOrder).toBe(0);
+    expect(strategies[1].sortOrder).toBe(0);
+    expect(strategies[2].sortOrder).toBe(10);
     strategies = body.environments.find((e) => e.name === secondEnv).strategies;
-    expect(strategies[0].sortOrder).toBe(sortOrderFirst);
-    expect(strategies[1].sortOrder).toBe(sortOrderSecond);
-    expect(strategies[2].sortOrder).toBe(sortOrderDefault);
+    expect(strategies[0].sortOrder).toBe(0);
+    expect(strategies[1].sortOrder).toBe(0);
+    expect(strategies[2].sortOrder).toBe(10);
 });
 
 test('Deleting last strategy for feature environment should disable that environment', async () => {
@@ -2594,9 +2593,9 @@ test('should change strategy sort order when payload is valid', async () => {
         `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
     );
 
-    expect(strategies[0].sortOrder).toBe(9999);
+    expect(strategies[0].sortOrder).toBe(0);
     expect(strategies[0].id).toBe(strategyOne.id);
-    expect(strategies[1].sortOrder).toBe(9999);
+    expect(strategies[1].sortOrder).toBe(1);
     expect(strategies[1].id).toBe(strategyTwo.id);
 
     await app.request
@@ -2680,9 +2679,9 @@ test('should return strategies in correct order when new strategies are added', 
         `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
     );
 
-    expect(strategies[0].sortOrder).toBe(9999);
+    expect(strategies[0].sortOrder).toBe(0);
     expect(strategies[0].id).toBe(strategyOne.id);
-    expect(strategies[1].sortOrder).toBe(9999);
+    expect(strategies[1].sortOrder).toBe(1);
     expect(strategies[1].id).toBe(strategyTwo.id);
 
     await app.request
@@ -2760,7 +2759,7 @@ test('should return strategies in correct order when new strategies are added', 
     expect(strategiesReOrdered[1].id).toBe(strategyTwo.id);
     expect(strategiesReOrdered[2].sortOrder).toBe(2);
     expect(strategiesReOrdered[2].id).toBe(strategyOne.id);
-    expect(strategiesReOrdered[3].sortOrder).toBe(9999);
+    expect(strategiesReOrdered[3].sortOrder).toBe(3);
     expect(strategiesReOrdered[3].id).toBe(strategyThree.id);
 });
 

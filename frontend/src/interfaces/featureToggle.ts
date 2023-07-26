@@ -52,7 +52,7 @@ export interface IFeatureVariant {
     name: string;
     stickiness: string;
     weight: number;
-    weightType: string;
+    weightType: 'fix' | 'variable';
     overrides?: IOverride[];
     payload?: IPayload;
 }

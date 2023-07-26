@@ -199,7 +199,7 @@ export default class UnleashClient {
         context: Context,
         fallbackVariant?: Variant,
     ): Variant {
-        return this.resolveVariant(name, context, true, fallbackVariant);
+        return this.resolveVariant(name, context, fallbackVariant);
     }
 
     // This function is intended to close an issue in the proxy where feature enabled
@@ -208,16 +208,28 @@ export default class UnleashClient {
     forceGetVariant(
         name: string,
         context: Context,
+        forcedResult: Pick<
+            FeatureStrategiesEvaluationResult,
+            'result' | 'variant'
+        >,
         fallbackVariant?: Variant,
     ): Variant {
-        return this.resolveVariant(name, context, false, fallbackVariant);
+        return this.resolveVariant(
+            name,
+            context,
+            fallbackVariant,
+            forcedResult,
+        );
     }
 
     private resolveVariant(
         name: string,
         context: Context,
-        checkToggle: boolean,
         fallbackVariant?: Variant,
+        forcedResult?: Pick<
+            FeatureStrategiesEvaluationResult,
+            'result' | 'variant'
+        >,
     ): Variant {
         const fallback = fallbackVariant || getDefaultVariant();
         const feature = this.repository.getToggle(name);
@@ -227,18 +239,18 @@ export default class UnleashClient {
         }
 
         let enabled = true;
-        if (checkToggle) {
-            const result = this.isFeatureEnabled(feature, context, () =>
+        const result =
+            forcedResult ??
+            this.isFeatureEnabled(feature, context, () =>
                 fallbackVariant ? fallbackVariant.enabled : false,
             );
-            enabled = result.result === true;
-            const strategyVariant = result.variant;
-            if (enabled && strategyVariant) {
-                return strategyVariant;
-            }
-            if (!enabled) {
-                return fallback;
-            }
+        enabled = result.result === true;
+        const strategyVariant = result.variant;
+        if (enabled && strategyVariant) {
+            return strategyVariant;
+        }
+        if (!enabled) {
+            return fallback;
         }
 
         if (
@@ -261,7 +273,7 @@ export default class UnleashClient {
         return {
             name: variant.name,
             payload: variant.payload,
-            enabled: !checkToggle || enabled,
+            enabled,
         };
     }
 }

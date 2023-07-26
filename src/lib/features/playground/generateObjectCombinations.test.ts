@@ -5,15 +5,16 @@ test('should generate all combinations correctly', () => {
         sessionId: '1,2',
         appName: 'a,b,c',
         channels: 'internet',
+        nonString: 1,
     };
 
     const expectedCombinations = [
-        { sessionId: '1', appName: 'a', channels: 'internet' },
-        { sessionId: '1', appName: 'b', channels: 'internet' },
-        { sessionId: '1', appName: 'c', channels: 'internet' },
-        { sessionId: '2', appName: 'a', channels: 'internet' },
-        { sessionId: '2', appName: 'b', channels: 'internet' },
-        { sessionId: '2', appName: 'c', channels: 'internet' },
+        { sessionId: '1', appName: 'a', channels: 'internet', nonString: 1 },
+        { sessionId: '1', appName: 'b', channels: 'internet', nonString: 1 },
+        { sessionId: '1', appName: 'c', channels: 'internet', nonString: 1 },
+        { sessionId: '2', appName: 'a', channels: 'internet', nonString: 1 },
+        { sessionId: '2', appName: 'b', channels: 'internet', nonString: 1 },
+        { sessionId: '2', appName: 'c', channels: 'internet', nonString: 1 },
     ];
 
     const actualCombinations = generateObjectCombinations(obj);

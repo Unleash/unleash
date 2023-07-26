@@ -1,6 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
+import { colors } from './colors';
 
 const actionColors = {
     0.54: 'rgba(223, 222, 255, 0.54)',
@@ -271,6 +272,7 @@ const theme = {
             // A400: '#A6000E',
             // A700: '#A6000E',
         },
+        variants: colors.variants,
     },
 };
 

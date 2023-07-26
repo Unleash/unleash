@@ -17,7 +17,7 @@ test('should render variants', async () => {
                 name: 'variantName',
                 stickiness: 'default',
                 weight: 1000,
-                weightType: 'variable',
+                weightType: 'variable' as const,
                 payload: {
                     type: 'string',
                     value: 'variantValue',

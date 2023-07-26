@@ -7,7 +7,7 @@ import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvi
 import { v4 as uuidv4 } from 'uuid';
 import { WeightType } from '../../../constants/variantTypes';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { styled, Typography } from '@mui/material';
+import { styled, Typography, useTheme } from '@mui/material';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import SplitPreviewSlider from './SplitPreviewSlider/SplitPreviewSlider';
@@ -26,6 +26,7 @@ export const StrategyVariants: FC<{
     const projectId = useRequiredPathParam('projectId');
     const environment = useRequiredQueryParam('environmentId');
     const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
+    const theme = useTheme();
     const stickiness =
         strategy?.parameters && 'stickiness' in strategy?.parameters
             ? String(strategy.parameters.stickiness)
@@ -89,7 +90,7 @@ export const StrategyVariants: FC<{
                 Variants
             </Typography>
             <StyledVariantForms>
-                {variantsEdit.map(variant => (
+                {variantsEdit.map((variant, i) => (
                     <VariantForm
                         disableOverrides={true}
                         key={variant.id}
@@ -108,6 +109,11 @@ export const StrategyVariants: FC<{
                                 )
                             )
                         }
+                        decorationColor={
+                            theme.palette.variants[
+                                i % theme.palette.variants.length
+                            ]
+                        }
                     />
                 ))}
             </StyledVariantForms>
@@ -120,7 +126,9 @@ export const StrategyVariants: FC<{
             >
                 Add variant
             </PermissionButton>
-            <SplitPreviewSlider value={[50]} />
+            <SplitPreviewSlider
+                values={variantsEdit.map(variant => variant.weight / 10)}
+            />
         </>
     );
 };

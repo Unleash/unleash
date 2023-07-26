@@ -112,6 +112,11 @@ declare module '@mui/material/styles' {
             disabled: string;
             expanded: string;
         };
+
+        /**
+         * Variants, percentage split in strategies
+         **/
+        variants: string[];
     }
 
     interface Theme extends CustomTheme {}

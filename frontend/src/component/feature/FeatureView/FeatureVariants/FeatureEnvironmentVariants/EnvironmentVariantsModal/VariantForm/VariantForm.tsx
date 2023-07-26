@@ -4,6 +4,7 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import SelectMenu from 'component/common/select';
 import { OverrideConfig } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/VariantOverrides';
 import {
+    Box,
     Button,
     FormControlLabel,
     IconButton,
@@ -28,7 +29,19 @@ const StyledVariantForm = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
     marginBottom: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusLarge,
+    overflow: 'hidden',
 }));
+
+const StyledDecoration = styled('div')<{ color?: string }>(
+    ({ theme, color }) => ({
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        height: '100%',
+        background: color || 'transparent',
+        width: theme.spacing(1),
+    })
+);
 
 const StyledDeleteButtonTooltip = styled(Tooltip)(({ theme }) => ({
     position: 'absolute',
@@ -151,6 +164,7 @@ interface IVariantFormProps {
     removeVariant: (variantId: string) => void;
     error?: string;
     disableOverrides?: boolean;
+    decorationColor?: string;
 }
 
 export const VariantForm = ({
@@ -160,6 +174,7 @@ export const VariantForm = ({
     removeVariant,
     error,
     disableOverrides = false,
+    decorationColor,
 }: IVariantFormProps) => {
     const [name, setName] = useState(variant.name);
     const [customPercentage, setCustomPercentage] = useState(
@@ -306,6 +321,7 @@ export const VariantForm = ({
 
     return (
         <StyledVariantForm data-testid="VARIANT">
+            <StyledDecoration color={decorationColor} />
             <StyledDeleteButtonTooltip
                 arrow
                 title={

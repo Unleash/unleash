@@ -257,19 +257,7 @@ const theme = {
             // A400: '#A6000E',
             // A700: '#A6000E',
         },
-        variants: [
-            '#BEBBF3',
-            '#FFC46F',
-            '#B0D182',
-            '#96D2FA',
-            '#F7E3AE',
-            '#7FBAA9',
-            '#D3B9DB',
-            '#FBC5A0',
-            '#DDE7B5',
-            '#9EC4E3',
-            '#F8B6CC',
-        ],
+        variants: colors.variants,
     },
 };
 

@@ -176,7 +176,11 @@ export class PlaygroundService {
                             data: strategyEvaluationResult.strategies,
                         },
                         projectId: featureProject[feature.name],
-                        variant: client.getVariant(feature.name, clientContext),
+                        variant: client.forceGetVariant(
+                            feature.name,
+                            strategyEvaluationResult,
+                            clientContext,
+                        ),
                         name: feature.name,
                         environment,
                         context,

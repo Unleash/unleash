@@ -89,7 +89,7 @@ const metaRules: Rule[] = [
                 },
             },
         },
-        knownExceptions: ['patchSchema'],
+        knownExceptions: [],
     },
     {
         name: 'should have a description',
@@ -100,7 +100,7 @@ const metaRules: Rule[] = [
             },
             required: ['description'],
         },
-        knownExceptions: ['patchSchema'],
+        knownExceptions: [],
     },
 ];
 

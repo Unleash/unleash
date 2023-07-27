@@ -107,7 +107,6 @@ const metaRules: Rule[] = [
         },
         knownExceptions: [
             'patchSchema',
-            'usersSearchSchema',
             'validateEdgeTokensSchema',
             'variantsSchema',
         ],

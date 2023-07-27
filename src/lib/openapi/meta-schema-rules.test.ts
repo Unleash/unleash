@@ -91,7 +91,6 @@ const metaRules: Rule[] = [
         },
         knownExceptions: [
             'patchSchema',
-            'stateSchema',
             'upsertContextFieldSchema',
             'upsertStrategySchema',
             'usersGroupsBaseSchema',

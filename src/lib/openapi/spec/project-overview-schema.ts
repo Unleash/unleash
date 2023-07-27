@@ -26,8 +26,10 @@ export const projectOverviewSchema = {
             description: 'Project statistics',
         },
         version: {
-            type: 'number',
+            type: 'integer',
             example: 1,
+            description:
+                'The schema version used to describe the project overview',
         },
         name: {
             type: 'string',
@@ -106,12 +108,14 @@ export const projectOverviewSchema = {
             format: 'date-time',
             nullable: true,
             example: '2023-02-10T08:36:35.262Z',
+            description: 'When the project was last updated.',
         },
         createdAt: {
             type: 'string',
             format: 'date-time',
             nullable: true,
             example: '2023-02-10T08:36:35.262Z',
+            description: 'When the project was created.',
         },
         favorite: {
             type: 'boolean',

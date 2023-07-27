@@ -93,7 +93,6 @@ const metaRules: Rule[] = [
             'patchSchema',
             'upsertContextFieldSchema', // must be split. Name can't be updated
             'validateEdgeTokensSchema',
-            'projectOverviewSchema',
         ],
     },
     {

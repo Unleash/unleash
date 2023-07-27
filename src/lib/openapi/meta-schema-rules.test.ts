@@ -117,7 +117,6 @@ const metaRules: Rule[] = [
             required: ['description'],
         },
         knownExceptions: [
-            'applicationsSchema',
             'createFeatureSchema',
             'featureStrategySegmentSchema',
             'maintenanceSchema',

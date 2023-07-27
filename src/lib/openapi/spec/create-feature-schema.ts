@@ -3,6 +3,7 @@ import { FromSchema } from 'json-schema-to-ts';
 export const createFeatureSchema = {
     $id: '#/components/schemas/createFeatureSchema',
     type: 'object',
+    description: 'Data used to create a new feature toggle.',
     required: ['name'],
     properties: {
         name: {

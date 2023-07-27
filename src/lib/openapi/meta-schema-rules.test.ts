@@ -90,7 +90,6 @@ const metaRules: Rule[] = [
             },
         },
         knownExceptions: [
-            'maintenanceSchema',
             'toggleMaintenanceSchema',
             'patchSchema',
             'projectSchema',
@@ -116,7 +115,6 @@ const metaRules: Rule[] = [
             required: ['description'],
         },
         knownExceptions: [
-            'maintenanceSchema',
             'toggleMaintenanceSchema',
             'patchSchema',
             'playgroundSegmentSchema',

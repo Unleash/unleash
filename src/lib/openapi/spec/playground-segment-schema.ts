@@ -5,6 +5,7 @@ export const playgroundSegmentSchema = {
     $id: '#/components/schemas/playgroundSegmentSchema',
     type: 'object',
     additionalProperties: false,
+    description: 'The evaluated result of a segment as used by the Playground.',
     required: ['name', 'id', 'constraints', 'result'],
     properties: {
         id: {

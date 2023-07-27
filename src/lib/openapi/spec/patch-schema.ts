@@ -28,6 +28,7 @@ export const patchSchema = {
             description:
                 'The value to add or replace, if performing one of those operations',
             example: 'kill-switch',
+            nullable: true,
         },
     },
     components: {},

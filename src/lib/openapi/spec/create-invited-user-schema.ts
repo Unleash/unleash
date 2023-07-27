@@ -9,7 +9,7 @@ export const createInvitedUserSchema = {
     properties: {
         username: {
             type: 'string',
-            description: "The user's username",
+            description: "The user's username. Must be unique if provided.",
             example: 'Hunter',
         },
         email: {

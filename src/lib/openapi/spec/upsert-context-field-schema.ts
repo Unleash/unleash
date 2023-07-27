@@ -4,9 +4,11 @@ import { legalValueSchema } from './legal-value-schema';
 export const upsertContextFieldSchema = {
     $id: '#/components/schemas/upsertContextFieldSchema',
     type: 'object',
+    description: 'Data to create or update a context field configuration.',
     required: ['name'],
     properties: {
         name: {
+            description: 'The name of the context field.',
             type: 'string',
         },
         description: {

@@ -92,7 +92,6 @@ const metaRules: Rule[] = [
         knownExceptions: [
             'patchSchema',
             'upsertContextFieldSchema', // must be split. Name can't be updated
-            'usersGroupsBaseSchema',
             'validateEdgeTokensSchema',
             'projectOverviewSchema',
         ],
@@ -108,7 +107,6 @@ const metaRules: Rule[] = [
         },
         knownExceptions: [
             'patchSchema',
-            'usersGroupsBaseSchema',
             'usersSearchSchema',
             'validateEdgeTokensSchema',
             'variantsSchema',

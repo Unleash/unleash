@@ -105,11 +105,7 @@ const metaRules: Rule[] = [
             },
             required: ['description'],
         },
-        knownExceptions: [
-            'patchSchema',
-            'validateEdgeTokensSchema',
-            'variantsSchema',
-        ],
+        knownExceptions: ['patchSchema', 'validateEdgeTokensSchema'],
     },
 ];
 

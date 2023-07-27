@@ -42,12 +42,16 @@ export const projectSchema = {
         },
         createdAt: {
             type: 'string',
+            description: 'When this project was created.',
+            example: '2023-07-27T12:12:28Z',
             format: 'date-time',
         },
         updatedAt: {
             type: 'string',
             format: 'date-time',
             nullable: true,
+            description: 'When this project was last updated.',
+            example: '2023-07-28T12:12:28Z',
         },
         favorite: {
             type: 'boolean',

@@ -112,7 +112,6 @@ const metaRules: Rule[] = [
         },
         knownExceptions: [
             'patchSchema',
-            'playgroundStrategySchema',
             'resetPasswordSchema',
             'sortOrderSchema',
             'upsertContextFieldSchema',

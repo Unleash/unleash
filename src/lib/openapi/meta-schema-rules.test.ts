@@ -91,7 +91,6 @@ const metaRules: Rule[] = [
         },
         knownExceptions: [
             'patchSchema',
-            'projectSchema',
             'projectsSchema',
             'pushVariantsSchema',
             'resetPasswordSchema',

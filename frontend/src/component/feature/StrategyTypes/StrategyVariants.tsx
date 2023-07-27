@@ -7,10 +7,11 @@ import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvi
 import { v4 as uuidv4 } from 'uuid';
 import { WeightType } from '../../../constants/variantTypes';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { styled, Typography, useTheme } from '@mui/material';
+import { styled, Typography, useTheme, Link } from '@mui/material';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import SplitPreviewSlider from './SplitPreviewSlider/SplitPreviewSlider';
+import { HelpIcon } from '../../common/HelpIcon/HelpIcon';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
@@ -86,8 +87,32 @@ export const StrategyVariants: FC<{
 
     return (
         <>
-            <Typography component="h3" sx={{ m: 0 }} variant="h3">
+            <Typography
+                component="h3"
+                sx={{ m: 0, display: 'flex', gap: '1ch' }}
+                variant="h3"
+            >
                 Variants
+                <HelpIcon
+                    htmlTooltip={true}
+                    tooltip={
+                        <>
+                            <span>
+                                Variants allow to attach one or more values to
+                                this strategy. Variants at the strategy level
+                                override variants at the feature level. Make
+                                sure to use recent SDK that supports strategy
+                                variants.{' '}
+                            </span>
+                            <Link
+                                target="_blank"
+                                href="https://docs.getunleash.io/reference/feature-strategy-variants"
+                            >
+                                Learn more
+                            </Link>
+                        </>
+                    }
+                />
             </Typography>
             <StyledVariantForms>
                 {variantsEdit.map((variant, i) => (

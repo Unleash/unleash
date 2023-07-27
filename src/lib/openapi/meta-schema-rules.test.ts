@@ -121,7 +121,6 @@ const metaRules: Rule[] = [
             'applicationSchema',
             'applicationsSchema',
             'createFeatureSchema',
-            'dateSchema',
             'featureStrategySegmentSchema',
             'maintenanceSchema',
             'toggleMaintenanceSchema',

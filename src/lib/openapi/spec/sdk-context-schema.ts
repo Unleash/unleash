@@ -28,6 +28,7 @@ export const sdkContextSchema = {
         properties: {
             type: 'object',
             additionalProperties: { type: 'string' },
+            description: 'Additional Unleash context properties',
             example: {
                 customContextField: 'this is one!',
                 otherCustomField: '3',

@@ -69,6 +69,12 @@ export const groupSchema = {
             },
             example: ['default', 'my-project'],
         },
+        userCount: {
+            description: 'The number of users that belong to this group',
+            example: 1,
+            type: 'integer',
+            minimum: 0,
+        },
     },
     components: {
         schemas: {

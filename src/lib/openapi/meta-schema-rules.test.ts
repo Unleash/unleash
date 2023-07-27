@@ -91,7 +91,6 @@ const metaRules: Rule[] = [
         },
         knownExceptions: [
             'patchSchema',
-            'resetPasswordSchema',
             'sdkContextSchema',
             'stateSchema',
             'upsertContextFieldSchema',
@@ -112,7 +111,6 @@ const metaRules: Rule[] = [
         },
         knownExceptions: [
             'patchSchema',
-            'resetPasswordSchema',
             'sortOrderSchema',
             'upsertContextFieldSchema',
             'upsertStrategySchema',

@@ -22,7 +22,6 @@ import {
     ContextFieldSchema,
 } from '../../openapi/spec/context-field-schema';
 import { ContextFieldsSchema } from '../../openapi/spec/context-fields-schema';
-import { UpsertContextFieldSchema } from '../../openapi/spec/upsert-context-field-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     createResponseSchema,
@@ -39,6 +38,8 @@ import {
     ContextFieldStrategiesSchema,
     contextFieldStrategiesSchema,
 } from '../../openapi/spec/context-field-strategies-schema';
+import { UpdateContextFieldSchema } from 'lib/openapi/spec/update-context-field-schema';
+import { CreateContextFieldSchema } from 'lib/openapi/spec/create-context-field-schema';
 
 interface ContextParam {
     contextField: string;
@@ -136,7 +137,7 @@ export class ContextController extends Controller {
                     description:
                         'Endpoint that allows creation of [custom context fields](https://docs.getunleash.io/reference/unleash-context#custom-context-fields)',
                     requestBody: createRequestSchema(
-                        'upsertContextFieldSchema',
+                        'createContextFieldSchema',
                     ),
                     responses: {
                         201: resourceCreatedResponseSchema(
@@ -159,7 +160,7 @@ export class ContextController extends Controller {
                     description: `Endpoint that allows updating a custom context field. Used to toggle stickiness and add/remove legal values for this context field`,
                     operationId: 'updateContextField',
                     requestBody: createRequestSchema(
-                        'upsertContextFieldSchema',
+                        'updateContextFieldSchema',
                     ),
                     responses: {
                         200: emptyResponse,
@@ -239,7 +240,7 @@ export class ContextController extends Controller {
     }
 
     async createContextField(
-        req: IAuthRequest<void, void, UpsertContextFieldSchema>,
+        req: IAuthRequest<void, void, CreateContextFieldSchema>,
         res: Response<ContextFieldSchema>,
     ): Promise<void> {
         const value = req.body;
@@ -260,16 +261,17 @@ export class ContextController extends Controller {
     }
 
     async updateContextField(
-        req: IAuthRequest<ContextParam, void, UpsertContextFieldSchema>,
+        req: IAuthRequest<ContextParam, void, UpdateContextFieldSchema>,
         res: Response,
     ): Promise<void> {
         const name = req.params.contextField;
         const userName = extractUsername(req);
         const contextField = req.body;
 
-        contextField.name = name;
-
-        await this.contextService.updateContextField(contextField, userName);
+        await this.contextService.updateContextField(
+            { ...contextField, name },
+            userName,
+        );
         res.status(200).end();
     }
 

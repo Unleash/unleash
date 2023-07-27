@@ -90,7 +90,6 @@ const metaRules: Rule[] = [
             },
         },
         knownExceptions: [
-            'featureStrategySegmentSchema',
             'maintenanceSchema',
             'toggleMaintenanceSchema',
             'patchSchema',
@@ -117,7 +116,6 @@ const metaRules: Rule[] = [
             required: ['description'],
         },
         knownExceptions: [
-            'featureStrategySegmentSchema',
             'maintenanceSchema',
             'toggleMaintenanceSchema',
             'patchSchema',

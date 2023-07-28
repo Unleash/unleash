@@ -168,8 +168,8 @@
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
     "@babel/core": "7.22.9",
-    "@swc/core": "1.3.69",
-    "@swc/jest": "0.2.26",
+    "@swc/core": "1.3.70",
+    "@swc/jest": "0.2.27",
     "@types/bcryptjs": "2.4.2",
     "@types/cors": "2.8.13",
     "@types/express": "4.17.17",

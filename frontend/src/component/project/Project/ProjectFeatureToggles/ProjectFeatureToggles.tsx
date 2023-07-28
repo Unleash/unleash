@@ -448,6 +448,7 @@ export const ProjectFeatureToggles = ({
             initialState,
             sortTypes,
             autoResetHiddenColumns: false,
+            autoResetSelectedRows: false,
             disableSortRemove: true,
             autoResetSortBy: false,
             getRowId,

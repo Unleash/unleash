@@ -90,7 +90,6 @@ const metaRules: Rule[] = [
             },
         },
         knownExceptions: [
-            'createInvitedUserSchema',
             'featureStrategySegmentSchema',
             'maintenanceSchema',
             'toggleMaintenanceSchema',
@@ -118,12 +117,6 @@ const metaRules: Rule[] = [
             required: ['description'],
         },
         knownExceptions: [
-            'adminFeaturesQuerySchema',
-            'applicationSchema',
-            'applicationsSchema',
-            'createFeatureSchema',
-            'createInvitedUserSchema',
-            'dateSchema',
             'featureStrategySegmentSchema',
             'maintenanceSchema',
             'toggleMaintenanceSchema',

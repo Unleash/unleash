@@ -68,7 +68,7 @@
     "classnames": "2.3.2",
     "copy-to-clipboard": "3.3.3",
     "countries-and-timezones": "^3.4.0",
-    "cypress": "12.17.1",
+    "cypress": "12.17.2",
     "cypress-vite": "^1.4.0",
     "date-fns": "2.30.0",
     "date-fns-tz": "^2.0.0",

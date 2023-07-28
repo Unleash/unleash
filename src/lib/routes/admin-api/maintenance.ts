@@ -16,6 +16,7 @@ import {
     maintenanceSchema,
 } from '../../openapi/spec/maintenance-schema';
 import MaintenanceService from 'lib/services/maintenance-service';
+import { ToggleMaintenanceSchema } from 'lib/openapi/spec/toggle-maintenance-schema';
 
 export default class MaintenanceController extends Controller {
     private maintenanceService: MaintenanceService;
@@ -77,8 +78,8 @@ export default class MaintenanceController extends Controller {
     }
 
     async toggleMaintenance(
-        req: IAuthRequest<unknown, unknown, MaintenanceSchema>,
-        res: Response,
+        req: IAuthRequest<unknown, unknown, ToggleMaintenanceSchema>,
+        res: Response<MaintenanceSchema>,
     ): Promise<void> {
         await this.maintenanceService.toggleMaintenanceMode(
             req.body,

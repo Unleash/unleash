@@ -6,9 +6,9 @@ exports[`sortOrderSchema invalid value type 1`] = `
     {
       "instancePath": "/a",
       "keyword": "type",
-      "message": "must be number",
+      "message": "must be integer",
       "params": {
-        "type": "number",
+        "type": "integer",
       },
       "schemaPath": "#/additionalProperties/type",
     },

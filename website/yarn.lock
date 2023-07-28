@@ -14571,10 +14571,10 @@ trim-lines@^3.0.0:
   resolved "https://registry.yarnpkg.com/trim-lines/-/trim-lines-3.0.1.tgz#d802e332a07df861c48802c04321017b1bd87338"
   integrity sha512-kRj8B+YHZCc9kQYdWfJB2/oUl9rA99qbowYYBtr4ui4mZyAQ2JpvVBd/6U2YloATfqBhBTSMhTpgBHtU0Mf3Rg==
 
-trim-newlines@^1.0.0, trim-newlines@^4.0.0:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/trim-newlines/-/trim-newlines-4.1.1.tgz#28c88deb50ed10c7ba6dc2474421904a00139125"
-  integrity sha512-jRKj0n0jXWo6kh62nA5TEh3+4igKDXLvzBJcPpiizP7oOolUrYIxmVBG9TOtHYFHoddUk6YvAkGeGoSVTXfQXQ==
+trim-newlines@^1.0.0, trim-newlines@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/trim-newlines/-/trim-newlines-5.0.0.tgz#fbe350dc9d5fe15e80793b86c09bc7436a3da383"
+  integrity sha512-kstfs+hgwmdsOadN3KgA+C68wPJwnZq4DN6WMDCvZapDWEF34W2TyPKN2v2+BJnZgIz5QOfxFeldLyYvdgRAwg==
 
 trim-trailing-lines@^1.0.0:
   version "1.1.4"

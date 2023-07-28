@@ -8203,9 +8203,9 @@ react-is@^17.0.1, react-is@^17.0.2:
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
 react-joyride@^2.5.3:
-  version "2.5.4"
-  resolved "https://registry.yarnpkg.com/react-joyride/-/react-joyride-2.5.4.tgz#e428fe322acf867624179cb3561ad128648495bd"
-  integrity sha512-CLV1Ju79iRKIP/KqsEX05nSxMBzT41BhPAyNrTdBQWEYAkpyo6iiCPelk6No2W8iPgw373JKk2cK7AQ5Q3lFew==
+  version "2.5.5"
+  resolved "https://registry.yarnpkg.com/react-joyride/-/react-joyride-2.5.5.tgz#a12024902347bea0a565ad2e69b291e35c6a274b"
+  integrity sha512-/esW9IcsuQJr4NcRZJUH8UYYTvB/yzVC0IyElopbjMFYPw3aylSny91QO3mQRRKPQJUqYa6wREOtQpsaLbu9fw==
   dependencies:
     deepmerge "^4.3.1"
     exenv "^1.2.2"
@@ -8214,7 +8214,7 @@ react-joyride@^2.5.3:
     react-floater "^0.7.6"
     react-is "^16.13.1"
     scroll "^3.0.1"
-    scrollparent "^2.0.1"
+    scrollparent "^2.1.0"
     tree-changes "^0.9.2"
 
 react-linkify@^1.0.0-alpha:
@@ -8641,10 +8641,10 @@ scroll@^3.0.1:
   resolved "https://registry.yarnpkg.com/scroll/-/scroll-3.0.1.tgz#d5afb59fb3592ee3df31c89743e78b39e4cd8a26"
   integrity sha512-pz7y517OVls1maEzlirKO5nPYle9AXsFzTMNJrRGmT951mzpIBy7sNHOg5o/0MQd/NqliCiWnAi0kZneMPFLcg==
 
-scrollparent@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/scrollparent/-/scrollparent-2.0.1.tgz#715d5b9cc57760fb22bdccc3befb5bfe06b1a317"
-  integrity sha512-HSdN78VMvFCSGCkh0oYX/tY4R3P1DW61f8+TeZZ4j2VLgfwvw0bpRSOv4PCVKisktIwbzHCfZsx+rLbbDBqIBA==
+scrollparent@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/scrollparent/-/scrollparent-2.1.0.tgz#6cae915c953835886a6ba0d77fdc2bb1ed09076d"
+  integrity sha512-bnnvJL28/Rtz/kz2+4wpBjHzWoEzXhVg/TE8BeVGJHUqE8THNIRnDxDWMktwM+qahvlRdvlLdsQfYe+cuqfZeA==
 
 semver@7.5.4, semver@^5.7.1, semver@^6.1.1, semver@^6.1.2, semver@^6.3.0, semver@^6.3.1, semver@^7.3.7, semver@^7.5.3:
   version "7.5.4"

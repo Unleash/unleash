@@ -89,10 +89,7 @@ const metaRules: Rule[] = [
                 },
             },
         },
-        knownExceptions: [
-            'patchSchema',
-            'upsertContextFieldSchema', // must be split. Name can't be updated
-        ],
+        knownExceptions: [],
     },
     {
         name: 'should have a description',
@@ -103,7 +100,7 @@ const metaRules: Rule[] = [
             },
             required: ['description'],
         },
-        knownExceptions: ['patchSchema'],
+        knownExceptions: [],
     },
 ];
 

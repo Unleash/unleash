@@ -179,7 +179,16 @@ async function createApp(
         server: {
             unleashUrl: 'http://localhost:4242',
         },
-        ...customOptions,
+        ...{
+            ...customOptions,
+            experimental: {
+                ...(customOptions?.experimental ?? {}),
+                flags: {
+                    strictSchemaValidation: true,
+                    ...(customOptions?.experimental?.flags ?? {}),
+                },
+            },
+        },
     });
     const services = createServices(stores, config, db);
     const unleashSession = sessionDb(config, undefined);

@@ -53,7 +53,7 @@ jobs:
           yarn --cwd ./frontend install
           yarn build:frontend
       - name: Build tag and push image to Docker hub
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           platforms: linux/amd64,linux/arm64

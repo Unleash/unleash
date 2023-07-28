@@ -25,6 +25,7 @@ export const userSchema = {
             description: 'Name of the user',
             type: 'string',
             example: 'User',
+            nullable: true,
         },
         email: {
             description: 'Email of the user',

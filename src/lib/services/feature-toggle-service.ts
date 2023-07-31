@@ -950,8 +950,6 @@ class FeatureToggleService {
                 strategies,
                 variants,
                 description,
-                createdAt,
-                lastSeenAt,
                 impressionData,
             }) => ({
                 name,
@@ -962,8 +960,6 @@ class FeatureToggleService {
                 strategies,
                 variants,
                 description,
-                createdAt,
-                lastSeenAt,
                 impressionData,
             }),
         );

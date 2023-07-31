@@ -7,11 +7,12 @@ import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvi
 import { v4 as uuidv4 } from 'uuid';
 import { WeightType } from '../../../constants/variantTypes';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { styled, Typography, useTheme, Link } from '@mui/material';
+import { Link, styled, Typography, useTheme } from '@mui/material';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import SplitPreviewSlider from './SplitPreviewSlider/SplitPreviewSlider';
 import { HelpIcon } from '../../common/HelpIcon/HelpIcon';
+import { StrategyVariantsUpgradeAlert } from '../../common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
@@ -100,9 +101,7 @@ export const StrategyVariants: FC<{
                             <span>
                                 Variants allow to attach one or more values to
                                 this strategy. Variants at the strategy level
-                                override variants at the feature level. Make
-                                sure to use recent SDK that supports strategy
-                                variants.{' '}
+                                override variants at the feature level.
                             </span>
                             <Link
                                 target="_blank"
@@ -115,6 +114,7 @@ export const StrategyVariants: FC<{
                 />
             </Typography>
             <StyledVariantForms>
+                <StrategyVariantsUpgradeAlert />
                 {variantsEdit.map((variant, i) => (
                     <VariantForm
                         disableOverrides={true}

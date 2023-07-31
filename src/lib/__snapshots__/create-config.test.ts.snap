@@ -69,7 +69,6 @@ exports[`should create default config 1`] = `
     "flags": {
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
-      "cleanClientApi": false,
       "configurableFeatureTypeLifetimes": false,
       "customRootRoles": false,
       "demo": false,
@@ -104,7 +103,6 @@ exports[`should create default config 1`] = `
     "experiments": {
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
-      "cleanClientApi": false,
       "configurableFeatureTypeLifetimes": false,
       "customRootRoles": false,
       "demo": false,

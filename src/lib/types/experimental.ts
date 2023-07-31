@@ -14,7 +14,6 @@ export type IFlagKey =
     | 'strictSchemaValidation'
     | 'proPlanAutoCharge'
     | 'personalAccessTokensKillSwitch'
-    | 'cleanClientApi'
     | 'migrationLock'
     | 'demo'
     | 'googleAuthEnabled'
@@ -81,7 +80,6 @@ const flags: IFlags = {
         process.env.UNLEASH_PAT_KILL_SWITCH,
         false,
     ),
-    cleanClientApi: parseEnvVarBoolean(process.env.CLEAN_CLIENT_API, false),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
     googleAuthEnabled: parseEnvVarBoolean(

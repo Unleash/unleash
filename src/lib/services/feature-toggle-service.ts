@@ -940,37 +940,29 @@ class FeatureToggleService {
         const result = await this.featureToggleClientStore.getClient(
             query || {},
         );
-        if (this.flagResolver.isEnabled('cleanClientApi')) {
-            return result.map(
-                ({
-                    name,
-                    type,
-                    enabled,
-                    project,
-                    stale,
-                    strategies,
-                    variants,
-                    description,
-                    createdAt,
-                    lastSeenAt,
-                    impressionData,
-                }) => ({
-                    name,
-                    type,
-                    enabled,
-                    project,
-                    stale,
-                    strategies,
-                    variants,
-                    description,
-                    createdAt,
-                    lastSeenAt,
-                    impressionData,
-                }),
-            );
-        } else {
-            return result;
-        }
+        return result.map(
+            ({
+                name,
+                type,
+                enabled,
+                project,
+                stale,
+                strategies,
+                variants,
+                description,
+                impressionData,
+            }) => ({
+                name,
+                type,
+                enabled,
+                project,
+                stale,
+                strategies,
+                variants,
+                description,
+                impressionData,
+            }),
+        );
     }
 
     async getPlaygroundFeatures(

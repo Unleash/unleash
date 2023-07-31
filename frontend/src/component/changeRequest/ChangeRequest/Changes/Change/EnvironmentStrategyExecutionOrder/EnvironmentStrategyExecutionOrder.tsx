@@ -25,16 +25,15 @@ const StyledStrategyExecutionWrapper = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(2),
     lineHeight: theme.spacing(3),
-    gap: theme.spacing(1),
+    gap: theme.spacing(2.5),
+    marginBottom: theme.spacing(1),
 }));
 
-const StyledStrategyContainer = styled('div')(({ theme }) => ({
+const StyledStrategyContainer = styled('div')({
     flexDirection: 'row',
-    marginBottom: theme.spacing(2),
-}));
+    width: '100%',
+});
 
 interface IEnvironmentStrategyExecutionOrderProps {
     feature: string;

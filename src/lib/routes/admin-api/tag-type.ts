@@ -18,11 +18,11 @@ import {
     resourceCreatedResponseSchema,
 } from '../../openapi/util/create-response-schema';
 import { TagTypesSchema } from '../../openapi/spec/tag-types-schema';
-import { ValidateTagTypeSchema } from '../../openapi/spec/validate-tag-type-schema';
 import {
-    tagTypeSchema,
-    TagTypeSchema,
-} from '../../openapi/spec/tag-type-schema';
+    validateTagTypeSchema,
+    ValidateTagTypeSchema,
+} from '../../openapi/spec/validate-tag-type-schema';
+import { TagTypeSchema } from '../../openapi/spec/tag-type-schema';
 import { UpdateTagTypeSchema } from '../../openapi/spec/update-tag-type-schema';
 import { OpenApiService } from '../../services/openapi-service';
 import {
@@ -180,10 +180,16 @@ class TagTypeController extends Controller {
         res: Response<ValidateTagTypeSchema>,
     ): Promise<void> {
         await this.tagTypeService.validate(req.body);
-        this.openApiService.respondWithValidation(200, res, tagTypeSchema.$id, {
-            valid: true,
-            tagType: req.body,
-        });
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            validateTagTypeSchema.$id,
+            {
+                valid: true,
+                tagType: req.body,
+            },
+        );
     }
 
     async createTagType(

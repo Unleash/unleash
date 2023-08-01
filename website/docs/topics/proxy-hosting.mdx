@@ -4,7 +4,7 @@ title: Edge & Proxy hosting strategies
 
 import VideoContent from '@site/src/components/VideoContent.jsx'
 
-Because [Unleash Edge](../generated/unleash-edge.md) (or alternatively [Unleash Proxy](../generated/unleash-proxy.md)) is a separate piece of the Unleash architecture and because it should sit close to your application, there are numerous ways of hosting it. Another important distinction is whether you're hosting Unleash yourself or you have a managed solution.
+Because [Unleash Edge](../generated/unleash-edge.md) (or alternatively [Unleash Proxy](../generated/unleash-proxy.md)) is a separate piece of the Unleash architecture and because it should sit close to your application, there are numerous ways of hosting it. Another important distinction is whether you're hosting Unleash yourself or have a managed solution.
 
 This document describes the main ways of hosting Edge or the proxy alongside the Unleash API and the tradeoffs between self-hosting these compared to using the Frontend API that Unleash hosts for you.
 
@@ -89,7 +89,7 @@ You'll need to configure Edge and the SDKs.
 
 ### On Edge
 
-Edge will fetch feature toggles from the specified upstream Unleash instance in context to the client API keys it has been made aware of, either during bootstrapping (recommended) or separate endpoint requests. It will then periodically refresh tokens with upstream.
+Edge will fetch feature toggles from the specified upstream Unleash instance for every client API key it has been made aware of, either during bootstrapping (recommended) or separate endpoint requests. It will then periodically sync features with upstream.
 
 It will then accept frontend / backend tokens from application SDKs. 
 
@@ -132,7 +132,7 @@ You host everything yourself. Everything runs where and how you configure it to.
 
 As you might expect, doing everything yourself _is_ going to give you the most flexibility, but it's also going to be the most work. If you're already hosting Unleash yourself, though, this shouldn't be any more difficult than the previous section.
 
-As described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted), running the Edge yourself gives you a number of benefits.  
+As described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted), running Edge yourself gives you a number of benefits.  
   
 
 ## Multi-region
@@ -148,7 +148,7 @@ You can also use Edge for a multi-region setup. You can run Edge in a different 
 :::info Recommendation
 
 This approach is no longer recommended. You should use [Unleash Edge](../reference/unleash-edge) instead of the Unleash proxy. 
-If you are an existing Proxy user, see our [Edge migration guide](https://github.com/Unleash/unleash-edge/blob/main/migration-guide.md) for a guide on how to migrate
+If you are an existing Proxy user, see our [Edge migration guide](https://github.com/Unleash/unleash-edge/blob/main/migration-guide.md) for a guide on how to migrate.
 :::
 
 :::info Availability

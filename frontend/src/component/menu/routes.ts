@@ -479,6 +479,13 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         group: 'users'
     },
     {
+        path: '/admin/api',
+        title: 'API access',
+        flag: 'frontendNavigationUpdate',
+        menu: { adminSettings: true },
+        group: 'access'
+    },
+    {
         path: '/admin/cors',
         title: 'CORS origins',
         flag: 'embedProxyFrontend',
@@ -495,7 +502,7 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         path: '/admin/instance',
         title: 'Instance stats',
         menu: { adminSettings: true },
-        group: 'access'
+        group: 'instance'
     },
     {
         path: '/admin/network/*',

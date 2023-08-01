@@ -99,6 +99,7 @@ export default class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'addDefaultStrategyToProjectEnvironment',
+                    summary: 'Set environment-default strategy',
                     description:
                         'Adds a default strategy for this environment. Unleash will use this strategy by default when enabling a toggle. Use the wild card "*" for `:environment` to add to all environments. ',
                     requestBody: createRequestSchema(

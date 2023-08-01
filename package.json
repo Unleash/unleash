@@ -162,13 +162,13 @@
     "stoppable": "^1.1.0",
     "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
-    "unleash-client": "4.1.0-beta.5",
+    "unleash-client": "4.1.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
     "@babel/core": "7.22.9",
-    "@swc/core": "1.3.70",
+    "@swc/core": "1.3.71",
     "@swc/jest": "0.2.27",
     "@types/bcryptjs": "2.4.2",
     "@types/cors": "2.8.13",

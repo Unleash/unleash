@@ -199,26 +199,24 @@ test('all API operations have summaries and descriptions', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-    const anomalies = Object.entries(spec.paths)
-        .flatMap(([path, data]) => {
-            return Object.entries(data)
-                .map(([verb, operationDescription]) => {
-                    if (
-                        'summary' in operationDescription &&
-                        'description' in operationDescription
-                    ) {
-                        return undefined;
-                    } else {
-                        return [verb, operationDescription.operationId];
-                    }
-                })
-                .filter(Boolean)
-                .map(
-                    ([verb, operationId]) =>
-                        `${verb.toUpperCase()} ${path} (operation ID: ${operationId})`,
-                );
-        })
-        .filter(Boolean);
+    const anomalies = Object.entries(spec.paths).flatMap(([path, data]) => {
+        return Object.entries(data)
+            .map(([verb, operationDescription]) => {
+                if (
+                    'summary' in operationDescription &&
+                    'description' in operationDescription
+                ) {
+                    return undefined;
+                } else {
+                    return [verb, operationDescription.operationId];
+                }
+            })
+            .filter(Boolean)
+            .map(
+                ([verb, operationId]) =>
+                    `${verb.toUpperCase()} ${path} (operation ID: ${operationId})`,
+            );
+    });
 
     // any items left in the anomalies list is missing either a summary, or a
     // description, or both.

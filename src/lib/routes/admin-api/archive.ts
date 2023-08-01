@@ -42,6 +42,9 @@ export default class ArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Archive'],
+                    summary: 'Get archived features',
+                    description:
+                        'Retrieve a list of all [archived feature toggles](https://docs.getunleash.io/reference/archived-toggles).',
                     operationId: 'getArchivedFeatures',
                     responses: {
                         200: createResponseSchema('featuresSchema'),
@@ -62,6 +65,9 @@ export default class ArchiveController extends Controller {
                 openApiService.validPath({
                     tags: ['Archive'],
                     operationId: 'getArchivedFeaturesByProjectId',
+                    summary: 'Get archived features in project',
+                    description:
+                        'Retrieves a list of archived features that belong to the provided project.',
                     responses: {
                         200: createResponseSchema('featuresSchema'),
                         ...getStandardResponses(401, 403),

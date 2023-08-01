@@ -18,10 +18,11 @@ export default class ConfigurationRevisionService extends EventEmitter {
         super();
         this.logger = getLogger('configuration-revision-service.ts');
         this.eventStore = eventStore;
+        this.revisionId = 0;
     }
 
     async getMaxRevisionId(): Promise<number> {
-        if (this.revisionId) {
+        if (this.revisionId > 0) {
             return this.revisionId;
         } else {
             return this.updateMaxRevisionId();

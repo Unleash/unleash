@@ -162,7 +162,7 @@ class EventStore implements IEventStore {
             )
             .andWhere('id', '>=', largerThan)
             .first();
-        return row ? row.max : -1;
+        return row?.max ?? 0;
     }
 
     async delete(key: number): Promise<void> {

@@ -327,6 +327,9 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     summary: 'Set the order of strategies on the list',
                     operationId: 'setStrategySortOrder',
+                    summary: 'Set strategy sort order',
+                    description:
+                        'Set the sort order of the provided list of strategies.',
                     requestBody: createRequestSchema(
                         'setStrategySortOrderSchema',
                     ),

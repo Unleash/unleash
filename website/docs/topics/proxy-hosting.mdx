@@ -4,13 +4,13 @@ title: Edge & Proxy hosting strategies
 
 import VideoContent from '@site/src/components/VideoContent.jsx'
 
-Because [Unleash Edge](../generated/unleash-edge.md) (or alternatively [Unleash Proxy](../generated/unleash-proxy.md)) is a separate piece of the Unleash architecture and because it should sit close to your application, there are numerous ways of hosting it. Another important distinction is whether you're hosting Unleash yourself or have a managed solution.
+This document describes the main ways of hosting [Unleash Edge](../generated/unleash-edge.md) (or alternatively [Unleash Proxy](../generated/unleash-proxy.md)) alongside the Unleash API and the tradeoffs between self-hosting compared to using the Frontend API that Unleash hosts for you.
+Whether you're hosting Unleash yourself or have a managed solution will be a key consideration.
 
-This document describes the main ways of hosting Edge or the proxy alongside the Unleash API and the tradeoffs between self-hosting these compared to using the Frontend API that Unleash hosts for you.
 
 :::info Warning
 
-Edge is the next-gen replacement of the Unleash proxy and is recommended to be used over the proxy in all cases.
+Edge is the next-gen replacement of the Unleash proxy and is recommended to be used over the proxy in most cases, with the exception of the scenario where custom strategies are being used as Edge does not support these.
 :::
 
 <VideoContent videoUrls={["https://www.youtube.com/embed/6uIdF-yByWs"]}>
@@ -19,11 +19,11 @@ In addition to the written reference below, the following video provides for det
 
 </VideoContent>
 
-## Unleash-hosted Frontend API vs self-hosted Edge/proxy {#unleash-hosted-or-self-hosted}
+## Unleash-hosted Frontend API vs self-hosted Edge/Proxy {#unleash-hosted-or-self-hosted}
 
 Which way is right for you will depend on your setup and your needs.
 
-In general, we recommend that you host Edge yourself, but we do recognize that self-hosting requires some extra work on your part and that not all our customers need it.
+In general, we recommend you use Edge over the Frontend API, but we do recognize that self-hosting requires some extra work on your part and that not all our customers need it.
 
 If you want Unleash to host the Frontend API for you, you should be aware of the following limitations:
 
@@ -33,7 +33,7 @@ If you want Unleash to host the Frontend API for you, you should be aware of the
 -   There's no guarantee that it'll be close to your applications. This means you'll get higher response times.
 -   When we host the frontend API, we will also receive whatever end user data you put in the [Unleash context](../reference/unleash-context.md). This may or may not be an issue depending on your business requirements.
 
-Hosting Edge yourself requires a little more setup on your part than the Unleash-hosted frontend API does, but it offers a number of benefits:
+Hosting Edge requires a little more setup the Unleash-hosted frontend API does, but it offers a number of benefits over both the frontend API and Proxy:
 
 -   You can scale Edge instances horizontally and automatically.
 -   There's no request cap or extra charges.
@@ -89,7 +89,7 @@ You'll need to configure Edge and the SDKs.
 
 ### On Edge
 
-Edge will fetch feature toggles from the specified upstream Unleash instance for every client API key it has been made aware of, either during bootstrapping (recommended) or separate endpoint requests. It will then periodically sync features with upstream.
+Edge will fetch feature toggles from the specified upstream Unleash instance for every client API key it has been made aware of, either during startup (recommended) or separate endpoint requests. It will then periodically sync features with upstream.
 
 It will then accept frontend / backend tokens from application SDKs. 
 
@@ -100,7 +100,7 @@ Frontend API: Frontend facing apps only, Edge returns app specific context
 Client API: For backend SDKs, Edge returns entire toggle payload for scope of token (project/environment)
 
 :::
-**Bootstrap Edge & populate toggle cache**
+**Start Edge & populate toggle cache**
 - This initial command will populate toggle cache on startup using the client token specified in the environment variable:
 
 ```docker run -p 3063:3063 -e TOKENS='CLIENT_API_TOKEN' -e UPSTREAM_URL='UPSTREAM_URL' unleashorg/unleash-edge:v8.1 edge```
@@ -149,6 +149,7 @@ You can also use Edge for a multi-region setup. You can run Edge in a different 
 
 This approach is no longer recommended. You should use [Unleash Edge](../reference/unleash-edge) instead of the Unleash proxy. 
 If you are an existing Proxy user, see our [Edge migration guide](https://github.com/Unleash/unleash-edge/blob/main/migration-guide.md) for a guide on how to migrate.
+Please take note of the section covering features Edge does not currently support in the same linked document before planning a migration.
 :::
 
 :::info Availability

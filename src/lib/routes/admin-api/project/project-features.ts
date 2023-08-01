@@ -325,7 +325,6 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
-                    summary: 'Set the order of strategies on the list',
                     operationId: 'setStrategySortOrder',
                     summary: 'Set strategy sort order',
                     description:

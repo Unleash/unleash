@@ -59,8 +59,9 @@ class ClientMetricsController extends Controller {
                 openApiService.validPath({
                     operationId: 'getRawFeatureMetrics',
                     tags: ['Metrics'],
-                    summary:
-                        'Feature usage metrics for the last 48 hours, grouped by hour',
+                    summary: 'Get feature metrics',
+                    description:
+                        'Get usage metrics for a specific feature for the last 48 hours, grouped by hour',
                     responses: {
                         200: createResponseSchema('featureMetricsSchema'),
                         ...getStandardResponses(401, 403, 404),

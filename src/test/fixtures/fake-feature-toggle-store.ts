@@ -179,15 +179,16 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
             {},
         );
 
-        for (const env in Object.keys(envArrays)) {
+        for (const env of Object.keys(envArrays)) {
             const toggleNames = envArrays[env];
-
-            toggleNames.forEach((t) => {
-                const toUpdate = this.features.find((f) => f.name === t);
-                if (toUpdate) {
-                    toUpdate.lastSeenAt = new Date();
-                }
-            });
+            if (toggleNames && Array.isArray(toggleNames)) {
+                toggleNames.forEach((t) => {
+                    const toUpdate = this.features.find((f) => f.name === t);
+                    if (toUpdate) {
+                        toUpdate.lastSeenAt = new Date();
+                    }
+                });
+            }
         }
     }
 

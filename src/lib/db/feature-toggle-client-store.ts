@@ -75,8 +75,8 @@ export default class FeatureToggleClientStore
             'features.project as project',
             'features.stale as stale',
             'features.impression_data as impression_data',
-            'fe.variants as variants',
             'features.created_at as created_at',
+            'fe.variants as variants',
             'fe.last_seen_at as last_seen_at',
             'fe.enabled as enabled',
             'fe.environment as environment',
@@ -109,6 +109,7 @@ export default class FeatureToggleClientStore
                         'enabled',
                         'environment',
                         'variants',
+                        'last_seen_at',
                     )
                     .where({ environment })
                     .as('fe'),

@@ -114,6 +114,7 @@ export interface IFeatureEnvironment {
     environment: string;
     featureName: string;
     enabled: boolean;
+    lastSeenAt?: Date;
     variants?: IVariant[];
 }
 
@@ -170,6 +171,7 @@ export interface IEnvironmentBase {
     enabled: boolean;
     type: string;
     sortOrder: number;
+    lastSeenAt: Date;
 }
 
 export interface IEnvironmentOverview extends IEnvironmentBase {

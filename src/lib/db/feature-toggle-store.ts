@@ -185,6 +185,18 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
                             .forUpdate()
                             .skipLocked(),
                     );
+
+                // Updating the toggle's last_seen_at also for backwards compatibility
+                await this.db(TABLE)
+                    .update({ last_seen_at: now })
+                    .whereIn(
+                        'name',
+                        this.db(TABLE)
+                            .select('name')
+                            .whereIn('name', toggleNames)
+                            .forUpdate()
+                            .skipLocked(),
+                    );
             }
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);

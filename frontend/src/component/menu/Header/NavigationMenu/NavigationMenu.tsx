@@ -2,11 +2,12 @@ import { Divider } from '@mui/material';
 import { Menu, MenuItem, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Fragment } from 'react';
+import { INavigationMenuItem } from 'interfaces/route';
 import { Link } from 'react-router-dom';
+import { EnterpriseBadge } from './EnterpriseBadge/EnterpriseBadge';
 
 interface INavigationMenuProps {
-    options: any[];
+    options: INavigationMenuItem[];
     id: string;
     anchorEl: any;
     handleClose: () => void;
@@ -73,6 +74,10 @@ export const NavigationMenu = ({
                     >
                         <StyledSpan />
                         {option.title}
+                        <ConditionallyRender
+                            condition={Boolean(option.menu.showEnterpriseBadge)}
+                            show={<EnterpriseBadge />}
+                        />
                     </MenuItem>,
                 ])
                 .flat()

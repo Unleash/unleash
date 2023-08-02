@@ -77,7 +77,7 @@ export default class FeatureToggleClientStore
             'features.impression_data as impression_data',
             'fe.variants as variants',
             'features.created_at as created_at',
-            'features.last_seen_at as last_seen_at',
+            'fe.last_seen_at as last_seen_at',
             'fe.enabled as enabled',
             'fe.environment as environment',
             'fs.id as strategy_id',

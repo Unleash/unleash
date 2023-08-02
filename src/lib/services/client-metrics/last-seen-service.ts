@@ -5,10 +5,15 @@ import { IUnleashStores } from '../../types';
 import { IClientMetricsEnv } from '../../types/stores/client-metrics-store-v2';
 import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
 
+export type LastSeenInput = {
+    featureName: string;
+    environment: string;
+};
+
 export class LastSeenService {
     private timers: NodeJS.Timeout[] = [];
 
-    private lastSeenToggles: Set<string> = new Set();
+    private lastSeenToggles: Set<LastSeenInput> = new Set();
 
     private logger: Logger;
 
@@ -48,7 +53,10 @@ export class LastSeenService {
                 (clientMetric) => clientMetric.yes > 0 || clientMetric.no > 0,
             )
             .forEach((clientMetric) =>
-                this.lastSeenToggles.add(clientMetric.featureName),
+                this.lastSeenToggles.add({
+                    featureName: clientMetric.featureName,
+                    environment: clientMetric.environment,
+                }),
             );
     }
 

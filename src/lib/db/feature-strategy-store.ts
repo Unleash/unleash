@@ -350,11 +350,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 acc.stale = r.stale;
 
                 acc.createdAt = r.created_at;
-                acc.lastSeenAt = r.last_seen_at;
                 acc.type = r.type;
                 if (!acc.environments[r.environment]) {
                     acc.environments[r.environment] = {
                         name: r.environment,
+                        lastSeenAt: r.last_seen_at,
                     };
                 }
                 const env = acc.environments[r.environment];

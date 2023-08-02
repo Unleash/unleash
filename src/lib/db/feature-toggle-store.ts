@@ -7,6 +7,9 @@ import { Logger, LogProvider } from '../logger';
 import { FeatureToggle, FeatureToggleDTO, IVariant } from '../types/model';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { Db } from './db';
+import { LastSeenInput } from '../services/client-metrics/last-seen-service';
+
+export type EnvironmentFeatureNames = { [key: string]: string[] };
 
 const FEATURE_COLUMNS = [
     'name',
@@ -165,22 +168,46 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return present;
     }
 
-    async setLastSeen(toggleNames: string[]): Promise<void> {
+    async setLastSeen(data: LastSeenInput[]): Promise<void> {
         const now = new Date();
+        const environmentArrays = this.mapMetricDataToEnvBuckets(data);
         try {
-            await this.db(TABLE)
-                .update({ last_seen_at: now })
-                .whereIn(
-                    'name',
-                    this.db(TABLE)
-                        .select('name')
-                        .whereIn('name', toggleNames)
-                        .forUpdate()
-                        .skipLocked(),
-                );
+            for (const env of Object.keys(environmentArrays)) {
+                const toggleNames = environmentArrays[env];
+                await this.db(FEATURE_ENVIRONMENTS_TABLE)
+                    .update({ last_seen_at: now })
+                    .where('environment', env)
+                    .whereIn(
+                        'feature_name',
+                        this.db(FEATURE_ENVIRONMENTS_TABLE)
+                            .select('feature_name')
+                            .whereIn('feature_name', toggleNames)
+                            .forUpdate()
+                            .skipLocked(),
+                    );
+            }
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);
         }
+    }
+
+    private mapMetricDataToEnvBuckets(
+        data: LastSeenInput[],
+    ): EnvironmentFeatureNames {
+        return data.reduce(
+            (acc: EnvironmentFeatureNames, feature: LastSeenInput) => {
+                const { environment, featureName } = feature;
+
+                if (!acc[environment]) {
+                    acc[environment] = [];
+                }
+
+                acc[environment].push(featureName);
+
+                return acc;
+            },
+            {},
+        );
     }
 
     static filterByArchived: Knex.QueryCallbackWithArgs = (

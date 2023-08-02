@@ -3,7 +3,7 @@ title: Feature Strategy Variants
 ---
 :::info Availability
 
-**Feature strategy variants** were first introduced in Unleash 5.3.
+**Feature strategy variants** were first introduced in Unleash 5.4.
 :::
 
 Gradual rollout strategies in Unleash can have _strategy variants_. _Strategy variants_ allow each matching activation strategy to return not just simple enabled/disabled status, but
@@ -112,8 +112,8 @@ To make use of strategy variants, you need to use a compatible client. Client SD
 - [unleash-client-node](https://github.com/Unleash/unleash-client-node) (from v4.1.0)
 - [unleash-client-java](https://github.com/Unleash/unleash-client-java) (from v8.3.0)
 - Client SDKs talking to [unleash-proxy](https://github.com/Unleash/unleash-proxy) (from v0.17.0) 
-- Client SDKs talking to Frontend API in [unleash-server](https://github.com/Unleash/unleash) (from v5.3.0)
-- Unleash Playground in [unleash-server](https://github.com/Unleash/unleash) (from v5.3.0)
+- Client SDKs talking to Frontend API in [unleash-server](https://github.com/Unleash/unleash) (from v5.4.0)
+- Unleash Playground in [unleash-server](https://github.com/Unleash/unleash) (from v5.4.0)
 
 
 If you would like to give feedback on this feature, experience issues or have questions, please feel free to open an issue on [GitHub](https://github.com/Unleash/unleash/).

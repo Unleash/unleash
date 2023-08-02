@@ -443,6 +443,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             type: r.environment_type,
             sortOrder: r.environment_sort_order,
             variantCount: r.variants?.length || 0,
+            lastSeenAt: r.last_seen_at,
         };
     }
 

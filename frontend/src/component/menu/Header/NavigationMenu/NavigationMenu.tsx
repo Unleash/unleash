@@ -53,26 +53,30 @@ export const NavigationMenu = ({
             open={Boolean(anchorEl)}
             style={style}
         >
-            {options.map((option, i) => (
-                <Fragment key={option.path}>
+            {options
+                .map((option, i) => [
                     <ConditionallyRender
+                        key={`${option.path}-divider`}
                         condition={Boolean(
                             showDividers &&
                                 options[i - 1]?.group &&
                                 options[i - 1]?.group !== option.group
                         )}
                         show={<Divider variant="middle" />}
-                    />
+                        elseShow={null}
+                    />,
                     <MenuItem
+                        key={option.path}
                         component={StyledLink}
                         to={option.path}
                         onClick={handleClose}
                     >
                         <StyledSpan />
                         {option.title}
-                    </MenuItem>
-                </Fragment>
-            ))}
+                    </MenuItem>,
+                ])
+                .flat()
+                .filter(Boolean)}
         </Menu>
     );
 };

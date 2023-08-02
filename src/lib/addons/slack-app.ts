@@ -70,9 +70,7 @@ export default class SlackAppAddon extends Addon {
                 );
                 return;
             }
-            this.logger.debug(
-                `Found candidate channels: ${JSON.stringify(eventChannels)}.`,
-            );
+            this.logger.debug(`Found candidate channels: ${eventChannels}.`);
 
             if (!this.slackClient || this.accessToken !== accessToken) {
                 const client = new WebClient(accessToken);
@@ -92,13 +90,17 @@ export default class SlackAppAddon extends Addon {
                     });
                 this.slackChannels = slackConversationsList.channels || [];
                 this.logger.debug(
-                    `Fetched ${this.slackChannels.length} Slack channels`,
+                    `Fetched ${
+                        this.slackChannels.length
+                    } available Slack channels: ${this.slackChannels.map(
+                        ({ name }) => name,
+                    )}`,
                 );
             }
 
             const currentSlackChannels = [...this.slackChannels];
             if (!currentSlackChannels.length) {
-                this.logger.warn('No Slack channels found.');
+                this.logger.warn('No available Slack channels found.');
                 return;
             }
 
@@ -107,6 +109,16 @@ export default class SlackAppAddon extends Addon {
 
             const slackChannelsToPostTo = currentSlackChannels.filter(
                 ({ id, name }) => id && name && eventChannels.includes(name),
+            );
+
+            if (!slackChannelsToPostTo.length) {
+                this.logger.info('No eligible Slack channel found.');
+                return;
+            }
+            this.logger.debug(
+                `Posting event to ${slackChannelsToPostTo.map(
+                    ({ name }) => name,
+                )}.`,
             );
 
             const requests = slackChannelsToPostTo.map(({ id }) =>

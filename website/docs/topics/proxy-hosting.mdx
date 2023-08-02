@@ -1,14 +1,29 @@
 ---
-title: Proxy hosting strategies
+title: Edge & Proxy hosting strategies
 ---
 
-Because the [Unleash proxy](../generated/unleash-proxy.md) (or alternatively [Unleash edge](../generated/unleash-edge.md)) is a separate piece of the Unleash architecture and because it should sit close to your application, there are numerous ways of hosting it. Another important distinction is whether you're hosting Unleash yourself or you have a managed solution.
+import VideoContent from '@site/src/components/VideoContent.jsx'
 
-This document describes the two main ways of hosting the proxy alongside the Unleash API and the tradeoffs between hosting the proxy yourself and using the Frontend API that Unleash hosts for you.
+This document describes the main ways of hosting [Unleash Edge](../generated/unleash-edge.md) (or alternatively [Unleash Proxy](../generated/unleash-proxy.md)) alongside the Unleash API and the tradeoffs between self-hosting compared to using the Frontend API that Unleash hosts for you.
+Whether you're hosting Unleash yourself or have a managed solution will be a key consideration.
 
-## Unleash-hosted Frontend API vs self-hosted proxy {#unleash-hosted-or-self-hosted}
 
-Which way is right for you will depend on your setup and your needs. In general, we recommend that you host the proxy yourself, but we do recognize that self-hosting requires some extra work on your part and that not all our customers need it.
+:::info Warning
+
+Edge is the next-gen replacement of the Unleash proxy and is recommended to be used over the proxy in most cases, with the exception of the scenario where custom strategies are being used as Edge does not support these.
+:::
+
+<VideoContent videoUrls={["https://www.youtube.com/embed/6uIdF-yByWs"]}>
+
+In addition to the written reference below, the following video provides for details on the Edge architecture, setup and demo 🍿
+
+</VideoContent>
+
+## Unleash-hosted Frontend API vs self-hosted Edge/Proxy {#unleash-hosted-or-self-hosted}
+
+Which way is right for you will depend on your setup and your needs.
+
+In general, we recommend you use Edge over the Frontend API, but we do recognize that self-hosting requires some extra work on your part and that not all our customers need it.
 
 If you want Unleash to host the Frontend API for you, you should be aware of the following limitations:
 
@@ -18,15 +33,17 @@ If you want Unleash to host the Frontend API for you, you should be aware of the
 -   There's no guarantee that it'll be close to your applications. This means you'll get higher response times.
 -   When we host the frontend API, we will also receive whatever end user data you put in the [Unleash context](../reference/unleash-context.md). This may or may not be an issue depending on your business requirements.
 
-Hosting the proxy yourself requires a little more setup on your part than the Unleash-hosted proxy does, but it offers a number of benefits:
+Hosting Edge requires a little more setup the Unleash-hosted frontend API does, but it offers a number of benefits over both the frontend API and Proxy:
 
--   You can scale the proxy horizontally and automatically.
+-   You can scale Edge instances horizontally and automatically.
 -   There's no request cap or extra charges.
--   You can host as many proxies as you want for as many different environments as you want.
--   You can arrange for the proxy to be close to your applications, minimizing response times.
--   You have full control of all your user data. None of the data that the proxy receives is ever sent to the Unleash API. This keeps _your_ data in _your_ hands.
--   You can easily add more proxies in different regions, as described in the [multi-region](#multi-region) section.
--   If you're having scaling challenges, it could be worth it to have a look at [Unleash Edge](../reference/unleash-edge)
+-   Edge can handle multiple sets of API tokens and sync these automatically. Compared to the legacy proxy, it is not necessary to setup single instances per token.
+-   A key benefit of Edge is its ability to dynamically update new tokens while running. This greatly simplifies scaling up additional application workloads that leverage new tokens without the need to restart the instance or make large changes to infra, as was the prior requirement with the proxy.
+-   You can arrange for Edge to be close to your applications, minimizing response times.
+-   You have full control of all your user data. None of the data that Edge receives is ever sent to the Unleash API. This keeps _your_ data in _your_ hands.
+-   You can easily add more Edge instances in different regions, as described in the [multi-region](#multi-region) section.  
+
+  
 
 ## Unleash hosts everything
 
@@ -34,8 +51,9 @@ Hosting the proxy yourself requires a little more setup on your part than the Un
 
 This setup is only available to Pro and Enterprise customers.
 
-:::
-
+:::  
+  
+  
 Unleash no longer hosts instances of the proxy, but makes the [Frontend API](../reference/front-end-api) available to all Pro and Enterprise customers. The API is backed by an Amazon RDS database. Your applications can connect to the frontend API from your own cloud or from other hosting solutions.
 
 In order to access the frontend API you'll need
@@ -44,13 +62,95 @@ In order to access the frontend API you'll need
 
 This is the simplest, but also most limited (by far) way to use Unleash client SDKs. In this setup, Unleash hosts both the Unleash API and the Unleash frontend API. With Unleash hosting, you'll only need to worry about the Frontend API keys and the URL to access the endpoint.
 
-While this is easy to get started with, it comes with the limitations described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted).
+While this is easy to get started with, it comes with the limitations described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted).  
 
-## Unleash hosts the API, you host the proxy
+  
+
+## Unleash hosts the API, you host Edge
+
+:::info Availability
+
+This setup is only available to Pro and Enterprise customers.
+
+:::
+
+![An architecture diagram of using Edge in a setup where Unleash hosts the API and you host the proxy.](/img/proxy-hosting-unleash-api-customer-proxy-edge.svg)
+
+
+
+You host Edge yourself. It runs in a standalone container alongside your other applications in your cloud or hosting setup. Unleash manages the Unleash API, the admin UI, and the backing database in our AWS setup: the API and the UI run together in a Kubernetes deployment and connect to an Amazon RDS database.
+
+You'll need to configure Edge and the SDKs.  
+
+### On Unleash
+
+- Create one or multiple [client API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens) scoped to the projects/environments you wish to leverage the Edge instance for. (Refer to [how to create API tokens](https://docs.getunleash.io/how-to/how-to-create-api-tokens) for the steps to create one)
+- Create frontend tokens for the frontend apps that will retrieve feature toggles from Edge
+
+### On Edge
+
+Edge will fetch feature toggles from the specified upstream Unleash instance for every client API key it has been made aware of, either during startup (recommended) or separate endpoint requests. It will then periodically sync features with upstream.
+
+It will then accept frontend / backend tokens from application SDKs. 
+
+:::info Warning 
+
+Make sure to use the correct token type for the use case:
+Frontend API: Frontend facing apps only, Edge returns app specific context
+Client API: For backend SDKs, Edge returns entire toggle payload for scope of token (project/environment)
+
+:::
+**Start Edge & populate toggle cache**
+- This initial command will populate toggle cache on startup using the client token specified in the environment variable:
+
+```docker run -p 3063:3063 -e TOKENS='CLIENT_API_TOKEN' -e UPSTREAM_URL='UPSTREAM_URL' unleashorg/unleash-edge:v8.1 edge```
+
+The following can be used to pass new tokens to Edge for different project/environment scopes:
+
+```curl --location --request GET 'http://0.0.0.0:3063/api/client/features' \ --header 'Content-Type: application/json' \ --header 'Authorization: NEW_TOKEN' \ --data-raw ''```
+
+### On SDKs
+
+- Point frontend/client SDKs to Edge endpoints
+    - **Backend SDKs:** /api/client
+    - **Frontend SDKs:** /api/frontend, /api/proxy  
+  
+
+## You host everything
+
+:::info Availability
+
+This setup is only available open-source and Enterprise customers.
+
+:::
+
+![An architecture diagram of using the proxy in a single-region, self-hosted setup.](/img/proxy-hosting-customer-single-edge.svg)
+
+You host everything yourself. Everything runs where and how you configure it to.
+
+**To configure Edge and the SDKs, follow steps in the [previous section on Unleash hosts the API, you host Edge](#unleash-hosts-the-api-you-host-edge)**
+
+As you might expect, doing everything yourself _is_ going to give you the most flexibility, but it's also going to be the most work. If you're already hosting Unleash yourself, though, this shouldn't be any more difficult than the previous section.
+
+As described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted), running Edge yourself gives you a number of benefits.  
+  
+
+## Multi-region
+
+![An architecture diagram of using the proxy in a multi-region, self-hosted setup.](/img/proxy-hosting-customer-multi-edge.svg)
+
+You can also use Edge for a multi-region setup. You can run Edge in a different region to the API and still connect to the API. Because Edge runs closer to your applications it still provides you benefits in terms of quicker response times. Everything should be configured as described in the [you host everything section](#you-host-everything) or the [Unleash hosts the API, you host Edge section](#unleash-hosts-the-api-you-host-edge). You can add as many Edge instances in as many extra regions as you want.
+
+  
+
+## Legacy: Unleash hosts the API, you host the Proxy
 
 :::info Recommendation
 
-We recommend you use [Unleash Edge](../reference/unleash-edge) instead of the Unleash proxy. See our [Edge migration guide](https://github.com/Unleash/unleash-edge/blob/main/migration-guide.md) for a guide on how to migrate
+This approach is no longer recommended. You should use [Unleash Edge](../reference/unleash-edge) instead of the Unleash proxy. 
+If you are an existing Proxy user, see our [Edge migration guide](https://github.com/Unleash/unleash-edge/blob/main/migration-guide.md) for a guide on how to migrate.
+Please take note of the section covering features Edge does not currently support in the same linked document before planning a migration.
+:::
 
 :::info Availability
 
@@ -76,38 +176,3 @@ For the proxy client SDK, configure:
 -   The proxy's endpoint. This will depend on where and how you're hosting the proxy, but will typically end in "/proxy"
 
 This setup requires a little more setup on your part than the Unleash-hosted proxy does, but it offers all the benefits described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted).
-
-## You host everything
-
-:::info Availability
-
-This setup is only available open-source and Enterprise customers.
-
-:::
-
-![An architecture diagram of using the proxy in a single-region, self-hosted setup.](/img/proxy-hosting-customer-single.svg)
-
-You host everything yourself. Everything runs where and how you configure it to.
-
-You'll need to configure the proxy and the proxy client SDKs.
-
-For the proxy, configure:
-
--   The Unleash API url. This is your Unleash instance URL followed by "/api".
--   A [client API token](../reference/api-tokens-and-client-keys.mdx#client-tokens). (Refer to [how to create API tokens](../how-to/how-to-create-api-tokens.mdx) for the steps to create one.)
--   One or more [proxy client keys](../reference/api-tokens-and-client-keys.mdx#proxy-client-keys). Refer to the [configuration section of the proxy document](../reference/unleash-proxy#configuration) for more details.
-
-For the proxy client SDK, configure:
-
--   One of the proxy client keys that you configured for the proxy.
--   The proxy's endpoint. This will depend on where and how you're hosting the proxy, but will typically end in "/proxy"
-
-As you might expect, doing everything yourself _is_ going to give you the most flexibility, but it's also going to be the most work. If you're already hosting Unleash yourself, though, this shouldn't be any more difficult than the previous section.
-
-As described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted), running the proxy yourself gives you a number of benefits.
-
-## Multi-region
-
-![An architecture diagram of using the proxy in a multi-region, self-hosted setup.](/img/proxy-hosting-customer-multi.svg)
-
-You can also use the proxy for a multi-region setup. You can run a proxy in a different region to the API and still connect to the API. Because the proxy runs closer to your applications it still provides you benefits in terms of quicker response times. Everything should be configured as described in the [you host everything section](#you-host-everything) or the [Unleash hosts the API, you host the proxy section](#unleash-hosts-the-api-you-host-the-proxy). You can add as many extra proxies in as many extra regions as you want.

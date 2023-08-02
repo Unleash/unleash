@@ -70,6 +70,9 @@ export default class SlackAppAddon extends Addon {
                 );
                 return;
             }
+            this.logger.debug(
+                `Found candidate channels: ${JSON.stringify(eventChannels)}.`,
+            );
 
             if (!this.slackClient || this.accessToken !== accessToken) {
                 const client = new WebClient(accessToken);

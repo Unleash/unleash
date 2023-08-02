@@ -176,7 +176,7 @@
     "@types/express-session": "1.17.7",
     "@types/faker": "5.5.9",
     "@types/hash-sum": "^1.0.0",
-    "@types/jest": "29.5.3",
+    "@types/jest": "^29.5.3",
     "@types/js-yaml": "4.0.5",
     "@types/lodash.groupby": "4.6.7",
     "@types/make-fetch-happen": "10.0.1",
@@ -219,9 +219,10 @@
     "source-map-support": "0.5.21",
     "superagent": "8.0.9",
     "supertest": "6.3.3",
+    "ts-jest": "^29.1.1",
     "ts-node": "10.9.1",
     "tsc-watch": "6.0.4",
-    "typescript": "4.8.4",
+    "typescript": "^5.1.6",
     "wait-on": "^7.0.1"
   },
   "resolutions": {

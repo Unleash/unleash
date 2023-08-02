@@ -34,7 +34,6 @@ class IndexRouter extends Controller {
                 max: 10,
                 standardHeaders: true,
                 legacyHeaders: false,
-                validate: false,
             }),
         );
         this.use(

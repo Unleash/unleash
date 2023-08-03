@@ -5,4 +5,7 @@
  */
 import type { NotificationsSchemaItem } from './notificationsSchemaItem';
 
+/**
+ * A list of [notifications](https://docs.getunleash.io/reference/notifications)
+ */
 export type NotificationsSchema = NotificationsSchemaItem[];

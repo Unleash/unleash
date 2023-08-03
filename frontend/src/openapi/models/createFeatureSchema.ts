@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Data used to create a new feature toggle.
+ */
 export interface CreateFeatureSchema {
     /** Unique feature name */
     name: string;

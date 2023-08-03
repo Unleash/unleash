@@ -5,7 +5,12 @@
  */
 import type { ChangeRequestStateSchemaState } from './changeRequestStateSchemaState';
 
+/**
+ * Data used to update the state of a [change request](https://docs.getunleash.io/reference/change-requests).
+ */
 export interface ChangeRequestStateSchema {
+    /** The new desired state for the change request */
     state: ChangeRequestStateSchemaState;
+    /** Any comments accompanying the state changed. Used when sending a draft to review. */
     comment?: string;
 }

@@ -9,6 +9,9 @@ import type { PlaygroundConstraintSchema } from './playgroundConstraintSchema';
 import type { ParametersSchema } from './parametersSchema';
 import type { PlaygroundStrategySchemaLinks } from './playgroundStrategySchemaLinks';
 
+/**
+ * An evaluated feature toggle strategy as used by the Playground
+ */
 export interface PlaygroundStrategySchema {
     /** The strategy's name. */
     name: string;

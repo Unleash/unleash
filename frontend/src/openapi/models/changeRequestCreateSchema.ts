@@ -3,25 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateSchemaOneOf } from './changeRequestCreateSchemaOneOf';
-import type { ChangeRequestCreateSchemaOneOfFour } from './changeRequestCreateSchemaOneOfFour';
-import type { ChangeRequestCreateSchemaOneOfSix } from './changeRequestCreateSchemaOneOfSix';
-import type { ChangeRequestCreateSchemaOneOfEight } from './changeRequestCreateSchemaOneOfEight';
-import type { ChangeRequestCreateSchemaOneOfOneone } from './changeRequestCreateSchemaOneOfOneone';
+import type { ChangeRequestCreateSegmentSchema } from './changeRequestCreateSegmentSchema';
+import type { ChangeRequestCreateFeatureSchema } from './changeRequestCreateFeatureSchema';
 
+/**
+ * Data used to create a [change request](https://docs.getunleash.io/reference/change-requests) for a single feature or segment change.
+ */
 export type ChangeRequestCreateSchema =
-    | (ChangeRequestCreateSchemaOneOf & {
-          feature: string;
-      })
-    | (ChangeRequestCreateSchemaOneOfFour & {
-          feature: string;
-      })
-    | (ChangeRequestCreateSchemaOneOfSix & {
-          feature: string;
-      })
-    | (ChangeRequestCreateSchemaOneOfEight & {
-          feature: string;
-      })
-    | (ChangeRequestCreateSchemaOneOfOneone & {
-          feature: string;
-      });
+    | ChangeRequestCreateSegmentSchema
+    | ChangeRequestCreateFeatureSchema;

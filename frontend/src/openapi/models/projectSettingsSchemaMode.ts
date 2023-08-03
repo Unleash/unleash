@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode).
+ */
 export type ProjectSettingsSchemaMode =
     typeof ProjectSettingsSchemaMode[keyof typeof ProjectSettingsSchemaMode];
 

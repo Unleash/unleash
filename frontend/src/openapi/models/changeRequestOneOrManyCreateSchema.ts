@@ -5,6 +5,9 @@
  */
 import type { ChangeRequestCreateSchema } from './changeRequestCreateSchema';
 
+/**
+ * Either a single change or a list of changes to create a change request from.
+ */
 export type ChangeRequestOneOrManyCreateSchema =
     | ChangeRequestCreateSchema
     | ChangeRequestCreateSchema[];

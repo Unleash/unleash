@@ -5,4 +5,7 @@
  */
 import type { VariantSchema } from './variantSchema';
 
+/**
+ * A list of variants
+ */
 export type VariantsSchema = VariantSchema[];

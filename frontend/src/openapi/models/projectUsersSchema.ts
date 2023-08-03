@@ -6,7 +6,13 @@
 import type { UserWithProjectRoleSchema } from './userWithProjectRoleSchema';
 import type { RoleSchema } from './roleSchema';
 
+/**
+ * An overview of users and available roles within a project.
+ * @deprecated
+ */
 export interface ProjectUsersSchema {
+    /** A list of users with access to this project and their role within it. */
     users: UserWithProjectRoleSchema[];
+    /** A list of roles that are available for this project */
     roles: RoleSchema[];
 }

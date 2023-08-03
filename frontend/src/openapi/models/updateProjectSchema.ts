@@ -4,7 +4,12 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Data used to update a [project](https://docs.getunleash.io/reference/projects)
+ */
 export interface UpdateProjectSchema {
+    /** The new name of the project */
     name: string;
+    /** A new description for the project */
     description?: string;
 }

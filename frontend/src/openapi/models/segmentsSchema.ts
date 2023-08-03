@@ -5,6 +5,10 @@
  */
 import type { AdminSegmentSchema } from './adminSegmentSchema';
 
+/**
+ * Data containing a list of [segments](https://docs.getunleash.io/reference/segments)
+ */
 export interface SegmentsSchema {
+    /** A list of segments */
     segments?: AdminSegmentSchema[];
 }

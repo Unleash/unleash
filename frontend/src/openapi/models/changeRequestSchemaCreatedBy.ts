@@ -4,7 +4,11 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * The user who created this change request.
+ */
 export type ChangeRequestSchemaCreatedBy = {
     username?: string | null;
+    /** The URL of the user's profile image. */
     imageUrl?: string | null;
 };

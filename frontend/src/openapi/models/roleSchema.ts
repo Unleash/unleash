@@ -10,7 +10,7 @@
 export interface RoleSchema {
     /** The role id */
     id: number;
-    /** A role can either be a global role (applies to all projects) or a project role */
+    /** A role can either be a global root role (applies to all projects) or a project role */
     type: string;
     /** The name of the role */
     name: string;

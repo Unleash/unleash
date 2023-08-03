@@ -4,8 +4,14 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Information about the user who gave this approval.
+ */
 export type ChangeRequestApprovalSchemaCreatedBy = {
+    /** The ID of the user who gave this approval. */
     id?: number;
+    /** The approving user's username. */
     username?: string;
+    /** The URL where the user's image can be found. */
     imageUrl?: string;
 };

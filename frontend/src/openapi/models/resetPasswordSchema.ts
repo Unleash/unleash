@@ -4,6 +4,10 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Data used to provide users a way to reset their passwords.
+ */
 export interface ResetPasswordSchema {
+    /** A URL pointing to a location where the user can reset their password */
     resetPasswordUrl: string;
 }

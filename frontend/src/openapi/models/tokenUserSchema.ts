@@ -12,7 +12,7 @@ export interface TokenUserSchema {
     /** The user id */
     id: number;
     /** The name of the user */
-    name: string;
+    name?: string;
     /** The email of the user */
     email: string;
     /** A token uniquely identifying a user */

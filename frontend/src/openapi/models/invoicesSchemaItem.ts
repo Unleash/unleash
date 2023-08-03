@@ -4,11 +4,20 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Data describing an invoice
+ */
 export type InvoicesSchemaItem = {
+    /** A formatted representation of the amount due. */
     amountFormatted: string;
+    /** `true` if the invoice has been paid, `false` if it has not. */
     paid: boolean;
+    /** The current status of the invoice */
     status: string;
+    /** When the invoice is due */
     dueDate?: string;
+    /** A URL pointing to where the invoice can be found. */
     invoiceURL: string;
+    /** A link to a PDF-version of the invoice. */
     invoicePDF: string;
 };

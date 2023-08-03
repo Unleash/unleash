@@ -3,13 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { VariantSchemaPayloadType } from './variantSchemaPayloadType';
 
 /**
  * Extra data configured for this variant
  */
 export type VariantSchemaPayload = {
     /** The type of the value. Commonly used types are string, json and csv. */
-    type: string;
+    type: VariantSchemaPayloadType;
     /** The actual value of payload */
     value: string;
 };

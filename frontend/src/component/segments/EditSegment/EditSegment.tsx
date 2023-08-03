@@ -76,7 +76,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
             clearErrors();
             try {
                 await updateSegment(segment.id, getSegmentPayload());
-                await refetchSegments();
+                refetchSegments();
                 if (projectId) {
                     navigate(`/projects/${projectId}/settings/segments/`);
                 } else {

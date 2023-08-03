@@ -17,7 +17,7 @@ export interface CreateUserResponseSchema {
      */
     isAPI?: boolean;
     /** Name of the user */
-    name?: string;
+    name?: string | null;
     /** Email of the user */
     email?: string;
     /** A unique username for the user */

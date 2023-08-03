@@ -5,6 +5,9 @@
  */
 import type { ConstraintSchema } from './constraintSchema';
 
+/**
+ * A description of a [segment](https://docs.getunleash.io/reference/segments)
+ */
 export interface AdminSegmentSchema {
     /** The ID of this segment */
     id: number;
@@ -18,9 +21,10 @@ export interface AdminSegmentSchema {
     usedInFeatures?: number | null;
     /** The number of projects that use this segment */
     usedInProjects?: number | null;
+    /** The project the segment belongs to. Only present if the segment is a project-specific segment. */
     project?: string | null;
     /** The creator's email or username */
-    createdBy?: string;
+    createdBy?: string | null;
     /** When the segment was created */
     createdAt: string;
 }

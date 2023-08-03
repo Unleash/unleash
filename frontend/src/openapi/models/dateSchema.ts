@@ -4,4 +4,7 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * A representation of a date. Either as a date-time string or as a UNIX timestamp.
+ */
 export type DateSchema = string | number;

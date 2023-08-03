@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Data used to clone an environment.
+ */
 export interface CloneEnvironmentSchema {
     /** The name of the new cloned environment, this cannot be changed later */
     name: string;

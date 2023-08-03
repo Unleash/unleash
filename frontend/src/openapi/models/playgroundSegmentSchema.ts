@@ -5,6 +5,9 @@
  */
 import type { PlaygroundConstraintSchema } from './playgroundConstraintSchema';
 
+/**
+ * The evaluated result of a segment as used by the Playground.
+ */
 export interface PlaygroundSegmentSchema {
     /** The segment's id. */
     id: number;

@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Data about an application that's connected to Unleash via an SDK.
+ */
 export interface ApplicationSchema {
     /** Name of the application */
     appName: string;

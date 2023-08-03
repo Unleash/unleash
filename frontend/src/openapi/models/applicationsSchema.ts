@@ -5,7 +5,10 @@
  */
 import type { ApplicationSchema } from './applicationSchema';
 
+/**
+ * An object containing a list of applications that have connected to Unleash via an SDK.
+ */
 export interface ApplicationsSchema {
-    /** Contains a list of applications that have connected via an SDK */
+    /** The list of applications that have connected to this Unleash instance. */
     applications?: ApplicationSchema[];
 }

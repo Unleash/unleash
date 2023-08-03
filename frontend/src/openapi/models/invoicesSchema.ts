@@ -5,4 +5,7 @@
  */
 import type { InvoicesSchemaItem } from './invoicesSchemaItem';
 
+/**
+ * A list of invoices
+ */
 export type InvoicesSchema = InvoicesSchemaItem[];

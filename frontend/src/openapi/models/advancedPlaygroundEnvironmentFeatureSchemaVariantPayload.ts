@@ -3,14 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdvancedPlaygroundEnvironmentFeatureSchemaVariantPayloadType } from './advancedPlaygroundEnvironmentFeatureSchemaVariantPayloadType';
 
 /**
  * An optional payload attached to the variant.
  */
 export type AdvancedPlaygroundEnvironmentFeatureSchemaVariantPayload = {
     /** The format of the payload. */
-    type: AdvancedPlaygroundEnvironmentFeatureSchemaVariantPayloadType;
+    type: string;
     /** The payload value stringified. */
     value: string;
 };

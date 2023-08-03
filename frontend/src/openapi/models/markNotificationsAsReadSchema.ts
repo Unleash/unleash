@@ -4,7 +4,10 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Data used to mark notifications as being read
+ */
 export interface MarkNotificationsAsReadSchema {
+    /** A list of IDs belonging to the notifications you want to mark as read. */
     notifications: number[];
-    [key: string]: any;
 }

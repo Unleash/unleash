@@ -4,4 +4,7 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * Additional Unleash context properties
+ */
 export type SdkContextSchemaProperties = { [key: string]: string };

@@ -5,6 +5,8 @@
  */
 
 export type CreateRoleWithPermissionsSchemaPermissionsItem = {
+    /** The id of the permission */
     id: number;
+    /** The environments of the permission if the permission is environment specific */
     environment?: string;
 };

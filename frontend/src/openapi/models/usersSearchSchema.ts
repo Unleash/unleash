@@ -5,4 +5,7 @@
  */
 import type { UserSchema } from './userSchema';
 
+/**
+ * A list of users
+ */
 export type UsersSearchSchema = UserSchema[];

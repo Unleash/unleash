@@ -5,7 +5,12 @@
  */
 import type { RoleSchema } from './roleSchema';
 
+/**
+ * A collection of user roles
+ */
 export interface RolesWithVersionSchema {
+    /** The version of this schema */
     version: number;
+    /** A list of roles */
     roles: RoleSchema[];
 }

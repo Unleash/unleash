@@ -27,5 +27,6 @@ export interface GroupSchema {
     users?: GroupUserModelSchema[];
     /** A list of projects where this group is used */
     projects?: string[];
-    [key: string]: any;
+    /** The number of users that belong to this group */
+    userCount?: number;
 }

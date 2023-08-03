@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * A custom role can either be a global/root custom role (applies to all projects) or a project custom role
+ */
 export type CreateRoleWithPermissionsSchemaType =
     typeof CreateRoleWithPermissionsSchemaType[keyof typeof CreateRoleWithPermissionsSchemaType];
 

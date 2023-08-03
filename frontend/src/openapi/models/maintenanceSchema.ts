@@ -4,6 +4,10 @@
  * See `gen:api` script in package.json
  */
 
+/**
+ * The current state of Unleash's maintenance mode feature.
+ */
 export interface MaintenanceSchema {
+    /** Whether maintenance mode is enabled or not. */
     enabled: boolean;
 }

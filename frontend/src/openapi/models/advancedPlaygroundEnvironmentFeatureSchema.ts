@@ -31,7 +31,7 @@ export interface AdvancedPlaygroundEnvironmentFeatureSchema {
     /** The feature variant you receive based on the provided context or the _disabled
                           variant_. If a feature is disabled or doesn't have any
                           variants, you would get the _disabled variant_.
-                          Otherwise, you'll get one of thefeature's defined variants. */
+                          Otherwise, you'll get one of the feature's defined variants. */
     variant: AdvancedPlaygroundEnvironmentFeatureSchemaVariant;
     /** The feature variants. */
     variants: VariantSchema[];

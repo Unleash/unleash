@@ -13,7 +13,7 @@ export interface PublicSignupTokenSchema {
     /** The actual value of the token. This is the part that is used by Unleash to create an invite link */
     secret: string;
     /** The public signup link for the token. Users who follow this link will be taken to a signup page where they can create an Unleash user. */
-    url: string;
+    url: string | null;
     /** The token's name. Only for displaying in the UI */
     name: string;
     /** Whether the token is active. This property will always be `false` for a token that has expired. */

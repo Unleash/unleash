@@ -18,6 +18,7 @@ export interface SdkContextSchema {
      * @deprecated
      */
     environment?: string;
+    /** Additional Unleash context properties */
     properties?: SdkContextSchemaProperties;
     /** The app's IP address */
     remoteAddress?: string;

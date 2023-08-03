@@ -14,6 +14,7 @@ import type { FeatureSchema } from './featureSchema';
 export interface ProjectOverviewSchema {
     /** Project statistics */
     stats?: ProjectStatsSchema;
+    /** The schema version used to describe the project overview */
     version: number;
     /** The name of this project */
     name: string;
@@ -33,7 +34,9 @@ export interface ProjectOverviewSchema {
     environments?: ProjectEnvironmentSchema[];
     /** The full list of features in this project (excluding archived features) */
     features?: FeatureSchema[];
+    /** When the project was last updated. */
     updatedAt?: string | null;
+    /** When the project was created. */
     createdAt?: string | null;
     /** `true` if the project was favorited, otherwise `false`. */
     favorite?: boolean;

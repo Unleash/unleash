@@ -3,14 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundFeatureSchemaVariantPayloadType } from './playgroundFeatureSchemaVariantPayloadType';
 
 /**
  * An optional payload attached to the variant.
  */
 export type PlaygroundFeatureSchemaVariantPayload = {
     /** The format of the payload. */
-    type: PlaygroundFeatureSchemaVariantPayloadType;
+    type: string;
     /** The payload value stringified. */
     value: string;
 };

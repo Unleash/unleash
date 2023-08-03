@@ -79,14 +79,19 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                 throw new Error('No feature toggle type loaded');
 
             const value = doesntExpire ? 0 : lifetime;
-            await updateFeatureTypeLifetime(featureType?.id, value);
+            await updateFeatureTypeLifetime(featureType.id, value);
             refetch();
             setToastData({
                 title: 'Feature type updated',
                 type: 'success',
             });
             navigate('/feature-toggle-type');
-            tracker.trackEvent('feature-type-edit');
+            tracker.trackEvent('feature-type-edit', {
+                props: {
+                    featureTypeId: featureType.id,
+                    newLifetime: value,
+                },
+            });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

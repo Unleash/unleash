@@ -28,7 +28,8 @@ export type IFlagKey =
     | 'configurableFeatureTypeLifetimes'
     | 'filterInvalidClientMetrics'
     | 'frontendNavigationUpdate'
-    | 'lastSeenByEnvironment';
+    | 'lastSeenByEnvironment'
+    | 'segmentChangeRequests';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -131,6 +132,10 @@ const flags: IFlags = {
     ),
     lastSeenByEnvironment: parseEnvVarBoolean(
         process.env.LAST_SEEN_BY_ENVIRONMENT,
+        false,
+    ),
+    segmentChangeRequests: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SEGMENT_CHANGE_REQUESTS,
         false,
     ),
 };

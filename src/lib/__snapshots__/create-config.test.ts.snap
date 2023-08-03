@@ -79,6 +79,7 @@ exports[`should create default config 1`] = `
       "emitPotentiallyStaleEvents": false,
       "featuresExportImport": true,
       "filterInvalidClientMetrics": false,
+      "frontendNavigationUpdate": false,
       "googleAuthEnabled": false,
       "maintenanceMode": false,
       "messageBanner": {
@@ -113,6 +114,7 @@ exports[`should create default config 1`] = `
       "emitPotentiallyStaleEvents": false,
       "featuresExportImport": true,
       "filterInvalidClientMetrics": false,
+      "frontendNavigationUpdate": false,
       "googleAuthEnabled": false,
       "maintenanceMode": false,
       "messageBanner": {

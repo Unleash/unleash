@@ -123,6 +123,7 @@ const Header: VFC = () => {
     const { uiConfig, isOss, isPro, isEnterprise } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
+    const showApiAccessInConfigure = !uiConfig?.flags?.frontendNavigationUpdate;
 
     const toggleDrawer = () => setOpenDrawer(prev => !prev);
     const onAdminClose = () => setAdminRef(null);
@@ -141,23 +142,31 @@ const Header: VFC = () => {
 
     const filteredMainRoutes = {
         mainNavRoutes: getCondensedRoutes(routes.mainNavRoutes)
-            .concat([
-                {
-                    path: '/admin/api',
-                    title: 'API access',
-                    menu: {},
-                },
-            ])
+            .concat(
+                showApiAccessInConfigure
+                    ? [
+                          {
+                              path: '/admin/api',
+                              title: 'API access',
+                              menu: {},
+                          },
+                      ]
+                    : []
+            )
             .filter(filterByConfig(uiConfig))
             .map(mapRouteLink),
         mobileRoutes: getCondensedRoutes(routes.mobileRoutes)
-            .concat([
-                {
-                    path: '/admin/api',
-                    title: 'API access',
-                    menu: {},
-                },
-            ])
+            .concat(
+                showApiAccessInConfigure
+                    ? [
+                          {
+                              path: '/admin/api',
+                              title: 'API access',
+                              menu: {},
+                          },
+                      ]
+                    : []
+            )
             .filter(filterByConfig(uiConfig))
             .map(mapRouteLink),
         adminRoutes: adminMenuRoutes

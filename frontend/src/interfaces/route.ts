@@ -22,6 +22,7 @@ export interface INavigationMenuItem {
     menu: IRouteMenu;
     flag?: keyof IFlags;
     configFlag?: keyof IUiConfig;
+    group?: string;
 }
 
 interface IRouteMenu {

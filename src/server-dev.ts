@@ -42,6 +42,7 @@ process.nextTick(async () => {
                         emitPotentiallyStaleEvents: true,
                         slackAppAddon: true,
                         configurableFeatureTypeLifetimes: true,
+                        frontendNavigationUpdate: true,
                     },
                 },
                 authentication: {

@@ -31,10 +31,9 @@ const StyledBadgeContainer = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
-export const EnterpriseFeatureUpgradePage: VFC<EnterpriseFeatureUpgradePageProps> = ({
-    title,
-    link,
-}) => (
+export const EnterpriseFeatureUpgradePage: VFC<
+    EnterpriseFeatureUpgradePageProps
+> = ({ title, link }) => (
     <PageContent header={<PageHeader title={title} />}>
         <StyledContainer>
             <StyledHeader variant="h2">

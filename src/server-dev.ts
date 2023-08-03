@@ -44,6 +44,7 @@ process.nextTick(async () => {
                         configurableFeatureTypeLifetimes: true,
                         frontendNavigationUpdate: true,
                         lastSeenByEnvironment: true,
+                        segmentChangeRequests: true,
                     },
                 },
                 authentication: {

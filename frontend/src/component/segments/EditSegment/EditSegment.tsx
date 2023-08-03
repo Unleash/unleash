@@ -20,6 +20,7 @@ import { SEGMENT_SAVE_BTN_ID } from 'utils/testIds';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 
 interface IEditSegmentProps {
     modal?: boolean;
@@ -58,13 +59,6 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
     const segmentValuesCount = useSegmentValuesCount(constraints);
     const { segmentValuesLimit } = useSegmentLimits();
 
-    const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
-        segment?.project || ''
-    );
-    const activateSegmentChangeRequests =
-        uiConfig?.flags?.segmentChangeRequests &&
-        isChangeRequestConfiguredInAnyEnv();
-
     const overSegmentValuesLimit: boolean = Boolean(
         segmentValuesLimit && segmentValuesCount > segmentValuesLimit
     );
@@ -78,28 +72,42 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
 --data-raw '${JSON.stringify(getSegmentPayload(), undefined, 2)}'`;
     };
 
+    const { highestPermissionChangeRequestEnv } = useChangeRequestsEnabled(
+        segment?.project || ''
+    );
+    const changeRequestEnv = highestPermissionChangeRequestEnv();
+    const activateSegmentChangeRequests =
+        uiConfig?.flags?.segmentChangeRequests && changeRequestEnv;
+    const { addChange } = useChangeRequestApi();
+
     const handleSubmit = async (e: React.FormEvent) => {
         if (segment) {
             e.preventDefault();
             clearErrors();
             try {
                 if (activateSegmentChangeRequests) {
-                    throw new Error(
-                        "You can't add segments to change requests just yet."
-                    );
+                    await addChange(segment.project || '', changeRequestEnv, {
+                        action: 'updateSegment',
+                        feature: null,
+                        payload: { id: segment.id, ...getSegmentPayload() },
+                    });
                 } else {
                     await updateSegment(segment.id, getSegmentPayload());
-                    refetchSegments();
-                    if (projectId) {
-                        navigate(`/projects/${projectId}/settings/segments/`);
-                    } else {
-                        navigate('/segments/');
-                    }
-                    setToastData({
-                        title: 'Segment updated',
-                        type: 'success',
-                    });
                 }
+                refetchSegments();
+                if (projectId) {
+                    navigate(`/projects/${projectId}/settings/segments/`);
+                } else {
+                    navigate('/segments/');
+                }
+                setToastData({
+                    title: `Segment ${
+                        activateSegmentChangeRequests
+                            ? 'change added to draft'
+                            : 'updated'
+                    }`,
+                    type: 'success',
+                });
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }

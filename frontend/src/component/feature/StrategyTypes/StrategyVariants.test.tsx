@@ -32,7 +32,12 @@ test('should render variants', async () => {
         currentStrategy = strategy;
 
         return (
-            <StrategyVariants strategy={strategy} setStrategy={setStrategy} />
+            <StrategyVariants
+                strategy={strategy}
+                setStrategy={setStrategy}
+                projectId={'default'}
+                environment={'development'}
+            />
         );
     };
     render(

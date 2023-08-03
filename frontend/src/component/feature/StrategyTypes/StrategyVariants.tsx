@@ -24,9 +24,9 @@ export const StrategyVariants: FC<{
         React.SetStateAction<Partial<IFeatureStrategy>>
     >;
     strategy: Partial<IFeatureStrategy>;
-}> = ({ strategy, setStrategy }) => {
-    const projectId = useRequiredPathParam('projectId');
-    const environment = useRequiredQueryParam('environmentId');
+    projectId: string;
+    environment: string;
+}> = ({ strategy, setStrategy, projectId, environment }) => {
     const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
     const theme = useTheme();
     const stickiness =

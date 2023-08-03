@@ -110,6 +110,7 @@ test('should set lastSeen for toggles with metrics', async () => {
         { name: 't2' },
         'tester',
     );
+
     const token = await app.services.apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
         project: 'default',
@@ -142,8 +143,22 @@ test('should set lastSeen for toggles with metrics', async () => {
 
     await app.services.clientMetricsServiceV2.bulkAdd();
     await app.services.lastSeenService.store();
-    const t1 = await db.stores.featureToggleStore.get('t1');
-    const t2 = await db.stores.featureToggleStore.get('t2');
-    expect(t1.lastSeenAt.getTime()).toBeGreaterThanOrEqual(start);
-    expect(t2.lastSeenAt).toBeDefined();
+    const t1 = await app.services.featureToggleServiceV2.getFeature({
+        featureName: 't1',
+        archived: false,
+        environmentVariants: true,
+        projectId: 'default',
+    });
+    const t2 = await app.services.featureToggleServiceV2.getFeature({
+        featureName: 't2',
+        archived: false,
+        environmentVariants: true,
+        projectId: 'default',
+    });
+
+    const t1Env = t1.environments.find((e) => e.name === 'default');
+    const t2Env = t2.environments.find((e) => e.name === 'default');
+
+    expect(t1Env?.lastSeenAt.getTime()).toBeGreaterThanOrEqual(start);
+    expect(t2Env?.lastSeenAt).toBeDefined();
 });

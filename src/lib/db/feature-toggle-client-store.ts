@@ -75,9 +75,10 @@ export default class FeatureToggleClientStore
             'features.project as project',
             'features.stale as stale',
             'features.impression_data as impression_data',
+            'features.last_seen_at as last_seen_at',
             'features.created_at as created_at',
             'fe.variants as variants',
-            'fe.last_seen_at as last_seen_at',
+            'fe.last_seen_at as env_last_seen_at',
             'fe.enabled as enabled',
             'fe.environment as environment',
             'fs.id as strategy_id',
@@ -201,6 +202,7 @@ export default class FeatureToggleClientStore
             feature.project = r.project;
             feature.stale = r.stale;
             feature.type = r.type;
+            feature.lastSeenAt = r.last_seen_at;
             feature.variants = r.variants || [];
             feature.project = r.project;
             if (isAdmin) {

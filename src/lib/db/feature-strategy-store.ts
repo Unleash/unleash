@@ -443,7 +443,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             type: r.environment_type,
             sortOrder: r.environment_sort_order,
             variantCount: r.variants?.length || 0,
-            lastSeenAt: r.last_seen_at,
+            lastSeenAt: r.env_last_seen_at,
         };
     }
 
@@ -524,6 +524,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'feature_environments.enabled as enabled',
             'feature_environments.environment as environment',
             'feature_environments.variants as variants',
+            'feature_environments.last_seen_at as env_last_seen_at',
             'environments.type as environment_type',
             'environments.sort_order as environment_sort_order',
             'ft.tag_value as tag_value',

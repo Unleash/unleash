@@ -987,6 +987,14 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@npmcli/agent@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@npmcli/agent/-/agent-1.1.0.tgz#c3dd498bdbb484358869b961739bb1e8cf408208"
+  integrity sha512-I9g/2XFOkflxm5IDrGSjCcR2d12Jmic0di9w/WpJBbzYuSXmfgoL+WwEV7zY/ajxzQr7o4vSkEJh6piyFLYtuQ==
+  dependencies:
+    lru-cache "^7.18.3"
+    socks "^2.7.1"
+
 "@npmcli/fs@^2.1.0":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@npmcli/fs/-/fs-2.1.2.tgz#a9e2541a4a2fec2e69c29b35e6060973da79b865"
@@ -5213,7 +5221,7 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-lru-cache@^7.7.1:
+lru-cache@^7.18.3, lru-cache@^7.7.1:
   version "7.18.3"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.18.3.tgz#f793896e0fd0e954a59dfdd82f0773808df6aa89"
   integrity sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==
@@ -5264,25 +5272,21 @@ make-fetch-happen@^10.2.1:
     socks-proxy-agent "^7.0.0"
     ssri "^9.0.0"
 
-make-fetch-happen@^11.0.0:
-  version "11.1.1"
-  resolved "https://registry.yarnpkg.com/make-fetch-happen/-/make-fetch-happen-11.1.1.tgz#85ceb98079584a9523d4bf71d32996e7e208549f"
-  integrity sha512-rLWS7GCSTcEujjVBs2YqG7Y4643u8ucvCJeSRqiLYhesrDuzeuFIk37xREzAsfQaqzl8b9rNCE4m6J8tvX4Q8w==
+make-fetch-happen@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/make-fetch-happen/-/make-fetch-happen-12.0.0.tgz#788e783444ac988a8145481cab3621bfa7d9d9ea"
+  integrity sha512-xpuA2kA8Z66uGQjaSXd7rffqJOv60iYpP8X0TsZl3uwXlqxUVmHETImjM71JOPA694TlcX37GhlaCsl6z6fNVg==
   dependencies:
-    agentkeepalive "^4.2.1"
+    "@npmcli/agent" "^1.1.0"
     cacache "^17.0.0"
     http-cache-semantics "^4.1.1"
-    http-proxy-agent "^5.0.0"
-    https-proxy-agent "^5.0.0"
     is-lambda "^1.0.1"
-    lru-cache "^7.7.1"
-    minipass "^5.0.0"
+    minipass "^7.0.2"
     minipass-fetch "^3.0.0"
     minipass-flush "^1.0.5"
     minipass-pipeline "^1.2.4"
     negotiator "^0.6.3"
     promise-retry "^2.0.1"
-    socks-proxy-agent "^7.0.0"
     ssri "^10.0.0"
 
 makeerror@1.0.12:
@@ -5517,6 +5521,11 @@ minipass@^5.0.0:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/minipass/-/minipass-6.0.2.tgz#542844b6c4ce95b202c0995b0a471f1229de4c81"
   integrity sha512-MzWSV5nYVT7mVyWCwn2o7JH13w2TBRmmSqSRCKzTw+lmft9X4z+3wjvs06Tzijo5z4W/kahUCDpRXTF+ZrmF/w==
+
+minipass@^7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/minipass/-/minipass-7.0.2.tgz#58a82b7d81c7010da5bd4b2c0c85ac4b4ec5131e"
+  integrity sha512-eL79dXrE1q9dBbDCLg7xfn/vl7MS4F1gvJAgjJrQli/jbQWdUttuVawphqpffoIYfRdq78LHx6GP4bU/EQ2ATA==
 
 minizlib@^2.1.1, minizlib@^2.1.2:
   version "2.1.2"
@@ -6828,7 +6837,7 @@ socks-proxy-agent@^7.0.0:
     debug "^4.3.3"
     socks "^2.6.2"
 
-socks@^2.6.2:
+socks@^2.6.2, socks@^2.7.1:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/socks/-/socks-2.7.1.tgz#d8e651247178fde79c0663043e07240196857d55"
   integrity sha512-7maUZy1N7uo6+WVEX6psASxtNlKaNVMlGQKkG/63nEDdLOWNbiUMoLK7X4uYoLhQstau72mLgfEWcXcwsaHbYQ==

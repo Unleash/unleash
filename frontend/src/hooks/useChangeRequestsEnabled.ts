@@ -41,9 +41,22 @@ export const useChangeRequestsEnabled = (projectId: string) => {
         return data.some(draft => draft.changeRequestEnabled);
     }, [JSON.stringify(data)]);
 
+    const highestPermissionChangeRequestEnv = React.useCallback(():
+        | string
+        | undefined => {
+        const changeRequestEnvs = data.filter(env => env.changeRequestEnabled);
+
+        const env =
+            changeRequestEnvs.find(env => env.environment === 'production') ??
+            changeRequestEnvs[0];
+
+        return env.environment;
+    }, [JSON.stringify(data)]);
+
     return {
         isChangeRequestConfigured,
         isChangeRequestConfiguredInAnyEnv,
         isChangeRequestConfiguredForReview,
+        highestPermissionChangeRequestEnv,
     };
 };

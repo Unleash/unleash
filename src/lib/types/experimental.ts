@@ -27,7 +27,8 @@ export type IFlagKey =
     | 'emitPotentiallyStaleEvents'
     | 'configurableFeatureTypeLifetimes'
     | 'filterInvalidClientMetrics'
-    | 'frontendNavigationUpdate';
+    | 'frontendNavigationUpdate'
+    | 'lastSeenByEnvironment';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -126,6 +127,10 @@ const flags: IFlags = {
     ),
     frontendNavigationUpdate: parseEnvVarBoolean(
         process.env.UNLEASH_NAVIGATION_UPDATE,
+        false,
+    ),
+    lastSeenByEnvironment: parseEnvVarBoolean(
+        process.env.LAST_SEEN_BY_ENVIRONMENT,
         false,
     ),
 };

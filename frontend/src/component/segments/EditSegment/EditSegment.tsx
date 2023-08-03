@@ -19,6 +19,7 @@ import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValues
 import { SEGMENT_SAVE_BTN_ID } from 'utils/testIds';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface IEditSegmentProps {
     modal?: boolean;
@@ -57,6 +58,13 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
     const segmentValuesCount = useSegmentValuesCount(constraints);
     const { segmentValuesLimit } = useSegmentLimits();
 
+    const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
+        segment?.project || ''
+    );
+    const activateSegmentChangeRequests =
+        uiConfig?.flags?.segmentChangeRequests &&
+        isChangeRequestConfiguredInAnyEnv();
+
     const overSegmentValuesLimit: boolean = Boolean(
         segmentValuesLimit && segmentValuesCount > segmentValuesLimit
     );
@@ -75,17 +83,23 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
             e.preventDefault();
             clearErrors();
             try {
-                await updateSegment(segment.id, getSegmentPayload());
-                await refetchSegments();
-                if (projectId) {
-                    navigate(`/projects/${projectId}/settings/segments/`);
+                if (activateSegmentChangeRequests) {
+                    throw new Error(
+                        "You can't add segments to change requests just yet."
+                    );
                 } else {
-                    navigate('/segments/');
+                    await updateSegment(segment.id, getSegmentPayload());
+                    refetchSegments();
+                    if (projectId) {
+                        navigate(`/projects/${projectId}/settings/segments/`);
+                    } else {
+                        navigate('/segments/');
+                    }
+                    setToastData({
+                        title: 'Segment updated',
+                        type: 'success',
+                    });
                 }
-                setToastData({
-                    title: 'Segment updated',
-                    type: 'success',
-                });
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -120,7 +134,9 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
                     permission={UPDATE_SEGMENT}
                     disabled={!hasValidConstraints || overSegmentValuesLimit}
                     data-testid={SEGMENT_SAVE_BTN_ID}
-                />
+                >
+                    {activateSegmentChangeRequests ? 'Add to draft' : 'Save'}
+                </UpdateButton>
             </SegmentForm>
         </FormTemplate>
     );

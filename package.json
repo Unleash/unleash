@@ -49,7 +49,7 @@
     "prebuild:watch": "yarn run clean",
     "build:watch": "tsc -w --strictNullChecks false",
     "prebuild": "yarn run clean",
-    "test": "NODE_ENV=test PORT=4243 jest",
+    "test": "NODE_ENV=test PORT=4243 jest --maxWorkers=20",
     "test:unit": "NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e --testPathIgnorePatterns=dist",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:report": "NODE_ENV=test PORT=4243 jest --reporters=\"default\" --reporters=\"jest-junit\"",

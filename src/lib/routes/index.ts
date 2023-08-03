@@ -32,6 +32,7 @@ class IndexRouter extends Controller {
             rateLimit({
                 windowMs: minutesToMilliseconds(1),
                 max: 10,
+                validate: false,
                 standardHeaders: true,
                 legacyHeaders: false,
             }),

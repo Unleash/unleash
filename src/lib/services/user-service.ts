@@ -296,13 +296,12 @@ class UserService {
             ? { email: usernameOrEmail }
             : { username: usernameOrEmail };
 
-        let user;
+        let user, passwordHash;
         try {
             user = await this.store.getByQuery(idQuery);
+            passwordHash = await this.store.getPasswordHash(user.id);
         } catch (error) {}
-        if (user) {
-            const passwordHash = await this.store.getPasswordHash(user.id);
-
+        if (user && passwordHash) {
             const match = await bcrypt.compare(password, passwordHash);
             if (match) {
                 await this.store.successfullyLogin(user);

@@ -122,6 +122,25 @@ test('should not be able to login with deleted user', async () => {
     );
 });
 
+test('should not be able to login without password_hash on user', async () => {
+    const user = await userService.createUser({
+        username: 'deleted_user',
+        password: 'unleash4all',
+        rootRole: adminRole.id,
+    });
+
+    /*@ts-ignore: we are testing for null on purpose! */
+    await userStore.setPasswordHash(user.id, null);
+
+    await expect(
+        userService.loginUser('deleted_user', 'anything-should-fail'),
+    ).rejects.toThrow(
+        new PasswordMismatch(
+            `The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.`,
+        ),
+    );
+});
+
 test('should not login user if simple auth is disabled', async () => {
     await settingService.insert(
         simpleAuthSettingsKey,

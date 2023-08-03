@@ -19,6 +19,7 @@ import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValues
 import { SEGMENT_SAVE_BTN_ID } from 'utils/testIds';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 interface IEditSegmentProps {
     modal?: boolean;
@@ -56,6 +57,10 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
     const hasValidConstraints = useConstraintsValidation(constraints);
     const segmentValuesCount = useSegmentValuesCount(constraints);
     const { segmentValuesLimit } = useSegmentLimits();
+
+    const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
+        segment?.project || ''
+    );
 
     const overSegmentValuesLimit: boolean = Boolean(
         segmentValuesLimit && segmentValuesCount > segmentValuesLimit

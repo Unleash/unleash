@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { Paper, styled, Tab, Tabs } from '@mui/material';
+import { Box, Paper, styled, Tab, Tabs } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { CenteredNavLink } from './CenteredNavLink';
@@ -9,13 +9,19 @@ import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadg
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     marginBottom: '1rem',
-    borderRadius: '12.5px',
+    borderRadius: `${theme.shape.borderRadiusLarge}px`,
     boxShadow: 'none',
-    padding: '0 2rem',
+    padding: theme.spacing(0, 2),
+}));
+
+const StyledBadgeContainer = styled('div')(({ theme }) => ({
+    marginLeft: theme.spacing(1),
+    display: 'flex',
+    alignItems: 'center',
 }));
 
 export const AdminTabsMenu: VFC = () => {
-    const { uiConfig, isEnterprise } = useUiConfig();
+    const { uiConfig, isEnterprise, isPro } = useUiConfig();
     const { pathname } = useLocation();
     const { isBilling } = useInstanceStatus();
     const { flags, networkViewEnabled } = uiConfig;
@@ -35,8 +41,9 @@ export const AdminTabsMenu: VFC = () => {
             value: 'service-accounts',
             label: 'Service accounts',
             link: '/admin/service-accounts',
-            condition: isEnterprise() || showEnterpriseFeaturesInPro,
-            isEnterprise: true,
+            condition:
+                isEnterprise() || (isPro() && showEnterpriseFeaturesInPro),
+            showEnterpriseBadge: true,
         },
         {
             value: 'groups',
@@ -48,7 +55,9 @@ export const AdminTabsMenu: VFC = () => {
             value: 'roles',
             label: 'Roles',
             link: '/admin/roles',
-            condition: isEnterprise() || showEnterpriseFeaturesInPro,
+            condition:
+                isEnterprise() || (isPro() && showEnterpriseFeaturesInPro),
+            showEnterpriseBadge: true,
         },
         {
             value: 'api',
@@ -113,8 +122,14 @@ export const AdminTabsMenu: VFC = () => {
                                 <CenteredNavLink to={tab.link}>
                                     {tab.label}
                                     <ConditionallyRender
-                                        condition={Boolean(tab.isEnterprise)}
-                                        show={<EnterpriseBadge />}
+                                        condition={Boolean(
+                                            tab.showEnterpriseBadge
+                                        )}
+                                        show={
+                                            <StyledBadgeContainer>
+                                                <EnterpriseBadge size={16} />
+                                            </StyledBadgeContainer>
+                                        }
                                     />
                                 </CenteredNavLink>
                             }

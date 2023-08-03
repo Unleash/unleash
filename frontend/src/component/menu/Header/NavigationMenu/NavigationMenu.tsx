@@ -4,7 +4,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { INavigationMenuItem } from 'interfaces/route';
 import { Link } from 'react-router-dom';
-import { EnterpriseBadge } from './EnterpriseBadge/EnterpriseBadge';
+import { EnterpriseBadge } from '../../../common/EnterpriseBadge/EnterpriseBadge';
 
 interface INavigationMenuProps {
     options: INavigationMenuItem[];
@@ -36,6 +36,12 @@ const StyledSpan = styled('span')(({ theme }) => ({
     borderRadius: '2px',
 }));
 
+const StyledBadgeContainer = styled('div')(({ theme }) => ({
+    marginLeft: 'auto',
+    paddingLeft: theme.spacing(2),
+    display: 'flex',
+}));
+
 export const NavigationMenu = ({
     options,
     id,
@@ -44,7 +50,7 @@ export const NavigationMenu = ({
     style,
 }: INavigationMenuProps) => {
     const { uiConfig } = useUiConfig();
-    const showDividers = uiConfig?.flags?.frontendNavigationUpdate;
+    const showUpdatedMenu = uiConfig?.flags?.frontendNavigationUpdate;
 
     return (
         <Menu
@@ -59,7 +65,7 @@ export const NavigationMenu = ({
                     <ConditionallyRender
                         key={`${option.path}-divider`}
                         condition={Boolean(
-                            showDividers &&
+                            showUpdatedMenu &&
                                 options[i - 1]?.group &&
                                 options[i - 1]?.group !== option.group
                         )}
@@ -75,8 +81,15 @@ export const NavigationMenu = ({
                         <StyledSpan />
                         {option.title}
                         <ConditionallyRender
-                            condition={Boolean(option.menu.showEnterpriseBadge)}
-                            show={<EnterpriseBadge />}
+                            condition={Boolean(
+                                option.menu.showEnterpriseBadge &&
+                                    showUpdatedMenu
+                            )}
+                            show={
+                                <StyledBadgeContainer>
+                                    <EnterpriseBadge />
+                                </StyledBadgeContainer>
+                            }
                         />
                     </MenuItem>,
                 ])

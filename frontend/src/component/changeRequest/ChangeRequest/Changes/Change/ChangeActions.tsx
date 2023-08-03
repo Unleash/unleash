@@ -143,7 +143,7 @@ export const ChangeActions: FC<{
                                         </ListItemIcon>
                                         <ListItemText>
                                             <Typography variant="body2">
-                                                Edit changes
+                                                Edit change
                                             </Typography>
                                         </ListItemText>
                                         <EditChange

@@ -2,14 +2,15 @@ import useAPI from '../useApi/useApi';
 import { usePlausibleTracker } from '../../../usePlausibleTracker';
 
 export interface IChangeSchema {
-    feature: string;
+    feature: string | null;
     action:
         | 'updateEnabled'
         | 'addStrategy'
         | 'updateStrategy'
         | 'deleteStrategy'
         | 'patchVariant'
-        | 'reorderStrategy';
+        | 'reorderStrategy'
+        | 'updateSegment';
     payload: string | boolean | object | number;
 }
 

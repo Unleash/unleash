@@ -55,6 +55,7 @@ export interface IFlags {
     newProjectLayout?: boolean;
     configurableFeatureTypeLifetimes?: boolean;
     frontendNavigationUpdate?: boolean;
+    segmentChangeRequests?: boolean;
 }
 
 export interface IVersionInfo {

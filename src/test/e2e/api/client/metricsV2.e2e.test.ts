@@ -98,7 +98,7 @@ test('should pick up environment from token', async () => {
     expect(metrics[0].appName).toBe('some-fancy-app');
 });
 
-test('should set lastSeen for toggles with metrics', async () => {
+test('should set lastSeen for toggles with metrics both for toggle and toggle env', async () => {
     const start = Date.now();
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',

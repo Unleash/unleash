@@ -257,6 +257,8 @@ export const FeatureStrategyForm = ({
                     <StrategyVariants
                         strategy={strategy}
                         setStrategy={setStrategy}
+                        environment={environmentId}
+                        projectId={projectId}
                     />
                 }
             />

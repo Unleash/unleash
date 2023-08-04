@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { Box, Paper, styled, Tab, Tabs } from '@mui/material';
+import { Paper, styled, Tab, Tabs } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { CenteredNavLink } from './CenteredNavLink';
@@ -43,7 +43,7 @@ export const AdminTabsMenu: VFC = () => {
             link: '/admin/service-accounts',
             condition:
                 isEnterprise() || (isPro() && showEnterpriseFeaturesInPro),
-            showEnterpriseBadge: true,
+            showEnterpriseBadge: isPro(),
         },
         {
             value: 'groups',
@@ -57,7 +57,7 @@ export const AdminTabsMenu: VFC = () => {
             link: '/admin/roles',
             condition:
                 isEnterprise() || (isPro() && showEnterpriseFeaturesInPro),
-            showEnterpriseBadge: true,
+            showEnterpriseBadge: isPro(),
         },
         {
             value: 'api',

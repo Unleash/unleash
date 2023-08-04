@@ -7,7 +7,7 @@ import { InstanceStatsService } from 'lib/services';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const _responseTime = responseTime.default;
 
-const appNameReportingThreshold = 100;
+const appNameReportingThreshold = 1000;
 
 export function responseTimeMetrics(
     eventBus: EventEmitter,

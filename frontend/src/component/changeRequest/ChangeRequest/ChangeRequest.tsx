@@ -2,8 +2,10 @@ import React, { VFC } from 'react';
 import { Box, Typography } from '@mui/material';
 import type { IChangeRequest } from '../changeRequest.types';
 import { FeatureToggleChanges } from './Changes/FeatureToggleChanges';
-import { Change } from './Changes/Change/Change';
+import { FeatureChange } from './Changes/Change/FeatureChange';
 import { ChangeActions } from './Changes/Change/ChangeActions';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { SegmentChange } from './Changes/Change/SegmentChange';
 
 interface IChangeRequestProps {
     changeRequest: IChangeRequest;
@@ -18,6 +20,30 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
 }) => {
     return (
         <Box>
+            <ConditionallyRender
+                condition={changeRequest.segments.length > 0}
+                show={
+                    <Typography variant="body2" color="text.secondary">
+                        You request changes for these segments:
+                    </Typography>
+                }
+            />
+
+            {changeRequest.segments?.map(segment => (
+                <SegmentChange
+                    key={segment.payload.id}
+                    segmentChange={segment}
+                    onNavigate={onNavigate}
+                />
+            ))}
+            <ConditionallyRender
+                condition={changeRequest.features.length > 0}
+                show={
+                    <Typography variant="body2" color="text.secondary">
+                        You request changes for these feature toggles:
+                    </Typography>
+                }
+            />
             {changeRequest.features?.map(feature => (
                 <FeatureToggleChanges
                     key={feature.name}
@@ -27,7 +53,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                     conflict={feature.conflict}
                 >
                     {feature.changes.map((change, index) => (
-                        <Change
+                        <FeatureChange
                             key={index}
                             discard={
                                 <ChangeActions
@@ -44,7 +70,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                         />
                     ))}
                     {feature.defaultChange ? (
-                        <Change
+                        <FeatureChange
                             discard={
                                 <Typography
                                     variant="body2"

@@ -1,11 +1,11 @@
 import React, { FC, useState } from 'react';
 import { screen } from '@testing-library/react';
 import { ChangeRequestTitle } from './ChangeRequestTitle';
-import { ChangeRequestState } from '../../changeRequest.types';
+import { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
 import userEvent from '@testing-library/user-event';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
-import { UIProviderContainer } from '../../../providers/UIProvider/UIProviderContainer';
+import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 
 const changeRequest = {
     id: 3,
@@ -19,6 +19,7 @@ const changeRequest = {
     features: [],
     approvals: [],
     comments: [],
+    segments: [],
 };
 
 const server = testServerSetup();

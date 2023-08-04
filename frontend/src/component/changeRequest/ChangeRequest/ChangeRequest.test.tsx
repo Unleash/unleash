@@ -19,6 +19,7 @@ const changeRequestWithDefaultChange = (
             username: 'author',
             imageUrl: '',
         },
+        segments: [],
         features: [
             {
                 name: 'Feature Toggle Name',

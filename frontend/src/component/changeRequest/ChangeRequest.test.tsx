@@ -29,6 +29,7 @@ const pendingChangeRequest = (featureName: string) =>
                         'https://gravatar.com/avatar/21232f297a57a5a743894a0e4a801fc3?size=42&default=retro',
                 },
                 createdAt: '2022-12-02T09:19:12.242Z',
+                segments: [],
                 features: [
                     {
                         name: featureName,

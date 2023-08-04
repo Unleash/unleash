@@ -21,6 +21,7 @@ import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentL
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
 
 interface IEditSegmentProps {
     modal?: boolean;
@@ -72,9 +73,8 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
 --data-raw '${JSON.stringify(getSegmentPayload(), undefined, 2)}'`;
     };
 
-    const { highestPermissionChangeRequestEnv } = useChangeRequestsEnabled(
-        segment?.project || ''
-    );
+    const highestPermissionChangeRequestEnv =
+        useHighestPermissionChangeRequestEnvironment(segment?.project);
     const changeRequestEnv = highestPermissionChangeRequestEnv();
     const activateSegmentChangeRequests =
         uiConfig?.flags?.segmentChangeRequests && changeRequestEnv;

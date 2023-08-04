@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import {
-    IChange,
+    IFeatureChange,
     IChangeRequest,
     IChangeRequestAddStrategy,
     IChangeRequestUpdateStrategy,
@@ -26,7 +26,10 @@ import {
 import { Delete, Edit, MoreVert } from '@mui/icons-material';
 import { EditChange } from './EditChange';
 
-const useShowActions = (changeRequest: IChangeRequest, change: IChange) => {
+const useShowActions = (
+    changeRequest: IChangeRequest,
+    change: IFeatureChange
+) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(
         changeRequest.project
     );
@@ -57,7 +60,7 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 export const ChangeActions: FC<{
     changeRequest: IChangeRequest;
     feature: string;
-    change: IChange;
+    change: IFeatureChange;
     onRefetch?: () => void;
 }> = ({ changeRequest, feature, change, onRefetch }) => {
     const { showDiscard, showEdit } = useShowActions(changeRequest, change);

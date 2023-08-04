@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 import {
-    IChange,
+    IFeatureChange,
     IChangeRequest,
     IChangeRequestFeature,
 } from '../../../changeRequest.types';
@@ -54,11 +54,11 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     },
 }));
 
-export const Change: FC<{
+export const FeatureChange: FC<{
     discard: ReactNode;
     index: number;
     changeRequest: IChangeRequest;
-    change: IChange;
+    change: IFeatureChange;
     feature: IChangeRequestFeature;
 }> = ({ index, change, feature, changeRequest, discard }) => {
     const lastIndex = feature.defaultChange
@@ -82,6 +82,7 @@ export const Change: FC<{
                     </StyledAlert>
                 }
             />
+
             <Box sx={theme => ({ padding: theme.spacing(3) })}>
                 {change.action === 'updateEnabled' && (
                     <ToggleStatusChange
@@ -89,6 +90,7 @@ export const Change: FC<{
                         discard={discard}
                     />
                 )}
+
                 {change.action === 'addStrategy' ||
                 change.action === 'deleteStrategy' ||
                 change.action === 'updateStrategy' ? (

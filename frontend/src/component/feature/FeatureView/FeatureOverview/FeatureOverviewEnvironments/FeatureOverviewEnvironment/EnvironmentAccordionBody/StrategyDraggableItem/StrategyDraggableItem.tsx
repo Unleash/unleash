@@ -7,7 +7,7 @@ import { IFeatureStrategy } from 'interfaces/strategy';
 import { StrategyItem } from './StrategyItem/StrategyItem';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Badge } from 'component/common/Badge/Badge';
-import { IChange } from 'component/changeRequest/changeRequest.types';
+import { IFeatureChange } from 'component/changeRequest/changeRequest.types';
 import { useStrategyChangeFromRequest } from './StrategyItem/useStrategyChangeFromRequest';
 
 interface IStrategyDraggableItemProps {
@@ -74,7 +74,7 @@ export const StrategyDraggableItem = ({
 const ChangeRequestStatusBadge = ({
     change,
 }: {
-    change: IChange | undefined;
+    change: IFeatureChange | undefined;
 }) => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));

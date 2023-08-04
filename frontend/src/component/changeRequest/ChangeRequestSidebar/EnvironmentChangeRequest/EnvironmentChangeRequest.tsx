@@ -112,11 +112,7 @@ export const EnvironmentChangeRequest: FC<{
                 </ChangeRequestTitle>
             </ChangeRequestHeader>
             <ChangeRequestContent>
-                <Typography variant="body2" color="text.secondary">
-                    You request changes for these feature toggles:
-                </Typography>
                 {children}
-
                 <ConditionallyRender
                     condition={environmentChangeRequest?.state === 'Draft'}
                     show={

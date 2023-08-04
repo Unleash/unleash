@@ -462,20 +462,32 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/service-accounts',
         title: 'Service accounts',
-        menu: { adminSettings: true, mode: ['enterprise'] },
+        menu: {
+            adminSettings: true,
+            mode: ['enterprise'],
+            showEnterpriseBadge: true,
+        },
         group: 'users',
     },
     {
         path: '/admin/groups',
         title: 'Groups',
-        menu: { adminSettings: true, mode: ['enterprise'] },
+        menu: {
+            adminSettings: true,
+            mode: ['enterprise'],
+            showEnterpriseBadge: true,
+        },
         flag: UG,
         group: 'users',
     },
     {
         path: '/admin/roles/*',
         title: 'Roles',
-        menu: { adminSettings: true, mode: ['enterprise'] },
+        menu: {
+            adminSettings: true,
+            mode: ['enterprise'],
+            showEnterpriseBadge: true,
+        },
         group: 'users',
     },
     {
@@ -532,7 +544,11 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/logins',
         title: 'Login history',
-        menu: { adminSettings: true, mode: ['enterprise'] },
+        menu: {
+            adminSettings: true,
+            mode: ['enterprise'],
+            showEnterpriseBadge: true,
+        },
         group: 'log',
     },
     {

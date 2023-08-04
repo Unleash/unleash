@@ -79,16 +79,13 @@ export const NavigationMenu = ({
         >
             {options
                 .map((option, i) => [
-                    <ConditionallyRender
-                        key={`${option.path}-divider`}
-                        condition={Boolean(
-                            showUpdatedMenu &&
-                                options[i - 1]?.group &&
-                                options[i - 1]?.group !== option.group
-                        )}
-                        show={<Divider variant="middle" />}
-                        elseShow={null}
-                    />,
+                    Boolean(
+                        showUpdatedMenu &&
+                            options[i - 1]?.group &&
+                            options[i - 1]?.group !== option.group
+                    ) ? (
+                        <Divider variant="middle" />
+                    ) : null,
                     <MenuItem
                         key={option.path}
                         component={StyledLink}

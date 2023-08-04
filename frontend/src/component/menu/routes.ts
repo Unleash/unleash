@@ -465,7 +465,6 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         menu: {
             adminSettings: true,
             mode: ['enterprise'],
-            showEnterpriseBadge: true,
         },
         group: 'users',
     },
@@ -475,7 +474,6 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         menu: {
             adminSettings: true,
             mode: ['enterprise'],
-            showEnterpriseBadge: true,
         },
         flag: UG,
         group: 'users',
@@ -486,7 +484,6 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         menu: {
             adminSettings: true,
             mode: ['enterprise'],
-            showEnterpriseBadge: true,
         },
         group: 'users',
     },
@@ -547,7 +544,6 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
         menu: {
             adminSettings: true,
             mode: ['enterprise'],
-            showEnterpriseBadge: true,
         },
         group: 'log',
     },

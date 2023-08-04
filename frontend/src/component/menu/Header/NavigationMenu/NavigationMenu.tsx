@@ -5,6 +5,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { INavigationMenuItem } from 'interfaces/route';
 import { Link } from 'react-router-dom';
 import { EnterpriseBadge } from '../../../common/EnterpriseBadge/EnterpriseBadge';
+import { useCallback } from 'react';
 
 interface INavigationMenuProps {
     options: INavigationMenuItem[];
@@ -49,8 +50,24 @@ export const NavigationMenu = ({
     anchorEl,
     style,
 }: INavigationMenuProps) => {
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isPro } = useUiConfig();
     const showUpdatedMenu = uiConfig?.flags?.frontendNavigationUpdate;
+
+    const showBadge = useCallback(
+        (mode?: INavigationMenuItem['menu']['mode']) => {
+            if (
+                isPro() &&
+                !mode?.includes('pro') &&
+                mode?.includes('enterprise') &&
+                showUpdatedMenu
+            ) {
+                return true;
+            }
+
+            return false;
+        },
+        [isPro, showUpdatedMenu]
+    );
 
     return (
         <Menu
@@ -81,10 +98,7 @@ export const NavigationMenu = ({
                         <StyledSpan />
                         {option.title}
                         <ConditionallyRender
-                            condition={Boolean(
-                                option.menu.showEnterpriseBadge &&
-                                    showUpdatedMenu
-                            )}
+                            condition={showBadge(option?.menu?.mode)}
                             show={
                                 <StyledBadgeContainer>
                                     <EnterpriseBadge />

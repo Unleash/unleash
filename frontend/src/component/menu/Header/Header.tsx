@@ -124,6 +124,9 @@ const Header: VFC = () => {
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const showApiAccessInConfigure = !uiConfig?.flags?.frontendNavigationUpdate;
+    const showEnterpriseOpttionsInPro = Boolean(
+        uiConfig?.flags?.frontendNavigationUpdate
+    );
 
     const toggleDrawer = () => setOpenDrawer(prev => !prev);
     const onAdminClose = () => setAdminRef(null);
@@ -132,20 +135,22 @@ const Header: VFC = () => {
     const routes = getRoutes();
 
     const filterByMode = (route: INavigationMenuItem): boolean => {
-        const { mode, showEnterpriseBadge } = route.menu;
+        const { mode } = route.menu;
 
         if (!mode) return true;
 
         if (isPro()) {
-            return (
-                mode.includes('pro') ||
-                (mode.includes('enterprise') && showEnterpriseBadge) ||
-                false
-            );
+            if (mode.includes('pro')) {
+                return true;
+            }
+
+            if (showEnterpriseOpttionsInPro && mode.includes('enterprise')) {
+                return true;
+            }
         }
 
-        if (isEnterprise()) {
-            return mode.includes('enterprise');
+        if (isEnterprise() && mode.includes('enterprise')) {
+            return true;
         }
 
         return false;

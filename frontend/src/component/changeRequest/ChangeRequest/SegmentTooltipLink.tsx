@@ -9,7 +9,7 @@ import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Typography, styled } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
-import { ISegment } from '../../../interfaces/segment';
+import { ISegment } from 'interfaces/segment';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -40,19 +40,6 @@ export const SegmentDiff: FC<{
         </StyledCodeSection>
     );
 };
-
-export const SegmentName: FC<{
-    change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
-}> = ({ change }) => {
-    return (
-        <>
-            <Truncated>
-                <Typography component="span">{change.payload.name}</Typography>
-            </Truncated>
-        </>
-    );
-};
-
 interface IStrategyTooltipLinkProps {
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
 }

@@ -4,7 +4,7 @@ import type { IChangeRequest } from '../changeRequest.types';
 import { FeatureToggleChanges } from './Changes/FeatureToggleChanges';
 import { FeatureChange } from './Changes/Change/FeatureChange';
 import { ChangeActions } from './Changes/Change/ChangeActions';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SegmentChange } from './Changes/Change/SegmentChange';
 
 interface IChangeRequestProps {

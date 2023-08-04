@@ -32,7 +32,7 @@ export class ChangeRequestAccessReadModel
                 : Promise.resolve(false),
             this.isChangeRequestsEnabled(project, environment),
         ]);
-        return !(changeRequestEnabled && !canSkipChangeRequest);
+        return canSkipChangeRequest || !changeRequestEnabled;
     }
 
     public async canBypassChangeRequestForProject(
@@ -49,7 +49,7 @@ export class ChangeRequestAccessReadModel
                 : Promise.resolve(false),
             this.isChangeRequestsEnabledForProject(project),
         ]);
-        return !(changeRequestEnabled && !canSkipChangeRequest);
+        return canSkipChangeRequest || !changeRequestEnabled;
     }
 
     public async isChangeRequestsEnabled(

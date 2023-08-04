@@ -3312,9 +3312,9 @@ expect@^29.6.2:
     jest-util "^29.6.2"
 
 express-rate-limit@^6.6.0:
-  version "6.8.0"
-  resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-6.8.0.tgz#4f1f8238ba209caee2a43be921813f1b70e29beb"
-  integrity sha512-yVeDWczkh8qgo9INJB1tT4j7LFu+n6ei/oqSMsqpsUIGYjTM+gk+Q3wv19TMUdo8chvus8XohAuOhG7RYRM9ZQ==
+  version "6.8.1"
+  resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-6.8.1.tgz#f614bc3a7040fe6f75dc3198536f4cc13526f989"
+  integrity sha512-xJyudsE60CsDShK74Ni1MxsldYaIoivmG3ieK2tAckMsYCBewEuGalss6p/jHmFFnqM9xd5ojE0W2VlanxcOKg==
 
 express-session@^1.17.1:
   version "1.17.3"

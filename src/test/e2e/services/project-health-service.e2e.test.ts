@@ -39,7 +39,7 @@ beforeAll(async () => {
     featureToggleService = new FeatureToggleService(
         stores,
         config,
-        new SegmentService(stores, config),
+        new SegmentService(stores, changeRequestAccessReadModel, config),
         accessService,
         changeRequestAccessReadModel,
     );

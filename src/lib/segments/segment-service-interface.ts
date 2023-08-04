@@ -34,7 +34,15 @@ export interface ISegmentService {
         user: Partial<Pick<IUser, 'username' | 'email'>>,
     ): Promise<void>;
 
+    unprotectedUpdate(
+        id: number,
+        data: UpsertSegmentSchema,
+        user: Partial<Pick<IUser, 'username' | 'email'>>,
+    ): Promise<void>;
+
     delete(id: number, user: IUser): Promise<void>;
+
+    unprotectedDelete(id: number, user: IUser): Promise<void>;
 
     removeFromStrategy(id: number, strategyId: string): Promise<void>;
 

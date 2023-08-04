@@ -7,11 +7,15 @@ import FeatureStrategiesStore from '../../db/feature-strategy-store';
 import SegmentStore from '../../db/segment-store';
 import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
 import FakeFeatureStrategiesStore from '../../../test/fixtures/fake-feature-strategies-store';
+import {
+    createChangeRequestAccessReadModel,
+    createFakeChangeRequestAccessService,
+} from '../change-request-access-service/createChangeRequestAccessReadModel';
 
 export const createSegmentService = (
     db: Db,
     config: IUnleashConfig,
-): ISegmentService => {
+): SegmentService => {
     const { eventBus, getLogger, flagResolver } = config;
     const eventStore = new EventStore(db, getLogger);
     const segmentStore = new SegmentStore(
@@ -26,9 +30,14 @@ export const createSegmentService = (
         getLogger,
         flagResolver,
     );
+    const changeRequestAccessReadModel = createChangeRequestAccessReadModel(
+        db,
+        config,
+    );
 
     return new SegmentService(
         { segmentStore, featureStrategiesStore, eventStore },
+        changeRequestAccessReadModel,
         config,
     );
 };
@@ -39,9 +48,11 @@ export const createFakeSegmentService = (
     const eventStore = new FakeEventStore();
     const segmentStore = new FakeSegmentStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
+    const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
 
     return new SegmentService(
         { segmentStore, featureStrategiesStore, eventStore },
+        changeRequestAccessReadModel,
         config,
     );
 };

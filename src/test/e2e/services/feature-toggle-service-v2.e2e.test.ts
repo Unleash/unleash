@@ -40,12 +40,17 @@ beforeAll(async () => {
     );
     unleashConfig = config;
     stores = db.stores;
-    segmentService = new SegmentService(stores, config);
+
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
     const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
         db.rawDatabase,
         accessService,
+    );
+    segmentService = new SegmentService(
+        stores,
+        changeRequestAccessReadModel,
+        config,
     );
     service = new FeatureToggleService(
         stores,

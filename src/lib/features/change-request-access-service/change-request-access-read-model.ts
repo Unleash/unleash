@@ -6,6 +6,10 @@ export interface IChangeRequestAccessReadModel {
         environment: string,
         user?: User,
     ): Promise<boolean>;
+    canBypassChangeRequestForProject(
+        project: string,
+        user?: User,
+    ): Promise<boolean>;
     isChangeRequestsEnabled(
         project: string,
         environment: string,

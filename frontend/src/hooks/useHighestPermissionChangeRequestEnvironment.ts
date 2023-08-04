@@ -16,11 +16,7 @@ export const getHighestChangeRequestEnv =
 export const useHighestPermissionChangeRequestEnvironment = (
     projectId?: string
 ) => {
-    if (!projectId) {
-        return React.useCallback(() => undefined, []);
-    }
-
-    const { data } = useChangeRequestConfig(projectId);
+    const { data } = useChangeRequestConfig(projectId || '');
 
     return React.useCallback(getHighestChangeRequestEnv(data), [
         JSON.stringify(data),

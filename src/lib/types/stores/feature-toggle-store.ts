@@ -1,5 +1,6 @@
 import { FeatureToggle, FeatureToggleDTO, IVariant } from '../model';
 import { Store } from './store';
+import { LastSeenInput } from '../../services/client-metrics/last-seen-service';
 
 export interface IFeatureToggleQuery {
     archived: boolean;
@@ -10,7 +11,7 @@ export interface IFeatureToggleQuery {
 
 export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     count(query?: Partial<IFeatureToggleQuery>): Promise<number>;
-    setLastSeen(toggleNames: string[]): Promise<void>;
+    setLastSeen(data: LastSeenInput[]): Promise<void>;
     getProjectId(name: string): Promise<string | undefined>;
     create(project: string, data: FeatureToggleDTO): Promise<FeatureToggle>;
     update(project: string, data: FeatureToggleDTO): Promise<FeatureToggle>;

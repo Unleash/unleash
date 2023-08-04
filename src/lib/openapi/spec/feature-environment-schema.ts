@@ -63,6 +63,14 @@ export const featureEnvironmentSchema = {
             },
             description: 'A list of variants for the feature environment',
         },
+        lastSeenAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2023-01-28T16:21:39.975Z',
+            description:
+                'The date when metrics where last collected for the feature environment',
+        },
     },
     components: {
         schemas: {

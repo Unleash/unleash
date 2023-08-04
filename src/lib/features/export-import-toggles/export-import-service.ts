@@ -643,6 +643,7 @@ export default class ExportImportService {
             featureEnvironments: featureEnvironments.map((item) => ({
                 ...item,
                 name: item.featureName,
+                lastSeenAt: item.lastSeenAt?.toISOString(),
             })),
             contextFields: filteredContextFields.map((item) => {
                 const { createdAt, ...rest } = item;

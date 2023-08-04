@@ -9,6 +9,8 @@ import {
     IFeatureEnvironment,
     IVariant,
 } from 'lib/types/model';
+import { LastSeenInput } from '../../lib/services/client-metrics/last-seen-service';
+import { EnvironmentFeatureNames } from '../../lib/db/feature-toggle-store';
 
 export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     features: FeatureToggle[] = [];
@@ -161,13 +163,33 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         throw new NotFoundError('Could not find feature to update');
     }
 
-    async setLastSeen(toggleNames: string[]): Promise<void> {
-        toggleNames.forEach((t) => {
-            const toUpdate = this.features.find((f) => f.name === t);
-            if (toUpdate) {
-                toUpdate.lastSeenAt = new Date();
+    async setLastSeen(data: LastSeenInput[]): Promise<void> {
+        const envArrays = data.reduce(
+            (acc: EnvironmentFeatureNames, feature: LastSeenInput) => {
+                const { environment, featureName } = feature;
+
+                if (!acc[environment]) {
+                    acc[environment] = [];
+                }
+
+                acc[environment].push(featureName);
+
+                return acc;
+            },
+            {},
+        );
+
+        for (const env of Object.keys(envArrays)) {
+            const toggleNames = envArrays[env];
+            if (toggleNames && Array.isArray(toggleNames)) {
+                toggleNames.forEach((t) => {
+                    const toUpdate = this.features.find((f) => f.name === t);
+                    if (toUpdate) {
+                        toUpdate.lastSeenAt = new Date();
+                    }
+                });
             }
-        });
+        }
     }
 
     async getVariants(featureName: string): Promise<IVariant[]> {

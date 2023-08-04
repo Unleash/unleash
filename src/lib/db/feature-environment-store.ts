@@ -88,6 +88,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                 featureName,
                 environment,
                 variants: md.variants,
+                lastSeenAt: md.last_seen_at,
             };
         }
         throw new NotFoundError(
@@ -123,6 +124,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
             featureName: r.feature_name,
             environment: r.environment,
             variants: r.variants,
+            lastSeenAt: r.last_seen_at,
         }));
     }
 
@@ -196,6 +198,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                 environment: r.environment,
                 variants: r.variants || [],
                 enabled: r.enabled,
+                lastSeenAt: r.last_seen_at,
             }));
         }
         return [];

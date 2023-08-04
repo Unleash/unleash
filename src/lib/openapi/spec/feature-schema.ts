@@ -84,9 +84,10 @@ export const featureSchema = {
             type: 'string',
             format: 'date-time',
             nullable: true,
+            deprecated: true,
             example: '2023-01-28T16:21:39.975Z',
             description:
-                'The date when metrics where last collected for the feature',
+                'The date when metrics where last collected for the feature. This field is deprecated, use the one in featureEnvironmentSchema',
         },
         environments: {
             type: 'array',

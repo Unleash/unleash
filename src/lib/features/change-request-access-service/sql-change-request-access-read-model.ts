@@ -35,6 +35,23 @@ export class ChangeRequestAccessReadModel
         return !(changeRequestEnabled && !canSkipChangeRequest);
     }
 
+    public async canBypassChangeRequestForProject(
+        project: string,
+        user?: User,
+    ): Promise<boolean> {
+        const [canSkipChangeRequest, changeRequestEnabled] = await Promise.all([
+            user
+                ? this.accessService.hasPermission(
+                      user,
+                      SKIP_CHANGE_REQUEST,
+                      project,
+                  )
+                : Promise.resolve(false),
+            this.isChangeRequestsEnabledForProject(project),
+        ]);
+        return !(changeRequestEnabled && !canSkipChangeRequest);
+    }
+
     public async isChangeRequestsEnabled(
         project: string,
         environment: string,

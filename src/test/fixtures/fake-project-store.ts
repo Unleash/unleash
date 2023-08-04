@@ -177,7 +177,7 @@ export default class FakeProjectStore implements IProjectStore {
         projectId: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         environment: string,
-    ): Promise<CreateFeatureStrategySchema | undefined> {
+    ): Promise<CreateFeatureStrategySchema | null> {
         throw new Error('Method not implemented.');
     }
 

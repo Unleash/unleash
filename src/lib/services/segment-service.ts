@@ -1,6 +1,11 @@
 import { IUnleashConfig } from '../types/option';
 import { IEventStore } from '../types/stores/event-store';
-import { IClientSegment, IUnleashStores } from '../types';
+import {
+    IClientSegment,
+    IFlagResolver,
+    IUnleashStores,
+    SKIP_CHANGE_REQUEST,
+} from '../types';
 import { Logger } from '../logger';
 import NameExistsError from '../error/name-exists-error';
 import { ISegmentStore } from '../types/stores/segment-store';
@@ -15,6 +20,8 @@ import User from '../types/user';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import BadDataError from '../error/bad-data-error';
 import { ISegmentService } from '../segments/segment-service-interface';
+import { PermissionError } from '../error';
+import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 
 export class SegmentService implements ISegmentService {
     private logger: Logger;
@@ -25,7 +32,11 @@ export class SegmentService implements ISegmentService {
 
     private eventStore: IEventStore;
 
+    private changeRequestAccessReadModel: IChangeRequestAccessReadModel;
+
     private config: IUnleashConfig;
+
+    private flagResolver: IFlagResolver;
 
     constructor(
         {
@@ -36,12 +47,15 @@ export class SegmentService implements ISegmentService {
             IUnleashStores,
             'segmentStore' | 'featureStrategiesStore' | 'eventStore'
         >,
+        changeRequestAccessReadModel: IChangeRequestAccessReadModel,
         config: IUnleashConfig,
     ) {
         this.segmentStore = segmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
         this.eventStore = eventStore;
+        this.changeRequestAccessReadModel = changeRequestAccessReadModel;
         this.logger = config.getLogger('services/segment-service.ts');
+        this.flagResolver = config.flagResolver;
         this.config = config;
     }
 
@@ -82,17 +96,25 @@ export class SegmentService implements ISegmentService {
 
         await this.eventStore.store({
             type: SEGMENT_CREATED,
-            createdBy: user.email || user.username,
+            createdBy: user.email || user.username || 'unknown',
             data: segment,
         });
 
         return segment;
     }
 
-    async update(
+    async update(id: number, data: unknown, user: User): Promise<void> {
+        if (this.flagResolver.isEnabled('segmentChangeRequests')) {
+            const input = await segmentSchema.validateAsync(data);
+            await this.stopWhenChangeRequestsEnabled(input.project, user);
+        }
+        return this.unprotectedUpdate(id, data, user);
+    }
+
+    async unprotectedUpdate(
         id: number,
         data: unknown,
-        user: Partial<Pick<User, 'username' | 'email'>>,
+        user: User,
     ): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
@@ -108,13 +130,26 @@ export class SegmentService implements ISegmentService {
 
         await this.eventStore.store({
             type: SEGMENT_UPDATED,
-            createdBy: user.email || user.username,
+            createdBy: user.email || user.username || 'unknown',
             data: segment,
             preData,
         });
     }
 
     async delete(id: number, user: User): Promise<void> {
+        const segment = await this.segmentStore.get(id);
+        if (this.flagResolver.isEnabled('segmentChangeRequests')) {
+            await this.stopWhenChangeRequestsEnabled(segment.project, user);
+        }
+        await this.segmentStore.delete(id);
+        await this.eventStore.store({
+            type: SEGMENT_DELETED,
+            createdBy: user.email || user.username,
+            data: segment,
+        });
+    }
+
+    async unprotectedDelete(id: number, user: User): Promise<void> {
         const segment = await this.segmentStore.get(id);
         await this.segmentStore.delete(id);
         await this.eventStore.store({
@@ -246,6 +281,18 @@ export class SegmentService implements ISegmentService {
                     projectsUsed,
                 ).join(', ')}`,
             );
+        }
+    }
+
+    private async stopWhenChangeRequestsEnabled(project?: string, user?: User) {
+        if (!project) return;
+        const canBypass =
+            await this.changeRequestAccessReadModel.canBypassChangeRequestForProject(
+                project,
+                user,
+            );
+        if (!canBypass) {
+            throw new PermissionError(SKIP_CHANGE_REQUEST);
         }
     }
 }

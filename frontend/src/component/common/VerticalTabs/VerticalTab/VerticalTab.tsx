@@ -45,12 +45,14 @@ interface IVerticalTabProps {
     label: string;
     selected?: boolean;
     onClick: () => void;
+    icon?: React.ReactNode;
 }
 
 export const VerticalTab = ({
     label,
     selected,
     onClick,
+    icon,
 }: IVerticalTabProps) => (
     <StyledTab
         selected={Boolean(selected)}
@@ -60,5 +62,6 @@ export const VerticalTab = ({
         fullWidth
     >
         {label}
+        {icon}
     </StyledTab>
 );

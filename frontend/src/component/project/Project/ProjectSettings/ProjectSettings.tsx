@@ -14,10 +14,12 @@ import { ProjectSegments } from './ProjectSegments/ProjectSegments';
 import { ProjectDefaultStrategySettings } from './ProjectDefaultStrategySettings/ProjectDefaultStrategySettings';
 import { Settings } from './Settings/Settings';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
+import { Box } from '@mui/material';
 
 export const ProjectSettings = () => {
     const location = useLocation();
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isPro, isEnterprise } = useUiConfig();
     const navigate = useNavigate();
 
     const tabs: ITab[] = [
@@ -33,18 +35,27 @@ export const ProjectSettings = () => {
             id: 'environments',
             label: 'Environments',
         },
-        {
-            id: 'access',
-            label: 'Access',
-        },
-        {
-            id: 'segments',
-            label: 'Segments',
-        },
-        {
-            id: 'change-requests',
-            label: 'Change request configuration',
-        },
+        ...(isPro() || isEnterprise()
+            ? [
+                  {
+                      id: 'access',
+                      label: 'Access',
+                  },
+                  {
+                      id: 'segments',
+                      label: 'Segments',
+                  },
+                  {
+                      id: 'change-requests',
+                      label: 'Change request configuration',
+                      icon: isPro() ? (
+                          <Box sx={{ marginLeft: 'auto' }}>
+                              <EnterpriseBadge />
+                          </Box>
+                      ) : undefined,
+                  },
+              ]
+            : []),
         {
             id: 'api-access',
             label: 'API access',

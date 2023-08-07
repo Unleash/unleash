@@ -109,7 +109,7 @@ export const Project = () => {
                       name: 'logs',
                   },
               ]),
-    ];
+    ].filter(tab => !updatedNavigation || !(isOss() && tab.isEnterprise));
 
     const activeTab = [...tabs]
         .reverse()

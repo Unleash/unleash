@@ -31,6 +31,7 @@ export interface ITab {
     label: string;
     path?: string;
     hidden?: boolean;
+    icon?: React.ReactNode;
 }
 
 interface IVerticalTabsProps {
@@ -56,6 +57,7 @@ export const VerticalTabs = ({
                         label={tab.label}
                         selected={tab.id === value}
                         onClick={() => onChange(tab)}
+                        icon={tab.icon}
                     />
                 ))}
         </StyledTabs>

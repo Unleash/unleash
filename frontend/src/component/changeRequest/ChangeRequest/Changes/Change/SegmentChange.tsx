@@ -44,7 +44,7 @@ export const SegmentChange: FC<ISegmentChangeProps> = ({
 
                 <Link
                     component={RouterLink}
-                    to={`/segments/${segmentChange.payload.id}`}
+                    to={`/segments/edit/${segmentChange.payload.id}`}
                     color="primary"
                     underline="hover"
                     sx={{

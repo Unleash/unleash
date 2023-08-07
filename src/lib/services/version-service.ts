@@ -19,6 +19,7 @@ import { ISettingStore } from '../types/stores/settings-store';
 import { hoursToMilliseconds } from 'date-fns';
 import { IStrategyStore } from 'lib/types';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
+import { CUSTOM_ROOT_ROLE_TYPE } from '../util';
 
 export interface IVersionInfo {
     oss: string;
@@ -46,6 +47,7 @@ export interface IFeatureUsageInfo {
     projects: number;
     contextFields: number;
     roles: number;
+    customRootRoles: number;
     featureExports: number;
     featureImports: number;
     groups: number;
@@ -226,6 +228,7 @@ export default class VersionService {
             contextFields,
             groups,
             roles,
+            customRootRoles,
             environments,
             segments,
             strategies,
@@ -242,6 +245,9 @@ export default class VersionService {
             this.contextFieldStore.count(),
             this.groupStore.count(),
             this.roleStore.count(),
+            this.roleStore.filteredCount({
+                type: CUSTOM_ROOT_ROLE_TYPE,
+            }),
             this.environmentStore.count(),
             this.segmentStore.count(),
             this.strategyStore.count(),
@@ -262,6 +268,7 @@ export default class VersionService {
             contextFields,
             groups,
             roles,
+            customRootRoles,
             environments,
             segments,
             strategies,

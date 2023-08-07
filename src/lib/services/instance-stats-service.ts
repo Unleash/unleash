@@ -18,6 +18,7 @@ import { IRoleStore } from '../types/stores/role-store';
 import VersionService from './version-service';
 import { ISettingStore } from '../types/stores/settings-store';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
+import { CUSTOM_ROOT_ROLE_TYPE } from '../util';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -31,6 +32,7 @@ export interface InstanceStats {
     projects: number;
     contextFields: number;
     roles: number;
+    customRootRoles: number;
     featureExports: number;
     featureImports: number;
     groups: number;
@@ -177,6 +179,7 @@ export class InstanceStatsService {
             contextFields,
             groups,
             roles,
+            customRootRoles,
             environments,
             segments,
             strategies,
@@ -192,6 +195,7 @@ export class InstanceStatsService {
             this.contextFieldStore.count(),
             this.groupStore.count(),
             this.roleStore.count(),
+            this.roleStore.filteredCount({ type: CUSTOM_ROOT_ROLE_TYPE }),
             this.environmentStore.count(),
             this.segmentStore.count(),
             this.strategyStore.count(),
@@ -212,6 +216,7 @@ export class InstanceStatsService {
             projects,
             contextFields,
             roles,
+            customRootRoles,
             groups,
             environments,
             segments,

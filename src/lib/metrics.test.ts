@@ -122,7 +122,7 @@ test('should collect metrics for feature toggle size', async () => {
     expect(metrics).toMatch(/feature_toggles_total\{version="(.*)"\} 0/);
 });
 
-test('should collect metrics for feature toggle size', async () => {
+test('should collect metrics for total client apps', async () => {
     await new Promise((done) => {
         setTimeout(done, 10);
     });

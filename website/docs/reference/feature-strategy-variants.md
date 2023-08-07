@@ -111,6 +111,8 @@ To make use of strategy variants, you need to use a compatible client. Client SD
 
 - [unleash-client-node](https://github.com/Unleash/unleash-client-node) (from v4.1.0)
 - [unleash-client-java](https://github.com/Unleash/unleash-client-java) (from v8.3.0)
+- [unleash-client-go](https://github.com/Unleash/unleash-client-go) (from v3.8.0)
+- [unleash-client-python](https://github.com/Unleash/unleash-client-python) (from v5.8.0)
 - Client SDKs talking to [unleash-proxy](https://github.com/Unleash/unleash-proxy) (from v0.17.0) 
 - Client SDKs talking to Frontend API in [unleash-server](https://github.com/Unleash/unleash) (from v5.4.0)
 - Unleash Playground in [unleash-server](https://github.com/Unleash/unleash) (from v5.4.0)

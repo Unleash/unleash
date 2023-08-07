@@ -333,6 +333,7 @@ module.exports = {
                         'reference/feature-toggles',
                         'reference/feature-toggle-types',
                         'reference/feature-toggle-variants',
+                        'reference/feature-strategy-variants',
                         'reference/front-end-api',
                         'reference/login-history',
                         'reference/maintenance-mode',

@@ -40,7 +40,9 @@ export const PlaygroundEnvironmentDiffTable = ({
     const contextFieldsHeaders = Object.keys(firstContext).map(
         contextField => ({
             Header: capitalizeFirst(contextField),
-            accessor: `${environments[0]}.context.${contextField}`,
+            accessor: (
+                row: Record<string, { context: Record<string, unknown> }>
+            ) => row[environments[0]]['context'][contextField],
             minWidth: 160,
             Cell: HighlightCell,
         })

@@ -33,7 +33,8 @@ export const PlaygroundEnvironmentTable = ({
     const dynamicHeaders = Object.keys(features[0].context).map(
         contextField => ({
             Header: capitalizeFirst(contextField),
-            accessor: `context.${contextField}`,
+            accessor: (row: { context: Record<string, unknown> }) =>
+                row['context'][contextField],
             minWidth: 160,
             Cell: HighlightCell,
         })

@@ -121,6 +121,7 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
                             path={item.path}
                             text={item.title}
                             key={item.path}
+                            mode={item.menu?.mode}
                         />
                     ))}
                 </List>

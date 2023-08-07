@@ -84,7 +84,7 @@ export const NavigationMenu = ({
                             options[i - 1]?.group &&
                             options[i - 1]?.group !== option.group
                     ) ? (
-                        <Divider variant="middle" />
+                        <Divider variant="middle" key={option.group} />
                     ) : null,
                     <MenuItem
                         key={option.path}

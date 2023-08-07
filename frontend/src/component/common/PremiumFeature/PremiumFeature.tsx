@@ -4,6 +4,8 @@ import { Box, Button, Link, styled, Typography } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 import { ThemeMode } from '../ThemeMode/ThemeMode';
+import { PageContent } from '../PageContent/PageContent';
+import { PageHeader } from '../PageHeader/PageHeader';
 
 const PremiumFeatureWrapper = styled(Box, {
     shouldForwardProp: prop => prop !== 'tooltip',
@@ -70,6 +72,21 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/reference/segments',
         label: 'Segments',
     },
+    'service-accounts': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/service-accounts',
+        label: 'Service Accounts',
+    },
+    'project-roles': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/rbac#custom-project-roles',
+        label: 'Project Roles',
+    },
+    'login-history': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/login-history',
+        label: 'Login history',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;
@@ -79,9 +96,14 @@ const UPGRADE_URL = 'https://www.getunleash.io/plans';
 export interface PremiumFeatureProps {
     feature: PremiumFeatureType;
     tooltip?: boolean;
+    page?: boolean;
 }
 
-export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
+export const PremiumFeature = ({
+    feature,
+    tooltip,
+    page,
+}: PremiumFeatureProps) => {
     const { url, plan, label } = PremiumFeatures[feature];
 
     const tracker = usePlausibleTracker();
@@ -110,7 +132,7 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
 
     const upgradeUrl = `${UPGRADE_URL}?feature=${feature}`;
 
-    return (
+    const content = (
         <PremiumFeatureWrapper tooltip={tooltip}>
             <StyledTitle>
                 <ThemeMode
@@ -168,4 +190,14 @@ export const PremiumFeature = ({ feature, tooltip }: PremiumFeatureProps) => {
             />
         </PremiumFeatureWrapper>
     );
+
+    if (page) {
+        return (
+            <PageContent header={<PageHeader title={label} />}>
+                {content}
+            </PageContent>
+        );
+    }
+
+    return content;
 };

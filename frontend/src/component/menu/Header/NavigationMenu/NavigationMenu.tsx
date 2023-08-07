@@ -5,6 +5,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { INavigationMenuItem } from 'interfaces/route';
 import { Link } from 'react-router-dom';
 import { EnterpriseBadge } from '../../../common/EnterpriseBadge/EnterpriseBadge';
+import { useCallback } from 'react';
 
 interface INavigationMenuProps {
     options: INavigationMenuItem[];
@@ -49,8 +50,24 @@ export const NavigationMenu = ({
     anchorEl,
     style,
 }: INavigationMenuProps) => {
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isPro } = useUiConfig();
     const showUpdatedMenu = uiConfig?.flags?.frontendNavigationUpdate;
+
+    const showBadge = useCallback(
+        (mode?: INavigationMenuItem['menu']['mode']) => {
+            if (
+                isPro() &&
+                !mode?.includes('pro') &&
+                mode?.includes('enterprise') &&
+                showUpdatedMenu
+            ) {
+                return true;
+            }
+
+            return false;
+        },
+        [isPro, showUpdatedMenu]
+    );
 
     return (
         <Menu
@@ -61,38 +78,36 @@ export const NavigationMenu = ({
             style={style}
         >
             {options
-                .map((option, i) => [
-                    <ConditionallyRender
-                        key={`${option.path}-divider`}
-                        condition={Boolean(
-                            showUpdatedMenu &&
-                                options[i - 1]?.group &&
-                                options[i - 1]?.group !== option.group
-                        )}
-                        show={<Divider variant="middle" />}
-                        elseShow={null}
-                    />,
-                    <MenuItem
-                        key={option.path}
-                        component={StyledLink}
-                        to={option.path}
-                        onClick={handleClose}
-                    >
-                        <StyledSpan />
-                        {option.title}
-                        <ConditionallyRender
-                            condition={Boolean(
-                                option.menu.showEnterpriseBadge &&
-                                    showUpdatedMenu
-                            )}
-                            show={
-                                <StyledBadgeContainer>
-                                    <EnterpriseBadge />
-                                </StyledBadgeContainer>
-                            }
-                        />
-                    </MenuItem>,
-                ])
+                .map((option, i) => {
+                    const previousGroup = options[i - 1]?.group;
+                    const addDivider =
+                        showUpdatedMenu &&
+                        previousGroup &&
+                        previousGroup !== option.group;
+
+                    return [
+                        addDivider ? (
+                            <Divider variant="middle" key={option.group} />
+                        ) : null,
+                        <MenuItem
+                            key={option.path}
+                            component={StyledLink}
+                            to={option.path}
+                            onClick={handleClose}
+                        >
+                            <StyledSpan />
+                            {option.title}
+                            <ConditionallyRender
+                                condition={showBadge(option?.menu?.mode)}
+                                show={
+                                    <StyledBadgeContainer>
+                                        <EnterpriseBadge />
+                                    </StyledBadgeContainer>
+                                }
+                            />
+                        </MenuItem>,
+                    ];
+                })
                 .flat()
                 .filter(Boolean)}
         </Menu>

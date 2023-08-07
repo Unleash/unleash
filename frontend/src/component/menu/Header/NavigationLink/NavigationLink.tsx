@@ -1,9 +1,14 @@
 import { ListItem, Link, styled } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { INavigationMenuItem } from 'interfaces/route';
 import { Link as RouterLink } from 'react-router-dom';
 interface INavigationLinkProps {
     path: string;
     text: string;
     handleClose: () => void;
+    mode?: INavigationMenuItem['menu']['mode'];
 }
 
 const StyledListItem = styled(ListItem)({
@@ -37,7 +42,25 @@ const StyledSpan = styled('span')(({ theme }) => ({
     borderRadius: '2px',
 }));
 
-const NavigationLink = ({ path, text, handleClose }: INavigationLinkProps) => {
+const StyledBadgeContainer = styled('div')(({ theme }) => ({
+    marginLeft: 'auto',
+    paddingLeft: theme.spacing(2),
+    display: 'flex',
+}));
+
+const NavigationLink = ({
+    path,
+    text,
+    handleClose,
+    ...props
+}: INavigationLinkProps) => {
+    const { uiConfig, isPro } = useUiConfig();
+    const showEnterpriseBadgeToPro = Boolean(
+        uiConfig?.flags?.frontendNavigationUpdate &&
+            isPro() &&
+            props.mode?.includes('enterprise')
+    );
+
     return (
         <StyledListItem
             onClick={() => {
@@ -52,6 +75,15 @@ const NavigationLink = ({ path, text, handleClose }: INavigationLinkProps) => {
             >
                 <StyledSpan />
                 {text}
+
+                <ConditionallyRender
+                    condition={showEnterpriseBadgeToPro}
+                    show={
+                        <StyledBadgeContainer>
+                            <EnterpriseBadge />
+                        </StyledBadgeContainer>
+                    }
+                />
             </Link>
         </StyledListItem>
     );

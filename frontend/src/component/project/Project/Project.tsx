@@ -14,7 +14,7 @@ import {
     StyledTabContainer,
     StyledTopRow,
 } from './Project.styles';
-import { Paper, Tabs, Typography } from '@mui/material';
+import { Box, Paper, Tabs, Typography } from '@mui/material';
 import { Delete, Edit, FileUpload } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
@@ -40,6 +40,7 @@ import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 import { ImportModal } from './Import/ImportModal';
 import { IMPORT_BUTTON } from 'utils/testIds';
+import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 
 const NAVIGATE_TO_EDIT_PROJECT = 'NAVIGATE_TO_EDIT_PROJECT';
 
@@ -52,12 +53,14 @@ export const Project = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const { isOss, uiConfig } = useUiConfig();
+    const { isOss, uiConfig, isPro } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
+
+    const updatedNavigation = uiConfig?.flags?.frontendNavigationUpdate;
 
     const tabs = [
         {
@@ -79,18 +82,34 @@ export const Project = () => {
             title: 'Change requests',
             path: `${basePath}/change-requests`,
             name: 'change-request',
+            isEnterprise: true,
         },
-        {
-            title: 'Project settings',
-            path: `${basePath}/settings`,
-            name: 'settings',
-        },
-        {
-            title: 'Event log',
-            path: `${basePath}/logs`,
-            name: 'logs',
-        },
-    ];
+        ...(updatedNavigation
+            ? [
+                  {
+                      title: 'Event log',
+                      path: `${basePath}/logs`,
+                      name: 'logs',
+                  },
+                  {
+                      title: 'Project settings',
+                      path: `${basePath}/settings`,
+                      name: 'settings',
+                  },
+              ]
+            : [
+                  {
+                      title: 'Project settings',
+                      path: `${basePath}/settings`,
+                      name: 'settings',
+                  },
+                  {
+                      title: 'Event log',
+                      path: `${basePath}/logs`,
+                      name: 'logs',
+                  },
+              ]),
+    ].filter(tab => !updatedNavigation || !(isOss() && tab.isEnterprise));
 
     const activeTab = [...tabs]
         .reverse()
@@ -129,6 +148,17 @@ export const Project = () => {
         }
         refetch();
     };
+
+    const enterpriseIcon = (
+        <Box
+            sx={theme => ({
+                marginLeft: theme.spacing(1),
+                display: 'flex',
+            })}
+        >
+            <EnterpriseBadge />
+        </Box>
+    );
 
     return (
         <div ref={ref}>
@@ -227,6 +257,16 @@ export const Project = () => {
                                 value={tab.path}
                                 onClick={() => navigate(tab.path)}
                                 data-testid={`TAB_${tab.title}`}
+                                iconPosition={
+                                    tab.isEnterprise ? 'end' : undefined
+                                }
+                                icon={
+                                    tab.isEnterprise &&
+                                    isPro() &&
+                                    updatedNavigation
+                                        ? enterpriseIcon
+                                        : undefined
+                                }
                             />
                         ))}
                     </Tabs>

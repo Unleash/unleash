@@ -20,8 +20,8 @@ import CreateUser from './users/CreateUser/CreateUser';
 import EditUser from './users/EditUser/EditUser';
 import { InviteLink } from './users/InviteLink/InviteLink';
 import UsersAdmin from './users/UsersAdmin';
-import { EnterpriseFeatureUpgradePage } from 'component/common/EnterpriseFeatureUpgradePage/EnterpriseFeatureUpgradePage';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 
 export const Admin = () => {
     const { isEnterprise } = useUiConfig();
@@ -40,10 +40,7 @@ export const Admin = () => {
                         isEnterprise() ? (
                             <ServiceAccounts />
                         ) : (
-                            <EnterpriseFeatureUpgradePage
-                                title="Service accounts"
-                                link="https://docs.getunleash.io/reference/service-accounts"
-                            />
+                            <PremiumFeature feature="service-accounts" page />
                         )
                     }
                 />
@@ -62,10 +59,7 @@ export const Admin = () => {
                         isEnterprise() ? (
                             <Roles />
                         ) : (
-                            <EnterpriseFeatureUpgradePage
-                                title="Project roles"
-                                link="https://docs.getunleash.io/reference/rbac#custom-project-roles"
-                            />
+                            <PremiumFeature feature="project-roles" page />
                         )
                     }
                 />

@@ -30,5 +30,5 @@ interface IRouteMenu {
     advanced?: boolean;
     adminSettings?: boolean;
     mode?: Array<'pro' | 'enterprise'>;
-    showEnterpriseBadge?: boolean;
+    billing?: boolean;
 }

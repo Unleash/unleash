@@ -330,6 +330,7 @@ module.exports = {
                         'reference/impression-data',
                         'reference/custom-activation-strategies',
                         'reference/environments',
+                        'reference/feature-strategy-variants',
                         'reference/feature-toggles',
                         'reference/feature-toggle-types',
                         'reference/feature-toggle-variants',

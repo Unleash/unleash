@@ -65,7 +65,7 @@ export default class RoleStore implements IRoleStore {
     }
 
     async filteredCountInUse(filter: Partial<RoleSchema>): Promise<number> {
-        const query = this.db
+        return this.db
             .from(T.ROLES)
             .countDistinct('roles.id')
             .leftJoin('role_user as ru', 'roles.id', 'ru.role_id')
@@ -73,10 +73,8 @@ export default class RoleStore implements IRoleStore {
             .where(filter)
             .andWhere((qb) =>
                 qb.whereNotNull('ru.role_id').orWhereNotNull('g.root_role_id'),
-            );
-        console.log(query.toSQL().toNative());
-
-        return query.then((res) => Number(res[0].count));
+            )
+            .then((res) => Number(res[0].count));
     }
 
     async create(role: ICustomRoleInsert): Promise<ICustomRole> {

@@ -38,6 +38,7 @@ const SegmentContainer = styled(Box)(({ theme }) => ({
     borderColor: theme.palette.divider,
     borderTopColor: theme.palette.divider,
     padding: theme.spacing(3),
+    borderRadius: `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
 }));
 
 export const SegmentChangeDetails: VFC<{

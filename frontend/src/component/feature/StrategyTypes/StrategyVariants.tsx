@@ -6,13 +6,12 @@ import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions';
 import { v4 as uuidv4 } from 'uuid';
 import { WeightType } from '../../../constants/variantTypes';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Link, styled, Typography, useTheme } from '@mui/material';
-import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import SplitPreviewSlider from './SplitPreviewSlider/SplitPreviewSlider';
 import { HelpIcon } from '../../common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from '../../common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
@@ -27,6 +26,7 @@ export const StrategyVariants: FC<{
     projectId: string;
     environment: string;
 }> = ({ strategy, setStrategy, projectId, environment }) => {
+    const { trackEvent } = usePlausibleTracker();
     const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
     const theme = useTheme();
     const stickiness =
@@ -84,6 +84,11 @@ export const StrategyVariants: FC<{
                 id,
             },
         ]);
+        trackEvent('strategy-variants', {
+            props: {
+                eventType: 'variant added',
+            },
+        });
     };
 
     return (

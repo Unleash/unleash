@@ -22,6 +22,8 @@ export const ProjectSettings = () => {
     const { uiConfig, isPro, isEnterprise } = useUiConfig();
     const navigate = useNavigate();
 
+    const updatedNavigation = uiConfig.flags?.frontendNavigationUpdate;
+
     const tabs: ITab[] = [
         ...(uiConfig.flags.newProjectLayout
             ? [
@@ -35,7 +37,7 @@ export const ProjectSettings = () => {
             id: 'environments',
             label: 'Environments',
         },
-        ...(isPro() || isEnterprise()
+        ...(!updatedNavigation || isPro() || isEnterprise()
             ? [
                   {
                       id: 'access',
@@ -48,11 +50,12 @@ export const ProjectSettings = () => {
                   {
                       id: 'change-requests',
                       label: 'Change request configuration',
-                      icon: isPro() ? (
-                          <Box sx={{ marginLeft: 'auto' }}>
-                              <EnterpriseBadge />
-                          </Box>
-                      ) : undefined,
+                      icon:
+                          isPro() && updatedNavigation ? (
+                              <Box sx={{ marginLeft: 'auto' }}>
+                                  <EnterpriseBadge />
+                              </Box>
+                          ) : undefined,
                   },
               ]
             : []),

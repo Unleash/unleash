@@ -31,4 +31,5 @@ export interface IRoleStore extends Store<ICustomRole, number> {
     nameInUse(name: string, existingId?: number): Promise<boolean>;
     count(): Promise<number>;
     filteredCount(filter: Partial<RoleSchema>): Promise<number>;
+    filteredCountInUse(filter: Partial<RoleSchema>): Promise<number>;
 }

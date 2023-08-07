@@ -44,6 +44,8 @@ const featureCollectionDetails = {
         Roles: 'The number of custom roles defined in your instance',
         'Custom Root Roles':
             'The number of custom root roles defined in your instance',
+        'Custom Root Roles In Use':
+            'The number of custom root roles that are in use by entities (users, groups, service accounts)',
         Environments: 'The number of environments in your instance',
         Segments: 'The number of segments defined in your instance',
         Strategies: 'The number of strategies defined in your instance',

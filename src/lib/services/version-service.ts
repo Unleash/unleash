@@ -229,6 +229,7 @@ export default class VersionService {
             groups,
             roles,
             customRootRoles,
+            customRootRolesInUse,
             environments,
             segments,
             strategies,
@@ -248,6 +249,7 @@ export default class VersionService {
             this.roleStore.filteredCount({
                 type: CUSTOM_ROOT_ROLE_TYPE,
             }),
+            this.roleStore.filteredCountInUse({ type: CUSTOM_ROOT_ROLE_TYPE }),
             this.environmentStore.count(),
             this.segmentStore.count(),
             this.strategyStore.count(),
@@ -269,6 +271,7 @@ export default class VersionService {
             groups,
             roles,
             customRootRoles,
+            customRootRolesInUse,
             environments,
             segments,
             strategies,

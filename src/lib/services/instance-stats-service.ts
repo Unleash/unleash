@@ -33,6 +33,7 @@ export interface InstanceStats {
     contextFields: number;
     roles: number;
     customRootRoles: number;
+    customRootRolesInUse: number;
     featureExports: number;
     featureImports: number;
     groups: number;
@@ -180,6 +181,7 @@ export class InstanceStatsService {
             groups,
             roles,
             customRootRoles,
+            customRootRolesInUse,
             environments,
             segments,
             strategies,
@@ -196,6 +198,7 @@ export class InstanceStatsService {
             this.groupStore.count(),
             this.roleStore.count(),
             this.roleStore.filteredCount({ type: CUSTOM_ROOT_ROLE_TYPE }),
+            this.roleStore.filteredCountInUse({ type: CUSTOM_ROOT_ROLE_TYPE }),
             this.environmentStore.count(),
             this.segmentStore.count(),
             this.strategyStore.count(),
@@ -217,6 +220,7 @@ export class InstanceStatsService {
             contextFields,
             roles,
             customRootRoles,
+            customRootRolesInUse,
             groups,
             environments,
             segments,

@@ -50,7 +50,7 @@ export interface IFlags {
     disableBulkToggle?: boolean;
     disableNotifications?: boolean;
     advancedPlayground?: boolean;
-    customRootRoles?: boolean;
+    customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
     newProjectLayout?: boolean;
     configurableFeatureTypeLifetimes?: boolean;

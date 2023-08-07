@@ -42,6 +42,8 @@ const featureCollectionDetails = {
         'Context Fields': 'The number of custom context fields in use',
         Groups: 'The number of groups present in your instance',
         Roles: 'The number of custom roles defined in your instance',
+        'Custom Root Roles':
+            'The number of custom root roles defined in your instance',
         Environments: 'The number of environments in your instance',
         Segments: 'The number of segments defined in your instance',
         Strategies: 'The number of strategies defined in your instance',

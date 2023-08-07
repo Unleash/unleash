@@ -30,4 +30,5 @@ interface IRouteMenu {
     advanced?: boolean;
     adminSettings?: boolean;
     mode?: Array<'pro' | 'enterprise'>;
+    billing?: boolean;
 }

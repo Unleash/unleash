@@ -535,7 +535,7 @@ export const adminMenuRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/admin-invoices',
         title: 'Billing & invoices',
-        menu: { adminSettings: true, mode: ['pro'] },
+        menu: { adminSettings: true, mode: ['pro'], billing: true },
         group: 'instance',
     },
     {

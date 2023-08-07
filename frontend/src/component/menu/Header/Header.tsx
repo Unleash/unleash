@@ -38,6 +38,8 @@ import { INavigationMenuItem } from 'interfaces/route';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useThemeMode } from 'hooks/useThemeMode';
 import { Notifications } from 'component/common/Notifications/Notifications';
+import { filterAdminRoutes } from './filterAdminRoutes';
+import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -121,10 +123,11 @@ const Header: VFC = () => {
     const [configRef, setConfigRef] = useState<HTMLButtonElement | null>(null);
 
     const { uiConfig, isOss, isPro, isEnterprise } = useUiConfig();
+    const { isBilling } = useInstanceStatus();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const showApiAccessInConfigure = !uiConfig?.flags?.frontendNavigationUpdate;
-    const showEnterpriseOpttionsInPro = Boolean(
+    const showEnterpriseOptionsInPro = Boolean(
         uiConfig?.flags?.frontendNavigationUpdate
     );
 
@@ -133,28 +136,6 @@ const Header: VFC = () => {
     const onConfigureClose = () => setConfigRef(null);
 
     const routes = getRoutes();
-
-    const filterByMode = (route: INavigationMenuItem): boolean => {
-        const { mode } = route.menu;
-
-        if (!mode) return true;
-
-        if (isPro()) {
-            if (mode.includes('pro')) {
-                return true;
-            }
-
-            if (showEnterpriseOpttionsInPro && mode.includes('enterprise')) {
-                return true;
-            }
-        }
-
-        if (isEnterprise() && mode.includes('enterprise')) {
-            return true;
-        }
-
-        return false;
-    };
 
     const filteredMainRoutes = {
         mainNavRoutes: getCondensedRoutes(routes.mainNavRoutes)
@@ -187,7 +168,17 @@ const Header: VFC = () => {
             .map(mapRouteLink),
         adminRoutes: adminMenuRoutes
             .filter(filterByConfig(uiConfig))
-            .filter(filterByMode)
+            .filter(route =>
+                filterAdminRoutes(
+                    route?.menu,
+                    {
+                        enterprise: isEnterprise(),
+                        pro: isPro(),
+                        billing: isBilling,
+                    },
+                    showEnterpriseOptionsInPro
+                )
+            )
             .map(mapRouteLink),
     };
 

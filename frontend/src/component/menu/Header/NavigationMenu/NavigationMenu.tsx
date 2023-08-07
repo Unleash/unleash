@@ -78,32 +78,36 @@ export const NavigationMenu = ({
             style={style}
         >
             {options
-                .map((option, i) => [
-                    Boolean(
+                .map((option, i) => {
+                    const previousGroup = options[i - 1]?.group;
+                    const addDivider =
                         showUpdatedMenu &&
-                            options[i - 1]?.group &&
-                            options[i - 1]?.group !== option.group
-                    ) ? (
-                        <Divider variant="middle" key={option.group} />
-                    ) : null,
-                    <MenuItem
-                        key={option.path}
-                        component={StyledLink}
-                        to={option.path}
-                        onClick={handleClose}
-                    >
-                        <StyledSpan />
-                        {option.title}
-                        <ConditionallyRender
-                            condition={showBadge(option?.menu?.mode)}
-                            show={
-                                <StyledBadgeContainer>
-                                    <EnterpriseBadge />
-                                </StyledBadgeContainer>
-                            }
-                        />
-                    </MenuItem>,
-                ])
+                        previousGroup &&
+                        previousGroup !== option.group;
+
+                    return [
+                        addDivider ? (
+                            <Divider variant="middle" key={option.group} />
+                        ) : null,
+                        <MenuItem
+                            key={option.path}
+                            component={StyledLink}
+                            to={option.path}
+                            onClick={handleClose}
+                        >
+                            <StyledSpan />
+                            {option.title}
+                            <ConditionallyRender
+                                condition={showBadge(option?.menu?.mode)}
+                                show={
+                                    <StyledBadgeContainer>
+                                        <EnterpriseBadge />
+                                    </StyledBadgeContainer>
+                                }
+                            />
+                        </MenuItem>,
+                    ];
+                })
                 .flat()
                 .filter(Boolean)}
         </Menu>

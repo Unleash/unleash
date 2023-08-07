@@ -11,6 +11,7 @@ import { IFeatureStrategy } from 'interfaces/strategy';
 import SplitPreviewSlider from './SplitPreviewSlider/SplitPreviewSlider';
 import { HelpIcon } from '../../common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from '../../common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
@@ -25,6 +26,7 @@ export const StrategyVariants: FC<{
     projectId: string;
     environment: string;
 }> = ({ strategy, setStrategy, projectId, environment }) => {
+    const { trackEvent } = usePlausibleTracker();
     const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
     const theme = useTheme();
     const stickiness =
@@ -82,6 +84,11 @@ export const StrategyVariants: FC<{
                 id,
             },
         ]);
+        trackEvent('strategy-variants', {
+            props: {
+                eventType: 'variant added',
+            },
+        });
     };
 
     return (

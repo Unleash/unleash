@@ -32,6 +32,7 @@ import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle';
 import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled';
 import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -86,6 +87,7 @@ export const FeatureStrategyForm = ({
     errors,
     isChangeRequest,
 }: IFeatureStrategyFormProps) => {
+    const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
@@ -158,6 +160,13 @@ export const FeatureStrategyForm = ({
     };
 
     const onSubmitWithValidation = async (event: React.FormEvent) => {
+        if (Array.isArray(strategy.variants) && strategy.variants?.length > 0) {
+            trackEvent('strategy-variants', {
+                props: {
+                    eventType: 'submitted',
+                },
+            });
+        }
         event.preventDefault();
         if (!validateAllParameters()) {
             return;

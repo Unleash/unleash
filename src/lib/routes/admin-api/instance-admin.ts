@@ -99,6 +99,7 @@ class InstanceAdminController extends Controller {
             instanceId: 'ed3861ae-78f9-4e8c-8e57-b57efc15f82b',
             projects: 1,
             roles: 5,
+            customRootRoles: 1,
             segments: 2,
             strategies: 8,
             sum: 'some-sha256-hash',

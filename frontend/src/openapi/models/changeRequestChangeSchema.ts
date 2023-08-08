@@ -7,7 +7,7 @@ import type { ChangeRequestChangeSchemaPayload } from './changeRequestChangeSche
 import type { ChangeRequestChangeSchemaCreatedBy } from './changeRequestChangeSchemaCreatedBy';
 
 /**
- * A change request event, containing info about the type of change and the specific changes.
+ * A change request change, containing info about the type of change and the specific changes.
  */
 export interface ChangeRequestChangeSchema {
     /** The ID of this change. */

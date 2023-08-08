@@ -6,6 +6,7 @@ const generateEnv = (enabled: boolean, name: string): IProjectEnvironment => {
         name,
         type: 'development',
         createdAt: new Date().toISOString(),
+        lastSeenAt: new Date().toISOString(),
         sortOrder: 0,
         protected: false,
         enabled,

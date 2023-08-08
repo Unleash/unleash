@@ -27,6 +27,13 @@ const StyledDescriptionHeader = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     fontWeight: theme.fontWeight.bold,
     marginBottom: theme.spacing(1),
+}));
+
+const StyledDescriptionBlockHeader = styled('p')(({ theme }) => ({
+    color: theme.palette.text.primary,
+    fontSize: theme.fontSizes.smallBody,
+    fontWeight: theme.fontWeight.bold,
+    marginBottom: theme.spacing(1),
     width: '50%',
 }));
 
@@ -82,9 +89,9 @@ export const LastSeenTooltip = ({
             {environments &&
                 environments?.map(({ name, lastSeenAt }) => (
                     <StyledDescriptionBlock key={name}>
-                        <StyledDescriptionHeader>
+                        <StyledDescriptionBlockHeader>
                             {name}
-                        </StyledDescriptionHeader>
+                        </StyledDescriptionBlockHeader>
                         <ConditionallyRender
                             condition={Boolean(lastSeenAt)}
                             show={

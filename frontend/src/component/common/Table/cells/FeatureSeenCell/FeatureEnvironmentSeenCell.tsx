@@ -3,10 +3,7 @@ import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { LastSeenTooltip } from './LastSeenTooltip';
-import {
-    IEnvironments,
-    IFeatureToggleListItem,
-} from 'interfaces/featureToggle';
+import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { ReactComponent as UsageLine } from 'assets/icons/usage-line.svg';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
 import TimeAgo from 'react-timeago';
@@ -74,33 +71,32 @@ export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
 }) => {
     const getColor = useLastSeenColors();
     const environments = Object.values(feature.environments);
-    const environmentWithMetrics = environments.filter(
-        (environment: IEnvironments) => environment.lastSeenAt != null
-    );
     return (
         <ConditionallyRender
-            condition={Boolean(environmentWithMetrics)}
+            condition={Boolean(feature.lastSeenAt)}
             show={
-                <TimeAgo
-                    date={feature.lastSeenAt!}
-                    title=""
-                    live={false}
-                    formatter={(value: number, unit: string) => {
-                        const [color, textColor] = getColor(unit);
-                        return (
-                            <TooltipContainer
-                                tooltip={
-                                    <LastSeenTooltip
-                                        environments={environments}
-                                    />
-                                }
-                                color={color}
-                            >
-                                <UsageRate stroke={textColor} />
-                            </TooltipContainer>
-                        );
-                    }}
-                />
+                feature.lastSeenAt && (
+                    <TimeAgo
+                        date={feature.lastSeenAt}
+                        title=""
+                        live={false}
+                        formatter={(value: number, unit: string) => {
+                            const [color, textColor] = getColor(unit);
+                            return (
+                                <TooltipContainer
+                                    tooltip={
+                                        <LastSeenTooltip
+                                            environments={environments}
+                                        />
+                                    }
+                                    color={color}
+                                >
+                                    <UsageRate stroke={textColor} />
+                                </TooltipContainer>
+                            );
+                        }}
+                    />
+                )
             }
             elseShow={
                 <TooltipContainer tooltip="No usage reported from connected applications">

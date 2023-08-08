@@ -94,9 +94,10 @@ export const LastSeenTooltip = ({
                                             unit: string,
                                             suffix: string
                                         ) => {
-                                            const [color] = getColor(unit);
+                                            const [, textColor] =
+                                                getColor(unit);
                                             return (
-                                                <StyledValue color={color}>
+                                                <StyledValue color={textColor}>
                                                     {`${value} ${unit}${
                                                         value !== 1 ? 's' : ''
                                                     } ${suffix}`}

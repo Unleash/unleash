@@ -3,6 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Box, Card, Typography, Link } from '@mui/material';
 import { ISegmentChange } from '../../../changeRequest.types';
 import { SegmentChangeDetails } from './SegmentChangeDetails';
+import { ConflictWarning } from './Conflict';
 
 interface ISegmentChangeProps {
     segmentChange: ISegmentChange;
@@ -27,11 +28,15 @@ export const SegmentChange: FC<ISegmentChangeProps> = ({
                 borderRadius: theme =>
                     `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
                 border: '1px solid',
-                borderColor: theme => theme.palette.divider,
+                borderColor: theme =>
+                    segmentChange.conflict
+                        ? theme.palette.warning.border
+                        : theme.palette.divider,
                 borderBottom: 'none',
                 overflow: 'hidden',
             })}
         >
+            <ConflictWarning conflict={segmentChange.conflict} />
             <Box
                 sx={{
                     display: 'flex',

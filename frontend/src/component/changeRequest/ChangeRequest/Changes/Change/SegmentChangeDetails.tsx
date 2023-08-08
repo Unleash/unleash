@@ -48,7 +48,14 @@ export const SegmentChangeDetails: VFC<{
     const { segment: currentSegment } = useSegment(change.payload.id);
 
     return (
-        <SegmentContainer>
+        <SegmentContainer
+            sx={theme => ({
+                borderColor: change.conflict
+                    ? theme.palette.warning.border
+                    : theme.palette.divider,
+                borderTopColor: theme.palette.divider,
+            })}
+        >
             {change.action === 'deleteSegment' && (
                 <ChangeItemWrapper>
                     <ChangeItemInfo>

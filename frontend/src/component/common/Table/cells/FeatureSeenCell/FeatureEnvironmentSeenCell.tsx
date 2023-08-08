@@ -117,7 +117,7 @@ export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
                     date={feature.lastSeenAt!}
                     title=""
                     live={false}
-                    formatter={(unit: string) => {
+                    formatter={(value: number, unit: string) => {
                         const [color, textColor] = getColor(unit);
                         return (
                             <Wrapper

@@ -60,14 +60,15 @@ export const StrategyName: FC<{
         <>
             <ConditionallyRender
                 condition={Boolean(
-                    previousTitle && previousTitle !== change.payload.title
+                    (previousTitle && previousTitle !== change.payload.title) ||
+                        (!previousTitle && change.payload.title)
                 )}
                 show={
                     <Truncated>
-                        <Typography component="span" color="text.secondary">
+                        <Typography component="del" color="text.secondary">
                             {previousTitle ||
                                 formatStrategyName(change.payload.name)}
-                        </Typography>{' '}
+                        </Typography>
                     </Truncated>
                 }
             />
@@ -118,7 +119,7 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     {formatStrategyName(change.payload.name)}
                 </Typography>
             </TooltipLink>
-            {<StrategyName change={change} previousTitle={previousTitle} />}
+            <StrategyName change={change} previousTitle={previousTitle} />
         </Truncated>
     </StyledContainer>
 );

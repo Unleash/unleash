@@ -1,12 +1,9 @@
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import TimeAgo from 'react-timeago';
-import { LastSeenTooltip } from '../../../common/Table/cells/FeatureSeenCell/LastSeenTooltip';
+import { LastSeenTooltip } from 'component/common/Table/cells/FeatureSeenCell/LastSeenTooltip';
 import React, { FC, ReactElement } from 'react';
-import {
-    IEnvironments,
-    IFeatureEnvironment,
-} from '../../../../interfaces/featureToggle';
-import { TooltipResolver } from '../../../common/TooltipResolver/TooltipResolver';
+import { IEnvironments, IFeatureEnvironment } from 'interfaces/featureToggle';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { Box, styled, SxProps } from '@mui/material';
 import { ReactComponent as UsageLine } from 'assets/icons/usage-line.svg';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';

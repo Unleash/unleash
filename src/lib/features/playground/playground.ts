@@ -70,7 +70,7 @@ export default class PlaygroundController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getAdvancedPlayground',
-                    tags: ['Unstable'],
+                    tags: ['Playground'],
                     responses: {
                         ...getStandardResponses(400, 401),
                         200: createResponseSchema(

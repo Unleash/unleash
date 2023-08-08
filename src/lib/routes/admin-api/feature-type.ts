@@ -52,7 +52,7 @@ export class FeatureTypeController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Features'],
+                    tags: ['Feature Types'],
                     operationId: 'getAllFeatureTypes',
                     summary: 'Get all feature types',
                     description:
@@ -72,7 +72,7 @@ export class FeatureTypeController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Feature Types'],
                     operationId: 'updateFeatureTypeLifetime',
                     summary: 'Update feature type lifetime',
                     description: `Updates the lifetime configuration for the specified [feature toggle type](https://docs.getunleash.io/reference/feature-toggle-types). The expected lifetime is an integer representing the number of days before Unleash marks a feature toggle of that type as potentially stale. If set to \`null\` or \`0\`, then feature toggles of that particular type will never be marked as potentially stale.

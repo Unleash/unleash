@@ -111,6 +111,7 @@ export interface IChangeRequestReorderStrategy
 
 export interface IChangeRequestUpdateSegment {
     action: 'updateSegment';
+    conflict?: string;
     payload: {
         id: number;
         name: string;
@@ -122,6 +123,7 @@ export interface IChangeRequestUpdateSegment {
 
 export interface IChangeRequestDeleteSegment {
     action: 'deleteSegment';
+    conflict?: string;
     payload: {
         id: number;
         name: string;

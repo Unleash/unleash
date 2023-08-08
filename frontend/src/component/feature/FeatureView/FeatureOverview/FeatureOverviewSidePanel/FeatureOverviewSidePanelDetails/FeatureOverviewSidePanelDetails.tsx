@@ -3,8 +3,8 @@ import { styled } from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
-import { FeatureEnvironmentSeenCell } from '../../../../../common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { FeatureEnvironmentSeen } from '../../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -38,6 +38,11 @@ export const FeatureOverviewSidePanelDetails = ({
     header,
 }: IFeatureOverviewSidePanelDetailsProps) => {
     const { locationSettings } = useLocationSettings();
+    const { uiConfig } = useUiConfig();
+
+    const showLastSeenByEnvironment = Boolean(
+        uiConfig.flags.lastSeenByEnvironment
+    );
 
     return (
         <StyledContainer>
@@ -52,11 +57,13 @@ export const FeatureOverviewSidePanelDetails = ({
                         )}
                     </span>
                 </StyledDetail>
-                <FeatureEnvironmentSeen
-                    featureLastSeen={feature.lastSeenAt}
-                    environments={feature.environments}
-                    sx={{ pt: 0 }}
-                />
+                {showLastSeenByEnvironment && (
+                    <FeatureEnvironmentSeen
+                        featureLastSeen={feature.lastSeenAt}
+                        environments={feature.environments}
+                        sx={{ pt: 0 }}
+                    />
+                )}
             </FlexRow>
         </StyledContainer>
     );

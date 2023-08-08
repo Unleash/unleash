@@ -15,6 +15,7 @@ export const ConflictWarning: React.FC<{
                     '&.MuiAlert-standardWarning': {
                         borderStyle: 'none',
                     },
+                    borderRadius: '0px',
                 }}
             >
                 <strong>Conflict!</strong> {conflict}.

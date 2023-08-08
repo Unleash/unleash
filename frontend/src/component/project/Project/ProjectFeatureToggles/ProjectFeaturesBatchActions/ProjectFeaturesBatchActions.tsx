@@ -88,7 +88,11 @@ export const ProjectFeaturesBatchActions: FC<
                     </Button>
                 }
             />
-            <ArchiveButton projectId={projectId} features={selectedIds} />
+            <ArchiveButton
+                projectId={projectId}
+                featureIds={selectedIds}
+                features={data}
+            />
             <Button
                 variant="outlined"
                 size="small"

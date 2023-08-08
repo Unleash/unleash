@@ -5,6 +5,9 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
+import { Alert, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;
@@ -12,7 +15,48 @@ interface IFeatureArchiveDialogProps {
     onClose: () => void;
     projectId: string;
     featureIds: string[];
+    featuresWithUsage?: string[];
 }
+
+const UsageWarning = ({
+    ids,
+    projectId,
+}: {
+    ids?: string[];
+    projectId: string;
+}) => {
+    const formatPath = (id: string) => {
+        return `/projects/${projectId}/features/${id}`;
+    };
+    if (ids) {
+        return (
+            <Alert
+                severity={'warning'}
+                sx={{ m: theme => theme.spacing(2, 0) }}
+            >
+                <Typography
+                    fontWeight={'bold'}
+                    variant={'body2'}
+                    display="inline"
+                >
+                    {`${ids.length} feature toggles `}
+                </Typography>
+                <span>
+                    have usage from applications. If you archive these feature
+                    toggles they will not be available to Client SDKs:
+                </span>
+                <ul>
+                    {ids?.map(id => (
+                        <li key={id}>
+                            {<Link to={formatPath(id)}>{id}</Link>}
+                        </li>
+                    ))}
+                </ul>
+            </Alert>
+        );
+    }
+    return null;
+};
 
 export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
     isOpen,
@@ -20,10 +64,12 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
     onConfirm,
     projectId,
     featureIds,
+    featuresWithUsage,
 }) => {
     const { archiveFeatureToggle } = useFeatureApi();
     const { archiveFeatures } = useProjectApi();
     const { setToastData, setToastApiError } = useToast();
+    const { uiConfig } = useUiConfig();
     const isBulkArchive = featureIds?.length > 1;
 
     const archiveToggle = async () => {
@@ -82,6 +128,19 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             <strong>{featureIds?.length}</strong> feature
                             toggles?
                         </p>
+                        <ConditionallyRender
+                            condition={Boolean(
+                                uiConfig.flags.lastSeenByEnvironment &&
+                                    featuresWithUsage &&
+                                    featuresWithUsage?.length > 0
+                            )}
+                            show={
+                                <UsageWarning
+                                    ids={featuresWithUsage}
+                                    projectId={projectId}
+                                />
+                            }
+                        />
                         <ConditionallyRender
                             condition={featureIds?.length <= 5}
                             show={

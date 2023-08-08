@@ -16,15 +16,13 @@ interface IArchiveButtonProps {
 
 const DEFAULT_USAGE_THRESHOLD_DAYS = 7;
 
-const useFeatureUsage = () => {
-    return (feature?: FeatureSchema) => {
-        const aWeekAgo = addDays(new Date(), -DEFAULT_USAGE_THRESHOLD_DAYS);
-        return !!(
-            feature &&
-            feature.lastSeenAt &&
-            isBefore(new Date(feature.lastSeenAt), aWeekAgo)
-        );
-    };
+const isFeatureInUse = (feature?: FeatureSchema): boolean => {
+    const aWeekAgo = addDays(new Date(), -DEFAULT_USAGE_THRESHOLD_DAYS);
+    return !!(
+        feature &&
+        feature.lastSeenAt &&
+        isBefore(new Date(feature.lastSeenAt), aWeekAgo)
+    );
 };
 
 export const ArchiveButton: VFC<IArchiveButtonProps> = ({
@@ -35,17 +33,12 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
     const { refetch } = useProject(projectId);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { trackEvent } = usePlausibleTracker();
-    const featureIsInUse = useFeatureUsage();
 
     const featuresWithUsage = useMemo(() => {
-        const result = [];
-        for (const name of featureIds) {
+        return featureIds.filter(name => {
             const feature = features.find(f => f.name === name);
-            if (featureIsInUse(feature)) {
-                result.push(name);
-            }
-        }
-        return result;
+            return isFeatureInUse(feature);
+        });
     }, [JSON.stringify(features), featureIds]);
 
     const onConfirm = async () => {

@@ -27,9 +27,9 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { Edit } from '@mui/icons-material';
-import { VariantInfoAlert } from '../../../../common/VariantInfoAlert/VariantInfoAlert';
-import { StrategyVariantsPreferredAlert } from '../../../../common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
-import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { VariantInfoAlert } from 'component/common/VariantInfoAlert/VariantInfoAlert';
+import { StrategyVariantsPreferredAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
     display: 'flex',

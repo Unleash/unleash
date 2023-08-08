@@ -5,9 +5,6 @@ import { AuthSettings } from './auth/AuthSettings';
 import { Billing } from './billing/Billing';
 import FlaggedBillingRedirect from './billing/FlaggedBillingRedirect/FlaggedBillingRedirect';
 import { CorsAdmin } from './cors';
-import { CreateGroup } from './groups/CreateGroup/CreateGroup';
-import { EditGroupContainer } from './groups/EditGroup/EditGroup';
-import { Group } from './groups/Group/Group';
 import { GroupsAdmin } from './groups/GroupsAdmin';
 import { InstanceAdmin } from './instance-admin/InstanceAdmin';
 import { InstancePrivacy } from './instance-privacy/InstancePrivacy';
@@ -16,32 +13,25 @@ import { Network } from './network/Network';
 import { Roles } from './roles/Roles';
 import { ServiceAccounts } from './serviceAccounts/ServiceAccounts';
 import CreateUser from './users/CreateUser/CreateUser';
-import EditUser from './users/EditUser/EditUser';
 import { InviteLink } from './users/InviteLink/InviteLink';
 import UsersAdmin from './users/UsersAdmin';
 import NotFound from 'component/common/NotFound/NotFound';
 import { AdminIndex } from './AdminIndex';
+import { AdminTabsMenu } from './menu/AdminTabsMenu';
 
 export const Admin = () => {
     return (
         <>
-            {/* <AdminTabsMenu /> */}
+            <AdminTabsMenu />
             <Routes>
-                <Route path="/" element={<AdminIndex />} />
-                <Route path="users" element={<UsersAdmin />} />
-                <Route path="users/:id/edit" element={<EditUser />} />
+                <Route index element={<AdminIndex />} />
+                <Route path="users/*" element={<UsersAdmin />} />
                 <Route path="api" element={<ApiTokenPage />} />
                 <Route path="api/create-token" element={<CreateApiToken />} />
                 <Route path="service-accounts" element={<ServiceAccounts />} />
                 <Route path="create-user" element={<CreateUser />} />
                 <Route path="invite-link" element={<InviteLink />} />
-                <Route path="groups" element={<GroupsAdmin />} />
-                <Route path="groups/create-group" element={<CreateGroup />} />
-                <Route
-                    path="groups/:groupId/edit"
-                    element={<EditGroupContainer />}
-                />
-                <Route path="groups/:groupId" element={<Group />} />
+                <Route path="groups/*" element={<GroupsAdmin />} />
                 <Route path="roles/*" element={<Roles />} />
                 <Route path="instance" element={<InstanceAdmin />} />
                 <Route path="network/*" element={<Network />} />

@@ -8,8 +8,8 @@ import { RolesPage } from './RolesPage';
 export const Roles = () => {
     const { isEnterprise } = useUiConfig();
 
-    if (isEnterprise()) {
-        <PremiumFeature feature="project-roles" page />;
+    if (!isEnterprise()) {
+        return <PremiumFeature feature="project-roles" page />;
     }
 
     return (

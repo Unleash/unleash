@@ -3,19 +3,23 @@ import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuar
 import { ServiceAccountsTable } from './ServiceAccountsTable/ServiceAccountsTable';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+import { AdminTabsMenu } from '../menu/AdminTabsMenu';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 export const ServiceAccounts = () => {
     const { isEnterprise } = useUiConfig();
 
-    if (isEnterprise()) {
-        return <PremiumFeature feature="service-accounts" page />;
-    }
-
     return (
         <div>
-            <PermissionGuard permissions={ADMIN}>
-                <ServiceAccountsTable />
-            </PermissionGuard>
+            <ConditionallyRender
+                condition={isEnterprise()}
+                show={
+                    <PermissionGuard permissions={ADMIN}>
+                        <ServiceAccountsTable />
+                    </PermissionGuard>
+                }
+                elseShow={<PremiumFeature feature="service-accounts" page />}
+            />
         </div>
     );
 };

@@ -1,108 +1,19 @@
-import React, { FC, ReactElement, VFC } from 'react';
-import { Box, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
-import { LastSeenTooltip } from './LastSeenTooltip';
+import React, { VFC } from 'react';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
-import { ReactComponent as UsageLine } from 'assets/icons/usage-line.svg';
-import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
-import TimeAgo from 'react-timeago';
-import { useLastSeenColors } from './useLastSeenColors';
-
-const StyledContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    padding: theme.spacing(1.5),
-}));
-
-const StyledBox = styled(Box)(({ theme }) => ({
-    width: '28px',
-    height: '28px',
-    background: 'transparent',
-    borderRadius: `${theme.shape.borderRadius}px`,
-    textAlign: 'center',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: theme.typography.body2.fontSize,
-    margin: '0 auto',
-}));
-
-const StyledIconWrapper = styled('div')(({ theme }) => ({
-    width: '20px',
-    height: '20px',
-    background: theme.palette.background.paper,
-    borderRadius: `${theme.shape.borderRadius}px`,
-    textAlign: 'center',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: theme.typography.body2.fontSize,
-    margin: '0 auto',
-}));
+import { FeatureEnvironmentSeen } from 'component/feature/FeatureView/FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 
 interface IFeatureSeenCellProps {
     feature: IFeatureToggleListItem;
 }
 
-const TooltipContainer: FC<{
-    color?: string;
-    tooltip: ReactElement | string;
-}> = ({ tooltip, color, children }) => {
-    return (
-        <StyledContainer>
-            <TooltipResolver
-                variant="custom"
-                titleComponent={tooltip}
-                arrow
-                describeChild
-            >
-                <StyledBox sx={{ '&:hover': { background: color } }}>
-                    <StyledIconWrapper style={{ background: color }}>
-                        {children}
-                    </StyledIconWrapper>
-                </StyledBox>
-            </TooltipResolver>
-        </StyledContainer>
-    );
-};
-
 export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
     feature,
 }) => {
-    const getColor = useLastSeenColors();
     const environments = Object.values(feature.environments);
     return (
-        <ConditionallyRender
-            condition={Boolean(feature.lastSeenAt)}
-            show={
-                feature.lastSeenAt && (
-                    <TimeAgo
-                        date={feature.lastSeenAt}
-                        title=""
-                        live={false}
-                        formatter={(value: number, unit: string) => {
-                            const [color, textColor] = getColor(unit);
-                            return (
-                                <TooltipContainer
-                                    tooltip={
-                                        <LastSeenTooltip
-                                            environments={environments}
-                                        />
-                                    }
-                                    color={color}
-                                >
-                                    <UsageRate stroke={textColor} />
-                                </TooltipContainer>
-                            );
-                        }}
-                    />
-                )
-            }
-            elseShow={
-                <TooltipContainer tooltip="No usage reported from connected applications">
-                    <UsageLine />
-                </TooltipContainer>
-            }
+        <FeatureEnvironmentSeen
+            featureLastSeen={feature.lastSeenAt}
+            environments={environments}
         />
     );
 };

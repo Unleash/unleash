@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Box, Card, Typography, Link } from '@mui/material';
 import { ISegmentChange } from '../../../changeRequest.types';
 import { SegmentChangeDetails } from './SegmentChangeDetails';
-import { ConflictWarning } from './Conflict';
+import { ConflictWarning } from './ConflictWarning';
 
 interface ISegmentChangeProps {
     segmentChange: ISegmentChange;

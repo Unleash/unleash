@@ -1,6 +1,6 @@
 import * as jsonpatch from 'fast-json-patch';
 
-import { Alert, styled, useMediaQuery, useTheme } from '@mui/material';
+import { styled, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -27,13 +27,9 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { Edit } from '@mui/icons-material';
-
-const StyledAlert = styled(Alert)(({ theme }) => ({
-    marginBottom: theme.spacing(4),
-    '& code': {
-        fontWeight: theme.fontWeight.bold,
-    },
-}));
+import { VariantInfoAlert } from 'component/common/VariantInfoAlert/VariantInfoAlert';
+import { StrategyVariantsPreferredAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -41,6 +37,7 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
 }));
 
 export const FeatureEnvironmentVariants = () => {
+    const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -269,12 +266,12 @@ export const FeatureEnvironmentVariants = () => {
                 </PageHeader>
             }
         >
-            <StyledAlert severity="info">
-                Variants allows you to return a variant object if the feature
-                toggle is considered enabled for the current request. When using
-                variants you should use the <code>getVariant()</code> method in
-                the Client SDK.
-            </StyledAlert>
+            <VariantInfoAlert mode="feature" />
+            <ConditionallyRender
+                condition={Boolean(uiConfig?.flags?.strategyVariant)}
+                show={<StrategyVariantsPreferredAlert />}
+            />
+
             {environments.map(environment => {
                 const otherEnvsWithVariants = environments.filter(
                     ({ name, variants }) =>

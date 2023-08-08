@@ -324,7 +324,7 @@ export const EnvironmentVariantsModal = ({
             <FormTemplate
                 modal
                 title=""
-                description="Variants allows you to return a variant object if the feature toggle is considered enabled for the current request."
+                description="Variants allow you to return a variant object if the feature toggle is considered enabled for the current request."
                 documentationLink="https://docs.getunleash.io/reference/feature-toggle-variants"
                 documentationLinkLabel="Feature toggle variants documentation"
                 formatApiCode={formatApiCode}

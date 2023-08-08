@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, VFC } from 'react';
-import { Box, styled, useTheme } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { LastSeenTooltip } from './LastSeenTooltip';
@@ -10,6 +10,7 @@ import {
 import { ReactComponent as UsageLine } from 'assets/icons/usage-line.svg';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
 import TimeAgo from 'react-timeago';
+import { useLastSeenColors } from './useLastSeenColors';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -46,7 +47,7 @@ interface IFeatureSeenCellProps {
     feature: IFeatureToggleListItem;
 }
 
-const Wrapper: FC<{
+const TooltipContainer: FC<{
     color?: string;
     tooltip: ReactElement | string;
 }> = ({ tooltip, color, children }) => {
@@ -59,10 +60,7 @@ const Wrapper: FC<{
                 describeChild
             >
                 <StyledBox sx={{ '&:hover': { background: color } }}>
-                    <StyledIconWrapper
-                        style={{ background: color }}
-                        data-loading
-                    >
+                    <StyledIconWrapper style={{ background: color }}>
                         {children}
                     </StyledIconWrapper>
                 </StyledBox>
@@ -71,44 +69,14 @@ const Wrapper: FC<{
     );
 };
 
-const useFeatureColor = () => {
-    const theme = useTheme();
-
-    return (unit?: string): [string, string] => {
-        switch (unit) {
-            case 'second':
-                return [theme.palette.seen.recent, theme.palette.success.main];
-            case 'minute':
-                return [theme.palette.seen.recent, theme.palette.success.main];
-            case 'hour':
-                return [theme.palette.seen.recent, theme.palette.success.main];
-            case 'day':
-                return [theme.palette.seen.recent, theme.palette.success.main];
-            case 'week':
-            case 'weeks':
-                return [
-                    theme.palette.seen.inactive,
-                    theme.palette.warning.main,
-                ];
-            case 'month':
-                return [theme.palette.seen.abandoned, theme.palette.error.main];
-            case 'year':
-                return [theme.palette.seen.abandoned, theme.palette.error.main];
-            default:
-                return [theme.palette.seen.unknown, theme.palette.grey.A400];
-        }
-    };
-};
-
 export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
     feature,
 }) => {
-    const getColor = useFeatureColor();
+    const getColor = useLastSeenColors();
     const environments = Object.values(feature.environments);
     const environmentWithMetrics = environments.filter(
         (environment: IEnvironments) => environment.lastSeenAt != null
     );
-    console.log(feature.name);
     return (
         <ConditionallyRender
             condition={Boolean(environmentWithMetrics)}
@@ -120,7 +88,7 @@ export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
                     formatter={(value: number, unit: string) => {
                         const [color, textColor] = getColor(unit);
                         return (
-                            <Wrapper
+                            <TooltipContainer
                                 tooltip={
                                     <LastSeenTooltip
                                         environments={environments}
@@ -129,15 +97,15 @@ export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
                                 color={color}
                             >
                                 <UsageRate stroke={textColor} />
-                            </Wrapper>
+                            </TooltipContainer>
                         );
                     }}
                 />
             }
             elseShow={
-                <Wrapper tooltip="No usage reported from connected applications">
+                <TooltipContainer tooltip="No usage reported from connected applications">
                     <UsageLine />
-                </Wrapper>
+                </TooltipContainer>
             }
         />
     );

@@ -1,8 +1,9 @@
-import { styled, SxProps, Theme, useTheme } from '@mui/material';
+import { styled, SxProps, Theme } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import { IEnvironments } from 'interfaces/featureToggle';
 import React from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useLastSeenColors } from './useLastSeenColors';
 
 const StyledDescription = styled(
     'div',
@@ -42,42 +43,30 @@ const StyledDescriptionSubHeader = styled('p')(({ theme }) => ({
     margin: theme.spacing(2, 0),
 }));
 
+const StyledValueContainer = styled('div')({
+    width: '50%',
+});
+
+const StyledValue = styled('div', {
+    shouldForwardProp: prop => prop !== 'color',
+})(({ color }) => ({
+    textAlign: 'left',
+    width: '100%',
+    color: color,
+}));
+
 interface ILastSeenTooltipProps {
     environments?: IEnvironments[];
     className?: string;
     sx?: SxProps<Theme>;
 }
 
-const useLastSeeneColor = () => {
-    const theme = useTheme();
-
-    return (unit?: string): string => {
-        switch (unit) {
-            case 'second':
-                return theme.palette.success.main;
-            case 'minute':
-                return theme.palette.success.main;
-            case 'hour':
-                return theme.palette.success.main;
-            case 'day':
-                return theme.palette.success.main;
-            case 'week':
-                return theme.palette.warning.main;
-            case 'month':
-                return theme.palette.error.main;
-            case 'year':
-                return theme.palette.error.main;
-            default:
-                return theme.palette.grey.A400;
-        }
-    };
-};
-
 export const LastSeenTooltip = ({
     environments,
     ...rest
 }: ILastSeenTooltipProps) => {
-    const getColor = useLastSeeneColor();
+    const getColor = useLastSeenColors();
+    const [defaultColor] = getColor();
     return (
         <StyledDescription {...rest}>
             <StyledDescriptionHeader sx={{ mb: 0 }}>
@@ -87,49 +76,42 @@ export const LastSeenTooltip = ({
                 Usage is reported from connected applications through metrics
             </StyledDescriptionSubHeader>
             {environments &&
-                environments?.map(({ name, lastSeenAt }) => (
+                environments.map(({ name, lastSeenAt }) => (
                     <StyledDescriptionBlock key={name}>
                         <StyledDescriptionBlockHeader>
                             {name}
                         </StyledDescriptionBlockHeader>
-                        <ConditionallyRender
-                            condition={Boolean(lastSeenAt)}
-                            show={
-                                <TimeAgo
-                                    date={lastSeenAt!}
-                                    title=""
-                                    live={false}
-                                    formatter={(
-                                        value: number,
-                                        unit: string,
-                                        suffix: string
-                                    ) => {
-                                        return (
-                                            <div
-                                                style={{
-                                                    color: getColor(unit),
-                                                    textAlign: 'left',
-                                                    width: '100%',
-                                                }}
-                                            >
-                                                {`${value} ${unit}${
-                                                    value !== 1 ? 's' : ''
-                                                } ${suffix}`}
-                                            </div>
-                                        );
-                                    }}
-                                />
-                            }
-                            elseShow={
-                                <div
-                                    style={{
-                                        color: getColor(),
-                                    }}
-                                >
-                                    no usage
-                                </div>
-                            }
-                        />
+                        <StyledValueContainer>
+                            <ConditionallyRender
+                                condition={Boolean(lastSeenAt)}
+                                show={
+                                    <TimeAgo
+                                        date={lastSeenAt!}
+                                        title=""
+                                        live={false}
+                                        formatter={(
+                                            value: number,
+                                            unit: string,
+                                            suffix: string
+                                        ) => {
+                                            const [color] = getColor(unit);
+                                            return (
+                                                <StyledValue color={color}>
+                                                    {`${value} ${unit}${
+                                                        value !== 1 ? 's' : ''
+                                                    } ${suffix}`}
+                                                </StyledValue>
+                                            );
+                                        }}
+                                    />
+                                }
+                                elseShow={
+                                    <StyledValue color={defaultColor}>
+                                        no usage
+                                    </StyledValue>
+                                }
+                            />
+                        </StyledValueContainer>
                     </StyledDescriptionBlock>
                 ))}
         </StyledDescription>

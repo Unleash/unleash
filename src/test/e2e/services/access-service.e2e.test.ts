@@ -735,7 +735,7 @@ test('Should be denied access to delete a role that is in use', async () => {
         await accessService.deleteRole(customRole.id);
     } catch (e) {
         expect(e.toString()).toBe(
-            'RoleInUseError: Role is in use by more than one user. You cannot delete a role that is in use without first removing the role from the users.',
+            'RoleInUseError: Role is in use by users(1) or groups(0). You cannot delete a role that is in use without first removing the role from the users and groups.',
         );
     }
 });

@@ -64,6 +64,7 @@ import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { RowSelectCell } from './RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from '../../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions/ProjectFeaturesBatchActions';
+import { FeatureEnvironmentSeenCell } from '../../../common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
@@ -161,6 +162,9 @@ export const ProjectFeatureToggles = ({
     } = useChangeRequestToggle(projectId);
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { uiConfig } = useUiConfig();
+    const showEnvironmentLastSeen = Boolean(
+        uiConfig.flags.lastSeenByEnvironment
+    );
 
     const onFavorite = useCallback(
         async (feature: IFeatureToggleListItem) => {
@@ -215,8 +219,13 @@ export const ProjectFeatureToggles = ({
             {
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
-                Cell: FeatureSeenCell,
-                sortType: 'date',
+                Cell: ({ value, row: { original: feature } }: any) => {
+                    return showEnvironmentLastSeen ? (
+                        <FeatureEnvironmentSeenCell feature={feature} />
+                    ) : (
+                        <FeatureSeenCell value={value} />
+                    );
+                },
                 align: 'center',
                 maxWidth: 80,
             },
@@ -351,6 +360,7 @@ export const ProjectFeatureToggles = ({
                                 name: env,
                                 enabled: thisEnv?.enabled || false,
                                 variantCount: thisEnv?.variantCount || 0,
+                                lastSeenAt: thisEnv?.lastSeenAt,
                             },
                         ];
                     })

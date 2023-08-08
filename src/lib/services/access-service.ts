@@ -598,7 +598,7 @@ export class AccessService {
 
         if (roleUsers.length > 0 || roleGroups.length > 0) {
             throw new RoleInUseError(
-                'Role is in use by one or more users or groups. You cannot delete a role that is in use without first removing the role from the users and groups.',
+                `Role is in use by users(${roleUsers.length}) or groups(${roleGroups.length}). You cannot delete a role that is in use without first removing the role from the users and groups.`,
             );
         }
 

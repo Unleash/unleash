@@ -229,7 +229,7 @@ test('throws error when trying to delete a project role in use by group', async 
         await accessService.deleteRole(1);
     } catch (e) {
         expect(e.toString()).toBe(
-            'RoleInUseError: Role is in use by one or more users or groups. You cannot delete a role that is in use without first removing the role from the users and groups.',
+            'RoleInUseError: Role is in use by users(0) or groups(1). You cannot delete a role that is in use without first removing the role from the users and groups.',
         );
     }
 });

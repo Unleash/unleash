@@ -17,6 +17,10 @@ export default class FakeRoleStore implements IRoleStore {
         return Promise.resolve(0);
     }
 
+    filteredCountInUse(search: Partial<RoleSchema>): Promise<number> {
+        return Promise.resolve(0);
+    }
+
     roles: ICustomRole[] = [];
 
     getGroupRolesForProject(projectId: string): Promise<IRole[]> {

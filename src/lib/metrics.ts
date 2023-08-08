@@ -109,6 +109,11 @@ export default class MetricsMonitor {
             help: 'Number of custom root roles',
         });
 
+        const customRootRolesInUseTotal = new client.Gauge({
+            name: 'custom_root_roles_in_use_total',
+            help: 'Number of custom root roles in use',
+        });
+
         const segmentsTotal = new client.Gauge({
             name: 'segments_total',
             help: 'Number of segments',
@@ -176,6 +181,9 @@ export default class MetricsMonitor {
 
                 customRootRolesTotal.reset();
                 customRootRolesTotal.set(stats.customRootRoles);
+
+                customRootRolesInUseTotal.reset();
+                customRootRolesInUseTotal.set(stats.customRootRolesInUse);
 
                 segmentsTotal.reset();
                 segmentsTotal.set(stats.segments);

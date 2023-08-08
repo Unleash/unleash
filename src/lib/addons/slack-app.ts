@@ -20,6 +20,7 @@ import {
     LinkStyle,
 } from './feature-event-formatter-md';
 import { IEvent } from '../types/events';
+import client, { Gauge } from 'prom-client';
 
 const CACHE_SECONDS = 30;
 
@@ -39,6 +40,8 @@ export default class SlackAppAddon extends Addon {
 
     private slackChannelsCacheTimeout?: NodeJS.Timeout;
 
+    private slackChannelCount: Gauge;
+
     constructor(args: IAddonConfig) {
         super(slackAppDefinition, args);
         this.msgFormatter = new FeatureEventFormatterMd(
@@ -46,6 +49,11 @@ export default class SlackAppAddon extends Addon {
             LinkStyle.SLACK,
         );
         this.startCacheInvalidation();
+        this.slackChannelCount = new client.Gauge({
+            name: 'slack_app_channel_count',
+            help: 'Number of slack channels found',
+            labelNames: ['token'],
+        });
     }
 
     async handleEvent(
@@ -73,13 +81,13 @@ export default class SlackAppAddon extends Addon {
             this.logger.debug(`Found candidate channels: ${eventChannels}.`);
 
             if (!this.slackClient || this.accessToken !== accessToken) {
-                const client = new WebClient(accessToken);
-                client.on(WebClientEvent.RATE_LIMITED, (numSeconds) => {
+                const webClient = new WebClient(accessToken);
+                webClient.on(WebClientEvent.RATE_LIMITED, (numSeconds) => {
                     this.logger.debug(
                         `Rate limit reached for event ${event.type}. Retry scheduled after ${numSeconds} seconds`,
                     );
                 });
-                this.slackClient = client;
+                this.slackClient = webClient;
                 this.accessToken = accessToken;
             }
 
@@ -114,11 +122,13 @@ export default class SlackAppAddon extends Addon {
                     this.logger.debug(
                         `This page had ${channels.length} channels`,
                     );
-
                     channels.forEach((channel) =>
                         this.slackChannels?.push(channel),
                     );
                 }
+                this.slackChannelCount
+                    ?.labels(this.accessToken.substring(0, 8))
+                    .set(this.slackChannels.length);
 
                 this.logger.debug(
                     `Fetched ${

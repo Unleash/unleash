@@ -7,6 +7,7 @@ import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender'
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { Alert, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;
@@ -68,6 +69,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
     const { archiveFeatureToggle } = useFeatureApi();
     const { archiveFeatures } = useProjectApi();
     const { setToastData, setToastApiError } = useToast();
+    const { uiConfig } = useUiConfig();
     const isBulkArchive = featureIds?.length > 1;
 
     const archiveToggle = async () => {
@@ -128,7 +130,8 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                         </p>
                         <ConditionallyRender
                             condition={Boolean(
-                                featuresWithUsage &&
+                                uiConfig.flags.lastSeenByEnvironment &&
+                                    featuresWithUsage &&
                                     featuresWithUsage?.length > 0
                             )}
                             show={

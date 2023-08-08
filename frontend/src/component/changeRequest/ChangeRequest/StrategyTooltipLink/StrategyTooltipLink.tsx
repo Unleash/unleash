@@ -56,13 +56,15 @@ export const StrategyName: FC<{
         | IChangeRequestDeleteStrategy;
     previousTitle: string | undefined;
 }> = ({ change, previousTitle }) => {
+    const titleHasChangedOrBeenAdded = Boolean(
+        (previousTitle && previousTitle !== change.payload.title) ||
+            (!previousTitle && change.payload.title)
+    );
+
     return (
         <>
             <ConditionallyRender
-                condition={Boolean(
-                    (previousTitle && previousTitle !== change.payload.title) ||
-                        (!previousTitle && change.payload.title)
-                )}
+                condition={titleHasChangedOrBeenAdded}
                 show={
                     <Truncated>
                         <Typography component="del" color="text.secondary">
@@ -73,7 +75,11 @@ export const StrategyName: FC<{
                 }
             />
             <Truncated>
-                <Typography component="span">{change.payload.title}</Typography>
+                <Typography
+                    component={titleHasChangedOrBeenAdded ? 'ins' : 'span'}
+                >
+                    {change.payload.title}
+                </Typography>
             </Truncated>
         </>
     );

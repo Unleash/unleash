@@ -1,9 +1,9 @@
 import { styled, SxProps, Theme } from '@mui/material';
 import TimeAgo from 'react-timeago';
-import { IEnvironments } from 'interfaces/featureToggle';
+import { IEnvironments, IFeatureEnvironment } from 'interfaces/featureToggle';
 import React from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useLastSeenColors } from './useLastSeenColors';
+import { useLastSeenColors } from '../../../../feature/FeatureView/FeatureEnvironmentSeen/useLastSeenColors';
 
 const StyledDescription = styled(
     'div',
@@ -56,7 +56,7 @@ const StyledValue = styled('div', {
 }));
 
 interface ILastSeenTooltipProps {
-    environments?: IEnvironments[];
+    environments?: IEnvironments[] | IFeatureEnvironment[];
     className?: string;
     sx?: SxProps<Theme>;
 }
@@ -66,7 +66,7 @@ export const LastSeenTooltip = ({
     ...rest
 }: ILastSeenTooltipProps) => {
     const getColor = useLastSeenColors();
-    const [defaultColor] = getColor();
+    const [, defaultTextColor] = getColor();
     return (
         <StyledDescription {...rest}>
             <StyledDescriptionHeader sx={{ mb: 0 }}>
@@ -107,7 +107,7 @@ export const LastSeenTooltip = ({
                                     />
                                 }
                                 elseShow={
-                                    <StyledValue color={defaultColor}>
+                                    <StyledValue color={defaultTextColor}>
                                         no usage
                                     </StyledValue>
                                 }

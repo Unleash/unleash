@@ -56,15 +56,17 @@ export const StrategyName: FC<{
         | IChangeRequestDeleteStrategy;
     previousTitle: string | undefined;
 }> = ({ change, previousTitle }) => {
-    const titleHasChangedOrBeenAdded = Boolean(
-        (previousTitle && previousTitle !== change.payload.title) ||
-            (!previousTitle && change.payload.title)
+    const titleHasChanged = Boolean(
+        previousTitle && previousTitle !== change.payload.title
     );
+
+    const titleHasChangedOrBeenAdded =
+        titleHasChanged || (!previousTitle && change.payload.title);
 
     return (
         <>
             <ConditionallyRender
-                condition={titleHasChangedOrBeenAdded}
+                condition={titleHasChanged}
                 show={
                     <Truncated>
                         <Typography component="del" color="text.secondary">

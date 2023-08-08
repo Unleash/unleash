@@ -385,15 +385,6 @@ export const routes: IRoute[] = [
     },
 
     // Admin
-
-    {
-        path: '/admin',
-        title: 'Admin',
-        component: AdminRedirect,
-        hidden: false,
-        type: 'protected',
-        menu: {},
-    },
     {
         path: '/admin/*',
         title: 'Admin',

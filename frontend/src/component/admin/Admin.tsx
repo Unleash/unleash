@@ -12,7 +12,6 @@ import { GroupsAdmin } from './groups/GroupsAdmin';
 import { InstanceAdmin } from './instance-admin/InstanceAdmin';
 import { InstancePrivacy } from './instance-privacy/InstancePrivacy';
 import { MaintenanceAdmin } from './maintenance';
-import { AdminTabsMenu } from './menu/AdminTabsMenu';
 import { Network } from './network/Network';
 import { Roles } from './roles/Roles';
 import { ServiceAccounts } from './serviceAccounts/ServiceAccounts';
@@ -20,30 +19,20 @@ import CreateUser from './users/CreateUser/CreateUser';
 import EditUser from './users/EditUser/EditUser';
 import { InviteLink } from './users/InviteLink/InviteLink';
 import UsersAdmin from './users/UsersAdmin';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+import NotFound from 'component/common/NotFound/NotFound';
+import { AdminIndex } from './AdminIndex';
 
 export const Admin = () => {
-    const { isEnterprise } = useUiConfig();
-
     return (
         <>
-            <AdminTabsMenu />
+            {/* <AdminTabsMenu /> */}
             <Routes>
+                <Route path="/" element={<AdminIndex />} />
                 <Route path="users" element={<UsersAdmin />} />
+                <Route path="users/:id/edit" element={<EditUser />} />
                 <Route path="api" element={<ApiTokenPage />} />
                 <Route path="api/create-token" element={<CreateApiToken />} />
-                <Route path="users/:id/edit" element={<EditUser />} />
-                <Route
-                    path="service-accounts"
-                    element={
-                        isEnterprise() ? (
-                            <ServiceAccounts />
-                        ) : (
-                            <PremiumFeature feature="service-accounts" page />
-                        )
-                    }
-                />
+                <Route path="service-accounts" element={<ServiceAccounts />} />
                 <Route path="create-user" element={<CreateUser />} />
                 <Route path="invite-link" element={<InviteLink />} />
                 <Route path="groups" element={<GroupsAdmin />} />
@@ -53,16 +42,7 @@ export const Admin = () => {
                     element={<EditGroupContainer />}
                 />
                 <Route path="groups/:groupId" element={<Group />} />
-                <Route
-                    path="roles/*"
-                    element={
-                        isEnterprise() ? (
-                            <Roles />
-                        ) : (
-                            <PremiumFeature feature="project-roles" page />
-                        )
-                    }
-                />
+                <Route path="roles/*" element={<Roles />} />
                 <Route path="instance" element={<InstanceAdmin />} />
                 <Route path="network/*" element={<Network />} />
                 <Route path="maintenance" element={<MaintenanceAdmin />} />
@@ -74,6 +54,7 @@ export const Admin = () => {
                 />
                 <Route path="billing" element={<Billing />} />
                 <Route path="instance-privacy" element={<InstancePrivacy />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </>
     );

@@ -29,9 +29,10 @@ const FlexRow = styled('div')({
     justifyContent: 'space-between',
 });
 
-const StyledDetail = styled('div')({
+const StyledDetail = styled('div')(({ theme }) => ({
     justifyContent: 'center',
-});
+    paddingTop: theme.spacing(0.75),
+}));
 
 export const FeatureOverviewSidePanelDetails = ({
     feature,

@@ -20,6 +20,7 @@ import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints';
 import { FeatureStrategyType } from 'component/feature/FeatureStrategy/FeatureStrategyType/FeatureStrategyType';
 import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle';
+import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 
 interface IProjectDefaultStrategyFormProps {
     projectId: string;
@@ -178,6 +179,21 @@ export const ProjectDefaultStrategyForm = ({
                 validateParameter={validateParameter}
                 errors={errors}
                 hasAccess={access}
+            />
+            <ConditionallyRender
+                condition={
+                    Boolean(uiConfig?.flags?.strategyVariant) &&
+                    strategy.parameters != null &&
+                    'stickiness' in strategy.parameters
+                }
+                show={
+                    <StrategyVariants
+                        strategy={strategy}
+                        setStrategy={setStrategy}
+                        environment={environmentId}
+                        projectId={projectId}
+                    />
+                }
             />
             <StyledHr />
             <StyledButtons>

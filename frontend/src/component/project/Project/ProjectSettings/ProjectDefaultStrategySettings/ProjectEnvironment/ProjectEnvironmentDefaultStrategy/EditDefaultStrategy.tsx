@@ -170,6 +170,7 @@ export const createStrategyPayload = (
     title: strategy.title,
     constraints: strategy.constraints ?? [],
     parameters: strategy.parameters ?? {},
+    variants: strategy.variants ?? [],
     segments: segments.map(segment => segment.id),
     disabled: strategy.disabled ?? false,
 });

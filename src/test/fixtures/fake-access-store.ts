@@ -146,6 +146,10 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
+    getGroupIdsForRole(roleId: number, projectId?: string): Promise<number[]> {
+        throw new Error('Method not implemented.');
+    }
+
     addUserToRole(userId: number, roleId: number): Promise<void> {
         this.userToRoleMap.set(userId, roleId);
         return Promise.resolve(undefined);

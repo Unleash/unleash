@@ -10,7 +10,7 @@ import {
     IUserRole,
 } from '../types/stores/access-store';
 import { Logger } from '../logger';
-import { IAccountStore, IUnleashStores } from '../types/stores';
+import { IAccountStore, IGroupStore, IUnleashStores } from '../types/stores';
 import {
     IAvailablePermissions,
     ICustomRole,
@@ -34,7 +34,7 @@ import {
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
-import { IGroupModelWithProjectRole } from '../types/group';
+import { IGroup, IGroupModelWithProjectRole } from '../types/group';
 import { GroupService } from './group-service';
 import { IFlagResolver, IUnleashConfig } from 'lib/types';
 
@@ -80,6 +80,8 @@ export class AccessService {
 
     private groupService: GroupService;
 
+    private groupStore: IGroupStore;
+
     private environmentStore: IEnvironmentStore;
 
     private logger: Logger;
@@ -92,9 +94,14 @@ export class AccessService {
             accountStore,
             roleStore,
             environmentStore,
+            groupStore,
         }: Pick<
             IUnleashStores,
-            'accessStore' | 'accountStore' | 'roleStore' | 'environmentStore'
+            | 'accessStore'
+            | 'accountStore'
+            | 'roleStore'
+            | 'environmentStore'
+            | 'groupStore'
         >,
         {
             getLogger,
@@ -109,6 +116,7 @@ export class AccessService {
         this.environmentStore = environmentStore;
         this.logger = getLogger('/services/access-service.ts');
         this.flagResolver = flagResolver;
+        this.groupStore = groupStore;
     }
 
     /**
@@ -397,6 +405,14 @@ export class AccessService {
         return [];
     }
 
+    async getGroupsForRole(roleId: number): Promise<IGroup[]> {
+        const groupdIdList = await this.store.getGroupIdsForRole(roleId);
+        if (groupdIdList.length > 0) {
+            return this.groupStore.getAllWithId(groupdIdList);
+        }
+        return [];
+    }
+
     async getProjectUsersForRole(
         roleId: number,
         projectId?: string,
@@ -578,10 +594,11 @@ export class AccessService {
         await this.validateRoleIsNotBuiltIn(id);
 
         const roleUsers = await this.getUsersForRole(id);
+        const roleGroups = await this.getGroupsForRole(id);
 
-        if (roleUsers.length > 0) {
+        if (roleUsers.length > 0 || roleGroups.length > 0) {
             throw new RoleInUseError(
-                'Role is in use by more than one user. You cannot delete a role that is in use without first removing the role from the users.',
+                'Role is in use by one or more users or groups. You cannot delete a role that is in use without first removing the role from the users and groups.',
             );
         }
 

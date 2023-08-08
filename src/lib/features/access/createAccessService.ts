@@ -30,7 +30,7 @@ export const createAccessService = (
     );
 
     return new AccessService(
-        { accessStore, accountStore, roleStore, environmentStore },
+        { accessStore, accountStore, roleStore, environmentStore, groupStore },
         { getLogger, flagResolver },
         groupService,
     );
@@ -52,7 +52,7 @@ export const createFakeAccessService = (
     );
 
     return new AccessService(
-        { accessStore, accountStore, roleStore, environmentStore },
+        { accessStore, accountStore, roleStore, environmentStore, groupStore },
         { getLogger, flagResolver },
         groupService,
     );

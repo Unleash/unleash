@@ -16,14 +16,14 @@ Will return all users and all available root roles for the Unleash instance.
 {
   "rootRoles": [
     {
-      "description": "Users with the global admin role have superuser access to Unleash and can perform any operation within the unleash platform.",
+      "description": "Users with the root admin role have superuser access to Unleash and can perform any operation within the unleash platform.",
       "id": 1,
       "name": "Admin",
       "project": null,
       "type": "root"
     },
     {
-      "description": "Users with this role have access most features in Unleash, but can not manage users and roles in the global scope. If a user with a global regular role creates a project, they will become a project admin and receive superuser rights within the context of that project.",
+      "description": "Users with this role have access most features in Unleash, but can not manage users and roles in the root scope. If a user with a regular root role creates a project, they will become a project admin and receive superuser rights within the context of that project.",
       "id": 2,
       "name": "Editor",
       "project": null,
@@ -64,7 +64,7 @@ Will return all users and all available root roles for the Unleash instance.
 }
 ```
 
-### Get a single users {#get-user}
+### Get a single user {#get-user}
 
 `GET https://unleash.host.com/api/admin/user-admin/:id`
 

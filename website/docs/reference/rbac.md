@@ -9,7 +9,7 @@ This document forms the specifications for [Role-Based Access Control](https://e
 
 Unleash has two levels in its hierarchy of resources:
 
-1. **Global resources** - Everything that lives across the entire Unleash instance. Examples of this include:
+1. **Root resources** - Everything that lives across the entire Unleash instance. Examples of this include:
    - activation strategies
    - context field definitions
    - addon configurations
@@ -19,21 +19,159 @@ Unleash has two levels in its hierarchy of resources:
 
 ![RBAC overview](/img/rbac.png)
 
-Unleash v4 allows you control access to both global resources and individual project resources.
+Unleash v4 allows you control access to both root resources and individual project resources.
 
-## Standard roles
+## Predefined roles
 
-Unleash comes with a set of built-in roles that you can use. The _global roles_ are available to all Unleash users, while the _project-based roles_ are only available to Pro and Enterprise users. The below table lists the roles, what they do, and what plans they are available in. Additionally, enterprise users can create their own [custom project roles](#custom-project-roles).
+Unleash comes with a set of built-in predefined roles that you can use. The _root roles_ are available to all Unleash users, while the _project-based roles_ are only available to Pro and Enterprise users. The below table lists the roles, what they do, and what plans they are available in. Additionally, Enterprise users can create their own [custom root roles](#custom-root-roles) and [custom project roles](#custom-project-roles).
 
-When you add a new user, you can assign them one of the global roles listed below.
+When you add a new user, you can assign them one of the root roles listed below.
 
 | Role | Scope | Description | Availability |
 | --- | --- | --- | --- |
-| **Admin** | Global | Users with the global admin role have superuser access to Unleash and can perform any operation within the Unleash platform. | All versions |
-| **Editor** | Global | Users with the editor role have access to most features in Unleash but can not manage users and roles in the global scope. Editors will be added as project owners when creating projects and get superuser rights within the context of these projects. Users with the editor role will also get access to most permissions on the default project by default. | All versions |
-| **Viewer** | Global | Users with the viewer role can read global resources in Unleash. | All versions |
-| **Owner** | Project | Users with this the project owner role have full control over the project, and can add and manage other users within the project context; manage feature toggles within the project; and control advanced project features like archiving and deleting the project. | Pro and Enterprise |
+| **Admin** | Root | Users with the root admin role have superuser access to Unleash and can perform any operation within the Unleash platform. | All versions |
+| **Editor** | Root | Users with the root editor role have access to most features in Unleash, but can not manage users and roles in the root scope. Editors will be added as project owners when creating projects and get superuser rights within the context of these projects. Users with the editor role will also get access to most permissions on the default project by default. | All versions |
+| **Viewer** | Root | Users with the root viewer role can only read root resources in Unleash. Viewers can be added to specific projects as project members. Users with the viewer role may not view API tokens. | All versions |
+| **Owner** | Project | Users with the project owner role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project. | Pro and Enterprise |
 | **Member** | Project | Users with the project member role are allowed to view, create, and update feature toggles within a project, but have limited permissions in regards to managing the project's user access and can not archive or delete the project. | Pro and Enterprise |
+
+## Custom Root Roles
+
+:::info availability
+
+Custom root roles were introduced in **Unleash 5.4** and are only available in Unleash Enterprise.
+
+:::
+
+Custom root roles let you define your own root roles with a specific set of root permissions. The roles can then be assigned to entities (users, service accounts and groups) at the root level. This allows you to control access to resources in a more precise, fine-grained way. For a step-by-step walkthrough of how to create and assign custom root roles, see [_how to create and assign custom root roles_](../how-to/how-to-create-and-assign-custom-root-roles.md).
+
+Each custom root role consists of:
+
+- a **name** (required)
+- a **role description** (required)
+- a set of **root permissions** (required)
+
+### Root permissions
+
+You can assign the following root permissions:
+
+#### Addon permissions
+
+- **Create addons**
+
+  Lets the user create addons.
+
+- **Update addons**
+
+  Lets the user update addons.
+
+- **Delete addons**
+
+  Lets the user delete addons.
+
+#### API token permissions
+
+- **Read frontend API tokens**
+
+  Lets the user read frontend API tokens.
+
+- **Create frontend API tokens**
+
+  Lets the user create frontend API tokens.
+
+- **Update frontend API tokens**
+
+  Lets the user update frontend API tokens.
+
+- **Delete frontend API tokens**
+
+  Lets the user delete frontend API tokens.
+
+- **Read client API tokens**
+
+  Lets the user read client API tokens.
+
+- **Create client API tokens**
+
+  Lets the user create client API tokens.
+
+- **Update client API tokens**
+
+  Lets the user update client API tokens.
+
+- **Delete client API tokens**
+
+  Lets the user delete client API tokens.
+
+#### Application permissions
+
+- **Update applications**
+
+  Lets the user update applications.
+
+#### Context field permissions
+
+- **Create context fields**
+
+  Lets the user create context fields.
+
+- **Update context fields**
+    
+  Lets the user update context fields.
+
+- **Delete context fields**
+
+  Lets the user delete context fields.
+
+#### Project permissions
+
+- **Create projects**
+
+  Lets the user create projects.
+
+#### Role permissions
+
+- **Read roles**
+
+  Lets the user read roles.
+
+#### Segment permissions
+
+- **Create segments**
+    
+  Lets the user create segments.
+
+- **Edit segments**
+
+  Lets the user edit segments.
+
+- **Delete segments**
+    
+  Lets the user delete segments.
+
+#### Strategy permissions
+
+- **Create strategies**
+
+  Lets the user create strategies.
+
+- **Update strategies**
+
+  Lets the user update strategies.
+
+- **Delete strategies**
+
+  Lets the user delete strategies.
+
+#### Tag type permissions
+
+- **Update tag types**
+
+  Lets the user update tag types.
+
+- **Delete tag types**
+
+  Lets the user delete tag types.
 
 ## Custom Project Roles
 
@@ -43,14 +181,13 @@ Custom project roles were introduced in **Unleash 4.6** and are only available i
 
 :::
 
-Custom project roles let you define your own roles with a specific set of project permissions down to the environment level. The roles can then be assigned to users in specific projects. All users have viewer access to all projects and resources, but must be assigned a project role to be allowed to edit a project's resources. For a step-by-step walkthrough of how to create and assign custom project roles, see [_how to create and assign custom project roles_](../how-to/how-to-create-and-assign-custom-project-roles.md).
+Custom project roles let you define your own project roles with a specific set of project permissions down to the environment level. The roles can then be assigned to users in specific projects. All users have viewer access to all projects and resources, but must be assigned a project role to be allowed to edit a project's resources. For a step-by-step walkthrough of how to create and assign custom project roles, see [_how to create and assign custom project roles_](../how-to/how-to-create-and-assign-custom-project-roles.md).
 
 Each custom project role consists of:
 
 - a **name** (required)
-- a **role description** (optional)
-- a set of **project permissions** (optional)
-- a set of **environment permissions** (optional)
+- a **role description** (required)
+- a set of **project and / or environment permissions** (required)
 
 ### Project permissions
 
@@ -140,9 +277,9 @@ A user group consists of the following:
 
 Groups do nothing on their own. They must either be given a root role directly or a role on a project to assign permissions.
 
-Groups that do not have a root role need to be assigned a role on a project to be useful. You can assign both standard roles and custom project roles to groups.
+Groups that do not have a root role need to be assigned a role on a project to be useful. You can assign both predefined roles and custom project roles to groups.
 
-Groups that *do* have a root role can't be assigned to a project. Any user that is a member of a group with a root role will inherit that root role's permissions globally.
+Groups that *do* have a root role can't be assigned to a project. Any user that is a member of a group with a root role will inherit that root role's permissions on a root level.
 
 While a user can only have one role in a given project, a user may belong to multiple groups, and each of those groups may be given a role on a project. In the case where a given user is given permissions through more than one group, the user will inherit most permissive permissions of all their groups in that project.
 
@@ -150,7 +287,7 @@ While a user can only have one role in a given project, a user may belong to mul
 
 :::info availability
 
-User group syncing is planned to be released in Unleash 4.18 and will be available for enterprise customers.
+User group syncing is planned to be released in Unleash 4.18 and will be available for Enterprise customers.
 
 :::
 

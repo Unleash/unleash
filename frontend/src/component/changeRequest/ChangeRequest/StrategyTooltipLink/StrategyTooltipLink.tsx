@@ -49,6 +49,12 @@ export const StrategyDiff: FC<{
     );
 };
 
+/// Test cases:
+
+// 1. the strategy didn't have a title, but has one now: change.payload.title is defined and previousTitle is undefined or empty
+// 2. the strategy had a title, but doesn't have one now: change.payload.title is undefined or empty and previousTitle is defined
+// 3. the strategy had a title, and has a new one now: change.payload.title is defined and previousTitle is defined and they are different
+// 4. the strategy had a title, and has the same one now: change.payload.title is defined and previousTitle is defined and they are the same
 export const StrategyName: FC<{
     change:
         | IChangeRequestAddStrategy

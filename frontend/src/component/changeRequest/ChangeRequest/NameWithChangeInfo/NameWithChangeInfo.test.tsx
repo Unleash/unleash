@@ -1,14 +1,17 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import React from 'react';
-import { StrategyName } from './StrategyTooltipLink';
+import { NameWithChangeInfo } from './NameWithChangeInfo';
 
 test.each(['', undefined])(
     'Should render only the new title if the previous title was %s',
     async previousTitle => {
         const newTitle = 'new title';
         render(
-            <StrategyName newTitle={newTitle} previousTitle={previousTitle} />
+            <NameWithChangeInfo
+                newTitle={newTitle}
+                previousTitle={previousTitle}
+            />
         );
 
         // expect no del elements
@@ -26,7 +29,10 @@ test.each(['', undefined])(
     async newTitle => {
         const previousTitle = 'previous title';
         render(
-            <StrategyName newTitle={newTitle} previousTitle={previousTitle} />
+            <NameWithChangeInfo
+                newTitle={newTitle}
+                previousTitle={previousTitle}
+            />
         );
 
         // expect no ins elements
@@ -42,7 +48,9 @@ test.each(['', undefined])(
 test('Should render the old title as deleted and the new title as inserted if the previous title was different', async () => {
     const newTitle = 'new title';
     const previousTitle = 'previous title';
-    render(<StrategyName newTitle={newTitle} previousTitle={previousTitle} />);
+    render(
+        <NameWithChangeInfo newTitle={newTitle} previousTitle={previousTitle} />
+    );
 
     // expect del element with old strategy name
     await screen.findByText(previousTitle, { selector: 'del' });
@@ -53,7 +61,7 @@ test('Should render the old title as deleted and the new title as inserted if th
 
 test('Should render the title in a span if it has not changed', async () => {
     const title = 'title';
-    render(<StrategyName newTitle={title} previousTitle={title} />);
+    render(<NameWithChangeInfo newTitle={title} previousTitle={title} />);
 
     // expect no del or ins elements
     expect(screen.queryByText(title, { selector: 'ins' })).toBeNull();
@@ -64,7 +72,9 @@ test('Should render the title in a span if it has not changed', async () => {
 });
 
 test('Should render nothing if there was no title and there is still no title', async () => {
-    render(<StrategyName newTitle={undefined} previousTitle={undefined} />);
+    render(
+        <NameWithChangeInfo newTitle={undefined} previousTitle={undefined} />
+    );
 
     expect(screen.queryByText('', { selector: 'ins' })).toBeNull();
     expect(screen.queryByText('', { selector: 'del' })).toBeNull();

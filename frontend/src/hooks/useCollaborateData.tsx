@@ -39,6 +39,21 @@ interface IStaleNotificationOptions {
     afterSubmitAction: () => void;
 }
 
+const omitUnwantedData = (obj: any, field: string): any => {
+    if (Array.isArray(obj)) {
+        return obj.map(value => omitUnwantedData(value, field));
+    } else if (typeof obj === 'object' && obj !== null) {
+        const result: any = {};
+        for (const [key, value] of Object.entries(obj)) {
+            if (key !== 'lastSeenAt') {
+                result[key] = omitUnwantedData(value, field);
+            }
+        }
+        return result;
+    }
+    return obj;
+};
+
 export const useCollaborateData = <Type,>(
     getterOptions: IGetterOptions,
     initialData: Type,
@@ -74,7 +89,12 @@ export const useCollaborateData = <Type,>(
     useEffect(() => {
         if (!cache || !data) return;
 
-        const equal = dequal(formatDequalData(cache), formatDequalData(data));
+        const cleanedCache = omitUnwantedData(cache, 'lastSeenAt');
+        const cleanedData = omitUnwantedData(data, 'lastSeenAt');
+        const equal = dequal(
+            formatDequalData(cleanedCache),
+            formatDequalData(cleanedData)
+        );
 
         if (!equal) {
             setDataModified(true);

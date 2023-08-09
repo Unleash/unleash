@@ -28,7 +28,7 @@ export const strategyEvaluationResults = {
                     description:
                         "Whether this strategy resolves to `false` or if it might resolve to `true`. Because Unleash can't evaluate the strategy, it can't say for certain whether it will be `true`, but if you have failing constraints or segments, it _can_ determine that your strategy would be `false`.",
                     anyOf: [
-                        { type: 'boolean', enum: [false] },
+                        { type: 'boolean', default: false },
                         {
                             type: 'string',
                             enum: [playgroundStrategyEvaluation.unknownResult],

@@ -50,30 +50,43 @@ export const StrategyDiff: FC<{
 };
 
 export const StrategyName: FC<{
-    change:
-        | IChangeRequestAddStrategy
-        | IChangeRequestUpdateStrategy
-        | IChangeRequestDeleteStrategy;
+    newTitle: string | undefined;
     previousTitle: string | undefined;
-}> = ({ change, previousTitle }) => {
+}> = ({ newTitle, previousTitle }) => {
+    const titleHasChanged = Boolean(
+        previousTitle && previousTitle !== newTitle
+    );
+
+    const titleHasChangedOrBeenAdded = Boolean(
+        titleHasChanged || (!previousTitle && newTitle)
+    );
+
     return (
         <>
             <ConditionallyRender
-                condition={Boolean(
-                    previousTitle && previousTitle !== change.payload.title
-                )}
+                condition={titleHasChanged}
                 show={
                     <Truncated>
-                        <Typography component="span" color="text.secondary">
-                            {previousTitle ||
-                                formatStrategyName(change.payload.name)}
-                        </Typography>{' '}
+                        <Typography component="del" color="text.secondary">
+                            {previousTitle}
+                        </Typography>
                     </Truncated>
                 }
             />
-            <Truncated>
-                <Typography component="span">{change.payload.title}</Typography>
-            </Truncated>
+            <ConditionallyRender
+                condition={Boolean(newTitle)}
+                show={
+                    <Truncated>
+                        <Typography
+                            component={
+                                titleHasChangedOrBeenAdded ? 'ins' : 'span'
+                            }
+                        >
+                            {newTitle}
+                        </Typography>
+                    </Truncated>
+                }
+            />
         </>
     );
 };
@@ -118,7 +131,10 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     {formatStrategyName(change.payload.name)}
                 </Typography>
             </TooltipLink>
-            {<StrategyName change={change} previousTitle={previousTitle} />}
+            <StrategyName
+                newTitle={change.payload.title}
+                previousTitle={previousTitle}
+            />
         </Truncated>
     </StyledContainer>
 );

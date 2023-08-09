@@ -55,33 +55,76 @@ Each custom root role consists of:
 
 You can assign the following root permissions:
 
-| Permission Group       | Permission Name                | Description                       |
-|------------------------|--------------------------------|-----------------------------------|
-| Addon permissions      | Create addons                  | Lets the user create addons.      |
-|                        | Update addons                  | Lets the user update addons.      |
-|                        | Delete addons                  | Lets the user delete addons.      |
-| API token permissions | Read frontend API tokens       | Lets the user read frontend API tokens. |
-|                        | Create frontend API tokens     | Lets the user create frontend API tokens. |
-|                        | Update frontend API tokens     | Lets the user update frontend API tokens. |
-|                        | Delete frontend API tokens     | Lets the user delete frontend API tokens. |
-|                        | Read client API tokens         | Lets the user read client API tokens. |
-|                        | Create client API tokens       | Lets the user create client API tokens. |
-|                        | Update client API tokens       | Lets the user update client API tokens. |
-|                        | Delete client API tokens       | Lets the user delete client API tokens. |
-| Application permissions| Update applications            | Lets the user update applications.  |
-| Context field permissions| Create context fields        | Lets the user create context fields. |
-|                        | Update context fields         | Lets the user update context fields. |
-|                        | Delete context fields         | Lets the user delete context fields. |
-| Project permissions   | Create projects                | Lets the user create projects.      |
-| Role permissions      | Read roles                     | Lets the user read roles.           |
-| Segment permissions   | Create segments                | Lets the user create segments.      |
-|                        | Edit segments                  | Lets the user edit segments.        |
-|                        | Delete segments                | Lets the user delete segments.      |
-| Strategy permissions  | Create strategies              | Lets the user create strategies.    |
-|                        | Update strategies              | Lets the user update strategies.    |
-|                        | Delete strategies              | Lets the user delete strategies.    |
-| Tag type permissions  | Update tag types               | Lets the user update tag types.     |
-|                        | Delete tag types               | Lets the user delete tag types.     |
+#### Addon permissions
+
+| Permission Name       | Description                       |
+|-----------------------|-----------------------------------|
+| Create addons         | Lets the user create addons.      |
+| Update addons         | Lets the user update addons.      |
+| Delete addons         | Lets the user delete addons.      |
+
+#### API token permissions
+
+| Permission Name       | Description                       |
+|-----------------------|-----------------------------------|
+| Read frontend API tokens   | Lets the user read frontend API tokens. |
+| Create frontend API tokens | Lets the user create frontend API tokens. |
+| Update frontend API tokens | Lets the user update frontend API tokens. |
+| Delete frontend API tokens | Lets the user delete frontend API tokens. |
+| Read client API tokens     | Lets the user read client API tokens. |
+| Create client API tokens   | Lets the user create client API tokens. |
+| Update client API tokens   | Lets the user update client API tokens. |
+| Delete client API tokens   | Lets the user delete client API tokens. |
+
+#### Application permissions
+
+| Permission Name       | Description                       |
+|-----------------------|-----------------------------------|
+| Update applications   | Lets the user update applications. |
+
+#### Context field permissions
+
+| Permission Name       | Description                       |
+|-----------------------|-----------------------------------|
+| Create context fields | Lets the user create context fields. |
+| Update context fields | Lets the user update context fields. |
+| Delete context fields | Lets the user delete context fields. |
+
+#### Project permissions
+
+| Permission Name       | Description                       |
+|-----------------------|-----------------------------------|
+| Create projects       | Lets the user create projects.    |
+
+#### Role permissions
+
+| Permission Name       | Description                       |
+|-----------------------|-----------------------------------|
+| Read roles            | Lets the user read roles.         |
+
+#### Segment permissions
+
+| Permission Name       | Description                       |
+|-----------------------|-----------------------------------|
+| Create segments       | Lets the user create segments.    |
+| Edit segments         | Lets the user edit segments.      |
+| Delete segments       | Lets the user delete segments.    |
+
+#### Strategy permissions
+
+| Permission Name       | Description                       |
+|-----------------------|-----------------------------------|
+| Create strategies     | Lets the user create strategies.  |
+| Update strategies     | Lets the user update strategies.  |
+| Delete strategies     | Lets the user delete strategies.  |
+
+#### Tag type permissions
+
+| Permission Name       | Description                       |
+|-----------------------|-----------------------------------|
+| Update tag types      | Lets the user update tag types.   |
+| Delete tag types      | Lets the user delete tag types.   |
+
 
 
 ## Custom Project Roles

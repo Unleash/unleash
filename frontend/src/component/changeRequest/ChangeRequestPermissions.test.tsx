@@ -266,6 +266,12 @@ const copyButtonsActiveInOtherEnv = async () => {
     expect(customEnvStrategyCopyButton).not.toBeDisabled();
 };
 
+const openEnvironments = async (envNames: string[]) => {
+    for (const env of envNames) {
+        (await screen.findAllByText(env))[1].click();
+    }
+};
+
 test('open mode + non-project member can perform basic change request actions', async () => {
     const project = 'default';
     const featureName = 'test';
@@ -288,6 +294,8 @@ test('open mode + non-project member can perform basic change request actions', 
             <FeatureView />
         </UnleashUiSetup>
     );
+
+    await openEnvironments(['development', 'production', 'custom']);
 
     await strategiesAreDisplayed('UserIDs', 'Standard');
     await deleteButtonsActiveInChangeRequestEnv();
@@ -317,6 +325,8 @@ test('protected mode + project member can perform basic change request actions',
         </UnleashUiSetup>
     );
 
+    await openEnvironments(['development', 'production', 'custom']);
+
     await strategiesAreDisplayed('UserIDs', 'Standard');
     await deleteButtonsActiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
@@ -344,6 +354,8 @@ test('protected mode + non-project member cannot perform basic change request ac
             <FeatureView />
         </UnleashUiSetup>
     );
+
+    await openEnvironments(['development', 'production', 'custom']);
 
     await strategiesAreDisplayed('UserIDs', 'Standard');
     await deleteButtonsInactiveInChangeRequestEnv();

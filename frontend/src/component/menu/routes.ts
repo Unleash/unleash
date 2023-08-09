@@ -4,7 +4,7 @@ import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesLi
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { AddonList } from 'component/addons/AddonList/AddonList';
 import Login from 'component/user/Login/Login';
-import { EEA, P, SE, UG } from 'component/common/flags';
+import { EEA, P, SE } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -42,7 +42,6 @@ import { LazyCreateProject } from 'component/project/Project/CreateProject/LazyC
 import { LazyFeatureView } from 'component/feature/FeatureView/LazyFeatureView';
 import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
-import { AdminRedirect } from 'component/admin/AdminRedirect';
 import { LoginHistory } from 'component/loginHistory/LoginHistory';
 import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
 

@@ -49,25 +49,17 @@ export const StrategyDiff: FC<{
     );
 };
 
-/// Test cases:
-
-// 1. the strategy didn't have a title, but has one now: change.payload.title is defined and previousTitle is undefined or empty
-// 2. the strategy had a title, but doesn't have one now: change.payload.title is undefined or empty and previousTitle is defined
-// 3. the strategy had a title, and has a new one now: change.payload.title is defined and previousTitle is defined and they are different
-// 4. the strategy had a title, and has the same one now: change.payload.title is defined and previousTitle is defined and they are the same
 export const StrategyName: FC<{
-    change:
-        | IChangeRequestAddStrategy
-        | IChangeRequestUpdateStrategy
-        | IChangeRequestDeleteStrategy;
+    newTitle: string | undefined;
     previousTitle: string | undefined;
-}> = ({ change, previousTitle }) => {
+}> = ({ newTitle, previousTitle }) => {
     const titleHasChanged = Boolean(
-        previousTitle && previousTitle !== change.payload.title
+        previousTitle && previousTitle !== newTitle
     );
 
-    const titleHasChangedOrBeenAdded =
-        titleHasChanged || (!previousTitle && change.payload.title);
+    const titleHasChangedOrBeenAdded = Boolean(
+        titleHasChanged || (!previousTitle && newTitle)
+    );
 
     return (
         <>
@@ -76,19 +68,25 @@ export const StrategyName: FC<{
                 show={
                     <Truncated>
                         <Typography component="del" color="text.secondary">
-                            {previousTitle ||
-                                formatStrategyName(change.payload.name)}
+                            {previousTitle}
                         </Typography>
                     </Truncated>
                 }
             />
-            <Truncated>
-                <Typography
-                    component={titleHasChangedOrBeenAdded ? 'ins' : 'span'}
-                >
-                    {change.payload.title}
-                </Typography>
-            </Truncated>
+            <ConditionallyRender
+                condition={Boolean(newTitle)}
+                show={
+                    <Truncated>
+                        <Typography
+                            component={
+                                titleHasChangedOrBeenAdded ? 'ins' : 'span'
+                            }
+                        >
+                            {newTitle}
+                        </Typography>
+                    </Truncated>
+                }
+            />
         </>
     );
 };
@@ -133,7 +131,10 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     {formatStrategyName(change.payload.name)}
                 </Typography>
             </TooltipLink>
-            <StrategyName change={change} previousTitle={previousTitle} />
+            <StrategyName
+                newTitle={change.payload.title}
+                previousTitle={previousTitle}
+            />
         </Truncated>
     </StyledContainer>
 );

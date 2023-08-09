@@ -1,0 +1,77 @@
+import { screen } from '@testing-library/react';
+import { render } from 'utils/testRenderer';
+import React from 'react';
+import { StrategyName } from './StrategyTooltipLink';
+
+test.each(['', undefined])(
+    'Should render only the new title if the previous title was %s',
+    async previousTitle => {
+        const newTitle = 'new title';
+        const { container } = render(
+            <StrategyName newTitle={newTitle} previousTitle={previousTitle} />
+        );
+
+        // expect no del elements
+        expect(container.querySelector('del')).toBeNull();
+
+        // expect ins element with new strategy name
+        await screen.findByText(newTitle, { selector: 'ins' });
+    }
+);
+
+test.each(['', undefined])(
+    'Should render the old title as deleted and no new title if there was a previous title and the new one is %s',
+    async newTitle => {
+        const previousTitle = 'previous title';
+        const { container } = render(
+            <StrategyName newTitle={newTitle} previousTitle={previousTitle} />
+        );
+
+        // expect no ins elements
+        expect(container.querySelector('ins')).toBeNull();
+
+        // expect del element with old strategy name
+        await screen.findByText(previousTitle, { selector: 'del' });
+    }
+);
+
+test('Should render the old title as deleted and the new title as inserted if the previous title was different', async () => {
+    const newTitle = 'new title';
+    const previousTitle = 'previous title';
+    const { container } = render(
+        <StrategyName newTitle={newTitle} previousTitle={previousTitle} />
+    );
+
+    // expect del element with old strategy name
+    await screen.findByText(previousTitle, { selector: 'del' });
+
+    // expect ins element with new strategy name
+    await screen.findByText(newTitle, { selector: 'ins' });
+});
+
+test('Should render the title in a span if it has not changed', async () => {
+    const title = 'title';
+    const { container } = render(
+        <StrategyName newTitle={title} previousTitle={title} />
+    );
+
+    // expect no del or ins elements
+    expect(container.querySelector('del')).toBeNull();
+    expect(container.querySelector('ins')).toBeNull();
+
+    // expect span element with the strategy name
+    await screen.findByText(title, { selector: 'span' });
+});
+
+test('Should render nothing if there was no title and there is still no title', async () => {
+    const { container } = render(
+        <StrategyName newTitle={undefined} previousTitle={undefined} />
+    );
+
+    expect(container.querySelector('del')).toBeNull();
+    expect(container.querySelector('ins')).toBeNull();
+    expect(container.querySelector('span')).toBeNull();
+
+    // There's an empty test div in the container but nothing else
+    expect(container.childElementCount).toBe(1);
+});

@@ -92,18 +92,18 @@ const deleteOldStrategies = async (featureId: string) => {
             strategy.constraints.length > 0 || strategy.segments.length > 0
     );
     await Promise.all(
-        tooGenericStrategies
-            .map((result: { id: string }) => result.id)
-            .map((strategyId: string) => deleteStrategy(featureId, strategyId))
+        tooGenericStrategies.map((result: { id: string }) =>
+            deleteStrategy(featureId, result.id)
+        )
     );
 
-    if (constrainedStrategies.length > 10) {
+    const strategyLimit = 30;
+    if (constrainedStrategies.length > strategyLimit) {
         await Promise.all(
             constrainedStrategies
-                .slice(0, 9)
-                .map((result: { id: string }) => result.id)
-                .map((strategyId: string) =>
-                    deleteStrategy(featureId, strategyId)
+                .slice(0, strategyLimit - 1)
+                .map((result: { id: string }) =>
+                    deleteStrategy(featureId, result.id)
                 )
         );
     }

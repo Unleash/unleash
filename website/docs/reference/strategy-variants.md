@@ -1,9 +1,9 @@
 ---
-title: Feature Strategy Variants
+title: Strategy Variants
 ---
 :::info Availability
 
-**Feature strategy variants** were first introduced in Unleash 5.4.
+**Strategy variants** were first introduced in Unleash 5.4.
 :::
 
 Gradual rollout strategies in Unleash can have _strategy variants_. _Strategy variants_ allow each matching activation strategy to return not just simple enabled/disabled status, but
@@ -78,7 +78,7 @@ Since strategy variants are part of activation strategies they have full access 
 
 In the Unleash UI, you can configure variants by navigating to the gradual strategy view, and then choosing the 'Variants' section.
 
-![strategy_variants](/img/strategy-variants.png 'Feature Strategy Variants')
+![strategy_variants](/img/strategy-variants.png 'Strategy Variants')
 
 ## The `disabled` variant
 

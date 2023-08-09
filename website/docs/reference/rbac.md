@@ -279,7 +279,7 @@ Groups do nothing on their own. They must either be given a root role directly o
 
 Groups that do not have a root role need to be assigned a role on a project to be useful. You can assign both predefined roles and custom project roles to groups.
 
-Groups that *do* have a root role can't be assigned to a project. Any user that is a member of a group with a root role will inherit that root role's permissions on a root level.
+Groups that *do* have a root role can't be assigned to a project. Any user that is a member of a group with a root role will inherit that root role's permissions on the root level.
 
 While a user can only have one role in a given project, a user may belong to multiple groups, and each of those groups may be given a role on a project. In the case where a given user is given permissions through more than one group, the user will inherit most permissive permissions of all their groups in that project.
 

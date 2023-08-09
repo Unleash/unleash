@@ -4,74 +4,68 @@ import React from 'react';
 import { NameWithChangeInfo } from './NameWithChangeInfo';
 
 test.each(['', undefined])(
-    'Should render only the new title if the previous title was %s',
-    async previousTitle => {
-        const newTitle = 'new title';
+    'Should render only the new name if the previous name was %s',
+    async previousName => {
+        const newName = 'new name';
         render(
-            <NameWithChangeInfo
-                newName={newTitle}
-                previousName={previousTitle}
-            />
+            <NameWithChangeInfo newName={newName} previousName={previousName} />
         );
 
         // expect no del elements
         expect(
-            screen.queryByText(previousTitle || '', { selector: 'del' })
+            screen.queryByText(previousName || '', { selector: 'del' })
         ).toBeNull();
 
         // expect ins element with new strategy name
-        await screen.findByText(newTitle, { selector: 'ins' });
+        await screen.findByText(newName, { selector: 'ins' });
     }
 );
 
 test.each(['', undefined])(
-    'Should render the old title as deleted and no new title if there was a previous title and the new one is %s',
-    async newTitle => {
-        const previousTitle = 'previous title';
+    'Should render the old name as deleted and no new name if there was a previous name and the new one is %s',
+    async newName => {
+        const previousName = 'previous name';
         render(
-            <NameWithChangeInfo
-                newName={newTitle}
-                previousName={previousTitle}
-            />
+            <NameWithChangeInfo newName={newName} previousName={previousName} />
         );
 
         // expect no ins elements
         expect(
-            screen.queryByText(newTitle || '', { selector: 'ins' })
+            screen.queryByText(newName || '', { selector: 'ins' })
         ).toBeNull();
 
         // expect del element with old strategy name
-        await screen.findByText(previousTitle, { selector: 'del' });
+        await screen.findByText(previousName, { selector: 'del' });
     }
 );
 
-test('Should render the old title as deleted and the new title as inserted if the previous title was different', async () => {
-    const newTitle = 'new title';
-    const previousTitle = 'previous title';
+test('Should render the old name as deleted and the new name as inserted if the previous name was different', async () => {
+    const newName = 'new name';
+    const previousName = 'previous name';
     render(
-        <NameWithChangeInfo newName={newTitle} previousName={previousTitle} />
+        <NameWithChangeInfo newName={newName} previousName={previousName} />
     );
 
     // expect del element with old strategy name
-    await screen.findByText(previousTitle, { selector: 'del' });
+    await screen.findByText(previousName, { selector: 'del' });
 
     // expect ins element with new strategy name
-    await screen.findByText(newTitle, { selector: 'ins' });
+    await screen.findByText(newName, { selector: 'ins' });
 });
 
-test('Should render the title in a span if it has not changed', async () => {
-    const title = 'title';
-    render(<NameWithChangeInfo newName={title} previousName={title} />);
+test('Should render the name in a span if it has not changed', async () => {
+    const name = 'name';
+    render(<NameWithChangeInfo newName={name} previousName={name} />);
 
     // expect no del or ins elements
-    expect(screen.queryByText(title, { selector: 'ins' })).toBeNull();
-    expect(screen.queryByText(title, { selector: 'del' })).toBeNull();
+    expect(screen.queryByText(name, { selector: 'ins' })).toBeNull();
+    expect(screen.queryByText(name, { selector: 'del' })).toBeNull();
 
     // expect span element with the strategy name
-    await screen.findByText(title, { selector: 'span' });
+    await screen.findByText(name, { selector: 'span' });
 });
 
-test('Should render nothing if there was no title and there is still no title', async () => {
+test('Should render nothing if there was no name and there is still no name', async () => {
     render(<NameWithChangeInfo newName={undefined} previousName={undefined} />);
 
     expect(screen.queryByText('', { selector: 'ins' })).toBeNull();

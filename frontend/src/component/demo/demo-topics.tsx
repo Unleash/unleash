@@ -429,18 +429,19 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href="https://docs.getunleash.io/reference/strategy-variants"
+                                href="https://docs.getunleash.io/reference/feature-toggle-variants"
                                 target="_blank"
                                 rel="noreferrer"
                             >
-                                Strategy variants
+                                Feature toggle variants
                             </a>{' '}
-                            allow you to define different values for a matching
-                            strategy. They can be used for A/B testing or
+                            allow you to define different values for a feature
+                            toggle. They can be used for A/B testing or
                             segmenting your users.
                         </Description>
                         <Description sx={{ mt: 1 }}>
-                            Let's try adding a variant to a strategy.
+                            Let's try adding a variant to a feature toggle,
+                            along with an override so our user can see it.
                         </Description>
                     </>
                 ),

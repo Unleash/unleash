@@ -257,13 +257,13 @@ class StrategyController extends Controller {
     }
 
     async updateStrategy(
-        req: IAuthRequest<{ strategyName: string }, UpdateStrategySchema>,
+        req: IAuthRequest<{ name: string }, UpdateStrategySchema>,
         res: Response<void>,
     ): Promise<void> {
         const userName = extractUsername(req);
 
         await this.strategyService.updateStrategy(
-            { ...req.body, name: req.params.strategyName },
+            { ...req.body, name: req.params.name },
             userName,
         );
         res.status(200).end();

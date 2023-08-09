@@ -375,14 +375,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
-    "hidden": false,
-    "menu": {},
-    "path": "/admin",
-    "title": "Admin",
-    "type": "protected",
-  },
-  {
     "component": {
       "$$typeof": Symbol(react.lazy),
       "_init": [Function],

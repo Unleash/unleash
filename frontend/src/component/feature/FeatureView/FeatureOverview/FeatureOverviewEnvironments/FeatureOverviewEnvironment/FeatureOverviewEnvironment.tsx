@@ -141,6 +141,7 @@ const FeatureOverviewEnvironment = ({
             show={
                 <StyledFeatureOverviewEnvironment enabled={env.enabled}>
                     <StyledAccordion
+                        TransitionProps={{ mountOnEnter: true }}
                         data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${env.name}`}
                         className={`environment-accordion ${
                             env.enabled ? '' : 'accordion-disabled'

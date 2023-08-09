@@ -13,7 +13,7 @@ test.each(['', undefined])(
 
         // expect no del elements
         expect(
-            screen.getByText(previousTitle || '', { selector: 'del' })
+            screen.queryByText(previousTitle || '', { selector: 'del' })
         ).toBeNull();
 
         // expect ins element with new strategy name
@@ -31,7 +31,7 @@ test.each(['', undefined])(
 
         // expect no ins elements
         expect(
-            screen.getByText(newTitle || '', { selector: 'ins' })
+            screen.queryByText(newTitle || '', { selector: 'ins' })
         ).toBeNull();
 
         // expect del element with old strategy name
@@ -56,8 +56,8 @@ test('Should render the title in a span if it has not changed', async () => {
     render(<StrategyName newTitle={title} previousTitle={title} />);
 
     // expect no del or ins elements
-    expect(screen.getByText(title, { selector: 'ins' })).toBeNull();
-    expect(screen.getByText(title, { selector: 'del' })).toBeNull();
+    expect(screen.queryByText(title, { selector: 'ins' })).toBeNull();
+    expect(screen.queryByText(title, { selector: 'del' })).toBeNull();
 
     // expect span element with the strategy name
     await screen.findByText(title, { selector: 'span' });
@@ -66,7 +66,7 @@ test('Should render the title in a span if it has not changed', async () => {
 test('Should render nothing if there was no title and there is still no title', async () => {
     render(<StrategyName newTitle={undefined} previousTitle={undefined} />);
 
-    expect(screen.getByText('', { selector: 'ins' })).toBeNull();
-    expect(screen.getByText('', { selector: 'del' })).toBeNull();
-    expect(screen.getByText('', { selector: 'span' })).toBeNull();
+    expect(screen.queryByText('', { selector: 'ins' })).toBeNull();
+    expect(screen.queryByText('', { selector: 'del' })).toBeNull();
+    expect(screen.queryByText('', { selector: 'span' })).toBeNull();
 });

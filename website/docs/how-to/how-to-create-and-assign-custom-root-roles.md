@@ -33,4 +33,4 @@ Give the root role a name, a description, and the set of permissions you'd like 
 
 ## Assigning custom root roles
 
-You may assign custom root roles just like you would assign any other [predefined root role](../reference/rbac.md#predefined-roles). Besides assigning root roles to users, you can also assign them to [service accounts](../reference/service-accounts.md) and [groups](../reference/rbac.md#user-groups).
+You can assign custom root roles just like you would assign any other [predefined root role](../reference/rbac.md#predefined-roles). Root roles can be assigned to users, [service accounts](../reference/service-accounts.md), and [groups](../reference/rbac.md#user-groups).

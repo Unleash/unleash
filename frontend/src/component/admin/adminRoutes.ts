@@ -1,4 +1,3 @@
-import { UG } from 'component/common/flags';
 import { INavigationMenuItem } from 'interfaces/route';
 
 export const adminGroups: Record<string, string> = {
@@ -32,7 +31,6 @@ export const adminRoutes: INavigationMenuItem[] = [
             adminSettings: true,
             mode: ['enterprise'],
         },
-        flag: UG,
         group: 'users',
     },
     {
@@ -61,14 +59,14 @@ export const adminRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/auth',
         title: 'Single sign-on',
-        menu: { adminSettings: true },
+        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         group: 'access',
     },
     {
         path: '/admin/network/*',
         title: 'Network',
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
-        configFlag: 'networkViewEnabled',
+        // configFlag: 'networkViewEnabled',
         group: 'instance',
     },
     {

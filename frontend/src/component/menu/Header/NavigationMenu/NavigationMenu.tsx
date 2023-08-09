@@ -50,7 +50,7 @@ export const NavigationMenu = ({
     anchorEl,
     style,
 }: INavigationMenuProps) => {
-    const { uiConfig, isPro } = useUiConfig();
+    const { uiConfig, isPro, isOss } = useUiConfig();
     const showUpdatedMenu = uiConfig?.flags?.frontendNavigationUpdate;
 
     const showBadge = useCallback(
@@ -83,7 +83,8 @@ export const NavigationMenu = ({
                     const addDivider =
                         showUpdatedMenu &&
                         previousGroup &&
-                        previousGroup !== option.group;
+                        previousGroup !== option.group &&
+                        (!isOss() || option.group === 'log');
 
                     return [
                         addDivider ? (

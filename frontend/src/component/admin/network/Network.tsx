@@ -8,9 +8,12 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 const NetworkOverview = lazy(() => import('./NetworkOverview/NetworkOverview'));
 const NetworkTraffic = lazy(() => import('./NetworkTraffic/NetworkTraffic'));
 
-const StyledPageContent = styled(PageContent)(() => ({
+const StyledPageContent = styled(PageContent)(({ theme }) => ({
     '.page-header': {
-        padding: 0,
+        padding: theme.spacing(0, 2),
+        [theme.breakpoints.down('md')]: {
+            padding: theme.spacing(1),
+        },
     },
 }));
 

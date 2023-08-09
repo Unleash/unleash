@@ -11,7 +11,6 @@ import {
     TextField,
 } from '@mui/material';
 import { Alert } from '@mui/material';
-import { PageContent } from 'component/common/PageContent/PageContent';
 import { AutoCreateForm } from '../AutoCreateForm/AutoCreateForm';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAuthSettingsApi from 'hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
@@ -82,7 +81,7 @@ export const OidcAuth = () => {
     };
 
     return (
-        <PageContent>
+        <>
             <Grid container sx={{ mb: 3 }}>
                 <Grid item md={12}>
                     <Alert severity="info">
@@ -292,6 +291,6 @@ export const OidcAuth = () => {
                     </Grid>
                 </Grid>
             </form>
-        </PageContent>
+        </>
     );
 };

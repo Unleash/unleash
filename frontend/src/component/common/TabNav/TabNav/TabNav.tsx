@@ -21,27 +21,6 @@ export const TabNav = ({
     startingTab = 0,
 }: ITabNavProps) => {
     const [activeTab, setActiveTab] = useState(startingTab);
-    const renderTabs = () =>
-        tabData.map((tab, index) => (
-            <Tab
-                key={`${tab.label}_${index}`}
-                label={tab.label}
-                id={`tab-${index}`}
-                aria-controls={`tabpanel-${index}`}
-                sx={{
-                    minWidth: {
-                        lg: 160,
-                    },
-                }}
-            />
-        ));
-
-    const renderTabPanels = () =>
-        tabData.map((tab, index) => (
-            <TabPanel key={index} value={activeTab} index={index}>
-                {tab.component}
-            </TabPanel>
-        ));
 
     return (
         <>
@@ -62,12 +41,29 @@ export const TabNav = ({
                     }}
                     indicatorColor="primary"
                     textColor="primary"
-                    centered
                 >
-                    {renderTabs()}
+                    {tabData.map((tab, index) => (
+                        <Tab
+                            key={`${tab.label}_${index}`}
+                            label={tab.label}
+                            id={`tab-${index}`}
+                            aria-controls={`tabpanel-${index}`}
+                            sx={{
+                                minWidth: {
+                                    lg: 160,
+                                },
+                            }}
+                        />
+                    ))}
                 </Tabs>
             </Paper>
-            <div className={className}>{renderTabPanels()}</div>
+            <div className={className}>
+                {tabData.map((tab, index) => (
+                    <TabPanel key={index} value={activeTab} index={index}>
+                        {tab.component}
+                    </TabPanel>
+                ))}
+            </div>
         </>
     );
 };

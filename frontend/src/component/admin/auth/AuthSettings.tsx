@@ -1,4 +1,4 @@
-import { Alert } from '@mui/material';
+import { Alert, Paper, Tab, Tabs, styled } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -9,6 +9,18 @@ import { GoogleAuth } from './GoogleAuth/GoogleAuth';
 import { TabNav } from 'component/common/TabNav/TabNav/TabNav';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN } from '@server/types/permissions';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+import { useState } from 'react';
+import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
+
+const StyledPageContent = styled(PageContent)(({ theme }) => ({
+    '& .page-header': {
+        padding: theme.spacing(0, 2),
+        [theme.breakpoints.down('md')]: {
+            padding: theme.spacing(1),
+        },
+    },
+}));
 
 export const AuthSettings = () => {
     const { authenticationType } = useUiConfig().uiConfig;
@@ -34,24 +46,46 @@ export const AuthSettings = () => {
     ].filter(
         item => uiConfig.flags?.googleAuthEnabled || item.label !== 'Google'
     );
+    const [activeTab, setActiveTab] = useState(0);
 
     return (
         <div>
             <PermissionGuard permissions={ADMIN}>
-                <PageContent header="Single Sign-On">
-                    <ConditionallyRender
-                        condition={authenticationType === 'enterprise'}
-                        show={<TabNav tabData={tabs} />}
-                    />
+                <StyledPageContent
+                    headerClass="page-header"
+                    header={
+                        <ConditionallyRender
+                            condition={authenticationType === 'enterprise'}
+                            show={
+                                <Tabs
+                                    value={activeTab}
+                                    onChange={(_, tabId) => {
+                                        setActiveTab(tabId);
+                                    }}
+                                    indicatorColor="primary"
+                                    textColor="primary"
+                                >
+                                    {tabs.map((tab, index) => (
+                                        <Tab
+                                            key={`${tab.label}_${index}`}
+                                            label={tab.label}
+                                            id={`tab-${index}`}
+                                            aria-controls={`tabpanel-${index}`}
+                                            sx={{
+                                                minWidth: {
+                                                    lg: 160,
+                                                },
+                                            }}
+                                        />
+                                    ))}
+                                </Tabs>
+                            }
+                        />
+                    }
+                >
                     <ConditionallyRender
                         condition={authenticationType === 'open-source'}
-                        show={
-                            <Alert severity="warning">
-                                You are running the open-source version of
-                                Unleash. You have to use the Enterprise edition
-                                in order configure Single Sign-on.
-                            </Alert>
-                        }
+                        show={<PremiumFeature feature="sso" />}
                     />
                     <ConditionallyRender
                         condition={authenticationType === 'demo'}
@@ -83,7 +117,23 @@ export const AuthSettings = () => {
                             </Alert>
                         }
                     />
-                </PageContent>
+                    <ConditionallyRender
+                        condition={authenticationType === 'enterprise'}
+                        show={
+                            <div>
+                                {tabs.map((tab, index) => (
+                                    <TabPanel
+                                        key={index}
+                                        value={activeTab}
+                                        index={index}
+                                    >
+                                        {tab.component}
+                                    </TabPanel>
+                                ))}
+                            </div>
+                        }
+                    />
+                </StyledPageContent>
             </PermissionGuard>
         </div>
     );

@@ -21,7 +21,7 @@ const StyledBadgeContainer = styled('div')(({ theme }) => ({
 }));
 
 export const AdminTabsMenu: VFC = () => {
-    const { uiConfig, isPro } = useUiConfig();
+    const { uiConfig, isPro, isOss } = useUiConfig();
     const { pathname } = useLocation();
 
     const activeTab = pathname.split('/')[2];
@@ -30,9 +30,16 @@ export const AdminTabsMenu: VFC = () => {
         uiConfig?.flags?.frontendNavigationUpdate;
 
     const adminRoutes = useAdminRoutes();
-    const group = adminRoutes.find(route => route.path === pathname)?.group;
+    const group = adminRoutes.find(route =>
+        pathname.includes(route.path)
+    )?.group;
 
-    const tabs = adminRoutes.filter(route => !group || route.group === group);
+    const tabs = adminRoutes.filter(
+        route =>
+            !group ||
+            route.group === group ||
+            (isOss() && route.group !== 'log')
+    );
 
     if (!group) {
         return null;

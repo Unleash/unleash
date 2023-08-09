@@ -43,7 +43,7 @@ Custom root roles were introduced in **Unleash 5.4** and are only available in U
 
 :::
 
-Custom root roles let you define your own root roles with a specific set of root permissions. The roles can then be assigned to entities (users, service accounts and groups) at the root level. This allows you to control access to resources in a more precise, fine-grained way. For a step-by-step walkthrough of how to create and assign custom root roles, see [_how to create and assign custom root roles_](../how-to/how-to-create-and-assign-custom-root-roles.md).
+Custom root roles let you define your own root roles with a specific set of root permissions. The roles can then be assigned to entities (users, service accounts and groups) at the root level. This allows you to control access to resources in a more precise, fine-grained way. For a step-by-step walkthrough of how to create and assign custom root roles, refer to [_how to create and assign custom root roles_](../how-to/how-to-create-and-assign-custom-root-roles.md).
 
 Each custom root role consists of:
 

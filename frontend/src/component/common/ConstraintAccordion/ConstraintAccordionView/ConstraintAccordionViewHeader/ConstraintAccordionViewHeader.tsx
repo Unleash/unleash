@@ -3,6 +3,7 @@ import { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo';
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 import { styled } from '@mui/system';
+import useUnleashContext from '../../../../../hooks/api/getters/useUnleashContext/useUnleashContext';
 
 interface IConstraintAccordionViewHeaderProps {
     constraint: IConstraint;
@@ -34,6 +35,13 @@ export const ConstraintAccordionViewHeader = ({
     expanded,
     compact,
 }: IConstraintAccordionViewHeaderProps) => {
+    const { context } = useUnleashContext();
+    const { contextName } = constraint;
+
+    const disableEdit = !context
+        .map(contextDefinition => contextDefinition.name)
+        .includes(contextName);
+
     return (
         <StyledContainer>
             <ConstraintIcon compact={compact} />
@@ -46,6 +54,7 @@ export const ConstraintAccordionViewHeader = ({
             <ConstraintAccordionHeaderActions
                 onEdit={onEdit}
                 onDelete={onDelete}
+                disableEdit={disableEdit}
             />
         </StyledContainer>
     );

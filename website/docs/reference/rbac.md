@@ -55,123 +55,34 @@ Each custom root role consists of:
 
 You can assign the following root permissions:
 
-#### Addon permissions
+| Permission Group       | Permission Name                | Description                       |
+|------------------------|--------------------------------|-----------------------------------|
+| Addon permissions      | Create addons                  | Lets the user create addons.      |
+|                        | Update addons                  | Lets the user update addons.      |
+|                        | Delete addons                  | Lets the user delete addons.      |
+| API token permissions | Read frontend API tokens       | Lets the user read frontend API tokens. |
+|                        | Create frontend API tokens     | Lets the user create frontend API tokens. |
+|                        | Update frontend API tokens     | Lets the user update frontend API tokens. |
+|                        | Delete frontend API tokens     | Lets the user delete frontend API tokens. |
+|                        | Read client API tokens         | Lets the user read client API tokens. |
+|                        | Create client API tokens       | Lets the user create client API tokens. |
+|                        | Update client API tokens       | Lets the user update client API tokens. |
+|                        | Delete client API tokens       | Lets the user delete client API tokens. |
+| Application permissions| Update applications            | Lets the user update applications.  |
+| Context field permissions| Create context fields        | Lets the user create context fields. |
+|                        | Update context fields         | Lets the user update context fields. |
+|                        | Delete context fields         | Lets the user delete context fields. |
+| Project permissions   | Create projects                | Lets the user create projects.      |
+| Role permissions      | Read roles                     | Lets the user read roles.           |
+| Segment permissions   | Create segments                | Lets the user create segments.      |
+|                        | Edit segments                  | Lets the user edit segments.        |
+|                        | Delete segments                | Lets the user delete segments.      |
+| Strategy permissions  | Create strategies              | Lets the user create strategies.    |
+|                        | Update strategies              | Lets the user update strategies.    |
+|                        | Delete strategies              | Lets the user delete strategies.    |
+| Tag type permissions  | Update tag types               | Lets the user update tag types.     |
+|                        | Delete tag types               | Lets the user delete tag types.     |
 
-- **Create addons**
-
-  Lets the user create addons.
-
-- **Update addons**
-
-  Lets the user update addons.
-
-- **Delete addons**
-
-  Lets the user delete addons.
-
-#### API token permissions
-
-- **Read frontend API tokens**
-
-  Lets the user read frontend API tokens.
-
-- **Create frontend API tokens**
-
-  Lets the user create frontend API tokens.
-
-- **Update frontend API tokens**
-
-  Lets the user update frontend API tokens.
-
-- **Delete frontend API tokens**
-
-  Lets the user delete frontend API tokens.
-
-- **Read client API tokens**
-
-  Lets the user read client API tokens.
-
-- **Create client API tokens**
-
-  Lets the user create client API tokens.
-
-- **Update client API tokens**
-
-  Lets the user update client API tokens.
-
-- **Delete client API tokens**
-
-  Lets the user delete client API tokens.
-
-#### Application permissions
-
-- **Update applications**
-
-  Lets the user update applications.
-
-#### Context field permissions
-
-- **Create context fields**
-
-  Lets the user create context fields.
-
-- **Update context fields**
-    
-  Lets the user update context fields.
-
-- **Delete context fields**
-
-  Lets the user delete context fields.
-
-#### Project permissions
-
-- **Create projects**
-
-  Lets the user create projects.
-
-#### Role permissions
-
-- **Read roles**
-
-  Lets the user read roles.
-
-#### Segment permissions
-
-- **Create segments**
-    
-  Lets the user create segments.
-
-- **Edit segments**
-
-  Lets the user edit segments.
-
-- **Delete segments**
-    
-  Lets the user delete segments.
-
-#### Strategy permissions
-
-- **Create strategies**
-
-  Lets the user create strategies.
-
-- **Update strategies**
-
-  Lets the user update strategies.
-
-- **Delete strategies**
-
-  Lets the user delete strategies.
-
-#### Tag type permissions
-
-- **Update tag types**
-
-  Lets the user update tag types.
-
-- **Delete tag types**
-
-  Lets the user delete tag types.
 
 ## Custom Project Roles
 
@@ -193,69 +104,30 @@ Each custom project role consists of:
 
 You can assign the following project permissions. The permissions will be valid across all of the project's environments.
 
-- **update the project**
-
-  Lets the user update project settings, such as enabling/disabling environments, add users, etc.
-
-- **delete the project**
-
-  Lets the user delete the project.
-
-- **create feature toggles within the project**
-
-  Lets the user create feature toggles within the project and create variants for said toggle. Note that they **can not assign strategies** to toggles without having the _create activation strategy_ permission for the corresponding environment.
-
-- **update feature toggles within the project**
-
-  Lets the user update feature toggle descriptions; mark toggles as stale / not stale; add, update, and remove toggle tags; and update toggle variants within the project.
-
-- **delete feature toggles within the project**
-
-  Lets the user archive feature toggles within the project.
-
-- **change feature toggle project**
-
-  Lets the user move toggles to other projects they have access to.
-
-- **create/edit variants**
-
-  Lets the user create and edit variants within the project. (Deprecated with v4.21 in favor of environment-specific permissions for working with variants[^1].)
+| Permission                                 | Description                                                                                                                                      |
+|--------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| **update the project**                     | Lets the user update project settings, such as enabling/disabling environments, add users, etc.                                              |
+| **delete the project**                     | Lets the user delete the project.                                                                                                               |
+| **create feature toggles within the project** | Lets the user create feature toggles within the project and create variants for said toggle. Note that they **cannot assign strategies** to toggles without having the _create activation strategy_ permission for the corresponding environment. |
+| **update feature toggles within the project** | Lets the user update feature toggle descriptions; mark toggles as stale / not stale; add, update, and remove toggle tags; and update toggle variants within the project. |
+| **delete feature toggles within the project** | Lets the user archive feature toggles within the project.                                                                                         |
+| **change feature toggle project**           | Lets the user move toggles to other projects they have access to.                                                                               |
+| **create/edit variants**                   | Lets the user create and edit variants within the project. (Deprecated with v4.21 in favor of environment-specific permissions for working with variants[^1].) |
 
 ### Environment permissions
 
 You can assign the following permissions on a per-environment level within the project:
 
-- **create activation strategies**
-
-  Lets the user assign feature toggle activation strategies within the environment.
-
-- **update activation strategies**
-
-  Lets the user update feature toggle activation strategies within the environment.
-
-- **delete activation strategies**
-
-  Lets the user delete feature toggle activation strategies within the environment.
-
-- **enable/disable toggles**
-
-  Lets the user enable and disable toggles within the environment.
-
-- **update variants**
-
-  Lets the user create, edit and remove variants within the environment.
-
-- **approve a change request**
-
-  Lets the user approve [change requests](change-requests.md) in the environment.
-
-- **apply a change request**
-
-  Lets the user apply change requests in the environment.
-
-- **skip change requests**
-
-  Lets the user ignore change request requirements. This applies **only when using the API** directly; when using the admin UI, users with this permission will still need to go through the normal change request flow. You can find more details in the section on [circumventing change requests](change-requests.md#circumventing-change-requests).
+| Permission                            | Description                                                                                      |
+|---------------------------------------|--------------------------------------------------------------------------------------------------|
+| **create activation strategies**      | Lets the user assign feature toggle activation strategies within the environment.               |
+| **update activation strategies**      | Lets the user update feature toggle activation strategies within the environment.               |
+| **delete activation strategies**      | Lets the user delete feature toggle activation strategies within the environment.               |
+| **enable/disable toggles**            | Lets the user enable and disable toggles within the environment.                                 |
+| **update variants**                   | Lets the user create, edit and remove variants within the environment.                            |
+| **approve a change request**          | Lets the user approve [change requests](change-requests.md) in the environment.                   |
+| **apply a change request**            | Lets the user apply change requests in the environment.                                          |
+| **skip change requests**              | Lets the user ignore change request requirements. This applies **only when using the API** directly; when using the admin UI, users with this permission will still need to go through the normal change request flow. You can find more details in the section on [circumventing change requests](change-requests.md#circumventing-change-requests). |
 
 ## User Groups
 

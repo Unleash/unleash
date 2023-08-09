@@ -91,7 +91,11 @@ export const NavigationMenu = ({
                             <Divider variant="middle" key={option.group} />
                         ) : null,
                         <Tooltip
-                            title={showBadge(option?.menu?.mode) ? 'This is an Enterprise feature' : ''}
+                            title={
+                                showBadge(option?.menu?.mode)
+                                    ? 'This is an Enterprise feature'
+                                    : ''
+                            }
                             arrow
                             placement="left"
                         >

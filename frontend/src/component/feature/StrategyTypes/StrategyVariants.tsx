@@ -155,6 +155,7 @@ export const StrategyVariants: FC<{
                 permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
                 projectId={projectId}
                 environmentId={environment}
+                data-testid="ADD_STRATEGY_VARIANT_BUTTON"
             >
                 Add variant
             </PermissionButton>

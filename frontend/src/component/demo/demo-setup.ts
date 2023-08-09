@@ -28,6 +28,7 @@ const ensureUserIdContextExists = async () => {
 };
 
 export const specificUser = async () => {
+    await deleteOldStrategies('demoApp.step2');
     await ensureUserIdContextExists();
 };
 
@@ -67,75 +68,48 @@ export const gradualRollout = async () => {
     }
 };
 
-export const variants = async () => {
-    const featureId = 'demoApp.step4';
-
-    await ensureUserIdContextExists();
-
-    const { variants }: IFeatureToggle = await fetch(
+const deleteStrategy = (featureId: string, strategyId: string) =>
+    fetch(
         formatApiPath(
-            `api/admin/projects/${PROJECT}/features/${featureId}?variantEnvironments=true`
+            `api/admin/projects/${PROJECT}/features/${featureId}/environments/${ENVIRONMENT}/strategies/${strategyId}`
+        ),
+        { method: 'DELETE' }
+    );
+
+const deleteOldStrategies = async (featureId: string) => {
+    const results = await fetch(
+        formatApiPath(
+            `api/admin/projects/${PROJECT}/features/${featureId}/environments/${ENVIRONMENT}/strategies`
         )
     ).then(res => res.json());
 
-    if (!variants.length) {
-        await fetch(
-            formatApiPath(
-                `api/admin/projects/${PROJECT}/features/${featureId}/environments/${ENVIRONMENT}/variants`
-            ),
-            {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify([
-                    {
-                        op: 'add',
-                        path: '/0',
-                        value: {
-                            name: 'red',
-                            weightType: 'variable',
-                            weight: 333,
-                            overrides: [],
-                            stickiness: 'default',
-                            payload: {
-                                type: 'string',
-                                value: 'red',
-                            },
-                        },
-                    },
-                    {
-                        op: 'add',
-                        path: '/1',
-                        value: {
-                            name: 'green',
-                            weightType: 'variable',
-                            weight: 333,
-                            overrides: [],
-                            stickiness: 'default',
-                            payload: {
-                                type: 'string',
-                                value: 'green',
-                            },
-                        },
-                    },
-                    {
-                        op: 'add',
-                        path: '/2',
-                        value: {
-                            name: 'blue',
-                            weightType: 'variable',
-                            weight: 333,
-                            overrides: [],
-                            stickiness: 'default',
-                            payload: {
-                                type: 'string',
-                                value: 'blue',
-                            },
-                        },
-                    },
-                ]),
-            }
+    const tooGenericStrategies = results.filter(
+        (strategy: { constraints: Array<unknown>; segments: Array<unknown> }) =>
+            strategy.constraints.length === 0 && strategy.segments.length === 0
+    );
+    const constrainedStrategies = results.filter(
+        (strategy: { constraints: Array<unknown>; segments: Array<unknown> }) =>
+            strategy.constraints.length > 0 || strategy.segments.length > 0
+    );
+    await Promise.all(
+        tooGenericStrategies
+            .map((result: { id: string }) => result.id)
+            .map((strategyId: string) => deleteStrategy(featureId, strategyId))
+    );
+
+    if (constrainedStrategies.length > 10) {
+        await Promise.all(
+            constrainedStrategies
+                .slice(0, 9)
+                .map((result: { id: string }) => result.id)
+                .map((strategyId: string) =>
+                    deleteStrategy(featureId, strategyId)
+                )
         );
     }
+};
+
+export const variants = async () => {
+    await deleteOldStrategies('demoApp.step4');
+    await ensureUserIdContextExists();
 };

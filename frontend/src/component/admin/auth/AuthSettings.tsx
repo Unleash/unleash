@@ -1,4 +1,4 @@
-import { Alert, Paper, Tab, Tabs, styled } from '@mui/material';
+import { Alert, Tab, Tabs } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -6,21 +6,11 @@ import { OidcAuth } from './OidcAuth/OidcAuth';
 import { SamlAuth } from './SamlAuth/SamlAuth';
 import { PasswordAuth } from './PasswordAuth/PasswordAuth';
 import { GoogleAuth } from './GoogleAuth/GoogleAuth';
-import { TabNav } from 'component/common/TabNav/TabNav/TabNav';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN } from '@server/types/permissions';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { useState } from 'react';
 import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
-
-const StyledPageContent = styled(PageContent)(({ theme }) => ({
-    '& .page-header': {
-        padding: theme.spacing(0, 2),
-        [theme.breakpoints.down('md')]: {
-            padding: theme.spacing(1),
-        },
-    },
-}));
 
 export const AuthSettings = () => {
     const { authenticationType } = useUiConfig().uiConfig;
@@ -51,8 +41,8 @@ export const AuthSettings = () => {
     return (
         <div>
             <PermissionGuard permissions={ADMIN}>
-                <StyledPageContent
-                    headerClass="page-header"
+                <PageContent
+                    withTabs
                     header={
                         <ConditionallyRender
                             condition={authenticationType === 'enterprise'}
@@ -133,7 +123,7 @@ export const AuthSettings = () => {
                             </div>
                         }
                     />
-                </StyledPageContent>
+                </PageContent>
             </PermissionGuard>
         </div>
     );

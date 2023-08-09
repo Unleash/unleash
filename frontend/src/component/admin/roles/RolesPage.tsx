@@ -16,15 +16,6 @@ import { Add } from '@mui/icons-material';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { IRole } from 'interfaces/role';
 
-const StyledPageContent = styled(PageContent)(({ theme }) => ({
-    '& .page-header': {
-        padding: theme.spacing(0, 2),
-        [theme.breakpoints.down('md')]: {
-            padding: theme.spacing(1),
-        },
-    },
-}));
-
 const StyledHeader = styled('div')(() => ({
     display: 'flex',
     justifyContent: 'space-between',
@@ -79,8 +70,8 @@ export const RolesPage = () => {
             : ROOT_ROLE_TYPE;
 
     return (
-        <StyledPageContent
-            headerClass="page-header"
+        <PageContent
+            withTabs
             bodyClass="page-body"
             isLoading={loading}
             header={
@@ -179,6 +170,6 @@ export const RolesPage = () => {
                     }
                 />
             </Routes>
-        </StyledPageContent>
+        </PageContent>
     );
 };

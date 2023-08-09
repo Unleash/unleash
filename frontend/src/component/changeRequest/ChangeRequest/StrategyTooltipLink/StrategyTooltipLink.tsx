@@ -90,8 +90,8 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                 </Typography>
             </TooltipLink>
             <NameWithChangeInfo
-                newTitle={change.payload.title}
-                previousTitle={previousTitle}
+                newName={change.payload.title}
+                previousName={previousTitle}
             />
         </Truncated>
     </StyledContainer>

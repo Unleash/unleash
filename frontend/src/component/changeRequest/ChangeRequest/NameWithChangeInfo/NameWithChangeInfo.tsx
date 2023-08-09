@@ -9,15 +9,13 @@ const Truncated = styled('div')(() => ({
 }));
 
 export const NameWithChangeInfo: FC<{
-    newTitle: string | undefined;
-    previousTitle: string | undefined;
-}> = ({ newTitle, previousTitle }) => {
-    const titleHasChanged = Boolean(
-        previousTitle && previousTitle !== newTitle
-    );
+    newName: string | undefined;
+    previousName: string | undefined;
+}> = ({ newName, previousName }) => {
+    const titleHasChanged = Boolean(previousName && previousName !== newName);
 
     const titleHasChangedOrBeenAdded = Boolean(
-        titleHasChanged || (!previousTitle && newTitle)
+        titleHasChanged || (!previousName && newName)
     );
 
     return (
@@ -27,13 +25,13 @@ export const NameWithChangeInfo: FC<{
                 show={
                     <Truncated>
                         <Typography component="del" color="text.secondary">
-                            {previousTitle}
+                            {previousName}
                         </Typography>
                     </Truncated>
                 }
             />
             <ConditionallyRender
-                condition={Boolean(newTitle)}
+                condition={Boolean(newName)}
                 show={
                     <Truncated>
                         <Typography
@@ -41,7 +39,7 @@ export const NameWithChangeInfo: FC<{
                                 titleHasChangedOrBeenAdded ? 'ins' : 'span'
                             }
                         >
-                            {newTitle}
+                            {newName}
                         </Typography>
                     </Truncated>
                 }

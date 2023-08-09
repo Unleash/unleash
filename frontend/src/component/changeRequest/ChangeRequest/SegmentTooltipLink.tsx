@@ -72,8 +72,8 @@ export const SegmentTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                 }}
             >
                 <NameWithChangeInfo
-                    previousTitle={change.name}
-                    newTitle={change.payload.name}
+                    previousName={change.name}
+                    newName={change.payload.name}
                 />
             </TooltipLink>
         </Truncated>

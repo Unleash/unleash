@@ -9,8 +9,8 @@ test.each(['', undefined])(
         const newTitle = 'new title';
         render(
             <NameWithChangeInfo
-                newTitle={newTitle}
-                previousTitle={previousTitle}
+                newName={newTitle}
+                previousName={previousTitle}
             />
         );
 
@@ -30,8 +30,8 @@ test.each(['', undefined])(
         const previousTitle = 'previous title';
         render(
             <NameWithChangeInfo
-                newTitle={newTitle}
-                previousTitle={previousTitle}
+                newName={newTitle}
+                previousName={previousTitle}
             />
         );
 
@@ -49,7 +49,7 @@ test('Should render the old title as deleted and the new title as inserted if th
     const newTitle = 'new title';
     const previousTitle = 'previous title';
     render(
-        <NameWithChangeInfo newTitle={newTitle} previousTitle={previousTitle} />
+        <NameWithChangeInfo newName={newTitle} previousName={previousTitle} />
     );
 
     // expect del element with old strategy name
@@ -61,7 +61,7 @@ test('Should render the old title as deleted and the new title as inserted if th
 
 test('Should render the title in a span if it has not changed', async () => {
     const title = 'title';
-    render(<NameWithChangeInfo newTitle={title} previousTitle={title} />);
+    render(<NameWithChangeInfo newName={title} previousName={title} />);
 
     // expect no del or ins elements
     expect(screen.queryByText(title, { selector: 'ins' })).toBeNull();
@@ -72,9 +72,7 @@ test('Should render the title in a span if it has not changed', async () => {
 });
 
 test('Should render nothing if there was no title and there is still no title', async () => {
-    render(
-        <NameWithChangeInfo newTitle={undefined} previousTitle={undefined} />
-    );
+    render(<NameWithChangeInfo newName={undefined} previousName={undefined} />);
 
     expect(screen.queryByText('', { selector: 'ins' })).toBeNull();
     expect(screen.queryByText('', { selector: 'del' })).toBeNull();

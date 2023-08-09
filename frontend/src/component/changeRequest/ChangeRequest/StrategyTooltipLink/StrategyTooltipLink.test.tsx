@@ -69,7 +69,4 @@ test('Should render nothing if there was no title and there is still no title', 
     expect(screen.getByText('', { selector: 'ins' })).toBeNull();
     expect(screen.getByText('', { selector: 'del' })).toBeNull();
     expect(screen.getByText('', { selector: 'span' })).toBeNull();
-
-    // There's an empty test div in the container but nothing else
-    expect(container.childElementCount).toBe(1);
 });

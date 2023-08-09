@@ -138,7 +138,7 @@ class StrategyController extends Controller {
 
         this.route({
             method: 'put',
-            path: '/:strategyName',
+            path: '/:name',
             handler: this.updateStrategy,
             permission: UPDATE_STRATEGY,
             middleware: [

@@ -66,7 +66,7 @@ export const adminRoutes: INavigationMenuItem[] = [
         path: '/admin/network/*',
         title: 'Network',
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
-        // configFlag: 'networkViewEnabled',
+        configFlag: 'networkViewEnabled',
         group: 'instance',
     },
     {

@@ -86,7 +86,7 @@ export const createFeatureToggleService = (
         { getLogger },
     );
     const accessService = new AccessService(
-        { accessStore, accountStore, roleStore, environmentStore },
+        { accessStore, accountStore, roleStore, environmentStore, groupStore },
         { getLogger, flagResolver },
         groupService,
     );
@@ -136,7 +136,7 @@ export const createFakeFeatureToggleService = (
         { getLogger },
     );
     const accessService = new AccessService(
-        { accessStore, accountStore, roleStore, environmentStore },
+        { accessStore, accountStore, roleStore, environmentStore, groupStore },
         { getLogger, flagResolver },
         groupService,
     );

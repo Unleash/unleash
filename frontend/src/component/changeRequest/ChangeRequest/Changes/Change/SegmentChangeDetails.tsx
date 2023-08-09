@@ -30,12 +30,16 @@ const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const SegmentContainer = styled(Box)(({ theme }) => ({
+const SegmentContainer = styled(Box, {
+    shouldForwardProp: prop => prop !== 'conflict',
+})<{ conflict: string | undefined }>(({ theme, conflict }) => ({
     borderLeft: '1px solid',
     borderRight: '1px solid',
     borderTop: '1px solid',
     borderBottom: '1px solid',
-    borderColor: theme.palette.divider,
+    borderColor: conflict
+        ? theme.palette.warning.border
+        : theme.palette.divider,
     borderTopColor: theme.palette.divider,
     padding: theme.spacing(3),
     borderRadius: `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
@@ -48,7 +52,7 @@ export const SegmentChangeDetails: VFC<{
     const { segment: currentSegment } = useSegment(change.payload.id);
 
     return (
-        <SegmentContainer>
+        <SegmentContainer conflict={change.conflict}>
             {change.action === 'deleteSegment' && (
                 <ChangeItemWrapper>
                     <ChangeItemInfo>

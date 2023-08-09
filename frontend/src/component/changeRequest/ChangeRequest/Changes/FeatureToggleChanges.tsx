@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Alert, Box, Card, Typography, Link } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Box, Card, Typography, Link } from '@mui/material';
+import { ConflictWarning } from './Change/ConflictWarning';
 
 interface IFeatureToggleChanges {
     featureName: string;
@@ -40,23 +40,7 @@ export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
                 overflow: 'hidden',
             })}
         >
-            <ConditionallyRender
-                condition={Boolean(conflict)}
-                show={
-                    <Alert
-                        severity="warning"
-                        sx={{
-                            px: 3,
-                            mb: 2,
-                            '&.MuiAlert-standardWarning': {
-                                borderStyle: 'none',
-                            },
-                        }}
-                    >
-                        <strong>Conflict!</strong> {conflict}.
-                    </Alert>
-                }
-            />
+            <ConflictWarning conflict={conflict} />
             <Box
                 sx={{
                     display: 'flex',

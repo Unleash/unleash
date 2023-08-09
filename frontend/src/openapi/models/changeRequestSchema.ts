@@ -5,7 +5,7 @@
  */
 import type { ChangeRequestSchemaState } from './changeRequestSchemaState';
 import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
-import type { ChangeRequestChangeSchema } from './changeRequestChangeSchema';
+import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema';
 import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema';
 import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema';
 import type { ChangeRequestSchemaCreatedBy } from './changeRequestSchemaCreatedBy';
@@ -29,7 +29,7 @@ export interface ChangeRequestSchema {
     /** The list of features and their changes that relate to this change request. */
     features: ChangeRequestFeatureSchema[];
     /** The list of segments and their changes that relate to this change request. */
-    segments: ChangeRequestChangeSchema[];
+    segments: ChangeRequestSegmentChangeSchema[];
     /** A list of approvals that this change request has received. */
     approvals?: ChangeRequestApprovalSchema[];
     /** All comments that have been made on this change request. */

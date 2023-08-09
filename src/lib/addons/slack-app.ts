@@ -87,8 +87,39 @@ export default class SlackAppAddon extends Addon {
                 const slackConversationsList =
                     await this.slackClient.conversations.list({
                         types: 'public_channel,private_channel',
+                        exclude_archived: true,
+                        limit: 200,
                     });
                 this.slackChannels = slackConversationsList.channels || [];
+                let nextCursor =
+                    slackConversationsList.response_metadata?.next_cursor;
+                while (nextCursor !== undefined && nextCursor !== '') {
+                    this.logger.debug('Fetching next page of channels');
+                    const moreChannels =
+                        await this.slackClient.conversations.list({
+                            cursor: nextCursor,
+                            types: 'public_channel,private_channel',
+                            exclude_archived: true,
+                            limit: 200,
+                        });
+                    const channels = moreChannels.channels;
+                    if (channels === undefined) {
+                        this.logger.debug(
+                            'Channels list was empty, breaking pagination',
+                        );
+                        nextCursor = undefined;
+                        break;
+                    }
+                    nextCursor = moreChannels.response_metadata?.next_cursor;
+                    this.logger.debug(
+                        `This page had ${channels.length} channels`,
+                    );
+
+                    channels.forEach((channel) =>
+                        this.slackChannels?.push(channel),
+                    );
+                }
+
                 this.logger.debug(
                     `Fetched ${
                         this.slackChannels.length

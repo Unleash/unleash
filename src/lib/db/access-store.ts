@@ -296,6 +296,14 @@ export class AccessStore implements IAccessStore {
         return rows.map((r) => r.user_id);
     }
 
+    async getGroupIdsForRole(roleId: number): Promise<number[]> {
+        const rows = await this.db
+            .select(['group_id'])
+            .from<IRole>(T.GROUP_ROLE)
+            .where('role_id', roleId);
+        return rows.map((r) => r.group_id);
+    }
+
     async addUserToRole(
         userId: number,
         roleId: number,

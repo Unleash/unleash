@@ -55,7 +55,9 @@ export const RestrictiveLegalValues = ({
     }, [values, setValuesMap]);
 
     const cleanDeletedLegalValues = (constraintValues: string[]): string[] => {
-        const deletedValuesSet = new Set(deletedLegalValues.map(v => v.value));
+        const deletedValuesSet = new Set(
+            deletedLegalValues.map(({ value }) => value)
+        );
         return (
             constraintValues?.filter(value => !deletedValuesSet.has(value)) ||
             []

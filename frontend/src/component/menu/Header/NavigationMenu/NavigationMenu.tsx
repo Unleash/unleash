@@ -1,4 +1,4 @@
-import { Divider } from '@mui/material';
+import { Divider, Tooltip } from '@mui/material';
 import { Menu, MenuItem, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -50,7 +50,7 @@ export const NavigationMenu = ({
     anchorEl,
     style,
 }: INavigationMenuProps) => {
-    const { uiConfig, isPro } = useUiConfig();
+    const { uiConfig, isPro, isOss } = useUiConfig();
     const showUpdatedMenu = uiConfig?.flags?.frontendNavigationUpdate;
 
     const showBadge = useCallback(
@@ -83,29 +83,40 @@ export const NavigationMenu = ({
                     const addDivider =
                         showUpdatedMenu &&
                         previousGroup &&
-                        previousGroup !== option.group;
+                        previousGroup !== option.group &&
+                        (!isOss() || option.group === 'log');
 
                     return [
                         addDivider ? (
                             <Divider variant="middle" key={option.group} />
                         ) : null,
-                        <MenuItem
-                            key={option.path}
-                            component={StyledLink}
-                            to={option.path}
-                            onClick={handleClose}
+                        <Tooltip
+                            title={
+                                showBadge(option?.menu?.mode)
+                                    ? 'This is an Enterprise feature'
+                                    : ''
+                            }
+                            arrow
+                            placement="left"
                         >
-                            <StyledSpan />
-                            {option.title}
-                            <ConditionallyRender
-                                condition={showBadge(option?.menu?.mode)}
-                                show={
-                                    <StyledBadgeContainer>
-                                        <EnterpriseBadge />
-                                    </StyledBadgeContainer>
-                                }
-                            />
-                        </MenuItem>,
+                            <MenuItem
+                                key={option.path}
+                                component={StyledLink}
+                                to={option.path}
+                                onClick={handleClose}
+                            >
+                                <StyledSpan />
+                                {option.title}
+                                <ConditionallyRender
+                                    condition={showBadge(option?.menu?.mode)}
+                                    show={
+                                        <StyledBadgeContainer>
+                                            <EnterpriseBadge />
+                                        </StyledBadgeContainer>
+                                    }
+                                />
+                            </MenuItem>
+                        </Tooltip>,
                     ];
                 })
                 .flat()

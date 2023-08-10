@@ -28,6 +28,7 @@ const ensureUserIdContextExists = async () => {
 };
 
 export const specificUser = async () => {
+    await deleteOldStrategies('demoApp.step2');
     await ensureUserIdContextExists();
 };
 
@@ -67,11 +68,48 @@ export const gradualRollout = async () => {
     }
 };
 
-export const variants = async () => {
-    const featureId = 'demoApp.step4';
+const deleteStrategy = (featureId: string, strategyId: string) =>
+    fetch(
+        formatApiPath(
+            `api/admin/projects/${PROJECT}/features/${featureId}/environments/${ENVIRONMENT}/strategies/${strategyId}`
+        ),
+        { method: 'DELETE' }
+    );
 
-    await ensureUserIdContextExists();
+const deleteOldStrategies = async (featureId: string) => {
+    const results = await fetch(
+        formatApiPath(
+            `api/admin/projects/${PROJECT}/features/${featureId}/environments/${ENVIRONMENT}/strategies`
+        )
+    ).then(res => res.json());
 
+    const tooGenericStrategies = results.filter(
+        (strategy: { constraints: Array<unknown>; segments: Array<unknown> }) =>
+            strategy.constraints.length === 0 && strategy.segments.length === 0
+    );
+    const constrainedStrategies = results.filter(
+        (strategy: { constraints: Array<unknown>; segments: Array<unknown> }) =>
+            strategy.constraints.length > 0 || strategy.segments.length > 0
+    );
+    await Promise.all(
+        tooGenericStrategies.map((result: { id: string }) =>
+            deleteStrategy(featureId, result.id)
+        )
+    );
+
+    const strategyLimit = 30;
+    if (constrainedStrategies.length > strategyLimit) {
+        await Promise.all(
+            constrainedStrategies
+                .slice(0, strategyLimit - 1)
+                .map((result: { id: string }) =>
+                    deleteStrategy(featureId, result.id)
+                )
+        );
+    }
+};
+
+const ensureDefaultVariants = async (featureId: string) => {
     const { variants }: IFeatureToggle = await fetch(
         formatApiPath(
             `api/admin/projects/${PROJECT}/features/${featureId}?variantEnvironments=true`
@@ -138,4 +176,10 @@ export const variants = async () => {
             }
         );
     }
+};
+
+export const variants = async () => {
+    await deleteOldStrategies('demoApp.step4');
+    await ensureDefaultVariants('demoApp.step4');
+    await ensureUserIdContextExists();
 };

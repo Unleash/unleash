@@ -74,9 +74,9 @@ Change requests have their own set of environment-specific permissions that can 
 - apply change requests
 - skip the change request flow **when using the API directly**
 
-None of the standard roles have any change request permissions, so you must create your own project roles to take advantage of change requests. In other words, even a user with the project "owner" role can not approve or apply change requests.
+None of the predefined roles have any change request permissions, so you must create your own project roles to take advantage of change requests. In other words, even a user with the project "owner" role can not approve or apply change requests.
 
-There is no permission to create change requests: **Anyone can create change requests**, even Unleash users with the [global viewer role](rbac.md#standard-roles). Change requests don't cause any changes until approved and applied by someone with the correct permissions.
+There is no permission to create change requests: **Anyone can create change requests**, even Unleash users with the [root viewer role](rbac.md#predefined-roles). Change requests don't cause any changes until approved and applied by someone with the correct permissions.
 
 ### Circumventing change requests
 

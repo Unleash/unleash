@@ -1,11 +1,14 @@
 /* eslint react/no-multi-comp:off */
 import React, { useContext, useState } from 'react';
 import {
+    Box,
     Avatar,
     Icon,
     IconButton,
     LinearProgress,
     Link,
+    Tab,
+    Tabs,
     Typography,
 } from '@mui/material';
 import { Link as LinkIcon } from '@mui/icons-material';
@@ -13,7 +16,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { UPDATE_APPLICATION } from 'component/providers/AccessProvider/permissions';
 import { ApplicationView } from '../ApplicationView/ApplicationView';
 import { ApplicationUpdate } from '../ApplicationUpdate/ApplicationUpdate';
-import { TabNav } from 'component/common/TabNav/TabNav/TabNav';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -27,6 +29,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { formatDateYMD } from 'utils/formatDate';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
 
 export const ApplicationEdit = () => {
     const navigate = useNavigate();
@@ -37,6 +40,7 @@ export const ApplicationEdit = () => {
     const { deleteApplication } = useApplicationsApi();
     const { locationSettings } = useLocationSettings();
     const { setToastData, setToastApiError } = useToast();
+    const [activeTab, setActiveTab] = useState(0);
 
     const [showDialog, setShowDialog] = useState(false);
 
@@ -91,8 +95,8 @@ export const ApplicationEdit = () => {
         return <p>Application ({appName}) not found</p>;
     }
     return (
-        <PageContent
-            header={
+        <>
+            <PageContent>
                 <PageHeader
                     titleElement={
                         <span
@@ -133,23 +137,59 @@ export const ApplicationEdit = () => {
                         </>
                     }
                 />
-            }
-        >
-            <div>
-                <Typography variant="body1">{description || ''}</Typography>
-                <Typography variant="body2">
-                    Created: <strong>{formatDate(createdAt)}</strong>
-                </Typography>
-            </div>
-            <ConditionallyRender
-                condition={hasAccess(UPDATE_APPLICATION)}
-                show={
-                    <div>
-                        {renderModal()}
-                        <TabNav tabData={tabData} />
-                    </div>
+                <Box sx={theme => ({ marginTop: theme.spacing(1) })}>
+                    <Typography variant="body1">{description || ''}</Typography>
+                    <Typography variant="body2">
+                        Created: <strong>{formatDate(createdAt)}</strong>
+                    </Typography>
+                </Box>
+            </PageContent>
+            <br />
+            <PageContent
+                withTabs
+                header={
+                    <Tabs
+                        value={activeTab}
+                        onChange={(_, tabId) => {
+                            setActiveTab(tabId);
+                        }}
+                        indicatorColor="primary"
+                        textColor="primary"
+                    >
+                        {tabData.map((tab, index) => (
+                            <Tab
+                                key={`${tab.label}_${index}`}
+                                label={tab.label}
+                                id={`tab-${index}`}
+                                aria-controls={`tabpanel-${index}`}
+                                sx={{
+                                    minWidth: {
+                                        lg: 160,
+                                    },
+                                }}
+                            />
+                        ))}
+                    </Tabs>
                 }
-            />
-        </PageContent>
+            >
+                <ConditionallyRender
+                    condition={hasAccess(UPDATE_APPLICATION)}
+                    show={
+                        <div>
+                            {renderModal()}
+                            {tabData.map((tab, index) => (
+                                <TabPanel
+                                    key={index}
+                                    value={activeTab}
+                                    index={index}
+                                >
+                                    {tab.component}
+                                </TabPanel>
+                            ))}
+                        </div>
+                    }
+                />
+            </PageContent>
+        </>
     );
 };

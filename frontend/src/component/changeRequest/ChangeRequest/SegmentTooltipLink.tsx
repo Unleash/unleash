@@ -10,6 +10,7 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Typography, styled } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
 import { ISegment } from 'interfaces/segment';
+import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -70,9 +71,10 @@ export const SegmentTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     maxHeight: 600,
                 }}
             >
-                <Typography component="span">
-                    {formatStrategyName(change.payload.name)}
-                </Typography>
+                <NameWithChangeInfo
+                    previousName={change.name}
+                    newName={change.payload.name}
+                />
             </TooltipLink>
         </Truncated>
     </StyledContainer>

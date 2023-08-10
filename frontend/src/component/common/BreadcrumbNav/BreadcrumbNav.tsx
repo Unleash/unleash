@@ -83,14 +83,6 @@ const BreadcrumbNav = () => {
                                         }
                                     });
 
-                                    if (index === 0 && path === 'admin') {
-                                        return (
-                                            <StyledParagraph key={path}>
-                                                {path}
-                                            </StyledParagraph>
-                                        );
-                                    }
-
                                     return (
                                         <StyledLink key={path} to={link}>
                                             <StyledParagraph>

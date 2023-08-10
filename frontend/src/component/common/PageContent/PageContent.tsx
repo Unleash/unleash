@@ -20,6 +20,7 @@ interface IPageContentProps extends PaperProps {
     disableLoading?: boolean;
     bodyClass?: string;
     headerClass?: string;
+    withTabs?: boolean;
 }
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -59,6 +60,7 @@ export const PageContent: FC<IPageContentProps> = ({
     isLoading = false,
     disableLoading = false,
     className,
+    withTabs,
     ...rest
 }) => {
     const { classes: styles } = useStyles();
@@ -69,6 +71,7 @@ export const PageContent: FC<IPageContentProps> = ({
         {
             [styles.paddingDisabled]: disablePadding,
             [styles.borderDisabled]: disableBorder,
+            [styles.withTabs]: withTabs,
         }
     );
 

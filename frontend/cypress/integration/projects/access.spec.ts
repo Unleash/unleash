@@ -118,7 +118,9 @@ describe('project-access', () => {
         ).as('editAccess');
 
         cy.get(`[data-testid='${PA_ROLE_ID}']`).click();
-        cy.contains('within a project are allowed').click({ force: true });
+        cy.contains('update feature toggles within a project').click({
+            force: true,
+        });
 
         cy.get(`[data-testid='${PA_ASSIGN_CREATE_ID}']`).click();
         cy.wait('@editAccess');

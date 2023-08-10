@@ -124,7 +124,7 @@ describe('imports', () => {
             .should('eq', 'development');
 
         cy.get(
-            "[data-testid='FEATURE_ENVIRONMENT_ACCORDION_development"
+            '[data-testid="FEATURE_ENVIRONMENT_ACCORDION_development"]'
         ).click();
         cy.contains('50%');
     });

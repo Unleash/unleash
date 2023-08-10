@@ -206,13 +206,7 @@ test('A role with only CREATE_PROJECT_API_TOKEN can create project tokens', asyn
         });
     };
 
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook, {
-        experimental: {
-            flags: {
-                customRootRoles: true,
-            },
-        },
-    });
+    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
 
     await request
         .post('/api/admin/projects/default/api-tokens')
@@ -261,13 +255,6 @@ describe('Fine grained API token permissions', () => {
             const { request, destroy } = await setupAppWithCustomAuth(
                 stores,
                 preHook,
-                {
-                    experimental: {
-                        flags: {
-                            customRootRoles: true,
-                        },
-                    },
-                },
             );
             await request
                 .post('/api/admin/api-tokens')
@@ -312,13 +299,6 @@ describe('Fine grained API token permissions', () => {
             const { request, destroy } = await setupAppWithCustomAuth(
                 stores,
                 preHook,
-                {
-                    experimental: {
-                        flags: {
-                            customRootRoles: true,
-                        },
-                    },
-                },
             );
             await request
                 .post('/api/admin/api-tokens')
@@ -363,13 +343,6 @@ describe('Fine grained API token permissions', () => {
             const { request, destroy } = await setupAppWithCustomAuth(
                 stores,
                 preHook,
-                {
-                    experimental: {
-                        flags: {
-                            customRootRoles: true,
-                        },
-                    },
-                },
             );
             await request
                 .post('/api/admin/api-tokens')
@@ -417,13 +390,6 @@ describe('Fine grained API token permissions', () => {
             const { request, destroy } = await setupAppWithCustomAuth(
                 stores,
                 preHook,
-                {
-                    experimental: {
-                        flags: {
-                            customRootRoles: true,
-                        },
-                    },
-                },
             );
             await stores.apiTokenStore.insert({
                 username: 'client',
@@ -486,13 +452,6 @@ describe('Fine grained API token permissions', () => {
             const { request, destroy } = await setupAppWithCustomAuth(
                 stores,
                 preHook,
-                {
-                    experimental: {
-                        flags: {
-                            customRootRoles: true,
-                        },
-                    },
-                },
             );
             await stores.apiTokenStore.insert({
                 username: 'client',
@@ -650,13 +609,6 @@ describe('Fine grained API token permissions', () => {
                 const { request, destroy } = await setupAppWithCustomAuth(
                     stores,
                     preHook,
-                    {
-                        experimental: {
-                            flags: {
-                                customRootRoles: true,
-                            },
-                        },
-                    },
                 );
                 const token = await stores.apiTokenStore.insert({
                     username: 'cilent',
@@ -706,13 +658,6 @@ describe('Fine grained API token permissions', () => {
                 const { request, destroy } = await setupAppWithCustomAuth(
                     stores,
                     preHook,
-                    {
-                        experimental: {
-                            flags: {
-                                customRootRoles: true,
-                            },
-                        },
-                    },
                 );
                 const token = await stores.apiTokenStore.insert({
                     username: 'frontend',
@@ -763,13 +708,6 @@ describe('Fine grained API token permissions', () => {
                 const { request, destroy } = await setupAppWithCustomAuth(
                     stores,
                     preHook,
-                    {
-                        experimental: {
-                            flags: {
-                                customRootRoles: true,
-                            },
-                        },
-                    },
                 );
                 const token = await stores.apiTokenStore.insert({
                     username: 'admin',
@@ -823,13 +761,6 @@ describe('Fine grained API token permissions', () => {
                 const { request, destroy } = await setupAppWithCustomAuth(
                     stores,
                     preHook,
-                    {
-                        experimental: {
-                            flags: {
-                                customRootRoles: true,
-                            },
-                        },
-                    },
                 );
                 const token = await stores.apiTokenStore.insert({
                     username: 'cilent',
@@ -879,13 +810,6 @@ describe('Fine grained API token permissions', () => {
                 const { request, destroy } = await setupAppWithCustomAuth(
                     stores,
                     preHook,
-                    {
-                        experimental: {
-                            flags: {
-                                customRootRoles: true,
-                            },
-                        },
-                    },
                 );
                 const token = await stores.apiTokenStore.insert({
                     username: 'frontend',
@@ -935,13 +859,6 @@ describe('Fine grained API token permissions', () => {
                 const { request, destroy } = await setupAppWithCustomAuth(
                     stores,
                     preHook,
-                    {
-                        experimental: {
-                            flags: {
-                                customRootRoles: true,
-                            },
-                        },
-                    },
                 );
                 const token = await stores.apiTokenStore.insert({
                     username: 'admin',

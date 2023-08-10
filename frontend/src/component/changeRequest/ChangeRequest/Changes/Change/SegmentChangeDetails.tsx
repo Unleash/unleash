@@ -6,6 +6,7 @@ import {
 } from 'component/changeRequest/changeRequest.types';
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
 import { SegmentDiff, SegmentTooltipLink } from '../../SegmentTooltipLink';
+import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -87,6 +88,10 @@ export const SegmentChangeDetails: VFC<{
                         </ChangeItemInfo>
                         <div>{actions}</div>
                     </ChangeItemCreateEditWrapper>
+                    <ConstraintAccordionList
+                        constraints={change.payload.constraints}
+                        showLabel={false}
+                    />
                 </>
             )}
         </SegmentContainer>

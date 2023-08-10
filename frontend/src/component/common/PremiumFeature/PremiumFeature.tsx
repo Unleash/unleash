@@ -195,12 +195,7 @@ export const PremiumFeature = ({
                             >
                                 Compare plans
                             </Button>
-                            <Button
-                                href={url}
-                                target="_blank"
-                                rel="noreferrer"
-                                onClick={handleClick}
-                            >
+                            <Button href={url} target="_blank" rel="noreferrer">
                                 Read about {label}
                             </Button>
                         </StyledButtonContainer>

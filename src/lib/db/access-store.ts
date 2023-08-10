@@ -5,6 +5,7 @@ import { Logger } from '../logger';
 import {
     IAccessInfo,
     IAccessStore,
+    IProjectUsageCount,
     IRole,
     IRoleWithProject,
     IUserPermission,
@@ -302,6 +303,40 @@ export class AccessStore implements IAccessStore {
             .from<IRole>(T.GROUP_ROLE)
             .where('role_id', roleId);
         return rows.map((r) => r.group_id);
+    }
+
+    async getProjectUserCountsForRole(
+        roleId: number,
+    ): Promise<IProjectUsageCount[]> {
+        const rows = await this.db(T.ROLE_USER)
+            .select('project', this.db.raw('count(project) as user_count'))
+            .where('role_id', roleId)
+            .groupBy('project');
+        return rows.map((r) => {
+            return {
+                project: r.project,
+                role: roleId,
+                userCount: r.user_count,
+                groupCount: 0,
+            };
+        });
+    }
+
+    async getProjectGroupCountsForRole(
+        roleId: number,
+    ): Promise<IProjectUsageCount[]> {
+        const rows = await this.db(T.GROUP_ROLE)
+            .select('project', this.db.raw('count(project) as group_count'))
+            .where('role_id', roleId)
+            .groupBy('project');
+        return rows.map((r) => {
+            return {
+                project: r.project,
+                role: roleId,
+                userCount: 0,
+                groupCount: r.group_count,
+            };
+        });
     }
 
     async addUserToRole(

@@ -2,6 +2,7 @@
 import {
     IAccessInfo,
     IAccessStore,
+    IProjectUsageCount,
     IRole,
     IRoleWithProject,
     IUserPermission,
@@ -18,6 +19,16 @@ class AccessStoreMock implements IAccessStore {
 
     constructor(roleStore?: IRoleStore) {
         this.fakeRolesStore = roleStore ?? new FakeRoleStore();
+    }
+
+    getProjectUserCountsForRole(roleId: number): Promise<IProjectUsageCount[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getProjectGroupCountsForRole(
+        roleId: number,
+    ): Promise<IProjectUsageCount[]> {
+        throw new Error('Method not implemented.');
     }
 
     addAccessToProject(

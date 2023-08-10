@@ -35,3 +35,10 @@ export interface IProjectHealthReport extends IProject {
     activeCount: number;
     updatedAt: string;
 }
+
+export interface IProjectRoleUsageCount {
+    project: string;
+    role: number;
+    userCount: number;
+    groupCount: number;
+}

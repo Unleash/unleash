@@ -14,6 +14,13 @@ export interface IRole {
     type: string;
 }
 
+export interface IProjectUsageCount {
+    project: string;
+    role: number;
+    userCount: number;
+    groupCount: number;
+}
+
 export interface IRoleWithProject extends IRole {
     project: string;
 }
@@ -69,6 +76,10 @@ export interface IAccessStore extends Store<IRole, number> {
     getUserIdsForRole(roleId: number, projectId?: string): Promise<number[]>;
 
     getGroupIdsForRole(roleId: number, projectId?: string): Promise<number[]>;
+
+    getProjectUserCountsForRole(roleId: number): Promise<IProjectUsageCount[]>;
+
+    getProjectGroupCountsForRole(roleId: number): Promise<IProjectUsageCount[]>;
 
     wipePermissionsFromRole(role_id: number): Promise<void>;
 

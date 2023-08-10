@@ -8,6 +8,8 @@ import { RoleDeleteDialogUsers } from './RoleDeleteDialogUsers/RoleDeleteDialogU
 import { RoleDeleteDialogServiceAccounts } from './RoleDeleteDialogServiceAccounts/RoleDeleteDialogServiceAccounts';
 import { useGroups } from 'hooks/api/getters/useGroups/useGroups';
 import { RoleDeleteDialogGroups } from './RoleDeleteDialogGroups/RoleDeleteDialogGroups';
+import { useProjectRoleAccessUsage } from 'hooks/api/getters/useProjectRoleAccessUsage/useProjectRoleAccessUsage';
+import { RoleDeleteDialogProjectRoles } from './RoleDeleteDialogProjectRoles/RoleDeleteDialogProjectRoles';
 
 const StyledTableContainer = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1.5),
@@ -40,8 +42,10 @@ export const RoleDeleteDialog = ({
     );
     const roleGroups = groups?.filter(({ rootRole }) => rootRole === role?.id);
 
+    const { projects } = useProjectRoleAccessUsage(role?.id);
+
     const entitiesWithRole = Boolean(
-        roleUsers.length || roleServiceAccounts.length || roleGroups?.length
+        roleUsers.length || roleServiceAccounts.length || roleGroups?.length || projects?.length
     );
 
     return (
@@ -108,6 +112,21 @@ export const RoleDeleteDialog = ({
                                     <StyledTableContainer>
                                         <RoleDeleteDialogGroups
                                             groups={roleGroups!}
+                                        />
+                                    </StyledTableContainer>
+                                </>
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={Boolean(projects?.length)}
+                            show={
+                                <>
+                                    <StyledLabel>
+                                        Project-assigned roles ({projects?.length}):
+                                    </StyledLabel>
+                                    <StyledTableContainer>
+                                        <RoleDeleteDialogProjectRoles
+                                            projects={projects!}
                                         />
                                     </StyledTableContainer>
                                 </>

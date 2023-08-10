@@ -3,6 +3,7 @@ import User, { IProjectUser, IUser } from '../types/user';
 import {
     IAccessInfo,
     IAccessStore,
+    IProjectUsageCount,
     IRole,
     IRoleWithPermissions,
     IRoleWithProject,
@@ -451,6 +452,30 @@ export class AccessService {
         );
         const groups = await this.groupService.getProjectGroups(projectId);
         return [roles, users.flat(), groups];
+    }
+
+    async getProjectRoleUsage(roleId: number): Promise<IProjectUsageCount[]> {
+        const userCount = await this.store.getProjectUserCountsForRole(roleId);
+        const groupCount = await this.store.getProjectGroupCountsForRole(
+            roleId,
+        );
+        const usersAndGroups = userCount.reduce((group, item) => {
+            if (!group[item.project]) {
+                group[item.project] = { ...item };
+            }
+
+            return group;
+        }, <{ [key: string]: IProjectUsageCount }>{});
+
+        for (let item of groupCount) {
+            if (!usersAndGroups[item.project]) {
+                usersAndGroups[item.project] = { ...item };
+            } else {
+                usersAndGroups[item.project].groupCount = item.groupCount;
+            }
+        }
+
+        return Object.keys(usersAndGroups).map((key) => usersAndGroups[key]);
     }
 
     async createDefaultProjectRoles(

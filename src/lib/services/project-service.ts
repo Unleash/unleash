@@ -35,6 +35,7 @@ import {
     RoleName,
     IFlagResolver,
     ProjectAccessAddedEvent,
+    IProjectRoleUsage,
 } from '../types';
 import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
 import {
@@ -695,6 +696,10 @@ export default class ProjectService {
 
     async getProjectsByUser(userId: number): Promise<string[]> {
         return this.store.getProjectsByUser(userId);
+    }
+
+    async getProjectsByRole(roleId: number): Promise<IProjectRoleUsage[]> {
+        return this.accessService.getProjectRoleUsage(roleId);
     }
 
     async statusJob(): Promise<void> {

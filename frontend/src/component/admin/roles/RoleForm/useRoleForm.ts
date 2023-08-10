@@ -68,6 +68,14 @@ export const useRoleForm = (
         setErrors(errors => ({ ...errors, [field]: error }));
     };
 
+    const reload = () => {
+        setName(initialName);
+        setDescription(initialDescription);
+        setCheckedPermissions(
+            permissionsToCheckedPermissions(initialPermissions)
+        );
+    };
+
     return {
         name,
         description,
@@ -83,5 +91,6 @@ export const useRoleForm = (
         isNotEmpty,
         hasPermissions,
         ErrorField,
+        reload,
     };
 };

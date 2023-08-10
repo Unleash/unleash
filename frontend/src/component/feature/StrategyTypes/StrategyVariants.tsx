@@ -111,7 +111,7 @@ export const StrategyVariants: FC<{
                             </span>
                             <Link
                                 target="_blank"
-                                href="https://docs.getunleash.io/reference/feature-strategy-variants"
+                                href="https://docs.getunleash.io/reference/strategy-variants"
                             >
                                 Learn more
                             </Link>

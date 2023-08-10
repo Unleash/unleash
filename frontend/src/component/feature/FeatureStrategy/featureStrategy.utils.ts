@@ -1,8 +1,10 @@
 import { IFeatureToggle } from 'interfaces/featureToggle';
+import { deepOmit, DeepOmit } from '../../../utils/deepOmit';
 
-export const comparisonModerator = (data: IFeatureToggle) => {
+export const comparisonModerator = (
+    data: IFeatureToggle
+): DeepOmit<IFeatureToggle, keyof IFeatureToggle> => {
     const tempData = { ...data };
-    delete tempData.lastSeenAt;
 
-    return tempData;
+    return deepOmit(tempData, 'lastSeenAt');
 };

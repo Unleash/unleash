@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { SWRConfiguration } from 'swr';
 import { dequal } from 'dequal';
 import { StaleDataNotification } from 'component/common/StaleDataNotification/StaleDataNotification';
-import { DeepOmit, deepOmit } from '../utils/deepOmit';
 
 interface IFormatUnleashGetterOutput<Type> {
     data: Type;
@@ -44,7 +43,7 @@ export const useCollaborateData = <Type,>(
     getterOptions: IGetterOptions,
     initialData: Type,
     notificationOptions: IStaleNotificationOptions,
-    comparisonModeratorFunc: (data: DeepOmit<Type, keyof any> | null) => any
+    comparisonModeratorFunc: (data: Type) => any
 ): ICollaborateDataOutput<Type> => {
     const { data, refetch } = formatUnleashGetter<Type>(getterOptions);
     const [cache, setCache] = useState<Type | null>(initialData || null);
@@ -55,7 +54,7 @@ export const useCollaborateData = <Type,>(
         setCache(data);
     };
 
-    const formatDequalData = (data: DeepOmit<Type, keyof any> | null) => {
+    const formatDequalData = (data: Type | null) => {
         if (!data) return data;
         if (
             comparisonModeratorFunc &&
@@ -75,12 +74,7 @@ export const useCollaborateData = <Type,>(
     useEffect(() => {
         if (!cache || !data) return;
 
-        const cleanedCache = deepOmit(cache, 'lastSeenAt');
-        const cleanedData = deepOmit(data, 'lastSeenAt');
-        const equal = dequal(
-            formatDequalData(cleanedCache),
-            formatDequalData(cleanedData)
-        );
+        const equal = dequal(formatDequalData(cache), formatDequalData(data));
 
         if (!equal) {
             setDataModified(true);
@@ -92,8 +86,8 @@ export const useCollaborateData = <Type,>(
         refetch,
         staleDataNotification: (
             <StaleDataNotification
-                cache={formatDequalData(deepOmit(cache, 'lastSeenAt'))}
-                data={formatDequalData(deepOmit(data, 'lastSeenAt'))}
+                cache={formatDequalData(cache)}
+                data={formatDequalData(data)}
                 refresh={() => forceRefreshCache(data)}
                 show={dataModified}
                 afterSubmitAction={notificationOptions.afterSubmitAction}

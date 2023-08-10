@@ -35,7 +35,7 @@ interface IVariantPatchProps {
     project: string;
     environment: string;
     change: IChangeRequestPatchVariant;
-    discard?: ReactNode;
+    actions?: ReactNode;
 }
 
 export const VariantPatch = ({
@@ -43,7 +43,7 @@ export const VariantPatch = ({
     project,
     environment,
     change,
-    discard,
+    actions,
 }: IVariantPatchProps) => {
     const { feature: featureData } = useFeature(project, feature);
 
@@ -68,7 +68,7 @@ export const VariantPatch = ({
                 >
                     Updating variants to:
                 </TooltipLink>
-                {discard}
+                {actions}
             </StyledChangeHeader>
             <EnvironmentVariantsTable variants={change.payload.variants} />
             <ConditionallyRender

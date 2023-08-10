@@ -55,12 +55,12 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 }));
 
 export const FeatureChange: FC<{
-    discard: ReactNode;
+    actions: ReactNode;
     index: number;
     changeRequest: IChangeRequest;
     change: IFeatureChange;
     feature: IChangeRequestFeature;
-}> = ({ index, change, feature, changeRequest, discard }) => {
+}> = ({ index, change, feature, changeRequest, actions }) => {
     const lastIndex = feature.defaultChange
         ? feature.changes.length + 1
         : feature.changes.length;
@@ -87,7 +87,7 @@ export const FeatureChange: FC<{
                 {change.action === 'updateEnabled' && (
                     <ToggleStatusChange
                         enabled={change.payload.enabled}
-                        discard={discard}
+                        actions={actions}
                     />
                 )}
 
@@ -95,7 +95,7 @@ export const FeatureChange: FC<{
                 change.action === 'deleteStrategy' ||
                 change.action === 'updateStrategy' ? (
                     <StrategyChange
-                        discard={discard}
+                        actions={actions}
                         change={change}
                         featureName={feature.name}
                         environmentName={changeRequest.environment}
@@ -108,7 +108,7 @@ export const FeatureChange: FC<{
                         project={changeRequest.project}
                         environment={changeRequest.environment}
                         change={change}
-                        discard={discard}
+                        actions={actions}
                     />
                 )}
                 {change.action === 'reorderStrategy' && (
@@ -117,7 +117,7 @@ export const FeatureChange: FC<{
                         project={changeRequest.project}
                         environment={changeRequest.environment}
                         change={change}
-                        discard={discard}
+                        actions={actions}
                     />
                 )}
             </Box>

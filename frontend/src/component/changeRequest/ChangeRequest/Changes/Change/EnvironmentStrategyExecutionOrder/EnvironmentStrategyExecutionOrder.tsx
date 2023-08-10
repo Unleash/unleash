@@ -40,7 +40,7 @@ interface IEnvironmentStrategyExecutionOrderProps {
     project: string;
     environment: string;
     change: IChangeRequestReorderStrategy;
-    discard?: ReactNode;
+    actions?: ReactNode;
 }
 
 export const EnvironmentStrategyExecutionOrder = ({
@@ -48,7 +48,7 @@ export const EnvironmentStrategyExecutionOrder = ({
     environment,
     change,
     project,
-    discard,
+    actions,
 }: IEnvironmentStrategyExecutionOrderProps) => {
     const { feature: featureData } = useFeature(project, feature);
     const featureEnvironment = featureData.environments.find(
@@ -96,7 +96,7 @@ export const EnvironmentStrategyExecutionOrder = ({
                 >
                     Updating strategy execution order to:
                 </TooltipLink>
-                {discard}
+                {actions}
             </StyledChangeHeader>
             <StyledStrategyExecutionWrapper>
                 {updatedStrategies.map((strategy, index) => (

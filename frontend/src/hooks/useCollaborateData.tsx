@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { SWRConfiguration } from 'swr';
 import { dequal } from 'dequal';
 import { StaleDataNotification } from 'component/common/StaleDataNotification/StaleDataNotification';
+import { DeepOmit, deepOmit } from '../utils/deepOmit';
 
 interface IFormatUnleashGetterOutput<Type> {
     data: Type;
@@ -39,26 +40,11 @@ interface IStaleNotificationOptions {
     afterSubmitAction: () => void;
 }
 
-const omitUnwantedData = (obj: any, field: string): any => {
-    if (Array.isArray(obj)) {
-        return obj.map(value => omitUnwantedData(value, field));
-    } else if (typeof obj === 'object' && obj !== null) {
-        const result: any = {};
-        for (const [key, value] of Object.entries(obj)) {
-            if (key !== 'lastSeenAt') {
-                result[key] = omitUnwantedData(value, field);
-            }
-        }
-        return result;
-    }
-    return obj;
-};
-
 export const useCollaborateData = <Type,>(
     getterOptions: IGetterOptions,
     initialData: Type,
     notificationOptions: IStaleNotificationOptions,
-    comparisonModeratorFunc: (data: Type) => any
+    comparisonModeratorFunc: (data: DeepOmit<Type, keyof any> | null) => any
 ): ICollaborateDataOutput<Type> => {
     const { data, refetch } = formatUnleashGetter<Type>(getterOptions);
     const [cache, setCache] = useState<Type | null>(initialData || null);
@@ -69,7 +55,7 @@ export const useCollaborateData = <Type,>(
         setCache(data);
     };
 
-    const formatDequalData = (data: Type | null) => {
+    const formatDequalData = (data: DeepOmit<Type, keyof any> | null) => {
         if (!data) return data;
         if (
             comparisonModeratorFunc &&
@@ -89,8 +75,8 @@ export const useCollaborateData = <Type,>(
     useEffect(() => {
         if (!cache || !data) return;
 
-        const cleanedCache = omitUnwantedData(cache, 'lastSeenAt');
-        const cleanedData = omitUnwantedData(data, 'lastSeenAt');
+        const cleanedCache = deepOmit(cache, 'lastSeenAt');
+        const cleanedData = deepOmit(data, 'lastSeenAt');
         const equal = dequal(
             formatDequalData(cleanedCache),
             formatDequalData(cleanedData)
@@ -106,8 +92,8 @@ export const useCollaborateData = <Type,>(
         refetch,
         staleDataNotification: (
             <StaleDataNotification
-                cache={formatDequalData(cache)}
-                data={formatDequalData(data)}
+                cache={formatDequalData(deepOmit(cache, 'lastSeenAt'))}
+                data={formatDequalData(deepOmit(data, 'lastSeenAt'))}
                 refresh={() => forceRefreshCache(data)}
                 show={dataModified}
                 afterSubmitAction={notificationOptions.afterSubmitAction}

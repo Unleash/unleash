@@ -86,7 +86,12 @@ export const EnvironmentChangeRequest: FC<{
                         </Typography>
                         <Separator />
                         <UpdateCount
-                            count={environmentChangeRequest.features.length}
+                            featuresCount={
+                                environmentChangeRequest.features.length
+                            }
+                            segmentsCount={
+                                environmentChangeRequest.segments.length
+                            }
                         />
                     </Box>
                     <Box sx={{ ml: 'auto' }}>

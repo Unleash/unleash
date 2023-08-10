@@ -13,8 +13,8 @@ import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Typography, styled } from '@mui/material';
 import { IFeatureStrategy } from 'interfaces/strategy';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { textTruncated } from 'themes/themeStyles';
+import { NameWithChangeInfo } from '../NameWithChangeInfo/NameWithChangeInfo';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -46,48 +46,6 @@ export const StrategyDiff: FC<{
                 }}
             />
         </StyledCodeSection>
-    );
-};
-
-export const StrategyName: FC<{
-    newTitle: string | undefined;
-    previousTitle: string | undefined;
-}> = ({ newTitle, previousTitle }) => {
-    const titleHasChanged = Boolean(
-        previousTitle && previousTitle !== newTitle
-    );
-
-    const titleHasChangedOrBeenAdded = Boolean(
-        titleHasChanged || (!previousTitle && newTitle)
-    );
-
-    return (
-        <>
-            <ConditionallyRender
-                condition={titleHasChanged}
-                show={
-                    <Truncated>
-                        <Typography component="del" color="text.secondary">
-                            {previousTitle}
-                        </Typography>
-                    </Truncated>
-                }
-            />
-            <ConditionallyRender
-                condition={Boolean(newTitle)}
-                show={
-                    <Truncated>
-                        <Typography
-                            component={
-                                titleHasChangedOrBeenAdded ? 'ins' : 'span'
-                            }
-                        >
-                            {newTitle}
-                        </Typography>
-                    </Truncated>
-                }
-            />
-        </>
     );
 };
 
@@ -131,9 +89,9 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     {formatStrategyName(change.payload.name)}
                 </Typography>
             </TooltipLink>
-            <StrategyName
-                newTitle={change.payload.title}
-                previousTitle={previousTitle}
+            <NameWithChangeInfo
+                newName={change.payload.title}
+                previousName={previousTitle}
             />
         </Truncated>
     </StyledContainer>

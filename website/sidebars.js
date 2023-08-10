@@ -123,6 +123,7 @@ module.exports = {
                     label: 'Users and permissions',
                     items: [
                         'how-to/how-to-add-users-to-unleash',
+                        'how-to/how-to-create-and-assign-custom-root-roles',
                         'how-to/how-to-create-and-assign-custom-project-roles',
                         'how-to/how-to-create-and-manage-user-groups',
                         'how-to/how-to-set-up-group-sso-sync',

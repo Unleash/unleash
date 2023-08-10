@@ -8,7 +8,6 @@ import {
     TextField,
 } from '@mui/material';
 import { Alert } from '@mui/material';
-import { PageContent } from 'component/common/PageContent/PageContent';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useAuthSettingsApi from 'hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
@@ -68,7 +67,7 @@ export const GoogleAuth = () => {
     };
 
     return (
-        <PageContent>
+        <>
             <Box>
                 <Alert severity="error" sx={{ mb: 2 }}>
                     This integration is deprecated and will be removed in next
@@ -240,6 +239,6 @@ export const GoogleAuth = () => {
                     </Grid>
                 </Grid>
             </form>
-        </PageContent>
+        </>
     );
 };

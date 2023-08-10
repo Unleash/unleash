@@ -11,6 +11,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { EnvironmentChangeRequest } from './EnvironmentChangeRequest/EnvironmentChangeRequest';
 import { ReviewChangesHeader } from './ReviewChangesHeader/ReviewChangesHeader';
+import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 
 interface IChangeRequestSidebarProps {
     open: boolean;
@@ -66,7 +67,10 @@ export const Separator = () => (
     </Typography>
 );
 
-export const UpdateCount: FC<{ count: number }> = ({ count }) => (
+export const UpdateCount: FC<{
+    featuresCount: number;
+    segmentsCount: number;
+}> = ({ featuresCount, segmentsCount }) => (
     <Box>
         <Typography component="span" variant="body1" color="text.secondary">
             Updates:{' '}
@@ -77,8 +81,32 @@ export const UpdateCount: FC<{ count: number }> = ({ count }) => (
                 fontWeight: 'bold',
             }}
         >
-            {count} {count === 1 ? 'feature toggle' : 'feature toggles'}
+            {featuresCount}{' '}
+            {featuresCount === 1 ? 'feature toggle' : 'feature toggles'}
         </Typography>
+        <ConditionallyRender
+            condition={segmentsCount > 0}
+            show={
+                <>
+                    <Typography
+                        component="span"
+                        variant="body1"
+                        color="text.secondary"
+                    >
+                        {' and '}
+                    </Typography>
+                    <Typography
+                        component="span"
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        {segmentsCount}{' '}
+                        {segmentsCount === 1 ? 'segment' : 'segments'}
+                    </Typography>
+                </>
+            }
+        />
     </Box>
 );
 

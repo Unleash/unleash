@@ -1,80 +1,82 @@
-import { VirtualizedTable } from 'component/common/Table';
-import { useMemo, useState } from 'react';
-import { useTable, useSortBy, useFlexLayout, Column } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
-import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
-import { IProjectRoleUsageCount } from 'interfaces/project';
+import { Alert, styled } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import { IRole } from 'interfaces/role';
+import { useProjectRoleAccessUsage } from 'hooks/api/getters/useProjectRoleAccessUsage/useProjectRoleAccessUsage';
+import { RoleDeleteDialogProjectRoleTable } from './RoleDeleteDialogProjectRoleTable'
 
-interface IRoleDeleteDialogProjectRolesProps {
-    projects: IProjectRoleUsageCount[];
+const StyledTableContainer = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(1.5),
+}));
+
+const StyledLabel = styled('p')(({ theme }) => ({
+    marginTop: theme.spacing(3),
+}));
+
+interface IRoleDeleteDialogProps {
+    role?: IRole;
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onConfirm: (role: IRole) => void;
 }
 
 export const RoleDeleteDialogProjectRoles = ({
-    projects,
-}: IRoleDeleteDialogProjectRolesProps) => {
-    const [initialState] = useState(() => ({
-        sortBy: [{ id: 'name' }],
-    }));
+    role,
+    open,
+    setOpen,
+    onConfirm,
+}: IRoleDeleteDialogProps) => {
+    const { projects } = useProjectRoleAccessUsage(role?.id);
 
-    const columns = useMemo(
-        () =>
-            [
-                {
-                    id: 'name',
-                    Header: 'Project name',
-                    accessor: (row: any) => row.project || '',
-                    minWidth: 200,
-                    Cell: ({ row: { original: item } }: any) => (
-                        <HighlightCell
-                            value={item.project}
-                        />
-                    ),
-                },
-                {
-                    id: 'users',
-                    Header: 'Assigned users',
-                    accessor: (row: any) =>
-                        row.userCount === 1
-                            ? '1 user'
-                            : `${row.userCount} users`,
-                    Cell: TextCell,
-                    maxWidth: 150,
-                },
-                {
-                    id: 'groups',
-                    Header: 'Assigned groups',
-                    accessor: (row: any) =>
-                        row.groupCount === 1
-                            ? '1 group'
-                            : `${row.groupCount} groups`,
-                    Cell: TextCell,
-                    maxWidth: 150,
-                },
-            ] as Column<IProjectRoleUsageCount>[],
-        []
-    );
-
-    const { headerGroups, rows, prepareRow } = useTable(
-        {
-            columns,
-            data: projects,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-        },
-        useSortBy,
-        useFlexLayout
+    const entitiesWithRole = Boolean(
+        projects?.length
     );
 
     return (
-        <VirtualizedTable
-            rows={rows}
-            headerGroups={headerGroups}
-            prepareRow={prepareRow}
-        />
+        <Dialogue
+            title="Delete project role?"
+            open={open}
+            primaryButtonText="Delete role"
+            secondaryButtonText="Cancel"
+            disabledPrimaryButton={entitiesWithRole}
+            onClick={() => onConfirm(role!)}
+            onClose={() => {
+                setOpen(false);
+            }}
+        >
+            <ConditionallyRender
+                condition={entitiesWithRole}
+                show={
+                    <>
+                        <Alert severity="error">
+                            You are not allowed to delete a role that is
+                            currently in use. Please change the role of the
+                            following entities first:
+                        </Alert>
+                        <ConditionallyRender
+                            condition={Boolean(projects?.length)}
+                            show={
+                                <>
+                                    <StyledLabel>
+                                        Project-assigned roles ({projects?.length}):
+                                    </StyledLabel>
+                                    <StyledTableContainer>
+                                        <RoleDeleteDialogProjectRoleTable
+                                            projects={projects!}
+                                        />
+                                    </StyledTableContainer>
+                                </>
+                            }
+                        />
+                    </>
+                }
+                elseShow={
+                    <p>
+                        You are about to delete role:{' '}
+                        <strong>{role?.name}</strong>
+                    </p>
+                }
+            />
+        </Dialogue>
     );
 };

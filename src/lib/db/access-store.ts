@@ -316,7 +316,7 @@ export class AccessStore implements IAccessStore {
             return {
                 project: r.project,
                 role: roleId,
-                userCount: r.user_count,
+                userCount: Number(r.user_count),
                 groupCount: 0,
             };
         });
@@ -334,7 +334,7 @@ export class AccessStore implements IAccessStore {
                 project: r.project,
                 role: roleId,
                 userCount: 0,
-                groupCount: r.group_count,
+                groupCount: Number(r.group_count),
             };
         });
     }

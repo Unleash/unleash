@@ -9,7 +9,7 @@ export const useProjectRoleAccessUsage = (roleId?: number) => {
     const { isEnterprise } = useUiConfig();
 
     const { data, error, mutate } = useConditionalSWR(
-        isEnterprise(),
+        isEnterprise() && roleId,
         { projects: [] },
         formatApiPath(`api/admin/projects/roles/${roleId}/access`),
         fetcher

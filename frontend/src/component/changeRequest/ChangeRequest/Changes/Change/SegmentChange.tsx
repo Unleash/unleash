@@ -1,10 +1,9 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Card, Typography, Link } from '@mui/material';
 import { ISegmentChange } from '../../../changeRequest.types';
 import { SegmentChangeDetails } from './SegmentChangeDetails';
 import { ConflictWarning } from './ConflictWarning';
-import { ChangeActions } from './ChangeActions';
 
 interface ISegmentChangeProps {
     segmentChange: ISegmentChange;

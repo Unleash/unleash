@@ -1,4 +1,4 @@
-import { render } from '../../../utils/testRenderer';
+import { render } from 'utils/testRenderer';
 import React from 'react';
 import { UpdateCount } from './ChangeRequestSidebar';
 import { screen } from '@testing-library/react';

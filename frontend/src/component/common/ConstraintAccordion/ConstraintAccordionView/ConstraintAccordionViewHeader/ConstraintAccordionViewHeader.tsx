@@ -3,7 +3,7 @@ import { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo';
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 import { styled } from '@mui/system';
-import useUnleashContext from '../../../../../hooks/api/getters/useUnleashContext/useUnleashContext';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 
 interface IConstraintAccordionViewHeaderProps {
     constraint: IConstraint;

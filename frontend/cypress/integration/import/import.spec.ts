@@ -122,6 +122,9 @@ describe('imports', () => {
         )
             .invoke('attr', 'aria-label')
             .should('eq', 'development');
+        cy.get(
+            "[data-testid='FEATURE_ENVIRONMENT_ACCORDION_development']"
+        ).click();
         cy.contains('50%');
     });
 });

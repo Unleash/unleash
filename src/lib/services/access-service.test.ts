@@ -185,11 +185,6 @@ test('throws error when trying to delete a project role in use by group', async 
     };
     const config = createTestConfig({
         getLogger,
-        experimental: {
-            flags: {
-                customRootRoles: false,
-            },
-        },
     });
 
     const eventStore = new FakeEventStore();

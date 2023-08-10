@@ -88,6 +88,9 @@ const StyledFieldColumn = styled('div')(({ theme }) => ({
 
 const StyledInput = styled(Input)(() => ({
     width: '100%',
+    '& textarea': {
+        resize: 'vertical',
+    },
 }));
 
 const StyledPercentageContainer = styled('div')(({ theme }) => ({

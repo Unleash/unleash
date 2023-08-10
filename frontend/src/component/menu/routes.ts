@@ -4,7 +4,7 @@ import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesLi
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { AddonList } from 'component/addons/AddonList/AddonList';
 import Login from 'component/user/Login/Login';
-import { EEA, P, SE, UG } from 'component/common/flags';
+import { EEA, P, SE } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -42,7 +42,6 @@ import { LazyCreateProject } from 'component/project/Project/CreateProject/LazyC
 import { LazyFeatureView } from 'component/feature/FeatureView/LazyFeatureView';
 import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
-import { AdminRedirect } from 'component/admin/AdminRedirect';
 import { LoginHistory } from 'component/loginHistory/LoginHistory';
 import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
 
@@ -385,15 +384,6 @@ export const routes: IRoute[] = [
     },
 
     // Admin
-
-    {
-        path: '/admin',
-        title: 'Admin',
-        component: AdminRedirect,
-        hidden: false,
-        type: 'protected',
-        menu: {},
-    },
     {
         path: '/admin/*',
         title: 'Admin',
@@ -449,109 +439,6 @@ export const routes: IRoute[] = [
         type: 'unprotected',
         menu: {},
         isStandalone: true,
-    },
-];
-
-export const adminMenuRoutes: INavigationMenuItem[] = [
-    {
-        path: '/admin/users',
-        title: 'Users',
-        menu: { adminSettings: true },
-        group: 'users',
-    },
-    {
-        path: '/admin/service-accounts',
-        title: 'Service accounts',
-        menu: {
-            adminSettings: true,
-            mode: ['enterprise'],
-        },
-        group: 'users',
-    },
-    {
-        path: '/admin/groups',
-        title: 'Groups',
-        menu: {
-            adminSettings: true,
-            mode: ['enterprise'],
-        },
-        flag: UG,
-        group: 'users',
-    },
-    {
-        path: '/admin/roles/*',
-        title: 'Roles',
-        menu: {
-            adminSettings: true,
-            mode: ['enterprise'],
-        },
-        group: 'users',
-    },
-    {
-        path: '/admin/api',
-        title: 'API access',
-        flag: 'frontendNavigationUpdate',
-        menu: { adminSettings: true },
-        group: 'access',
-    },
-    {
-        path: '/admin/cors',
-        title: 'CORS origins',
-        flag: 'embedProxyFrontend',
-        menu: { adminSettings: true },
-        group: 'access',
-    },
-    {
-        path: '/admin/auth',
-        title: 'Single sign-on',
-        menu: { adminSettings: true },
-        group: 'access',
-    },
-    {
-        path: '/admin/network/*',
-        title: 'Network',
-        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
-        configFlag: 'networkViewEnabled',
-        group: 'instance',
-    },
-    {
-        path: '/admin/maintenance',
-        title: 'Maintenance',
-        menu: { adminSettings: true },
-        group: 'instance',
-    },
-    {
-        path: '/admin/instance',
-        title: 'Instance stats',
-        menu: { adminSettings: true },
-        group: 'instance',
-    },
-    {
-        path: '/admin/instance-privacy',
-        title: 'Instance privacy',
-        menu: { adminSettings: true },
-        group: 'instance',
-    },
-    {
-        path: '/admin/admin-invoices',
-        title: 'Billing & invoices',
-        menu: { adminSettings: true, mode: ['pro'], billing: true },
-        group: 'instance',
-    },
-    {
-        path: '/admin/logins',
-        title: 'Login history',
-        menu: {
-            adminSettings: true,
-            mode: ['enterprise'],
-        },
-        group: 'log',
-    },
-    {
-        path: '/history',
-        title: 'Event log',
-        menu: { adminSettings: true },
-        group: 'log',
     },
 ];
 

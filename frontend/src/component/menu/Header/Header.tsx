@@ -22,24 +22,18 @@ import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { flexRow, focusable } from 'themes/themeStyles';
 import { NavigationMenu } from './NavigationMenu/NavigationMenu';
-import {
-    getRoutes,
-    adminMenuRoutes,
-    getCondensedRoutes,
-} from 'component/menu/routes';
+import { getRoutes, getCondensedRoutes } from 'component/menu/routes';
 import {
     DarkModeOutlined,
     KeyboardArrowDown,
     LightModeOutlined,
 } from '@mui/icons-material';
-import { filterByConfig } from 'component/common/util';
+import { filterByConfig, mapRouteLink } from 'component/common/util';
 import { useId } from 'hooks/useId';
-import { INavigationMenuItem } from 'interfaces/route';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useThemeMode } from 'hooks/useThemeMode';
 import { Notifications } from 'component/common/Notifications/Notifications';
-import { filterAdminRoutes } from './filterAdminRoutes';
-import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
+import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 
 const StyledHeader = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -109,11 +103,6 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     borderRadius: 100,
 }));
 
-const mapRouteLink = (route: INavigationMenuItem) => ({
-    ...route,
-    path: route.path.replace('/*', ''),
-});
-
 const Header: VFC = () => {
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
@@ -122,20 +111,17 @@ const Header: VFC = () => {
     const [adminRef, setAdminRef] = useState<HTMLButtonElement | null>(null);
     const [configRef, setConfigRef] = useState<HTMLButtonElement | null>(null);
 
-    const { uiConfig, isOss, isPro, isEnterprise } = useUiConfig();
-    const { isBilling } = useInstanceStatus();
+    const { uiConfig, isOss } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const showApiAccessInConfigure = !uiConfig?.flags?.frontendNavigationUpdate;
-    const showEnterpriseOptionsInPro = Boolean(
-        uiConfig?.flags?.frontendNavigationUpdate
-    );
 
     const toggleDrawer = () => setOpenDrawer(prev => !prev);
     const onAdminClose = () => setAdminRef(null);
     const onConfigureClose = () => setConfigRef(null);
 
     const routes = getRoutes();
+    const adminRoutes = useAdminRoutes();
 
     const filteredMainRoutes = {
         mainNavRoutes: getCondensedRoutes(routes.mainNavRoutes)
@@ -166,20 +152,7 @@ const Header: VFC = () => {
             )
             .filter(filterByConfig(uiConfig))
             .map(mapRouteLink),
-        adminRoutes: adminMenuRoutes
-            .filter(filterByConfig(uiConfig))
-            .filter(route =>
-                filterAdminRoutes(
-                    route?.menu,
-                    {
-                        enterprise: isEnterprise(),
-                        pro: isPro(),
-                        billing: isBilling,
-                    },
-                    showEnterpriseOptionsInPro
-                )
-            )
-            .map(mapRouteLink),
+        adminRoutes,
     };
 
     if (smallScreen) {

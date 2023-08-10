@@ -120,7 +120,6 @@ export const StrategyVariants: FC<{
                 />
             </Typography>
             <StyledVariantForms>
-                <VariantInfoAlert mode="strategy" />
                 <StrategyVariantsUpgradeAlert />
                 {variantsEdit.map((variant, i) => (
                     <VariantForm

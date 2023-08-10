@@ -19,7 +19,14 @@ export const ChangeRequestTitleCell = ({
     row: { original },
 }: IChangeRequestTitleCellProps) => {
     const projectId = useRequiredPathParam('projectId');
-    const { id, title, features: changes } = original;
+    const {
+        id,
+        title,
+        features: featureChanges,
+        segments: segmentChanges,
+    } = original;
+    const totalChanges =
+        (featureChanges || []).length + (segmentChanges || []).length;
     const path = `/projects/${projectId}/change-requests/${id}`;
 
     if (!value) {
@@ -47,8 +54,7 @@ export const ChangeRequestTitleCell = ({
                 </Typography>
             </StyledLink>
             <span>
-                {`${changes?.length}`}{' '}
-                {changes.length <= 1 ? `update` : 'updates'}
+                {`${totalChanges}`} {totalChanges <= 1 ? `update` : 'updates'}
             </span>
         </TextCell>
     );

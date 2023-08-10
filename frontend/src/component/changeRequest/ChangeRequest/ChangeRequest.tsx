@@ -29,11 +29,19 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                 }
             />
 
-            {changeRequest.segments?.map(segment => (
+            {changeRequest.segments?.map(segmentChange => (
                 <SegmentChange
-                    key={segment.payload.id}
-                    segmentChange={segment}
+                    key={segmentChange.payload.id}
+                    segmentChange={segmentChange}
                     onNavigate={onNavigate}
+                    actions={
+                        <ChangeActions
+                            changeRequest={changeRequest}
+                            feature={segmentChange.name}
+                            change={segmentChange}
+                            onRefetch={onRefetch}
+                        />
+                    }
                 />
             ))}
             <ConditionallyRender
@@ -55,7 +63,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                     {feature.changes.map((change, index) => (
                         <FeatureChange
                             key={index}
-                            discard={
+                            actions={
                                 <ChangeActions
                                     changeRequest={changeRequest}
                                     feature={feature.name}
@@ -71,7 +79,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                     ))}
                     {feature.defaultChange ? (
                         <FeatureChange
-                            discard={
+                            actions={
                                 <Typography
                                     variant="body2"
                                     color="text.secondary"

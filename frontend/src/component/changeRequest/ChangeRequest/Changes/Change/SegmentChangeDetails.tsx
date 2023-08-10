@@ -46,9 +46,9 @@ const SegmentContainer = styled(Box, {
 }));
 
 export const SegmentChangeDetails: VFC<{
-    discard?: ReactNode;
+    actions?: ReactNode;
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
-}> = ({ discard, change }) => {
+}> = ({ actions, change }) => {
     const { segment: currentSegment } = useSegment(change.payload.id);
 
     return (
@@ -70,7 +70,7 @@ export const SegmentChangeDetails: VFC<{
                             />
                         </SegmentTooltipLink>
                     </ChangeItemInfo>
-                    <div>{discard}</div>
+                    <div>{actions}</div>
                 </ChangeItemWrapper>
             )}
             {change.action === 'updateSegment' && (
@@ -85,7 +85,7 @@ export const SegmentChangeDetails: VFC<{
                                 />
                             </SegmentTooltipLink>
                         </ChangeItemInfo>
-                        <div>{discard}</div>
+                        <div>{actions}</div>
                     </ChangeItemCreateEditWrapper>
                 </>
             )}

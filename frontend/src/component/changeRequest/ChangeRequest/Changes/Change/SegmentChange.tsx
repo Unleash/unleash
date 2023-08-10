@@ -1,18 +1,21 @@
-import { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Card, Typography, Link } from '@mui/material';
 import { ISegmentChange } from '../../../changeRequest.types';
 import { SegmentChangeDetails } from './SegmentChangeDetails';
 import { ConflictWarning } from './ConflictWarning';
+import { ChangeActions } from './ChangeActions';
 
 interface ISegmentChangeProps {
     segmentChange: ISegmentChange;
     onNavigate?: () => void;
+    actions: ReactNode;
 }
 
 export const SegmentChange: FC<ISegmentChangeProps> = ({
     segmentChange,
     onNavigate,
+    actions,
 }) => (
     <Card
         elevation={0}
@@ -64,6 +67,6 @@ export const SegmentChange: FC<ISegmentChangeProps> = ({
                 </Link>
             </Box>
         </Box>
-        <SegmentChangeDetails change={segmentChange} />
+        <SegmentChangeDetails change={segmentChange} actions={actions} />
     </Card>
 );

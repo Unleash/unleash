@@ -101,7 +101,7 @@ const EditHeader: VFC<{
 };
 
 export const StrategyChange: VFC<{
-    discard?: ReactNode;
+    actions?: ReactNode;
     change:
         | IChangeRequestAddStrategy
         | IChangeRequestDeleteStrategy
@@ -109,7 +109,7 @@ export const StrategyChange: VFC<{
     environmentName: string;
     featureName: string;
     projectId: string;
-}> = ({ discard, change, featureName, environmentName, projectId }) => {
+}> = ({ actions, change, featureName, environmentName, projectId }) => {
     const currentStrategy = useCurrentStrategy(
         change,
         projectId,
@@ -145,7 +145,7 @@ export const StrategyChange: VFC<{
                                 />
                             </div>
                         </ChangeItemInfo>
-                        <div>{discard}</div>
+                        <div>{actions}</div>
                     </ChangeItemCreateEditWrapper>
                     <StrategyExecution strategy={change.payload} />
                 </>
@@ -169,7 +169,7 @@ export const StrategyChange: VFC<{
                             </StrategyTooltipLink>
                         )}
                     </ChangeItemInfo>
-                    <div>{discard}</div>
+                    <div>{actions}</div>
                 </ChangeItemWrapper>
             )}
             {change.action === 'updateStrategy' && (
@@ -190,7 +190,7 @@ export const StrategyChange: VFC<{
                                 />
                             </StrategyTooltipLink>
                         </ChangeItemInfo>
-                        <div>{discard}</div>
+                        <div>{actions}</div>
                     </ChangeItemCreateEditWrapper>
                     <ConditionallyRender
                         condition={

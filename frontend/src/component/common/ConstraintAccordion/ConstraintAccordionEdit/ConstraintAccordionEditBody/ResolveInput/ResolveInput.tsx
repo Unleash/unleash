@@ -1,4 +1,4 @@
-import { IUnleashContextDefinition } from 'interfaces/context';
+import { ILegalValue, IUnleashContextDefinition } from 'interfaces/context';
 import { IConstraint } from 'interfaces/strategy';
 import { DateSingleValue } from '../DateSingleValue/DateSingleValue';
 import { FreeTextInput } from '../FreeTextInput/FreeTextInput';
@@ -30,6 +30,29 @@ interface IResolveInputProps {
     error: string;
 }
 
+const resolveLegalValues = (
+    constraint: IConstraint,
+    contextDefinition: IUnleashContextDefinition
+): { legalValues: ILegalValue[]; deletedLegalValues: ILegalValue[] } => {
+    const legalValues = contextDefinition.legalValues || [];
+    const constraintValues = constraint.values || [];
+
+    const deletedLegalValues =
+        constraintValues
+            .filter(
+                value =>
+                    !legalValues.some(
+                        ({ value: legalValue }) => legalValue === value
+                    )
+            )
+            .map(v => ({ value: v, description: '' })) || [];
+
+    return {
+        legalValues,
+        deletedLegalValues,
+    };
+};
+
 export const ResolveInput = ({
     input,
     contextDefinition,
@@ -43,20 +66,14 @@ export const ResolveInput = ({
     const resolveInput = () => {
         switch (input) {
             case IN_OPERATORS_LEGAL_VALUES:
-                return (
-                    <RestrictiveLegalValues
-                        legalValues={contextDefinition.legalValues || []}
-                        values={localConstraint.values || []}
-                        setValues={setValues}
-                        error={error}
-                        setError={setError}
-                    />
-                );
             case STRING_OPERATORS_LEGAL_VALUES:
                 return (
                     <>
                         <RestrictiveLegalValues
-                            legalValues={contextDefinition.legalValues || []}
+                            data={resolveLegalValues(
+                                localConstraint,
+                                contextDefinition
+                            )}
                             values={localConstraint.values || []}
                             setValues={setValues}
                             error={error}

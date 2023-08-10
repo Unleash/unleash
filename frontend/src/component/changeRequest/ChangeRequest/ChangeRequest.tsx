@@ -37,7 +37,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                     actions={
                         <ChangeActions
                             changeRequest={changeRequest}
-                            feature={segmentChange.name}
+                            feature={'Unused'}
                             change={segmentChange}
                             onRefetch={onRefetch}
                         />

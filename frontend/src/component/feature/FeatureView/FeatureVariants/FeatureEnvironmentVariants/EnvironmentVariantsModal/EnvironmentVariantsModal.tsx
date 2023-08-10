@@ -2,7 +2,7 @@ import { Alert, Button, Divider, Link, styled } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState, memo } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IFeatureEnvironment, IFeatureVariant } from 'interfaces/featureToggle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -132,6 +132,8 @@ interface IEnvironmentVariantModalProps {
     };
     onConfirm: (updatedVariants: IFeatureVariant[]) => void;
 }
+
+const MemoizedVariantForm = memo(VariantForm);
 
 export const EnvironmentVariantsModal = ({
     environment,
@@ -373,7 +375,7 @@ export const EnvironmentVariantsModal = ({
                     />
                     <StyledVariantForms>
                         {variantsEdit.map(variant => (
-                            <VariantForm
+                            <MemoizedVariantForm
                                 key={variant.id}
                                 variant={variant}
                                 variants={variantsEdit}

@@ -61,7 +61,7 @@ export const RoleDeleteDialogProjectRoles = ({
                                     </StyledLabel>
                                     <StyledTableContainer>
                                         <RoleDeleteDialogProjectRoleTable
-                                            projects={projects!}
+                                            projects={projects}
                                         />
                                     </StyledTableContainer>
                                 </>

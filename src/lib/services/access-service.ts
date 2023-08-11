@@ -544,7 +544,7 @@ export class AccessService {
 
         if (
             roleType === CUSTOM_ROOT_ROLE_TYPE &&
-            !this.flagResolver.isEnabled('customRootRoles')
+            this.flagResolver.isEnabled('customRootRolesKillSwitch')
         ) {
             throw new InvalidOperationError(
                 'Custom root roles are not enabled.',
@@ -582,7 +582,7 @@ export class AccessService {
 
         if (
             roleType === CUSTOM_ROOT_ROLE_TYPE &&
-            !this.flagResolver.isEnabled('customRootRoles')
+            this.flagResolver.isEnabled('customRootRolesKillSwitch')
         ) {
             throw new InvalidOperationError(
                 'Custom root roles are not enabled.',

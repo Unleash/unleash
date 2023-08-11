@@ -11,6 +11,7 @@ import { EventOptions, PlausibleOptions } from 'plausible-tracker';
 export type CustomEvents =
     | 'invite'
     | 'upgrade_plan_clicked'
+    | 'read_about'
     | 'change_request'
     | 'favorite'
     | 'maintenance'

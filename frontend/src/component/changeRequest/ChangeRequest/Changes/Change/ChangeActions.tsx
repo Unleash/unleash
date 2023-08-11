@@ -1,17 +1,17 @@
 import React, { FC, useState } from 'react';
 import {
-    IFeatureChange,
     IChangeRequest,
     IChangeRequestAddStrategy,
     IChangeRequestUpdateStrategy,
-} from '../../../changeRequest.types';
+    IChange,
+} from 'component/changeRequest/changeRequest.types';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
-import { changesCount } from '../../../changesCount';
+import { changesCount } from 'component/changeRequest/changesCount';
 import {
     IconButton,
     ListItemIcon,
@@ -26,10 +26,7 @@ import {
 import { Delete, Edit, MoreVert } from '@mui/icons-material';
 import { EditChange } from './EditChange';
 
-const useShowActions = (
-    changeRequest: IChangeRequest,
-    change: IFeatureChange
-) => {
+const useShowActions = (changeRequest: IChangeRequest, change: IChange) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(
         changeRequest.project
     );
@@ -60,7 +57,7 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 export const ChangeActions: FC<{
     changeRequest: IChangeRequest;
     feature: string;
-    change: IFeatureChange;
+    change: IChange;
     onRefetch?: () => void;
 }> = ({ changeRequest, feature, change, onRefetch }) => {
     const { showDiscard, showEdit } = useShowActions(changeRequest, change);

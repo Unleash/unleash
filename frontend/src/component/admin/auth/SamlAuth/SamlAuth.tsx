@@ -7,7 +7,6 @@ import {
     TextField,
 } from '@mui/material';
 import { Alert } from '@mui/material';
-import { PageContent } from 'component/common/PageContent/PageContent';
 import { AutoCreateForm } from '../AutoCreateForm/AutoCreateForm';
 import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -73,7 +72,7 @@ export const SamlAuth = () => {
     };
 
     return (
-        <PageContent>
+        <>
             <Grid container sx={{ mb: 3 }}>
                 <Grid item md={12}>
                     <Alert severity="info">
@@ -264,6 +263,6 @@ export const SamlAuth = () => {
                     </Grid>
                 </Grid>
             </form>
-        </PageContent>
+        </>
     );
 };

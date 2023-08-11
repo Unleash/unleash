@@ -8,9 +8,9 @@ This guide's purpose is to give you a conceptual overview of how Unleash works. 
 The end of this guide presents a [short use case, explaining how you might configure Unleash](#use-case) to start working with feature toggles.
 
 
-## The global level
+## The root level
 
-Some things in Unleash are configured and defined on the global level. These options apply across the entire Unleash instance. The most important global configuration options for day-to-day operations are:
+Some things in Unleash are configured and defined on the root level. These options apply across the entire Unleash instance. The most important root configuration options for day-to-day operations are:
 
 - [API access tokens](../reference/api-tokens-and-client-keys.mdx)
 - [Projects](../reference/projects.md)
@@ -18,7 +18,7 @@ Some things in Unleash are configured and defined on the global level. These opt
 - [Strategy types](../reference/activation-strategies.md) (including [custom activation strategy types](../reference/custom-activation-strategies.md))
 - [Tag types](../reference/tags.md)
 - [Unleash context](../reference/unleash-context.md) fields (including [custom context fields](../reference/unleash-context.md#custom-context-fields))
-- Users, [user groups](../reference/rbac.md#user-groups) and [global roles](../reference/rbac.md)
+- Users, [user groups](../reference/rbac.md#user-groups) and [roles](../reference/rbac.md)
 
 
 ## Projects
@@ -37,7 +37,7 @@ Pro and Enterprise customers can create, rename, and delete projects as they wis
 
 [**Environments**](../reference/environments.md) in Unleash let you change how a feature toggle works in your application’s different environments. For instance, while you are developing a feature, it’s likely that you’ll want it to be available in your development environment, but not in your production environment: environments let you do that. You might also want to enable a feature for only some users in your development environment, but no users in your production environment: environments let you do that.
 
-Environments exist on two different levels within Unleash. The set of **all available environments is defined on the global level**. Additionally, **each project** can choose which of these global environments should be **available on the project level**. The set of environments available to any given project is **always a subset** of the set of globally available environments.
+Environments exist on two different levels within Unleash. The set of **all available environments is defined on the root level**. Additionally, **each project** can choose which of these root environments should be **available on the project level**. The set of environments available to any given project is **always a subset** of the set of all available environments at the root level.
 
 Each project must always have **at least one** active environment.
 

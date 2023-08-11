@@ -92,7 +92,7 @@ Use the values from the [previous section](#azure-details) to fill out the form:
 2. In the single sign-on URL field, add the **login URL**. It should look something like `https://login.microsoftonline.com/**[identifier]**/saml2`
 3. In the X.509 certificate field, add the content of the `X509Certificate` tag from the **federation metadata XML**.
 
-Optionally, you may also choose to “Auto-create users”. This will make Unleash automatically create new users on the fly the first time they sign-in to Unleash with the given SSO provider (JIT). If you decide to automatically create users in Unleash you must also provide a list of valid email domains separated by commas. You must also decide which global Unleash role they will be assigned. Without this enabled you will need to manually add users to Unleash before SSO will work for their accounts and Unleash.
+Optionally, you may also choose to “Auto-create users”. This will make Unleash automatically create new users on the fly the first time they sign-in to Unleash with the given SSO provider (JIT). If you decide to automatically create users in Unleash you must also provide a list of valid email domains separated by commas. You must also decide which root Unleash role they will be assigned. Without this enabled you will need to manually add users to Unleash before SSO will work for their accounts and Unleash.
 
 ![Unleash: SAML 2.0 filled out with entity ID, Single Sign-On URL, and X.509 certificate and auto-creating users for users with the '@getunleash.ai' and '@getunleash.io' emaiil domains.](/img/sso-azure-saml-unleash-config.png)
 

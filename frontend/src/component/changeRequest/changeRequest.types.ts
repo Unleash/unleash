@@ -110,6 +110,7 @@ export interface IChangeRequestReorderStrategy
 }
 
 export interface IChangeRequestUpdateSegment {
+    id: number;
     action: 'updateSegment';
     conflict?: string;
     name: string;
@@ -123,6 +124,7 @@ export interface IChangeRequestUpdateSegment {
 }
 
 export interface IChangeRequestDeleteSegment {
+    id: number;
     action: 'deleteSegment';
     conflict?: string;
     name: string;

@@ -96,14 +96,14 @@ const EventDiff = ({
         };
     };
 
-    let changes;
+    let changes: any[] = [];
 
     if (diffs) {
         changes = diffs
             .map(buildDiff)
             .sort(sort)
             .map(({ value }) => value);
-    } else {
+    } else if (entry.data == null || entry.preData == null) {
         // Just show the data if there is no diff yet.
         const data = entry.data || entry.preData;
         changes = [

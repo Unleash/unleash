@@ -23,14 +23,13 @@ import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playgrou
 import { PlaygroundSegmentSchema } from 'lib/openapi/spec/playground-segment-schema';
 import { GroupService } from '../../../lib/services/group-service';
 import { AccessService } from '../../../lib/services/access-service';
-import { ISegmentService } from '../../../lib/segments/segment-service-interface';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: PlaygroundService;
 let featureToggleService: FeatureToggleService;
-let segmentService: ISegmentService;
+let segmentService: SegmentService;
 
 beforeAll(async () => {
     const config = createTestConfig();

@@ -12,13 +12,12 @@ import User from '../../../lib/types/user';
 import { IConstraint, IVariant, SKIP_CHANGE_REQUEST } from '../../../lib/types';
 import EnvironmentService from '../../../lib/services/environment-service';
 import { ForbiddenError, PermissionError } from '../../../lib/error';
-import { ISegmentService } from '../../../lib/segments/segment-service-interface';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
 let stores;
 let db;
 let service: FeatureToggleService;
-let segmentService: ISegmentService;
+let segmentService: SegmentService;
 let environmentService: EnvironmentService;
 let unleashConfig;
 

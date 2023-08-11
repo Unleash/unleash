@@ -119,8 +119,14 @@ export const PremiumFeature = ({
 
     const tracker = usePlausibleTracker();
 
-    const handleClick = () => {
+    const trackUpgradePlan = () => {
         tracker.trackEvent('upgrade_plan_clicked', {
+            props: { feature: label },
+        });
+    };
+
+    const trackReadAbout = () => {
+        tracker.trackEvent('read_about', {
             props: { feature: label },
         });
     };
@@ -167,7 +173,7 @@ export const PremiumFeature = ({
                                 href={upgradeUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                onClick={handleClick}
+                                onClick={trackUpgradePlan}
                             >
                                 Compare plans
                             </StyledLink>
@@ -191,11 +197,16 @@ export const PremiumFeature = ({
                                 href={upgradeUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                onClick={handleClick}
+                                onClick={trackUpgradePlan}
                             >
                                 Compare plans
                             </Button>
-                            <Button href={url} target="_blank" rel="noreferrer">
+                            <Button
+                                href={url}
+                                target="_blank"
+                                rel="noreferrer"
+                                onClick={trackReadAbout}
+                            >
                                 Read about {label}
                             </Button>
                         </StyledButtonContainer>

@@ -34,15 +34,14 @@ const resolveLegalValues = (
     values: IConstraint['values'],
     legalValues: IUnleashContextDefinition['legalValues']
 ): { legalValues: ILegalValue[]; deletedLegalValues: ILegalValue[] } => {
-    const deletedLegalValues =
-        (values || [])
-            .filter(
-                value =>
-                    !(legalValues || []).some(
-                        ({ value: legalValue }) => legalValue === value
-                    )
-            )
-            .map(v => ({ value: v, description: '' })) || [];
+    const deletedLegalValues = (values || [])
+        .filter(
+            value =>
+                !(legalValues || []).some(
+                    ({ value: legalValue }) => legalValue === value
+                )
+        )
+        .map(v => ({ value: v, description: '' }));
 
     return {
         legalValues: legalValues || [],

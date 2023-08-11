@@ -27,15 +27,15 @@ export const SegmentDiff: FC<{
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
     currentSegment?: ISegment;
 }> = ({ change, currentSegment }) => {
-    const changeRequestStrategy =
+    const changeRequestSegment =
         change.action === 'deleteSegment' ? undefined : change.payload;
 
     return (
         <StyledCodeSection>
             <EventDiff
                 entry={{
-                    preData: omit(currentSegment, 'sortOrder'),
-                    data: changeRequestStrategy,
+                    preData: omit(currentSegment, ['createdAt', 'createdBy']),
+                    data: changeRequestSegment,
                 }}
             />
         </StyledCodeSection>

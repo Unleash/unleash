@@ -46,7 +46,7 @@ export const RoleDeleteDialogRootRoles = ({
 
     return (
         <Dialogue
-            title="Delete role?"
+            title="Delete root role?"
             open={open}
             primaryButtonText="Delete role"
             secondaryButtonText="Cancel"

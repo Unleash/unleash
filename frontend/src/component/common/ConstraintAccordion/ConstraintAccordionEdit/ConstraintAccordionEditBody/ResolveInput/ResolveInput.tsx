@@ -31,24 +31,21 @@ interface IResolveInputProps {
 }
 
 const resolveLegalValues = (
-    constraint: IConstraint,
-    contextDefinition: IUnleashContextDefinition
+    values: IConstraint['values'],
+    legalValues: IUnleashContextDefinition['legalValues']
 ): { legalValues: ILegalValue[]; deletedLegalValues: ILegalValue[] } => {
-    const legalValues = contextDefinition.legalValues || [];
-    const constraintValues = constraint.values || [];
-
     const deletedLegalValues =
-        constraintValues
+        (values || [])
             .filter(
                 value =>
-                    !legalValues.some(
+                    !(legalValues || []).some(
                         ({ value: legalValue }) => legalValue === value
                     )
             )
             .map(v => ({ value: v, description: '' })) || [];
 
     return {
-        legalValues,
+        legalValues: legalValues || [],
         deletedLegalValues,
     };
 };
@@ -71,8 +68,8 @@ export const ResolveInput = ({
                     <>
                         <RestrictiveLegalValues
                             data={resolveLegalValues(
-                                localConstraint,
-                                contextDefinition
+                                localConstraint.values,
+                                contextDefinition.legalValues
                             )}
                             values={localConstraint.values || []}
                             setValues={setValues}

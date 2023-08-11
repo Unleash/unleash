@@ -16,13 +16,13 @@ import {
     Separator,
     StyledFlexAlignCenterBox,
     StyledSuccessIcon,
-    UpdateCount,
 } from '../ChangeRequestSidebar';
 import { CloudCircle } from '@mui/icons-material';
 import { AddCommentField } from '../../ChangeRequestOverview/ChangeRequestComments/AddCommentField';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import Input from 'component/common/Input/Input';
 import { ChangeRequestTitle } from './ChangeRequestTitle';
+import { UpdateCount } from 'component/changeRequest/UpdateCount';
 
 const SubmitChangeRequestButton: FC<{ onClick: () => void; count: number }> = ({
     onClick,
@@ -85,6 +85,13 @@ export const EnvironmentChangeRequest: FC<{
                             {environmentChangeRequest.environment}
                         </Typography>
                         <Separator />
+                        <Typography
+                            component="span"
+                            variant="body2"
+                            color="text.secondary"
+                        >
+                            Updates:
+                        </Typography>
                         <UpdateCount
                             featuresCount={
                                 environmentChangeRequest.features.length

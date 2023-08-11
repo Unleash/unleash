@@ -15,7 +15,7 @@ export const RoleDeleteDialog = ({
     setOpen,
     onConfirm,
 }: IRoleDeleteDialogProps) => {
-    if (role?.type === 'custom') {
+    if (role?.type === CUSTOM_PROJECT_ROLE_TYPE) {
         return (
             <RoleDeleteDialogProjectRoles
                 role={role}

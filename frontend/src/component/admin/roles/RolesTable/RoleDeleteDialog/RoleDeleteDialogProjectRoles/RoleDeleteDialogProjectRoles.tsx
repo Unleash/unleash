@@ -56,7 +56,7 @@ export const RoleDeleteDialogProjectRoles = ({
                             show={
                                 <>
                                     <StyledLabel>
-                                        Project-assigned roles (
+                                        Role assigned in
                                         {projects?.length}):
                                     </StyledLabel>
                                     <StyledTableContainer>

@@ -2,7 +2,6 @@ import { Db, IUnleashConfig } from 'lib/server-impl';
 import EventStore from '../../db/event-store';
 import { SegmentService } from '../../services';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import { ISegmentService } from '../../segments/segment-service-interface';
 import FeatureStrategiesStore from '../../db/feature-strategy-store';
 import SegmentStore from '../../db/segment-store';
 import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
@@ -44,7 +43,7 @@ export const createSegmentService = (
 
 export const createFakeSegmentService = (
     config: IUnleashConfig,
-): ISegmentService => {
+): SegmentService => {
     const eventStore = new FakeEventStore();
     const segmentStore = new FakeSegmentStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();

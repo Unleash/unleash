@@ -89,8 +89,8 @@ import { AccessService } from './access-service';
 import { User } from '../server-impl';
 import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-features';
 import { unique } from '../util/unique';
-import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
+import { SegmentService } from './segment-service';
 
 interface IFeatureContext {
     featureName: string;
@@ -132,7 +132,7 @@ class FeatureToggleService {
 
     private contextFieldStore: IContextFieldStore;
 
-    private segmentService: ISegmentService;
+    private segmentService: SegmentService;
 
     private accessService: AccessService;
 
@@ -165,7 +165,7 @@ class FeatureToggleService {
             getLogger,
             flagResolver,
         }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
-        segmentService: ISegmentService,
+        segmentService: SegmentService,
         accessService: AccessService,
         changeRequestAccessReadModel: IChangeRequestAccessReadModel,
     ) {

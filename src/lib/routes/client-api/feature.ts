@@ -26,8 +26,8 @@ import {
     clientFeaturesSchema,
     ClientFeaturesSchema,
 } from '../../openapi/spec/client-features-schema';
-import { ISegmentService } from '../../segments/segment-service-interface';
 import ConfigurationRevisionService from '../../features/feature-toggle/configuration-revision-service';
+import { SegmentService } from '../../services';
 
 const version = 2;
 
@@ -47,7 +47,7 @@ export default class FeatureController extends Controller {
 
     private featureToggleServiceV2: FeatureToggleService;
 
-    private segmentService: ISegmentService;
+    private segmentService: SegmentService;
 
     private clientSpecService: ClientSpecService;
 

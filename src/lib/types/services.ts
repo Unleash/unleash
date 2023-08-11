@@ -40,9 +40,9 @@ import { AccountService } from '../services/account-service';
 import { SchedulerService } from '../services/scheduler-service';
 import { Knex } from 'knex';
 import ExportImportService from '../features/export-import-toggles/export-import-service';
-import { ISegmentService } from '../segments/segment-service-interface';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import EventAnnouncerService from 'lib/services/event-announcer-service';
+import { SegmentService } from '../services';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -78,7 +78,7 @@ export interface IUnleashServices {
     userService: UserService;
     versionService: VersionService;
     userSplashService: UserSplashService;
-    segmentService: ISegmentService;
+    segmentService: SegmentService;
     openApiService: OpenApiService;
     clientSpecService: ClientSpecService;
     patService: PatService;

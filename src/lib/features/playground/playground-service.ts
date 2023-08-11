@@ -11,7 +11,6 @@ import {
     EvaluatedPlaygroundStrategy,
     FeatureStrategiesEvaluationResult,
 } from 'lib/features/playground/feature-evaluator/client';
-import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
 import { generateObjectCombinations } from './generateObjectCombinations';
 import groupBy from 'lodash.groupby';
@@ -20,6 +19,7 @@ import { AdvancedPlaygroundFeatureSchema } from '../../openapi/spec/advanced-pla
 import { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema';
 import { validateQueryComplexity } from './validateQueryComplexity';
 import { playgroundStrategyEvaluation } from 'lib/openapi';
+import { SegmentService } from '../../services';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -64,7 +64,7 @@ export class PlaygroundService {
 
     private readonly featureToggleService: FeatureToggleService;
 
-    private readonly segmentService: ISegmentService;
+    private readonly segmentService: SegmentService;
 
     constructor(
         config: IUnleashConfig,

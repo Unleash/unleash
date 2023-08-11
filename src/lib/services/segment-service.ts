@@ -19,11 +19,10 @@ import {
 import User from '../types/user';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import BadDataError from '../error/bad-data-error';
-import { ISegmentService } from '../segments/segment-service-interface';
 import { PermissionError } from '../error';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 
-export class SegmentService implements ISegmentService {
+export class SegmentService {
     private logger: Logger;
 
     private segmentStore: ISegmentStore;

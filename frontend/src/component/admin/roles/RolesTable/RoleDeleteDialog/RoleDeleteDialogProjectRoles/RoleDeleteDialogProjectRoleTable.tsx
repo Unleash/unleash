@@ -26,9 +26,7 @@ export const RoleDeleteDialogProjectRoleTable = ({
                     accessor: (row: any) => row.project || '',
                     minWidth: 200,
                     Cell: ({ row: { original: item } }: any) => (
-                        <HighlightCell
-                            value={item.project}
-                        />
+                        <HighlightCell value={item.project} />
                     ),
                 },
                 {

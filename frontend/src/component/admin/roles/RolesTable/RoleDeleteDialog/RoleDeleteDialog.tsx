@@ -17,11 +17,21 @@ export const RoleDeleteDialog = ({
 }: IRoleDeleteDialogProps) => {
     if (role?.type === 'custom') {
         return (
-            <RoleDeleteDialogProjectRoles role={role} open={open} setOpen={setOpen} onConfirm={onConfirm} />
+            <RoleDeleteDialogProjectRoles
+                role={role}
+                open={open}
+                setOpen={setOpen}
+                onConfirm={onConfirm}
+            />
         );
     }
 
     return (
-        <RoleDeleteDialogRootRoles role={role} open={open} setOpen={setOpen} onConfirm={onConfirm} />
+        <RoleDeleteDialogRootRoles
+            role={role}
+            open={open}
+            setOpen={setOpen}
+            onConfirm={onConfirm}
+        />
     );
 };

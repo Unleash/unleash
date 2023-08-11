@@ -3,7 +3,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { IRole } from 'interfaces/role';
 import { useProjectRoleAccessUsage } from 'hooks/api/getters/useProjectRoleAccessUsage/useProjectRoleAccessUsage';
-import { RoleDeleteDialogProjectRoleTable } from './RoleDeleteDialogProjectRoleTable'
+import { RoleDeleteDialogProjectRoleTable } from './RoleDeleteDialogProjectRoleTable';
 
 const StyledTableContainer = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1.5),
@@ -28,9 +28,7 @@ export const RoleDeleteDialogProjectRoles = ({
 }: IRoleDeleteDialogProps) => {
     const { projects } = useProjectRoleAccessUsage(role?.id);
 
-    const entitiesWithRole = Boolean(
-        projects?.length
-    );
+    const entitiesWithRole = Boolean(projects?.length);
 
     return (
         <Dialogue
@@ -58,7 +56,8 @@ export const RoleDeleteDialogProjectRoles = ({
                             show={
                                 <>
                                     <StyledLabel>
-                                        Project-assigned roles ({projects?.length}):
+                                        Project-assigned roles (
+                                        {projects?.length}):
                                     </StyledLabel>
                                     <StyledTableContainer>
                                         <RoleDeleteDialogProjectRoleTable

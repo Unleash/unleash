@@ -14,6 +14,7 @@ const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
     alignItems: 'center',
     width: '100%',
+    margin: theme.spacing(0, 0, 1, 0),
 }));
 
 export const ChangeItemWrapper = styled(Box)({

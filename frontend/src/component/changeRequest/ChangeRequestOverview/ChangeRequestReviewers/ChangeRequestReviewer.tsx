@@ -26,6 +26,14 @@ export const StyledErrorIcon = styled(Cancel)(({ theme }) => ({
     marginLeft: 'auto',
 }));
 
+export const ReviewerName = styled(Typography)({
+    maxWidth: '170px',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    color: 'text.primary',
+});
+
 export const ChangeRequestApprover: FC<IChangeRequestReviewerProps> = ({
     name,
     imageUrl,
@@ -33,18 +41,7 @@ export const ChangeRequestApprover: FC<IChangeRequestReviewerProps> = ({
     return (
         <StyledBox>
             <StyledAvatar src={imageUrl} />
-            <Typography
-                variant="body1"
-                color="text.primary"
-                sx={{
-                    maxWidth: '170px',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                }}
-            >
-                {name}
-            </Typography>
+            <ReviewerName variant="body1">{name}</ReviewerName>
             <StyledSuccessIcon />
         </StyledBox>
     );
@@ -57,18 +54,7 @@ export const ChangeRequestRejector: FC<IChangeRequestReviewerProps> = ({
     return (
         <StyledBox>
             <StyledAvatar src={imageUrl} />
-            <Typography
-                variant="body1"
-                color="text.primary"
-                sx={{
-                    maxWidth: '170px',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                }}
-            >
-                {name}
-            </Typography>
+            <ReviewerName variant="body1">{name}</ReviewerName>
             <StyledErrorIcon />
         </StyledBox>
     );

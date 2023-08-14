@@ -8,6 +8,7 @@ test('Show approvers', async () => {
         <ChangeRequestReviewers
             changeRequest={{
                 state: 'Approved',
+                minApprovals: 2,
                 rejections: [],
                 approvals: [
                     {

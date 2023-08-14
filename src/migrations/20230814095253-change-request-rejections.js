@@ -7,7 +7,8 @@ exports.up = function (db, callback) {
                id SERIAL PRIMARY KEY,
                change_request_id INTEGER NOT NULL REFERENCES change_requests(id) ON DELETE CASCADE,
                created_by INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-               created_at TIMESTAMP DEFAULT now()
+               created_at TIMESTAMP DEFAULT now(),
+               UNIQUE (change_request_id, created_by)
             );
         `,
         callback,

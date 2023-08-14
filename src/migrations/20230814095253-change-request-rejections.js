@@ -4,10 +4,10 @@ exports.up = function (db, callback) {
     db.runSql(
         `
             CREATE TABLE IF NOT EXISTS change_request_rejections (
-               id serial primary key,
-               change_request_id integer NOT NULL REFERENCES change_requests(id) ON DELETE CASCADE,
-               created_by integer not null references users (id) ON DELETE CASCADE,
-               created_at timestamp default now()
+               id SERIAL PRIMARY KEY,
+               change_request_id INTEGER NOT NULL REFERENCES change_requests(id) ON DELETE CASCADE,
+               created_by INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+               created_at TIMESTAMP DEFAULT now()
             );
         `,
         callback,

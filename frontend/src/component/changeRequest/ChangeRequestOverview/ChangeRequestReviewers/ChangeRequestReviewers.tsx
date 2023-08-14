@@ -34,13 +34,6 @@ export const ChangeRequestReviewers: FC<{ header: ReactNode }> = ({
             })}
         >
             <StyledBox>{header}</StyledBox>
-            <Typography variant="body1" color="text.secondary">
-                <ConditionallyRender
-                    condition={React.Children.count(children) > 0}
-                    show={'Approved by'}
-                    elseShow={'No approvals yet'}
-                />
-            </Typography>
             {children}
         </Paper>
     );

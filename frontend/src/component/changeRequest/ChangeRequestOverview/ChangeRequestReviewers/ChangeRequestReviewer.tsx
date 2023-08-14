@@ -1,7 +1,7 @@
 import { Box, styled, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { StyledAvatar } from '../ChangeRequestHeader/ChangeRequestHeader.styles';
-import { CheckCircle } from '@mui/icons-material';
+import { CheckCircle, Cancel } from '@mui/icons-material';
 
 interface IChangeRequestReviewerProps {
     name?: string;
@@ -21,7 +21,12 @@ export const StyledSuccessIcon = styled(CheckCircle)(({ theme }) => ({
     marginLeft: 'auto',
 }));
 
-export const ChangeRequestReviewer: FC<IChangeRequestReviewerProps> = ({
+export const StyledErrorIcon = styled(Cancel)(({ theme }) => ({
+    color: theme.palette.error.main,
+    marginLeft: 'auto',
+}));
+
+export const ChangeRequestApprover: FC<IChangeRequestReviewerProps> = ({
     name,
     imageUrl,
 }) => {
@@ -41,6 +46,30 @@ export const ChangeRequestReviewer: FC<IChangeRequestReviewerProps> = ({
                 {name}
             </Typography>
             <StyledSuccessIcon />
+        </StyledBox>
+    );
+};
+
+export const ChangeRequestRejector: FC<IChangeRequestReviewerProps> = ({
+    name,
+    imageUrl,
+}) => {
+    return (
+        <StyledBox>
+            <StyledAvatar src={imageUrl} />
+            <Typography
+                variant="body1"
+                color="text.primary"
+                sx={{
+                    maxWidth: '170px',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                }}
+            >
+                {name}
+            </Typography>
+            <StyledErrorIcon />
         </StyledBox>
     );
 };

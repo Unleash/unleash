@@ -29,6 +29,7 @@ export type IFlagKey =
     | 'frontendNavigationUpdate'
     | 'lastSeenByEnvironment'
     | 'segmentChangeRequests'
+    | 'changeRequestReject'
     | 'customRootRolesKillSwitch';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -131,6 +132,10 @@ const flags: IFlags = {
     ),
     segmentChangeRequests: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SEGMENT_CHANGE_REQUESTS,
+        false,
+    ),
+    changeRequestReject: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_REJECT,
         false,
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(

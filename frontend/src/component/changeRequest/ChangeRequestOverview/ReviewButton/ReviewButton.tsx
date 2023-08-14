@@ -20,8 +20,11 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 
 export const ReviewButton: FC<{ disabled: boolean }> = ({ disabled }) => {
+    const { uiConfig } = useUiConfig();
     const { isAdmin } = useContext(AccessContext);
     const projectId = useRequiredPathParam('projectId');
     const id = useRequiredPathParam('id');
@@ -134,9 +137,16 @@ export const ReviewButton: FC<{ disabled: boolean }> = ({ disabled }) => {
                                     <MenuItem onClick={onApprove}>
                                         Approve changes
                                     </MenuItem>
-                                    <MenuItem onClick={onReject}>
-                                        Reject changes
-                                    </MenuItem>
+                                    <ConditionallyRender
+                                        condition={Boolean(
+                                            uiConfig?.flags?.changeRequestReject
+                                        )}
+                                        show={
+                                            <MenuItem onClick={onReject}>
+                                                Reject changes
+                                            </MenuItem>
+                                        }
+                                    />
                                 </MenuList>
                             </ClickAwayListener>
                         </Paper>

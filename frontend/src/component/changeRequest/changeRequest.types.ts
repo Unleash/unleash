@@ -15,6 +15,7 @@ export interface IChangeRequest {
     features: IChangeRequestFeature[];
     segments: ISegmentChange[];
     approvals: IChangeRequestApproval[];
+    rejections: IChangeRequestApproval[];
     comments: IChangeRequestComment[];
     conflict?: string;
 }

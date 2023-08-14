@@ -56,6 +56,7 @@ export interface IFlags {
     configurableFeatureTypeLifetimes?: boolean;
     frontendNavigationUpdate?: boolean;
     segmentChangeRequests?: boolean;
+    changeRequestReject?: boolean;
     lastSeenByEnvironment?: boolean;
 }
 

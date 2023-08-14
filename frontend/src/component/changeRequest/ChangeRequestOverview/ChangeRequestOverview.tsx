@@ -1,5 +1,5 @@
 import { Alert, Button, styled, Typography } from '@mui/material';
-import { FC, useContext, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { Box } from '@mui/material';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader';
@@ -17,7 +17,10 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Paper from '@mui/material/Paper';
 import { ReviewButton } from './ReviewButton/ReviewButton';
-import { ChangeRequestReviewer } from './ChangeRequestReviewers/ChangeRequestReviewer';
+import {
+    ChangeRequestApprover,
+    ChangeRequestRejector,
+} from './ChangeRequestReviewers/ChangeRequestReviewer';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { APPLY_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
@@ -169,16 +172,60 @@ export const ChangeRequestOverview: FC = () => {
                             />
                         }
                     >
-                        {changeRequest.approvals?.map(approver => (
-                            <ChangeRequestReviewer
-                                key={approver.createdBy.username}
-                                name={
-                                    approver.createdBy.username ||
-                                    'Unknown user'
-                                }
-                                imageUrl={approver.createdBy.imageUrl}
-                            />
-                        ))}
+                        <ConditionallyRender
+                            condition={changeRequest.state === 'Rejected'}
+                            show={
+                                <>
+                                    <Typography
+                                        variant="body1"
+                                        color="text.secondary"
+                                    >
+                                        Rejected by
+                                    </Typography>
+                                    {changeRequest.rejections?.map(rejector => (
+                                        <ChangeRequestRejector
+                                            key={rejector.createdBy.username}
+                                            name={
+                                                rejector.createdBy.username ||
+                                                'Unknown user'
+                                            }
+                                            imageUrl={
+                                                rejector.createdBy.imageUrl
+                                            }
+                                        />
+                                    ))}
+                                </>
+                            }
+                            elseShow={
+                                <>
+                                    <Typography
+                                        variant="body1"
+                                        color="text.secondary"
+                                    >
+                                        <ConditionallyRender
+                                            condition={
+                                                changeRequest.approvals
+                                                    ?.length > 0
+                                            }
+                                            show={'Approved by'}
+                                            elseShow={'No approvals yet'}
+                                        />
+                                    </Typography>
+                                    {changeRequest.approvals?.map(approver => (
+                                        <ChangeRequestApprover
+                                            key={approver.createdBy.username}
+                                            name={
+                                                approver.createdBy.username ||
+                                                'Unknown user'
+                                            }
+                                            imageUrl={
+                                                approver.createdBy.imageUrl
+                                            }
+                                        />
+                                    ))}
+                                </>
+                            }
+                        />
                     </ChangeRequestReviewers>
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>

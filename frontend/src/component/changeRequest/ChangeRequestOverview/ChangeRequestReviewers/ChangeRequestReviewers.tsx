@@ -1,6 +1,9 @@
 import { Box, Paper, styled, Typography } from '@mui/material';
 import React, { FC, ReactNode } from 'react';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { ChangeRequestRejections } from './ChangeRequestRejections';
+import { ChangeRequestApprovals } from './ChangeRequestApprovals';
+import { IChangeRequest } from '../../changeRequest.types';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -20,7 +23,7 @@ export const ChangeRequestReviewersHeader: FC<{
     );
 };
 
-export const ChangeRequestReviewers: FC<{ header: ReactNode }> = ({
+export const ChangeRequestReviewersWrapper: FC<{ header: ReactNode }> = ({
     header,
     children,
 }) => {
@@ -38,3 +41,28 @@ export const ChangeRequestReviewers: FC<{ header: ReactNode }> = ({
         </Paper>
     );
 };
+
+export const ChangeRequestReviewers: FC<{
+    changeRequest: IChangeRequest;
+}> = ({ changeRequest }) => (
+    <ChangeRequestReviewersWrapper
+        header={
+            <ChangeRequestReviewersHeader
+                actualApprovals={changeRequest.approvals.length}
+                minApprovals={changeRequest.minApprovals}
+            />
+        }
+    >
+        <ConditionallyRender
+            condition={changeRequest.state === 'Rejected'}
+            show={
+                <ChangeRequestRejections
+                    rejections={changeRequest.rejections}
+                />
+            }
+            elseShow={
+                <ChangeRequestApprovals approvals={changeRequest.approvals} />
+            }
+        />
+    </ChangeRequestReviewersWrapper>
+);

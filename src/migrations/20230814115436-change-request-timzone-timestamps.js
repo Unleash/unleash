@@ -17,7 +17,6 @@ exports.up = function (db, callback) {
 exports.down = function (db, callback) {
     db.runSql(
         `
-            DROP TABLE IF EXISTS change_request_rejections;
         `,
         callback,
     );

@@ -262,6 +262,7 @@ export const ChangeRequestOverview: FC = () => {
                             <ConditionallyRender
                                 condition={
                                     changeRequest.state !== 'Applied' &&
+                                    changeRequest.state !== 'Rejected' &&
                                     changeRequest.state !== 'Cancelled' &&
                                     (changeRequest.createdBy.id === user?.id ||
                                         isAdmin)

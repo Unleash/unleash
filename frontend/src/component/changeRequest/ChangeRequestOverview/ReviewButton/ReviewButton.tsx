@@ -53,6 +53,23 @@ export const ReviewButton: FC<{ disabled: boolean }> = ({ disabled }) => {
         }
     };
 
+    const onReject = async () => {
+        try {
+            await changeState(projectId, Number(id), {
+                state: 'Rejected',
+            });
+            refetchChangeRequest();
+            refetchChangeRequestOpen();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Changes rejected',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
     const onToggle = () => {
         setOpen(prevOpen => !prevOpen);
     };
@@ -116,6 +133,9 @@ export const ReviewButton: FC<{ disabled: boolean }> = ({ disabled }) => {
                                 >
                                     <MenuItem onClick={onApprove}>
                                         Approve changes
+                                    </MenuItem>
+                                    <MenuItem onClick={onReject}>
+                                        Reject changes
                                     </MenuItem>
                                 </MenuList>
                             </ClickAwayListener>

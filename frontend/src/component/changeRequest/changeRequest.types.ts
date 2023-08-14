@@ -66,7 +66,8 @@ export type ChangeRequestState =
     | 'Approved'
     | 'In review'
     | 'Applied'
-    | 'Cancelled';
+    | 'Cancelled'
+    | 'Rejected';
 
 type ChangeRequestPayload =
     | ChangeRequestEnabled

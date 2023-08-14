@@ -30,7 +30,8 @@ export type IFlagKey =
     | 'changeRequestReject'
     | 'customRootRolesKillSwitch'
     | 'newApplicationList'
-    | 'integrationsRework';
+    | 'integrationsRework'
+    | 'multipleRoles';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -136,6 +137,10 @@ const flags: IFlags = {
     ),
     integrationsRework: parseEnvVarBoolean(
         process.env.UNLEASH_INTEGRATIONS,
+        false,
+    ),
+    multipleRoles: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MULTIPLE_ROLES,
         false,
     ),
 };

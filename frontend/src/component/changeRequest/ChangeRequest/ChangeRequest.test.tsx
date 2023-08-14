@@ -12,6 +12,7 @@ const changeRequestWithDefaultChange = (
 ) => {
     const changeRequest: IChangeRequest = {
         approvals: [],
+        rejections: [],
         comments: [],
         createdAt: new Date(),
         createdBy: {

@@ -32,6 +32,7 @@ test('Show rejectors', async () => {
         <ChangeRequestReviewers
             changeRequest={{
                 state: 'Rejected',
+                minApprovals: 2,
                 rejections: [
                     {
                         createdBy: {

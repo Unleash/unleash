@@ -43,7 +43,10 @@ export const ChangeRequestReviewersWrapper: FC<{ header: ReactNode }> = ({
 };
 
 export const ChangeRequestReviewers: FC<{
-    changeRequest: Pick<IChangeRequest, 'approvals' | 'rejections' | 'state'>;
+    changeRequest: Pick<
+        IChangeRequest,
+        'approvals' | 'rejections' | 'state' | 'minApprovals'
+    >;
 }> = ({ changeRequest }) => (
     <ChangeRequestReviewersWrapper
         header={

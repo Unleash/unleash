@@ -20,8 +20,8 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 export const ReviewButton: FC<{ disabled: boolean }> = ({ disabled }) => {
     const { uiConfig } = useUiConfig();

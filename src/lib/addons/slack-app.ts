@@ -12,7 +12,7 @@ import Addon from './addon';
 
 import slackAppDefinition from './slack-app-definition';
 import { IAddonConfig } from '../types/model';
-
+const SCHEDULE_MESSAGE_DELAY_IN_SECONDS = 10;
 import {
     FeatureEventFormatter,
     FeatureEventFormatterMd,
@@ -79,7 +79,7 @@ export default class SlackAppAddon extends Addon {
             const url = this.msgFormatter.featureLink(event);
             const requests = eventChannels.map((name) => {
                 const now = Math.floor(new Date().getTime() / 1000);
-                const postAt = now + 10;
+                const postAt = now + SCHEDULE_MESSAGE_DELAY_IN_SECONDS;
                 return this.slackClient!.chat.scheduleMessage({
                     channel: name,
                     text,

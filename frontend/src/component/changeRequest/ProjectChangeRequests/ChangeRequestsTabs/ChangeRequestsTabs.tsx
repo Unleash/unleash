@@ -56,6 +56,7 @@ const StyledTabButton = styled(Tab)(({ theme }) => ({
 const ConftigurationLinkBox = styled(Box)(({ theme }) => ({
     textAlign: 'right',
     paddingBottom: theme.spacing(2),
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 export const ChangeRequestsTabs = ({

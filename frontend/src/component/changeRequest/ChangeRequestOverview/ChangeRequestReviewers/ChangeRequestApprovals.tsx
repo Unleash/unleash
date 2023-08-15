@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Typography } from '@mui/material';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ChangeRequestApprover } from './ChangeRequestReviewer';
 import { IChangeRequestApproval } from '../../changeRequest.types';
 

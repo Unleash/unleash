@@ -24,7 +24,7 @@ test('Maintenance on should pause scheduler', async () => {
 });
 
 test('Maintenance off should resume scheduler', async () => {
-    const config = createTestConfig();
+    const config = createTestConfig({ disableScheduler: false });
     const schedulerService = new SchedulerService(config.getLogger);
     schedulerService.pause();
     const maintenanceService = new MaintenanceService(

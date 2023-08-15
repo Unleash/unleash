@@ -20,8 +20,11 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 export const ReviewButton: FC<{ disabled: boolean }> = ({ disabled }) => {
+    const { uiConfig } = useUiConfig();
     const { isAdmin } = useContext(AccessContext);
     const projectId = useRequiredPathParam('projectId');
     const id = useRequiredPathParam('id');
@@ -47,6 +50,23 @@ export const ReviewButton: FC<{ disabled: boolean }> = ({ disabled }) => {
                 type: 'success',
                 title: 'Success',
                 text: 'Changes approved',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onReject = async () => {
+        try {
+            await changeState(projectId, Number(id), {
+                state: 'Rejected',
+            });
+            refetchChangeRequest();
+            refetchChangeRequestOpen();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Changes rejected',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -117,6 +137,16 @@ export const ReviewButton: FC<{ disabled: boolean }> = ({ disabled }) => {
                                     <MenuItem onClick={onApprove}>
                                         Approve changes
                                     </MenuItem>
+                                    <ConditionallyRender
+                                        condition={Boolean(
+                                            uiConfig?.flags?.changeRequestReject
+                                        )}
+                                        show={
+                                            <MenuItem onClick={onReject}>
+                                                Reject changes
+                                            </MenuItem>
+                                        }
+                                    />
                                 </MenuList>
                             </ClickAwayListener>
                         </Paper>

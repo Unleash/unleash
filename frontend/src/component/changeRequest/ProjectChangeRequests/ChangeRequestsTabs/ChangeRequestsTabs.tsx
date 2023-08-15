@@ -72,11 +72,13 @@ export const ChangeRequestsTabs = ({
         const open = changeRequests.filter(
             changeRequest =>
                 changeRequest.state !== 'Cancelled' &&
+                changeRequest.state !== 'Rejected' &&
                 changeRequest.state !== 'Applied'
         );
         const closed = changeRequests.filter(
             changeRequest =>
                 changeRequest.state === 'Cancelled' ||
+                changeRequest.state === 'Rejected' ||
                 changeRequest.state === 'Applied'
         );
 

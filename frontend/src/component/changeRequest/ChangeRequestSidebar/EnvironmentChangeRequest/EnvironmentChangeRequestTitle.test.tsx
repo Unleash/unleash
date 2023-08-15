@@ -18,6 +18,7 @@ const changeRequest = {
     createdAt: new Date(),
     features: [],
     approvals: [],
+    rejections: [],
     comments: [],
     segments: [],
 };

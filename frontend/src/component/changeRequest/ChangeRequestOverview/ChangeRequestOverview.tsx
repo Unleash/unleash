@@ -1,13 +1,8 @@
-import { Alert, Button, styled, Typography } from '@mui/material';
+import { Alert, Box, Button, styled, Typography } from '@mui/material';
 import { FC, useContext, useState } from 'react';
-import { Box } from '@mui/material';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader';
 import { ChangeRequestTimeline } from './ChangeRequestTimeline/ChangeRequestTimeline';
-import {
-    ChangeRequestReviewers,
-    ChangeRequestReviewersHeader,
-} from './ChangeRequestReviewers/ChangeRequestReviewers';
 import { ChangeRequest } from '../ChangeRequest/ChangeRequest';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -17,7 +12,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Paper from '@mui/material/Paper';
 import { ReviewButton } from './ReviewButton/ReviewButton';
-import { ChangeRequestReviewer } from './ChangeRequestReviewers/ChangeRequestReviewer';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { APPLY_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
@@ -28,6 +22,7 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { changesCount } from '../changesCount';
+import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestReviewers';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -161,25 +156,7 @@ export const ChangeRequestOverview: FC = () => {
             <ChangeRequestBody>
                 <StyledAsideBox>
                     <ChangeRequestTimeline state={changeRequest.state} />
-                    <ChangeRequestReviewers
-                        header={
-                            <ChangeRequestReviewersHeader
-                                actualApprovals={changeRequest.approvals.length}
-                                minApprovals={changeRequest.minApprovals}
-                            />
-                        }
-                    >
-                        {changeRequest.approvals?.map(approver => (
-                            <ChangeRequestReviewer
-                                key={approver.createdBy.username}
-                                name={
-                                    approver.createdBy.username ||
-                                    'Unknown user'
-                                }
-                                imageUrl={approver.createdBy.imageUrl}
-                            />
-                        ))}
-                    </ChangeRequestReviewers>
+                    <ChangeRequestReviewers changeRequest={changeRequest} />
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>
@@ -262,6 +239,7 @@ export const ChangeRequestOverview: FC = () => {
                             <ConditionallyRender
                                 condition={
                                     changeRequest.state !== 'Applied' &&
+                                    changeRequest.state !== 'Rejected' &&
                                     changeRequest.state !== 'Cancelled' &&
                                     (changeRequest.createdBy.id === user?.id ||
                                         isAdmin)

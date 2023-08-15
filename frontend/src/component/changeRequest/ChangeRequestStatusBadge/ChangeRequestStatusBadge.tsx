@@ -41,6 +41,12 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
                     Cancelled
                 </Badge>
             );
+        case 'Rejected':
+            return (
+                <Badge color="error" icon={<Close fontSize={'small'} />}>
+                    Rejected
+                </Badge>
+            );
         default:
             return <ReviewRequiredBadge />;
     }

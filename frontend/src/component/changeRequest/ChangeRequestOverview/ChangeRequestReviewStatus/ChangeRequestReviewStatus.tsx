@@ -106,6 +106,10 @@ const ResolveComponent = ({ changeRequest }: IResolveComponentProps) => {
         return <Cancelled />;
     }
 
+    if (state === 'Rejected') {
+        return <Rejected />;
+    }
+
     return <ReviewRequired minApprovals={changeRequest.minApprovals} />;
 };
 
@@ -201,6 +205,23 @@ const Cancelled = () => {
                 <Box>
                     <StyledReviewTitle color={theme.palette.error.main}>
                         Changes cancelled
+                    </StyledReviewTitle>
+                </Box>
+            </StyledFlexAlignCenterBox>
+        </>
+    );
+};
+
+const Rejected = () => {
+    const theme = useTheme();
+
+    return (
+        <>
+            <StyledFlexAlignCenterBox>
+                <StyledErrorIcon />
+                <Box>
+                    <StyledReviewTitle color={theme.palette.error.main}>
+                        Changes rejected
                     </StyledReviewTitle>
                 </Box>
             </StyledFlexAlignCenterBox>

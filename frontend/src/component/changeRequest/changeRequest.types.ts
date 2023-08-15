@@ -15,6 +15,7 @@ export interface IChangeRequest {
     features: IChangeRequestFeature[];
     segments: ISegmentChange[];
     approvals: IChangeRequestApproval[];
+    rejections: IChangeRequestApproval[];
     comments: IChangeRequestComment[];
     conflict?: string;
 }
@@ -66,7 +67,8 @@ export type ChangeRequestState =
     | 'Approved'
     | 'In review'
     | 'Applied'
-    | 'Cancelled';
+    | 'Cancelled'
+    | 'Rejected';
 
 type ChangeRequestPayload =
     | ChangeRequestEnabled

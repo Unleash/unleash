@@ -44,6 +44,7 @@ exports[`should create default config 1`] = `
     "user": "unleash",
     "version": undefined,
   },
+  "disableScheduler": undefined,
   "email": {
     "host": undefined,
     "port": 587,

@@ -8,7 +8,8 @@ import {
 } from 'component/common/Table';
 import { SortingRule, useSortBy, useTable } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { styled, Tab, Tabs, useMediaQuery } from '@mui/material';
+import { styled, Tab, Tabs, Box, useMediaQuery } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { sortTypes } from 'utils/sortTypes';
 import { useEffect, useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -50,6 +51,11 @@ const StyledTabButton = styled(Tab)(({ theme }) => ({
     [theme.breakpoints.up('md')]: {
         minWidth: 160,
     },
+}));
+
+const ConftigurationLinkBox = styled(Box)(({ theme }) => ({
+    textAlign: 'right',
+    paddingBottom: theme.spacing(2),
 }));
 
 export const ChangeRequestsTabs = ({
@@ -282,6 +288,11 @@ export const ChangeRequestsTabs = ({
                 />
             }
         >
+            <ConftigurationLinkBox>
+                <Link to={`/projects/${projectId}/settings/change-requests`}>
+                    Change request configuration
+                </Link>
+            </ConftigurationLinkBox>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <Table {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups} />

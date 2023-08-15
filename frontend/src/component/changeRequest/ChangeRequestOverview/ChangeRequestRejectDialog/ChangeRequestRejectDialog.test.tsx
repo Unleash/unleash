@@ -2,7 +2,7 @@ import React from 'react';
 import { vi } from 'vitest';
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog'; // Make sure you update the path accordingly
+import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog';
 
 describe('<ChangeRequestRejectDialogue />', () => {
     test('submits the typed comment to onConfirm', () => {

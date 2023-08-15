@@ -118,6 +118,7 @@ export interface IUnleashOptions {
     accessControlMaxAge?: number;
     prometheusApi?: string;
     publicFolder?: string;
+    disableScheduler?: boolean;
 }
 
 export interface IEmailOption {
@@ -207,4 +208,5 @@ export interface IUnleashConfig {
     accessControlMaxAge: number;
     prometheusApi?: string;
     publicFolder?: string;
+    disableScheduler?: boolean;
 }

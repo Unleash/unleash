@@ -43,7 +43,9 @@ async function createApp(
     const db = createDb(config);
     const stores = createStores(config, db);
     const services = createServices(stores, config, db);
-    await scheduleServices(services);
+    if (!config.disableScheduler) {
+        await scheduleServices(services);
+    }
 
     const metricsMonitor = createMetricsMonitor();
     const unleashSession = sessionDb(config, db);

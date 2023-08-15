@@ -23,6 +23,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { changesCount } from '../changesCount';
 import { ChangeRequestReviewers } from './ChangeRequestReviewers/ChangeRequestReviewers';
+import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog/ChangeRequestRejectDialog';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -65,6 +66,7 @@ const ChangeRequestBody = styled(Box)(({ theme }) => ({
 export const ChangeRequestOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
     const [showCancelDialog, setShowCancelDialog] = useState(false);
+    const [showRejectDialog, setShowRejectDialog] = useState(false);
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
     const [commentText, setCommentText] = useState('');
@@ -139,8 +141,45 @@ export const ChangeRequestOverview: FC = () => {
         }
     };
 
+    const onReject = async (comment?: string) => {
+        try {
+            await changeState(projectId, Number(id), {
+                state: 'Rejected',
+                comment,
+            });
+            setShowRejectDialog(false);
+            refetchChangeRequest();
+            refetchChangeRequestOpen();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Changes rejected',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onApprove = async () => {
+        try {
+            await changeState(projectId, Number(id), {
+                state: 'Approved',
+            });
+            refetchChangeRequest();
+            refetchChangeRequestOpen();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Changes approved',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
     const onCancel = () => setShowCancelDialog(true);
     const onCancelAbort = () => setShowCancelDialog(false);
+    const onCancelReject = () => setShowRejectDialog(false);
 
     const isSelfReview =
         changeRequest?.createdBy.id === user?.id &&
@@ -212,6 +251,10 @@ export const ChangeRequestOverview: FC = () => {
                                 }
                                 show={
                                     <ReviewButton
+                                        onReject={() =>
+                                            setShowRejectDialog(true)
+                                        }
+                                        onApprove={onApprove}
                                         disabled={!allowChangeRequestActions}
                                     />
                                 }
@@ -278,6 +321,11 @@ export const ChangeRequestOverview: FC = () => {
                         can't be reopened.
                     </Typography>
                 </Dialogue>
+                <ChangeRequestRejectDialogue
+                    open={showRejectDialog}
+                    onConfirm={onReject}
+                    onClose={onCancelReject}
+                />
             </ChangeRequestBody>
         </>
     );

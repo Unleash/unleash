@@ -1,17 +1,14 @@
 import React, { FC, useContext } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
-import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import useToast from 'hooks/useToast';
 
 import {
+    ClickAwayListener,
     Grow,
-    Paper,
-    Popper,
     MenuItem,
     MenuList,
-    ClickAwayListener,
+    Paper,
+    Popper,
 } from '@mui/material';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -19,59 +16,23 @@ import { APPROVE_CHANGE_REQUEST } from 'component/providers/AccessProvider/permi
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
-import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-export const ReviewButton: FC<{ disabled: boolean }> = ({ disabled }) => {
+export const ReviewButton: FC<{
+    disabled: boolean;
+    onReject: () => void;
+    onApprove: () => void;
+}> = ({ disabled, onReject, onApprove }) => {
     const { uiConfig } = useUiConfig();
     const { isAdmin } = useContext(AccessContext);
     const projectId = useRequiredPathParam('projectId');
     const id = useRequiredPathParam('id');
     const { user } = useAuthUser();
-    const { refetchChangeRequest, data } = useChangeRequest(projectId, id);
-    const { refetch: refetchChangeRequestOpen } =
-        usePendingChangeRequests(projectId);
-    const { setToastApiError, setToastData } = useToast();
-
-    const { changeState } = useChangeRequestApi();
+    const { data } = useChangeRequest(projectId, id);
 
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
-
-    const onApprove = async () => {
-        try {
-            await changeState(projectId, Number(id), {
-                state: 'Approved',
-            });
-            refetchChangeRequest();
-            refetchChangeRequestOpen();
-            setToastData({
-                type: 'success',
-                title: 'Success',
-                text: 'Changes approved',
-            });
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
-
-    const onReject = async () => {
-        try {
-            await changeState(projectId, Number(id), {
-                state: 'Rejected',
-            });
-            refetchChangeRequest();
-            refetchChangeRequestOpen();
-            setToastData({
-                type: 'success',
-                title: 'Success',
-                text: 'Changes rejected',
-            });
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
 
     const onToggle = () => {
         setOpen(prevOpen => !prevOpen);

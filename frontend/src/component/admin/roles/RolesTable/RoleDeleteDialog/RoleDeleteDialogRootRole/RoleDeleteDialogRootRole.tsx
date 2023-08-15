@@ -17,19 +17,19 @@ const StyledLabel = styled('p')(({ theme }) => ({
     marginTop: theme.spacing(3),
 }));
 
-interface IRoleDeleteDialogRootRolesProps {
+interface IRoleDeleteDialogRootRoleProps {
     role?: IRole;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onConfirm: (role: IRole) => void;
 }
 
-export const RoleDeleteDialogRootRoles = ({
+export const RoleDeleteDialogRootRole = ({
     role,
     open,
     setOpen,
     onConfirm,
-}: IRoleDeleteDialogRootRolesProps) => {
+}: IRoleDeleteDialogRootRoleProps) => {
     const { users } = useUsers();
     const { serviceAccounts } = useServiceAccounts();
     const { groups } = useGroups();

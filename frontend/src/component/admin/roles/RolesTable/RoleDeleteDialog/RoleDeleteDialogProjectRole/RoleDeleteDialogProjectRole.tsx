@@ -20,7 +20,7 @@ interface IRoleDeleteDialogProps {
     onConfirm: (role: IRole) => void;
 }
 
-export const RoleDeleteDialogProjectRoles = ({
+export const RoleDeleteDialogProjectRole = ({
     role,
     open,
     setOpen,

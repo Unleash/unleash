@@ -1,6 +1,6 @@
 import { IRole } from 'interfaces/role';
-import { RoleDeleteDialogRootRoles } from './RoleDeleteDialogRootRoles/RoleDeleteDialogRootRoles';
-import { RoleDeleteDialogProjectRoles } from './RoleDeleteDialogProjectRole/RoleDeleteDialogProjectRole';
+import { RoleDeleteDialogRootRole } from './RoleDeleteDialogRootRole/RoleDeleteDialogRootRole';
+import { RoleDeleteDialogProjectRole } from './RoleDeleteDialogProjectRole/RoleDeleteDialogProjectRole';
 import { CUSTOM_PROJECT_ROLE_TYPE } from 'constants/roles';
 
 interface IRoleDeleteDialogProps {
@@ -18,7 +18,7 @@ export const RoleDeleteDialog = ({
 }: IRoleDeleteDialogProps) => {
     if (role?.type === CUSTOM_PROJECT_ROLE_TYPE) {
         return (
-            <RoleDeleteDialogProjectRoles
+            <RoleDeleteDialogProjectRole
                 role={role}
                 open={open}
                 setOpen={setOpen}
@@ -28,7 +28,7 @@ export const RoleDeleteDialog = ({
     }
 
     return (
-        <RoleDeleteDialogRootRoles
+        <RoleDeleteDialogRootRole
             role={role}
             open={open}
             setOpen={setOpen}

@@ -93,7 +93,6 @@ export default class SlackAppAddon extends Addon {
                         },
                         {
                             type: 'actions',
-                            block_id: url,
                             elements: [
                                 {
                                     type: 'button',

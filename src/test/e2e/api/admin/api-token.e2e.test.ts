@@ -157,9 +157,17 @@ test('creates a lot of client tokens', async () => {
         );
     }
     await Promise.all(requests);
-    expect.assertions(2);
-    return app.request
+    expect.assertions(4);
+    await app.request
         .get('/api/admin/api-tokens')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.tokens.length).toBe(10);
+            expect(res.body.tokens[2].type).toBe('client');
+        });
+    await app.request
+        .get('/api/admin/api-tokens/default-client')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {

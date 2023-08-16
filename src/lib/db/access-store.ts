@@ -144,7 +144,6 @@ export class AccessStore implements IAccessStore {
                 .join(`${T.GROUP_ROLE} AS gr`, 'gu.group_id', 'gr.group_id')
                 .join(`${T.ROLE_PERMISSION} AS rp`, 'rp.role_id', 'gr.role_id')
                 .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
-                .whereNull('g.root_role_id')
                 .andWhere('gu.user_id', '=', userId);
         });
 
@@ -167,7 +166,6 @@ export class AccessStore implements IAccessStore {
                 .whereNotNull('g.root_role_id')
                 .andWhere('gu.user_id', '=', userId);
         });
-
         const rows = await userPermissionQuery;
         stopTimer();
         return rows.map(this.mapUserPermission);

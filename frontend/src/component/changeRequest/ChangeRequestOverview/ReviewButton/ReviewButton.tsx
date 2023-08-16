@@ -5,6 +5,8 @@ import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRe
 import {
     ClickAwayListener,
     Grow,
+    ListItemIcon,
+    ListItemText,
     MenuItem,
     MenuList,
     Paper,
@@ -18,12 +20,14 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import CheckBox from '@mui/icons-material/Check';
+import Clear from '@mui/icons-material/Clear';
 
 export const ReviewButton: FC<{
     disabled: boolean;
     onReject: () => void;
     onApprove: () => void;
-}> = ({ disabled, onReject, onApprove }) => {
+}> = ({ disabled, onReject, onApprove, children }) => {
     const { uiConfig } = useUiConfig();
     const { isAdmin } = useContext(AccessContext);
     const projectId = useRequiredPathParam('projectId');
@@ -48,6 +52,9 @@ export const ReviewButton: FC<{
 
         setOpen(false);
     };
+    const popperWidth = anchorRef.current
+        ? anchorRef.current.offsetWidth
+        : null;
 
     return (
         <React.Fragment>
@@ -67,11 +74,12 @@ export const ReviewButton: FC<{
                 projectId={projectId}
                 environmentId={data?.environment}
             >
-                Review changes
+                {children}
             </PermissionButton>
             <Popper
                 sx={{
                     zIndex: 1,
+                    width: popperWidth,
                 }}
                 open={open}
                 anchorEl={anchorRef.current}
@@ -96,7 +104,12 @@ export const ReviewButton: FC<{
                                     autoFocusItem
                                 >
                                     <MenuItem onClick={onApprove}>
-                                        Approve changes
+                                        <ListItemIcon>
+                                            <CheckBox fontSize="small" />
+                                        </ListItemIcon>
+                                        <ListItemText>
+                                            Approve changes
+                                        </ListItemText>
                                     </MenuItem>
                                     <ConditionallyRender
                                         condition={Boolean(
@@ -104,7 +117,12 @@ export const ReviewButton: FC<{
                                         )}
                                         show={
                                             <MenuItem onClick={onReject}>
-                                                Reject changes
+                                                <ListItemIcon>
+                                                    <Clear fontSize="small" />
+                                                </ListItemIcon>
+                                                <ListItemText>
+                                                    Reject changes
+                                                </ListItemText>
                                             </MenuItem>
                                         }
                                     />

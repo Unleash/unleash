@@ -182,7 +182,7 @@ export class ApiTokenController extends Controller {
                     operationId: 'getApiTokensByName',
                     summary: 'Get API tokens by name',
                     description:
-                        'Retrieves all API tokens that match a given token name. Token names are not unique so 0, 1 or many tokens can be returned.',
+                        'Retrieves all API tokens that match a given token name. Because token names are not unique, this endpoint will always return a list. If no tokens with the provided name exist, the list will be empty. Otherwise, it will contain all the tokens with the given name. 
                     responses: {
                         200: createResponseSchema('apiTokensSchema'),
                         ...getStandardResponses(401, 403),

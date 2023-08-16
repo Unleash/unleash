@@ -3,7 +3,6 @@ import { FromSchema } from 'json-schema-to-ts';
 export const exportQuerySchema = {
     $id: '#/components/schemas/exportQuerySchema',
     type: 'object',
-    additionalProperties: true,
     required: ['environment'],
     description:
         'Available query parameters for  the [deprecated export/import](https://docs.getunleash.io/reference/deploy/import-export) functionality.',

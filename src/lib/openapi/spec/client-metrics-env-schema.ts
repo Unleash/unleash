@@ -5,7 +5,6 @@ export const clientMetricsEnvSchema = {
     $id: '#/components/schemas/clientMetricsEnvSchema',
     type: 'object',
     required: ['featureName', 'appName', 'environment'],
-    additionalProperties: true,
     description: 'Used for reporting feature evaluation results from SDKs',
     properties: {
         featureName: {

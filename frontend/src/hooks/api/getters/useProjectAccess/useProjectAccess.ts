@@ -20,10 +20,12 @@ export interface IProjectAccess {
 }
 
 export interface IProjectAccessUser extends IUser {
+    selectedRoles: number[];
     roleId: number;
 }
 
 export interface IProjectAccessGroup extends IGroup {
+    selectedRoles: number[];
     roleId: number;
 }
 

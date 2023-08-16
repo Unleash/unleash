@@ -35,6 +35,7 @@ import {
 } from 'utils/testIds';
 import { caseInsensitiveSearch } from 'utils/search';
 import { IServiceAccount } from 'interfaces/service-account';
+import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/MultipleRoleSelect';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
 
 const StyledForm = styled('form')(() => ({
@@ -181,9 +182,8 @@ export const ProjectAccessAssign = ({
                     id === selected?.entity.id && type === selected?.type
             )
     );
-    const [role, setRole] = useState<IRole | null>(
-        roles.find(({ id }) => id === selected?.entity.roleId) ?? null
-    );
+    const [selectedRoles, setRoles] = useState<IRole[]>(roles.filter(({id}) => selected?.entity.selectedRoles.includes(id)))
+
 
     const payload = {
         users: selectedOptions
@@ -430,7 +430,7 @@ export const ProjectAccessAssign = ({
                             Select the role to assign for this project
                         </StyledInputDescription>
                         <StyledAutocompleteWrapper>
-                            <RoleSelect
+                            <MultipleRoleSelect
                                 data-testid={PA_ROLE_ID}
                                 roles={roles}
                                 value={role}

@@ -417,7 +417,7 @@ export class AccessService {
     async getProjectUsersForRole(
         roleId: number,
         projectId?: string,
-    ): Promise<IProjectUser[]> {
+    ): Promise<IUserWithRole[]> {
         const userRoleList = await this.store.getProjectUsersForRole(
             roleId,
             projectId,
@@ -430,6 +430,7 @@ export class AccessService {
                 return {
                     ...user,
                     addedAt: role.addedAt!,
+                    roleId,
                 };
             });
         }
@@ -443,11 +444,7 @@ export class AccessService {
 
         const users = await Promise.all(
             roles.map(async (role) => {
-                const projectUsers = await this.getProjectUsersForRole(
-                    role.id,
-                    projectId,
-                );
-                return projectUsers.map((u) => ({ ...u, roleId: role.id }));
+                return this.getProjectUsersForRole(role.id, projectId);
             }),
         );
         const groups = await this.groupService.getProjectGroups(projectId);

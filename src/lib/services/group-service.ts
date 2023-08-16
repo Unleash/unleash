@@ -147,7 +147,7 @@ export class GroupService {
     }
 
     async getProjectGroups(
-        projectId?: string,
+        projectId: string,
     ): Promise<IGroupModelWithProjectRole[]> {
         const groupRoles = await this.groupStore.getProjectGroupRoles(
             projectId,
@@ -157,20 +157,30 @@ export class GroupService {
                 groupRoles.map((a) => a.groupId),
             );
             const groupUsers = await this.groupStore.getAllUsersByGroups(
-                groups.map((g) => g.id),
+                groups.map((g) => g.id!),
             );
 
             const users = await this.accountStore.getAllWithId(
                 groupUsers.map((u) => u.userId),
             );
-            return groups.map((group) => {
+            return groups.flatMap((group) => {
+                return groupRoles
+                    .filter((gr) => gr.groupId === group.id)
+                    .map((groupRole) => ({
+                        ...this.mapGroupWithUsers(group, groupUsers, users),
+                        roleId: groupRole.roleId,
+                        addedAt: groupRole.createdAt,
+                    }));
+            });
+            /*
+
                 const groupRole = groupRoles.find((g) => g.groupId == group.id);
                 return {
                     ...this.mapGroupWithUsers(group, groupUsers, users),
                     roleId: groupRole.roleId,
                     addedAt: groupRole.createdAt,
                 };
-            });
+*/
         }
         return [];
     }

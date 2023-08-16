@@ -41,8 +41,7 @@ test('rejected timeline shows all states', () => {
     expect(screen.queryByText('Applied')).not.toBeInTheDocument();
 });
 
-const irrelevantActiveIndex = -99; // Using a number that's unlikely to be a valid index
-const irrelevantIndex = -99;
+const irrelevantIndex = -99; // Using a number that's unlikely to be a valid index
 
 test('returns grey for Cancelled state regardless of displayed stage', () => {
     const stages: ChangeRequestState[] = [
@@ -54,40 +53,25 @@ test('returns grey for Cancelled state regardless of displayed stage', () => {
     ];
     stages.forEach(stage => {
         expect(
-            determineColor(
-                'Cancelled',
-                irrelevantActiveIndex,
-                stage,
-                irrelevantIndex
-            )
+            determineColor('Cancelled', irrelevantIndex, stage, irrelevantIndex)
         ).toBe('grey');
     });
 });
 
 test('returns error for Rejected stage in Rejected state', () => {
     expect(
-        determineColor(
-            'Rejected',
-            irrelevantActiveIndex,
-            'Rejected',
-            irrelevantIndex
-        )
+        determineColor('Rejected', irrelevantIndex, 'Rejected', irrelevantIndex)
     ).toBe('error');
 });
 
 test('returns success for stages other than Rejected in Rejected state', () => {
     expect(
-        determineColor(
-            'Rejected',
-            irrelevantActiveIndex,
-            'Draft',
-            irrelevantIndex
-        )
+        determineColor('Rejected', irrelevantIndex, 'Draft', irrelevantIndex)
     ).toBe('success');
     expect(
         determineColor(
             'Rejected',
-            irrelevantActiveIndex,
+            irrelevantIndex,
             'In review',
             irrelevantIndex
         )

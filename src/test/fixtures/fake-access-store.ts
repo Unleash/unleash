@@ -11,8 +11,6 @@ import {
 import { IPermission } from 'lib/types/model';
 import { IRoleStore } from 'lib/types';
 import FakeRoleStore from './fake-role-store';
-import { Promise } from 'ts-toolbelt/out/Any/Promise';
-import { Number } from 'ts-toolbelt';
 
 class AccessStoreMock implements IAccessStore {
     fakeRolesStore: IRoleStore;

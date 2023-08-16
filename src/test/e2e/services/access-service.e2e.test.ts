@@ -20,7 +20,7 @@ import { ChangeRequestAccessReadModel } from '../../../lib/features/change-reque
 let db: ITestDb;
 let stores: IUnleashStores;
 let accessService: AccessService;
-let groupService;
+let groupService: GroupService;
 let featureToggleService;
 let favoritesService;
 let projectService;
@@ -41,6 +41,12 @@ const createUserViewerAccess = async (name, email) => {
     const { userStore } = stores;
     const user = await userStore.insert({ name, email });
     await accessService.addUserToRole(user.id, readRole.id, ALL_PROJECTS);
+    return user;
+};
+
+const createEmptyUser = async (name, email) => {
+    const { userStore } = stores;
+    const user = await userStore.insert({ name, email });
     return user;
 };
 
@@ -1248,4 +1254,371 @@ test('Should give full project access to the default project to user in a group 
     );
 
     await hasFullProjectAccess(viewerUser, projectName, true);
+});
+
+test('if user has two roles user has union of permissions from the two roles', async () => {
+    const projectName = 'default';
+
+    const emptyUser = await createEmptyUser(
+        'Empty Shell',
+        'empty@getunleash.io',
+    );
+
+    const firstRole = await accessService.createRole({
+        name: 'createAndDelete',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: undefined,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 8,
+                name: 'DELETE_FEATURE',
+                environment: undefined,
+                displayName: 'Delete Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+    const secondRole = await accessService.createRole({
+        name: 'createFeature',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: undefined,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 13,
+                name: 'UPDATE_PROJECT',
+                environment: undefined,
+                displayName: 'Can update projects',
+                type: 'project',
+            },
+        ],
+    });
+
+    await accessService.setProjectRolesForUser(projectName, emptyUser.id, [
+        firstRole.id,
+        secondRole.id,
+    ]);
+
+    const assignedPermissions = await accessService.getPermissionsForUser(
+        emptyUser,
+    );
+    const permissionNameSet = new Set(
+        assignedPermissions.map((p) => p.permission),
+    );
+
+    expect(permissionNameSet.size).toBe(3);
+});
+
+test('calling set for user overwrites existing roles', async () => {
+    const projectName = 'default';
+
+    const emptyUser = await createEmptyUser(
+        'New Empty Shell',
+        'moreempty@getunleash.io',
+    );
+
+    const firstRole = await accessService.createRole({
+        name: 'reCreateAndDelete',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: undefined,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 8,
+                name: 'DELETE_FEATURE',
+                environment: undefined,
+                displayName: 'Delete Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+    const secondRole = await accessService.createRole({
+        name: 'reCreateFeature',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: undefined,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 13,
+                name: 'UPDATE_PROJECT',
+                environment: undefined,
+                displayName: 'Can update projects',
+                type: 'project',
+            },
+        ],
+    });
+
+    await accessService.setProjectRolesForUser(projectName, emptyUser.id, [
+        firstRole.id,
+        secondRole.id,
+    ]);
+
+    const assignedPermissions = await accessService.getPermissionsForUser(
+        emptyUser,
+    );
+    const permissionNameSet = new Set(
+        assignedPermissions.map((p) => p.permission),
+    );
+
+    expect(permissionNameSet.size).toBe(3);
+
+    await accessService.setProjectRolesForUser(projectName, emptyUser.id, [
+        firstRole.id,
+    ]);
+
+    const newAssignedPermissions = await accessService.getPermissionsForUser(
+        emptyUser,
+    );
+
+    expect(newAssignedPermissions.length).toBe(2);
+    expect(newAssignedPermissions).toContainEqual({
+        project: projectName,
+        environment: undefined,
+        permission: 'CREATE_FEATURE',
+    });
+    expect(newAssignedPermissions).toContainEqual({
+        project: projectName,
+        environment: undefined,
+        permission: 'DELETE_FEATURE',
+    });
+});
+
+test('if group has two roles user has union of permissions from the two roles', async () => {
+    const projectName = 'default';
+    const { groupStore } = stores;
+
+    const emptyUser = await createEmptyUser(
+        'More Empty Shell',
+        'evenmoreempty@getunleash.io',
+    );
+
+    const emptyGroup = await groupStore.create({
+        name: 'group1',
+    });
+
+    await groupStore.addUserToGroups(emptyUser.id, [emptyGroup.id!], 'testusr');
+
+    const firstRole = await accessService.createRole({
+        name: 'groupCreateAndDelete',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: undefined,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 8,
+                name: 'DELETE_FEATURE',
+                environment: undefined,
+                displayName: 'Delete Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+    const secondRole = await accessService.createRole({
+        name: 'groupCreateFeature',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: undefined,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 13,
+                name: 'UPDATE_PROJECT',
+                environment: undefined,
+                displayName: 'Can update projects',
+                type: 'project',
+            },
+        ],
+    });
+
+    await accessService.setProjectRolesForGroup(
+        projectName,
+        emptyGroup.id!,
+        [firstRole.id, secondRole.id],
+        'testusr',
+    );
+
+    const assignedPermissions = await accessService.getPermissionsForUser(
+        emptyUser,
+    );
+    const permissionNameSet = new Set(
+        assignedPermissions.map((p) => p.permission),
+    );
+
+    expect(permissionNameSet.size).toBe(3);
+});
+
+test('calling set for group overwrites existing roles', async () => {
+    const projectName = 'default';
+    const { groupStore } = stores;
+
+    const emptyUser = await createEmptyUser(
+        'More New Empty Shell',
+        'veryempty@getunleash.io',
+    );
+
+    const emptyGroup = await groupStore.create({
+        name: 'group2',
+    });
+
+    await groupStore.addUserToGroups(emptyUser.id, [emptyGroup.id!], 'testusr');
+
+    const firstRole = await accessService.createRole({
+        name: 'regroupCreateAndDelete',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: undefined,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 8,
+                name: 'DELETE_FEATURE',
+                environment: undefined,
+                displayName: 'Delete Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+    const secondRole = await accessService.createRole({
+        name: 'regroupCreateFeature',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: undefined,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 13,
+                name: 'UPDATE_PROJECT',
+                environment: undefined,
+                displayName: 'Can update projects',
+                type: 'project',
+            },
+        ],
+    });
+
+    await accessService.setProjectRolesForGroup(
+        projectName,
+        emptyGroup.id!,
+        [firstRole.id, secondRole.id],
+        'testusr',
+    );
+
+    const assignedPermissions = await accessService.getPermissionsForUser(
+        emptyUser,
+    );
+    const permissionNameSet = new Set(
+        assignedPermissions.map((p) => p.permission),
+    );
+
+    expect(permissionNameSet.size).toBe(3);
+
+    await accessService.setProjectRolesForGroup(
+        projectName,
+        emptyGroup.id!,
+        [firstRole.id],
+        'testusr',
+    );
+
+    const newAssignedPermissions = await accessService.getPermissionsForUser(
+        emptyUser,
+    );
+
+    expect(newAssignedPermissions.length).toBe(2);
+    expect(newAssignedPermissions).toContainEqual({
+        project: projectName,
+        environment: undefined,
+        permission: 'CREATE_FEATURE',
+    });
+    expect(newAssignedPermissions).toContainEqual({
+        project: projectName,
+        environment: undefined,
+        permission: 'DELETE_FEATURE',
+    });
+});
+
+test('group with root role can be assigned a project specific role', async () => {
+    const projectName = 'default';
+    const { groupStore } = stores;
+
+    const emptyUser = await createEmptyUser(
+        'Even More New Empty Shell',
+        'soveryempty@getunleash.io',
+    );
+
+    const emptyGroup = await groupStore.create({
+        name: 'group2',
+        rootRole: readRole.id,
+    });
+
+    const firstRole = await accessService.createRole({
+        name: 'projectCreateFeatureRole',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: undefined,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await groupStore.addUserToGroups(emptyUser.id, [emptyGroup.id!], 'testusr');
+
+    await accessService.setProjectRolesForGroup(
+        projectName,
+        emptyGroup.id!,
+        [firstRole.id],
+        'testusr',
+    );
+
+    const assignedPermissions = await accessService.getPermissionsForUser(
+        emptyUser,
+    );
+
+    console.log(assignedPermissions);
+
+    expect(assignedPermissions).toContainEqual({
+        project: projectName,
+        environment: undefined,
+        permission: 'CREATE_FEATURE',
+    });
 });

@@ -41,6 +41,7 @@ export const RoleDeleteDialogProjectRole = ({
             onClose={() => {
                 setOpen(false);
             }}
+            maxWidth="md"
         >
             <ConditionallyRender
                 condition={entitiesWithRole}
@@ -57,7 +58,7 @@ export const RoleDeleteDialogProjectRole = ({
                                 <>
                                     <StyledLabel>
                                         Role assigned in
-                                        {projects?.length} projects:
+                                        {' '}{projects?.length} projects:
                                     </StyledLabel>
                                     <StyledTableContainer>
                                         <RoleDeleteDialogProjectRoleTable

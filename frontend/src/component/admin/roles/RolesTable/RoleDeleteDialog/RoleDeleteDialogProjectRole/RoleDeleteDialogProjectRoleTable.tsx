@@ -5,6 +5,7 @@ import { sortTypes } from 'utils/sortTypes';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { IProjectRoleUsageCount } from 'interfaces/project';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 
 interface IRoleDeleteDialogProjectRoleTableProps {
     projects: IProjectRoleUsageCount[];
@@ -26,7 +27,10 @@ export const RoleDeleteDialogProjectRoleTable = ({
                     accessor: (row: any) => row.project || '',
                     minWidth: 200,
                     Cell: ({ row: { original: item } }: any) => (
-                        <HighlightCell value={item.project} />
+                        <LinkCell
+                            title={item.project}
+                            to={`/projects/${item.project}`}
+                        />
                     ),
                 },
                 {
@@ -36,6 +40,16 @@ export const RoleDeleteDialogProjectRoleTable = ({
                         row.userCount === 1
                             ? '1 user'
                             : `${row.userCount} users`,
+                    Cell: TextCell,
+                    maxWidth: 150,
+                },
+                {
+                    id: 'serviceAccounts',
+                    Header: 'Service accounts',
+                    accessor: (row: any) =>
+                        row.serviceAccountCount === 1
+                            ? '1 account'
+                            : `${row.serviceAccountCount} accounts`,
                     Cell: TextCell,
                     maxWidth: 150,
                 },

@@ -104,7 +104,7 @@
     "react-table": "7.8.0",
     "react-test-renderer": "17.0.2",
     "react-timeago": "7.1.0",
-    "sass": "1.64.1",
+    "sass": "1.64.2",
     "semver": "7.5.4",
     "swr": "2.2.0",
     "tss-react": "4.8.8",

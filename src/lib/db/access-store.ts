@@ -18,6 +18,7 @@ import {
     ROOT_PERMISSION_TYPE,
 } from '../util/constants';
 import { Db } from './db';
+import { StringMatchingConstraints } from 'fast-check';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -483,6 +484,31 @@ export class AccessStore implements IAccessStore {
                     .onConflict(['project', 'role_id', 'group_id'])
                     .merge();
             }
+        });
+    }
+
+    async setProjectRolesForUser(
+        projectId: string,
+        userId: number,
+        roles: number[],
+    ): Promise<void> {
+        const userRows = roles.map((role) => {
+            return {
+                user_id: userId,
+                project: projectId,
+                role_id: role,
+            };
+        });
+
+        await this.db.transaction(async (tx) => {
+            await tx(T.ROLE_USER)
+                .where('project', projectId)
+                .andWhere('user_id', userId)
+                .delete();
+            await tx(T.ROLE_USER)
+                .insert(userRows)
+                .onConflict(['project', 'role_id', 'group_id'])
+                .ignore();
         });
     }
 

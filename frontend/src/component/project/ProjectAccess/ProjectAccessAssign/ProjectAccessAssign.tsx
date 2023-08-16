@@ -112,7 +112,7 @@ export const ProjectAccessAssign = ({
 
     const projectId = useRequiredPathParam('projectId');
     const { refetchProjectAccess } = useProjectAccess(projectId);
-    const { addAccessToProject, changeUserRole, changeGroupRole, loading } =
+    const { addAccessToProject, setUserRoles, setGroupRoles, loading } =
         useProjectApi();
     const edit = Boolean(selected);
 
@@ -182,8 +182,9 @@ export const ProjectAccessAssign = ({
                     id === selected?.entity.id && type === selected?.type
             )
     );
-    const [selectedRoles, setRoles] = useState<IRole[]>(roles.filter(({id}) => selected?.entity.selectedRoles.includes(id)))
-
+    const [selectedRoles, setRoles] = useState<IRole[]>(
+        roles.filter(({ id }) => selected?.entity?.selectedRoles?.includes(id))
+    );
 
     const payload = {
         users: selectedOptions
@@ -202,17 +203,18 @@ export const ProjectAccessAssign = ({
         e.preventDefault();
 
         if (!isValid) return;
-
         try {
             if (!edit) {
-                await addAccessToProject(projectId, role.id, payload);
+                selectedRoles.forEach(async role => {
+                    await addAccessToProject(projectId, role.id, payload);
+                });
             } else if (
                 selected?.type === ENTITY_TYPE.USER ||
                 selected?.type === ENTITY_TYPE.SERVICE_ACCOUNT
             ) {
-                await changeUserRole(projectId, role.id, selected.entity.id);
+                await setUserRoles(projectId, selectedRoles.map(role => role.id), selected.entity.id);
             } else if (selected?.type === ENTITY_TYPE.GROUP) {
-                await changeGroupRole(projectId, role.id, selected.entity.id);
+                await setGroupRoles(projectId, selectedRoles.map(role => role.id), selected.entity.id);
             }
             refetchProjectAccess();
             navigate(GO_BACK);
@@ -229,22 +231,30 @@ export const ProjectAccessAssign = ({
 
     const formatApiCode = () => {
         if (edit) {
-            return `curl --location --request ${edit ? 'PUT' : 'POST'} '${
-                uiConfig.unleashUrl
-            }/api/admin/projects/${projectId}/${
-                selected?.type === ENTITY_TYPE.USER ||
-                selected?.type === ENTITY_TYPE.SERVICE_ACCOUNT
-                    ? 'users'
-                    : 'groups'
-            }/${selected?.entity.id}/roles/${role?.id}' \\
-            --header 'Authorization: INSERT_API_KEY'`;
+            return selectedRoles
+                .map(role => {
+                    return `curl --location --request ${
+                        edit ? 'PUT' : 'POST'
+                    } '${uiConfig.unleashUrl}/api/admin/projects/${projectId}/${
+                        selected?.type === ENTITY_TYPE.USER ||
+                        selected?.type === ENTITY_TYPE.SERVICE_ACCOUNT
+                            ? 'users'
+                            : 'groups'
+                    }/${selected?.entity.id}/roles/${role?.id}' \\
+                    --header 'Authorization: INSERT_API_KEY'`;
+                })
+                .join('\r\n');
         }
-        return `curl --location --request ${edit ? 'PUT' : 'POST'} '${
-            uiConfig.unleashUrl
-        }/api/admin/projects/${projectId}/role/${role?.id}/access' \\
-        --header 'Authorization: INSERT_API_KEY' \\
-        --header 'Content-Type: application/json' \\
-        --data-raw '${JSON.stringify(payload, undefined, 2)}'`;
+        return selectedRoles
+            .map(role => {
+                return `curl --location --request ${edit ? 'PUT' : 'POST'} '${
+                    uiConfig.unleashUrl
+                }/api/admin/projects/${projectId}/role/${role?.id}/access' \\
+                --header 'Authorization: INSERT_API_KEY' \\
+                --header 'Content-Type: application/json' \\
+                --data-raw '${JSON.stringify(payload, undefined, 2)}'`;
+            })
+            .join('\r\n');
     };
 
     const createRootGroupWarning = (group?: IGroup): string | undefined => {
@@ -308,7 +318,7 @@ export const ProjectAccessAssign = ({
         );
     };
 
-    const isValid = selectedOptions.length > 0 && role;
+    const isValid = selectedOptions.length > 0 && roles;
 
     return (
         <SidebarModal
@@ -433,8 +443,8 @@ export const ProjectAccessAssign = ({
                             <MultipleRoleSelect
                                 data-testid={PA_ROLE_ID}
                                 roles={roles}
-                                value={role}
-                                setValue={role => setRole(role || null)}
+                                value={selectedRoles}
+                                setValue={role => setRoles(role || null)}
                             />
                         </StyledAutocompleteWrapper>
                     </div>

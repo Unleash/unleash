@@ -1,5 +1,5 @@
 import { subDays } from 'date-fns';
-import { ValidationError } from 'joi';
+import { NumberSchema, ValidationError } from 'joi';
 import User, { IUser } from '../types/user';
 import { AccessService } from './access-service';
 import NameExistsError from '../error/name-exists-error';
@@ -508,6 +508,20 @@ export default class ProjectService {
                     users: usersAndGroups.users.map(({ id }) => id),
                 },
             }),
+        );
+    }
+
+    async setRolesForUser(
+        projectId: string,
+        userId: number,
+        roles: number[],
+        createdByUserName: string,
+    ): Promise<void> {
+        await this.accessService.setProjectRolesForUser(
+            projectId,
+            userId,
+            roles,
+            createdByUserName,
         );
     }
 

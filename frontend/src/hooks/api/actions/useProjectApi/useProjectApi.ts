@@ -193,6 +193,20 @@ const useProjectApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const setUserRoles = (
+        projectId: string,
+        roleIds: number[],
+        userId: number
+    ) => {
+        const path = `api/admin/projects/${projectId}/users/${userId}/roles`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify({ roles: roleIds }),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     const changeGroupRole = (
         projectId: string,
         roleId: number,
@@ -203,6 +217,21 @@ const useProjectApi = () => {
 
         return makeRequest(req.caller, req.id);
     };
+
+    const setGroupRoles = (
+        projectId: string,
+        roleIds: number[],
+        groupId: number
+    ) => {
+        const path = `api/admin/projects/${projectId}/groups/${groupId}/roles`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify({ roles: roleIds }),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     const archiveFeatures = async (projectId: string, featureIds: string[]) => {
         const path = `api/admin/projects/${projectId}/archive`;
         const req = createRequest(path, {
@@ -286,7 +315,9 @@ const useProjectApi = () => {
         removeUserFromRole,
         removeGroupFromRole,
         changeUserRole,
+        setUserRoles,
         changeGroupRole,
+        setGroupRoles,
         archiveFeatures,
         reviveFeatures,
         staleFeatures,

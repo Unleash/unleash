@@ -251,6 +251,15 @@ export class AccessService {
         );
     }
 
+    async setProjectRolesForUser(
+        projectId: string,
+        userId: number,
+        roles: number[],
+        createdByUserName: string
+    ): Promise<void> {
+        await this.store.setProjectRolesForUser(projectId, userId, roles);
+    }
+
     async getRoleByName(roleName: string): Promise<IRole> {
         return this.roleStore.getRoleByName(roleName);
     }

@@ -1,5 +1,5 @@
 import * as permissions from '../types/permissions';
-import User, { IProjectUser, IUser } from '../types/user';
+import User, { IUser } from '../types/user';
 import {
     IAccessInfo,
     IAccessStore,
@@ -255,9 +255,36 @@ export class AccessService {
         projectId: string,
         userId: number,
         roles: number[],
-        createdByUserName: string
     ): Promise<void> {
         await this.store.setProjectRolesForUser(projectId, userId, roles);
+    }
+
+    async getProjectRolesForUser(
+        projectId: string,
+        userId: number,
+    ): Promise<number[]> {
+        return this.store.getProjectRolesForUser(projectId, userId);
+    }
+
+    async setProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+        roles: number[],
+        createdByUsername: string,
+    ): Promise<void> {
+        await this.store.setProjectRolesForGroup(
+            projectId,
+            groupId,
+            roles,
+            createdByUsername,
+        );
+    }
+
+    async getProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+    ): Promise<number[]> {
+        return this.store.getProjectRolesForGroup(projectId, groupId);
     }
 
     async getRoleByName(roleName: string): Promise<IRole> {

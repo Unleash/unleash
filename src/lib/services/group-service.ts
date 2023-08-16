@@ -176,7 +176,7 @@ export class GroupService {
 
                 const groupRole = groupRoles.find((g) => g.groupId == group.id);
                 return {
-                    ...this.mapGroupWithUsers(group, groupUsers, users),
+                   ...this.mapGroupWithUsers(group, groupUsers, users),
                     roleId: groupRole.roleId,
                     addedAt: groupRole.createdAt,
                 };

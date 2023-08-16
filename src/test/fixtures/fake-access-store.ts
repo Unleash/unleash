@@ -11,6 +11,8 @@ import {
 import { IPermission } from 'lib/types/model';
 import { IRoleStore } from 'lib/types';
 import FakeRoleStore from './fake-role-store';
+import { Promise } from 'ts-toolbelt/out/Any/Promise';
+import { Number } from 'ts-toolbelt';
 
 class AccessStoreMock implements IAccessStore {
     fakeRolesStore: IRoleStore;
@@ -198,7 +200,7 @@ class AccessStoreMock implements IAccessStore {
     }
 
     get(key: number): Promise<IRole> {
-        return Promise.resolve(undefined);
+        throw new Error('Not implemented yet');
     }
 
     getAll(): Promise<IRole[]> {
@@ -233,6 +235,37 @@ class AccessStoreMock implements IAccessStore {
 
     clearPublicSignupUserTokens(userId: number): Promise<void> {
         return Promise.resolve(undefined);
+    }
+
+    getProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+    ): Promise<number[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getProjectRolesForUser(
+        projectId: string,
+        userId: number,
+    ): Promise<number[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    setProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+        roles: number[],
+        createdByUsername: string,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    setProjectRolesForUser(
+        projectId: string,
+        userId: number,
+        roles: number[],
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
     }
 }
 

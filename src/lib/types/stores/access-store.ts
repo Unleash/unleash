@@ -155,4 +155,24 @@ export interface IAccessStore extends Store<IRole, number> {
         sourceEnvironment: string,
         destinationEnvironment: string,
     ): Promise<void>;
+
+    setProjectRolesForUser(
+        projectId: string,
+        userId: number,
+        roles: number[],
+    ): Promise<void>;
+    getProjectRolesForUser(
+        projectId: string,
+        userId: number,
+    ): Promise<number[]>;
+    setProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+        roles: number[],
+        createdByUsername: string,
+    ): Promise<void>;
+    getProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+    ): Promise<number[]>;
 }

@@ -18,7 +18,6 @@ import {
     ROOT_PERMISSION_TYPE,
 } from '../util/constants';
 import { Db } from './db';
-import { StringMatchingConstraints } from 'fast-check';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -507,9 +506,57 @@ export class AccessStore implements IAccessStore {
                 .delete();
             await tx(T.ROLE_USER)
                 .insert(userRows)
+                .onConflict(['project', 'role_id', 'user_id'])
+                .ignore();
+        });
+    }
+
+    async getProjectRolesForUser(
+        projectId: string,
+        userId: number,
+    ): Promise<number[]> {
+        const rows = await this.db(T.ROLE_USER)
+            .select('role_id')
+            .where('project', projectId)
+            .andWhere('user_id', userId);
+        return rows.map((r) => r.role_id as number);
+    }
+
+    async setProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+        roles: number[],
+        created_by: string,
+    ): Promise<void> {
+        const groupRows = roles.map((role) => {
+            return {
+                group_id: groupId,
+                project: projectId,
+                role_id: role,
+                created_by,
+            };
+        });
+        await this.db.transaction(async (tx) => {
+            await tx(T.GROUP_ROLE)
+                .where('project', projectId)
+                .andWhere('group_id', groupId)
+                .delete();
+            await tx(T.GROUP_ROLE)
+                .insert(groupRows)
                 .onConflict(['project', 'role_id', 'group_id'])
                 .ignore();
         });
+    }
+
+    async getProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+    ): Promise<number[]> {
+        const rows = await this.db(T.GROUP_ROLE)
+            .select('role_id')
+            .where('project', projectId)
+            .andWhere('group_id', groupId);
+        return rows.map((row) => row.role_id as number);
     }
 
     async removeRolesOfTypeForUser(

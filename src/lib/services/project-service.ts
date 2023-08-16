@@ -35,6 +35,8 @@ import {
     RoleName,
     IFlagResolver,
     ProjectAccessAddedEvent,
+    ProjectAccessUserRolesUpdated,
+    ProjectAccessGroupRolesUpdated,
     IProjectRoleUsage,
 } from '../types';
 import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
@@ -517,11 +519,60 @@ export default class ProjectService {
         roles: number[],
         createdByUserName: string,
     ): Promise<void> {
+        const existingRoles = await this.accessService.getProjectRolesForUser(
+            projectId,
+            userId,
+        );
         await this.accessService.setProjectRolesForUser(
             projectId,
             userId,
             roles,
+        );
+        await this.eventStore.store(
+            new ProjectAccessUserRolesUpdated({
+                project: projectId,
+                createdBy: createdByUserName,
+                data: {
+                    roles,
+                    userId,
+                },
+                preData: {
+                    roles: existingRoles,
+                    userId,
+                },
+            }),
+        );
+    }
+
+    async setRolesForGroup(
+        projectId: string,
+        groupId: number,
+        roles: number[],
+        createdByUserName: string,
+    ): Promise<void> {
+        const existingRoles = await this.accessService.getProjectRolesForGroup(
+            projectId,
+            groupId,
+        );
+        await this.accessService.setProjectRolesForGroup(
+            projectId,
+            groupId,
+            roles,
             createdByUserName,
+        );
+        await this.eventStore.store(
+            new ProjectAccessGroupRolesUpdated({
+                project: projectId,
+                createdBy: createdByUserName,
+                data: {
+                    roles,
+                    groupId,
+                },
+                preData: {
+                    roles: existingRoles,
+                    groupId,
+                },
+            }),
         );
     }
 

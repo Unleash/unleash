@@ -38,16 +38,20 @@ const steps: ChangeRequestState[] = [
 const rejectedSteps: ChangeRequestState[] = ['Draft', 'In review', 'Rejected'];
 
 export const determineColor = (
-    displayStage: ChangeRequestState,
     changeRequestState: ChangeRequestState,
-    activeIndex: number,
-    index: number
+    changeRequestStateIndex: number,
+    displayStage: ChangeRequestState,
+    displayStageIndex: number
 ) => {
     if (changeRequestState === 'Cancelled') return 'grey';
     if (changeRequestState === 'Rejected')
         return displayStage === 'Rejected' ? 'error' : 'success';
-    if (activeIndex !== -1 && activeIndex >= index) return 'success';
-    if (activeIndex + 1 === index) return 'primary';
+    if (
+        changeRequestStateIndex !== -1 &&
+        changeRequestStateIndex >= displayStageIndex
+    )
+        return 'success';
+    if (changeRequestStateIndex + 1 === displayStageIndex) return 'primary';
     return 'grey';
 };
 
@@ -63,9 +67,9 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
                 <StyledTimeline>
                     {data.map((title, index) => {
                         const color = determineColor(
-                            title,
                             state,
                             activeIndex,
+                            title,
                             index
                         );
                         let timelineDotProps = {};

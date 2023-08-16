@@ -55,9 +55,9 @@ test('returns grey for Cancelled state regardless of displayed stage', () => {
     stages.forEach(stage => {
         expect(
             determineColor(
-                stage,
                 'Cancelled',
                 irrelevantActiveIndex,
+                stage,
                 irrelevantIndex
             )
         ).toBe('grey');
@@ -68,8 +68,8 @@ test('returns error for Rejected stage in Rejected state', () => {
     expect(
         determineColor(
             'Rejected',
-            'Rejected',
             irrelevantActiveIndex,
+            'Rejected',
             irrelevantIndex
         )
     ).toBe('error');
@@ -78,32 +78,32 @@ test('returns error for Rejected stage in Rejected state', () => {
 test('returns success for stages other than Rejected in Rejected state', () => {
     expect(
         determineColor(
-            'Draft',
             'Rejected',
             irrelevantActiveIndex,
+            'Draft',
             irrelevantIndex
         )
     ).toBe('success');
     expect(
         determineColor(
-            'In review',
             'Rejected',
             irrelevantActiveIndex,
+            'In review',
             irrelevantIndex
         )
     ).toBe('success');
 });
 
 test('returns success for stages at or before activeIndex', () => {
-    expect(determineColor('Draft', 'In review', 1, 0)).toBe('success');
-    expect(determineColor('In review', 'In review', 1, 1)).toBe('success');
+    expect(determineColor('In review', 1, 'Draft', 0)).toBe('success');
+    expect(determineColor('In review', 1, 'In review', 1)).toBe('success');
 });
 
 test('returns primary for stages right after activeIndex', () => {
-    expect(determineColor('Approved', 'In review', 1, 2)).toBe('primary');
+    expect(determineColor('In review', 1, 'Approved', 2)).toBe('primary');
 });
 
 test('returns grey for stages two or more steps after activeIndex', () => {
-    expect(determineColor('Approved', 'Draft', 0, 2)).toBe('grey');
-    expect(determineColor('Applied', 'Draft', 0, 3)).toBe('grey');
+    expect(determineColor('Draft', 0, 'Approved', 2)).toBe('grey');
+    expect(determineColor('Draft', 0, 'Applied', 3)).toBe('grey');
 });

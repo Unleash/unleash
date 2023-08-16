@@ -3,7 +3,6 @@ import { FromSchema } from 'json-schema-to-ts';
 export const tokenStringListSchema = {
     $id: '#/components/schemas/tokenStringListSchema',
     type: 'object',
-    additionalProperties: true,
     description: 'A list of unleash tokens to validate against known tokens',
     required: ['tokens'],
     properties: {

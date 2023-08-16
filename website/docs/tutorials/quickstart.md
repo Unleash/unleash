@@ -4,9 +4,9 @@ title: Quickstart
 
 In this section we will attempt to guide you in order to get started with Unleash easily. There are multiple options to get started with Unleash, browse the headings to find the method that works best for you.
 
-:::info Feature Flags or Feature Toggles?
+:::info Feature flags or feature toggles?
 
-This document uses Feature Flags and Feature Toggles interchangeably. Some people prefer flag; others prefer toggle. We use both - they are synonyms for us.
+This document uses **feature flags** and **feature toggles** interchangeably. Some people prefer flag; others prefer toggle. We use both - they are synonyms for us.
 
 :::
 

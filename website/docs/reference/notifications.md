@@ -29,4 +29,5 @@ The following actions in your projects will trigger notifications for your proje
 * Enabling a feature in an environment
 * Submitting a change request
 * Approving change request
+* Rejecting change request
 * Applying change request

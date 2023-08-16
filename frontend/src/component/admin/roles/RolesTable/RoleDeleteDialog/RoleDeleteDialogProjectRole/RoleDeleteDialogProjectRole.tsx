@@ -57,8 +57,8 @@ export const RoleDeleteDialogProjectRole = ({
                             show={
                                 <>
                                     <StyledLabel>
-                                        Role assigned in
-                                        {' '}{projects?.length} projects:
+                                        Role assigned in {projects?.length}{' '}
+                                        projects:
                                     </StyledLabel>
                                     <StyledTableContainer>
                                         <RoleDeleteDialogProjectRoleTable

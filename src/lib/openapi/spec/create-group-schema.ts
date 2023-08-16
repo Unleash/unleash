@@ -4,7 +4,6 @@ import { groupSchema } from './group-schema';
 export const createGroupSchema = {
     $id: '#/components/schemas/createGroupSchema',
     type: 'object',
-    additionalProperties: true,
     required: ['name'],
     description: 'A detailed information about a user group',
     properties: {

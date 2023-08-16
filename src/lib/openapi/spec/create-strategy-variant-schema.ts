@@ -3,7 +3,6 @@ import { FromSchema } from 'json-schema-to-ts';
 export const createStrategyVariantSchema = {
     $id: '#/components/schemas/createStrategyVariantSchema',
     type: 'object',
-    additionalProperties: true,
     description:
         "This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. A strategy variant allows you to attach any data to strategies instead of only returning `true`/`false`. Strategy variants take precedence over feature variants.",
     required: ['name', 'weight', 'weightType', 'stickiness'],

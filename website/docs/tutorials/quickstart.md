@@ -4,19 +4,25 @@ title: Quickstart
 
 In this section we will attempt to guide you in order to get started with Unleash easily. There are multiple options to get started with Unleash, browse the headings to find the method that works best for you.
 
-## I just want to get started creating toggles without much setup
+:::info Feature flags or feature toggles?
+
+This document uses **feature flags** and **feature toggles** interchangeably. Some people prefer flag; others prefer toggle. We use both - they are synonyms for us.
+
+:::
+
+## I just want to try creating flags without much setup
 
 Usually, you'll need to set up an Unleash instance in order to work with Unleash. However, for testing purposes we have set up a demo instance that you can use in order to test out different use-cases before setting up your own instance. You can find the demo instance admin panel here: https://app.unleash-hosted.com/demo/
 
 NOTE: This is a demo instance set up with the Enterprise version. Some of the functionality may be enterprise specific, but everything we cover here is also available in open source.
 
-### I want to test toggles in a client side environment
+### I want to test flags in a client side environment
 
-To test toggles in a client-side environment, we recommend that you use the [front-end client API](../reference/front-end-api.md). Client-side SDKs act a little differently from server-side SDKs, so the regular client API won't work for this. For more advanced setups, you can also use the [Unleash proxy](../generated/unleash-proxy.md), which offers greater flexibility than the front-end API, but at the cost of increased complexity.
+To test flags in a client-side environment, we recommend that you use the [front-end client API](../reference/front-end-api.md). Client-side SDKs act a little differently from server-side SDKs, so the regular client API won't work for this. For more advanced setups, you can also use the [Unleash proxy](../generated/unleash-proxy.md), which offers greater flexibility than the front-end API, but at the cost of increased complexity.
 
-#### Create your first toggle
+#### Create your first flag
 
-In order to create a toggle through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+In order to create a flag through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature flag, you are ready to connect your application using an SDK.
 
 
 #### Connecting a client-side SDK to Unleash
@@ -58,11 +64,11 @@ unleash.updateContext({ userId: '1233' });
 unleash.start();
 ```
 
-### I want to test toggles in a back-end environment
+### I want to test flags in a back-end environment
 
-#### Create your first toggle
+#### Create your first flag
 
-In order to create a toggle through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+In order to create a flag through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature flag, you are ready to connect your application using an SDK.
 
 #### Connecting to the Unleash instance from your app
 
@@ -94,7 +100,7 @@ const unleash = initialize({
 });
 
 unleash.on('synchronized', () => {
-  // Unleash is ready to serve updated feature toggles.
+  // Unleash is ready to serve updated feature flags.
 
   // Check a feature flag
   const isEnabled = unleash.isEnabled('some-toggle');
@@ -104,7 +110,7 @@ unleash.on('synchronized', () => {
 });
 ```
 
-Now you can fetch the feature toggle you created and try turning it on / off in your code.
+Now you can fetch the feature flag you created and try turning it on / off in your code.
 
 ## I want to setup my own instance for testing purposes
 
@@ -141,11 +147,11 @@ username: admin
 password: unleash4all
 ```
 
-### Create your first toggle
+### Create your first flag
 
-In order to create a toggle through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+In order to create a flag through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature flag, you are ready to connect your application using an SDK.
 
-If you'd like to create your feature toggles with code, you can hit the create feature endpoint with the following command:
+If you'd like to create your feature flag with code, you can hit the create feature endpoint with the following command:
 
 > CRUD operations require an admin API key. For security reasons we have split the admin and client API into separate APIs. You can view how to create API keys in the next section of this guide. Make sure you create client keys for use in SDKs and restrict Admin api key usage.
 
@@ -253,9 +259,9 @@ password: unleash4all
 ```
 
 
-### Create your first toggle
+### Create your first flag
 
-In order to create a toggle through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature toggle, you are ready to connect your application using an SDK.
+In order to create a flag through the UI, [you can follow this guide](../how-to/how-to-create-feature-toggles.md). Once you have created your feature flag, you are ready to connect your application using an SDK.
 
 If you'd like to create your feature toggles with code, you can hit the create feature endpoint with the following command:
 
@@ -306,7 +312,7 @@ unleash.on('synchronized', () => {
   // Unleash is ready to serve updated feature toggles.
 
   // Check a feature flag
-  const isEnabled = unleash.isEnabled('some-toggle');
+  const isEnabled = unleash.isEnabled('some-flag');
 
   // Check the variant
   const variant = unleash.getVariant('app.ToggleY');

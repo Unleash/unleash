@@ -189,6 +189,9 @@ export const ChangeRequestOverview: FC = () => {
     const hasApprovedAlready = changeRequest.approvals.some(
         approval => approval.createdBy.id === user?.id
     );
+
+    const countOfChanges = changesCount(changeRequest);
+
     return (
         <>
             <ChangeRequestHeader changeRequest={changeRequest} />
@@ -199,7 +202,7 @@ export const ChangeRequestOverview: FC = () => {
                 </StyledAsideBox>
                 <StyledPaper elevation={0}>
                     <StyledInnerContainer>
-                        Requested Changes ({changesCount(changeRequest)})
+                        Requested Changes ({countOfChanges})
                         <ChangeRequest
                             changeRequest={changeRequest}
                             onRefetch={refetchChangeRequest}
@@ -256,7 +259,9 @@ export const ChangeRequestOverview: FC = () => {
                                         }
                                         onApprove={onApprove}
                                         disabled={!allowChangeRequestActions}
-                                    />
+                                    >
+                                        Review changes ({countOfChanges})
+                                    </ReviewButton>
                                 }
                             />
                             <ConditionallyRender

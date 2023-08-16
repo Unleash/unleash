@@ -27,12 +27,7 @@ export const searchEventsSchema = {
         },
         query: {
             type: 'string',
-            description: `
-                Find events by a free-text search query.
-                The query will be matched against the event type,
-                the username or email that created the event (if any),
-                and the event data payload (if any).
-            `,
+            description: `Find events by a free-text search query. The query will be matched against the event type, the username or email that created the event (if any), and the event data payload (if any).`,
             example: 'admin@example.com',
         },
         limit: {

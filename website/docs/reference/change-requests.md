@@ -56,7 +56,7 @@ Once a change is added to a draft, the draft needs to be completed before anothe
 * **Approved** - The change request has been approved by the required number of users.
 * **Applied** - The change request has been applied to the environment. The feature toggle configuration is updated.
 * **Cancelled** - The change request has been cancelled by the change request author or admin.
-* **Rejected** - The change request has been rejected by the reviewer or admin. 
+* **Rejected** - The change request has been rejected by the reviewer or by an admin. 
 
 ![Change request banner](/img/change-request-banner.png)
 

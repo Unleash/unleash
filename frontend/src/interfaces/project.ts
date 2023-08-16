@@ -41,4 +41,5 @@ export interface IProjectRoleUsageCount {
     role: number;
     userCount: number;
     groupCount: number;
+    serviceAccountCount: number;
 }

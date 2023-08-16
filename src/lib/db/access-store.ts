@@ -5,7 +5,7 @@ import { Logger } from '../logger';
 import {
     IAccessInfo,
     IAccessStore,
-    IProjectUsageCount,
+    IProjectRoleUsage,
     IRole,
     IRoleWithProject,
     IUserPermission,
@@ -305,36 +305,55 @@ export class AccessStore implements IAccessStore {
         return rows.map((r) => r.group_id);
     }
 
-    async getProjectUserCountsForRole(
+    async getProjectUserAndGroupCountsForRole(
         roleId: number,
-    ): Promise<IProjectUsageCount[]> {
-        const rows = await this.db(T.ROLE_USER)
+    ): Promise<IProjectRoleUsage[]> {
+        const query = await this.db.raw(
+            `
+            SELECT 
+                uq.project,
+                sum(uq.user_count) AS user_count,
+                sum(uq.svc_account_count) AS svc_account_count,
+                sum(uq.group_count) AS group_count
+            FROM (
+                SELECT 
+                    project,
+                    0 AS user_count,
+                    0 AS svc_account_count,
+                    count(project) AS group_count
+                FROM group_role
+                WHERE role_id = ?
+                GROUP BY project
+
+                UNION SELECT
+                    project,
+                    count(us.id) AS user_count,
+                    count(svc.id) AS svc_account_count,
+                    0 AS group_count
+                FROM role_user AS usr_r
+                LEFT OUTER JOIN public.users AS us ON us.id = usr_r.user_id AND us.is_service = 'false'
+                LEFT OUTER JOIN public.users AS svc ON svc.id = usr_r.user_id AND svc.is_service = 'true'
+                WHERE usr_r.role_id = ?
+                GROUP BY usr_r.project
+            ) AS uq
+            GROUP BY uq.project
+        `,
+            [roleId, roleId],
+        );
+
+        /*
+        const rows2 = await this.db(T.ROLE_USER)
             .select('project', this.db.raw('count(project) as user_count'))
             .where('role_id', roleId)
             .groupBy('project');
-        return rows.map((r) => {
+            */
+        return query.rows.map((r) => {
             return {
                 project: r.project,
                 role: roleId,
                 userCount: Number(r.user_count),
-                groupCount: 0,
-            };
-        });
-    }
-
-    async getProjectGroupCountsForRole(
-        roleId: number,
-    ): Promise<IProjectUsageCount[]> {
-        const rows = await this.db(T.GROUP_ROLE)
-            .select('project', this.db.raw('count(project) as group_count'))
-            .where('role_id', roleId)
-            .groupBy('project');
-        return rows.map((r) => {
-            return {
-                project: r.project,
-                role: roleId,
-                userCount: 0,
                 groupCount: Number(r.group_count),
+                serviceAccountCount: Number(r.svc_account_count),
             };
         });
     }

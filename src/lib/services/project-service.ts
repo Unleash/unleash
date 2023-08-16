@@ -698,7 +698,7 @@ export default class ProjectService {
         return this.store.getProjectsByUser(userId);
     }
 
-    async getProjectsByRole(roleId: number): Promise<IProjectRoleUsage[]> {
+    async getProjectRoleUsage(roleId: number): Promise<IProjectRoleUsage[]> {
         return this.accessService.getProjectRoleUsage(roleId);
     }
 

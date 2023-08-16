@@ -5,4 +5,5 @@ export interface IProjectRoleUsage {
     role: number;
     userCount: number;
     groupCount: number;
+    serviceAccountCount: number;
 }

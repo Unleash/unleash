@@ -8,13 +8,20 @@ This website is built using [Docusaurus 2](https://docusaurus.io/), a modern sta
 yarn install
 ```
 
+## Generate Open API docs
+
+```console
+yarn generate
+```
+Generate the Open API docs that live at Reference documentation > APIs > OpenAPI
+
 ## Local Development
 
 ```console
 yarn start
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+ Start a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
 ## Build
 

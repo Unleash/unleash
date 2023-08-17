@@ -18,10 +18,7 @@ import { OpenApiService } from '../../services/openapi-service';
 import { AddonSchema, addonSchema } from '../../openapi/spec/addon-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import { AddonsSchema, addonsSchema } from '../../openapi/spec/addons-schema';
-import {
-    emptyResponse,
-    getStandardResponses,
-} from '../../openapi/util/standard-responses';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 import { AddonCreateUpdateSchema } from 'lib/openapi/spec/addon-create-update-schema';
 
 type AddonServices = Pick<IUnleashServices, 'addonService' | 'openApiService'>;
@@ -56,7 +53,6 @@ class AddonController extends Controller {
                 tags: ['Addons'],
                 operationId: 'getAddons',
                 responses: {
-                    ...getStandardResponses(401),
                     200: createResponseSchema('addonsSchema'),
                 },
             },
@@ -112,7 +108,6 @@ Note: passing \`null\` as a value for the description property will set it to an
                 requestBody: createRequestSchema('addonCreateUpdateSchema'),
                 responses: {
                     200: createResponseSchema('addonSchema'),
-                    ...getStandardResponses(404),
                 },
             },
         });
@@ -131,7 +126,6 @@ Note: passing \`null\` as a value for the description property will set it to an
                 operationId: 'deleteAddon',
                 responses: {
                     200: emptyResponse,
-                    ...getStandardResponses(404),
                 },
             },
         });

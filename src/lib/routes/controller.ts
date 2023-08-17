@@ -129,6 +129,10 @@ export default class Controller {
                 errorCodes.add(415);
             }
 
+            if (options.path.includes(':')) {
+                errorCodes.add(404);
+            }
+
             if (options.permission !== NONE) {
                 errorCodes.add(403);
             }

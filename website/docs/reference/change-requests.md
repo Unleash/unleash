@@ -52,10 +52,11 @@ The flow can be summarized as follows:
 Once a change is added to a draft, the draft needs to be completed before another change request can be opened. The draft is personal to the user that created the change request draft, until it is sent for review. Once changes are added to draft, the user will have a banner in the top of the screen indicating that a draft exists. The state of a change request can be one of the following:
 
 * **Draft** - The change request is in draft mode, and can be edited by the user that created the draft.
-* **In review** - The change request is in review mode, and can be edited by the user that created the draft. If editing ocurrs, all current approvals are revoked
+* **In review** - The change request is in review mode, and can be edited by the user that created the draft. If editing occurs, all current approvals are revoked
 * **Approved** - The change request has been approved by the required number of users.
 * **Applied** - The change request has been applied to the environment. The feature toggle configuration is updated.
-* **Cancelled** - The change request has been cancelled by the user/admin.
+* **Cancelled** - The change request has been cancelled by the change request author or by an admin.
+* **Rejected** - The change request has been rejected by the reviewer or by an admin. 
 
 ![Change request banner](/img/change-request-banner.png)
 
@@ -71,7 +72,7 @@ From here, if you have the correct permissions, you can approve and apply the ch
 
 Change requests have their own set of environment-specific permissions that can be applied to [custom project roles](rbac.md#custom-project-roles). These permissions let users
 
-- approve change requests
+- approve/reject change requests
 - apply change requests
 - skip the change request flow
 

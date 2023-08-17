@@ -3,7 +3,6 @@ import { FromSchema } from 'json-schema-to-ts';
 export const createApplicationSchema = {
     $id: '#/components/schemas/createApplicationSchema',
     type: 'object',
-    additionalProperties: true,
     description: 'Reported application information from Unleash SDKs',
     properties: {
         appName: {

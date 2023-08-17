@@ -44,6 +44,7 @@ exports[`should create default config 1`] = `
     "user": "unleash",
     "version": undefined,
   },
+  "disableScheduler": undefined,
   "email": {
     "host": undefined,
     "port": 587,
@@ -69,6 +70,7 @@ exports[`should create default config 1`] = `
     "flags": {
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
+      "changeRequestReject": false,
       "configurableFeatureTypeLifetimes": false,
       "customRootRolesKillSwitch": false,
       "demo": false,
@@ -91,7 +93,7 @@ exports[`should create default config 1`] = `
           "value": "",
         },
       },
-      "migrationLock": false,
+      "migrationLock": true,
       "newProjectLayout": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
@@ -106,6 +108,7 @@ exports[`should create default config 1`] = `
     "experiments": {
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
+      "changeRequestReject": false,
       "configurableFeatureTypeLifetimes": false,
       "customRootRolesKillSwitch": false,
       "demo": false,
@@ -128,7 +131,7 @@ exports[`should create default config 1`] = `
           "value": "",
         },
       },
-      "migrationLock": false,
+      "migrationLock": true,
       "newProjectLayout": false,
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,

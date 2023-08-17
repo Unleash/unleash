@@ -55,7 +55,12 @@ export const useChangeRequestApi = () => {
         project: string,
         changeRequestId: number,
         payload: {
-            state: 'Approved' | 'Applied' | 'Cancelled' | 'In review';
+            state:
+                | 'Approved'
+                | 'Applied'
+                | 'Cancelled'
+                | 'In review'
+                | 'Rejected';
             comment?: string;
         }
     ) => {

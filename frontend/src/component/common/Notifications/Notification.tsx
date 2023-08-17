@@ -157,7 +157,10 @@ export const Notification = ({
                     </StyledUserContainer>
 
                     <StyledTimeAgoTypography>
-                        <TimeAgo date={new Date(notification.createdAt)} />
+                        <TimeAgo
+                            date={new Date(notification.createdAt)}
+                            minPeriod={60}
+                        />
                     </StyledTimeAgoTypography>
                 </StyledSecondaryInfoBox>
             </StyledNotificationMessageBox>

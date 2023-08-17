@@ -29,6 +29,7 @@ export type IFlagKey =
     | 'frontendNavigationUpdate'
     | 'lastSeenByEnvironment'
     | 'segmentChangeRequests'
+    | 'changeRequestReject'
     | 'customRootRolesKillSwitch';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -83,7 +84,7 @@ const flags: IFlags = {
         process.env.UNLEASH_PAT_KILL_SWITCH,
         false,
     ),
-    migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
+    migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, true),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
@@ -131,6 +132,10 @@ const flags: IFlags = {
     ),
     segmentChangeRequests: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SEGMENT_CHANGE_REQUESTS,
+        false,
+    ),
+    changeRequestReject: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_REJECT,
         false,
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(

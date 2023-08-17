@@ -499,6 +499,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         accessControlMaxAge,
         prometheusApi,
         publicFolder: options.publicFolder,
+        disableScheduler: options.disableScheduler,
     };
 }
 

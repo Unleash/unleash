@@ -30,7 +30,8 @@ export type IFlagKey =
     | 'lastSeenByEnvironment'
     | 'segmentChangeRequests'
     | 'changeRequestReject'
-    | 'customRootRolesKillSwitch';
+    | 'customRootRolesKillSwitch'
+    | 'integrationsRework';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -140,6 +141,10 @@ const flags: IFlags = {
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
+        false,
+    ),
+    integrationsRework: parseEnvVarBoolean(
+        process.env.UNLEASH_INTEGRATIONS,
         false,
     ),
 };

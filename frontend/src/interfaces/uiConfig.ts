@@ -58,6 +58,7 @@ export interface IFlags {
     segmentChangeRequests?: boolean;
     changeRequestReject?: boolean;
     lastSeenByEnvironment?: boolean;
+    integrationsRework?: boolean;
 }
 
 export interface IVersionInfo {

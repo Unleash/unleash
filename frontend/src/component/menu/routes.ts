@@ -300,7 +300,7 @@ export const routes: IRoute[] = [
         menu: { mobile: true, advanced: true },
     },
 
-    // Addons
+    // Integrations
     {
         path: '/addons/create/:providerId',
         parent: '/addons',
@@ -324,6 +324,16 @@ export const routes: IRoute[] = [
         hidden: false,
         type: 'protected',
         menu: { mobile: true, advanced: true },
+    },
+    // TODO: remove 'addons' from menu after removing Integrations menu flag
+    {
+        path: '/integrations',
+        title: 'Integrations',
+        component: AddonList,
+        hidden: false,
+        type: 'protected',
+        menu: { mobile: true, advanced: true },
+        flag: 'integrationsRework',
     },
 
     // Segments

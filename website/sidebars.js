@@ -171,14 +171,24 @@ module.exports = {
             items: [
                 {
                     type: 'category',
-                    link: { type: 'doc', id: 'reference/addons/index' },
+                    link: { type: 'doc', id: 'reference/integrations/index' },
                     items: [
-                        'reference/addons/datadog',
-                        'reference/addons/slack',
-                        'reference/addons/teams',
-                        'reference/addons/webhook',
+                        'reference/integrations/datadog',
+                        {
+                            'Jira Server': [
+                                'reference/integrations/jira-server-plugin-installation',
+                                'reference/integrations/jira-server-plugin-usage',
+                            ],
+                            'Jira Cloud': [
+                                'reference/integrations/jira-cloud-plugin-installation',
+                                'reference/integrations/jira-cloud-plugin-usage',
+                            ],
+                        },
+                        'reference/integrations/slack',
+                        'reference/integrations/teams',
+                        'reference/integrations/webhook',
                     ],
-                    label: 'Addons',
+                    label: 'Integrations',
                 },
                 {
                     type: 'category',
@@ -289,27 +299,6 @@ module.exports = {
                         'reference/deploy/environment-import-export',
                         'reference/deploy/migration-guide',
                         'reference/deploy/securing-unleash',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Integrations',
-                    link: {
-                        type: 'doc',
-                        id: 'reference/integrations/integrations',
-                    },
-                    items: [
-                        {
-                            'Jira Server': [
-                                'reference/integrations/jira-server-plugin-installation',
-                                'reference/integrations/jira-server-plugin-usage',
-                            ],
-                            'Jira Cloud': [
-                                'reference/integrations/jira-cloud-plugin-installation',
-                                'reference/integrations/jira-cloud-plugin-usage',
-                            ],
-                        },
-                        ,
                     ],
                 },
                 {

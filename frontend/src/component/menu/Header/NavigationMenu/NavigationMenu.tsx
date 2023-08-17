@@ -98,9 +98,9 @@ export const NavigationMenu = ({
                             }
                             arrow
                             placement="left"
+                            key={option.path}
                         >
                             <MenuItem
-                                key={option.path}
                                 component={StyledLink}
                                 to={option.path}
                                 onClick={handleClose}

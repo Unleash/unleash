@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Paper, styled, Tab, Tabs } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { CenteredNavLink } from './CenteredNavLink';
@@ -23,6 +23,7 @@ const StyledBadgeContainer = styled('div')(({ theme }) => ({
 export const AdminTabsMenu: VFC = () => {
     const { uiConfig, isPro, isOss } = useUiConfig();
     const { pathname } = useLocation();
+    const navigate = useNavigate();
 
     const activeTab = pathname.split('/')[2];
 
@@ -55,6 +56,7 @@ export const AdminTabsMenu: VFC = () => {
             >
                 {tabs.map(tab => (
                     <Tab
+                        sx={{ padding: 0 }}
                         key={tab.route}
                         value={tab.route?.split('/')?.[2]}
                         label={

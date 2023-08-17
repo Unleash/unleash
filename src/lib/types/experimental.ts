@@ -30,7 +30,8 @@ export type IFlagKey =
     | 'lastSeenByEnvironment'
     | 'segmentChangeRequests'
     | 'changeRequestReject'
-    | 'customRootRolesKillSwitch';
+    | 'customRootRolesKillSwitch'
+    | 'newApplicationList';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

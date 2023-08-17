@@ -5,8 +5,8 @@ exports.up = function (db, callback) {
         `
           CREATE TABLE IF NOT EXISTS client_applications_usage (
                app_name VARCHAR(255) REFERENCES client_applications(app_name) ON DELETE CASCADE,
-               project VARCHAR(255) REFERENCES projects(id) NOT NULL default 'default',
-               environment VARCHAR(100) REFERENCES environments(name) NOT NULL default 'default',
+               project VARCHAR(255) NOT NULL,
+               environment VARCHAR(100) NOT NULL,
                PRIMARY KEY(app_name, project, environment)
           ) ;
         `,

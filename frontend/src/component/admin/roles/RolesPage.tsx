@@ -97,6 +97,7 @@ export const RolesPage = () => {
                                                 </span>
                                             </CenteredNavLink>
                                         }
+                                        sx={{ padding: 0 }}
                                     />
                                 ))}
                             </Tabs>

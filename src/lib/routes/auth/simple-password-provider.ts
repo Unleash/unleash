@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import { OpenApiService } from '../../services/openapi-service';
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../server-impl';
 import UserService from '../../services/user-service';
@@ -17,8 +16,6 @@ import { getStandardResponses } from '../../openapi';
 export class SimplePasswordProvider extends Controller {
     private logger: Logger;
 
-    private openApiService: OpenApiService;
-
     private userService: UserService;
 
     constructor(
@@ -28,9 +25,8 @@ export class SimplePasswordProvider extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'userService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('/auth/password-provider.js');
-        this.openApiService = openApiService;
         this.userService = userService;
 
         this.route({

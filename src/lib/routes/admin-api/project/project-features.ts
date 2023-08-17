@@ -41,11 +41,7 @@ import {
     UpdateFeatureSchema,
     UpdateFeatureStrategySchema,
 } from '../../../openapi';
-import {
-    OpenApiService,
-    FeatureToggleService,
-    FeatureTagService,
-} from '../../../services';
+import { FeatureToggleService, FeatureTagService } from '../../../services';
 import { querySchema } from '../../../schema/feature-schema';
 import { BatchStaleSchema } from '../../../openapi/spec/batch-stale-schema';
 import {
@@ -118,8 +114,6 @@ export default class ProjectFeaturesController extends Controller {
         db: UnleashTransaction,
     ) => FeatureToggleService;
 
-    private openApiService: OpenApiService;
-
     private flagResolver: IFlagResolver;
 
     private readonly logger: Logger;
@@ -136,12 +130,11 @@ export default class ProjectFeaturesController extends Controller {
         }: ProjectFeaturesServices,
         startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.featureService = featureToggleServiceV2;
         this.transactionalFeatureToggleService =
             transactionalFeatureToggleService;
         this.startTransaction = startTransaction;
-        this.openApiService = openApiService;
         this.featureTagService = featureTagService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/admin-api/project/features.ts');

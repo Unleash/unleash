@@ -12,7 +12,6 @@ import {
 } from '../../openapi/spec/validated-edge-tokens-schema';
 import ClientInstanceService from '../../services/client-metrics/instance-service';
 import EdgeService from '../../services/edge-service';
-import { OpenApiService } from '../../services/openapi-service';
 import {
     emptyResponse,
     getStandardResponses,
@@ -26,8 +25,6 @@ export default class EdgeController extends Controller {
     private readonly logger: Logger;
 
     private edgeService: EdgeService;
-
-    private openApiService: OpenApiService;
 
     private metricsV2: ClientMetricsServiceV2;
 
@@ -48,10 +45,9 @@ export default class EdgeController extends Controller {
             | 'clientInstanceService'
         >,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('edge-api/index.ts');
         this.edgeService = edgeService;
-        this.openApiService = openApiService;
         this.metricsV2 = clientMetricsServiceV2;
         this.clientInstanceService = clientInstanceService;
 

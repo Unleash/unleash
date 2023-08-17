@@ -11,7 +11,6 @@ import { extractUsername } from '../../../util/extract-user';
 import { DELETE_FEATURE } from '../../../types/permissions';
 import FeatureToggleService from '../../../services/feature-toggle-service';
 import { IAuthRequest } from '../../unleash-types';
-import { OpenApiService } from '../../../services/openapi-service';
 import {
     emptyResponse,
     getStandardResponses,
@@ -29,8 +28,6 @@ export default class ProjectArchiveController extends Controller {
 
     private featureService: FeatureToggleService;
 
-    private openApiService: OpenApiService;
-
     private flagResolver: IFlagResolver;
 
     constructor(
@@ -40,10 +37,9 @@ export default class ProjectArchiveController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('/admin-api/archive.js');
         this.featureService = featureToggleServiceV2;
-        this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
 
         this.route({

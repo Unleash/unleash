@@ -16,7 +16,6 @@ import ContextService from '../../services/context-service';
 import { Logger } from '../../logger';
 import { IAuthRequest } from '../unleash-types';
 
-import { OpenApiService } from '../../services/openapi-service';
 import {
     contextFieldSchema,
     ContextFieldSchema,
@@ -48,8 +47,6 @@ interface ContextParam {
 export class ContextController extends Controller {
     private contextService: ContextService;
 
-    private openApiService: OpenApiService;
-
     private logger: Logger;
 
     constructor(
@@ -59,8 +56,7 @@ export class ContextController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'contextService' | 'openApiService'>,
     ) {
-        super(config);
-        this.openApiService = openApiService;
+        super(config, { openApiService });
         this.logger = config.getLogger('/admin-api/context.ts');
         this.contextService = contextService;
 

@@ -20,10 +20,8 @@ class TelemetryController extends Controller {
         config: IUnleashConfig,
         { openApiService }: Pick<IUnleashServices, 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.config = config;
-        this.openApiService = openApiService;
-
         this.route({
             method: 'get',
             path: '/settings',

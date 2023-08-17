@@ -6,7 +6,6 @@ import { Logger } from '../../logger';
 import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
 import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { OpenApiService } from '../../services/openapi-service';
 import { serializeDates } from '../../types/serialize-dates';
 import {
     FeatureUsageSchema,
@@ -31,8 +30,6 @@ class ClientMetricsController extends Controller {
 
     private metrics: ClientMetricsServiceV2;
 
-    private openApiService: OpenApiService;
-
     private static HOURS_BACK_MIN = 1;
 
     private static HOURS_BACK_MAX = 48;
@@ -44,12 +41,10 @@ class ClientMetricsController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'clientMetricsServiceV2' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('/admin-api/client-metrics.ts');
 
         this.metrics = clientMetricsServiceV2;
-        this.openApiService = openApiService;
-
         this.route({
             method: 'get',
             path: '/features/:name/raw',

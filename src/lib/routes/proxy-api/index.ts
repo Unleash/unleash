@@ -50,7 +50,7 @@ export default class ProxyController extends Controller {
         services: Services,
         flagResolver: IFlagResolver,
     ) {
-        super(config);
+        super(config, { openApiService: services.openApiService });
         this.logger = config.getLogger('proxy-api/index.ts');
         this.services = services;
         this.flagResolver = flagResolver;

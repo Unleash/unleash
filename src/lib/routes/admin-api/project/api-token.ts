@@ -23,7 +23,6 @@ import { ApiTokenType, IApiToken } from '../../../types/models/api-token';
 import {
     AccessService,
     ApiTokenService,
-    OpenApiService,
     ProxyService,
 } from '../../../services';
 import { extractUsername } from '../../../util';
@@ -49,8 +48,6 @@ export class ProjectApiTokenController extends Controller {
 
     private proxyService: ProxyService;
 
-    private openApiService: OpenApiService;
-
     private logger: Logger;
 
     constructor(
@@ -68,11 +65,10 @@ export class ProjectApiTokenController extends Controller {
             | 'openApiService'
         >,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.apiTokenService = apiTokenService;
         this.accessService = accessService;
         this.proxyService = proxyService;
-        this.openApiService = openApiService;
         this.logger = config.getLogger('project-api-token-controller.js');
 
         this.route({

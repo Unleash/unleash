@@ -11,6 +11,7 @@ import {
     StandardResponseCodes,
 } from '../../lib/openapi';
 import { OpenApiService } from '../../lib/services';
+import { IUnleashServices } from 'lib/types';
 
 interface IRequestHandler<
     P = any,
@@ -77,12 +78,18 @@ export default class Controller {
 
     config: IUnleashConfig;
 
-    constructor(config: IUnleashConfig) {
+    protected openApiService: OpenApiService;
+
+    constructor(
+        config: IUnleashConfig,
+        { openApiService }: Pick<IUnleashServices, 'openApiService'>,
+    ) {
         this.ownLogger = config.getLogger(
             `controller/${this.constructor.name}`,
         );
         this.app = Router();
         this.config = config;
+        this.openApiService = openApiService;
     }
 
     private useRouteErrorHandler(handler: IRequestHandler): IRequestHandler {

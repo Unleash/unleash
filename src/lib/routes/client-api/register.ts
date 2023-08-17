@@ -28,11 +28,9 @@ export default class RegisterController extends Controller {
         }: Pick<IUnleashServices, 'clientInstanceService' | 'openApiService'>,
         config: IUnleashConfig,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('/api/client/register');
         this.clientInstanceService = clientInstanceService;
-        this.openApiService = openApiService;
-
         this.route({
             method: 'post',
             path: '',

@@ -4,12 +4,16 @@ import { join } from 'path';
 import { register as prometheusRegister } from 'prom-client';
 import Controller from './controller';
 import { IUnleashConfig } from '../types/option';
+import { IUnleashServices } from 'lib/types';
 
 class BackstageController extends Controller {
     logger: any;
 
-    constructor(config: IUnleashConfig) {
-        super(config);
+    constructor(
+        config: IUnleashConfig,
+        { openApiService }: Pick<IUnleashServices, 'openApiService'>,
+    ) {
+        super(config, { openApiService });
 
         this.logger = config.getLogger('backstage.js');
 

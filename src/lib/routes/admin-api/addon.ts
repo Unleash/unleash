@@ -14,7 +14,6 @@ import {
 import { IAuthRequest } from '../unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { OpenApiService } from '../../services/openapi-service';
 import { AddonSchema, addonSchema } from '../../openapi/spec/addon-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import { AddonsSchema, addonsSchema } from '../../openapi/spec/addons-schema';
@@ -30,17 +29,13 @@ class AddonController extends Controller {
 
     private addonService: AddonService;
 
-    private openApiService: OpenApiService;
-
     constructor(
         config: IUnleashConfig,
         { addonService, openApiService }: AddonServices,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('/admin-api/addon.ts');
         this.addonService = addonService;
-        this.openApiService = openApiService;
-
         this.routeWithOpenApi(this.openApiService)({
             method: 'get',
             path: '',

@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashServices } from '../types/services';
 import { Logger } from '../logger';
-import { OpenApiService } from '../services/openapi-service';
 
 import Controller from './controller';
 import { NONE } from '../types/permissions';
@@ -12,15 +11,12 @@ import { HealthCheckSchema } from '../openapi/spec/health-check-schema';
 export class HealthCheckController extends Controller {
     private logger: Logger;
 
-    private openApiService: OpenApiService;
-
     constructor(
         config: IUnleashConfig,
         { openApiService }: Pick<IUnleashServices, 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('health-check.js');
-        this.openApiService = openApiService;
 
         this.route({
             method: 'get',

@@ -8,7 +8,6 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi';
-import { OpenApiService } from '../../services';
 import { IAuthRequest } from '../unleash-types';
 import { extractUsername } from '../../util';
 import {
@@ -21,8 +20,6 @@ import { ToggleMaintenanceSchema } from 'lib/openapi/spec/toggle-maintenance-sch
 export default class MaintenanceController extends Controller {
     private maintenanceService: MaintenanceService;
 
-    private openApiService: OpenApiService;
-
     private logger: Logger;
 
     constructor(
@@ -32,9 +29,8 @@ export default class MaintenanceController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'maintenanceService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.maintenanceService = maintenanceService;
-        this.openApiService = openApiService;
         this.logger = config.getLogger('routes/admin-api/maintenance');
         this.route({
             method: 'post',

@@ -12,7 +12,6 @@ import {
 } from '../../types/permissions';
 import { Request, Response } from 'express';
 import { IAuthRequest } from '../unleash-types';
-import { OpenApiService } from '../../services/openapi-service';
 import {
     emptyResponse,
     getStandardResponses,
@@ -40,8 +39,6 @@ class StrategyController extends Controller {
 
     private strategyService: StrategyService;
 
-    private openApiService: OpenApiService;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -49,11 +46,9 @@ class StrategyController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'strategyService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('/admin-api/strategy.js');
         this.strategyService = strategyService;
-        this.openApiService = openApiService;
-
         this.route({
             method: 'get',
             path: '',

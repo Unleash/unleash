@@ -8,7 +8,6 @@ import UserService from '../../../services/user-service';
 import UserFeedbackService from '../../../services/user-feedback-service';
 import UserSplashService from '../../../services/user-splash-service';
 import { ADMIN, NONE } from '../../../types/permissions';
-import { OpenApiService } from '../../../services/openapi-service';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { meSchema, MeSchema } from '../../../openapi/spec/me-schema';
@@ -34,8 +33,6 @@ class UserController extends Controller {
 
     private userSplashService: UserSplashService;
 
-    private openApiService: OpenApiService;
-
     private projectService: ProjectService;
 
     constructor(
@@ -57,12 +54,11 @@ class UserController extends Controller {
             | 'projectService'
         >,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.accessService = accessService;
         this.userService = userService;
         this.userFeedbackService = userFeedbackService;
         this.userSplashService = userSplashService;
-        this.openApiService = openApiService;
         this.projectService = projectService;
 
         this.route({

@@ -17,9 +17,12 @@ class LogoutController extends Controller {
 
     constructor(
         config: IUnleashConfig,
-        { sessionService }: Pick<IUnleashServices, 'sessionService'>,
+        {
+            sessionService,
+            openApiService,
+        }: Pick<IUnleashServices, 'sessionService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.sessionService = sessionService;
         this.baseUri = config.server.baseUriPath;
         this.clearSiteDataOnLogout = config.session.clearSiteDataOnLogout;

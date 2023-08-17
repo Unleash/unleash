@@ -35,12 +35,11 @@ export default class ClientMetricsController extends Controller {
         >,
         config: IUnleashConfig,
     ) {
-        super(config);
+        super(config, { openApiService });
         const { getLogger } = config;
 
         this.logger = getLogger('/api/client/metrics');
         this.clientInstanceService = clientInstanceService;
-        this.openApiService = openApiService;
         this.metricsV2 = clientMetricsServiceV2;
 
         this.route({

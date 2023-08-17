@@ -17,7 +17,6 @@ import {
     getStandardResponses,
     ProjectEnvironmentSchema,
 } from '../../../openapi';
-import { OpenApiService } from '../../../services';
 
 const PREFIX = '/:projectId/environments';
 
@@ -31,8 +30,6 @@ export default class EnvironmentsController extends Controller {
 
     private environmentService: EnvironmentService;
 
-    private openApiService: OpenApiService;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -40,12 +37,10 @@ export default class EnvironmentsController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'environmentService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
 
         this.logger = config.getLogger('admin-api/project/environments.ts');
         this.environmentService = environmentService;
-        this.openApiService = openApiService;
-
         this.route({
             method: 'post',
             path: PREFIX,

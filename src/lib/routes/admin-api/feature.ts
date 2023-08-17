@@ -18,7 +18,6 @@ import {
 import { TagSchema } from '../../openapi/spec/tag-schema';
 import { TagsSchema } from '../../openapi/spec/tags-schema';
 import { serializeDates } from '../../types/serialize-dates';
-import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     createResponseSchema,
@@ -36,8 +35,6 @@ const version = 1;
 class FeatureController extends Controller {
     private tagService: FeatureTagService;
 
-    private openApiService: OpenApiService;
-
     private service: FeatureToggleService;
 
     constructor(
@@ -51,9 +48,8 @@ class FeatureController extends Controller {
             'featureTagService' | 'featureToggleServiceV2' | 'openApiService'
         >,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.tagService = featureTagService;
-        this.openApiService = openApiService;
         this.service = featureToggleServiceV2;
 
         this.route({

@@ -3,7 +3,6 @@ import { IUnleashServices } from '../../types/services';
 import FeatureTypeService from '../../services/feature-type-service';
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../types/option';
-import { OpenApiService } from '../../services/openapi-service';
 import { ADMIN, NONE } from '../../types/permissions';
 import {
     featureTypesSchema,
@@ -26,8 +25,6 @@ const version = 1;
 export class FeatureTypeController extends Controller {
     private featureTypeService: FeatureTypeService;
 
-    private openApiService: OpenApiService;
-
     private logger: Logger;
 
     private flagResolver: IFlagResolver;
@@ -39,9 +36,8 @@ export class FeatureTypeController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'featureTypeService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.featureTypeService = featureTypeService;
-        this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/admin-api/feature-type.js');
 

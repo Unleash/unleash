@@ -3,6 +3,7 @@ import User, { IProjectUser, IUser } from '../types/user';
 import {
     IAccessInfo,
     IAccessStore,
+    IProjectRoleUsage,
     IRole,
     IRoleWithPermissions,
     IRoleWithProject,
@@ -451,6 +452,10 @@ export class AccessService {
         );
         const groups = await this.groupService.getProjectGroups(projectId);
         return [roles, users.flat(), groups];
+    }
+
+    async getProjectRoleUsage(roleId: number): Promise<IProjectRoleUsage[]> {
+        return this.store.getProjectUserAndGroupCountsForRole(roleId);
     }
 
     async createDefaultProjectRoles(

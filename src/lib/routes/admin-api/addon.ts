@@ -36,7 +36,7 @@ class AddonController extends Controller {
         super(config, { openApiService });
         this.logger = config.getLogger('/admin-api/addon.ts');
         this.addonService = addonService;
-        this.routeWithOpenApi(this.openApiService)({
+        this.routeWithOpenApi({
             method: 'get',
             path: '',
             permission: NONE,
@@ -53,7 +53,7 @@ class AddonController extends Controller {
             },
         });
 
-        this.routeWithOpenApi(this.openApiService)({
+        this.routeWithOpenApi({
             method: 'post',
             path: '',
             handler: this.createAddon,
@@ -71,7 +71,7 @@ class AddonController extends Controller {
             },
         });
 
-        this.routeWithOpenApi(this.openApiService)({
+        this.routeWithOpenApi({
             method: 'get',
             path: `${PATH}:id`,
             handler: this.getAddon,
@@ -88,7 +88,7 @@ class AddonController extends Controller {
             },
         });
 
-        this.routeWithOpenApi(this.openApiService)({
+        this.routeWithOpenApi({
             method: 'put',
             path: `${PATH}:id`,
             handler: this.updateAddon,
@@ -107,7 +107,7 @@ Note: passing \`null\` as a value for the description property will set it to an
             },
         });
 
-        this.routeWithOpenApi(this.openApiService)({
+        this.routeWithOpenApi({
             method: 'delete',
             path: `${PATH}:id`,
             handler: this.deleteAddon,

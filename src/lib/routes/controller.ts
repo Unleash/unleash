@@ -119,46 +119,44 @@ export default class Controller {
         );
     }
 
-    routeWithOpenApi(openApiService: OpenApiService) {
-        return ({
-            openApi,
-            ...options
-        }: IRouteOptions & { openApi: ApiOperation }): void => {
-            const errorCodes = new Set<StandardResponseCodes>([401]);
+    routeWithOpenApi({
+        openApi,
+        ...options
+    }: IRouteOptions & { openApi: ApiOperation }): void {
+        const errorCodes = new Set<StandardResponseCodes>([401]);
 
-            if (
-                ['put', 'post', 'patch'].includes(
-                    options?.method?.toLowerCase() || '',
-                )
-            ) {
-                errorCodes.add(400);
-                errorCodes.add(413);
-                errorCodes.add(415);
-            }
+        if (
+            ['put', 'post', 'patch'].includes(
+                options?.method?.toLowerCase() || '',
+            )
+        ) {
+            errorCodes.add(400);
+            errorCodes.add(413);
+            errorCodes.add(415);
+        }
 
-            if (options.path.includes(':')) {
-                errorCodes.add(404);
-            }
+        if (options.path.includes(':')) {
+            errorCodes.add(404);
+        }
 
-            if (options.permission !== NONE) {
-                errorCodes.add(403);
-            }
+        if (options.permission !== NONE) {
+            errorCodes.add(403);
+        }
 
-            const openApiWithErrorCodes = {
-                ...openApi,
-                responses: {
-                    ...getStandardResponses(...errorCodes),
-                    ...openApi.responses,
-                },
-            };
-            return this.route({
-                ...options,
-                middleware: [
-                    ...(options.middleware ?? []),
-                    openApiService.validPath(openApiWithErrorCodes),
-                ],
-            });
+        const openApiWithErrorCodes = {
+            ...openApi,
+            responses: {
+                ...getStandardResponses(...errorCodes),
+                ...openApi.responses,
+            },
         };
+        return this.route({
+            ...options,
+            middleware: [
+                ...(options.middleware ?? []),
+                this.openApiService.validPath(openApiWithErrorCodes),
+            ],
+        });
     }
 
     get(

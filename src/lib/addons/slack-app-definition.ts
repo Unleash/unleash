@@ -57,6 +57,14 @@ const slackAppDefinition: IAddonDefinition = {
             required: false,
             sensitive: false,
         },
+        {
+            name: 'alwaysPostToDefault',
+            displayName: 'Always post to default channels',
+            description: `If set to 'true' or 'yes', the app will always post events to the default channels, even if the feature toggle has slack tags`,
+            type: 'text',
+            required: false,
+            sensitive: false,
+        },
     ],
     events: [
         FEATURE_CREATED,

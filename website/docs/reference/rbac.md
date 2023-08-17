@@ -12,7 +12,7 @@ Unleash has two levels in its hierarchy of resources:
 1. **Root resources** - Everything that lives across the entire Unleash instance. Examples of this include:
    - activation strategies
    - context field definitions
-   - addon configurations
+   - integration configurations
    - applications
    - users
 2. **Project resources** - Resources which are only available under a project. Today this is only “feature toggles” (but we expect more resources to live under a project in the future). A feature toggle will belong to only one single project. In Unleash-Open source there exists only a single project, the “default” project, while Unleash Enterprise supports multiple projects.
@@ -55,37 +55,37 @@ Each custom root role consists of:
 
 You can assign the following root permissions:
 
-#### Addon permissions
+#### Integration permissions
 
-| Permission Name       | Description                       |
-|-----------------------|-----------------------------------|
-| Create addons         | Lets the user create addons.      |
-| Update addons         | Lets the user update addons.      |
-| Delete addons         | Lets the user delete addons.      |
+| Permission Name     | Description                        |
+|---------------------|------------------------------------|
+| Create integrations | Lets the user create integrations. |
+| Update integrations | Lets the user update integrations. |
+| Delete integrations | Lets the user delete integrations. |
 
 #### API token permissions
 
-| Permission Name       | Description                       |
-|-----------------------|-----------------------------------|
-| Read frontend API tokens   | Lets the user read frontend API tokens. |
+| Permission Name            | Description                               |
+|----------------------------|-------------------------------------------|
+| Read frontend API tokens   | Lets the user read frontend API tokens.   |
 | Create frontend API tokens | Lets the user create frontend API tokens. |
 | Update frontend API tokens | Lets the user update frontend API tokens. |
 | Delete frontend API tokens | Lets the user delete frontend API tokens. |
-| Read client API tokens     | Lets the user read client API tokens. |
-| Create client API tokens   | Lets the user create client API tokens. |
-| Update client API tokens   | Lets the user update client API tokens. |
-| Delete client API tokens   | Lets the user delete client API tokens. |
+| Read client API tokens     | Lets the user read client API tokens.     |
+| Create client API tokens   | Lets the user create client API tokens.   |
+| Update client API tokens   | Lets the user update client API tokens.   |
+| Delete client API tokens   | Lets the user delete client API tokens.   |
 
 #### Application permissions
 
-| Permission Name       | Description                       |
-|-----------------------|-----------------------------------|
-| Update applications   | Lets the user update applications. |
+| Permission Name     | Description                        |
+|---------------------|------------------------------------|
+| Update applications | Lets the user update applications. |
 
 #### Context field permissions
 
-| Permission Name       | Description                       |
-|-----------------------|-----------------------------------|
+| Permission Name       | Description                          |
+|-----------------------|--------------------------------------|
 | Create context fields | Lets the user create context fields. |
 | Update context fields | Lets the user update context fields. |
 | Delete context fields | Lets the user delete context fields. |

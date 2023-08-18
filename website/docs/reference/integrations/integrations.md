@@ -27,6 +27,12 @@ Unleash currently supports the following integrations out of the box:
 - [Slack](slack.md) - Allows Unleash to post updates to Slack.
 - [Webhook](webhook.md) - A generic way to post messages from Unleash to third party services.
 
+:::info Missing an integration? Request it!
+
+If you're looking for an integration that Unleash doesn't have at the moment, you can fill out this [integration request form](https://docs.google.com/forms/d/e/1FAIpQLScR1_iuoQiKq89c0TKtj0gM02JVWyQ2hQ-YchBMc2GRrGf7uw/viewform) to register it with us.
+
+:::
+
 ## Community integrations
 
 Our wonderful community has also created the following integrations:

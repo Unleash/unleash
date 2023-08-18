@@ -55,6 +55,7 @@ export const AdminTabsMenu: VFC = () => {
             >
                 {tabs.map(tab => (
                     <Tab
+                        sx={{ padding: 0 }}
                         key={tab.route}
                         value={tab.route?.split('/')?.[2]}
                         label={

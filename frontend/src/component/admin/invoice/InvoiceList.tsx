@@ -115,7 +115,9 @@ const InvoiceList = () => {
                     </div>
                 </PageContent>
             }
-            elseShow={<div>{isLoaded && 'No invoices to show.'}</div>}
+            elseShow={
+                <PageContent>{isLoaded && 'No invoices to show.'}</PageContent>
+            }
         />
     );
 };

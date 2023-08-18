@@ -8,7 +8,7 @@ import DocCardList from '@theme/DocCardList';
 
 Unleash integrations were introduced in _Unleash v3.11.0_.
 
-Prior to Unleash 5.x, they were known as _addons_.
+Integrations were previously known as _addons_.
 
 :::
 

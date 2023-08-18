@@ -14,11 +14,11 @@ const style: React.CSSProperties = {
     marginRight: '16px',
 };
 
-interface IAddonIconProps {
+interface IIntegrationIconProps {
     name: string;
 }
 
-export const AddonIcon = ({ name }: IAddonIconProps) => {
+export const IntegrationIcon = ({ name }: IIntegrationIconProps) => {
     switch (name) {
         case 'slack':
         case 'slack-app':

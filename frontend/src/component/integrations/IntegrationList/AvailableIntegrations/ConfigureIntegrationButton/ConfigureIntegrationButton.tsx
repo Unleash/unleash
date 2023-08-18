@@ -3,13 +3,13 @@ import { CREATE_ADDON } from 'component/providers/AccessProvider/permissions';
 import { IAddonProvider } from 'interfaces/addons';
 import { useNavigate } from 'react-router-dom';
 
-interface IConfigureAddonButtonProps {
+interface IConfigureIntegrationButtonProps {
     provider: IAddonProvider;
 }
 
-export const ConfigureAddonButton = ({
+export const ConfigureIntegrationButton = ({
     provider,
-}: IConfigureAddonButtonProps) => {
+}: IConfigureIntegrationButtonProps) => {
     const navigate = useNavigate();
 
     return (

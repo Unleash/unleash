@@ -22,9 +22,9 @@ import {
     StyledHelpText,
     StyledSelectAllFormControlLabel,
     StyledTitle,
-} from '../AddonForm.styles';
+} from '../IntegrationForm.styles';
 
-export interface IAddonMultiSelectorProps {
+export interface IIntegrationMultiSelectorProps {
     options: IAutocompleteBoxOption[];
     selectedItems: string[];
     onChange: (value: string[]) => void;
@@ -44,7 +44,7 @@ const StyledCheckbox = styled(Checkbox)(() => ({
 
 const CustomPaper = ({ ...props }) => <Paper elevation={8} {...props} />;
 
-export const AddonMultiSelector: VFC<IAddonMultiSelectorProps> = ({
+export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
     options,
     selectedItems,
     onChange,
@@ -138,7 +138,7 @@ export const AddonMultiSelector: VFC<IAddonMultiSelectorProps> = ({
 
     const DefaultHelpText = () => (
         <StyledHelpText>
-            Selecting {entityName}(s) here will filter events so that your addon
+            Selecting {entityName}(s) here will filter events so that your integration
             will only receive events that are tagged with one of your{' '}
             {entityName}s.
         </StyledHelpText>

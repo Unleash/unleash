@@ -1,5 +1,5 @@
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
-import { AddonForm } from '../AddonForm/AddonForm';
+import { IntegrationForm } from '../IntegrationForm/IntegrationForm';
 import cloneDeep from 'lodash.clonedeep';
 import { IAddon } from 'interfaces/addons';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -14,7 +14,7 @@ export const DEFAULT_DATA = {
     environments: [],
 } as unknown as IAddon; // TODO: improve type
 
-export const CreateAddon = () => {
+export const CreateIntegration = () => {
     const providerId = useRequiredPathParam('providerId');
     const { providers, refetchAddons } = useAddons();
 
@@ -29,7 +29,7 @@ export const CreateAddon = () => {
     };
 
     return (
-        <AddonForm
+        <IntegrationForm
             editMode={editMode}
             provider={provider}
             fetch={refetchAddons}

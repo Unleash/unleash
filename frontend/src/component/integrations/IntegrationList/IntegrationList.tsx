@@ -1,19 +1,19 @@
 import React from 'react';
-import { ConfiguredAddons } from './ConfiguredAddons/ConfiguredAddons';
-import { AvailableAddons } from './AvailableAddons/AvailableAddons';
+import { ConfiguredIntegrations } from './ConfiguredIntegrations/ConfiguredIntegrations';
+import { AvailableIntegrations } from './AvailableIntegrations/AvailableIntegrations';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 
-export const AddonList = () => {
+export const IntegrationList = () => {
     const { providers, addons, loading } = useAddons();
 
     return (
         <>
             <ConditionallyRender
                 condition={addons.length > 0}
-                show={<ConfiguredAddons />}
+                show={<ConfiguredIntegrations />}
             />
-            <AvailableAddons loading={loading} providers={providers} />
+            <AvailableIntegrations loading={loading} providers={providers} />
         </>
     );
 };

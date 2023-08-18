@@ -1,26 +1,26 @@
 import React from 'react';
 import { IAddonProvider } from 'interfaces/addons';
 import {
-    AddonParameter,
-    IAddonParameterProps,
-} from './AddonParameter/AddonParameter';
-import { StyledTitle } from '../AddonForm.styles';
+    IntegrationParameter,
+    IIntegrationParameterProps,
+} from './IntegrationParameter/IntegrationParameter';
+import { StyledTitle } from '../IntegrationForm.styles';
 
-interface IAddonParametersProps {
+interface IIntegrationParametersProps {
     provider?: IAddonProvider;
-    parametersErrors: IAddonParameterProps['parametersErrors'];
+    parametersErrors: IIntegrationParameterProps['parametersErrors'];
     editMode: boolean;
-    setParameterValue: IAddonParameterProps['setParameterValue'];
-    config: IAddonParameterProps['config'];
+    setParameterValue: IIntegrationParameterProps['setParameterValue'];
+    config: IIntegrationParameterProps['config'];
 }
 
-export const AddonParameters = ({
+export const IntegrationParameters = ({
     provider,
     config,
     parametersErrors,
     setParameterValue,
     editMode,
-}: IAddonParametersProps) => {
+}: IIntegrationParametersProps) => {
     if (!provider) return null;
     return (
         <React.Fragment>
@@ -33,7 +33,7 @@ export const AddonParameters = ({
                 </p>
             ) : null}
             {provider.parameters.map(parameter => (
-                <AddonParameter
+                <IntegrationParameter
                     key={parameter.name}
                     definition={parameter}
                     parametersErrors={parametersErrors}

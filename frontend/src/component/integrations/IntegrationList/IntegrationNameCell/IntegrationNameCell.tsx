@@ -10,14 +10,14 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
 
-interface IAddonNameCellProps {
+interface IIntegrationNameCellProps {
     provider: Pick<
         IAddonProvider,
         'displayName' | 'description' | 'deprecated'
     >;
 }
 
-export const AddonNameCell = ({ provider }: IAddonNameCellProps) => (
+export const IntegrationNameCell = ({ provider }: IIntegrationNameCellProps) => (
     <HighlightCell
         value={provider.displayName}
         subtitle={provider.description}

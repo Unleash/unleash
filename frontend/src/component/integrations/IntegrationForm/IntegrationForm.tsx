@@ -16,8 +16,8 @@ import {
 import produce from 'immer';
 import { trim } from 'component/common/util';
 import { IAddon, IAddonProvider } from 'interfaces/addons';
-import { AddonParameters } from './AddonParameters/AddonParameters';
-import { AddonInstall } from './AddonInstall/AddonInstall';
+import { IntegrationParameters } from './IntegrationParameters/IntegrationParameters';
+import { IntegrationInstall } from './IntegrationInstall/IntegrationInstall';
 import cloneDeep from 'lodash.clonedeep';
 import { useNavigate } from 'react-router-dom';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
@@ -25,7 +25,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import { AddonMultiSelector } from './AddonMultiSelector/AddonMultiSelector';
+import { IntegrationMultiSelector } from './IntegrationMultiSelector/IntegrationMultiSelector';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -42,7 +42,7 @@ import {
     StyledContainer,
     StyledButtonContainer,
     StyledButtonSection,
-} from './AddonForm.styles';
+} from './IntegrationForm.styles';
 import { useTheme } from '@mui/system';
 import { GO_BACK } from 'constants/navigate';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -54,7 +54,7 @@ interface IAddonFormProps {
     editMode: boolean;
 }
 
-export const AddonForm: VFC<IAddonFormProps> = ({
+export const IntegrationForm: VFC<IAddonFormProps> = ({
     editMode,
     provider,
     addon: initialValues,
@@ -272,7 +272,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                     <ConditionallyRender
                         condition={Boolean(installation)}
                         show={() => (
-                            <AddonInstall
+                            <IntegrationInstall
                                 url={installation!.url}
                                 title={installation!.title}
                                 helpText={installation!.helpText}
@@ -321,7 +321,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                     </StyledFormSection>
 
                     <StyledFormSection>
-                        <AddonMultiSelector
+                        <IntegrationMultiSelector
                             options={selectableEvents || []}
                             selectedItems={formValues.events}
                             onChange={setEventValues}
@@ -333,7 +333,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                         />
                     </StyledFormSection>
                     <StyledFormSection>
-                        <AddonMultiSelector
+                        <IntegrationMultiSelector
                             options={selectableProjects}
                             selectedItems={formValues.projects || []}
                             onChange={setProjects}
@@ -342,7 +342,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                         />
                     </StyledFormSection>
                     <StyledFormSection>
-                        <AddonMultiSelector
+                        <IntegrationMultiSelector
                             options={selectableEnvironments}
                             selectedItems={formValues.environments || []}
                             onChange={setEnvironments}
@@ -351,7 +351,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                         />
                     </StyledFormSection>
                     <StyledFormSection>
-                        <AddonParameters
+                        <IntegrationParameters
                             provider={provider}
                             config={formValues}
                             parametersErrors={errors.parameters}

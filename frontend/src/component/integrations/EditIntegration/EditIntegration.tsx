@@ -1,11 +1,11 @@
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
-import { AddonForm } from '../AddonForm/AddonForm';
+import { IntegrationForm } from '../IntegrationForm/IntegrationForm';
 import cloneDeep from 'lodash.clonedeep';
 import { IAddon } from 'interfaces/addons';
-import { DEFAULT_DATA } from '../CreateAddon/CreateAddon';
+import { DEFAULT_DATA } from '../CreateIntegration/CreateIntegration';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
-export const EditAddon = () => {
+export const EditIntegration = () => {
     const addonId = useRequiredPathParam('addonId');
     const { providers, addons, refetchAddons } = useAddons();
 
@@ -18,7 +18,7 @@ export const EditAddon = () => {
         : undefined;
 
     return (
-        <AddonForm
+        <IntegrationForm
             editMode={editMode}
             provider={provider}
             fetch={refetchAddons}

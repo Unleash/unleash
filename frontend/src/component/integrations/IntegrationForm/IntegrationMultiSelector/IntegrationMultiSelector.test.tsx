@@ -4,15 +4,15 @@ import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import {
-    IAddonMultiSelectorProps,
-    AddonMultiSelector,
-} from './AddonMultiSelector';
+    IIntegrationMultiSelectorProps,
+    IntegrationMultiSelector,
+} from './IntegrationMultiSelector';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const onChange = vi.fn();
 const onFocus = vi.fn();
 
-const mockProps: IAddonMultiSelectorProps = {
+const mockProps: IIntegrationMultiSelectorProps = {
     options: [
         { label: 'Project1', value: 'project1' },
         { label: 'Project2', value: 'project2' },
@@ -35,7 +35,7 @@ describe('AddonMultiSelector', () => {
     });
 
     it('renders with default state', () => {
-        render(<AddonMultiSelector {...mockProps} selectedItems={['*']} />);
+        render(<IntegrationMultiSelector {...mockProps} selectedItems={['*']} />);
 
         const checkbox = screen.getByLabelText(
             /all current and future projects/i
@@ -49,7 +49,7 @@ describe('AddonMultiSelector', () => {
 
     it('can toggle "ALL" checkbox', async () => {
         const user = userEvent.setup();
-        render(<AddonMultiSelector {...mockProps} selectedItems={['*']} />);
+        render(<IntegrationMultiSelector {...mockProps} selectedItems={['*']} />);
 
         await user.click(screen.getByTestId('select-all-projects'));
 
@@ -70,7 +70,7 @@ describe('AddonMultiSelector', () => {
 
     it('renders with autocomplete enabled if default value is not a wildcard', () => {
         render(
-            <AddonMultiSelector {...mockProps} selectedItems={['project1']} />
+            <IntegrationMultiSelector {...mockProps} selectedItems={['project1']} />
         );
 
         const checkbox = screen.getByLabelText(
@@ -87,7 +87,7 @@ describe('AddonMultiSelector', () => {
         it("doesn't show up for less than 3 options", async () => {
             const user = userEvent.setup();
             render(
-                <AddonMultiSelector
+                <IntegrationMultiSelector
                     {...mockProps}
                     selectedItems={[]}
                     options={[
@@ -108,7 +108,7 @@ describe('AddonMultiSelector', () => {
     it('can filter options', async () => {
         const user = userEvent.setup();
         render(
-            <AddonMultiSelector
+            <IntegrationMultiSelector
                 {...mockProps}
                 selectedItems={[]}
                 options={[

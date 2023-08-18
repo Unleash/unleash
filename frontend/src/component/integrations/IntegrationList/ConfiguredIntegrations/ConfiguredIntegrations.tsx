@@ -13,11 +13,11 @@ import { useTable, useSortBy } from 'react-table';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { SortableTableHeader, TablePlaceholder } from 'component/common/Table';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
-import { AddonIcon } from '../AddonIcon/AddonIcon';
-import { ConfiguredAddonsActionsCell } from './ConfiguredAddonsActionCell/ConfiguredAddonsActionsCell';
-import { AddonNameCell } from '../AddonNameCell/AddonNameCell';
+import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
+import { ConfiguredAddonsActionsCell } from './ConfiguredIntegrationsActionCell/ConfiguredIntegrationActionsCell';
+import { IntegrationNameCell } from '../IntegrationNameCell/IntegrationNameCell';
 
-export const ConfiguredAddons = () => {
+export const ConfiguredIntegrations = () => {
     const { refetchAddons, addons, providers, loading } = useAddons();
     const { updateAddon, removeAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
@@ -73,7 +73,7 @@ export const ConfiguredAddons = () => {
                         original: { provider },
                     },
                 }: any) => (
-                    <IconCell icon={<AddonIcon name={provider as string} />} />
+                    <IconCell icon={<IntegrationIcon name={provider as string} />} />
                 ),
                 disableSortBy: true,
             },
@@ -86,7 +86,7 @@ export const ConfiguredAddons = () => {
                         original: { provider, description },
                     },
                 }: any) => (
-                    <AddonNameCell
+                    <IntegrationNameCell
                         provider={{
                             ...(providers.find(
                                 ({ name }) => name === provider

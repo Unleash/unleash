@@ -3,7 +3,7 @@ import {
     StyledFormSection,
     StyledHelpText,
     StyledTitle,
-} from '../AddonForm.styles';
+} from '../IntegrationForm.styles';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ export interface IAddonInstallProps {
     helpText?: string;
 }
 
-export const AddonInstall = ({
+export const IntegrationInstall = ({
     url,
     title = 'Install addon',
     helpText = 'Click this button to install this addon.',

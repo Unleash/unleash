@@ -2,7 +2,7 @@ import { FeatureToggleListTable } from 'component/feature/FeatureToggleList/Feat
 import { StrategyView } from 'component/strategies/StrategyView/StrategyView';
 import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesList';
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
-import { AddonList } from 'component/addons/AddonList/AddonList';
+import { IntegrationList } from 'component/integrations/IntegrationList/IntegrationList';
 import Login from 'component/user/Login/Login';
 import { EEA, P, SE } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
@@ -22,8 +22,8 @@ import { ApplicationEdit } from 'component/application/ApplicationEdit/Applicati
 import { ApplicationList } from 'component/application/ApplicationList/ApplicationList';
 import ContextList from 'component/context/ContextList/ContextList/ContextList';
 import RedirectFeatureView from 'component/feature/RedirectFeatureView/RedirectFeatureView';
-import { CreateAddon } from 'component/addons/CreateAddon/CreateAddon';
-import { EditAddon } from 'component/addons/EditAddon/EditAddon';
+import { CreateIntegration } from 'component/integrations/CreateIntegration/CreateIntegration';
+import { EditIntegration } from 'component/integrations/EditIntegration/EditIntegration';
 import { CopyFeatureToggle } from 'component/feature/CopyFeature/CopyFeature';
 import { EventPage } from 'component/events/EventPage/EventPage';
 import { CreateStrategy } from 'component/strategies/CreateStrategy/CreateStrategy';
@@ -305,7 +305,7 @@ export const routes: IRoute[] = [
         path: '/addons/create/:providerId',
         parent: '/addons',
         title: 'Create',
-        component: CreateAddon,
+        component: CreateIntegration,
         type: 'protected',
         menu: {},
     },
@@ -313,14 +313,14 @@ export const routes: IRoute[] = [
         path: '/addons/edit/:addonId',
         parent: '/addons',
         title: 'Edit',
-        component: EditAddon,
+        component: EditIntegration,
         type: 'protected',
         menu: {},
     },
     {
         path: '/addons',
         title: 'Addons',
-        component: AddonList,
+        component: IntegrationList,
         hidden: false,
         type: 'protected',
         menu: { mobile: true, advanced: true },
@@ -329,7 +329,7 @@ export const routes: IRoute[] = [
     {
         path: '/integrations',
         title: 'Integrations',
-        component: AddonList,
+        component: IntegrationList,
         hidden: false,
         type: 'protected',
         menu: { mobile: true, advanced: true },

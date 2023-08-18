@@ -16,9 +16,9 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { sortTypes } from 'utils/sortTypes';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { ConfigureAddonButton } from './ConfigureAddonButton/ConfigureAddonButton';
-import { AddonIcon } from '../AddonIcon/AddonIcon';
-import { AddonNameCell } from '../AddonNameCell/AddonNameCell';
+import { ConfigureIntegrationButton } from './ConfigureIntegrationButton/ConfigureIntegrationButton';
+import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
+import { IntegrationNameCell } from '../IntegrationNameCell/IntegrationNameCell';
 import { IAddonInstallation } from 'interfaces/addons';
 
 interface IProvider {
@@ -32,15 +32,15 @@ interface IProvider {
     deprecated?: string;
 }
 
-interface IAvailableAddonsProps {
+interface IAvailableIntegrationsProps {
     providers: IProvider[];
     loading: boolean;
 }
 
-export const AvailableAddons = ({
+export const AvailableIntegrations = ({
     providers,
     loading,
-}: IAvailableAddonsProps) => {
+}: IAvailableIntegrationsProps) => {
     const data = useMemo(() => {
         if (loading) {
             return Array(5).fill({
@@ -70,7 +70,7 @@ export const AvailableAddons = ({
                     },
                 }: any) => {
                     return (
-                        <IconCell icon={<AddonIcon name={name as string} />} />
+                        <IconCell icon={<IntegrationIcon name={name as string} />} />
                     );
                 },
             },
@@ -79,7 +79,7 @@ export const AvailableAddons = ({
                 accessor: 'name',
                 width: '90%',
                 Cell: ({ row: { original } }: any) => (
-                    <AddonNameCell provider={original} />
+                    <IntegrationNameCell provider={original} />
                 ),
                 sortType: 'alphanumeric',
             },
@@ -88,7 +88,7 @@ export const AvailableAddons = ({
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
                     <ActionCell>
-                        <ConfigureAddonButton provider={original} />
+                        <ConfigureIntegrationButton provider={original} />
                     </ActionCell>
                 ),
                 width: 150,

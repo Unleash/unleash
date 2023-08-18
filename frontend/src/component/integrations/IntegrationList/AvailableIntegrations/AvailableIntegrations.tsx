@@ -11,6 +11,7 @@ interface IAvailableIntegrationsProps {
 
 const StyledGrid = styled('div')(({ theme }) => ({
     gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+    gridAutoRows: '1fr',
     gap: theme.spacing(2),
     display: 'grid',
 }));
@@ -24,6 +25,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                 {providers?.map(({ name, displayName, description }) => (
                     <IntegrationCard
                         key={name}
+                        icon={name}
                         title={displayName || name}
                         description={description}
                     />

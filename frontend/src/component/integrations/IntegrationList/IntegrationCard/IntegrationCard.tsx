@@ -1,7 +1,9 @@
 import { VFC } from 'react';
 import { Box, styled, Typography } from '@mui/material';
+import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
 
 interface IIntegrationCardProps {
+    icon: string;
     title: string;
     description?: string;
     isEnabled?: boolean;
@@ -9,13 +11,19 @@ interface IIntegrationCardProps {
 }
 
 const StyledBox = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
     borderRadius: `${theme.shape.borderRadiusMedium}px`,
     border: `1px solid ${theme.palette.divider}`,
-    boxShadow: theme.shadows[1],
+}));
+
+const StyledHeader = styled(Typography)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: theme.spacing(2),
 }));
 
 export const IntegrationCard: VFC<IIntegrationCardProps> = ({
+    icon,
     title,
     description,
     isDeprecated,
@@ -23,7 +31,9 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
 }) => {
     return (
         <StyledBox>
-            <Typography variant="h3">{title}</Typography>
+            <StyledHeader variant="h3">
+                <IntegrationIcon name={icon as string} /> {title}
+            </StyledHeader>
             <Typography variant="body1">{description}</Typography>
         </StyledBox>
     );

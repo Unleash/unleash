@@ -19,22 +19,10 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { ConfigureAddonsButton } from './ConfigureAddonButton/ConfigureAddonsButton';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
 import { IntegrationNameCell } from '../IntegrationNameCell/IntegrationNameCell';
-import { IAddonInstallation } from 'interfaces/addons';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-
-interface IProvider {
-    name: string;
-    displayName: string;
-    description: string;
-    documentationUrl: string;
-    parameters: object[];
-    events: string[];
-    installation?: IAddonInstallation;
-    deprecated?: string;
-}
+import type { AddonTypeSchema } from 'openapi';
 
 interface IAvailableAddonsProps {
-    providers: IProvider[];
+    providers: AddonTypeSchema[];
     loading: boolean;
 }
 

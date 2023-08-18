@@ -18,7 +18,7 @@ export const IntegrationList = () => {
             />
             <ConditionallyRender
                 condition={integrationsRework}
-                show={<AvailableIntegrations />}
+                show={<AvailableIntegrations providers={providers} />}
                 elseShow={
                     <AvailableAddons loading={loading} providers={providers} />
                 }

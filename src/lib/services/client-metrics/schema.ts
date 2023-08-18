@@ -91,4 +91,5 @@ export const clientRegisterSchema = joi
         started: joi.date().required(),
         interval: joi.number().required(),
         environment: joi.string().optional(),
+        project: joi.string().optional(),
     });

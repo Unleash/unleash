@@ -7,6 +7,9 @@ interface IConfigureAddonsButtonProps {
     provider: IAddonProvider;
 }
 
+/**
+ * @deprecated Remove when integrationsRework flag is removed
+ */
 export const ConfigureAddonsButton = ({
     provider,
 }: IConfigureAddonsButtonProps) => {

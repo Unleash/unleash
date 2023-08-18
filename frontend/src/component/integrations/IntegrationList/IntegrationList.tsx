@@ -3,6 +3,7 @@ import { AvailableAddons } from './AvailableAddons/AvailableAddons';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { AvailableIntegrations } from './AvailableIntegrations/AvailableIntegrations';
 
 export const IntegrationList = () => {
     const { providers, addons, loading } = useAddons();
@@ -15,7 +16,13 @@ export const IntegrationList = () => {
                 condition={addons.length > 0}
                 show={<ConfiguredAddons />}
             />
-            <AvailableAddons loading={loading} providers={providers} />
+            <ConditionallyRender
+                condition={integrationsRework}
+                show={<AvailableIntegrations />}
+                elseShow={
+                    <AvailableAddons loading={loading} providers={providers} />
+                }
+            />
         </>
     );
 };

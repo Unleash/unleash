@@ -17,6 +17,9 @@ interface IIntegrationNameCellProps {
     >;
 }
 
+/**
+ * @deprecated Remove when integrationsRework flag is removed
+ */
 export const IntegrationNameCell = ({ provider }: IIntegrationNameCellProps) => (
     <HighlightCell
         value={provider.displayName}

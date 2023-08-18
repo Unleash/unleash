@@ -38,6 +38,9 @@ interface IAvailableAddonsProps {
     loading: boolean;
 }
 
+/**
+ * @deprecated Remove when integrationsRework flag is removed
+ */
 export const AvailableAddons = ({
     providers,
     loading,

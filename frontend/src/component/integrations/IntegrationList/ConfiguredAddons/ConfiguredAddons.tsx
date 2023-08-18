@@ -17,6 +17,9 @@ import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
 import { ConfiguredAddonsActionsCell } from './ConfiguredAddonsActionCell/ConfiguredAddonsActionsCell';
 import { IntegrationNameCell } from '../IntegrationNameCell/IntegrationNameCell';
 
+/**
+ * @deprecated Remove when integrationsRework flag is removed
+ */
 export const ConfiguredAddons = () => {
     const { refetchAddons, addons, providers, loading } = useAddons();
     const { updateAddon, removeAddon } = useAddonsApi();

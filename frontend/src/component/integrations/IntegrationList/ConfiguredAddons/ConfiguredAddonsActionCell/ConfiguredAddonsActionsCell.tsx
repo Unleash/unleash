@@ -18,6 +18,9 @@ interface IConfiguredAddonsActionsCellProps {
     setDeletedAddon: React.Dispatch<React.SetStateAction<IAddon>>;
 }
 
+/**
+ * @deprecated Remove when integrationsRework flag is removed
+ */
 export const ConfiguredAddonsActionsCell = ({
     toggleAddon,
     setShowDelete,

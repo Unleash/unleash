@@ -58,6 +58,7 @@ export interface IFlags {
     segmentChangeRequests?: boolean;
     changeRequestReject?: boolean;
     lastSeenByEnvironment?: boolean;
+    newApplicationList?: boolean;
 }
 
 export interface IVersionInfo {

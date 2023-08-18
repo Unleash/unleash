@@ -19,7 +19,6 @@ import EditProject from 'component/project/Project/EditProject/EditProject';
 import CreateFeature from 'component/feature/CreateFeature/CreateFeature';
 import EditFeature from 'component/feature/EditFeature/EditFeature';
 import { ApplicationEdit } from 'component/application/ApplicationEdit/ApplicationEdit';
-import { ApplicationList } from 'component/application/ApplicationList/ApplicationList';
 import ContextList from 'component/context/ContextList/ContextList/ContextList';
 import RedirectFeatureView from 'component/feature/RedirectFeatureView/RedirectFeatureView';
 import { CreateAddon } from 'component/addons/CreateAddon/CreateAddon';
@@ -44,6 +43,7 @@ import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
 import { LoginHistory } from 'component/loginHistory/LoginHistory';
 import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
+import { TemporaryApplicationListWrapper } from 'component/application/ApplicationList/TemporaryApplicationListWrapper';
 
 export const routes: IRoute[] = [
     // Splash
@@ -179,7 +179,7 @@ export const routes: IRoute[] = [
     {
         path: '/applications',
         title: 'Applications',
-        component: ApplicationList,
+        component: TemporaryApplicationListWrapper,
         type: 'protected',
         menu: { mobile: true, advanced: true },
     },

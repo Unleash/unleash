@@ -92,7 +92,7 @@ Returns a list of _configured integrations_ and available _integration providers
       "tags": [
         {
           "name": "slack",
-          "description": "Slack tag used by the slack-integration to specify the slack channel.",
+          "description": "Slack tag used by the slack integration to specify the slack channel.",
           "icon": "S"
         }
       ]

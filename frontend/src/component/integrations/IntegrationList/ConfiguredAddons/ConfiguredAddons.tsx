@@ -180,11 +180,7 @@ export const ConfiguredAddons = () => {
     return (
         <PageContent
             isLoading={loading}
-            header={
-                <PageHeader
-                    title={`Configured addons (${rows.length})`}
-                />
-            }
+            header={<PageHeader title={`Configured addons (${rows.length})`} />}
             sx={theme => ({ marginBottom: theme.spacing(2) })}
         >
             <Table {...getTableProps()}>

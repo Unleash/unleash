@@ -35,7 +35,9 @@ describe('AddonMultiSelector', () => {
     });
 
     it('renders with default state', () => {
-        render(<IntegrationMultiSelector {...mockProps} selectedItems={['*']} />);
+        render(
+            <IntegrationMultiSelector {...mockProps} selectedItems={['*']} />
+        );
 
         const checkbox = screen.getByLabelText(
             /all current and future projects/i
@@ -49,7 +51,9 @@ describe('AddonMultiSelector', () => {
 
     it('can toggle "ALL" checkbox', async () => {
         const user = userEvent.setup();
-        render(<IntegrationMultiSelector {...mockProps} selectedItems={['*']} />);
+        render(
+            <IntegrationMultiSelector {...mockProps} selectedItems={['*']} />
+        );
 
         await user.click(screen.getByTestId('select-all-projects'));
 
@@ -70,7 +74,10 @@ describe('AddonMultiSelector', () => {
 
     it('renders with autocomplete enabled if default value is not a wildcard', () => {
         render(
-            <IntegrationMultiSelector {...mockProps} selectedItems={['project1']} />
+            <IntegrationMultiSelector
+                {...mockProps}
+                selectedItems={['project1']}
+            />
         );
 
         const checkbox = screen.getByLabelText(

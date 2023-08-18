@@ -12,7 +12,8 @@ export const AddonRedirect = () => {
 
     return (
         <PageContent>
-            Addons where renamed to <Link to="/integrations">/integrations</Link>
+            Addons where renamed to{' '}
+            <Link to="/integrations">/integrations</Link>
         </PageContent>
     );
 };

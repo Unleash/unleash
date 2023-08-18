@@ -138,9 +138,9 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
 
     const DefaultHelpText = () => (
         <StyledHelpText>
-            Selecting {entityName}(s) here will filter events so that your integration
-            will only receive events that are tagged with one of your{' '}
-            {entityName}s.
+            Selecting {entityName}(s) here will filter events so that your
+            integration will only receive events that are tagged with one of
+            your {entityName}s.
         </StyledHelpText>
     );
 

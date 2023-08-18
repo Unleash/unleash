@@ -139,11 +139,7 @@ export const AvailableAddons = ({
     return (
         <PageContent
             isLoading={loading}
-            header={
-                <PageHeader
-                    title={`Available addons (${rows.length})`}
-                />
-            }
+            header={<PageHeader title={`Available addons (${rows.length})`} />}
         >
             <Table {...getTableProps()}>
                 <SortableTableHeader headerGroups={headerGroups} />

@@ -14,10 +14,10 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { SortableTableHeader, TablePlaceholder } from 'component/common/Table';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
-import { ConfiguredAddonsActionsCell } from './ConfiguredIntegrationsActionCell/ConfiguredIntegrationActionsCell';
+import { ConfiguredAddonsActionsCell } from './ConfiguredAddonsActionCell/ConfiguredAddonsActionsCell';
 import { IntegrationNameCell } from '../IntegrationNameCell/IntegrationNameCell';
 
-export const ConfiguredIntegrations = () => {
+export const ConfiguredAddons = () => {
     const { refetchAddons, addons, providers, loading } = useAddons();
     const { updateAddon, removeAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
@@ -73,7 +73,9 @@ export const ConfiguredIntegrations = () => {
                         original: { provider },
                     },
                 }: any) => (
-                    <IconCell icon={<IntegrationIcon name={provider as string} />} />
+                    <IconCell
+                        icon={<IntegrationIcon name={provider as string} />}
+                    />
                 ),
                 disableSortBy: true,
             },
@@ -175,7 +177,11 @@ export const ConfiguredIntegrations = () => {
     return (
         <PageContent
             isLoading={loading}
-            header={<PageHeader title={`Configured addons (${rows.length})`} />}
+            header={
+                <PageHeader
+                    title={`Configured addons (${rows.length})`}
+                />
+            }
             sx={theme => ({ marginBottom: theme.spacing(2) })}
         >
             <Table {...getTableProps()}>

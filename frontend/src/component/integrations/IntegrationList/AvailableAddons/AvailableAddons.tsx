@@ -16,10 +16,11 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { sortTypes } from 'utils/sortTypes';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { ConfigureIntegrationButton } from './ConfigureIntegrationButton/ConfigureIntegrationButton';
+import { ConfigureAddonsButton } from './ConfigureAddonButton/ConfigureAddonsButton';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
 import { IntegrationNameCell } from '../IntegrationNameCell/IntegrationNameCell';
 import { IAddonInstallation } from 'interfaces/addons';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IProvider {
     name: string;
@@ -32,15 +33,15 @@ interface IProvider {
     deprecated?: string;
 }
 
-interface IAvailableIntegrationsProps {
+interface IAvailableAddonsProps {
     providers: IProvider[];
     loading: boolean;
 }
 
-export const AvailableIntegrations = ({
+export const AvailableAddons = ({
     providers,
     loading,
-}: IAvailableIntegrationsProps) => {
+}: IAvailableAddonsProps) => {
     const data = useMemo(() => {
         if (loading) {
             return Array(5).fill({
@@ -70,7 +71,9 @@ export const AvailableIntegrations = ({
                     },
                 }: any) => {
                     return (
-                        <IconCell icon={<IntegrationIcon name={name as string} />} />
+                        <IconCell
+                            icon={<IntegrationIcon name={name as string} />}
+                        />
                     );
                 },
             },
@@ -88,7 +91,7 @@ export const AvailableIntegrations = ({
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
                     <ActionCell>
-                        <ConfigureIntegrationButton provider={original} />
+                        <ConfigureAddonsButton provider={original} />
                     </ActionCell>
                 ),
                 width: 150,
@@ -133,7 +136,11 @@ export const AvailableIntegrations = ({
     return (
         <PageContent
             isLoading={loading}
-            header={<PageHeader title={`Available addons (${rows.length})`} />}
+            header={
+                <PageHeader
+                    title={`Available addons (${rows.length})`}
+                />
+            }
         >
             <Table {...getTableProps()}>
                 <SortableTableHeader headerGroups={headerGroups} />

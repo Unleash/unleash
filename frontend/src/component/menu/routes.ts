@@ -306,6 +306,7 @@ export const routes: IRoute[] = [
         parent: '/addons',
         title: 'Create',
         component: CreateIntegration,
+        // TODO: use AddonRedirect after removing `integrationsRework` menu flag
         type: 'protected',
         menu: {},
     },
@@ -314,6 +315,7 @@ export const routes: IRoute[] = [
         parent: '/addons',
         title: 'Edit',
         component: EditIntegration,
+        // TODO: use AddonRedirect after removing `integrationsRework` menu flag
         type: 'protected',
         menu: {},
     },
@@ -321,11 +323,28 @@ export const routes: IRoute[] = [
         path: '/addons',
         title: 'Addons',
         component: IntegrationList,
+        // TODO: use AddonRedirect after removing `integrationsRework` menu flag
         hidden: false,
         type: 'protected',
         menu: { mobile: true, advanced: true },
+        // TODO: remove 'addons' from menu after removing `integrationsRework` menu flag
     },
-    // TODO: remove 'addons' from menu after removing Integrations menu flag
+    {
+        path: '/integrations/create/:providerId',
+        parent: '/integrations',
+        title: 'Create',
+        component: CreateIntegration,
+        type: 'protected',
+        menu: {},
+    },
+    {
+        path: '/integrations/edit/:addonId',
+        parent: '/integrations',
+        title: 'Edit',
+        component: EditIntegration,
+        type: 'protected',
+        menu: {},
+    },
     {
         path: '/integrations',
         title: 'Integrations',

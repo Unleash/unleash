@@ -56,6 +56,7 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({ id }) => {
                     aria-controls={open ? 'actions-menu' : undefined}
                     aria-haspopup="true"
                     aria-expanded={open ? 'true' : undefined}
+                    data-loading
                 >
                     <MoreVertIcon sx={{ width: 32, height: 32 }} />
                 </IconButton>

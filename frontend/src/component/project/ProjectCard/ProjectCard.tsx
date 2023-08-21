@@ -22,7 +22,6 @@ import {
     StyledBox,
     StyledH2Title,
     StyledEditIcon,
-    StyledDeleteIcon,
     StyledProjectIcon,
     StyledDivInfo,
     StyledDivInfoContainer,
@@ -49,7 +48,7 @@ export const ProjectCard = ({
     isFavorite = false,
 }: IProjectCardProps) => {
     const { hasAccess } = useContext(AccessContext);
-    const { isOss, uiConfig } = useUiConfig();
+    const { isOss } = useUiConfig();
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const [showDelDialog, setShowDelDialog] = useState(false);
     const navigate = useNavigate();
@@ -60,9 +59,6 @@ export const ProjectCard = ({
         event.preventDefault();
         setAnchorEl(event.currentTarget);
     };
-
-    const canDeleteProject =
-        hasAccess(DELETE_PROJECT, id) && id !== DEFAULT_PROJECT_ID;
 
     const onFavorite = async (e: React.SyntheticEvent) => {
         e.preventDefault();

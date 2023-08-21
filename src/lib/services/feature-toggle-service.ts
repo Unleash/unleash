@@ -2063,25 +2063,23 @@ class FeatureToggleService {
     async updatePotentiallyStaleFeatures(): Promise<void> {
         const potentiallyStaleFeatures =
             await this.featureToggleStore.updatePotentiallyStaleFeatures();
-        if (this.flagResolver.isEnabled('emitPotentiallyStaleEvents')) {
-            if (potentiallyStaleFeatures.length > 0) {
-                return this.eventStore.batchStore(
-                    await Promise.all(
-                        potentiallyStaleFeatures
-                            .filter((feature) => feature.potentiallyStale)
-                            .map(
-                                async ({ name, project }) =>
-                                    new PotentiallyStaleOnEvent({
-                                        featureName: name,
-                                        project,
-                                        tags: await this.tagStore.getAllTagsForFeature(
-                                            name,
-                                        ),
-                                    }),
-                            ),
-                    ),
-                );
-            }
+        if (potentiallyStaleFeatures.length > 0) {
+            return this.eventStore.batchStore(
+                await Promise.all(
+                    potentiallyStaleFeatures
+                        .filter((feature) => feature.potentiallyStale)
+                        .map(
+                            async ({ name, project }) =>
+                                new PotentiallyStaleOnEvent({
+                                    featureName: name,
+                                    project,
+                                    tags: await this.tagStore.getAllTagsForFeature(
+                                        name,
+                                    ),
+                                }),
+                        ),
+                ),
+            );
         }
     }
 }

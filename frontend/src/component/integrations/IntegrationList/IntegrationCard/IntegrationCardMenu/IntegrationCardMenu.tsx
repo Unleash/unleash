@@ -1,4 +1,4 @@
-import { useState, VFC } from 'react';
+import { useCallback, useState, VFC } from 'react';
 import {
     IconButton,
     ListItemIcon,
@@ -16,9 +16,14 @@ import {
     UPDATE_ADDON,
 } from 'component/providers/AccessProvider/permissions';
 import { useHasRootAccess } from 'hooks/useHasAccess';
+import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
+import type { AddonSchema } from 'openapi';
+import useAddons from 'hooks/api/getters/useAddons/useAddons';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IIntegrationCardMenuProps {
-    id: string;
+    addon: AddonSchema;
 }
 
 const StyledMenu = styled('div')(({ theme }) => ({
@@ -30,9 +35,14 @@ const StyledMenu = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
-export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({ id }) => {
+export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
+    addon,
+}) => {
     const [open, setOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+    const { updateAddon, removeAddon } = useAddonsApi();
+    const { refetchAddons } = useAddons();
+    const { setToastData, setToastApiError } = useToast();
 
     const handleMenuClick = (event: React.SyntheticEvent) => {
         event.preventDefault();
@@ -46,6 +56,36 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({ id }) => {
     };
     const updateAccess = useHasRootAccess(UPDATE_ADDON);
     const deleteAccess = useHasRootAccess(DELETE_ADDON);
+
+    const toggleIntegration = useCallback(async () => {
+        try {
+            await updateAddon({ ...addon, enabled: !addon.enabled });
+            refetchAddons();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: !addon.enabled
+                    ? 'Integration is now enabled'
+                    : 'Integration is now disabled',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    }, [setToastApiError, refetchAddons, setToastData, updateAddon]);
+
+    const deleteIntegration = useCallback(async () => {
+        try {
+            await removeAddon(addon.id);
+            refetchAddons();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Integration has been deleted',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    }, [setToastApiError, refetchAddons, setToastData, removeAddon]);
 
     return (
         <StyledMenu>
@@ -73,54 +113,37 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({ id }) => {
                     vertical: 'top',
                     horizontal: 'right',
                 }}
-                // style={{ top: 0, left: -100 }}
                 onClick={event => {
                     event.preventDefault();
                 }}
                 onClose={handleMenuClick}
             >
                 <MenuItem
-                    // onClick={e => {
-                    //     e.preventDefault();
-                    //     navigate(
-                    //         getProjectEditPath(
-                    //             id,
-                    //             Boolean(
-                    //                 uiConfig.flags
-                    //                     .newProjectLayout
-                    //             )
-                    //         )
-                    //     );
-                    // }}
+                    onClick={e => {
+                        e.preventDefault();
+                        toggleIntegration();
+                    }}
                     disabled={!updateAccess}
                 >
                     <ListItemIcon>
                         <PowerSettingsNew />
                     </ListItemIcon>
-                    <ListItemText>Disable</ListItemText>
+                    <ListItemText>
+                        {addon.enabled ? 'Disable' : 'Enable'}
+                    </ListItemText>
                 </MenuItem>{' '}
                 <MenuItem
                     disabled={!deleteAccess}
-                    // onClick={() => setRemoveDialogOpen(true)}
+                    onClick={e => {
+                        e.preventDefault();
+                        deleteIntegration();
+                    }}
                 >
                     <ListItemIcon>
                         <Delete />
                     </ListItemIcon>
                     <ListItemText>Delete</ListItemText>
                 </MenuItem>
-                {/* <MenuItem
-                onClick={e => {
-                    e.preventDefault();
-                    setShowDelDialog(true);
-                }}
-                disabled={!canDeleteProject}
-            >
-                <StyledDeleteIcon />
-                {id === DEFAULT_PROJECT_ID &&
-                !canDeleteProject
-                    ? "You can't delete the default project"
-                    : 'Delete project'}
-            </MenuItem> */}
             </Menu>
         </StyledMenu>
     );

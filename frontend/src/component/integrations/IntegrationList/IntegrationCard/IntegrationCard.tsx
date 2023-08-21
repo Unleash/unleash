@@ -6,6 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Badge } from 'component/common/Badge/Badge';
 import { IntegrationCardMenu } from './IntegrationCardMenu/IntegrationCardMenu';
+import type { AddonSchema } from 'openapi';
 
 interface IIntegrationCardProps {
     id?: string | number;
@@ -16,6 +17,7 @@ interface IIntegrationCardProps {
     isEnabled?: boolean;
     configureActionText?: string;
     link: string;
+    addon?: AddonSchema;
 }
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -55,15 +57,15 @@ const StyledAction = styled(Typography)(({ theme }) => ({
 }));
 
 export const IntegrationCard: VFC<IIntegrationCardProps> = ({
-    id,
     icon,
     title,
     description,
     isEnabled,
     configureActionText = 'Configure',
     link,
+    addon,
 }) => {
-    const isConfigured = id !== undefined;
+    const isConfigured = addon !== undefined;
 
     return (
         <StyledLink to={link}>
@@ -85,7 +87,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                 />
                 <ConditionallyRender
                     condition={isConfigured}
-                    show={<IntegrationCardMenu id={id as string} />}
+                    show={<IntegrationCardMenu addon={addon as AddonSchema} />}
                 />
             </StyledHeader>
             <Typography variant="body1" data-loading>

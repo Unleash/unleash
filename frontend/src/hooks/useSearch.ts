@@ -12,32 +12,37 @@ type IUseSearchOutput<T extends any> = {
     getSearchContext: () => IGetSearchContextOutput<T>;
 };
 
+const normalizeSearchValue = (value: string) =>
+    value.replaceAll(/\s*,\s*/g, ',');
+
 export const useSearch = <T extends any>(
     columns: any[],
     searchValue: string,
     data: T[]
 ): IUseSearchOutput<T> => {
     const getSearchText = useCallback(
-        (value: string) => getSearchTextGenerator(columns)(value),
+        (value: string) =>
+            getSearchTextGenerator(columns)(normalizeSearchValue(value)),
         [columns]
     );
+    const normalizedSearchValue = normalizeSearchValue(searchValue);
 
     const getSearchContext = useCallback(() => {
-        return { data, searchValue, columns };
-    }, [data, searchValue, columns]);
+        return { data, searchValue: normalizedSearchValue, columns };
+    }, [data, normalizedSearchValue, columns]);
 
     const search = useMemo(() => {
-        if (!searchValue) return data;
+        if (!normalizedSearchValue) return data;
 
-        const filteredData = filter(columns, searchValue, data);
+        const filteredData = filter(columns, normalizedSearchValue, data);
         const searchedData = searchInFilteredData(
             columns,
-            getSearchText(searchValue),
+            getSearchText(normalizedSearchValue),
             filteredData
         );
 
         return searchedData;
-    }, [columns, searchValue, data, getSearchText]);
+    }, [columns, normalizedSearchValue, data, getSearchText]);
 
     return { data: search, getSearchText, getSearchContext };
 };
@@ -67,6 +72,7 @@ export const searchInFilteredData = <T extends any>(
     searchValue: string,
     filteredData: T[]
 ) => {
+    const trimmedSearchValue = searchValue.trim();
     const searchableColumns = columns.filter(
         column => column.searchable && column.accessor
     );
@@ -74,16 +80,24 @@ export const searchInFilteredData = <T extends any>(
     return filteredData.filter(row => {
         return searchableColumns.some(column => {
             if (column.searchBy) {
-                return column.searchBy(row, searchValue);
+                return column.searchBy(row, trimmedSearchValue);
             }
 
-            return defaultSearch(getColumnValues(column, row), searchValue);
+            return defaultSearch(
+                getColumnValues(column, row),
+                trimmedSearchValue
+            );
         });
     });
 };
 
 const defaultFilter = (fieldValue: string, values: string[]) =>
     values.some(value => fieldValue?.toLowerCase() === value?.toLowerCase());
+
+export const includesFilter = (fieldValue: string, values: string[]) =>
+    values.some(value =>
+        fieldValue?.toLowerCase().includes(value?.toLowerCase())
+    );
 
 const defaultSearch = (fieldValue: string, value: string) =>
     fieldValue?.toLowerCase().includes(value?.toLowerCase());

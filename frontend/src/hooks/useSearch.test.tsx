@@ -3,7 +3,10 @@ import {
     getSearchTextGenerator,
     searchInFilteredData,
     filter,
+    useSearch,
 } from './useSearch';
+import { FC } from 'react';
+import { render, screen } from '@testing-library/react';
 
 const columns = [
     {
@@ -308,5 +311,115 @@ describe('filter', () => {
                 seen: true,
             },
         ]);
+    });
+});
+
+const SearchData: FC<{ searchValue: string }> = ({ searchValue }) => {
+    const search = useSearch(columns, searchValue, data);
+
+    return <div>{search.data.map(item => item.name).join(',')}</div>;
+};
+
+const SearchText: FC<{ searchValue: string }> = ({ searchValue }) => {
+    const search = useSearch(columns, searchValue, data);
+
+    return <div>{search.getSearchText(searchValue)}</div>;
+};
+
+describe('Search and filter data', () => {
+    it('should filter single value', () => {
+        render(<SearchData searchValue={'project:my-project'} />);
+
+        screen.getByText('my-feature-toggle-3,my-feature-toggle-4');
+    });
+
+    it('should filter multiple values', () => {
+        render(<SearchData searchValue={'project:my-project,another-value'} />);
+
+        screen.getByText('my-feature-toggle-3,my-feature-toggle-4');
+    });
+
+    it('should filter multiple values with spaces', () => {
+        render(
+            <SearchData searchValue={'project:my-project  ,  another-value'} />
+        );
+
+        screen.getByText('my-feature-toggle-3,my-feature-toggle-4');
+    });
+
+    it('should handle multiple filters', () => {
+        render(
+            <SearchData
+                searchValue={'project:my-project ,another-value state:active'}
+            />
+        );
+
+        screen.getByText('my-feature-toggle-3');
+    });
+
+    it('should handle multiple filters with long spaces', () => {
+        render(
+            <SearchData
+                searchValue={
+                    'project:my-project   ,   another-value   state:active   ,   stale'
+                }
+            />
+        );
+
+        screen.getByText('my-feature-toggle-3,my-feature-toggle-4');
+    });
+
+    it('should handle multiple filters and search string in between', () => {
+        render(
+            <SearchData
+                searchValue={
+                    'project:my-project , another-value toggle-3 state:active , stale'
+                }
+            />
+        );
+
+        screen.getByText('my-feature-toggle-3');
+    });
+
+    it('should handle multiple filters and search string at the end', () => {
+        render(
+            <SearchData
+                searchValue={
+                    'project:my-project , another-value state:active , stale toggle-3'
+                }
+            />
+        );
+
+        screen.getByText('my-feature-toggle-3');
+    });
+
+    it('should handle multiple filters and search string at the beginning', () => {
+        render(
+            <SearchData
+                searchValue={
+                    'toggle-3 project:my-project , another-value state:active , stale'
+                }
+            />
+        );
+
+        screen.getByText('my-feature-toggle-3');
+    });
+
+    it('should return basic search text', () => {
+        render(<SearchText searchValue={'toggle-3'} />);
+
+        screen.getByText('toggle-3');
+    });
+
+    it('should return advanced search text', () => {
+        render(
+            <SearchText
+                searchValue={
+                    'project:my-project , another-value toggle-3 state:active , stale'
+                }
+            />
+        );
+
+        screen.getByText('toggle-3');
     });
 });

@@ -25,14 +25,10 @@ export const ProjectSettings = () => {
     const updatedNavigation = uiConfig.flags?.frontendNavigationUpdate;
 
     const tabs: ITab[] = [
-        ...(uiConfig.flags.newProjectLayout
-            ? [
-                  {
-                      id: '',
-                      label: 'Settings',
-                  },
-              ]
-            : []),
+        {
+            id: '',
+            label: 'Settings',
+        },
         {
             id: 'environments',
             label: 'Environments',
@@ -84,9 +80,7 @@ export const ProjectSettings = () => {
             onChange={onChange}
         >
             <Routes>
-                {uiConfig.flags.newProjectLayout ? (
-                    <Route path="/*" element={<Settings />} />
-                ) : null}
+                <Route path="/*" element={<Settings />} />
                 <Route
                     path="environments/*"
                     element={<ProjectEnvironmentList />}

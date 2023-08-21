@@ -21,7 +21,6 @@ export type IFlagKey =
     | 'disableNotifications'
     | 'advancedPlayground'
     | 'strategyVariant'
-    | 'newProjectLayout'
     | 'slackAppAddon'
     | 'emitPotentiallyStaleEvents'
     | 'configurableFeatureTypeLifetimes'
@@ -97,10 +96,6 @@ const flags: IFlags = {
     ),
     disableNotifications: parseEnvVarBoolean(
         process.env.DISABLE_NOTIFICATIONS,
-        false,
-    ),
-    newProjectLayout: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_PROJECT_LAYOUT,
         false,
     ),
     strategyVariant: parseEnvVarBoolean(

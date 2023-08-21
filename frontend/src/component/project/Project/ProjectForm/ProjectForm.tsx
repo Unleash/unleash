@@ -8,7 +8,6 @@ import { Box, styled, TextField } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IProjectForm {
     projectId: string;
@@ -107,7 +106,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
     validateProjectId,
     clearErrors,
 }) => {
-    const { uiConfig } = useUiConfig();
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
@@ -199,50 +197,42 @@ const ProjectForm: React.FC<IProjectForm> = ({
                         ]}
                     ></StyledSelect>
                 </>
-                <ConditionallyRender
-                    condition={Boolean(uiConfig.flags.newProjectLayout)}
-                    show={
-                        <>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    marginBottom: 1,
-                                    gap: 1,
-                                }}
-                            >
-                                <p>Feature toggles limit?</p>
-                                <FeatureTogglesLimitTooltip />
-                            </Box>
-                            <StyledSubtitle>
-                                Leave it empty if you don’t want to add a limit
-                            </StyledSubtitle>
-                            <StyledInputContainer>
-                                <StyledInput
-                                    label={'Limit'}
-                                    name="value"
-                                    type={'number'}
-                                    value={featureLimit}
-                                    onChange={e =>
-                                        setFeatureLimit(e.target.value)
-                                    }
-                                />
-                                <ConditionallyRender
-                                    condition={
-                                        featureCount !== undefined &&
-                                        Boolean(featureLimit)
-                                    }
-                                    show={
-                                        <Box>
-                                            ({featureCount} of {featureLimit}{' '}
-                                            used)
-                                        </Box>
-                                    }
-                                />
-                            </StyledInputContainer>
-                        </>
-                    }
-                />
+                <>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginBottom: 1,
+                            gap: 1,
+                        }}
+                    >
+                        <p>Feature toggles limit?</p>
+                        <FeatureTogglesLimitTooltip />
+                    </Box>
+                    <StyledSubtitle>
+                        Leave it empty if you don’t want to add a limit
+                    </StyledSubtitle>
+                    <StyledInputContainer>
+                        <StyledInput
+                            label={'Limit'}
+                            name="value"
+                            type={'number'}
+                            value={featureLimit}
+                            onChange={e => setFeatureLimit(e.target.value)}
+                        />
+                        <ConditionallyRender
+                            condition={
+                                featureCount !== undefined &&
+                                Boolean(featureLimit)
+                            }
+                            show={
+                                <Box>
+                                    ({featureCount} of {featureLimit} used)
+                                </Box>
+                            }
+                        />
+                    </StyledInputContainer>
+                </>
             </StyledContainer>
             <StyledButtonContainer>{children}</StyledButtonContainer>
         </StyledForm>

@@ -27,23 +27,25 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
             isLoading={loading}
         >
             <StyledCardsGrid ref={ref}>
-                {addons?.map(
-                    ({
-                        id,
-                        enabled,
-                        provider,
-                        description,
-                        // events,
-                        // projects,
-                    }) => {
+                {addons
+                    ?.sort(({ id: a }, { id: b }) => a - b)
+                    .map(addon => {
+                        const {
+                            id,
+                            enabled,
+                            provider,
+                            description,
+                            // events,
+                            // projects,
+                        } = addon;
                         const providerConfig = providers.find(
                             item => item.name === provider
                         );
 
                         return (
                             <IntegrationCard
-                                key={id}
-                                id={id}
+                                key={`${id}-${provider}-${enabled}`}
+                                addon={addon}
                                 icon={provider}
                                 title={providerConfig?.displayName || provider}
                                 isEnabled={enabled}
@@ -52,8 +54,7 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                                 link={`/integrations/edit/${id}`}
                             />
                         );
-                    }
-                )}
+                    })}
             </StyledCardsGrid>
         </PageContent>
     );

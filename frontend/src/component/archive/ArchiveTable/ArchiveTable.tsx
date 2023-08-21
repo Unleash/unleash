@@ -19,7 +19,6 @@ import { Search } from 'component/common/Search/Search';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
 import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { FeatureStaleCell } from 'component/feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
 import { ArchivedFeatureActionCell } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell';
 import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
@@ -36,6 +35,8 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { RowSelectCell } from '../../project/Project/ProjectFeatureToggles/RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from '../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ArchiveBatchActions } from './ArchiveBatchActions';
+import { FeatureEnvironmentSeenCell } from '../../common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
@@ -72,6 +73,11 @@ export const ArchiveTable = ({
 
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || ''
+    );
+
+    const { uiConfig } = useUiConfig();
+    const showEnvironmentLastSeen = Boolean(
+        uiConfig.flags.lastSeenByEnvironment
     );
 
     const onRevive = useCallback(
@@ -113,11 +119,16 @@ export const ArchiveTable = ({
                 : []),
             {
                 Header: 'Seen',
-                width: 85,
-                canSort: true,
-                Cell: FeatureSeenCell,
                 accessor: 'lastSeenAt',
+                Cell: ({ value, row: { original: feature } }: any) => {
+                    return showEnvironmentLastSeen ? (
+                        <FeatureEnvironmentSeenCell feature={feature} />
+                    ) : (
+                        <FeatureSeenCell value={value} />
+                    );
+                },
                 align: 'center',
+                maxWidth: 80,
             },
             {
                 Header: 'Type',
@@ -197,7 +208,7 @@ export const ArchiveTable = ({
             },
         ],
         //eslint-disable-next-line
-        [projectId]
+        [projectId, showEnvironmentLastSeen]
     );
 
     const {

@@ -1,4 +1,4 @@
-import { useState, VFC } from 'react';
+import { VFC } from 'react';
 import { Link } from 'react-router-dom';
 import { styled, Typography } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
@@ -68,24 +68,30 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     return (
         <StyledLink to={link}>
             <StyledHeader>
-                <StyledTitle variant="h3">
+                <StyledTitle variant="h3" data-loading>
                     <IntegrationIcon name={icon as string} /> {title}
                 </StyledTitle>
                 <ConditionallyRender
                     condition={isEnabled === true}
-                    show={<Badge color="success">Enabled</Badge>}
+                    show={
+                        <Badge color="success" data-loading>
+                            Enabled
+                        </Badge>
+                    }
                 />
                 <ConditionallyRender
                     condition={isEnabled === false}
-                    show={<Badge>Disabled</Badge>}
+                    show={<Badge data-loading>Disabled</Badge>}
                 />
                 <ConditionallyRender
                     condition={isConfigured}
                     show={<IntegrationCardMenu id={id as string} />}
                 />
             </StyledHeader>
-            <Typography variant="body1">{description}</Typography>
-            <StyledAction>
+            <Typography variant="body1" data-loading>
+                {description}
+            </Typography>
+            <StyledAction data-loading>
                 {configureActionText} <ChevronRightIcon />
             </StyledAction>
         </StyledLink>

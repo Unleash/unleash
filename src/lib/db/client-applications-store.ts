@@ -62,8 +62,8 @@ const remapRow = (input) => {
 const remapUsageRow = (input) => {
     return {
         app_name: input.appName,
-        project: input.project,
-        environment: input.environment,
+        project: input.project || '*',
+        environment: input.environment || '*',
     };
 };
 
@@ -83,14 +83,20 @@ export default class ClientApplicationsStore
         const row = remapRow(details);
         await this.db(TABLE).insert(row).onConflict('app_name').merge();
         const usageRow = remapUsageRow(details);
-        await this.db(TABLE_USAGE).insert(usageRow).onConflict().merge();
+        await this.db(TABLE_USAGE)
+            .insert(usageRow)
+            .onConflict(['app_name', 'project', 'environment'])
+            .merge();
     }
 
     async bulkUpsert(apps: Partial<IClientApplication>[]): Promise<void> {
         const rows = apps.map(remapRow);
         const usageRows = apps.map(remapUsageRow);
         await this.db(TABLE).insert(rows).onConflict('app_name').merge();
-        await this.db(TABLE_USAGE).insert(usageRows).onConflict().merge();
+        await this.db(TABLE_USAGE)
+            .insert(usageRows)
+            .onConflict(['app_name', 'project', 'environment'])
+            .merge();
     }
 
     async exists(appName: string): Promise<boolean> {

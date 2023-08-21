@@ -111,7 +111,7 @@ export default class ClientApplicationsStore
     async getAll(): Promise<IClientApplication[]> {
         const rows = await this.db
             .select(COLUMNS)
-            .from('TABLE')
+            .from(TABLE)
             .orderBy('app_name', 'asc');
 
         return rows.map(mapRow);

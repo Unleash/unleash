@@ -27,8 +27,8 @@ import { ReportStatusCell } from './ReportStatusCell/ReportStatusCell';
 import { formatStatus, ReportingStatus } from './ReportStatusCell/formatStatus';
 import { formatExpiredAt } from './ReportExpiredCell/formatExpiredAt';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { FeatureEnvironmentSeenCell } from '../../../../common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 
 interface IReportTableProps {
     projectId: string;

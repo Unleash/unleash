@@ -21,6 +21,8 @@ const COLUMNS = [
 ];
 const TABLE = 'client_applications';
 
+const TABLE_USAGE = 'client_applications_usage';
+
 const mapRow: (any) => IClientApplication = (row) => ({
     appName: row.app_name,
     createdAt: row.created_at,
@@ -57,6 +59,14 @@ const remapRow = (input) => {
     return temp;
 };
 
+const remapUsageRow = (input) => {
+    return {
+        app_name: input.appName,
+        project: input.project || '*',
+        environment: input.environment || '*',
+    };
+};
+
 export default class ClientApplicationsStore
     implements IClientApplicationsStore
 {
@@ -72,11 +82,21 @@ export default class ClientApplicationsStore
     async upsert(details: Partial<IClientApplication>): Promise<void> {
         const row = remapRow(details);
         await this.db(TABLE).insert(row).onConflict('app_name').merge();
+        const usageRow = remapUsageRow(details);
+        await this.db(TABLE_USAGE)
+            .insert(usageRow)
+            .onConflict(['app_name', 'project', 'environment'])
+            .merge();
     }
 
     async bulkUpsert(apps: Partial<IClientApplication>[]): Promise<void> {
         const rows = apps.map(remapRow);
+        const usageRows = apps.map(remapUsageRow);
         await this.db(TABLE).insert(rows).onConflict('app_name').merge();
+        await this.db(TABLE_USAGE)
+            .insert(usageRows)
+            .onConflict(['app_name', 'project', 'environment'])
+            .merge();
     }
 
     async exists(appName: string): Promise<boolean> {

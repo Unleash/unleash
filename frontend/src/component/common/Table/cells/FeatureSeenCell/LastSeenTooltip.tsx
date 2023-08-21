@@ -1,4 +1,4 @@
-import { styled, SxProps, Theme } from '@mui/material';
+import { styled, SxProps, Theme, Typography } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import { IEnvironments, IFeatureEnvironment } from 'interfaces/featureToggle';
 import React from 'react';
@@ -56,6 +56,7 @@ const StyledValue = styled('div', {
 }));
 
 interface ILastSeenTooltipProps {
+    featureLastSeen: string;
     environments?: IEnvironments[] | IFeatureEnvironment[];
     className?: string;
     sx?: SxProps<Theme>;
@@ -63,10 +64,14 @@ interface ILastSeenTooltipProps {
 
 export const LastSeenTooltip = ({
     environments,
+    featureLastSeen,
     ...rest
 }: ILastSeenTooltipProps) => {
     const getColor = useLastSeenColors();
     const [, defaultTextColor] = getColor();
+    const environmentsHaveLastSeen = environments?.some(environment =>
+        Boolean(environment.lastSeenAt)
+    );
     return (
         <StyledDescription {...rest}>
             <StyledDescriptionHeader sx={{ mb: 0 }}>
@@ -75,46 +80,84 @@ export const LastSeenTooltip = ({
             <StyledDescriptionSubHeader>
                 Usage is reported from connected applications through metrics
             </StyledDescriptionSubHeader>
-            {environments &&
-                environments.map(({ name, lastSeenAt }) => (
-                    <StyledDescriptionBlock key={name}>
-                        <StyledDescriptionBlockHeader>
-                            {name}
-                        </StyledDescriptionBlockHeader>
-                        <StyledValueContainer>
-                            <ConditionallyRender
-                                condition={Boolean(lastSeenAt)}
-                                show={
-                                    <TimeAgo
-                                        date={lastSeenAt!}
-                                        title=""
-                                        live={false}
-                                        formatter={(
-                                            value: number,
-                                            unit: string,
-                                            suffix: string
-                                        ) => {
-                                            const [, textColor] =
-                                                getColor(unit);
-                                            return (
-                                                <StyledValue color={textColor}>
-                                                    {`${value} ${unit}${
-                                                        value !== 1 ? 's' : ''
-                                                    } ${suffix}`}
-                                                </StyledValue>
-                                            );
-                                        }}
+            <ConditionallyRender
+                condition={
+                    Boolean(environments) && Boolean(environmentsHaveLastSeen)
+                }
+                show={
+                    <>
+                        {environments?.map(({ name, lastSeenAt }) => (
+                            <StyledDescriptionBlock key={name}>
+                                <StyledDescriptionBlockHeader>
+                                    {name}
+                                </StyledDescriptionBlockHeader>
+                                <StyledValueContainer>
+                                    <ConditionallyRender
+                                        condition={Boolean(lastSeenAt)}
+                                        show={
+                                            <TimeAgo
+                                                date={lastSeenAt!}
+                                                title=""
+                                                live={false}
+                                                formatter={(
+                                                    value: number,
+                                                    unit: string,
+                                                    suffix: string
+                                                ) => {
+                                                    const [, textColor] =
+                                                        getColor(unit);
+                                                    return (
+                                                        <StyledValue
+                                                            color={textColor}
+                                                        >
+                                                            {`${value} ${unit}${
+                                                                value !== 1
+                                                                    ? 's'
+                                                                    : ''
+                                                            } ${suffix}`}
+                                                        </StyledValue>
+                                                    );
+                                                }}
+                                            />
+                                        }
+                                        elseShow={
+                                            <StyledValue
+                                                color={defaultTextColor}
+                                            >
+                                                no usage
+                                            </StyledValue>
+                                        }
                                     />
-                                }
-                                elseShow={
-                                    <StyledValue color={defaultTextColor}>
-                                        no usage
-                                    </StyledValue>
-                                }
-                            />
-                        </StyledValueContainer>
-                    </StyledDescriptionBlock>
-                ))}
+                                </StyledValueContainer>
+                            </StyledDescriptionBlock>
+                        ))}
+                    </>
+                }
+                elseShow={
+                    <TimeAgo
+                        date={featureLastSeen}
+                        title=""
+                        live={false}
+                        formatter={(
+                            value: number,
+                            unit: string,
+                            suffix: string
+                        ) => {
+                            const [, textColor] = getColor(unit);
+                            return (
+                                <Typography
+                                    fontWeight={'bold'}
+                                    color={'text.primary'}
+                                >
+                                    {`Reported ${value} ${unit}${
+                                        value !== 1 ? 's' : ''
+                                    } ${suffix}`}
+                                </Typography>
+                            );
+                        }}
+                    />
+                }
+            />
         </StyledDescription>
     );
 };

@@ -52,7 +52,6 @@ export interface IFlags {
     advancedPlayground?: boolean;
     customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
-    newProjectLayout?: boolean;
     configurableFeatureTypeLifetimes?: boolean;
     frontendNavigationUpdate?: boolean;
     segmentChangeRequests?: boolean;

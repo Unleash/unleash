@@ -194,49 +194,6 @@ export const Project = () => {
                                     </PermissionIconButton>
                                 }
                             />
-                            <ConditionallyRender
-                                condition={
-                                    !isOss() &&
-                                    !Boolean(uiConfig.flags.newProjectLayout)
-                                }
-                                show={
-                                    <PermissionIconButton
-                                        permission={UPDATE_PROJECT}
-                                        projectId={projectId}
-                                        onClick={() =>
-                                            navigate(
-                                                `/projects/${projectId}/edit`
-                                            )
-                                        }
-                                        tooltipProps={{ title: 'Edit project' }}
-                                        data-loading
-                                        data-testid={NAVIGATE_TO_EDIT_PROJECT}
-                                    >
-                                        <Edit />
-                                    </PermissionIconButton>
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={
-                                    !isOss() &&
-                                    !Boolean(uiConfig.flags.newProjectLayout)
-                                }
-                                show={
-                                    <PermissionIconButton
-                                        permission={DELETE_PROJECT}
-                                        projectId={projectId}
-                                        onClick={() => {
-                                            setShowDelDialog(true);
-                                        }}
-                                        tooltipProps={{
-                                            title: 'Delete project',
-                                        }}
-                                        data-loading
-                                    >
-                                        <Delete />
-                                    </PermissionIconButton>
-                                }
-                            />
                         </StyledDiv>
                     </StyledTopRow>
                 </StyledInnerContainer>

@@ -151,6 +151,7 @@ export default class ExportImportService {
             unsupportedContextFields,
             archivedFeatures,
             otherProjectFeatures,
+            existingProjectFeatures,
             missingPermissions,
         ] = await Promise.all([
             this.getUnsupportedStrategies(dto),
@@ -158,6 +159,7 @@ export default class ExportImportService {
             this.getUnsupportedContextFields(dto),
             this.getArchivedFeatures(dto),
             this.getOtherProjectFeatures(dto),
+            this.getExistingProjectFeatures(dto),
             this.importPermissionsService.getMissingPermissions(
                 dto,
                 user,
@@ -176,6 +178,7 @@ export default class ExportImportService {
         const warnings = ImportValidationMessages.compileWarnings(
             usedCustomStrategies,
             archivedFeatures,
+            existingProjectFeatures,
         );
         const permissions =
             ImportValidationMessages.compilePermissionErrors(
@@ -299,7 +302,7 @@ export default class ExportImportService {
                 this.contextService.createContextField(
                     {
                         name: contextField.name,
-                        description: contextField.description,
+                        description: contextField.description || '',
                         legalValues: contextField.legalValues,
                         stickiness: contextField.stickiness,
                     },
@@ -527,6 +530,15 @@ export default class ExportImportService {
         return otherProjectsFeatures.map(
             (it) => `${it.name} (in project ${it.project})`,
         );
+    }
+
+    private async getExistingProjectFeatures(dto: ImportTogglesSchema) {
+        const existingProjectsFeatures =
+            await this.importTogglesStore.getFeaturesInProject(
+                dto.data.features.map((feature) => feature.name),
+                dto.project,
+            );
+        return existingProjectsFeatures;
     }
 
     private async getNewTagTypes(dto: ImportTogglesSchema) {

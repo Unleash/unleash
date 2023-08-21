@@ -31,6 +31,7 @@ export type IFlagKey =
     | 'segmentChangeRequests'
     | 'changeRequestReject'
     | 'customRootRolesKillSwitch'
+    | 'newApplicationList'
     | 'integrationsRework';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;

@@ -43,6 +43,7 @@ export const Network = () => {
                                         <span>{label}</span>
                                     </CenteredNavLink>
                                 }
+                                sx={{ padding: 0 }}
                             />
                         ))}
                     </Tabs>

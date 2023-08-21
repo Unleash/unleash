@@ -193,7 +193,7 @@ test('all tags are listed in the root "tags" list', async () => {
     expect(invalidTags).toStrictEqual({});
 });
 
-test('all API operations have summaries and descriptions', async () => {
+test('all API operations have non-empty summaries and descriptions', async () => {
     const { body: spec } = await app.request
         .get('/docs/openapi.json')
         .expect('Content-Type', /json/)
@@ -203,8 +203,8 @@ test('all API operations have summaries and descriptions', async () => {
         return Object.entries(data)
             .map(([verb, operationDescription]) => {
                 if (
-                    'summary' in operationDescription &&
-                    'description' in operationDescription
+                    operationDescription.summary &&
+                    operationDescription.description
                 ) {
                     return undefined;
                 } else {

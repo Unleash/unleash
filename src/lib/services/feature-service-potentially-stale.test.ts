@@ -44,7 +44,6 @@ test('Should only store events for potentially stale on', async () => {
             flagResolver: { isEnabled: () => true },
             experimental: {
                 ...(config.experimental ?? {}),
-                emitPotentiallyStaleEvents: true,
             },
         } as unknown as IUnleashConfig,
         {} as ISegmentService,

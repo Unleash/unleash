@@ -22,7 +22,6 @@ export type IFlagKey =
     | 'advancedPlayground'
     | 'strategyVariant'
     | 'slackAppAddon'
-    | 'emitPotentiallyStaleEvents'
     | 'configurableFeatureTypeLifetimes'
     | 'filterInvalidClientMetrics'
     | 'frontendNavigationUpdate'
@@ -104,10 +103,6 @@ const flags: IFlags = {
     ),
     slackAppAddon: parseEnvVarBoolean(
         process.env.UNLEASH_SLACK_APP_ADDON,
-        false,
-    ),
-    emitPotentiallyStaleEvents: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EMIT_POTENTIALLY_STALE_EVENTS,
         false,
     ),
     configurableFeatureTypeLifetimes: parseEnvVarBoolean(

@@ -42,6 +42,7 @@ process.nextTick(async () => {
                         configurableFeatureTypeLifetimes: true,
                         lastSeenByEnvironment: true,
                         segmentChangeRequests: true,
+                        integrationsRework: true,
                         newApplicationList: true,
                     },
                 },

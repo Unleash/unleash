@@ -1,28 +1,19 @@
-import { ConfiguredAddons } from './ConfiguredAddons/ConfiguredAddons';
-import { AvailableAddons } from './AvailableAddons/AvailableAddons';
+import { VFC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { AvailableIntegrations } from './AvailableIntegrations/AvailableIntegrations';
+import { ConfiguredIntegrations } from './ConfiguredIntegrations/ConfiguredIntegrations';
 
-export const IntegrationList = () => {
+export const IntegrationList: VFC = () => {
     const { providers, addons, loading } = useAddons();
-    const { uiConfig } = useUiConfig();
-    const integrationsRework = uiConfig?.flags?.integrationsRework || false;
 
     return (
         <>
             <ConditionallyRender
                 condition={addons.length > 0}
-                show={<ConfiguredAddons />}
+                show={<ConfiguredIntegrations />}
             />
-            <ConditionallyRender
-                condition={integrationsRework}
-                show={<AvailableIntegrations providers={providers} />}
-                elseShow={
-                    <AvailableAddons loading={loading} providers={providers} />
-                }
-            />
+            <AvailableIntegrations providers={providers} />
         </>
     );
 };

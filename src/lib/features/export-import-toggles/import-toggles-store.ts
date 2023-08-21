@@ -81,6 +81,7 @@ export class ImportTogglesStore implements IImportTogglesStore {
         const rows = await this.db(T.features)
             .select(['name', 'project'])
             .where('project', project)
+            .where('archived_at', null)
             .whereIn('name', featureNames);
         return rows.map((row) => row.name);
     }

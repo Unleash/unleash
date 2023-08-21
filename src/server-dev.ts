@@ -45,6 +45,7 @@ process.nextTick(async () => {
                         frontendNavigationUpdate: true,
                         lastSeenByEnvironment: true,
                         segmentChangeRequests: true,
+                        integrationsRework: true,
                     },
                 },
                 authentication: {

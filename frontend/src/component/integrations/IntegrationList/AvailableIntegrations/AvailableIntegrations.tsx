@@ -3,34 +3,27 @@ import type { AddonTypeSchema } from 'openapi';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
-import { styled } from '@mui/material';
+import { StyledCardsGrid } from '../IntegrationList.styles';
 
 interface IAvailableIntegrationsProps {
     providers: AddonTypeSchema[];
 }
-
-const StyledGrid = styled('div')(({ theme }) => ({
-    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-    gridAutoRows: '1fr',
-    gap: theme.spacing(2),
-    display: 'grid',
-}));
-
 export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
     providers,
 }) => {
     return (
         <PageContent header={<PageHeader title="Available integrations" />}>
-            <StyledGrid>
+            <StyledCardsGrid>
                 {providers?.map(({ name, displayName, description }) => (
                     <IntegrationCard
                         key={name}
                         icon={name}
                         title={displayName || name}
                         description={description}
+                        link={`/integrations/create/${name}`}
                     />
                 ))}
-            </StyledGrid>
+            </StyledCardsGrid>
         </PageContent>
     );
 };

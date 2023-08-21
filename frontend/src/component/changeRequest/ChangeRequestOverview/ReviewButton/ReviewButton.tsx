@@ -18,16 +18,11 @@ import { APPROVE_CHANGE_REQUEST } from 'component/providers/AccessProvider/permi
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
-import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import CheckBox from '@mui/icons-material/Check';
 import Clear from '@mui/icons-material/Clear';
 
-export const ReviewButton: FC<{ disabled: boolean }> = ({ disabled }) => {
-    const { uiConfig } = useUiConfig();
 export const ReviewButton: FC<{
     disabled: boolean;
     onReject: () => void;
@@ -38,49 +33,10 @@ export const ReviewButton: FC<{
     const projectId = useRequiredPathParam('projectId');
     const id = useRequiredPathParam('id');
     const { user } = useAuthUser();
-    const { refetchChangeRequest, data } = useChangeRequest(projectId, id);
-    const { refetch: refetchChangeRequestOpen } =
-        usePendingChangeRequests(projectId);
-    const { setToastApiError, setToastData } = useToast();
-
-    const { changeState } = useChangeRequestApi();
+    const { data } = useChangeRequest(projectId, id);
 
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
-
-    const onApprove = async () => {
-        try {
-            await changeState(projectId, Number(id), {
-                state: 'Approved',
-            });
-            refetchChangeRequest();
-            refetchChangeRequestOpen();
-            setToastData({
-                type: 'success',
-                title: 'Success',
-                text: 'Changes approved',
-            });
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
-
-    const onReject = async () => {
-        try {
-            await changeState(projectId, Number(id), {
-                state: 'Rejected',
-            });
-            refetchChangeRequest();
-            refetchChangeRequestOpen();
-            setToastData({
-                type: 'success',
-                title: 'Success',
-                text: 'Changes rejected',
-            });
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
 
     const onToggle = () => {
         setOpen(prevOpen => !prevOpen);
@@ -167,16 +123,6 @@ export const ReviewButton: FC<{
                                                 <ListItemText>
                                                     Reject changes
                                                 </ListItemText>
-                                            </MenuItem>
-                                        }
-                                    />
-                                    <ConditionallyRender
-                                        condition={Boolean(
-                                            uiConfig?.flags?.changeRequestReject
-                                        )}
-                                        show={
-                                            <MenuItem onClick={onReject}>
-                                                Reject changes
                                             </MenuItem>
                                         }
                                     />

@@ -11,6 +11,11 @@ export interface IImportTogglesStore {
         project: string,
     ): Promise<{ name: string; project: string }[]>;
 
+    getFeaturesInProject(
+        featureNames: string[],
+        project: string,
+    ): Promise<string[]>;
+
     deleteTagsForFeatures(tags: string[]): Promise<void>;
 
     strategiesExistForFeatures(

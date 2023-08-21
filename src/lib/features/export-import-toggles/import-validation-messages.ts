@@ -73,6 +73,7 @@ export class ImportValidationMessages {
     static compileWarnings(
         usedCustomStrategies: string[],
         archivedFeatures: string[],
+        existingFeatures: string[],
     ): ImportTogglesValidateItemSchema[] {
         const warnings: ImportTogglesValidateItemSchema[] = [];
         if (usedCustomStrategies.length > 0) {
@@ -87,6 +88,13 @@ export class ImportValidationMessages {
                 message:
                     'The following features will not be imported as they are currently archived. To import them, please unarchive them first:',
                 affectedItems: archivedFeatures,
+            });
+        }
+        if (existingFeatures.length > 0) {
+            warnings.push({
+                message:
+                    'The following features already exist in this project and will be overwritten:',
+                affectedItems: existingFeatures,
             });
         }
         return warnings;

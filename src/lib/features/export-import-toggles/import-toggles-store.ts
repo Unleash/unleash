@@ -74,6 +74,17 @@ export class ImportTogglesStore implements IImportTogglesStore {
         return rows.map((row) => ({ name: row.name, project: row.project }));
     }
 
+    async getFeaturesInProject(
+        featureNames: string[],
+        project: string,
+    ): Promise<string[]> {
+        const rows = await this.db(T.features)
+            .select(['name', 'project'])
+            .where('project', project)
+            .whereIn('name', featureNames);
+        return rows.map((row) => row.name);
+    }
+
     async deleteTagsForFeatures(features: string[]): Promise<void> {
         return this.db(T.featureTag).whereIn('feature_name', features).del();
     }

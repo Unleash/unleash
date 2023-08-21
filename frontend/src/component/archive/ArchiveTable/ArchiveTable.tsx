@@ -35,8 +35,8 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { RowSelectCell } from '../../project/Project/ProjectFeatureToggles/RowSelectCell/RowSelectCell';
 import { BatchSelectionActionsBar } from '../../common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ArchiveBatchActions } from './ArchiveBatchActions';
-import { FeatureEnvironmentSeenCell } from '../../common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];

@@ -1,0 +1,43 @@
+import React from 'react';
+import { render } from '@testing-library/react';
+import { Highlighter } from './Highlighter'; // adjust the import path accordingly
+
+test('renders children when there is no search term', () => {
+    const { container } = render(<Highlighter>Test Text</Highlighter>);
+
+    expect(container.innerHTML).toContain('Test Text');
+});
+
+test('highlights the search term', () => {
+    const { container } = render(
+        <Highlighter search="Test">Test Text</Highlighter>
+    );
+
+    expect(container.innerHTML).toContain('<mark>Test</mark>');
+});
+
+test('does not highlight when search term is not present in children', () => {
+    const { container } = render(
+        <Highlighter search="Hello">Test Text</Highlighter>
+    );
+
+    expect(container.innerHTML).not.toContain('<mark>');
+});
+
+test('is case insensitive by default', () => {
+    const { container } = render(
+        <Highlighter search="test">Test Text</Highlighter>
+    );
+
+    expect(container.innerHTML).toContain('<mark>Test</mark>');
+});
+
+test('respects case sensitivity when specified', () => {
+    const { container } = render(
+        <Highlighter search="test" caseSensitive={true}>
+            Test Text
+        </Highlighter>
+    );
+
+    expect(container.innerHTML).not.toContain('<mark>');
+});

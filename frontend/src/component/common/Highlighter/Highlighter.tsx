@@ -31,16 +31,13 @@ export const Highlighter: VFC<IHighlighterProps> = ({
 
     const parts = children.split(regex);
 
-    const highlightedText = parts.map((part, index) =>
-        index < parts.length - 1 ? (
-            <Fragment key={index}>
-                {part}
-                <mark>{search}</mark>
-            </Fragment>
-        ) : (
-            part
-        )
-    );
+    const matches = Array.from(children.matchAll(regex)).map(match => match[0]);
+
+    const highlightedText = parts.flatMap((part, index) => {
+        return index < matches.length
+            ? [part, <mark key={index}>{matches[index]}</mark>]
+            : [part];
+    });
 
     return <StyledSpan>{highlightedText}</StyledSpan>;
 };

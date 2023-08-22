@@ -36,7 +36,6 @@ import {
 import { caseInsensitiveSearch } from 'utils/search';
 import { IServiceAccount } from 'interfaces/service-account';
 import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/MultipleRoleSelect';
-import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -183,20 +182,21 @@ export const ProjectAccessAssign = ({
             )
     );
     const [selectedRoles, setRoles] = useState<IRole[]>(
-        roles.filter(({ id }) => selected?.entity?.selectedRoles?.includes(id))
+        roles.filter(({ id }) => selected?.entity?.roles?.includes(id))
     );
 
     const payload = {
+        roles: selectedRoles.map(({ id }) => id),
+        groups: selectedOptions
+            ?.filter(({ type }) => type === ENTITY_TYPE.GROUP)
+            .map(({ id }) => id),
         users: selectedOptions
             ?.filter(
                 ({ type }) =>
                     type === ENTITY_TYPE.USER ||
                     type === ENTITY_TYPE.SERVICE_ACCOUNT
             )
-            .map(({ id }) => ({ id })),
-        groups: selectedOptions
-            ?.filter(({ type }) => type === ENTITY_TYPE.GROUP)
-            .map(({ id }) => ({ id })),
+            .map(({ id }) => id),
     };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -205,16 +205,22 @@ export const ProjectAccessAssign = ({
         if (!isValid) return;
         try {
             if (!edit) {
-                selectedRoles.forEach(async role => {
-                    await addAccessToProject(projectId, role.id, payload);
-                });
+                await addAccessToProject(projectId, payload);
             } else if (
                 selected?.type === ENTITY_TYPE.USER ||
                 selected?.type === ENTITY_TYPE.SERVICE_ACCOUNT
             ) {
-                await setUserRoles(projectId, selectedRoles.map(role => role.id), selected.entity.id);
+                await setUserRoles(
+                    projectId,
+                    selectedRoles.map(({ id }) => id),
+                    selected.entity.id
+                );
             } else if (selected?.type === ENTITY_TYPE.GROUP) {
-                await setGroupRoles(projectId, selectedRoles.map(role => role.id), selected.entity.id);
+                await setGroupRoles(
+                    projectId,
+                    selectedRoles.map(({ id }) => id),
+                    selected.entity.id
+                );
             }
             refetchProjectAccess();
             navigate(GO_BACK);
@@ -231,30 +237,24 @@ export const ProjectAccessAssign = ({
 
     const formatApiCode = () => {
         if (edit) {
-            return selectedRoles
-                .map(role => {
-                    return `curl --location --request ${
-                        edit ? 'PUT' : 'POST'
-                    } '${uiConfig.unleashUrl}/api/admin/projects/${projectId}/${
-                        selected?.type === ENTITY_TYPE.USER ||
-                        selected?.type === ENTITY_TYPE.SERVICE_ACCOUNT
-                            ? 'users'
-                            : 'groups'
-                    }/${selected?.entity.id}/roles/${role?.id}' \\
-                    --header 'Authorization: INSERT_API_KEY'`;
-                })
-                .join('\r\n');
+            return `curl --location --request PUT '${
+                uiConfig.unleashUrl
+            }/api/admin/projects/${projectId}/${
+                selected?.type === ENTITY_TYPE.USER ||
+                selected?.type === ENTITY_TYPE.SERVICE_ACCOUNT
+                    ? 'users'
+                    : 'groups'
+            }/${selected?.entity.id}/roles' \\
+--header 'Authorization: INSERT_API_KEY' \\
+--header 'Content-Type: application/json' \\
+--data-raw '${JSON.stringify({ roles: payload.roles }, undefined, 2)}'`;
         }
-        return selectedRoles
-            .map(role => {
-                return `curl --location --request ${edit ? 'PUT' : 'POST'} '${
-                    uiConfig.unleashUrl
-                }/api/admin/projects/${projectId}/role/${role?.id}/access' \\
-                --header 'Authorization: INSERT_API_KEY' \\
-                --header 'Content-Type: application/json' \\
-                --data-raw '${JSON.stringify(payload, undefined, 2)}'`;
-            })
-            .join('\r\n');
+        return `curl --location --request POST '${
+            uiConfig.unleashUrl
+        }/api/admin/projects/${projectId}/access' \\
+--header 'Authorization: INSERT_API_KEY' \\
+--header 'Content-Type: application/json' \\
+--data-raw '${JSON.stringify(payload, undefined, 2)}'`;
     };
 
     const createRootGroupWarning = (group?: IGroup): string | undefined => {
@@ -318,7 +318,7 @@ export const ProjectAccessAssign = ({
         );
     };
 
-    const isValid = selectedOptions.length > 0 && roles;
+    const isValid = selectedOptions.length > 0 && selectedRoles.length > 0;
 
     return (
         <SidebarModal
@@ -444,7 +444,7 @@ export const ProjectAccessAssign = ({
                                 data-testid={PA_ROLE_ID}
                                 roles={roles}
                                 value={selectedRoles}
-                                setValue={role => setRoles(role || null)}
+                                setValue={setRoles}
                             />
                         </StyledAutocompleteWrapper>
                     </div>

@@ -9,9 +9,10 @@ interface ICreatePayload {
     defaultStickiness: string;
 }
 
-interface IAccessesPayload {
-    users: { id: number }[];
-    groups: { id: number }[];
+interface IAccessPayload {
+    roles: number[];
+    groups: number[];
+    users: number[];
 }
 
 const useProjectApi = () => {
@@ -116,22 +117,15 @@ const useProjectApi = () => {
 
     const addAccessToProject = async (
         projectId: string,
-        roleId: number,
-        accesses: IAccessesPayload
+        payload: IAccessPayload
     ) => {
-        const path = `api/admin/projects/${projectId}/role/${roleId}/access`;
+        const path = `api/admin/projects/${projectId}/access`;
         const req = createRequest(path, {
             method: 'POST',
-            body: JSON.stringify(accesses),
+            body: JSON.stringify(payload),
         });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return await makeRequest(req.caller, req.id);
     };
 
     const removeUserFromRole = async (

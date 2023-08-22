@@ -125,9 +125,13 @@ const UsersList = () => {
                 accessor: (row: any) =>
                     roles.find((role: IRole) => role.id === row.rootRole)
                         ?.name || '',
-                Cell: ({ row: { original: user }, value }: any) => (
-                    <RoleCell value={value} roleId={user.rootRole} />
-                ),
+                Cell: ({
+                    row: { original: user },
+                    value,
+                }: {
+                    row: { original: IUser };
+                    value: string;
+                }) => <RoleCell value={value} role={user.rootRole} />,
                 maxWidth: 120,
             },
             {

@@ -2,7 +2,7 @@ import { FeatureToggleListTable } from 'component/feature/FeatureToggleList/Feat
 import { StrategyView } from 'component/strategies/StrategyView/StrategyView';
 import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesList';
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
-import { AddonList } from 'component/addons/AddonList/AddonList';
+import { IntegrationList } from 'component/integrations/IntegrationList/IntegrationList';
 import Login from 'component/user/Login/Login';
 import { EEA, P, SE } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
@@ -21,8 +21,8 @@ import EditFeature from 'component/feature/EditFeature/EditFeature';
 import { ApplicationEdit } from 'component/application/ApplicationEdit/ApplicationEdit';
 import ContextList from 'component/context/ContextList/ContextList/ContextList';
 import RedirectFeatureView from 'component/feature/RedirectFeatureView/RedirectFeatureView';
-import { CreateAddon } from 'component/addons/CreateAddon/CreateAddon';
-import { EditAddon } from 'component/addons/EditAddon/EditAddon';
+import { CreateIntegration } from 'component/integrations/CreateIntegration/CreateIntegration';
+import { EditIntegration } from 'component/integrations/EditIntegration/EditIntegration';
 import { CopyFeatureToggle } from 'component/feature/CopyFeature/CopyFeature';
 import { EventPage } from 'component/events/EventPage/EventPage';
 import { CreateStrategy } from 'component/strategies/CreateStrategy/CreateStrategy';
@@ -300,12 +300,13 @@ export const routes: IRoute[] = [
         menu: { mobile: true, advanced: true },
     },
 
-    // Addons
+    // Integrations
     {
         path: '/addons/create/:providerId',
         parent: '/addons',
         title: 'Create',
-        component: CreateAddon,
+        component: CreateIntegration,
+        // TODO: use AddonRedirect after removing `integrationsRework` menu flag
         type: 'protected',
         menu: {},
     },
@@ -313,17 +314,45 @@ export const routes: IRoute[] = [
         path: '/addons/edit/:addonId',
         parent: '/addons',
         title: 'Edit',
-        component: EditAddon,
+        component: EditIntegration,
+        // TODO: use AddonRedirect after removing `integrationsRework` menu flag
         type: 'protected',
         menu: {},
     },
     {
         path: '/addons',
         title: 'Addons',
-        component: AddonList,
+        component: IntegrationList,
+        // TODO: use AddonRedirect after removing `integrationsRework` menu flag
         hidden: false,
         type: 'protected',
         menu: { mobile: true, advanced: true },
+        // TODO: remove 'addons' from menu after removing `integrationsRework` menu flag
+    },
+    {
+        path: '/integrations/create/:providerId',
+        parent: '/integrations',
+        title: 'Create',
+        component: CreateIntegration,
+        type: 'protected',
+        menu: {},
+    },
+    {
+        path: '/integrations/edit/:addonId',
+        parent: '/integrations',
+        title: 'Edit',
+        component: EditIntegration,
+        type: 'protected',
+        menu: {},
+    },
+    {
+        path: '/integrations',
+        title: 'Integrations',
+        component: IntegrationList,
+        hidden: false,
+        type: 'protected',
+        menu: { mobile: true, advanced: true },
+        flag: 'integrationsRework',
     },
 
     // Segments

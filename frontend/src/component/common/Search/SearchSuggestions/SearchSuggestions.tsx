@@ -72,9 +72,11 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
             return {
                 name: column.filterName,
                 header: column.Header ?? column.filterName,
-                options: [...new Set(filterOptions)].sort((a, b) =>
-                    a.localeCompare(b)
-                ),
+                options: [...new Set(filterOptions)]
+                    .filter(Boolean)
+                    .flatMap(item => item.split('\n'))
+                    .map(item => (item.includes(' ') ? `"${item}"` : item))
+                    .sort((a, b) => a.localeCompare(b)),
                 suggestedOption:
                     filterOptions[randomRow] ?? `example-${column.filterName}`,
                 values: getFilterValues(

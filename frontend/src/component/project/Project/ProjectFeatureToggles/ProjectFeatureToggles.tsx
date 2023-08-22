@@ -36,7 +36,7 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
-import { useSearch } from 'hooks/useSearch';
+import { getColumnValues, includesFilter, useSearch } from 'hooks/useSearch';
 import { Search } from 'component/common/Search/Search';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
@@ -234,6 +234,7 @@ export const ProjectFeatureToggles = ({
                 accessor: 'type',
                 Cell: FeatureTypeCell,
                 align: 'center',
+                filterName: 'type',
                 maxWidth: 80,
             },
             {
@@ -265,6 +266,16 @@ export const ProjectFeatureToggles = ({
                           Cell: FeatureTagCell,
                           width: 80,
                           searchable: true,
+                          filterName: 'tags',
+                          filterBy(
+                              row: IFeatureToggleListItem,
+                              values: string[]
+                          ) {
+                              return includesFilter(
+                                  getColumnValues(this, row),
+                                  values
+                              );
+                          },
                       },
                   ]
                 : []),

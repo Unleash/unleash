@@ -1,10 +1,14 @@
 import {
     Autocomplete,
     AutocompleteProps,
+    AutocompleteRenderOptionState,
+    Checkbox,
     TextField,
     styled,
 } from '@mui/material';
-import { IRole } from '../../../interfaces/role';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { IRole } from 'interfaces/role';
 import { RoleDescription } from '../RoleDescription/RoleDescription';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
@@ -17,21 +21,33 @@ const StyledRoleOption = styled('div')(({ theme }) => ({
     },
 }));
 
-interface IMultipleRoleSelectProps extends Partial<AutocompleteProps<IRole, true, false, false>> {
+interface IMultipleRoleSelectProps
+    extends Partial<AutocompleteProps<IRole, true, false, false>> {
     roles: IRole[];
-    value: IRole[] | undefined;
+    value: IRole[];
     setValue: (role: IRole[]) => void;
     required?: boolean;
 }
 
 export const MultipleRoleSelect = ({
-    roles, value, setValue, required, ...rest
+    roles,
+    value,
+    setValue,
+    required,
+    ...rest
 }: IMultipleRoleSelectProps) => {
     const renderRoleOption = (
         props: React.HTMLAttributes<HTMLLIElement>,
-        option: IRole
+        option: IRole,
+        state: AutocompleteRenderOptionState
     ) => (
         <li {...props}>
+            <Checkbox
+                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                checkedIcon={<CheckBoxIcon fontSize="small" />}
+                style={{ marginRight: 8 }}
+                checked={state.selected}
+            />
             <StyledRoleOption>
                 <span>{option.name}</span>
                 <span>{option.description}</span>
@@ -43,6 +59,7 @@ export const MultipleRoleSelect = ({
         <>
             <Autocomplete
                 multiple
+                disableCloseOnSelect
                 openOnFocus
                 size="small"
                 value={value}
@@ -54,14 +71,19 @@ export const MultipleRoleSelect = ({
                     <TextField {...params} label="Role" required={required} />
                 )}
                 {...rest}
-                />
+            />
             <ConditionallyRender
-                condition={value !== undefined}
-                show={() => (
-                    value!.map((r) =>
-                    <RoleDescription sx={{ marginTop: 1 }} roleId={r!.id} />
-                ))}
+                condition={value.length > 0}
+                show={() =>
+                    value.map(({ id }) => (
+                        <RoleDescription
+                            key={id}
+                            sx={{ marginTop: 1 }}
+                            roleId={id}
+                        />
+                    ))
+                }
             />
         </>
-    )
-}
+    );
+};

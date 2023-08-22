@@ -58,6 +58,7 @@ export interface IFlags {
     changeRequestReject?: boolean;
     lastSeenByEnvironment?: boolean;
     newApplicationList?: boolean;
+    integrationsRework?: boolean;
 }
 
 export interface IVersionInfo {

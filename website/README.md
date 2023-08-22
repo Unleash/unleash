@@ -13,6 +13,7 @@ yarn install
 ```console
 yarn generate
 ```
+
 Generate the Open API docs that live at Reference documentation > APIs > OpenAPI
 
 ## Local Development
@@ -21,7 +22,7 @@ Generate the Open API docs that live at Reference documentation > APIs > OpenAPI
 yarn start
 ```
 
- Start a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+Start a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
 ## Build
 

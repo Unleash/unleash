@@ -235,18 +235,34 @@ export class AccessService {
         return this.store.addGroupToRole(groupId, roleId, createdBy, projectId);
     }
 
-    async addAccessToProject(
+    async addRoleAccessToProject(
         users: IAccessInfo[],
         groups: IAccessInfo[],
         projectId: string,
         roleId: number,
         createdBy: string,
     ): Promise<void> {
-        return this.store.addAccessToProject(
+        return this.store.addRoleAccessToProject(
             users,
             groups,
             projectId,
             roleId,
+            createdBy,
+        );
+    }
+
+    async addAccessToProject(
+        roles: number[],
+        groups: number[],
+        users: number[],
+        projectId: string,
+        createdBy: string,
+    ): Promise<void> {
+        return this.store.addAccessToProject(
+            roles,
+            groups,
+            users,
+            projectId,
             createdBy,
         );
     }

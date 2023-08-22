@@ -1,5 +1,5 @@
 import { subDays } from 'date-fns';
-import { NumberSchema, ValidationError } from 'joi';
+import { ValidationError } from 'joi';
 import User, { IUser } from '../types/user';
 import { AccessService } from './access-service';
 import NameExistsError from '../error/name-exists-error';
@@ -486,13 +486,13 @@ export default class ProjectService {
         );
     }
 
-    async addAccess(
+    async addRoleAccess(
         projectId: string,
         roleId: number,
         usersAndGroups: IProjectAccessModel,
         createdBy: string,
     ): Promise<void> {
-        await this.accessService.addAccessToProject(
+        await this.accessService.addRoleAccessToProject(
             usersAndGroups.users,
             usersAndGroups.groups,
             projectId,
@@ -508,6 +508,34 @@ export default class ProjectService {
                     roleId,
                     groups: usersAndGroups.groups.map(({ id }) => id),
                     users: usersAndGroups.users.map(({ id }) => id),
+                },
+            }),
+        );
+    }
+
+    async addAccess(
+        projectId: string,
+        roles: number[],
+        groups: number[],
+        users: number[],
+        createdBy: string,
+    ): Promise<void> {
+        await this.accessService.addAccessToProject(
+            roles,
+            groups,
+            users,
+            projectId,
+            createdBy,
+        );
+
+        await this.eventStore.store(
+            new ProjectAccessAddedEvent({
+                project: projectId,
+                createdBy,
+                data: {
+                    roles,
+                    groups,
+                    users,
                 },
             }),
         );

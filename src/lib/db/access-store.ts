@@ -308,13 +308,13 @@ export class AccessStore implements IAccessStore {
     ): Promise<IProjectRoleUsage[]> {
         const query = await this.db.raw(
             `
-            SELECT 
+            SELECT
                 uq.project,
                 sum(uq.user_count) AS user_count,
                 sum(uq.svc_account_count) AS svc_account_count,
                 sum(uq.group_count) AS group_count
             FROM (
-                SELECT 
+                SELECT
                     project,
                     0 AS user_count,
                     0 AS svc_account_count,
@@ -444,7 +444,7 @@ export class AccessStore implements IAccessStore {
             .update('role_id', roleId);
     }
 
-    async addAccessToProject(
+    async addRoleAccessToProject(
         users: IAccessInfo[],
         groups: IAccessInfo[],
         projectId: string,
@@ -479,6 +479,46 @@ export class AccessStore implements IAccessStore {
                 await tx(T.GROUP_ROLE)
                     .insert(groupRows)
                     .onConflict(['project', 'role_id', 'group_id'])
+                    .merge();
+            }
+        });
+    }
+
+    async addAccessToProject(
+        roles: number[],
+        groups: number[],
+        users: number[],
+        projectId: string,
+        createdBy: string,
+    ): Promise<void> {
+        const groupRows = groups.flatMap((group) =>
+            roles.map((role) => ({
+                group_id: group,
+                project: projectId,
+                role_id: role,
+                created_by: createdBy,
+            })),
+        );
+
+        const userRows = users.flatMap((user) =>
+            roles.map((role) => ({
+                user_id: user,
+                project: projectId,
+                role_id: role,
+            })),
+        );
+
+        await this.db.transaction(async (tx) => {
+            if (groupRows.length > 0) {
+                await tx(T.GROUP_ROLE)
+                    .insert(groupRows)
+                    .onConflict(['project', 'role_id', 'group_id'])
+                    .merge();
+            }
+            if (userRows.length > 0) {
+                await tx(T.ROLE_USER)
+                    .insert(userRows)
+                    .onConflict(['project', 'role_id', 'user_id'])
                     .merge();
             }
         });

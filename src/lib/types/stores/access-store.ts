@@ -95,11 +95,19 @@ export interface IAccessStore extends Store<IRole, number> {
         projectId?: string,
     ): Promise<void>;
 
-    addAccessToProject(
+    addRoleAccessToProject(
         users: IAccessInfo[],
         groups: IAccessInfo[],
         projectId: string,
         roleId: number,
+        createdBy: string,
+    ): Promise<void>;
+
+    addAccessToProject(
+        roles: number[],
+        groups: number[],
+        users: number[],
+        projectId: string,
         createdBy: string,
     ): Promise<void>;
 

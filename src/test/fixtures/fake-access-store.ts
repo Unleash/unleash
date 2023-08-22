@@ -27,11 +27,21 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    addAccessToProject(
+    addRoleAccessToProject(
         users: IAccessInfo[],
         groups: IAccessInfo[],
         projectId: string,
         roleId: number,
+        createdBy: string,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    addAccessToProject(
+        roles: number[],
+        groups: number[],
+        users: number[],
+        projectId: string,
         createdBy: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');

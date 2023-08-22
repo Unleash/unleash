@@ -1109,11 +1109,9 @@ test('Should allow bulk update of group permissions', async () => {
 
     await projectService.addAccess(
         project.id,
-        createFeatureRole.id,
-        {
-            users: [{ id: user1.id }],
-            groups: [{ id: group1.id }],
-        },
+        [createFeatureRole.id],
+        [group1.id],
+        [user1.id],
         'some-admin-user',
     );
 });
@@ -1142,11 +1140,9 @@ test('Should bulk update of only users', async () => {
 
     await projectService.addAccess(
         project,
-        createFeatureRole.id,
-        {
-            users: [{ id: user1.id }],
-            groups: [],
-        },
+        [createFeatureRole.id],
+        [],
+        [user1.id],
         'some-admin-user',
     );
 });
@@ -1183,11 +1179,9 @@ test('Should allow bulk update of only groups', async () => {
 
     await projectService.addAccess(
         project.id,
-        createFeatureRole.id,
-        {
-            users: [],
-            groups: [{ id: group1.id }],
-        },
+        [createFeatureRole.id],
+        [group1.id],
+        [],
         'some-admin-user',
     );
 });

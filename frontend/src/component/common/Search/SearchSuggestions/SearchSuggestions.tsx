@@ -11,8 +11,6 @@ import { useMemo, VFC } from 'react';
 import { SearchDescription } from './SearchDescription/SearchDescription';
 import { SearchInstructions } from './SearchInstructions/SearchInstructions';
 
-const randomIndex = (arr: any[]) => Math.floor(Math.random() * arr.length);
-
 const StyledPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
     width: '100%',
@@ -53,6 +51,10 @@ interface SearchSuggestionsProps {
     getSearchContext: () => IGetSearchContextOutput;
 }
 
+const quote = (item: string) => (item.includes(' ') ? `"${item}"` : item);
+
+const randomIndex = (arr: any[]) => Math.floor(Math.random() * arr.length);
+
 export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
     getSearchContext,
 }) => {
@@ -69,16 +71,19 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                 getColumnValues(column, row)
             );
 
+            const options = [...new Set(filterOptions)]
+                .filter(Boolean)
+                .flatMap(item => item.split('\n'))
+                .filter(item => !item.includes('"') && !item.includes("'"))
+                .map(quote)
+                .sort((a, b) => a.localeCompare(b));
+
             return {
                 name: column.filterName,
                 header: column.Header ?? column.filterName,
-                options: [...new Set(filterOptions)]
-                    .filter(Boolean)
-                    .flatMap(item => item.split('\n'))
-                    .map(item => (item.includes(' ') ? `"${item}"` : item))
-                    .sort((a, b) => a.localeCompare(b)),
+                options,
                 suggestedOption:
-                    filterOptions[randomRow] ?? `example-${column.filterName}`,
+                    options[randomRow] ?? `example-${column.filterName}`,
                 values: getFilterValues(
                     column.filterName,
                     searchContext.searchValue

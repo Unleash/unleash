@@ -12,8 +12,14 @@ type IUseSearchOutput<T extends any> = {
     getSearchContext: () => IGetSearchContextOutput<T>;
 };
 
+// https://stackoverflow.com/questions/9577930/regular-expression-to-select-all-whitespace-that-isnt-in-quotes
+const SPACES_WITHOUT_QUOTES = /\s+(?=(?:[^\'"]*[\'"][^\'"]*[\'"])*[^\'"]*$)/g;
+
 const normalizeSearchValue = (value: string) =>
     value.replaceAll(/\s*,\s*/g, ',');
+
+const removeQuotes = (value: string) =>
+    value.replaceAll("'", '').replaceAll('"', '');
 
 export const useSearch = <T extends any>(
     columns: any[],
@@ -22,7 +28,9 @@ export const useSearch = <T extends any>(
 ): IUseSearchOutput<T> => {
     const getSearchText = useCallback(
         (value: string) =>
-            getSearchTextGenerator(columns)(normalizeSearchValue(value)),
+            removeQuotes(
+                getSearchTextGenerator(columns)(normalizeSearchValue(value))
+            ),
         [columns]
     );
     const normalizedSearchValue = normalizeSearchValue(searchValue);
@@ -113,13 +121,14 @@ export const getSearchTextGenerator = (columns: any[]) => {
 
     return (searchValue: string) =>
         searchValue
-            .split(' ')
+            .split(SPACES_WITHOUT_QUOTES)
             .filter(fragment => !isValidSearch(fragment))
             .join(' ');
 };
 
 export const isValidFilter = (input: string, match: string) =>
-    new RegExp(`${match}:\\w+`).test(input);
+    // name:"hello world" or name:'hello world' or name:simple
+    new RegExp(`${match}:(?:\\w+|["'][^"']+["'])`).test(input);
 
 export const getFilterableColumns = (columns: any[]) =>
     columns.filter(column => column.filterName && column.accessor);
@@ -144,6 +153,7 @@ export const getColumnValues = (column: any, row: any) => {
 export const getFilterValues = (filterName: string, searchValue: string) =>
     searchValue
         ?.split(`${filterName}:`)[1]
-        ?.split(' ')[0]
+        ?.split(SPACES_WITHOUT_QUOTES)[0]
         ?.split(',')
+        .map(removeQuotes)
         .filter(value => value) ?? [];

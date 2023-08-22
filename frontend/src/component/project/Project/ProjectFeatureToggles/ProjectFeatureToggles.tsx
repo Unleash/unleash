@@ -276,10 +276,6 @@ export const ProjectFeatureToggles = ({
                                   values
                               );
                           },
-                          filterParsing(value: string) {
-                              // only first tag from the list is added to search suggestions
-                              return value.split('\n')[0];
-                          },
                       },
                   ]
                 : []),

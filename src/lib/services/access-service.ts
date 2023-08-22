@@ -3,12 +3,15 @@ import User, { IUser } from '../types/user';
 import {
     IAccessInfo,
     IAccessStore,
+    IGroupWithProjectRoles,
     IProjectRoleUsage,
     IRole,
+    IRoleDescriptor,
     IRoleWithPermissions,
     IRoleWithProject,
     IUserPermission,
     IUserRole,
+    IUserWithProjectRoles,
 } from '../types/stores/access-store';
 import { Logger } from '../logger';
 import { IAccountStore, IGroupStore, IUnleashStores } from '../types/stores';
@@ -35,7 +38,7 @@ import {
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
-import { IGroup, IGroupModelWithProjectRole } from '../types/group';
+import { IGroup } from '../types/group';
 import { GroupService } from './group-service';
 import { IFlagResolver, IUnleashConfig } from 'lib/types';
 
@@ -68,6 +71,12 @@ interface IRoleUpdate {
     description: string;
     type?: 'root-custom' | 'custom';
     permissions?: IPermission[];
+}
+
+export interface AccessWithRoles {
+    roles: IRoleDescriptor[];
+    groups: IGroupWithProjectRoles[];
+    users: IUserWithProjectRoles[];
 }
 
 const isProjectPermission = (permission) => PROJECT_ADMIN.includes(permission);
@@ -489,18 +498,37 @@ export class AccessService {
         return [];
     }
 
-    async getProjectRoleAccess(
-        projectId: string,
-    ): Promise<[IRole[], IUserWithRole[], IGroupModelWithProjectRole[]]> {
+    async getProjectUsers(projectId: string): Promise<IUserWithProjectRoles[]> {
+        const projectUsers = await this.store.getProjectUsers(projectId);
+
+        if (projectUsers.length > 0) {
+            const users = await this.accountStore.getAllWithId(
+                projectUsers.map((u) => u.id),
+            );
+            return users.flatMap((user) => {
+                return projectUsers
+                    .filter((u) => u.id === user.id)
+                    .map((groupUser) => ({
+                        ...user,
+                        ...groupUser,
+                    }));
+            });
+        }
+        return [];
+    }
+
+    async getProjectRoleAccess(projectId: string): Promise<AccessWithRoles> {
         const roles = await this.roleStore.getProjectRoles();
 
-        const users = await Promise.all(
-            roles.map(async (role) => {
-                return this.getProjectUsersForRole(role.id, projectId);
-            }),
-        );
+        const users = await this.getProjectUsers(projectId);
+
         const groups = await this.groupService.getProjectGroups(projectId);
-        return [roles, users.flat(), groups];
+
+        return {
+            roles,
+            groups,
+            users,
+        };
     }
 
     async getProjectRoleUsage(roleId: number): Promise<IProjectRoleUsage[]> {

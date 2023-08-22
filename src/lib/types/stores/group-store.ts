@@ -7,6 +7,7 @@ import Group, {
     IGroupRole,
     IGroupUser,
 } from '../group';
+import { IGroupWithProjectRoles } from './access-store';
 
 export interface IStoreGroup {
     name: string;
@@ -33,6 +34,8 @@ export interface IGroupStore extends Store<IGroup, number> {
     getGroupProjects(groupIds: number[]): Promise<IGroupProject[]>;
 
     getProjectGroupRoles(projectId: string): Promise<IGroupRole[]>;
+
+    getProjectGroups(projectId: string): Promise<IGroupWithProjectRoles[]>;
 
     getAllWithId(ids: number[]): Promise<IGroup[]>;
 

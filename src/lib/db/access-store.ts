@@ -10,11 +10,13 @@ import {
     IRoleWithProject,
     IUserPermission,
     IUserRole,
+    IUserWithProjectRoles,
 } from '../types/stores/access-store';
 import { IPermission } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import {
     ENVIRONMENT_PERMISSION_TYPE,
+    PROJECT_ROLE_TYPES,
     ROOT_PERMISSION_TYPE,
 } from '../util/constants';
 import { Db } from './db';
@@ -277,6 +279,34 @@ export class AccessStore implements IAccessStore {
             userId: r.user_id,
             addedAt: r.created_at,
         }));
+    }
+
+    async getProjectUsers(
+        projectId?: string,
+    ): Promise<IUserWithProjectRoles[]> {
+        const rows = await this.db
+            .select(['user_id', 'ru.created_at', 'ru.role_id'])
+            .from<IRole>(`${T.ROLE_USER} AS ru`)
+            .join(`${T.ROLES} as r`, 'ru.role_id', 'id')
+            .whereIn('r.type', PROJECT_ROLE_TYPES)
+            .andWhere('ru.project', projectId);
+
+        return rows.reduce((acc, row) => {
+            const existingUser = acc.find((user) => user.id === row.user_id);
+
+            if (existingUser) {
+                existingUser.roles.push(row.role_id);
+            } else {
+                acc.push({
+                    id: row.user_id,
+                    addedAt: row.created_at,
+                    roleId: row.role_id,
+                    roles: [row.role_id],
+                });
+            }
+
+            return acc;
+        }, []);
     }
 
     async getRolesForUserId(userId: number): Promise<IRoleWithProject[]> {

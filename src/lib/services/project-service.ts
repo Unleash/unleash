@@ -1,7 +1,7 @@
 import { subDays } from 'date-fns';
 import { ValidationError } from 'joi';
 import User, { IUser } from '../types/user';
-import { AccessService } from './access-service';
+import { AccessService, AccessWithRoles } from './access-service';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
 import { nameType } from '../routes/util';
@@ -21,7 +21,6 @@ import {
     IProjectWithCount,
     IUnleashConfig,
     IUnleashStores,
-    IUserWithRole,
     MOVE_FEATURE_TOGGLE,
     PROJECT_CREATED,
     PROJECT_DELETED,
@@ -50,7 +49,7 @@ import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 import { arraysHaveSameItems } from '../util';
 import { GroupService } from './group-service';
-import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
+import { IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
 import { calculateAverageTimeToProd } from '../features/feature-toggle/time-to-production/time-to-production';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
@@ -58,12 +57,6 @@ import { uniqueByKey } from '../util/unique';
 import { PermissionError } from '../error';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
-
-export interface AccessWithRoles {
-    users: IUserWithRole[];
-    roles: IRoleDescriptor[];
-    groups: IGroupModelWithProjectRole[];
-}
 
 type Days = number;
 type Count = number;
@@ -337,14 +330,7 @@ export default class ProjectService {
 
     // RBAC methods
     async getAccessToProject(projectId: string): Promise<AccessWithRoles> {
-        const [roles, users, groups] =
-            await this.accessService.getProjectRoleAccess(projectId);
-
-        return {
-            roles,
-            users,
-            groups,
-        };
+        return this.accessService.getProjectRoleAccess(projectId);
     }
 
     // Deprecated: See addAccess instead.
@@ -354,7 +340,7 @@ export default class ProjectService {
         userId: number,
         createdBy: string,
     ): Promise<void> {
-        const [roles, users] = await this.accessService.getProjectRoleAccess(
+        const { roles, users } = await this.accessService.getProjectRoleAccess(
             projectId,
         );
         const user = await this.accountStore.get(userId);
@@ -763,7 +749,7 @@ export default class ProjectService {
     async getProjectUsers(
         projectId: string,
     ): Promise<Array<Pick<IUser, 'id' | 'email' | 'username'>>> {
-        const [, users, groups] = await this.accessService.getProjectRoleAccess(
+        const { groups, users } = await this.accessService.getProjectRoleAccess(
             projectId,
         );
         const actualUsers = users.map((user) => ({

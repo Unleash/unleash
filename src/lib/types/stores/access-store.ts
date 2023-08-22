@@ -1,4 +1,5 @@
-import { IPermission } from '../model';
+import { IGroupModelWithProjectRole } from '../group';
+import { IPermission, IUserWithRole } from '../model';
 import { Store } from './store';
 
 export interface IUserPermission {
@@ -52,6 +53,17 @@ export interface IUserRole {
     addedAt?: Date;
 }
 
+interface IEntityWithProjectRoles {
+    roles?: number[];
+}
+
+export interface IUserWithProjectRoles
+    extends IUserWithRole,
+        IEntityWithProjectRoles {}
+export interface IGroupWithProjectRoles
+    extends IGroupModelWithProjectRole,
+        IEntityWithProjectRoles {}
+
 export interface IAccessStore extends Store<IRole, number> {
     getAvailablePermissions(): Promise<IPermission[]>;
 
@@ -73,6 +85,8 @@ export interface IAccessStore extends Store<IRole, number> {
         roleId: number,
         projectId?: string,
     ): Promise<IUserRole[]>;
+
+    getProjectUsers(projectId?: string): Promise<IUserWithProjectRoles[]>;
 
     getUserIdsForRole(roleId: number, projectId?: string): Promise<number[]>;
 

@@ -7,6 +7,7 @@ import {
     IRoleWithProject,
     IUserPermission,
     IUserRole,
+    IUserWithProjectRoles,
 } from '../../lib/types/stores/access-store';
 import { IPermission } from 'lib/types/model';
 import { IRoleStore } from 'lib/types';
@@ -104,6 +105,10 @@ class AccessStoreMock implements IAccessStore {
         roleId: number,
         projectId?: string,
     ): Promise<IUserRole[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getProjectUsers(projectId?: string): Promise<IUserWithProjectRoles[]> {
         throw new Error('Method not implemented.');
     }
 

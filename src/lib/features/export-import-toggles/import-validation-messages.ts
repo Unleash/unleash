@@ -4,6 +4,20 @@ import {
 } from '../../openapi';
 import { IContextFieldDto } from '../../types/stores/context-field-store';
 
+export interface IErrorsParams {
+    projectName: string;
+    strategies: FeatureStrategySchema[];
+    contextFields: IContextFieldDto[];
+    otherProjectFeatures: string[];
+    duplicateFeatures: string[];
+}
+
+export interface IWarningParams {
+    usedCustomStrategies: string[];
+    archivedFeatures: string[];
+    existingFeatures: string[];
+}
+
 export class ImportValidationMessages {
     static compilePermissionErrors(
         missingPermissions: string[],
@@ -20,14 +34,13 @@ export class ImportValidationMessages {
         return errors;
     }
 
-    static compileErrors(
-        projectName: string,
-        strategies: FeatureStrategySchema[],
-        contextFields: IContextFieldDto[],
-        segments: string[],
-        otherProjectFeatures: string[],
-        changeRequestExists: boolean,
-    ): ImportTogglesValidateItemSchema[] {
+    static compileErrors({
+        projectName,
+        strategies,
+        contextFields,
+        otherProjectFeatures,
+        duplicateFeatures,
+    }: IErrorsParams): ImportTogglesValidateItemSchema[] {
         const errors: ImportTogglesValidateItemSchema[] = [];
 
         if (strategies.length > 0) {
@@ -46,35 +59,28 @@ export class ImportValidationMessages {
                 ),
             });
         }
-        if (segments.length > 0) {
-            errors.push({
-                message:
-                    'We detected the following segments in the import file that need to be created first:',
-                affectedItems: segments,
-            });
-        }
-        if (changeRequestExists) {
-            errors.push({
-                message:
-                    'Before importing any data, please resolve your pending change request in this project and environment as it is preventing you from importing at this time',
-                affectedItems: [],
-            });
-        }
         if (otherProjectFeatures.length > 0) {
             errors.push({
                 message: `You cannot import a features that already exist in other projects. You already have the following features defined outside of project ${projectName}:`,
                 affectedItems: otherProjectFeatures,
             });
         }
+        if (duplicateFeatures.length > 0) {
+            errors.push({
+                message:
+                    'We detected the following features are duplicate in your import data:',
+                affectedItems: duplicateFeatures,
+            });
+        }
 
         return errors;
     }
 
-    static compileWarnings(
-        usedCustomStrategies: string[],
-        archivedFeatures: string[],
-        existingFeatures: string[],
-    ): ImportTogglesValidateItemSchema[] {
+    static compileWarnings({
+        usedCustomStrategies,
+        existingFeatures,
+        archivedFeatures,
+    }: IWarningParams): ImportTogglesValidateItemSchema[] {
         const warnings: ImportTogglesValidateItemSchema[] = [];
         if (usedCustomStrategies.length > 0) {
             warnings.push({

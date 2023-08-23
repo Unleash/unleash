@@ -42,8 +42,9 @@ import {
 } from '../../services';
 import { isValidField } from './import-context-validation';
 import { IImportTogglesStore } from './import-toggles-store-type';
-import { ImportPermissionsService } from './import-permissions-service';
+import { ImportPermissionsService, Mode } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
+import { findDuplicates } from '../../util/findDuplicates';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -144,6 +145,7 @@ export default class ExportImportService {
     async validate(
         dto: ImportTogglesSchema,
         user: User,
+        mode = 'regular' as Mode,
     ): Promise<ImportTogglesValidateSchema> {
         const [
             unsupportedStrategies,
@@ -153,6 +155,7 @@ export default class ExportImportService {
             otherProjectFeatures,
             existingProjectFeatures,
             missingPermissions,
+            duplicateFeatures,
         ] = await Promise.all([
             this.getUnsupportedStrategies(dto),
             this.getUsedCustomStrategies(dto),
@@ -163,23 +166,23 @@ export default class ExportImportService {
             this.importPermissionsService.getMissingPermissions(
                 dto,
                 user,
-                'regular',
+                mode,
             ),
+            this.getDuplicateFeatures(dto),
         ]);
 
-        const errors = ImportValidationMessages.compileErrors(
-            dto.project,
-            unsupportedStrategies,
-            unsupportedContextFields || [],
-            [],
+        const errors = ImportValidationMessages.compileErrors({
+            projectName: dto.project,
+            strategies: unsupportedStrategies,
+            contextFields: unsupportedContextFields || [],
             otherProjectFeatures,
-            false,
-        );
-        const warnings = ImportValidationMessages.compileWarnings(
-            usedCustomStrategies,
+            duplicateFeatures,
+        });
+        const warnings = ImportValidationMessages.compileWarnings({
             archivedFeatures,
-            existingProjectFeatures,
-        );
+            existingFeatures: existingProjectFeatures,
+            usedCustomStrategies,
+        });
         const permissions =
             ImportValidationMessages.compilePermissionErrors(
                 missingPermissions,
@@ -192,24 +195,36 @@ export default class ExportImportService {
         };
     }
 
+    async importVerify(
+        dto: ImportTogglesSchema,
+        user: User,
+        mode = 'regular' as Mode,
+    ): Promise<void> {
+        await Promise.all([
+            this.verifyStrategies(dto),
+            this.verifyContextFields(dto),
+            this.importPermissionsService.verifyPermissions(dto, user, mode),
+            this.verifyFeatures(dto),
+        ]);
+    }
+
+    async importToggleLevelInfo(
+        dto: ImportTogglesSchema,
+        user: User,
+    ): Promise<void> {
+        await this.createOrUpdateToggles(dto, user);
+        await this.importToggleVariants(dto, user);
+        await this.importTagTypes(dto, user);
+        await this.importTags(dto, user);
+        await this.importContextFields(dto, user);
+    }
+
     async import(dto: ImportTogglesSchema, user: User): Promise<void> {
         const cleanedDto = await this.cleanData(dto);
 
-        await Promise.all([
-            this.verifyStrategies(cleanedDto),
-            this.verifyContextFields(cleanedDto),
-            this.importPermissionsService.verifyPermissions(
-                dto,
-                user,
-                'regular',
-            ),
-            this.verifyFeatures(dto),
-        ]);
-        await this.createOrUpdateToggles(cleanedDto, user);
-        await this.importToggleVariants(dto, user);
-        await this.importTagTypes(cleanedDto, user);
-        await this.importTags(cleanedDto, user);
-        await this.importContextFields(dto, user);
+        await this.importVerify(cleanedDto, user);
+
+        await this.importToggleLevelInfo(cleanedDto, user);
 
         await this.importDefault(cleanedDto, user);
         await this.eventStore.store({
@@ -220,7 +235,7 @@ export default class ExportImportService {
         });
     }
 
-    private async importDefault(dto: ImportTogglesSchema, user: User) {
+    async importDefault(dto: ImportTogglesSchema, user: User): Promise<void> {
         await this.deleteStrategies(dto);
         await this.importStrategies(dto, user);
         await this.importToggleStatuses(dto, user);
@@ -429,7 +444,9 @@ export default class ExportImportService {
         };
     }
 
-    private async removeArchivedFeatures(dto: ImportTogglesSchema) {
+    async removeArchivedFeatures(
+        dto: ImportTogglesSchema,
+    ): Promise<ImportTogglesSchema> {
         const archivedFeatures = await this.getArchivedFeatures(dto);
         const featureTags =
             dto.data.featureTags?.filter(
@@ -547,6 +564,10 @@ export default class ExportImportService {
             dto.data.features.map((feature) => feature.name),
             dto.project,
         );
+    }
+
+    private getDuplicateFeatures(dto: ImportTogglesSchema) {
+        return findDuplicates(dto.data.features.map((feature) => feature.name));
     }
 
     private async getNewTagTypes(dto: ImportTogglesSchema) {

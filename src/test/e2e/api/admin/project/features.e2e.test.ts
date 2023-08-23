@@ -3367,7 +3367,7 @@ test('should not be allowed to create with invalid strategy type name', async ()
                 userId: 'string',
             },
         },
-        404,
+        400,
     );
 });
 
@@ -3391,6 +3391,6 @@ test('should not be allowed to update with invalid strategy type name', async ()
             },
             segments: [],
         },
-        404,
+        400,
     );
 });

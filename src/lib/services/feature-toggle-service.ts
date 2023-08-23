@@ -281,7 +281,12 @@ class FeatureToggleService {
         strategyName: string | undefined,
     ): Promise<void> {
         if (strategyName !== undefined) {
-            await this.strategyStore.get(strategyName);
+            const exists = await this.strategyStore.exists(strategyName);
+            if (!exists) {
+                throw new BadDataError(
+                    `Could not find strategy type with name ${strategyName}`,
+                );
+            }
         }
     }
 

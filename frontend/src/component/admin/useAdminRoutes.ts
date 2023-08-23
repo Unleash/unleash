@@ -22,14 +22,11 @@ export const useAdminRoutes = () => {
     return routes
         .filter(filterByConfig(uiConfig))
         .filter(route =>
-            filterAdminRoutes(
-                route?.menu,
-                {
-                    enterprise: isEnterprise(),
-                    pro: isPro(),
-                    billing: isBilling,
-                },
-            )
+            filterAdminRoutes(route?.menu, {
+                enterprise: isEnterprise(),
+                pro: isPro(),
+                billing: isBilling,
+            })
         )
         .map(mapRouteLink);
 };

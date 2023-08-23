@@ -1,4 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { applicationUsageSchema } from './application-usage-schema';
 
 export const applicationSchema = {
     $id: '#/components/schemas/applicationSchema',
@@ -50,8 +51,17 @@ export const applicationSchema = {
             type: 'string',
             example: 'https://github.com/favicon.ico',
         },
+        usage: {
+            description: 'The list of projects the application has been using.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/applicationUsageSchema',
+            },
+        },
     },
-    components: {},
+    components: {
+        applicationUsageSchema,
+    },
 } as const;
 
 export type ApplicationSchema = FromSchema<typeof applicationSchema>;

@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "5.3.0-main",
+  "version": "5.4.0-main",
   "keywords": [
     "unleash",
     "feature toggle",

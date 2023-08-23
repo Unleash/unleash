@@ -62,7 +62,6 @@ beforeEach(async () => {
         description: 'Some desc',
         project: 'default',
         environment: 'dev',
-        //@ts-ignore
     });
 });
 

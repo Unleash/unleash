@@ -108,6 +108,10 @@ const useAPI = ({
                 const response = await res.json();
                 if (response?.details?.length > 0 && propagateErrors) {
                     const error = response.details[0];
+                    setErrors(prev => ({
+                        ...prev,
+                        unknown: error,
+                    }));
                     if (propagateErrors) {
                         throw new Error(error.message || error.msg);
                     }

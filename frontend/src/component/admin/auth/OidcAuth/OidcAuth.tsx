@@ -245,7 +245,7 @@ export const OidcAuth = () => {
                     <Grid item md={5}>
                         <strong>Enable Additional Scopes</strong>
                         <p>
-                            If you enable additional scopes unleash will request
+                            If you enable additional scopes Unleash will request
                             the additional scopes needed to match configuration
                             beyond openid, profile, and email. For example 'groups'.
                         </p>

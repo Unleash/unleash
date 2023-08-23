@@ -7,6 +7,7 @@ import {
 import { Logger, LogProvider } from '../logger';
 import { IApplicationQuery } from '../types/query';
 import { Db } from './db';
+import { IFlagResolver } from '../types';
 
 const COLUMNS = [
     'app_name',
@@ -35,7 +36,48 @@ const mapRow: (any) => IClientApplication = (row) => ({
     icon: row.icon,
     lastSeen: row.last_seen,
     announced: row.announced,
+    project: row.project,
+    environment: row.environment,
 });
+
+const reduceRows = (rows: any[]): IClientApplication[] => {
+    const appsObj = rows.reduce((acc, row) => {
+        const existingApp = acc[row.app_name];
+
+        if (existingApp) {
+            let project = existingApp.usage.find(
+                (usage) => usage.project === row.project,
+            );
+
+            if (project) {
+                project.environments.push(row.environment);
+            } else {
+                existingApp.usage.push({
+                    project: row.project,
+                    environments: [row.environment],
+                });
+            }
+        } else {
+            const mappedRow = mapRow(row);
+            acc[row.app_name] = {
+                ...mappedRow,
+                usage:
+                    row.project && row.environment
+                        ? [
+                              {
+                                  project: row.project,
+                                  environments: [row.environment],
+                              },
+                          ]
+                        : [],
+            };
+        }
+
+        return acc;
+    }, {});
+
+    return Object.values(appsObj);
+};
 
 const remapRow = (input) => {
     const temp = {
@@ -72,10 +114,18 @@ export default class ClientApplicationsStore
 {
     private db: Db;
 
+    private flagResolver: IFlagResolver;
+
     private logger: Logger;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: IFlagResolver,
+    ) {
         this.db = db;
+        this.flagResolver = flagResolver;
         this.logger = getLogger('client-applications-store.ts');
     }
 
@@ -147,15 +197,38 @@ export default class ClientApplicationsStore
     async getAppsForStrategy(
         query: IApplicationQuery,
     ): Promise<IClientApplication[]> {
-        const rows = await this.db.select(COLUMNS).from(TABLE);
-        const apps = rows.map(mapRow);
+        if (this.flagResolver.isEnabled('newApplicationList')) {
+            const rows = await this.db
+                .select([
+                    ...COLUMNS.map((column) => `${TABLE}.${column}`),
+                    'project',
+                    'environment',
+                ])
+                .from(TABLE)
+                .leftJoin(
+                    TABLE_USAGE,
+                    `${TABLE_USAGE}.app_name`,
+                    `${TABLE}.app_name`,
+                );
+            const apps = reduceRows(rows);
 
-        if (query.strategyName) {
-            return apps.filter((app) =>
-                app.strategies.includes(query.strategyName),
-            );
+            if (query.strategyName) {
+                return apps.filter((app) =>
+                    app.strategies.includes(query.strategyName),
+                );
+            }
+            return apps;
+        } else {
+            const rows = await this.db.select(COLUMNS).from(TABLE);
+            const apps = rows.map(mapRow);
+
+            if (query.strategyName) {
+                return apps.filter((app) =>
+                    app.strategies.includes(query.strategyName),
+                );
+            }
+            return apps;
         }
-        return apps;
     }
 
     async getUnannounced(): Promise<IClientApplication[]> {

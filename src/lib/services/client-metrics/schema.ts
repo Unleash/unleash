@@ -66,6 +66,8 @@ export const applicationSchema = joi
         url: joi.string().allow('').optional(),
         color: joi.string().allow('').optional(),
         icon: joi.string().allow('').optional(),
+        project: joi.string().allow('').optional(),
+        environment: joi.string().allow('').optional(),
         announced: joi.boolean().optional().default(false),
     });
 

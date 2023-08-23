@@ -547,6 +547,7 @@ const variants: VariantsSchema = [
 const exportedFeature: ImportTogglesSchema['data']['features'][0] = {
     project: 'old_project',
     name: 'first_feature',
+    type: 'release',
 };
 const anotherExportedFeature: ImportTogglesSchema['data']['features'][0] = {
     project: 'old_project',
@@ -723,15 +724,22 @@ test('import multiple features with same tag', async () => {
     });
 });
 
-test('importing same JSON should work multiple times in a row', async () => {
+test('can update toggles on subsequent import', async () => {
     await createProjects();
     await app.importToggles(defaultImportPayload);
-    await app.importToggles(defaultImportPayload);
+    await app.importToggles({
+        ...defaultImportPayload,
+        data: {
+            ...defaultImportPayload.data,
+            features: [{ ...exportedFeature, type: 'operational' }],
+        },
+    });
 
     const { body: importedFeature } = await getFeature(defaultFeature);
     expect(importedFeature).toMatchObject({
         name: 'first_feature',
         project: DEFAULT_PROJECT,
+        type: 'operational',
         variants,
     });
 
@@ -801,6 +809,26 @@ test('reject import with unsupported strategies', async () => {
     );
 
     expect(body.details[0].description).toMatch(/\bcustomStrategy\b/);
+});
+
+test('reject import with duplicate features', async () => {
+    await createProjects();
+    const importPayloadWithContextFields: ImportTogglesSchema = {
+        ...defaultImportPayload,
+        data: {
+            ...defaultImportPayload.data,
+            features: [exportedFeature, exportedFeature],
+        },
+    };
+
+    const { body } = await app.importToggles(
+        importPayloadWithContextFields,
+        409,
+    );
+
+    expect(body.details[0].description).toBe(
+        'Feature first_feature already exists',
+    );
 });
 
 test('validate import data', async () => {

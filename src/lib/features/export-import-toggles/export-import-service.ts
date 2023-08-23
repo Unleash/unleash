@@ -205,7 +205,7 @@ export default class ExportImportService {
             ),
             this.verifyFeatures(dto),
         ]);
-        await this.createToggles(cleanedDto, user);
+        await this.createOrUpdateToggles(cleanedDto, user);
         await this.importToggleVariants(dto, user);
         await this.importTagTypes(cleanedDto, user);
         await this.importTags(cleanedDto, user);
@@ -348,10 +348,21 @@ export default class ExportImportService {
         );
     }
 
-    private async createToggles(dto: ImportTogglesSchema, user: User) {
+    private async createOrUpdateToggles(dto: ImportTogglesSchema, user: User) {
+        const existingFeatures = await this.getExistingProjectFeatures(dto);
+        const username = extractUsernameFromUser(user);
         await Promise.all(
-            dto.data.features.map((feature) =>
-                this.featureToggleService
+            dto.data.features.map((feature) => {
+                if (existingFeatures.includes(feature.name)) {
+                    const { archivedAt, createdAt, ...rest } = feature;
+                    return this.featureToggleService.updateFeatureToggle(
+                        dto.project,
+                        rest as FeatureToggleDTO,
+                        username,
+                        feature.name,
+                    );
+                }
+                return this.featureToggleService
                     .validateName(feature.name)
                     .then(() => {
                         const { archivedAt, createdAt, ...rest } = feature;
@@ -360,9 +371,8 @@ export default class ExportImportService {
                             rest as FeatureToggleDTO,
                             extractUsernameFromUser(user),
                         );
-                    })
-                    .catch(() => {}),
-            ),
+                    });
+            }),
         );
     }
 
@@ -533,12 +543,10 @@ export default class ExportImportService {
     }
 
     private async getExistingProjectFeatures(dto: ImportTogglesSchema) {
-        const existingProjectsFeatures =
-            await this.importTogglesStore.getFeaturesInProject(
-                dto.data.features.map((feature) => feature.name),
-                dto.project,
-            );
-        return existingProjectsFeatures;
+        return this.importTogglesStore.getFeaturesInProject(
+            dto.data.features.map((feature) => feature.name),
+            dto.project,
+        );
     }
 
     private async getNewTagTypes(dto: ImportTogglesSchema) {

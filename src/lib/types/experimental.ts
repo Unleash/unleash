@@ -24,7 +24,6 @@ export type IFlagKey =
     | 'slackAppAddon'
     | 'configurableFeatureTypeLifetimes'
     | 'filterInvalidClientMetrics'
-    | 'frontendNavigationUpdate'
     | 'lastSeenByEnvironment'
     | 'segmentChangeRequests'
     | 'changeRequestReject'
@@ -112,10 +111,6 @@ const flags: IFlags = {
     ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
         process.env.FILTER_INVALID_CLIENT_METRICS,
-        false,
-    ),
-    frontendNavigationUpdate: parseEnvVarBoolean(
-        process.env.UNLEASH_NAVIGATION_UPDATE,
         false,
     ),
     lastSeenByEnvironment: parseEnvVarBoolean(

@@ -40,7 +40,6 @@ process.nextTick(async () => {
                         strategyVariant: true,
                         slackAppAddon: true,
                         configurableFeatureTypeLifetimes: true,
-                        frontendNavigationUpdate: true,
                         lastSeenByEnvironment: true,
                         segmentChangeRequests: true,
                         newApplicationList: true,

@@ -7,9 +7,6 @@ import { filterByConfig, mapRouteLink } from 'component/common/util';
 export const useAdminRoutes = () => {
     const { uiConfig, isPro, isEnterprise } = useUiConfig();
     const { isBilling } = useInstanceStatus();
-    const showEnterpriseOptionsInPro = Boolean(
-        uiConfig?.flags?.frontendNavigationUpdate
-    );
     const routes = [...adminRoutes];
 
     if (uiConfig.flags.UNLEASH_CLOUD) {
@@ -32,7 +29,6 @@ export const useAdminRoutes = () => {
                     pro: isPro(),
                     billing: isBilling,
                 },
-                showEnterpriseOptionsInPro
             )
         )
         .map(mapRouteLink);

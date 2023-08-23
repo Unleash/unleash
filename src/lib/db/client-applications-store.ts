@@ -42,33 +42,29 @@ const mapRow: (any) => IClientApplication = (row) => ({
 
 const reduceRows = (rows: any[]): IClientApplication[] => {
     const appsObj = rows.reduce((acc, row) => {
+        // extracting project and environment from usage table
+        const { project, environment } = row;
         const existingApp = acc[row.app_name];
 
         if (existingApp) {
-            let project = existingApp.usage.find(
-                (usage) => usage.project === row.project,
+            const existingProject = existingApp.usage.find(
+                (usage) => usage.project === project,
             );
 
-            if (project) {
-                project.environments.push(row.environment);
+            if (existingProject) {
+                existingProject.environments.push(environment);
             } else {
                 existingApp.usage.push({
-                    project: row.project,
-                    environments: [row.environment],
+                    project: project,
+                    environments: [environment],
                 });
             }
         } else {
-            const mappedRow = mapRow(row);
             acc[row.app_name] = {
-                ...mappedRow,
+                ...mapRow(row),
                 usage:
-                    row.project && row.environment
-                        ? [
-                              {
-                                  project: row.project,
-                                  environments: [row.environment],
-                              },
-                          ]
+                    project && environment
+                        ? [{ project, environments: [environment] }]
                         : [],
             };
         }

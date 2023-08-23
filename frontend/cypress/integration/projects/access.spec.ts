@@ -47,6 +47,19 @@ describe('project-access', () => {
             id: groupAndProjectName,
             name: groupAndProjectName,
         });
+
+        cy.intercept('GET', `${baseUrl}/api/admin/ui-config`, req => {
+            req.headers['cache-control'] =
+                'no-cache, no-store, must-revalidate';
+            req.on('response', res => {
+                if (res.body) {
+                    res.body.flags = {
+                        ...res.body.flags,
+                        multipleRoles: true,
+                    };
+                }
+            });
+        });
     });
 
     after(() => {

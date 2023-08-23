@@ -59,6 +59,7 @@ export interface IFlags {
     lastSeenByEnvironment?: boolean;
     newApplicationList?: boolean;
     integrationsRework?: boolean;
+    multipleRoles?: boolean;
 }
 
 export interface IVersionInfo {

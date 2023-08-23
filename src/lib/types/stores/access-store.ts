@@ -191,10 +191,12 @@ export interface IAccessStore extends Store<IRole, number> {
         projectId: string,
         groupId: number,
         roles: number[],
-        createdByUsername: string,
+        createdBy: string,
     ): Promise<void>;
     getProjectRolesForGroup(
         projectId: string,
         groupId: number,
     ): Promise<number[]>;
+    removeUserAccess(projectId: string, userId: number): Promise<void>;
+    removeGroupAccess(projectId: string, groupId: number): Promise<void>;
 }

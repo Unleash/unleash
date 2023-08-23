@@ -11,6 +11,7 @@ import Group, {
 import { Db } from './db';
 import { BadDataError, FOREIGN_KEY_VIOLATION } from '../error';
 import { IGroupWithProjectRoles } from '../types/stores/access-store';
+import { PROJECT_ROLE_TYPES } from '../util';
 
 const T = {
     GROUPS: 'groups',
@@ -124,6 +125,7 @@ export default class GroupStore implements IGroupStore {
             .select(['gr.group_id', 'gr.created_at', 'gr.role_id'])
             .from(`${T.GROUP_ROLE} AS gr`)
             .join(`${T.ROLES} as r`, 'gr.role_id', 'r.id')
+            .whereIn('r.type', PROJECT_ROLE_TYPES)
             .andWhere('project', projectId);
 
         return rows.reduce((acc, row) => {

@@ -49,6 +49,13 @@ export const PROJECT_ACCESS_USER_ROLES_UPDATED =
 
 export const PROJECT_ACCESS_GROUP_ROLES_UPDATED =
     'project-access-group-roles-updated';
+
+export const PROJECT_ACCESS_USER_ROLES_DELETED =
+    'project-access-user-roles-deleted';
+
+export const PROJECT_ACCESS_GROUP_ROLES_DELETED =
+    'project-access-group-roles-deleted';
+
 export const PROJECT_CREATED = 'project-created' as const;
 export const PROJECT_UPDATED = 'project-updated' as const;
 export const PROJECT_DELETED = 'project-deleted' as const;
@@ -170,6 +177,8 @@ export const IEventTypes = [
     PROJECT_ACCESS_ADDED,
     PROJECT_ACCESS_USER_ROLES_UPDATED,
     PROJECT_ACCESS_GROUP_ROLES_UPDATED,
+    PROJECT_ACCESS_USER_ROLES_DELETED,
+    PROJECT_ACCESS_GROUP_ROLES_DELETED,
     PROJECT_CREATED,
     PROJECT_UPDATED,
     PROJECT_DELETED,
@@ -869,6 +878,52 @@ export class ProjectAccessGroupRolesUpdated extends BaseEvent {
         const { project, data, preData } = p;
         this.project = project;
         this.data = data;
+        this.preData = preData;
+    }
+}
+
+export class ProjectAccessUserRolesDeleted extends BaseEvent {
+    readonly project: string;
+
+    readonly data: null;
+
+    readonly preData: any;
+
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(p: {
+        project: string;
+        createdBy: string | IUser;
+        preData: any;
+    }) {
+        super(PROJECT_ACCESS_USER_ROLES_DELETED, p.createdBy);
+        const { project, preData } = p;
+        this.project = project;
+        this.data = null;
+        this.preData = preData;
+    }
+}
+
+export class ProjectAccessGroupRolesDeleted extends BaseEvent {
+    readonly project: string;
+
+    readonly data: null;
+
+    readonly preData: any;
+
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(p: {
+        project: string;
+        createdBy: string | IUser;
+        preData: any;
+    }) {
+        super(PROJECT_ACCESS_GROUP_ROLES_DELETED, p.createdBy);
+        const { project, preData } = p;
+        this.project = project;
+        this.data = null;
         this.preData = preData;
     }
 }

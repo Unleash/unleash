@@ -93,7 +93,7 @@ export const ProjectAccessTable: VFC = () => {
     const { setToastData } = useToast();
 
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
-    const { removeUserFromRole, removeGroupFromRole } = useProjectApi();
+    const { removeUserAccess, removeGroupAccess } = useProjectApi();
     const [removeOpen, setRemoveOpen] = useState(false);
     const [groupOpen, setGroupOpen] = useState(false);
     const [selectedRow, setSelectedRow] = useState<IProjectAccess>();
@@ -352,7 +352,7 @@ export const ProjectAccessTable: VFC = () => {
 
     const removeAccess = async (userOrGroup?: IProjectAccess) => {
         if (!userOrGroup) return;
-        const { id, roleId } = userOrGroup.entity;
+        const { id } = userOrGroup.entity;
         let name = userOrGroup.entity.name;
         if (userOrGroup.type !== ENTITY_TYPE.GROUP) {
             const user = userOrGroup.entity as IUser;
@@ -361,9 +361,9 @@ export const ProjectAccessTable: VFC = () => {
 
         try {
             if (userOrGroup.type !== ENTITY_TYPE.GROUP) {
-                await removeUserFromRole(projectId, roleId, id);
+                await removeUserAccess(projectId, id);
             } else {
-                await removeGroupFromRole(projectId, roleId, id);
+                await removeGroupAccess(projectId, id);
             }
             refetchProjectAccess();
             setToastData({

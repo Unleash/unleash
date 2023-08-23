@@ -128,38 +128,18 @@ const useProjectApi = () => {
         return await makeRequest(req.caller, req.id);
     };
 
-    const removeUserFromRole = async (
-        projectId: string,
-        roleId: number,
-        userId: number
-    ) => {
-        const path = `api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`;
+    const removeUserAccess = async (projectId: string, userId: number) => {
+        const path = `api/admin/projects/${projectId}/users/${userId}/roles`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return await makeRequest(req.caller, req.id);
     };
 
-    const removeGroupFromRole = async (
-        projectId: string,
-        roleId: number,
-        groupId: number
-    ) => {
-        const path = `api/admin/projects/${projectId}/groups/${groupId}/roles/${roleId}`;
+    const removeGroupAccess = async (projectId: string, groupId: number) => {
+        const path = `api/admin/projects/${projectId}/groups/${groupId}/roles`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return await makeRequest(req.caller, req.id);
     };
 
     const searchProjectUser = async (query: string): Promise<Response> => {
@@ -306,8 +286,8 @@ const useProjectApi = () => {
         addEnvironmentToProject,
         removeEnvironmentFromProject,
         addAccessToProject,
-        removeUserFromRole,
-        removeGroupFromRole,
+        removeUserAccess,
+        removeGroupAccess,
         changeUserRole,
         setUserRoles,
         changeGroupRole,

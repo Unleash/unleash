@@ -295,13 +295,13 @@ export class AccessService {
         projectId: string,
         groupId: number,
         roles: number[],
-        createdByUsername: string,
+        createdBy: string,
     ): Promise<void> {
         await this.store.setProjectRolesForGroup(
             projectId,
             groupId,
             roles,
-            createdByUsername,
+            createdBy,
         );
     }
 
@@ -314,6 +314,14 @@ export class AccessService {
 
     async getRoleByName(roleName: string): Promise<IRole> {
         return this.roleStore.getRoleByName(roleName);
+    }
+
+    async removeUserAccess(projectId: string, userId: number): Promise<void> {
+        await this.store.removeUserAccess(projectId, userId);
+    }
+
+    async removeGroupAccess(projectId: string, groupId: number): Promise<void> {
+        await this.store.removeGroupAccess(projectId, groupId);
     }
 
     async setUserRootRole(

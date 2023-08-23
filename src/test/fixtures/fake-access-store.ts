@@ -268,7 +268,7 @@ class AccessStoreMock implements IAccessStore {
         projectId: string,
         groupId: number,
         roles: number[],
-        createdByUsername: string,
+        createdBy: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
@@ -278,6 +278,14 @@ class AccessStoreMock implements IAccessStore {
         userId: number,
         roles: number[],
     ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    removeUserAccess(projectId: string, userId: number): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    removeGroupAccess(projectId: string, groupId: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 }

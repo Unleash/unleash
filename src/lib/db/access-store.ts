@@ -369,12 +369,6 @@ export class AccessStore implements IAccessStore {
             [roleId, roleId],
         );
 
-        /*
-        const rows2 = await this.db(T.ROLE_USER)
-            .select('project', this.db.raw('count(project) as user_count'))
-            .where('role_id', roleId)
-            .groupBy('project');
-            */
         return query.rows.map((r) => {
             return {
                 project: r.project,
@@ -521,8 +515,14 @@ export class AccessStore implements IAccessStore {
         projectId: string,
         createdBy: string,
     ): Promise<void> {
+        const validatedProjectRoleIds = await this.db(T.ROLES)
+            .select('id')
+            .whereIn('id', roles)
+            .whereIn('type', PROJECT_ROLE_TYPES)
+            .pluck('id');
+
         const groupRows = groups.flatMap((group) =>
-            roles.map((role) => ({
+            validatedProjectRoleIds.map((role) => ({
                 group_id: group,
                 project: projectId,
                 role_id: role,
@@ -531,7 +531,7 @@ export class AccessStore implements IAccessStore {
         );
 
         const userRows = users.flatMap((user) =>
-            roles.map((role) => ({
+            validatedProjectRoleIds.map((role) => ({
                 user_id: user,
                 project: projectId,
                 role_id: role,
@@ -559,19 +559,28 @@ export class AccessStore implements IAccessStore {
         userId: number,
         roles: number[],
     ): Promise<void> {
-        const userRows = roles.map((role) => {
-            return {
+        const projectRoleIds = await this.db(T.ROLES)
+            .select('id')
+            .whereIn('type', PROJECT_ROLE_TYPES)
+            .pluck('id');
+
+        const projectRoleIdsSet = new Set(projectRoleIds);
+
+        const userRows = roles
+            .filter((role) => projectRoleIdsSet.has(role))
+            .map((role) => ({
                 user_id: userId,
                 project: projectId,
                 role_id: role,
-            };
-        });
+            }));
 
         await this.db.transaction(async (tx) => {
             await tx(T.ROLE_USER)
                 .where('project', projectId)
                 .andWhere('user_id', userId)
+                .whereIn('role_id', projectRoleIds)
                 .delete();
+
             await tx(T.ROLE_USER)
                 .insert(userRows)
                 .onConflict(['project', 'role_id', 'user_id'])
@@ -583,10 +592,12 @@ export class AccessStore implements IAccessStore {
         projectId: string,
         userId: number,
     ): Promise<number[]> {
-        const rows = await this.db(T.ROLE_USER)
-            .select('role_id')
-            .where('project', projectId)
-            .andWhere('user_id', userId);
+        const rows = await this.db(`${T.ROLE_USER} as ru`)
+            .join(`${T.ROLES} as r`, 'ru.role_id', 'r.id')
+            .select('ru.role_id')
+            .where('ru.project', projectId)
+            .whereIn('r.type', PROJECT_ROLE_TYPES)
+            .andWhere('ru.user_id', userId);
         return rows.map((r) => r.role_id as number);
     }
 
@@ -594,21 +605,31 @@ export class AccessStore implements IAccessStore {
         projectId: string,
         groupId: number,
         roles: number[],
-        created_by: string,
+        createdBy: string,
     ): Promise<void> {
-        const groupRows = roles.map((role) => {
-            return {
+        const projectRoleIds = await this.db(T.ROLES)
+            .select('id')
+            .whereIn('type', PROJECT_ROLE_TYPES)
+            .pluck('id');
+
+        const projectRoleIdsSet = new Set(projectRoleIds);
+
+        const groupRows = roles
+            .filter((role) => projectRoleIdsSet.has(role))
+            .map((role) => ({
                 group_id: groupId,
                 project: projectId,
                 role_id: role,
-                created_by,
-            };
-        });
+                created_by: createdBy,
+            }));
+
         await this.db.transaction(async (tx) => {
             await tx(T.GROUP_ROLE)
                 .where('project', projectId)
                 .andWhere('group_id', groupId)
+                .whereIn('role_id', projectRoleIds)
                 .delete();
+
             await tx(T.GROUP_ROLE)
                 .insert(groupRows)
                 .onConflict(['project', 'role_id', 'group_id'])
@@ -620,11 +641,43 @@ export class AccessStore implements IAccessStore {
         projectId: string,
         groupId: number,
     ): Promise<number[]> {
-        const rows = await this.db(T.GROUP_ROLE)
-            .select('role_id')
-            .where('project', projectId)
-            .andWhere('group_id', groupId);
+        const rows = await this.db(`${T.GROUP_ROLE} as gr`)
+            .join(`${T.ROLES} as r`, 'gr.role_id', 'r.id')
+            .select('gr.role_id')
+            .where('gr.project', projectId)
+            .whereIn('r.type', PROJECT_ROLE_TYPES)
+            .andWhere('gr.group_id', groupId);
         return rows.map((row) => row.role_id as number);
+    }
+
+    async removeUserAccess(projectId: string, userId: number): Promise<void> {
+        return this.db(T.ROLE_USER)
+            .where({
+                user_id: userId,
+                project: projectId,
+            })
+            .whereIn(
+                'role_id',
+                this.db(T.ROLES)
+                    .select('id as role_id')
+                    .whereIn('type', PROJECT_ROLE_TYPES),
+            )
+            .delete();
+    }
+
+    async removeGroupAccess(projectId: string, groupId: number): Promise<void> {
+        return this.db(T.GROUP_ROLE)
+            .where({
+                group_id: groupId,
+                project: projectId,
+            })
+            .whereIn(
+                'role_id',
+                this.db(T.ROLES)
+                    .select('id as role_id')
+                    .whereIn('type', PROJECT_ROLE_TYPES),
+            )
+            .delete();
     }
 
     async removeRolesOfTypeForUser(

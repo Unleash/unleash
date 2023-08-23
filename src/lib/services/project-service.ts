@@ -37,6 +37,7 @@ import {
     ProjectAccessUserRolesUpdated,
     ProjectAccessGroupRolesUpdated,
     IProjectRoleUsage,
+    ProjectAccessUserRolesDeleted,
 } from '../types';
 import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
 import {
@@ -401,6 +402,54 @@ export default class ProjectService {
         );
     }
 
+    async removeUserAccess(
+        projectId: string,
+        userId: number,
+        createdBy: string,
+    ): Promise<void> {
+        const existingRoles = await this.accessService.getProjectRolesForUser(
+            projectId,
+            userId,
+        );
+
+        await this.accessService.removeUserAccess(projectId, userId);
+
+        await this.eventStore.store(
+            new ProjectAccessUserRolesDeleted({
+                project: projectId,
+                createdBy,
+                preData: {
+                    roles: existingRoles,
+                    userId,
+                },
+            }),
+        );
+    }
+
+    async removeGroupAccess(
+        projectId: string,
+        groupId: number,
+        createdBy: string,
+    ): Promise<void> {
+        const existingRoles = await this.accessService.getProjectRolesForGroup(
+            projectId,
+            groupId,
+        );
+
+        await this.accessService.removeGroupAccess(projectId, groupId);
+
+        await this.eventStore.store(
+            new ProjectAccessUserRolesDeleted({
+                project: projectId,
+                createdBy,
+                preData: {
+                    roles: existingRoles,
+                    groupId,
+                },
+            }),
+        );
+    }
+
     async addGroup(
         projectId: string,
         roleId: number,
@@ -562,7 +611,7 @@ export default class ProjectService {
         projectId: string,
         groupId: number,
         roles: number[],
-        createdByUserName: string,
+        createdBy: string,
     ): Promise<void> {
         const existingRoles = await this.accessService.getProjectRolesForGroup(
             projectId,
@@ -572,12 +621,12 @@ export default class ProjectService {
             projectId,
             groupId,
             roles,
-            createdByUserName,
+            createdBy,
         );
         await this.eventStore.store(
             new ProjectAccessGroupRolesUpdated({
                 project: projectId,
-                createdBy: createdByUserName,
+                createdBy,
                 data: {
                     roles,
                     groupId,

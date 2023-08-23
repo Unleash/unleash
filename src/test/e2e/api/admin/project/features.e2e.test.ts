@@ -57,26 +57,28 @@ const createSegment = async (segmentName: string) => {
 const createStrategy = async (
     featureName: string,
     payload: IStrategyConfig,
+    expectedCode = 200,
 ) => {
     return app.request
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/default/strategies`,
         )
         .send(payload)
-        .expect(200);
+        .expect(expectedCode);
 };
 
 const updateStrategy = async (
     featureName: string,
     strategyId: string,
     payload: IStrategyConfig,
+    expectedCode = 200,
 ) => {
     const { body } = await app.request
         .put(
             `/api/admin/projects/default/features/${featureName}/environments/default/strategies/${strategyId}`,
         )
         .send(payload)
-        .expect(200);
+        .expect(expectedCode);
 
     return body;
 };
@@ -110,8 +112,6 @@ afterEach(async () => {
                 ),
             ),
     );
-
-    await db.stores.strategyStore.deleteAll();
 });
 
 afterAll(async () => {
@@ -2355,7 +2355,7 @@ test('should handle strategy variants', async () => {
     await app.createFeature(feature.name);
 
     const strategyWithInvalidVariant = {
-        name: uuidv4(),
+        name: 'flexibleRollout',
         constraints: [],
         variants: [
             {
@@ -2386,7 +2386,7 @@ test('should handle strategy variants', async () => {
         stickiness: 'default',
     };
     const strategyWithValidVariant = {
-        name: uuidv4(),
+        name: 'flexibleRollout',
         constraints: [],
         variants: [variant],
     };
@@ -2438,7 +2438,7 @@ test('should reject invalid constraint values for multi-valued constraints', asy
     });
 
     const mockStrategy = (values: string[]) => ({
-        name: uuidv4(),
+        name: 'flexibleRollout',
         constraints: [{ contextName: 'userId', operator: 'IN', values }],
     });
 
@@ -2497,7 +2497,7 @@ test('should add default constraint values for single-valued constraints', async
     };
 
     const mockStrategy = (constraint: unknown) => ({
-        name: uuidv4(),
+        name: 'flexibleRollout',
         constraints: [constraint],
     });
 
@@ -2544,7 +2544,7 @@ test('should allow long parameter values', async () => {
     });
 
     const strategy = {
-        name: uuidv4(),
+        name: 'flexibleRollout',
         parameters: { a: 'b'.repeat(500) },
     };
 
@@ -2582,7 +2582,7 @@ test('should change strategy sort order when payload is valid', async () => {
             `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
         )
         .send({
-            name: 'gradualrollout',
+            name: 'flexibleRollout',
             parameters: {
                 userId: 'string',
             },
@@ -2668,7 +2668,7 @@ test('should return strategies in correct order when new strategies are added', 
             `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
         )
         .send({
-            name: 'gradualrollout',
+            name: 'flexibleRollout',
             parameters: {
                 userId: 'string',
             },
@@ -2705,7 +2705,7 @@ test('should return strategies in correct order when new strategies are added', 
             `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
         )
         .send({
-            name: 'gradualrollout',
+            name: 'flexibleRollout',
             parameters: {
                 userId: 'string',
             },
@@ -2717,7 +2717,7 @@ test('should return strategies in correct order when new strategies are added', 
             `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
         )
         .send({
-            name: 'gradualrollout',
+            name: 'flexibleRollout',
             parameters: {
                 userId: 'string',
             },
@@ -2993,7 +2993,7 @@ test('should return disabled strategies', async () => {
             `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
         )
         .send({
-            name: 'gradualrollout',
+            name: 'flexibleRollout',
             parameters: {
                 userId: 'string',
             },
@@ -3354,4 +3354,43 @@ test('Updating feature strategy sort-order should trigger a an event', async () 
         .expect((res) => {
             expect(res.body.events[0].type).toBe('strategy-order-changed');
         });
+});
+
+test('should not be allowed to create with invalid strategy type name', async () => {
+    const feature = { name: uuidv4(), impressionData: false };
+    await app.createFeature(feature.name);
+    await createStrategy(
+        feature.name,
+        {
+            name: 'random-type',
+            parameters: {
+                userId: 'string',
+            },
+        },
+        404,
+    );
+});
+
+test('should not be allowed to update with invalid strategy type name', async () => {
+    const feature = { name: uuidv4(), impressionData: false };
+    await app.createFeature(feature.name);
+    const { body: strategyOne } = await createStrategy(feature.name, {
+        name: 'default',
+        parameters: {
+            userId: 'string',
+        },
+    });
+
+    await updateStrategy(
+        feature.name,
+        strategyOne.id,
+        {
+            name: 'random-type',
+            parameters: {
+                userId: 'string',
+            },
+            segments: [],
+        },
+        404,
+    );
 });

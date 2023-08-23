@@ -101,7 +101,6 @@ export default class StrategyStore implements IStrategyStore {
     }
 
     rowToStrategy(row: IStrategyRow): IStrategy {
-        console.log('rowToStrategy', row);
         if (!row) {
             throw new NotFoundError('No strategy found');
         }
@@ -117,7 +116,6 @@ export default class StrategyStore implements IStrategyStore {
     }
 
     rowToEditableStrategy(row: IStrategyRow): IEditableStrategy {
-        console.log('rowToEditableStrategy', row);
         if (!row) {
             throw new NotFoundError('No strategy found');
         }

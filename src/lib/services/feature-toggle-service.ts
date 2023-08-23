@@ -42,6 +42,7 @@ import {
     WeightType,
     StrategiesOrderChangedEvent,
     PotentiallyStaleOnEvent,
+    IStrategyStore,
 } from '../types';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
@@ -118,6 +119,8 @@ class FeatureToggleService {
 
     private featureStrategiesStore: IFeatureStrategiesStore;
 
+    private strategyStore: IStrategyStore;
+
     private featureToggleStore: IFeatureToggleStore;
 
     private featureToggleClientStore: IFeatureToggleClientStore;
@@ -150,6 +153,7 @@ class FeatureToggleService {
             featureTagStore,
             featureEnvironmentStore,
             contextFieldStore,
+            strategyStore,
         }: Pick<
             IUnleashStores,
             | 'featureStrategiesStore'
@@ -160,6 +164,7 @@ class FeatureToggleService {
             | 'featureTagStore'
             | 'featureEnvironmentStore'
             | 'contextFieldStore'
+            | 'strategyStore'
         >,
         {
             getLogger,
@@ -171,6 +176,7 @@ class FeatureToggleService {
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
+        this.strategyStore = strategyStore;
         this.featureToggleStore = featureToggleStore;
         this.featureToggleClientStore = featureToggleClientStore;
         this.tagStore = featureTagStore;
@@ -225,24 +231,24 @@ class FeatureToggleService {
 
     validateUpdatedProperties(
         { featureName, projectId }: IFeatureContext,
-        strategy: IFeatureStrategy,
+        existingStrategy: IFeatureStrategy,
     ): void {
-        if (strategy.projectId !== projectId) {
+        if (existingStrategy.projectId !== projectId) {
             throw new InvalidOperationError(
                 'You can not change the projectId for an activation strategy.',
             );
         }
 
-        if (strategy.featureName !== featureName) {
+        if (existingStrategy.featureName !== featureName) {
             throw new InvalidOperationError(
                 'You can not change the featureName for an activation strategy.',
             );
         }
 
         if (
-            strategy.parameters &&
-            'stickiness' in strategy.parameters &&
-            strategy.parameters.stickiness === ''
+            existingStrategy.parameters &&
+            'stickiness' in existingStrategy.parameters &&
+            existingStrategy.parameters.stickiness === ''
         ) {
             throw new InvalidOperationError(
                 'You can not have an empty string for stickiness.',
@@ -268,6 +274,19 @@ class FeatureToggleService {
                     }
                 }),
             );
+        }
+    }
+
+    async validateStrategyType(
+        strategyName: string | undefined,
+    ): Promise<void> {
+        if (strategyName !== undefined) {
+            const exists = await this.strategyStore.exists(strategyName);
+            if (!exists) {
+                throw new BadDataError(
+                    `Could not find strategy type with name ${strategyName}`,
+                );
+            }
         }
     }
 
@@ -502,6 +521,7 @@ class FeatureToggleService {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureBelongsToProject(context);
 
+        await this.validateStrategyType(strategyConfig.name);
         await this.validateProjectCanAccessSegments(
             projectId,
             strategyConfig.segments,
@@ -602,7 +622,7 @@ class FeatureToggleService {
      */
     async updateStrategy(
         id: string,
-        updates: Partial<IFeatureStrategy>,
+        updates: Partial<IStrategyConfig>,
         context: IFeatureStrategyContext,
         userName: string,
         user?: User,
@@ -640,13 +660,15 @@ class FeatureToggleService {
 
     async unprotectedUpdateStrategy(
         id: string,
-        updates: Partial<IFeatureStrategy>,
+        updates: Partial<IStrategyConfig>,
         context: IFeatureStrategyContext,
         userName: string,
     ): Promise<Saved<IStrategyConfig>> {
         const { projectId, environment, featureName } = context;
         const existingStrategy = await this.featureStrategiesStore.get(id);
+
         this.validateUpdatedProperties(context, existingStrategy);
+        await this.validateStrategyType(updates.name);
         await this.validateProjectCanAccessSegments(
             projectId,
             updates.segments,

@@ -142,31 +142,6 @@ const useProjectApi = () => {
         return await makeRequest(req.caller, req.id);
     };
 
-    const searchProjectUser = async (query: string): Promise<Response> => {
-        const path = `api/admin/user-admin/search?q=${query}`;
-
-        const req = createRequest(path, { method: 'GET' });
-
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
-    };
-
-    const changeUserRole = (
-        projectId: string,
-        roleId: number,
-        userId: number
-    ) => {
-        const path = `api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`;
-        const req = createRequest(path, { method: 'PUT' });
-
-        return makeRequest(req.caller, req.id);
-    };
-
     const setUserRoles = (
         projectId: string,
         roleIds: number[],
@@ -177,17 +152,6 @@ const useProjectApi = () => {
             method: 'PUT',
             body: JSON.stringify({ roles: roleIds }),
         });
-
-        return makeRequest(req.caller, req.id);
-    };
-
-    const changeGroupRole = (
-        projectId: string,
-        roleId: number,
-        groupId: number
-    ) => {
-        const path = `api/admin/projects/${projectId}/groups/${groupId}/roles/${roleId}`;
-        const req = createRequest(path, { method: 'PUT' });
 
         return makeRequest(req.caller, req.id);
     };
@@ -288,16 +252,13 @@ const useProjectApi = () => {
         addAccessToProject,
         removeUserAccess,
         removeGroupAccess,
-        changeUserRole,
         setUserRoles,
-        changeGroupRole,
         setGroupRoles,
         archiveFeatures,
         reviveFeatures,
         staleFeatures,
         deleteFeature,
         deleteFeatures,
-        searchProjectUser,
         updateDefaultStrategy,
         errors,
         loading,

@@ -382,21 +382,6 @@ test(`should not delete api_tokens on import when drop-flag is set`, async () =>
         },
         userName,
     );
-    await app.services.featureToggleServiceV2.createStrategy(
-        {
-            name: 'default',
-            constraints: [
-                { contextName: 'userId', operator: 'IN', values: ['123'] },
-            ],
-            parameters: {},
-        },
-        {
-            projectId,
-            featureName,
-            environment,
-        },
-        userName,
-    );
     await app.services.apiTokenService.createApiTokenWithProjects({
         tokenName: apiTokenName,
         type: ApiTokenType.CLIENT,

@@ -53,7 +53,6 @@ export interface IFlags {
     customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
     configurableFeatureTypeLifetimes?: boolean;
-    frontendNavigationUpdate?: boolean;
     segmentChangeRequests?: boolean;
     changeRequestReject?: boolean;
     lastSeenByEnvironment?: boolean;

@@ -45,7 +45,6 @@ export const adminRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/api',
         title: 'API access',
-        flag: 'frontendNavigationUpdate',
         menu: { adminSettings: true },
         group: 'access',
     },

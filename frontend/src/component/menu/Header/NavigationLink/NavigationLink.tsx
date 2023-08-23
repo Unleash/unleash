@@ -54,10 +54,10 @@ const NavigationLink = ({
     handleClose,
     ...props
 }: INavigationLinkProps) => {
-    const { uiConfig, isPro } = useUiConfig();
+    const { isPro } = useUiConfig();
     const showEnterpriseBadgeToPro = Boolean(
-        uiConfig?.flags?.frontendNavigationUpdate &&
-            isPro() &&
+        isPro() &&
+            !props.mode?.includes('pro') &&
             props.mode?.includes('enterprise')
     );
 

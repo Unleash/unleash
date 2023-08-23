@@ -42,8 +42,6 @@ import { ImportModal } from './Import/ImportModal';
 import { IMPORT_BUTTON } from 'utils/testIds';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 
-const NAVIGATE_TO_EDIT_PROJECT = 'NAVIGATE_TO_EDIT_PROJECT';
-
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
@@ -59,8 +57,6 @@ export const Project = () => {
     const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
-
-    const updatedNavigation = uiConfig?.flags?.frontendNavigationUpdate;
 
     const tabs = [
         {
@@ -84,32 +80,17 @@ export const Project = () => {
             name: 'change-request',
             isEnterprise: true,
         },
-        ...(updatedNavigation
-            ? [
-                  {
-                      title: 'Event log',
-                      path: `${basePath}/logs`,
-                      name: 'logs',
-                  },
-                  {
-                      title: 'Project settings',
-                      path: `${basePath}/settings`,
-                      name: 'settings',
-                  },
-              ]
-            : [
-                  {
-                      title: 'Project settings',
-                      path: `${basePath}/settings`,
-                      name: 'settings',
-                  },
-                  {
-                      title: 'Event log',
-                      path: `${basePath}/logs`,
-                      name: 'logs',
-                  },
-              ]),
-    ].filter(tab => !updatedNavigation || !(isOss() && tab.isEnterprise));
+        {
+            title: 'Event log',
+            path: `${basePath}/logs`,
+            name: 'logs',
+        },
+        {
+            title: 'Project settings',
+            path: `${basePath}/settings`,
+            name: 'settings',
+        },
+    ].filter(tab => !(isOss() && tab.isEnterprise));
 
     const activeTab = [...tabs]
         .reverse()
@@ -218,11 +199,10 @@ export const Project = () => {
                                     tab.isEnterprise ? 'end' : undefined
                                 }
                                 icon={
-                                    tab.isEnterprise &&
-                                    isPro() &&
-                                    updatedNavigation
-                                        ? enterpriseIcon
-                                        : undefined
+                                    (tab.isEnterprise &&
+                                        isPro() &&
+                                        enterpriseIcon) ||
+                                    undefined
                                 }
                             />
                         ))}

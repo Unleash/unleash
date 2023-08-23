@@ -26,9 +26,6 @@ export const AdminTabsMenu: VFC = () => {
 
     const activeTab = pathname.split('/')[2];
 
-    const showEnterpriseFeaturesInPro =
-        uiConfig?.flags?.frontendNavigationUpdate;
-
     const adminRoutes = useAdminRoutes();
     const group = adminRoutes.find(route =>
         pathname.includes(route.path)
@@ -65,8 +62,7 @@ export const AdminTabsMenu: VFC = () => {
                                     condition={Boolean(
                                         tab.menu.mode?.includes('enterprise') &&
                                             !tab.menu.mode?.includes('pro') &&
-                                            isPro() &&
-                                            showEnterpriseFeaturesInPro
+                                            isPro()
                                     )}
                                     show={
                                         <StyledBadgeContainer>

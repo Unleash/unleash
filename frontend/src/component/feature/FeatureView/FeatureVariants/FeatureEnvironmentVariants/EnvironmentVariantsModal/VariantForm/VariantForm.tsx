@@ -86,7 +86,7 @@ const StyledFieldColumn = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledInput = styled(Input)(({theme}) => ({
+const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
     '& textarea': {
         minHeight: theme.spacing(3),

@@ -133,6 +133,10 @@ const flags: IFlags = {
         process.env.UNLEASH_INTEGRATIONS,
         false,
     ),
+    newApplicationList: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_APPLICATION_LIST,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

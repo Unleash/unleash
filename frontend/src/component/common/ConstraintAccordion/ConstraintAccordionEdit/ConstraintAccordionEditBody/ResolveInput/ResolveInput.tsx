@@ -23,6 +23,7 @@ interface IResolveInputProps {
     contextDefinition: IUnleashContextDefinition;
     localConstraint: IConstraint;
     constraintValues: string[];
+    constraintValue: string;
     setValue: (value: string) => void;
     setValues: (values: string[]) => void;
     setError: React.Dispatch<React.SetStateAction<string>>;
@@ -54,6 +55,7 @@ export const ResolveInput = ({
     input,
     contextDefinition,
     constraintValues,
+    constraintValue,
     localConstraint,
     setValue,
     setValues,
@@ -84,8 +86,13 @@ export const ResolveInput = ({
                 return (
                     <>
                         <SingleLegalValue
+                            data={resolveLegalValues(
+                                [constraintValue],
+                                contextDefinition.legalValues
+                            )}
                             setValue={setValue}
                             value={localConstraint.value}
+                            constraintValue={constraintValue}
                             type="number"
                             legalValues={
                                 contextDefinition.legalValues?.filter(
@@ -101,8 +108,13 @@ export const ResolveInput = ({
                 return (
                     <>
                         <SingleLegalValue
+                            data={resolveLegalValues(
+                                [constraintValue],
+                                contextDefinition.legalValues
+                            )}
                             setValue={setValue}
                             value={localConstraint.value}
+                            constraintValue={constraintValue}
                             type="semver"
                             legalValues={contextDefinition.legalValues || []}
                             error={error}

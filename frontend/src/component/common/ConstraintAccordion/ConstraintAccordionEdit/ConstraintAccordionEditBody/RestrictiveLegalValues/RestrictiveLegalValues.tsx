@@ -36,6 +36,19 @@ const createValuesMap = (values: string[]): IValuesMap => {
     }, {});
 };
 
+export const getLegalValueSet = (values: ILegalValue[]) => {
+    return new Set(values.map(({ value }) => value));
+};
+
+export const getIllegalValues = (
+    constraintValues: string[],
+    deletedLegalValues: ILegalValue[]
+) => {
+    const deletedValuesSet = getLegalValueSet(deletedLegalValues);
+
+    return constraintValues.filter(value => deletedValuesSet.has(value));
+};
+
 export const RestrictiveLegalValues = ({
     data,
     values,
@@ -53,25 +66,18 @@ export const RestrictiveLegalValues = ({
     const [valuesMap, setValuesMap] = useState(() => createValuesMap(values));
     const { classes: styles } = useThemeStyles();
 
-    const getDeletedValuesSet = () => {
-        return new Set(deletedLegalValues.map(({ value }) => value));
-    };
-
     const cleanDeletedLegalValues = (constraintValues: string[]): string[] => {
-        const deletedValuesSet = getDeletedValuesSet();
+        const deletedValuesSet = getLegalValueSet(deletedLegalValues);
         return (
             constraintValues?.filter(value => !deletedValuesSet.has(value)) ||
             []
         );
     };
 
-    const getIllegalValues = () => {
-        const deletedValuesSet = getDeletedValuesSet();
-
-        return constraintValues.filter(value => deletedValuesSet.has(value));
-    };
-
-    const illegalValues = getIllegalValues();
+    const illegalValues = getIllegalValues(
+        constraintValues,
+        deletedLegalValues
+    );
 
     useEffect(() => {
         setValuesMap(createValuesMap(values));

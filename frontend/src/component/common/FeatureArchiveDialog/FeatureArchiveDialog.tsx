@@ -7,11 +7,11 @@ import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender'
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { Alert, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
-import { useChangeRequestApi } from '../../../hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { usePendingChangeRequests } from '../../../hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { useHighestPermissionChangeRequestEnvironment } from '../../../hooks/useHighestPermissionChangeRequestEnvironment';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;
@@ -62,18 +62,35 @@ const UsageWarning = ({
     return null;
 };
 
-export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
-    isOpen,
-    onClose,
-    onConfirm,
+const useActionButtonText = (projectId: string, isBulkArchive: boolean) => {
+    const { isChangeRequestConfiguredInAnyEnv } =
+        useChangeRequestsEnabled(projectId);
+    if (isChangeRequestConfiguredInAnyEnv() && isBulkArchive) {
+        return 'Add to change request';
+    }
+    if (isChangeRequestConfiguredInAnyEnv()) {
+        return 'Add change to draft';
+    }
+    if (isBulkArchive) {
+        return 'Archive toggles';
+    }
+    return 'Archive toggle';
+};
+
+const useArchiveAction = ({
     projectId,
     featureIds,
-    featuresWithUsage,
+    onSuccess,
+    onError,
+}: {
+    projectId: string;
+    featureIds: string[];
+    onSuccess: () => void;
+    onError: () => void;
 }) => {
+    const { setToastData, setToastApiError } = useToast();
     const { archiveFeatureToggle } = useFeatureApi();
     const { archiveFeatures } = useProjectApi();
-    const { setToastData, setToastApiError } = useToast();
-    const { uiConfig } = useUiConfig();
     const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(projectId);
     const { addChange } = useChangeRequestApi();
@@ -123,24 +140,11 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
         setToastData({
             text: 'Selected feature toggles have been archived',
             type: 'success',
-            title: 'Feature toggles archived',
+            title: 'Features archived',
         });
     };
 
-    const resolveButtonText = () => {
-        if (isChangeRequestConfiguredInAnyEnv() && isBulkArchive) {
-            return 'Add to change request';
-        }
-        if (isChangeRequestConfiguredInAnyEnv()) {
-            return 'Add change to draft';
-        }
-        if (isBulkArchive) {
-            return 'Archive toggles';
-        }
-        return 'Archive toggle';
-    };
-
-    const onClick = async () => {
+    return async () => {
         try {
             if (isChangeRequestConfiguredInAnyEnv()) {
                 await addArchiveToggleToChangeRequest();
@@ -150,23 +154,50 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                 await archiveToggle();
             }
 
-            onConfirm();
-            onClose();
+            onSuccess();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
-            onClose();
+            onError();
         }
     };
+};
+
+export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
+    isOpen,
+    onClose,
+    onConfirm,
+    projectId,
+    featureIds,
+    featuresWithUsage,
+}) => {
+    const { uiConfig } = useUiConfig();
+
+    const isBulkArchive = featureIds?.length > 1;
+
+    const buttonText = useActionButtonText(projectId, isBulkArchive);
 
     const dialogTitle = isBulkArchive
         ? 'Archive feature toggles'
         : 'Archive feature toggle';
+
+    const archiveAction = useArchiveAction({
+        projectId,
+        featureIds,
+        onSuccess() {
+            onConfirm();
+            onClose();
+        },
+        onError() {
+            onClose();
+        },
+    });
+
     return (
         <Dialogue
-            onClick={onClick}
+            onClick={archiveAction}
             open={isOpen}
             onClose={onClose}
-            primaryButtonText={resolveButtonText()}
+            primaryButtonText={buttonText}
             secondaryButtonText="Cancel"
             title={dialogTitle}
         >

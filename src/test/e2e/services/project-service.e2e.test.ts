@@ -1186,6 +1186,81 @@ test('Should allow bulk update of only groups', async () => {
     );
 });
 
+test('Should allow permutations of roles, groups and users when adding a new access', async () => {
+    const project = {
+        id: 'project-access-permutations',
+        name: 'project-access-permutations',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const group1 = await stores.groupStore.create({
+        name: 'permutation-group-1',
+        description: '',
+    });
+
+    const group2 = await stores.groupStore.create({
+        name: 'permutation-group-2',
+        description: '',
+    });
+
+    const user1 = await stores.userStore.insert({
+        name: 'permutation-user-1',
+        email: 'pu1@getunleash.io',
+    });
+
+    const user2 = await stores.userStore.insert({
+        name: 'permutation-user-2',
+        email: 'pu2@getunleash.io',
+    });
+
+    const role1 = await accessService.createRole({
+        name: 'permutation-role-1',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                displayName: 'Create feature toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    const role2 = await accessService.createRole({
+        name: 'permutation-role-2',
+        description: '',
+        permissions: [
+            {
+                id: 7,
+                name: 'UPDATE_FEATURE',
+                displayName: 'Update feature toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await projectService.addAccess(
+        project.id,
+        [role1.id, role2.id],
+        [group1.id, group2.id],
+        [user1.id, user2.id],
+        'some-admin-user',
+    );
+
+    const { users, groups } = await projectService.getAccessToProject(
+        project.id,
+    );
+
+    expect(users).toHaveLength(2);
+    expect(groups).toHaveLength(2);
+
+    expect(users[0].roles).toStrictEqual([role1.id, role2.id]);
+    expect(groups[0].roles).toStrictEqual([role1.id, role2.id]);
+});
+
 test('should only count active feature toggles for project', async () => {
     const project = {
         id: 'only-active',

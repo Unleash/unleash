@@ -581,10 +581,12 @@ export class AccessStore implements IAccessStore {
                 .whereIn('role_id', projectRoleIds)
                 .delete();
 
-            await tx(T.ROLE_USER)
-                .insert(userRows)
-                .onConflict(['project', 'role_id', 'user_id'])
-                .ignore();
+            if (userRows.length > 0) {
+                await tx(T.ROLE_USER)
+                    .insert(userRows)
+                    .onConflict(['project', 'role_id', 'user_id'])
+                    .ignore();
+            }
         });
     }
 
@@ -629,11 +631,12 @@ export class AccessStore implements IAccessStore {
                 .andWhere('group_id', groupId)
                 .whereIn('role_id', projectRoleIds)
                 .delete();
-
-            await tx(T.GROUP_ROLE)
-                .insert(groupRows)
-                .onConflict(['project', 'role_id', 'group_id'])
-                .ignore();
+            if (groupRows.length > 0) {
+                await tx(T.GROUP_ROLE)
+                    .insert(groupRows)
+                    .onConflict(['project', 'role_id', 'group_id'])
+                    .ignore();
+            }
         });
     }
 

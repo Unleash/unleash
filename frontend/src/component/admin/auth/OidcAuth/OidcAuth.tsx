@@ -23,7 +23,7 @@ import { SsoGroupSettings } from '../SsoGroupSettings';
 const initialState = {
     enabled: false,
     enableSingleSignOut: false,
-    enableAdditionalScopes: false,
+    enableGroupScope: false,
     enableGroupSyncing: false,
     autoCreate: false,
     unleashHostname: location.hostname,
@@ -59,10 +59,6 @@ export const OidcAuth = () => {
     const updateSingleSignOut = () => {
         setData({ ...data, enableSingleSignOut: !data.enableSingleSignOut });
     };
-
-    const updateAdditionalScopes = () => {
-        setData({ ...data, enableAdditionalScopes: !data.enableAdditionalScopes });
-    }
 
     const setValue = (name: string, value: string | boolean) => {
         setData({
@@ -241,34 +237,6 @@ export const OidcAuth = () => {
                     data={data}
                     setValue={setValue}
                 />
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
-                        <strong>Enable Additional Scopes</strong>
-                        <p>
-                            If you enable additional scopes Unleash will request
-                            the additional scopes needed to match configuration
-                            beyond openid, profile, and email. For example 'groups'.
-                        </p>
-                    </Grid>
-                    <Grid item md={6} style={{ padding: '20px' }}>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    onChange={updateAdditionalScopes}
-                                    value={data.enableAdditionalScopes}
-                                    disabled={!data.enabled}
-                                    name="enableAdditionalScopes"
-                                    checked={data.enableAdditionalScopes}
-                                />
-                            }
-                            label={
-                                data.enableAdditionalScopes
-                                    ? 'Enabled'
-                                    : 'Disabled'
-                            }
-                        />
-                    </Grid>
-                </Grid>{' '}
                 <AutoCreateForm data={data} setValue={setValue} />
                 <Grid container spacing={3} mb={2}>
                     <Grid item md={5}>

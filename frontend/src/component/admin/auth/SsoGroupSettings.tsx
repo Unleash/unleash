@@ -7,6 +7,7 @@ interface SsoGroupSettingsProps {
         enabled: boolean;
         enableGroupSyncing: boolean;
         groupJsonPath: string;
+        enableGroupScope: boolean;
     };
     setValue: (name: string, value: string | boolean) => void;
 }
@@ -17,6 +18,7 @@ export const SsoGroupSettings = ({
         enabled: false,
         enableGroupSyncing: false,
         groupJsonPath: '',
+        enableGroupScope: false,
     },
     setValue,
 }: SsoGroupSettingsProps) => {
@@ -28,6 +30,9 @@ export const SsoGroupSettings = ({
         setValue(event.target.name, event.target.value);
     };
 
+    const updateGroupScope = () => {
+        setValue('enableGroupScope', !data.enableGroupScope);
+    }
     return (
         <>
             <Grid container spacing={3} mb={2}>
@@ -76,6 +81,32 @@ export const SsoGroupSettings = ({
                     />
                 </Grid>
             </Grid>
-        </>
+            <Grid container spacing={3} mb={2}>
+                    <Grid item md={5}>
+                        <strong>Request 'groups' Scope</strong>
+                        <p>
+                            When enabled Unleash will also request the 'groups' scope as part of the login request.
+                        </p>
+                    </Grid>
+                    <Grid item md={6} style={{ padding: '20px' }}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    onChange={updateGroupScope}
+                                    value={data.enableGroupScope}
+                                    disabled={!data.enableGroupSyncing}
+                                    name="enableGroupScope"
+                                    checked={data.enableGroupScope}
+                                />
+                            }
+                            label={
+                                data.enableGroupScope
+                                    ? 'Enabled'
+                                    : 'Disabled'
+                            }
+                        />
+                    </Grid>
+                </Grid>
+            </>
     );
 };

@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
-import { IAddon, IAddonProvider } from 'interfaces/addons';
+import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import { IntegrationParameters } from './IntegrationParameters/IntegrationParameters';
 import { IntegrationInstall } from './IntegrationInstall/IntegrationInstall';
 import cloneDeep from 'lodash.clonedeep';
@@ -48,8 +48,8 @@ import { GO_BACK } from 'constants/navigate';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IAddonFormProps {
-    provider?: IAddonProvider;
-    addon: IAddon;
+    provider?: AddonTypeSchema;
+    addon: AddonSchema;
     fetch: () => void;
     editMode: boolean;
 }
@@ -74,12 +74,12 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
         value: environment.name,
         label: environment.name,
     }));
-    const selectableEvents = provider?.events.map(event => ({
+    const selectableEvents = provider?.events?.map(event => ({
         value: event,
         label: event,
     }));
     const { uiConfig } = useUiConfig();
-    const [formValues, setFormValues] = useState(initialValues);
+    const [formValues, setFormValues] = useState<AddonSchema>(initialValues);
     const [errors, setErrors] = useState<{
         containsErrors: boolean;
         parameters: Record<string, string>;
@@ -204,8 +204,9 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
             updatedErrors.containsErrors = true;
         }
 
-        provider.parameters.forEach(parameterConfig => {
-            const value = trim(formValues.parameters[parameterConfig.name]);
+        provider.parameters?.forEach(parameterConfig => {
+            let value = formValues.parameters[parameterConfig.name];
+            value = typeof value === 'string' ? trim(value) : value;
             if (parameterConfig.required && !value) {
                 updatedErrors.parameters[parameterConfig.name] =
                     'This field is required';
@@ -252,7 +253,7 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
         documentationUrl = 'https://unleash.github.io/docs/addons',
         installation,
         alerts,
-    } = provider ? provider : ({} as Partial<IAddonProvider>);
+    } = provider ? provider : ({} as Partial<AddonTypeSchema>);
 
     return (
         <FormTemplate

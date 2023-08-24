@@ -462,6 +462,8 @@ export const ProjectFeatureToggles = ({
         state: { selectedRowIds, sortBy, hiddenColumns },
         prepareRow,
         setHiddenColumns,
+        toggleRowSelected,
+        toggleAllRowsSelected,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
@@ -524,6 +526,21 @@ export const ProjectFeatureToggles = ({
         setSearchParams,
         isFavoritesPinned,
     ]);
+
+    useEffect(() => {
+        // Get current data row IDs
+        const currentRowIds = new Set(rows.map(row => row.id));
+
+        // Remove selected rows that no longer exist
+        Object.keys(selectedRowIds).forEach(rowId => {
+            if (!currentRowIds.has(rowId)) {
+                console.log('removing row', rowId, currentRowIds);
+                toggleRowSelected(rowId, false);
+                toggleAllRowsSelected(false);
+            }
+        });
+        console.log('final selected rows ', selectedRowIds);
+    }, [rows]);
 
     return (
         <>

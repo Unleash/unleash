@@ -25,10 +25,9 @@ export const ProjectFeaturesBatchActions: FC<
     const [showBulkEnableDialog, setShowBulkEnableDialog] = useState(false);
     const [showBulkDisableDialog, setShowBulkDisableDialog] = useState(false);
     const { trackEvent } = usePlausibleTracker();
-    const selectedData = useMemo(
-        () => data.filter(d => selectedIds.includes(d.name)),
-        [data, selectedIds]
-    );
+    const selectedData = useMemo(() => {
+        return data.filter(d => selectedIds.includes(d.name));
+    }, [JSON.stringify(data), selectedIds]);
 
     const environments = useMemo(() => {
         const envs = selectedData

@@ -31,9 +31,15 @@ export const ApplicationUsageCell = ({ usage }: IApplicationUsageCellProps) => {
         if (index !== 0) {
             formattedProjects.push(', ');
         }
-        formattedProjects.push(
-            <StyledLink to={`/projects/${p.project}`}>{p.project}</StyledLink>
-        );
+        if (p.project !== '*') {
+            formattedProjects.push(
+                <StyledLink to={`/projects/${p.project}`}>
+                    {p.project}
+                </StyledLink>
+            );
+        } else {
+            formattedProjects.push(p.project);
+        }
         formattedProjects.push(` (${p.environments.join(', ')})`);
     });
     return (

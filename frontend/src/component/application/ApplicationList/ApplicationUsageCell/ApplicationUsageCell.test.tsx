@@ -21,3 +21,14 @@ test('display project and environments in correct manner', () => {
     expect(anchor).toHaveAttribute('href', '/projects/myProject');
     expect(screen.getByText('(dev, production)')).toBeInTheDocument();
 });
+
+test('when no specific project is defined, do not create link', () => {
+    render(
+        <ApplicationUsageCell
+            usage={[{ project: '*', environments: ['dev', 'production'] }]}
+        />
+    );
+
+    const anchor = screen.queryByRole('link');
+    expect(anchor).not.toBeInTheDocument();
+});

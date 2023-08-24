@@ -24,5 +24,5 @@ export interface ApplicationSchema {
     /** An URL to an icon file to be used for the applications's entry in the application list */
     icon?: string;
     /** The list of projects the application has been using. */
-    usage: ApplicationUsageSchema[];
+    usage?: ApplicationUsageSchema[];
 }

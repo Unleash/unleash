@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { ApplicationUsageSchema } from '../../../../openapi';
 
 export interface IApplicationUsageCellProps {
-    usage: ApplicationUsageSchema[];
+    usage: ApplicationUsageSchema[] | undefined;
 }
 export interface IApplicationUsage {
     project: string;
@@ -40,13 +40,13 @@ const formatProject = (projectInfo: IApplicationUsage, index: number) => {
 
 export const ApplicationUsageCell = ({ usage }: IApplicationUsageCellProps) => {
     const theme = useTheme();
-    const formattedProjects = usage.flatMap((p, index) =>
+    const formattedProjects = usage?.flatMap((p, index) =>
         formatProject(p, index)
     );
     return (
         <TextCell>
             <ConditionallyRender
-                condition={usage && usage.length > 0}
+                condition={usage !== undefined && usage.length > 0}
                 show={
                     <Typography variant="body2">{formattedProjects}</Typography>
                 }

@@ -47,14 +47,14 @@ import { useTheme } from '@mui/system';
 import { GO_BACK } from 'constants/navigate';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-interface IAddonFormProps {
+type IntegrationFormProps = {
     provider?: AddonTypeSchema;
-    addon: AddonSchema;
     fetch: () => void;
     editMode: boolean;
-}
+    addon: AddonSchema | Omit<AddonSchema, 'id'>;
+};
 
-export const IntegrationForm: VFC<IAddonFormProps> = ({
+export const IntegrationForm: VFC<IntegrationFormProps> = ({
     editMode,
     provider,
     addon: initialValues,
@@ -79,7 +79,7 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
         label: event,
     }));
     const { uiConfig } = useUiConfig();
-    const [formValues, setFormValues] = useState<AddonSchema>(initialValues);
+    const [formValues, setFormValues] = useState(initialValues);
     const [errors, setErrors] = useState<{
         containsErrors: boolean;
         parameters: Record<string, string>;
@@ -94,7 +94,7 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
     });
     const submitText = editMode ? 'Update' : 'Create';
     let url = `${uiConfig.unleashUrl}/api/admin/addons${
-        editMode ? `/${formValues.id}` : ``
+        editMode ? `/${(formValues as AddonSchema).id}` : ``
     }`;
 
     const formatApiCode = () => {
@@ -221,14 +221,14 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
 
         try {
             if (editMode) {
-                await updateAddon(formValues);
+                await updateAddon(formValues as AddonSchema);
                 navigate('/addons');
                 setToastData({
                     type: 'success',
                     title: 'Addon updated successfully',
                 });
             } else {
-                await createAddon(formValues);
+                await createAddon(formValues as Omit<AddonSchema, 'id'>);
                 navigate('/addons');
                 setToastData({
                     type: 'success',
@@ -354,7 +354,7 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
                     <StyledFormSection>
                         <IntegrationParameters
                             provider={provider}
-                            config={formValues}
+                            config={formValues as AddonSchema}
                             parametersErrors={errors.parameters}
                             editMode={editMode}
                             setParameterValue={setParameterValue}

@@ -9,7 +9,7 @@ const useAddonsApi = () => {
 
     const URI = 'api/admin/addons';
 
-    const createAddon = async (addonConfig: AddonSchema) => {
+    const createAddon = async (addonConfig: Omit<AddonSchema, 'id'>) => {
         const path = URI;
         const req = createRequest(path, {
             method: 'POST',

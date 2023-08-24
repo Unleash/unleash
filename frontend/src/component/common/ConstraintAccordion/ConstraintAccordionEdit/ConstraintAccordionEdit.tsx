@@ -252,6 +252,7 @@ export const ConstraintAccordionEdit = ({
                             setValue={setValue}
                             setError={setError}
                             localConstraint={localConstraint}
+                            constraintValues={constraint?.values || []}
                             input={input}
                             error={error}
                             contextDefinition={contextDefinition}

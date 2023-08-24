@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Checkbox } from '@mui/material';
+import { Alert, Checkbox } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
@@ -15,6 +15,7 @@ interface IRestrictiveLegalValuesProps {
         legalValues: ILegalValue[];
         deletedLegalValues: ILegalValue[];
     };
+    constraintValues: string[];
     values: string[];
     setValues: (values: string[]) => void;
     beforeValues?: JSX.Element;
@@ -41,28 +42,44 @@ export const RestrictiveLegalValues = ({
     setValues,
     error,
     setError,
+    constraintValues,
 }: IRestrictiveLegalValuesProps) => {
     const [filter, setFilter] = useState('');
     const { legalValues, deletedLegalValues } = data;
+
     const filteredValues = filterLegalValues(legalValues, filter);
 
     // Lazily initialise the values because there might be a lot of them.
     const [valuesMap, setValuesMap] = useState(() => createValuesMap(values));
     const { classes: styles } = useThemeStyles();
 
-    useEffect(() => {
-        setValuesMap(createValuesMap(values));
-    }, [values, setValuesMap]);
+    const getDeletedValuesSet = () => {
+        return new Set(deletedLegalValues.map(({ value }) => value));
+    };
 
     const cleanDeletedLegalValues = (constraintValues: string[]): string[] => {
-        const deletedValuesSet = new Set(
-            deletedLegalValues.map(({ value }) => value)
-        );
+        const deletedValuesSet = getDeletedValuesSet();
         return (
             constraintValues?.filter(value => !deletedValuesSet.has(value)) ||
             []
         );
     };
+
+    const getIllegalValues = () => {
+        const deletedValuesSet = getDeletedValuesSet();
+
+        return constraintValues.filter(value => deletedValuesSet.has(value));
+    };
+
+    const illegalValues = getIllegalValues();
+
+    useEffect(() => {
+        setValuesMap(createValuesMap(values));
+    }, [values, setValuesMap]);
+
+    useEffect(() => {
+        setValues(cleanDeletedLegalValues(values));
+    }, []);
 
     const onChange = (legalValue: string) => {
         setError('');
@@ -80,6 +97,23 @@ export const RestrictiveLegalValues = ({
 
     return (
         <>
+            <ConditionallyRender
+                condition={Boolean(illegalValues && illegalValues.length > 0)}
+                show={
+                    <Alert severity="warning">
+                        This constraint is using legal values that have been
+                        deleted as valid options. If you save changes on this
+                        constraint and then save the strategy the following
+                        values will be removed:
+                        <ul>
+                            {illegalValues?.map(value => (
+                                <li key={value}>{value}</li>
+                            ))}
+                        </ul>
+                    </Alert>
+                }
+            />
+
             <ConstraintFormHeader>
                 Select values from a predefined set
             </ConstraintFormHeader>
@@ -92,7 +126,7 @@ export const RestrictiveLegalValues = ({
                     />
                 }
             />
-            {filteredValues.concat(deletedLegalValues).map(match => (
+            {filteredValues.map(match => (
                 <LegalValueLabel
                     key={match.value}
                     legal={match}
@@ -109,6 +143,7 @@ export const RestrictiveLegalValues = ({
                     }
                 />
             ))}
+
             <ConditionallyRender
                 condition={Boolean(error)}
                 show={<p className={styles.error}>{error}</p>}

@@ -5,6 +5,7 @@ import {
     Icon,
     Link,
     styled,
+    Tooltip,
     Typography,
     useTheme,
 } from '@mui/material';
@@ -27,7 +28,7 @@ import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import { ApplicationUsageCell } from './ApplicationUsageCell/ApplicationUsageCell';
 
 export const ApplicationList = () => {
     const { applications: data, loading } = useApplications();
@@ -100,15 +101,8 @@ export const ApplicationList = () => {
                 Header: 'Project(environment)',
                 accessor: 'usage',
                 width: '50%',
-                Cell: () => (
-                    <TextCell>
-                        <Typography
-                            variant="body2"
-                            color={theme.palette.text.secondary}
-                        >
-                            not connected
-                        </Typography>
-                    </TextCell>
+                Cell: ({ row: { original } }: any) => (
+                    <ApplicationUsageCell usage={original.usage} />
                 ),
                 sortType: 'alphanumeric',
             },

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { KeyboardEvent } from 'react';
 import {
     Button,
     Dialog,
@@ -45,6 +45,7 @@ interface IDialogue {
     primaryButtonText?: string;
     secondaryButtonText?: string;
     open: boolean;
+    setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
     onClick?: (e: React.SyntheticEvent) => void;
     onClose?: (e: React.SyntheticEvent, reason?: string) => void;
     style?: object;
@@ -59,6 +60,7 @@ interface IDialogue {
 export const Dialogue: React.FC<IDialogue> = ({
     children,
     open,
+    setOpen,
     onClick,
     onClose,
     title,
@@ -78,10 +80,27 @@ export const Dialogue: React.FC<IDialogue> = ({
               }
           }
         : onClick;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+        console.log('keydown 2');
+        if (event.key === 'Escape') {
+            setOpen?.(false);
+        }
+    };
+    const handleKeyDown = event => {
+        console.log('keydown');
+        if (event.key === 'Escape') {
+            setOpen?.(false);
+        }
+    };
+    // document.addEventListener('keydown', handleKeyDown);
+    console.log('dialog');
     return (
         <StyledDialog
             open={open}
             onClose={onClose}
+            onKeyDown={onKeyDown}
+            role={'dialog'}
             fullWidth={fullWidth}
             aria-labelledby={'simple-modal-title'}
             aria-describedby={'simple-modal-description'}

@@ -7,6 +7,7 @@ import { TokenType } from 'interfaces/token';
 
 interface IConfirmUserLink {
     open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     closeConfirm: () => void;
     token: string;
     type?: string;
@@ -14,6 +15,7 @@ interface IConfirmUserLink {
 
 export const ConfirmToken = ({
     open,
+    setOpen,
     closeConfirm,
     token,
     type,
@@ -21,6 +23,7 @@ export const ConfirmToken = ({
     return (
         <Dialogue
             open={open}
+            setOpen={setOpen}
             onClick={closeConfirm}
             primaryButtonText="Close"
             title="New token created"

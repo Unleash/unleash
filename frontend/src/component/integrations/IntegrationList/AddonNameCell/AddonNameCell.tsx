@@ -3,16 +3,16 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
-import { IAddonProvider } from 'interfaces/addons';
+import { AddonTypeSchema } from 'openapi';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     cursor: 'pointer',
     marginLeft: theme.spacing(1),
 }));
 
-interface IIntegrationNameCellProps {
+interface IAddonNameCellProps {
     provider: Pick<
-        IAddonProvider,
+        AddonTypeSchema,
         'displayName' | 'description' | 'deprecated'
     >;
 }
@@ -20,9 +20,7 @@ interface IIntegrationNameCellProps {
 /**
  * @deprecated Remove when integrationsRework flag is removed
  */
-export const IntegrationNameCell = ({
-    provider,
-}: IIntegrationNameCellProps) => (
+export const AddonNameCell = ({ provider }: IAddonNameCellProps) => (
     <HighlightCell
         value={provider.displayName}
         subtitle={provider.description}

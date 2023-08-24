@@ -18,7 +18,7 @@ import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { ConfigureAddonsButton } from './ConfigureAddonButton/ConfigureAddonsButton';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
-import { IntegrationNameCell } from '../IntegrationNameCell/IntegrationNameCell';
+import { AddonNameCell } from '../AddonNameCell/AddonNameCell';
 import type { AddonTypeSchema } from 'openapi';
 
 interface IAvailableAddonsProps {
@@ -73,7 +73,7 @@ export const AvailableAddons = ({
                 accessor: 'name',
                 width: '90%',
                 Cell: ({ row: { original } }: any) => (
-                    <IntegrationNameCell provider={original} />
+                    <AddonNameCell provider={original} />
                 ),
                 sortType: 'alphanumeric',
             },

@@ -7,7 +7,7 @@ interface SsoGroupSettingsProps {
         enabled: boolean;
         enableGroupSyncing: boolean;
         groupJsonPath: string;
-        enableGroupScope: boolean;
+        addGroupsScope: boolean;
     };
     setValue: (name: string, value: string | boolean) => void;
 }
@@ -18,7 +18,7 @@ export const SsoGroupSettings = ({
         enabled: false,
         enableGroupSyncing: false,
         groupJsonPath: '',
-        enableGroupScope: false,
+        addGroupsScope: false,
     },
     setValue,
 }: SsoGroupSettingsProps) => {
@@ -30,8 +30,8 @@ export const SsoGroupSettings = ({
         setValue(event.target.name, event.target.value);
     };
 
-    const updateGroupScope = () => {
-        setValue('enableGroupScope', !data.enableGroupScope);
+    const updateAddGroupScope = () => {
+        setValue('addGroupsScope', !data.addGroupsScope);
     }
     return (
         <>
@@ -92,15 +92,15 @@ export const SsoGroupSettings = ({
                         <FormControlLabel
                             control={
                                 <Switch
-                                    onChange={updateGroupScope}
-                                    value={data.enableGroupScope}
+                                    onChange={updateAddGroupScope}
+                                    value={data.addGroupsScope}
                                     disabled={!data.enableGroupSyncing}
-                                    name="enableGroupScope"
-                                    checked={data.enableGroupScope}
+                                    name="addGroupsScope"
+                                    checked={data.addGroupsScope}
                                 />
                             }
                             label={
-                                data.enableGroupScope
+                                data.addGroupsScope
                                     ? 'Enabled'
                                     : 'Disabled'
                             }

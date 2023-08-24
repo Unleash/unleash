@@ -44,5 +44,4 @@ export interface StateSchema {
     segments?: SegmentSchema[];
     /** A list of segment/strategy pairings */
     featureStrategySegments?: FeatureStrategySegmentSchema[];
-    [key: string]: any;
 }

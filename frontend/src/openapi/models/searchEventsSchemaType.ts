@@ -97,6 +97,7 @@ export const SearchEventsSchemaType = {
     'change-added': 'change-added',
     'change-discarded': 'change-discarded',
     'change-edited': 'change-edited',
+    'change-request-rejected': 'change-request-rejected',
     'change-request-approved': 'change-request-approved',
     'change-request-approval-added': 'change-request-approval-added',
     'change-request-cancelled': 'change-request-cancelled',

@@ -20,5 +20,4 @@ export interface CreateStrategyVariantSchema {
     stickiness: string;
     /** Extra data configured for this variant */
     payload?: CreateStrategyVariantSchemaPayload;
-    [key: string]: any;
 }

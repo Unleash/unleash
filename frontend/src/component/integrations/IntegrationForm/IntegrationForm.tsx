@@ -31,6 +31,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {
     CREATE_ADDON,
+    DELETE_ADDON,
     UPDATE_ADDON,
 } from '../../providers/AccessProvider/permissions';
 import {
@@ -46,6 +47,7 @@ import {
 import { useTheme } from '@mui/system';
 import { GO_BACK } from 'constants/navigate';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { IntegrationDeleteDialog } from './IntegrationDeleteDialog/IntegrationDeleteDialog';
 
 interface IAddonFormProps {
     provider?: IAddonProvider;
@@ -64,6 +66,7 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
     const theme = useTheme();
+    const [isDeleteOpen, setDeleteOpen] = useState(false);
     const { projects: availableProjects } = useProjects();
     const selectableProjects = availableProjects.map(project => ({
         value: project.id,
@@ -374,6 +377,34 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
                         <Button type="button" onClick={onCancel}>
                             Cancel
                         </Button>
+                        <ConditionallyRender
+                            condition={Boolean(
+                                uiConfig?.flags?.integrationsRework && editMode
+                            )}
+                            show={() => (
+                                <>
+                                    <PermissionButton
+                                        type="button"
+                                        variant="text"
+                                        color="error"
+                                        permission={DELETE_ADDON}
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            setDeleteOpen(true);
+                                        }}
+                                    >
+                                        Delete
+                                    </PermissionButton>
+                                    <IntegrationDeleteDialog
+                                        id={formValues.id}
+                                        isOpen={isDeleteOpen}
+                                        onClose={() => {
+                                            setDeleteOpen(false);
+                                        }}
+                                    />
+                                </>
+                            )}
+                        />
                     </StyledButtonSection>
                 </StyledButtonContainer>
             </StyledForm>

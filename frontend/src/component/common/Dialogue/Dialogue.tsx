@@ -54,7 +54,7 @@ interface IDialogue {
     maxWidth?: 'lg' | 'sm' | 'xs' | 'md' | 'xl';
     disabledPrimaryButton?: boolean;
     formId?: string;
-    permissionButton?: JSX.Element;
+    permissionButton?: React.JSX.Element;
 }
 
 export const Dialogue: React.FC<IDialogue> = ({
@@ -82,19 +82,10 @@ export const Dialogue: React.FC<IDialogue> = ({
         : onClick;
 
     const onKeyDown = (event: KeyboardEvent) => {
-        console.log('keydown 2');
         if (event.key === 'Escape') {
             setOpen?.(false);
         }
     };
-    const handleKeyDown = event => {
-        console.log('keydown');
-        if (event.key === 'Escape') {
-            setOpen?.(false);
-        }
-    };
-    // document.addEventListener('keydown', handleKeyDown);
-    console.log('dialog');
     return (
         <StyledDialog
             open={open}

@@ -1,54 +1,53 @@
 import { render } from 'utils/testRenderer';
-import { RestrictiveLegalValues } from './RestrictiveLegalValues';
 import { screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import { RestrictiveLegalValues } from './RestrictiveLegalValues';
+// import { testServerRoute, testServerSetup } from 'utils/testServer';
 
-describe('RestictiveLegalValues', () => {
-    it('should show deleted legal values as disabled', async () => {
-        const value = 'some-value';
-        const values = [{ value }];
-        const legalValues = [{ value: 'some-other-value' }];
+test('should show alert when you have illegal legal values', async () => {
+    const contextDefinitionValues = [{ value: 'value1' }, { value: 'value2' }];
+    const fixedValues = ['value1', 'value2'];
+    const localValues = ['value1', 'value2'];
+    const deletedLegalValues = [{ value: 'value1' }];
 
-        render(
-            <RestrictiveLegalValues
-                data={{ legalValues, deletedLegalValues: values }}
-                values={[value]}
-                setValues={vi.fn()}
-                error={''}
-                setError={vi.fn()}
-            />
-        );
+    render(
+        <RestrictiveLegalValues
+            data={{ legalValues: contextDefinitionValues, deletedLegalValues }}
+            constraintValues={fixedValues}
+            values={localValues}
+            setValues={() => {}}
+            error={''}
+            setError={() => {}}
+        />
+    );
 
-        const input = await screen.findByDisplayValue('some-value');
+    await screen.findByText(
+        'This constraint is using legal values that have been deleted as valid options. If you save changes on this constraint and then save the strategy the following values will be removed:'
+    );
+});
 
-        expect(input).toBeInTheDocument();
-        expect(input).toHaveProperty('disabled', true);
+test('Should remove illegal legal values from internal value state when mounting', () => {
+    const contextDefinitionValues = [{ value: 'value1' }, { value: 'value2' }];
+    const fixedValues = ['value1', 'value2'];
+    let localValues = ['value1', 'value2'];
+    const deletedLegalValues = [{ value: 'value1' }];
 
-        expect(
-            await screen.findByDisplayValue('some-other-value')
-        ).toBeInTheDocument();
-    });
+    const setValues = (values: string[]) => {
+        localValues = values;
+    };
 
-    it('should remove deleted legal values when editing values', async () => {
-        const value = 'some-value';
-        const deletedLegalValues = [{ value }];
-        const legalValues = [
-            { value: 'some-other-value' },
-            { value: 'value2' },
-        ];
-        const setValues = vi.fn();
-        render(
-            <RestrictiveLegalValues
-                data={{ legalValues, deletedLegalValues }}
-                values={[value, 'value2']}
-                setValues={setValues}
-                error={''}
-                setError={vi.fn()}
-            />
-        );
-        const btn = await screen.findByDisplayValue('some-other-value');
-        btn.click();
+    render(
+        <RestrictiveLegalValues
+            data={{
+                legalValues: contextDefinitionValues,
+                deletedLegalValues,
+            }}
+            constraintValues={fixedValues}
+            values={localValues}
+            setValues={setValues}
+            error={''}
+            setError={() => {}}
+        />
+    );
 
-        expect(setValues).toHaveBeenCalledWith(['value2', 'some-other-value']);
-    });
+    expect(localValues).toEqual(['value2']);
 });

@@ -57,8 +57,8 @@ test('Add single archive feature change to change request', async () => {
 
     await waitFor(() => {
         expect(onConfirm).toBeCalledTimes(1);
-        expect(onClose).toBeCalledTimes(1);
     });
+    expect(onClose).toBeCalledTimes(1);
 });
 
 test('Add multiple archive feature changes to change request', async () => {
@@ -85,6 +85,6 @@ test('Add multiple archive feature changes to change request', async () => {
 
     await waitFor(() => {
         expect(onConfirm).toBeCalledTimes(1);
-        expect(onClose).toBeCalledTimes(1);
     });
+    expect(onClose).toBeCalledTimes(1);
 });

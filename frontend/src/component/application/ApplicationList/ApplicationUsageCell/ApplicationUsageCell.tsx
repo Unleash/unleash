@@ -13,7 +13,7 @@ export interface IApplicationUsage {
     environments: string[];
 }
 
-const StyledLink = styled(Link)(({ theme }) => ({
+const StyledLink = styled(Link)(() => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
@@ -23,25 +23,27 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
 }));
 
+const formatProject = (projectInfo: IApplicationUsage, index: number) => {
+    const separator = index !== 0 ? ', ' : '';
+    const projectElement =
+        projectInfo.project !== '*' ? (
+            <StyledLink to={`/projects/${projectInfo.project}`}>
+                {projectInfo.project}
+            </StyledLink>
+        ) : (
+            projectInfo.project
+        );
+
+    const environments = ` (${projectInfo.environments.join(', ')})`;
+
+    return [separator, projectElement, environments];
+};
+
 export const ApplicationUsageCell = ({ usage }: IApplicationUsageCellProps) => {
     const theme = useTheme();
-    const formattedProjects: (React.JSX.Element | string)[] = [];
-
-    usage.forEach((p, index) => {
-        if (index !== 0) {
-            formattedProjects.push(', ');
-        }
-        if (p.project !== '*') {
-            formattedProjects.push(
-                <StyledLink to={`/projects/${p.project}`}>
-                    {p.project}
-                </StyledLink>
-            );
-        } else {
-            formattedProjects.push(p.project);
-        }
-        formattedProjects.push(` (${p.environments.join(', ')})`);
-    });
+    const formattedProjects = usage.flatMap((p, index) =>
+        formatProject(p, index)
+    );
     return (
         <TextCell>
             <ConditionallyRender

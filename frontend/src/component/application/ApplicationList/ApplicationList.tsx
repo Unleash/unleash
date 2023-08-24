@@ -1,14 +1,5 @@
 import { useMemo } from 'react';
-import {
-    Avatar,
-    CircularProgress,
-    Icon,
-    Link,
-    styled,
-    Tooltip,
-    Typography,
-    useTheme,
-} from '@mui/material';
+import { Avatar, CircularProgress, Icon, Link } from '@mui/material';
 import { Warning } from '@mui/icons-material';
 import { styles as themeStyles } from 'component/common';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -32,7 +23,6 @@ import { ApplicationUsageCell } from './ApplicationUsageCell/ApplicationUsageCel
 
 export const ApplicationList = () => {
     const { applications: data, loading } = useApplications();
-    const theme = useTheme();
 
     const renderNoApplications = () => (
         <>

@@ -29,7 +29,7 @@ export interface UserSchema {
     loginAttempts?: number;
     /** Is the welcome email sent to the user or not */
     emailSent?: boolean;
-    /** Which [root role](https://docs.getunleash.io/reference/rbac#standard-roles) this user is assigned */
+    /** Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned */
     rootRole?: number;
     /** The last time this user logged in */
     seenAt?: string | null;

@@ -32,6 +32,8 @@ export interface ChangeRequestSchema {
     segments: ChangeRequestSegmentChangeSchema[];
     /** A list of approvals that this change request has received. */
     approvals?: ChangeRequestApprovalSchema[];
+    /** A list of rejections that this change request has received.  */
+    rejections?: ChangeRequestApprovalSchema[];
     /** All comments that have been made on this change request. */
     comments?: ChangeRequestCommentSchema[];
     /** The user who created this change request. */

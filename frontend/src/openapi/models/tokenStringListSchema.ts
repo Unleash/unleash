@@ -10,5 +10,4 @@
 export interface TokenStringListSchema {
     /** Tokens that we want to get access information about */
     tokens: string[];
-    [key: string]: any;
 }

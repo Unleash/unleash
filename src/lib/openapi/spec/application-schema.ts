@@ -7,7 +7,7 @@ export const applicationSchema = {
     description:
         "Data about an application that's connected to Unleash via an SDK.",
     additionalProperties: false,
-    required: ['appName'],
+    required: ['appName', 'usage'],
     properties: {
         appName: {
             description: 'Name of the application',

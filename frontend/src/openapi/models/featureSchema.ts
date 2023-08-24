@@ -34,7 +34,10 @@ export interface FeatureSchema {
     createdAt?: string | null;
     /** The date the feature was archived */
     archivedAt?: string | null;
-    /** The date when metrics where last collected for the feature */
+    /**
+     * The date when metrics where last collected for the feature. This field is deprecated, use the one in featureEnvironmentSchema
+     * @deprecated
+     */
     lastSeenAt?: string | null;
     /** The list of environments where the feature can be used */
     environments?: FeatureEnvironmentSchema[];

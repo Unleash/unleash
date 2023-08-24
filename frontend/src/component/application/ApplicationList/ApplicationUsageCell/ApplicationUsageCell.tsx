@@ -1,13 +1,12 @@
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled, Typography, useTheme } from '@mui/material';
-import React from 'react';
 import { Link } from 'react-router-dom';
+import { ApplicationUsageSchema } from '../../../../openapi';
 
 export interface IApplicationUsageCellProps {
-    usage: IApplicationUsage[];
+    usage: ApplicationUsageSchema[];
 }
-
 export interface IApplicationUsage {
     project: string;
     environments: string[];
@@ -47,7 +46,7 @@ export const ApplicationUsageCell = ({ usage }: IApplicationUsageCellProps) => {
     return (
         <TextCell>
             <ConditionallyRender
-                condition={usage.length > 0}
+                condition={usage && usage.length > 0}
                 show={
                     <Typography variant="body2">{formattedProjects}</Typography>
                 }

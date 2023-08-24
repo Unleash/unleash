@@ -20,6 +20,7 @@ import { sortTypes } from 'utils/sortTypes';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ApplicationUsageCell } from './ApplicationUsageCell/ApplicationUsageCell';
+import { ApplicationSchema } from '../../../openapi';
 
 export const ApplicationList = () => {
     const { applications: data, loading } = useApplications();
@@ -91,9 +92,11 @@ export const ApplicationList = () => {
                 Header: 'Project(environment)',
                 accessor: 'usage',
                 width: '50%',
-                Cell: ({ row: { original } }: any) => (
-                    <ApplicationUsageCell usage={original.usage} />
-                ),
+                Cell: ({
+                    row: { original },
+                }: {
+                    row: { original: ApplicationSchema };
+                }) => <ApplicationUsageCell usage={original.usage} />,
                 sortType: 'alphanumeric',
             },
             {

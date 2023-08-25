@@ -20,6 +20,7 @@ const initialState = {
     enabled: false,
     autoCreate: false,
     enableGroupSyncing: false,
+    addGroupsScope: false,
     unleashHostname: location.hostname,
     entityId: '',
     signOnUrl: '',

@@ -190,7 +190,7 @@ test('throws error when trying to delete a project role in use by group', async 
     const eventStore = new FakeEventStore();
     const groupStore = new FakeGroupStore();
     groupStore.getAllWithId = async (): Promise<IGroup[]> => {
-        return [{ name: 'group' }];
+        return [{ id: 1, name: 'group' }];
     };
     const accountStore = new FakeAccountStore();
     const roleStore = new FakeRoleStore();

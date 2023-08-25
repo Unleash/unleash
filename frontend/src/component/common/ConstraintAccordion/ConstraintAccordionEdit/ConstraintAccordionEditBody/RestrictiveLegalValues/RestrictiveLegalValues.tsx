@@ -81,7 +81,7 @@ export const RestrictiveLegalValues = ({
 
     useEffect(() => {
         setValuesMap(createValuesMap(values));
-    }, [values, setValuesMap]);
+    }, [values, setValuesMap, createValuesMap]);
 
     useEffect(() => {
         if (illegalValues.length > 0) {

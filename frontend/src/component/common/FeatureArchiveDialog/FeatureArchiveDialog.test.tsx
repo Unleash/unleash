@@ -88,3 +88,32 @@ test('Add multiple archive feature changes to change request', async () => {
     });
     expect(onClose).toBeCalledTimes(1);
 });
+
+test('Skip change request', async () => {
+    const onClose = vi.fn();
+    const onConfirm = vi.fn();
+    setupHappyPathForChangeRequest();
+    render(
+        <UIProviderContainer>
+            <FeatureArchiveDialog
+                featureIds={['featureA', 'featureB']}
+                projectId={'projectId'}
+                isOpen={true}
+                onClose={onClose}
+                onConfirm={onConfirm}
+                featuresWithUsage={[]}
+            />
+        </UIProviderContainer>,
+        { permissions: [{ permission: 'SKIP_CHANGE_REQUEST' }] }
+    );
+
+    await screen.findByText('Archive feature toggles');
+    const button = await screen.findByText('Archive toggles');
+
+    button.click();
+
+    await waitFor(() => {
+        expect(onClose).toBeCalledTimes(1);
+    });
+    expect(onConfirm).toBeCalledTimes(0); // we didn't setup non Change Request flow so failure
+});

@@ -1,10 +1,6 @@
-import { ReactNode, VFC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Box, styled } from '@mui/material';
 import { ChangeItemWrapper } from './StrategyChange';
-
-interface IArchiveFeatureChange {
-    actions?: ReactNode;
-}
 
 const ArchiveBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -12,13 +8,15 @@ const ArchiveBox = styled(Box)(({ theme }) => ({
     color: theme.palette.error.main,
 }));
 
-export const ArchiveFeatureChange: VFC<IArchiveFeatureChange> = ({
+interface IArchiveFeatureChange {
+    actions?: ReactNode;
+}
+
+export const ArchiveFeatureChange: FC<IArchiveFeatureChange> = ({
     actions,
-}) => {
-    return (
-        <ChangeItemWrapper>
-            <ArchiveBox>Archiving feature</ArchiveBox>
-            {actions}
-        </ChangeItemWrapper>
-    );
-};
+}) => (
+    <ChangeItemWrapper>
+        <ArchiveBox>Archiving feature</ArchiveBox>
+        {actions}
+    </ChangeItemWrapper>
+);

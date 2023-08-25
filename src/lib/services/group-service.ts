@@ -153,10 +153,10 @@ export class GroupService {
 
         if (projectGroups.length > 0) {
             const groups = await this.groupStore.getAllWithId(
-                projectGroups.map((g) => g.id!),
+                projectGroups.map((g) => g.id),
             );
             const groupUsers = await this.groupStore.getAllUsersByGroups(
-                groups.map((g) => g.id!),
+                groups.map((g) => g.id),
             );
             const users = await this.accountStore.getAllWithId(
                 groupUsers.map((u) => u.userId),

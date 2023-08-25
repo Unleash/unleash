@@ -63,12 +63,18 @@ const UsageWarning = ({
 };
 
 const useActionButtonText = (projectId: string, isBulkArchive: boolean) => {
-    const { isChangeRequestConfiguredInAnyEnv } =
-        useChangeRequestsEnabled(projectId);
-    if (isChangeRequestConfiguredInAnyEnv() && isBulkArchive) {
+    const getHighestEnvironment =
+        useHighestPermissionChangeRequestEnvironment(projectId);
+    const environment = getHighestEnvironment();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    if (
+        environment &&
+        isChangeRequestConfigured(environment) &&
+        isBulkArchive
+    ) {
         return 'Add to change request';
     }
-    if (isChangeRequestConfiguredInAnyEnv()) {
+    if (environment && isChangeRequestConfigured(environment)) {
         return 'Add change to draft';
     }
     if (isBulkArchive) {
@@ -91,16 +97,15 @@ const useArchiveAction = ({
     const { setToastData, setToastApiError } = useToast();
     const { archiveFeatureToggle } = useFeatureApi();
     const { archiveFeatures } = useProjectApi();
-    const { isChangeRequestConfiguredInAnyEnv } =
-        useChangeRequestsEnabled(projectId);
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
     const getHighestEnvironment =
         useHighestPermissionChangeRequestEnvironment(projectId);
     const isBulkArchive = featureIds?.length > 1;
+    const environment = getHighestEnvironment();
     const addArchiveToggleToChangeRequest = async () => {
-        const environment = getHighestEnvironment();
         if (!environment) {
             console.error('No change request environment');
             return;
@@ -146,7 +151,7 @@ const useArchiveAction = ({
 
     return async () => {
         try {
-            if (isChangeRequestConfiguredInAnyEnv()) {
+            if (environment && isChangeRequestConfigured(environment)) {
                 await addArchiveToggleToChangeRequest();
             } else if (isBulkArchive) {
                 await archiveToggles();

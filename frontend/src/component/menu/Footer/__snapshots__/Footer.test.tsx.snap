@@ -14,7 +14,7 @@ exports[`should render DrawerMenu 1`] = `
       }
     >
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4 css-g8shpt-MuiGrid-root"
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4 css-uhlu2j-MuiGrid-root"
       >
         <section
           title="API details"
@@ -33,7 +33,7 @@ exports[`should render DrawerMenu 1`] = `
         </section>
       </div>
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-auto css-16ccgsq-MuiGrid-root"
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-auto css-ouc276-MuiGrid-root"
       >
         <div
           className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-7 css-3f6ufr-MuiGrid-root"
@@ -558,7 +558,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
       }
     >
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4 css-g8shpt-MuiGrid-root"
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4 css-uhlu2j-MuiGrid-root"
       >
         <section
           title="API details"
@@ -577,7 +577,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
         </section>
       </div>
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-auto css-16ccgsq-MuiGrid-root"
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-auto css-ouc276-MuiGrid-root"
       >
         <div
           className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-7 css-3f6ufr-MuiGrid-root"

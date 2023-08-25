@@ -12,7 +12,6 @@ beforeAll(async () => {
     app = await setupAppWithCustomConfig(db.stores, {
         experimental: {
             flags: {
-                configurableFeatureTypeLifetimes: true,
                 strictSchemaValidation: true,
             },
         },

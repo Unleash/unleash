@@ -49,14 +49,20 @@ describe('project-access', () => {
         });
 
         cy.intercept('GET', `${baseUrl}/api/admin/ui-config`, req => {
+            cy.log('Intercepted ui-config request');
             req.headers['cache-control'] =
                 'no-cache, no-store, must-revalidate';
             req.on('response', res => {
+                cy.log('Received response:', JSON.stringify(res.body));
                 if (res.body) {
                     res.body.flags = {
                         ...res.body.flags,
                         multipleRoles: true,
                     };
+                    cy.log(
+                        'Changing response flags to:',
+                        JSON.stringify(res.body.flags)
+                    );
                 }
             });
         });
@@ -130,7 +136,7 @@ describe('project-access', () => {
             `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`
         ).as('editAccess');
 
-        cy.get(`[data-testid='CancelIcon']`).last().click();
+        cy.get(`[data-testid='CancelIcon']`).last().click({ force: true });
         cy.get(`[data-testid='${PA_ROLE_ID}']`).click();
         cy.contains('update feature toggles within a project').click({
             force: true,

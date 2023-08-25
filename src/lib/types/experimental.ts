@@ -22,14 +22,14 @@ export type IFlagKey =
     | 'advancedPlayground'
     | 'strategyVariant'
     | 'slackAppAddon'
-    | 'configurableFeatureTypeLifetimes'
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
     | 'segmentChangeRequests'
     | 'changeRequestReject'
     | 'customRootRolesKillSwitch'
     | 'newApplicationList'
-    | 'integrationsRework';
+    | 'integrationsRework'
+    | 'multipleRoles';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -105,10 +105,6 @@ const flags: IFlags = {
         process.env.UNLEASH_SLACK_APP_ADDON,
         false,
     ),
-    configurableFeatureTypeLifetimes: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CONFIGURABLE_FEATURE_TYPE_LIFETIMES,
-        false,
-    ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
         process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
@@ -131,6 +127,10 @@ const flags: IFlags = {
     ),
     integrationsRework: parseEnvVarBoolean(
         process.env.UNLEASH_INTEGRATIONS,
+        false,
+    ),
+    multipleRoles: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MULTIPLE_ROLES,
         false,
     ),
     newApplicationList: parseEnvVarBoolean(

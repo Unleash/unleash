@@ -195,7 +195,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "configurableFeatureTypeLifetimes",
     "menu": {
       "advanced": true,
       "mobile": true,

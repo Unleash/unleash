@@ -21,7 +21,7 @@ const StyledDescription = styled('div', {
         : theme.palette.neutral.light,
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallBody,
-    borderRadius: theme.shape.borderRadiusMedium,
+    borderRadius: tooltip ? 0 : theme.shape.borderRadiusMedium,
 }));
 
 const StyledDescriptionBlock = styled('div')(({ theme }) => ({

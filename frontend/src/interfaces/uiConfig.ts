@@ -52,12 +52,12 @@ export interface IFlags {
     advancedPlayground?: boolean;
     customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
-    configurableFeatureTypeLifetimes?: boolean;
     segmentChangeRequests?: boolean;
     changeRequestReject?: boolean;
     lastSeenByEnvironment?: boolean;
     newApplicationList?: boolean;
     integrationsRework?: boolean;
+    multipleRoles?: boolean;
 }
 
 export interface IVersionInfo {

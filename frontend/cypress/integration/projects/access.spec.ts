@@ -130,7 +130,7 @@ describe('project-access', () => {
             `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`
         ).as('editAccess');
 
-        cy.get(`[data-testid='CancelIcon']`).last().click({ force: true });
+        cy.get(`[data-testid='CancelIcon']`).last().click();
         cy.get(`[data-testid='${PA_ROLE_ID}']`).click();
         cy.contains('update feature toggles within a project').click({
             force: true,

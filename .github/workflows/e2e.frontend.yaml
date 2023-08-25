@@ -28,3 +28,5 @@ jobs:
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=${{ github.event.deployment_status.target_url }}
           spec: cypress/integration/${{ matrix.test }}
+        env:
+          UNLEASH_EXPERIMENTAL_MULTIPLE_ROLES: true

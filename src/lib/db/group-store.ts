@@ -10,6 +10,8 @@ import Group, {
 } from '../types/group';
 import { Db } from './db';
 import { BadDataError, FOREIGN_KEY_VIOLATION } from '../error';
+import { IGroupWithProjectRoles } from '../types/stores/access-store';
+import { PROJECT_ROLE_TYPES } from '../util';
 
 const T = {
     GROUPS: 'groups',
@@ -114,6 +116,36 @@ export default class GroupStore implements IGroupStore {
                 name: r.name,
             };
         });
+    }
+
+    async getProjectGroups(
+        projectId: string,
+    ): Promise<IGroupWithProjectRoles[]> {
+        const rows = await this.db
+            .select(['gr.group_id', 'gr.created_at', 'gr.role_id'])
+            .from(`${T.GROUP_ROLE} AS gr`)
+            .join(`${T.ROLES} as r`, 'gr.role_id', 'r.id')
+            .whereIn('r.type', PROJECT_ROLE_TYPES)
+            .andWhere('project', projectId);
+
+        return rows.reduce((acc, row) => {
+            const existingGroup = acc.find(
+                (group) => group.id === row.group_id,
+            );
+
+            if (existingGroup) {
+                existingGroup.roles.push(row.role_id);
+            } else {
+                acc.push({
+                    id: row.group_id,
+                    addedAt: row.created_at,
+                    roleId: row.role_id,
+                    roles: [row.role_id],
+                });
+            }
+
+            return acc;
+        }, []);
     }
 
     async getGroupProjects(groupIds: number[]): Promise<IGroupProject[]> {

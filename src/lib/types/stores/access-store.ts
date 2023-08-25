@@ -1,4 +1,5 @@
-import { IPermission } from '../model';
+import { IGroupModelWithProjectRole } from '../group';
+import { IPermission, IUserWithRole } from '../model';
 import { Store } from './store';
 
 export interface IUserPermission {
@@ -52,6 +53,17 @@ export interface IUserRole {
     addedAt?: Date;
 }
 
+interface IEntityWithProjectRoles {
+    roles?: number[];
+}
+
+export interface IUserWithProjectRoles
+    extends IUserWithRole,
+        IEntityWithProjectRoles {}
+export interface IGroupWithProjectRoles
+    extends IGroupModelWithProjectRole,
+        IEntityWithProjectRoles {}
+
 export interface IAccessStore extends Store<IRole, number> {
     getAvailablePermissions(): Promise<IPermission[]>;
 
@@ -74,6 +86,8 @@ export interface IAccessStore extends Store<IRole, number> {
         projectId?: string,
     ): Promise<IUserRole[]>;
 
+    getProjectUsers(projectId?: string): Promise<IUserWithProjectRoles[]>;
+
     getUserIdsForRole(roleId: number, projectId?: string): Promise<number[]>;
 
     getGroupIdsForRole(roleId: number, projectId?: string): Promise<number[]>;
@@ -95,11 +109,19 @@ export interface IAccessStore extends Store<IRole, number> {
         projectId?: string,
     ): Promise<void>;
 
-    addAccessToProject(
+    addRoleAccessToProject(
         users: IAccessInfo[],
         groups: IAccessInfo[],
         projectId: string,
         roleId: number,
+        createdBy: string,
+    ): Promise<void>;
+
+    addAccessToProject(
+        roles: number[],
+        groups: number[],
+        users: number[],
+        projectId: string,
         createdBy: string,
     ): Promise<void>;
 
@@ -155,4 +177,26 @@ export interface IAccessStore extends Store<IRole, number> {
         sourceEnvironment: string,
         destinationEnvironment: string,
     ): Promise<void>;
+
+    setProjectRolesForUser(
+        projectId: string,
+        userId: number,
+        roles: number[],
+    ): Promise<void>;
+    getProjectRolesForUser(
+        projectId: string,
+        userId: number,
+    ): Promise<number[]>;
+    setProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+        roles: number[],
+        createdBy: string,
+    ): Promise<void>;
+    getProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+    ): Promise<number[]>;
+    removeUserAccess(projectId: string, userId: number): Promise<void>;
+    removeGroupAccess(projectId: string, groupId: number): Promise<void>;
 }

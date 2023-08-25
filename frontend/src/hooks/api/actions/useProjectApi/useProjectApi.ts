@@ -9,9 +9,10 @@ interface ICreatePayload {
     defaultStickiness: string;
 }
 
-interface IAccessesPayload {
-    users: { id: number }[];
-    groups: { id: number }[];
+interface IAccessPayload {
+    roles: number[];
+    groups: number[];
+    users: number[];
 }
 
 const useProjectApi = () => {
@@ -116,93 +117,59 @@ const useProjectApi = () => {
 
     const addAccessToProject = async (
         projectId: string,
-        roleId: number,
-        accesses: IAccessesPayload
+        payload: IAccessPayload
     ) => {
-        const path = `api/admin/projects/${projectId}/role/${roleId}/access`;
+        const path = `api/admin/projects/${projectId}/access`;
         const req = createRequest(path, {
             method: 'POST',
-            body: JSON.stringify(accesses),
+            body: JSON.stringify(payload),
         });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return await makeRequest(req.caller, req.id);
     };
 
-    const removeUserFromRole = async (
-        projectId: string,
-        roleId: number,
-        userId: number
-    ) => {
-        const path = `api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`;
+    const removeUserAccess = async (projectId: string, userId: number) => {
+        const path = `api/admin/projects/${projectId}/users/${userId}/roles`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return await makeRequest(req.caller, req.id);
     };
 
-    const removeGroupFromRole = async (
-        projectId: string,
-        roleId: number,
-        groupId: number
-    ) => {
-        const path = `api/admin/projects/${projectId}/groups/${groupId}/roles/${roleId}`;
+    const removeGroupAccess = async (projectId: string, groupId: number) => {
+        const path = `api/admin/projects/${projectId}/groups/${groupId}/roles`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return await makeRequest(req.caller, req.id);
     };
 
-    const searchProjectUser = async (query: string): Promise<Response> => {
-        const path = `api/admin/user-admin/search?q=${query}`;
-
-        const req = createRequest(path, { method: 'GET' });
-
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
-    };
-
-    const changeUserRole = (
+    const setUserRoles = (
         projectId: string,
-        roleId: number,
+        roleIds: number[],
         userId: number
     ) => {
-        const path = `api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`;
-        const req = createRequest(path, { method: 'PUT' });
+        const path = `api/admin/projects/${projectId}/users/${userId}/roles`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify({ roles: roleIds }),
+        });
 
         return makeRequest(req.caller, req.id);
     };
 
-    const changeGroupRole = (
+    const setGroupRoles = (
         projectId: string,
-        roleId: number,
+        roleIds: number[],
         groupId: number
     ) => {
-        const path = `api/admin/projects/${projectId}/groups/${groupId}/roles/${roleId}`;
-        const req = createRequest(path, { method: 'PUT' });
+        const path = `api/admin/projects/${projectId}/groups/${groupId}/roles`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify({ roles: roleIds }),
+        });
 
         return makeRequest(req.caller, req.id);
     };
+
     const archiveFeatures = async (projectId: string, featureIds: string[]) => {
         const path = `api/admin/projects/${projectId}/archive`;
         const req = createRequest(path, {
@@ -283,16 +250,15 @@ const useProjectApi = () => {
         addEnvironmentToProject,
         removeEnvironmentFromProject,
         addAccessToProject,
-        removeUserFromRole,
-        removeGroupFromRole,
-        changeUserRole,
-        changeGroupRole,
+        removeUserAccess,
+        removeGroupAccess,
+        setUserRoles,
+        setGroupRoles,
         archiveFeatures,
         reviveFeatures,
         staleFeatures,
         deleteFeature,
         deleteFeatures,
-        searchProjectUser,
         updateDefaultStrategy,
         errors,
         loading,

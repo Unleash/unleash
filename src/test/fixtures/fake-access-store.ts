@@ -7,6 +7,7 @@ import {
     IRoleWithProject,
     IUserPermission,
     IUserRole,
+    IUserWithProjectRoles,
 } from '../../lib/types/stores/access-store';
 import { IPermission } from 'lib/types/model';
 import { IRoleStore } from 'lib/types';
@@ -27,11 +28,21 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    addAccessToProject(
+    addRoleAccessToProject(
         users: IAccessInfo[],
         groups: IAccessInfo[],
         projectId: string,
         roleId: number,
+        createdBy: string,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    addAccessToProject(
+        roles: number[],
+        groups: number[],
+        users: number[],
+        projectId: string,
         createdBy: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
@@ -94,6 +105,10 @@ class AccessStoreMock implements IAccessStore {
         roleId: number,
         projectId?: string,
     ): Promise<IUserRole[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getProjectUsers(projectId?: string): Promise<IUserWithProjectRoles[]> {
         throw new Error('Method not implemented.');
     }
 
@@ -198,7 +213,7 @@ class AccessStoreMock implements IAccessStore {
     }
 
     get(key: number): Promise<IRole> {
-        return Promise.resolve(undefined);
+        throw new Error('Not implemented yet');
     }
 
     getAll(): Promise<IRole[]> {
@@ -233,6 +248,45 @@ class AccessStoreMock implements IAccessStore {
 
     clearPublicSignupUserTokens(userId: number): Promise<void> {
         return Promise.resolve(undefined);
+    }
+
+    getProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+    ): Promise<number[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getProjectRolesForUser(
+        projectId: string,
+        userId: number,
+    ): Promise<number[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    setProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+        roles: number[],
+        createdBy: string,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    setProjectRolesForUser(
+        projectId: string,
+        userId: number,
+        roles: number[],
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    removeUserAccess(projectId: string, userId: number): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    removeGroupAccess(projectId: string, groupId: number): Promise<void> {
+        throw new Error('Method not implemented.');
     }
 }
 

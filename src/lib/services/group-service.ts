@@ -147,29 +147,27 @@ export class GroupService {
     }
 
     async getProjectGroups(
-        projectId?: string,
+        projectId: string,
     ): Promise<IGroupModelWithProjectRole[]> {
-        const groupRoles = await this.groupStore.getProjectGroupRoles(
-            projectId,
-        );
-        if (groupRoles.length > 0) {
+        const projectGroups = await this.groupStore.getProjectGroups(projectId);
+
+        if (projectGroups.length > 0) {
             const groups = await this.groupStore.getAllWithId(
-                groupRoles.map((a) => a.groupId),
+                projectGroups.map((g) => g.id!),
             );
             const groupUsers = await this.groupStore.getAllUsersByGroups(
-                groups.map((g) => g.id),
+                groups.map((g) => g.id!),
             );
-
             const users = await this.accountStore.getAllWithId(
                 groupUsers.map((u) => u.userId),
             );
-            return groups.map((group) => {
-                const groupRole = groupRoles.find((g) => g.groupId == group.id);
-                return {
-                    ...this.mapGroupWithUsers(group, groupUsers, users),
-                    roleId: groupRole.roleId,
-                    addedAt: groupRole.createdAt,
-                };
+            return groups.flatMap((group) => {
+                return projectGroups
+                    .filter((gr) => gr.id === group.id)
+                    .map((groupRole) => ({
+                        ...this.mapGroupWithUsers(group, groupUsers, users),
+                        ...groupRole,
+                    }));
             });
         }
         return [];

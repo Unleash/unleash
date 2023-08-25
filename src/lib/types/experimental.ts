@@ -22,7 +22,6 @@ export type IFlagKey =
     | 'advancedPlayground'
     | 'strategyVariant'
     | 'slackAppAddon'
-    | 'configurableFeatureTypeLifetimes'
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
     | 'segmentChangeRequests'
@@ -103,10 +102,6 @@ const flags: IFlags = {
     ),
     slackAppAddon: parseEnvVarBoolean(
         process.env.UNLEASH_SLACK_APP_ADDON,
-        false,
-    ),
-    configurableFeatureTypeLifetimes: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CONFIGURABLE_FEATURE_TYPE_LIFETIMES,
         false,
     ),
     filterInvalidClientMetrics: parseEnvVarBoolean(

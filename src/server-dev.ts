@@ -39,7 +39,6 @@ process.nextTick(async () => {
                         responseTimeWithAppNameKillSwitch: false,
                         strategyVariant: true,
                         slackAppAddon: true,
-                        configurableFeatureTypeLifetimes: true,
                         lastSeenByEnvironment: true,
                         segmentChangeRequests: true,
                         newApplicationList: true,

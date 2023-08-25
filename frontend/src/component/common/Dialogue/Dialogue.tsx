@@ -45,7 +45,7 @@ interface IDialogue {
     primaryButtonText?: string;
     secondaryButtonText?: string;
     open: boolean;
-    setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+    setOpen?: (status: boolean) => void;
     onClick?: (e: React.SyntheticEvent) => void;
     onClose?: (e: React.SyntheticEvent, reason?: string) => void;
     style?: object;

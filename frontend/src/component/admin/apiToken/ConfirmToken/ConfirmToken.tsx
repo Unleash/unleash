@@ -7,7 +7,7 @@ import { TokenType } from 'interfaces/token';
 
 interface IConfirmUserLink {
     open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setOpen: (status: boolean) => void;
     closeConfirm: () => void;
     token: string;
     type?: string;

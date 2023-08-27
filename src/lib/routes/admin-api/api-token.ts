@@ -20,7 +20,6 @@ import User from '../../types/user';
 import { IUnleashConfig } from '../../types/option';
 import { ApiTokenType, IApiToken } from '../../types/models/api-token';
 import { createApiToken } from '../../schema/api-token-schema';
-import { OpenApiService } from '../../services/openapi-service';
 import { IUnleashServices } from '../../types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
@@ -125,8 +124,6 @@ export class ApiTokenController extends Controller {
 
     private proxyService: ProxyService;
 
-    private openApiService: OpenApiService;
-
     private logger: Logger;
 
     constructor(
@@ -144,11 +141,10 @@ export class ApiTokenController extends Controller {
             | 'openApiService'
         >,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.apiTokenService = apiTokenService;
         this.accessService = accessService;
         this.proxyService = proxyService;
-        this.openApiService = openApiService;
         this.logger = config.getLogger('api-token-controller.js');
 
         this.route({

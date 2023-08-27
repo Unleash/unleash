@@ -21,7 +21,7 @@ import {
     ProjectsSchema,
 } from '../../../openapi';
 import { getStandardResponses } from '../../../openapi/util/standard-responses';
-import { OpenApiService, SettingService } from '../../../services';
+import { SettingService } from '../../../services';
 import { IAuthRequest } from '../../unleash-types';
 import { ProjectApiTokenController } from './api-token';
 import ProjectArchiveController from './project-archive';
@@ -33,10 +33,8 @@ export default class ProjectApi extends Controller {
 
     private settingService: SettingService;
 
-    private openApiService: OpenApiService;
-
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
-        super(config);
+        super(config, { openApiService: services.openApiService });
         this.projectService = services.projectService;
         this.openApiService = services.openApiService;
         this.settingService = services.settingService;

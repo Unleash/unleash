@@ -8,11 +8,7 @@ import {
     serializeDates,
 } from '../../types';
 import { Logger } from '../../logger';
-import {
-    AccessService,
-    OpenApiService,
-    PublicSignupTokenService,
-} from '../../services';
+import { AccessService, PublicSignupTokenService } from '../../services';
 import { IAuthRequest } from '../unleash-types';
 import {
     createRequestSchema,
@@ -40,8 +36,6 @@ export class PublicSignupController extends Controller {
 
     private accessService: AccessService;
 
-    private openApiService: OpenApiService;
-
     private logger: Logger;
 
     constructor(
@@ -59,11 +53,10 @@ export class PublicSignupController extends Controller {
             | 'openApiService'
         >,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.publicSignupTokenService = publicSignupTokenService;
         this.accessService = accessService;
         this.userService = userService;
-        this.openApiService = openApiService;
         this.logger = config.getLogger('public-signup-controller.js');
 
         this.route({

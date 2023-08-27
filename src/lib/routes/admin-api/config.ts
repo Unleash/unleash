@@ -16,7 +16,6 @@ import {
     uiConfigSchema,
     UiConfigSchema,
 } from '../../openapi/spec/ui-config-schema';
-import { OpenApiService } from '../../services/openapi-service';
 import { EmailService } from '../../services/email-service';
 import { emptyResponse } from '../../openapi/util/standard-responses';
 import { IAuthRequest } from '../unleash-types';
@@ -38,8 +37,6 @@ class ConfigController extends Controller {
 
     private maintenanceService: MaintenanceService;
 
-    private readonly openApiService: OpenApiService;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -59,11 +56,10 @@ class ConfigController extends Controller {
             | 'maintenanceService'
         >,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.versionService = versionService;
         this.settingService = settingService;
         this.emailService = emailService;
-        this.openApiService = openApiService;
         this.proxyService = proxyService;
         this.maintenanceService = maintenanceService;
 

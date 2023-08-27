@@ -5,7 +5,6 @@ import { IUnleashConfig } from '../../types/option';
 import EnvironmentService from '../../services/environment-service';
 import { Logger } from '../../logger';
 import { ADMIN, NONE } from '../../types/permissions';
-import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
@@ -37,8 +36,6 @@ interface ProjectParam {
 export class EnvironmentsController extends Controller {
     private logger: Logger;
 
-    private openApiService: OpenApiService;
-
     private service: EnvironmentService;
 
     constructor(
@@ -48,9 +45,8 @@ export class EnvironmentsController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'environmentService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('admin-api/environments-controller.ts');
-        this.openApiService = openApiService;
         this.service = environmentService;
 
         this.route({

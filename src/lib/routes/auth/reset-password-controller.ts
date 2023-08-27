@@ -7,7 +7,6 @@ import { IUnleashServices } from '../../types';
 import { NONE } from '../../types/permissions';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { OpenApiService } from '../../services/openapi-service';
 import {
     tokenUserSchema,
     TokenUserSchema,
@@ -35,8 +34,6 @@ interface SessionRequest<PARAMS, QUERY, BODY, K>
 class ResetPasswordController extends Controller {
     private userService: UserService;
 
-    private openApiService: OpenApiService;
-
     private logger: Logger;
 
     constructor(
@@ -46,11 +43,10 @@ class ResetPasswordController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'userService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger(
             'lib/routes/auth/reset-password-controller.ts',
         );
-        this.openApiService = openApiService;
         this.userService = userService;
         this.route({
             method: 'get',

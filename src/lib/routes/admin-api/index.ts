@@ -35,7 +35,7 @@ import ExportImportController from '../../features/export-import-toggles/export-
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
-        super(config);
+        super(config, { openApiService: services.openApiService });
 
         this.app.use(
             '/features',

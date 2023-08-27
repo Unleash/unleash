@@ -14,9 +14,12 @@ export default class EmailController extends Controller {
 
     constructor(
         config: IUnleashConfig,
-        { emailService }: Pick<IUnleashServices, 'emailService'>,
+        {
+            emailService,
+            openApiService,
+        }: Pick<IUnleashServices, 'emailService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.emailService = emailService;
         this.logger = config.getLogger('routes/admin-api/email');
         this.get('/preview/html/:template', this.getHtmlPreview, ADMIN);

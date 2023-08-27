@@ -6,7 +6,6 @@ import ProjectHealthService from '../../../services/project-health-service';
 import { Logger } from '../../../logger';
 import { IProjectParam } from '../../../types/model';
 import { NONE } from '../../../types/permissions';
-import { OpenApiService } from '../../../services/openapi-service';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { getStandardResponses } from '../../../openapi/util/standard-responses';
 import { serializeDates } from '../../../types/serialize-dates';
@@ -18,8 +17,6 @@ import {
 export default class ProjectHealthReport extends Controller {
     private projectHealthService: ProjectHealthService;
 
-    private openApiService: OpenApiService;
-
     private logger: Logger;
 
     constructor(
@@ -29,11 +26,9 @@ export default class ProjectHealthReport extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'projectHealthService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('/admin-api/project/health-report');
         this.projectHealthService = projectHealthService;
-        this.openApiService = openApiService;
-
         this.route({
             method: 'get',
             path: '/:projectId/health-report',

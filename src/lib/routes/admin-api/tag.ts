@@ -16,7 +16,6 @@ import {
 } from '../../openapi/util/create-response-schema';
 import { tagsSchema, TagsSchema } from '../../openapi/spec/tags-schema';
 import { TagSchema } from '../../openapi/spec/tag-schema';
-import { OpenApiService } from '../../services/openapi-service';
 import {
     tagWithVersionSchema,
     TagWithVersionSchema,
@@ -37,8 +36,6 @@ class TagController extends Controller {
 
     private featureTagService: FeatureTagService;
 
-    private openApiService: OpenApiService;
-
     private flagResolver: IFlagResolver;
 
     constructor(
@@ -52,9 +49,8 @@ class TagController extends Controller {
             'tagService' | 'openApiService' | 'featureTagService'
         >,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.tagService = tagService;
-        this.openApiService = openApiService;
         this.featureTagService = featureTagService;
         this.logger = config.getLogger('/admin-api/tag.js');
         this.flagResolver = config.flagResolver;

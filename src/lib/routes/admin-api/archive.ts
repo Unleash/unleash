@@ -11,7 +11,6 @@ import {
     FeaturesSchema,
 } from '../../openapi/spec/features-schema';
 import { serializeDates } from '../../types/serialize-dates';
-import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     emptyResponse,
@@ -21,8 +20,6 @@ import {
 export default class ArchiveController extends Controller {
     private featureService: FeatureToggleService;
 
-    private openApiService: OpenApiService;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -30,9 +27,8 @@ export default class ArchiveController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.featureService = featureToggleServiceV2;
-        this.openApiService = openApiService;
 
         this.route({
             method: 'get',

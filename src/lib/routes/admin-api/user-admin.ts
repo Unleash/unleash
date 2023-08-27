@@ -13,7 +13,6 @@ import SettingService from '../../services/setting-service';
 import { IUser, SimpleAuthSettings } from '../../server-impl';
 import { simpleAuthSettingsKey } from '../../types/settings/simple-auth-settings';
 import { anonymise } from '../../util/anonymise';
-import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     createResponseSchema,
@@ -74,8 +73,6 @@ export default class UserAdminController extends Controller {
 
     private settingService: SettingService;
 
-    private openApiService: OpenApiService;
-
     private groupService: GroupService;
 
     readonly unleashUrl: string;
@@ -103,14 +100,13 @@ export default class UserAdminController extends Controller {
             | 'groupService'
         >,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.userService = userService;
         this.accountService = accountService;
         this.accessService = accessService;
         this.emailService = emailService;
         this.resetTokenService = resetTokenService;
         this.settingService = settingService;
-        this.openApiService = openApiService;
         this.groupService = groupService;
         this.logger = config.getLogger('routes/user-controller.ts');
         this.unleashUrl = config.server.unleashUrl;

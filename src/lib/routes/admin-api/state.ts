@@ -11,7 +11,6 @@ import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
 import StateService from '../../services/state-service';
 import { IAuthRequest } from '../unleash-types';
-import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
@@ -41,8 +40,6 @@ class StateController extends Controller {
 
     private stateService: StateService;
 
-    private openApiService: OpenApiService;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -50,10 +47,9 @@ class StateController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'stateService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('/admin-api/state.ts');
         this.stateService = stateService;
-        this.openApiService = openApiService;
         this.fileupload('/import', upload.single('file'), this.import, ADMIN);
         this.route({
             method: 'post',

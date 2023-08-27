@@ -27,7 +27,7 @@ class MetricsController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'clientInstanceService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('/admin-api/metrics.ts');
 
         this.clientInstanceService = clientInstanceService;

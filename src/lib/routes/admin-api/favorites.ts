@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import Controller from '../controller';
-import { FavoritesService, OpenApiService } from '../../services';
+import { FavoritesService } from '../../services';
 import { Logger } from '../../logger';
 import { IUnleashConfig, IUnleashServices, NONE } from '../../types';
 import { emptyResponse, getStandardResponses } from '../../openapi';
@@ -11,8 +11,6 @@ export default class FavoritesController extends Controller {
 
     private logger: Logger;
 
-    private openApiService: OpenApiService;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -20,11 +18,9 @@ export default class FavoritesController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'favoritesService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('/routes/favorites-controller');
         this.favoritesService = favoritesService;
-        this.openApiService = openApiService;
-
         this.route({
             method: 'post',
             path: '/:projectId/features/:featureName/favorites',

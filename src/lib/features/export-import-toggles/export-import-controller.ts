@@ -2,7 +2,6 @@ import { Response } from 'express';
 import Controller from '../../routes/controller';
 import { Logger } from '../../logger';
 import ExportImportService from './export-import-service';
-import { OpenApiService } from '../../services';
 import { TransactionCreator, UnleashTransaction } from '../../db/transaction';
 import {
     IUnleashConfig,
@@ -34,8 +33,6 @@ class ExportImportController extends Controller {
         db: UnleashTransaction,
     ) => ExportImportService;
 
-    private openApiService: OpenApiService;
-
     private readonly startTransaction: TransactionCreator<UnleashTransaction>;
 
     constructor(
@@ -52,13 +49,12 @@ class ExportImportController extends Controller {
         >,
         startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('/admin-api/export-import.ts');
         this.exportImportService = exportImportService;
         this.transactionalExportImportService =
             transactionalExportImportService;
         this.startTransaction = startTransaction;
-        this.openApiService = openApiService;
         this.route({
             method: 'post',
             path: '/export',

@@ -5,6 +5,13 @@ import { NONE } from '../types/permissions';
 import { handleErrors } from './util';
 import requireContentType from '../middleware/content_type_checker';
 import { PermissionError } from '../error';
+import {
+    ApiOperation,
+    getStandardResponses,
+    StandardResponseCodes,
+} from '../../lib/openapi';
+import { OpenApiService } from '../../lib/services';
+import { IUnleashServices } from 'lib/types';
 
 interface IRequestHandler<
     P = any,
@@ -62,6 +69,7 @@ const checkPermission =
  * - try/catch inside RequestHandler
  * - await if the RequestHandler returns a promise.
  * - access control
+ * - add openapi standard response codes
  */
 export default class Controller {
     private ownLogger: Logger;
@@ -70,12 +78,18 @@ export default class Controller {
 
     config: IUnleashConfig;
 
-    constructor(config: IUnleashConfig) {
+    protected openApiService: OpenApiService;
+
+    constructor(
+        config: IUnleashConfig,
+        { openApiService }: Pick<IUnleashServices, 'openApiService'>,
+    ) {
         this.ownLogger = config.getLogger(
             `controller/${this.constructor.name}`,
         );
         this.app = Router();
         this.config = config;
+        this.openApiService = openApiService;
     }
 
     private useRouteErrorHandler(handler: IRequestHandler): IRequestHandler {
@@ -103,6 +117,46 @@ export default class Controller {
             this.useContentTypeMiddleware(options),
             this.useRouteErrorHandler(options.handler.bind(this)),
         );
+    }
+
+    routeWithOpenApi({
+        openApi,
+        ...options
+    }: IRouteOptions & { openApi: ApiOperation }): void {
+        const errorCodes = new Set<StandardResponseCodes>([401]);
+
+        if (
+            ['put', 'post', 'patch'].includes(
+                options?.method?.toLowerCase() || '',
+            )
+        ) {
+            errorCodes.add(400);
+            errorCodes.add(413);
+            errorCodes.add(415);
+        }
+
+        if (options.path.includes(':')) {
+            errorCodes.add(404);
+        }
+
+        if (options.permission !== NONE) {
+            errorCodes.add(403);
+        }
+
+        const openApiWithErrorCodes = {
+            ...openApi,
+            responses: {
+                ...getStandardResponses(...errorCodes),
+                ...openApi.responses,
+            },
+        };
+        return this.route({
+            ...options,
+            middleware: [
+                ...(options.middleware ?? []),
+                this.openApiService.validPath(openApiWithErrorCodes),
+            ],
+        });
     }
 
     get(

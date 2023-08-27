@@ -5,14 +5,11 @@ import { IUnleashServices } from '../../types';
 import { NONE } from '../../types/permissions';
 import Controller from '../controller';
 import { Logger } from '../../logger';
-import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { ConstraintSchema, getStandardResponses } from '../../openapi';
 
 export default class ConstraintController extends Controller {
     private featureService: FeatureToggleService;
-
-    private openApiService: OpenApiService;
 
     private readonly logger: Logger;
 
@@ -23,9 +20,8 @@ export default class ConstraintController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.featureService = featureToggleServiceV2;
-        this.openApiService = openApiService;
         this.logger = config.getLogger('/admin-api/validation.ts');
 
         this.route({

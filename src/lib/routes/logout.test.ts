@@ -8,6 +8,7 @@ import SessionService from '../services/session-service';
 import FakeSessionStore from '../../test/fixtures/fake-session-store';
 import noLogger from '../../test/fixtures/no-logger';
 import { addDays } from 'date-fns';
+import { OpenApiService } from 'lib/services';
 
 test('should redirect to "/" after logout', async () => {
     const baseUriPath = '';
@@ -18,10 +19,12 @@ test('should redirect to "/" after logout', async () => {
         { sessionStore },
         { getLogger: noLogger },
     );
+    const openApiService = new OpenApiService(config);
     app.use(
         '/logout',
         new LogoutController(config, {
             sessionService,
+            openApiService,
         }).router,
     );
     const request = supertest(app);
@@ -41,7 +44,11 @@ test('should redirect to "/basePath" after logout when baseUriPath is set', asyn
         { sessionStore },
         { getLogger: noLogger },
     );
-    app.use('/logout', new LogoutController(config, { sessionService }).router);
+    const openApiService = new OpenApiService(config);
+    app.use(
+        '/logout',
+        new LogoutController(config, { sessionService, openApiService }).router,
+    );
     const request = supertest(app);
     expect.assertions(0);
     await request
@@ -60,7 +67,11 @@ test('should set "Clear-Site-Data" header', async () => {
         { getLogger: noLogger },
     );
 
-    app.use('/logout', new LogoutController(config, { sessionService }).router);
+    const openApiService = new OpenApiService(config);
+    app.use(
+        '/logout',
+        new LogoutController(config, { sessionService, openApiService }).router,
+    );
     const request = supertest(app);
     expect.assertions(0);
     await request
@@ -82,7 +93,11 @@ test('should not set "Clear-Site-Data" header', async () => {
         { getLogger: noLogger },
     );
 
-    app.use('/logout', new LogoutController(config, { sessionService }).router);
+    const openApiService = new OpenApiService(config);
+    app.use(
+        '/logout',
+        new LogoutController(config, { sessionService, openApiService }).router,
+    );
     const request = supertest(app);
     expect.assertions(1);
     await request
@@ -103,7 +118,11 @@ test('should clear "unleash-session" cookies', async () => {
         { getLogger: noLogger },
     );
 
-    app.use('/logout', new LogoutController(config, { sessionService }).router);
+    const openApiService = new OpenApiService(config);
+    app.use(
+        '/logout',
+        new LogoutController(config, { sessionService, openApiService }).router,
+    );
 
     const request = supertest(app);
     expect.assertions(0);
@@ -129,7 +148,11 @@ test('should clear "unleash-session" cookie even when disabled clear site data',
         { getLogger: noLogger },
     );
 
-    app.use('/logout', new LogoutController(config, { sessionService }).router);
+    const openApiService = new OpenApiService(config);
+    app.use(
+        '/logout',
+        new LogoutController(config, { sessionService, openApiService }).router,
+    );
 
     const request = supertest(app);
     expect.assertions(0);
@@ -159,7 +182,11 @@ test('should call destroy on session', async () => {
         { getLogger: noLogger },
     );
 
-    app.use('/logout', new LogoutController(config, { sessionService }).router);
+    const openApiService = new OpenApiService(config);
+    app.use(
+        '/logout',
+        new LogoutController(config, { sessionService, openApiService }).router,
+    );
 
     const request = supertest(app);
     await request.post(`${baseUriPath}/logout`);
@@ -183,7 +210,11 @@ test('should handle req.logout with callback function', async () => {
         { getLogger: noLogger },
     );
 
-    app.use('/logout', new LogoutController(config, { sessionService }).router);
+    const openApiService = new OpenApiService(config);
+    app.use(
+        '/logout',
+        new LogoutController(config, { sessionService, openApiService }).router,
+    );
 
     const request = supertest(app);
     await request.post(`${baseUriPath}/logout`);
@@ -208,7 +239,11 @@ test('should handle req.logout without callback function', async () => {
         { getLogger: noLogger },
     );
 
-    app.use('/logout', new LogoutController(config, { sessionService }).router);
+    const openApiService = new OpenApiService(config);
+    app.use(
+        '/logout',
+        new LogoutController(config, { sessionService, openApiService }).router,
+    );
 
     const request = supertest(app);
     await request.post(`${baseUriPath}/logout`);
@@ -234,7 +269,11 @@ test('should redirect to alternative logoutUrl', async () => {
         { getLogger: noLogger },
     );
 
-    app.use('/logout', new LogoutController(config, { sessionService }).router);
+    const openApiService = new OpenApiService(config);
+    app.use(
+        '/logout',
+        new LogoutController(config, { sessionService, openApiService }).router,
+    );
 
     const request = supertest(app);
     await request
@@ -281,7 +320,11 @@ test('Should destroy sessions for user', async () => {
     });
     let activeSessionsBeforeLogout = await sessionStore.getSessionsForUser(1);
     expect(activeSessionsBeforeLogout).toHaveLength(2);
-    app.use('/logout', new LogoutController(config, { sessionService }).router);
+    const openApiService = new OpenApiService(config);
+    app.use(
+        '/logout',
+        new LogoutController(config, { sessionService, openApiService }).router,
+    );
     await supertest(app).post('/logout').expect(302);
     let activeSessions = await sessionStore.getSessionsForUser(1);
     expect(activeSessions).toHaveLength(0);

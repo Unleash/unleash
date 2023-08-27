@@ -6,7 +6,6 @@ import { IUnleashServices } from '../../types/services';
 import UserSplashService from '../../services/user-splash-service';
 import { IAuthRequest } from '../unleash-types';
 import { NONE } from '../../types/permissions';
-import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { splashRequestSchema } from '../../openapi/spec/splash-request-schema';
 import { getStandardResponses } from '../../openapi';
@@ -17,8 +16,6 @@ class UserSplashController extends Controller {
 
     private userSplashService: UserSplashService;
 
-    private openApiService: OpenApiService;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -26,11 +23,9 @@ class UserSplashController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'userSplashService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('splash-controller.ts');
         this.userSplashService = userSplashService;
-        this.openApiService = openApiService;
-
         this.route({
             method: 'post',
             path: '/:id',

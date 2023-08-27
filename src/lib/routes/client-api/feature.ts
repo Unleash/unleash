@@ -14,7 +14,6 @@ import ApiUser from '../../types/api-user';
 import { ALL, isAllProjects } from '../../types/models/api-token';
 import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
 import { ClientSpecService } from '../../services/client-spec-service';
-import { OpenApiService } from '../../services/openapi-service';
 import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { ClientFeaturesQuerySchema } from '../../openapi/spec/client-features-query-schema';
@@ -51,8 +50,6 @@ export default class FeatureController extends Controller {
 
     private clientSpecService: ClientSpecService;
 
-    private openApiService: OpenApiService;
-
     private configurationRevisionService: ConfigurationRevisionService;
 
     private featuresAndSegments: (
@@ -77,12 +74,11 @@ export default class FeatureController extends Controller {
         >,
         config: IUnleashConfig,
     ) {
-        super(config);
+        super(config, { openApiService });
         const { clientFeatureCaching } = config;
         this.featureToggleServiceV2 = featureToggleServiceV2;
         this.segmentService = segmentService;
         this.clientSpecService = clientSpecService;
-        this.openApiService = openApiService;
         this.configurationRevisionService = configurationRevisionService;
         this.logger = config.getLogger('client-api/feature.js');
 

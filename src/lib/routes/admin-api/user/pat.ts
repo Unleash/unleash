@@ -12,7 +12,6 @@ import {
     resourceCreatedResponseSchema,
 } from '../../../openapi/util/create-response-schema';
 import { getStandardResponses } from '../../../openapi/util/standard-responses';
-import { OpenApiService } from '../../../services/openapi-service';
 import { emptyResponse } from '../../../openapi/util/standard-responses';
 
 import PatService from '../../../services/pat-service';
@@ -25,8 +24,6 @@ import { PatsSchema, patsSchema } from '../../../openapi/spec/pats-schema';
 export default class PatController extends Controller {
     private patService: PatService;
 
-    private openApiService: OpenApiService;
-
     private logger: Logger;
 
     private flagResolver: IFlagResolver;
@@ -38,10 +35,9 @@ export default class PatController extends Controller {
             patService,
         }: Pick<IUnleashServices, 'openApiService' | 'patService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('lib/routes/auth/pat-controller.ts');
         this.flagResolver = config.flagResolver;
-        this.openApiService = openApiService;
         this.patService = patService;
         this.route({
             method: 'get',

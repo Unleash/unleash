@@ -11,7 +11,6 @@ import {
     InstanceStatsService,
     InstanceStatsSigned,
 } from '../../services/instance-stats-service';
-import { OpenApiService } from '../../services/openapi-service';
 import {
     createCsvResponseSchema,
     createResponseSchema,
@@ -19,8 +18,6 @@ import {
 
 class InstanceAdminController extends Controller {
     private instanceStatsService: InstanceStatsService;
-
-    private openApiService: OpenApiService;
 
     private jsonCsvParser: Parser;
 
@@ -31,9 +28,8 @@ class InstanceAdminController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'instanceStatsService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.jsonCsvParser = new Parser();
-        this.openApiService = openApiService;
         this.instanceStatsService = instanceStatsService;
 
         this.route({

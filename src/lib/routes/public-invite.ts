@@ -5,7 +5,6 @@ import { NONE } from '../types/permissions';
 import { Logger } from '../logger';
 import { IAuthRequest } from './unleash-types';
 import { IUnleashConfig, IUnleashServices } from '../types';
-import { OpenApiService } from '../services/openapi-service';
 import { createRequestSchema } from '../openapi/util/create-request-schema';
 import { createResponseSchema } from '../openapi/util/create-response-schema';
 import { serializeDates } from '../types/serialize-dates';
@@ -24,8 +23,6 @@ interface TokenParam {
 export class PublicInviteController extends Controller {
     private publicSignupTokenService: PublicSignupTokenService;
 
-    private openApiService: OpenApiService;
-
     private logger: Logger;
 
     constructor(
@@ -38,9 +35,8 @@ export class PublicInviteController extends Controller {
             'publicSignupTokenService' | 'openApiService'
         >,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.publicSignupTokenService = publicSignupTokenService;
-        this.openApiService = openApiService;
         this.logger = config.getLogger('validate-invite-token-controller.js');
 
         this.route({

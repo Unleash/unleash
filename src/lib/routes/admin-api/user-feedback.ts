@@ -6,7 +6,6 @@ import { IUnleashServices } from '../../types/services';
 import UserFeedbackService from '../../services/user-feedback-service';
 import { IAuthRequest } from '../unleash-types';
 import { NONE } from '../../types/permissions';
-import { OpenApiService } from '../../services/openapi-service';
 import { FeedbackCreateSchema } from '../../openapi/spec/feedback-create-schema';
 import { FeedbackUpdateSchema } from '../../openapi/spec/feedback-update-schema';
 import { FeedbackResponseSchema } from '../../openapi/spec/feedback-response-schema';
@@ -22,8 +21,6 @@ class UserFeedbackController extends Controller {
 
     private userFeedbackService: UserFeedbackService;
 
-    private openApiService: OpenApiService;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -31,11 +28,9 @@ class UserFeedbackController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'userFeedbackService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('feedback-controller.ts');
         this.userFeedbackService = userFeedbackService;
-        this.openApiService = openApiService;
-
         this.route({
             method: 'post',
             path: '',

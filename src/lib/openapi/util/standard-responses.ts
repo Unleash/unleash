@@ -218,6 +218,7 @@ const standardResponses = {
 } as const;
 
 type StandardResponses = typeof standardResponses;
+export type StandardResponseCodes = keyof StandardResponses;
 
 export const getStandardResponses = (
     ...statusCodes: (keyof StandardResponses)[]

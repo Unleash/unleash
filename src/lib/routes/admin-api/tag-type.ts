@@ -24,7 +24,6 @@ import {
 } from '../../openapi/spec/validate-tag-type-schema';
 import { TagTypeSchema } from '../../openapi/spec/tag-type-schema';
 import { UpdateTagTypeSchema } from '../../openapi/spec/update-tag-type-schema';
-import { OpenApiService } from '../../services/openapi-service';
 import {
     emptyResponse,
     getStandardResponses,
@@ -37,8 +36,6 @@ class TagTypeController extends Controller {
 
     private tagTypeService: TagTypeService;
 
-    private openApiService: OpenApiService;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -46,10 +43,9 @@ class TagTypeController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'tagTypeService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.logger = config.getLogger('/admin-api/tag-type.js');
         this.tagTypeService = tagTypeService;
-        this.openApiService = openApiService;
         this.route({
             method: 'get',
             path: '',

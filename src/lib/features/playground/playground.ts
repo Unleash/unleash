@@ -3,7 +3,6 @@ import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { NONE } from '../../types/permissions';
 import Controller from '../../routes/controller';
-import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { getStandardResponses } from '../../openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
@@ -22,8 +21,6 @@ import {
 } from './playground-view-model';
 
 export default class PlaygroundController extends Controller {
-    private openApiService: OpenApiService;
-
     private playgroundService: PlaygroundService;
 
     private flagResolver: IFlagResolver;
@@ -35,8 +32,7 @@ export default class PlaygroundController extends Controller {
             playgroundService,
         }: Pick<IUnleashServices, 'openApiService' | 'playgroundService'>,
     ) {
-        super(config);
-        this.openApiService = openApiService;
+        super(config, { openApiService });
         this.playgroundService = playgroundService;
         this.flagResolver = config.flagResolver;
 

@@ -6,7 +6,6 @@ import { ADMIN, NONE } from '../../types/permissions';
 import { IEvent, IEventList } from '../../types/events';
 import Controller from '../controller';
 import { anonymiseKeys } from '../../util/anonymise';
-import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     eventsSchema,
@@ -29,8 +28,6 @@ export default class EventController extends Controller {
 
     private flagResolver: IFlagResolver;
 
-    private openApiService: OpenApiService;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -38,11 +35,9 @@ export default class EventController extends Controller {
             openApiService,
         }: Pick<IUnleashServices, 'eventService' | 'openApiService'>,
     ) {
-        super(config);
+        super(config, { openApiService });
         this.eventService = eventService;
         this.flagResolver = config.flagResolver;
-        this.openApiService = openApiService;
-
         this.route({
             method: 'get',
             path: '',

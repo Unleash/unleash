@@ -17,14 +17,17 @@ import { minutesToMilliseconds } from 'date-fns';
 
 class IndexRouter extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
-        super(config);
+        super(config, { openApiService: services.openApiService });
 
         this.use('/health', new HealthCheckController(config, services).router);
         this.use(
             '/invite',
             new PublicInviteController(config, services).router,
         );
-        this.use('/internal-backstage', new BackstageController(config).router);
+        this.use(
+            '/internal-backstage',
+            new BackstageController(config, services).router,
+        );
         this.use('/logout', new LogoutController(config, services).router);
         this.useWithMiddleware(
             '/auth/simple',

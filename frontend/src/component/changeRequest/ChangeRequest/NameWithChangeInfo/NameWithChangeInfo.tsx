@@ -14,10 +14,6 @@ export const NameWithChangeInfo: FC<{
 }> = ({ newName, previousName }) => {
     const titleHasChanged = Boolean(previousName && previousName !== newName);
 
-    const titleHasChangedOrBeenAdded = Boolean(
-        titleHasChanged || (!previousName && newName)
-    );
-
     return (
         <>
             <ConditionallyRender
@@ -34,13 +30,7 @@ export const NameWithChangeInfo: FC<{
                 condition={Boolean(newName)}
                 show={
                     <Truncated>
-                        <Typography
-                            component={
-                                titleHasChangedOrBeenAdded ? 'ins' : 'span'
-                            }
-                        >
-                            {newName}
-                        </Typography>
+                        <Typography>{newName}</Typography>
                     </Truncated>
                 }
             />

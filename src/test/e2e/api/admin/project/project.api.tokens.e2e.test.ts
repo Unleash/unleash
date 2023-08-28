@@ -113,3 +113,36 @@ test('Deletes existing tokens', async () => {
         .set('Content-Type', 'application/json')
         .expect(200);
 });
+
+test('Returns Not Found when deleting non-existing tokens', async () => {
+    const tokenSecret = 'random-secret';
+
+    return app.request
+        .delete(`/api/admin/projects/default/api-tokens/${tokenSecret}`)
+        .set('Content-Type', 'application/json')
+        .expect(404);
+});
+
+test('Returns Bad Request when deleting tokens with more than one project', async () => {
+    const tokenSecret = 'random-secret';
+
+    await db.stores.projectStore.create({
+        id: 'other',
+        name: 'other',
+        description: 'other',
+        mode: 'open',
+    });
+
+    await db.stores.apiTokenStore.insert({
+        tokenName: 'test',
+        secret: tokenSecret,
+        type: ApiTokenType.CLIENT,
+        environment: 'default',
+        projects: ['default', 'other'],
+    });
+
+    return app.request
+        .delete(`/api/admin/projects/default/api-tokens/${tokenSecret}`)
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});

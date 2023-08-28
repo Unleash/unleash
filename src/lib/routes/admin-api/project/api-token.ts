@@ -213,6 +213,10 @@ export class ProjectApiTokenController extends Controller {
             await this.apiTokenService.delete(token, extractUsername(req));
             await this.proxyService.deleteClientForProxyToken(token);
             res.status(200).end();
+        } else if (!storedToken) {
+            res.status(404).end();
+        } else {
+            res.status(400).end();
         }
     }
 

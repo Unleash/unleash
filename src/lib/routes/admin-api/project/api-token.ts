@@ -130,7 +130,7 @@ export class ProjectApiTokenController extends Controller {
                     description: `This operation deletes the API token specified in the request URL. If the token doesn't exist, returns an OK response (status code 200).`,
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(401, 403),
+                        ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
             ],
@@ -213,6 +213,10 @@ export class ProjectApiTokenController extends Controller {
             await this.apiTokenService.delete(token, extractUsername(req));
             await this.proxyService.deleteClientForProxyToken(token);
             res.status(200).end();
+        } else if (!storedToken) {
+            res.status(404).end();
+        } else {
+            res.status(400).end();
         }
     }
 

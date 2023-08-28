@@ -34,11 +34,6 @@ const OPENAPI_TAGS = [
     },
     { name: 'Auth', description: 'Manage logins, passwords, etc.' },
     {
-        name: 'Change Requests',
-        description:
-            'Operations related to [Change Requests](https://docs.getunleash.io/reference/change-requests).',
-    },
-    {
         name: 'Client',
         description:
             'Endpoints for [Unleash server-side clients](https://docs.getunleash.io/reference/sdks).',
@@ -77,11 +72,6 @@ const OPENAPI_TAGS = [
     {
         name: 'Metrics',
         description: 'Register, read, or delete metrics recorded by Unleash.',
-    },
-    {
-        name: 'Notifications',
-        description:
-            'Manage [notifications](https://docs.getunleash.io/reference/notifications).',
     },
     {
         name: 'Operational',

@@ -130,7 +130,7 @@ export class ProjectApiTokenController extends Controller {
                     description: `This operation deletes the API token specified in the request URL. If the token doesn't exist, returns an OK response (status code 200).`,
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(401, 403),
+                        ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
             ],

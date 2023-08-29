@@ -149,8 +149,7 @@ export class ProjectApiTokenController extends Controller {
     ): Promise<void> {
         const { user } = req;
         const { projectId } = req.params;
-        // throws Not Found on store get() level
-        await this.projectService.getProject(projectId);
+        await this.projectService.getProject(projectId); // Validates that the project exists
 
         const projectTokens = await this.accessibleTokens(user, projectId);
         this.openApiService.respondWithValidation(
@@ -167,8 +166,7 @@ export class ProjectApiTokenController extends Controller {
     ): Promise<any> {
         const createToken = await createApiToken.validateAsync(req.body);
         const { projectId } = req.params;
-        // throws Not Found on store get() level
-        await this.projectService.getProject(projectId);
+        await this.projectService.getProject(projectId); // Validates that the project exists
 
         const permissionRequired = CREATE_PROJECT_API_TOKEN;
         const hasPermission = await this.accessService.hasPermission(

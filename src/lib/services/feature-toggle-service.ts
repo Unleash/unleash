@@ -1038,6 +1038,27 @@ class FeatureToggleService {
     ): Promise<FeatureToggle> {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
+
+        if (this.flagResolver.isEnabled('featureNamingPattern')) {
+            const project = await this.projectStore.get(projectId);
+            const namingPattern = project.featureNaming?.pattern;
+            const namingExample = project.featureNaming?.example;
+            console.log('project naming', namingPattern, namingExample);
+
+            if (
+                namingPattern &&
+                namingExample &&
+                !value.name.match(namingExample)
+            ) {
+                throw new BadDataError(
+                    `The feature name "${value.name}" does not match the project's naming pattern: "${namingPattern}.` +
+                    namingExample
+                        ? ` Here's an example of a name that does match the pattern: "${namingExample}"`
+                        : '',
+                );
+            }
+        }
+
         const exists = await this.projectStore.hasProject(projectId);
 
         if (await this.projectStore.isFeatureLimitReached(projectId)) {

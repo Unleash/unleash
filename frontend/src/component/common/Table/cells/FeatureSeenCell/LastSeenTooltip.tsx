@@ -196,7 +196,8 @@ export const LastSeenTooltip = ({
                                                 >
                                                     <PrettifyLargeNumber
                                                         value={total}
-                                                    />
+                                                    />{' '}
+                                                    times
                                                 </StyledValue>
                                             }
                                             elseShow={

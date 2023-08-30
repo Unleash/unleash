@@ -228,6 +228,14 @@ export default class ProjectService {
                 `You've provided a feature flag naming example ("${updatedProject.featureNaming.example}") that doesn't match your feature flag naming pattern ("${updatedProject.featureNaming.pattern}"). Please either provide an example that matches your supplied pattern.`,
             );
         }
+
+        if (
+            updatedProject.featureNaming?.pattern &&
+            !updatedProject.featureNaming?.example
+        ) {
+            updatedProject.featureNaming.example = null;
+        }
+
         await this.store.update(updatedProject);
 
         await this.eventStore.store({

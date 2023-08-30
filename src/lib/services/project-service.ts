@@ -55,7 +55,7 @@ import { FavoritesService } from './favorites-service';
 import { calculateAverageTimeToProd } from '../features/feature-toggle/time-to-production/time-to-production';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 import { uniqueByKey } from '../util/unique';
-import { PermissionError } from '../error';
+import { BadDataError, PermissionError } from '../error';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -176,6 +176,17 @@ export default class ProjectService {
         const data = await projectSchema.validateAsync(newProject);
         await this.validateUniqueId(data.id);
 
+        if (
+            data.featureNaming.example &&
+            !data.featureNaming.example.match(
+                new RegExp(data.featureNaming.pattern),
+            )
+        ) {
+            throw new BadDataError(
+                `You've provided a feature flag naming example ("${data.featureNaming.example}") that doesn't match your feature flag naming pattern ("${data.featureNaming.pattern}"). Please either provide an example that matches your supplied pattern.`,
+            );
+        }
+
         await this.store.create(data);
 
         const enabledEnvironments = await this.environmentStore.getAll({
@@ -207,6 +218,16 @@ export default class ProjectService {
     async updateProject(updatedProject: IProject, user: User): Promise<void> {
         const preData = await this.store.get(updatedProject.id);
 
+        if (
+            updatedProject.featureNaming.example &&
+            !updatedProject.featureNaming.example.match(
+                new RegExp(updatedProject.featureNaming.pattern),
+            )
+        ) {
+            throw new BadDataError(
+                `You've provided a feature flag naming example ("${updatedProject.featureNaming.example}") that doesn't match your feature flag naming pattern ("${updatedProject.featureNaming.pattern}"). Please either provide an example that matches your supplied pattern.`,
+            );
+        }
         await this.store.update(updatedProject);
 
         await this.eventStore.store({

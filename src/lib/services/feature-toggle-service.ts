@@ -1038,20 +1038,7 @@ class FeatureToggleService {
     ): Promise<FeatureToggle> {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
-
-        if (this.flagResolver.isEnabled('featureNamingPattern')) {
-            const project = await this.projectStore.get(projectId);
-            const namingPattern = project.featureNaming?.pattern;
-            const namingExample = project.featureNaming?.example;
-
-            if (namingPattern && !value.name.match(new RegExp(namingPattern))) {
-                const error = `The feature name "${value.name}" does not match the project's naming pattern: "${namingPattern}.`;
-                const example = namingExample
-                    ? ` Here's an example of a name that does match the pattern: "${namingExample}. Try something like that instead."`
-                    : '';
-                throw new BadDataError(`${error}${example}`);
-            }
-        }
+        await this.validateFeatureFlagPattern(value.name, projectId);
 
         const exists = await this.projectStore.hasProject(projectId);
 
@@ -1105,6 +1092,28 @@ class FeatureToggleService {
             return createdToggle;
         }
         throw new NotFoundError(`Project with id ${projectId} does not exist`);
+    }
+
+    async validateFeatureFlagPattern(
+        featureName: string,
+        projectId?: string,
+    ): Promise<void> {
+        if (this.flagResolver.isEnabled('featureNamingPattern') && projectId) {
+            const project = await this.projectStore.get(projectId);
+            const namingPattern = project.featureNaming?.pattern;
+            const namingExample = project.featureNaming?.example;
+
+            if (
+                namingPattern &&
+                !featureName.match(new RegExp(namingPattern))
+            ) {
+                const error = `The feature name "${featureName}" does not match the project's naming pattern: "${namingPattern}.`;
+                const example = namingExample
+                    ? ` Here's an example of a name that does match the pattern: "${namingExample}. Try something like that instead."`
+                    : '';
+                throw new BadDataError(`${error}${example}`);
+            }
+        }
     }
 
     async cloneFeatureToggle(

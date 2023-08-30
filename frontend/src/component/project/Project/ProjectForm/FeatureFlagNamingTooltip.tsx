@@ -12,8 +12,9 @@ export const FeatureFlagNamingTooltip: FC = () => {
             htmlTooltip
             tooltip={
                 <Box>
-                    Enforce a naming convention for feature flags
-                    {''}
+                    <h3>Enforce a naming convention for feature flags</h3>
+                    <hr />
+                    <p>{`eg. ^[A - Za - z0 - 9]{2}[.][a-z]{4,12}$ matches 'a1.project'`}</p>
                     <div className="scrollable">
                         <h3>Brackets:</h3>
                         <table>

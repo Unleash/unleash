@@ -133,7 +133,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
         if (featureNamingPattern) {
             const regex = new RegExp(featureNamingPattern);
             const matches = regex.test(example);
-            console.log(`${regex} ${matches} ${example}`);
             if (!matches) {
                 errors.namingExample = 'Example does not match regex';
             } else {

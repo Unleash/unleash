@@ -58,7 +58,9 @@ export interface IFlags {
     newApplicationList?: boolean;
     integrationsRework?: boolean;
     multipleRoles?: boolean;
+    doraMetrics?: boolean;
     instanceHealthDashboard?: boolean;
+    [key: string]: boolean | Variant | undefined;
 }
 
 export interface IVersionInfo {

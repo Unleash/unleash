@@ -20,4 +20,8 @@ export default class FakeProjectStatsStore implements IProjectStatsStore {
     getTimeToProdDates(): Promise<ICreateEnabledDates[]> {
         throw new Error('not implemented');
     }
+
+    getTimeToProdDatesForFeatureToggles(): Promise<any> {
+        throw new Error('not implemented');
+    }
 }

@@ -9,6 +9,7 @@ import {
     IProjectStatsStore,
 } from 'lib/types/stores/project-stats-store-type';
 import { Db } from './db';
+import { DoraFeaturesSchema } from 'lib/openapi';
 
 const TABLE = 'project_stats';
 
@@ -143,6 +144,51 @@ class ProjectStatsStore implements IProjectStatsStore {
             // first enabled event
             .orderBy('events.created_at', 'asc');
         return result;
+    }
+
+    async getTimeToProdDatesForFeatureToggles(
+        projectId: string,
+        featureToggleNames: string[],
+    ): Promise<DoraFeaturesSchema[]> {
+        const result = await this.db
+            .select('events.feature_name')
+            .distinctOn('events.feature_name')
+            .select(
+                this.db.raw(
+                    'events.created_at as enabled, features.created_at as created',
+                ),
+            )
+            .from('events')
+            .innerJoin(
+                'environments',
+                'environments.name',
+                '=',
+                'events.environment',
+            )
+            .innerJoin('features', 'features.name', '=', 'events.feature_name')
+            .whereIn('events.feature_name', featureToggleNames)
+            .where('events.type', '=', 'feature-environment-enabled')
+            .where('environments.type', '=', 'production')
+            .where('features.type', '=', 'release')
+            .where(this.db.raw('events.created_at > features.created_at'))
+            .where('features.project', '=', projectId)
+            .orderBy('events.feature_name')
+            .orderBy('events.created_at', 'asc');
+
+        const timeDifferenceData: DoraFeaturesSchema[] = result.map((row) => {
+            const enabledDate = new Date(row.enabled).getTime();
+            const createdDate = new Date(row.created).getTime();
+            const timeDifferenceInDays = Math.floor(
+                (enabledDate - createdDate) / (1000 * 60 * 60 * 24),
+            );
+
+            return {
+                name: row.feature_name,
+                timeToProduction: timeDifferenceInDays,
+            };
+        });
+
+        return timeDifferenceData;
     }
 }
 

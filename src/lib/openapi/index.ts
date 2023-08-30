@@ -155,6 +155,8 @@ import {
     createStrategyVariantSchema,
     clientSegmentSchema,
     createGroupSchema,
+    doraFeaturesSchema,
+    projectDoraMetricsSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -367,6 +369,8 @@ export const schemas: UnleashSchemas = {
     createStrategyVariantSchema,
     clientSegmentSchema,
     createGroupSchema,
+    doraFeaturesSchema,
+    projectDoraMetricsSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

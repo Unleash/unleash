@@ -34,7 +34,7 @@ interface ClientMetricsEnvVariantTable extends ClientMetricsBaseTable {
 
 const TABLE = 'client_metrics_env';
 const TABLE_VARIANTS = 'client_metrics_env_variants';
-const TABLE_TOTAL_METRICS = 'client_total_metrics';
+const TABLE_METRICS_TOTAL = 'client_metrics_total';
 
 const fromRow = (row: ClientMetricsEnvTable) => ({
     featureName: row.feature_name,
@@ -235,13 +235,13 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
                 a.environment.localeCompare(b.environment),
         );
 
-        const insertQuery = this.db('client_total_metrics')
+        const insertQuery = this.db(TABLE_METRICS_TOTAL)
             .insert(sortedRows)
             .toString();
         const updateOnConflictQuery = `
             ${insertQuery}
             ON CONFLICT (feature_name, environment) DO UPDATE
-            SET total = client_total_metrics.total + EXCLUDED.total;
+            SET total = client_metrics_total.total + EXCLUDED.total;
         `;
 
         await this.db.raw(updateOnConflictQuery);

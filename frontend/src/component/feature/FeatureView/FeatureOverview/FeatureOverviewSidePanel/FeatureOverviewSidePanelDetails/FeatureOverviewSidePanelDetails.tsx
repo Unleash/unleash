@@ -60,6 +60,7 @@ export const FeatureOverviewSidePanelDetails = ({
                 </StyledDetail>
                 {showLastSeenByEnvironment && (
                     <FeatureEnvironmentSeen
+                        featureId={feature.name}
                         featureLastSeen={feature.lastSeenAt}
                         environments={feature.environments}
                         sx={{ pt: 0 }}

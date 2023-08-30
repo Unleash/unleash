@@ -206,15 +206,14 @@ export default class ProjectService {
 
     async updateProject(updatedProject: IProject, user: User): Promise<void> {
         const preData = await this.store.get(updatedProject.id);
-        const project = await projectSchema.validateAsync(updatedProject);
 
-        await this.store.update(project);
+        await this.store.update(updatedProject);
 
         await this.eventStore.store({
             type: PROJECT_UPDATED,
-            project: project.id,
+            project: updatedProject.id,
             createdBy: getCreatedBy(user),
-            data: project,
+            data: updatedProject,
             preData,
         });
     }

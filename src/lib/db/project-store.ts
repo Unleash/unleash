@@ -267,10 +267,8 @@ class ProjectStore implements IProjectStore {
                         project_mode: data.mode,
                         default_stickiness: data.defaultStickiness,
                         feature_limit: data.featureLimit,
-                        feature_naming_pattern:
-                            data.featureNaming?.featureNamingPattern,
-                        feature_naming_example:
-                            data.featureNaming?.featureNamingExample,
+                        feature_naming_pattern: data.featureNaming?.pattern,
+                        feature_naming_example: data.featureNaming?.example,
                     });
             } else {
                 await this.db(SETTINGS_TABLE).insert({
@@ -278,10 +276,8 @@ class ProjectStore implements IProjectStore {
                     project_mode: data.mode,
                     default_stickiness: data.defaultStickiness,
                     feature_limit: data.featureLimit,
-                    feature_naming_pattern:
-                        data.featureNaming?.featureNamingPattern,
-                    feature_naming_example:
-                        data.featureNaming?.featureNamingExample,
+                    feature_naming_pattern: data.featureNaming?.pattern,
+                    feature_naming_example: data.featureNaming?.example,
                 });
             }
         } catch (err) {

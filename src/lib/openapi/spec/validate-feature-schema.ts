@@ -11,6 +11,11 @@ export const validateFeatureSchema = {
             type: 'string',
             example: 'my-feature-3',
         },
+        project: {
+            description: 'The project name to validate.',
+            type: 'string',
+            example: 'my-feature-3',
+        },
     },
     components: {},
 } as const;

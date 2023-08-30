@@ -42,7 +42,7 @@ process.nextTick(async () => {
                         lastSeenByEnvironment: true,
                         segmentChangeRequests: true,
                         newApplicationList: true,
-                        flagNamingPattern: true,
+                        featureNamingPattern: true,
                     },
                 },
                 authentication: {

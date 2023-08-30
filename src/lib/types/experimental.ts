@@ -30,7 +30,7 @@ export type IFlagKey =
     | 'newApplicationList'
     | 'integrationsRework'
     | 'multipleRoles'
-    | 'flagNamingPattern';
+    | 'featureNamingPattern';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -138,8 +138,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_NEW_APPLICATION_LIST,
         false,
     ),
-    flagNamingPattern: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FLAG_NAMING_PATTERN,
+    featureNamingPattern: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_NAMING_PATTERN,
         false,
     ),
 };

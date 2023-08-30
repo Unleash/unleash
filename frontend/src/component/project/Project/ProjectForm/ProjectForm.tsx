@@ -9,6 +9,7 @@ import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
 import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IProjectForm {
     projectId: string;
@@ -115,6 +116,8 @@ const ProjectForm: React.FC<IProjectForm> = ({
     validateProjectId,
     clearErrors,
 }) => {
+    const { uiConfig } = useUiConfig();
+    const shouldShowFlagNaming = uiConfig.flags.featureNamingPattern;
     const onSetFeatureNamingPattern = (regex: string) => {
         try {
             new RegExp(regex);
@@ -130,6 +133,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
         if (featureNamingPattern) {
             const regex = new RegExp(featureNamingPattern);
             const matches = regex.test(example);
+            console.log(`${regex} ${matches} ${example}`);
             if (!matches) {
                 errors.namingExample = 'Example does not match regex';
             } else {
@@ -268,6 +272,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 </>
                 <ConditionallyRender
                     condition={
+                        Boolean(shouldShowFlagNaming) &&
                         setProjectNamingPattern != null &&
                         setFeatureNamingExample != null
                     }

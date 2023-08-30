@@ -26,5 +26,4 @@ export interface SdkContextSchema {
     sessionId?: string;
     /** An identifier for the current user */
     userId?: string;
-    [key: string]: any;
 }

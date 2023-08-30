@@ -101,6 +101,7 @@ exports[`should create default config 1`] = `
       "slackAppAddon": false,
       "strategyVariant": false,
       "strictSchemaValidation": false,
+      "totalMetricsCount": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -138,6 +139,7 @@ exports[`should create default config 1`] = `
       "slackAppAddon": false,
       "strategyVariant": false,
       "strictSchemaValidation": false,
+      "totalMetricsCount": false,
     },
     "externalResolver": {
       "getVariant": [Function],

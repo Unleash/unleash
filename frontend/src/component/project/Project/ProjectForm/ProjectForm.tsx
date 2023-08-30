@@ -291,7 +291,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             <StyledInputContainer>
                                 <StyledInput
                                     label={'Naming Pattern'}
-                                    name="value"
+                                    name="pattern"
                                     type={'text'}
                                     value={featureNamingPattern}
                                     error={Boolean(errors.featureNamingPattern)}
@@ -305,7 +305,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 />
                                 <StyledInput
                                     label={'Naming Example'}
-                                    name="value"
+                                    name="example"
                                     type={'text'}
                                     value={featureNamingExample}
                                     error={Boolean(errors.namingExample)}

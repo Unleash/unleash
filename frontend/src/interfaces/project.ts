@@ -13,7 +13,7 @@ export interface IProjectCard {
     favorite?: boolean;
 }
 
-export type FlagNamingType = {
+export type FeatureNamingType = {
     pattern: string;
     example: string;
 };
@@ -32,7 +32,7 @@ export interface IProject {
     mode: 'open' | 'protected';
     defaultStickiness: string;
     featureLimit?: number;
-    flagNaming?: FlagNamingType;
+    featureNaming?: FeatureNamingType;
 }
 
 export interface IProjectHealthReport extends IProject {

@@ -75,7 +75,7 @@ const useProjectForm = (
             defaultStickiness: projectStickiness,
             featureLimit: getFeatureLimitAsNumber(),
             mode: projectMode,
-            flagNaming: {
+            featureNaming: {
                 pattern: featureNamingPattern,
                 example: featureNamingExample,
             },

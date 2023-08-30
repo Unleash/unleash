@@ -4,6 +4,7 @@ import {
     IClientMetricsEnvKey,
     IClientMetricsEnvVariant,
     IClientMetricsStoreV2,
+    IClientTotalMetricsPerEnv,
 } from '../types/stores/client-metrics-store-v2';
 import NotFoundError from '../error/notfound-error';
 import { startOfHour } from 'date-fns';
@@ -33,6 +34,7 @@ interface ClientMetricsEnvVariantTable extends ClientMetricsBaseTable {
 
 const TABLE = 'client_metrics_env';
 const TABLE_VARIANTS = 'client_metrics_env_variants';
+const TABLE_TOTAL_METRICS = 'client_total_metrics';
 
 const fromRow = (row: ClientMetricsEnvTable) => ({
     featureName: row.feature_name,
@@ -200,6 +202,51 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         }
     }
 
+    async batchInsertTotalMetrics(metrics: IClientMetricsEnv[]): Promise<void> {
+        if (!metrics || metrics.length == 0) {
+            return;
+        }
+
+        const aggregatedMetrics: Record<string, number> = {};
+
+        for (const metric of metrics) {
+            const { featureName, environment, yes, no } = metric;
+            const key = `${featureName}_${environment}`;
+
+            if (aggregatedMetrics[key] === undefined) {
+                aggregatedMetrics[key] = 0;
+            }
+
+            aggregatedMetrics[key] += yes + no;
+        }
+
+        const rows = Object.keys(aggregatedMetrics).map((key) => {
+            const [featureName, environment] = key.split('_');
+            return {
+                feature_name: featureName,
+                environment,
+                total: aggregatedMetrics[key],
+            };
+        });
+
+        const sortedRows = rows.sort(
+            (a, b) =>
+                a.feature_name.localeCompare(b.feature_name) ||
+                a.environment.localeCompare(b.environment),
+        );
+
+        const insertQuery = this.db('client_total_metrics')
+            .insert(sortedRows)
+            .toString();
+        const updateOnConflictQuery = `
+            ${insertQuery}
+            ON CONFLICT (feature_name, environment) DO UPDATE
+            SET total = client_total_metrics.total + EXCLUDED.total;
+        `;
+
+        await this.db.raw(updateOnConflictQuery);
+    }
+
     async getMetricsForFeatureToggle(
         featureName: string,
         hoursBack: number = 24,
@@ -222,6 +269,19 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
 
         const tokens = rows.reduce(variantRowReducer, {});
         return Object.values(tokens);
+    }
+
+    async getTotalCountForToggle(
+        featureName: string,
+    ): Promise<IClientTotalMetricsPerEnv[]> {
+        const rows = await this.db(TABLE_TOTAL_METRICS)
+            .select(['environment', 'total'])
+            .where({ feature_name: featureName });
+
+        return rows.map((row) => ({
+            environment: row.environment.toString(),
+            total: Number(row.total),
+        }));
     }
 
     async getSeenAppsForFeatureToggle(

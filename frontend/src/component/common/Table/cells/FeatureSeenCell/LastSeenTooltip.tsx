@@ -1,9 +1,12 @@
 import { styled, SxProps, Theme, Typography } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import { IEnvironments, IFeatureEnvironment } from 'interfaces/featureToggle';
-import React from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLastSeenColors } from 'component/feature/FeatureView/FeatureEnvironmentSeen/useLastSeenColors';
+import { useFeatureMetricsTotal } from 'hooks/api/getters/useFeatureMetricsTotal/useFeatureMetricsTotal';
+import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
+import { StyledDivider } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestReviewStatus/ChangeRequestReviewStatus.styles';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledDescription = styled(
     'div',
@@ -56,6 +59,7 @@ const StyledValue = styled('div', {
 }));
 
 interface ILastSeenTooltipProps {
+    featureId: string;
     featureLastSeen: string;
     environments?: IEnvironments[] | IFeatureEnvironment[];
     className?: string;
@@ -63,10 +67,14 @@ interface ILastSeenTooltipProps {
 }
 
 export const LastSeenTooltip = ({
+    featureId,
     environments,
     featureLastSeen,
     ...rest
 }: ILastSeenTooltipProps) => {
+    const { uiConfig } = useUiConfig();
+    const { data: metricsTotal } = useFeatureMetricsTotal(featureId);
+
     const getColor = useLastSeenColors();
     const [, defaultTextColor] = getColor();
     const environmentsHaveLastSeen = environments?.some(environment =>
@@ -156,6 +164,54 @@ export const LastSeenTooltip = ({
                             );
                         }}
                     />
+                }
+            />
+            <ConditionallyRender
+                condition={Boolean(uiConfig.flags.totalMetricsCount)}
+                show={
+                    <>
+                        <StyledDivider />
+                        <StyledDescriptionHeader sx={{ mb: 0 }}>
+                            Total metrics count
+                        </StyledDescriptionHeader>
+                        <StyledDescriptionSubHeader>
+                            Total evaluations for this feature reported from
+                            connected applications through metrics
+                        </StyledDescriptionSubHeader>
+                        {environments?.map(({ name }) => {
+                            const { total } = metricsTotal?.find(
+                                ({ environment }) => environment === name
+                            ) || { total: 0 };
+                            return (
+                                <StyledDescriptionBlock key={name}>
+                                    <StyledDescriptionBlockHeader>
+                                        {name}
+                                    </StyledDescriptionBlockHeader>
+                                    <StyledValueContainer>
+                                        <ConditionallyRender
+                                            condition={Boolean(total)}
+                                            show={
+                                                <StyledValue
+                                                    color={defaultTextColor}
+                                                >
+                                                    <PrettifyLargeNumber
+                                                        value={total}
+                                                    />
+                                                </StyledValue>
+                                            }
+                                            elseShow={
+                                                <StyledValue
+                                                    color={defaultTextColor}
+                                                >
+                                                    no usage
+                                                </StyledValue>
+                                            }
+                                        />
+                                    </StyledValueContainer>
+                                </StyledDescriptionBlock>
+                            );
+                        })}
+                    </>
                 }
             />
         </StyledDescription>

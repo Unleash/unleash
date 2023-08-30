@@ -16,7 +16,11 @@ import {
     featureMetricsSchema,
     FeatureMetricsSchema,
 } from '../../openapi/spec/feature-metrics-schema';
-import { getStandardResponses } from '../../openapi';
+import {
+    getStandardResponses,
+    FeatureTotalMetricsSchema,
+    featureTotalMetricsSchema,
+} from '../../openapi';
 
 interface IName {
     name: string;
@@ -89,6 +93,26 @@ class ClientMetricsController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'get',
+            path: '/features/:name/total',
+            handler: this.getTotalFeatureMetrics,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    operationId: 'getTotalFeatureMetrics',
+                    tags: ['Metrics'],
+                    summary: 'Get total feature metrics per environment',
+                    description:
+                        'Get total usage metrics for a specific feature, grouped by environment',
+                    responses: {
+                        200: createResponseSchema('featureMetricsSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
     }
 
     async getRawToggleMetrics(
@@ -106,6 +130,20 @@ class ClientMetricsController extends Controller {
             res,
             featureMetricsSchema.$id,
             { version: 1, maturity: 'stable', data: serializeDates(data) },
+        );
+    }
+
+    async getTotalFeatureMetrics(
+        req: Request,
+        res: Response<FeatureTotalMetricsSchema>,
+    ): Promise<void> {
+        const { name } = req.params;
+        const data = await this.metrics.getTotalClientMetricsForToggle(name);
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featureTotalMetricsSchema.$id,
+            serializeDates(data),
         );
     }
 

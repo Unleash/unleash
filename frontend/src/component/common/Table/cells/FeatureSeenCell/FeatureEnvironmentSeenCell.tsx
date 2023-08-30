@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import { VFC } from 'react';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { FeatureEnvironmentSeen } from 'component/feature/FeatureView/FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 
@@ -15,6 +15,7 @@ export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
 
     return (
         <FeatureEnvironmentSeen
+            featureId={feature.name}
             featureLastSeen={feature.lastSeenAt}
             environments={environments}
         />

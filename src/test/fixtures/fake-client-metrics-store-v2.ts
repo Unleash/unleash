@@ -5,6 +5,7 @@ import {
     IClientMetricsEnv,
     IClientMetricsEnvKey,
     IClientMetricsStoreV2,
+    IClientTotalMetricsPerEnv,
 } from '../../lib/types/stores/client-metrics-store-v2';
 
 export default class FakeClientMetricsStoreV2
@@ -17,6 +18,13 @@ export default class FakeClientMetricsStoreV2
         super();
         this.setMaxListeners(0);
     }
+
+    async getTotalCountForToggle(
+        featureName: string,
+    ): Promise<IClientTotalMetricsPerEnv[]> {
+        throw new Error('Method not implemented.');
+    }
+
     getSeenTogglesForApp(
         appName: string,
         hoursBack?: number,
@@ -40,6 +48,9 @@ export default class FakeClientMetricsStoreV2
     }
     batchInsertMetrics(metrics: IClientMetricsEnv[]): Promise<void> {
         metrics.forEach((m) => this.metrics.push(m));
+        return Promise.resolve();
+    }
+    batchInsertTotalMetrics(metrics: IClientMetricsEnv[]): Promise<void> {
         return Promise.resolve();
     }
     get(key: IClientMetricsEnvKey): Promise<IClientMetricsEnv> {

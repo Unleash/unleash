@@ -5,6 +5,7 @@ import { ToggleMetricsSummary } from '../../types/models/metrics';
 import {
     IClientMetricsEnv,
     IClientMetricsStoreV2,
+    IClientTotalMetricsPerEnv,
 } from '../../types/stores/client-metrics-store-v2';
 import { clientMetricsSchema } from './schema';
 import {
@@ -144,6 +145,10 @@ export default class ClientMetricsServiceV2 {
             const copy = [...this.unsavedMetrics];
             this.unsavedMetrics = [];
             await this.clientMetricsStoreV2.batchInsertMetrics(copy);
+
+            if (this.flagResolver.isEnabled('totalMetricsCount')) {
+                await this.clientMetricsStoreV2.batchInsertTotalMetrics(copy);
+            }
         }
     }
 
@@ -230,6 +235,12 @@ export default class ClientMetricsServiceV2 {
             });
         });
         return result.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
+    }
+
+    async getTotalClientMetricsForToggle(
+        featureName: string,
+    ): Promise<IClientTotalMetricsPerEnv[]> {
+        return this.clientMetricsStoreV2.getTotalCountForToggle(featureName);
     }
 
     resolveMetricsEnvironment(

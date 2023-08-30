@@ -1,7 +1,7 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import TimeAgo from 'react-timeago';
 import { LastSeenTooltip } from 'component/common/Table/cells/FeatureSeenCell/LastSeenTooltip';
-import React, { FC, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 import { IEnvironments, IFeatureEnvironment } from 'interfaces/featureToggle';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { Box, styled, SxProps } from '@mui/material';
@@ -10,6 +10,7 @@ import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
 import { useLastSeenColors } from './useLastSeenColors';
 
 interface IFeatureEnvironmentSeenProps {
+    featureId: string;
     featureLastSeen: string | undefined;
     environments: IEnvironments[] | IFeatureEnvironment[];
     sx?: SxProps;
@@ -70,6 +71,7 @@ const TooltipContainer: FC<{
 };
 
 export const FeatureEnvironmentSeen = ({
+    featureId,
     featureLastSeen,
     environments,
     sx,
@@ -91,6 +93,7 @@ export const FeatureEnvironmentSeen = ({
                                     sx={sx}
                                     tooltip={
                                         <LastSeenTooltip
+                                            featureId={featureId}
                                             featureLastSeen={featureLastSeen}
                                             environments={environments}
                                         />

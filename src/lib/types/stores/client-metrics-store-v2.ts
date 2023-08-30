@@ -18,9 +18,15 @@ export interface IClientMetricsEnvVariant extends IClientMetricsEnvKey {
     count: number;
 }
 
+export interface IClientTotalMetricsPerEnv {
+    environment: string;
+    total: number;
+}
+
 export interface IClientMetricsStoreV2
     extends Store<IClientMetricsEnv, IClientMetricsEnvKey> {
     batchInsertMetrics(metrics: IClientMetricsEnv[]): Promise<void>;
+    batchInsertTotalMetrics(metrics: IClientMetricsEnv[]): Promise<void>;
     getMetricsForFeatureToggle(
         featureName: string,
         hoursBack?: number,
@@ -33,5 +39,8 @@ export interface IClientMetricsStoreV2
         appName: string,
         hoursBack?: number,
     ): Promise<string[]>;
+    getTotalCountForToggle(
+        featureName: string,
+    ): Promise<IClientTotalMetricsPerEnv[]>;
     clearMetrics(hoursAgo: number): Promise<void>;
 }

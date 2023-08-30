@@ -13,6 +13,7 @@ import { useInstanceStats } from '../../../../hooks/api/getters/useInstanceStats
 import { formatApiPath } from '../../../../utils/formatPath';
 import { PageContent } from '../../../common/PageContent/PageContent';
 import { PageHeader } from '../../../common/PageHeader/PageHeader';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 export const InstanceStats: VFC = () => {
     const { stats } = useInstanceStats();
@@ -32,6 +33,21 @@ export const InstanceStats: VFC = () => {
         { title: 'Instance Id', value: stats?.instanceId },
         { title: versionTitle, value: version },
         { title: 'Users', value: stats?.users },
+        {
+            title: 'Active past 7 days',
+            value: stats?.activeUsers?.last7,
+            offset: true,
+        },
+        {
+            title: 'Active past 30 days',
+            value: stats?.activeUsers?.last30,
+            offset: true,
+        },
+        {
+            title: 'Active past 90 days',
+            value: stats?.activeUsers?.last90,
+            offset: true,
+        },
         { title: 'Feature toggles', value: stats?.featureToggles },
         { title: 'Projects', value: stats?.projects },
         { title: 'Environments', value: stats?.environments },
@@ -64,7 +80,22 @@ export const InstanceStats: VFC = () => {
                         {rows.map(row => (
                             <TableRow key={row.title}>
                                 <TableCell component="th" scope="row">
-                                    {row.title}
+                                    <ConditionallyRender
+                                        condition={Boolean(row.offset)}
+                                        show={
+                                            <Box
+                                                component="span"
+                                                sx={theme => ({
+                                                    marginLeft: row.offset
+                                                        ? theme.spacing(2)
+                                                        : 0,
+                                                })}
+                                            >
+                                                {row.title}
+                                            </Box>
+                                        }
+                                        elseShow={row.title}
+                                    />
                                 </TableCell>
                                 <TableCell align="right">{row.value}</TableCell>
                             </TableRow>

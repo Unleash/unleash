@@ -201,6 +201,31 @@ class UserStore implements IUserStore {
             .then((res) => Number(res[0].count));
     }
 
+    async getActiveUsersCount(): Promise<{
+        last7: number;
+        last30: number;
+        last90: number;
+    }> {
+        const result = await this.db.raw(
+            `SELECT
+                (SELECT COUNT(*) FROM ${TABLE} WHERE seen_at > NOW() - INTERVAL '1 week') AS last_week,
+                (SELECT COUNT(*) FROM ${TABLE} WHERE seen_at > NOW() - INTERVAL '1 month') AS last_month,
+                (SELECT COUNT(*) FROM ${TABLE} WHERE seen_at > NOW() - INTERVAL '3 months') AS last_quarter`,
+        );
+
+        const {
+            last_week: last7,
+            last_month: last30,
+            last_quarter: last90,
+        } = result.rows[0];
+
+        return {
+            last7,
+            last30,
+            last90,
+        };
+    }
+
     destroy(): void {}
 
     async exists(id: number): Promise<boolean> {

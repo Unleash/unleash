@@ -152,6 +152,18 @@ export const instanceAdminStatsSchema = {
                 },
             },
         },
+        featureExports: {
+            type: 'number',
+            description: 'The number of export operations on this instance',
+            example: 0,
+            minimum: 0,
+        },
+        featureImports: {
+            type: 'number',
+            description: 'The number of import operations on this instance',
+            example: 0,
+            minimum: 0,
+        },
         sum: {
             type: 'string',
             description:

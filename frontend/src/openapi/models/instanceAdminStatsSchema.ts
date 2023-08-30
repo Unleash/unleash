@@ -44,6 +44,10 @@ export interface InstanceAdminStatsSchema {
     OIDCenabled?: boolean;
     /** A count of connected applications in the last week, last month and all time since last restart */
     clientApps?: InstanceAdminStatsSchemaClientAppsItem[];
+    /** The number of export operations on this instance */
+    featureExports?: number;
+    /** The number of import operations on this instance */
+    featureImports?: number;
     /** A SHA-256 checksum of the instance statistics to be used to verify that the data in this object has not been tampered with */
     sum?: string;
 }

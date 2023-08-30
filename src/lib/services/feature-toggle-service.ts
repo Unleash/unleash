@@ -1111,7 +1111,7 @@ class FeatureToggleService {
                 const example = namingExample
                     ? ` Here's an example of a name that does match the pattern: "${namingExample}. Try something like that instead."`
                     : '';
-                throw new BadDataError(`${error}${example}`);
+                throw new BadDataError(`Must match ${error}${example}`);
             }
         }
     }

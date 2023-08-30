@@ -13,6 +13,7 @@ export const validateFeatureSchema = {
         },
         projectId: {
             description: 'The project id to validate.',
+            nullable: true,
             type: 'string',
             example: 'my-feature-3',
         },

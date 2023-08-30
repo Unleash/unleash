@@ -62,7 +62,7 @@ const useFeatureForm = (
             return false;
         }
         try {
-            await validateFeatureToggleName(name);
+            await validateFeatureToggleName(name, project);
             return true;
         } catch (error: unknown) {
             setErrors(prev => ({ ...prev, name: formatUnknownError(error) }));

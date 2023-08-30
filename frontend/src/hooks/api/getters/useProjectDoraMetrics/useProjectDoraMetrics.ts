@@ -14,7 +14,7 @@ export const useProjectDoraMetrics = (
         return fetch(path, {
             method: 'GET',
         })
-            .then(handleErrorResponses('Invoices'))
+            .then(handleErrorResponses('Dora metrics'))
             .then(res => res.json());
     };
 

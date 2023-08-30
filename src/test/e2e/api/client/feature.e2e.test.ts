@@ -324,7 +324,7 @@ test('returns a feature toggles impression data for a different project', async 
 
 describe('Feature flag naming pattern', () => {
     test('Uses a feature flag naming pattern to validate feature names', async () => {
-        app.request
+        await app.request
             .put('/api/admin/projects/default')
             .send({ featureNaming: { pattern: '/^123.[a-z]{1,5}$/i' } })
             .expect(200);

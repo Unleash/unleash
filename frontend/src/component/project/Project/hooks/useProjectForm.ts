@@ -60,7 +60,7 @@ const useProjectForm = (
     }, [initialFeatureNamingPattern]);
 
     useEffect(() => {
-        setFeatureNamingPattern(initialFeatureNamingExample);
+        setFeatureNamingExample(initialFeatureNamingExample);
     }, [initialFeatureNamingExample]);
 
     useEffect(() => {

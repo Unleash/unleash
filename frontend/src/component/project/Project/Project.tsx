@@ -86,6 +86,12 @@ export const Project = () => {
             flag: undefined,
         },
         {
+            title: 'DORA Metrics',
+            path: `${basePath}/dora`,
+            name: 'dora',
+            flag: 'doraMetrics',
+        },
+        {
             title: 'Event log',
             path: `${basePath}/logs`,
             name: 'logs',
@@ -96,12 +102,6 @@ export const Project = () => {
             path: `${basePath}/settings`,
             name: 'settings',
             flag: undefined,
-        },
-        {
-            title: 'DORA Metrics',
-            path: `${basePath}/dora`,
-            name: 'dora',
-            flag: 'doraMetrics',
         },
     ]
         .filter(tab => {

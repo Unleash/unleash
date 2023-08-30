@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { InstanceAdminStatsSchemaActiveUsers } from './instanceAdminStatsSchemaActiveUsers';
 import type { InstanceAdminStatsSchemaClientAppsItem } from './instanceAdminStatsSchemaClientAppsItem';
 
 /**
@@ -19,6 +20,8 @@ export interface InstanceAdminStatsSchema {
     versionEnterprise?: string;
     /** The number of users this instance has */
     users?: number;
+    /** The number of active users in the last 7, 30 and 90 days */
+    activeUsers?: InstanceAdminStatsSchemaActiveUsers;
     /** The number of feature-toggles this instance has */
     featureToggles?: number;
     /** The number of projects defined in this instance. */

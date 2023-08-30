@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const createFeatureNamingPattern = {
-    $id: '#/components/schemas/createFeatureNamingPattern',
+export const createFeatureNamingPatternSchema = {
+    $id: '#/components/schemas/createFeatureNamingPatternSchema',
     type: 'object',
     description: 'Create a feature naming pattern',
     required: ['pattern'],
@@ -14,7 +14,7 @@ export const createFeatureNamingPattern = {
             pattern: '^/.*/[gimuy]*$',
         },
         example: {
-            type: 'stringe',
+            type: 'string',
             description:
                 'An example of a feature name that matches the pattern. Must itself match the pattern supplied.',
             example: 'new-project.team-red.feature-1',
@@ -23,4 +23,6 @@ export const createFeatureNamingPattern = {
     components: {},
 } as const;
 
-export type IdSchema = FromSchema<typeof idSchema>;
+export type CreateFeatureNamingPatternSchema = FromSchema<
+    typeof createFeatureNamingPatternSchema
+>;

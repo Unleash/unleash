@@ -58,6 +58,8 @@ export interface IFlags {
     newApplicationList?: boolean;
     integrationsRework?: boolean;
     multipleRoles?: boolean;
+    doraMetrics?: boolean;
+    [key: string]: boolean | Variant | undefined;
 }
 
 export interface IVersionInfo {

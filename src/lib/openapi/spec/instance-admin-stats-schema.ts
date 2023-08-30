@@ -39,34 +39,6 @@ export const instanceAdminStatsSchema = {
             example: 8,
             minimum: 0,
         },
-        activeUsers: {
-            type: 'object',
-            description:
-                'The number of active users in the last 7, 30 and 90 days',
-            properties: {
-                last7: {
-                    type: 'number',
-                    description:
-                        'The number of active users in the last 7 days',
-                    example: 5,
-                    minimum: 0,
-                },
-                last30: {
-                    type: 'number',
-                    description:
-                        'The number of active users in the last 30 days',
-                    example: 10,
-                    minimum: 0,
-                },
-                last90: {
-                    type: 'number',
-                    description:
-                        'The number of active users in the last 90 days',
-                    example: 15,
-                    minimum: 0,
-                },
-            },
-        },
         featureToggles: {
             type: 'number',
             description: 'The number of feature-toggles this instance has',

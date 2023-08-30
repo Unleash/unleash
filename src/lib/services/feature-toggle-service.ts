@@ -1108,7 +1108,7 @@ class FeatureToggleService {
                 !featureName.match(new RegExp(namingPattern))
             ) {
                 throw new PatternError(
-                    `Must match ${namingPattern}`,
+                    `Must match "${namingPattern}"`,
                     namingPattern,
                 );
             }

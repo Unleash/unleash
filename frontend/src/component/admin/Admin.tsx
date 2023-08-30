@@ -18,6 +18,7 @@ import UsersAdmin from './users/UsersAdmin';
 import NotFound from 'component/common/NotFound/NotFound';
 import { AdminIndex } from './AdminIndex';
 import { AdminTabsMenu } from './menu/AdminTabsMenu';
+import { InstanceHealth } from './instance-health/InstanceHealth';
 
 export const Admin = () => {
     return (
@@ -34,6 +35,7 @@ export const Admin = () => {
                 <Route path="groups/*" element={<GroupsAdmin />} />
                 <Route path="roles/*" element={<Roles />} />
                 <Route path="instance" element={<InstanceAdmin />} />
+                <Route path="instance-health" element={<InstanceHealth />} />
                 <Route path="network/*" element={<Network />} />
                 <Route path="maintenance" element={<MaintenanceAdmin />} />
                 <Route path="cors" element={<CorsAdmin />} />

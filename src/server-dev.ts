@@ -43,6 +43,7 @@ process.nextTick(async () => {
                         segmentChangeRequests: true,
                         newApplicationList: true,
                         doraMetrics: true,
+                        instanceHealthDashboard: true,
                     },
                 },
                 authentication: {

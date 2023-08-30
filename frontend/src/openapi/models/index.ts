@@ -548,6 +548,7 @@ export * from './importTogglesSchema';
 export * from './importTogglesValidateItemSchema';
 export * from './importTogglesValidateSchema';
 export * from './instanceAdminStatsSchema';
+export * from './instanceAdminStatsSchemaActiveUsers';
 export * from './instanceAdminStatsSchemaClientAppsItem';
 export * from './instanceAdminStatsSchemaClientAppsItemRange';
 export * from './invoicesSchema';

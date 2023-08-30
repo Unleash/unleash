@@ -43,6 +43,7 @@ process.nextTick(async () => {
                         segmentChangeRequests: true,
                         newApplicationList: true,
                         featureNamingPattern: true,
+                        doraMetrics: true,
                     },
                 },
                 authentication: {

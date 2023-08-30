@@ -59,6 +59,8 @@ export interface IFlags {
     integrationsRework?: boolean;
     multipleRoles?: boolean;
     featureNamingPattern?: boolean;
+    doraMetrics?: boolean;
+    [key: string]: boolean | Variant | undefined;
 }
 
 export interface IVersionInfo {

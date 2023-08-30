@@ -56,6 +56,7 @@ import { calculateAverageTimeToProd } from '../features/feature-toggle/time-to-p
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 import { uniqueByKey } from '../util/unique';
 import { BadDataError, PermissionError } from '../error';
+import { ProjectDoraMetricsSchema } from 'lib/openapi';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -708,6 +709,20 @@ export default class ProjectService {
         }
     }
 
+    async getDoraMetrics(projectId: string): Promise<ProjectDoraMetricsSchema> {
+        const featureToggleNames = (await this.featureToggleStore.getAll()).map(
+            (feature) => feature.name,
+        );
+
+        const avgTimeToProductionPerToggle =
+            await this.projectStatsStore.getTimeToProdDatesForFeatureToggles(
+                projectId,
+                featureToggleNames,
+            );
+
+        return { features: avgTimeToProductionPerToggle };
+    }
+
     async changeRole(
         projectId: string,
         roleId: number,
@@ -983,6 +998,7 @@ export default class ProjectService {
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
         ]);
+
         return {
             stats: projectStats,
             name: project.name,

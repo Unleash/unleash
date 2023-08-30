@@ -1048,7 +1048,7 @@ class FeatureToggleService {
             if (
                 namingPattern &&
                 namingExample &&
-                !value.name.match(namingExample)
+                !value.name.match(new RegExp(namingExample))
             ) {
                 throw new BadDataError(
                     `The feature name "${value.name}" does not match the project's naming pattern: "${namingPattern}.` +

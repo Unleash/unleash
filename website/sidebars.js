@@ -166,7 +166,7 @@ module.exports = {
                         type: 'generated-index',
                         title: 'How-to: troubleshooting',
                         description:
-                            'Troubleshooting common problems. If you want to contribute, plese make sure the title is phrased as a concrete user problem',
+                            'Troubleshooting common problems. If you want to contribute, please make sure the title is phrased as a concrete user problem',
                         slug: '/how-to/troubleshooting',
                     },
                 },

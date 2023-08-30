@@ -267,8 +267,10 @@ class ProjectStore implements IProjectStore {
                         project_mode: data.mode,
                         default_stickiness: data.defaultStickiness,
                         feature_limit: data.featureLimit,
-                        feature_naming_pattern: data.featureNamingPattern,
-                        feature_naming_example: data.featureNamingExample,
+                        feature_naming_pattern:
+                            data.featureNaming?.featureNamingPattern,
+                        feature_naming_example:
+                            data.featureNaming?.featureNamingExample,
                     });
             } else {
                 await this.db(SETTINGS_TABLE).insert({
@@ -276,8 +278,10 @@ class ProjectStore implements IProjectStore {
                     project_mode: data.mode,
                     default_stickiness: data.defaultStickiness,
                     feature_limit: data.featureLimit,
-                    feature_naming_pattern: data.featureNamingPattern,
-                    feature_naming_example: data.featureNamingExample,
+                    feature_naming_pattern:
+                        data.featureNaming?.featureNamingPattern,
+                    feature_naming_example:
+                        data.featureNaming?.featureNamingExample,
                 });
             }
         } catch (err) {
@@ -570,8 +574,10 @@ class ProjectStore implements IProjectStore {
             mode: row.project_mode || 'open',
             defaultStickiness: row.default_stickiness || 'default',
             featureLimit: row.feature_limit,
-            featureNamingPattern: row.feature_naming_pattern,
-            featureNamingExample: row.feature_naming_example,
+            featureNaming: {
+                pattern: row.feature_naming_pattern,
+                example: row.feature_naming_example,
+            },
         };
     }
 

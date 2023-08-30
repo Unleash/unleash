@@ -29,7 +29,8 @@ export type IFlagKey =
     | 'customRootRolesKillSwitch'
     | 'newApplicationList'
     | 'integrationsRework'
-    | 'multipleRoles';
+    | 'multipleRoles'
+    | 'featureNamingPattern';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -135,6 +136,10 @@ const flags: IFlags = {
     ),
     newApplicationList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_APPLICATION_LIST,
+        false,
+    ),
+    featureNamingPattern: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_NAMING_PATTERN,
         false,
     ),
 };

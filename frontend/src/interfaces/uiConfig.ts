@@ -58,6 +58,7 @@ export interface IFlags {
     newApplicationList?: boolean;
     integrationsRework?: boolean;
     multipleRoles?: boolean;
+    instanceHealthDashboard?: boolean;
 }
 
 export interface IVersionInfo {

@@ -42,6 +42,7 @@ process.nextTick(async () => {
                         lastSeenByEnvironment: true,
                         segmentChangeRequests: true,
                         newApplicationList: true,
+                        instanceHealthDashboard: true,
                     },
                 },
                 authentication: {

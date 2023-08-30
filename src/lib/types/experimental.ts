@@ -29,7 +29,8 @@ export type IFlagKey =
     | 'customRootRolesKillSwitch'
     | 'newApplicationList'
     | 'integrationsRework'
-    | 'multipleRoles';
+    | 'multipleRoles'
+    | 'instanceHealthDashboard';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -135,6 +136,10 @@ const flags: IFlags = {
     ),
     newApplicationList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_APPLICATION_LIST,
+        false,
+    ),
+    instanceHealthDashboard: parseEnvVarBoolean(
+        process.env.UNLEASH_INSTANCE_HEALTH_DASHBOARD,
         false,
     ),
 };

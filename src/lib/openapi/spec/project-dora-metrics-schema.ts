@@ -11,6 +11,8 @@ export const projectDoraMetricsSchema = {
         features: {
             type: 'array',
             items: { $ref: '#/components/schemas/doraFeaturesSchema' },
+            description:
+                'An array of objects containing feature toggle name and timeToProduction values',
         },
     },
     components: {

@@ -45,6 +45,7 @@ import {
     IStrategyStore,
 } from '../types';
 import { Logger } from '../logger';
+import { PatternError } from '../error';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
@@ -1111,7 +1112,7 @@ class FeatureToggleService {
                 const example = namingExample
                     ? ` Here's an example of a name that does match the pattern: "${namingExample}. Try something like that instead."`
                     : '';
-                throw new BadDataError(`Must match ${error}${example}`);
+                throw new PatternError(`${error}${example}`, namingPattern);
             }
         }
     }

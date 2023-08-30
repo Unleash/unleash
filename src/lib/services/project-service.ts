@@ -166,6 +166,20 @@ export default class ProjectService {
         return this.store.get(id);
     }
 
+    private validateFlagNaming = ({
+        pattern,
+        example,
+    }: {
+        pattern: string;
+        example: string;
+    }) => {
+        if (example && !example.match(new RegExp(pattern))) {
+            throw new BadDataError(
+                `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please either provide an example that matches your supplied pattern.`,
+            );
+        }
+    };
+
     async createProject(
         newProject: Pick<
             IProject,
@@ -176,16 +190,7 @@ export default class ProjectService {
         const data = await projectSchema.validateAsync(newProject);
         await this.validateUniqueId(data.id);
 
-        if (
-            data.featureNaming.example &&
-            !data.featureNaming.example.match(
-                new RegExp(data.featureNaming.pattern),
-            )
-        ) {
-            throw new BadDataError(
-                `You've provided a feature flag naming example ("${data.featureNaming.example}") that doesn't match your feature flag naming pattern ("${data.featureNaming.pattern}"). Please either provide an example that matches your supplied pattern.`,
-            );
-        }
+        this.validateFlagNaming(data.featureNaming);
 
         await this.store.create(data);
 
@@ -218,16 +223,7 @@ export default class ProjectService {
     async updateProject(updatedProject: IProject, user: User): Promise<void> {
         const preData = await this.store.get(updatedProject.id);
 
-        if (
-            updatedProject.featureNaming.example &&
-            !updatedProject.featureNaming.example.match(
-                new RegExp(updatedProject.featureNaming.pattern),
-            )
-        ) {
-            throw new BadDataError(
-                `You've provided a feature flag naming example ("${updatedProject.featureNaming.example}") that doesn't match your feature flag naming pattern ("${updatedProject.featureNaming.pattern}"). Please either provide an example that matches your supplied pattern.`,
-            );
-        }
+        this.validateFlagNaming(updatedProject.featureNaming);
 
         if (
             updatedProject.featureNaming?.pattern &&

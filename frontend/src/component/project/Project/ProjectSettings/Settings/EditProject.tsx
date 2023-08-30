@@ -59,8 +59,8 @@ const EditProject = () => {
         defaultStickiness,
         project.mode,
         project.featureLimit ? String(project.featureLimit) : '',
-        project.flagNaming?.pattern || '',
-        project.flagNaming?.example || ''
+        project.featureNaming?.pattern || '',
+        project.featureNaming?.example || ''
     );
 
     const formatApiCode = () => {

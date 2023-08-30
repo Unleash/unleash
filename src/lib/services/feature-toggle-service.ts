@@ -1043,15 +1043,13 @@ class FeatureToggleService {
             const project = await this.projectStore.get(projectId);
             const namingPattern = project.featureNaming?.pattern;
             const namingExample = project.featureNaming?.example;
-            console.log('project naming', namingPattern, namingExample);
 
             if (namingPattern && !value.name.match(new RegExp(namingPattern))) {
-                throw new BadDataError(
-                    `The feature name "${value.name}" does not match the project's naming pattern: "${namingPattern}.` +
-                    namingExample
-                        ? ` Here's an example of a name that does match the pattern: "${namingExample}"`
-                        : '',
-                );
+                const error = `The feature name "${value.name}" does not match the project's naming pattern: "${namingPattern}.`;
+                const example = namingExample
+                    ? ` Here's an example of a name that does match the pattern: "${namingExample}. Try something like that instead."`
+                    : '';
+                throw new BadDataError(`${error}${example}`);
             }
         }
 

@@ -60,6 +60,7 @@ export interface IFlags {
     multipleRoles?: boolean;
     featureNamingPattern?: boolean;
     doraMetrics?: boolean;
+    instanceHealthDashboard?: boolean;
     [key: string]: boolean | Variant | undefined;
 }
 

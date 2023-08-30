@@ -81,6 +81,13 @@ export const adminRoutes: INavigationMenuItem[] = [
         group: 'instance',
     },
     {
+        path: '/admin/instance-health',
+        title: 'Instance health',
+        menu: { adminSettings: true },
+        group: 'instance',
+        flag: 'instanceHealthDashboard',
+    },
+    {
         path: '/admin/instance-privacy',
         title: 'Instance privacy',
         menu: { adminSettings: true },

@@ -1,5 +1,6 @@
 import User, { IUser } from '../../lib/types/user';
 import {
+    IActiveUsers,
     ICreateUser,
     IUserLookup,
     IUserStore,
@@ -44,6 +45,26 @@ class UserStoreMock implements IUserStore {
 
     async get(key: number): Promise<IUser> {
         return this.data.find((u) => u.id === key);
+    }
+
+    async getActiveUsersCount(): Promise<IActiveUsers> {
+        return Promise.resolve({
+            last7: this.data.filter(
+                (u) =>
+                    u.seenAt &&
+                    u.seenAt > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+            ).length,
+            last30: this.data.filter(
+                (u) =>
+                    u.seenAt &&
+                    u.seenAt > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+            ).length,
+            last90: this.data.filter(
+                (u) =>
+                    u.seenAt &&
+                    u.seenAt > new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
+            ).length,
+        });
     }
 
     async insert(user: User): Promise<User> {

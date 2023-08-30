@@ -31,7 +31,8 @@ export type IFlagKey =
     | 'integrationsRework'
     | 'multipleRoles'
     | 'featureNamingPattern'
-    | 'doraMetrics';
+    | 'doraMetrics'
+    | 'instanceHealthDashboard';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -143,7 +144,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_NAMING_PATTERN,
         false,
     ),
-    doraMetrics: parseEnvVarBoolean(process.env.UNLEASH_DORA_METRICS, false),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

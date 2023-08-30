@@ -44,6 +44,7 @@ process.nextTick(async () => {
                         newApplicationList: true,
                         featureNamingPattern: true,
                         doraMetrics: true,
+                        instanceHealthDashboard: true,
                     },
                 },
                 authentication: {

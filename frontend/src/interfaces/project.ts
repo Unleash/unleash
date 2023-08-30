@@ -13,6 +13,11 @@ export interface IProjectCard {
     favorite?: boolean;
 }
 
+export type FlagNamingType = {
+    pattern: string;
+    example: string;
+};
+
 export interface IProject {
     id?: string;
     members: number;
@@ -27,6 +32,7 @@ export interface IProject {
     mode: 'open' | 'protected';
     defaultStickiness: string;
     featureLimit?: number;
+    flagNaming?: FlagNamingType;
 }
 
 export interface IProjectHealthReport extends IProject {

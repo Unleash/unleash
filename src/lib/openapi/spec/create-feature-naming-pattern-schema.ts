@@ -10,9 +10,9 @@ export const createFeatureNamingPatternSchema = {
             type: 'string',
             nullable: true,
             description:
-                'A JavaScript regular expression pattern, including the start and end delimiters, and any optional flags.',
-            example: '/[a-z]{2,5}.team-[a-z]+.[a-z-]+/i',
-            pattern: '^/.*/[gimuy]*$',
+                'A JavaScript regular expression pattern, without the start and end delimiters. Optional flags are not allowed.',
+            example: '[a-z]{2,5}.team-[a-z]+.[a-z-]+',
+            pattern: '.*',
         },
         example: {
             type: 'string',

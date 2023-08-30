@@ -15,47 +15,6 @@ export const FeatureFlagNamingTooltip: FC = () => {
                     Enforce a naming convention for feature flags
                     {''}
                     <div className="scrollable">
-                        <table>
-                            <h3>Flags:</h3>
-                            <tbody>
-                                <tr>
-                                    <th>g</th>
-                                    <td>Perform a global match</td>
-                                </tr>
-                                <tr>
-                                    <th>i</th>
-                                    <td>Perform case-insensitive matching</td>
-                                </tr>
-                                <tr>
-                                    <th>m</th>
-                                    <td>
-                                        Treat beginning and end characters (^
-                                        and $) as working over multiple lines
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>u</th>
-                                    <td>
-                                        Treat the pattern as a series of Unicode
-                                        code points (
-                                        <a
-                                            href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#Regular_expression_and_Unicode_characters"
-                                            rel="external noopener"
-                                        >
-                                            See the MDN docs
-                                        </a>
-                                        )
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>y</th>
-                                    <td>
-                                        Sticky; treat the pattern after a match
-                                        as a separate pattern
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                         <h3>Brackets:</h3>
                         <table>
                             <tbody>

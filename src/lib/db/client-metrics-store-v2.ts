@@ -274,7 +274,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
     async getTotalCountForToggle(
         featureName: string,
     ): Promise<IClientTotalMetricsPerEnv[]> {
-        const rows = await this.db(TABLE_TOTAL_METRICS)
+        const rows = await this.db(TABLE_METRICS_TOTAL)
             .select(['environment', 'total'])
             .where({ feature_name: featureName });
 

@@ -19,12 +19,16 @@ export interface IProjectInsert {
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
     featureLimit?: number;
+    featureNamingPattern?: string;
+    featureNamingExample?: string;
 }
 
 export interface IProjectSettings {
     mode: ProjectMode;
     defaultStickiness: string;
     featureLimit?: number;
+    featureNamingPattern?: string;
+    featureNamingExample?: string;
 }
 
 export interface IProjectSettingsRow {

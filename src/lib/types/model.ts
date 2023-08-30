@@ -203,6 +203,8 @@ export interface IProjectOverview {
     stats?: IProjectStats;
     mode: ProjectMode;
     featureLimit?: number;
+    featureNamingPattern?: string;
+    featureNamingExample?: string;
     defaultStickiness: string;
 }
 
@@ -405,6 +407,8 @@ export interface IProject {
     mode: ProjectMode;
     defaultStickiness: string;
     featureLimit?: number;
+    featureNamingPattern?: string;
+    featureNamingExample?: string;
 }
 
 /**

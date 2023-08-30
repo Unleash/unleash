@@ -965,6 +965,8 @@ export default class ProjectService {
             description: project.description,
             mode: project.mode,
             featureLimit: project.featureLimit,
+            featureNamingPattern: project.featureNamingPattern,
+            featureNamingExample: project.featureNamingExample,
             defaultStickiness: project.defaultStickiness,
             health: project.health || 0,
             favorite: favorite,

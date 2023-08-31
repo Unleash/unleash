@@ -28,7 +28,6 @@ const EditProject = () => {
     const { project } = useProject(id);
     const { defaultStickiness } = useDefaultProjectSettings(id);
     const { trackEvent } = usePlausibleTracker();
-    const shouldUseFeatureNamingPattern = uiConfig.flags.featureNamingPattern;
 
     const {
         projectId,

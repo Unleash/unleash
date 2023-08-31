@@ -190,8 +190,8 @@ export interface IFeatureOverview {
 export type ProjectMode = 'open' | 'protected';
 
 export interface IFeatureNaming {
-    pattern: string;
-    example: string;
+    pattern: string | null;
+    example: string | null;
 }
 
 export interface IProjectOverview {

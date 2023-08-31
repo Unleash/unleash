@@ -38,6 +38,7 @@ import {
     ProjectAccessGroupRolesUpdated,
     IProjectRoleUsage,
     ProjectAccessUserRolesDeleted,
+    IFeatureNaming,
 } from '../types';
 import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
 import {
@@ -167,17 +168,18 @@ export default class ProjectService {
         return this.store.get(id);
     }
 
-    private validateFlagNaming = ({
-        pattern,
-        example,
-    }: {
-        pattern: string;
-        example: string;
-    }) => {
-        if (example && !example.match(new RegExp(pattern))) {
-            throw new BadDataError(
-                `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please either provide an example that matches your supplied pattern.`,
-            );
+    private validateFlagNaming = (naming?: IFeatureNaming) => {
+        if (naming) {
+            const { pattern, example } = naming;
+            if (
+                pattern != null &&
+                example != null &&
+                !example.match(new RegExp(pattern))
+            ) {
+                throw new BadDataError(
+                    `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern.`,
+                );
+            }
         }
     };
 
@@ -224,8 +226,9 @@ export default class ProjectService {
     async updateProject(updatedProject: IProject, user: User): Promise<void> {
         const preData = await this.store.get(updatedProject.id);
 
-        this.validateFlagNaming(updatedProject.featureNaming);
-
+        if (updatedProject.featureNaming) {
+            this.validateFlagNaming(updatedProject.featureNaming);
+        }
         if (
             updatedProject.featureNaming?.pattern &&
             !updatedProject.featureNaming?.example

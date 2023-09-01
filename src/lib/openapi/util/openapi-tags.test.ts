@@ -6,3 +6,10 @@ test('no duplicate tags', () => {
         return [...acc, tag.name];
     }, []);
 });
+
+test('The list of OpenAPI tags is sorted', () => {
+    const tags = openApiTags.map((tag) => tag.name);
+    const sorted = [...tags].sort((a, b) => a.localeCompare(b));
+
+    expect(tags).toStrictEqual(sorted);
+});

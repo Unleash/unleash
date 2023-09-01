@@ -7,7 +7,7 @@ test('no duplicate tags', () => {
     }, []);
 });
 
-test('tags are sorted', () => {
+test('The list of OpenAPI tags is sorted', () => {
     const tags = openApiTags.map((tag) => tag.name);
     const sorted = [...tags].sort((a, b) => a.localeCompare(b));
     console.log(tags, sorted);

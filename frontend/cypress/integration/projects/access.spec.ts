@@ -124,44 +124,44 @@ describe('project-access', () => {
 
     // TODO: This works locally but not on GH actions, I assume because of the way we (don't) handle feature flagging for Cypress tests in GH actions.
     // This should be uncommented again once we remove the multipleRoles flag or if we find a better solution in the meantime.
-    // it('can edit role', () => {
-    //     cy.get(`[data-testid='${PA_EDIT_BUTTON_ID}']`).first().click();
+    it('can edit role', () => {
+        cy.get(`[data-testid='${PA_EDIT_BUTTON_ID}']`).first().click();
 
-    //     cy.intercept(
-    //         'PUT',
-    //         `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`
-    //     ).as('editAccess');
+        cy.intercept(
+            'PUT',
+            `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`
+        ).as('editAccess');
 
-    //     cy.get(`[data-testid='CancelIcon']`).last().click();
-    //     cy.get(`[data-testid='${PA_ROLE_ID}']`).click();
-    //     cy.contains('update feature toggles within a project').click({
-    //         force: true,
-    //     });
+        cy.get(`[data-testid='CancelIcon']`).last().click();
+        cy.get(`[data-testid='${PA_ROLE_ID}']`).click();
+        cy.contains('update feature toggles within a project').click({
+            force: true,
+        });
 
-    //     cy.get(`[data-testid='${PA_ASSIGN_CREATE_ID}']`).click();
-    //     cy.wait('@editAccess');
-    //     cy.get("td span:contains('Owner')").should('have.length', 2);
-    //     cy.get("td span:contains('Member')").should('have.length', 1);
-    // });
+        cy.get(`[data-testid='${PA_ASSIGN_CREATE_ID}']`).click();
+        cy.wait('@editAccess');
+        cy.get("td span:contains('Owner')").should('have.length', 2);
+        cy.get("td span:contains('Member')").should('have.length', 1);
+    });
 
-    // it('can edit role to multiple roles', () => {
-    //     cy.get(`[data-testid='${PA_EDIT_BUTTON_ID}']`).first().click();
+    it('can edit role to multiple roles', () => {
+        cy.get(`[data-testid='${PA_EDIT_BUTTON_ID}']`).first().click();
 
-    //     cy.intercept(
-    //         'PUT',
-    //         `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`
-    //     ).as('editAccess');
+        cy.intercept(
+            'PUT',
+            `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`
+        ).as('editAccess');
 
-    //     cy.get(`[data-testid='${PA_ROLE_ID}']`).click();
-    //     cy.contains('full control over the project').click({
-    //         force: true,
-    //     });
+        cy.get(`[data-testid='${PA_ROLE_ID}']`).click();
+        cy.contains('full control over the project').click({
+            force: true,
+        });
 
-    //     cy.get(`[data-testid='${PA_ASSIGN_CREATE_ID}']`).click();
-    //     cy.wait('@editAccess');
-    //     cy.get("td span:contains('Owner')").should('have.length', 2);
-    //     cy.get("td span:contains('2 roles')").should('have.length', 1);
-    // });
+        cy.get(`[data-testid='${PA_ASSIGN_CREATE_ID}']`).click();
+        cy.wait('@editAccess');
+        cy.get("td span:contains('Owner')").should('have.length', 2);
+        cy.get("td span:contains('2 roles')").should('have.length', 1);
+    });
 
     it('can remove access', () => {
         cy.get(`[data-testid='${PA_REMOVE_BUTTON_ID}']`).first().click();

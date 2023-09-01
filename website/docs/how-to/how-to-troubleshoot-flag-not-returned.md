@@ -2,7 +2,7 @@
 title: My feature flag is not returned in the Frontend API/Edge/Proxy
 ---
 
-By default, these endpoints will not return features that are not enabled. This is mainly to save on bandwidth but it can be confusing when you expect your customers to be exposed to a feature but they’re not. What features are accessible to you is mainly determined by the token you’re using and the type of access it has.
+By default, these endpoints will not return feature flags that are not enabled. This is mainly to save on bandwidth but it can be confusing when you expect your customers to be exposed to a feature but they’re not. What features are accessible to you is mainly determined by the token you’re using and the type of access it has.
 1. Check that the feature is enabled in two places: 
     1. **Feature flag level** - This is the top-level enablement process for a feature flag. Strategies will not be respected if this top-level feature flag is disabled.
     1. **Strategy level** - Strategies allow for different constraints and segments to be addressed in a unique fashion. If a strategy is disabled, the constraints and segment rules will not be respected.

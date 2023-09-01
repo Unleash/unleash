@@ -1,7 +1,6 @@
 import { styled, SxProps, Theme, Typography } from '@mui/material';
 import TimeAgo from 'react-timeago';
 import { IEnvironments, IFeatureEnvironment } from 'interfaces/featureToggle';
-import React from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLastSeenColors } from 'component/feature/FeatureView/FeatureEnvironmentSeen/useLastSeenColors';
 

@@ -1,6 +1,7 @@
 // The "official" OpenAPI tags that we use. These tags are added to the OpenAPI
 // spec as the root-level "tags" list. Consider creating a new entry here when
-// creating a new endpoint.
+// creating a new endpoint. This list should always be sorted alphabetically on
+// the tag name.
 const OPENAPI_TAGS = [
     {
         name: 'Addons',

@@ -24,14 +24,14 @@ const OPENAPI_TAGS = [
     },
     { name: 'Auth', description: 'Manage logins, passwords, etc.' },
     {
-        name: 'Client',
-        description:
-            'Endpoints for [Unleash server-side clients](https://docs.getunleash.io/reference/sdks).',
-    },
-    {
         name: 'Change Requests',
         description:
             'API for managing [change requests](https://docs.getunleash.io/reference/change-requests).',
+    },
+    {
+        name: 'Client',
+        description:
+            'Endpoints for [Unleash server-side clients](https://docs.getunleash.io/reference/sdks).',
     },
     {
         name: 'Context',
@@ -141,9 +141,7 @@ const OPENAPI_TAGS = [
 ] as const;
 
 // make the export mutable, so it can be used in a schema
-export const openApiTags = [...OPENAPI_TAGS].sort((a, b) =>
-    a.name.localeCompare(b.name),
-);
+export const openApiTags = [...OPENAPI_TAGS];
 
 export type OpenApiTag =
     // The official OpenAPI tags that we use.

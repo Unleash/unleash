@@ -1,4 +1,4 @@
-import { FC, VFC } from 'react';
+import { VFC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -11,7 +11,6 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { EnvironmentChangeRequest } from './EnvironmentChangeRequest/EnvironmentChangeRequest';
 import { ReviewChangesHeader } from './ReviewChangesHeader/ReviewChangesHeader';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 
 interface IChangeRequestSidebarProps {
     open: boolean;

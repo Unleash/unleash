@@ -20,7 +20,6 @@ import { ConfigureAddonsButton } from './ConfigureAddonButton/ConfigureAddonsBut
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
 import { IntegrationNameCell } from '../IntegrationNameCell/IntegrationNameCell';
 import { IAddonInstallation } from 'interfaces/addons';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IProvider {
     name: string;

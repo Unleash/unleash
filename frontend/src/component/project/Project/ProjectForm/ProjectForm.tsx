@@ -19,8 +19,8 @@ interface IProjectForm {
     projectMode?: string;
     featureLimit: string;
     featureCount?: number;
-    featureNamingPattern: string;
-    featureNamingExample: string;
+    featureNamingPattern?: string;
+    featureNamingExample?: string;
     setProjectNamingPattern?: React.Dispatch<React.SetStateAction<string>>;
     setFeatureNamingExample?: React.Dispatch<React.SetStateAction<string>>;
     setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
@@ -297,7 +297,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     label={'Naming Pattern'}
                                     name="pattern"
                                     type={'text'}
-                                    value={featureNamingPattern}
+                                    value={featureNamingPattern || ''}
                                     error={Boolean(errors.featureNamingPattern)}
                                     errorText={errors.featureNamingPattern}
                                     onFocus={() => clearErrors()}
@@ -311,7 +311,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     label={'Naming Example'}
                                     name="example"
                                     type={'text'}
-                                    value={featureNamingExample}
+                                    value={featureNamingExample || ''}
                                     error={Boolean(errors.namingExample)}
                                     errorText={errors.namingExample}
                                     onChange={e =>

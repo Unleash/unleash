@@ -1,5 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
-
+import { allOf } from '../util/all-of';
 const adminSchema = {
     required: ['type'],
     type: 'object',
@@ -97,18 +97,10 @@ export const createApiTokenSchema = {
         },
     },
     oneOf: [
-        {
-            allOf: [adminSchema, tokenNameSchema],
-        },
-        {
-            allOf: [adminSchema, usernameSchema],
-        },
-        {
-            allOf: [clientFrontendSchema, tokenNameSchema],
-        },
-        {
-            allOf: [clientFrontendSchema, usernameSchema],
-        },
+        allOf(adminSchema, tokenNameSchema),
+        allOf(adminSchema, usernameSchema),
+        allOf(clientFrontendSchema, tokenNameSchema),
+        allOf(clientFrontendSchema, usernameSchema),
     ],
     components: {},
 } as const;

@@ -21,8 +21,10 @@ interface IProjectForm {
     featureCount?: number;
     featureNamingPattern?: string;
     featureNamingExample?: string;
-    setProjectNamingPattern?: React.Dispatch<React.SetStateAction<string>>;
+    featureNamingPrompt?: string;
+    setFeatureNamingPattern?: React.Dispatch<React.SetStateAction<string>>;
     setFeatureNamingExample?: React.Dispatch<React.SetStateAction<string>>;
+    setFeatureNamingPrompt?: React.Dispatch<React.SetStateAction<string>>;
     setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
@@ -103,8 +105,10 @@ const ProjectForm: React.FC<IProjectForm> = ({
     featureCount,
     featureNamingExample,
     featureNamingPattern,
+    featureNamingPrompt,
     setFeatureNamingExample,
-    setProjectNamingPattern,
+    setFeatureNamingPattern,
+    setFeatureNamingPrompt,
     setProjectId,
     setProjectName,
     setProjectDesc,
@@ -121,11 +125,10 @@ const ProjectForm: React.FC<IProjectForm> = ({
     const onSetFeatureNamingPattern = (regex: string) => {
         try {
             new RegExp(regex);
-            setProjectNamingPattern && setProjectNamingPattern(regex);
+            setFeatureNamingPattern && setFeatureNamingPattern(regex);
             clearErrors();
         } catch (e) {
             errors.featureNamingPattern = 'Invalid regular expression';
-            setProjectNamingPattern && setProjectNamingPattern(regex);
         }
     };
 
@@ -140,6 +143,11 @@ const ProjectForm: React.FC<IProjectForm> = ({
             }
             setFeatureNamingExample && setFeatureNamingExample(trim(example));
         }
+    };
+
+    const onSetFeatureNamingPrompt = (prompt: string) => {
+        console.log(prompt);
+        setFeatureNamingPrompt && setFeatureNamingPrompt(trim(prompt));
     };
 
     return (
@@ -270,11 +278,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     </StyledInputContainer>
                 </>
                 <ConditionallyRender
-                    condition={
-                        Boolean(shouldShowFlagNaming) &&
-                        setProjectNamingPattern != null &&
-                        setFeatureNamingExample != null
-                    }
+                    condition={Boolean(shouldShowFlagNaming)}
                     show={
                         <>
                             <Box
@@ -292,14 +296,20 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 Leave it empty if you don’t want to add a naming
                                 pattern
                             </StyledSubtitle>
-                            <StyledInputContainer>
-                                <StyledInput
+                            <StyledInputContainer
+                                sx={{
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-start',
+                                    mt: theme => theme.spacing(1),
+                                }}
+                            >
+                                <StyledTextField
                                     label={'Naming Pattern'}
                                     name="pattern"
                                     type={'text'}
                                     value={featureNamingPattern || ''}
                                     error={Boolean(errors.featureNamingPattern)}
-                                    errorText={errors.featureNamingPattern}
+                                    helperText={errors.featureNamingPattern}
                                     onFocus={() => clearErrors()}
                                     onChange={e =>
                                         onSetFeatureNamingPattern(
@@ -307,17 +317,29 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                         )
                                     }
                                 />
-                                <StyledInput
+                                <StyledTextField
                                     label={'Naming Example'}
                                     name="example"
                                     type={'text'}
                                     value={featureNamingExample || ''}
                                     error={Boolean(errors.namingExample)}
-                                    errorText={errors.namingExample}
+                                    helperText={errors.namingExample}
                                     onChange={e =>
                                         onSetFeatureNamingExample(
                                             e.target.value
                                         )
+                                    }
+                                />
+                                <StyledTextField
+                                    label={'Naming Prompt'}
+                                    name="prompt"
+                                    type={'text'}
+                                    placeholder={
+                                        'e.g <project>.<featureName>.<ticket>'
+                                    }
+                                    value={featureNamingPrompt || ''}
+                                    onChange={e =>
+                                        onSetFeatureNamingPrompt(e.target.value)
                                     }
                                 />
                             </StyledInputContainer>

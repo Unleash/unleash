@@ -192,6 +192,7 @@ export type ProjectMode = 'open' | 'protected';
 export interface IFeatureNaming {
     pattern: string | null;
     example: string | null;
+    prompt: string | null;
 }
 
 export interface IProjectOverview {

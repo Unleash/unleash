@@ -13,6 +13,7 @@ export const projectSchema = joi
         featureNaming: joi.object().keys({
             pattern: joi.string().allow(null).optional(),
             example: joi.string().allow(null).optional(),
+            prompt: joi.string().allow(null).optional(),
         }),
     })
     .options({ allowUnknown: false, stripUnknown: true });

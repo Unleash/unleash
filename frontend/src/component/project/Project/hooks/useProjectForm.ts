@@ -12,7 +12,8 @@ const useProjectForm = (
     initialProjectMode: ProjectMode = 'open',
     initialFeatureLimit = '',
     initialFeatureNamingPattern = '',
-    initialFeatureNamingExample = ''
+    initialFeatureNamingExample = '',
+    initialFeatureNamingPrompt = ''
 ) => {
     const [projectId, setProjectId] = useState(initialProjectId);
 
@@ -30,6 +31,9 @@ const useProjectForm = (
     );
     const [featureNamingExample, setFeatureNamingExample] = useState(
         initialFeatureNamingExample
+    );
+    const [featureNamingPrompt, setFeatureNamingPrompt] = useState(
+        initialFeatureNamingPrompt
     );
     const [errors, setErrors] = useState({});
 
@@ -64,6 +68,10 @@ const useProjectForm = (
     }, [initialFeatureNamingExample]);
 
     useEffect(() => {
+        setFeatureNamingPrompt(initialFeatureNamingPrompt);
+    }, [initialFeatureNamingPrompt]);
+
+    useEffect(() => {
         setProjectStickiness(initialProjectStickiness);
     }, [initialProjectStickiness]);
 
@@ -78,6 +86,7 @@ const useProjectForm = (
             featureNaming: {
                 pattern: featureNamingPattern,
                 example: featureNamingExample,
+                prompt: featureNamingPrompt,
             },
         };
     };
@@ -125,8 +134,10 @@ const useProjectForm = (
         featureLimit,
         featureNamingPattern,
         featureNamingExample,
+        featureNamingPrompt,
         setFeatureNamingPattern,
         setFeatureNamingExample,
+        setFeatureNamingPrompt,
         setProjectId,
         setProjectName,
         setProjectDesc,

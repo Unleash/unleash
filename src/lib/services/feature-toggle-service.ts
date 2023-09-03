@@ -1097,18 +1097,22 @@ class FeatureToggleService {
 
     async validateFeatureFlagPattern(
         featureName: string,
-        projectId?: string,
+        projectId?: string | null,
     ): Promise<void> {
         if (this.flagResolver.isEnabled('featureNamingPattern') && projectId) {
             const project = await this.projectStore.get(projectId);
             const namingPattern = project.featureNaming?.pattern;
+            const namingPrompt = project.featureNaming?.prompt;
+            const namingExample = project.featureNaming?.example;
 
             if (
                 namingPattern &&
                 !featureName.match(new RegExp(namingPattern))
             ) {
                 throw new PatternError(
-                    `Must match "${namingPattern}"`,
+                    namingPrompt
+                        ? `hint: "${namingPrompt}" eg. "${namingExample}"`
+                        : `Must match "${namingPattern}"`,
                     namingPattern,
                 );
             }

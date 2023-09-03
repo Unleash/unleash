@@ -14,7 +14,10 @@ export const FeatureFlagNamingTooltip: FC = () => {
                 <Box>
                     <h3>Enforce a naming convention for feature flags</h3>
                     <hr />
-                    <p>{`eg. ^[A - Za - z0 - 9]{2}[.][a-z]{4,12}$ matches 'a1.project'`}</p>
+                    <p>{'pattern: ^[A-Za-z]{2,3}-[A-Za-z]+-[0-9]{3}$ '}</p>
+                    <p>{'example: dx-name-123'}</p>
+                    <p>{'prompt: <team>.<name>.<ticket>'}</p>
+                    <hr />
                     <div className="scrollable">
                         <h3>Brackets:</h3>
                         <table>

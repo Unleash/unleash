@@ -43,6 +43,7 @@ const EditProject = () => {
         projectMode,
         featureNamingPattern,
         featureNamingExample,
+        featureNamingPrompt,
         setProjectId,
         setProjectName,
         setProjectDesc,
@@ -50,6 +51,7 @@ const EditProject = () => {
         setProjectMode,
         setFeatureNamingExample,
         setFeatureNamingPattern,
+        setFeatureNamingPrompt,
         getProjectPayload,
         clearErrors,
         validateProjectId,
@@ -131,13 +133,15 @@ const EditProject = () => {
                 projectMode={projectMode}
                 featureNamingPattern={featureNamingPattern}
                 featureNamingExample={featureNamingExample}
+                featureNamingPrompt={featureNamingPrompt}
                 setProjectName={setProjectName}
                 projectStickiness={projectStickiness}
                 setProjectStickiness={setProjectStickiness}
                 setProjectMode={setProjectMode}
                 setFeatureLimit={() => {}}
                 setFeatureNamingExample={setFeatureNamingExample}
-                setProjectNamingPattern={setFeatureNamingPattern}
+                setFeatureNamingPattern={setFeatureNamingPattern}
+                setFeatureNamingPrompt={setFeatureNamingPrompt}
                 featureLimit={''}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}

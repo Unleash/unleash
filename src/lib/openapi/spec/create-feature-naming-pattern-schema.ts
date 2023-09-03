@@ -21,6 +21,12 @@ export const createFeatureNamingPatternSchema = {
                 'An example of a feature name that matches the pattern. Must itself match the pattern supplied.',
             example: 'new-project.team-red.feature-1',
         },
+        prompt: {
+            type: 'string',
+            nullable: true,
+            description: 'An optional prompt that describes the pattern',
+            example: '<project-name>.team-<team-name>>.feature-<ticket-number>',
+        },
     },
     components: {},
 } as const;

@@ -4,6 +4,8 @@ import { ApiErrorSchema } from './unleash-error';
 class PatternError extends BadDataError {
     pattern: string;
 
+    prompt: string;
+
     constructor(message: string, pattern: string) {
         super(message);
         this.pattern = pattern;

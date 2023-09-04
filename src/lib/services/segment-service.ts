@@ -104,10 +104,8 @@ export class SegmentService implements ISegmentService {
     }
 
     async update(id: number, data: unknown, user: User): Promise<void> {
-        if (this.flagResolver.isEnabled('segmentChangeRequests')) {
-            const input = await segmentSchema.validateAsync(data);
-            await this.stopWhenChangeRequestsEnabled(input.project, user);
-        }
+        const input = await segmentSchema.validateAsync(data);
+        await this.stopWhenChangeRequestsEnabled(input.project, user);
         return this.unprotectedUpdate(id, data, user);
     }
 
@@ -138,9 +136,7 @@ export class SegmentService implements ISegmentService {
 
     async delete(id: number, user: User): Promise<void> {
         const segment = await this.segmentStore.get(id);
-        if (this.flagResolver.isEnabled('segmentChangeRequests')) {
-            await this.stopWhenChangeRequestsEnabled(segment.project, user);
-        }
+        await this.stopWhenChangeRequestsEnabled(segment.project, user);
         await this.segmentStore.delete(id);
         await this.eventStore.store({
             type: SEGMENT_DELETED,

@@ -398,10 +398,9 @@ class FeatureToggleService {
             disabled: featureStrategy.disabled,
             constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
+            sortOrder: featureStrategy.sortOrder,
             segments: segments.map((segment) => segment.id) ?? [],
         };
-
-        result.sortOrder = featureStrategy.sortOrder;
 
         return result;
     }
@@ -1223,7 +1222,7 @@ class FeatureToggleService {
             segments: [],
             title: strategy.title,
             disabled: strategy.disabled,
-            // FIXME: Should we return sortOrder here, or adjust OpenAPI?
+            sortOrder: strategy.sortOrder,
         };
 
         if (segments && segments.length > 0) {

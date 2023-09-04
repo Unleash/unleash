@@ -22,7 +22,6 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { Badge } from 'component/common/Badge/Badge';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;

@@ -20,18 +20,15 @@ export type IFlagKey =
     | 'disableBulkToggle'
     | 'disableNotifications'
     | 'advancedPlayground'
-    | 'strategyVariant'
     | 'slackAppAddon'
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
-    | 'segmentChangeRequests'
-    | 'changeRequestReject'
     | 'customRootRolesKillSwitch'
     | 'newApplicationList'
     | 'integrationsRework'
     | 'multipleRoles'
-    | 'doraMetrics'
-    | 'instanceHealthDashboard';
+    | 'featureNamingPattern'
+    | 'doraMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -99,10 +96,6 @@ const flags: IFlags = {
         process.env.DISABLE_NOTIFICATIONS,
         false,
     ),
-    strategyVariant: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_VARIANT,
-        false,
-    ),
     slackAppAddon: parseEnvVarBoolean(
         process.env.UNLEASH_SLACK_APP_ADDON,
         false,
@@ -113,14 +106,6 @@ const flags: IFlags = {
     ),
     lastSeenByEnvironment: parseEnvVarBoolean(
         process.env.LAST_SEEN_BY_ENVIRONMENT,
-        false,
-    ),
-    segmentChangeRequests: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SEGMENT_CHANGE_REQUESTS,
-        false,
-    ),
-    changeRequestReject: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_REJECT,
         false,
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
@@ -137,6 +122,10 @@ const flags: IFlags = {
     ),
     newApplicationList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_APPLICATION_LIST,
+        false,
+    ),
+    featureNamingPattern: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_NAMING_PATTERN,
         false,
     ),
 };

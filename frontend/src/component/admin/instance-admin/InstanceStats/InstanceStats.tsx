@@ -30,24 +30,9 @@ export const InstanceStats: VFC = () => {
     }
 
     const rows = [
-        { title: 'Instance Id', value: stats?.instanceId },
+        { title: 'Instance Id', value: stats?.instanceId, offset: false },
         { title: versionTitle, value: version },
         { title: 'Users', value: stats?.users },
-        {
-            title: 'Active past 7 days',
-            value: stats?.activeUsers?.last7,
-            offset: true,
-        },
-        {
-            title: 'Active past 30 days',
-            value: stats?.activeUsers?.last30,
-            offset: true,
-        },
-        {
-            title: 'Active past 90 days',
-            value: stats?.activeUsers?.last90,
-            offset: true,
-        },
         { title: 'Feature toggles', value: stats?.featureToggles },
         { title: 'Projects', value: stats?.projects },
         { title: 'Environments', value: stats?.environments },
@@ -80,22 +65,16 @@ export const InstanceStats: VFC = () => {
                         {rows.map(row => (
                             <TableRow key={row.title}>
                                 <TableCell component="th" scope="row">
-                                    <ConditionallyRender
-                                        condition={Boolean(row.offset)}
-                                        show={
-                                            <Box
-                                                component="span"
-                                                sx={theme => ({
-                                                    marginLeft: row.offset
-                                                        ? theme.spacing(2)
-                                                        : 0,
-                                                })}
-                                            >
-                                                {row.title}
-                                            </Box>
-                                        }
-                                        elseShow={row.title}
-                                    />
+                                    <Box
+                                        component="span"
+                                        sx={theme => ({
+                                            marginLeft: row.offset
+                                                ? theme.spacing(2)
+                                                : 0,
+                                        })}
+                                    >
+                                        {row.title}
+                                    </Box>
                                 </TableCell>
                                 <TableCell align="right">{row.value}</TableCell>
                             </TableRow>

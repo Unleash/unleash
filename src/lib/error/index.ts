@@ -14,6 +14,7 @@ import RoleInUseError from './role-in-use-error';
 import ProjectWithoutOwnerError from './project-without-owner-error';
 import PasswordUndefinedError from './password-undefined';
 import PasswordMismatchError from './password-mismatch';
+import PatternError from './pattern-error';
 import ForbiddenError from './forbidden-error';
 
 export {
@@ -34,5 +35,6 @@ export {
     RoleInUseError,
     ProjectWithoutOwnerError,
     PasswordUndefinedError,
+    PatternError,
     PasswordMismatchError,
 };

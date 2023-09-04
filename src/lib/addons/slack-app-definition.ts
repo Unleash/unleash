@@ -14,6 +14,7 @@ import {
     FEATURE_PROJECT_CHANGE,
     FEATURE_VARIANTS_UPDATED,
     FEATURE_POTENTIALLY_STALE_ON,
+    FEATURE_ENVIRONMENT_VARIANTS_UPDATED,
 } from '../types/events';
 import { IAddonDefinition } from '../types/model';
 
@@ -75,6 +76,7 @@ const slackAppDefinition: IAddonDefinition = {
         FEATURE_STALE_OFF,
         FEATURE_ENVIRONMENT_ENABLED,
         FEATURE_ENVIRONMENT_DISABLED,
+        FEATURE_ENVIRONMENT_VARIANTS_UPDATED,
         FEATURE_STRATEGY_REMOVE,
         FEATURE_STRATEGY_UPDATE,
         FEATURE_STRATEGY_ADD,

@@ -4,7 +4,6 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import SelectMenu from 'component/common/select';
 import { OverrideConfig } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/VariantOverrides';
 import {
-    Box,
     Button,
     FormControlLabel,
     IconButton,

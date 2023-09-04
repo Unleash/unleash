@@ -52,14 +52,12 @@ export interface IFlags {
     advancedPlayground?: boolean;
     customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
-    segmentChangeRequests?: boolean;
-    changeRequestReject?: boolean;
     lastSeenByEnvironment?: boolean;
     newApplicationList?: boolean;
     integrationsRework?: boolean;
     multipleRoles?: boolean;
+    featureNamingPattern?: boolean;
     doraMetrics?: boolean;
-    instanceHealthDashboard?: boolean;
     [key: string]: boolean | Variant | undefined;
 }
 

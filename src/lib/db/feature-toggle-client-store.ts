@@ -253,9 +253,7 @@ export default class FeatureToggleClientStore
             parameters: mapValues(row.parameters || {}, ensureStringValue),
             sortOrder: row.sort_order,
         };
-        if (this.flagResolver.isEnabled('strategyVariant')) {
-            strategy.variants = row.strategy_variants || [];
-        }
+        strategy.variants = row.strategy_variants || [];
         return strategy;
     }
 

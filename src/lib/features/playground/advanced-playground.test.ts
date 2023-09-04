@@ -11,7 +11,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('advanced_playground', getLogger, {
-        experimental: { flags: { strategyVariant: true } },
+        experimental: { flags: {} },
     });
     app = await setupAppWithCustomConfig(
         db.stores,

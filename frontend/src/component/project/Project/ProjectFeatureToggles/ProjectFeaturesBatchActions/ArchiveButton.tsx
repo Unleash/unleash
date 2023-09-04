@@ -12,6 +12,7 @@ interface IArchiveButtonProps {
     projectId: string;
     featureIds: string[];
     features: FeatureSchema[];
+    onConfirm?: () => void;
 }
 
 const DEFAULT_USAGE_THRESHOLD_DAYS = 7;
@@ -29,6 +30,7 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
     projectId,
     featureIds,
     features,
+    onConfirm,
 }) => {
     const { refetch } = useProject(projectId);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -41,8 +43,9 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
         });
     }, [JSON.stringify(features), featureIds]);
 
-    const onConfirm = async () => {
+    const onArchive = async () => {
         setIsDialogOpen(false);
+        onConfirm?.();
         await refetch();
         trackEvent('batch_operations', {
             props: {
@@ -69,7 +72,7 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
                 projectId={projectId}
                 featureIds={featureIds}
                 featuresWithUsage={featuresWithUsage}
-                onConfirm={onConfirm}
+                onConfirm={onArchive}
                 isOpen={isDialogOpen}
                 onClose={() => setIsDialogOpen(false)}
             />

@@ -42,7 +42,6 @@ process.nextTick(async () => {
                         lastSeenByEnvironment: true,
                         newApplicationList: true,
                         doraMetrics: true,
-                        instanceHealthDashboard: true,
                     },
                 },
                 authentication: {

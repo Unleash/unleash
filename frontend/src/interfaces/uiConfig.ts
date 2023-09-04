@@ -57,7 +57,6 @@ export interface IFlags {
     integrationsRework?: boolean;
     multipleRoles?: boolean;
     doraMetrics?: boolean;
-    instanceHealthDashboard?: boolean;
     [key: string]: boolean | Variant | undefined;
 }
 

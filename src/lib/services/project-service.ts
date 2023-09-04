@@ -173,7 +173,7 @@ export default class ProjectService {
             const { pattern, example } = naming;
             if (
                 pattern != null &&
-                example != null &&
+                example &&
                 !example.match(new RegExp(pattern))
             ) {
                 throw new BadDataError(

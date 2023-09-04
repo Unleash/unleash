@@ -189,6 +189,11 @@ export interface IFeatureOverview {
 
 export type ProjectMode = 'open' | 'protected';
 
+export interface IFeatureNaming {
+    pattern: string | null;
+    example: string | null;
+}
+
 export interface IProjectOverview {
     name: string;
     description: string;
@@ -203,6 +208,7 @@ export interface IProjectOverview {
     stats?: IProjectStats;
     mode: ProjectMode;
     featureLimit?: number;
+    featureNaming?: IFeatureNaming;
     defaultStickiness: string;
 }
 
@@ -405,6 +411,7 @@ export interface IProject {
     mode: ProjectMode;
     defaultStickiness: string;
     featureLimit?: number;
+    featureNaming?: IFeatureNaming;
 }
 
 /**

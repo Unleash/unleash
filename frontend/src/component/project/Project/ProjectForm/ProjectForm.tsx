@@ -8,6 +8,8 @@ import { Box, styled, TextField } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
+import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IProjectForm {
     projectId: string;
@@ -17,6 +19,10 @@ interface IProjectForm {
     projectMode?: string;
     featureLimit: string;
     featureCount?: number;
+    featureNamingPattern?: string;
+    featureNamingExample?: string;
+    setProjectNamingPattern?: React.Dispatch<React.SetStateAction<string>>;
+    setFeatureNamingExample?: React.Dispatch<React.SetStateAction<string>>;
     setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
@@ -95,6 +101,10 @@ const ProjectForm: React.FC<IProjectForm> = ({
     projectMode,
     featureLimit,
     featureCount,
+    featureNamingExample,
+    featureNamingPattern,
+    setFeatureNamingExample,
+    setProjectNamingPattern,
     setProjectId,
     setProjectName,
     setProjectDesc,
@@ -106,6 +116,32 @@ const ProjectForm: React.FC<IProjectForm> = ({
     validateProjectId,
     clearErrors,
 }) => {
+    const { uiConfig } = useUiConfig();
+    const shouldShowFlagNaming = uiConfig.flags.featureNamingPattern;
+    const onSetFeatureNamingPattern = (regex: string) => {
+        try {
+            new RegExp(regex);
+            setProjectNamingPattern && setProjectNamingPattern(regex);
+            clearErrors();
+        } catch (e) {
+            errors.featureNamingPattern = 'Invalid regular expression';
+            setProjectNamingPattern && setProjectNamingPattern(regex);
+        }
+    };
+
+    const onSetFeatureNamingExample = (example: string) => {
+        if (featureNamingPattern) {
+            const regex = new RegExp(featureNamingPattern);
+            const matches = regex.test(example);
+            if (!matches) {
+                errors.namingExample = 'Example does not match regex';
+            } else {
+                delete errors.namingExample;
+            }
+            setFeatureNamingExample && setFeatureNamingExample(trim(example));
+        }
+    };
+
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
@@ -206,7 +242,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             gap: 1,
                         }}
                     >
-                        <p>Feature toggles limit?</p>
+                        <p>Feature flag limit?</p>
                         <FeatureTogglesLimitTooltip />
                     </Box>
                     <StyledSubtitle>
@@ -233,6 +269,61 @@ const ProjectForm: React.FC<IProjectForm> = ({
                         />
                     </StyledInputContainer>
                 </>
+                <ConditionallyRender
+                    condition={
+                        Boolean(shouldShowFlagNaming) &&
+                        setProjectNamingPattern != null &&
+                        setFeatureNamingExample != null
+                    }
+                    show={
+                        <>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginBottom: 1,
+                                    gap: 1,
+                                }}
+                            >
+                                <p>Feature flag naming pattern?</p>
+                                <FeatureFlagNamingTooltip />
+                            </Box>
+                            <StyledSubtitle>
+                                Leave it empty if you don’t want to add a naming
+                                pattern
+                            </StyledSubtitle>
+                            <StyledInputContainer>
+                                <StyledInput
+                                    label={'Naming Pattern'}
+                                    name="pattern"
+                                    type={'text'}
+                                    value={featureNamingPattern || ''}
+                                    error={Boolean(errors.featureNamingPattern)}
+                                    errorText={errors.featureNamingPattern}
+                                    onFocus={() => clearErrors()}
+                                    onChange={e =>
+                                        onSetFeatureNamingPattern(
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                                <StyledInput
+                                    label={'Naming Example'}
+                                    name="example"
+                                    type={'text'}
+                                    value={featureNamingExample || ''}
+                                    error={Boolean(errors.namingExample)}
+                                    errorText={errors.namingExample}
+                                    onChange={e =>
+                                        onSetFeatureNamingExample(
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                            </StyledInputContainer>
+                        </>
+                    }
+                />
             </StyledContainer>
             <StyledButtonContainer>{children}</StyledButtonContainer>
         </StyledForm>

@@ -56,6 +56,7 @@ export interface IFlags {
     newApplicationList?: boolean;
     integrationsRework?: boolean;
     multipleRoles?: boolean;
+    featureNamingPattern?: boolean;
     doraMetrics?: boolean;
     [key: string]: boolean | Variant | undefined;
 }

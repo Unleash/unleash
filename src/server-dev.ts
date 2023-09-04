@@ -40,7 +40,6 @@ process.nextTick(async () => {
                         strategyVariant: true,
                         slackAppAddon: true,
                         lastSeenByEnvironment: true,
-                        segmentChangeRequests: true,
                         newApplicationList: true,
                         doraMetrics: true,
                         instanceHealthDashboard: true,

@@ -24,8 +24,6 @@ export type IFlagKey =
     | 'slackAppAddon'
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
-    | 'segmentChangeRequests'
-    | 'changeRequestReject'
     | 'customRootRolesKillSwitch'
     | 'newApplicationList'
     | 'integrationsRework'
@@ -113,14 +111,6 @@ const flags: IFlags = {
     ),
     lastSeenByEnvironment: parseEnvVarBoolean(
         process.env.LAST_SEEN_BY_ENVIRONMENT,
-        false,
-    ),
-    segmentChangeRequests: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SEGMENT_CHANGE_REQUESTS,
-        false,
-    ),
-    changeRequestReject: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_REJECT,
         false,
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(

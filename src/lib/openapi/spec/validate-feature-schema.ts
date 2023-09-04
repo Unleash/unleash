@@ -12,10 +12,11 @@ export const validateFeatureSchema = {
             example: 'my-feature-3',
         },
         projectId: {
-            description: 'The project id to validate.',
+            description:
+                'The id of the project that the feature flag will belong to. If the target project has a feature naming pattern defined, the name will be validated against that pattern.',
             nullable: true,
             type: 'string',
-            example: 'my-feature-3',
+            example: 'project-y',
         },
     },
     components: {},

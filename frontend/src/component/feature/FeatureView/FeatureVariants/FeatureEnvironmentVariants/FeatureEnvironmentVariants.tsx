@@ -29,7 +29,6 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { Edit } from '@mui/icons-material';
 import { VariantInfoAlert } from 'component/common/VariantInfoAlert/VariantInfoAlert';
 import { StrategyVariantsPreferredAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -37,7 +36,6 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
 }));
 
 export const FeatureEnvironmentVariants = () => {
-    const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));

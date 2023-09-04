@@ -146,7 +146,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
     };
 
     const onSetFeatureNamingPrompt = (prompt: string) => {
-        console.log(prompt);
         setFeatureNamingPrompt && setFeatureNamingPrompt(trim(prompt));
     };
 

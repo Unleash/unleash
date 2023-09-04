@@ -28,8 +28,7 @@ export type IFlagKey =
     | 'newApplicationList'
     | 'integrationsRework'
     | 'multipleRoles'
-    | 'doraMetrics'
-    | 'instanceHealthDashboard';
+    | 'doraMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

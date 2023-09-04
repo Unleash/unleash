@@ -70,7 +70,6 @@ exports[`should create default config 1`] = `
     "flags": {
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
-      "changeRequestReject": false,
       "customRootRolesKillSwitch": false,
       "demo": false,
       "disableBulkToggle": false,
@@ -97,7 +96,6 @@ exports[`should create default config 1`] = `
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
-      "segmentChangeRequests": false,
       "slackAppAddon": false,
       "strategyVariant": false,
       "strictSchemaValidation": false,
@@ -107,7 +105,6 @@ exports[`should create default config 1`] = `
     "experiments": {
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
-      "changeRequestReject": false,
       "customRootRolesKillSwitch": false,
       "demo": false,
       "disableBulkToggle": false,
@@ -134,7 +131,6 @@ exports[`should create default config 1`] = `
       "personalAccessTokensKillSwitch": false,
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
-      "segmentChangeRequests": false,
       "slackAppAddon": false,
       "strategyVariant": false,
       "strictSchemaValidation": false,

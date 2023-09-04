@@ -97,7 +97,6 @@ exports[`should create default config 1`] = `
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
       "slackAppAddon": false,
-      "strategyVariant": false,
       "strictSchemaValidation": false,
     },
   },
@@ -132,7 +131,6 @@ exports[`should create default config 1`] = `
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
       "slackAppAddon": false,
-      "strategyVariant": false,
       "strictSchemaValidation": false,
     },
     "externalResolver": {

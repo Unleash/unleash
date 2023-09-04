@@ -398,12 +398,10 @@ class FeatureToggleService {
             disabled: featureStrategy.disabled,
             constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
+            sortOrder: featureStrategy.sortOrder,
             segments: segments.map((segment) => segment.id) ?? [],
         };
 
-        if (this.flagResolver.isEnabled('strategyVariant')) {
-            result.sortOrder = featureStrategy.sortOrder;
-        }
         return result;
     }
 
@@ -460,39 +458,37 @@ class FeatureToggleService {
                 );
             }),
         );
-        if (this.flagResolver.isEnabled('strategyVariant')) {
-            const newOrder = (
-                await this.getStrategiesForEnvironment(
-                    project,
-                    featureName,
-                    environment,
-                )
-            )
-                .sort((strategy1, strategy2) => {
-                    if (
-                        typeof strategy1.sortOrder === 'number' &&
-                        typeof strategy2.sortOrder === 'number'
-                    ) {
-                        return strategy1.sortOrder - strategy2.sortOrder;
-                    }
-                    return 0;
-                })
-                .map((strategy) => strategy.id);
-
-            const eventData: StrategyIds = { strategyIds: newOrder };
-
-            const tags = await this.tagStore.getAllTagsForFeature(featureName);
-            const event = new StrategiesOrderChangedEvent({
+        const newOrder = (
+            await this.getStrategiesForEnvironment(
+                project,
                 featureName,
                 environment,
-                project,
-                createdBy,
-                preData: eventPreData,
-                data: eventData,
-                tags: tags,
-            });
-            await this.eventStore.store(event);
-        }
+            )
+        )
+            .sort((strategy1, strategy2) => {
+                if (
+                    typeof strategy1.sortOrder === 'number' &&
+                    typeof strategy2.sortOrder === 'number'
+                ) {
+                    return strategy1.sortOrder - strategy2.sortOrder;
+                }
+                return 0;
+            })
+            .map((strategy) => strategy.id);
+
+        const eventData: StrategyIds = { strategyIds: newOrder };
+
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+        const event = new StrategiesOrderChangedEvent({
+            featureName,
+            environment,
+            project,
+            createdBy,
+            preData: eventPreData,
+            data: eventData,
+            tags: tags,
+        });
+        await this.eventStore.store(event);
     }
 
     async createStrategy(
@@ -1226,7 +1222,7 @@ class FeatureToggleService {
             segments: [],
             title: strategy.title,
             disabled: strategy.disabled,
-            // FIXME: Should we return sortOrder here, or adjust OpenAPI?
+            sortOrder: strategy.sortOrder,
         };
 
         if (segments && segments.length > 0) {

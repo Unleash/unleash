@@ -37,7 +37,6 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        strategyVariant: true,
                         slackAppAddon: true,
                         lastSeenByEnvironment: true,
                         newApplicationList: true,

@@ -33,10 +33,10 @@ export const StyledButtonContainer = styled('div')({
 });
 
 export const StyledButtonSection = styled('section')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
     paddingTop: theme.spacing(2),
-    '& > *': {
-        marginRight: theme.spacing(1),
-    },
+    gap: theme.spacing(1),
 }));
 
 export const StyledTextField = styled(TextField)({

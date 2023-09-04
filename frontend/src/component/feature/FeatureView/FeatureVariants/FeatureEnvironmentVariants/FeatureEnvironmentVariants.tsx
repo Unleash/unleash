@@ -267,11 +267,7 @@ export const FeatureEnvironmentVariants = () => {
             }
         >
             <VariantInfoAlert mode="feature" />
-            <ConditionallyRender
-                condition={Boolean(uiConfig?.flags?.strategyVariant)}
-                show={<StrategyVariantsPreferredAlert />}
-            />
-
+            <StrategyVariantsPreferredAlert />
             {environments.map(environment => {
                 const otherEnvsWithVariants = environments.filter(
                     ({ name, variants }) =>

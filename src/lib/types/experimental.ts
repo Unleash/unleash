@@ -20,7 +20,6 @@ export type IFlagKey =
     | 'disableBulkToggle'
     | 'disableNotifications'
     | 'advancedPlayground'
-    | 'strategyVariant'
     | 'slackAppAddon'
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
@@ -95,10 +94,6 @@ const flags: IFlags = {
     ),
     disableNotifications: parseEnvVarBoolean(
         process.env.DISABLE_NOTIFICATIONS,
-        false,
-    ),
-    strategyVariant: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_VARIANT,
         false,
     ),
     slackAppAddon: parseEnvVarBoolean(

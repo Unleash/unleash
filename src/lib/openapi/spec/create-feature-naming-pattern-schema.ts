@@ -12,7 +12,6 @@ export const createFeatureNamingPatternSchema = {
             description:
                 'A JavaScript regular expression pattern, without the start and end delimiters. Optional flags are not allowed.',
             example: '[a-z]{2,5}.team-[a-z]+.[a-z-]+',
-            pattern: '.*',
         },
         example: {
             type: 'string',

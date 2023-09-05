@@ -397,7 +397,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                         Delete
                                     </PermissionButton>
                                     <IntegrationDeleteDialog
-                                        id={formValues.id}
+                                        id={(formValues as AddonSchema).id}
                                         isOpen={isDeleteOpen}
                                         onClose={() => {
                                             setDeleteOpen(false);

@@ -378,7 +378,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     aria-describedBy="pattern-description-description"
                                     placeholder={`<project>.<featureName>.<ticket>
 
-The flag name should contain the project name, the feature name and the ticket number, each separated by a dot.`}
+The flag name should contain the project name, the feature name, and the ticket number, each separated by a dot.`}
                                     multiline
                                     value={featureNamingDescription || ''}
                                     onChange={e =>

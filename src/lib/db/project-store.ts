@@ -37,6 +37,8 @@ const SETTINGS_COLUMNS = [
     'project_mode',
     'default_stickiness',
     'feature_limit',
+    'feature_naming_pattern',
+    'feature_naming_example',
 ];
 const SETTINGS_TABLE = 'project_settings';
 const PROJECT_ENVIRONMENTS = 'project_environments';
@@ -236,6 +238,8 @@ class ProjectStore implements IProjectStore {
                 project_mode: project.mode,
                 default_stickiness: project.defaultStickiness,
                 feature_limit: project.featureLimit,
+                feature_naming_pattern: project.featureNamingPattern,
+                feature_naming_example: project.featureNamingExample,
             })
             .returning('*');
         return this.mapRow({ ...row[0], ...settingsRow[0] });
@@ -263,6 +267,8 @@ class ProjectStore implements IProjectStore {
                         project_mode: data.mode,
                         default_stickiness: data.defaultStickiness,
                         feature_limit: data.featureLimit,
+                        feature_naming_pattern: data.featureNaming?.pattern,
+                        feature_naming_example: data.featureNaming?.example,
                     });
             } else {
                 await this.db(SETTINGS_TABLE).insert({
@@ -270,6 +276,8 @@ class ProjectStore implements IProjectStore {
                     project_mode: data.mode,
                     default_stickiness: data.defaultStickiness,
                     feature_limit: data.featureLimit,
+                    feature_naming_pattern: data.featureNaming?.pattern,
+                    feature_naming_example: data.featureNaming?.example,
                 });
             }
         } catch (err) {
@@ -562,6 +570,10 @@ class ProjectStore implements IProjectStore {
             mode: row.project_mode || 'open',
             defaultStickiness: row.default_stickiness || 'default',
             featureLimit: row.feature_limit,
+            featureNaming: {
+                pattern: row.feature_naming_pattern,
+                example: row.feature_naming_example,
+            },
         };
     }
 

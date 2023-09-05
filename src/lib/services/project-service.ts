@@ -38,6 +38,7 @@ import {
     ProjectAccessGroupRolesUpdated,
     IProjectRoleUsage,
     ProjectAccessUserRolesDeleted,
+    IFeatureNaming,
 } from '../types';
 import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
 import {
@@ -55,7 +56,7 @@ import { FavoritesService } from './favorites-service';
 import { calculateAverageTimeToProd } from '../features/feature-toggle/time-to-production/time-to-production';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 import { uniqueByKey } from '../util/unique';
-import { PermissionError } from '../error';
+import { BadDataError, PermissionError } from '../error';
 import { ProjectDoraMetricsSchema } from 'lib/openapi';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
@@ -167,6 +168,27 @@ export default class ProjectService {
         return this.store.get(id);
     }
 
+    private validateFlagNaming = (naming?: IFeatureNaming) => {
+        if (naming) {
+            const { pattern, example } = naming;
+            if (
+                pattern != null &&
+                example &&
+                !example.match(new RegExp(pattern))
+            ) {
+                throw new BadDataError(
+                    `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern.`,
+                );
+            }
+
+            if (!pattern && example) {
+                throw new BadDataError(
+                    "You've provided a feature flag naming example, but no feature flag naming pattern. You must specify a pattern to use an example.",
+                );
+            }
+        }
+    };
+
     async createProject(
         newProject: Pick<
             IProject,
@@ -176,6 +198,8 @@ export default class ProjectService {
     ): Promise<IProject> {
         const data = await projectSchema.validateAsync(newProject);
         await this.validateUniqueId(data.id);
+
+        this.validateFlagNaming(data.featureNaming);
 
         await this.store.create(data);
 
@@ -207,15 +231,24 @@ export default class ProjectService {
 
     async updateProject(updatedProject: IProject, user: User): Promise<void> {
         const preData = await this.store.get(updatedProject.id);
-        const project = await projectSchema.validateAsync(updatedProject);
 
-        await this.store.update(project);
+        if (updatedProject.featureNaming) {
+            this.validateFlagNaming(updatedProject.featureNaming);
+        }
+        if (
+            updatedProject.featureNaming?.pattern &&
+            !updatedProject.featureNaming?.example
+        ) {
+            updatedProject.featureNaming.example = null;
+        }
+
+        await this.store.update(updatedProject);
 
         await this.eventStore.store({
             type: PROJECT_UPDATED,
-            project: project.id,
+            project: updatedProject.id,
             createdBy: getCreatedBy(user),
-            data: project,
+            data: updatedProject,
             preData,
         });
     }
@@ -981,6 +1014,7 @@ export default class ProjectService {
             description: project.description,
             mode: project.mode,
             featureLimit: project.featureLimit,
+            featureNaming: project.featureNaming,
             defaultStickiness: project.defaultStickiness,
             health: project.health || 0,
             favorite: favorite,

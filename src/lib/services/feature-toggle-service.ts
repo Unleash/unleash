@@ -45,6 +45,7 @@ import {
     IStrategyStore,
 } from '../types';
 import { Logger } from '../logger';
+import { PatternError } from '../error';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
@@ -1034,6 +1035,8 @@ class FeatureToggleService {
     ): Promise<FeatureToggle> {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
+        await this.validateFeatureFlagPattern(value.name, projectId);
+
         const exists = await this.projectStore.hasProject(projectId);
 
         if (await this.projectStore.isFeatureLimitReached(projectId)) {
@@ -1086,6 +1089,28 @@ class FeatureToggleService {
             return createdToggle;
         }
         throw new NotFoundError(`Project with id ${projectId} does not exist`);
+    }
+
+    async validateFeatureFlagPattern(
+        featureName: string,
+        projectId?: string,
+    ): Promise<void> {
+        if (this.flagResolver.isEnabled('featureNamingPattern') && projectId) {
+            const project = await this.projectStore.get(projectId);
+            const namingPattern = project.featureNaming?.pattern;
+            const namingExample = project.featureNaming?.example;
+
+            if (
+                namingPattern &&
+                !featureName.match(new RegExp(namingPattern))
+            ) {
+                const error = `The feature flag name "${featureName}" does not match the project's naming pattern: "${namingPattern}.`;
+                const example = namingExample
+                    ? ` Here's an example of a name that does match the pattern: "${namingExample}. Try something like that instead."`
+                    : '';
+                throw new PatternError(`${error}${example}`, namingPattern);
+            }
+        }
     }
 
     async cloneFeatureToggle(

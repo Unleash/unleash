@@ -80,7 +80,7 @@ export const CopyFeatureToggle = () => {
 
     const onValidateName = async () => {
         try {
-            await validateFeatureToggleName(newToggleName);
+            await validateFeatureToggleName(newToggleName, projectId);
             setNameError(undefined);
             return true;
         } catch (error) {

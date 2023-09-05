@@ -127,7 +127,7 @@ const EditProject = () => {
                     projectStickiness={projectStickiness}
                     setProjectStickiness={setProjectStickiness}
                     setProjectMode={setProjectMode}
-                    setProjectNamingPattern={setFeatureNamingPattern}
+                    setFeatureNamingPattern={setFeatureNamingPattern}
                     setFeatureNamingExample={setFeatureNamingExample}
                     projectDesc={projectDesc}
                     mode="Edit"

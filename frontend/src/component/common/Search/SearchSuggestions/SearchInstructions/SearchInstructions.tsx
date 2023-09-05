@@ -15,7 +15,6 @@ const StyledCode = styled('span')(({ theme }) => ({
 }));
 
 const StyledFilterHint = styled('p')(({ theme }) => ({
-    // marginTop: theme.spacing(0.5),
     lineHeight: 1.75,
 }));
 

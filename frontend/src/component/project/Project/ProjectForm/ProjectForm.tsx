@@ -311,7 +311,14 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     naming pattern.
                                 </p>
                             </StyledSubtitle>
-                            <StyledInputContainer>
+                            <StyledInputContainer
+                                sx={{
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-start',
+                                    mt: theme => theme.spacing(1),
+                                    '& > *': { width: '100%' },
+                                }}
+                            >
                                 <StyledInput
                                     label={'Naming Pattern'}
                                     name="pattern"
@@ -328,25 +335,19 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                         )
                                     }
                                 />
-                                <StyledInput
-                                    label={'Naming Example'}
-                                    name="example"
-                                    type={'text'}
-                                    value={featureNamingExample || ''}
-                                    placeholder="dx-feature1"
-                                    error={Boolean(errors.namingExample)}
-                                    errorText={errors.namingExample}
-                                    onChange={e =>
-                                        onSetFeatureNamingExample(
-                                            e.target.value
-                                        )
-                                    }
-                                />
+                                <StyledSubtitle>
+                                    <p id="pattern-example-description">
+                                        The example will be shown to users when
+                                        they create a new feature flag in this
+                                        project.
+                                    </p>
+                                </StyledSubtitle>
 
                                 <StyledInput
                                     label={'Naming Example'}
                                     name="example"
                                     type={'text'}
+                                    aria-describedBy="pattern-example-description"
                                     value={featureNamingExample || ''}
                                     placeholder="dx-feature1"
                                     error={Boolean(errors.namingExample)}

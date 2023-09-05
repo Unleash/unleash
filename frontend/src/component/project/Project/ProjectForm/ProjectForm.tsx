@@ -341,10 +341,10 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     }
                                 />
                                 <StyledSubtitle>
-                                    <p id="pattern-example-description">
-                                        The example will be shown to users when
-                                        they create a new feature flag in this
-                                        project.
+                                    <p id="pattern-additional-description">
+                                        The example and description will be
+                                        shown to users when they create a new
+                                        feature flag in this project.
                                     </p>
                                 </StyledSubtitle>
 
@@ -352,7 +352,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     label={'Naming Example'}
                                     name="example"
                                     type={'text'}
-                                    aria-describedBy="pattern-example-description"
+                                    aria-describedBy="pattern-additional-description"
                                     value={featureNamingExample || ''}
                                     placeholder="dx.feature1.1-135"
                                     error={Boolean(errors.namingExample)}
@@ -363,18 +363,11 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                         )
                                     }
                                 />
-                                <StyledSubtitle>
-                                    <p id="pattern-description-description">
-                                        The description will be displayed to
-                                        users when they are creating a new
-                                        feature flag.
-                                    </p>
-                                </StyledSubtitle>
                                 <StyledTextField
-                                    label={'Naming Prompt'}
+                                    label={'Naming pattern description'}
                                     name="prompt"
                                     type={'text'}
-                                    aria-describedBy="pattern-description-description"
+                                    aria-describedBy="pattern-additional-description"
                                     placeholder={`<project>.<featureName>.<ticket>
 
 The flag name should contain the project name, the feature name, and the ticket number, each separated by a dot.`}

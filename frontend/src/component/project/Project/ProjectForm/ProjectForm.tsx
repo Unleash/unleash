@@ -75,6 +75,11 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
+const StyledFieldset = styled('fieldset')(() => ({
+    padding: 0,
+    border: 'none',
+}));
+
 const StyledSelect = styled(Select)(({ theme }) => ({
     marginBottom: theme.spacing(2),
     minWidth: '200px',
@@ -89,6 +94,14 @@ const StyledButtonContainer = styled('div')(() => ({
 const StyledInputContainer = styled('div')(() => ({
     display: 'flex',
     alignItems: 'center',
+}));
+
+const StyledFlagNamingContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    mt: theme.spacing(1),
+    '& > *': { width: '100%' },
 }));
 
 const ProjectForm: React.FC<IProjectForm> = ({
@@ -276,7 +289,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                         setFeatureNamingExample != null
                     }
                     show={
-                        <>
+                        <StyledFieldset>
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -285,17 +298,33 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     gap: 1,
                                 }}
                             >
-                                <p>Feature flag naming pattern?</p>
+                                <legend>Feature flag naming pattern?</legend>
                                 <FeatureFlagNamingTooltip />
                             </Box>
                             <StyledSubtitle>
-                                Leave it empty if you don’t want to add a naming
-                                pattern
+                                <p id="pattern-naming-description">
+                                    A feature flag naming pattern is a{' '}
+                                    <a
+                                        href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        JavaScript RegEx
+                                    </a>{' '}
+                                    used to enforce feature flag names within
+                                    this project.
+                                </p>
+                                <p>
+                                    Leave it empty if you don’t want to add a
+                                    naming pattern.
+                                </p>
                             </StyledSubtitle>
-                            <StyledInputContainer>
+                            <StyledFlagNamingContainer>
                                 <StyledInput
                                     label={'Naming Pattern'}
                                     name="pattern"
+                                    aria-describedby="pattern-naming-description"
+                                    placeholder="^[A-Za-z]+-[A-Za-z0-9]+$"
                                     type={'text'}
                                     value={featureNamingPattern || ''}
                                     error={Boolean(errors.featureNamingPattern)}
@@ -307,11 +336,21 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                         )
                                     }
                                 />
+                                <StyledSubtitle>
+                                    <p id="pattern-example-description">
+                                        The example will be shown to users when
+                                        they create a new feature flag in this
+                                        project.
+                                    </p>
+                                </StyledSubtitle>
+
                                 <StyledInput
                                     label={'Naming Example'}
                                     name="example"
                                     type={'text'}
+                                    aria-describedBy="pattern-example-description"
                                     value={featureNamingExample || ''}
+                                    placeholder="dx-feature1"
                                     error={Boolean(errors.namingExample)}
                                     errorText={errors.namingExample}
                                     onChange={e =>
@@ -320,8 +359,8 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                         )
                                     }
                                 />
-                            </StyledInputContainer>
-                        </>
+                            </StyledFlagNamingContainer>
+                        </StyledFieldset>
                     }
                 />
             </StyledContainer>

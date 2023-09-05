@@ -16,11 +16,13 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 interface IArchiveBatchActionsProps {
     selectedIds: string[];
     projectId: string;
+    onReviveConfirm?: () => void;
 }
 
 export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
     selectedIds,
     projectId,
+    onReviveConfirm,
 }) => {
     const { reviveFeatures } = useProjectApi();
     const { setToastData, setToastApiError } = useToast();
@@ -31,6 +33,7 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
     const onRevive = async () => {
         try {
             await reviveFeatures(projectId, selectedIds);
+            onReviveConfirm?.();
             await refetchArchived();
             setToastData({
                 type: 'success',

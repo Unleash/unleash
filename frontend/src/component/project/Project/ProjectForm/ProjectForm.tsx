@@ -155,13 +155,12 @@ const ProjectForm: React.FC<IProjectForm> = ({
             } else {
                 delete errors.namingExample;
             }
-            setFeatureNamingExample && setFeatureNamingExample(trim(example));
+            setFeatureNamingExample && setFeatureNamingExample(example);
         }
     };
 
     const onSetFeatureNamingDescription = (description: string) => {
-        setFeatureNamingDescription &&
-            setFeatureNamingDescription(trim(description));
+        setFeatureNamingDescription && setFeatureNamingDescription(description);
     };
 
     return (

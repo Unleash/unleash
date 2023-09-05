@@ -36,11 +36,9 @@ const searchContext = {
 test('displays search and filter instructions when no search value is provided', () => {
     render(<SearchSuggestions getSearchContext={() => searchContext} />);
 
-    expect(
-        screen.getByText(/Filter your search with operators like:/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Filter your results by:/i)).toBeInTheDocument();
 
-    expect(screen.getByText(/Filter by Environment:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Environment:/)).toBeInTheDocument();
 
     expect(
         screen.getByText(/environment:"dev env",pre-prod/i)

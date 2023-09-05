@@ -4,7 +4,7 @@ import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrate
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Select from 'component/common/select';
 import { ProjectMode } from '../hooks/useProjectForm';
-import { Box, styled, TextField } from '@mui/material';
+import { Box, Link, styled, TextField } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
@@ -73,6 +73,11 @@ const StyledInput = styled(Input)(({ theme }) => ({
 const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
     marginBottom: theme.spacing(2),
+}));
+
+const StyledFieldset = styled('fieldset')(() => ({
+    padding: 0,
+    border: 'none',
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
@@ -276,7 +281,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                         setFeatureNamingExample != null
                     }
                     show={
-                        <>
+                        <StyledFieldset>
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -285,17 +290,33 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     gap: 1,
                                 }}
                             >
-                                <p>Feature flag naming pattern?</p>
+                                <legend>Feature flag naming pattern?</legend>
                                 <FeatureFlagNamingTooltip />
                             </Box>
                             <StyledSubtitle>
-                                Leave it empty if you don’t want to add a naming
-                                pattern
+                                <p id="pattern-naming-description">
+                                    A feature flag naming pattern is a{' '}
+                                    <a
+                                        href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        JavaScript RegEx
+                                    </a>{' '}
+                                    used to enforce feature flag names within
+                                    this project.
+                                </p>
+                                <p>
+                                    Leave it empty if you don’t want to add a
+                                    naming pattern.
+                                </p>
                             </StyledSubtitle>
                             <StyledInputContainer>
                                 <StyledInput
                                     label={'Naming Pattern'}
                                     name="pattern"
+                                    aria-describedby="pattern-naming-description"
+                                    placeholder="^[A-Za-z]+-[A-Za-z0-9]+$"
                                     type={'text'}
                                     value={featureNamingPattern || ''}
                                     error={Boolean(errors.featureNamingPattern)}
@@ -312,6 +333,22 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     name="example"
                                     type={'text'}
                                     value={featureNamingExample || ''}
+                                    placeholder="dx-feature1"
+                                    error={Boolean(errors.namingExample)}
+                                    errorText={errors.namingExample}
+                                    onChange={e =>
+                                        onSetFeatureNamingExample(
+                                            e.target.value
+                                        )
+                                    }
+                                />
+
+                                <StyledInput
+                                    label={'Naming Example'}
+                                    name="example"
+                                    type={'text'}
+                                    value={featureNamingExample || ''}
+                                    placeholder="dx-feature1"
                                     error={Boolean(errors.namingExample)}
                                     errorText={errors.namingExample}
                                     onChange={e =>
@@ -321,7 +358,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     }
                                 />
                             </StyledInputContainer>
-                        </>
+                        </StyledFieldset>
                     }
                 />
             </StyledContainer>

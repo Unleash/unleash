@@ -96,6 +96,14 @@ const StyledInputContainer = styled('div')(() => ({
     alignItems: 'center',
 }));
 
+const StyledFlagNamingContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    mt: theme => theme.spacing(1),
+    '& > *': { width: '100%' },
+}));
+
 const ProjectForm: React.FC<IProjectForm> = ({
     children,
     handleSubmit,
@@ -311,14 +319,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     naming pattern.
                                 </p>
                             </StyledSubtitle>
-                            <StyledInputContainer
-                                sx={{
-                                    flexDirection: 'column',
-                                    alignItems: 'flex-start',
-                                    mt: theme => theme.spacing(1),
-                                    '& > *': { width: '100%' },
-                                }}
-                            >
+                            <StyledFlagNamingContainer>
                                 <StyledInput
                                     label={'Naming Pattern'}
                                     name="pattern"
@@ -358,7 +359,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                         )
                                     }
                                 />
-                            </StyledInputContainer>
+                            </StyledFlagNamingContainer>
                         </StyledFieldset>
                     }
                 />

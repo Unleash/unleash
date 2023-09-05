@@ -47,19 +47,6 @@ describe('project-access', () => {
             id: groupAndProjectName,
             name: groupAndProjectName,
         });
-
-        cy.intercept('GET', `${baseUrl}/api/admin/ui-config`, req => {
-            req.headers['cache-control'] =
-                'no-cache, no-store, must-revalidate';
-            req.on('response', res => {
-                if (res.body) {
-                    res.body.flags = {
-                        ...res.body.flags,
-                        multipleRoles: true,
-                    };
-                }
-            });
-        });
     });
 
     after(() => {
@@ -78,6 +65,20 @@ describe('project-access', () => {
 
     beforeEach(() => {
         cy.login_UI();
+
+        cy.intercept('GET', `${baseUrl}/api/admin/ui-config`, req => {
+            req.headers['cache-control'] =
+                'no-cache, no-store, must-revalidate';
+            req.on('response', res => {
+                if (res.body) {
+                    res.body.flags = {
+                        ...res.body.flags,
+                        multipleRoles: true,
+                    };
+                }
+            });
+        });
+
         cy.visit(`/projects/${groupAndProjectName}/settings/access`);
         if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
             cy.get("[data-testid='CLOSE_SPLASH']").click();
@@ -122,8 +123,6 @@ describe('project-access', () => {
         cy.contains(`1-${groupAndProjectName}`);
     });
 
-    // TODO: This works locally but not on GH actions, I assume because of the way we (don't) handle feature flagging for Cypress tests in GH actions.
-    // This should be uncommented again once we remove the multipleRoles flag or if we find a better solution in the meantime.
     it('can edit role', () => {
         cy.get(`[data-testid='${PA_EDIT_BUTTON_ID}']`).first().click();
 

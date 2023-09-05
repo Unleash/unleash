@@ -464,6 +464,7 @@ export const ProjectFeatureToggles = ({
         state: { selectedRowIds, sortBy, hiddenColumns },
         prepareRow,
         setHiddenColumns,
+        toggleAllRowsSelected,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
@@ -715,6 +716,7 @@ export const ProjectFeatureToggles = ({
                     selectedIds={Object.keys(selectedRowIds)}
                     data={features}
                     projectId={projectId}
+                    onResetSelection={() => toggleAllRowsSelected(false)}
                 />
             </BatchSelectionActionsBar>
         </>

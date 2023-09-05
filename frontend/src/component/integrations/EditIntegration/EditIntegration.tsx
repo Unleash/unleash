@@ -1,9 +1,9 @@
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import { IntegrationForm } from '../IntegrationForm/IntegrationForm';
 import cloneDeep from 'lodash.clonedeep';
-import { IAddon } from 'interfaces/addons';
 import { DEFAULT_DATA } from '../CreateIntegration/CreateIntegration';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { AddonSchema } from 'openapi';
 
 export const EditIntegration = () => {
     const addonId = useRequiredPathParam('addonId');
@@ -11,7 +11,7 @@ export const EditIntegration = () => {
 
     const editMode = true;
     const addon = addons.find(
-        (addon: IAddon) => addon.id === Number(addonId)
+        (addon: AddonSchema) => addon.id === Number(addonId)
     ) || { ...cloneDeep(DEFAULT_DATA) };
     const provider = addon
         ? providers.find(provider => provider.name === addon.provider)

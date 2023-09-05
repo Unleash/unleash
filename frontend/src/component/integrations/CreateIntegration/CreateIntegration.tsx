@@ -1,10 +1,10 @@
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import { IntegrationForm } from '../IntegrationForm/IntegrationForm';
 import cloneDeep from 'lodash.clonedeep';
-import { IAddon } from 'interfaces/addons';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { AddonSchema } from 'openapi';
 
-export const DEFAULT_DATA = {
+export const DEFAULT_DATA: Omit<AddonSchema, 'id'> = {
     provider: '',
     description: '',
     enabled: true,
@@ -12,7 +12,7 @@ export const DEFAULT_DATA = {
     events: [],
     projects: [],
     environments: [],
-} as unknown as IAddon; // TODO: improve type
+};
 
 export const CreateIntegration = () => {
     const providerId = useRequiredPathParam('providerId');

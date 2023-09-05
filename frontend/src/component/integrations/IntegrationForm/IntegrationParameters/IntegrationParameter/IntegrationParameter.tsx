@@ -1,7 +1,7 @@
 import { TextField, Typography } from '@mui/material';
-import { IAddonConfig, IAddonProviderParams } from 'interfaces/addons';
 import { ChangeEventHandler } from 'react';
 import { StyledAddonParameterContainer } from '../../IntegrationForm.styles';
+import type { AddonParameterSchema, AddonSchema } from 'openapi';
 
 const resolveType = ({ type = 'text', sensitive = false }, value: string) => {
     if (sensitive && value === MASKED_VALUE) {
@@ -17,9 +17,9 @@ const MASKED_VALUE = '*****';
 
 export interface IIntegrationParameterProps {
     parametersErrors: Record<string, string>;
-    definition: IAddonProviderParams;
+    definition: AddonParameterSchema;
     setParameterValue: (param: string) => ChangeEventHandler<HTMLInputElement>;
-    config: IAddonConfig;
+    config: AddonSchema;
 }
 
 export const IntegrationParameter = ({
@@ -28,8 +28,11 @@ export const IntegrationParameter = ({
     parametersErrors,
     setParameterValue,
 }: IIntegrationParameterProps) => {
-    const value = config.parameters[definition.name] || '';
-    const type = resolveType(definition, value);
+    const value = config.parameters[definition?.name] || '';
+    const type = resolveType(
+        definition,
+        typeof value === 'string' ? value : ''
+    );
     const error = parametersErrors[definition.name];
 
     return (

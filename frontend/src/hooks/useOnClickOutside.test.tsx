@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { useRef } from 'react';
 import { useOnClickOutside } from './useOnClickOutside';
 
@@ -20,10 +20,9 @@ test('should not call the callback when clicking inside', () => {
     let mockCallbackCallCount = 0;
     const mockCallback = () => mockCallbackCallCount++;
 
-    const { getByTestId } = render(
-        <TestComponent outsideClickHandler={mockCallback} />
-    );
-    const insideDiv = getByTestId('inside');
+    render(<TestComponent outsideClickHandler={mockCallback} />);
+
+    const insideDiv = screen.getByTestId('inside');
 
     // Simulate a click inside the div
     fireEvent.click(insideDiv);
@@ -35,10 +34,9 @@ test('should call the callback when clicking outside', () => {
     let mockCallbackCallCount = 0;
     const mockCallback = () => mockCallbackCallCount++;
 
-    const { getByTestId } = render(
-        <TestComponent outsideClickHandler={mockCallback} />
-    );
-    const outsideDiv = getByTestId('outside');
+    render(<TestComponent outsideClickHandler={mockCallback} />);
+
+    const outsideDiv = screen.getByTestId('outside');
 
     fireEvent.click(outsideDiv);
 

@@ -5,7 +5,6 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import useToast from 'hooks/useToast';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
-import { IAddon } from 'interfaces/addons';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { sortTypes } from 'utils/sortTypes';
@@ -15,7 +14,8 @@ import { SortableTableHeader, TablePlaceholder } from 'component/common/Table';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
 import { ConfiguredAddonsActionsCell } from './ConfiguredAddonsActionCell/ConfiguredAddonsActionsCell';
-import { IntegrationNameCell } from '../IntegrationNameCell/IntegrationNameCell';
+import { AddonNameCell } from '../AddonNameCell/AddonNameCell';
+import { AddonSchema } from 'openapi';
 
 /**
  * @deprecated Remove when integrationsRework flag is removed
@@ -25,7 +25,7 @@ export const ConfiguredAddons = () => {
     const { updateAddon, removeAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
     const [showDelete, setShowDelete] = useState(false);
-    const [deletedAddon, setDeletedAddon] = useState<IAddon>({
+    const [deletedAddon, setDeletedAddon] = useState<AddonSchema>({
         id: 0,
         provider: '',
         description: '',
@@ -48,7 +48,7 @@ export const ConfiguredAddons = () => {
     }, [addons, loading]);
 
     const toggleAddon = useCallback(
-        async (addon: IAddon) => {
+        async (addon: AddonSchema) => {
             try {
                 await updateAddon({ ...addon, enabled: !addon.enabled });
                 refetchAddons();
@@ -91,7 +91,7 @@ export const ConfiguredAddons = () => {
                         original: { provider, description },
                     },
                 }: any) => (
-                    <IntegrationNameCell
+                    <AddonNameCell
                         provider={{
                             ...(providers.find(
                                 ({ name }) => name === provider
@@ -111,7 +111,7 @@ export const ConfiguredAddons = () => {
                 Cell: ({
                     row: { original },
                 }: {
-                    row: { original: IAddon };
+                    row: { original: AddonSchema };
                 }) => (
                     <ConfiguredAddonsActionsCell
                         key={original.id}
@@ -163,7 +163,7 @@ export const ConfiguredAddons = () => {
         useSortBy
     );
 
-    const onRemoveAddon = async (addon: IAddon) => {
+    const onRemoveAddon = async (addon: AddonSchema) => {
         try {
             await removeAddon(addon.id);
             refetchAddons();

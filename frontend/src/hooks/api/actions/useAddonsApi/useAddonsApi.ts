@@ -1,6 +1,6 @@
-import { IAddon } from 'interfaces/addons';
 import { useCallback } from 'react';
 import useAPI from '../useApi/useApi';
+import type { AddonSchema } from 'openapi';
 
 const useAddonsApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -9,7 +9,7 @@ const useAddonsApi = () => {
 
     const URI = 'api/admin/addons';
 
-    const createAddon = async (addonConfig: IAddon) => {
+    const createAddon = async (addonConfig: Omit<AddonSchema, 'id'>) => {
         const path = URI;
         const req = createRequest(path, {
             method: 'POST',
@@ -29,7 +29,7 @@ const useAddonsApi = () => {
     };
 
     const updateAddon = useCallback(
-        async (addonConfig: IAddon) => {
+        async (addonConfig: AddonSchema) => {
             const path = `${URI}/${addonConfig.id}`;
             const req = createRequest(path, {
                 method: 'PUT',

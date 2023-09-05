@@ -355,6 +355,8 @@ export const ProjectFeatureToggles = ({
         searchParams.get('search') || ''
     );
 
+    const [showTitle, setShowTitle] = useState(true);
+
     const featuresData = useMemo(
         () =>
             features.map(feature => ({
@@ -532,15 +534,23 @@ export const ProjectFeatureToggles = ({
                 className={styles.container}
                 header={
                     <PageHeader
-                        titleElement={`Feature toggles (${rows.length})`}
+                        titleElement={
+                            showTitle
+                                ? `Feature toggles (${rows.length})`
+                                : null
+                        }
                         actions={
                             <>
                                 <ConditionallyRender
                                     condition={!isSmallScreen}
                                     show={
                                         <Search
+                                            placeholder="Search and Filter"
+                                            expandable
                                             initialValue={searchValue}
                                             onChange={setSearchValue}
+                                            onFocus={() => setShowTitle(false)}
+                                            onBlur={() => setShowTitle(true)}
                                             hasFilters
                                             getSearchContext={getSearchContext}
                                         />

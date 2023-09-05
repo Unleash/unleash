@@ -12,6 +12,8 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside';
 interface ISearchProps {
     initialValue?: string;
     onChange: (value: string) => void;
+    onFocus?: () => void;
+    onBlur?: () => void;
     className?: string;
     placeholder?: string;
     hasFilters?: boolean;
@@ -19,15 +21,18 @@ interface ISearchProps {
     getSearchContext?: () => IGetSearchContextOutput;
     containerStyles?: React.CSSProperties;
     debounceTime?: number;
+    expandable?: boolean;
 }
 
-const StyledContainer = styled('div')(({ theme }) => ({
+const StyledContainer = styled('div', {
+    shouldForwardProp: prop => prop !== 'active',
+})<{ active: boolean | undefined }>(({ theme, active }) => ({
     display: 'flex',
     flexGrow: 1,
     alignItems: 'center',
     position: 'relative',
     backgroundColor: theme.palette.background.paper,
-    maxWidth: '400px',
+    maxWidth: active ? '100%' : '400px',
     [theme.breakpoints.down('md')]: {
         marginTop: theme.spacing(1),
         maxWidth: '100%',
@@ -62,18 +67,24 @@ const StyledClose = styled(Close)(({ theme }) => ({
 export const Search = ({
     initialValue = '',
     onChange,
+    onFocus,
+    onBlur,
     className,
     placeholder: customPlaceholder,
     hasFilters,
     disabled,
     getSearchContext,
     containerStyles,
+    expandable = false,
     debounceTime = 200,
 }: ISearchProps) => {
     const searchInputRef = useRef<HTMLInputElement>(null);
     const suggestionsRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
-    const hideSuggestions = () => setShowSuggestions(false);
+    const hideSuggestions = () => {
+        setShowSuggestions(false);
+        onBlur?.();
+    };
 
     const [value, setValue] = useState(initialValue);
     const debouncedOnChange = useAsyncDebounce(onChange, debounceTime);
@@ -104,7 +115,10 @@ export const Search = ({
     useOnClickOutside([searchInputRef, suggestionsRef], hideSuggestions);
 
     return (
-        <StyledContainer style={containerStyles}>
+        <StyledContainer
+            style={containerStyles}
+            active={expandable && showSuggestions}
+        >
             <StyledSearch className={className}>
                 <SearchIcon
                     sx={{
@@ -121,7 +135,10 @@ export const Search = ({
                     }}
                     value={value}
                     onChange={e => onSearchChange(e.target.value)}
-                    onFocus={() => setShowSuggestions(true)}
+                    onFocus={() => {
+                        setShowSuggestions(true);
+                        onFocus?.();
+                    }}
                     disabled={disabled}
                 />
                 <Box sx={{ width: theme => theme.spacing(4) }}>

@@ -1,6 +1,5 @@
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IGetSearchContextOutput } from 'hooks/useSearch';
 import { VFC } from 'react';
 
 const StyledHeader = styled('span')(({ theme }) => ({
@@ -11,26 +10,29 @@ const StyledHeader = styled('span')(({ theme }) => ({
 const StyledCode = styled('span')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
     color: theme.palette.text.primary,
-    padding: theme.spacing(0, 0.5),
+    padding: theme.spacing(0.2, 1),
     borderRadius: theme.spacing(0.5),
+}));
+
+const StyledFilterHint = styled('p')(({ theme }) => ({
+    // marginTop: theme.spacing(0.5),
+    lineHeight: 1.75,
 }));
 
 interface ISearchInstructionsProps {
     filters: any[];
-    getSearchContext: () => IGetSearchContextOutput;
     searchableColumnsString: string;
 }
 
 export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
     filters,
-    getSearchContext,
     searchableColumnsString,
 }) => {
     return (
         <>
             <StyledHeader>
                 {filters.length > 0
-                    ? 'Filter your search with operators like:'
+                    ? 'Filter your results by:'
                     : `Start typing to search${
                           searchableColumnsString
                               ? ` in ${searchableColumnsString}`
@@ -38,8 +40,8 @@ export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
                       }`}
             </StyledHeader>
             {filters.map(filter => (
-                <p key={filter.name}>
-                    Filter by {filter.header}:{' '}
+                <StyledFilterHint key={filter.name}>
+                    {filter.header}:{' '}
                     <StyledCode>
                         {filter.name}:{filter.options[0]}
                     </StyledCode>
@@ -55,7 +57,7 @@ export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
                             </>
                         }
                     />
-                </p>
+                </StyledFilterHint>
             ))}
         </>
     );

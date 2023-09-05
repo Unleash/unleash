@@ -63,7 +63,7 @@ const createGroup = async ({
         name: `Group ${groupIndex}`,
         rootRole: role,
     });
-    if (users) await groupStore.addUsersToGroup(group.id!, users, 'Admin');
+    if (users) await groupStore.addUsersToGroup(group.id, users, 'Admin');
     return group;
 };
 
@@ -1292,7 +1292,7 @@ test('if group has two roles user has union of permissions from the two roles', 
 
     await accessService.setProjectRolesForGroup(
         projectName,
-        emptyGroup.id!,
+        emptyGroup.id,
         [firstRole.id, secondRole.id],
         'testusr',
     );
@@ -1347,7 +1347,7 @@ test('calling set for group overwrites existing roles', async () => {
 
     await accessService.setProjectRolesForGroup(
         projectName,
-        emptyGroup.id!,
+        emptyGroup.id,
         [firstRole.id, secondRole.id],
         'testusr',
     );
@@ -1363,7 +1363,7 @@ test('calling set for group overwrites existing roles', async () => {
 
     await accessService.setProjectRolesForGroup(
         projectName,
-        emptyGroup.id!,
+        emptyGroup.id,
         [firstRole.id],
         'testusr',
     );
@@ -1404,7 +1404,7 @@ test('group with root role can be assigned a project specific role', async () =>
 
     await accessService.setProjectRolesForGroup(
         projectName,
-        emptyGroup.id!,
+        emptyGroup.id,
         [firstRole.id],
         'testusr',
     );
@@ -1638,7 +1638,7 @@ test('calling set roles for group with invalid project role ids should not assig
 
     accessService.setProjectRolesForGroup(
         projectName,
-        emptyGroup.id!,
+        emptyGroup.id,
         [adminRootRole.id, 9999],
         'admin',
     );
@@ -1669,7 +1669,7 @@ test('calling set roles for group with empty role array removes all roles', asyn
 
     await accessService.setProjectRolesForGroup(
         projectName,
-        emptyGroup.id!,
+        emptyGroup.id,
         [role.id],
         'admin',
     );
@@ -1682,7 +1682,7 @@ test('calling set roles for group with empty role array removes all roles', asyn
 
     await accessService.setProjectRolesForGroup(
         projectName,
-        emptyGroup.id!,
+        emptyGroup.id,
         [],
         'admin',
     );
@@ -1719,7 +1719,7 @@ test('calling set roles for group with empty role array should not remove root r
 
     await accessService.setProjectRolesForGroup(
         projectName,
-        group.id!,
+        group.id,
         [role.id],
         'admin',
     );
@@ -1732,7 +1732,7 @@ test('calling set roles for group with empty role array should not remove root r
 
     await accessService.setProjectRolesForGroup(
         projectName,
-        group.id!,
+        group.id,
         [],
         'admin',
     );
@@ -1778,7 +1778,7 @@ test('remove group access should remove all project roles', async () => {
 
     await accessService.setProjectRolesForGroup(
         projectName,
-        group.id!,
+        group.id,
         [firstRole.id, secondRole.id],
         'admin',
     );
@@ -1789,7 +1789,7 @@ test('remove group access should remove all project roles', async () => {
 
     expect(assignedPermissions.length).toBe(3);
 
-    await accessService.removeGroupAccess(projectName, group.id!);
+    await accessService.removeGroupAccess(projectName, group.id);
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
         emptyUser,
@@ -1831,7 +1831,7 @@ test('remove group access should remove all project roles, while leaving root ro
 
     await accessService.setProjectRolesForGroup(
         projectName,
-        group.id!,
+        group.id,
         [firstRole.id, secondRole.id],
         'admin',
     );
@@ -1842,7 +1842,7 @@ test('remove group access should remove all project roles, while leaving root ro
 
     expect(assignedPermissions.length).toBe(4);
 
-    await accessService.removeGroupAccess(projectName, group.id!);
+    await accessService.removeGroupAccess(projectName, group.id);
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
         adminUser,

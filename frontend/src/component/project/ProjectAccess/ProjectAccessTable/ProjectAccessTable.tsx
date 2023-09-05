@@ -151,11 +151,13 @@ export const ProjectAccessTable: VFC = () => {
                 id: 'role',
                 Header: 'Role',
                 accessor: (row: IProjectAccess) =>
-                    row.entity.roles.length > 1
-                        ? `${row.entity.roles.length} roles`
-                        : access?.roles.find(
-                              ({ id }) => id === row.entity.roleId
-                          )?.name,
+                    row.entity.roles
+                        ? row.entity.roles.length > 1
+                            ? `${row.entity.roles.length} roles`
+                            : access?.roles.find(
+                                  ({ id }) => id === row.entity.roleId
+                              )?.name
+                        : 'No Roles!',
                 Cell: ({
                     value,
                     row: { original: row },

@@ -7,6 +7,7 @@ import { SearchSuggestions } from './SearchSuggestions/SearchSuggestions';
 import { IGetSearchContextOutput } from 'hooks/useSearch';
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
+import { useOnClickOutside } from 'hooks/useOnClickOutside';
 
 interface ISearchProps {
     initialValue?: string;
@@ -69,7 +70,8 @@ export const Search = ({
     containerStyles,
     debounceTime = 200,
 }: ISearchProps) => {
-    const ref = useRef<HTMLInputElement>();
+    const searchInputRef = useRef<HTMLInputElement>(null);
+    const suggestionsRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
 
     const [value, setValue] = useState(initialValue);
@@ -83,19 +85,24 @@ export const Search = ({
     const hotkey = useKeyboardShortcut(
         { modifiers: ['ctrl'], key: 'k', preventDefault: true },
         () => {
-            if (document.activeElement === ref.current) {
-                ref.current?.blur();
+            if (document.activeElement === searchInputRef.current) {
+                searchInputRef.current?.blur();
             } else {
-                ref.current?.focus();
+                searchInputRef.current?.focus();
             }
         }
     );
     useKeyboardShortcut({ key: 'Escape' }, () => {
-        if (document.activeElement === ref.current) {
-            ref.current?.blur();
+        if (document.activeElement === searchInputRef.current) {
+            searchInputRef.current?.blur();
+            setShowSuggestions(false);
         }
     });
     const placeholder = `${customPlaceholder ?? 'Search'} (${hotkey})`;
+
+    useOnClickOutside([searchInputRef, suggestionsRef], () =>
+        setShowSuggestions(false)
+    );
 
     return (
         <StyledContainer style={containerStyles}>
@@ -107,7 +114,7 @@ export const Search = ({
                     }}
                 />
                 <StyledInputBase
-                    inputRef={ref}
+                    inputRef={searchInputRef}
                     placeholder={placeholder}
                     inputProps={{
                         'aria-label': placeholder,
@@ -116,7 +123,6 @@ export const Search = ({
                     value={value}
                     onChange={e => onSearchChange(e.target.value)}
                     onFocus={() => setShowSuggestions(true)}
-                    onBlur={() => setShowSuggestions(false)}
                     disabled={disabled}
                 />
                 <Box sx={{ width: theme => theme.spacing(4) }}>
@@ -128,7 +134,7 @@ export const Search = ({
                                     size="small"
                                     onClick={() => {
                                         onSearchChange('');
-                                        ref.current?.focus();
+                                        searchInputRef.current?.focus();
                                     }}
                                     sx={{ padding: theme => theme.spacing(1) }}
                                 >
@@ -142,7 +148,11 @@ export const Search = ({
             <ConditionallyRender
                 condition={Boolean(hasFilters) && showSuggestions}
                 show={
-                    <SearchSuggestions getSearchContext={getSearchContext!} />
+                    <div ref={suggestionsRef}>
+                        <SearchSuggestions
+                            getSearchContext={getSearchContext!}
+                        />
+                    </div>
                 }
             />
         </StyledContainer>

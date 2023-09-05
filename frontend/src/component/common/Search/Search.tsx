@@ -73,6 +73,7 @@ export const Search = ({
     const searchInputRef = useRef<HTMLInputElement>(null);
     const suggestionsRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const hideSuggestions = () => setShowSuggestions(false);
 
     const [value, setValue] = useState(initialValue);
     const debouncedOnChange = useAsyncDebounce(onChange, debounceTime);
@@ -95,14 +96,12 @@ export const Search = ({
     useKeyboardShortcut({ key: 'Escape' }, () => {
         if (document.activeElement === searchInputRef.current) {
             searchInputRef.current?.blur();
-            setShowSuggestions(false);
+            hideSuggestions();
         }
     });
     const placeholder = `${customPlaceholder ?? 'Search'} (${hotkey})`;
 
-    useOnClickOutside([searchInputRef, suggestionsRef], () =>
-        setShowSuggestions(false)
-    );
+    useOnClickOutside([searchInputRef, suggestionsRef], hideSuggestions);
 
     return (
         <StyledContainer style={containerStyles}>

@@ -4,7 +4,6 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import SelectMenu from 'component/common/select';
 import { OverrideConfig } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/VariantOverrides';
 import {
-    Box,
     Button,
     FormControlLabel,
     IconButton,
@@ -86,8 +85,12 @@ const StyledFieldColumn = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledInput = styled(Input)(() => ({
+const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
+    '& textarea': {
+        minHeight: theme.spacing(3),
+        resize: 'vertical',
+    },
 }));
 
 const StyledPercentageContainer = styled('div')(({ theme }) => ({

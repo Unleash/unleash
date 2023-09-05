@@ -31,7 +31,7 @@ test('get snapshot should not call getStats', async () => {
     // subsequent calls to getStatsSnapshot don't call getStats
     for (let i = 0; i < 3; i++) {
         const stats = instanceStatsService.getStatsSnapshot();
-        expect(stats.clientApps).toStrictEqual([
+        expect(stats?.clientApps).toStrictEqual([
             { range: 'allTime', count: 0 },
             { range: '30d', count: 0 },
             { range: '7d', count: 0 },

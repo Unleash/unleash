@@ -217,7 +217,6 @@ export const routes: IRoute[] = [
         component: FeatureTypesList,
         type: 'protected',
         menu: { mobile: true, advanced: true },
-        flag: 'configurableFeatureTypeLifetimes',
     },
 
     // Strategies

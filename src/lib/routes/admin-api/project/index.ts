@@ -15,6 +15,8 @@ import ProjectService from '../../../services/project-service';
 import VariantsController from './variants';
 import {
     createResponseSchema,
+    ProjectDoraMetricsSchema,
+    projectDoraMetricsSchema,
     ProjectOverviewSchema,
     projectOverviewSchema,
     projectsSchema,
@@ -27,6 +29,7 @@ import { ProjectApiTokenController } from './api-token';
 import ProjectArchiveController from './project-archive';
 import { createKnexTransactionStarter } from '../../../db/transaction';
 import { Db } from '../../../db/db';
+import { InvalidOperationError } from '../../../error';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
@@ -75,6 +78,26 @@ export default class ProjectApi extends Controller {
                         'This endpoint returns an overview of the specified projects stats, project health, number of members, which environments are configured, and the features in the project.',
                     responses: {
                         200: createResponseSchema('projectOverviewSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:projectId/dora',
+            handler: this.getProjectDora,
+            permission: NONE,
+            middleware: [
+                services.openApiService.validPath({
+                    tags: ['Projects'],
+                    operationId: 'getProjectDora',
+                    summary: 'Get an overview project dora metrics.',
+                    description:
+                        'This endpoint returns an overview of the specified dora metrics',
+                    responses: {
+                        200: createResponseSchema('projectDoraMetricsSchema'),
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
@@ -135,5 +158,27 @@ export default class ProjectApi extends Controller {
             projectOverviewSchema.$id,
             serializeDates(overview),
         );
+    }
+
+    async getProjectDora(
+        req: IAuthRequest,
+        res: Response<ProjectDoraMetricsSchema>,
+    ): Promise<void> {
+        if (this.config.flagResolver.isEnabled('doraMetrics')) {
+            const { projectId } = req.params;
+
+            const dora = await this.projectService.getDoraMetrics(projectId);
+
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                projectDoraMetricsSchema.$id,
+                dora,
+            );
+        } else {
+            throw new InvalidOperationError(
+                'Feature dora metrics is not enabled',
+            );
+        }
     }
 }

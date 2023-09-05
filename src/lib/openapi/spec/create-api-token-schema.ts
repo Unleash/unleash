@@ -1,5 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
-
+import { mergeAllOfs } from '../util/all-of';
 const adminSchema = {
     required: ['type'],
     type: 'object',
@@ -74,6 +74,18 @@ const clientFrontendSchema = {
     },
 } as const;
 
+const expireSchema = {
+    type: 'object',
+    properties: {
+        expiresAt: {
+            type: 'string',
+            format: 'date-time',
+            description: 'The time when this token should expire.',
+            example: '2023-07-04T11:26:24+02:00',
+        },
+    },
+} as const;
+
 // TODO: (openapi) this schema isn't entirely correct: `project` and `projects`
 // are mutually exclusive.
 //
@@ -88,27 +100,11 @@ export const createApiTokenSchema = {
     type: 'object',
     description:
         'The data required to create an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).',
-    properties: {
-        expiresAt: {
-            type: 'string',
-            format: 'date-time',
-            description: 'The time when this token should expire.',
-            example: '2023-07-04T11:26:24+02:00',
-        },
-    },
     oneOf: [
-        {
-            allOf: [adminSchema, tokenNameSchema],
-        },
-        {
-            allOf: [adminSchema, usernameSchema],
-        },
-        {
-            allOf: [clientFrontendSchema, tokenNameSchema],
-        },
-        {
-            allOf: [clientFrontendSchema, usernameSchema],
-        },
+        mergeAllOfs([expireSchema, adminSchema, tokenNameSchema]),
+        mergeAllOfs([expireSchema, adminSchema, usernameSchema]),
+        mergeAllOfs([expireSchema, clientFrontendSchema, tokenNameSchema]),
+        mergeAllOfs([expireSchema, clientFrontendSchema, usernameSchema]),
     ],
     components: {},
 } as const;

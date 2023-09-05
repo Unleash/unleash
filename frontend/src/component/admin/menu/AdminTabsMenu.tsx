@@ -21,7 +21,7 @@ const StyledBadgeContainer = styled('div')(({ theme }) => ({
 }));
 
 export const AdminTabsMenu: VFC = () => {
-    const { uiConfig, isPro, isOss } = useUiConfig();
+    const { isPro, isOss } = useUiConfig();
     const { pathname } = useLocation();
 
     const activeTab = pathname.split('/')[2];

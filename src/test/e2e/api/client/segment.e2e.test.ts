@@ -66,7 +66,7 @@ const updateSegment = (
 
 const mockStrategy = (segments: number[] = []) => {
     return {
-        name: randomId(),
+        name: 'flexibleRollout',
         parameters: {},
         constraints: [],
         segments,

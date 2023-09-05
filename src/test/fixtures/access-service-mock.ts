@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { AccessService } from '../../lib/services/access-service';
+import {
+    AccessService,
+    AccessWithRoles,
+} from '../../lib/services/access-service';
 import User from '../../lib/types/user';
 import noLoggerProvider from './no-logger';
 import { IRole } from '../../lib/types/stores/access-store';
-import {
-    IAvailablePermissions,
-    IRoleData,
-    IUserWithRole,
-} from '../../lib/types/model';
-import { IGroupModelWithProjectRole } from '../../lib/types/group';
+import { IAvailablePermissions } from '../../lib/types/model';
 
 class AccessServiceMock extends AccessService {
     constructor() {
@@ -78,9 +76,7 @@ class AccessServiceMock extends AccessService {
         throw new Error('Method not implemented.');
     }
 
-    getProjectRoleAccess(
-        projectId: string,
-    ): Promise<[IRole[], IUserWithRole[], IGroupModelWithProjectRole[]]> {
+    getProjectRoleAccess(projectId: string): Promise<AccessWithRoles> {
         throw new Error('Method not implemented.');
     }
 

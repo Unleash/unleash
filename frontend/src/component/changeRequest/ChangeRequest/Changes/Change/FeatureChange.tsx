@@ -11,6 +11,7 @@ import { ToggleStatusChange } from './ToggleStatusChange';
 import { StrategyChange } from './StrategyChange';
 import { VariantPatch } from './VariantPatch/VariantPatch';
 import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder';
+import { ArchiveFeatureChange } from './ArchiveFeatureChange';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),
@@ -89,6 +90,9 @@ export const FeatureChange: FC<{
                         enabled={change.payload.enabled}
                         actions={actions}
                     />
+                )}
+                {change.action === 'archiveFeature' && (
+                    <ArchiveFeatureChange actions={actions} />
                 )}
 
                 {change.action === 'addStrategy' ||

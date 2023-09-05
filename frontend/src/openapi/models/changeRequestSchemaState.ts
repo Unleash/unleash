@@ -17,4 +17,5 @@ export const ChangeRequestSchemaState = {
     Approved: 'Approved',
     Applied: 'Applied',
     Cancelled: 'Cancelled',
+    Rejected: 'Rejected',
 } as const;

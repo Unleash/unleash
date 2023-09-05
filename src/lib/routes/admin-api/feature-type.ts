@@ -113,20 +113,16 @@ When a feature toggle type's expected lifetime is changed, this will also cause 
         >,
         res: Response<FeatureTypeSchema>,
     ): Promise<void> {
-        if (this.flagResolver.isEnabled('configurableFeatureTypeLifetimes')) {
-            const result = await this.featureTypeService.updateLifetime(
-                req.params.id.toLowerCase(),
-                req.body.lifetimeDays,
-            );
+        const result = await this.featureTypeService.updateLifetime(
+            req.params.id.toLowerCase(),
+            req.body.lifetimeDays,
+        );
 
-            this.openApiService.respondWithValidation(
-                200,
-                res,
-                featureTypeSchema.$id,
-                result,
-            );
-        } else {
-            res.status(409).end();
-        }
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featureTypeSchema.$id,
+            result,
+        );
     }
 }

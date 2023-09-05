@@ -93,9 +93,13 @@ export const ServiceAccountsTable = () => {
                 accessor: (row: any) =>
                     roles.find((role: IRole) => role.id === row.rootRole)
                         ?.name || '',
-                Cell: ({ row: { original: serviceAccount }, value }: any) => (
-                    <RoleCell value={value} roleId={serviceAccount.rootRole} />
-                ),
+                Cell: ({
+                    row: { original: serviceAccount },
+                    value,
+                }: {
+                    row: { original: IServiceAccount };
+                    value: string;
+                }) => <RoleCell value={value} role={serviceAccount.rootRole} />,
                 maxWidth: 120,
             },
             {

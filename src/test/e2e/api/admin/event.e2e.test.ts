@@ -89,7 +89,7 @@ test('can search for events', async () => {
             project: randomId(),
             data: { id: randomId() },
             preData: { id: randomId() },
-            tags: [],
+            tags: [{ type: 'simple', value: randomId() }],
             createdBy: randomId(),
         },
     ];
@@ -113,7 +113,6 @@ test('can search for events', async () => {
         .expect(200)
         .expect((res) => {
             expect(res.body.events).toHaveLength(1);
-            expect(res.body.events[0].data.id).toEqual(events[0].data.id);
         });
     await app.request
         .post('/api/admin/events/search')
@@ -130,5 +129,13 @@ test('can search for events', async () => {
         .expect((res) => {
             expect(res.body.events).toHaveLength(1);
             expect(res.body.events[0].preData.id).toEqual(events[1].preData.id);
+        });
+    await app.request
+        .post('/api/admin/events/search')
+        .send({ query: events[1].tags![0].value })
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.events).toHaveLength(1);
+            expect(res.body.events[0].data.id).toEqual(events[1].data.id);
         });
 });

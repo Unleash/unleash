@@ -18,8 +18,6 @@ import { APPROVE_CHANGE_REQUEST } from 'component/providers/AccessProvider/permi
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import CheckBox from '@mui/icons-material/Check';
 import Clear from '@mui/icons-material/Clear';
 
@@ -28,7 +26,6 @@ export const ReviewButton: FC<{
     onReject: () => void;
     onApprove: () => void;
 }> = ({ disabled, onReject, onApprove, children }) => {
-    const { uiConfig } = useUiConfig();
     const { isAdmin } = useContext(AccessContext);
     const projectId = useRequiredPathParam('projectId');
     const id = useRequiredPathParam('id');
@@ -111,21 +108,14 @@ export const ReviewButton: FC<{
                                             Approve changes
                                         </ListItemText>
                                     </MenuItem>
-                                    <ConditionallyRender
-                                        condition={Boolean(
-                                            uiConfig?.flags?.changeRequestReject
-                                        )}
-                                        show={
-                                            <MenuItem onClick={onReject}>
-                                                <ListItemIcon>
-                                                    <Clear fontSize="small" />
-                                                </ListItemIcon>
-                                                <ListItemText>
-                                                    Reject changes
-                                                </ListItemText>
-                                            </MenuItem>
-                                        }
-                                    />
+                                    <MenuItem onClick={onReject}>
+                                        <ListItemIcon>
+                                            <Clear fontSize="small" />
+                                        </ListItemIcon>
+                                        <ListItemText>
+                                            Reject changes
+                                        </ListItemText>
+                                    </MenuItem>
                                 </MenuList>
                             </ClickAwayListener>
                         </Paper>

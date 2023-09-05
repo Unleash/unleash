@@ -140,6 +140,7 @@ export const CreateProjectApiTokenForm = () => {
             </ApiTokenForm>
             <ConfirmToken
                 open={showConfirm}
+                setOpen={setShowConfirm}
                 closeConfirm={closeConfirm}
                 token={token}
                 type={type}

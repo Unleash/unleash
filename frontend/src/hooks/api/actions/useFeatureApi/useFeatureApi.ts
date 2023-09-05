@@ -11,11 +11,14 @@ const useFeatureApi = () => {
         propagateErrors: true,
     });
 
-    const validateFeatureToggleName = async (name: string | undefined) => {
+    const validateFeatureToggleName = async (
+        name: string | undefined,
+        project: string | undefined
+    ) => {
         const path = `api/admin/features/validate`;
         const req = createRequest(path, {
             method: 'POST',
-            body: JSON.stringify({ name }),
+            body: JSON.stringify({ name, projectId: project }),
         });
 
         try {

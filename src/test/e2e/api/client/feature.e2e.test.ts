@@ -15,6 +15,7 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 strictSchemaValidation: true,
+                featureNamingPattern: true,
             },
         },
     });
@@ -217,7 +218,7 @@ test('Can get strategies for specific environment', async () => {
             `/api/admin/projects/default/features/${featureName}/environments/testing/strategies`,
         )
         .send({
-            name: 'custom1',
+            name: 'default',
         })
         .expect(200);
 
@@ -229,7 +230,7 @@ test('Can get strategies for specific environment', async () => {
             expect(res.body.name).toBe(featureName);
             expect(res.body.strategies).toHaveLength(1);
             expect(
-                res.body.strategies.find((s) => s.name === 'custom1'),
+                res.body.strategies.find((s) => s.name === 'default'),
             ).toBeDefined();
         });
 });

@@ -10,5 +10,9 @@ export const projectSchema = joi
         mode: joi.string().valid('open', 'protected').default('open'),
         defaultStickiness: joi.string().default('default'),
         featureLimit: joi.number().allow(null).optional(),
+        featureNaming: joi.object().keys({
+            pattern: joi.string().allow(null).allow('').optional(),
+            example: joi.string().allow(null).allow('').optional(),
+        }),
     })
     .options({ allowUnknown: false, stripUnknown: true });

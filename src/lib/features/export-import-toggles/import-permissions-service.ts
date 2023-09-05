@@ -14,7 +14,7 @@ import {
 } from '../../types';
 import { PermissionError } from '../../error';
 
-type Mode = 'regular' | 'change_request';
+export type Mode = 'regular' | 'change_request';
 
 export class ImportPermissionsService {
     private importTogglesStore: IImportTogglesStore;

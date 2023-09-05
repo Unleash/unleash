@@ -100,7 +100,7 @@ const StyledFlagNamingContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    mt: theme => theme.spacing(1),
+    mt: theme.spacing(1),
     '& > *': { width: '100%' },
 }));
 

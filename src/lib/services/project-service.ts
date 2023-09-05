@@ -180,6 +180,12 @@ export default class ProjectService {
                     `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern.`,
                 );
             }
+
+            if (!pattern && example) {
+                throw new BadDataError(
+                    "You've provided a feature flag naming example, but no feature flag naming pattern. You must specify a pattern to use an example.",
+                );
+            }
         }
     };
 

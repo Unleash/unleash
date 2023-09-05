@@ -1,13 +1,13 @@
 import React from 'react';
-import { IAddonProvider } from 'interfaces/addons';
 import {
     IntegrationParameter,
     IIntegrationParameterProps,
 } from './IntegrationParameter/IntegrationParameter';
 import { StyledTitle } from '../IntegrationForm.styles';
+import type { AddonTypeSchema } from 'openapi';
 
 interface IIntegrationParametersProps {
-    provider?: IAddonProvider;
+    provider?: AddonTypeSchema;
     parametersErrors: IIntegrationParameterProps['parametersErrors'];
     editMode: boolean;
     setParameterValue: IIntegrationParameterProps['setParameterValue'];
@@ -32,7 +32,7 @@ export const IntegrationParameters = ({
                     when saving.
                 </p>
             ) : null}
-            {provider.parameters.map(parameter => (
+            {provider.parameters?.map(parameter => (
                 <IntegrationParameter
                     key={parameter.name}
                     definition={parameter}

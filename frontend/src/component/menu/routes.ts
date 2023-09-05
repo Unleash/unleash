@@ -43,6 +43,7 @@ import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
 import { LoginHistory } from 'component/loginHistory/LoginHistory';
 import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
+import { AddonsList } from 'component/integrations/IntegrationList/AddonsList';
 import { TemporaryApplicationListWrapper } from 'component/application/ApplicationList/TemporaryApplicationListWrapper';
 
 export const routes: IRoute[] = [
@@ -321,7 +322,7 @@ export const routes: IRoute[] = [
     {
         path: '/addons',
         title: 'Addons',
-        component: IntegrationList,
+        component: AddonsList,
         // TODO: use AddonRedirect after removing `integrationsRework` menu flag
         hidden: false,
         type: 'protected',

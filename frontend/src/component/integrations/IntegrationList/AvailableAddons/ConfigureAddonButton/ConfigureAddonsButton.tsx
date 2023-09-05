@@ -1,10 +1,10 @@
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_ADDON } from 'component/providers/AccessProvider/permissions';
-import { IAddonProvider } from 'interfaces/addons';
+import type { AddonTypeSchema } from 'openapi';
 import { useNavigate } from 'react-router-dom';
 
 interface IConfigureAddonsButtonProps {
-    provider: IAddonProvider;
+    provider: AddonTypeSchema;
 }
 
 /**

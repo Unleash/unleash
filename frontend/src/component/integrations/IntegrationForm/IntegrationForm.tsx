@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
-import { IAddon, IAddonProvider } from 'interfaces/addons';
+import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import { IntegrationParameters } from './IntegrationParameters/IntegrationParameters';
 import { IntegrationInstall } from './IntegrationInstall/IntegrationInstall';
 import cloneDeep from 'lodash.clonedeep';
@@ -49,14 +49,14 @@ import { GO_BACK } from 'constants/navigate';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IntegrationDeleteDialog } from './IntegrationDeleteDialog/IntegrationDeleteDialog';
 
-interface IAddonFormProps {
-    provider?: IAddonProvider;
-    addon: IAddon;
+type IntegrationFormProps = {
+    provider?: AddonTypeSchema;
     fetch: () => void;
     editMode: boolean;
-}
+    addon: AddonSchema | Omit<AddonSchema, 'id'>;
+};
 
-export const IntegrationForm: VFC<IAddonFormProps> = ({
+export const IntegrationForm: VFC<IntegrationFormProps> = ({
     editMode,
     provider,
     addon: initialValues,
@@ -77,7 +77,7 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
         value: environment.name,
         label: environment.name,
     }));
-    const selectableEvents = provider?.events.map(event => ({
+    const selectableEvents = provider?.events?.map(event => ({
         value: event,
         label: event,
     }));
@@ -97,7 +97,7 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
     });
     const submitText = editMode ? 'Update' : 'Create';
     let url = `${uiConfig.unleashUrl}/api/admin/addons${
-        editMode ? `/${formValues.id}` : ``
+        editMode ? `/${(formValues as AddonSchema).id}` : ``
     }`;
 
     const formatApiCode = () => {
@@ -207,8 +207,9 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
             updatedErrors.containsErrors = true;
         }
 
-        provider.parameters.forEach(parameterConfig => {
-            const value = trim(formValues.parameters[parameterConfig.name]);
+        provider.parameters?.forEach(parameterConfig => {
+            let value = formValues.parameters[parameterConfig.name];
+            value = typeof value === 'string' ? trim(value) : value;
             if (parameterConfig.required && !value) {
                 updatedErrors.parameters[parameterConfig.name] =
                     'This field is required';
@@ -223,14 +224,14 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
 
         try {
             if (editMode) {
-                await updateAddon(formValues);
+                await updateAddon(formValues as AddonSchema);
                 navigate('/addons');
                 setToastData({
                     type: 'success',
                     title: 'Addon updated successfully',
                 });
             } else {
-                await createAddon(formValues);
+                await createAddon(formValues as Omit<AddonSchema, 'id'>);
                 navigate('/addons');
                 setToastData({
                     type: 'success',
@@ -255,7 +256,7 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
         documentationUrl = 'https://unleash.github.io/docs/addons',
         installation,
         alerts,
-    } = provider ? provider : ({} as Partial<IAddonProvider>);
+    } = provider ? provider : ({} as Partial<AddonTypeSchema>);
 
     return (
         <FormTemplate
@@ -356,7 +357,7 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
                     <StyledFormSection>
                         <IntegrationParameters
                             provider={provider}
-                            config={formValues}
+                            config={formValues as AddonSchema}
                             parametersErrors={errors.parameters}
                             editMode={editMode}
                             setParameterValue={setParameterValue}
@@ -396,7 +397,7 @@ export const IntegrationForm: VFC<IAddonFormProps> = ({
                                         Delete
                                     </PermissionButton>
                                     <IntegrationDeleteDialog
-                                        id={formValues.id}
+                                        id={(formValues as AddonSchema).id}
                                         isOpen={isDeleteOpen}
                                         onClose={() => {
                                             setDeleteOpen(false);

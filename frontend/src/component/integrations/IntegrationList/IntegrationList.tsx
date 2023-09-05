@@ -1,28 +1,38 @@
-import { ConfiguredAddons } from './ConfiguredAddons/ConfiguredAddons';
-import { AvailableAddons } from './AvailableAddons/AvailableAddons';
+import { VFC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { AvailableIntegrations } from './AvailableIntegrations/AvailableIntegrations';
+import { ConfiguredIntegrations } from './ConfiguredIntegrations/ConfiguredIntegrations';
+import { AddonSchema } from 'openapi';
 
-export const IntegrationList = () => {
+export const IntegrationList: VFC = () => {
     const { providers, addons, loading } = useAddons();
-    const { uiConfig } = useUiConfig();
-    const integrationsRework = uiConfig?.flags?.integrationsRework || false;
+
+    const loadingPlaceholderAddons: AddonSchema[] = Array.from({ length: 4 })
+        .fill({})
+        .map((_, id) => ({
+            id,
+            provider: 'mock',
+            description: 'mock integratino',
+            events: [],
+            projects: [],
+            parameters: {},
+            enabled: false,
+        }));
 
     return (
         <>
             <ConditionallyRender
                 condition={addons.length > 0}
-                show={<ConfiguredAddons />}
-            />
-            <ConditionallyRender
-                condition={integrationsRework}
-                show={<AvailableIntegrations />}
-                elseShow={
-                    <AvailableAddons loading={loading} providers={providers} />
+                show={
+                    <ConfiguredIntegrations
+                        addons={loading ? loadingPlaceholderAddons : addons}
+                        providers={providers}
+                        loading={loading}
+                    />
                 }
             />
+            <AvailableIntegrations providers={providers} loading={loading} />
         </>
     );
 };

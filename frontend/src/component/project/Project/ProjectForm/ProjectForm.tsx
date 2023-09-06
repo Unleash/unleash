@@ -147,16 +147,14 @@ const ProjectForm: React.FC<IProjectForm> = ({
     };
 
     const onSetFeatureNamingExample = (example: string) => {
-        if (featureNamingPattern) {
-            const regex = new RegExp(featureNamingPattern);
-            const matches = regex.test(example);
-            if (!matches) {
-                errors.namingExample = 'Example does not match regex';
-            } else {
-                delete errors.namingExample;
-            }
-            setFeatureNamingExample && setFeatureNamingExample(example);
+        const regex = new RegExp(featureNamingPattern);
+        const matches = regex.test(example);
+        if (!matches) {
+            errors.namingExample = 'Example does not match regex';
+        } else {
+            delete errors.namingExample;
         }
+        setFeatureNamingExample && setFeatureNamingExample(example);
     };
 
     const onSetFeatureNamingDescription = (description: string) => {

@@ -113,7 +113,7 @@ export const validateFeatureNamingExample = ({
 }: {
     pattern: string;
     example: string;
-    featureNamingPatternError?: string;
+    featureNamingPatternError: string | undefined;
 }): { state: 'valid' } | { state: 'invalid'; reason: string } => {
     if (featureNamingPatternError || !example || !pattern) {
         return { state: 'valid' };

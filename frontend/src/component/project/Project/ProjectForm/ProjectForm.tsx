@@ -236,7 +236,9 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     onChange={e => setProjectName(e.target.value)}
                     error={Boolean(errors.name)}
                     errorText={errors.name}
-                    onFocus={() => clearErrors()}
+                    onFocus={() => {
+                        delete errors.name;
+                    }}
                     data-testid={PROJECT_NAME_INPUT}
                     required
                 />

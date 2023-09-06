@@ -21,8 +21,10 @@ interface IProjectForm {
     featureCount?: number;
     featureNamingPattern?: string;
     featureNamingExample?: string;
-    setProjectNamingPattern?: React.Dispatch<React.SetStateAction<string>>;
+    featureNamingDescription?: string;
+    setFeatureNamingPattern?: React.Dispatch<React.SetStateAction<string>>;
     setFeatureNamingExample?: React.Dispatch<React.SetStateAction<string>>;
+    setFeatureNamingDescription?: React.Dispatch<React.SetStateAction<string>>;
     setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
@@ -100,7 +102,7 @@ const StyledFlagNamingContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    mt: theme.spacing(1),
+    gap: theme.spacing(1),
     '& > *': { width: '100%' },
 }));
 
@@ -116,8 +118,10 @@ const ProjectForm: React.FC<IProjectForm> = ({
     featureCount,
     featureNamingExample,
     featureNamingPattern,
+    featureNamingDescription,
     setFeatureNamingExample,
-    setProjectNamingPattern,
+    setFeatureNamingPattern,
+    setFeatureNamingDescription,
     setProjectId,
     setProjectName,
     setProjectDesc,
@@ -134,11 +138,11 @@ const ProjectForm: React.FC<IProjectForm> = ({
     const onSetFeatureNamingPattern = (regex: string) => {
         try {
             new RegExp(regex);
-            setProjectNamingPattern && setProjectNamingPattern(regex);
+            setFeatureNamingPattern && setFeatureNamingPattern(regex);
             clearErrors();
         } catch (e) {
             errors.featureNamingPattern = 'Invalid regular expression';
-            setProjectNamingPattern && setProjectNamingPattern(regex);
+            setFeatureNamingPattern && setFeatureNamingPattern(regex);
         }
     };
 
@@ -151,8 +155,12 @@ const ProjectForm: React.FC<IProjectForm> = ({
             } else {
                 delete errors.namingExample;
             }
-            setFeatureNamingExample && setFeatureNamingExample(trim(example));
+            setFeatureNamingExample && setFeatureNamingExample(example);
         }
+    };
+
+    const onSetFeatureNamingDescription = (description: string) => {
+        setFeatureNamingDescription && setFeatureNamingDescription(description);
     };
 
     return (
@@ -283,11 +291,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     </StyledInputContainer>
                 </>
                 <ConditionallyRender
-                    condition={
-                        Boolean(shouldShowFlagNaming) &&
-                        setProjectNamingPattern != null &&
-                        setFeatureNamingExample != null
-                    }
+                    condition={Boolean(shouldShowFlagNaming)}
                     show={
                         <StyledFieldset>
                             <Box
@@ -322,9 +326,9 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             <StyledFlagNamingContainer>
                                 <StyledInput
                                     label={'Naming Pattern'}
-                                    name="pattern"
+                                    name="feature flag naming pattern"
                                     aria-describedby="pattern-naming-description"
-                                    placeholder="^[A-Za-z]+-[A-Za-z0-9]+$"
+                                    placeholder="^[A-Za-z]+\.[A-Za-z]+\.[A-Za-z0-9-]+$"
                                     type={'text'}
                                     value={featureNamingPattern || ''}
                                     error={Boolean(errors.featureNamingPattern)}
@@ -337,24 +341,41 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     }
                                 />
                                 <StyledSubtitle>
-                                    <p id="pattern-example-description">
-                                        The example will be shown to users when
-                                        they create a new feature flag in this
-                                        project.
+                                    <p id="pattern-additional-description">
+                                        The example and description will be
+                                        shown to users when they create a new
+                                        feature flag in this project.
                                     </p>
                                 </StyledSubtitle>
 
                                 <StyledInput
                                     label={'Naming Example'}
-                                    name="example"
+                                    name="feature flag naming example"
                                     type={'text'}
-                                    aria-describedBy="pattern-example-description"
+                                    aria-describedBy="pattern-additional-description"
                                     value={featureNamingExample || ''}
-                                    placeholder="dx-feature1"
+                                    placeholder="dx.feature1.1-135"
                                     error={Boolean(errors.namingExample)}
                                     errorText={errors.namingExample}
                                     onChange={e =>
                                         onSetFeatureNamingExample(
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                                <StyledTextField
+                                    label={'Naming pattern description'}
+                                    name="feature flag naming description"
+                                    type={'text'}
+                                    aria-describedBy="pattern-additional-description"
+                                    placeholder={`<project>.<featureName>.<ticket>
+
+The flag name should contain the project name, the feature name, and the ticket number, each separated by a dot.`}
+                                    multiline
+                                    minRows={5}
+                                    value={featureNamingDescription || ''}
+                                    onChange={e =>
+                                        onSetFeatureNamingDescription(
                                             e.target.value
                                         )
                                     }

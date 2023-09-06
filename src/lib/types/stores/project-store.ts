@@ -21,6 +21,7 @@ export interface IProjectInsert {
     featureLimit?: number;
     featureNamingPattern?: string;
     featureNamingExample?: string;
+    featureNamingDescription?: string;
 }
 
 export interface IProjectSettings {
@@ -29,6 +30,7 @@ export interface IProjectSettings {
     featureLimit?: number;
     featureNamingPattern?: string;
     featureNamingExample?: string;
+    featureNamingDescription?: string;
 }
 
 export interface IProjectSettingsRow {

@@ -6,14 +6,7 @@ import {
     useState,
     VFC,
 } from 'react';
-import {
-    Alert,
-    Box,
-    Button,
-    Divider,
-    FormControlLabel,
-    Switch,
-} from '@mui/material';
+import { Alert, Box, Button, Divider, Typography } from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
@@ -37,13 +30,13 @@ import {
 } from '../../providers/AccessProvider/permissions';
 import {
     StyledForm,
-    StyledFormSection,
     StyledAlerts,
     StyledHelpText,
     StyledTextField,
     StyledContainer,
     StyledButtonContainer,
     StyledButtonSection,
+    StyledConfigurationSection,
 } from './IntegrationForm.styles';
 import { useTheme } from '@mui/system';
 import { GO_BACK } from 'constants/navigate';
@@ -273,7 +266,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                     >
                         {name}
                     </Box>{' '}
-                    addon
+                    integration
                 </>
             }
             description={description || ''}
@@ -298,7 +291,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                             />
                         )}
                     />
-                    <StyledFormSection>
+                    <section>
                         <StyledTextField
                             size="small"
                             label="Provider"
@@ -312,59 +305,73 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                             checked={formValues.enabled}
                             onClick={onEnabled}
                         />
-                    </StyledFormSection>
-                    <StyledFormSection>
-                        <StyledHelpText>
-                            What is your integration description?
-                        </StyledHelpText>
+                    </section>
+                    <section>
+                        <StyledConfigurationSection>
+                            <Typography
+                                component="h3"
+                                variant="h3"
+                                sx={theme => ({
+                                    marginBottom: theme.spacing(3),
+                                })}
+                            >
+                                Configuration
+                            </Typography>
+                            <div>
+                                <StyledHelpText>
+                                    What is your integration description?
+                                </StyledHelpText>
 
-                        <StyledTextField
-                            size="small"
-                            style={{ width: '80%' }}
-                            minRows={4}
-                            multiline
-                            label="Description"
-                            name="description"
-                            placeholder=""
-                            value={formValues.description}
-                            error={Boolean(errors.description)}
-                            helperText={errors.description}
-                            onChange={setFieldValue('description')}
-                            variant="outlined"
-                        />
-                    </StyledFormSection>
+                                <StyledTextField
+                                    size="small"
+                                    minRows={2}
+                                    multiline
+                                    label="Description"
+                                    name="description"
+                                    placeholder=""
+                                    value={formValues.description}
+                                    error={Boolean(errors.description)}
+                                    helperText={errors.description}
+                                    onChange={setFieldValue('description')}
+                                    variant="outlined"
+                                />
+                            </div>
 
-                    <StyledFormSection>
-                        <IntegrationMultiSelector
-                            options={selectableEvents || []}
-                            selectedItems={formValues.events}
-                            onChange={setEventValues}
-                            entityName="event"
-                            selectAllEnabled={false}
-                            error={errors.events}
-                            description="Select what events you want your integration to be notified about."
-                            required
-                        />
-                    </StyledFormSection>
-                    <StyledFormSection>
-                        <IntegrationMultiSelector
-                            options={selectableProjects}
-                            selectedItems={formValues.projects || []}
-                            onChange={setProjects}
-                            entityName="project"
-                            selectAllEnabled={true}
-                        />
-                    </StyledFormSection>
-                    <StyledFormSection>
-                        <IntegrationMultiSelector
-                            options={selectableEnvironments}
-                            selectedItems={formValues.environments || []}
-                            onChange={setEnvironments}
-                            entityName="environment"
-                            selectAllEnabled={true}
-                        />
-                    </StyledFormSection>
-                    <StyledFormSection>
+                            <div>
+                                <IntegrationMultiSelector
+                                    options={selectableEvents || []}
+                                    selectedItems={formValues.events}
+                                    onChange={setEventValues}
+                                    entityName="event"
+                                    selectAllEnabled={false}
+                                    error={errors.events}
+                                    description="Select what events you want your integration to be notified about."
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <IntegrationMultiSelector
+                                    options={selectableProjects}
+                                    selectedItems={formValues.projects || []}
+                                    onChange={setProjects}
+                                    entityName="project"
+                                    selectAllEnabled={true}
+                                />
+                            </div>
+                            <div>
+                                <IntegrationMultiSelector
+                                    options={selectableEnvironments}
+                                    selectedItems={
+                                        formValues.environments || []
+                                    }
+                                    onChange={setEnvironments}
+                                    entityName="environment"
+                                    selectAllEnabled={true}
+                                />
+                            </div>
+                        </StyledConfigurationSection>
+                    </section>
+                    <div>
                         <IntegrationParameters
                             provider={provider}
                             config={formValues as AddonSchema}
@@ -372,7 +379,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                             editMode={editMode}
                             setParameterValue={setParameterValue}
                         />
-                    </StyledFormSection>
+                    </div>
                 </StyledContainer>
                 <Divider />
                 <StyledButtonContainer>

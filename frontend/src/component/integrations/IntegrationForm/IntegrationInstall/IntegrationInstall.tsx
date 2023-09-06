@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    StyledFormSection,
     StyledHelpText,
     StyledTitle,
 } from '../IntegrationForm.styles';
@@ -20,20 +19,18 @@ export const IntegrationInstall = ({
 }: IAddonInstallProps) => {
     return (
         <React.Fragment>
-            <StyledFormSection>
-                <StyledTitle>{title}</StyledTitle>
-                <StyledHelpText>{helpText}</StyledHelpText>
-                <Button
-                    type="button"
-                    variant="outlined"
-                    component={Link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    to={url}
-                >
-                    Install
-                </Button>
-            </StyledFormSection>
+            <StyledTitle>{title}</StyledTitle>
+            <StyledHelpText>{helpText}</StyledHelpText>
+            <Button
+                type="button"
+                variant="outlined"
+                component={Link}
+                target="_blank"
+                rel="noopener noreferrer"
+                to={url}
+            >
+                Install
+            </Button>
         </React.Fragment>
     );
 };

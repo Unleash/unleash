@@ -167,7 +167,6 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
                 show={<SelectAllFormControl />}
             />
             <Autocomplete
-                sx={{ mb: 8 }}
                 disabled={isWildcardSelected}
                 multiple
                 limitTags={2}

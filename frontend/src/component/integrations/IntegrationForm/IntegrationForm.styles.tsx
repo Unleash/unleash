@@ -22,9 +22,7 @@ export const StyledHelpText = styled('p')({
     marginBottom: '0.5rem',
 });
 
-export const StyledContainer = styled('div')({
-    maxWidth: '600px',
-});
+export const StyledContainer = styled('div')({});
 
 export const StyledButtonContainer = styled('div')({
     marginTop: 'auto',

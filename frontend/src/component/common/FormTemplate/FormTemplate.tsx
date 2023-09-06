@@ -13,13 +13,13 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import Loader from '../Loader/Loader';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { ReactComponent as MobileGuidanceBG } from 'assets/img/mobileGuidanceBg.svg';
 import { formTemplateSidebarWidth } from './FormTemplate.styles';
 import { relative } from 'themes/themeStyles';
 
 interface ICreateProps {
-    title?: string;
+    title?: ReactNode;
     description: string;
     documentationLink: string;
     documentationLinkLabel: string;

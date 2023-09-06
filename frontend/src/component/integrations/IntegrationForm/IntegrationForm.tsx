@@ -8,6 +8,7 @@ import {
 } from 'react';
 import {
     Alert,
+    Box,
     Button,
     Divider,
     FormControlLabel,
@@ -48,6 +49,7 @@ import { useTheme } from '@mui/system';
 import { GO_BACK } from 'constants/navigate';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IntegrationDeleteDialog } from './IntegrationDeleteDialog/IntegrationDeleteDialog';
+import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStateSwitch';
 
 type IntegrationFormProps = {
     provider?: AddonTypeSchema;
@@ -260,7 +262,20 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
 
     return (
         <FormTemplate
-            title={`${submitText} ${name} addon`}
+            title={
+                <>
+                    {submitText}{' '}
+                    <Box
+                        component="span"
+                        sx={{
+                            textTransform: 'capitalize',
+                        }}
+                    >
+                        {name}
+                    </Box>{' '}
+                    addon
+                </>
+            }
             description={description || ''}
             documentationLink={documentationUrl}
             documentationLinkLabel="Addon documentation"
@@ -293,19 +308,14 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                             hidden={true}
                             variant="outlined"
                         />
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={formValues.enabled}
-                                    onClick={onEnabled}
-                                />
-                            }
-                            label={formValues.enabled ? 'Enabled' : 'Disabled'}
+                        <IntegrationStateSwitch
+                            checked={formValues.enabled}
+                            onClick={onEnabled}
                         />
                     </StyledFormSection>
                     <StyledFormSection>
                         <StyledHelpText>
-                            What is your addon description?
+                            What is your integration description?
                         </StyledHelpText>
 
                         <StyledTextField
@@ -332,7 +342,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                             entityName="event"
                             selectAllEnabled={false}
                             error={errors.events}
-                            description="Select what events you want your addon to be notified about."
+                            description="Select what events you want your integration to be notified about."
                             required
                         />
                     </StyledFormSection>

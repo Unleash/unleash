@@ -7,12 +7,16 @@ const StyledHeader = styled('span')(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-const StyledCode = styled('span')(({ theme }) => ({
+export const StyledCode = styled('span')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
     color: theme.palette.text.primary,
     padding: theme.spacing(0.2, 1),
     borderRadius: theme.spacing(0.5),
     cursor: 'pointer',
+    '&:hover': {
+        transition: 'background-color 0.2s ease-in-out',
+        backgroundColor: theme.palette.seen.primary,
+    },
 }));
 
 const StyledFilterHint = styled('p')(({ theme }) => ({
@@ -49,11 +53,18 @@ export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
             {filters.map(filter => (
                 <StyledFilterHint key={filter.name}>
                     {filter.header}:{' '}
-                    <StyledCode
-                        onClick={() => onClick(firstFilterOption(filter))}
-                    >
-                        {firstFilterOption(filter)}
-                    </StyledCode>
+                    <ConditionallyRender
+                        condition={filter.options.length > 0}
+                        show={
+                            <StyledCode
+                                onClick={() =>
+                                    onClick(firstFilterOption(filter))
+                                }
+                            >
+                                {firstFilterOption(filter)}
+                            </StyledCode>
+                        }
+                    />
                     <ConditionallyRender
                         condition={filter.options.length > 1}
                         show={

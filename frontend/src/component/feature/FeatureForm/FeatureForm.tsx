@@ -131,6 +131,8 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
         return featureTypes.find(toggle => toggle.id === type)?.description;
     };
 
+    const displayFeatureNamingInfo = Boolean(featureNaming?.pattern);
+
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
@@ -138,16 +140,18 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     What would you like to call your toggle?
                 </StyledInputDescription>
                 <ConditionallyRender
-                    condition={Boolean(featureNaming?.pattern)}
+                    condition={displayFeatureNamingInfo}
                     show={
-                        <>
+                        <StyledTypeDescription>
                             <p>
                                 This project has feature flag naming patterns
                                 enabled.
                             </p>
-                            <dl>
+                            <dl id="feature-naming-pattern-info">
                                 <dt>Pattern</dt>
-                                <dd>{featureNaming.pattern}</dd>
+                                <dd>
+                                    <code>{featureNaming.pattern}</code>
+                                </dd>
                                 {Boolean(featureNaming?.example) && (
                                     <>
                                         <dt>Example</dt>
@@ -161,13 +165,18 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                                     </>
                                 )}
                             </dl>
-                        </>
+                        </StyledTypeDescription>
                     }
                 />
                 <StyledInput
                     autoFocus
                     disabled={mode === 'Edit'}
                     label="Name"
+                    aria-details={
+                        displayFeatureNamingInfo
+                            ? 'feature-naming-pattern-info'
+                            : undefined
+                    }
                     id="feature-toggle-name"
                     error={Boolean(errors.name)}
                     errorText={errors.name}

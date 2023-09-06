@@ -21,6 +21,7 @@ import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
+import { FeatureNamingType } from 'interfaces/project';
 
 interface IFeatureToggleForm {
     type: string;
@@ -33,6 +34,7 @@ interface IFeatureToggleForm {
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     setProject: React.Dispatch<React.SetStateAction<string>>;
     setImpressionData: React.Dispatch<React.SetStateAction<boolean>>;
+    featureNaming: FeatureNamingType;
     validateToggleName?: () => void;
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
@@ -111,6 +113,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     setDescription,
     setProject,
     validateToggleName,
+    featureNaming,
     setImpressionData,
     impressionData,
     handleSubmit,
@@ -134,6 +137,33 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 <StyledInputDescription>
                     What would you like to call your toggle?
                 </StyledInputDescription>
+                <ConditionallyRender
+                    condition={Boolean(featureNaming?.pattern)}
+                    show={
+                        <>
+                            <p>
+                                This project has feature flag naming patterns
+                                enabled.
+                            </p>
+                            <dl>
+                                <dt>Pattern</dt>
+                                <dd>{featureNaming.pattern}</dd>
+                                {Boolean(featureNaming?.example) && (
+                                    <>
+                                        <dt>Example</dt>
+                                        <dd>{featureNaming.example}</dd>
+                                    </>
+                                )}
+                                {Boolean(featureNaming?.description) && (
+                                    <>
+                                        <dt>Description</dt>
+                                        <dd>{featureNaming.description}</dd>
+                                    </>
+                                )}
+                            </dl>
+                        </>
+                    }
+                />
                 <StyledInput
                     autoFocus
                     disabled={mode === 'Edit'}

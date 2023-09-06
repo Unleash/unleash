@@ -1,7 +1,8 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
+import { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 
 const useAuthSettings = (id: string, options: SWRConfiguration = {}) => {
     const fetcher = async () => {
@@ -14,7 +15,7 @@ const useAuthSettings = (id: string, options: SWRConfiguration = {}) => {
 
     const KEY = `api/admin/auth/${id}/settings`;
 
-    const { data, error } = useSWR(KEY, fetcher, options);
+    const { data, error } = useEnterpriseSWR({}, KEY, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);
 
     const refetch = () => {

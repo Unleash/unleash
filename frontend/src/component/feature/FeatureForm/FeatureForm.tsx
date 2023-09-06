@@ -157,18 +157,28 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                                 <dd>
                                     <code>{featureNaming?.pattern}</code>
                                 </dd>
-                                {Boolean(featureNaming?.example) && (
-                                    <>
-                                        <dt>Example</dt>
-                                        <dd>{featureNaming?.example}</dd>
-                                    </>
-                                )}
-                                {Boolean(featureNaming?.description) && (
-                                    <>
-                                        <dt>Description</dt>
-                                        <dd>{featureNaming?.description}</dd>
-                                    </>
-                                )}
+                                <ConditionallyRender
+                                    condition={Boolean(featureNaming?.example)}
+                                    show={
+                                        <>
+                                            <dt>Example</dt>
+                                            <dd>{featureNaming?.example}</dd>
+                                        </>
+                                    }
+                                />
+                                <ConditionallyRender
+                                    condition={Boolean(
+                                        featureNaming?.description
+                                    )}
+                                    show={
+                                        <>
+                                            <dt>Description</dt>
+                                            <dd>
+                                                {featureNaming?.description}
+                                            </dd>
+                                        </>
+                                    }
+                                />
                             </dl>
                         </StyledFlagNamingInfo>
                     }

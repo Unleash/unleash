@@ -24,7 +24,6 @@ export const IntegrationParameters = ({
     if (!provider) return null;
     return (
         <React.Fragment>
-            <StyledTitle>Parameters</StyledTitle>
             {editMode ? (
                 <p>
                     Sensitive parameters will be masked with value "<i>*****</i>

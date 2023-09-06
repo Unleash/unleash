@@ -7,16 +7,17 @@ import {
     Component,
     ComponentProps,
 } from 'react';
+import theme from 'themes/theme';
 
-export const StyledForm = styled('form')({
+export const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    gap: '1rem',
-});
+    gap: theme.spacing(2),
+    marginTop: theme.spacing(1),
+}));
 
 export const StyledAlerts = styled('section')(({ theme }) => ({
-    marginBottom: '36px',
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),

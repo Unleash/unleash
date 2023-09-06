@@ -42,6 +42,7 @@ import { GO_BACK } from 'constants/navigate';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IntegrationDelete } from './IntegrationDelete/IntegrationDelete';
 import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStateSwitch';
+import { capitalizeFirst } from 'utils/capitalizeFirst';
 
 type IntegrationFormProps = {
     provider?: AddonTypeSchema;
@@ -254,15 +255,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         <FormTemplate
             title={
                 <>
-                    {submitText}{' '}
-                    <Box
-                        component="span"
-                        sx={{
-                            textTransform: 'capitalize',
-                        }}
-                    >
-                        {name}
-                    </Box>{' '}
+                    {submitText} {name ? capitalizeFirst(`${name} `) : ''}
                     integration
                 </>
             }
@@ -300,16 +293,6 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                             </StyledAlerts>
                         )}
                     />
-                    <ConditionallyRender
-                        condition={Boolean(installation)}
-                        show={() => (
-                            <IntegrationInstall
-                                url={installation!.url}
-                                title={installation!.title}
-                                helpText={installation!.helpText}
-                            />
-                        )}
-                    />
                     <StyledTextField
                         size="small"
                         label="Provider"
@@ -326,6 +309,16 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                         />
                     </StyledRaisedSection>
                     <StyledRaisedSection>
+                        <ConditionallyRender
+                            condition={Boolean(installation)}
+                            show={() => (
+                                <IntegrationInstall
+                                    url={installation!.url}
+                                    title={installation!.title}
+                                    helpText={installation!.helpText}
+                                />
+                            )}
+                        />
                         <IntegrationParameters
                             provider={provider}
                             config={formValues as AddonSchema}
@@ -343,6 +336,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 What is your integration description?
                             </StyledTitle>
                             <StyledTextField
+                                size="small"
                                 minRows={1}
                                 multiline
                                 label="Description"
@@ -387,17 +381,19 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                             />
                         </div>
                     </StyledConfigurationSection>
-                    <Divider />
                     <ConditionallyRender
                         condition={Boolean(
                             uiConfig?.flags?.integrationsRework && editMode
                         )}
                         show={() => (
-                            <section>
-                                <IntegrationDelete
-                                    id={(formValues as AddonSchema).id}
-                                />
-                            </section>
+                            <>
+                                <Divider />
+                                <section>
+                                    <IntegrationDelete
+                                        id={(formValues as AddonSchema).id}
+                                    />
+                                </section>
+                            </>
                         )}
                     />
                 </StyledContainer>

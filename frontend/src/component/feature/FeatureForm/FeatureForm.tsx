@@ -34,7 +34,7 @@ interface IFeatureToggleForm {
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     setProject: React.Dispatch<React.SetStateAction<string>>;
     setImpressionData: React.Dispatch<React.SetStateAction<boolean>>;
-    featureNaming: FeatureNamingType;
+    featureNaming?: FeatureNamingType;
     validateToggleName?: () => void;
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
@@ -155,18 +155,18 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                             <dl id="feature-naming-pattern-info">
                                 <dt>Pattern</dt>
                                 <dd>
-                                    <code>{featureNaming.pattern}</code>
+                                    <code>{featureNaming?.pattern}</code>
                                 </dd>
                                 {Boolean(featureNaming?.example) && (
                                     <>
                                         <dt>Example</dt>
-                                        <dd>{featureNaming.example}</dd>
+                                        <dd>{featureNaming?.example}</dd>
                                     </>
                                 )}
                                 {Boolean(featureNaming?.description) && (
                                     <>
                                         <dt>Description</dt>
-                                        <dd>{featureNaming.description}</dd>
+                                        <dd>{featureNaming?.description}</dd>
                                     </>
                                 )}
                             </dl>

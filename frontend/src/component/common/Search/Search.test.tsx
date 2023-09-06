@@ -45,3 +45,15 @@ test('should read saved query from local storage', async () => {
 
     expect(screen.getByText('newquery')).toBeInTheDocument(); // new saved query updated
 });
+
+test('should update saved query without local storage', async () => {
+    render(testDisplayComponent);
+
+    const input = screen.getByTestId(SEARCH_INPUT);
+
+    input.focus();
+
+    fireEvent.change(input, { target: { value: 'newquery' } });
+
+    expect(screen.getByText('newquery')).toBeInTheDocument(); // new saved query updated
+});

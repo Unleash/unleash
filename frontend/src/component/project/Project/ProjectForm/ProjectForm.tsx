@@ -166,7 +166,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
             delete errors.featureNamingPattern;
         } catch (e) {
             errors.featureNamingPattern = 'Invalid regular expression';
-            delete errors.namingExample;
             setFeatureNamingPattern && setFeatureNamingPattern(regex);
         }
         validateFeatureNaming({ regex });

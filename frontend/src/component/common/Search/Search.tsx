@@ -79,7 +79,7 @@ export const Search = ({
     debounceTime = 200,
 }: ISearchProps) => {
     const searchInputRef = useRef<HTMLInputElement>(null);
-    const suggestionsRef = useRef<HTMLInputElement>(null);
+    const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const hideSuggestions = () => {
         setShowSuggestions(false);
@@ -112,10 +112,11 @@ export const Search = ({
     });
     const placeholder = `${customPlaceholder ?? 'Search'} (${hotkey})`;
 
-    useOnClickOutside([searchInputRef, suggestionsRef], hideSuggestions);
+    useOnClickOutside([searchContainerRef], hideSuggestions);
 
     return (
         <StyledContainer
+            ref={searchContainerRef}
             style={containerStyles}
             active={expandable && showSuggestions}
         >
@@ -148,7 +149,8 @@ export const Search = ({
                             <Tooltip title="Clear search query" arrow>
                                 <IconButton
                                     size="small"
-                                    onClick={() => {
+                                    onClick={e => {
+                                        e.stopPropagation(); // prevent outside click from the lazily added element
                                         onSearchChange('');
                                         searchInputRef.current?.focus();
                                     }}
@@ -164,11 +166,13 @@ export const Search = ({
             <ConditionallyRender
                 condition={Boolean(hasFilters) && showSuggestions}
                 show={
-                    <div ref={suggestionsRef}>
-                        <SearchSuggestions
-                            getSearchContext={getSearchContext!}
-                        />
-                    </div>
+                    <SearchSuggestions
+                        onSuggestion={suggestion => {
+                            onSearchChange(suggestion);
+                            searchInputRef.current?.focus();
+                        }}
+                        getSearchContext={getSearchContext!}
+                    />
                 }
             />
         </StyledContainer>

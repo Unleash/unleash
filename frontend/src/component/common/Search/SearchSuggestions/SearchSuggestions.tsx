@@ -45,10 +45,12 @@ const StyledCode = styled('span')(({ theme }) => ({
     color: theme.palette.text.primary,
     padding: theme.spacing(0.2, 0.5),
     borderRadius: theme.spacing(0.5),
+    cursor: 'pointer',
 }));
 
 interface SearchSuggestionsProps {
     getSearchContext: () => IGetSearchContextOutput;
+    onSuggestion: (suggestion: string) => void;
 }
 
 const quote = (item: string) => (item.includes(' ') ? `"${item}"` : item);
@@ -57,13 +59,9 @@ const randomIndex = (arr: any[]) => Math.floor(Math.random() * arr.length);
 
 export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
     getSearchContext,
+    onSuggestion,
 }) => {
     const searchContext = getSearchContext();
-
-    const randomRow = useMemo(
-        () => randomIndex(searchContext.data),
-        [searchContext.data]
-    );
 
     const filters = getFilterableColumns(searchContext.columns)
         .map(column => {
@@ -82,8 +80,7 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                 name: column.filterName,
                 header: column.Header ?? column.filterName,
                 options,
-                suggestedOption:
-                    options[randomRow] ?? `example-${column.filterName}`,
+                suggestedOption: options[0] ?? `example-${column.filterName}`,
                 values: getFilterValues(
                     column.filterName,
                     searchContext.searchValue
@@ -102,11 +99,12 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
 
     const suggestedTextSearch =
         searchContext.data.length && searchableColumns.length
-            ? getColumnValues(
-                  searchableColumns[0],
-                  searchContext.data[randomRow]
-              )
+            ? getColumnValues(searchableColumns[0], searchContext.data[0])
             : 'example-search-text';
+
+    const selectedFilter = filters.map(
+        filter => `${filter.name}:${filter.suggestedOption}`
+    )[0];
 
     return (
         <StyledPaper className="dropdown-outline">
@@ -130,6 +128,7 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                                 searchableColumnsString={
                                     searchableColumnsString
                                 }
+                                onClick={onSuggestion}
                             />
                         }
                     />
@@ -141,12 +140,12 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                     condition={filters.length > 0}
                     show="Combine filters and search: "
                 />
-                <StyledCode>
-                    {filters.map(filter => (
-                        <span key={filter.name}>
-                            {filter.name}:{filter.suggestedOption}{' '}
-                        </span>
-                    ))}
+                <StyledCode
+                    onClick={() =>
+                        onSuggestion(selectedFilter + ' ' + suggestedTextSearch)
+                    }
+                >
+                    <span key={selectedFilter}>{selectedFilter}</span>{' '}
                     <span>{suggestedTextSearch}</span>
                 </StyledCode>
             </Box>

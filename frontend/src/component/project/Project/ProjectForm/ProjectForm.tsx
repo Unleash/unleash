@@ -152,32 +152,53 @@ const ProjectForm: React.FC<IProjectForm> = ({
         }
     };
 
+    const validateFeatureNaming = ({
+        regex,
+        example,
+    }: {
+        regex?: string;
+        example?: string;
+    }) => {
+        const r = regex ?? featureNamingPattern;
+        const x = example ?? featureNamingExample;
+
+        if (errors.featureNamingPattern || !x || !r) {
+            console.log('Deleting naming example error');
+            delete errors.namingExample;
+        } else if (x && r) {
+            console.log('We have a valid pattern and an example, validating');
+
+            const regex = new RegExp(r);
+            const matches = regex.test(x);
+            if (!matches) {
+                console.log(x, 'does not match regex', r);
+
+                errors.namingExample = 'Example does not match regex';
+            } else {
+                console.log(x, 'matches regex', r);
+                delete errors.namingExample;
+            }
+        }
+    };
+
     const onSetFeatureNamingPattern = (regex: string) => {
+        console.log('New pattern', regex);
+
         try {
             new RegExp(regex);
             setFeatureNamingPattern && setFeatureNamingPattern(regex);
             delete errors.featureNamingPattern;
-            validateFeatureNamingExample();
         } catch (e) {
             errors.featureNamingPattern = 'Invalid regular expression';
             delete errors.namingExample;
             setFeatureNamingPattern && setFeatureNamingPattern(regex);
         }
+        validateFeatureNaming({ regex });
     };
 
     const onSetFeatureNamingExample = (example: string) => {
-        if (example && !errors.featureNamingPattern) {
-            const regex = new RegExp(featureNamingPattern || '');
-            const matches = regex.test(example);
-            if (!matches) {
-                errors.namingExample = 'Example does not match regex';
-            } else {
-                delete errors.namingExample;
-            }
-        } else {
-            delete errors.namingExample;
-        }
         setFeatureNamingExample && setFeatureNamingExample(example);
+        validateFeatureNaming({ example });
     };
 
     const onSetFeatureNamingDescription = (description: string) => {

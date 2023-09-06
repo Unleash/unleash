@@ -136,22 +136,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
     const { uiConfig } = useUiConfig();
     const shouldShowFlagNaming = uiConfig.flags.featureNamingPattern;
 
-    const validateFeatureNamingExample = () => {
-        if (featureNamingPattern && featureNamingExample) {
-            try {
-                const regex = new RegExp(featureNamingPattern);
-                const matches = regex.test(featureNamingExample);
-                if (!matches) {
-                    errors.namingExample = 'Example does not match regex';
-                } else {
-                    delete errors.namingExample;
-                }
-            } catch {
-                delete errors.namingExample;
-            }
-        }
-    };
-
     const validateFeatureNaming = ({
         regex,
         example: newExample,
@@ -176,8 +160,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
     };
 
     const onSetFeatureNamingPattern = (regex: string) => {
-        console.log('New pattern', regex);
-
         try {
             new RegExp(regex);
             setFeatureNamingPattern && setFeatureNamingPattern(regex);
@@ -369,8 +351,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     value={featureNamingPattern || ''}
                                     error={Boolean(errors.featureNamingPattern)}
                                     errorText={errors.featureNamingPattern}
-                                    // onFocus={() => clearErrors()}
-                                    // onBlur={validateFeatureNamingExample}
                                     onChange={e =>
                                         onSetFeatureNamingPattern(
                                             e.target.value
@@ -394,7 +374,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     placeholder="dx.feature1.1-135"
                                     error={Boolean(errors.namingExample)}
                                     errorText={errors.namingExample}
-                                    onBlur={validateFeatureNamingExample}
                                     onChange={e =>
                                         onSetFeatureNamingExample(
                                             e.target.value

@@ -270,6 +270,23 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
             documentationLink={documentationUrl}
             documentationLinkLabel="Addon documentation"
             formatApiCode={formatApiCode}
+            footer={
+                <StyledButtonContainer>
+                    <StyledButtonSection>
+                        <PermissionButton
+                            type="submit"
+                            color="primary"
+                            variant="contained"
+                            permission={editMode ? UPDATE_ADDON : CREATE_ADDON}
+                        >
+                            {submitText}
+                        </PermissionButton>
+                        <Button type="button" onClick={onCancel}>
+                            Cancel
+                        </Button>
+                    </StyledButtonSection>
+                </StyledButtonContainer>
+            }
         >
             <StyledForm onSubmit={onSubmit}>
                 <StyledContainer>
@@ -384,21 +401,6 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                         )}
                     />
                 </StyledContainer>
-                <StyledButtonContainer>
-                    <StyledButtonSection>
-                        <PermissionButton
-                            type="submit"
-                            color="primary"
-                            variant="contained"
-                            permission={editMode ? UPDATE_ADDON : CREATE_ADDON}
-                        >
-                            {submitText}
-                        </PermissionButton>
-                        <Button type="button" onClick={onCancel}>
-                            Cancel
-                        </Button>
-                    </StyledButtonSection>
-                </StyledButtonContainer>
             </StyledForm>
         </FormTemplate>
     );

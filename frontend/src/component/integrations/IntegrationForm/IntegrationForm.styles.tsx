@@ -35,7 +35,6 @@ export const StyledContainer = styled('div')(({ theme }) => ({
 }));
 
 export const StyledButtonContainer = styled('div')({
-    marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
 });
@@ -43,8 +42,7 @@ export const StyledButtonContainer = styled('div')({
 export const StyledButtonSection = styled('section')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
-    paddingTop: theme.spacing(2),
-    gap: theme.spacing(1),
+    gap: theme.spacing(2),
 }));
 
 export const StyledTextField = styled(TextField)(({ theme }) => ({

@@ -27,6 +27,7 @@ interface ICreateProps {
     modal?: boolean;
     disablePadding?: boolean;
     formatApiCode: () => string;
+    footer?: ReactNode;
 }
 
 const StyledContainer = styled('section', {
@@ -46,6 +47,17 @@ const StyledContainer = styled('section', {
 
 const StyledRelativeDiv = styled('div')(({ theme }) => relative);
 
+const StyledMain = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    flexShrink: 1,
+    width: '100%',
+    [theme.breakpoints.down(1100)]: {
+        width: '100%',
+    },
+}));
+
 const StyledFormContent = styled('div', {
     shouldForwardProp: prop => prop !== 'disablePadding',
 })<{ disablePadding?: boolean }>(({ theme, disablePadding }) => ({
@@ -62,6 +74,17 @@ const StyledFormContent = styled('div', {
     },
     [theme.breakpoints.down(500)]: {
         padding: disablePadding ? 0 : theme.spacing(4, 2),
+    },
+}));
+
+const StyledFooter = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(4, 6),
+    [theme.breakpoints.down('lg')]: {
+        padding: theme.spacing(4),
+    },
+    [theme.breakpoints.down(500)]: {
+        padding: theme.spacing(4, 2),
     },
 }));
 
@@ -161,6 +184,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     modal,
     formatApiCode,
     disablePadding,
+    footer,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
@@ -198,21 +222,32 @@ const FormTemplate: React.FC<ICreateProps> = ({
                     </StyledRelativeDiv>
                 }
             />
-            <StyledFormContent disablePadding={disablePadding}>
+            <StyledMain>
+                <StyledFormContent disablePadding={disablePadding}>
+                    <ConditionallyRender
+                        condition={loading || false}
+                        show={<Loader />}
+                        elseShow={
+                            <>
+                                <ConditionallyRender
+                                    condition={title !== undefined}
+                                    show={<StyledTitle>{title}</StyledTitle>}
+                                />
+                                {children}
+                            </>
+                        }
+                    />
+                </StyledFormContent>
                 <ConditionallyRender
-                    condition={loading || false}
-                    show={<Loader />}
-                    elseShow={
+                    condition={footer !== undefined}
+                    show={() => (
                         <>
-                            <ConditionallyRender
-                                condition={title !== undefined}
-                                show={<StyledTitle>{title}</StyledTitle>}
-                            />
-                            {children}
+                            <Divider />
+                            <StyledFooter>{footer}</StyledFooter>
                         </>
-                    }
+                    )}
                 />
-            </StyledFormContent>
+            </StyledMain>
             <ConditionallyRender
                 condition={!smallScreen}
                 show={

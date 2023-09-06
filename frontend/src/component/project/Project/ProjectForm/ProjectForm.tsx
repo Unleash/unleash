@@ -135,22 +135,45 @@ const ProjectForm: React.FC<IProjectForm> = ({
 }) => {
     const { uiConfig } = useUiConfig();
     const shouldShowFlagNaming = uiConfig.flags.featureNamingPattern;
+
+    const validateFeatureNamingExample = () => {
+        if (featureNamingPattern && featureNamingExample) {
+            try {
+                const regex = new RegExp(featureNamingPattern);
+                const matches = regex.test(featureNamingExample);
+                if (!matches) {
+                    errors.namingExample = 'Example does not match regex';
+                } else {
+                    delete errors.namingExample;
+                }
+            } catch {
+                delete errors.namingExample;
+            }
+        }
+    };
+
     const onSetFeatureNamingPattern = (regex: string) => {
         try {
             new RegExp(regex);
             setFeatureNamingPattern && setFeatureNamingPattern(regex);
-            clearErrors();
+            delete errors.featureNamingPattern;
+            validateFeatureNamingExample();
         } catch (e) {
             errors.featureNamingPattern = 'Invalid regular expression';
+            delete errors.namingExample;
             setFeatureNamingPattern && setFeatureNamingPattern(regex);
         }
     };
 
     const onSetFeatureNamingExample = (example: string) => {
-        const regex = new RegExp(featureNamingPattern);
-        const matches = regex.test(example);
-        if (!matches) {
-            errors.namingExample = 'Example does not match regex';
+        if (example && !errors.featureNamingPattern) {
+            const regex = new RegExp(featureNamingPattern || '');
+            const matches = regex.test(example);
+            if (!matches) {
+                errors.namingExample = 'Example does not match regex';
+            } else {
+                delete errors.namingExample;
+            }
         } else {
             delete errors.namingExample;
         }
@@ -331,7 +354,8 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     value={featureNamingPattern || ''}
                                     error={Boolean(errors.featureNamingPattern)}
                                     errorText={errors.featureNamingPattern}
-                                    onFocus={() => clearErrors()}
+                                    // onFocus={() => clearErrors()}
+                                    // onBlur={validateFeatureNamingExample}
                                     onChange={e =>
                                         onSetFeatureNamingPattern(
                                             e.target.value
@@ -355,6 +379,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     placeholder="dx.feature1.1-135"
                                     error={Boolean(errors.namingExample)}
                                     errorText={errors.namingExample}
+                                    onBlur={validateFeatureNamingExample}
                                     onChange={e =>
                                         onSetFeatureNamingExample(
                                             e.target.value

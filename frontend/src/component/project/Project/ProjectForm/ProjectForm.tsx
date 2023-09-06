@@ -352,7 +352,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     label={'Naming Example'}
                                     name="feature flag naming example"
                                     type={'text'}
-                                    aria-describedBy="pattern-additional-description"
+                                    aria-describedby="pattern-additional-description"
                                     value={featureNamingExample || ''}
                                     placeholder="dx.feature1.1-135"
                                     error={Boolean(errors.namingExample)}
@@ -367,7 +367,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     label={'Naming pattern description'}
                                     name="feature flag naming description"
                                     type={'text'}
-                                    aria-describedBy="pattern-additional-description"
+                                    aria-describedby="pattern-additional-description"
                                     placeholder={`<project>.<featureName>.<ticket>
 
 The flag name should contain the project name, the feature name, and the ticket number, each separated by a dot.`}

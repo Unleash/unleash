@@ -21,6 +21,7 @@ import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
+import { FeatureNamingType } from 'interfaces/project';
 
 interface IFeatureToggleForm {
     type: string;
@@ -33,6 +34,7 @@ interface IFeatureToggleForm {
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     setProject: React.Dispatch<React.SetStateAction<string>>;
     setImpressionData: React.Dispatch<React.SetStateAction<boolean>>;
+    featureNaming?: FeatureNamingType;
     validateToggleName?: () => void;
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
@@ -80,6 +82,11 @@ const StyledTypeDescription = styled('p')(({ theme }) => ({
     position: 'relative',
 }));
 
+const StyledFlagNamingInfo = styled('div')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.secondary,
+}));
+
 const StyledButtonContainer = styled('div')({
     marginTop: 'auto',
     display: 'flex',
@@ -111,6 +118,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     setDescription,
     setProject,
     validateToggleName,
+    featureNaming,
     setImpressionData,
     impressionData,
     handleSubmit,
@@ -128,16 +136,52 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
         return featureTypes.find(toggle => toggle.id === type)?.description;
     };
 
+    const displayFeatureNamingInfo = Boolean(featureNaming?.pattern);
+
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
                 <StyledInputDescription>
                     What would you like to call your toggle?
                 </StyledInputDescription>
+                <ConditionallyRender
+                    condition={displayFeatureNamingInfo}
+                    show={
+                        <StyledFlagNamingInfo>
+                            <p>
+                                This project has feature flag naming patterns
+                                enabled.
+                            </p>
+                            <dl id="feature-naming-pattern-info">
+                                <dt>Pattern</dt>
+                                <dd>
+                                    <code>{featureNaming?.pattern}</code>
+                                </dd>
+                                {Boolean(featureNaming?.example) && (
+                                    <>
+                                        <dt>Example</dt>
+                                        <dd>{featureNaming?.example}</dd>
+                                    </>
+                                )}
+                                {Boolean(featureNaming?.description) && (
+                                    <>
+                                        <dt>Description</dt>
+                                        <dd>{featureNaming?.description}</dd>
+                                    </>
+                                )}
+                            </dl>
+                        </StyledFlagNamingInfo>
+                    }
+                />
                 <StyledInput
                     autoFocus
                     disabled={mode === 'Edit'}
                     label="Name"
+                    aria-details={
+                        displayFeatureNamingInfo
+                            ? 'feature-naming-pattern-info'
+                            : undefined
+                    }
                     id="feature-toggle-name"
                     error={Boolean(errors.name)}
                     errorText={errors.name}

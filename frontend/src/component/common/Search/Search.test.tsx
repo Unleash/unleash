@@ -26,7 +26,7 @@ test('should read saved query from local storage', async () => {
         {}
     );
     setValue({
-        query: 'myquery',
+        query: 'oldquery',
     });
 
     render(testDisplayComponent);
@@ -35,7 +35,11 @@ test('should read saved query from local storage', async () => {
 
     input.focus();
 
-    await screen.findByText('myquery'); // local storage saved search query
+    await screen.findByText('oldquery'); // local storage saved search query
+
+    screen.getByText('oldquery').click(); // click history hint
+
+    expect(screen.getByDisplayValue('oldquery')).toBeInTheDocument(); // check if input updates
 
     fireEvent.change(input, { target: { value: 'newquery' } });
 

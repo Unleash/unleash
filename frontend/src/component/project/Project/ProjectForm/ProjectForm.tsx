@@ -326,7 +326,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             <StyledFlagNamingContainer>
                                 <StyledInput
                                     label={'Naming Pattern'}
-                                    name="pattern"
+                                    name="feature flag naming pattern"
                                     aria-describedby="pattern-naming-description"
                                     placeholder="^[A-Za-z]+\.[A-Za-z]+\.[A-Za-z0-9-]+$"
                                     type={'text'}
@@ -350,7 +350,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
 
                                 <StyledInput
                                     label={'Naming Example'}
-                                    name="example"
+                                    name="feature flag naming example"
                                     type={'text'}
                                     aria-describedBy="pattern-additional-description"
                                     value={featureNamingExample || ''}
@@ -365,7 +365,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 />
                                 <StyledTextField
                                     label={'Naming pattern description'}
-                                    name="prompt"
+                                    name="feature flag naming description"
                                     type={'text'}
                                     aria-describedBy="pattern-additional-description"
                                     placeholder={`<project>.<featureName>.<ticket>

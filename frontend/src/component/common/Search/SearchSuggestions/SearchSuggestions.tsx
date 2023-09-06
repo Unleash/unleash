@@ -56,8 +56,6 @@ interface SearchSuggestionsProps {
 
 const quote = (item: string) => (item.includes(' ') ? `"${item}"` : item);
 
-const randomIndex = (arr: any[]) => Math.floor(Math.random() * arr.length);
-
 export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
     getSearchContext,
     onSuggestion,

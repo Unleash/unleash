@@ -82,6 +82,11 @@ const StyledTypeDescription = styled('p')(({ theme }) => ({
     position: 'relative',
 }));
 
+const StyledFlagNamingInfo = styled('div')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.secondary,
+}));
+
 const StyledButtonContainer = styled('div')({
     marginTop: 'auto',
     display: 'flex',
@@ -142,7 +147,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 <ConditionallyRender
                     condition={displayFeatureNamingInfo}
                     show={
-                        <StyledTypeDescription>
+                        <StyledFlagNamingInfo>
                             <p>
                                 This project has feature flag naming patterns
                                 enabled.
@@ -165,7 +170,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                                     </>
                                 )}
                             </dl>
-                        </StyledTypeDescription>
+                        </StyledFlagNamingInfo>
                     }
                 />
                 <StyledInput

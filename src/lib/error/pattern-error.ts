@@ -1,18 +1,21 @@
-import BadDataError from './bad-data-error';
-import { ApiErrorSchema } from './unleash-error';
+import { ApiErrorSchema, UnleashError } from './unleash-error';
 
-class PatternError extends BadDataError {
-    pattern: string;
+class PatternError extends UnleashError {
+    statusCode = 400;
 
-    constructor(message: string, pattern: string) {
+    details?: { message: string }[];
+
+    constructor(message: string, details?: string[]) {
         super(message);
-        this.pattern = pattern;
+        this.details = details?.map((description) => ({
+            message: description,
+        }));
     }
 
     toJSON(): ApiErrorSchema {
         return {
             ...super.toJSON(),
-            pattern: this.pattern,
+            details: this.details,
         };
     }
 }

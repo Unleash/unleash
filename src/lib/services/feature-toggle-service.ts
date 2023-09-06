@@ -1099,16 +1099,22 @@ class FeatureToggleService {
             const project = await this.projectStore.get(projectId);
             const namingPattern = project.featureNaming?.pattern;
             const namingExample = project.featureNaming?.example;
+            const namingDescription = project.featureNaming?.description;
 
             if (
                 namingPattern &&
                 !featureName.match(new RegExp(namingPattern))
             ) {
-                const error = `The feature flag name "${featureName}" does not match the project's naming pattern: "${namingPattern}.`;
+                const error = `The feature flag name "${featureName}" does not match the project's naming pattern: "${namingPattern}".`;
                 const example = namingExample
-                    ? ` Here's an example of a name that does match the pattern: "${namingExample}. Try something like that instead."`
+                    ? ` Here's an example of a name that does match the pattern: "${namingExample}"."`
                     : '';
-                throw new PatternError(`${error}${example}`, namingPattern);
+                const description = namingDescription
+                    ? ` The pattern's description is: "${namingDescription}"`
+                    : '';
+                throw new PatternError(`${error}${example}${description}`, [
+                    `The flag name does not match the pattern.`,
+                ]);
             }
         }
     }

@@ -43,7 +43,7 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 const StyledCode = styled('span')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
     color: theme.palette.text.primary,
-    padding: theme.spacing(0, 0.5),
+    padding: theme.spacing(0.2, 0.5),
     borderRadius: theme.spacing(0.5),
 }));
 
@@ -127,7 +127,6 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                         elseShow={
                             <SearchInstructions
                                 filters={filters}
-                                getSearchContext={getSearchContext}
                                 searchableColumnsString={
                                     searchableColumnsString
                                 }
@@ -137,12 +136,11 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                 </Box>
             </StyledBox>
             <StyledDivider />
-            <ConditionallyRender
-                condition={filters.length > 0}
-                show="Combine filters and search."
-            />
-            <p>
-                Example:{' '}
+            <Box sx={{ lineHeight: 1.75 }}>
+                <ConditionallyRender
+                    condition={filters.length > 0}
+                    show="Combine filters and search: "
+                />
                 <StyledCode>
                     {filters.map(filter => (
                         <span key={filter.name}>
@@ -151,7 +149,7 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                     ))}
                     <span>{suggestedTextSearch}</span>
                 </StyledCode>
-            </p>
+            </Box>
         </StyledPaper>
     );
 };

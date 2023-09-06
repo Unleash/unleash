@@ -154,28 +154,22 @@ const ProjectForm: React.FC<IProjectForm> = ({
 
     const validateFeatureNaming = ({
         regex,
-        example,
+        example: newExample,
     }: {
         regex?: string;
         example?: string;
     }) => {
-        const r = regex ?? featureNamingPattern;
-        const x = example ?? featureNamingExample;
+        const pattern = regex ?? featureNamingPattern;
+        const example = newExample ?? featureNamingExample;
 
-        if (errors.featureNamingPattern || !x || !r) {
-            console.log('Deleting naming example error');
+        if (errors.featureNamingPattern || !example || !pattern) {
             delete errors.namingExample;
-        } else if (x && r) {
-            console.log('We have a valid pattern and an example, validating');
-
-            const regex = new RegExp(r);
-            const matches = regex.test(x);
+        } else if (example && pattern) {
+            const regex = new RegExp(pattern);
+            const matches = regex.test(example);
             if (!matches) {
-                console.log(x, 'does not match regex', r);
-
                 errors.namingExample = 'Example does not match regex';
             } else {
-                console.log(x, 'matches regex', r);
                 delete errors.namingExample;
             }
         }

@@ -106,6 +106,29 @@ const StyledFlagNamingContainer = styled('div')(({ theme }) => ({
     '& > *': { width: '100%' },
 }));
 
+export const validateFeatureNamingExample = ({
+    pattern,
+    example,
+    featureNamingPatternError,
+}: {
+    pattern: string;
+    example: string;
+    featureNamingPatternError?: string;
+}): { state: 'valid' } | { state: 'invalid'; reason: string } => {
+    if (featureNamingPatternError || !example || !pattern) {
+        return { state: 'valid' };
+    } else if (example && pattern) {
+        const regex = new RegExp(pattern);
+        const matches = regex.test(example);
+        if (!matches) {
+            return { state: 'invalid', reason: 'Example does not match regex' };
+        } else {
+            return { state: 'valid' };
+        }
+    }
+    return { state: 'valid' };
+};
+
 const ProjectForm: React.FC<IProjectForm> = ({
     children,
     handleSubmit,
@@ -136,26 +159,26 @@ const ProjectForm: React.FC<IProjectForm> = ({
     const { uiConfig } = useUiConfig();
     const shouldShowFlagNaming = uiConfig.flags.featureNamingPattern;
 
-    const validateFeatureNaming = ({
-        regex,
-        example: newExample,
+    const updateNamingExampleError = ({
+        example,
+        pattern,
     }: {
-        regex?: string;
-        example?: string;
+        example: string;
+        pattern: string;
     }) => {
-        const pattern = regex ?? featureNamingPattern;
-        const example = newExample ?? featureNamingExample;
+        const validationResult = validateFeatureNamingExample({
+            pattern,
+            example,
+            featureNamingPatternError: errors.featureNamingPattern,
+        });
 
-        if (errors.featureNamingPattern || !example || !pattern) {
-            delete errors.namingExample;
-        } else if (example && pattern) {
-            const regex = new RegExp(pattern);
-            const matches = regex.test(example);
-            if (!matches) {
-                errors.namingExample = 'Example does not match regex';
-            } else {
+        switch (validationResult.state) {
+            case 'invalid':
+                errors.namingExample = validationResult.reason;
+                break;
+            case 'valid':
                 delete errors.namingExample;
-            }
+                break;
         }
     };
 
@@ -168,12 +191,18 @@ const ProjectForm: React.FC<IProjectForm> = ({
             errors.featureNamingPattern = 'Invalid regular expression';
             setFeatureNamingPattern && setFeatureNamingPattern(regex);
         }
-        validateFeatureNaming({ regex });
+        updateNamingExampleError({
+            pattern: regex,
+            example: featureNamingExample || '',
+        });
     };
 
     const onSetFeatureNamingExample = (example: string) => {
         setFeatureNamingExample && setFeatureNamingExample(example);
-        validateFeatureNaming({ example });
+        updateNamingExampleError({
+            pattern: featureNamingPattern || '',
+            example,
+        });
     };
 
     const onSetFeatureNamingDescription = (description: string) => {

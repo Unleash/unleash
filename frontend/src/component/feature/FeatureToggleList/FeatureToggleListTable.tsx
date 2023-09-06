@@ -303,6 +303,8 @@ export const FeatureToggleListTable: VFC = () => {
                                 show={
                                     <>
                                         <Search
+                                            placeholder="Search and Filter"
+                                            expandable
                                             initialValue={searchValue}
                                             onChange={setSearchValue}
                                             hasFilters

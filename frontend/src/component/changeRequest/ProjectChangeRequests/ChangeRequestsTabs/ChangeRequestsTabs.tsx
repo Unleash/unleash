@@ -301,6 +301,8 @@ export const ChangeRequestsTabs = ({
                     }
                     actions={
                         <Search
+                            placeholder="Search and Filter"
+                            expandable
                             initialValue={searchValue}
                             onChange={setSearchValue}
                             hasFilters

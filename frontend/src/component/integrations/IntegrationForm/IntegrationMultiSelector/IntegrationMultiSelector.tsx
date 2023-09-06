@@ -147,7 +147,7 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
     return (
         <React.Fragment>
             <StyledTitle>
-                {capitalize(entityName)}s
+                {capitalize(`${entityName}s`)}
                 {required ? (
                     <Typography component="span" color="error">
                         *

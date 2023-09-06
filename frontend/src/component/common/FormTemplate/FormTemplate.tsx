@@ -211,7 +211,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                             {children}
                         </>
                     }
-                />{' '}
+                />
             </StyledFormContent>
             <ConditionallyRender
                 condition={!smallScreen}

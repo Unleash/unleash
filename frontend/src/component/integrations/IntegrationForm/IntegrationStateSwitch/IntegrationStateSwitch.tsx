@@ -1,10 +1,4 @@
-import {
-    Box,
-    FormControlLabel,
-    Paper,
-    Switch,
-    Typography,
-} from '@mui/material';
+import { Box, FormControlLabel, Switch, Typography } from '@mui/material';
 import { MouseEventHandler, VFC } from 'react';
 
 interface IIntegrationStateSwitchProps {
@@ -17,17 +11,13 @@ export const IntegrationStateSwitch: VFC<IIntegrationStateSwitchProps> = ({
     onClick,
 }) => {
     return (
-        <Paper
-            elevation={0}
-            sx={theme => ({
-                background: theme.palette.background.elevation1,
-                padding: theme.spacing(2, 3),
+        <Box
+            sx={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 width: '100%',
-                borderRadius: `${theme.shape.borderRadiusLarge}px`,
-            })}
+            }}
         >
             <Typography component="span">Integration status</Typography>
             <FormControlLabel
@@ -41,6 +31,6 @@ export const IntegrationStateSwitch: VFC<IIntegrationStateSwitchProps> = ({
                     </Box>
                 }
             />
-        </Paper>
+        </Box>
     );
 };

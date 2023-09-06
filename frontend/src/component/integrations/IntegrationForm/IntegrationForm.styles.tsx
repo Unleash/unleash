@@ -1,6 +1,12 @@
-import { styled } from '@mui/system';
+import { Paper, styled } from '@mui/material';
 import { FormControlLabel, TextField, Typography } from '@mui/material';
-import { forwardRef, type FC, type ReactNode } from 'react';
+import {
+    forwardRef,
+    type FC,
+    type ReactNode,
+    Component,
+    ComponentProps,
+} from 'react';
 
 export const StyledForm = styled('form')({
     display: 'flex',
@@ -16,9 +22,11 @@ export const StyledAlerts = styled('section')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-export const StyledHelpText = styled('p')({
-    marginBottom: '0.5rem',
-});
+export const StyledHelpText = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+}));
 
 export const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -39,15 +47,15 @@ export const StyledButtonSection = styled('section')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-export const StyledTextField = styled(TextField)({
+export const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
-    marginBottom: '1rem',
-    marginTop: '0px',
-});
+}));
 
-export const StyledSelectAllFormControlLabel = styled(FormControlLabel)({
-    paddingBottom: '16px',
-});
+export const StyledSelectAllFormControlLabel = styled(FormControlLabel)(
+    ({ theme }) => ({
+        paddingBottom: theme.spacing(1),
+    })
+);
 
 export const StyledTitle = forwardRef<
     HTMLHeadingElement,
@@ -58,8 +66,7 @@ export const StyledTitle = forwardRef<
         component="h4"
         variant="h4"
         sx={theme => ({
-            marginBottom: theme.spacing(2),
-            marginTop: theme.spacing(2),
+            margin: theme.spacing(1, 0),
         })}
     >
         {children}
@@ -80,3 +87,20 @@ export const StyledConfigurationSection = styled('section')(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(3),
 }));
+
+export const StyledRaisedSection: FC<ComponentProps<typeof Paper>> = ({
+    ...props
+}) => (
+    <Paper
+        elevation={0}
+        sx={theme => ({
+            background: theme.palette.background.elevation1,
+            padding: theme.spacing(2, 3),
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            borderRadius: `${theme.shape.borderRadiusLarge}px`,
+        })}
+        {...props}
+    />
+);

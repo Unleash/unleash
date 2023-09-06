@@ -307,6 +307,7 @@ export const ChangeRequestsTabs = ({
                             onChange={setSearchValue}
                             hasFilters
                             getSearchContext={getSearchContext}
+                            id="changeRequestList"
                         />
                     }
                 />

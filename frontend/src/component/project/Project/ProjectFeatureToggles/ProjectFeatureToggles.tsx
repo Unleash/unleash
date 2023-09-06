@@ -554,6 +554,7 @@ export const ProjectFeatureToggles = ({
                                             onBlur={() => setShowTitle(true)}
                                             hasFilters
                                             getSearchContext={getSearchContext}
+                                            id="projectFeatureToggles"
                                         />
                                     }
                                 />
@@ -612,6 +613,7 @@ export const ProjectFeatureToggles = ({
                                     onChange={setSearchValue}
                                     hasFilters
                                     getSearchContext={getSearchContext}
+                                    id="projectFeatureToggles"
                                 />
                             }
                         />

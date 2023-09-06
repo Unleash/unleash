@@ -1,4 +1,4 @@
-import { FilterList } from '@mui/icons-material';
+import { FilterList, History } from '@mui/icons-material';
 import { Box, Divider, Paper, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
@@ -7,9 +7,12 @@ import {
     getFilterValues,
     IGetSearchContextOutput,
 } from 'hooks/useSearch';
-import { useMemo, VFC } from 'react';
+import { VFC } from 'react';
 import { SearchDescription } from './SearchDescription/SearchDescription';
-import { SearchInstructions } from './SearchInstructions/SearchInstructions';
+import {
+    SearchInstructions,
+    StyledCode,
+} from './SearchInstructions/SearchInstructions';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -31,6 +34,10 @@ const StyledBox = styled(Box)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const StyledHistory = styled(History)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
 const StyledFilterList = styled(FilterList)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
@@ -40,17 +47,10 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
     margin: theme.spacing(1.5, 0),
 }));
 
-const StyledCode = styled('span')(({ theme }) => ({
-    backgroundColor: theme.palette.background.elevation2,
-    color: theme.palette.text.primary,
-    padding: theme.spacing(0.2, 0.5),
-    borderRadius: theme.spacing(0.5),
-    cursor: 'pointer',
-}));
-
 interface SearchSuggestionsProps {
     getSearchContext: () => IGetSearchContextOutput;
     onSuggestion: (suggestion: string) => void;
+    savedQuery?: string;
 }
 
 const quote = (item: string) => (item.includes(' ') ? `"${item}"` : item);
@@ -60,6 +60,7 @@ const randomIndex = (arr: any[]) => Math.floor(Math.random() * arr.length);
 export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
     getSearchContext,
     onSuggestion,
+    savedQuery,
 }) => {
     const searchContext = getSearchContext();
 
@@ -108,6 +109,23 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
 
     return (
         <StyledPaper className="dropdown-outline">
+            <ConditionallyRender
+                condition={Boolean(savedQuery)}
+                show={
+                    <>
+                        <StyledBox>
+                            <StyledHistory />
+                            <StyledCode
+                                onClick={() => onSuggestion(savedQuery || '')}
+                            >
+                                <span>{savedQuery}</span>
+                            </StyledCode>
+                        </StyledBox>
+                        <StyledDivider />
+                    </>
+                }
+            />
+
             <StyledBox>
                 <StyledFilterList />
                 <Box>

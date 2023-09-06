@@ -1,15 +1,17 @@
 import React, { useRef, useState } from 'react';
 import { useAsyncDebounce } from 'react-table';
 import { Box, IconButton, InputBase, styled, Tooltip } from '@mui/material';
-import { Search as SearchIcon, Close } from '@mui/icons-material';
+import { Close, Search as SearchIcon } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SearchSuggestions } from './SearchSuggestions/SearchSuggestions';
 import { IGetSearchContextOutput } from 'hooks/useSearch';
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
+import { useSavedQuery } from './useSavedQuery';
 
 interface ISearchProps {
+    id?: string;
     initialValue?: string;
     onChange: (value: string) => void;
     onFocus?: () => void;
@@ -66,6 +68,7 @@ const StyledClose = styled(Close)(({ theme }) => ({
 
 export const Search = ({
     initialValue = '',
+    id,
     onChange,
     onFocus,
     onBlur,
@@ -86,12 +89,15 @@ export const Search = ({
         onBlur?.();
     };
 
+    const { savedQuery, setSavedQuery } = useSavedQuery(id);
+
     const [value, setValue] = useState(initialValue);
     const debouncedOnChange = useAsyncDebounce(onChange, debounceTime);
 
     const onSearchChange = (value: string) => {
         debouncedOnChange(value);
         setValue(value);
+        setSavedQuery(value);
     };
 
     const hotkey = useKeyboardShortcut(
@@ -163,6 +169,7 @@ export const Search = ({
                     />
                 </Box>
             </StyledSearch>
+
             <ConditionallyRender
                 condition={Boolean(hasFilters) && showSuggestions}
                 show={
@@ -171,6 +178,7 @@ export const Search = ({
                             onSearchChange(suggestion);
                             searchInputRef.current?.focus();
                         }}
+                        savedQuery={savedQuery}
                         getSearchContext={getSearchContext!}
                     />
                 }

@@ -34,7 +34,15 @@ const searchContext = {
 };
 
 test('displays search and filter instructions when no search value is provided', () => {
-    render(<SearchSuggestions getSearchContext={() => searchContext} />);
+    let recordedSuggestion = '';
+    render(
+        <SearchSuggestions
+            onSuggestion={suggestion => {
+                recordedSuggestion = suggestion;
+            }}
+            getSearchContext={() => searchContext}
+        />
+    );
 
     expect(screen.getByText(/Filter your results by:/i)).toBeInTheDocument();
 
@@ -47,11 +55,15 @@ test('displays search and filter instructions when no search value is provided',
     expect(
         screen.getByText(/Combine filters and search./i)
     ).toBeInTheDocument();
+
+    screen.getByText(/environment:"dev env",pre-prod/i).click();
+    expect(recordedSuggestion).toBe('environment:"dev env",pre-prod');
 });
 
 test('displays search and filter instructions when search value is provided', () => {
     render(
         <SearchSuggestions
+            onSuggestion={() => {}}
             getSearchContext={() => ({
                 ...searchContext,
                 searchValue: 'Title',
@@ -67,8 +79,12 @@ test('displays search and filter instructions when search value is provided', ()
 });
 
 test('displays search and filter instructions when filter value is provided', () => {
+    let recordedSuggestion = '';
     render(
         <SearchSuggestions
+            onSuggestion={suggestion => {
+                recordedSuggestion = suggestion;
+            }}
             getSearchContext={() => ({
                 ...searchContext,
                 searchValue: 'environment:prod',
@@ -84,4 +100,9 @@ test('displays search and filter instructions when filter value is provided', ()
     expect(
         screen.getByText(/Combine filters and search./i)
     ).toBeInTheDocument();
+    expect(screen.getByText(/environment:"dev env"/i)).toBeInTheDocument();
+    expect(screen.getByText(/Title A/i)).toBeInTheDocument();
+
+    screen.getByText(/Title A/i).click();
+    expect(recordedSuggestion).toBe('environment:"dev env" Title A');
 });

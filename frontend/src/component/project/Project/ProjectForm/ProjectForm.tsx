@@ -372,6 +372,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
 
 The flag name should contain the project name, the feature name, and the ticket number, each separated by a dot.`}
                                     multiline
+                                    minRows={5}
                                     value={featureNamingDescription || ''}
                                     onChange={e =>
                                         onSetFeatureNamingDescription(

@@ -239,9 +239,9 @@ class ProjectStore implements IProjectStore {
                 project_mode: project.mode,
                 default_stickiness: project.defaultStickiness,
                 feature_limit: project.featureLimit,
-                feature_naming_pattern: project.featureNamingPattern,
-                feature_naming_example: project.featureNamingExample,
-                feature_naming_description: project.featureNamingDescription,
+                feature_naming_pattern: project.featureNaming?.pattern,
+                feature_naming_example: project.featureNaming?.example,
+                feature_naming_description: project.featureNaming?.description,
             })
             .returning('*');
         return this.mapRow({ ...row[0], ...settingsRow[0] });

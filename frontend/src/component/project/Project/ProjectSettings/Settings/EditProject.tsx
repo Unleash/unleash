@@ -61,7 +61,8 @@ const EditProject = () => {
         project.mode,
         project.featureLimit ? String(project.featureLimit) : '',
         project.featureNaming?.pattern || '',
-        project.featureNaming?.example || ''
+        project.featureNaming?.example || '',
+        project.featureNaming?.description || ''
     );
 
     const formatApiCode = () => {

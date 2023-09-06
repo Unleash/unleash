@@ -16,6 +16,7 @@ export interface IProjectCard {
 export type FeatureNamingType = {
     pattern: string;
     example: string;
+    description: string;
 };
 
 export interface IProject {

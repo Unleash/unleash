@@ -39,6 +39,7 @@ const SETTINGS_COLUMNS = [
     'feature_limit',
     'feature_naming_pattern',
     'feature_naming_example',
+    'feature_naming_description',
 ];
 const SETTINGS_TABLE = 'project_settings';
 const PROJECT_ENVIRONMENTS = 'project_environments';
@@ -240,6 +241,7 @@ class ProjectStore implements IProjectStore {
                 feature_limit: project.featureLimit,
                 feature_naming_pattern: project.featureNamingPattern,
                 feature_naming_example: project.featureNamingExample,
+                feature_naming_description: project.featureNamingDescription,
             })
             .returning('*');
         return this.mapRow({ ...row[0], ...settingsRow[0] });
@@ -269,6 +271,8 @@ class ProjectStore implements IProjectStore {
                         feature_limit: data.featureLimit,
                         feature_naming_pattern: data.featureNaming?.pattern,
                         feature_naming_example: data.featureNaming?.example,
+                        feature_naming_description:
+                            data.featureNaming?.description,
                     });
             } else {
                 await this.db(SETTINGS_TABLE).insert({
@@ -278,6 +282,7 @@ class ProjectStore implements IProjectStore {
                     feature_limit: data.featureLimit,
                     feature_naming_pattern: data.featureNaming?.pattern,
                     feature_naming_example: data.featureNaming?.example,
+                    feature_naming_description: data.featureNaming?.description,
                 });
             }
         } catch (err) {
@@ -573,6 +578,7 @@ class ProjectStore implements IProjectStore {
             featureNaming: {
                 pattern: row.feature_naming_pattern,
                 example: row.feature_naming_example,
+                description: row.feature_naming_description,
             },
         };
     }

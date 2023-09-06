@@ -1,8 +1,8 @@
 import { IGroupStore, IStoreGroup } from '../../lib/types/stores/group-store';
 import Group, {
-    ICreateGroupModel,
     ICreateGroupUserModel,
     IGroup,
+    IGroupModel,
     IGroupProject,
     IGroupRole,
     IGroupUser,
@@ -63,7 +63,7 @@ export default class FakeGroupStore implements IGroupStore {
         throw new Error('Method not implemented.');
     }
 
-    update(group: ICreateGroupModel): Promise<IGroup> {
+    update(group: IGroupModel): Promise<IGroup> {
         throw new Error('Method not implemented.');
     }
 

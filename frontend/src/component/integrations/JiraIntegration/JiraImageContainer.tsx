@@ -3,7 +3,13 @@ import { styled, Typography } from '@mui/material';
 import { formatAssetPath } from '../../../utils/formatPath';
 import { FC } from 'react';
 
-export const StyledContainer = styled('div')(({ theme }) => ({
+export const StyledFigure = styled('figure')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
+    flexDirection: 'column',
+}));
+
+export const StyledFigCaption = styled('figcaption')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(2),
     flexDirection: 'column',
@@ -31,10 +37,12 @@ export const JiraImageContainer: FC<JiraIntegrationProps> = ({
     src,
 }) => {
     return (
-        <StyledContainer>
-            <StyledTitle>{title}</StyledTitle>
-            <Typography>{description}</Typography>
-            <StyledImg src={formatAssetPath(src)} />
-        </StyledContainer>
+        <StyledFigure>
+            <StyledFigCaption>
+                <StyledTitle>{title}</StyledTitle>
+                <Typography>{description}</Typography>
+            </StyledFigCaption>
+            <StyledImg src={formatAssetPath(src)} alt={title} />
+        </StyledFigure>
     );
 };

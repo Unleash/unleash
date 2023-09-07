@@ -8,13 +8,13 @@ import manage from 'assets/img/jira/manage.png';
 import React from 'react';
 import { JiraImageContainer } from './JiraImageContainer';
 
-export const StyledContainer = styled('p')(({ theme }) => ({
+export const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
 }));
 
-export const StyledGrayContainer = styled('p')(({ theme }) => ({
+export const StyledGrayContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.grey[100],
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(3),
@@ -23,7 +23,7 @@ export const StyledGrayContainer = styled('p')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-export const StyledIconLine = styled('p')(({ theme }) => ({
+export const StyledIconLine = styled('div')(({ theme }) => ({
     display: 'flex',
     marginLeft: theme.spacing(1),
     alignItems: 'center',

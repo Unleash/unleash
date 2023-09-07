@@ -33,6 +33,13 @@ export const addonTypeSchema = {
             description: 'A description of the addon type.',
             example: 'Allows Unleash to post updates to Slack.',
         },
+        howTo: {
+            type: 'string',
+            description:
+                'A long description of how to use this addon type. This will be displayed on the top of configuration page. Can contain markdown.',
+            example:
+                'This is **how you use** this addon type...\n  - Step 1\n  - Step 2\n  - Step 3',
+        },
         tagTypes: {
             type: 'array',
             description: `A list of [Unleash tag types](https://docs.getunleash.io/reference/tags#tag-types) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created.`,

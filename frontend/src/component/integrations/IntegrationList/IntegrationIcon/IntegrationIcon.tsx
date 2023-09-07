@@ -1,4 +1,4 @@
-import { Avatar } from '@mui/material';
+import { Avatar, styled } from '@mui/material';
 import { DeviceHub } from '@mui/icons-material';
 import { formatAssetPath } from 'utils/formatPath';
 
@@ -8,73 +8,48 @@ import jiraIcon from 'assets/icons/jira.svg';
 import webhooksIcon from 'assets/icons/webhooks.svg';
 import teamsIcon from 'assets/icons/teams.svg';
 import dataDogIcon from 'assets/icons/datadog.svg';
+import unleashIcon from 'assets/icons/unleash-integration.svg';
+import { capitalizeFirst } from 'utils/capitalizeFirst';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-const style: React.CSSProperties = {
-    width: '32.5px',
-    height: '32.5px',
-    marginRight: '16px',
-};
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+    marginRight: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius,
+    overflow: 'hidden',
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    // background: theme.palette.background.elevation1,
+}));
 
 interface IIntegrationIconProps {
     name: string;
 }
 
-export const IntegrationIcon = ({ name }: IIntegrationIconProps) => {
-    switch (name) {
-        case 'slack':
-        case 'slack-app':
-            return (
-                <img
-                    style={style}
-                    alt="Slack logo"
-                    src={formatAssetPath(slackIcon)}
-                />
-            );
-        case 'jira-comment':
-            return (
-                <img
-                    style={style}
-                    alt="JIRA logo"
-                    src={formatAssetPath(jiraCommentIcon)}
-                />
-            );
-        case 'webhook':
-            return (
-                <img
-                    style={style}
-                    alt="Generic Webhook logo"
-                    src={formatAssetPath(webhooksIcon)}
-                />
-            );
-        case 'teams':
-            return (
-                <img
-                    style={style}
-                    alt="Microsoft Teams logo"
-                    src={formatAssetPath(teamsIcon)}
-                />
-            );
-        case 'datadog':
-            return (
-                <img
-                    style={style}
-                    alt="Datadog logo"
-                    src={formatAssetPath(dataDogIcon)}
-                />
-            );
-        case 'jira':
-            return (
-                <img
-                    style={style}
-                    alt="JIRA logo"
-                    src={formatAssetPath(jiraIcon)}
-                />
-            );
-        default:
-            return (
-                <Avatar>
-                    <DeviceHub />
-                </Avatar>
-            );
-    }
+const integrations: Record<string, string> = {
+    slack: slackIcon,
+    'slack-app': slackIcon,
+    'jira-comment': jiraCommentIcon,
+    webhook: webhooksIcon,
+    teams: teamsIcon,
+    datadog: dataDogIcon,
+    jira: jiraIcon,
+    unleash: unleashIcon,
 };
+
+export const IntegrationIcon = ({ name }: IIntegrationIconProps) => (
+    <ConditionallyRender
+        condition={Object.keys(integrations).includes(name)}
+        show={() => (
+            <StyledAvatar
+                src={formatAssetPath(integrations[name])}
+                alt={`${capitalizeFirst(name)} icon`}
+                variant="rounded"
+            />
+        )}
+        elseShow={() => (
+            <StyledAvatar variant="rounded">
+                <DeviceHub />
+            </StyledAvatar>
+        )}
+    />
+);

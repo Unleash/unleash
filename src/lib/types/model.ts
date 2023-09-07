@@ -264,6 +264,7 @@ export interface IAddonDefinition {
     tagTypes?: ITagType[];
     installation?: IAddonInstallation;
     alerts?: IAddonAlert[];
+    howTo?: string;
 }
 
 export interface IAddonInstallation {

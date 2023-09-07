@@ -1,6 +1,6 @@
 import { VFC } from 'react';
 import { Link } from 'react-router-dom';
-import { styled, Typography } from '@mui/material';
+import { styled, Tooltip, Typography } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -18,6 +18,7 @@ interface IIntegrationCardProps {
     configureActionText?: string;
     link: string;
     addon?: AddonSchema;
+    deprecated?: string;
 }
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -64,6 +65,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     configureActionText = 'Configure',
     link,
     addon,
+    deprecated,
 }) => {
     const isConfigured = addon !== undefined;
 
@@ -73,6 +75,16 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                 <StyledTitle variant="h3" data-loading>
                     <IntegrationIcon name={icon as string} /> {title}
                 </StyledTitle>
+                <ConditionallyRender
+                    condition={deprecated !== undefined}
+                    show={
+                        <Tooltip title={deprecated} arrow>
+                            <Badge data-loading>
+                                Deprecated
+                            </Badge>
+                        </Tooltip>
+                    }
+                />
                 <ConditionallyRender
                     condition={isEnabled === true}
                     show={
@@ -90,7 +102,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                     show={<IntegrationCardMenu addon={addon as AddonSchema} />}
                 />
             </StyledHeader>
-            <Typography variant="body1" data-loading>
+            <Typography variant="body2" data-loading color="text.secondary">
                 {description}
             </Typography>
             <StyledAction data-loading>

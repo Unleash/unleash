@@ -347,6 +347,7 @@ module.exports = {
                         'reference/custom-activation-strategies',
                         'reference/environments',
                         'reference/strategy-variants',
+                        'reference/feature-flag-naming-patterns',
                         'reference/feature-toggles',
                         'reference/feature-toggle-types',
                         'reference/feature-toggle-variants',

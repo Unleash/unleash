@@ -5,14 +5,7 @@ export const apiTokenSchema = {
     $id: '#/components/schemas/apiTokenSchema',
     type: 'object',
     additionalProperties: false,
-    required: [
-        'secret',
-        'tokenName',
-        'type',
-        'project',
-        'projects',
-        'createdAt',
-    ],
+    required: ['secret', 'tokenName', 'type', 'createdAt'],
     description:
         'An overview of an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).',
     properties: {

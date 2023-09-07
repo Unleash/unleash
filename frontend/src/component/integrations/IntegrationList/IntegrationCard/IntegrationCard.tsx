@@ -21,20 +21,6 @@ interface IIntegrationCardProps {
     addon?: AddonSchema;
 }
 
-export const wrapperStyles = (theme: Theme) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    padding: theme.spacing(3),
-    borderRadius: `${theme.shape.borderRadiusMedium}px`,
-    border: `1px solid ${theme.palette.divider}`,
-    textDecoration: 'none',
-    color: 'inherit',
-    boxShadow: theme.boxShadows.card,
-    ':hover': {
-        backgroundColor: theme.palette.action.hover,
-    },
-});
-
 const StyledLink = styled(Link)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',

@@ -19,6 +19,7 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
+import useProject from 'hooks/api/getters/useProject/useProject';
 
 const StyledPage = styled(Paper)(({ theme }) => ({
     overflow: 'visible',
@@ -69,6 +70,10 @@ export const CopyFeatureToggle = () => {
     const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(projectId);
 
+    const {
+        project: { featureNaming },
+    } = useProject(projectId);
+
     const setValue: ChangeEventHandler<HTMLInputElement> = event => {
         const value = trim(event.target.value);
         setNewToggleName(value);
@@ -111,6 +116,8 @@ export const CopyFeatureToggle = () => {
 
     if (!feature || !feature.name) return <span>Toggle not found</span>;
 
+    const displayFeatureNamingInfo = Boolean(featureNaming?.pattern);
+
     return (
         <StyledPage className={themeStyles.fullwidth}>
             <StyledHeader>
@@ -130,6 +137,47 @@ export const CopyFeatureToggle = () => {
                     . You must give the new feature toggle a unique name before
                     you can proceed.
                 </StyledDescription>
+
+                <ConditionallyRender
+                    condition={displayFeatureNamingInfo}
+                    show={
+                        <>
+                            <p>
+                                This project has feature flag naming patterns
+                                enabled, so the name must also match the
+                                configured pattern.
+                            </p>
+                            <dl id="feature-naming-pattern-info">
+                                <dt>Pattern</dt>
+                                <dd>
+                                    <code>{featureNaming?.pattern}</code>
+                                </dd>
+                                <ConditionallyRender
+                                    condition={Boolean(featureNaming?.example)}
+                                    show={
+                                        <>
+                                            <dt>Example</dt>
+                                            <dd>{featureNaming?.example}</dd>
+                                        </>
+                                    }
+                                />
+                                <ConditionallyRender
+                                    condition={Boolean(
+                                        featureNaming?.description
+                                    )}
+                                    show={
+                                        <>
+                                            <dt>Description</dt>
+                                            <dd>
+                                                {featureNaming?.description}
+                                            </dd>
+                                        </>
+                                    }
+                                />
+                            </dl>
+                        </>
+                    }
+                />
                 <StyledForm onSubmit={onSubmit}>
                     <TextField
                         label="Name"
@@ -142,6 +190,11 @@ export const CopyFeatureToggle = () => {
                         variant="outlined"
                         size="small"
                         aria-required
+                        aria-details={
+                            displayFeatureNamingInfo
+                                ? 'feature-naming-pattern-info'
+                                : undefined
+                        }
                         autoFocus
                     />
                     <StyledFormControlLabel

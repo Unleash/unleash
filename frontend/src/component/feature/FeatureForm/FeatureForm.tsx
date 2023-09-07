@@ -138,6 +138,13 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
 
     const displayFeatureNamingInfo = Boolean(featureNaming?.pattern);
 
+    React.useEffect(() => {
+        if (featureNaming?.pattern && validateToggleName && name) {
+            clearErrors();
+            validateToggleName();
+        }
+    }, [featureNaming?.pattern]);
+
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>

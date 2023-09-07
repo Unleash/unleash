@@ -45,6 +45,7 @@ import { LoginHistory } from 'component/loginHistory/LoginHistory';
 import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
 import { AddonsList } from 'component/integrations/IntegrationList/AddonsList';
 import { TemporaryApplicationListWrapper } from 'component/application/ApplicationList/TemporaryApplicationListWrapper';
+import { JiraIntegration } from '../integrations/JiraIntegration/JiraIntegration';
 
 export const routes: IRoute[] = [
     // Splash
@@ -334,6 +335,14 @@ export const routes: IRoute[] = [
         parent: '/integrations',
         title: 'Create',
         component: CreateIntegration,
+        type: 'protected',
+        menu: {},
+    },
+    {
+        path: '/integrations/view/:providerId',
+        parent: '/integrations',
+        title: 'View',
+        component: JiraIntegration,
         type: 'protected',
         menu: {},
     },

@@ -1,11 +1,6 @@
 import { Paper, styled } from '@mui/material';
 import { FormControlLabel, TextField, Typography } from '@mui/material';
-import {
-    forwardRef,
-    type FC,
-    type ReactNode,
-    ComponentProps,
-} from 'react';
+import { forwardRef, type FC, type ReactNode, ComponentProps } from 'react';
 
 export const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',

@@ -5,6 +5,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
 import { StyledCardsGrid } from '../IntegrationList.styles';
+import { IntegrationsSection } from './IntegrationsSection';
 
 interface IAvailableIntegrationsProps {
     providers: AddonTypeSchema[];
@@ -17,10 +18,10 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
     const ref = useLoading(loading || false);
     return (
         <PageContent
-            header={<PageHeader title="Available integrations" />}
+            header={<PageHeader title="Integrations" />}
             isLoading={loading}
         >
-            <StyledCardsGrid ref={ref}>
+            <IntegrationsSection>
                 {providers?.map(({ name, displayName, description }) => (
                     <IntegrationCard
                         key={name}
@@ -30,7 +31,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                         link={`/integrations/create/${name}`}
                     />
                 ))}
-            </StyledCardsGrid>
+            </IntegrationsSection>
         </PageContent>
     );
 };

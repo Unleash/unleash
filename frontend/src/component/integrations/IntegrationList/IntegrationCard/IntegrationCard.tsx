@@ -17,11 +17,25 @@ interface IIntegrationCardProps {
     isEnabled?: boolean;
     configureActionText?: string;
     link: string;
+    isExternal?: boolean;
     addon?: AddonSchema;
     deprecated?: string;
 }
 
 const StyledLink = styled(Link)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    padding: theme.spacing(3),
+    borderRadius: `${theme.shape.borderRadiusMedium}px`,
+    border: `1px solid ${theme.palette.divider}`,
+    textDecoration: 'none',
+    color: 'inherit',
+    boxShadow: theme.boxShadows.card,
+    ':hover': {
+        backgroundColor: theme.palette.action.hover,
+    },
+}));
+const StyledAnchor = styled('a')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(3),
@@ -66,11 +80,12 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     link,
     addon,
     deprecated,
+    isExternal = false,
 }) => {
     const isConfigured = addon !== undefined;
 
-    return (
-        <StyledLink to={link}>
+    const content = (
+        <>
             <StyledHeader>
                 <StyledTitle variant="h3" data-loading>
                     <IntegrationIcon name={icon as string} /> {title}
@@ -79,9 +94,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                     condition={deprecated !== undefined}
                     show={
                         <Tooltip title={deprecated} arrow>
-                            <Badge data-loading>
-                                Deprecated
-                            </Badge>
+                            <Badge data-loading>Deprecated</Badge>
                         </Tooltip>
                     }
                 />
@@ -102,12 +115,22 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                     show={<IntegrationCardMenu addon={addon as AddonSchema} />}
                 />
             </StyledHeader>
-            <Typography variant="body2" data-loading color="text.secondary">
+            <Typography variant="body2" color="text.secondary" data-loading>
                 {description}
             </Typography>
             <StyledAction data-loading>
                 {configureActionText} <ChevronRightIcon />
             </StyledAction>
-        </StyledLink>
+        </>
     );
+
+    if (isExternal) {
+        return (
+            <StyledAnchor href={link} target="_blank" rel="noreferrer">
+                {content}
+            </StyledAnchor>
+        );
+    } else {
+        return <StyledLink to={link}>{content}</StyledLink>;
+    }
 };

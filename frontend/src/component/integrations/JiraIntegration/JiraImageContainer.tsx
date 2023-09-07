@@ -14,9 +14,6 @@ export const StyledFigCaption = styled('figcaption')(({ theme }) => ({
     gap: theme.spacing(2),
     flexDirection: 'column',
 }));
-export const StyledTitle = styled(Typography)({
-    fontWeight: 'bold',
-});
 
 export const StyledImg = styled('img')({
     maxWidth: '100%',
@@ -39,7 +36,7 @@ export const JiraImageContainer: FC<JiraIntegrationProps> = ({
     return (
         <StyledFigure>
             <StyledFigCaption>
-                <StyledTitle>{title}</StyledTitle>
+                <Typography variant={'h3'}>{title}</Typography>
                 <Typography>{description}</Typography>
             </StyledFigCaption>
             <StyledImg src={formatAssetPath(src)} alt={title} />

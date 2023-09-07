@@ -1,4 +1,4 @@
-import { FilterList } from '@mui/icons-material';
+import { FilterList, History } from '@mui/icons-material';
 import { Box, Divider, Paper, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
@@ -7,9 +7,13 @@ import {
     getFilterValues,
     IGetSearchContextOutput,
 } from 'hooks/useSearch';
-import { useMemo, VFC } from 'react';
+import { VFC } from 'react';
 import { SearchDescription } from './SearchDescription/SearchDescription';
-import { SearchInstructions } from './SearchInstructions/SearchInstructions';
+import {
+    SearchInstructions,
+    StyledCode,
+} from './SearchInstructions/SearchInstructions';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -31,6 +35,10 @@ const StyledBox = styled(Box)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const StyledHistory = styled(History)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
 const StyledFilterList = styled(FilterList)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
@@ -40,30 +48,21 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
     margin: theme.spacing(1.5, 0),
 }));
 
-const StyledCode = styled('span')(({ theme }) => ({
-    backgroundColor: theme.palette.background.elevation2,
-    color: theme.palette.text.primary,
-    padding: theme.spacing(0.2, 0.5),
-    borderRadius: theme.spacing(0.5),
-}));
-
 interface SearchSuggestionsProps {
     getSearchContext: () => IGetSearchContextOutput;
+    onSuggestion: (suggestion: string) => void;
+    savedQuery?: string;
 }
 
 const quote = (item: string) => (item.includes(' ') ? `"${item}"` : item);
 
-const randomIndex = (arr: any[]) => Math.floor(Math.random() * arr.length);
-
 export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
     getSearchContext,
+    onSuggestion,
+    savedQuery,
 }) => {
+    const { trackEvent } = usePlausibleTracker();
     const searchContext = getSearchContext();
-
-    const randomRow = useMemo(
-        () => randomIndex(searchContext.data),
-        [searchContext.data]
-    );
 
     const filters = getFilterableColumns(searchContext.columns)
         .map(column => {
@@ -82,8 +81,7 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                 name: column.filterName,
                 header: column.Header ?? column.filterName,
                 options,
-                suggestedOption:
-                    options[randomRow] ?? `example-${column.filterName}`,
+                suggestedOption: options[0] ?? `example-${column.filterName}`,
                 values: getFilterValues(
                     column.filterName,
                     searchContext.searchValue
@@ -102,14 +100,39 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
 
     const suggestedTextSearch =
         searchContext.data.length && searchableColumns.length
-            ? getColumnValues(
-                  searchableColumns[0],
-                  searchContext.data[randomRow]
-              )
+            ? getColumnValues(searchableColumns[0], searchContext.data[0])
             : 'example-search-text';
+
+    const selectedFilter = filters.map(
+        filter => `${filter.name}:${filter.suggestedOption}`
+    )[0];
 
     return (
         <StyledPaper className="dropdown-outline">
+            <ConditionallyRender
+                condition={Boolean(savedQuery)}
+                show={
+                    <>
+                        <StyledBox>
+                            <StyledHistory />
+                            <StyledCode
+                                onClick={() => {
+                                    onSuggestion(savedQuery || '');
+                                    trackEvent('search-filter-suggestions', {
+                                        props: {
+                                            eventType: 'saved query',
+                                        },
+                                    });
+                                }}
+                            >
+                                <span>{savedQuery}</span>
+                            </StyledCode>
+                        </StyledBox>
+                        <StyledDivider />
+                    </>
+                }
+            />
+
             <StyledBox>
                 <StyledFilterList />
                 <Box>
@@ -130,6 +153,14 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                                 searchableColumnsString={
                                     searchableColumnsString
                                 }
+                                onClick={suggestion => {
+                                    onSuggestion(suggestion);
+                                    trackEvent('search-filter-suggestions', {
+                                        props: {
+                                            eventType: 'filter',
+                                        },
+                                    });
+                                }}
                             />
                         }
                     />
@@ -141,12 +172,19 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                     condition={filters.length > 0}
                     show="Combine filters and search: "
                 />
-                <StyledCode>
-                    {filters.map(filter => (
-                        <span key={filter.name}>
-                            {filter.name}:{filter.suggestedOption}{' '}
-                        </span>
-                    ))}
+                <StyledCode
+                    onClick={() => {
+                        onSuggestion(
+                            selectedFilter + ' ' + suggestedTextSearch
+                        );
+                        trackEvent('search-filter-suggestions', {
+                            props: {
+                                eventType: 'search and filter',
+                            },
+                        });
+                    }}
+                >
+                    <span key={selectedFilter}>{selectedFilter}</span>{' '}
                     <span>{suggestedTextSearch}</span>
                 </StyledCode>
             </Box>

@@ -26,7 +26,7 @@ interface ICreateProps {
     loading?: boolean;
     modal?: boolean;
     disablePadding?: boolean;
-    formatApiCode: () => string;
+    formatApiCode?: () => string;
     footer?: ReactNode;
 }
 
@@ -189,22 +189,43 @@ const FormTemplate: React.FC<ICreateProps> = ({
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
     const copyCommand = () => {
-        if (copy(formatApiCode())) {
-            setToastData({
-                title: 'Successfully copied the command',
-                text: 'The command should now be automatically copied to your clipboard',
-                autoHideDuration: 6000,
-                type: 'success',
-                show: true,
-            });
-        } else {
-            setToastData({
-                title: 'Could not copy the command',
-                text: 'Sorry, but we could not copy the command.',
-                autoHideDuration: 6000,
-                type: 'error',
-                show: true,
-            });
+        if (formatApiCode !== undefined) {
+            if (copy(formatApiCode())) {
+                setToastData({
+                    title: 'Successfully copied the command',
+                    text: 'The command should now be automatically copied to your clipboard',
+                    autoHideDuration: 6000,
+                    type: 'success',
+                    show: true,
+                });
+            } else {
+                setToastData({
+                    title: 'Could not copy the command',
+                    text: 'Sorry, but we could not copy the command.',
+                    autoHideDuration: 6000,
+                    type: 'error',
+                    show: true,
+                });
+            }
+        }
+    };
+
+    const renderApiInfo = (apiDisabled: boolean) => {
+        if (!apiDisabled) {
+            return (
+                <>
+                    <StyledSidebarDivider />
+                    <StyledSubtitle>
+                        API Command{' '}
+                        <Tooltip title="Copy command" arrow>
+                            <IconButton onClick={copyCommand} size="large">
+                                <StyledIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </StyledSubtitle>
+                    <Codebox text={formatApiCode!()} />{' '}
+                </>
+            );
         }
     };
 
@@ -256,16 +277,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         documentationLink={documentationLink}
                         documentationLinkLabel={documentationLinkLabel}
                     >
-                        <StyledSidebarDivider />
-                        <StyledSubtitle>
-                            API Command{' '}
-                            <Tooltip title="Copy command" arrow>
-                                <IconButton onClick={copyCommand} size="large">
-                                    <StyledIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </StyledSubtitle>
-                        <Codebox text={formatApiCode()} />
+                        {renderApiInfo(formatApiCode === undefined)}
                     </Guidance>
                 }
             />

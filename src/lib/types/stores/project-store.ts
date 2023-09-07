@@ -4,6 +4,7 @@ import {
 } from '../../db/project-store';
 import {
     IEnvironment,
+    IFeatureNaming,
     IProject,
     IProjectWithCount,
     ProjectMode,
@@ -19,9 +20,7 @@ export interface IProjectInsert {
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
     featureLimit?: number;
-    featureNamingPattern?: string;
-    featureNamingExample?: string;
-    featureNamingDescription?: string;
+    featureNaming?: IFeatureNaming;
 }
 
 export interface IProjectSettings {

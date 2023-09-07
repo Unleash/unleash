@@ -106,6 +106,29 @@ const StyledFlagNamingContainer = styled('div')(({ theme }) => ({
     '& > *': { width: '100%' },
 }));
 
+export const validateFeatureNamingExample = ({
+    pattern,
+    example,
+    featureNamingPatternError,
+}: {
+    pattern: string;
+    example: string;
+    featureNamingPatternError: string | undefined;
+}): { state: 'valid' } | { state: 'invalid'; reason: string } => {
+    if (featureNamingPatternError || !example || !pattern) {
+        return { state: 'valid' };
+    } else if (example && pattern) {
+        const regex = new RegExp(pattern);
+        const matches = regex.test(example);
+        if (!matches) {
+            return { state: 'invalid', reason: 'Example does not match regex' };
+        } else {
+            return { state: 'valid' };
+        }
+    }
+    return { state: 'valid' };
+};
+
 const ProjectForm: React.FC<IProjectForm> = ({
     children,
     handleSubmit,
@@ -135,28 +158,51 @@ const ProjectForm: React.FC<IProjectForm> = ({
 }) => {
     const { uiConfig } = useUiConfig();
     const shouldShowFlagNaming = uiConfig.flags.featureNamingPattern;
+
+    const updateNamingExampleError = ({
+        example,
+        pattern,
+    }: {
+        example: string;
+        pattern: string;
+    }) => {
+        const validationResult = validateFeatureNamingExample({
+            pattern,
+            example,
+            featureNamingPatternError: errors.featureNamingPattern,
+        });
+
+        switch (validationResult.state) {
+            case 'invalid':
+                errors.namingExample = validationResult.reason;
+                break;
+            case 'valid':
+                delete errors.namingExample;
+                break;
+        }
+    };
+
     const onSetFeatureNamingPattern = (regex: string) => {
         try {
             new RegExp(regex);
             setFeatureNamingPattern && setFeatureNamingPattern(regex);
-            clearErrors();
+            delete errors.featureNamingPattern;
         } catch (e) {
             errors.featureNamingPattern = 'Invalid regular expression';
             setFeatureNamingPattern && setFeatureNamingPattern(regex);
         }
+        updateNamingExampleError({
+            pattern: regex,
+            example: featureNamingExample || '',
+        });
     };
 
     const onSetFeatureNamingExample = (example: string) => {
-        if (featureNamingPattern) {
-            const regex = new RegExp(featureNamingPattern);
-            const matches = regex.test(example);
-            if (!matches) {
-                errors.namingExample = 'Example does not match regex';
-            } else {
-                delete errors.namingExample;
-            }
-            setFeatureNamingExample && setFeatureNamingExample(example);
-        }
+        setFeatureNamingExample && setFeatureNamingExample(example);
+        updateNamingExampleError({
+            pattern: featureNamingPattern || '',
+            example,
+        });
     };
 
     const onSetFeatureNamingDescription = (description: string) => {
@@ -190,7 +236,9 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     onChange={e => setProjectName(e.target.value)}
                     error={Boolean(errors.name)}
                     errorText={errors.name}
-                    onFocus={() => clearErrors()}
+                    onFocus={() => {
+                        delete errors.name;
+                    }}
                     data-testid={PROJECT_NAME_INPUT}
                     required
                 />
@@ -333,7 +381,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     value={featureNamingPattern || ''}
                                     error={Boolean(errors.featureNamingPattern)}
                                     errorText={errors.featureNamingPattern}
-                                    onFocus={() => clearErrors()}
                                     onChange={e =>
                                         onSetFeatureNamingPattern(
                                             e.target.value
@@ -352,7 +399,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     label={'Naming Example'}
                                     name="feature flag naming example"
                                     type={'text'}
-                                    aria-describedBy="pattern-additional-description"
+                                    aria-describedby="pattern-additional-description"
                                     value={featureNamingExample || ''}
                                     placeholder="dx.feature1.1-135"
                                     error={Boolean(errors.namingExample)}
@@ -367,7 +414,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     label={'Naming pattern description'}
                                     name="feature flag naming description"
                                     type={'text'}
-                                    aria-describedBy="pattern-additional-description"
+                                    aria-describedby="pattern-additional-description"
                                     placeholder={`<project>.<featureName>.<ticket>
 
 The flag name should contain the project name, the feature name, and the ticket number, each separated by a dot.`}

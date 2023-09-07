@@ -1,15 +1,17 @@
 import React, { useRef, useState } from 'react';
 import { useAsyncDebounce } from 'react-table';
 import { Box, IconButton, InputBase, styled, Tooltip } from '@mui/material';
-import { Search as SearchIcon, Close } from '@mui/icons-material';
+import { Close, Search as SearchIcon } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SearchSuggestions } from './SearchSuggestions/SearchSuggestions';
 import { IGetSearchContextOutput } from 'hooks/useSearch';
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
+import { useSavedQuery } from './useSavedQuery';
 
 interface ISearchProps {
+    id?: string;
     initialValue?: string;
     onChange: (value: string) => void;
     onFocus?: () => void;
@@ -66,6 +68,7 @@ const StyledClose = styled(Close)(({ theme }) => ({
 
 export const Search = ({
     initialValue = '',
+    id,
     onChange,
     onFocus,
     onBlur,
@@ -79,12 +82,14 @@ export const Search = ({
     debounceTime = 200,
 }: ISearchProps) => {
     const searchInputRef = useRef<HTMLInputElement>(null);
-    const suggestionsRef = useRef<HTMLInputElement>(null);
+    const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const hideSuggestions = () => {
         setShowSuggestions(false);
         onBlur?.();
     };
+
+    const { savedQuery, setSavedQuery } = useSavedQuery(id);
 
     const [value, setValue] = useState(initialValue);
     const debouncedOnChange = useAsyncDebounce(onChange, debounceTime);
@@ -92,6 +97,7 @@ export const Search = ({
     const onSearchChange = (value: string) => {
         debouncedOnChange(value);
         setValue(value);
+        setSavedQuery(value);
     };
 
     const hotkey = useKeyboardShortcut(
@@ -112,10 +118,11 @@ export const Search = ({
     });
     const placeholder = `${customPlaceholder ?? 'Search'} (${hotkey})`;
 
-    useOnClickOutside([searchInputRef, suggestionsRef], hideSuggestions);
+    useOnClickOutside([searchContainerRef], hideSuggestions);
 
     return (
         <StyledContainer
+            ref={searchContainerRef}
             style={containerStyles}
             active={expandable && showSuggestions}
         >
@@ -148,7 +155,8 @@ export const Search = ({
                             <Tooltip title="Clear search query" arrow>
                                 <IconButton
                                     size="small"
-                                    onClick={() => {
+                                    onClick={e => {
+                                        e.stopPropagation(); // prevent outside click from the lazily added element
                                         onSearchChange('');
                                         searchInputRef.current?.focus();
                                     }}
@@ -161,14 +169,18 @@ export const Search = ({
                     />
                 </Box>
             </StyledSearch>
+
             <ConditionallyRender
                 condition={Boolean(hasFilters) && showSuggestions}
                 show={
-                    <div ref={suggestionsRef}>
-                        <SearchSuggestions
-                            getSearchContext={getSearchContext!}
-                        />
-                    </div>
+                    <SearchSuggestions
+                        onSuggestion={suggestion => {
+                            onSearchChange(suggestion);
+                            searchInputRef.current?.focus();
+                        }}
+                        savedQuery={savedQuery}
+                        getSearchContext={getSearchContext!}
+                    />
                 }
             />
         </StyledContainer>

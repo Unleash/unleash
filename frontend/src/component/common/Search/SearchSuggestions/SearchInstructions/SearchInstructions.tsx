@@ -7,11 +7,16 @@ const StyledHeader = styled('span')(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-const StyledCode = styled('span')(({ theme }) => ({
+export const StyledCode = styled('span')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
     color: theme.palette.text.primary,
     padding: theme.spacing(0.2, 1),
     borderRadius: theme.spacing(0.5),
+    cursor: 'pointer',
+    '&:hover': {
+        transition: 'background-color 0.2s ease-in-out',
+        backgroundColor: theme.palette.seen.primary,
+    },
 }));
 
 const StyledFilterHint = styled('p')(({ theme }) => ({
@@ -21,11 +26,18 @@ const StyledFilterHint = styled('p')(({ theme }) => ({
 interface ISearchInstructionsProps {
     filters: any[];
     searchableColumnsString: string;
+    onClick: (instruction: string) => void;
 }
+
+const firstFilterOption = (filter: { name: string; options: string[] }) =>
+    `${filter.name}:${filter.options[0]}`;
+const secondFilterOption = (filter: { name: string; options: string[] }) =>
+    `${filter.name}:${filter.options.slice(0, 2).join(',')}`;
 
 export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
     filters,
     searchableColumnsString,
+    onClick,
 }) => {
     return (
         <>
@@ -41,17 +53,29 @@ export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
             {filters.map(filter => (
                 <StyledFilterHint key={filter.name}>
                     {filter.header}:{' '}
-                    <StyledCode>
-                        {filter.name}:{filter.options[0]}
-                    </StyledCode>
+                    <ConditionallyRender
+                        condition={filter.options.length > 0}
+                        show={
+                            <StyledCode
+                                onClick={() =>
+                                    onClick(firstFilterOption(filter))
+                                }
+                            >
+                                {firstFilterOption(filter)}
+                            </StyledCode>
+                        }
+                    />
                     <ConditionallyRender
                         condition={filter.options.length > 1}
                         show={
                             <>
                                 {' or '}
-                                <StyledCode>
-                                    {filter.name}:
-                                    {filter.options.slice(0, 2).join(',')}
+                                <StyledCode
+                                    onClick={() => {
+                                        onClick(secondFilterOption(filter));
+                                    }}
+                                >
+                                    {secondFilterOption(filter)}
                                 </StyledCode>
                             </>
                         }

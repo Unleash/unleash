@@ -3,6 +3,7 @@ import { DeviceHub } from '@mui/icons-material';
 import { formatAssetPath } from 'utils/formatPath';
 
 import slackIcon from 'assets/icons/slack.svg';
+import jiraCommentIcon from 'assets/icons/jira-comment.svg';
 import jiraIcon from 'assets/icons/jira.svg';
 import webhooksIcon from 'assets/icons/webhooks.svg';
 import teamsIcon from 'assets/icons/teams.svg';
@@ -34,7 +35,7 @@ export const IntegrationIcon = ({ name }: IIntegrationIconProps) => {
                 <img
                     style={style}
                     alt="JIRA logo"
-                    src={formatAssetPath(jiraIcon)}
+                    src={formatAssetPath(jiraCommentIcon)}
                 />
             );
         case 'webhook':
@@ -59,6 +60,14 @@ export const IntegrationIcon = ({ name }: IIntegrationIconProps) => {
                     style={style}
                     alt="Datadog logo"
                     src={formatAssetPath(dataDogIcon)}
+                />
+            );
+        case 'jira':
+            return (
+                <img
+                    style={style}
+                    alt="JIRA logo"
+                    src={formatAssetPath(jiraIcon)}
                 />
             );
         default:

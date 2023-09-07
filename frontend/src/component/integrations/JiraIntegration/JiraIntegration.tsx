@@ -5,17 +5,16 @@ import { IntegrationIcon } from '../IntegrationList/IntegrationIcon/IntegrationI
 import cr from 'assets/img/jira/cr.png';
 import connect from 'assets/img/jira/connect.png';
 import manage from 'assets/img/jira/manage.png';
-import React from 'react';
 import { JiraImageContainer } from './JiraImageContainer';
 
-export const StyledContainer = styled('div')(({ theme }) => ({
+const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
 }));
 
-export const StyledGrayContainer = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.grey[100],
+const StyledGrayContainer = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.background.elevation1,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(3),
     display: 'flex',
@@ -23,13 +22,13 @@ export const StyledGrayContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-export const StyledIconLine = styled('div')(({ theme }) => ({
+const StyledIconLine = styled('div')(({ theme }) => ({
     display: 'flex',
     marginLeft: theme.spacing(1),
     alignItems: 'center',
 }));
 
-export const StyledLink = styled('a')({
+const StyledLink = styled('a')({
     textDecoration: 'none',
 });
 

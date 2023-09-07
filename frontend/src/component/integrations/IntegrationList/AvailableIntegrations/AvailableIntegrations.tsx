@@ -7,6 +7,7 @@ import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
 import { JIRA_INFO } from '../../JiraIntegration/JiraIntegration';
 import { StyledCardsGrid } from '../IntegrationList.styles';
 import { Paper, Typography, styled } from '@mui/material';
+import { RequestIntegrationCard } from '../RequestIntegrationCard/RequestIntegrationCard';
 
 interface IAvailableIntegrationsProps {
     providers: AddonTypeSchema[];
@@ -86,6 +87,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                 />
                             )
                         )}
+                        <RequestIntegrationCard />
                     </StyledCardsGrid>
                 </StyledSection>
                 <StyledSection>

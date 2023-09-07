@@ -13,7 +13,6 @@ import { useInstanceStats } from '../../../../hooks/api/getters/useInstanceStats
 import { formatApiPath } from '../../../../utils/formatPath';
 import { PageContent } from '../../../common/PageContent/PageContent';
 import { PageHeader } from '../../../common/PageHeader/PageHeader';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 export const InstanceStats: VFC = () => {
     const { stats } = useInstanceStats();

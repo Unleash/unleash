@@ -6,7 +6,7 @@ import {
     useState,
     VFC,
 } from 'react';
-import { Alert, Box, Button, Divider, Typography } from '@mui/material';
+import { Alert, Button, Divider, Typography } from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';

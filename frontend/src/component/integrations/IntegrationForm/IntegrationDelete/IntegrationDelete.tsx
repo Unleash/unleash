@@ -7,7 +7,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useNavigate } from 'react-router-dom';
 import { StyledHelpText, StyledTitle } from '../IntegrationForm.styles';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DELETE_ADDON } from 'component/providers/AccessProvider/permissions';
 

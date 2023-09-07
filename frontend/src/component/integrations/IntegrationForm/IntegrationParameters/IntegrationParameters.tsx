@@ -3,7 +3,6 @@ import {
     IntegrationParameter,
     IIntegrationParameterProps,
 } from './IntegrationParameter/IntegrationParameter';
-import { StyledTitle } from '../IntegrationForm.styles';
 import type { AddonTypeSchema } from 'openapi';
 
 interface IIntegrationParametersProps {

@@ -4,10 +4,8 @@ import {
     forwardRef,
     type FC,
     type ReactNode,
-    Component,
     ComponentProps,
 } from 'react';
-import theme from 'themes/theme';
 
 export const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',

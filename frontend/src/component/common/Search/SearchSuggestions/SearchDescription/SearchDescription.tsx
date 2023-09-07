@@ -58,7 +58,9 @@ export const SearchDescription: VFC<ISearchDescriptionProps> = ({
                                     {filter.values.join(',')}
                                 </StyledCode>{' '}
                                 in {filter.header}. Options:{' '}
-                                {filter.options.slice(0, 10).join(', ')}
+                                {[...new Set(filter.options)]
+                                    .slice(0, 10)
+                                    .join(', ')}
                             </p>
                         ))}
                     </>

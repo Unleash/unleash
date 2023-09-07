@@ -21,10 +21,7 @@ const testDisplayComponent = (
 );
 
 test('should read saved query from local storage', async () => {
-    const { value, setValue } = createLocalStorage(
-        'Search:localStorageId:v1',
-        {}
-    );
+    const { setValue } = createLocalStorage('Search:localStorageId:v1', {});
     setValue({
         query: 'oldquery',
     });

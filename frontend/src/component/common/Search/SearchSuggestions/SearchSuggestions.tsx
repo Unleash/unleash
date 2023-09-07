@@ -13,6 +13,7 @@ import {
     SearchInstructions,
     StyledCode,
 } from './SearchInstructions/SearchInstructions';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -55,13 +56,12 @@ interface SearchSuggestionsProps {
 
 const quote = (item: string) => (item.includes(' ') ? `"${item}"` : item);
 
-const randomIndex = (arr: any[]) => Math.floor(Math.random() * arr.length);
-
 export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
     getSearchContext,
     onSuggestion,
     savedQuery,
 }) => {
+    const { trackEvent } = usePlausibleTracker();
     const searchContext = getSearchContext();
 
     const filters = getFilterableColumns(searchContext.columns)
@@ -116,7 +116,14 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                         <StyledBox>
                             <StyledHistory />
                             <StyledCode
-                                onClick={() => onSuggestion(savedQuery || '')}
+                                onClick={() => {
+                                    onSuggestion(savedQuery || '');
+                                    trackEvent('search-filter-suggestions', {
+                                        props: {
+                                            eventType: 'saved query',
+                                        },
+                                    });
+                                }}
                             >
                                 <span>{savedQuery}</span>
                             </StyledCode>
@@ -146,7 +153,14 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                                 searchableColumnsString={
                                     searchableColumnsString
                                 }
-                                onClick={onSuggestion}
+                                onClick={suggestion => {
+                                    onSuggestion(suggestion);
+                                    trackEvent('search-filter-suggestions', {
+                                        props: {
+                                            eventType: 'filter',
+                                        },
+                                    });
+                                }}
                             />
                         }
                     />
@@ -159,9 +173,16 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                     show="Combine filters and search: "
                 />
                 <StyledCode
-                    onClick={() =>
-                        onSuggestion(selectedFilter + ' ' + suggestedTextSearch)
-                    }
+                    onClick={() => {
+                        onSuggestion(
+                            selectedFilter + ' ' + suggestedTextSearch
+                        );
+                        trackEvent('search-filter-suggestions', {
+                            props: {
+                                eventType: 'search and filter',
+                            },
+                        });
+                    }}
                 >
                     <span key={selectedFilter}>{selectedFilter}</span>{' '}
                     <span>{suggestedTextSearch}</span>

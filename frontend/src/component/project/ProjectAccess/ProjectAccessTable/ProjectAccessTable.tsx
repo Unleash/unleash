@@ -98,6 +98,11 @@ export const ProjectAccessTable: VFC = () => {
     const [groupOpen, setGroupOpen] = useState(false);
     const [selectedRow, setSelectedRow] = useState<IProjectAccess>();
 
+    const roleText = (roles: number[]): string =>
+        roles.length > 1
+            ? `${roles.length} roles`
+            : access?.roles.find(({ id }) => id === roles[0])?.name || '';
+
     const columns = useMemo(
         () => [
             {
@@ -150,14 +155,7 @@ export const ProjectAccessTable: VFC = () => {
             {
                 id: 'role',
                 Header: 'Role',
-                accessor: (row: IProjectAccess) =>
-                    row.entity.roles
-                        ? row.entity.roles.length > 1
-                            ? `${row.entity.roles.length} roles`
-                            : access?.roles.find(
-                                  ({ id }) => id === row.entity.roleId
-                              )?.name
-                        : 'No Roles!',
+                accessor: (row: IProjectAccess) => roleText(row.entity.roles),
                 Cell: ({
                     value,
                     row: { original: row },
@@ -490,11 +488,17 @@ export const ProjectAccessTable: VFC = () => {
                 setOpen={setGroupOpen}
                 group={selectedRow?.entity as IGroup}
                 projectId={projectId}
-                subtitle={`Role: ${
-                    access?.roles.find(
-                        ({ id }) => id === selectedRow?.entity.roleId
-                    )?.name
-                }`}
+                subtitle={
+                    <>
+                        {selectedRow && selectedRow.entity.roles.length > 1
+                            ? 'Roles:'
+                            : 'Role:'}
+                        <RoleCell
+                            value={roleText(selectedRow?.entity.roles || [])}
+                            roles={selectedRow?.entity.roles || []}
+                        />
+                    </>
+                }
                 onEdit={() => {
                     navigate(`edit/group/${selectedRow?.entity.id}`);
                 }}

@@ -1,6 +1,6 @@
 import { styled, Typography } from '@mui/material';
 
-import { formatAssetPath } from '../../../utils/formatPath';
+import { formatAssetPath } from 'utils/formatPath';
 import { FC } from 'react';
 
 export const StyledFigure = styled('figure')(({ theme }) => ({

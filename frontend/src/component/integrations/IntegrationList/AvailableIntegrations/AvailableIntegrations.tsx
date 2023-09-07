@@ -4,7 +4,7 @@ import useLoading from 'hooks/useLoading';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
-import { JIRA_INFO } from '../../JiraIntegration/JiraIntegration';
+import { JIRA_INFO } from '../../ViewIntegration/JiraIntegration/JiraIntegration';
 import { StyledCardsGrid } from '../IntegrationList.styles';
 import { Typography, styled } from '@mui/material';
 import { OFFICIAL_SDKS } from './SDKs';

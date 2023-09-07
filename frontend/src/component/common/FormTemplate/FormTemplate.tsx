@@ -166,7 +166,6 @@ const FormTemplate: React.FC<ICreateProps> = ({
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
     const copyCommand = () => {
         if (formatApiCode !== undefined) {
-            console.log('format');
             if (copy(formatApiCode())) {
                 setToastData({
                     title: 'Successfully copied the command',

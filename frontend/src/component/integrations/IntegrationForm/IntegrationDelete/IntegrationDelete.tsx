@@ -1,19 +1,25 @@
 import { useState, type VFC } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { styled } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { AddonSchema } from 'openapi';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useNavigate } from 'react-router-dom';
-import { StyledHelpText, StyledTitle } from '../IntegrationForm.styles';
-import { Box } from '@mui/material';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DELETE_ADDON } from 'component/providers/AccessProvider/permissions';
+import { StyledHelpText, StyledTitle } from '../IntegrationForm.styles';
 
 interface IIntegrationDeleteProps {
     id: AddonSchema['id'];
 }
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    margin: theme.spacing(1, 0, 6),
+    display: 'flex',
+    justifyContent: 'flex-end',
+}));
 
 export const IntegrationDelete: VFC<IIntegrationDeleteProps> = ({ id }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -43,13 +49,7 @@ export const IntegrationDelete: VFC<IIntegrationDeleteProps> = ({ id }) => {
                 Deleting an integration it will delete the entire configuration
                 and it will automatically disable the integration
             </StyledHelpText>
-            <Box
-                sx={theme => ({
-                    margin: theme.spacing(1, 0, 6),
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                })}
-            >
+            <StyledContainer>
                 <PermissionButton
                     type="button"
                     variant="outlined"
@@ -62,7 +62,7 @@ export const IntegrationDelete: VFC<IIntegrationDeleteProps> = ({ id }) => {
                 >
                     Delete integration
                 </PermissionButton>
-            </Box>
+            </StyledContainer>
             <Dialogue
                 open={isOpen}
                 onClick={onSubmit}

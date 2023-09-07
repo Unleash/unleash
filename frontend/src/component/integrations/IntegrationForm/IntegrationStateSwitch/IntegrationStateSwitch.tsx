@@ -1,4 +1,10 @@
-import { Box, FormControlLabel, Switch, Typography } from '@mui/material';
+import {
+    Box,
+    FormControlLabel,
+    Switch,
+    Typography,
+    styled,
+} from '@mui/material';
 import { MouseEventHandler, VFC } from 'react';
 
 interface IIntegrationStateSwitchProps {
@@ -6,19 +12,19 @@ interface IIntegrationStateSwitchProps {
     onClick: MouseEventHandler<HTMLButtonElement>;
 }
 
+const StyledContainer = styled('div')({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+});
+
 export const IntegrationStateSwitch: VFC<IIntegrationStateSwitchProps> = ({
     checked,
     onClick,
 }) => {
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                width: '100%',
-            }}
-        >
+        <StyledContainer>
             <Typography component="span">Integration status</Typography>
             <FormControlLabel
                 control={<Switch checked={checked} onClick={onClick} />}
@@ -31,6 +37,6 @@ export const IntegrationStateSwitch: VFC<IIntegrationStateSwitchProps> = ({
                     </Box>
                 }
             />
-        </Box>
+        </StyledContainer>
     );
 };

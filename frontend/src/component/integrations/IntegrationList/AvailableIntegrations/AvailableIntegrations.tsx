@@ -6,7 +6,8 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
 import { JIRA_INFO } from '../../JiraIntegration/JiraIntegration';
 import { StyledCardsGrid } from '../IntegrationList.styles';
-import { Paper, Typography, styled } from '@mui/material';
+import { Typography, styled } from '@mui/material';
+import { OFFICIAL_SDKS } from './SDKs';
 
 interface IAvailableIntegrationsProps {
     providers: AddonTypeSchema[];
@@ -43,6 +44,8 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
     loading,
 }) => {
     const customProviders = [JIRA_INFO];
+    const serverSdks = OFFICIAL_SDKS.filter(sdk => sdk.type === 'server');
+    const clientSdks = OFFICIAL_SDKS.filter(sdk => sdk.type === 'client');
 
     const ref = useLoading(loading || false);
 
@@ -110,6 +113,77 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                 />
                             )
                         )} */}
+                    </StyledCardsGrid>
+                </StyledSection>
+                <StyledSection>
+                    <div>
+                        <Typography component="h3" variant="h2">
+                            Official SDKs
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            In order to connect your application to Unleash you
+                            will need a client SDK (software developer kit) for
+                            your programming language and an API token.
+                        </Typography>
+                    </div>
+                    <div>
+                        <Typography component="h4" variant="h4">
+                            Server-side SDKs
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Server-side clients run on your server and
+                            communicate directly with your Unleash instance.
+                        </Typography>
+                    </div>
+                    <StyledCardsGrid small>
+                        {serverSdks?.map(
+                            ({
+                                name,
+                                displayName,
+                                description,
+                                documentationUrl,
+                            }) => (
+                                <IntegrationCard
+                                    key={name}
+                                    icon={name}
+                                    title={displayName || name}
+                                    description={description}
+                                    link={documentationUrl}
+                                    configureActionText={'View documentation'}
+                                    isExternal
+                                />
+                            )
+                        )}
+                    </StyledCardsGrid>
+                    <div>
+                        <Typography component="h4" variant="h4">
+                            Client-side SDKs
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Client-side SDKs can connect to the Unleash Proxy or
+                            to the Unleash front-end API, but not to the regular
+                            Unleash client API.
+                        </Typography>
+                    </div>
+                    <StyledCardsGrid small>
+                        {clientSdks?.map(
+                            ({
+                                name,
+                                displayName,
+                                description,
+                                documentationUrl,
+                            }) => (
+                                <IntegrationCard
+                                    key={name}
+                                    icon={name}
+                                    title={displayName || name}
+                                    description={description}
+                                    link={documentationUrl}
+                                    configureActionText={'View documentation'}
+                                    isExternal
+                                />
+                            )
+                        )}
                     </StyledCardsGrid>
                 </StyledSection>
                 <StyledSection>

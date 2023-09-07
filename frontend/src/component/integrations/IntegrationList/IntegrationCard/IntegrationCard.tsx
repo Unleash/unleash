@@ -1,6 +1,6 @@
-import { VFC } from 'react';
+import React, { Fragment, VFC } from 'react';
 import { Link } from 'react-router-dom';
-import { styled, Typography } from '@mui/material';
+import { styled, Typography, Theme } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -17,10 +17,24 @@ interface IIntegrationCardProps {
     isEnabled?: boolean;
     configureActionText?: string;
     link: string;
+    isExternal?: boolean;
     addon?: AddonSchema;
 }
 
 const StyledLink = styled(Link)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    padding: theme.spacing(3),
+    borderRadius: `${theme.shape.borderRadiusMedium}px`,
+    border: `1px solid ${theme.palette.divider}`,
+    textDecoration: 'none',
+    color: 'inherit',
+    boxShadow: theme.boxShadows.card,
+    ':hover': {
+        backgroundColor: theme.palette.action.hover,
+    },
+}));
+const StyledAnchor = styled('a')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(3),
@@ -64,11 +78,12 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     configureActionText = 'Configure',
     link,
     addon,
+    isExternal = false,
 }) => {
     const isConfigured = addon !== undefined;
 
-    return (
-        <StyledLink to={link}>
+    const content = (
+        <Fragment>
             <StyledHeader>
                 <StyledTitle variant="h3" data-loading>
                     <IntegrationIcon name={icon as string} /> {title}
@@ -90,12 +105,22 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                     show={<IntegrationCardMenu addon={addon as AddonSchema} />}
                 />
             </StyledHeader>
-            <Typography variant="body1" data-loading>
+            <Typography variant="body2" color="text.secondary" data-loading>
                 {description}
             </Typography>
             <StyledAction data-loading>
                 {configureActionText} <ChevronRightIcon />
             </StyledAction>
-        </StyledLink>
+        </Fragment>
     );
+
+    if (isExternal) {
+        return (
+            <StyledAnchor href={link} target="_blank" rel="noreferrer">
+                {content}
+            </StyledAnchor>
+        );
+    } else {
+        return <StyledLink to={link}> {content}</StyledLink>;
+    }
 };

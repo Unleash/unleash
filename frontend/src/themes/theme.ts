@@ -39,6 +39,10 @@ const theme = {
             fontSize: '1rem',
             fontWeight: '700',
         },
+        h4: {
+            fontSize: '1rem',
+            fontWeight: '400',
+        },
         caption: {
             fontSize: `${12 / 16}rem`,
         },

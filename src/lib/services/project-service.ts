@@ -1026,4 +1026,10 @@ export default class ProjectService {
             version: 1,
         };
     }
+
+    async getFeatureNamingPattern(projectId: string): Promise<string | null> {
+        return (
+            (await this.store.get(projectId))?.featureNaming?.pattern ?? null
+        );
+    }
 }

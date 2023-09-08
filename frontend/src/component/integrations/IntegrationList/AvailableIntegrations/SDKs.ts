@@ -37,21 +37,21 @@ export const OFFICIAL_SDKS: Sdk[] = [
     },
     {
         name: 'python',
-        displayName: 'Python  SDK',
+        displayName: 'Python SDK',
         description: 'Officially Unleash Client for Python',
         documentationUrl: 'https://docs.getunleash.io/reference/sdks/python',
         type: 'server',
     },
     {
         name: 'ruby',
-        displayName: 'Ruby  SDK',
+        displayName: 'Ruby SDK',
         description: 'Officially Unleash Client for Ruby',
         documentationUrl: 'https://docs.getunleash.io/reference/sdks/ruby',
         type: 'server',
     },
     {
         name: 'rust',
-        displayName: 'Rust  SDK',
+        displayName: 'Rust SDK',
         description: 'Officially Unleash Client for Rust',
         documentationUrl: 'https://docs.getunleash.io/reference/sdks/rust',
         type: 'server',
@@ -80,14 +80,14 @@ export const OFFICIAL_SDKS: Sdk[] = [
     },
     {
         name: 'ios',
-        displayName: 'iOS  Proxy SDK',
+        displayName: 'iOS Proxy SDK',
         description: 'Officially Unleash Client for iOS',
         documentationUrl: 'https://docs.getunleash.io/reference/sdks/ios-proxy',
         type: 'client',
     },
     {
         name: 'javascript',
-        displayName: 'Javascript  Proxy SDK',
+        displayName: 'Javascript Proxy SDK',
         description: 'Officially Unleash Client for Javascript',
         documentationUrl:
             'https://docs.getunleash.io/reference/sdks/javascript-browser',
@@ -95,14 +95,14 @@ export const OFFICIAL_SDKS: Sdk[] = [
     },
     {
         name: 'react',
-        displayName: 'React  Proxy SDK',
+        displayName: 'React Proxy SDK',
         description: 'Officially Unleash Client for React',
         documentationUrl: 'https://docs.getunleash.io/reference/sdks/react',
         type: 'client',
     },
     {
         name: 'svelte',
-        displayName: 'Svelte  Proxy SDK',
+        displayName: 'Svelte Proxy SDK',
         description: 'Officially Unleash Client for Svelte',
         documentationUrl: 'https://docs.getunleash.io/reference/sdks/svelte',
         type: 'client',

@@ -8,6 +8,11 @@ export const projectDoraMetricsSchema = {
     required: ['features'],
     description: 'A projects dora metrics',
     properties: {
+        projectAverage: {
+            type: 'number',
+            description:
+                'The average time it takes a feature toggle to be enabled in production',
+        },
         features: {
             type: 'array',
             items: { $ref: '#/components/schemas/doraFeaturesSchema' },

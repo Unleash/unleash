@@ -164,7 +164,7 @@ export const ProjectDoraMetrics = () => {
                     marginBottom: theme.spacing(2),
                 })}
             >
-                <h3>We are trying something new!</h3>
+                <h3>We are trying something experimental!</h3>
                 <Typography>
                     {' '}
                     We are considering adding project metrics to see how a

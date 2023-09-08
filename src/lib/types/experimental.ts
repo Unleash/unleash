@@ -128,6 +128,10 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_NAMING_PATTERN,
         false,
     ),
+    doraMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DORA_METRICS,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

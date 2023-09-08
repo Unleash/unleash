@@ -34,7 +34,13 @@ It takes about three steps to create custom project roles:
 
 ## Assigning custom project roles
 
-Custom project role creation is a pretty straightforward process and requires around three steps, outlined below.
+:::info Multiple project roles
+
+Multiple project roles were introduced as a beta Enterprise feature in **Unleash 5.5**. See [multiple project roles](../reference/rbac.md#multiple-project-roles) for more info.
+
+:::
+
+Assigning a custom project role is a pretty straightforward process and requires around three steps, outlined below.
 
 To assign a custom project role to a user:
 1. Navigate to the project you want to assign the user a role in.

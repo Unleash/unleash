@@ -17,7 +17,7 @@ export const projectDoraMetricsSchema = {
             type: 'array',
             items: { $ref: '#/components/schemas/doraFeaturesSchema' },
             description:
-                'An array of objects containing feature toggle name and timeToProduction values',
+                'An array of objects containing feature toggle name and timeToProduction values. The measurement unit of timeToProduction is days.',
         },
     },
     components: {

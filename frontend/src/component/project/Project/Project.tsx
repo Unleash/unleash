@@ -15,7 +15,7 @@ import {
     StyledTopRow,
 } from './Project.styles';
 import { Box, Paper, Tabs, Typography } from '@mui/material';
-import { Delete, Edit, FileUpload } from '@mui/icons-material';
+import { FileUpload } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState } from 'react';
@@ -24,11 +24,7 @@ import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeatures
 import ProjectOverview from './ProjectOverview';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import {
-    UPDATE_FEATURE,
-    DELETE_PROJECT,
-    UPDATE_PROJECT,
-} from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';

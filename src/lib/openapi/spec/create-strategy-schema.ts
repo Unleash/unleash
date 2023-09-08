@@ -6,6 +6,7 @@ export const createStrategySchema = {
     description:
         'The data required to create a strategy type. Refer to the docs on [custom strategy types](https://docs.getunleash.io/reference/custom-activation-strategies) for more information.',
     required: ['name', 'parameters'],
+    additionalProperties: false,
     properties: {
         name: {
             type: 'string',

@@ -1,4 +1,5 @@
 import { SxProps, Theme, styled } from '@mui/material';
+import { SupervisedUserCircle } from '@mui/icons-material';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 import { useRole } from 'hooks/api/getters/useRole/useRole';
 import {
@@ -24,20 +25,45 @@ const StyledDescription = styled('div', {
     borderRadius: tooltip ? 0 : theme.shape.borderRadiusMedium,
 }));
 
-const StyledDescriptionBlock = styled('div')(({ theme }) => ({
+const StyledPermissionsLabel = styled('p')(({ theme }) => ({
+    color: theme.palette.text.primary,
     marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(0.5),
 }));
 
-const StyledDescriptionHeader = styled('p')(({ theme }) => ({
+const StyledPermissions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+}));
+
+const StyledRoleHeader = styled('p')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
     color: theme.palette.text.primary,
-    fontSize: theme.fontSizes.smallBody,
+    fontSize: theme.fontSizes.bodySize,
     fontWeight: theme.fontWeight.bold,
-    marginBottom: theme.spacing(1),
+}));
+
+const StyledSupervisedUserCircle = styled(SupervisedUserCircle)(
+    ({ theme }) => ({
+        fontSize: theme.fontSizes.mainHeader,
+    })
+);
+
+const StyledDescriptionHeader = styled('p')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontWeight: theme.fontWeight.bold,
 }));
 
 const StyledDescriptionSubHeader = styled('p')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(0.5),
+}));
+
+const StyledPermissionsList = styled('ul')(({ theme }) => ({
+    margin: 0,
+    paddingLeft: theme.spacing(2),
 }));
 
 interface IRoleDescriptionProps {
@@ -66,28 +92,38 @@ export const RoleDescription = ({
 
     return (
         <StyledDescription tooltip={tooltip} {...rest}>
-            <StyledDescriptionHeader sx={{ mb: 0 }}>
+            <StyledRoleHeader>
+                <StyledSupervisedUserCircle color="disabled" />
                 {name}
-            </StyledDescriptionHeader>
+            </StyledRoleHeader>
             <StyledDescriptionSubHeader>
                 {description}
             </StyledDescriptionSubHeader>
             <ConditionallyRender
                 condition={!PREDEFINED_ROLE_TYPES.includes(role.type)}
-                show={() =>
-                    categories.map(({ label, permissions }) => (
-                        <StyledDescriptionBlock key={label}>
-                            <StyledDescriptionHeader>
-                                {label}
-                            </StyledDescriptionHeader>
-                            {permissions.map(permission => (
-                                <p key={permission.id}>
-                                    {permission.displayName}
-                                </p>
+                show={() => (
+                    <>
+                        <StyledPermissionsLabel>
+                            Role permissions:
+                        </StyledPermissionsLabel>
+                        <StyledPermissions>
+                            {categories.map(({ label, permissions }) => (
+                                <div key={label}>
+                                    <StyledDescriptionHeader>
+                                        {label}
+                                    </StyledDescriptionHeader>
+                                    <StyledPermissionsList>
+                                        {permissions.map(permission => (
+                                            <li key={permission.id}>
+                                                {permission.displayName}
+                                            </li>
+                                        ))}
+                                    </StyledPermissionsList>
+                                </div>
                             ))}
-                        </StyledDescriptionBlock>
-                    ))
-                }
+                        </StyledPermissions>
+                    </>
+                )}
             />
         </StyledDescription>
     );

@@ -11,7 +11,7 @@ export const projectDoraMetricsSchema = {
         projectAverage: {
             type: 'number',
             description:
-                'The average time it takes a feature toggle to be enabled in production',
+                'The average time it takes a feature toggle to be enabled in production. The measurement unit is days.',
         },
         features: {
             type: 'array',

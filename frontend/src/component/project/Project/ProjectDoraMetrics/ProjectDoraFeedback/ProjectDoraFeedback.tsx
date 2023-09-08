@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box, Button, Divider, Typography, styled } from '@mui/material';
-import { ChatBubble, PermMedia, Send } from '@mui/icons-material';
+import { PermMedia, Send } from '@mui/icons-material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -88,10 +88,11 @@ export const ProjectDoraFeedback = () => {
             </StyledHeader>
             <Typography>
                 We are considering adding project metrics to see how a project
-                performs. As a first step, we have added a lead time for changes
-                indicator that is calculated per feature toggle based on the
-                creation of the feature toggle and when it was first turned on
-                in an environment of type production.
+                performs. As a first step, we have added a{' '}
+                <i>lead time for changes</i> indicator that is calculated per
+                feature toggle based on the creation of the feature toggle and
+                when it was first turned on in an environment of type
+                production.
             </Typography>
 
             <ConditionallyRender

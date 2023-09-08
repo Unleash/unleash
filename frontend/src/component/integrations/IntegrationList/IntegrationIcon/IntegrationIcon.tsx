@@ -1,6 +1,8 @@
 import { Avatar, styled } from '@mui/material';
 import { DeviceHub } from '@mui/icons-material';
 import { formatAssetPath } from 'utils/formatPath';
+import { capitalizeFirst } from 'utils/capitalizeFirst';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 import slackIcon from 'assets/icons/slack.svg';
 import jiraCommentIcon from 'assets/icons/jira-comment.svg';
@@ -9,17 +11,6 @@ import webhooksIcon from 'assets/icons/webhooks.svg';
 import teamsIcon from 'assets/icons/teams.svg';
 import dataDogIcon from 'assets/icons/datadog.svg';
 import unleashIcon from 'assets/icons/unleash-integration.svg';
-import { capitalizeFirst } from 'utils/capitalizeFirst';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-
-const StyledAvatar = styled(Avatar)(({ theme }) => ({
-    marginRight: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius,
-    overflow: 'hidden',
-    width: theme.spacing(4),
-    height: theme.spacing(4),
-}));
-
 import android from 'assets/icons/sdks/Logo-android.svg';
 import dotnet from 'assets/icons/sdks/Logo-net.svg';
 import flutter from 'assets/icons/sdks/Logo-flutter.svg';
@@ -39,6 +30,14 @@ import vue from 'assets/icons/sdks/Logo-vue.svg';
 interface IIntegrationIconProps {
     name: string;
 }
+
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+    marginRight: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius,
+    overflow: 'hidden',
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+}));
 
 const integrations: Record<
     string,

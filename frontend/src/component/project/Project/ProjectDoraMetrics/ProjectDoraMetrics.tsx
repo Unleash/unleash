@@ -1,12 +1,4 @@
-import {
-    Alert,
-    Box,
-    Button,
-    Divider,
-    List,
-    ListItem,
-    Typography,
-} from '@mui/material';
+import { Box } from '@mui/material';
 import { useProjectDoraMetrics } from 'hooks/api/getters/useProjectDoraMetrics/useProjectDoraMetrics';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useMemo } from 'react';
@@ -23,9 +15,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Badge } from 'component/common/Badge/Badge';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { ChatBubble, PermMedia, Send } from '@mui/icons-material';
-import { Separator } from 'component/changeRequest/ChangeRequestSidebar/ChangeRequestSidebar';
+import { ProjectDoraFeedback } from './ProjectDoraFeedback/ProjectDoraFeedback';
 
 const resolveDoraMetrics = (input: number) => {
     const ONE_MONTH = 30;
@@ -46,7 +36,6 @@ const resolveDoraMetrics = (input: number) => {
 
 export const ProjectDoraMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
-    const { trackEvent } = usePlausibleTracker();
 
     const { dora, loading } = useProjectDoraMetrics(projectId);
 
@@ -66,7 +55,7 @@ export const ProjectDoraMetrics = () => {
             {
                 Header: 'Name',
                 accessor: 'name',
-                width: '50%',
+                width: '40%',
                 Cell: ({
                     row: {
                         original: { name },
@@ -102,7 +91,23 @@ export const ProjectDoraMetrics = () => {
                         {original.timeToProduction} days
                     </Box>
                 ),
-                width: 150,
+                width: 200,
+                disableGlobalFilter: true,
+                disableSortBy: true,
+            },
+            {
+                Header: `Deviation`,
+                id: 'Deviation from average',
+                align: 'center',
+                Cell: ({ row: { original } }: any) => (
+                    <Box
+                        sx={{ display: 'flex', justifyContent: 'center' }}
+                        data-loading
+                    >
+                        {dora.projectAverage - original.timeToProduction} days
+                    </Box>
+                ),
+                width: 300,
                 disableGlobalFilter: true,
                 disableSortBy: true,
             },
@@ -156,91 +161,12 @@ export const ProjectDoraMetrics = () => {
 
     return (
         <>
-            <Box
-                sx={theme => ({
-                    backgroundColor: theme.palette.background.paper,
-                    padding: theme.spacing(2, 4),
-                    borderRadius: theme.shape.borderRadius,
-                    marginBottom: theme.spacing(2),
-                })}
-            >
-                <h3>We are trying something experimental!</h3>
-                <Typography>
-                    {' '}
-                    We are considering adding project metrics to see how a
-                    project performs. As a first step, we have added a lead time
-                    for changes indicator that is calculated per feature toggle
-                    based on the creation of the feature toggle and when it was
-                    first turned on in an environment of type production. Is
-                    this useful to you?
-                </Typography>
-
-                <Box sx={{ marginTop: '1rem' }}>
-                    <Button
-                        sx={{ marginRight: '0.5rem' }}
-                        variant="contained"
-                        color="primary"
-                    >
-                        Yes, I like the direction
-                    </Button>
-                    <Button variant="outlined" color="primary">
-                        No, I don't see value in this
-                    </Button>
-                </Box>
-
-                <Divider sx={theme => ({ marginTop: theme.spacing(2.5) })} />
-                <Box sx={{ display: 'flex' }}>
-                    <Box
-                        sx={theme => ({
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginTop: theme.spacing(2),
-                            marginRight: theme.spacing(3),
-                        })}
-                    >
-                        <PermMedia
-                            color="primary"
-                            sx={theme => ({ marginRight: theme.spacing(1) })}
-                        />{' '}
-                        <a>View sketches</a>
-                    </Box>
-
-                    <Box
-                        sx={theme => ({
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginTop: theme.spacing(2),
-                            marginRight: theme.spacing(3),
-                        })}
-                    >
-                        <ChatBubble
-                            color="primary"
-                            sx={theme => ({ marginRight: theme.spacing(1) })}
-                        />{' '}
-                        <a>Leave comment</a>
-                    </Box>
-
-                    <Box
-                        sx={theme => ({
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginTop: theme.spacing(2),
-                        })}
-                    >
-                        <Send
-                            color="primary"
-                            sx={theme => ({ marginRight: theme.spacing(1) })}
-                        />{' '}
-                        <a>Get involved with our UX team</a>
-                    </Box>
-                </Box>
-            </Box>
-
+            <ProjectDoraFeedback />
             <PageContent
                 isLoading={loading}
                 header={
                     <PageHeader
-                        title={`Lead time for changes (per feature toggle)`}
+                        title={`Lead time for changes (per release toggle)`}
                     />
                 }
             >

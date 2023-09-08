@@ -24,6 +24,12 @@ export const createStrategySchema = {
             example:
                 'Enable the feature for users who have not logged in before.',
         },
+        deprecated: {
+            type: 'boolean',
+            description:
+                'Whether the strategy type is deprecated or not. Defaults to `false`.',
+            example: 'true',
+        },
         parameters: {
             type: 'array',
             description:

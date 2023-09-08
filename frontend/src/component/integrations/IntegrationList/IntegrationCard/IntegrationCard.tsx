@@ -7,6 +7,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Badge } from 'component/common/Badge/Badge';
 import { IntegrationCardMenu } from './IntegrationCardMenu/IntegrationCardMenu';
 import type { AddonSchema } from 'openapi';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 interface IIntegrationCardProps {
     id?: string | number;
@@ -71,6 +72,10 @@ const StyledAction = styled(Typography)(({ theme }) => ({
     gap: theme.spacing(0.5),
 }));
 
+const StyledOpenInNewIcon = styled(OpenInNewIcon)(({ theme }) => ({
+    fontSize: theme.fontSizes.bodySize,
+}));
+
 export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     icon,
     title,
@@ -119,7 +124,12 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                 {description}
             </Typography>
             <StyledAction data-loading>
-                {configureActionText} <ChevronRightIcon />
+                {configureActionText}
+                <ConditionallyRender
+                    condition={isExternal}
+                    show={<StyledOpenInNewIcon />}
+                    elseShow={<ChevronRightIcon />}
+                />
             </StyledAction>
         </>
     );

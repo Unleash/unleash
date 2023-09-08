@@ -142,7 +142,6 @@ export const LastSeenTooltip = ({
                             unit: string,
                             suffix: string
                         ) => {
-                            const [, textColor] = getColor(unit);
                             return (
                                 <Typography
                                     fontWeight={'bold'}

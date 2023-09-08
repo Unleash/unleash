@@ -33,6 +33,24 @@ exports[`apiTokenSchema empty 1`] = `
     {
       "instancePath": "",
       "keyword": "required",
+      "message": "must have required property 'project'",
+      "params": {
+        "missingProperty": "project",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'projects'",
+      "params": {
+        "missingProperty": "projects",
+      },
+      "schemaPath": "#/required",
+    },
+    {
+      "instancePath": "",
+      "keyword": "required",
       "message": "must have required property 'createdAt'",
       "params": {
         "missingProperty": "createdAt",

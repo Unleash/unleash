@@ -1,4 +1,5 @@
 import { type VFC } from 'react';
+import { Typography, styled } from '@mui/material';
 import type { AddonTypeSchema } from 'openapi';
 import useLoading from 'hooks/useLoading';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -6,8 +7,8 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
 import { JIRA_INFO } from '../../JiraIntegration/JiraIntegration';
 import { StyledCardsGrid } from '../IntegrationList.styles';
-import { Paper, Typography, styled } from '@mui/material';
 import { RequestIntegrationCard } from '../RequestIntegrationCard/RequestIntegrationCard';
+import { OFFICIAL_SDKS } from './SDKs';
 
 interface IAvailableIntegrationsProps {
     providers: AddonTypeSchema[];
@@ -44,6 +45,8 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
     loading,
 }) => {
     const customProviders = [JIRA_INFO];
+    const serverSdks = OFFICIAL_SDKS.filter(sdk => sdk.type === 'server');
+    const clientSdks = OFFICIAL_SDKS.filter(sdk => sdk.type === 'client');
 
     const ref = useLoading(loading || false);
 
@@ -115,10 +118,102 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                     </StyledCardsGrid>
                 </StyledSection>
                 <StyledSection>
+                    <div>
+                        <Typography component="h3" variant="h2">
+                            Official SDKs
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            In order to connect your application to Unleash you
+                            will need a client SDK (software developer kit) for
+                            your programming language and an{' '}
+                            <a
+                                href="https://docs.getunleash.io/how-to/how-to-create-api-tokens"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                API token
+                            </a>
+                        </Typography>
+                    </div>
+                    <div>
+                        <Typography component="h4" variant="h4">
+                            Server-side SDKs
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Server-side clients run on your server and
+                            communicate directly with your Unleash instance.
+                        </Typography>
+                    </div>
+                    <StyledCardsGrid small>
+                        {serverSdks?.map(
+                            ({
+                                name,
+                                displayName,
+                                description,
+                                documentationUrl,
+                            }) => (
+                                <IntegrationCard
+                                    key={name}
+                                    icon={name}
+                                    title={displayName || name}
+                                    description={description}
+                                    link={documentationUrl}
+                                    configureActionText={'View documentation'}
+                                    isExternal
+                                />
+                            )
+                        )}
+                    </StyledCardsGrid>
+                    <div>
+                        <Typography component="h4" variant="h4">
+                            Client-side SDKs
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Client-side SDKs can connect to the{' '}
+                            <a
+                                href="https://docs.getunleash.io/reference/unleash-edge"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Unleash Edge
+                            </a>{' '}
+                            or to the{' '}
+                            <a
+                                href="https://docs.getunleash.io/reference/front-end-api"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Unleash front-end API
+                            </a>
+                            , but not to the regular Unleash client API.
+                        </Typography>
+                    </div>
+                    <StyledCardsGrid small>
+                        {clientSdks?.map(
+                            ({
+                                name,
+                                displayName,
+                                description,
+                                documentationUrl,
+                            }) => (
+                                <IntegrationCard
+                                    key={name}
+                                    icon={name}
+                                    title={displayName || name}
+                                    description={description}
+                                    link={documentationUrl}
+                                    configureActionText={'View documentation'}
+                                    isExternal
+                                />
+                            )
+                        )}
+                    </StyledCardsGrid>
+                </StyledSection>
+                <StyledSection>
                     <StyledGrayContainer>
                         <div>
-                            <Typography component="h3" variant="h2">
-                                Other
+                            <Typography component="h3" variant="h4">
+                                Community SDKs
                             </Typography>
                             <Typography>
                                 <a

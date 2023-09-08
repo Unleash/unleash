@@ -73,7 +73,7 @@ export const ProjectDoraFeedback = () => {
         }
     };
 
-    const recipientEmail = 'recipient@example.com';
+    const recipientEmail = 'ux@getunleash.io';
     const emailSubject = "I'd like to get involved";
     const emailBody = `Hello Unleash,\n\nI just saw the new metrics page you are experimenting with in Unleash. I'd like to be involved in user tests and give my feedback on this feature.\n\nRegards,\n`;
 

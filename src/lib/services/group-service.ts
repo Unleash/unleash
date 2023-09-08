@@ -105,7 +105,10 @@ export class GroupService {
         return newGroup;
     }
 
-    async updateGroup(group: IGroupModel, userName: string): Promise<IGroup> {
+    async updateGroup(
+        group: ICreateGroupModel,
+        userName: string,
+    ): Promise<IGroup> {
         const preData = await this.groupStore.get(group.id);
 
         await this.validateGroup(group, preData);
@@ -150,10 +153,10 @@ export class GroupService {
 
         if (projectGroups.length > 0) {
             const groups = await this.groupStore.getAllWithId(
-                projectGroups.map((g) => g.id),
+                projectGroups.map((g) => g.id!),
             );
             const groupUsers = await this.groupStore.getAllUsersByGroups(
-                groups.map((g) => g.id),
+                groups.map((g) => g.id!),
             );
             const users = await this.accountStore.getAllWithId(
                 groupUsers.map((u) => u.userId),
@@ -175,7 +178,7 @@ export class GroupService {
     }
 
     async validateGroup(
-        group: IGroupModel | ICreateGroupModel,
+        group: ICreateGroupModel,
         existingGroup?: IGroup,
     ): Promise<void> {
         if (!group.name) {
@@ -186,6 +189,16 @@ export class GroupService {
             if (await this.groupStore.existsWithName(group.name)) {
                 throw new NameExistsError('Group name already exists');
             }
+        }
+
+        if (
+            group.id &&
+            group.rootRole &&
+            (await this.groupStore.hasProjectRole(group.id))
+        ) {
+            throw new BadDataError(
+                'This group already has a project role and cannot also be given a root role',
+            );
         }
     }
 

@@ -1,8 +1,8 @@
 import { Store } from './store';
 import Group, {
+    ICreateGroupModel,
     ICreateGroupUserModel,
     IGroup,
-    IGroupModel,
     IGroupProject,
     IGroupRole,
     IGroupUser,
@@ -48,7 +48,7 @@ export interface IGroupStore extends Store<IGroup, number> {
 
     deleteUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void>;
 
-    update(group: IGroupModel): Promise<IGroup>;
+    update(group: ICreateGroupModel): Promise<IGroup>;
 
     getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]>;
 

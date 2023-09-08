@@ -1,6 +1,6 @@
 import React, { Fragment, VFC } from 'react';
 import { Link } from 'react-router-dom';
-import { styled, Typography, Theme } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';

@@ -1,4 +1,4 @@
-import { Box, List, ListItem } from '@mui/material';
+import { Box } from '@mui/material';
 import { useProjectDoraMetrics } from 'hooks/api/getters/useProjectDoraMetrics/useProjectDoraMetrics';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useMemo } from 'react';
@@ -57,7 +57,7 @@ export const ProjectDoraMetrics = () => {
                 width: '50%',
                 Cell: ({
                     row: {
-                        original: { name, description },
+                        original: { name },
                     },
                 }: any) => {
                     return (
@@ -129,7 +129,6 @@ export const ProjectDoraMetrics = () => {
         rows,
         prepareRow,
         state: { globalFilter },
-        setGlobalFilter,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update

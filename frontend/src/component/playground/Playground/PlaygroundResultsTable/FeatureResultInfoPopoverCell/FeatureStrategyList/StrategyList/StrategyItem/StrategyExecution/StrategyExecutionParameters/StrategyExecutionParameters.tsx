@@ -7,7 +7,6 @@ import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle
 import { PlaygroundParameterItem } from '../PlaygroundParameterItem/PlaygroundParameterItem';
 import { StyledBoxSummary } from '../StrategyExecution.styles';
 import { PlaygroundConstraintSchema, PlaygroundRequestSchema } from 'openapi';
-import { getMappedParam } from '../helpers';
 import { Badge } from 'component/common/Badge/Badge';
 
 export interface PlaygroundResultStrategyExecutionParametersProps {
@@ -60,23 +59,14 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 value={users}
                                 text="user"
                                 input={
-                                    Boolean(
-                                        input?.context?.[getMappedParam(key)]
-                                    )
-                                        ? input?.context?.[getMappedParam(key)]
+                                    Boolean(input?.context?.userId)
+                                        ? input?.context?.userId
                                         : 'no value'
                                 }
-                                showReason={
-                                    Boolean(
-                                        input?.context?.[getMappedParam(key)]
-                                    )
-                                        ? !users.includes(
-                                              input?.context?.[
-                                                  getMappedParam(key)
-                                              ]
-                                          )
-                                        : undefined
-                                }
+                                showReason={Boolean(
+                                    input?.context?.userId &&
+                                        !users.includes(input?.context?.userId)
+                                )}
                             />
                         );
                     case 'hostNames':
@@ -99,23 +89,16 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 value={IPs}
                                 text={'IP'}
                                 input={
-                                    Boolean(
-                                        input?.context?.[getMappedParam(key)]
-                                    )
-                                        ? input?.context?.[getMappedParam(key)]
+                                    Boolean(input?.context?.remoteAddress)
+                                        ? input?.context?.remoteAddress
                                         : 'no value'
                                 }
-                                showReason={
-                                    Boolean(
-                                        input?.context?.[getMappedParam(key)]
-                                    )
-                                        ? !IPs.includes(
-                                              input?.context?.[
-                                                  getMappedParam(key)
-                                              ]
-                                          )
-                                        : undefined
-                                }
+                                showReason={Boolean(
+                                    input?.context?.remoteAddress &&
+                                        !IPs.includes(
+                                            input?.context?.remoteAddress
+                                        )
+                                )}
                             />
                         );
                     case 'stickiness':

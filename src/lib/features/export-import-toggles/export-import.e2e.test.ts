@@ -833,6 +833,14 @@ test('reject import with duplicate features', async () => {
 
 test('validate import data', async () => {
     await createProjects();
+    await projectStore.update({
+        id: DEFAULT_PROJECT,
+        name: 'default',
+        description: '',
+        mode: 'open',
+        featureNaming: { pattern: '^testpattern.+' },
+    });
+
     const contextField: IContextFieldDto = {
         name: 'validate_context_field',
         legalValues: [{ value: 'Value1' }],
@@ -881,6 +889,11 @@ test('validate import data', async () => {
             {
                 message:
                     'We detected the following features are duplicate in your import data:',
+                affectedItems: [defaultFeatureName],
+            },
+
+            {
+                message: 'Pattern mismatch!',
                 affectedItems: [defaultFeatureName],
             },
         ],

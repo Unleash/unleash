@@ -28,7 +28,7 @@ export const createStrategySchema = {
             type: 'boolean',
             description:
                 'Whether the strategy type is deprecated or not. Defaults to `false`.',
-            example: 'true',
+            example: true,
         },
         parameters: {
             type: 'array',

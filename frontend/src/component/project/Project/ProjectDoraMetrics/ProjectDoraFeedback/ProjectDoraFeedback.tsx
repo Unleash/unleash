@@ -51,11 +51,11 @@ export const ProjectDoraFeedback = () => {
         `project:metrics:plausible`,
         { sent: false }
     );
-    const [sentObj, setSentObj] = useState(value);
+    const [metrics, setMetrics] = useState(value);
 
     useEffect(() => {
-        setValue(sentObj);
-    }, [sentObj]);
+        setValue(metrics);
+    }, [metrics]);
 
     const onBtnClick = (type: string) => {
         try {
@@ -65,8 +65,8 @@ export const ProjectDoraFeedback = () => {
                 },
             });
 
-            if (!Boolean(sentObj.sent)) {
-                setSentObj({ sent: true });
+            if (!Boolean(metrics.sent)) {
+                setMetrics({ sent: true });
             }
         } catch (e) {
             console.error('error sending metrics');
@@ -96,7 +96,7 @@ export const ProjectDoraFeedback = () => {
             </Typography>
 
             <ConditionallyRender
-                condition={!sentObj.sent}
+                condition={!metrics.sent}
                 show={
                     <StyledBtnContainer>
                         {' '}

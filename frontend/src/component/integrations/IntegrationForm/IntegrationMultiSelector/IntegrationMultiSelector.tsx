@@ -147,7 +147,7 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
     return (
         <React.Fragment>
             <StyledTitle>
-                {capitalize(entityName)}s
+                {capitalize(`${entityName}s`)}
                 {required ? (
                     <Typography component="span" color="error">
                         *
@@ -167,7 +167,7 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
                 show={<SelectAllFormControl />}
             />
             <Autocomplete
-                sx={{ mb: 8 }}
+                size="small"
                 disabled={isWildcardSelected}
                 multiple
                 limitTags={2}

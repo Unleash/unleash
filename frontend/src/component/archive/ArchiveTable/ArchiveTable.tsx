@@ -244,7 +244,6 @@ export const ArchiveTable = ({
         prepareRow,
         setHiddenColumns,
         toggleAllRowsSelected,
-        toggleRowSelected,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update

@@ -1,7 +1,7 @@
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { Divider, styled } from '@mui/material';
 
-import { IntegrationIcon } from '../IntegrationList/IntegrationIcon/IntegrationIcon';
+import { IntegrationIcon } from '../../IntegrationList/IntegrationIcon/IntegrationIcon';
 import cr from 'assets/img/jira/cr.png';
 import connect from 'assets/img/jira/connect.png';
 import manage from 'assets/img/jira/manage.png';

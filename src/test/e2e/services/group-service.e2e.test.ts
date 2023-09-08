@@ -106,19 +106,25 @@ test('adding a root role to a group with a project role should not fail', async 
 
     await stores.accessStore.addGroupToRole(group.id, 1, 'test', 'default');
 
-    await expect(() => {
-        return groupService.updateGroup(
-            {
-                id: group.id,
-                name: group.name,
-                users: [],
-                rootRole: 1,
-                createdAt: new Date(),
-                createdBy: 'test',
-            },
-            'test',
-        );
-    }).not.toThrow();
+    const updatedGroup = await groupService.updateGroup(
+        {
+            id: group.id!,
+            name: group.name,
+            users: [],
+            rootRole: 1,
+            createdAt: new Date(),
+            createdBy: 'test',
+        },
+        'test',
+    );
+
+    expect(updatedGroup).toMatchObject({
+        description: group.description,
+        id: group.id,
+        mappingsSSO: [],
+        name: group.name,
+        rootRole: 1,
+    });
 
     expect.assertions(1);
 });

@@ -13,6 +13,11 @@ export const createStrategySchema = {
             description: 'The name of the strategy type. Must be unique.',
             example: 'my-custom-strategy',
         },
+        title: {
+            type: 'string',
+            description: 'The title of the strategy',
+            example: 'My awesome strategy',
+        },
         description: {
             type: 'string',
             description: 'A description of the strategy type.',

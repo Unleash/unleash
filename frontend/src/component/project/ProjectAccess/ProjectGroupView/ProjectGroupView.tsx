@@ -41,6 +41,8 @@ const StyledTitle = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     '& > span': {
+        display: 'flex',
+        alignItems: 'center',
         color: theme.palette.text.secondary,
         fontSize: theme.fontSizes.bodySize,
     },
@@ -113,7 +115,7 @@ interface IProjectGroupViewProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     group: IGroup;
     projectId: string;
-    subtitle: string;
+    subtitle: React.ReactNode;
     onEdit: () => void;
     onRemove: () => void;
 }

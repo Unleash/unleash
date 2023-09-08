@@ -8,7 +8,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { IntegrationCardMenu } from './IntegrationCardMenu/IntegrationCardMenu';
 import type { AddonSchema } from 'openapi';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { usePlausibleTracker } from '../../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IIntegrationCardProps {
     id?: string | number;

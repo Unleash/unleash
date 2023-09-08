@@ -119,10 +119,10 @@ test('adding a root role to a group with a project role should not fail', async 
     );
 
     expect(updatedGroup).toMatchObject({
-        description: 'root_group',
+        description: group.description,
         id: group.id,
         mappingsSSO: [],
-        name: 'root_group',
+        name: group.name,
         rootRole: 1,
     });
 

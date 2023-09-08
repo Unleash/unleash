@@ -92,7 +92,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Custom fallback variant | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 | Custom weight | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 | [Custom stickiness](../stickiness.md#custom-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
-| [Strategy Variants](../strategy-variants)| ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
+| [Strategy Variants](./strategy-variants)| ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 | **Category: Local backup** |  |  |  |  |  |  |  |  |
 | File based backup | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 | **Category: Usage metrics** |  |  |  |  |  |  |  |  |

@@ -8,14 +8,14 @@ import {
     UPDATE_ADDON,
     DELETE_ADDON,
 } from 'component/providers/AccessProvider/permissions';
-import { IAddon } from 'interfaces/addons';
+import { AddonSchema } from 'openapi';
 import { useNavigate } from 'react-router-dom';
 
 interface IConfiguredAddonsActionsCellProps {
-    toggleAddon: (addon: IAddon) => Promise<void>;
-    original: IAddon;
+    toggleAddon: (addon: AddonSchema) => Promise<void>;
+    original: AddonSchema;
     setShowDelete: React.Dispatch<React.SetStateAction<boolean>>;
-    setDeletedAddon: React.Dispatch<React.SetStateAction<IAddon>>;
+    setDeletedAddon: React.Dispatch<React.SetStateAction<AddonSchema>>;
 }
 
 /**

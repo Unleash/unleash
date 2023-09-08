@@ -1,12 +1,13 @@
 import { Store } from './store';
 import Group, {
-    ICreateGroupModel,
     ICreateGroupUserModel,
     IGroup,
+    IGroupModel,
     IGroupProject,
     IGroupRole,
     IGroupUser,
 } from '../group';
+import { IGroupWithProjectRoles } from './access-store';
 
 export interface IStoreGroup {
     name: string;
@@ -34,6 +35,8 @@ export interface IGroupStore extends Store<IGroup, number> {
 
     getProjectGroupRoles(projectId: string): Promise<IGroupRole[]>;
 
+    getProjectGroups(projectId: string): Promise<IGroupWithProjectRoles[]>;
+
     getAllWithId(ids: number[]): Promise<IGroup[]>;
 
     updateGroupUsers(
@@ -45,7 +48,7 @@ export interface IGroupStore extends Store<IGroup, number> {
 
     deleteUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void>;
 
-    update(group: ICreateGroupModel): Promise<IGroup>;
+    update(group: IGroupModel): Promise<IGroup>;
 
     getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]>;
 

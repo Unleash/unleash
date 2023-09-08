@@ -342,6 +342,7 @@ class EventStore implements IEventStore {
                     .orWhereRaw('type::text ILIKE ?', `%${search.query}%`)
                     .orWhereRaw('created_by::text ILIKE ?', `%${search.query}%`)
                     .orWhereRaw('data::text ILIKE ?', `%${search.query}%`)
+                    .orWhereRaw('tags::text ILIKE ?', `%${search.query}%`)
                     .orWhereRaw('pre_data::text ILIKE ?', `%${search.query}%`),
             );
         }

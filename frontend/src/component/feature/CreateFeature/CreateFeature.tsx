@@ -137,6 +137,7 @@ const CreateFeature = () => {
                 handleCancel={handleCancel}
                 mode="Create"
                 clearErrors={clearErrors}
+                featureNaming={projectInfo.featureNaming}
             >
                 <CreateButton
                     name="feature toggle"

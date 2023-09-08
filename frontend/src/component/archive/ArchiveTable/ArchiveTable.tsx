@@ -243,6 +243,7 @@ export const ArchiveTable = ({
         state: { sortBy, selectedRowIds },
         prepareRow,
         setHiddenColumns,
+        toggleAllRowsSelected,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
@@ -360,6 +361,7 @@ export const ArchiveTable = ({
                         <ArchiveBatchActions
                             selectedIds={Object.keys(selectedRowIds)}
                             projectId={projectId!}
+                            onReviveConfirm={() => toggleAllRowsSelected(false)}
                         />
                     </BatchSelectionActionsBar>
                 }

@@ -258,7 +258,6 @@ export const FeatureStrategyForm = ({
             <StyledHr />
             <ConditionallyRender
                 condition={
-                    Boolean(uiConfig?.flags?.strategyVariant) &&
                     strategy.parameters != null &&
                     'stickiness' in strategy.parameters
                 }

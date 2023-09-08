@@ -15,11 +15,12 @@ interface IProjectFeaturesBatchActionsProps {
     selectedIds: string[];
     data: FeatureSchema[];
     projectId: string;
+    onResetSelection: () => void;
 }
 
 export const ProjectFeaturesBatchActions: FC<
     IProjectFeaturesBatchActionsProps
-> = ({ selectedIds, data, projectId }) => {
+> = ({ selectedIds, data, projectId, onResetSelection }) => {
     const { uiConfig } = useUiConfig();
     const [showExportDialog, setShowExportDialog] = useState(false);
     const [showBulkEnableDialog, setShowBulkEnableDialog] = useState(false);
@@ -92,6 +93,7 @@ export const ProjectFeaturesBatchActions: FC<
                 projectId={projectId}
                 featureIds={selectedIds}
                 features={data}
+                onConfirm={onResetSelection}
             />
             <Button
                 variant="outlined"

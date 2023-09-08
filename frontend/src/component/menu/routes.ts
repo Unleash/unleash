@@ -43,7 +43,9 @@ import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
 import { LoginHistory } from 'component/loginHistory/LoginHistory';
 import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
+import { AddonsList } from 'component/integrations/IntegrationList/AddonsList';
 import { TemporaryApplicationListWrapper } from 'component/application/ApplicationList/TemporaryApplicationListWrapper';
+import { ViewIntegration } from 'component/integrations/ViewIntegration/ViewIntegration';
 
 export const routes: IRoute[] = [
     // Splash
@@ -216,7 +218,6 @@ export const routes: IRoute[] = [
         component: FeatureTypesList,
         type: 'protected',
         menu: { mobile: true, advanced: true },
-        flag: 'configurableFeatureTypeLifetimes',
     },
 
     // Strategies
@@ -322,7 +323,7 @@ export const routes: IRoute[] = [
     {
         path: '/addons',
         title: 'Addons',
-        component: IntegrationList,
+        component: AddonsList,
         // TODO: use AddonRedirect after removing `integrationsRework` menu flag
         hidden: false,
         type: 'protected',
@@ -334,6 +335,14 @@ export const routes: IRoute[] = [
         parent: '/integrations',
         title: 'Create',
         component: CreateIntegration,
+        type: 'protected',
+        menu: {},
+    },
+    {
+        path: '/integrations/view/:providerId',
+        parent: '/integrations',
+        title: 'View',
+        component: ViewIntegration,
         type: 'protected',
         menu: {},
     },

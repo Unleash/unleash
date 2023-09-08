@@ -9,7 +9,7 @@ const theme = {
             xs: 0,
             sm: 600,
             md: 960,
-            lg: 1260,
+            lg: 1280,
             xl: 1536,
         },
     },
@@ -38,6 +38,10 @@ const theme = {
         h3: {
             fontSize: '1rem',
             fontWeight: '700',
+        },
+        h4: {
+            fontSize: '1rem',
+            fontWeight: '400',
         },
         caption: {
             fontSize: `${12 / 16}rem`,

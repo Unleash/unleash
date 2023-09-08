@@ -12,7 +12,7 @@ import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IGroupStore } from '../types/stores/group-store';
 import { IProjectStore } from '../types/stores/project-store';
 import { IStrategyStore } from '../types/stores/strategy-store';
-import { IUserStore } from '../types/stores/user-store';
+import { IActiveUsers, IUserStore } from '../types/stores/user-store';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { IRoleStore } from '../types/stores/role-store';
 import VersionService from './version-service';
@@ -43,6 +43,7 @@ export interface InstanceStats {
     SAMLenabled: boolean;
     OIDCenabled: boolean;
     clientApps: { range: TimeRange; count: number }[];
+    activeUsers: IActiveUsers;
 }
 
 export interface InstanceStatsSigned extends InstanceStats {
@@ -176,6 +177,7 @@ export class InstanceStatsService {
         const [
             featureToggles,
             users,
+            activeUsers,
             projects,
             contextFields,
             groups,
@@ -193,6 +195,7 @@ export class InstanceStatsService {
         ] = await Promise.all([
             this.getToggleCount(),
             this.userStore.count(),
+            this.userStore.getActiveUsersCount(),
             this.projectStore.count(),
             this.contextFieldStore.count(),
             this.groupStore.count(),
@@ -215,6 +218,7 @@ export class InstanceStatsService {
             versionOSS: versionInfo.current.oss,
             versionEnterprise: versionInfo.current.enterprise,
             users,
+            activeUsers,
             featureToggles,
             projects,
             contextFields,

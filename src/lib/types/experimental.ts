@@ -20,16 +20,15 @@ export type IFlagKey =
     | 'disableBulkToggle'
     | 'disableNotifications'
     | 'advancedPlayground'
-    | 'strategyVariant'
     | 'slackAppAddon'
-    | 'configurableFeatureTypeLifetimes'
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
-    | 'segmentChangeRequests'
-    | 'changeRequestReject'
     | 'customRootRolesKillSwitch'
     | 'newApplicationList'
-    | 'integrationsRework';
+    | 'integrationsRework'
+    | 'multipleRoles'
+    | 'featureNamingPattern'
+    | 'doraMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -97,16 +96,8 @@ const flags: IFlags = {
         process.env.DISABLE_NOTIFICATIONS,
         false,
     ),
-    strategyVariant: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_VARIANT,
-        false,
-    ),
     slackAppAddon: parseEnvVarBoolean(
         process.env.UNLEASH_SLACK_APP_ADDON,
-        false,
-    ),
-    configurableFeatureTypeLifetimes: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CONFIGURABLE_FEATURE_TYPE_LIFETIMES,
         false,
     ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
@@ -117,20 +108,24 @@ const flags: IFlags = {
         process.env.LAST_SEEN_BY_ENVIRONMENT,
         false,
     ),
-    segmentChangeRequests: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SEGMENT_CHANGE_REQUESTS,
-        false,
-    ),
-    changeRequestReject: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_REJECT,
-        false,
-    ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
         false,
     ),
     integrationsRework: parseEnvVarBoolean(
         process.env.UNLEASH_INTEGRATIONS,
+        false,
+    ),
+    multipleRoles: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MULTIPLE_ROLES,
+        false,
+    ),
+    newApplicationList: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_APPLICATION_LIST,
+        false,
+    ),
+    featureNamingPattern: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_NAMING_PATTERN,
         false,
     ),
 };

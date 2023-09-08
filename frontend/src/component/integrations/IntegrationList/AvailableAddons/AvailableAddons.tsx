@@ -18,23 +18,11 @@ import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { ConfigureAddonsButton } from './ConfigureAddonButton/ConfigureAddonsButton';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
-import { IntegrationNameCell } from '../IntegrationNameCell/IntegrationNameCell';
-import { IAddonInstallation } from 'interfaces/addons';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-
-interface IProvider {
-    name: string;
-    displayName: string;
-    description: string;
-    documentationUrl: string;
-    parameters: object[];
-    events: string[];
-    installation?: IAddonInstallation;
-    deprecated?: string;
-}
+import { AddonNameCell } from '../AddonNameCell/AddonNameCell';
+import type { AddonTypeSchema } from 'openapi';
 
 interface IAvailableAddonsProps {
-    providers: IProvider[];
+    providers: AddonTypeSchema[];
     loading: boolean;
 }
 
@@ -85,7 +73,7 @@ export const AvailableAddons = ({
                 accessor: 'name',
                 width: '90%',
                 Cell: ({ row: { original } }: any) => (
-                    <IntegrationNameCell provider={original} />
+                    <AddonNameCell provider={original} />
                 ),
                 sortType: 'alphanumeric',
             },

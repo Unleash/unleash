@@ -170,7 +170,10 @@ const defaultServerOption: IServerOption = {
         parseEnvVarNumber(process.env.SERVER_KEEPALIVE_TIMEOUT, 15),
     ),
     headersTimeout: secondsToMilliseconds(61),
-    enableRequestLogger: false,
+    enableRequestLogger: parseEnvVarBoolean(
+        process.env.REQUEST_LOGGER_ENABLE,
+        false,
+    ),
     gracefulShutdownEnable: parseEnvVarBoolean(
         process.env.GRACEFUL_SHUTDOWN_ENABLE,
         true,

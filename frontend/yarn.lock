@@ -8,9 +8,9 @@
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
 "@adobe/css-tools@^4.0.1":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.0.2.tgz#bd7d13543a186c3ff3eabb44bec2b22e8fb18ee0"
-  integrity sha512-Fx6tYjk2wKUgLi8uMANZr8GNZx05u44ArIJldn9VxLvolzlJVgHbTUCbwhMd6bcYky178+WUSxPHO3DAtGLWpw==
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.3.1.tgz#abfccb8ca78075a2b6187345c26243c1a0842f28"
+  integrity sha512-/62yikz7NLScCGAAST5SHdnjaDJQBDq0M2muyRTpf2VQhw6StBg2ALiu73zSJQ4fMVLA+0uBhBHAle7Wg+2kSg==
 
 "@ampproject/remapping@^2.1.0":
   version "2.2.0"
@@ -3016,10 +3016,10 @@
     "@types/history" "^4.7.11"
     "@types/react" "*"
 
-"@types/react-table@7.7.14":
-  version "7.7.14"
-  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.7.14.tgz#b880f1ae140ed065bca2e21b3008ca1ebe71595a"
-  integrity sha512-TYrv7onCiakaG1uAu/UpQ9FojNEt/4/ht87EgJQaEGFoWV606ZLWUZAcUHzMxgc3v1mywP1cDyz3qB4ho3hWOw==
+"@types/react-table@7.7.15":
+  version "7.7.15"
+  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.7.15.tgz#e9a093a5f2be4fff5ccb41f1aec9516b520ed9b3"
+  integrity sha512-tlXKCeq4gk2xT2lB+Hbp/dO5yYZ899HwQOAp/3o3hKw8wp7ngNpdB90BNWE6kWCm5K2KzmEsHnYoJheSS5SVjg==
   dependencies:
     "@types/react" "*"
 

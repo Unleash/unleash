@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { FormControlLabel, Grid, Switch, TextField } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface SsoGroupSettingsProps {
     ssoType: 'OIDC' | 'SAML';
@@ -7,6 +8,7 @@ interface SsoGroupSettingsProps {
         enabled: boolean;
         enableGroupSyncing: boolean;
         groupJsonPath: string;
+        addGroupsScope: boolean;
     };
     setValue: (name: string, value: string | boolean) => void;
 }
@@ -17,6 +19,7 @@ export const SsoGroupSettings = ({
         enabled: false,
         enableGroupSyncing: false,
         groupJsonPath: '',
+        addGroupsScope: false,
     },
     setValue,
 }: SsoGroupSettingsProps) => {
@@ -28,6 +31,9 @@ export const SsoGroupSettings = ({
         setValue(event.target.name, event.target.value);
     };
 
+    const updateAddGroupScope = () => {
+        setValue('addGroupsScope', !data.addGroupsScope);
+    };
     return (
         <>
             <Grid container spacing={3} mb={2}>
@@ -76,6 +82,36 @@ export const SsoGroupSettings = ({
                     />
                 </Grid>
             </Grid>
+            <ConditionallyRender
+                condition={ssoType === 'OIDC'}
+                show={
+                    <Grid container spacing={3} mb={2}>
+                        <Grid item md={5}>
+                            <strong>Request 'groups' Scope</strong>
+                            <p>
+                                When enabled Unleash will also request the
+                                'groups' scope as part of the login request.
+                            </p>
+                        </Grid>
+                        <Grid item md={6} style={{ padding: '20px' }}>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        onChange={updateAddGroupScope}
+                                        value={data.addGroupsScope}
+                                        disabled={!data.enableGroupSyncing}
+                                        name="addGroupsScope"
+                                        checked={data.addGroupsScope}
+                                    />
+                                }
+                                label={
+                                    data.addGroupsScope ? 'Enabled' : 'Disabled'
+                                }
+                            />
+                        </Grid>
+                    </Grid>
+                }
+            />
         </>
     );
 };

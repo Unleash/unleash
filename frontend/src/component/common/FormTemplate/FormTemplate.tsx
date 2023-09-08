@@ -13,20 +13,21 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import Loader from '../Loader/Loader';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { ReactComponent as MobileGuidanceBG } from 'assets/img/mobileGuidanceBg.svg';
 import { formTemplateSidebarWidth } from './FormTemplate.styles';
 import { relative } from 'themes/themeStyles';
 
 interface ICreateProps {
-    title?: string;
+    title?: ReactNode;
     description: string;
     documentationLink: string;
     documentationLinkLabel: string;
     loading?: boolean;
     modal?: boolean;
     disablePadding?: boolean;
-    formatApiCode: () => string;
+    formatApiCode?: () => string;
+    footer?: ReactNode;
 }
 
 const StyledContainer = styled('section', {
@@ -46,6 +47,17 @@ const StyledContainer = styled('section', {
 
 const StyledRelativeDiv = styled('div')(({ theme }) => relative);
 
+const StyledMain = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    flexShrink: 1,
+    width: '100%',
+    [theme.breakpoints.down(1100)]: {
+        width: '100%',
+    },
+}));
+
 const StyledFormContent = styled('div', {
     shouldForwardProp: prop => prop !== 'disablePadding',
 })<{ disablePadding?: boolean }>(({ theme, disablePadding }) => ({
@@ -62,6 +74,17 @@ const StyledFormContent = styled('div', {
     },
     [theme.breakpoints.down(500)]: {
         padding: disablePadding ? 0 : theme.spacing(4, 2),
+    },
+}));
+
+const StyledFooter = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(4, 6),
+    [theme.breakpoints.down('lg')]: {
+        padding: theme.spacing(4),
+    },
+    [theme.breakpoints.down(500)]: {
+        padding: theme.spacing(4, 2),
     },
 }));
 
@@ -161,26 +184,48 @@ const FormTemplate: React.FC<ICreateProps> = ({
     modal,
     formatApiCode,
     disablePadding,
+    footer,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
     const copyCommand = () => {
-        if (copy(formatApiCode())) {
-            setToastData({
-                title: 'Successfully copied the command',
-                text: 'The command should now be automatically copied to your clipboard',
-                autoHideDuration: 6000,
-                type: 'success',
-                show: true,
-            });
-        } else {
-            setToastData({
-                title: 'Could not copy the command',
-                text: 'Sorry, but we could not copy the command.',
-                autoHideDuration: 6000,
-                type: 'error',
-                show: true,
-            });
+        if (formatApiCode !== undefined) {
+            if (copy(formatApiCode())) {
+                setToastData({
+                    title: 'Successfully copied the command',
+                    text: 'The command should now be automatically copied to your clipboard',
+                    autoHideDuration: 6000,
+                    type: 'success',
+                    show: true,
+                });
+            } else {
+                setToastData({
+                    title: 'Could not copy the command',
+                    text: 'Sorry, but we could not copy the command.',
+                    autoHideDuration: 6000,
+                    type: 'error',
+                    show: true,
+                });
+            }
+        }
+    };
+
+    const renderApiInfo = (apiDisabled: boolean) => {
+        if (!apiDisabled) {
+            return (
+                <>
+                    <StyledSidebarDivider />
+                    <StyledSubtitle>
+                        API Command{' '}
+                        <Tooltip title="Copy command" arrow>
+                            <IconButton onClick={copyCommand} size="large">
+                                <StyledIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </StyledSubtitle>
+                    <Codebox text={formatApiCode!()} />{' '}
+                </>
+            );
         }
     };
 
@@ -198,21 +243,32 @@ const FormTemplate: React.FC<ICreateProps> = ({
                     </StyledRelativeDiv>
                 }
             />
-            <StyledFormContent disablePadding={disablePadding}>
+            <StyledMain>
+                <StyledFormContent disablePadding={disablePadding}>
+                    <ConditionallyRender
+                        condition={loading || false}
+                        show={<Loader />}
+                        elseShow={
+                            <>
+                                <ConditionallyRender
+                                    condition={title !== undefined}
+                                    show={<StyledTitle>{title}</StyledTitle>}
+                                />
+                                {children}
+                            </>
+                        }
+                    />
+                </StyledFormContent>
                 <ConditionallyRender
-                    condition={loading || false}
-                    show={<Loader />}
-                    elseShow={
+                    condition={footer !== undefined}
+                    show={() => (
                         <>
-                            <ConditionallyRender
-                                condition={title !== undefined}
-                                show={<StyledTitle>{title}</StyledTitle>}
-                            />
-                            {children}
+                            <Divider />
+                            <StyledFooter>{footer}</StyledFooter>
                         </>
-                    }
-                />{' '}
-            </StyledFormContent>
+                    )}
+                />
+            </StyledMain>
             <ConditionallyRender
                 condition={!smallScreen}
                 show={
@@ -221,16 +277,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         documentationLink={documentationLink}
                         documentationLinkLabel={documentationLinkLabel}
                     >
-                        <StyledSidebarDivider />
-                        <StyledSubtitle>
-                            API Command{' '}
-                            <Tooltip title="Copy command" arrow>
-                                <IconButton onClick={copyCommand} size="large">
-                                    <StyledIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </StyledSubtitle>
-                        <Codebox text={formatApiCode()} />
+                        {renderApiInfo(formatApiCode === undefined)}
                     </Guidance>
                 }
             />

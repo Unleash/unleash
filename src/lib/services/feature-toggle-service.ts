@@ -45,6 +45,7 @@ import {
     IStrategyStore,
 } from '../types';
 import { Logger } from '../logger';
+import { PatternError } from '../error';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
@@ -398,12 +399,10 @@ class FeatureToggleService {
             disabled: featureStrategy.disabled,
             constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
+            sortOrder: featureStrategy.sortOrder,
             segments: segments.map((segment) => segment.id) ?? [],
         };
 
-        if (this.flagResolver.isEnabled('strategyVariant')) {
-            result.sortOrder = featureStrategy.sortOrder;
-        }
         return result;
     }
 
@@ -460,39 +459,37 @@ class FeatureToggleService {
                 );
             }),
         );
-        if (this.flagResolver.isEnabled('strategyVariant')) {
-            const newOrder = (
-                await this.getStrategiesForEnvironment(
-                    project,
-                    featureName,
-                    environment,
-                )
-            )
-                .sort((strategy1, strategy2) => {
-                    if (
-                        typeof strategy1.sortOrder === 'number' &&
-                        typeof strategy2.sortOrder === 'number'
-                    ) {
-                        return strategy1.sortOrder - strategy2.sortOrder;
-                    }
-                    return 0;
-                })
-                .map((strategy) => strategy.id);
-
-            const eventData: StrategyIds = { strategyIds: newOrder };
-
-            const tags = await this.tagStore.getAllTagsForFeature(featureName);
-            const event = new StrategiesOrderChangedEvent({
+        const newOrder = (
+            await this.getStrategiesForEnvironment(
+                project,
                 featureName,
                 environment,
-                project,
-                createdBy,
-                preData: eventPreData,
-                data: eventData,
-                tags: tags,
-            });
-            await this.eventStore.store(event);
-        }
+            )
+        )
+            .sort((strategy1, strategy2) => {
+                if (
+                    typeof strategy1.sortOrder === 'number' &&
+                    typeof strategy2.sortOrder === 'number'
+                ) {
+                    return strategy1.sortOrder - strategy2.sortOrder;
+                }
+                return 0;
+            })
+            .map((strategy) => strategy.id);
+
+        const eventData: StrategyIds = { strategyIds: newOrder };
+
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+        const event = new StrategiesOrderChangedEvent({
+            featureName,
+            environment,
+            project,
+            createdBy,
+            preData: eventPreData,
+            data: eventData,
+            tags: tags,
+        });
+        await this.eventStore.store(event);
     }
 
     async createStrategy(
@@ -1038,6 +1035,8 @@ class FeatureToggleService {
     ): Promise<FeatureToggle> {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
+        await this.validateFeatureFlagPattern(value.name, projectId);
+
         const exists = await this.projectStore.hasProject(projectId);
 
         if (await this.projectStore.isFeatureLimitReached(projectId)) {
@@ -1090,6 +1089,34 @@ class FeatureToggleService {
             return createdToggle;
         }
         throw new NotFoundError(`Project with id ${projectId} does not exist`);
+    }
+
+    async validateFeatureFlagPattern(
+        featureName: string,
+        projectId?: string,
+    ): Promise<void> {
+        if (this.flagResolver.isEnabled('featureNamingPattern') && projectId) {
+            const project = await this.projectStore.get(projectId);
+            const namingPattern = project.featureNaming?.pattern;
+            const namingExample = project.featureNaming?.example;
+            const namingDescription = project.featureNaming?.description;
+
+            if (
+                namingPattern &&
+                !featureName.match(new RegExp(namingPattern))
+            ) {
+                const error = `The feature flag name "${featureName}" does not match the project's naming pattern: "${namingPattern}".`;
+                const example = namingExample
+                    ? ` Here's an example of a name that does match the pattern: "${namingExample}"."`
+                    : '';
+                const description = namingDescription
+                    ? ` The pattern's description is: "${namingDescription}"`
+                    : '';
+                throw new PatternError(`${error}${example}${description}`, [
+                    `The flag name does not match the pattern.`,
+                ]);
+            }
+        }
     }
 
     async cloneFeatureToggle(
@@ -1226,7 +1253,7 @@ class FeatureToggleService {
             segments: [],
             title: strategy.title,
             disabled: strategy.disabled,
-            // FIXME: Should we return sortOrder here, or adjust OpenAPI?
+            sortOrder: strategy.sortOrder,
         };
 
         if (segments && segments.length > 0) {

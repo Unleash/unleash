@@ -10,8 +10,9 @@ export interface IChangeSchema {
         | 'deleteStrategy'
         | 'patchVariant'
         | 'reorderStrategy'
+        | 'archiveFeature'
         | 'updateSegment';
-    payload: string | boolean | object | number;
+    payload: string | boolean | object | number | undefined;
 }
 
 export interface IChangeRequestConfig {

@@ -29,7 +29,7 @@ export const InstanceStats: VFC = () => {
     }
 
     const rows = [
-        { title: 'Instance Id', value: stats?.instanceId },
+        { title: 'Instance Id', value: stats?.instanceId, offset: false },
         { title: versionTitle, value: version },
         { title: 'Users', value: stats?.users },
         { title: 'Feature toggles', value: stats?.featureToggles },
@@ -64,7 +64,16 @@ export const InstanceStats: VFC = () => {
                         {rows.map(row => (
                             <TableRow key={row.title}>
                                 <TableCell component="th" scope="row">
-                                    {row.title}
+                                    <Box
+                                        component="span"
+                                        sx={theme => ({
+                                            marginLeft: row.offset
+                                                ? theme.spacing(2)
+                                                : 0,
+                                        })}
+                                    >
+                                        {row.title}
+                                    </Box>
                                 </TableCell>
                                 <TableCell align="right">{row.value}</TableCell>
                             </TableRow>

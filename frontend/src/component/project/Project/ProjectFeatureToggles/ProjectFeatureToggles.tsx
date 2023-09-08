@@ -355,6 +355,8 @@ export const ProjectFeatureToggles = ({
         searchParams.get('search') || ''
     );
 
+    const [showTitle, setShowTitle] = useState(true);
+
     const featuresData = useMemo(
         () =>
             features.map(feature => ({
@@ -462,6 +464,7 @@ export const ProjectFeatureToggles = ({
         state: { selectedRowIds, sortBy, hiddenColumns },
         prepareRow,
         setHiddenColumns,
+        toggleAllRowsSelected,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
@@ -532,17 +535,26 @@ export const ProjectFeatureToggles = ({
                 className={styles.container}
                 header={
                     <PageHeader
-                        titleElement={`Feature toggles (${rows.length})`}
+                        titleElement={
+                            showTitle
+                                ? `Feature toggles (${rows.length})`
+                                : null
+                        }
                         actions={
                             <>
                                 <ConditionallyRender
                                     condition={!isSmallScreen}
                                     show={
                                         <Search
+                                            placeholder="Search and Filter"
+                                            expandable
                                             initialValue={searchValue}
                                             onChange={setSearchValue}
+                                            onFocus={() => setShowTitle(false)}
+                                            onBlur={() => setShowTitle(true)}
                                             hasFilters
                                             getSearchContext={getSearchContext}
+                                            id="projectFeatureToggles"
                                         />
                                     }
                                 />
@@ -601,6 +613,7 @@ export const ProjectFeatureToggles = ({
                                     onChange={setSearchValue}
                                     hasFilters
                                     getSearchContext={getSearchContext}
+                                    id="projectFeatureToggles"
                                 />
                             }
                         />
@@ -705,6 +718,7 @@ export const ProjectFeatureToggles = ({
                     selectedIds={Object.keys(selectedRowIds)}
                     data={features}
                     projectId={projectId}
+                    onResetSelection={() => toggleAllRowsSelected(false)}
                 />
             </BatchSelectionActionsBar>
         </>

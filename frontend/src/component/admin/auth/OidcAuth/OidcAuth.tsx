@@ -23,6 +23,7 @@ import { SsoGroupSettings } from '../SsoGroupSettings';
 const initialState = {
     enabled: false,
     enableSingleSignOut: false,
+    addGroupsScope: false,
     enableGroupSyncing: false,
     autoCreate: false,
     unleashHostname: location.hostname,

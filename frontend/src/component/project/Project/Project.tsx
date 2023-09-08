@@ -15,7 +15,7 @@ import {
     StyledTopRow,
 } from './Project.styles';
 import { Box, Paper, Tabs, Typography } from '@mui/material';
-import { Delete, Edit, FileUpload } from '@mui/icons-material';
+import { FileUpload } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState } from 'react';
@@ -24,11 +24,7 @@ import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeatures
 import ProjectOverview from './ProjectOverview';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import {
-    UPDATE_FEATURE,
-    DELETE_PROJECT,
-    UPDATE_PROJECT,
-} from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
@@ -41,6 +37,7 @@ import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi
 import { ImportModal } from './Import/ImportModal';
 import { IMPORT_BUTTON } from 'utils/testIds';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
+import { ProjectDoraMetrics } from './ProjectDoraMetrics/ProjectDoraMetrics';
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -63,34 +60,53 @@ export const Project = () => {
             title: 'Overview',
             path: basePath,
             name: 'overview',
+            flag: undefined,
         },
         {
             title: 'Health',
             path: `${basePath}/health`,
             name: 'health',
+            flag: undefined,
         },
         {
             title: 'Archive',
             path: `${basePath}/archive`,
             name: 'archive',
+            flag: undefined,
         },
         {
             title: 'Change requests',
             path: `${basePath}/change-requests`,
             name: 'change-request',
             isEnterprise: true,
+            flag: undefined,
+        },
+        {
+            title: 'DORA Metrics',
+            path: `${basePath}/dora`,
+            name: 'dora',
+            flag: 'doraMetrics',
         },
         {
             title: 'Event log',
             path: `${basePath}/logs`,
             name: 'logs',
+            flag: undefined,
         },
         {
             title: 'Project settings',
             path: `${basePath}/settings`,
             name: 'settings',
+            flag: undefined,
         },
-    ].filter(tab => !(isOss() && tab.isEnterprise));
+    ]
+        .filter(tab => {
+            if (tab.flag) {
+                return uiConfig.flags[tab.flag];
+            }
+            return true;
+        })
+        .filter(tab => !(isOss() && tab.isEnterprise));
 
     const activeTab = [...tabs]
         .reverse()
@@ -188,24 +204,26 @@ export const Project = () => {
                         variant="scrollable"
                         allowScrollButtonsMobile
                     >
-                        {tabs.map(tab => (
-                            <StyledTab
-                                key={tab.title}
-                                label={tab.title}
-                                value={tab.path}
-                                onClick={() => navigate(tab.path)}
-                                data-testid={`TAB_${tab.title}`}
-                                iconPosition={
-                                    tab.isEnterprise ? 'end' : undefined
-                                }
-                                icon={
-                                    (tab.isEnterprise &&
-                                        isPro() &&
-                                        enterpriseIcon) ||
-                                    undefined
-                                }
-                            />
-                        ))}
+                        {tabs.map(tab => {
+                            return (
+                                <StyledTab
+                                    key={tab.title}
+                                    label={tab.title}
+                                    value={tab.path}
+                                    onClick={() => navigate(tab.path)}
+                                    data-testid={`TAB_${tab.title}`}
+                                    iconPosition={
+                                        tab.isEnterprise ? 'end' : undefined
+                                    }
+                                    icon={
+                                        (tab.isEnterprise &&
+                                            isPro() &&
+                                            enterpriseIcon) ||
+                                        undefined
+                                    }
+                                />
+                            );
+                        })}
                     </Tabs>
                 </StyledTabContainer>
             </StyledHeader>
@@ -242,6 +260,7 @@ export const Project = () => {
                     element={<ChangeRequestOverview />}
                 />
                 <Route path="settings/*" element={<ProjectSettings />} />
+                <Route path="dora" element={<ProjectDoraMetrics />} />
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
             <ImportModal

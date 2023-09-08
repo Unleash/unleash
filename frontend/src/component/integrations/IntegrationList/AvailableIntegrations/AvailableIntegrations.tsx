@@ -1,4 +1,5 @@
 import { type VFC } from 'react';
+import { Typography, styled } from '@mui/material';
 import type { AddonTypeSchema } from 'openapi';
 import useLoading from 'hooks/useLoading';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -6,7 +7,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
 import { JIRA_INFO } from '../../JiraIntegration/JiraIntegration';
 import { StyledCardsGrid } from '../IntegrationList.styles';
-import { Typography, styled } from '@mui/material';
+import { RequestIntegrationCard } from '../RequestIntegrationCard/RequestIntegrationCard';
 import { OFFICIAL_SDKS } from './SDKs';
 
 interface IAvailableIntegrationsProps {
@@ -89,6 +90,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                 />
                             )
                         )}
+                        <RequestIntegrationCard />
                     </StyledCardsGrid>
                 </StyledSection>
                 <StyledSection>

@@ -123,7 +123,14 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                         <Typography variant="body2" color="text.secondary">
                             In order to connect your application to Unleash you
                             will need a client SDK (software developer kit) for
-                            your programming language and an API token.
+                            your programming language and an{' '}
+                            <a
+                                href="https://docs.getunleash.io/how-to/how-to-create-api-tokens"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                API token
+                            </a>
                         </Typography>
                     </div>
                     <div>
@@ -160,9 +167,23 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             Client-side SDKs
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            Client-side SDKs can connect to the Unleash Proxy or
-                            to the Unleash front-end API, but not to the regular
-                            Unleash client API.
+                            Client-side SDKs can connect to the{' '}
+                            <a
+                                href="https://docs.getunleash.io/reference/unleash-edge"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Unleash Edge
+                            </a>{' '}
+                            or to the{' '}
+                            <a
+                                href="https://docs.getunleash.io/reference/front-end-api"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Unleash front-end API
+                            </a>
+                            , but not to the regular Unleash client API.
                         </Typography>
                     </div>
                     <StyledCardsGrid small>
@@ -189,8 +210,8 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                 <StyledSection>
                     <StyledGrayContainer>
                         <div>
-                            <Typography component="h3" variant="h2">
-                                Other
+                            <Typography component="h3" variant="h4">
+                                Community SDKs
                             </Typography>
                             <Typography>
                                 <a

@@ -97,22 +97,27 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             Performance and security
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            Description
+                            Connect Unleash to private, scalable and distributed
+                            relays. Additional layer for handling massive number
+                            of requests.
                         </Typography>
                     </div>
-                    <StyledCardsGrid small>
-                        {/* TODO: edge and proxy */}
-                        {/* {providers?.map(
-                            ({ name, displayName, description }) => (
-                                <IntegrationCard
-                                    key={name}
-                                    icon={name}
-                                    title={displayName || name}
-                                    description={description}
-                                    link={`/integrations/create/${name}`}
-                                />
-                            )
-                        )} */}
+                    <StyledCardsGrid>
+                        <IntegrationCard
+                            icon="unleash"
+                            title="Unleash Edge"
+                            description="Unleash Edge is built to help you scale Unleash. As a successor of Unleash Proxy it's even faster and more versitile."
+                            link="/integrations/create/unleash-proxy"
+                            configureActionText="Learn more"
+                        />
+                        <IntegrationCard
+                            icon="unleash"
+                            title="Unleash Proxy"
+                            description="The Unleash Proxy is a lightweight, stateless proxy that sits between your Unleash client SDKs and the Unleash API."
+                            link="/integrations/create/unleash-proxy"
+                            configureActionText="View documentation"
+                            deprecated="Try Unleash Edge instead. It has all the features of Unleash Proxy and more."
+                        />
                     </StyledCardsGrid>
                 </StyledSection>
                 <StyledSection>

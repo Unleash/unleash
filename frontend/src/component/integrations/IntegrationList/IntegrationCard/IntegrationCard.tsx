@@ -1,6 +1,6 @@
-import React, { Fragment, VFC } from 'react';
+import { VFC } from 'react';
 import { Link } from 'react-router-dom';
-import { styled, Typography } from '@mui/material';
+import { styled, Tooltip, Typography } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -20,6 +20,7 @@ interface IIntegrationCardProps {
     link: string;
     isExternal?: boolean;
     addon?: AddonSchema;
+    deprecated?: string;
 }
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -83,16 +84,25 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     configureActionText = 'Configure',
     link,
     addon,
+    deprecated,
     isExternal = false,
 }) => {
     const isConfigured = addon !== undefined;
 
     const content = (
-        <Fragment>
+        <>
             <StyledHeader>
                 <StyledTitle variant="h3" data-loading>
                     <IntegrationIcon name={icon as string} /> {title}
                 </StyledTitle>
+                <ConditionallyRender
+                    condition={deprecated !== undefined}
+                    show={
+                        <Tooltip title={deprecated} arrow>
+                            <Badge data-loading>Deprecated</Badge>
+                        </Tooltip>
+                    }
+                />
                 <ConditionallyRender
                     condition={isEnabled === true}
                     show={
@@ -121,7 +131,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                     elseShow={<ChevronRightIcon />}
                 />
             </StyledAction>
-        </Fragment>
+        </>
     );
 
     if (isExternal) {
@@ -131,6 +141,6 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
             </StyledAnchor>
         );
     } else {
-        return <StyledLink to={link}> {content}</StyledLink>;
+        return <StyledLink to={link}>{content}</StyledLink>;
     }
 };

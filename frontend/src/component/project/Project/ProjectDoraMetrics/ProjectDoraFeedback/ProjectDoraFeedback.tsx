@@ -102,7 +102,9 @@ export const ProjectDoraFeedback = () => {
                         <Typography>Is this useful to you?</Typography>
                         <StyledBtnContainer>
                             <Button
-                                sx={{ marginRight: '0.5rem' }}
+                                sx={theme => ({
+                                    marginRight: theme.spacing(1),
+                                })}
                                 variant="contained"
                                 color="primary"
                                 onClick={() => onBtnClick('useful')}

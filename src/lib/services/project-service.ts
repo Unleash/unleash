@@ -719,17 +719,33 @@ export default class ProjectService {
     }
 
     async getDoraMetrics(projectId: string): Promise<ProjectDoraMetricsSchema> {
-        const featureToggleNames = (await this.featureToggleStore.getAll()).map(
-            (feature) => feature.name,
+        const activeFeatureToggles = (
+            await this.featureToggleStore.getAll({ project: projectId })
+        ).map((feature) => feature.name);
+
+        const archivedFeatureToggles = (
+            await this.featureToggleStore.getAll({
+                project: projectId,
+                archived: true,
+            })
+        ).map((feature) => feature.name);
+
+        const featureToggleNames = [
+            ...activeFeatureToggles,
+            ...archivedFeatureToggles,
+        ];
+
+        const projectAverage = calculateAverageTimeToProd(
+            await this.projectStatsStore.getTimeToProdDates(projectId),
         );
 
-        const avgTimeToProductionPerToggle =
+        const toggleAverage =
             await this.projectStatsStore.getTimeToProdDatesForFeatureToggles(
                 projectId,
                 featureToggleNames,
             );
 
-        return { features: avgTimeToProductionPerToggle };
+        return { features: toggleAverage, projectAverage: projectAverage };
     }
 
     async changeRole(

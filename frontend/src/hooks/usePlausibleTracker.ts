@@ -45,6 +45,7 @@ export type CustomEvents =
     | 'feature-type-edit'
     | 'strategy-variants'
     | 'search-filter-suggestions'
+    | 'project-metrics'
     | 'open-integration';
 
 export const usePlausibleTracker = () => {

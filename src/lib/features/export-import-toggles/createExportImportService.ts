@@ -12,10 +12,7 @@ import ContextFieldStore from '../../db/context-field-store';
 import FeatureStrategiesStore from '../../db/feature-strategy-store';
 import {
     ContextService,
-    FavoritesService,
     FeatureTagService,
-    GroupService,
-    ProjectService,
     StrategyService,
     TagTypeService,
 } from '../../services';
@@ -29,13 +26,6 @@ import {
 } from '../feature-toggle/createFeatureToggleService';
 import SegmentStore from '../../db/segment-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
-import FeatureTypeStore from '../../db/feature-type-store';
-import EnvironmentStore from '../../db/environment-store';
-import { AccountStore } from '../../db/account-store';
-import ProjectStatsStore from '../../db/project-stats-store';
-import GroupStore from '../../db/group-store';
-import { FavoriteFeaturesStore } from '../../db/favorite-features-store';
-import { FavoriteProjectsStore } from '../../db/favorite-projects-store';
 import FakeFeatureToggleStore from '../../../test/fixtures/fake-feature-toggle-store';
 import FakeTagStore from '../../../test/fixtures/fake-tag-store';
 import FakeTagTypeStore from '../../../test/fixtures/fake-tag-type-store';
@@ -48,13 +38,6 @@ import FakeFeatureStrategiesStore from '../../../test/fixtures/fake-feature-stra
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
 import EventStore from '../../db/event-store';
-import FakeFeatureTypeStore from '../../../test/fixtures/fake-feature-type-store';
-import FakeEnvironmentStore from '../../../test/fixtures/fake-environment-store';
-import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
-import FakeProjectStatsStore from '../../../test/fixtures/fake-project-stats-store';
-import FakeGroupStore from '../../../test/fixtures/fake-group-store';
-import FakeFavoriteFeaturesStore from '../../../test/fixtures/fake-favorite-features-store';
-import FakeFavoriteProjectsStore from '../../../test/fixtures/fake-favorite-projects-store';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -72,13 +55,6 @@ export const createFakeExportImportTogglesService = (
     const eventStore = new FakeEventStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
-    const featureTypeStore = new FakeFeatureTypeStore();
-    const environmentStore = new FakeEnvironmentStore();
-    const accountStore = new FakeAccountStore();
-    const projectStatsStore = new FakeProjectStatsStore();
-    const groupStore = new FakeGroupStore();
-    const favoriteFeaturesStore = new FakeFavoriteFeaturesStore();
-    const favoriteProjectsStore = new FakeFavoriteProjectsStore();
     const accessService = createFakeAccessService(config);
     const featureToggleService = createFakeFeatureToggleService(config);
 
@@ -108,45 +84,6 @@ export const createFakeExportImportTogglesService = (
         { tagTypeStore, eventStore },
         { getLogger },
     );
-
-    const groupService = new GroupService(
-        {
-            groupStore,
-            eventStore,
-            accountStore,
-        },
-        { getLogger },
-    );
-
-    const favoriteService = new FavoritesService(
-        {
-            eventStore,
-            favoriteFeaturesStore,
-            favoriteProjectsStore,
-        },
-        config,
-    );
-
-    const projectService = new ProjectService(
-        {
-            projectStore,
-            eventStore,
-            featureToggleStore,
-            featureTypeStore,
-            environmentStore,
-            featureEnvironmentStore,
-            featureTagStore,
-            accountStore,
-            projectStatsStore,
-        },
-
-        config,
-        accessService,
-        featureToggleService,
-        groupService,
-        favoriteService,
-    );
-
     const exportImportService = new ExportImportService(
         {
             eventStore,
@@ -167,7 +104,6 @@ export const createFakeExportImportTogglesService = (
             contextService,
             strategyService,
             tagTypeService,
-            projectService,
         },
     );
 
@@ -214,21 +150,6 @@ export const createExportImportTogglesService = (
         getLogger,
     );
     const eventStore = new EventStore(db, getLogger);
-    const featureTypeStore = new FeatureTypeStore(db, getLogger);
-    const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
-    const accountStore = new AccountStore(db, getLogger);
-    const projectStatsStore = new ProjectStatsStore(db, eventBus, getLogger);
-    const groupStore = new GroupStore(db);
-    const favoriteFeaturesStore = new FavoriteFeaturesStore(
-        db,
-        eventBus,
-        getLogger,
-    );
-    const favoriteProjectsStore = new FavoriteProjectsStore(
-        db,
-        eventBus,
-        getLogger,
-    );
     const accessService = createAccessService(db, config);
     const featureToggleService = createFeatureToggleService(db, config);
 
@@ -258,45 +179,6 @@ export const createExportImportTogglesService = (
         { tagTypeStore, eventStore },
         { getLogger },
     );
-
-    const groupService = new GroupService(
-        {
-            groupStore,
-            eventStore,
-            accountStore,
-        },
-        { getLogger },
-    );
-
-    const favoriteService = new FavoritesService(
-        {
-            eventStore,
-            favoriteFeaturesStore,
-            favoriteProjectsStore,
-        },
-        config,
-    );
-
-    const projectService = new ProjectService(
-        {
-            projectStore,
-            eventStore,
-            featureToggleStore,
-            featureTypeStore,
-            environmentStore,
-            featureEnvironmentStore,
-            featureTagStore,
-            accountStore,
-            projectStatsStore,
-        },
-
-        config,
-        accessService,
-        featureToggleService,
-        groupService,
-        favoriteService,
-    );
-
     const exportImportService = new ExportImportService(
         {
             eventStore,
@@ -317,7 +199,6 @@ export const createExportImportTogglesService = (
             contextService,
             strategyService,
             tagTypeService,
-            projectService,
         },
     );
 

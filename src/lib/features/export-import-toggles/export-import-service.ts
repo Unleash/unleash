@@ -37,7 +37,6 @@ import {
     ContextService,
     FeatureTagService,
     FeatureToggleService,
-    ProjectService,
     StrategyService,
     TagTypeService,
 } from '../../services';
@@ -85,8 +84,6 @@ export default class ExportImportService {
 
     private importPermissionsService: ImportPermissionsService;
 
-    private projectService: ProjectService;
-
     constructor(
         stores: Pick<
             IUnleashStores,
@@ -111,7 +108,6 @@ export default class ExportImportService {
             accessService,
             tagTypeService,
             featureTagService,
-            projectService,
         }: Pick<
             IUnleashServices,
             | 'featureToggleService'
@@ -120,7 +116,6 @@ export default class ExportImportService {
             | 'accessService'
             | 'tagTypeService'
             | 'featureTagService'
-            | 'projectService'
         >,
     ) {
         this.eventStore = stores.eventStore;
@@ -133,7 +128,6 @@ export default class ExportImportService {
         this.segmentStore = stores.segmentStore;
         this.flagResolver = flagResolver;
         this.featureToggleService = featureToggleService;
-        this.projectService = projectService;
         this.contextFieldStore = stores.contextFieldStore;
         this.strategyService = strategyService;
         this.contextService = contextService;

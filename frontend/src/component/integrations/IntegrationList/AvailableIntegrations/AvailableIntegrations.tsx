@@ -60,7 +60,12 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                 <StyledSection>
                     <StyledCardsGrid>
                         {providers?.map(
-                            ({ name, displayName, description, deprecated }) => (
+                            ({
+                                name,
+                                displayName,
+                                description,
+                                deprecated,
+                            }) => (
                                 <IntegrationCard
                                     key={name}
                                     icon={name}

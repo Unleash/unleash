@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { useRef } from 'react';
 import { useOnBlur } from './useOnBlur';
 
@@ -18,7 +18,7 @@ function TestComponent(props: { onBlurHandler: () => void }) {
     );
 }
 
-test('should not call the callback when blurring within the same container', () => {
+test('should not call the callback when blurring within the same container', async () => {
     let mockCallbackCallCount = 0;
     const mockCallback = () => mockCallbackCallCount++;
 
@@ -26,13 +26,15 @@ test('should not call the callback when blurring within the same container', () 
 
     const insideDiv = screen.getByTestId('inside');
 
-    fireEvent.focus(insideDiv);
-    fireEvent.blur(insideDiv);
+    insideDiv.focus();
+    insideDiv.blur();
 
-    expect(mockCallbackCallCount).toBe(0);
+    await waitFor(() => {
+        expect(mockCallbackCallCount).toBe(0);
+    });
 });
 
-test('should call the callback when blurring outside of the container', () => {
+test('should call the callback when blurring outside of the container', async () => {
     let mockCallbackCallCount = 0;
     const mockCallback = () => mockCallbackCallCount++;
 
@@ -41,8 +43,10 @@ test('should call the callback when blurring outside of the container', () => {
     const insideDiv = screen.getByTestId('inside');
     const outsideDiv = screen.getByTestId('outside');
 
-    fireEvent.focus(insideDiv);
-    fireEvent.focus(outsideDiv);
+    insideDiv.focus();
+    outsideDiv.focus();
 
-    expect(mockCallbackCallCount).toBe(1);
+    await waitFor(() => {
+        expect(mockCallbackCallCount).toBe(1);
+    });
 });

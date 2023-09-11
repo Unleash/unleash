@@ -144,6 +144,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     featuresExportImport: true,
+                    featureNamingPattern: true,
                 },
             },
         },
@@ -833,13 +834,6 @@ test('reject import with duplicate features', async () => {
 
 test('validate import data', async () => {
     await createProjects();
-    await projectStore.update({
-        id: DEFAULT_PROJECT,
-        name: 'default',
-        description: '',
-        mode: 'open',
-        featureNaming: { pattern: 'testpattern.+' },
-    });
 
     const contextField: IContextFieldDto = {
         name: 'validate_context_field',
@@ -871,6 +865,16 @@ test('validate import data', async () => {
             ],
         },
     };
+
+    // note: this must be done after creating the feature on the earlier lines,
+    // to prevent the pattern from blocking the creation.
+    await projectStore.update({
+        id: DEFAULT_PROJECT,
+        name: 'default',
+        description: '',
+        mode: 'open',
+        featureNaming: { pattern: 'testpattern.+' },
+    });
 
     const { body } = await validateImport(importPayloadWithContextFields, 200);
 

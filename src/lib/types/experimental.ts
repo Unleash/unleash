@@ -27,7 +27,8 @@ export type IFlagKey =
     | 'integrationsRework'
     | 'multipleRoles'
     | 'featureNamingPattern'
-    | 'doraMetrics';
+    | 'doraMetrics'
+    | 'variantTypeNumber';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -125,6 +126,10 @@ const flags: IFlags = {
     ),
     doraMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DORA_METRICS,
+        false,
+    ),
+    variantTypeNumber: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_VARIANT_TYPE_NUMBER,
         false,
     ),
 };

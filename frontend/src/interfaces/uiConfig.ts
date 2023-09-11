@@ -64,6 +64,7 @@ export type UiFlags = {
     multipleRoles?: boolean;
     featureNamingPattern?: boolean;
     doraMetrics?: boolean;
+    variantTypeNumber?: boolean;
     [key: string]: boolean | Variant | undefined;
 };
 

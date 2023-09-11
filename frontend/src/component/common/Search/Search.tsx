@@ -9,7 +9,7 @@ import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useSavedQuery } from './useSavedQuery';
-import { useOnBlur } from '../../../hooks/useOnBlur';
+import { useOnBlur } from 'hooks/useOnBlur';
 
 interface ISearchProps {
     id?: string;

@@ -19,7 +19,7 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import { WeightType } from 'constants/variantTypes';
 import { IFeatureVariantEdit } from '../EnvironmentVariantsModal';
 import { Delete } from '@mui/icons-material';
-import useUiConfig from '../../../../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledVariantForm = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -180,7 +180,6 @@ export const VariantForm = ({
     disableOverrides = false,
     decorationColor,
 }: IVariantFormProps) => {
-    const { uiConfig } = useUiConfig();
     const [name, setName] = useState(variant.name);
     const [customPercentage, setCustomPercentage] = useState(
         variant.weightType === WeightType.FIX
@@ -197,15 +196,13 @@ export const VariantForm = ({
 
     const [errors, setErrors] = useState<IVariantFormErrors>({});
 
-    const shouldAddTypeNumberToOptions = Boolean(
-        uiConfig.flags.variantTypeNumber
-    );
+    const variantTypeNumber = useUiFlag('variantTypeNumber');
 
     useEffect(() => {
-        if (shouldAddTypeNumberToOptions) {
+        if (variantTypeNumber) {
             payloadOptions.push({ key: 'number', label: 'number' });
         }
-    }, [shouldAddTypeNumberToOptions]);
+    }, [variantTypeNumber]);
 
     const clearError = (field: ErrorField) => {
         setErrors(errors => ({ ...errors, [field]: undefined }));
@@ -295,7 +292,7 @@ export const VariantForm = ({
             if (payload.type === 'json') {
                 JSON.parse(payload.value);
             }
-            if (shouldAddTypeNumberToOptions && payload.type === 'number') {
+            if (variantTypeNumber && payload.type === 'number') {
                 Number(payload.value);
             }
             return true;

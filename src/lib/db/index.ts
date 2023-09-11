@@ -1,5 +1,4 @@
-import { IUnleashConfig } from '../types/option';
-import { IUnleashStores } from '../types/stores';
+import { IUnleashConfig, IUnleashStores } from '../types';
 
 import EventStore from './event-store';
 import FeatureToggleStore from './feature-toggle-store';
@@ -54,7 +53,6 @@ export const createStores = (
             db,
             eventBus,
             getLogger,
-            config.flagResolver,
         ),
         clientInstanceStore: new ClientInstanceStore(db, eventBus, getLogger),
         clientMetricsStoreV2: new ClientMetricsStoreV2(

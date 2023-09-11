@@ -668,8 +668,8 @@ describe('flag name validation', () => {
 
         expect(result).toMatchObject({
             state: 'invalid',
-            mismatchedNames: new Set(invalidFeatures),
-            patternData: featureNaming,
+            invalidNames: new Set(invalidFeatures),
+            featureNaming: featureNaming,
         });
 
         const validResult =

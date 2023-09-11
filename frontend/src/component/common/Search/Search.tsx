@@ -9,6 +9,7 @@ import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useSavedQuery } from './useSavedQuery';
+import { useOnBlur } from '../../../hooks/useOnBlur';
 
 interface ISearchProps {
     id?: string;
@@ -111,7 +112,10 @@ export const Search = ({
         }
     );
     useKeyboardShortcut({ key: 'Escape' }, () => {
-        if (document.activeElement === searchInputRef.current) {
+        if (
+            document.activeElement === searchInputRef.current ||
+            searchContainerRef.current?.contains(document.activeElement)
+        ) {
             searchInputRef.current?.blur();
             hideSuggestions();
         }
@@ -119,6 +123,7 @@ export const Search = ({
     const placeholder = `${customPlaceholder ?? 'Search'} (${hotkey})`;
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
+    useOnBlur(searchContainerRef, hideSuggestions);
 
     return (
         <StyledContainer

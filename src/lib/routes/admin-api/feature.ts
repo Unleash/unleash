@@ -310,7 +310,10 @@ class FeatureController extends Controller {
         const { name, projectId } = req.body;
 
         await this.service.validateName(name);
-        await this.service.testFeatureFlagNameAgainstPattern(name, projectId);
+        await this.service.validateFeatureFlagNameAgainstPattern(
+            name,
+            projectId ?? undefined,
+        );
         res.status(200).end();
     }
 

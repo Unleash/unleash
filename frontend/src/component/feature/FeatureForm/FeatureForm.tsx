@@ -80,10 +80,23 @@ const StyledTypeDescription = styled('p')(({ theme }) => ({
 
 const StyledFlagNamingInfo = styled('article')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    backgroundColor: theme.palette.grey[100],
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
-    '& dt': { color: theme.palette.text.secondary },
+    backgroundColor: `${theme.palette.background.elevation2}`,
+    '& dl': {
+        display: 'grid',
+        gridTemplateColumns: 'max-content auto',
+        rowGap: theme.spacing(1),
+        columnGap: 0,
+    },
+    '& dt': {
+        color: theme.palette.text.secondary,
+        '&::after': { content: '":"' },
+    },
+    '& dd': {
+        marginInlineStart: theme.spacing(2),
+    },
+
     marginBottom: theme.spacing(2),
 }));
 

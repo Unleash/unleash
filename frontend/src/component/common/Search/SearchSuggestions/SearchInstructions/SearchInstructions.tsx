@@ -80,6 +80,9 @@ export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
                                 {' or '}
                                 <StyledCode
                                     tabIndex={0}
+                                    onKeyDown={onEnter(() =>
+                                        onClick(secondFilterOption(filter))
+                                    )}
                                     onClick={() => {
                                         onClick(secondFilterOption(filter));
                                     }}

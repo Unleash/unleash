@@ -104,9 +104,12 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
             ? getColumnValues(searchableColumns[0], searchContext.data[0])
             : 'example-search-text';
 
-    const selectedFilter = filters.map(
-        filter => `${filter.name}:${filter.suggestedOption}`
-    )[0];
+    const selectedFilter =
+        filters.length === 0
+            ? ''
+            : filters.map(
+                  filter => `${filter.name}:${filter.suggestedOption}`
+              )[0];
 
     const onFilter = (suggestion: string) => {
         onSuggestion(suggestion);
@@ -117,7 +120,7 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
         });
     };
     const onSearchAndFilter = () => {
-        onSuggestion(selectedFilter + ' ' + suggestedTextSearch);
+        onSuggestion((selectedFilter + ' ' + suggestedTextSearch).trim());
         trackEvent('search-filter-suggestions', {
             props: {
                 eventType: 'search and filter',

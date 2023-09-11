@@ -157,7 +157,7 @@ export default class ExportImportService {
             existingProjectFeatures,
             missingPermissions,
             duplicateFeatures,
-            patternMismatches,
+            featureNameCheckResult,
         ] = await Promise.all([
             this.getUnsupportedStrategies(dto),
             this.getUsedCustomStrategies(dto),
@@ -180,7 +180,7 @@ export default class ExportImportService {
             contextFields: unsupportedContextFields || [],
             otherProjectFeatures,
             duplicateFeatures,
-            patternMismatches,
+            featureNameCheckResult,
         });
         const warnings = ImportValidationMessages.compileWarnings({
             archivedFeatures,

@@ -11,7 +11,7 @@ export interface IErrorsParams {
     contextFields: IContextFieldDto[];
     otherProjectFeatures: string[];
     duplicateFeatures: string[];
-    patternMismatches: FeatureNameCheckResult;
+    featureNameCheckResult: FeatureNameCheckResult;
 }
 
 export interface IWarningParams {
@@ -42,7 +42,7 @@ export class ImportValidationMessages {
         contextFields,
         otherProjectFeatures,
         duplicateFeatures,
-        patternMismatches,
+        featureNameCheckResult,
     }: IErrorsParams): ImportTogglesValidateItemSchema[] {
         const errors: ImportTogglesValidateItemSchema[] = [];
 
@@ -75,17 +75,21 @@ export class ImportValidationMessages {
                 affectedItems: duplicateFeatures,
             });
         }
-        if (patternMismatches.state === 'invalid') {
-            const baseError = `Features imported into this project must match the project's feature naming pattern: "${patternMismatches.featureNaming.pattern}".`;
-            const exampleInfo = patternMismatches.featureNaming.example
-                ? ` For example: "${patternMismatches.featureNaming.example}".`
+        if (featureNameCheckResult.state === 'invalid') {
+            const baseError = `Features imported into this project must match the project's feature naming pattern: "${featureNameCheckResult.featureNaming.pattern}".`;
+
+            const exampleInfo = featureNameCheckResult.featureNaming.example
+                ? ` For example: "${featureNameCheckResult.featureNaming.example}".`
                 : '';
-            const descriptionInfo = patternMismatches.featureNaming.description
-                ? ` The pattern is described as follows: "${patternMismatches.featureNaming.description}"`
+
+            const descriptionInfo = featureNameCheckResult.featureNaming
+                .description
+                ? ` The pattern is described as follows: "${featureNameCheckResult.featureNaming.description}"`
                 : '';
+
             errors.push({
                 message: `${baseError}${exampleInfo}${descriptionInfo} The following features do not match the pattern:`,
-                affectedItems: [...patternMismatches.invalidNames].sort(),
+                affectedItems: [...featureNameCheckResult.invalidNames].sort(),
             });
         }
 

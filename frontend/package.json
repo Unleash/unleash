@@ -20,7 +20,7 @@
     "start:demo": "UNLEASH_BASE_PATH=/demo/ UNLEASH_API=https://app.unleash-hosted.com/ yarn run start",
     "test": "tsc && NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest run",
     "test:snapshot": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn test -u",
-    "test:watch": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest watch SearchSuggestions",
+    "test:watch": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest watch",
     "lint": "eslint --fix ./src",
     "lint:check": "eslint ./src",
     "fmt": "prettier src --write --loglevel warn",

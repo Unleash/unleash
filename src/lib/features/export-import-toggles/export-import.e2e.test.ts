@@ -838,7 +838,7 @@ test('validate import data', async () => {
         name: 'default',
         description: '',
         mode: 'open',
-        featureNaming: { pattern: '^testpattern.+' },
+        featureNaming: { pattern: 'testpattern.+' },
     });
 
     const contextField: IContextFieldDto = {
@@ -893,7 +893,7 @@ test('validate import data', async () => {
             },
 
             {
-                message: 'Pattern mismatch!',
+                message: expect.stringMatching(/\btestpattern.+\b/),
                 affectedItems: [defaultFeatureName],
             },
         ],

@@ -1,6 +1,7 @@
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { VFC } from 'react';
+import { onEnter } from '../onEnter';
 
 const StyledHeader = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -13,9 +14,12 @@ export const StyledCode = styled('span')(({ theme }) => ({
     padding: theme.spacing(0.2, 1),
     borderRadius: theme.spacing(0.5),
     cursor: 'pointer',
-    '&:hover': {
+    '&:hover, &:focus-visible': {
         transition: 'background-color 0.2s ease-in-out',
         backgroundColor: theme.palette.seen.primary,
+    },
+    '&:focus-visible': {
+        outline: `2px solid ${theme.palette.primary.main}`,
     },
 }));
 
@@ -57,6 +61,10 @@ export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
                         condition={filter.options.length > 0}
                         show={
                             <StyledCode
+                                tabIndex={0}
+                                onKeyDown={onEnter(() =>
+                                    onClick(firstFilterOption(filter))
+                                )}
                                 onClick={() =>
                                     onClick(firstFilterOption(filter))
                                 }
@@ -71,6 +79,10 @@ export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
                             <>
                                 {' or '}
                                 <StyledCode
+                                    tabIndex={0}
+                                    onKeyDown={onEnter(() =>
+                                        onClick(secondFilterOption(filter))
+                                    )}
                                     onClick={() => {
                                         onClick(secondFilterOption(filter));
                                     }}

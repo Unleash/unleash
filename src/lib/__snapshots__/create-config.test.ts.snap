@@ -99,6 +99,7 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppNameKillSwitch": false,
       "slackAppAddon": false,
       "strictSchemaValidation": false,
+      "variantTypeNumber": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -134,6 +135,7 @@ exports[`should create default config 1`] = `
       "responseTimeWithAppNameKillSwitch": false,
       "slackAppAddon": false,
       "strictSchemaValidation": false,
+      "variantTypeNumber": false,
     },
     "externalResolver": {
       "getVariant": [Function],

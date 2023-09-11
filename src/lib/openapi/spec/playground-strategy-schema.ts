@@ -83,7 +83,7 @@ export const strategyEvaluationResults = {
                                 type: {
                                     description: 'The format of the payload.',
                                     type: 'string',
-                                    enum: ['json', 'csv', 'string'],
+                                    enum: ['json', 'csv', 'string', 'number'],
                                 },
                                 value: {
                                     type: 'string',

@@ -42,6 +42,7 @@ process.nextTick(async () => {
                         integrationsRework: true,
                         featureNamingPattern: true,
                         doraMetrics: true,
+                        variantTypeNumber: true,
                     },
                 },
                 authentication: {

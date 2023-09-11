@@ -53,7 +53,6 @@ export interface IFlags {
     customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
     lastSeenByEnvironment?: boolean;
-    newApplicationList?: boolean;
     integrationsRework?: boolean;
     multipleRoles?: boolean;
     featureNamingPattern?: boolean;

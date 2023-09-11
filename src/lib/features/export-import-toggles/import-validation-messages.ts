@@ -78,10 +78,10 @@ export class ImportValidationMessages {
         if (patternMismatches.state === 'invalid') {
             const baseError = `Features imported into this project must match the project's feature naming pattern: "${patternMismatches.patternData.pattern}".`;
             const exampleInfo = patternMismatches.patternData.example
-                ? `\nFor example: "${patternMismatches.patternData.example}".`
+                ? ` For example: "${patternMismatches.patternData.example}".`
                 : '';
             const descriptionInfo = patternMismatches.patternData.description
-                ? `\nThe pattern is described as follows: \n\n${patternMismatches.patternData.description}\n\n`
+                ? ` The pattern is described as follows: "${patternMismatches.patternData.description}"`
                 : '';
             errors.push({
                 message: `${baseError}${exampleInfo}${descriptionInfo} The following features do not match the pattern:`,

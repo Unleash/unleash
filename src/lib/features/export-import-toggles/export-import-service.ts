@@ -46,10 +46,7 @@ import { IImportTogglesStore } from './import-toggles-store-type';
 import { ImportPermissionsService, Mode } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
 import { findDuplicates } from '../../util/findDuplicates';
-
-export type PatternValidationResult =
-    | { state: 'no pattern' }
-    | { state: 'pattern'; pattern: string; invalidNames: Set<string> };
+import { FeatureNameValidationResult } from 'lib/services/feature-toggle-service';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -513,40 +510,14 @@ export default class ExportImportService {
         }
     }
 
-    private async getInvalidFeatureNames(
-        dto: ImportTogglesSchema,
-    ): Promise<PatternValidationResult> {
-        const pattern = await this.projectService.getFeatureNamingPattern(
-            dto.project,
+    private async getInvalidFeatureNames({
+        project,
+        data,
+    }: ImportTogglesSchema): Promise<FeatureNameValidationResult> {
+        return this.featureToggleService.validateFeatureNames(
+            project,
+            data.features.map((f) => f.name),
         );
-        if (!pattern) {
-            return { state: 'no pattern' };
-        }
-
-        // const invalidNames = (
-        //     await Promise.all(
-        //         dto.data.features.map(async ({ name }) => {
-        //             try {
-        //                 await this.featureToggleService.validateFeatureFlagPattern(
-        //                     name,
-        //                     dto.project,
-        //                 );
-        //                 return '';
-        //             } catch {
-        //                 return name;
-        //             }
-        //         }),
-        //     )
-        // ).filter(Boolean);
-
-        const regex = new RegExp(pattern);
-        const invalidNames = new Set(
-            dto.data.features
-                .filter((feature) => !regex.test(feature.name))
-                .map((feature) => feature.name),
-        );
-
-        return { state: 'pattern', pattern, invalidNames };
     }
 
     private async getUnsupportedStrategies(

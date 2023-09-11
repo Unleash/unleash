@@ -1,9 +1,9 @@
+import { FeatureNameValidationResult } from 'lib/services/feature-toggle-service';
 import {
     FeatureStrategySchema,
     ImportTogglesValidateItemSchema,
 } from '../../openapi';
 import { IContextFieldDto } from '../../types/stores/context-field-store';
-import { PatternValidationResult } from './export-import-service';
 
 export interface IErrorsParams {
     projectName: string;
@@ -11,7 +11,7 @@ export interface IErrorsParams {
     contextFields: IContextFieldDto[];
     otherProjectFeatures: string[];
     duplicateFeatures: string[];
-    patternMismatches: PatternValidationResult;
+    patternMismatches: FeatureNameValidationResult;
 }
 
 export interface IWarningParams {
@@ -75,13 +75,17 @@ export class ImportValidationMessages {
                 affectedItems: duplicateFeatures,
             });
         }
-        if (
-            patternMismatches.state === 'pattern' &&
-            patternMismatches.invalidNames.size > 0
-        ) {
+        if (patternMismatches.state === 'invalid') {
+            const baseError = `Features imported into this project must match the project's feature naming pattern: "${patternMismatches.patternData.pattern}".`;
+            const exampleInfo = patternMismatches.patternData.example
+                ? `\nFor example: "${patternMismatches.patternData.example}".`
+                : '';
+            const descriptionInfo = patternMismatches.patternData.description
+                ? `\nThe pattern is described as follows: \n\n${patternMismatches.patternData.description}\n\n`
+                : '';
             errors.push({
-                message: `Features imported into this project must match the project's feature naming pattern: "${patternMismatches.pattern}". The following features do not match the pattern:`,
-                affectedItems: [...patternMismatches.invalidNames].sort(),
+                message: `${baseError}${exampleInfo}${descriptionInfo} The following features do not match the pattern:`,
+                affectedItems: [...patternMismatches.mismatchedNames].sort(),
             });
         }
 

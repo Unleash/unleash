@@ -1032,4 +1032,38 @@ export default class ProjectService {
             (await this.store.get(projectId))?.featureNaming?.pattern ?? null
         );
     }
+
+    async validateFeatureNames(
+        projectId: string,
+        featureNames: string[],
+    ): Promise<
+        | { state: 'valid' }
+        | {
+              state: 'invalid';
+              mismatchedNames: string[];
+              patternData: IFeatureNaming;
+          }
+    > {
+        if (this.flagResolver.isEnabled('featureNamingPattern')) {
+            const project = await this.store.get(projectId);
+            const namingPattern = project.featureNaming?.pattern;
+
+            if (namingPattern) {
+                const regex = new RegExp(namingPattern);
+                const mismatchedNames = featureNames.filter(
+                    (name) => !regex.test(name),
+                );
+
+                if (mismatchedNames.length > 0) {
+                    return {
+                        state: 'invalid',
+                        mismatchedNames,
+                        patternData: project.featureNaming,
+                    };
+                }
+            }
+        }
+
+        return { state: 'valid' };
+    }
 }

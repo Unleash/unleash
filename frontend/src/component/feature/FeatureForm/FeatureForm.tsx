@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 import { FeatureNamingType } from 'interfaces/project';
+import { FlagNamingInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
 
 interface IFeatureToggleForm {
     type: string;
@@ -76,28 +77,6 @@ const StyledTypeDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
     top: '-13px',
     position: 'relative',
-}));
-
-const StyledFlagNamingInfo = styled('article')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    padding: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: `${theme.palette.background.elevation2}`,
-    '& dl': {
-        display: 'grid',
-        gridTemplateColumns: 'max-content auto',
-        rowGap: theme.spacing(1),
-        columnGap: 0,
-    },
-    '& dt': {
-        color: theme.palette.text.secondary,
-        '&::after': { content: '":"' },
-    },
-    '& dd': {
-        marginInlineStart: theme.spacing(2),
-    },
-
-    marginBottom: theme.spacing(2),
 }));
 
 const StyledButtonContainer = styled('div')({
@@ -166,42 +145,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 </StyledInputDescription>
                 <ConditionallyRender
                     condition={displayFeatureNamingInfo}
-                    show={
-                        <StyledFlagNamingInfo>
-                            <p>
-                                This project has feature flag naming patterns
-                                enabled.
-                            </p>
-                            <dl id="feature-naming-pattern-info">
-                                <dt>Pattern</dt>
-                                <dd>
-                                    <code>{featureNaming?.pattern}</code>
-                                </dd>
-                                <ConditionallyRender
-                                    condition={Boolean(featureNaming?.example)}
-                                    show={
-                                        <>
-                                            <dt>Example</dt>
-                                            <dd>{featureNaming?.example}</dd>
-                                        </>
-                                    }
-                                />
-                                <ConditionallyRender
-                                    condition={Boolean(
-                                        featureNaming?.description
-                                    )}
-                                    show={
-                                        <>
-                                            <dt>Description</dt>
-                                            <dd>
-                                                {featureNaming?.description}
-                                            </dd>
-                                        </>
-                                    }
-                                />
-                            </dl>
-                        </StyledFlagNamingInfo>
-                    }
+                    show={<FlagNamingInfo featureNaming={featureNaming!} />}
                 />
                 <StyledInput
                     autoFocus

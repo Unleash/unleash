@@ -112,12 +112,12 @@ export interface IGetFeatureParams {
     userId?: number;
 }
 
-export type FeatureNameValidationResult =
+export type FeatureNameCheckResult =
     | { state: 'valid' }
     | {
           state: 'invalid';
-          mismatchedNames: Set<string>;
-          patternData: IFeatureNaming;
+          invalidNames: Set<string>;
+          featureNaming: IFeatureNaming;
       };
 
 const oneOf = (values: string[], match: string) => {
@@ -1044,7 +1044,7 @@ class FeatureToggleService {
     ): Promise<FeatureToggle> {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
-        await this.validateFeatureFlagPattern(value.name, projectId);
+        await this.validateFeatureFlagNameAgainstPattern(value.name, projectId);
 
         const exists = await this.projectStore.hasProject(projectId);
 
@@ -1100,10 +1100,10 @@ class FeatureToggleService {
         throw new NotFoundError(`Project with id ${projectId} does not exist`);
     }
 
-    async validateFeatureNames(
+    async checkFeatureFlagNamesAgainstProjectPattern(
         projectId: string,
         featureNames: string[],
-    ): Promise<FeatureNameValidationResult> {
+    ): Promise<FeatureNameCheckResult> {
         if (this.flagResolver.isEnabled('featureNamingPattern')) {
             const project = await this.projectStore.get(projectId);
             const patternData = project.featureNaming;
@@ -1118,8 +1118,8 @@ class FeatureToggleService {
                 if (mismatchedNames.length > 0) {
                     return {
                         state: 'invalid',
-                        mismatchedNames: new Set(mismatchedNames),
-                        patternData,
+                        invalidNames: new Set(mismatchedNames),
+                        featureNaming: patternData,
                     };
                 }
             }
@@ -1127,19 +1127,21 @@ class FeatureToggleService {
         return { state: 'valid' };
     }
 
-    async validateFeatureFlagPattern(
+    async validateFeatureFlagNameAgainstPattern(
         featureName: string,
         projectId?: string,
     ): Promise<void> {
         if (projectId) {
-            const result = await this.validateFeatureNames(projectId, [
-                featureName,
-            ]);
+            const result =
+                await this.checkFeatureFlagNamesAgainstProjectPattern(
+                    projectId,
+                    [featureName],
+                );
 
             if (result.state === 'invalid') {
-                const namingPattern = result.patternData.pattern;
-                const namingExample = result.patternData.example;
-                const namingDescription = result.patternData.description;
+                const namingPattern = result.featureNaming.pattern;
+                const namingExample = result.featureNaming.example;
+                const namingDescription = result.featureNaming.description;
 
                 const error = `The feature flag name "${featureName}" does not match the project's naming pattern: "${namingPattern}".`;
                 const example = namingExample

@@ -1,4 +1,4 @@
-import { FeatureNameValidationResult } from 'lib/services/feature-toggle-service';
+import { FeatureNameCheckResult } from 'lib/services/feature-toggle-service';
 import {
     FeatureStrategySchema,
     ImportTogglesValidateItemSchema,
@@ -11,7 +11,7 @@ export interface IErrorsParams {
     contextFields: IContextFieldDto[];
     otherProjectFeatures: string[];
     duplicateFeatures: string[];
-    patternMismatches: FeatureNameValidationResult;
+    patternMismatches: FeatureNameCheckResult;
 }
 
 export interface IWarningParams {
@@ -76,16 +76,16 @@ export class ImportValidationMessages {
             });
         }
         if (patternMismatches.state === 'invalid') {
-            const baseError = `Features imported into this project must match the project's feature naming pattern: "${patternMismatches.patternData.pattern}".`;
-            const exampleInfo = patternMismatches.patternData.example
-                ? ` For example: "${patternMismatches.patternData.example}".`
+            const baseError = `Features imported into this project must match the project's feature naming pattern: "${patternMismatches.featureNaming.pattern}".`;
+            const exampleInfo = patternMismatches.featureNaming.example
+                ? ` For example: "${patternMismatches.featureNaming.example}".`
                 : '';
-            const descriptionInfo = patternMismatches.patternData.description
-                ? ` The pattern is described as follows: "${patternMismatches.patternData.description}"`
+            const descriptionInfo = patternMismatches.featureNaming.description
+                ? ` The pattern is described as follows: "${patternMismatches.featureNaming.description}"`
                 : '';
             errors.push({
                 message: `${baseError}${exampleInfo}${descriptionInfo} The following features do not match the pattern:`,
-                affectedItems: [...patternMismatches.mismatchedNames].sort(),
+                affectedItems: [...patternMismatches.invalidNames].sort(),
             });
         }
 

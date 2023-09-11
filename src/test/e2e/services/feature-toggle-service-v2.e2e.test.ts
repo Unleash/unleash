@@ -661,10 +661,10 @@ describe('flag name validation', () => {
 
         const validFeatures = ['testpattern-feature', 'testpattern-feature2'];
         const invalidFeatures = ['a', 'b', 'c'];
-        const result = await service.validateFeatureNames(projectId, [
-            ...validFeatures,
-            ...invalidFeatures,
-        ]);
+        const result = await service.checkFeatureFlagNamesAgainstProjectPattern(
+            projectId,
+            [...validFeatures, ...invalidFeatures],
+        );
 
         expect(result).toMatchObject({
             state: 'invalid',
@@ -672,10 +672,11 @@ describe('flag name validation', () => {
             patternData: featureNaming,
         });
 
-        const validResult = await service.validateFeatureNames(
-            projectId,
-            validFeatures,
-        );
+        const validResult =
+            await service.checkFeatureFlagNamesAgainstProjectPattern(
+                projectId,
+                validFeatures,
+            );
 
         expect(validResult).toMatchObject({ state: 'valid' });
     });
@@ -698,10 +699,11 @@ describe('flag name validation', () => {
             await stores.projectStore.create(project);
 
             const features = ['a', 'b'];
-            const result = await service.validateFeatureNames(
-                projectId,
-                features,
-            );
+            const result =
+                await service.checkFeatureFlagNamesAgainstProjectPattern(
+                    projectId,
+                    features,
+                );
 
             expect(result).toMatchObject({ state: 'valid' });
         },

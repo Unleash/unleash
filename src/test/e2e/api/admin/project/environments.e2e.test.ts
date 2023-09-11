@@ -159,3 +159,12 @@ test('Should throw an error if you try to set defaultStrategy other than flexibl
         })
         .expect(400);
 });
+
+test('Add environment to project should return 404 when given a projectid that does not exist', async () => {
+    await app.request
+        .post(`/api/admin/projects/unknown/environments`)
+        .send({
+            environment: 'default',
+        })
+        .expect(404);
+});

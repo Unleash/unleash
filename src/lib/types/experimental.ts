@@ -24,7 +24,6 @@ export type IFlagKey =
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
     | 'customRootRolesKillSwitch'
-    | 'newApplicationList'
     | 'integrationsRework'
     | 'multipleRoles'
     | 'featureNamingPattern'
@@ -120,12 +119,12 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_MULTIPLE_ROLES,
         false,
     ),
-    newApplicationList: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_APPLICATION_LIST,
-        false,
-    ),
     featureNamingPattern: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_NAMING_PATTERN,
+        false,
+    ),
+    doraMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DORA_METRICS,
         false,
     ),
 };

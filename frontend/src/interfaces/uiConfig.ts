@@ -4,7 +4,14 @@ import { Variant } from 'utils/variants';
 export interface IUiConfig {
     authenticationType?: string;
     baseUriPath?: string;
-    flags: IFlags;
+    /**
+     * @deprecated `useUiFlags` can be used instead
+     * @example
+     * ```ts
+     *   const yourFlag = useUiFlags("yourFlag")
+     * ```
+     */
+    flags: UiFlags;
     name: string;
     slogan: string;
     environment?: string;
@@ -29,7 +36,7 @@ export interface IProclamationToast {
     link: string;
 }
 
-export interface IFlags {
+export type UiFlags = {
     P: boolean;
     RE: boolean;
     EEA?: boolean;
@@ -53,13 +60,12 @@ export interface IFlags {
     customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
     lastSeenByEnvironment?: boolean;
-    newApplicationList?: boolean;
     integrationsRework?: boolean;
     multipleRoles?: boolean;
     featureNamingPattern?: boolean;
     doraMetrics?: boolean;
     [key: string]: boolean | Variant | undefined;
-}
+};
 
 export interface IVersionInfo {
     instanceId: string;

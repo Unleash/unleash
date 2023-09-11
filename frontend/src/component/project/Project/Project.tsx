@@ -15,7 +15,7 @@ import {
     StyledTopRow,
 } from './Project.styles';
 import { Box, Paper, Tabs, Typography } from '@mui/material';
-import { Delete, Edit, FileUpload } from '@mui/icons-material';
+import { FileUpload } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState } from 'react';
@@ -24,11 +24,7 @@ import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeatures
 import ProjectOverview from './ProjectOverview';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import {
-    UPDATE_FEATURE,
-    DELETE_PROJECT,
-    UPDATE_PROJECT,
-} from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
@@ -41,6 +37,7 @@ import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi
 import { ImportModal } from './Import/ImportModal';
 import { IMPORT_BUTTON } from 'utils/testIds';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
+import { Badge } from 'component/common/Badge/Badge';
 import { ProjectDoraMetrics } from './ProjectDoraMetrics/ProjectDoraMetrics';
 
 export const Project = () => {
@@ -65,18 +62,21 @@ export const Project = () => {
             path: basePath,
             name: 'overview',
             flag: undefined,
+            new: false,
         },
         {
             title: 'Health',
             path: `${basePath}/health`,
             name: 'health',
             flag: undefined,
+            new: false,
         },
         {
             title: 'Archive',
             path: `${basePath}/archive`,
             name: 'archive',
             flag: undefined,
+            new: false,
         },
         {
             title: 'Change requests',
@@ -84,24 +84,28 @@ export const Project = () => {
             name: 'change-request',
             isEnterprise: true,
             flag: undefined,
+            new: false,
         },
         {
-            title: 'DORA Metrics',
-            path: `${basePath}/dora`,
+            title: 'Metrics',
+            path: `${basePath}/metrics`,
             name: 'dora',
             flag: 'doraMetrics',
+            new: true,
         },
         {
             title: 'Event log',
             path: `${basePath}/logs`,
             name: 'logs',
             flag: undefined,
+            new: false,
         },
         {
             title: 'Project settings',
             path: `${basePath}/settings`,
             name: 'settings',
             flag: undefined,
+            new: false,
         },
     ]
         .filter(tab => {
@@ -220,10 +224,28 @@ export const Project = () => {
                                         tab.isEnterprise ? 'end' : undefined
                                     }
                                     icon={
-                                        (tab.isEnterprise &&
-                                            isPro() &&
-                                            enterpriseIcon) ||
-                                        undefined
+                                        <>
+                                            <ConditionallyRender
+                                                condition={tab.new}
+                                                show={
+                                                    <Badge
+                                                        sx={{
+                                                            position:
+                                                                'absolute',
+                                                            top: 10,
+                                                            right: 20,
+                                                        }}
+                                                        color="success"
+                                                    >
+                                                        New
+                                                    </Badge>
+                                                }
+                                            />
+                                            {(tab.isEnterprise &&
+                                                isPro() &&
+                                                enterpriseIcon) ||
+                                                undefined}
+                                        </>
                                     }
                                 />
                             );
@@ -264,7 +286,7 @@ export const Project = () => {
                     element={<ChangeRequestOverview />}
                 />
                 <Route path="settings/*" element={<ProjectSettings />} />
-                <Route path="dora" element={<ProjectDoraMetrics />} />
+                <Route path="metrics" element={<ProjectDoraMetrics />} />
                 <Route path="*" element={<ProjectOverview />} />
             </Routes>
             <ImportModal

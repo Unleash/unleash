@@ -33,6 +33,36 @@ const searchContext = {
     ],
 };
 
+const searchContextWithoutFilters = {
+    data: [
+        {
+            title: 'Title A',
+            environment: 'prod',
+        },
+        {
+            title: 'Title B',
+            environment: 'dev env',
+        },
+        {
+            title: 'Title C',
+            environment: 'stage\npre-prod',
+        },
+    ],
+    searchValue: '',
+    columns: [
+        {
+            Header: 'Title',
+            searchable: true,
+            accessor: 'title',
+        },
+        {
+            Header: 'Environment',
+            accessor: 'environment',
+            searchable: true,
+        },
+    ],
+};
+
 test('displays search and filter instructions when no search value is provided', () => {
     let recordedSuggestion = '';
     render(
@@ -105,4 +135,23 @@ test('displays search and filter instructions when filter value is provided', ()
 
     screen.getByText(/Title A/i).click();
     expect(recordedSuggestion).toBe('environment:"dev env" Title A');
+});
+
+test('displays search instructions without filters', () => {
+    let recordedSuggestion = '';
+    render(
+        <SearchSuggestions
+            onSuggestion={suggestion => {
+                recordedSuggestion = suggestion;
+            }}
+            getSearchContext={() => searchContextWithoutFilters}
+        />
+    );
+
+    expect(
+        screen.getByText(/Start typing to search in Title, Environment/i)
+    ).toBeInTheDocument();
+
+    screen.getByText(/Title A/i).click();
+    expect(recordedSuggestion).toBe('Title A');
 });

@@ -312,6 +312,7 @@ exports[`returns all baseRoutes 1`] = `
       "advanced": true,
       "mobile": true,
     },
+    "notFlag": "integrationsRework",
     "path": "/addons",
     "title": "Addons",
     "type": "protected",
@@ -322,6 +323,14 @@ exports[`returns all baseRoutes 1`] = `
     "parent": "/integrations",
     "path": "/integrations/create/:providerId",
     "title": "Create",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "menu": {},
+    "parent": "/integrations",
+    "path": "/integrations/view/:providerId",
+    "title": "View",
     "type": "protected",
   },
   {

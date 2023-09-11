@@ -6,13 +6,7 @@ import {
     useState,
     VFC,
 } from 'react';
-import {
-    Alert,
-    Button,
-    Divider,
-    FormControlLabel,
-    Switch,
-} from '@mui/material';
+import { Alert, Button, Divider, Typography } from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
@@ -31,23 +25,25 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {
     CREATE_ADDON,
-    DELETE_ADDON,
     UPDATE_ADDON,
 } from '../../providers/AccessProvider/permissions';
 import {
     StyledForm,
-    StyledFormSection,
     StyledAlerts,
-    StyledHelpText,
     StyledTextField,
     StyledContainer,
     StyledButtonContainer,
     StyledButtonSection,
+    StyledConfigurationSection,
+    StyledTitle,
+    StyledRaisedSection,
 } from './IntegrationForm.styles';
-import { useTheme } from '@mui/system';
 import { GO_BACK } from 'constants/navigate';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IntegrationDeleteDialog } from './IntegrationDeleteDialog/IntegrationDeleteDialog';
+import { IntegrationDelete } from './IntegrationDelete/IntegrationDelete';
+import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStateSwitch';
+import { capitalizeFirst } from 'utils/capitalizeFirst';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type IntegrationFormProps = {
     provider?: AddonTypeSchema;
@@ -65,8 +61,6 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
     const { createAddon, updateAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
-    const theme = useTheme();
-    const [isDeleteOpen, setDeleteOpen] = useState(false);
     const { projects: availableProjects } = useProjects();
     const selectableProjects = availableProjects.map(project => ({
         value: project.id,
@@ -82,6 +76,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         label: event,
     }));
     const { uiConfig } = useUiConfig();
+    const integrationsRework = useUiFlag('integrationsRework');
     const [formValues, setFormValues] = useState(initialValues);
     const [errors, setErrors] = useState<{
         containsErrors: boolean;
@@ -225,14 +220,14 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         try {
             if (editMode) {
                 await updateAddon(formValues as AddonSchema);
-                navigate('/addons');
+                navigate(integrationsRework ? '/integrations' : '/addons');
                 setToastData({
                     type: 'success',
                     title: 'Addon updated successfully',
                 });
             } else {
                 await createAddon(formValues as Omit<AddonSchema, 'id'>);
-                navigate('/addons');
+                navigate(integrationsRework ? '/integrations' : '/addons');
                 setToastData({
                     type: 'success',
                     confetti: true,
@@ -260,101 +255,73 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
 
     return (
         <FormTemplate
-            title={`${submitText} ${name} addon`}
+            title={
+                <>
+                    {submitText} {name ? capitalizeFirst(`${name} `) : ''}
+                    integration
+                </>
+            }
             description={description || ''}
             documentationLink={documentationUrl}
             documentationLinkLabel="Addon documentation"
             formatApiCode={formatApiCode}
+            footer={
+                <StyledButtonContainer>
+                    <StyledButtonSection>
+                        <PermissionButton
+                            type="submit"
+                            color="primary"
+                            variant="contained"
+                            permission={editMode ? UPDATE_ADDON : CREATE_ADDON}
+                            onClick={onSubmit}
+                        >
+                            {submitText}
+                        </PermissionButton>
+                        <Button type="button" onClick={onCancel}>
+                            Cancel
+                        </Button>
+                    </StyledButtonSection>
+                </StyledButtonContainer>
+            }
         >
             <StyledForm onSubmit={onSubmit}>
                 <StyledContainer>
-                    <StyledAlerts>
-                        {alerts?.map(({ type, text }) => (
-                            <Alert severity={type}>{text}</Alert>
-                        ))}
-                    </StyledAlerts>
                     <ConditionallyRender
-                        condition={Boolean(installation)}
+                        condition={Boolean(alerts)}
                         show={() => (
-                            <IntegrationInstall
-                                url={installation!.url}
-                                title={installation!.title}
-                                helpText={installation!.helpText}
-                            />
+                            <StyledAlerts>
+                                {alerts?.map(({ type, text }) => (
+                                    <Alert severity={type}>{text}</Alert>
+                                ))}
+                            </StyledAlerts>
                         )}
                     />
-                    <StyledFormSection>
-                        <StyledTextField
-                            size="small"
-                            label="Provider"
-                            name="provider"
-                            value={formValues.provider}
-                            disabled
-                            hidden={true}
-                            variant="outlined"
+                    <StyledTextField
+                        size="small"
+                        label="Provider"
+                        name="provider"
+                        value={formValues.provider}
+                        disabled
+                        hidden={true}
+                        variant="outlined"
+                    />
+                    <StyledRaisedSection>
+                        <IntegrationStateSwitch
+                            checked={formValues.enabled}
+                            onClick={onEnabled}
                         />
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={formValues.enabled}
-                                    onClick={onEnabled}
+                    </StyledRaisedSection>
+                    <StyledRaisedSection>
+                        <ConditionallyRender
+                            condition={Boolean(installation)}
+                            show={() => (
+                                <IntegrationInstall
+                                    url={installation!.url}
+                                    title={installation!.title}
+                                    helpText={installation!.helpText}
                                 />
-                            }
-                            label={formValues.enabled ? 'Enabled' : 'Disabled'}
+                            )}
                         />
-                    </StyledFormSection>
-                    <StyledFormSection>
-                        <StyledHelpText>
-                            What is your addon description?
-                        </StyledHelpText>
-
-                        <StyledTextField
-                            size="small"
-                            style={{ width: '80%' }}
-                            minRows={4}
-                            multiline
-                            label="Description"
-                            name="description"
-                            placeholder=""
-                            value={formValues.description}
-                            error={Boolean(errors.description)}
-                            helperText={errors.description}
-                            onChange={setFieldValue('description')}
-                            variant="outlined"
-                        />
-                    </StyledFormSection>
-
-                    <StyledFormSection>
-                        <IntegrationMultiSelector
-                            options={selectableEvents || []}
-                            selectedItems={formValues.events}
-                            onChange={setEventValues}
-                            entityName="event"
-                            selectAllEnabled={false}
-                            error={errors.events}
-                            description="Select what events you want your addon to be notified about."
-                            required
-                        />
-                    </StyledFormSection>
-                    <StyledFormSection>
-                        <IntegrationMultiSelector
-                            options={selectableProjects}
-                            selectedItems={formValues.projects || []}
-                            onChange={setProjects}
-                            entityName="project"
-                            selectAllEnabled={true}
-                        />
-                    </StyledFormSection>
-                    <StyledFormSection>
-                        <IntegrationMultiSelector
-                            options={selectableEnvironments}
-                            selectedItems={formValues.environments || []}
-                            onChange={setEnvironments}
-                            entityName="environment"
-                            selectAllEnabled={true}
-                        />
-                    </StyledFormSection>
-                    <StyledFormSection>
                         <IntegrationParameters
                             provider={provider}
                             config={formValues as AddonSchema}
@@ -362,52 +329,75 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                             editMode={editMode}
                             setParameterValue={setParameterValue}
                         />
-                    </StyledFormSection>
-                </StyledContainer>
-                <Divider />
-                <StyledButtonContainer>
-                    <StyledButtonSection theme={theme}>
-                        <PermissionButton
-                            type="submit"
-                            color="primary"
-                            variant="contained"
-                            permission={editMode ? UPDATE_ADDON : CREATE_ADDON}
-                        >
-                            {submitText}
-                        </PermissionButton>
-                        <Button type="button" onClick={onCancel}>
-                            Cancel
-                        </Button>
-                        <ConditionallyRender
-                            condition={Boolean(
-                                uiConfig?.flags?.integrationsRework && editMode
-                            )}
-                            show={() => (
-                                <>
-                                    <PermissionButton
-                                        type="button"
-                                        variant="text"
-                                        color="error"
-                                        permission={DELETE_ADDON}
-                                        onClick={e => {
-                                            e.preventDefault();
-                                            setDeleteOpen(true);
-                                        }}
-                                    >
-                                        Delete
-                                    </PermissionButton>
-                                    <IntegrationDeleteDialog
+                    </StyledRaisedSection>
+                    <StyledConfigurationSection>
+                        <Typography component="h3" variant="h3">
+                            Configuration
+                        </Typography>
+                        <div>
+                            <StyledTitle>
+                                What is your integration description?
+                            </StyledTitle>
+                            <StyledTextField
+                                size="small"
+                                minRows={1}
+                                multiline
+                                label="Description"
+                                name="description"
+                                placeholder=""
+                                value={formValues.description}
+                                error={Boolean(errors.description)}
+                                helperText={errors.description}
+                                onChange={setFieldValue('description')}
+                                variant="outlined"
+                            />
+                        </div>
+
+                        <div>
+                            <IntegrationMultiSelector
+                                options={selectableEvents || []}
+                                selectedItems={formValues.events}
+                                onChange={setEventValues}
+                                entityName="event"
+                                selectAllEnabled={false}
+                                error={errors.events}
+                                description="Select what events you want your integration to be notified about."
+                                required
+                            />
+                        </div>
+                        <div>
+                            <IntegrationMultiSelector
+                                options={selectableProjects}
+                                selectedItems={formValues.projects || []}
+                                onChange={setProjects}
+                                entityName="project"
+                                selectAllEnabled={true}
+                            />
+                        </div>
+                        <div>
+                            <IntegrationMultiSelector
+                                options={selectableEnvironments}
+                                selectedItems={formValues.environments || []}
+                                onChange={setEnvironments}
+                                entityName="environment"
+                                selectAllEnabled={true}
+                            />
+                        </div>
+                    </StyledConfigurationSection>
+                    <ConditionallyRender
+                        condition={Boolean(integrationsRework && editMode)}
+                        show={() => (
+                            <>
+                                <Divider />
+                                <section>
+                                    <IntegrationDelete
                                         id={(formValues as AddonSchema).id}
-                                        isOpen={isDeleteOpen}
-                                        onClose={() => {
-                                            setDeleteOpen(false);
-                                        }}
                                     />
-                                </>
-                            )}
-                        />
-                    </StyledButtonSection>
-                </StyledButtonContainer>
+                                </section>
+                            </>
+                        )}
+                    />
+                </StyledContainer>
             </StyledForm>
         </FormTemplate>
     );

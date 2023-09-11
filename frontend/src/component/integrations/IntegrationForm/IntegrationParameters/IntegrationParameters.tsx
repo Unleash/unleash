@@ -3,7 +3,6 @@ import {
     IntegrationParameter,
     IIntegrationParameterProps,
 } from './IntegrationParameter/IntegrationParameter';
-import { StyledTitle } from '../IntegrationForm.styles';
 import type { AddonTypeSchema } from 'openapi';
 
 interface IIntegrationParametersProps {
@@ -24,7 +23,6 @@ export const IntegrationParameters = ({
     if (!provider) return null;
     return (
         <React.Fragment>
-            <StyledTitle>Parameters</StyledTitle>
             {editMode ? (
                 <p>
                     Sensitive parameters will be masked with value "<i>*****</i>

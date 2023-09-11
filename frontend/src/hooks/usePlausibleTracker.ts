@@ -44,7 +44,9 @@ export type CustomEvents =
     | 'playground'
     | 'feature-type-edit'
     | 'strategy-variants'
-    | 'search-filter-suggestions';
+    | 'search-filter-suggestions'
+    | 'project-metrics'
+    | 'open-integration';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

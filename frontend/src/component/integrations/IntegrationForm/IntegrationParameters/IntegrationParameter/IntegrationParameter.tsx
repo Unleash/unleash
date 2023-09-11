@@ -40,7 +40,7 @@ export const IntegrationParameter = ({
             <TextField
                 size="small"
                 style={{ width: '100%' }}
-                minRows={definition.type === 'textfield' ? 9 : 0}
+                minRows={definition.type === 'textfield' ? 5 : 0}
                 multiline={definition.type === 'textfield'}
                 type={type}
                 label={

@@ -14,6 +14,7 @@ import {
     StyledCode,
 } from './SearchInstructions/SearchInstructions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { onEnter } from './onEnter';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -103,9 +104,37 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
             ? getColumnValues(searchableColumns[0], searchContext.data[0])
             : 'example-search-text';
 
-    const selectedFilter = filters.map(
-        filter => `${filter.name}:${filter.suggestedOption}`
-    )[0];
+    const selectedFilter =
+        filters.length === 0
+            ? ''
+            : filters.map(
+                  filter => `${filter.name}:${filter.suggestedOption}`
+              )[0];
+
+    const onFilter = (suggestion: string) => {
+        onSuggestion(suggestion);
+        trackEvent('search-filter-suggestions', {
+            props: {
+                eventType: 'filter',
+            },
+        });
+    };
+    const onSearchAndFilter = () => {
+        onSuggestion((selectedFilter + ' ' + suggestedTextSearch).trim());
+        trackEvent('search-filter-suggestions', {
+            props: {
+                eventType: 'search and filter',
+            },
+        });
+    };
+    const onSavedQuery = () => {
+        onSuggestion(savedQuery || '');
+        trackEvent('search-filter-suggestions', {
+            props: {
+                eventType: 'saved query',
+            },
+        });
+    };
 
     return (
         <StyledPaper className="dropdown-outline">
@@ -116,14 +145,9 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                         <StyledBox>
                             <StyledHistory />
                             <StyledCode
-                                onClick={() => {
-                                    onSuggestion(savedQuery || '');
-                                    trackEvent('search-filter-suggestions', {
-                                        props: {
-                                            eventType: 'saved query',
-                                        },
-                                    });
-                                }}
+                                tabIndex={0}
+                                onClick={onSavedQuery}
+                                onKeyDown={onEnter(onSavedQuery)}
                             >
                                 <span>{savedQuery}</span>
                             </StyledCode>
@@ -153,14 +177,7 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                                 searchableColumnsString={
                                     searchableColumnsString
                                 }
-                                onClick={suggestion => {
-                                    onSuggestion(suggestion);
-                                    trackEvent('search-filter-suggestions', {
-                                        props: {
-                                            eventType: 'filter',
-                                        },
-                                    });
-                                }}
+                                onClick={onFilter}
                             />
                         }
                     />
@@ -173,16 +190,9 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                     show="Combine filters and search: "
                 />
                 <StyledCode
-                    onClick={() => {
-                        onSuggestion(
-                            selectedFilter + ' ' + suggestedTextSearch
-                        );
-                        trackEvent('search-filter-suggestions', {
-                            props: {
-                                eventType: 'search and filter',
-                            },
-                        });
-                    }}
+                    tabIndex={0}
+                    onClick={onSearchAndFilter}
+                    onKeyDown={onEnter(onSearchAndFilter)}
                 >
                     <span key={selectedFilter}>{selectedFilter}</span>{' '}
                     <span>{suggestedTextSearch}</span>

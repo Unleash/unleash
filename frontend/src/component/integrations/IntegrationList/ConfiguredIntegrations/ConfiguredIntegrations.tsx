@@ -50,7 +50,6 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                                 title={providerConfig?.displayName || provider}
                                 isEnabled={enabled}
                                 description={description || ''}
-                                isConfigured
                                 link={`/integrations/edit/${id}`}
                             />
                         );

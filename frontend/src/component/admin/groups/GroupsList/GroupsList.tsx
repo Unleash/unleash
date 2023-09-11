@@ -30,7 +30,7 @@ const groupsSearch = (group: IGroup, searchValue: string) => {
     };
     return (
         group.name.toLowerCase().includes(search) ||
-        group.description.toLowerCase().includes(search) ||
+        group.description?.toLowerCase().includes(search) ||
         users.names?.some(name => name.includes(search)) ||
         users.usernames?.some(username => username.includes(search)) ||
         users.emails?.some(email => email.includes(search))

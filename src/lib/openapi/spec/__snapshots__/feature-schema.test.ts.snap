@@ -29,6 +29,7 @@ exports[`featureSchema variant override values must be an array 1`] = `
           "json",
           "csv",
           "string",
+          "number",
         ],
       },
       "schemaPath": "#/properties/payload/properties/type/enum",

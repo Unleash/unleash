@@ -49,10 +49,6 @@ const StyledForm = styled('form')({
     height: '100%',
 });
 
-const StyledContainer = styled('div')({
-    maxWidth: '400px',
-});
-
 const StyledInputDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
@@ -147,7 +143,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
 
     return (
         <StyledForm onSubmit={handleSubmit}>
-            <StyledContainer>
+            <div>
                 <StyledInputDescription>
                     What would you like to call your toggle?
                 </StyledInputDescription>
@@ -296,7 +292,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                         />
                     </StyledRow>
                 </StyledFormControl>
-            </StyledContainer>
+            </div>
             <StyledButtonContainer>
                 {children}
                 <StyledCancelButton onClick={handleCancel}>

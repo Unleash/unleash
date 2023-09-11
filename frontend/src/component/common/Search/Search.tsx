@@ -112,10 +112,7 @@ export const Search = ({
         }
     );
     useKeyboardShortcut({ key: 'Escape' }, () => {
-        if (
-            document.activeElement === searchInputRef.current ||
-            searchContainerRef.current?.contains(document.activeElement)
-        ) {
+        if (searchContainerRef.current?.contains(document.activeElement)) {
             searchInputRef.current?.blur();
             hideSuggestions();
         }

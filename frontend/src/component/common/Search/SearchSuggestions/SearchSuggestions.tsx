@@ -14,7 +14,7 @@ import {
     StyledCode,
 } from './SearchInstructions/SearchInstructions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { onEnter } from './onKeyActions';
+import { onEnter } from './onEnter';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',

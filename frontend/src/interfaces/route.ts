@@ -8,6 +8,7 @@ export interface IRoute {
     layout?: string;
     parent?: string;
     flag?: keyof UiFlags;
+    notFlag?: keyof UiFlags;
     configFlag?: keyof IUiConfig;
     hidden?: boolean;
     enterprise?: boolean;
@@ -21,6 +22,7 @@ export interface INavigationMenuItem {
     title: string;
     menu: IRouteMenu;
     flag?: keyof UiFlags;
+    notFlag?: keyof UiFlags;
     configFlag?: keyof IUiConfig;
     group?: string;
 }

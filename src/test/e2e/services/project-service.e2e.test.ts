@@ -46,9 +46,8 @@ beforeAll(async () => {
     });
     const config = createTestConfig({
         getLogger,
-        experimental: {
-            flags: { featureNamingPattern: true },
-        },
+        // @ts-ignore
+        experimental: { environments: { enabled: true } },
     });
     groupService = new GroupService(stores, config);
     accessService = new AccessService(stores, config, groupService);

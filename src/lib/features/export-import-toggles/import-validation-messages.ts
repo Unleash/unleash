@@ -77,11 +77,11 @@ export class ImportValidationMessages {
         }
         if (
             patternMismatches.state === 'pattern' &&
-            patternMismatches.invalidNames.length > 0
+            patternMismatches.invalidNames.size > 0
         ) {
             errors.push({
                 message: `Features imported into this project must match the project's feature naming pattern: "${patternMismatches.pattern}". The following features do not match the pattern:`,
-                affectedItems: patternMismatches.invalidNames,
+                affectedItems: [...patternMismatches.invalidNames].sort(),
             });
         }
 

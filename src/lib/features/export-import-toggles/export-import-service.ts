@@ -49,7 +49,7 @@ import { findDuplicates } from '../../util/findDuplicates';
 
 export type PatternValidationResult =
     | { state: 'no pattern' }
-    | { state: 'pattern'; pattern: string; invalidNames: string[] };
+    | { state: 'pattern'; pattern: string; invalidNames: Set<string> };
 
 export default class ExportImportService {
     private logger: Logger;
@@ -540,9 +540,11 @@ export default class ExportImportService {
         // ).filter(Boolean);
 
         const regex = new RegExp(pattern);
-        const invalidNames = dto.data.features
-            .filter((feature) => !regex.test(feature.name))
-            .map((feature) => feature.name);
+        const invalidNames = new Set(
+            dto.data.features
+                .filter((feature) => !regex.test(feature.name))
+                .map((feature) => feature.name),
+        );
 
         return { state: 'pattern', pattern, invalidNames };
     }

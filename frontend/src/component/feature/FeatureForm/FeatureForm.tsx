@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 import { FeatureNamingType } from 'interfaces/project';
-import { FlagNamingInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
+import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
 
 interface IFeatureToggleForm {
     type: string;
@@ -145,7 +145,11 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 </StyledInputDescription>
                 <ConditionallyRender
                     condition={displayFeatureNamingInfo}
-                    show={<FlagNamingInfo featureNaming={featureNaming!} />}
+                    show={
+                        <FeatureNamingPatternInfo
+                            featureNaming={featureNaming!}
+                        />
+                    }
                 />
                 <StyledInput
                     autoFocus

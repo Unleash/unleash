@@ -20,7 +20,7 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
 import useProject from 'hooks/api/getters/useProject/useProject';
-import { FlagNamingInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
+import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
 
 const StyledPage = styled(Paper)(({ theme }) => ({
     overflow: 'visible',
@@ -141,7 +141,11 @@ export const CopyFeatureToggle = () => {
 
                 <ConditionallyRender
                     condition={displayFeatureNamingInfo}
-                    show={<FlagNamingInfo featureNaming={featureNaming!} />}
+                    show={
+                        <FeatureNamingPatternInfo
+                            featureNaming={featureNaming!}
+                        />
+                    }
                 />
                 <StyledForm onSubmit={onSubmit}>
                     <TextField

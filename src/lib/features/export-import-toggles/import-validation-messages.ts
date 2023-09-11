@@ -3,6 +3,7 @@ import {
     ImportTogglesValidateItemSchema,
 } from '../../openapi';
 import { IContextFieldDto } from '../../types/stores/context-field-store';
+import { PatternValidationResult } from './export-import-service';
 
 export interface IErrorsParams {
     projectName: string;
@@ -10,6 +11,7 @@ export interface IErrorsParams {
     contextFields: IContextFieldDto[];
     otherProjectFeatures: string[];
     duplicateFeatures: string[];
+    patternMismatches: PatternValidationResult;
 }
 
 export interface IWarningParams {
@@ -40,6 +42,7 @@ export class ImportValidationMessages {
         contextFields,
         otherProjectFeatures,
         duplicateFeatures,
+        patternMismatches,
     }: IErrorsParams): ImportTogglesValidateItemSchema[] {
         const errors: ImportTogglesValidateItemSchema[] = [];
 
@@ -70,6 +73,15 @@ export class ImportValidationMessages {
                 message:
                     'We detected the following features are duplicate in your import data:',
                 affectedItems: duplicateFeatures,
+            });
+        }
+        if (
+            patternMismatches.state === 'pattern' &&
+            patternMismatches.invalidNames.length > 0
+        ) {
+            errors.push({
+                message: `Features imported into this project must match the project's feature naming pattern: "${patternMismatches.pattern}". The following features do not match the pattern:`,
+                affectedItems: patternMismatches.invalidNames,
             });
         }
 

@@ -47,6 +47,10 @@ import { ImportPermissionsService, Mode } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
 import { findDuplicates } from '../../util/findDuplicates';
 
+export type PatternValidationResult =
+    | { state: 'no pattern' }
+    | { state: 'pattern'; pattern: string; invalidNames: string[] };
+
 export default class ExportImportService {
     private logger: Logger;
 
@@ -162,6 +166,7 @@ export default class ExportImportService {
             existingProjectFeatures,
             missingPermissions,
             duplicateFeatures,
+            patternMismatches,
         ] = await Promise.all([
             this.getUnsupportedStrategies(dto),
             this.getUsedCustomStrategies(dto),
@@ -175,6 +180,7 @@ export default class ExportImportService {
                 mode,
             ),
             this.getDuplicateFeatures(dto),
+            this.getInvalidFeatureNames(dto),
         ]);
 
         const errors = ImportValidationMessages.compileErrors({
@@ -183,6 +189,7 @@ export default class ExportImportService {
             contextFields: unsupportedContextFields || [],
             otherProjectFeatures,
             duplicateFeatures,
+            patternMismatches,
         });
         const warnings = ImportValidationMessages.compileWarnings({
             archivedFeatures,
@@ -504,6 +511,40 @@ export default class ExportImportService {
                 [firstError, ...remainingErrors],
             );
         }
+    }
+
+    private async getInvalidFeatureNames(
+        dto: ImportTogglesSchema,
+    ): Promise<PatternValidationResult> {
+        const pattern = await this.projectService.getFeatureNamingPattern(
+            dto.project,
+        );
+        if (!pattern) {
+            return { state: 'no pattern' };
+        }
+
+        // const invalidNames = (
+        //     await Promise.all(
+        //         dto.data.features.map(async ({ name }) => {
+        //             try {
+        //                 await this.featureToggleService.validateFeatureFlagPattern(
+        //                     name,
+        //                     dto.project,
+        //                 );
+        //                 return '';
+        //             } catch {
+        //                 return name;
+        //             }
+        //         }),
+        //     )
+        // ).filter(Boolean);
+
+        const regex = new RegExp(pattern);
+        const invalidNames = dto.data.features
+            .filter((feature) => !regex.test(feature.name))
+            .map((feature) => feature.name);
+
+        return { state: 'pattern', pattern, invalidNames };
     }
 
     private async getUnsupportedStrategies(

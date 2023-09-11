@@ -16,6 +16,12 @@ export const filterByConfig =
             return Boolean(flags[r.flag]);
         }
 
+        if (r.notFlag) {
+            const flags = config.flags as unknown as Record<string, boolean>;
+
+            return !(flags[r.notFlag] === true);
+        }
+
         if (r.configFlag) {
             // Check if the route's `configFlag` is enabled in IUiConfig.
             return Boolean(config[r.configFlag]);

@@ -327,6 +327,7 @@ export const routes: IRoute[] = [
         // TODO: use AddonRedirect after removing `integrationsRework` menu flag
         hidden: false,
         type: 'protected',
+        notFlag: 'integrationsRework',
         menu: { mobile: true, advanced: true },
         // TODO: remove 'addons' from menu after removing `integrationsRework` menu flag
     },
@@ -508,6 +509,7 @@ export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
             title: route.title,
             menu: route.menu,
             configFlag: route.configFlag,
+            notFlag: route.notFlag,
         };
     });
 };

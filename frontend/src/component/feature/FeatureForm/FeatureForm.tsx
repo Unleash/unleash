@@ -78,9 +78,13 @@ const StyledTypeDescription = styled('p')(({ theme }) => ({
     position: 'relative',
 }));
 
-const StyledFlagNamingInfo = styled('div')(({ theme }) => ({
+const StyledFlagNamingInfo = styled('article')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.text.secondary,
+    backgroundColor: theme.palette.grey[100],
+    padding: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius,
+    '& dt': { color: theme.palette.text.secondary },
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledButtonContainer = styled('div')({

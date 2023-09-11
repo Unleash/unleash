@@ -92,6 +92,7 @@ module.exports = {
                     label: 'Feature toggles, strategies, context',
                     items: [
                         'how-to/how-to-add-strategy-constraints',
+                        'how-to/how-to-add-feature-flag-naming-patterns',
                         'how-to/how-to-capture-impression-data',
                         'how-to/how-to-create-feature-toggles',
                         'how-to/how-to-define-custom-context-fields',
@@ -347,6 +348,7 @@ module.exports = {
                         'reference/custom-activation-strategies',
                         'reference/environments',
                         'reference/strategy-variants',
+                        'reference/feature-flag-naming-patterns',
                         'reference/feature-toggles',
                         'reference/feature-toggle-types',
                         'reference/feature-toggle-variants',

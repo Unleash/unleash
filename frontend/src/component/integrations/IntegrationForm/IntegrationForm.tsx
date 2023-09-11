@@ -44,6 +44,9 @@ import { IntegrationDelete } from './IntegrationDelete/IntegrationDelete';
 import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStateSwitch';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { useUiFlag } from 'hooks/useUiFlag';
+import ReactMarkdown from 'react-markdown';
+import { IntegrationIcon } from '../IntegrationList/IntegrationIcon/IntegrationIcon';
+import { IntegrationHowToSection } from '../IntegrationHowToSection/IntegrationHowToSection';
 
 type IntegrationFormProps = {
     provider?: AddonTypeSchema;
@@ -305,6 +308,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                         hidden={true}
                         variant="outlined"
                     />
+                    <IntegrationHowToSection provider={provider} />
                     <StyledRaisedSection>
                         <IntegrationStateSwitch
                             checked={formValues.enabled}

@@ -1,9 +1,10 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { styled } from '@mui/material';
+import { Divider, styled } from '@mui/material';
 
 import { IntegrationIcon } from '../../IntegrationList/IntegrationIcon/IntegrationIcon';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import LaunchIcon from '@mui/icons-material/Launch';
+import { IntegrationHowToSection } from 'component/integrations/IntegrationHowToSection/IntegrationHowToSection';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -52,12 +53,10 @@ export const EdgeIntegration = () => {
             documentationLinkLabel="Unleash Edge documentation"
         >
             <StyledContainer>
-                <StyledGrayContainer>
-                    <StyledIconLine>
-                        <IntegrationIcon name={name} /> How does it work?
-                    </StyledIconLine>
-                    <ReactMarkdown>{howTo}</ReactMarkdown>
-                </StyledGrayContainer>
+                <IntegrationHowToSection
+                    provider={EDGE_INFO}
+                    title="Why would you need Edge?"
+                />
                 <StyledGrayContainer>
                     <StyledLink
                         target="_blank"
@@ -74,6 +73,12 @@ export const EdgeIntegration = () => {
                         />
                     </StyledLink>
                 </StyledGrayContainer>
+                <Divider
+                    sx={theme => ({
+                        marginTop: theme.spacing(2),
+                        marginBottom: theme.spacing(2),
+                    })}
+                />
                 <iframe
                     src="https://www.youtube-nocookie.com/embed/6uIdF-yByWs?si=rPzsFCM_2IheaTUo"
                     title="YouTube video player"

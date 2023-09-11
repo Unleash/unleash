@@ -40,7 +40,7 @@ Multiple project roles were introduced as a beta Enterprise feature in **Unleash
 
 :::
 
-Assigning a custom project role is a pretty straightforward process and requires around three steps, outlined below.
+Assigning a custom project role is a pretty straightforward process and requires three steps, outlined below.
 
 To assign a custom project role to a user:
 1. Navigate to the project you want to assign the user a role in.

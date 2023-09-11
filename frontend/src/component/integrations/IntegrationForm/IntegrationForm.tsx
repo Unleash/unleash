@@ -43,6 +43,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { IntegrationDelete } from './IntegrationDelete/IntegrationDelete';
 import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStateSwitch';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type IntegrationFormProps = {
     provider?: AddonTypeSchema;
@@ -75,6 +76,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         label: event,
     }));
     const { uiConfig } = useUiConfig();
+    const integrationsRework = useUiFlag('integrationsRework');
     const [formValues, setFormValues] = useState(initialValues);
     const [errors, setErrors] = useState<{
         containsErrors: boolean;
@@ -218,14 +220,14 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         try {
             if (editMode) {
                 await updateAddon(formValues as AddonSchema);
-                navigate('/addons');
+                navigate(integrationsRework ? '/integrations' : '/addons');
                 setToastData({
                     type: 'success',
                     title: 'Addon updated successfully',
                 });
             } else {
                 await createAddon(formValues as Omit<AddonSchema, 'id'>);
-                navigate('/addons');
+                navigate(integrationsRework ? '/integrations' : '/addons');
                 setToastData({
                     type: 'success',
                     confetti: true,
@@ -271,6 +273,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                             color="primary"
                             variant="contained"
                             permission={editMode ? UPDATE_ADDON : CREATE_ADDON}
+                            onClick={onSubmit}
                         >
                             {submitText}
                         </PermissionButton>
@@ -382,9 +385,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                         </div>
                     </StyledConfigurationSection>
                     <ConditionallyRender
-                        condition={Boolean(
-                            uiConfig?.flags?.integrationsRework && editMode
-                        )}
+                        condition={Boolean(integrationsRework && editMode)}
                         show={() => (
                             <>
                                 <Divider />

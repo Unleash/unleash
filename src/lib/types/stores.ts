@@ -72,7 +72,7 @@ export interface IUnleashStores {
     importTogglesStore: IImportTogglesStore;
 }
 
-export {
+export type {
     IAccessStore,
     IAccountStore,
     IAddonStore,

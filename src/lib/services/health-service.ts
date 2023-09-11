@@ -23,4 +23,3 @@ class HealthService {
 }
 
 export default HealthService;
-module.exports = HealthService;

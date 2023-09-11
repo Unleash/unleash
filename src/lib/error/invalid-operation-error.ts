@@ -4,4 +4,3 @@ class InvalidOperationError extends UnleashError {
     statusCode = 403;
 }
 export default InvalidOperationError;
-module.exports = InvalidOperationError;

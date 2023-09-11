@@ -23,8 +23,3 @@ export function createDb({
         },
     });
 }
-
-// for backward compatibility
-module.exports = {
-    createDb,
-};

@@ -236,4 +236,3 @@ class TagTypeController extends Controller {
     }
 }
 export default TagTypeController;
-module.exports = TagTypeController;

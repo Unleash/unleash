@@ -19,5 +19,4 @@ noLoggerProvider.setMuteError = (mute) => {
     muteError = mute;
 };
 
-module.exports = noLoggerProvider;
 export default noLoggerProvider;

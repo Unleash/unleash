@@ -37,4 +37,3 @@ class PermissionError extends UnleashError {
 }
 
 export default PermissionError;
-module.exports = PermissionError;

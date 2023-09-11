@@ -47,5 +47,3 @@ export default class FeatureTypeService {
         return result;
     }
 }
-
-module.exports = FeatureTypeService;

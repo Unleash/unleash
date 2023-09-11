@@ -257,5 +257,4 @@ class FeatureTagStore implements IFeatureTagStore {
     }
 }
 
-module.exports = FeatureTagStore;
 export default FeatureTagStore;

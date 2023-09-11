@@ -243,5 +243,4 @@ class UserStore implements IUserStore {
     }
 }
 
-module.exports = UserStore;
 export default UserStore;

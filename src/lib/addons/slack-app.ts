@@ -192,5 +192,3 @@ export default class SlackAppAddon extends Addon {
         }
     }
 }
-
-module.exports = SlackAppAddon;

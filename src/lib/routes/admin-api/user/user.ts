@@ -206,5 +206,4 @@ class UserController extends Controller {
     }
 }
 
-module.exports = UserController;
 export default UserController;

@@ -9,4 +9,3 @@ class InvalidTokenError extends UnleashError {
 }
 
 export default InvalidTokenError;
-module.exports = InvalidTokenError;

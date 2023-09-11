@@ -71,5 +71,3 @@ export default class SettingStore implements ISettingStore {
         return rows.map((r) => r.content);
     }
 }
-
-module.exports = SettingStore;

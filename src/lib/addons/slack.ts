@@ -107,5 +107,3 @@ export default class SlackAddon extends Addon {
         return [];
     }
 }
-
-module.exports = SlackAddon;

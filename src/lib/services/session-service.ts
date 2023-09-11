@@ -43,5 +43,3 @@ export default class SessionService {
         return this.sessionStore.insertSession({ sid, sess });
     }
 }
-
-module.exports = SessionService;

@@ -43,5 +43,3 @@ export default class UserFeedbackService {
         return this.userFeedbackStore.updateFeedback(feedback);
     }
 }
-
-module.exports = UserFeedbackService;

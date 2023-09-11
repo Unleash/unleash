@@ -51,4 +51,3 @@ export default class EmailController extends Controller {
         res.end();
     }
 }
-module.exports = EmailController;

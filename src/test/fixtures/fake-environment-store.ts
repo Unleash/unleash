@@ -140,5 +140,3 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
         return Promise.resolve(0);
     }
 }
-
-module.exports = FakeEnvironmentStore;

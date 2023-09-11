@@ -779,5 +779,3 @@ export default class StateService {
         );
     }
 }
-
-module.exports = StateService;

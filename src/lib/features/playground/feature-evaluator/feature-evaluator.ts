@@ -1,7 +1,8 @@
 import Client, { FeatureStrategiesEvaluationResult } from './client';
 import Repository, { RepositoryInterface } from './repository';
 import { Context } from './context';
-import { Strategy, defaultStrategies } from './strategy';
+import { defaultStrategies } from './strategy';
+import type { Strategy } from './strategy';
 
 import { ClientFeaturesResponse, FeatureInterface } from './feature';
 import { Variant } from './variant';

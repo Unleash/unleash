@@ -127,5 +127,4 @@ class FakeEventStore implements IEventStore {
     }
 }
 
-module.exports = FakeEventStore;
 export default FakeEventStore;

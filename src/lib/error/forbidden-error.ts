@@ -5,4 +5,3 @@ class ForbiddenError extends UnleashError {
 }
 
 export default ForbiddenError;
-module.exports = ForbiddenError;

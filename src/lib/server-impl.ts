@@ -27,10 +27,10 @@ import AuthenticationRequired from './types/authentication-required';
 import Controller from './routes/controller';
 import { IAuthRequest } from './routes/unleash-types';
 import { SimpleAuthSettings } from './types/settings/simple-auth-settings';
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import * as permissions from './types/permissions';
 import * as eventType from './types/events';
-import { Db } from './db/db';
+import type { Db } from './db/db';
 import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock';
 
 async function createApp(

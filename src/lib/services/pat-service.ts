@@ -100,5 +100,3 @@ export default class PatService {
         return `user:${randomStr}`;
     }
 }
-
-module.exports = PatService;

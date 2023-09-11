@@ -1,6 +1,5 @@
-// export module version
-require('pkginfo')(module, 'version');
-
-const { version } = module.exports;
+const packageInfo = await Bun.file('package.json', {
+    type: 'application/json',
+}).json();
+export const version = packageInfo.version;
 export default version;
-module.exports = version;

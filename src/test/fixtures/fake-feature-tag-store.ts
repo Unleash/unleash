@@ -102,5 +102,3 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
         throw new Error('Method not implemented.');
     }
 }
-
-module.exports = FakeFeatureTagStore;

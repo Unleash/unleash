@@ -122,5 +122,4 @@ class UserFeedbackController extends Controller {
     }
 }
 
-module.exports = UserFeedbackController;
 export default UserFeedbackController;

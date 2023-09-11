@@ -1,6 +1,6 @@
 import { IUnleashConfig } from '../../types';
 import { GroupService } from '../../services';
-import { Db } from '../../db/db';
+import type { Db } from '../../db/db';
 import GroupStore from '../../db/group-store';
 import { AccountStore } from '../../db/account-store';
 import EventStore from '../../db/event-store';

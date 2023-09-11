@@ -132,7 +132,3 @@ export const createStores = (
         importTogglesStore: new ImportTogglesStore(db),
     };
 };
-
-module.exports = {
-    createStores,
-};

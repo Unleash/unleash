@@ -5,4 +5,3 @@ class UnauthorizedError extends UnleashError {
 }
 
 export default UnauthorizedError;
-module.exports = UnauthorizedError;

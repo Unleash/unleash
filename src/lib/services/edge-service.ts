@@ -36,5 +36,3 @@ export default class EdgeService {
         return { tokens: edgeTokens };
     }
 }
-
-module.exports = EdgeService;

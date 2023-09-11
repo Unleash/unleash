@@ -5,6 +5,11 @@ import { ClientFeaturesResponse } from './feature';
 import InMemStorageProvider from './repository/storage-provider-in-mem';
 
 // exports
-export { Strategy } from './strategy';
-export { Context, Variant, FeatureEvaluator, InMemStorageProvider };
-export type { ClientFeaturesResponse, FeatureEvaluatorConfig };
+export type { Strategy } from './strategy';
+export { FeatureEvaluator, InMemStorageProvider };
+export type {
+    Variant,
+    Context,
+    ClientFeaturesResponse,
+    FeatureEvaluatorConfig,
+};

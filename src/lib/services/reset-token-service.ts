@@ -126,5 +126,3 @@ export default class ResetTokenService {
         return bcrypt.hash(crypto.randomBytes(32).toString(), 10);
     }
 }
-
-module.exports = ResetTokenService;

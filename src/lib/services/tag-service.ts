@@ -73,5 +73,3 @@ export default class TagService {
         });
     }
 }
-
-module.exports = TagService;

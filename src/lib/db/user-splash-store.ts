@@ -101,5 +101,3 @@ export default class UserSplashStore implements IUserSplashStore {
         return userSplashs.map(rowToField);
     }
 }
-
-module.exports = UserSplashStore;

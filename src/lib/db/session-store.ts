@@ -111,5 +111,3 @@ export default class SessionStore implements ISessionStore {
         };
     }
 }
-
-module.exports = SessionStore;

@@ -182,5 +182,3 @@ export default class StrategyStore implements IStrategyStore {
             .delete();
     }
 }
-
-module.exports = StrategyStore;

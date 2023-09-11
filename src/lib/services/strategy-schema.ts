@@ -24,4 +24,3 @@ const strategySchema = joi
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });
 export default strategySchema;
-module.exports = strategySchema;

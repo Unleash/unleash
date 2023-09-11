@@ -174,6 +174,4 @@ class UserStoreMock implements IUserStore {
     }
 }
 
-module.exports = UserStoreMock;
-
 export default UserStoreMock;

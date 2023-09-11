@@ -722,5 +722,3 @@ export default class ExportImportService {
         });
     }
 }
-
-module.exports = ExportImportService;

@@ -483,5 +483,3 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return result?.potentially_stale ?? false;
     }
 }
-
-module.exports = FeatureToggleStore;

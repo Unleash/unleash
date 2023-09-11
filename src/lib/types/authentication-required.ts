@@ -48,4 +48,3 @@ class AuthenticationRequired extends UnleashError {
 }
 
 export default AuthenticationRequired;
-module.exports = AuthenticationRequired;

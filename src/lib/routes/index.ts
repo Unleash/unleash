@@ -5,9 +5,9 @@ import { IUnleashConfig, IUnleashServices } from '../types';
 import LogoutController from './logout';
 import rateLimit from 'express-rate-limit';
 
-const AdminApi = require('./admin-api');
-const ClientApi = require('./client-api');
-const Controller = require('./controller');
+import { AdminApi } from './admin-api';
+import { ClientApi } from './client-api';
+import Controller from './controller';
 import { HealthCheckController } from './health-check';
 import ProxyController from './proxy-api';
 import EdgeController from './edge-api';
@@ -55,5 +55,3 @@ class IndexRouter extends Controller {
 }
 
 export default IndexRouter;
-
-module.exports = IndexRouter;

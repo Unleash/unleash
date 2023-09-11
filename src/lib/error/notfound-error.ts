@@ -8,4 +8,3 @@ class NotFoundError extends UnleashError {
     }
 }
 export default NotFoundError;
-module.exports = NotFoundError;

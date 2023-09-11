@@ -98,5 +98,3 @@ export default class TagTypeService {
         return data;
     }
 }
-
-module.exports = TagTypeService;

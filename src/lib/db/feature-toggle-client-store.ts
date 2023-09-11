@@ -1,4 +1,4 @@
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
@@ -355,5 +355,3 @@ export default class FeatureToggleClientStore
         });
     }
 }
-
-module.exports = FeatureToggleClientStore;

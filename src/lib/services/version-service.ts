@@ -318,5 +318,3 @@ export default class VersionService {
         this.timer = null;
     }
 }
-
-module.exports = VersionService;

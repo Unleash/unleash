@@ -3,7 +3,7 @@ import { Logger, LogProvider } from '../logger';
 export type SchedulerMode = 'active' | 'paused';
 
 export class SchedulerService {
-    private intervalIds: NodeJS.Timer[] = [];
+    private intervalIds: NodeJS.Timeout[] = [];
 
     private mode: SchedulerMode;
 

@@ -4,7 +4,7 @@ import MetricsController from './metrics';
 import RegisterController from './register';
 import { IUnleashConfig, IUnleashServices } from '../../types';
 
-export default class ClientApi extends Controller {
+export class ClientApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
         super(config);
 
@@ -13,5 +13,3 @@ export default class ClientApi extends Controller {
         this.use('/register', new RegisterController(services, config).router);
     }
 }
-
-module.exports = ClientApi;

@@ -505,8 +505,3 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         disableScheduler: options.disableScheduler,
     };
 }
-
-module.exports = {
-    createConfig,
-    authTypeFromString,
-};

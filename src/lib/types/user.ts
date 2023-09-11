@@ -91,5 +91,3 @@ export default class User implements IUser {
         return generateImageUrl(this);
     }
 }
-
-module.exports = User;

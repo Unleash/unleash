@@ -147,4 +147,3 @@ class ContextService {
     }
 }
 export default ContextService;
-module.exports = ContextService;

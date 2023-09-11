@@ -146,5 +146,3 @@ export default class ProjectArchiveController extends Controller {
         res.status(202).end();
     }
 }
-
-module.exports = ProjectArchiveController;

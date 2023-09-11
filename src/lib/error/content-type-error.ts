@@ -18,4 +18,3 @@ class ContentTypeError extends UnleashError {
 }
 
 export default ContentTypeError;
-module.exports = ContentTypeError;

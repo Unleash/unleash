@@ -1,4 +1,4 @@
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import EventEmitter from 'events';
 import { v4 as uuidv4 } from 'uuid';
 import metricsHelper from '../util/metrics-helper';
@@ -720,5 +720,4 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     }
 }
 
-module.exports = FeatureStrategiesStore;
 export default FeatureStrategiesStore;

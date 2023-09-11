@@ -219,4 +219,3 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 }
 export default AddonController;
-module.exports = AddonController;

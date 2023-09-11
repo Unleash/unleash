@@ -110,5 +110,3 @@ export default class UserFeedbackStore implements IUserFeedbackStore {
         return userFeedbacks.map(rowToField);
     }
 }
-
-module.exports = UserFeedbackStore;

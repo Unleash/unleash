@@ -85,4 +85,3 @@ class FeatureTypeStore implements IFeatureTypeStore {
     }
 }
 export default FeatureTypeStore;
-module.exports = FeatureTypeStore;

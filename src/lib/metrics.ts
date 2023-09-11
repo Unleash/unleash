@@ -21,19 +21,13 @@ import {
 import { IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
-import Timer = NodeJS.Timer;
 import { InstanceStatsService } from './services/instance-stats-service';
 import { ValidatedClientMetrics } from './services/client-metrics/schema';
 
 export default class MetricsMonitor {
-    timer?: Timer;
+    timer?: NodeJS.Timeout | undefined;
 
-    poolMetricsTimer?: Timer;
-
-    constructor() {
-        this.timer = null;
-        this.poolMetricsTimer = null;
-    }
+    poolMetricsTimer?: NodeJS.Timeout | undefined;
 
     startMonitoring(
         config: IUnleashConfig,
@@ -381,7 +375,3 @@ export default class MetricsMonitor {
 export function createMetricsMonitor(): MetricsMonitor {
     return new MetricsMonitor();
 }
-
-module.exports = {
-    createMetricsMonitor,
-};

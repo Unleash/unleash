@@ -46,7 +46,7 @@ export class ProxyRepository
 
     private interval: number;
 
-    private timer: NodeJS.Timer | null;
+    private timer: NodeJS.Timeout | null;
 
     private running: boolean;
 

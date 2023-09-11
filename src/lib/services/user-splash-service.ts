@@ -48,5 +48,3 @@ export default class UserSplashService {
         return this.userSplashStore.updateSplash(splash);
     }
 }
-
-module.exports = UserSplashService;

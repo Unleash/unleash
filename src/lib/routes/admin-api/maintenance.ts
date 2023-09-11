@@ -98,4 +98,3 @@ export default class MaintenanceController extends Controller {
         );
     }
 }
-module.exports = MaintenanceController;

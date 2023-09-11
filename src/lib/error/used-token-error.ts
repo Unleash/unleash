@@ -9,4 +9,3 @@ class UsedTokenError extends UnleashError {
 }
 
 export default UsedTokenError;
-module.exports = UsedTokenError;

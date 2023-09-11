@@ -122,4 +122,3 @@ export default class TagStore implements ITagStore {
         };
     }
 }
-module.exports = TagStore;

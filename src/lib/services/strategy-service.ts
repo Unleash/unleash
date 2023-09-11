@@ -154,4 +154,3 @@ class StrategyService {
     }
 }
 export default StrategyService;
-module.exports = StrategyService;

@@ -68,5 +68,3 @@ export default class MaintenanceService {
         );
     }
 }
-
-module.exports = MaintenanceService;

@@ -174,5 +174,3 @@ export default class ArchiveController extends Controller {
         res.status(200).end();
     }
 }
-
-module.exports = ArchiveController;

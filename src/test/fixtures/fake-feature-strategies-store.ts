@@ -339,5 +339,3 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(3);
     }
 }
-
-module.exports = FakeFeatureStrategiesStore;

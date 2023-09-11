@@ -58,3 +58,7 @@ website/docs/reference/api/**/sidebar.js
 website/docs/reference/api/**/**.info.mdx
 website/docs/generated
 reports/jest-junit.xml
+
+# TypeScript cache
+
+*.tsbuildinfo

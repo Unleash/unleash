@@ -290,6 +290,4 @@ class AccessStoreMock implements IAccessStore {
     }
 }
 
-module.exports = AccessStoreMock;
-
 export default AccessStoreMock;

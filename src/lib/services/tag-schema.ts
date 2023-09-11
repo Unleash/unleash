@@ -17,5 +17,3 @@ export const tagSchema = Joi.object()
         stripUnknown: true,
         abortEarly: false,
     });
-
-module.exports = { tagSchema };

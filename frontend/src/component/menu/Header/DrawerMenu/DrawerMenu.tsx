@@ -8,7 +8,6 @@ import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
 import NavigationLink from '../NavigationLink/NavigationLink';
 import { basePath } from 'utils/formatPath';
-import { IFlags } from 'interfaces/uiConfig';
 import { INavigationMenuItem } from 'interfaces/route';
 import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
 import theme from 'themes/theme';
@@ -36,7 +35,6 @@ interface IDrawerMenuProps {
         href: string;
         title: string;
     }>;
-    flags?: IFlags;
     routes: {
         mainNavRoutes: INavigationMenuItem[];
         mobileRoutes: INavigationMenuItem[];
@@ -46,7 +44,6 @@ interface IDrawerMenuProps {
 
 export const DrawerMenu: VFC<IDrawerMenuProps> = ({
     links = [],
-    flags = {},
     open = false,
     toggleDrawer,
     routes,

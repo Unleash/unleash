@@ -147,7 +147,6 @@ const Header: VFC = () => {
                         </IconButton>
                     </Tooltip>
                     <DrawerMenu
-                        flags={uiConfig.flags}
                         links={uiConfig.links}
                         open={openDrawer}
                         toggleDrawer={toggleDrawer}

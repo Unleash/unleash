@@ -1,5 +1,5 @@
 import { type VFC } from 'react';
-import { Typography, styled } from '@mui/material';
+import { Box, Typography, styled } from '@mui/material';
 import type { AddonTypeSchema } from 'openapi';
 import useLoading from 'hooks/useLoading';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -58,23 +58,16 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
         >
             <StyledContainer>
                 <StyledSection>
-                    <div>
-                        <Typography component="h3" variant="h2">
-                            Title
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            Description
-                        </Typography>
-                    </div>
                     <StyledCardsGrid>
                         {providers?.map(
-                            ({ name, displayName, description }) => (
+                            ({ name, displayName, description, deprecated }) => (
                                 <IntegrationCard
                                     key={name}
                                     icon={name}
                                     title={displayName || name}
                                     description={description}
                                     link={`/integrations/create/${name}`}
+                                    deprecated={deprecated}
                                 />
                             )
                         )}
@@ -109,16 +102,17 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             icon="unleash"
                             title="Unleash Edge"
                             description="Unleash Edge is built to help you scale Unleash. As a successor of Unleash Proxy it's even faster and more versitile."
-                            link="/integrations/create/unleash-proxy"
+                            link="/integrations/view/edge"
                             configureActionText="Learn more"
                         />
                         <IntegrationCard
                             icon="unleash"
                             title="Unleash Proxy"
                             description="The Unleash Proxy is a lightweight, stateless proxy that sits between your Unleash client SDKs and the Unleash API."
-                            link="/integrations/create/unleash-proxy"
+                            link="https://docs.getunleash.io/reference/unleash-proxy"
                             configureActionText="View documentation"
                             deprecated="Try Unleash Edge instead. It has all the features of Unleash Proxy and more."
+                            isExternal
                         />
                     </StyledCardsGrid>
                 </StyledSection>
@@ -140,7 +134,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             </a>
                         </Typography>
                     </div>
-                    <div>
+                    <Box sx={theme => ({ marginTop: theme.spacing(2) })}>
                         <Typography component="h4" variant="h4">
                             Server-side SDKs
                         </Typography>
@@ -148,7 +142,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             Server-side clients run on your server and
                             communicate directly with your Unleash instance.
                         </Typography>
-                    </div>
+                    </Box>
                     <StyledCardsGrid small>
                         {serverSdks?.map(
                             ({
@@ -169,7 +163,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             )
                         )}
                     </StyledCardsGrid>
-                    <div>
+                    <Box sx={theme => ({ marginTop: theme.spacing(2) })}>
                         <Typography component="h4" variant="h4">
                             Client-side SDKs
                         </Typography>
@@ -192,7 +186,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             </a>
                             , but not to the regular Unleash client API.
                         </Typography>
-                    </div>
+                    </Box>
                     <StyledCardsGrid small>
                         {clientSdks?.map(
                             ({

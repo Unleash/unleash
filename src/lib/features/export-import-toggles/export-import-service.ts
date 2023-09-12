@@ -522,7 +522,7 @@ export default class ExportImportService {
         data,
     }: ImportTogglesSchema): Promise<ProjectFeaturesLimit> {
         return this.importTogglesStore.getProjectFeaturesLimit(
-            data.features.map((f) => f.name),
+            [...new Set(data.features.map((f) => f.name))],
             project,
         );
     }

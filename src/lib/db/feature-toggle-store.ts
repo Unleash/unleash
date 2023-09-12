@@ -9,6 +9,7 @@ import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { Db } from './db';
 import { LastSeenInput } from '../services/client-metrics/last-seen-service';
 import { NameExistsError } from '../error';
+import FlagResolver from '../util/flag-resolver';
 
 export type EnvironmentFeatureNames = { [key: string]: string[] };
 
@@ -51,9 +52,17 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     private timer: Function;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    private flagResolver: FlagResolver;
+
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        flagResolver: FlagResolver,
+    ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');
+        this.flagResolver = flagResolver;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle',
@@ -175,18 +184,19 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         try {
             for (const env of Object.keys(environmentArrays)) {
                 const toggleNames = environmentArrays[env];
-                // await this.db(FEATURE_ENVIRONMENTS_TABLE)
-                //     .update({ last_seen_at: now })
-                //     .where('environment', env)
-                //     .whereIn(
-                //         'feature_name',
-                //         this.db(FEATURE_ENVIRONMENTS_TABLE)
-                //             .select('feature_name')
-                //             .whereIn('feature_name', toggleNames)
-                //             .forUpdate()
-                //             .skipLocked(),
-                //     );
-
+                if (this.flagResolver.isEnabled('lastSeenByEnvironment')) {
+                    await this.db(FEATURE_ENVIRONMENTS_TABLE)
+                        .update({ last_seen_at: now })
+                        .where('environment', env)
+                        .whereIn(
+                            'feature_name',
+                            this.db(FEATURE_ENVIRONMENTS_TABLE)
+                                .select('feature_name')
+                                .whereIn('feature_name', toggleNames)
+                                .forUpdate()
+                                .skipLocked(),
+                        );
+                }
                 // Updating the toggle's last_seen_at also for backwards compatibility
                 await this.db(TABLE)
                     .update({ last_seen_at: now })

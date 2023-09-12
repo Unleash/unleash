@@ -1034,7 +1034,6 @@ const validateFlagNaming = (naming?: IFeatureNaming) => {
     }
 };
 
-// mutates the input object
 export const validateAndProcessFeatureNamingPattern = (
     featureNaming: IFeatureNaming,
 ): IFeatureNaming => {

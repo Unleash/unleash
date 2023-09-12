@@ -21,7 +21,7 @@ const StyledFlagNamingInfo = styled('article')(({ theme }) => ({
         marginInlineStart: theme.spacing(2),
     },
 
-    marginBottom: theme.spacing(2),
+    marginBlockEnd: theme.spacing(2),
 }));
 
 type Props = {

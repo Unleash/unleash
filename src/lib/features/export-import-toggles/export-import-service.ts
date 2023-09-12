@@ -41,7 +41,10 @@ import {
     TagTypeService,
 } from '../../services';
 import { isValidField } from './import-context-validation';
-import { IImportTogglesStore } from './import-toggles-store-type';
+import {
+    IImportTogglesStore,
+    ProjectFeaturesLimit,
+} from './import-toggles-store-type';
 import { ImportPermissionsService, Mode } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
 import { findDuplicates } from '../../util/findDuplicates';
@@ -158,6 +161,7 @@ export default class ExportImportService {
             missingPermissions,
             duplicateFeatures,
             featureNameCheckResult,
+            featureLimitResult,
         ] = await Promise.all([
             this.getUnsupportedStrategies(dto),
             this.getUsedCustomStrategies(dto),
@@ -172,6 +176,7 @@ export default class ExportImportService {
             ),
             this.getDuplicateFeatures(dto),
             this.getInvalidFeatureNames(dto),
+            this.getFeatureLimit(dto),
         ]);
 
         const errors = ImportValidationMessages.compileErrors({
@@ -181,6 +186,7 @@ export default class ExportImportService {
             otherProjectFeatures,
             duplicateFeatures,
             featureNameCheckResult,
+            featureLimitResult,
         });
         const warnings = ImportValidationMessages.compileWarnings({
             archivedFeatures,
@@ -508,6 +514,16 @@ export default class ExportImportService {
         return this.featureToggleService.checkFeatureFlagNamesAgainstProjectPattern(
             project,
             data.features.map((f) => f.name),
+        );
+    }
+
+    private async getFeatureLimit({
+        project,
+        data,
+    }: ImportTogglesSchema): Promise<ProjectFeaturesLimit> {
+        return this.importTogglesStore.getProjectFeaturesLimit(
+            [...new Set(data.features.map((f) => f.name))],
+            project,
         );
     }
 

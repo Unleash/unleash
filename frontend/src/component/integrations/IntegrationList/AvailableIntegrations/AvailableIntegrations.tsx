@@ -106,7 +106,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                         <IntegrationCard
                             icon="unleash"
                             title="Unleash Edge"
-                            description="Unleash Edge is built to help you scale Unleash. As a successor of Unleash Proxy it's even faster and more versitile."
+                            description="Unleash Edge is built to help you scale Unleash. As a successor of Unleash Proxy it's even faster and more versatile."
                             link="/integrations/view/edge"
                             configureActionText="Learn more"
                         />

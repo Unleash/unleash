@@ -1,14 +1,22 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { styled } from '@mui/material';
-
-import { IntegrationIcon } from '../../IntegrationList/IntegrationIcon/IntegrationIcon';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import { Divider, Typography, styled } from '@mui/material';
+import edgeMode from './assets/edge-mode.svg';
+import offlineMode from './assets/edge-offline.svg';
+import edgeChaining from './assets/edge-daisy-chaining.svg';
 import LaunchIcon from '@mui/icons-material/Launch';
+import { IntegrationHowToSection } from 'component/integrations/IntegrationHowToSection/IntegrationHowToSection';
+import { formatAssetPath } from 'utils/formatPath';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
+}));
+
+const StyledDescription = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
 }));
 
 const StyledGrayContainer = styled('div')(({ theme }) => ({
@@ -20,14 +28,30 @@ const StyledGrayContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const StyledIconLine = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
+const StyledDescriptionHeader = styled(Typography)(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
 }));
 
 const StyledLink = styled('a')({
     textDecoration: 'none',
 });
+
+const StyledFigure = styled('figure')(({ theme }) => ({
+    display: 'flex',
+    marginLeft: 0,
+    marginRight: 0,
+    marginTop: theme.spacing(1.5),
+    marginBottom: theme.spacing(3),
+    gap: theme.spacing(1),
+    flexDirection: 'column',
+}));
+
+const StyledFigcaption = styled('figcaption')(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    color: theme.palette.text.secondary,
+    textAlign: 'center',
+}));
 
 export const EDGE_INFO = {
     name: 'unleash',
@@ -41,8 +65,7 @@ Unleash Edge offers two important features:
 };
 
 export const EdgeIntegration = () => {
-    const { name, displayName, description, documentationUrl, howTo } =
-        EDGE_INFO;
+    const { displayName, description, documentationUrl } = EDGE_INFO;
 
     return (
         <FormTemplate
@@ -52,12 +75,10 @@ export const EdgeIntegration = () => {
             documentationLinkLabel="Unleash Edge documentation"
         >
             <StyledContainer>
-                <StyledGrayContainer>
-                    <StyledIconLine>
-                        <IntegrationIcon name={name} /> How does it work?
-                    </StyledIconLine>
-                    <ReactMarkdown>{howTo}</ReactMarkdown>
-                </StyledGrayContainer>
+                <IntegrationHowToSection
+                    provider={EDGE_INFO}
+                    title="Why would you need Edge?"
+                />
                 <StyledGrayContainer>
                     <StyledLink
                         target="_blank"
@@ -74,6 +95,12 @@ export const EdgeIntegration = () => {
                         />
                     </StyledLink>
                 </StyledGrayContainer>
+                <Divider
+                    sx={theme => ({
+                        marginTop: theme.spacing(2),
+                        marginBottom: theme.spacing(2),
+                    })}
+                />
                 <iframe
                     src="https://www.youtube-nocookie.com/embed/6uIdF-yByWs?si=rPzsFCM_2IheaTUo"
                     title="YouTube video player"
@@ -85,6 +112,94 @@ export const EdgeIntegration = () => {
                         aspectRatio: '16/9',
                     }}
                 ></iframe>
+                <StyledDescription>
+                    <section>
+                        <StyledDescriptionHeader variant="h3">
+                            Modes
+                        </StyledDescriptionHeader>
+                        <Typography variant="body1">
+                            Edge currently supports 2 different modes:{' '}
+                            <ul>
+                                <li>
+                                    <a
+                                        href="https://docs.getunleash.io/reference/unleash-edge#edge"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Edge
+                                    </a>{' '}
+                                    Edge &ndash; Connection to upstream node
+                                    (Unleash instance or another Edge). Supports
+                                    dynamic tokens, metrics and other advanced
+                                    features;
+                                </li>
+                                <li>
+                                    <a
+                                        href="https://docs.getunleash.io/reference/unleash-edge#offline"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Offline
+                                    </a>{' '}
+                                    &ndash; No connection to upstream node. Full
+                                    control of data and tokens;
+                                </li>
+                            </ul>
+                        </Typography>
+                    </section>
+                    <section>
+                        <StyledDescriptionHeader variant="h3">
+                            Edge
+                        </StyledDescriptionHeader>
+                        <Typography variant="body1">
+                            Edge mode is the "standard" mode for Unleash Edge
+                            and the one you should default to in most cases. It
+                            connects to an upstream node, such as your Unleash
+                            instance, and uses that as the source of truth for
+                            feature toggles.
+                        </Typography>
+                        <StyledFigure>
+                            <img src={formatAssetPath(edgeMode)} alt="test" />
+                            <StyledFigcaption>Edge mode</StyledFigcaption>
+                        </StyledFigure>
+                        <Typography>
+                            Other than connecting Edge directly to your Unleash
+                            instance, it's also possible to connect to another
+                            Edge instance (daisy chaining). You can have as many
+                            Edge nodes as you'd like between the Edge node your
+                            clients are accessing and the Unleash server, and
+                            it's also possible for multiple nodes to connect to
+                            a single upstream one.
+                        </Typography>
+                        <StyledFigure>
+                            <img
+                                src={formatAssetPath(edgeChaining)}
+                                alt="test"
+                            />
+                            <StyledFigcaption>
+                                Edge daisy chaining
+                            </StyledFigcaption>
+                        </StyledFigure>
+                    </section>
+                    <section>
+                        <StyledDescriptionHeader variant="h3">
+                            Offline
+                        </StyledDescriptionHeader>
+                        <Typography>
+                            Offline mode is useful when there is no connection
+                            to an upstream node, such as your Unleash instance
+                            or another Edge instance, or as a tool to make
+                            working with Unleash easier during development.
+                        </Typography>
+                        <StyledFigure>
+                            <img
+                                src={formatAssetPath(offlineMode)}
+                                alt="test"
+                            />
+                            <StyledFigcaption>Edge offline</StyledFigcaption>
+                        </StyledFigure>
+                    </section>
+                </StyledDescription>
             </StyledContainer>
         </FormTemplate>
     );

@@ -52,6 +52,7 @@ const PROJECT_ADMIN = [
     permissions.DELETE_FEATURE,
 ];
 
+/** @deprecated prefer to use NamePermissionRef */
 export type IdPermissionRef = Pick<IPermission, 'id' | 'environment'>;
 export type NamePermissionRef = Pick<IPermission, 'name' | 'environment'>;
 export type PermissionRef = IdPermissionRef | NamePermissionRef;

@@ -4,7 +4,7 @@ import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrate
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Select from 'component/common/select';
 import { ProjectMode } from '../hooks/useProjectForm';
-import { Box, styled, TextField } from '@mui/material';
+import { Box, InputAdornment, styled, TextField } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
@@ -377,6 +377,18 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     name="feature flag naming pattern"
                                     aria-describedby="pattern-naming-description"
                                     placeholder="^[A-Za-z]+\.[A-Za-z]+\.[A-Za-z0-9-]+$"
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                ^
+                                            </InputAdornment>
+                                        ),
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                $
+                                            </InputAdornment>
+                                        ),
+                                    }}
                                     type={'text'}
                                     value={featureNamingPattern || ''}
                                     error={Boolean(errors.featureNamingPattern)}

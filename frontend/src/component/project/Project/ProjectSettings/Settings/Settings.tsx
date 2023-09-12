@@ -8,8 +8,8 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
 import EditProject from './EditProject';
-import { PremiumFeature } from '../../../../common/PremiumFeature/PremiumFeature';
-import useUiConfig from '../../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const Settings = () => {
     const projectId = useRequiredPathParam('projectId');

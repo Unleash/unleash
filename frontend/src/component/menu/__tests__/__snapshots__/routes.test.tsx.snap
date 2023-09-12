@@ -312,6 +312,7 @@ exports[`returns all baseRoutes 1`] = `
       "advanced": true,
       "mobile": true,
     },
+    "notFlag": "integrationsRework",
     "path": "/addons",
     "title": "Addons",
     "type": "protected",

@@ -123,7 +123,7 @@ export interface IVariant {
     weight: number;
     weightType: 'variable' | 'fix';
     payload?: {
-        type: 'json' | 'csv' | 'string';
+        type: 'json' | 'csv' | 'string' | 'number';
         value: string;
     };
     stickiness: string;
@@ -191,8 +191,8 @@ export type ProjectMode = 'open' | 'protected';
 
 export interface IFeatureNaming {
     pattern: string | null;
-    example: string | null;
-    description: string | null;
+    example?: string | null;
+    description?: string | null;
 }
 
 export interface IProjectOverview {

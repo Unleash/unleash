@@ -10,7 +10,7 @@ interface Override {
 }
 
 export interface Payload {
-    type: 'string' | 'csv' | 'json';
+    type: 'string' | 'csv' | 'json' | 'number';
     value: string;
 }
 

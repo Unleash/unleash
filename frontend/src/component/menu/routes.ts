@@ -44,8 +44,8 @@ import { LazyProject } from 'component/project/Project/LazyProject';
 import { LoginHistory } from 'component/loginHistory/LoginHistory';
 import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
 import { AddonsList } from 'component/integrations/IntegrationList/AddonsList';
-import { TemporaryApplicationListWrapper } from 'component/application/ApplicationList/TemporaryApplicationListWrapper';
 import { ViewIntegration } from 'component/integrations/ViewIntegration/ViewIntegration';
+import { ApplicationList } from '../application/ApplicationList/ApplicationList';
 
 export const routes: IRoute[] = [
     // Splash
@@ -181,7 +181,7 @@ export const routes: IRoute[] = [
     {
         path: '/applications',
         title: 'Applications',
-        component: TemporaryApplicationListWrapper,
+        component: ApplicationList,
         type: 'protected',
         menu: { mobile: true, advanced: true },
     },
@@ -327,6 +327,7 @@ export const routes: IRoute[] = [
         // TODO: use AddonRedirect after removing `integrationsRework` menu flag
         hidden: false,
         type: 'protected',
+        notFlag: 'integrationsRework',
         menu: { mobile: true, advanced: true },
         // TODO: remove 'addons' from menu after removing `integrationsRework` menu flag
     },
@@ -502,14 +503,14 @@ const computeRoutes = () => {
 
 export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
     return routes.map(route => {
-        const condensedRoute = {
+        return {
             path: route.path,
             flag: route.flag,
             title: route.title,
             menu: route.menu,
             configFlag: route.configFlag,
+            notFlag: route.notFlag,
         };
-        return condensedRoute;
     });
 };
 

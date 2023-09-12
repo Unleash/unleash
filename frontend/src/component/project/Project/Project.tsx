@@ -102,7 +102,7 @@ export const Project = () => {
         },
         {
             title: 'Project settings',
-            path: `${basePath}/settings`,
+            path: `${basePath}/settings${isOss() ? '/environments' : ''}`,
             name: 'settings',
             flag: undefined,
             new: false,

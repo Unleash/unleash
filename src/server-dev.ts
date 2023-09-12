@@ -40,9 +40,9 @@ process.nextTick(async () => {
                         slackAppAddon: true,
                         lastSeenByEnvironment: true,
                         integrationsRework: true,
-                        newApplicationList: true,
                         featureNamingPattern: true,
                         doraMetrics: true,
+                        variantTypeNumber: true,
                     },
                 },
                 authentication: {

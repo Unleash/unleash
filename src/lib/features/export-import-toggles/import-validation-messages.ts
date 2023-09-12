@@ -1,3 +1,4 @@
+import { FeatureNameCheckResult } from 'lib/services/feature-toggle-service';
 import {
     FeatureStrategySchema,
     ImportTogglesValidateItemSchema,
@@ -10,6 +11,7 @@ export interface IErrorsParams {
     contextFields: IContextFieldDto[];
     otherProjectFeatures: string[];
     duplicateFeatures: string[];
+    featureNameCheckResult: FeatureNameCheckResult;
 }
 
 export interface IWarningParams {
@@ -40,6 +42,7 @@ export class ImportValidationMessages {
         contextFields,
         otherProjectFeatures,
         duplicateFeatures,
+        featureNameCheckResult,
     }: IErrorsParams): ImportTogglesValidateItemSchema[] {
         const errors: ImportTogglesValidateItemSchema[] = [];
 
@@ -70,6 +73,23 @@ export class ImportValidationMessages {
                 message:
                     'We detected the following features are duplicate in your import data:',
                 affectedItems: duplicateFeatures,
+            });
+        }
+        if (featureNameCheckResult.state === 'invalid') {
+            const baseError = `Features imported into this project must match the project's feature naming pattern: "${featureNameCheckResult.featureNaming.pattern}".`;
+
+            const exampleInfo = featureNameCheckResult.featureNaming.example
+                ? ` For example: "${featureNameCheckResult.featureNaming.example}".`
+                : '';
+
+            const descriptionInfo = featureNameCheckResult.featureNaming
+                .description
+                ? ` The pattern is described as follows: "${featureNameCheckResult.featureNaming.description}"`
+                : '';
+
+            errors.push({
+                message: `${baseError}${exampleInfo}${descriptionInfo} The following features do not match the pattern:`,
+                affectedItems: [...featureNameCheckResult.invalidNames].sort(),
             });
         }
 

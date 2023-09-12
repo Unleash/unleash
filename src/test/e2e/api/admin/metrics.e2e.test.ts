@@ -9,16 +9,8 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('metrics_serial', getLogger, {
-        experimental: { flags: { newApplicationList: true } },
-    });
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                newApplicationList: true,
-            },
-        },
-    });
+    db = await dbInit('metrics_serial', getLogger, {});
+    app = await setupAppWithCustomConfig(db.stores, {});
 });
 
 beforeEach(async () => {

@@ -45,6 +45,7 @@ import { IImportTogglesStore } from './import-toggles-store-type';
 import { ImportPermissionsService, Mode } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
 import { findDuplicates } from '../../util/findDuplicates';
+import { FeatureNameCheckResult } from 'lib/services/feature-toggle-service';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -156,6 +157,7 @@ export default class ExportImportService {
             existingProjectFeatures,
             missingPermissions,
             duplicateFeatures,
+            featureNameCheckResult,
         ] = await Promise.all([
             this.getUnsupportedStrategies(dto),
             this.getUsedCustomStrategies(dto),
@@ -169,6 +171,7 @@ export default class ExportImportService {
                 mode,
             ),
             this.getDuplicateFeatures(dto),
+            this.getInvalidFeatureNames(dto),
         ]);
 
         const errors = ImportValidationMessages.compileErrors({
@@ -177,6 +180,7 @@ export default class ExportImportService {
             contextFields: unsupportedContextFields || [],
             otherProjectFeatures,
             duplicateFeatures,
+            featureNameCheckResult,
         });
         const warnings = ImportValidationMessages.compileWarnings({
             archivedFeatures,
@@ -498,6 +502,16 @@ export default class ExportImportService {
                 [firstError, ...remainingErrors],
             );
         }
+    }
+
+    private async getInvalidFeatureNames({
+        project,
+        data,
+    }: ImportTogglesSchema): Promise<FeatureNameCheckResult> {
+        return this.featureToggleService.checkFeatureFlagNamesAgainstProjectPattern(
+            project,
+            data.features.map((f) => f.name),
+        );
     }
 
     private async getUnsupportedStrategies(

@@ -168,27 +168,6 @@ export default class ProjectService {
         return this.store.get(id);
     }
 
-    private validateFlagNaming = (naming?: IFeatureNaming) => {
-        if (naming) {
-            const { pattern, example } = naming;
-            if (
-                pattern != null &&
-                example &&
-                !example.match(new RegExp(pattern))
-            ) {
-                throw new BadDataError(
-                    `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern.`,
-                );
-            }
-
-            if (!pattern && example) {
-                throw new BadDataError(
-                    "You've provided a feature flag naming example, but no feature flag naming pattern. You must specify a pattern to use an example.",
-                );
-            }
-        }
-    };
-
     async createProject(
         newProject: Pick<
             IProject,
@@ -231,16 +210,6 @@ export default class ProjectService {
 
     async updateProject(updatedProject: IProject, user: User): Promise<void> {
         const preData = await this.store.get(updatedProject.id);
-
-        if (updatedProject.featureNaming) {
-            this.validateFlagNaming(updatedProject.featureNaming);
-        }
-        if (
-            updatedProject.featureNaming?.pattern &&
-            !updatedProject.featureNaming?.example
-        ) {
-            updatedProject.featureNaming.example = null;
-        }
 
         await this.store.update(updatedProject);
 
@@ -1043,3 +1012,38 @@ export default class ProjectService {
         };
     }
 }
+
+const validateFlagNaming = (naming?: IFeatureNaming) => {
+    if (naming) {
+        const { pattern, example } = naming;
+        if (pattern != null && example && !example.match(new RegExp(pattern))) {
+            throw new BadDataError(
+                `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern.`,
+            );
+        }
+
+        if (!pattern && example) {
+            throw new BadDataError(
+                "You've provided a feature flag naming example, but no feature flag naming pattern. You must specify a pattern to use an example.",
+            );
+        }
+    }
+};
+
+// mutates the input object
+export const validateAndProcessFeatureNamingPattern = (
+    featureNaming: IFeatureNaming,
+): IFeatureNaming => {
+    featureNaming.pattern = featureNaming.pattern.replace(/(^\^+|\$+$)/g, '');
+
+    validateFlagNaming(featureNaming);
+
+    if (featureNaming.pattern && !featureNaming.example) {
+        featureNaming.example = null;
+    }
+    if (featureNaming.pattern && !featureNaming.description) {
+        featureNaming.description = null;
+    }
+
+    return featureNaming;
+};

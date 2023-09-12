@@ -958,3 +958,44 @@ test('should not import archived features tags', async () => {
         tags: resultTags,
     });
 });
+
+test(`should give errors with flag names if the flags don't match the project pattern`, async () => {
+    await db.stores.environmentStore.create({
+        name: DEFAULT_ENV,
+        type: 'production',
+    });
+
+    const pattern = 'testpattern.+';
+    for (const project of [DEFAULT_PROJECT]) {
+        await db.stores.projectStore.create({
+            name: project,
+            description: '',
+            id: project,
+            mode: 'open' as const,
+            featureNaming: { pattern },
+        });
+        await app.linkProjectToEnvironment(project, DEFAULT_ENV);
+    }
+
+    const flagName = 'unusedfeaturenamethatdoesntmatchpattern';
+
+    const { body } = await app.importToggles(
+        {
+            ...defaultImportPayload,
+            data: {
+                ...defaultImportPayload.data,
+                features: [
+                    {
+                        project: 'old_project',
+                        name: flagName,
+                        type: 'release',
+                    },
+                ],
+            },
+        },
+        400,
+    );
+
+    expect(body.message).toContain(pattern);
+    expect(body.message).toContain(flagName);
+});

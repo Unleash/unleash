@@ -175,17 +175,17 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         try {
             for (const env of Object.keys(environmentArrays)) {
                 const toggleNames = environmentArrays[env];
-                await this.db(FEATURE_ENVIRONMENTS_TABLE)
-                    .update({ last_seen_at: now })
-                    .where('environment', env)
-                    .whereIn(
-                        'feature_name',
-                        this.db(FEATURE_ENVIRONMENTS_TABLE)
-                            .select('feature_name')
-                            .whereIn('feature_name', toggleNames)
-                            .forUpdate()
-                            .skipLocked(),
-                    );
+                // await this.db(FEATURE_ENVIRONMENTS_TABLE)
+                //     .update({ last_seen_at: now })
+                //     .where('environment', env)
+                //     .whereIn(
+                //         'feature_name',
+                //         this.db(FEATURE_ENVIRONMENTS_TABLE)
+                //             .select('feature_name')
+                //             .whereIn('feature_name', toggleNames)
+                //             .forUpdate()
+                //             .skipLocked(),
+                //     );
 
                 // Updating the toggle's last_seen_at also for backwards compatibility
                 await this.db(TABLE)

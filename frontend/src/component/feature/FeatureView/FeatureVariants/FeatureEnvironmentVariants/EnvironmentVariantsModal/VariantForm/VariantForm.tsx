@@ -293,7 +293,7 @@ export const VariantForm = ({
                 JSON.parse(payload.value);
             }
             if (variantTypeNumber && payload.type === 'number') {
-                return !isNaN(Number(payload.value));
+                return !Number.isNaN(Number(payload.value));
             }
             return true;
         } catch (e: unknown) {

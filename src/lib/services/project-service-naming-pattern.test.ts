@@ -37,3 +37,11 @@ test('^ and $ inside the pattern is left untouched', () => {
         pattern,
     });
 });
+
+test('trailing ^ and leading $ are left untouched', () => {
+    const pattern = '$[a-z]-^';
+
+    expect(validateAndProcessFeatureNamingPattern({ pattern })).toMatchObject({
+        pattern,
+    });
+});

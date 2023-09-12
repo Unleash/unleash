@@ -1,5 +1,3 @@
-// test any number of leading and trailing ^ and $
-
 import { BadDataError } from '../error';
 import { validateAndProcessFeatureNamingPattern } from './project-service';
 

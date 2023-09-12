@@ -1022,7 +1022,7 @@ const validateFlagNaming = (naming?: IFeatureNaming) => {
             !example.match(new RegExp(`^${pattern}$`))
         ) {
             throw new BadDataError(
-                `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern.`,
+                `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern. Bear in mind that the pattern must match the whole example, as if it were surrounded by '^' and "$".`,
             );
         }
 

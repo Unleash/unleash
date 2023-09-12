@@ -59,6 +59,11 @@ class UserStoreMock implements IUserStore {
                     u.seenAt &&
                     u.seenAt > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
             ).length,
+            last60: this.data.filter(
+                (u) =>
+                    u.seenAt &&
+                    u.seenAt > new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
+            ).length,
             last90: this.data.filter(
                 (u) =>
                     u.seenAt &&

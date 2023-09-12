@@ -47,7 +47,12 @@ export const createStores = (
 
     return {
         eventStore,
-        featureToggleStore: new FeatureToggleStore(db, eventBus, getLogger),
+        featureToggleStore: new FeatureToggleStore(
+            db,
+            eventBus,
+            getLogger,
+            config.flagResolver,
+        ),
         featureTypeStore: new FeatureTypeStore(db, getLogger),
         strategyStore: new StrategyStore(db, getLogger),
         clientApplicationsStore: new ClientApplicationsStore(

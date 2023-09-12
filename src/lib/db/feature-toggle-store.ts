@@ -9,7 +9,7 @@ import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { Db } from './db';
 import { LastSeenInput } from '../services/client-metrics/last-seen-service';
 import { NameExistsError } from '../error';
-import FlagResolver from '../util/flag-resolver';
+import { IFlagResolver } from 'lib/types';
 
 export type EnvironmentFeatureNames = { [key: string]: string[] };
 
@@ -52,13 +52,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     private timer: Function;
 
-    private flagResolver: FlagResolver;
+    private flagResolver: IFlagResolver;
 
     constructor(
         db: Db,
         eventBus: EventEmitter,
         getLogger: LogProvider,
-        flagResolver: FlagResolver,
+        flagResolver: IFlagResolver,
     ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');

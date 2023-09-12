@@ -56,7 +56,7 @@ interface IRoleCreation {
     name: string;
     description: string;
     type?: 'root-custom' | 'custom';
-    permissions?: IPermission[];
+    permissions?: Pick<IPermission, 'id' | 'environment'>[];
 }
 
 export interface IRoleValidation {

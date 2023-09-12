@@ -921,7 +921,7 @@ test('validate import data', async () => {
             },
             {
                 message:
-                    'We detected you want to create 2 new features in a project with 0 current features and a limit of 1',
+                    'We detected you want to create 2 new features to a project that already has 0 existing features, exceeding the maximum limit of 1.',
                 affectedItems: [],
             },
         ],

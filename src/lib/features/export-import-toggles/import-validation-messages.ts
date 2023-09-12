@@ -101,7 +101,7 @@ export class ImportValidationMessages {
             featureLimitResult.limit
         ) {
             errors.push({
-                message: `We detected you want to create ${featureLimitResult.newFeaturesCount} new features in a project with ${featureLimitResult.currentFeaturesCount} current features and a limit of ${featureLimitResult.limit}`,
+                message: `We detected you want to create ${featureLimitResult.newFeaturesCount} new features to a project that already has ${featureLimitResult.currentFeaturesCount} existing features, exceeding the maximum limit of ${featureLimitResult.limit}.`,
                 affectedItems: [],
             });
         }

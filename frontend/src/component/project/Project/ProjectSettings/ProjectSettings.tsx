@@ -23,16 +23,12 @@ export const ProjectSettings = () => {
     const navigate = useNavigate();
 
     const tabs: ITab[] = [
-        {
-            id: '',
-            label: 'Settings',
-        },
-        {
-            id: 'environments',
-            label: 'Environments',
-        },
         ...(isPro() || isEnterprise()
             ? [
+                  {
+                      id: '',
+                      label: 'Settings',
+                  },
                   {
                       id: 'access',
                       label: 'Access',
@@ -52,6 +48,10 @@ export const ProjectSettings = () => {
                   },
               ]
             : []),
+        {
+            id: 'environments',
+            label: 'Environments',
+        },
         {
             id: 'api-access',
             label: 'API access',

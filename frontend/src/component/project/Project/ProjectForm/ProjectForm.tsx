@@ -376,7 +376,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                     label={'Naming Pattern'}
                                     name="feature flag naming pattern"
                                     aria-describedby="pattern-naming-description"
-                                    placeholder="^[A-Za-z]+\.[A-Za-z]+\.[A-Za-z0-9-]+$"
+                                    placeholder="[A-Za-z]+\.[A-Za-z]+\.[A-Za-z0-9-]+"
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">

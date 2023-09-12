@@ -262,7 +262,7 @@ export const VariantForm = ({
 
     const validatePayload = (payload: IPayload) => {
         if (!isValidPayload(payload)) {
-            setError(ErrorField.PAYLOAD, 'Invalid JSON.');
+            setError(ErrorField.PAYLOAD, 'Invalid value.');
         }
     };
 
@@ -293,7 +293,7 @@ export const VariantForm = ({
                 JSON.parse(payload.value);
             }
             if (variantTypeNumber && payload.type === 'number') {
-                Number(payload.value);
+                return !isNaN(Number(payload.value));
             }
             return true;
         } catch (e: unknown) {

@@ -22,6 +22,7 @@ export interface IUserUpdateFields {
 export interface IActiveUsers {
     last7: number;
     last30: number;
+    last60: number;
     last90: number;
 }
 

@@ -86,6 +86,22 @@ export default class MetricsMonitor {
             name: 'users_total',
             help: 'Number of users',
         });
+        const usersActive7days = new client.Gauge({
+            name: 'users_active_7',
+            help: 'Number of users active in the last 7 days',
+        });
+        const usersActive30days = new client.Gauge({
+            name: 'users_active_30',
+            help: 'Number of users active in the last 30 days',
+        });
+        const usersActive60days = new client.Gauge({
+            name: 'users_active_60',
+            help: 'Number of users active in the last 60 days',
+        });
+        const usersActive90days = new client.Gauge({
+            name: 'users_active_90',
+            help: 'Number of users active in the last 90 days',
+        });
         const projectsTotal = new client.Gauge({
             name: 'projects_total',
             help: 'Number of projects',
@@ -166,6 +182,15 @@ export default class MetricsMonitor {
 
                 usersTotal.reset();
                 usersTotal.set(stats.users);
+
+                usersActive7days.reset();
+                usersActive7days.set(stats.activeUsers.last7);
+                usersActive30days.reset();
+                usersActive30days.set(stats.activeUsers.last30);
+                usersActive60days.reset();
+                usersActive60days.set(stats.activeUsers.last60);
+                usersActive90days.reset();
+                usersActive90days.set(stats.activeUsers.last90);
 
                 projectsTotal.reset();
                 projectsTotal.set(stats.projects);

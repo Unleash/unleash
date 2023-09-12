@@ -104,7 +104,10 @@ const createVariants = async (feature: string, variants: IVariant[]) => {
     );
 };
 
-const createProjects = async (projects: string[] = [DEFAULT_PROJECT]) => {
+const createProjects = async (
+    projects: string[] = [DEFAULT_PROJECT],
+    featureLimit = 2,
+) => {
     await db.stores.environmentStore.create({
         name: DEFAULT_ENV,
         type: 'production',
@@ -115,6 +118,7 @@ const createProjects = async (projects: string[] = [DEFAULT_PROJECT]) => {
             description: '',
             id: project,
             mode: 'open' as const,
+            featureLimit,
         });
         await app.linkProjectToEnvironment(project, DEFAULT_ENV);
     }
@@ -725,6 +729,13 @@ test('import multiple features with same tag', async () => {
     });
 });
 
+test('import too many feature exceeding limit', async () => {
+    const featureLimit = 1;
+    await createProjects([DEFAULT_PROJECT], featureLimit);
+
+    await app.importToggles(importWithMultipleFeatures, 403);
+});
+
 test('can update toggles on subsequent import', async () => {
     await createProjects();
     await app.importToggles(defaultImportPayload);
@@ -828,7 +839,7 @@ test('reject import with duplicate features', async () => {
     );
 
     expect(body.details[0].description).toBe(
-        'Feature first_feature already exists',
+        'A toggle with that name already exists',
     );
 });
 

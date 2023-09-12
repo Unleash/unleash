@@ -155,12 +155,12 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
                 ) : null}
             </StyledTitle>
             <ConditionallyRender
-                condition={description !== undefined}
-                show={<StyledHelpText>{description}</StyledHelpText>}
-            />
-            <ConditionallyRender
                 condition={selectAllEnabled}
                 show={<DefaultHelpText />}
+            />
+            <ConditionallyRender
+                condition={description !== undefined}
+                show={<StyledHelpText>{description}</StyledHelpText>}
             />
             <ConditionallyRender
                 condition={selectAllEnabled}

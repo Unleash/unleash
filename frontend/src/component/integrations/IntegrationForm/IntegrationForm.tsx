@@ -381,6 +381,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 onChange={setEnvironments}
                                 entityName="environment"
                                 selectAllEnabled={true}
+                                description="Global events that are not specific to an environment will still be received."
                             />
                         </div>
                     </StyledConfigurationSection>

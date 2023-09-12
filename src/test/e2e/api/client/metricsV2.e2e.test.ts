@@ -11,7 +11,13 @@ let defaultToken;
 
 beforeAll(async () => {
     db = await dbInit('metrics_two_api_client', getLogger);
-    app = await setupAppWithAuth(db.stores, {});
+    app = await setupAppWithAuth(db.stores, {
+        experimental: {
+            flags: {
+                lastSeenByEnvironment: true,
+            },
+        },
+    });
     defaultToken = await app.services.apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
         project: 'default',
@@ -156,11 +162,11 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
         projectId: 'default',
     });
 
-    // const t1Env = t1.environments.find((e) => e.name === 'default');
-    // const t2Env = t2.environments.find((e) => e.name === 'default');
+    const t1Env = t1.environments.find((e) => e.name === 'default');
+    const t2Env = t2.environments.find((e) => e.name === 'default');
 
     expect(t1.lastSeenAt?.getTime()).toBeGreaterThanOrEqual(start);
-    // expect(t1Env?.lastSeenAt.getTime()).toBeGreaterThanOrEqual(start);
+    expect(t1Env?.lastSeenAt.getTime()).toBeGreaterThanOrEqual(start);
     expect(t2?.lastSeenAt).toBeDefined();
-    // expect(t2Env?.lastSeenAt).toBeDefined();
+    expect(t2Env?.lastSeenAt).toBeDefined();
 });

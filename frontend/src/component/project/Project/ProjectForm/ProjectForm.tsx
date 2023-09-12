@@ -354,22 +354,31 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 <FeatureFlagNamingTooltip />
                             </Box>
                             <StyledSubtitle>
-                                <p id="pattern-naming-description">
-                                    A feature flag naming pattern is a{' '}
-                                    <a
-                                        href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions`}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        JavaScript RegEx
-                                    </a>{' '}
-                                    used to enforce feature flag names within
-                                    this project.
-                                </p>
-                                <p>
-                                    Leave it empty if you don’t want to add a
-                                    naming pattern.
-                                </p>
+                                <div id="pattern-naiming-description">
+                                    <p>
+                                        A feature flag naming pattern is a{' '}
+                                        <a
+                                            href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            JavaScript RegEx
+                                        </a>{' '}
+                                        used to enforce feature flag names
+                                        within this project.
+                                    </p>
+                                    <p>
+                                        When set, it requires the entire flag
+                                        name to match the pattern, as if the
+                                        pattern was surrounded by a leading{' '}
+                                        <code>^</code> and a trailing{' '}
+                                        <code>$</code>.
+                                    </p>
+                                    <p>
+                                        Leave it empty if you don’t want to add
+                                        a naming pattern.
+                                    </p>
+                                </div>
                             </StyledSubtitle>
                             <StyledFlagNamingContainer>
                                 <StyledInput

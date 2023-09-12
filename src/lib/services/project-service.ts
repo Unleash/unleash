@@ -85,8 +85,6 @@ const validateFlagNaming = (naming?: IFeatureNaming) => {
 export const validateAndProcessFeatureNamingPattern = (
     featureNaming: IFeatureNaming,
 ): IFeatureNaming => {
-    featureNaming.pattern = featureNaming.pattern.replace(/(^\^+|\$+$)/g, '');
-
     validateFlagNaming(featureNaming);
 
     if (featureNaming.pattern && !featureNaming.example) {

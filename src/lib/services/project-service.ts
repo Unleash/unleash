@@ -1016,7 +1016,11 @@ export default class ProjectService {
 const validateFlagNaming = (naming?: IFeatureNaming) => {
     if (naming) {
         const { pattern, example } = naming;
-        if (pattern != null && example && !example.match(new RegExp(pattern))) {
+        if (
+            pattern != null &&
+            example &&
+            !example.match(new RegExp(`^${pattern}$`))
+        ) {
             throw new BadDataError(
                 `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern.`,
             );

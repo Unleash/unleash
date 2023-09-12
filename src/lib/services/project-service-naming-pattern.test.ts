@@ -1,5 +1,6 @@
 // test any number of leading and trailing ^ and $
 
+import { BadDataError } from '../error';
 import { validateAndProcessFeatureNamingPattern } from './project-service';
 
 test.each([1, 3, 7])(
@@ -44,4 +45,27 @@ test('trailing ^ and leading $ are left untouched', () => {
     expect(validateAndProcessFeatureNamingPattern({ pattern })).toMatchObject({
         pattern,
     });
+});
+
+test('pattern examples are tested against the pattern as if it were surrounded by ^ and $', () => {
+    const pattern = '-[0-9]+';
+    const validExample = '-23';
+    const invalidExample1 = 'feat-15';
+    const invalidExample2 = '-15-';
+
+    expect(
+        validateAndProcessFeatureNamingPattern({
+            pattern,
+            example: validExample,
+        }),
+    ).toMatchObject({ pattern, example: validExample });
+
+    for (const example of [invalidExample1, invalidExample2]) {
+        expect(() => {
+            validateAndProcessFeatureNamingPattern({
+                pattern,
+                example,
+            });
+        }).toThrow(BadDataError);
+    }
 });

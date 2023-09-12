@@ -118,7 +118,7 @@ export const validateFeatureNamingExample = ({
     if (featureNamingPatternError || !example || !pattern) {
         return { state: 'valid' };
     } else if (example && pattern) {
-        const regex = new RegExp(pattern);
+        const regex = new RegExp(`^${pattern}$`);
         const matches = regex.test(example);
         if (!matches) {
             return { state: 'invalid', reason: 'Example does not match regex' };

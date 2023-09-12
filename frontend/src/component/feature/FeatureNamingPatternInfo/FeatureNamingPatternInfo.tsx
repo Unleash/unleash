@@ -7,17 +7,17 @@ const StyledFlagNamingInfo = styled('article')(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
     backgroundColor: `${theme.palette.background.elevation2}`,
-    '& dl': {
+    dl: {
         display: 'grid',
         gridTemplateColumns: 'max-content auto',
         rowGap: theme.spacing(1),
         columnGap: 0,
     },
-    '& dt': {
+    dt: {
         color: theme.palette.text.secondary,
         '&::after': { content: '":"' },
     },
-    '& dd': {
+    dd: {
         marginInlineStart: theme.spacing(2),
     },
 

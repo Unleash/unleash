@@ -1110,7 +1110,7 @@ class FeatureToggleService {
             const namingPattern = patternData?.pattern;
 
             if (namingPattern) {
-                const regex = new RegExp(namingPattern);
+                const regex = new RegExp(`^${namingPattern}$`);
                 const mismatchedNames = featureNames.filter(
                     (name) => !regex.test(name),
                 );

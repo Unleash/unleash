@@ -708,4 +708,32 @@ describe('flag name validation', () => {
             expect(result).toMatchObject({ state: 'valid' });
         },
     );
+
+    test('should not validate names as if the pattern is surrounded by ^ and $.', async () => {
+        const pattern = '-[0-9]+';
+        const projectId = `implicit-pattern-surrounding-project`;
+        const featureNaming = {
+            pattern,
+        };
+        const project = {
+            id: projectId,
+            name: projectId,
+            mode: 'open' as const,
+            defaultStickiness: 'default',
+            featureNaming,
+        };
+
+        await stores.projectStore.create(project);
+
+        const features = ['a-95', '-95-', 'b-52-z'];
+        const result = await service.checkFeatureFlagNamesAgainstProjectPattern(
+            projectId,
+            features,
+        );
+
+        expect(result).toMatchObject({
+            state: 'invalid',
+            invalidNames: new Set(features),
+        });
+    });
 });

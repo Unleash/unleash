@@ -8,7 +8,11 @@ Feature flag naming patterns is an in-development, **enterprise-only** feature.
 
 :::
 
-A feature flag naming pattern is [JavaScript regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) that is used to validate the name of a feature flag before the flag can be created. The pattern is defined in the project settings and is enforced when creating a new feature flag. The pattern is also enforced when creating a new feature flag via the API.
+A feature flag naming pattern is [JavaScript regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) that is used to validate the name of a feature flag before the flag can be created.
+
+The pattern is defined in the project settings and is enforced when creating a new feature flag. The pattern is also enforced when creating a new feature flag via the API.
+
+Patterns are implicitly anchored to the start and end of the string. This means that a pattern is matched against the entire new feature flag name, and not just any subset of it, as if the pattern was surrounded by `^` and `$`. In other words, the pattern `[a-z]+` will be interpreted as `^[a-z]+$` and will match "somefeature", but will not match "some.other.feature".
 
 Feature flag naming patterns are defined on a per-project basis.
 

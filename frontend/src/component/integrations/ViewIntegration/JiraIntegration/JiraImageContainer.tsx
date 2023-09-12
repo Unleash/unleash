@@ -6,6 +6,7 @@ import { FC } from 'react';
 export const StyledFigure = styled('figure')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(2),
+    margin: theme.spacing(2, 0),
     flexDirection: 'column',
 }));
 

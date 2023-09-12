@@ -207,20 +207,39 @@ class UserStore implements IUserStore {
         last60: number;
         last90: number;
     }> {
-        const result = await this.db.raw(
-            `SELECT
-                (SELECT COUNT(*) FROM ${TABLE} WHERE seen_at > NOW() - INTERVAL '1 week') AS last_week,
-                (SELECT COUNT(*) FROM ${TABLE} WHERE seen_at > NOW() - INTERVAL '1 month') AS last_month,
-                (SELECT COUNT(*) FROM ${TABLE} WHERE seen_at > NOW() - INTERVAL '1 month') AS last_two_months,
-                (SELECT COUNT(*) FROM ${TABLE} WHERE seen_at > NOW() - INTERVAL '3 months') AS last_quarter`,
-        );
+        const combinedQuery = this.db
+            .select('id as user_id', 'seen_at')
+            .from('users')
+            .unionAll(
+                this.db
+                    .select('user_id', 'seen_at')
+                    .from('personal_access_tokens'),
+            );
+
+        const result = await this.db
+            .with('Combined', combinedQuery)
+            .select({
+                last_week: this.db.raw(
+                    "COUNT(DISTINCT CASE WHEN seen_at > NOW() - INTERVAL '1 week' THEN user_id END)",
+                ),
+                last_month: this.db.raw(
+                    "COUNT(DISTINCT CASE WHEN seen_at > NOW() - INTERVAL '1 month' THEN user_id END)",
+                ),
+                last_two_months: this.db.raw(
+                    "COUNT(DISTINCT CASE WHEN seen_at > NOW() - INTERVAL '2 months' THEN user_id END)",
+                ),
+                last_quarter: this.db.raw(
+                    "COUNT(DISTINCT CASE WHEN seen_at > NOW() - INTERVAL '3 months' THEN user_id END)",
+                ),
+            })
+            .from('Combined');
 
         const {
             last_week: last7,
             last_month: last30,
             last_quarter: last90,
             last_two_months: last60,
-        } = result.rows[0];
+        } = result[0];
 
         return {
             last7,

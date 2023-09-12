@@ -44,8 +44,6 @@ import { IntegrationDelete } from './IntegrationDelete/IntegrationDelete';
 import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStateSwitch';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { useUiFlag } from 'hooks/useUiFlag';
-import ReactMarkdown from 'react-markdown';
-import { IntegrationIcon } from '../IntegrationList/IntegrationIcon/IntegrationIcon';
 import { IntegrationHowToSection } from '../IntegrationHowToSection/IntegrationHowToSection';
 
 type IntegrationFormProps = {

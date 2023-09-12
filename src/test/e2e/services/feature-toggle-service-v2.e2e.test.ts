@@ -33,7 +33,9 @@ const mockConstraints = (): IConstraint[] => {
 const irrelevantDate = new Date();
 
 beforeAll(async () => {
-    const config = createTestConfig();
+    const config = createTestConfig({
+        experimental: { flags: { featureNamingPattern: true } },
+    });
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',
         config.getLogger,
@@ -637,4 +639,73 @@ test('getPlaygroundFeatures should return ids and titles (if they exist) on clie
     )) {
         expect(strategy.id).not.toBeUndefined();
     }
+});
+
+describe('flag name validation', () => {
+    test('should validate names if project has flag name pattern', async () => {
+        const projectId = 'pattern-validation';
+        const featureNaming = {
+            pattern: 'testpattern.+',
+            example: 'testpattern-one!',
+            description: 'naming description',
+        };
+        const project = {
+            id: projectId,
+            name: projectId,
+            mode: 'open' as const,
+            defaultStickiness: 'default',
+            featureNaming,
+        };
+
+        await stores.projectStore.create(project);
+
+        const validFeatures = ['testpattern-feature', 'testpattern-feature2'];
+        const invalidFeatures = ['a', 'b', 'c'];
+        const result = await service.checkFeatureFlagNamesAgainstProjectPattern(
+            projectId,
+            [...validFeatures, ...invalidFeatures],
+        );
+
+        expect(result).toMatchObject({
+            state: 'invalid',
+            invalidNames: new Set(invalidFeatures),
+            featureNaming: featureNaming,
+        });
+
+        const validResult =
+            await service.checkFeatureFlagNamesAgainstProjectPattern(
+                projectId,
+                validFeatures,
+            );
+
+        expect(validResult).toMatchObject({ state: 'valid' });
+    });
+
+    test.each([null, undefined, ''])(
+        'should not validate names if the pattern is %s',
+        async (pattern) => {
+            const projectId = `empty-pattern-validation-${pattern}`;
+            const featureNaming = {
+                pattern,
+            };
+            const project = {
+                id: projectId,
+                name: projectId,
+                mode: 'open' as const,
+                defaultStickiness: 'default',
+                featureNaming,
+            };
+
+            await stores.projectStore.create(project);
+
+            const features = ['a', 'b'];
+            const result =
+                await service.checkFeatureFlagNamesAgainstProjectPattern(
+                    projectId,
+                    features,
+                );
+
+            expect(result).toMatchObject({ state: 'valid' });
+        },
+    );
 });

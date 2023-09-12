@@ -144,6 +144,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     featuresExportImport: true,
+                    featureNamingPattern: true,
                 },
             },
         },
@@ -833,6 +834,7 @@ test('reject import with duplicate features', async () => {
 
 test('validate import data', async () => {
     await createProjects();
+
     const contextField: IContextFieldDto = {
         name: 'validate_context_field',
         legalValues: [{ value: 'Value1' }],
@@ -864,6 +866,16 @@ test('validate import data', async () => {
         },
     };
 
+    // note: this must be done after creating the feature on the earlier lines,
+    // to prevent the pattern from blocking the creation.
+    await projectStore.update({
+        id: DEFAULT_PROJECT,
+        name: 'default',
+        description: '',
+        mode: 'open',
+        featureNaming: { pattern: 'testpattern.+' },
+    });
+
     const { body } = await validateImport(importPayloadWithContextFields, 200);
 
     expect(body).toMatchObject({
@@ -881,6 +893,11 @@ test('validate import data', async () => {
             {
                 message:
                     'We detected the following features are duplicate in your import data:',
+                affectedItems: [defaultFeatureName],
+            },
+
+            {
+                message: expect.stringMatching(/\btestpattern.+\b/),
                 affectedItems: [defaultFeatureName],
             },
         ],
@@ -940,4 +957,45 @@ test('should not import archived features tags', async () => {
     expect(importedTags).toMatchObject({
         tags: resultTags,
     });
+});
+
+test(`should give errors with flag names if the flags don't match the project pattern`, async () => {
+    await db.stores.environmentStore.create({
+        name: DEFAULT_ENV,
+        type: 'production',
+    });
+
+    const pattern = 'testpattern.+';
+    for (const project of [DEFAULT_PROJECT]) {
+        await db.stores.projectStore.create({
+            name: project,
+            description: '',
+            id: project,
+            mode: 'open' as const,
+            featureNaming: { pattern },
+        });
+        await app.linkProjectToEnvironment(project, DEFAULT_ENV);
+    }
+
+    const flagName = 'unusedfeaturenamethatdoesntmatchpattern';
+
+    const { body } = await app.importToggles(
+        {
+            ...defaultImportPayload,
+            data: {
+                ...defaultImportPayload.data,
+                features: [
+                    {
+                        project: 'old_project',
+                        name: flagName,
+                        type: 'release',
+                    },
+                ],
+            },
+        },
+        400,
+    );
+
+    expect(body.message).toContain(pattern);
+    expect(body.message).toContain(flagName);
 });

@@ -6,7 +6,6 @@ export const createStrategySchema = {
     description:
         'The data required to create a strategy type. Refer to the docs on [custom strategy types](https://docs.getunleash.io/reference/custom-activation-strategies) for more information.',
     required: ['name', 'parameters'],
-    additionalProperties: false,
     properties: {
         name: {
             type: 'string',
@@ -23,6 +22,12 @@ export const createStrategySchema = {
             description: 'A description of the strategy type.',
             example:
                 'Enable the feature for users who have not logged in before.',
+        },
+        editable: {
+            type: 'boolean',
+            description:
+                'Whether the strategy type is editable or not. Defaults to `true`.',
+            example: false,
         },
         deprecated: {
             type: 'boolean',

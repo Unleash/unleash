@@ -45,8 +45,6 @@ interface IFeatureToggleForm {
 }
 
 const StyledForm = styled('form')({
-    display: 'flex',
-    flexDirection: 'column',
     height: '100%',
 });
 
@@ -139,125 +137,121 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
 
     return (
         <StyledForm onSubmit={handleSubmit}>
-            <div>
-                <StyledInputDescription>
-                    What would you like to call your toggle?
-                </StyledInputDescription>
-                <ConditionallyRender
-                    condition={displayFeatureNamingInfo}
-                    show={
-                        <FeatureNamingPatternInfo
-                            featureNaming={featureNaming!}
-                        />
-                    }
-                />
-                <StyledInput
-                    autoFocus
-                    disabled={mode === 'Edit'}
-                    label="Name"
-                    aria-details={
-                        displayFeatureNamingInfo
-                            ? 'feature-naming-pattern-info'
-                            : undefined
-                    }
-                    id="feature-toggle-name"
-                    error={Boolean(errors.name)}
-                    errorText={errors.name}
-                    onFocus={() => clearErrors()}
-                    value={name}
-                    onChange={e => setName(trim(e.target.value))}
-                    data-testid={CF_NAME_ID}
-                    onBlur={validateToggleName}
-                />
-                <StyledInputDescription>
-                    What kind of feature toggle do you want?
-                </StyledInputDescription>
-                <FeatureTypeSelect
-                    sx={styledSelectInput}
-                    value={type}
-                    onChange={setType}
-                    label={'Toggle type'}
-                    id="feature-type-select"
-                    editable
-                    data-testid={CF_TYPE_ID}
-                    IconComponent={KeyboardArrowDownOutlined}
-                />
-                <StyledTypeDescription>
-                    {renderToggleDescription()}
-                </StyledTypeDescription>
-                <ConditionallyRender
-                    condition={editable}
-                    show={
-                        <StyledInputDescription>
-                            In which project do you want to save the toggle?
-                        </StyledInputDescription>
-                    }
-                />
-                <FeatureProjectSelect
-                    value={project}
-                    onChange={projectId => {
-                        setProject(projectId);
-                        navigate(`/projects/${projectId}/create-toggle`, {
-                            replace: true,
-                        });
-                    }}
-                    enabled={editable}
-                    filter={projectFilterGenerator(permissions, CREATE_FEATURE)}
-                    IconComponent={KeyboardArrowDownOutlined}
-                    sx={styledSelectInput}
-                />
+            <StyledInputDescription>
+                What would you like to call your toggle?
+            </StyledInputDescription>
+            <ConditionallyRender
+                condition={displayFeatureNamingInfo}
+                show={
+                    <FeatureNamingPatternInfo featureNaming={featureNaming!} />
+                }
+            />
+            <StyledInput
+                autoFocus
+                disabled={mode === 'Edit'}
+                label="Name"
+                aria-details={
+                    displayFeatureNamingInfo
+                        ? 'feature-naming-pattern-info'
+                        : undefined
+                }
+                id="feature-toggle-name"
+                error={Boolean(errors.name)}
+                errorText={errors.name}
+                onFocus={() => clearErrors()}
+                value={name}
+                onChange={e => setName(trim(e.target.value))}
+                data-testid={CF_NAME_ID}
+                onBlur={validateToggleName}
+            />
+            <StyledInputDescription>
+                What kind of feature toggle do you want?
+            </StyledInputDescription>
+            <FeatureTypeSelect
+                sx={styledSelectInput}
+                value={type}
+                onChange={setType}
+                label={'Toggle type'}
+                id="feature-type-select"
+                editable
+                data-testid={CF_TYPE_ID}
+                IconComponent={KeyboardArrowDownOutlined}
+            />
+            <StyledTypeDescription>
+                {renderToggleDescription()}
+            </StyledTypeDescription>
+            <ConditionallyRender
+                condition={editable}
+                show={
+                    <StyledInputDescription>
+                        In which project do you want to save the toggle?
+                    </StyledInputDescription>
+                }
+            />
+            <FeatureProjectSelect
+                value={project}
+                onChange={projectId => {
+                    setProject(projectId);
+                    navigate(`/projects/${projectId}/create-toggle`, {
+                        replace: true,
+                    });
+                }}
+                enabled={editable}
+                filter={projectFilterGenerator(permissions, CREATE_FEATURE)}
+                IconComponent={KeyboardArrowDownOutlined}
+                sx={styledSelectInput}
+            />
 
-                <StyledInputDescription>
-                    How would you describe your feature toggle?
-                </StyledInputDescription>
-                <StyledInput
-                    multiline
-                    rows={4}
-                    label="Description"
-                    placeholder="A short description of the feature toggle"
-                    value={description}
-                    data-testid={CF_DESC_ID}
-                    onChange={e => setDescription(e.target.value)}
-                />
-                <StyledFormControl>
-                    <Typography
-                        variant="subtitle1"
-                        sx={styledTypography}
-                        data-loading
-                        component="h2"
+            <StyledInputDescription>
+                How would you describe your feature toggle?
+            </StyledInputDescription>
+            <StyledInput
+                multiline
+                rows={4}
+                label="Description"
+                placeholder="A short description of the feature toggle"
+                value={description}
+                data-testid={CF_DESC_ID}
+                onChange={e => setDescription(e.target.value)}
+            />
+            <StyledFormControl>
+                <Typography
+                    variant="subtitle1"
+                    sx={styledTypography}
+                    data-loading
+                    component="h2"
+                >
+                    Impression Data
+                </Typography>
+                <p>
+                    When you enable impression data for a feature toggle, your
+                    client SDKs will emit events you can listen for every time
+                    this toggle gets triggered. Learn more in{' '}
+                    <Link
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://docs.getunleash.io/advanced/impression_data"
                     >
-                        Impression Data
-                    </Typography>
-                    <p>
-                        When you enable impression data for a feature toggle,
-                        your client SDKs will emit events you can listen for
-                        every time this toggle gets triggered. Learn more in{' '}
-                        <Link
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href="https://docs.getunleash.io/advanced/impression_data"
-                        >
-                            the impression data documentation
-                        </Link>
-                    </p>
-                    <StyledRow>
-                        <FormControlLabel
-                            labelPlacement="start"
-                            style={{ marginLeft: 0 }}
-                            control={
-                                <Switch
-                                    name="impressionData"
-                                    onChange={() =>
-                                        setImpressionData(!impressionData)
-                                    }
-                                    checked={impressionData}
-                                />
-                            }
-                            label="Enable impression data"
-                        />
-                    </StyledRow>
-                </StyledFormControl>
-            </div>
+                        the impression data documentation
+                    </Link>
+                </p>
+                <StyledRow>
+                    <FormControlLabel
+                        labelPlacement="start"
+                        style={{ marginLeft: 0 }}
+                        control={
+                            <Switch
+                                name="impressionData"
+                                onChange={() =>
+                                    setImpressionData(!impressionData)
+                                }
+                                checked={impressionData}
+                            />
+                        }
+                        label="Enable impression data"
+                    />
+                </StyledRow>
+            </StyledFormControl>
             <StyledButtonContainer>
                 {children}
                 <StyledCancelButton onClick={handleCancel}>

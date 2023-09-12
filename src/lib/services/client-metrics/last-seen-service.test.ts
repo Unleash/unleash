@@ -25,7 +25,7 @@ function initLastSeenService(flagEnabled = true) {
     return { lastSeenService, featureToggleStore: stores.featureToggleStore };
 }
 
-test('process metrics properly', async () => {
+test('should not add duplicates per feature/environment', async () => {
     const { lastSeenService, featureToggleStore } = initLastSeenService();
 
     lastSeenService.updateLastSeen([

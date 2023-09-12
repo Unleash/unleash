@@ -844,7 +844,8 @@ test('reject import with duplicate features', async () => {
 });
 
 test('validate import data', async () => {
-    await createProjects();
+    const featureLimit = 1;
+    await createProjects([DEFAULT_PROJECT], featureLimit);
 
     const contextField: IContextFieldDto = {
         name: 'validate_context_field',
@@ -864,7 +865,11 @@ test('validate import data', async () => {
         ...defaultImportPayload,
         data: {
             ...defaultImportPayload.data,
-            features: [exportedFeature, exportedFeature],
+            features: [
+                exportedFeature,
+                exportedFeature,
+                anotherExportedFeature,
+            ],
             featureStrategies: [{ name: 'customStrategy' }],
             segments: [{ id: 1, name: 'customSegment' }],
             contextFields: [
@@ -909,7 +914,15 @@ test('validate import data', async () => {
 
             {
                 message: expect.stringMatching(/\btestpattern.+\b/),
-                affectedItems: [defaultFeatureName],
+                affectedItems: [
+                    defaultFeatureName,
+                    anotherExportedFeature.name,
+                ],
+            },
+            {
+                message:
+                    'We detected you want to create 2 new features in a project with 0 current features and a limit of 1',
+                affectedItems: [],
             },
         ],
         warnings: [

@@ -51,7 +51,12 @@ export const createFeatureToggleService = (
         getLogger,
         flagResolver,
     );
-    const featureToggleStore = new FeatureToggleStore(db, eventBus, getLogger);
+    const featureToggleStore = new FeatureToggleStore(
+        db,
+        eventBus,
+        getLogger,
+        flagResolver,
+    );
     const featureToggleClientStore = new FeatureToggleClientStore(
         db,
         eventBus,

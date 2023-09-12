@@ -17,7 +17,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 export const IntegrationInstall = ({
     url,
     title = 'Install addon',
-    helpText = 'Click this button to install this addon.',
+    helpText = 'Click this button to install this integration.',
 }: IAddonInstallProps) => {
     return (
         <Box>

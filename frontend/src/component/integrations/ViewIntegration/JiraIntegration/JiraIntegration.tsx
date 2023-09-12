@@ -1,6 +1,6 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { Divider, styled } from '@mui/material';
-
+import LaunchIcon from '@mui/icons-material/Launch';
 import cr from './assets/cr.png';
 import connect from './assets/connect.png';
 import manage from './assets/manage.png';
@@ -20,10 +20,14 @@ const StyledGrayContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledLink = styled('a')({
     textDecoration: 'none',
+    '&:hover': {
+        textDecoration: 'underline',
+    },
 });
 
 export const JIRA_INFO = {
@@ -57,7 +61,14 @@ export const JiraIntegration = () => {
                         rel="noopener noreferrer"
                         href="https://marketplace.atlassian.com/apps/1231447/unleash-enterprise-for-jira"
                     >
-                        View plugin on Atlassian marketplace
+                        View plugin on Atlassian marketplace{' '}
+                        <LaunchIcon
+                            fontSize="inherit"
+                            sx={{
+                                verticalAlign: 'middle',
+                                marginBottom: '2px',
+                            }}
+                        />
                     </StyledLink>
                 </StyledGrayContainer>
                 <Divider />

@@ -224,7 +224,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                 navigate(integrationsRework ? '/integrations' : '/addons');
                 setToastData({
                     type: 'success',
-                    title: 'Addon updated successfully',
+                    title: 'Integration updated successfully',
                 });
             } else {
                 await createAddon(formValues as Omit<AddonSchema, 'id'>);
@@ -232,7 +232,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                 setToastData({
                     type: 'success',
                     confetti: true,
-                    title: 'Addon created successfully',
+                    title: 'Integration created successfully',
                 });
             }
         } catch (error) {
@@ -248,6 +248,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
 
     const {
         name,
+        displayName,
         description,
         documentationUrl = 'https://unleash.github.io/docs/addons',
         installation,
@@ -264,7 +265,9 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
             }
             description={description || ''}
             documentationLink={documentationUrl}
-            documentationLinkLabel="Addon documentation"
+            documentationLinkLabel={`${
+                displayName || capitalizeFirst(`${name} `)
+            } documentation`}
             formatApiCode={formatApiCode}
             footer={
                 <StyledButtonContainer>

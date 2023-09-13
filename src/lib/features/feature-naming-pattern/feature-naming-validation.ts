@@ -4,32 +4,33 @@ const compileRegex = (pattern: string) => new RegExp(`^${pattern}$`);
 
 export const checkFeatureNamingData = (
     featureNaming?: IFeatureNaming,
-): { state: 'valid' } | { state: 'invalid'; reason: string } => {
+):
+    | { state: 'valid' }
+    | { state: 'invalid'; reasons: [string, ...string[]] } => {
     if (featureNaming) {
         const { pattern, example, description } = featureNaming;
-        if (
-            pattern != null &&
-            example &&
-            !example.match(compileRegex(pattern))
-        ) {
-            return {
-                state: 'invalid',
-                reason: `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern. Bear in mind that the pattern must match the whole example, as if it were surrounded by '^' and "$".`,
-            };
+        const errors: string[] = [];
+        if (pattern && example && !example.match(compileRegex(pattern))) {
+            errors.push(
+                `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern. Bear in mind that the pattern must match the whole example, as if it were surrounded by '^' and "$".`,
+            );
         }
 
         if (!pattern && example) {
-            return {
-                state: 'invalid',
-                reason: "You've provided a feature flag naming example, but no feature flag naming pattern. You must specify a pattern to use an example.",
-            };
+            errors.push(
+                "You've provided a feature flag naming example, but no feature flag naming pattern. You must specify a pattern to use an example.",
+            );
         }
 
         if (!pattern && description) {
-            return {
-                state: 'invalid',
-                reason: "You've provided a feature flag naming pattern description, but no feature flag naming pattern. You must have a pattern to use a description.",
-            };
+            errors.push(
+                "You've provided a feature flag naming pattern description, but no feature flag naming pattern. You must have a pattern to use a description.",
+            );
+        }
+
+        const [first, ...rest] = errors;
+        if (first) {
+            return { state: 'invalid', reasons: [first, ...rest] };
         }
     }
 

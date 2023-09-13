@@ -181,9 +181,19 @@ const ProjectForm: React.FC<IProjectForm> = ({
     };
 
     const onSetFeatureNamingPattern = (regex: string) => {
-        const blockedStrings = [' ', '\\t', '\\s'];
+        const disallowedStrings = [
+            ' ',
+            '\\t',
+            '\\s',
+            '\\n',
+            '\\r',
+            '\\f',
+            '\\v',
+        ];
         if (
-            blockedStrings.some(blockedString => regex.includes(blockedString))
+            disallowedStrings.some(blockedString =>
+                regex.includes(blockedString)
+            )
         ) {
             errors.featureNamingPattern =
                 'Whitespace is not allowed in the expression';

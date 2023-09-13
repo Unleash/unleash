@@ -115,15 +115,15 @@ export const ProjectDoraFeedback = () => {
 
             <Typography>
                 DORA is a method for measuring the performance of your DevOps
-                teams. It measures four different metrics. You can read more
-                about it{' '}
+                teams. It measures four different metrics. You can read Google's
+                blog post about
                 <a
                     href="https://cloud.google.com/blog/products/devops-sre/using-the-four-keys-to-measure-your-devops-performance"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    here
-                </a>
+                    DORA metrics
+                </a> for more information.
             </Typography>
 
             <ConditionallyRender

@@ -363,6 +363,9 @@ test('should remove CREATE_FEATURE on default environment', async () => {
         permissions.CREATE_FEATURE,
         '*',
     );
+    expect(
+        await accessService.hasPermission(user, CREATE_FEATURE, 'some-project'),
+    ).toBe(true);
 
     await accessService.removePermissionFromRole(
         editRole.id,

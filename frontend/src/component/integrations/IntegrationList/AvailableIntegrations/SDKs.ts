@@ -79,8 +79,8 @@ export const OFFICIAL_SDKS: Sdk[] = [
         type: 'client',
     },
     {
-        name: 'ios',
-        displayName: 'iOS Proxy SDK',
+        name: 'swift',
+        displayName: 'Swift Proxy SDK',
         description: 'Officially Unleash Client for iOS',
         documentationUrl: 'https://docs.getunleash.io/reference/sdks/ios-proxy',
         type: 'client',

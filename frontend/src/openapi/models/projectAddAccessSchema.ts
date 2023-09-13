@@ -3,15 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectAddAccessSchemaGroupsItem } from './projectAddAccessSchemaGroupsItem';
-import type { ProjectAddAccessSchemaUsersItem } from './projectAddAccessSchemaUsersItem';
 
 /**
- * An object containing a collection of users and a collection of groups.
+ * An object containing a collection of roles, a collection of groups and a collection of users.
  */
 export interface ProjectAddAccessSchema {
-    /** A list of groups IDs */
-    groups: ProjectAddAccessSchemaGroupsItem[];
+    /** A list of role IDs */
+    roles: number[];
+    /** A list of group IDs */
+    groups: number[];
     /** A list of user IDs */
-    users: ProjectAddAccessSchemaUsersItem[];
+    users: number[];
 }

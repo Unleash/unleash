@@ -5,6 +5,7 @@
  */
 import type { ProjectStatsSchema } from './projectStatsSchema';
 import type { ProjectOverviewSchemaMode } from './projectOverviewSchemaMode';
+import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
 import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
 import type { FeatureSchema } from './featureSchema';
 
@@ -26,6 +27,7 @@ export interface ProjectOverviewSchema {
     mode?: ProjectOverviewSchemaMode;
     /** A limit on the number of features allowed in the project. Null if no limit. */
     featureLimit?: number | null;
+    featureNaming?: CreateFeatureNamingPatternSchema;
     /** The number of members this project has */
     members?: number;
     /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100 */

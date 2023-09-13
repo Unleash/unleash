@@ -4,27 +4,15 @@
  * See `gen:api` script in package.json
  */
 import type { CreateApiTokenSchemaOneOf } from './createApiTokenSchemaOneOf';
+import type { CreateApiTokenSchemaOneOfTwo } from './createApiTokenSchemaOneOfTwo';
+import type { CreateApiTokenSchemaOneOfThree } from './createApiTokenSchemaOneOfThree';
 import type { CreateApiTokenSchemaOneOfFour } from './createApiTokenSchemaOneOfFour';
-import type { CreateApiTokenSchemaOneOfSeven } from './createApiTokenSchemaOneOfSeven';
-import type { CreateApiTokenSchemaOneOfOnezero } from './createApiTokenSchemaOneOfOnezero';
 
 /**
  * The data required to create an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).
  */
 export type CreateApiTokenSchema =
-    | (CreateApiTokenSchemaOneOf & {
-          /** The time when this token should expire. */
-          expiresAt?: string;
-      })
-    | (CreateApiTokenSchemaOneOfFour & {
-          /** The time when this token should expire. */
-          expiresAt?: string;
-      })
-    | (CreateApiTokenSchemaOneOfSeven & {
-          /** The time when this token should expire. */
-          expiresAt?: string;
-      })
-    | (CreateApiTokenSchemaOneOfOnezero & {
-          /** The time when this token should expire. */
-          expiresAt?: string;
-      });
+    | CreateApiTokenSchemaOneOf
+    | CreateApiTokenSchemaOneOfTwo
+    | CreateApiTokenSchemaOneOfThree
+    | CreateApiTokenSchemaOneOfFour;

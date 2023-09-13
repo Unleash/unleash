@@ -4,7 +4,7 @@
  * See `gen:api` script in package.json
  */
 
-export type ProjectAddAccessSchemaGroupsItem = {
-    /** A group ID */
+export type ProjectAddRoleAccessSchemaUsersItem = {
+    /** A user ID */
     id: number;
 };

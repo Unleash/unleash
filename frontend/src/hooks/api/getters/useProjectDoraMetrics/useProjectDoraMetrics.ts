@@ -2,11 +2,19 @@ import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { ProjectDoraMetricsSchema } from 'openapi';
+
+interface IUseProjectDoraMetricsOutput {
+    dora: ProjectDoraMetricsSchema;
+    loading: boolean;
+    error?: Error;
+    refetchDoraMetrics: () => void;
+}
 
 export const useProjectDoraMetrics = (
     projectId: string,
     options: SWRConfiguration = {}
-) => {
+): IUseProjectDoraMetricsOutput => {
     const KEY = `api/admin/projects/${projectId}/dora`;
     const path = formatApiPath(KEY);
 

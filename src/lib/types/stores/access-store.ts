@@ -1,3 +1,4 @@
+import { PermissionRef } from 'lib/services/access-service';
 import { IGroupModelWithProjectRole } from '../group';
 import { IPermission, IUserWithRole } from '../model';
 import { Store } from './store';
@@ -100,7 +101,7 @@ export interface IAccessStore extends Store<IRole, number> {
 
     addEnvironmentPermissionsToRole(
         role_id: number,
-        permissions: IPermission[],
+        permissions: PermissionRef[],
     ): Promise<void>;
 
     addUserToRole(

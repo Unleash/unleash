@@ -52,17 +52,22 @@ const PROJECT_ADMIN = [
     permissions.DELETE_FEATURE,
 ];
 
+/** @deprecated prefer to use NamePermissionRef */
+export type IdPermissionRef = Pick<IPermission, 'id' | 'environment'>;
+export type NamePermissionRef = Pick<IPermission, 'name' | 'environment'>;
+export type PermissionRef = IdPermissionRef | NamePermissionRef;
+
 interface IRoleCreation {
     name: string;
     description: string;
     type?: 'root-custom' | 'custom';
-    permissions?: IPermission[];
+    permissions?: PermissionRef[];
 }
 
 export interface IRoleValidation {
     name: string;
     description?: string;
-    permissions?: Pick<IPermission, 'id' | 'environment'>[];
+    permissions?: PermissionRef[];
 }
 
 interface IRoleUpdate {
@@ -70,7 +75,7 @@ interface IRoleUpdate {
     name: string;
     description: string;
     type?: 'root-custom' | 'custom';
-    permissions?: IPermission[];
+    permissions?: PermissionRef[];
 }
 
 export interface AccessWithRoles {
@@ -627,7 +632,7 @@ export class AccessService {
             if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
                 await this.store.addPermissionsToRole(
                     newRole.id,
-                    rolePermissions.map(({ name }) => name),
+                    rolePermissions.map((p: NamePermissionRef) => p.name),
                 );
             } else {
                 await this.store.addEnvironmentPermissionsToRole(
@@ -668,7 +673,7 @@ export class AccessService {
             if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
                 await this.store.addPermissionsToRole(
                     newRole.id,
-                    rolePermissions.map(({ name }) => name),
+                    rolePermissions.map((p: NamePermissionRef) => p.name),
                 );
             } else {
                 await this.store.addEnvironmentPermissionsToRole(

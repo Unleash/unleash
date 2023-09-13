@@ -20,6 +20,7 @@ import {
     ROOT_PERMISSION_TYPE,
 } from '../util/constants';
 import { Db } from './db';
+import { IdPermissionRef } from 'lib/services/access-service';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -221,7 +222,7 @@ export class AccessStore implements IAccessStore {
 
     async addEnvironmentPermissionsToRole(
         role_id: number,
-        permissions: IPermission[],
+        permissions: IdPermissionRef[],
     ): Promise<void> {
         const rows = permissions.map((permission) => {
             return {

@@ -238,7 +238,7 @@ class StrategyController extends Controller {
     }
 
     async createStrategy(
-        req: IAuthRequest<unknown, CreateStrategySchema>,
+        req: IAuthRequest<unknown, unknown, CreateStrategySchema>,
         res: Response<StrategySchema>,
     ): Promise<void> {
         const userName = extractUsername(req);

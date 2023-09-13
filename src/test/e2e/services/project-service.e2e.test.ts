@@ -801,18 +801,10 @@ test('should add a user to the project with a custom role', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
             {
-                id: 8,
-                name: 'DELETE_FEATURE',
-                environment: undefined,
-                displayName: 'Delete Feature Toggles',
-                type: 'project',
+                id: 8, // DELETE_FEATURE
             },
         ],
     });
@@ -859,18 +851,10 @@ test('should delete role entries when deleting project', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
             {
-                id: 8,
-                name: 'DELETE_FEATURE',
-                environment: undefined,
-                displayName: 'Delete Feature Toggles',
-                type: 'project',
+                id: 8, // DELETE_FEATURE
             },
         ],
     });
@@ -907,18 +891,10 @@ test('should change a users role in the project', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
             {
-                id: 8,
-                name: 'DELETE_FEATURE',
-                environment: undefined,
-                displayName: 'Delete Feature Toggles',
-                type: 'project',
+                id: 8, // DELETE_FEATURE
             },
         ],
     });
@@ -1098,11 +1074,7 @@ test('Should allow bulk update of group permissions', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
@@ -1129,11 +1101,7 @@ test('Should bulk update of only users', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
@@ -1168,11 +1136,7 @@ test('Should allow bulk update of only groups', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
@@ -1221,10 +1185,7 @@ test('Should allow permutations of roles, groups and users when adding a new acc
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                displayName: 'Create feature toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
@@ -1234,10 +1195,7 @@ test('Should allow permutations of roles, groups and users when adding a new acc
         description: '',
         permissions: [
             {
-                id: 7,
-                name: 'UPDATE_FEATURE',
-                displayName: 'Update feature toggles',
-                type: 'project',
+                id: 7, // UPDATE_FEATURE
             },
         ],
     });

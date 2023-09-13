@@ -22,7 +22,7 @@ export const checkFeatureNamingData = (
             if (disallowedStrings.some((str) => pattern.includes(str))) {
                 return {
                     state: 'invalid',
-                    reason: `Feature flag names can not contain whitespace. You've provided a feature flag naming pattern that contains a whitespace: "${pattern}". Remove any whitespace characters from your pattern.`,
+                    reason: `Feature flag names can not contain whitespace. You've provided a feature flag naming pattern that contains a whitespace character: "${pattern}". Remove any whitespace characters from your pattern.`,
                 };
             } else if (
                 pattern != null &&

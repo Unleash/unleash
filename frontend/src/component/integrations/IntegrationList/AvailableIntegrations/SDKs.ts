@@ -38,7 +38,7 @@ export const OFFICIAL_SDKS: Sdk[] = [
     {
         name: 'python',
         displayName: 'Python SDK',
-        description: 'Officially Unleash Client for Python',
+        description: 'Official Unleash Client for Python',
         documentationUrl: 'https://docs.getunleash.io/reference/sdks/python',
         type: 'server',
     },

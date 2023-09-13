@@ -6,7 +6,7 @@ export const checkFeatureNamingData = (
     featureNaming?: IFeatureNaming,
 ): { state: 'valid' } | { state: 'invalid'; reason: string } => {
     if (featureNaming) {
-        const { pattern, example } = featureNaming;
+        const { pattern, example, description } = featureNaming;
         if (
             pattern != null &&
             example &&
@@ -22,6 +22,13 @@ export const checkFeatureNamingData = (
             return {
                 state: 'invalid',
                 reason: "You've provided a feature flag naming example, but no feature flag naming pattern. You must specify a pattern to use an example.",
+            };
+        }
+
+        if (!pattern && description) {
+            return {
+                state: 'invalid',
+                reason: "You've provided a feature flag naming pattern description, but no feature flag naming pattern. You must have a pattern to use a description.",
             };
         }
     }

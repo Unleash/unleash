@@ -121,6 +121,7 @@ export default class AddonService {
                     )
                     .filter(
                         (addon) =>
+                            !event.environment ||
                             !addon.environments ||
                             addon.environments.length == 0 ||
                             addon.environments[0] === WILDCARD_OPTION ||

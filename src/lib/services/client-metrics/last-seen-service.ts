@@ -13,7 +13,7 @@ export type LastSeenInput = {
 export class LastSeenService {
     private timers: NodeJS.Timeout[] = [];
 
-    private lastSeenToggles: Set<LastSeenInput> = new Set();
+    private lastSeenToggles: Map<String, LastSeenInput> = new Map();
 
     private logger: Logger;
 
@@ -37,8 +37,8 @@ export class LastSeenService {
     async store(): Promise<number> {
         const count = this.lastSeenToggles.size;
         if (count > 0) {
-            const lastSeenToggles = [...this.lastSeenToggles];
-            this.lastSeenToggles = new Set();
+            const lastSeenToggles = Array.from(this.lastSeenToggles.values());
+            this.lastSeenToggles = new Map<String, LastSeenInput>();
             this.logger.debug(
                 `Updating last seen for ${lastSeenToggles.length} toggles`,
             );
@@ -50,14 +50,21 @@ export class LastSeenService {
     updateLastSeen(clientMetrics: IClientMetricsEnv[]): void {
         clientMetrics
             .filter(
+                (clientMetric) =>
+                    !this.lastSeenToggles.has(
+                        `${clientMetric.featureName}:${clientMetric.environment}`,
+                    ),
+            )
+            .filter(
                 (clientMetric) => clientMetric.yes > 0 || clientMetric.no > 0,
             )
-            .forEach((clientMetric) =>
-                this.lastSeenToggles.add({
+            .forEach((clientMetric) => {
+                const key = `${clientMetric.featureName}:${clientMetric.environment}`;
+                this.lastSeenToggles.set(key, {
                     featureName: clientMetric.featureName,
                     environment: clientMetric.environment,
-                }),
-            );
+                });
+            });
     }
 
     destroy(): void {

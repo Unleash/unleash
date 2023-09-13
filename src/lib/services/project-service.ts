@@ -39,6 +39,7 @@ import {
     IProjectRoleUsage,
     ProjectAccessUserRolesDeleted,
     IFeatureNaming,
+    CreateProject,
 } from '../types';
 import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
 import {
@@ -189,10 +190,7 @@ export default class ProjectService {
     };
 
     async createProject(
-        newProject: Pick<
-            IProject,
-            'id' | 'name' | 'mode' | 'defaultStickiness'
-        >,
+        newProject: CreateProject,
         user: IUser,
     ): Promise<IProject> {
         const data = await projectSchema.validateAsync(newProject);

@@ -163,6 +163,7 @@ test('counts toggles', async () => {
     await stores.strategyStore.createStrategy({
         name: uuidv4(),
         editable: true,
+        parameters: [],
     });
     const latest = {
         oss: '4.0.0',
@@ -213,10 +214,12 @@ test('counts custom strategies', async () => {
     await stores.strategyStore.createStrategy({
         name: strategyName,
         editable: true,
+        parameters: [],
     });
     await stores.strategyStore.createStrategy({
         name: uuidv4(),
         editable: true,
+        parameters: [],
     });
     await stores.featureStrategiesStore.createStrategyFeatureEnv({
         featureName: toggleName,

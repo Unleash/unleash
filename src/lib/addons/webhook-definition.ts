@@ -34,6 +34,7 @@ const webhookDefinition: IAddonDefinition = {
     description:
         'A Webhook is a generic way to post messages from Unleash to third party services.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/webhook',
+    howTo: 'The Webhook Addon introduces a generic way to post messages from Unleash to third party services. Unleash allows you to define a webhook which listens changes in Unleash and post them to a third party services.',
     parameters: [
         {
             name: 'url',

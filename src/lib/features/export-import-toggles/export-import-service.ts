@@ -41,7 +41,10 @@ import {
     TagTypeService,
 } from '../../services';
 import { isValidField } from './import-context-validation';
-import { IImportTogglesStore } from './import-toggles-store-type';
+import {
+    IImportTogglesStore,
+    ProjectFeaturesLimit,
+} from './import-toggles-store-type';
 import { ImportPermissionsService, Mode } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
 import { findDuplicates } from '../../util/findDuplicates';
@@ -158,6 +161,7 @@ export default class ExportImportService {
             missingPermissions,
             duplicateFeatures,
             featureNameCheckResult,
+            featureLimitResult,
         ] = await Promise.all([
             this.getUnsupportedStrategies(dto),
             this.getUsedCustomStrategies(dto),
@@ -172,6 +176,7 @@ export default class ExportImportService {
             ),
             this.getDuplicateFeatures(dto),
             this.getInvalidFeatureNames(dto),
+            this.getFeatureLimit(dto),
         ]);
 
         const errors = ImportValidationMessages.compileErrors({
@@ -181,6 +186,7 @@ export default class ExportImportService {
             otherProjectFeatures,
             duplicateFeatures,
             featureNameCheckResult,
+            featureLimitResult,
         });
         const warnings = ImportValidationMessages.compileWarnings({
             archivedFeatures,
@@ -370,29 +376,26 @@ export default class ExportImportService {
     private async createOrUpdateToggles(dto: ImportTogglesSchema, user: User) {
         const existingFeatures = await this.getExistingProjectFeatures(dto);
         const username = extractUsernameFromUser(user);
-        await Promise.all(
-            dto.data.features.map((feature) => {
-                if (existingFeatures.includes(feature.name)) {
-                    const { archivedAt, createdAt, ...rest } = feature;
-                    return this.featureToggleService.updateFeatureToggle(
-                        dto.project,
-                        rest as FeatureToggleDTO,
-                        username,
-                        feature.name,
-                    );
-                }
-                return this.featureToggleService
-                    .validateName(feature.name)
-                    .then(() => {
-                        const { archivedAt, createdAt, ...rest } = feature;
-                        return this.featureToggleService.createFeatureToggle(
-                            dto.project,
-                            rest as FeatureToggleDTO,
-                            extractUsernameFromUser(user),
-                        );
-                    });
-            }),
-        );
+
+        for (const feature of dto.data.features) {
+            if (existingFeatures.includes(feature.name)) {
+                const { archivedAt, createdAt, ...rest } = feature;
+                await this.featureToggleService.updateFeatureToggle(
+                    dto.project,
+                    rest as FeatureToggleDTO,
+                    username,
+                    feature.name,
+                );
+            } else {
+                await this.featureToggleService.validateName(feature.name);
+                const { archivedAt, createdAt, ...rest } = feature;
+                await this.featureToggleService.createFeatureToggle(
+                    dto.project,
+                    rest as FeatureToggleDTO,
+                    username,
+                );
+            }
+        }
     }
 
     private async verifyContextFields(dto: ImportTogglesSchema) {
@@ -511,6 +514,16 @@ export default class ExportImportService {
         return this.featureToggleService.checkFeatureFlagNamesAgainstProjectPattern(
             project,
             data.features.map((f) => f.name),
+        );
+    }
+
+    private async getFeatureLimit({
+        project,
+        data,
+    }: ImportTogglesSchema): Promise<ProjectFeaturesLimit> {
+        return this.importTogglesStore.getProjectFeaturesLimit(
+            [...new Set(data.features.map((f) => f.name))],
+            project,
         );
     }
 

@@ -4,7 +4,6 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 export const FeatureFlagNamingTooltip: FC = () => {
     const X = 'X';
-    const Y = 'Y';
     const nx = 'n{X,}';
     const nxy = 'n{X,Y}';
     return (

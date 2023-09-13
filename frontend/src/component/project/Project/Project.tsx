@@ -14,7 +14,7 @@ import {
     StyledTabContainer,
     StyledTopRow,
 } from './Project.styles';
-import { Box, Paper, Tabs, Typography } from '@mui/material';
+import { Box, Paper, Tabs, Typography, styled } from '@mui/material';
 import { FileUpload } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
@@ -39,6 +39,15 @@ import { IMPORT_BUTTON } from 'utils/testIds';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import { Badge } from 'component/common/Badge/Badge';
 import { ProjectDoraMetrics } from './ProjectDoraMetrics/ProjectDoraMetrics';
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    position: 'absolute',
+    top: 5,
+    right: 20,
+    [theme.breakpoints.down('md')]: {
+        top: 2,
+    },
+}));
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -228,17 +237,9 @@ export const Project = () => {
                                             <ConditionallyRender
                                                 condition={tab.new}
                                                 show={
-                                                    <Badge
-                                                        sx={{
-                                                            position:
-                                                                'absolute',
-                                                            top: 10,
-                                                            right: 20,
-                                                        }}
-                                                        color="success"
-                                                    >
+                                                    <StyledBadge color="success">
                                                         New
-                                                    </Badge>
+                                                    </StyledBadge>
                                                 }
                                             />
                                             {(tab.isEnterprise &&

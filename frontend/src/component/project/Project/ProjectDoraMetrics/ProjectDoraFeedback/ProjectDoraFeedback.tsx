@@ -14,6 +14,18 @@ const StyledOuterContainer = styled(Box)(({ theme }) => ({
 
 const StyledBtnContainer = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(3),
+    [theme.breakpoints.down('md')]: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+}));
+
+const StyledBtn = styled(Button)(({ theme }) => ({
+    marginRight: theme.spacing(1),
+    [theme.breakpoints.down('md')]: {
+        marginRight: 0,
+        marginBottom: theme.spacing(1),
+    },
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -26,6 +38,10 @@ const StyledFlexBox = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     marginTop: theme.spacing(1),
     marginRight: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
 }));
 
 const StyledIconWrapper = styled(Box)(({ theme }) => ({
@@ -117,16 +133,13 @@ export const ProjectDoraFeedback = () => {
                         {' '}
                         <Typography>Is this useful to you?</Typography>
                         <StyledBtnContainer>
-                            <Button
-                                sx={theme => ({
-                                    marginRight: theme.spacing(1),
-                                })}
+                            <StyledBtn
                                 variant="contained"
                                 color="primary"
                                 onClick={() => onBtnClick('useful')}
                             >
                                 Yes, I like the direction
-                            </Button>
+                            </StyledBtn>
                             <Button
                                 variant="outlined"
                                 color="primary"

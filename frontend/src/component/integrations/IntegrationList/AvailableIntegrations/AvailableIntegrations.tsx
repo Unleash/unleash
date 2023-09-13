@@ -1,7 +1,6 @@
 import { type VFC } from 'react';
 import { Box, Typography, styled } from '@mui/material';
 import type { AddonTypeSchema } from 'openapi';
-import useLoading from 'hooks/useLoading';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
@@ -60,13 +59,10 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
     const serverSdks = OFFICIAL_SDKS.filter(sdk => sdk.type === 'server');
     const clientSdks = OFFICIAL_SDKS.filter(sdk => sdk.type === 'client');
 
-    const ref = useLoading(loading || false);
-
     return (
         <PageContent
             header={<PageHeader title="Integrations" secondary />}
             isLoading={loading}
-            ref={ref}
         >
             <StyledContainer>
                 <StyledSection>

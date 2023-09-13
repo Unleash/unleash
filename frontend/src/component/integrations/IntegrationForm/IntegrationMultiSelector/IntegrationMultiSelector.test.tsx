@@ -51,25 +51,21 @@ describe('AddonMultiSelector', () => {
 
     it('can toggle "ALL" checkbox', async () => {
         const user = userEvent.setup();
-        render(
+        const { rerender } = render(
             <IntegrationMultiSelector {...mockProps} selectedItems={['*']} />
         );
 
         await user.click(screen.getByTestId('select-all-projects'));
 
-        expect(
-            screen.getByLabelText(/all current and future projects/i)
-        ).not.toBeChecked();
+        expect(onChange).toHaveBeenCalledWith([]);
 
-        expect(screen.getByLabelText('Projects')).toBeEnabled();
+        rerender(
+            <IntegrationMultiSelector {...mockProps} selectedItems={[]} />
+        );
 
         await user.click(screen.getByTestId('select-all-projects'));
 
-        expect(
-            screen.getByLabelText(/all current and future projects/i)
-        ).toBeChecked();
-
-        expect(screen.getByLabelText('Projects')).toBeDisabled();
+        expect(onChange).toHaveBeenCalledWith(['*']);
     });
 
     it('renders with autocomplete enabled if default value is not a wildcard', () => {
@@ -150,5 +146,23 @@ describe('AddonMultiSelector', () => {
         await waitFor(() => {
             expect(screen.queryByText('Alpha')).not.toBeInTheDocument();
         });
+    });
+
+    it('will load wildcard status from props', async () => {
+        const { rerender } = render(
+            <IntegrationMultiSelector {...mockProps} selectedItems={[]} />
+        );
+
+        expect(
+            screen.getByLabelText(/all current and future projects/i)
+        ).not.toBeChecked();
+
+        rerender(
+            <IntegrationMultiSelector {...mockProps} selectedItems={['*']} />
+        );
+
+        expect(
+            screen.getByLabelText(/all current and future projects/i)
+        ).toBeChecked();
     });
 });

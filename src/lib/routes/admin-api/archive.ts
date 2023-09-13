@@ -170,7 +170,7 @@ export default class ArchiveController extends Controller {
     ): Promise<void> {
         const userName = extractUsername(req);
         const { featureName } = req.params;
-        await this.featureService.reviveToggle(featureName, userName);
+        await this.featureService.reviveFeature(featureName, userName);
         res.status(200).end();
     }
 }

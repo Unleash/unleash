@@ -262,7 +262,10 @@ export const VariantForm = ({
 
     const validatePayload = (payload: IPayload) => {
         if (!isValidPayload(payload)) {
-            setError(ErrorField.PAYLOAD, 'Invalid value.');
+            setError(
+                ErrorField.PAYLOAD,
+                payload.type === 'json' ? 'Invalid json' : 'Invalid number'
+            );
         }
     };
 

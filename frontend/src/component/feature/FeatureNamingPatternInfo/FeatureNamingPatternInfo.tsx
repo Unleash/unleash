@@ -37,7 +37,7 @@ export const FeatureNamingPatternInfo: React.FC<Props> = ({
             <dl id="feature-naming-pattern-info">
                 <dt>Pattern</dt>
                 <dd>
-                    <code>{featureNaming.pattern}</code>
+                    <code>^{featureNaming.pattern}$</code>
                 </dd>
                 <ConditionallyRender
                     condition={Boolean(featureNaming?.example)}

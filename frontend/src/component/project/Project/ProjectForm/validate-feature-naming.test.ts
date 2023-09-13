@@ -47,4 +47,14 @@ describe('validateFeatureNaming', () => {
             expect(result.state).toBe(state);
         }
     );
+
+    test('the pattern gets an implicit leading ^ and trailing $ added', () => {
+        const result = validateFeatureNamingExample({
+            pattern: '[a-z]+',
+            example: 'not.valid',
+            featureNamingPatternError: undefined,
+        });
+
+        expect(result.state).toBe('invalid');
+    });
 });

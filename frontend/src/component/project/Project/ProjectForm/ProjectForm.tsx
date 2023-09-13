@@ -4,7 +4,7 @@ import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrate
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Select from 'component/common/select';
 import { ProjectMode } from '../hooks/useProjectForm';
-import { Box, styled, TextField } from '@mui/material';
+import { Box, InputAdornment, styled, TextField } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
@@ -106,6 +106,10 @@ const StyledFlagNamingContainer = styled('div')(({ theme }) => ({
     '& > *': { width: '100%' },
 }));
 
+const StyledPatternNamingExplanation = styled('div')(({ theme }) => ({
+    'p + p': { marginTop: theme.spacing(1) },
+}));
+
 export const validateFeatureNamingExample = ({
     pattern,
     example,
@@ -118,7 +122,7 @@ export const validateFeatureNamingExample = ({
     if (featureNamingPatternError || !example || !pattern) {
         return { state: 'valid' };
     } else if (example && pattern) {
-        const regex = new RegExp(pattern);
+        const regex = new RegExp(`^${pattern}$`);
         const matches = regex.test(example);
         if (!matches) {
             return { state: 'invalid', reason: 'Example does not match regex' };
@@ -354,29 +358,45 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 <FeatureFlagNamingTooltip />
                             </Box>
                             <StyledSubtitle>
-                                <p id="pattern-naming-description">
-                                    A feature flag naming pattern is a{' '}
-                                    <a
-                                        href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions`}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        JavaScript RegEx
-                                    </a>{' '}
-                                    used to enforce feature flag names within
-                                    this project.
-                                </p>
-                                <p>
-                                    Leave it empty if you don’t want to add a
-                                    naming pattern.
-                                </p>
+                                <StyledPatternNamingExplanation id="pattern-naming-description">
+                                    <p>
+                                        Define a{' '}
+                                        <a
+                                            href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            JavaScript RegEx
+                                        </a>{' '}
+                                        used to enforce feature flag names
+                                        within this project. The regex will be
+                                        surrounded by a leading <code>^</code>{' '}
+                                        and a trailing <code>$</code>.
+                                    </p>
+                                    <p>
+                                        Leave it empty if you don’t want to add
+                                        a naming pattern.
+                                    </p>
+                                </StyledPatternNamingExplanation>
                             </StyledSubtitle>
                             <StyledFlagNamingContainer>
                                 <StyledInput
                                     label={'Naming Pattern'}
                                     name="feature flag naming pattern"
                                     aria-describedby="pattern-naming-description"
-                                    placeholder="^[A-Za-z]+\.[A-Za-z]+\.[A-Za-z0-9-]+$"
+                                    placeholder="[A-Za-z]+\.[A-Za-z]+\.[A-Za-z0-9-]+"
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                ^
+                                            </InputAdornment>
+                                        ),
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                $
+                                            </InputAdornment>
+                                        ),
+                                    }}
                                     type={'text'}
                                     value={featureNamingPattern || ''}
                                     error={Boolean(errors.featureNamingPattern)}

@@ -11,7 +11,11 @@ import { FeatureStrategySchema } from '../../../lib/openapi';
 import User from '../../../lib/types/user';
 import { IConstraint, IVariant, SKIP_CHANGE_REQUEST } from '../../../lib/types';
 import EnvironmentService from '../../../lib/services/environment-service';
-import { ForbiddenError, PermissionError } from '../../../lib/error';
+import {
+    ForbiddenError,
+    PatternError,
+    PermissionError,
+} from '../../../lib/error';
 import { ISegmentService } from '../../../lib/segments/segment-service-interface';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 
@@ -642,7 +646,7 @@ test('getPlaygroundFeatures should return ids and titles (if they exist) on clie
 });
 
 describe('flag name validation', () => {
-    test('should validate names if project has flag name pattern', async () => {
+    test('should validate feature names if the project has flag name pattern', async () => {
         const projectId = 'pattern-validation';
         const featureNaming = {
             pattern: 'testpattern.+',
@@ -661,79 +665,23 @@ describe('flag name validation', () => {
 
         const validFeatures = ['testpattern-feature', 'testpattern-feature2'];
         const invalidFeatures = ['a', 'b', 'c'];
-        const result = await service.checkFeatureFlagNamesAgainstProjectPattern(
-            projectId,
-            [...validFeatures, ...invalidFeatures],
-        );
 
-        expect(result).toMatchObject({
-            state: 'invalid',
-            invalidNames: new Set(invalidFeatures),
-            featureNaming: featureNaming,
-        });
-
-        const validResult =
-            await service.checkFeatureFlagNamesAgainstProjectPattern(
-                projectId,
-                validFeatures,
-            );
-
-        expect(validResult).toMatchObject({ state: 'valid' });
-    });
-
-    test.each([null, undefined, ''])(
-        'should not validate names if the pattern is %s',
-        async (pattern) => {
-            const projectId = `empty-pattern-validation-${pattern}`;
-            const featureNaming = {
-                pattern,
-            };
-            const project = {
-                id: projectId,
-                name: projectId,
-                mode: 'open' as const,
-                defaultStickiness: 'default',
-                featureNaming,
-            };
-
-            await stores.projectStore.create(project);
-
-            const features = ['a', 'b'];
-            const result =
-                await service.checkFeatureFlagNamesAgainstProjectPattern(
+        for (const feature of invalidFeatures) {
+            await expect(
+                service.validateFeatureFlagNameAgainstPattern(
+                    feature,
                     projectId,
-                    features,
-                );
+                ),
+            ).rejects.toBeInstanceOf(PatternError);
+        }
 
-            expect(result).toMatchObject({ state: 'valid' });
-        },
-    );
-
-    test('should not validate names as if the pattern is surrounded by ^ and $.', async () => {
-        const pattern = '-[0-9]+';
-        const projectId = `implicit-pattern-surrounding-project`;
-        const featureNaming = {
-            pattern,
-        };
-        const project = {
-            id: projectId,
-            name: projectId,
-            mode: 'open' as const,
-            defaultStickiness: 'default',
-            featureNaming,
-        };
-
-        await stores.projectStore.create(project);
-
-        const features = ['a-95', '-95-', 'b-52-z'];
-        const result = await service.checkFeatureFlagNamesAgainstProjectPattern(
-            projectId,
-            features,
-        );
-
-        expect(result).toMatchObject({
-            state: 'invalid',
-            invalidNames: new Set(features),
-        });
+        for (const feature of validFeatures) {
+            await expect(
+                service.validateFeatureFlagNameAgainstPattern(
+                    feature,
+                    projectId,
+                ),
+            ).resolves.toBeFalsy();
+        }
     });
 });

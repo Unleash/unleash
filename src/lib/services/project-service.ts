@@ -58,44 +58,9 @@ import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 import { uniqueByKey } from '../util/unique';
 import { BadDataError, PermissionError } from '../error';
 import { ProjectDoraMetricsSchema } from 'lib/openapi';
+import { checkFeatureNamingData } from '../features/feature-naming-pattern/feature-naming-validation';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
-
-const validateFlagNaming = (naming?: IFeatureNaming) => {
-    if (naming) {
-        const { pattern, example } = naming;
-        if (
-            pattern != null &&
-            example &&
-            !example.match(new RegExp(`^${pattern}$`))
-        ) {
-            throw new BadDataError(
-                `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern. Bear in mind that the pattern must match the whole example, as if it were surrounded by '^' and "$".`,
-            );
-        }
-
-        if (!pattern && example) {
-            throw new BadDataError(
-                "You've provided a feature flag naming example, but no feature flag naming pattern. You must specify a pattern to use an example.",
-            );
-        }
-    }
-};
-
-export const validateAndProcessFeatureNamingPattern = (
-    featureNaming: IFeatureNaming,
-): IFeatureNaming => {
-    validateFlagNaming(featureNaming);
-
-    if (featureNaming.pattern && !featureNaming.example) {
-        featureNaming.example = null;
-    }
-    if (featureNaming.pattern && !featureNaming.description) {
-        featureNaming.description = null;
-    }
-
-    return featureNaming;
-};
 
 type Days = number;
 type Count = number;
@@ -204,6 +169,25 @@ export default class ProjectService {
         return this.store.get(id);
     }
 
+    private validateAndProcessFeatureNamingPattern = (
+        featureNaming: IFeatureNaming,
+    ): IFeatureNaming => {
+        const validationResult = checkFeatureNamingData(featureNaming);
+
+        if (validationResult.state === 'invalid') {
+            throw new BadDataError(validationResult.reason);
+        }
+
+        if (featureNaming.pattern && !featureNaming.example) {
+            featureNaming.example = null;
+        }
+        if (featureNaming.pattern && !featureNaming.description) {
+            featureNaming.description = null;
+        }
+
+        return featureNaming;
+    };
+
     async createProject(
         newProject: Pick<
             IProject,
@@ -215,7 +199,7 @@ export default class ProjectService {
         await this.validateUniqueId(data.id);
 
         if (data.featureNaming) {
-            validateAndProcessFeatureNamingPattern(data.featureNaming);
+            this.validateAndProcessFeatureNamingPattern(data.featureNaming);
         }
 
         await this.store.create(data);
@@ -250,7 +234,7 @@ export default class ProjectService {
         const preData = await this.store.get(updatedProject.id);
 
         if (updatedProject.featureNaming) {
-            validateAndProcessFeatureNamingPattern(
+            this.validateAndProcessFeatureNamingPattern(
                 updatedProject.featureNaming,
             );
         }

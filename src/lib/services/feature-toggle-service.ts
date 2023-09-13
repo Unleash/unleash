@@ -43,7 +43,6 @@ import {
     StrategiesOrderChangedEvent,
     PotentiallyStaleOnEvent,
     IStrategyStore,
-    IFeatureNaming,
 } from '../types';
 import { Logger } from '../logger';
 import { PatternError } from '../error';
@@ -94,6 +93,7 @@ import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-f
 import { unique } from '../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
+import { checkFeatureFlagNamesAgainstPattern } from '../features/feature-naming-pattern/feature-naming-validation';
 
 interface IFeatureContext {
     featureName: string;
@@ -111,14 +111,6 @@ export interface IGetFeatureParams {
     environmentVariants?: boolean;
     userId?: number;
 }
-
-export type FeatureNameCheckResult =
-    | { state: 'valid' }
-    | {
-          state: 'invalid';
-          invalidNames: Set<string>;
-          featureNaming: IFeatureNaming;
-      };
 
 const oneOf = (values: string[], match: string) => {
     return values.some((value) => value === match);
@@ -1100,48 +1092,26 @@ class FeatureToggleService {
         throw new NotFoundError(`Project with id ${projectId} does not exist`);
     }
 
-    async checkFeatureFlagNamesAgainstProjectPattern(
-        projectId: string,
-        featureNames: string[],
-    ): Promise<FeatureNameCheckResult> {
-        if (this.flagResolver.isEnabled('featureNamingPattern')) {
-            const project = await this.projectStore.get(projectId);
-            const patternData = project.featureNaming;
-            const namingPattern = patternData?.pattern;
-
-            if (namingPattern) {
-                const regex = new RegExp(`^${namingPattern}$`);
-                const mismatchedNames = featureNames.filter(
-                    (name) => !regex.test(name),
-                );
-
-                if (mismatchedNames.length > 0) {
-                    return {
-                        state: 'invalid',
-                        invalidNames: new Set(mismatchedNames),
-                        featureNaming: patternData,
-                    };
-                }
-            }
-        }
-        return { state: 'valid' };
-    }
-
     async validateFeatureFlagNameAgainstPattern(
         featureName: string,
         projectId?: string,
     ): Promise<void> {
         if (projectId) {
-            const result =
-                await this.checkFeatureFlagNamesAgainstProjectPattern(
-                    projectId,
-                    [featureName],
-                );
+            const { featureNaming } = await this.projectStore.get(projectId);
+
+            if (!featureNaming) {
+                return;
+            }
+
+            const result = checkFeatureFlagNamesAgainstPattern(
+                [featureName],
+                featureNaming?.pattern,
+            );
 
             if (result.state === 'invalid') {
-                const namingPattern = result.featureNaming.pattern;
-                const namingExample = result.featureNaming.example;
-                const namingDescription = result.featureNaming.description;
+                const namingPattern = featureNaming.pattern;
+                const namingExample = featureNaming.example;
+                const namingDescription = featureNaming.description;
 
                 const error = `The feature flag name "${featureName}" does not match the project's naming pattern: "${namingPattern}".`;
                 const example = namingExample

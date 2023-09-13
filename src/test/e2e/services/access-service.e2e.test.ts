@@ -364,7 +364,7 @@ test('should remove CREATE_FEATURE on default environment', async () => {
         '*',
     );
     expect(
-        await accessService.hasPermission(user, CREATE_FEATURE, 'some-project'),
+        await accessService.hasPermission(user, CREATE_FEATURE, 'default'),
     ).toBe(true);
 
     await accessService.removePermissionFromRole(
@@ -373,6 +373,11 @@ test('should remove CREATE_FEATURE on default environment', async () => {
         '*',
     );
 
+    expect(
+        await accessService.hasPermission(user, CREATE_FEATURE, 'default'),
+    ).toBe(false);
+
+    // if project does not exist we also return false
     expect(
         await accessService.hasPermission(user, CREATE_FEATURE, 'some-project'),
     ).toBe(false);

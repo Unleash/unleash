@@ -47,7 +47,7 @@ export const IntegrationDelete: VFC<IIntegrationDeleteProps> = ({ id }) => {
             <StyledTitle>Delete integration</StyledTitle>
             <StyledHelpText>
                 Deleting an integration will delete the entire configuration and
-                it will automatically disable the integration
+                will automatically disable the integration
             </StyledHelpText>
             <StyledContainer>
                 <PermissionButton

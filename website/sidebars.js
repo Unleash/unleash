@@ -171,27 +171,6 @@ module.exports = {
             items: [
                 {
                     type: 'category',
-                    link: { type: 'doc', id: 'reference/integrations/index' },
-                    items: [
-                        'reference/integrations/datadog',
-                        {
-                            'Jira Server': [
-                                'reference/integrations/jira-server-plugin-installation',
-                                'reference/integrations/jira-server-plugin-usage',
-                            ],
-                            'Jira Cloud': [
-                                'reference/integrations/jira-cloud-plugin-installation',
-                                'reference/integrations/jira-cloud-plugin-usage',
-                            ],
-                        },
-                        'reference/integrations/slack',
-                        'reference/integrations/teams',
-                        'reference/integrations/webhook',
-                    ],
-                    label: 'Integrations',
-                },
-                {
-                    type: 'category',
                     label: 'APIs',
                     items: [
                         {
@@ -300,6 +279,27 @@ module.exports = {
                         'reference/deploy/migration-guide',
                         'reference/deploy/securing-unleash',
                     ],
+                },
+                {
+                    type: 'category',
+                    link: { type: 'doc', id: 'reference/integrations/index' },
+                    items: [
+                        'reference/integrations/datadog',
+                        {
+                            'Jira Server': [
+                                'reference/integrations/jira-server-plugin-installation',
+                                'reference/integrations/jira-server-plugin-usage',
+                            ],
+                            'Jira Cloud': [
+                                'reference/integrations/jira-cloud-plugin-installation',
+                                'reference/integrations/jira-cloud-plugin-usage',
+                            ],
+                        },
+                        'reference/integrations/slack',
+                        'reference/integrations/teams',
+                        'reference/integrations/webhook',
+                    ],
+                    label: 'Integrations',
                 },
                 {
                     type: 'category',

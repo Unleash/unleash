@@ -59,6 +59,7 @@ import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 import { uniqueByKey } from '../util/unique';
 import { BadDataError, PermissionError } from '../error';
 import { ProjectDoraMetricsSchema } from 'lib/openapi';
+import { checkFeatureNamingData } from '../features/feature-naming-pattern/feature-naming-validation';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -169,25 +170,23 @@ export default class ProjectService {
         return this.store.get(id);
     }
 
-    private validateFlagNaming = (naming?: IFeatureNaming) => {
-        if (naming) {
-            const { pattern, example } = naming;
-            if (
-                pattern != null &&
-                example &&
-                !example.match(new RegExp(pattern))
-            ) {
-                throw new BadDataError(
-                    `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern.`,
-                );
-            }
+    private validateAndProcessFeatureNamingPattern = (
+        featureNaming: IFeatureNaming,
+    ): IFeatureNaming => {
+        const validationResult = checkFeatureNamingData(featureNaming);
 
-            if (!pattern && example) {
-                throw new BadDataError(
-                    "You've provided a feature flag naming example, but no feature flag naming pattern. You must specify a pattern to use an example.",
-                );
-            }
+        if (validationResult.state === 'invalid') {
+            throw new BadDataError(validationResult.reason);
         }
+
+        if (featureNaming.pattern && !featureNaming.example) {
+            featureNaming.example = null;
+        }
+        if (featureNaming.pattern && !featureNaming.description) {
+            featureNaming.description = null;
+        }
+
+        return featureNaming;
     };
 
     async createProject(
@@ -197,7 +196,9 @@ export default class ProjectService {
         const data = await projectSchema.validateAsync(newProject);
         await this.validateUniqueId(data.id);
 
-        this.validateFlagNaming(data.featureNaming);
+        if (data.featureNaming) {
+            this.validateAndProcessFeatureNamingPattern(data.featureNaming);
+        }
 
         await this.store.create(data);
 
@@ -231,13 +232,9 @@ export default class ProjectService {
         const preData = await this.store.get(updatedProject.id);
 
         if (updatedProject.featureNaming) {
-            this.validateFlagNaming(updatedProject.featureNaming);
-        }
-        if (
-            updatedProject.featureNaming?.pattern &&
-            !updatedProject.featureNaming?.example
-        ) {
-            updatedProject.featureNaming.example = null;
+            this.validateAndProcessFeatureNamingPattern(
+                updatedProject.featureNaming,
+            );
         }
 
         await this.store.update(updatedProject);

@@ -94,6 +94,7 @@ import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-f
 import { unique } from '../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
+import { checkFeatureFlagNamesAgainstPattern } from '../features/feature-naming-pattern/feature-naming-validation';
 
 interface IFeatureContext {
     featureName: string;
@@ -112,7 +113,7 @@ export interface IGetFeatureParams {
     userId?: number;
 }
 
-export type FeatureNameCheckResult =
+export type FeatureNameCheckResultWithFeaturePattern =
     | { state: 'valid' }
     | {
           state: 'invalid';
@@ -1103,24 +1104,20 @@ class FeatureToggleService {
     async checkFeatureFlagNamesAgainstProjectPattern(
         projectId: string,
         featureNames: string[],
-    ): Promise<FeatureNameCheckResult> {
+    ): Promise<FeatureNameCheckResultWithFeaturePattern> {
         if (this.flagResolver.isEnabled('featureNamingPattern')) {
             const project = await this.projectStore.get(projectId);
             const patternData = project.featureNaming;
             const namingPattern = patternData?.pattern;
 
             if (namingPattern) {
-                const regex = new RegExp(namingPattern);
-                const mismatchedNames = featureNames.filter(
-                    (name) => !regex.test(name),
+                const result = checkFeatureFlagNamesAgainstPattern(
+                    featureNames,
+                    namingPattern,
                 );
 
-                if (mismatchedNames.length > 0) {
-                    return {
-                        state: 'invalid',
-                        invalidNames: new Set(mismatchedNames),
-                        featureNaming: patternData,
-                    };
+                if (result.state === 'invalid') {
+                    return { ...result, featureNaming: patternData };
                 }
             }
         }

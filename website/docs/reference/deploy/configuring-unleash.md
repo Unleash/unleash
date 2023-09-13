@@ -102,13 +102,16 @@ unleash.start(unleashOptions);
 - **preHook** (function) - this is a hook if you need to provide any middlewares to express before `unleash` adds any. Express app instance is injected as first argument.
 - **preRouterHook** (function) - use this to register custom express middlewares before the `unleash` specific routers are added.
 - **secureHeaders** (boolean) - use this to enable security headers (HSTS, CSP, etc) when serving Unleash from HTTPS. Can also be configured through the environment variable `SECURE_HEADERS`.
-- **additionalCspAllowedDomains** (CspAllowedDomains) - use this when you want to enable security headers but have additional domains you need to allow traffic to
-  - You can set the environment variable CSP_ALLOWED_DEFAULT to allow new defaultSrc (comma separated list)
-  - You can set the environment variable CSP_ALLOWED_FONT to allow new fontSrc (comma separated list)
-  - You can set the environment variable CSP_ALLOWED_STYLE to allow new styleSrc (comma separated list)
-  - You can set the environment variable CSP_ALLOWED_SCRIPT to allow new scriptSrc (comma separated list)
-  - You can set the environment variable CSP_ALLOWED_IMG to allow new imgSrc (comma separated list)
-  - You can set the environment variable CSP_ALLOWED_CONNECT to allow new connectSrc (comma separated list)
+- **additionalCspAllowedDomains** (CspAllowedDomains) - use this when you want to enable security headers but have additional domains you need to allow traffic to you can set the following environment variables:
+  - `CSP_ALLOWED_DEFAULT` to allow new defaultSrc (comma separated list)
+  - `CSP_ALLOWED_FONT` to allow new fontSrc (comma separated list)
+  - `CSP_ALLOWED_STYLE` to allow new styleSrc (comma separated list)
+  - `CSP_ALLOWED_SCRIPT` to allow new scriptSrc (comma separated list)
+  - `CSP_ALLOWED_IMG` to allow new imgSrc (comma separated list)
+  - `CSP_ALLOWED_CONNECT` to allow new connectSrc (comma separated list)
+  - `CSP_ALLOWED_FRAME` to allow new frameSrc (comma separated listed)
+  - `CSP_ALLOWED_MEDIA` to allow new mediaSrc (comma separated list)
+  - `CSP_ALLOWED_OBJECT` to allow new objectSrc (comma separated list)
 - **server** - The server config object taking the following properties
   - _port_ - which port the unleash-server should bind to. If port is omitted or is 0, the operating system will assign an arbitrary unused port. Will be ignored if pipe is specified. This value may also be set via the `HTTP_PORT` environment variable
   - _host_ - which host the unleash-server should bind to. If host is omitted, the server will accept connections on the unspecified IPv6 address (::) when IPv6 is available, or the unspecified IPv4 address (0.0.0.0) otherwise. This value may also be set via the `HTTP_HOST` environment variable

@@ -162,6 +162,9 @@ export interface ICspDomainOptions {
     scriptSrc?: string[];
     imgSrc?: string[];
     connectSrc?: string[];
+    frameSrc?: string[];
+    objectSrc?: string[];
+    mediaSrc?: string[];
 }
 
 export interface ICspDomainConfig {

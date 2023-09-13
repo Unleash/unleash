@@ -60,6 +60,19 @@ describe('validate incoming feature naming data', () => {
             ).toMatchObject({ state: 'invalid' });
         }
     });
+
+    test.each([' ', '\\t', '\\n'])(
+        'patterns with illegal characters (%s) are invalid',
+        (string) => {
+            const pattern = `-${string}[0-9]+`;
+
+            expect(
+                checkFeatureNamingData({
+                    pattern,
+                }),
+            ).toMatchObject({ state: 'invalid' });
+        },
+    );
 });
 
 describe('validate feature flag names against a pattern', () => {

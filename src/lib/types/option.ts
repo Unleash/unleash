@@ -171,6 +171,9 @@ export interface ICspDomainConfig {
     scriptSrc: string[];
     imgSrc: string[];
     connectSrc: string[];
+    frameSrc: string[];
+    objectSrc: string[];
+    mediaSrc: string[];
 }
 
 interface IFrontendApi {

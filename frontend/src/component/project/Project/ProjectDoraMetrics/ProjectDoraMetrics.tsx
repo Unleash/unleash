@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Tooltip } from '@mui/material';
 import { useProjectDoraMetrics } from 'hooks/api/getters/useProjectDoraMetrics/useProjectDoraMetrics';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useMemo } from 'react';
@@ -84,12 +84,17 @@ export const ProjectDoraMetrics = () => {
                 id: 'Time to production',
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
-                    <Box
-                        sx={{ display: 'flex', justifyContent: 'center' }}
-                        data-loading
+                    <Tooltip
+                        title="The time from the feature toggle was created until it was turned on in a production environment"
+                        arrow
                     >
-                        {original.timeToProduction} days
-                    </Box>
+                        <Box
+                            sx={{ display: 'flex', justifyContent: 'center' }}
+                            data-loading
+                        >
+                            {original.timeToProduction} days
+                        </Box>
+                    </Tooltip>
                 ),
                 width: 200,
                 disableGlobalFilter: true,
@@ -100,12 +105,21 @@ export const ProjectDoraMetrics = () => {
                 id: 'Deviation from average',
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
-                    <Box
-                        sx={{ display: 'flex', justifyContent: 'center' }}
-                        data-loading
+                    <Tooltip
+                        title={`Deviation from project average. Average for this project is: ${
+                            dora.projectAverage || 0
+                        } days`}
+                        arrow
                     >
-                        {dora.projectAverage - original.timeToProduction} days
-                    </Box>
+                        <Box
+                            sx={{ display: 'flex', justifyContent: 'center' }}
+                            data-loading
+                        >
+                            {(dora.projectAverage ? dora.projectAverage : 0) -
+                                original.timeToProduction}{' '}
+                            days
+                        </Box>
+                    </Tooltip>
                 ),
                 width: 300,
                 disableGlobalFilter: true,
@@ -116,12 +130,17 @@ export const ProjectDoraMetrics = () => {
                 id: 'dora',
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
-                    <Box
-                        sx={{ display: 'flex', justifyContent: 'center' }}
-                        data-loading
+                    <Tooltip
+                        title="Dora score. High = less than a week to production. Medium = less than a month to production. Low = Less than 6 months to production"
+                        arrow
                     >
-                        {resolveDoraMetrics(original.timeToProduction)}
-                    </Box>
+                        <Box
+                            sx={{ display: 'flex', justifyContent: 'center' }}
+                            data-loading
+                        >
+                            {resolveDoraMetrics(original.timeToProduction)}
+                        </Box>
+                    </Tooltip>
                 ),
                 width: 200,
                 disableGlobalFilter: true,

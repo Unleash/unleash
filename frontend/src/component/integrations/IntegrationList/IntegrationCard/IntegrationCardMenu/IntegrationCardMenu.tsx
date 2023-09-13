@@ -21,6 +21,8 @@ import type { AddonSchema } from 'openapi';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import { event } from 'cypress/types/jquery';
 
 interface IIntegrationCardMenuProps {
     addon: AddonSchema;
@@ -35,10 +37,19 @@ const StyledMenu = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
+const preventPropagation =
+    (fn: () => void) => (event: React.SyntheticEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+        fn();
+    };
+
 export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
     addon,
 }) => {
-    const [open, setOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [isToggleOpen, setIsToggleOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const { updateAddon, removeAddon } = useAddonsApi();
     const { refetchAddons } = useAddons();
@@ -46,12 +57,12 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
 
     const handleMenuClick = (event: React.SyntheticEvent) => {
         event.preventDefault();
-        if (open) {
-            setOpen(false);
+        if (isMenuOpen) {
+            setIsMenuOpen(false);
             setAnchorEl(null);
         } else {
             setAnchorEl(event.currentTarget);
-            setOpen(true);
+            setIsMenuOpen(true);
         }
     };
     const updateAccess = useHasRootAccess(UPDATE_ADDON);
@@ -93,9 +104,9 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
                 <IconButton
                     onClick={handleMenuClick}
                     size="small"
-                    aria-controls={open ? 'actions-menu' : undefined}
+                    aria-controls={isMenuOpen ? 'actions-menu' : undefined}
                     aria-haspopup="true"
-                    aria-expanded={open ? 'true' : undefined}
+                    aria-expanded={isMenuOpen ? 'true' : undefined}
                     data-loading
                 >
                     <MoreVertIcon sx={{ width: 32, height: 32 }} />
@@ -119,10 +130,7 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
                 onClose={handleMenuClick}
             >
                 <MenuItem
-                    onClick={e => {
-                        e.preventDefault();
-                        toggleIntegration();
-                    }}
+                    onClick={preventPropagation(() => setIsToggleOpen(true))}
                     disabled={!updateAccess}
                 >
                     <ListItemIcon>
@@ -134,10 +142,7 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
                 </MenuItem>{' '}
                 <MenuItem
                     disabled={!deleteAccess}
-                    onClick={e => {
-                        e.preventDefault();
-                        deleteIntegration();
-                    }}
+                    onClick={preventPropagation(() => setIsDeleteOpen(true))}
                 >
                     <ListItemIcon>
                         <Delete />
@@ -145,6 +150,26 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
                     <ListItemText>Delete</ListItemText>
                 </MenuItem>
             </Menu>
+
+            <Dialogue
+                open={isToggleOpen}
+                onClick={preventPropagation(toggleIntegration)}
+                onClose={preventPropagation(() => setIsToggleOpen(false))}
+                title="Confirm deletion"
+            >
+                <div>
+                    Are you sure you want to{' '}
+                    {addon.enabled ? 'disable' : 'enable'} this Integration?
+                </div>
+            </Dialogue>
+            <Dialogue
+                open={isDeleteOpen}
+                onClick={preventPropagation(deleteIntegration)}
+                onClose={preventPropagation(() => setIsDeleteOpen(false))}
+                title="Confirm deletion"
+            >
+                <div>Are you sure you want to delete this Integration?</div>
+            </Dialogue>
         </StyledMenu>
     );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { trim } from 'component/common/util';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -10,6 +10,7 @@ import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
 import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IProjectForm {
     projectId: string;
@@ -127,6 +128,27 @@ export const validateFeatureNamingExample = ({
     return { state: 'valid' };
 };
 
+const useFeatureNamePatternTracking = () => {
+    const [previousPattern, setPreviousPattern] = React.useState<string>('');
+    const { trackEvent } = usePlausibleTracker();
+    const eventName = 'feature-naming-pattern' as const;
+
+    const trackPattern = (pattern: string = '') => {
+        if (pattern === previousPattern) {
+            // do nothing; they've probably updated something else in the
+            // project.
+        } else if (pattern === '' && previousPattern !== '') {
+            trackEvent(eventName, { props: { action: 'removed' } });
+        } else if (pattern !== '' && previousPattern === '') {
+            trackEvent(eventName, { props: { action: 'added' } });
+        } else if (pattern !== '' && previousPattern !== '') {
+            trackEvent(eventName, { props: { action: 'edited' } });
+        }
+    };
+
+    return { trackPattern, setPreviousPattern };
+};
+
 const ProjectForm: React.FC<IProjectForm> = ({
     children,
     handleSubmit,
@@ -156,6 +178,13 @@ const ProjectForm: React.FC<IProjectForm> = ({
 }) => {
     const { uiConfig } = useUiConfig();
     const shouldShowFlagNaming = uiConfig.flags.featureNamingPattern;
+
+    const { setPreviousPattern, trackPattern } =
+        useFeatureNamePatternTracking();
+
+    useEffect(() => {
+        setPreviousPattern(featureNamingPattern || '');
+    }, [projectId]);
 
     const updateNamingExampleError = ({
         example,
@@ -208,7 +237,12 @@ const ProjectForm: React.FC<IProjectForm> = ({
     };
 
     return (
-        <StyledForm onSubmit={handleSubmit}>
+        <StyledForm
+            onSubmit={submitEvent => {
+                handleSubmit(submitEvent);
+                trackPattern(featureNamingPattern);
+            }}
+        >
             <StyledDescription>What is your project Id?</StyledDescription>
             <StyledInput
                 label="Project Id"

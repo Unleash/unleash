@@ -69,7 +69,7 @@ export const IntegrationDelete: VFC<IIntegrationDeleteProps> = ({ id }) => {
                 onClose={() => setIsOpen(false)}
                 title="Confirm deletion"
             >
-                <div>Are you sure you want to delete this Addon?</div>
+                <div>Are you sure you want to delete this Integration?</div>
             </Dialogue>
         </>
     );

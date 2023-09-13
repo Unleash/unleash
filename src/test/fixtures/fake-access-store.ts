@@ -12,6 +12,7 @@ import {
 import { IPermission } from 'lib/types/model';
 import { IRoleStore } from 'lib/types';
 import FakeRoleStore from './fake-role-store';
+import { PermissionRef } from 'lib/services/access-service';
 
 class AccessStoreMock implements IAccessStore {
     fakeRolesStore: IRoleStore;
@@ -118,7 +119,7 @@ class AccessStoreMock implements IAccessStore {
 
     addEnvironmentPermissionsToRole(
         role_id: number,
-        permissions: IPermission[],
+        permissions: PermissionRef[],
     ): Promise<void> {
         return Promise.resolve(undefined);
     }

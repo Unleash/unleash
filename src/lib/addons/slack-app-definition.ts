@@ -39,7 +39,7 @@ const slackAppDefinition: IAddonDefinition = {
         url: 'https://unleash-slack-app.vercel.app/install',
         title: 'Slack App installation',
         helpText:
-            'After installing the Unleash Slack app in your Slack workspace, paste the access token into the appropriate field below in order to configure this addon.',
+            'After installing the Unleash Slack app in your Slack workspace, paste the access token into the appropriate field below in order to configure this integration.',
     },
     parameters: [
         {

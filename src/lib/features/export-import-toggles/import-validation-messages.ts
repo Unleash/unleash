@@ -4,6 +4,7 @@ import {
     ImportTogglesValidateItemSchema,
 } from '../../openapi';
 import { IContextFieldDto } from '../../types/stores/context-field-store';
+import { ProjectFeaturesLimit } from './import-toggles-store-type';
 
 export interface IErrorsParams {
     projectName: string;
@@ -12,6 +13,7 @@ export interface IErrorsParams {
     otherProjectFeatures: string[];
     duplicateFeatures: string[];
     featureNameCheckResult: FeatureNameCheckResult;
+    featureLimitResult: ProjectFeaturesLimit;
 }
 
 export interface IWarningParams {
@@ -43,6 +45,7 @@ export class ImportValidationMessages {
         otherProjectFeatures,
         duplicateFeatures,
         featureNameCheckResult,
+        featureLimitResult,
     }: IErrorsParams): ImportTogglesValidateItemSchema[] {
         const errors: ImportTogglesValidateItemSchema[] = [];
 
@@ -90,6 +93,16 @@ export class ImportValidationMessages {
             errors.push({
                 message: `${baseError}${exampleInfo}${descriptionInfo} The following features do not match the pattern:`,
                 affectedItems: [...featureNameCheckResult.invalidNames].sort(),
+            });
+        }
+        if (
+            featureLimitResult.currentFeaturesCount +
+                featureLimitResult.newFeaturesCount >
+            featureLimitResult.limit
+        ) {
+            errors.push({
+                message: `We detected you want to create ${featureLimitResult.newFeaturesCount} new features to a project that already has ${featureLimitResult.currentFeaturesCount} existing features, exceeding the maximum limit of ${featureLimitResult.limit}.`,
+                affectedItems: [],
             });
         }
 

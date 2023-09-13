@@ -320,6 +320,7 @@ test('should export strategies', async () => {
     await stores.strategyStore.createStrategy({
         name: 'a-strategy',
         editable: true,
+        parameters: [],
     });
 
     const data = await stateService.export({ includeStrategies: true });
@@ -595,7 +596,10 @@ test('exporting to new format works', async () => {
     await stores.featureToggleStore.create('fancy', {
         name: 'Some-feature',
     });
-    await stores.strategyStore.createStrategy({ name: 'format' });
+    await stores.strategyStore.createStrategy({
+        name: 'format',
+        parameters: [],
+    });
     await stores.featureEnvironmentStore.addEnvironmentToFeature(
         'Some-feature',
         'dev',
@@ -650,7 +654,10 @@ test('featureStrategies can keep existing', async () => {
     await stores.featureToggleStore.create('fancy', {
         name: 'Some-feature',
     });
-    await stores.strategyStore.createStrategy({ name: 'format' });
+    await stores.strategyStore.createStrategy({
+        name: 'format',
+        parameters: [],
+    });
     await stores.featureEnvironmentStore.addEnvironmentToFeature(
         'Some-feature',
         'dev',
@@ -697,7 +704,10 @@ test('featureStrategies should not keep existing if dropBeforeImport', async () 
     await stores.featureToggleStore.create('fancy', {
         name: 'Some-feature',
     });
-    await stores.strategyStore.createStrategy({ name: 'format' });
+    await stores.strategyStore.createStrategy({
+        name: 'format',
+        parameters: [],
+    });
     await stores.featureEnvironmentStore.addEnvironmentToFeature(
         'Some-feature',
         'dev',

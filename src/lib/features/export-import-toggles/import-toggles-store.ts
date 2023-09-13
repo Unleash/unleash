@@ -1,10 +1,14 @@
-import { IImportTogglesStore } from './import-toggles-store-type';
+import {
+    IImportTogglesStore,
+    ProjectFeaturesLimit,
+} from './import-toggles-store-type';
 import { Db } from '../../db/db';
 
 const T = {
     featureStrategies: 'feature_strategies',
     features: 'features',
     featureTag: 'feature_tag',
+    projectSettings: 'project_settings',
 };
 export class ImportTogglesStore implements IImportTogglesStore {
     private db: Db;
@@ -84,6 +88,38 @@ export class ImportTogglesStore implements IImportTogglesStore {
             .where('archived_at', null)
             .whereIn('name', featureNames);
         return rows.map((row) => row.name);
+    }
+
+    async getProjectFeaturesLimit(
+        featureNames: string[],
+        project: string,
+    ): Promise<ProjectFeaturesLimit> {
+        const row = await this.db(T.projectSettings)
+            .select(['feature_limit'])
+            .where('project', project)
+            .first();
+        const limit: number = row?.feature_limit ?? Number.MAX_SAFE_INTEGER;
+
+        const existingFeaturesCount = await this.db(T.features)
+            .whereIn('name', featureNames)
+            .andWhere('project', project)
+            .where('archived_at', null)
+            .count()
+            .then((res) => Number(res[0].count));
+
+        const newFeaturesCount = featureNames.length - existingFeaturesCount;
+
+        const currentFeaturesCount = await this.db(T.features)
+            .where('project', project)
+            .count()
+            .where('archived_at', null)
+            .then((res) => Number(res[0].count));
+
+        return {
+            limit,
+            newFeaturesCount,
+            currentFeaturesCount,
+        };
     }
 
     async deleteTagsForFeatures(features: string[]): Promise<void> {

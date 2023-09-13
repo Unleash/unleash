@@ -9,7 +9,7 @@ import type { CreateStrategyVariantSchemaPayloadType } from './createStrategyVar
  * Extra data configured for this variant
  */
 export type CreateStrategyVariantSchemaPayload = {
-    /** The type of the value. Commonly used types are string, json and csv. */
+    /** The type of the value. Commonly used types are string, number, json and csv. */
     type: CreateStrategyVariantSchemaPayloadType;
     /** The actual value of payload */
     value: string;

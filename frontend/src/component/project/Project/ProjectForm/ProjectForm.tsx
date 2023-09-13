@@ -106,6 +106,10 @@ const StyledFlagNamingContainer = styled('div')(({ theme }) => ({
     '& > *': { width: '100%' },
 }));
 
+const StyledPatternNamingExplanation = styled('div')(({ theme }) => ({
+    'p + p': { marginTop: theme.spacing(1) },
+}));
+
 export const validateFeatureNamingExample = ({
     pattern,
     example,
@@ -354,9 +358,9 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 <FeatureFlagNamingTooltip />
                             </Box>
                             <StyledSubtitle>
-                                <div id="pattern-naiming-description">
+                                <StyledPatternNamingExplanation id="pattern-naming-description">
                                     <p>
-                                        A feature flag naming pattern is a{' '}
+                                        Define a{' '}
                                         <a
                                             href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions`}
                                             target="_blank"
@@ -365,20 +369,15 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                             JavaScript RegEx
                                         </a>{' '}
                                         used to enforce feature flag names
-                                        within this project.
-                                    </p>
-                                    <p>
-                                        When set, it requires the entire flag
-                                        name to match the pattern, as if the
-                                        pattern was surrounded by a leading{' '}
-                                        <code>^</code> and a trailing{' '}
-                                        <code>$</code>.
+                                        within this project. The regex will be
+                                        surrounded by a leading <code>^</code>{' '}
+                                        and a trailing <code>$</code>.
                                     </p>
                                     <p>
                                         Leave it empty if you don’t want to add
                                         a naming pattern.
                                     </p>
-                                </div>
+                                </StyledPatternNamingExplanation>
                             </StyledSubtitle>
                             <StyledFlagNamingContainer>
                                 <StyledInput

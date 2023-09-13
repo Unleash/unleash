@@ -40,7 +40,6 @@ export type UiFlags = {
     P: boolean;
     RE: boolean;
     EEA?: boolean;
-    SE?: boolean;
     T?: boolean;
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;

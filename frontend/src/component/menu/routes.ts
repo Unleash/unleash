@@ -374,7 +374,6 @@ export const routes: IRoute[] = [
         type: 'protected',
         layout: 'main',
         menu: {},
-        flag: SE,
     },
     {
         path: '/segments/edit/:segmentId',
@@ -384,7 +383,6 @@ export const routes: IRoute[] = [
         type: 'protected',
         layout: 'main',
         menu: {},
-        flag: SE,
     },
     {
         path: '/segments',
@@ -393,7 +391,6 @@ export const routes: IRoute[] = [
         hidden: false,
         type: 'protected',
         menu: { mobile: true, advanced: true },
-        flag: SE,
     },
 
     // History

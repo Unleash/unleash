@@ -1,15 +1,14 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const contextFieldStrategiesSchema = {
-    $id: '#/components/schemas/contextFieldStrategiesSchema',
+export const segmentStrategiesSchema = {
+    $id: '#/components/schemas/segmentStrategiesSchema',
     type: 'object',
-    description:
-        'A wrapper object containing all strategies that use a specific context field',
     required: ['strategies'],
+    description: 'A collection of strategies belonging to a specified segment.',
     properties: {
         strategies: {
+            description: 'The list of strategies',
             type: 'array',
-            description: 'List of strategies using the context field',
             items: {
                 type: 'object',
                 required: [
@@ -22,28 +21,30 @@ export const contextFieldStrategiesSchema = {
                 properties: {
                     id: {
                         type: 'string',
-                        example: '433ae8d9-dd69-4ad0-bc46-414aedbe9c55',
-                        description: 'The ID of the strategy.',
+                        description: 'The ID of the strategy',
+                        example: 'e465c813-cffb-4232-b184-82b1d6fe9d3d',
                     },
                     featureName: {
                         type: 'string',
-                        example: 'best-feature',
-                        description:
-                            'The name of the feature that contains this strategy.',
+                        description: 'The ID of the strategy',
+                        example: 'new-signup-flow',
                     },
                     projectId: {
                         type: 'string',
                         description:
-                            'The ID of the project that contains this feature.',
+                            'The ID of the project that the strategy belongs to.',
+                        example: 'red-vista',
                     },
                     environment: {
                         type: 'string',
                         description:
-                            'The ID of the environment where this strategy is in.',
+                            'The ID of the environment that the strategy belongs to.',
+                        example: 'development',
                     },
                     strategyName: {
                         type: 'string',
-                        description: 'The name of the strategy.',
+                        description: "The name of the strategy's type.",
+                        example: 'flexibleRollout',
                     },
                 },
             },
@@ -52,6 +53,6 @@ export const contextFieldStrategiesSchema = {
     components: {},
 } as const;
 
-export type ContextFieldStrategiesSchema = FromSchema<
-    typeof contextFieldStrategiesSchema
+export type SegmentStrategiesSchema = FromSchema<
+    typeof segmentStrategiesSchema
 >;

@@ -1,9 +1,9 @@
-import { FeatureNameCheckResult } from 'lib/services/feature-toggle-service';
 import {
     FeatureStrategySchema,
     ImportTogglesValidateItemSchema,
 } from '../../openapi';
 import { IContextFieldDto } from '../../types/stores/context-field-store';
+import { FeatureNameCheckResultWithFeaturePattern } from '../../services/feature-toggle-service';
 
 export interface IErrorsParams {
     projectName: string;
@@ -11,7 +11,7 @@ export interface IErrorsParams {
     contextFields: IContextFieldDto[];
     otherProjectFeatures: string[];
     duplicateFeatures: string[];
-    featureNameCheckResult: FeatureNameCheckResult;
+    featureNameCheckResult: FeatureNameCheckResultWithFeaturePattern;
 }
 
 export interface IWarningParams {

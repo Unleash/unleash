@@ -295,7 +295,9 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                         show={() => (
                             <StyledAlerts>
                                 {alerts?.map(({ type, text }) => (
-                                    <Alert severity={type}>{text}</Alert>
+                                    <Alert severity={type} key={text}>
+                                        {text}
+                                    </Alert>
                                 ))}
                             </StyledAlerts>
                         )}

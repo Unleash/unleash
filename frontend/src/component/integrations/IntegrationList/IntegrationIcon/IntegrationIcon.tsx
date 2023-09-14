@@ -15,7 +15,7 @@ import android from 'assets/icons/sdks/Logo-android.svg';
 import dotnet from 'assets/icons/sdks/Logo-net.svg';
 import flutter from 'assets/icons/sdks/Logo-flutter.svg';
 import go from 'assets/icons/sdks/Logo-go.svg';
-import ios from 'assets/icons/sdks/Logo-ios.svg';
+import swift from 'assets/icons/sdks/Logo-swift.svg';
 import java from 'assets/icons/sdks/Logo-java.svg';
 import javascript from 'assets/icons/sdks/Logo-javascript.svg';
 import node from 'assets/icons/sdks/Logo-node.svg';
@@ -58,7 +58,7 @@ const integrations: Record<
     dotnet: { title: 'Dotnet', icon: dotnet },
     flutter: { title: 'Flutter', icon: flutter },
     go: { title: 'Go', icon: go },
-    ios: { title: 'iOS', icon: ios },
+    swift: { title: 'Swift', icon: swift },
     java: { title: 'Java', icon: java },
     javascript: { title: 'Javascript', icon: javascript },
     node: { title: 'Node', icon: node },

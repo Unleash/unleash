@@ -38,7 +38,7 @@ export const OFFICIAL_SDKS: Sdk[] = [
     {
         name: 'python',
         displayName: 'Python SDK',
-        description: 'Officially Unleash Client for Python',
+        description: 'Official Unleash Client for Python',
         documentationUrl: 'https://docs.getunleash.io/reference/sdks/python',
         type: 'server',
     },
@@ -79,8 +79,8 @@ export const OFFICIAL_SDKS: Sdk[] = [
         type: 'client',
     },
     {
-        name: 'ios',
-        displayName: 'iOS Proxy SDK',
+        name: 'swift',
+        displayName: 'Swift Proxy SDK',
         description: 'Officially Unleash Client for iOS',
         documentationUrl: 'https://docs.getunleash.io/reference/sdks/ios-proxy',
         type: 'client',

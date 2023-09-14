@@ -1777,3 +1777,43 @@ test('should return average time to production per toggle and include archived t
 
     expect(resultProject1.features).toHaveLength(3);
 });
+
+describe('feature flag naming patterns', () => {
+    test(`should clear existing example and description if the payload doesn't contain them`, async () => {
+        const featureNaming = {
+            pattern: '.+',
+            example: 'example',
+            description: 'description',
+        };
+
+        const project = {
+            id: 'feature-flag-naming-patterns-cleanup',
+            name: 'Project',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+            description: 'description',
+            featureNaming,
+        };
+
+        await projectService.createProject(project, user.id);
+
+        expect(
+            (await projectService.getProject(project.id)).featureNaming,
+        ).toMatchObject(featureNaming);
+
+        const newPattern = 'new-pattern.+';
+        await projectService.updateProject(
+            {
+                ...project,
+                featureNaming: { pattern: newPattern },
+            },
+            user.id,
+        );
+
+        const updatedProject = await projectService.getProject(project.id);
+
+        expect(updatedProject.featureNaming!.pattern).toBe(newPattern);
+        expect(updatedProject.featureNaming!.example).toBeFalsy();
+        expect(updatedProject.featureNaming!.description).toBeFalsy();
+    });
+});

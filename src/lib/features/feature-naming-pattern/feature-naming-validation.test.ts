@@ -91,6 +91,19 @@ describe('validate incoming feature naming data', () => {
             }),
         ).toMatchObject({ state: 'invalid' });
     });
+
+    test('if the pattern contains disallowed characters, a match is not attempted against the example', () => {
+        const result = checkFeatureNamingData({
+            pattern: 'a. [0-9]+',
+            example: 'obviously-not-a-match',
+        });
+
+        if (result.state === 'valid') {
+            fail('Expected invalid result');
+        }
+
+        expect(result.reasons.length).toBe(1);
+    });
 });
 
 describe('validate feature flag names against a pattern', () => {

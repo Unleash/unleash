@@ -414,10 +414,11 @@ export class EnvironmentVariantEvent extends BaseEvent {
         environment: string;
         project: string;
         createdBy: string | IUser;
+        tags: ITag[];
         newVariants: IVariant[];
         oldVariants: IVariant[];
     }) {
-        super(FEATURE_ENVIRONMENT_VARIANTS_UPDATED, p.createdBy);
+        super(FEATURE_ENVIRONMENT_VARIANTS_UPDATED, p.createdBy, p.tags);
         this.featureName = p.featureName;
         this.environment = p.environment;
         this.project = p.project;

@@ -1875,6 +1875,8 @@ class FeatureToggleService {
             ).variants ||
             [];
 
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+
         await this.eventStore.store(
             new EnvironmentVariantEvent({
                 featureName,
@@ -1883,6 +1885,7 @@ class FeatureToggleService {
                 createdBy: user,
                 oldVariants: theOldVariants,
                 newVariants: fixedVariants,
+                tags,
             }),
         );
         await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
@@ -1948,6 +1951,9 @@ class FeatureToggleService {
             });
             oldVariants[env] = featureEnv.variants || [];
         }
+
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+
         await this.eventStore.batchStore(
             environments.map(
                 (environment) =>
@@ -1958,6 +1964,7 @@ class FeatureToggleService {
                         createdBy: user,
                         oldVariants: oldVariants[environment],
                         newVariants: fixedVariants,
+                        tags,
                     }),
             ),
         );

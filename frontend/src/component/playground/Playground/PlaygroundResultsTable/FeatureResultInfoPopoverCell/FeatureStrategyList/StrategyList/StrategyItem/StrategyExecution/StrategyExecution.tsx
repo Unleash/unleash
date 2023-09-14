@@ -30,8 +30,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
 
     const { uiConfig } = useUiConfig();
 
-    const hasSegments =
-        Boolean(uiConfig.flags.SE) && Boolean(segments && segments.length > 0);
+    const hasSegments = Boolean(segments && segments.length > 0);
     const hasConstraints = Boolean(constraints && constraints?.length > 0);
     const hasExecutionParameters =
         name !== 'default' &&

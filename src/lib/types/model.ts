@@ -459,3 +459,14 @@ export interface IFeatureStrategySegment {
     featureStrategyId: string;
     segmentId: number;
 }
+
+export interface IUserAccessOverview {
+    userId: number;
+    createdAt?: Date;
+    userName?: string;
+    userEmail: number;
+    lastSeen?: Date;
+    accessibleProjects: string[];
+    groups: string[];
+    rootRole: string;
+}

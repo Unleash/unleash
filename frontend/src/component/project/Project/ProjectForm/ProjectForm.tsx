@@ -190,9 +190,14 @@ const ProjectForm: React.FC<IProjectForm> = ({
         { key: 'protected', label: 'protected' },
     ];
 
-    if (privateProjects) {
-        projectModeOptions.push({ key: 'private', label: 'private' });
-    }
+    useEffect(() => {
+        if (
+            privateProjects &&
+            !projectModeOptions.some(option => option.key === 'private')
+        ) {
+            projectModeOptions.push({ key: 'private', label: 'private' });
+        }
+    }, [projectModeOptions]);
 
     useEffect(() => {
         setPreviousPattern(featureNamingPattern || '');

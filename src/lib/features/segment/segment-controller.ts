@@ -290,7 +290,6 @@ export class SegmentsController extends Controller {
             200,
             res,
             segmentsSchema.$id,
-            //@ts-ignore
             serializeDates(responseBody),
         );
     }
@@ -441,7 +440,6 @@ export class SegmentsController extends Controller {
             200,
             res,
             segmentsSchema.$id,
-            //@ts-ignore
             serializeDates(response),
         );
     }

@@ -102,7 +102,7 @@ unleash.start(unleashOptions);
 - **preHook** (function) - this is a hook if you need to provide any middlewares to express before `unleash` adds any. Express app instance is injected as first argument.
 - **preRouterHook** (function) - use this to register custom express middlewares before the `unleash` specific routers are added.
 - **secureHeaders** (boolean) - use this to enable security headers (HSTS, CSP, etc) when serving Unleash from HTTPS. Can also be configured through the environment variable `SECURE_HEADERS`.
-- **additionalCspAllowedDomains** (CspAllowedDomains) - use this when you want to enable security headers but have additional domains you need to allow traffic to you can set the following environment variables:
+- **additionalCspAllowedDomains** (CspAllowedDomains) - use this when you want to enable security headers but have additional domains you need to allow traffic to. You can set the following environment variables:
   - `CSP_ALLOWED_DEFAULT` to allow new defaultSrc (comma separated list)
   - `CSP_ALLOWED_FONT` to allow new fontSrc (comma separated list)
   - `CSP_ALLOWED_STYLE` to allow new styleSrc (comma separated list)

@@ -113,9 +113,8 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             Performance and security
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            Connect Unleash to private, scalable and distributed
-                            relays. Additional layer for handling massive number
-                            of requests.
+                            Connect Unleash to private, scalable, and
+                            distributed relays.
                         </Typography>
                     </div>
                     <StyledCardsGrid>

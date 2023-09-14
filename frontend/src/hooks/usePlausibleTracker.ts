@@ -46,7 +46,8 @@ export type CustomEvents =
     | 'strategy-variants'
     | 'search-filter-suggestions'
     | 'project-metrics'
-    | 'open-integration';
+    | 'open-integration'
+    | 'feature-naming-pattern';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

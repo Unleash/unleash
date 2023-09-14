@@ -1801,10 +1801,14 @@ describe('feature flag naming patterns', () => {
         ).toMatchObject(featureNaming);
 
         const newPattern = 'new-pattern.+';
-        await projectService.updateProject(project.id, {
-            name: project.name,
-            featureNaming: { pattern: newPattern },
-        });
+        await projectService.updateProject(
+            {
+                id: project.id,
+                name: project.name,
+                featureNaming: { pattern: newPattern },
+            },
+            user.id,
+        );
 
         const updatedProject = await projectService.getProject(project.id);
 

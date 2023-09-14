@@ -103,7 +103,7 @@
     "react-router-dom": "6.15.0",
     "react-table": "7.8.0",
     "react-test-renderer": "17.0.2",
-    "react-timeago": "7.1.0",
+    "react-timeago": "7.2.0",
     "sass": "1.65.1",
     "semver": "7.5.4",
     "swr": "2.2.2",

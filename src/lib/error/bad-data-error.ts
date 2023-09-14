@@ -4,7 +4,7 @@ import getProp from 'lodash.get';
 import { ApiErrorSchema, UnleashError } from './unleash-error';
 
 type ValidationErrorDescription = {
-    description: string;
+    description?: string;
     message: string;
     path?: string;
 };

@@ -1,14 +1,17 @@
 import * as permissions from '../types/permissions';
-import User, { IProjectUser, IUser } from '../types/user';
+import User, { IUser } from '../types/user';
 import {
     IAccessInfo,
     IAccessStore,
+    IGroupWithProjectRoles,
     IProjectRoleUsage,
     IRole,
+    IRoleDescriptor,
     IRoleWithPermissions,
     IRoleWithProject,
     IUserPermission,
     IUserRole,
+    IUserWithProjectRoles,
 } from '../types/stores/access-store';
 import { Logger } from '../logger';
 import { IAccountStore, IGroupStore, IUnleashStores } from '../types/stores';
@@ -35,9 +38,9 @@ import {
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
-import { IGroup, IGroupModelWithProjectRole } from '../types/group';
+import { IGroup } from '../types/group';
 import { GroupService } from './group-service';
-import { IFlagResolver, IUnleashConfig } from 'lib/types';
+import { IFlagResolver, IUnleashConfig, IUserAccessOverview } from 'lib/types';
 
 const { ADMIN } = permissions;
 
@@ -49,17 +52,22 @@ const PROJECT_ADMIN = [
     permissions.DELETE_FEATURE,
 ];
 
+/** @deprecated prefer to use NamePermissionRef */
+export type IdPermissionRef = Pick<IPermission, 'id' | 'environment'>;
+export type NamePermissionRef = Pick<IPermission, 'name' | 'environment'>;
+export type PermissionRef = IdPermissionRef | NamePermissionRef;
+
 interface IRoleCreation {
     name: string;
     description: string;
     type?: 'root-custom' | 'custom';
-    permissions?: IPermission[];
+    permissions?: PermissionRef[];
 }
 
 export interface IRoleValidation {
     name: string;
     description?: string;
-    permissions?: Pick<IPermission, 'id' | 'environment'>[];
+    permissions?: PermissionRef[];
 }
 
 interface IRoleUpdate {
@@ -67,7 +75,13 @@ interface IRoleUpdate {
     name: string;
     description: string;
     type?: 'root-custom' | 'custom';
-    permissions?: IPermission[];
+    permissions?: PermissionRef[];
+}
+
+export interface AccessWithRoles {
+    roles: IRoleDescriptor[];
+    groups: IGroupWithProjectRoles[];
+    users: IUserWithProjectRoles[];
 }
 
 const isProjectPermission = (permission) => PROJECT_ADMIN.includes(permission);
@@ -235,14 +249,14 @@ export class AccessService {
         return this.store.addGroupToRole(groupId, roleId, createdBy, projectId);
     }
 
-    async addAccessToProject(
+    async addRoleAccessToProject(
         users: IAccessInfo[],
         groups: IAccessInfo[],
         projectId: string,
         roleId: number,
         createdBy: string,
     ): Promise<void> {
-        return this.store.addAccessToProject(
+        return this.store.addRoleAccessToProject(
             users,
             groups,
             projectId,
@@ -251,8 +265,68 @@ export class AccessService {
         );
     }
 
+    async addAccessToProject(
+        roles: number[],
+        groups: number[],
+        users: number[],
+        projectId: string,
+        createdBy: string,
+    ): Promise<void> {
+        return this.store.addAccessToProject(
+            roles,
+            groups,
+            users,
+            projectId,
+            createdBy,
+        );
+    }
+
+    async setProjectRolesForUser(
+        projectId: string,
+        userId: number,
+        roles: number[],
+    ): Promise<void> {
+        await this.store.setProjectRolesForUser(projectId, userId, roles);
+    }
+
+    async getProjectRolesForUser(
+        projectId: string,
+        userId: number,
+    ): Promise<number[]> {
+        return this.store.getProjectRolesForUser(projectId, userId);
+    }
+
+    async setProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+        roles: number[],
+        createdBy: string,
+    ): Promise<void> {
+        await this.store.setProjectRolesForGroup(
+            projectId,
+            groupId,
+            roles,
+            createdBy,
+        );
+    }
+
+    async getProjectRolesForGroup(
+        projectId: string,
+        groupId: number,
+    ): Promise<number[]> {
+        return this.store.getProjectRolesForGroup(projectId, groupId);
+    }
+
     async getRoleByName(roleName: string): Promise<IRole> {
         return this.roleStore.getRoleByName(roleName);
+    }
+
+    async removeUserAccess(projectId: string, userId: number): Promise<void> {
+        await this.store.removeUserAccess(projectId, userId);
+    }
+
+    async removeGroupAccess(projectId: string, groupId: number): Promise<void> {
+        await this.store.removeGroupAccess(projectId, groupId);
     }
 
     async setUserRootRole(
@@ -417,7 +491,7 @@ export class AccessService {
     async getProjectUsersForRole(
         roleId: number,
         projectId?: string,
-    ): Promise<IProjectUser[]> {
+    ): Promise<IUserWithRole[]> {
         const userRoleList = await this.store.getProjectUsersForRole(
             roleId,
             projectId,
@@ -430,28 +504,44 @@ export class AccessService {
                 return {
                     ...user,
                     addedAt: role.addedAt!,
+                    roleId,
                 };
             });
         }
         return [];
     }
 
-    async getProjectRoleAccess(
-        projectId: string,
-    ): Promise<[IRole[], IUserWithRole[], IGroupModelWithProjectRole[]]> {
+    async getProjectUsers(projectId: string): Promise<IUserWithProjectRoles[]> {
+        const projectUsers = await this.store.getProjectUsers(projectId);
+
+        if (projectUsers.length > 0) {
+            const users = await this.accountStore.getAllWithId(
+                projectUsers.map((u) => u.id),
+            );
+            return users.flatMap((user) => {
+                return projectUsers
+                    .filter((u) => u.id === user.id)
+                    .map((groupUser) => ({
+                        ...user,
+                        ...groupUser,
+                    }));
+            });
+        }
+        return [];
+    }
+
+    async getProjectRoleAccess(projectId: string): Promise<AccessWithRoles> {
         const roles = await this.roleStore.getProjectRoles();
 
-        const users = await Promise.all(
-            roles.map(async (role) => {
-                const projectUsers = await this.getProjectUsersForRole(
-                    role.id,
-                    projectId,
-                );
-                return projectUsers.map((u) => ({ ...u, roleId: role.id }));
-            }),
-        );
+        const users = await this.getProjectUsers(projectId);
+
         const groups = await this.groupService.getProjectGroups(projectId);
-        return [roles, users.flat(), groups];
+
+        return {
+            roles,
+            groups,
+            users,
+        };
     }
 
     async getProjectRoleUsage(roleId: number): Promise<IProjectRoleUsage[]> {
@@ -542,7 +632,7 @@ export class AccessService {
             if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
                 await this.store.addPermissionsToRole(
                     newRole.id,
-                    rolePermissions.map(({ name }) => name),
+                    rolePermissions.map((p: NamePermissionRef) => p.name),
                 );
             } else {
                 await this.store.addEnvironmentPermissionsToRole(
@@ -583,7 +673,7 @@ export class AccessService {
             if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
                 await this.store.addPermissionsToRole(
                     newRole.id,
-                    rolePermissions.map(({ name }) => name),
+                    rolePermissions.map((p: NamePermissionRef) => p.name),
                 );
             } else {
                 await this.store.addEnvironmentPermissionsToRole(
@@ -645,5 +735,9 @@ export class AccessService {
         }
         await this.validateRoleIsUnique(role.name, existingId);
         return cleanedRole;
+    }
+
+    async getUserAccessOverview(): Promise<IUserAccessOverview[]> {
+        return this.store.getUserAccessOverview();
     }
 }

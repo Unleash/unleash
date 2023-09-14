@@ -94,11 +94,10 @@ const CreateFeature = () => {
         navigate(GO_BACK);
     };
 
-    const featureLimitReached =
-        isFeatureLimitReached(
-            projectInfo.featureLimit,
-            projectInfo.features.length
-        ) && Boolean(uiConfig.flags.newProjectLayout);
+    const featureLimitReached = isFeatureLimitReached(
+        projectInfo.featureLimit,
+        projectInfo.features.length
+    );
     return (
         <FormTemplate
             loading={loading}
@@ -138,6 +137,7 @@ const CreateFeature = () => {
                 handleCancel={handleCancel}
                 mode="Create"
                 clearErrors={clearErrors}
+                featureNaming={projectInfo.featureNaming}
             >
                 <CreateButton
                     name="feature toggle"

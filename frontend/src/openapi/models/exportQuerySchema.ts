@@ -15,12 +15,10 @@ export type ExportQuerySchema =
           environment: string;
           /** Whether to return a downloadable file */
           downloadFile?: boolean;
-          [key: string]: any;
       })
     | (ExportQuerySchemaOneOfTwo & {
           /** The environment to export from */
           environment: string;
           /** Whether to return a downloadable file */
           downloadFile?: boolean;
-          [key: string]: any;
       });

@@ -801,18 +801,10 @@ test('should add a user to the project with a custom role', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
             {
-                id: 8,
-                name: 'DELETE_FEATURE',
-                environment: undefined,
-                displayName: 'Delete Feature Toggles',
-                type: 'project',
+                id: 8, // DELETE_FEATURE
             },
         ],
     });
@@ -859,18 +851,10 @@ test('should delete role entries when deleting project', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
             {
-                id: 8,
-                name: 'DELETE_FEATURE',
-                environment: undefined,
-                displayName: 'Delete Feature Toggles',
-                type: 'project',
+                id: 8, // DELETE_FEATURE
             },
         ],
     });
@@ -907,18 +891,10 @@ test('should change a users role in the project', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
             {
-                id: 8,
-                name: 'DELETE_FEATURE',
-                environment: undefined,
-                displayName: 'Delete Feature Toggles',
-                type: 'project',
+                id: 8, // DELETE_FEATURE
             },
         ],
     });
@@ -1098,22 +1074,16 @@ test('Should allow bulk update of group permissions', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
 
     await projectService.addAccess(
         project.id,
-        createFeatureRole.id,
-        {
-            users: [{ id: user1.id }],
-            groups: [{ id: group1.id }],
-        },
+        [createFeatureRole.id],
+        [group1.id],
+        [user1.id],
         'some-admin-user',
     );
 });
@@ -1131,22 +1101,16 @@ test('Should bulk update of only users', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
 
     await projectService.addAccess(
         project,
-        createFeatureRole.id,
-        {
-            users: [{ id: user1.id }],
-            groups: [],
-        },
+        [createFeatureRole.id],
+        [],
+        [user1.id],
         'some-admin-user',
     );
 });
@@ -1172,24 +1136,87 @@ test('Should allow bulk update of only groups', async () => {
         description: '',
         permissions: [
             {
-                id: 2,
-                name: 'CREATE_FEATURE',
-                environment: undefined,
-                displayName: 'Create Feature Toggles',
-                type: 'project',
+                id: 2, // CREATE_FEATURE
             },
         ],
     });
 
     await projectService.addAccess(
         project.id,
-        createFeatureRole.id,
-        {
-            users: [],
-            groups: [{ id: group1.id }],
-        },
+        [createFeatureRole.id],
+        [group1.id],
+        [],
         'some-admin-user',
     );
+});
+
+test('Should allow permutations of roles, groups and users when adding a new access', async () => {
+    const project = {
+        id: 'project-access-permutations',
+        name: 'project-access-permutations',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const group1 = await stores.groupStore.create({
+        name: 'permutation-group-1',
+        description: '',
+    });
+
+    const group2 = await stores.groupStore.create({
+        name: 'permutation-group-2',
+        description: '',
+    });
+
+    const user1 = await stores.userStore.insert({
+        name: 'permutation-user-1',
+        email: 'pu1@getunleash.io',
+    });
+
+    const user2 = await stores.userStore.insert({
+        name: 'permutation-user-2',
+        email: 'pu2@getunleash.io',
+    });
+
+    const role1 = await accessService.createRole({
+        name: 'permutation-role-1',
+        description: '',
+        permissions: [
+            {
+                id: 2, // CREATE_FEATURE
+            },
+        ],
+    });
+
+    const role2 = await accessService.createRole({
+        name: 'permutation-role-2',
+        description: '',
+        permissions: [
+            {
+                id: 7, // UPDATE_FEATURE
+            },
+        ],
+    });
+
+    await projectService.addAccess(
+        project.id,
+        [role1.id, role2.id],
+        [group1.id, group2.id],
+        [user1.id, user2.id],
+        'some-admin-user',
+    );
+
+    const { users, groups } = await projectService.getAccessToProject(
+        project.id,
+    );
+
+    expect(users).toHaveLength(2);
+    expect(groups).toHaveLength(2);
+
+    expect(users[0].roles).toStrictEqual([role1.id, role2.id]);
+    expect(groups[0].roles).toStrictEqual([role1.id, role2.id]);
 });
 
 test('should only count active feature toggles for project', async () => {
@@ -1533,4 +1560,260 @@ test('should get correct amount of project members for current and past window',
     expect(result.updates.projectMembersAddedCurrentWindow).toBe(5);
     expect(result.updates.projectActivityCurrentWindow).toBe(6);
     expect(result.updates.projectActivityPastWindow).toBe(0);
+});
+
+test('should return average time to production per toggle', async () => {
+    const project = {
+        id: 'average-time-to-prod-per-toggle',
+        name: 'average-time-to-prod-per-toggle',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    await projectService.createProject(project, user.id);
+
+    const toggles = [
+        { name: 'average-prod-time-pt', subdays: 7 },
+        { name: 'average-prod-time-pt-2', subdays: 14 },
+        { name: 'average-prod-time-pt-3', subdays: 40 },
+        { name: 'average-prod-time-pt-4', subdays: 15 },
+        { name: 'average-prod-time-pt-5', subdays: 2 },
+    ];
+
+    const featureToggles = await Promise.all(
+        toggles.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureToggles.map((toggle) => {
+            return stores.eventStore.store(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                    tags: [],
+                }),
+            );
+        }),
+    );
+
+    await Promise.all(
+        toggles.map((toggle) =>
+            updateFeature(toggle.name, {
+                created_at: subDays(new Date(), toggle.subdays),
+            }),
+        ),
+    );
+
+    const result = await projectService.getDoraMetrics(project.id);
+
+    expect(result.features).toHaveLength(5);
+    expect(result.features[0].timeToProduction).toBeTruthy();
+    expect(result.projectAverage).toBeTruthy();
+});
+
+test('should return average time to production per toggle for a specific project', async () => {
+    const project1 = {
+        id: 'average-time-to-prod-per-toggle-1',
+        name: 'Project 1',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    const project2 = {
+        id: 'average-time-to-prod-per-toggle-2',
+        name: 'Project 2',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    await projectService.createProject(project1, user.id);
+    await projectService.createProject(project2, user.id);
+
+    const togglesProject1 = [
+        { name: 'average-prod-time-pt-10', subdays: 7 },
+        { name: 'average-prod-time-pt-11', subdays: 14 },
+        { name: 'average-prod-time-pt-12', subdays: 40 },
+    ];
+
+    const togglesProject2 = [
+        { name: 'average-prod-time-pt-13', subdays: 15 },
+        { name: 'average-prod-time-pt-14', subdays: 2 },
+    ];
+
+    const featureTogglesProject1 = await Promise.all(
+        togglesProject1.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project1.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    const featureTogglesProject2 = await Promise.all(
+        togglesProject2.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project2.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureTogglesProject1.map((toggle) => {
+            return stores.eventStore.store(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project1.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                    tags: [],
+                }),
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureTogglesProject2.map((toggle) => {
+            return stores.eventStore.store(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project2.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                    tags: [],
+                }),
+            );
+        }),
+    );
+
+    await Promise.all(
+        togglesProject1.map((toggle) =>
+            updateFeature(toggle.name, {
+                created_at: subDays(new Date(), toggle.subdays),
+            }),
+        ),
+    );
+
+    await Promise.all(
+        togglesProject2.map((toggle) =>
+            updateFeature(toggle.name, {
+                created_at: subDays(new Date(), toggle.subdays),
+            }),
+        ),
+    );
+
+    const resultProject1 = await projectService.getDoraMetrics(project1.id);
+    const resultProject2 = await projectService.getDoraMetrics(project2.id);
+
+    expect(resultProject1.features).toHaveLength(3);
+    expect(resultProject2.features).toHaveLength(2);
+});
+
+test('should return average time to production per toggle and include archived toggles', async () => {
+    const project1 = {
+        id: 'average-time-to-prod-per-toggle-12',
+        name: 'Project 1',
+        mode: 'open' as const,
+        defaultStickiness: 'clientId',
+    };
+
+    await projectService.createProject(project1, user.id);
+
+    const togglesProject1 = [
+        { name: 'average-prod-time-pta-10', subdays: 7 },
+        { name: 'average-prod-time-pta-11', subdays: 14 },
+        { name: 'average-prod-time-pta-12', subdays: 40 },
+    ];
+
+    const featureTogglesProject1 = await Promise.all(
+        togglesProject1.map((toggle) => {
+            return featureToggleService.createFeatureToggle(
+                project1.id,
+                toggle,
+                user,
+            );
+        }),
+    );
+
+    await Promise.all(
+        featureTogglesProject1.map((toggle) => {
+            return stores.eventStore.store(
+                new FeatureEnvironmentEvent({
+                    enabled: true,
+                    project: project1.id,
+                    featureName: toggle.name,
+                    environment: 'default',
+                    createdBy: 'Fredrik',
+                    tags: [],
+                }),
+            );
+        }),
+    );
+
+    await Promise.all(
+        togglesProject1.map((toggle) =>
+            updateFeature(toggle.name, {
+                created_at: subDays(new Date(), toggle.subdays),
+            }),
+        ),
+    );
+
+    await featureToggleService.archiveToggle('average-prod-time-pta-12', user);
+
+    const resultProject1 = await projectService.getDoraMetrics(project1.id);
+
+    expect(resultProject1.features).toHaveLength(3);
+});
+
+describe('feature flag naming patterns', () => {
+    test(`should clear existing example and description if the payload doesn't contain them`, async () => {
+        const featureNaming = {
+            pattern: '.+',
+            example: 'example',
+            description: 'description',
+        };
+
+        const project = {
+            id: 'feature-flag-naming-patterns-cleanup',
+            name: 'Project',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+            description: 'description',
+            featureNaming,
+        };
+
+        await projectService.createProject(project, user.id);
+
+        expect(
+            (await projectService.getProject(project.id)).featureNaming,
+        ).toMatchObject(featureNaming);
+
+        const newPattern = 'new-pattern.+';
+        await projectService.updateProject(
+            {
+                ...project,
+                featureNaming: { pattern: newPattern },
+            },
+            user.id,
+        );
+
+        const updatedProject = await projectService.getProject(project.id);
+
+        expect(updatedProject.featureNaming!.pattern).toBe(newPattern);
+        expect(updatedProject.featureNaming!.example).toBeFalsy();
+        expect(updatedProject.featureNaming!.description).toBeFalsy();
+    });
 });

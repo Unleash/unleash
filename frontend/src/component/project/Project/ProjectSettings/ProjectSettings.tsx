@@ -19,26 +19,16 @@ import { Box } from '@mui/material';
 
 export const ProjectSettings = () => {
     const location = useLocation();
-    const { uiConfig, isPro, isEnterprise } = useUiConfig();
+    const { isPro, isEnterprise } = useUiConfig();
     const navigate = useNavigate();
 
-    const updatedNavigation = uiConfig.flags?.frontendNavigationUpdate;
-
     const tabs: ITab[] = [
-        ...(uiConfig.flags.newProjectLayout
+        ...(isPro() || isEnterprise()
             ? [
                   {
                       id: '',
                       label: 'Settings',
                   },
-              ]
-            : []),
-        {
-            id: 'environments',
-            label: 'Environments',
-        },
-        ...(!updatedNavigation || isPro() || isEnterprise()
-            ? [
                   {
                       id: 'access',
                       label: 'Access',
@@ -50,15 +40,18 @@ export const ProjectSettings = () => {
                   {
                       id: 'change-requests',
                       label: 'Change request configuration',
-                      icon:
-                          isPro() && updatedNavigation ? (
-                              <Box sx={{ marginLeft: 'auto' }}>
-                                  <EnterpriseBadge />
-                              </Box>
-                          ) : undefined,
+                      icon: isPro() ? (
+                          <Box sx={{ marginLeft: 'auto' }}>
+                              <EnterpriseBadge />
+                          </Box>
+                      ) : undefined,
                   },
               ]
             : []),
+        {
+            id: 'environments',
+            label: 'Environments',
+        },
         {
             id: 'api-access',
             label: 'API access',
@@ -84,9 +77,7 @@ export const ProjectSettings = () => {
             onChange={onChange}
         >
             <Routes>
-                {uiConfig.flags.newProjectLayout ? (
-                    <Route path="/*" element={<Settings />} />
-                ) : null}
+                <Route path="/*" element={<Settings />} />
                 <Route
                     path="environments/*"
                     element={<ProjectEnvironmentList />}

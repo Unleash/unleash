@@ -3,11 +3,10 @@ import {
     IChangeRequestUpdateSegment,
 } from 'component/changeRequest/changeRequest.types';
 import { FC } from 'react';
-import { formatStrategyName } from 'utils/strategyNames';
 import EventDiff from 'component/events/EventDiff/EventDiff';
 import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
-import { Typography, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
 import { ISegment } from 'interfaces/segment';
 import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo';

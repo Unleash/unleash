@@ -1,7 +1,7 @@
 import { subDays } from 'date-fns';
 import { ValidationError } from 'joi';
 import User, { IUser } from '../types/user';
-import { AccessService } from './access-service';
+import { AccessService, AccessWithRoles } from './access-service';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
 import { nameType } from '../routes/util';
@@ -21,7 +21,6 @@ import {
     IProjectWithCount,
     IUnleashConfig,
     IUnleashStores,
-    IUserWithRole,
     MOVE_FEATURE_TOGGLE,
     PROJECT_CREATED,
     PROJECT_DELETED,
@@ -35,7 +34,12 @@ import {
     RoleName,
     IFlagResolver,
     ProjectAccessAddedEvent,
+    ProjectAccessUserRolesUpdated,
+    ProjectAccessGroupRolesUpdated,
     IProjectRoleUsage,
+    ProjectAccessUserRolesDeleted,
+    IFeatureNaming,
+    CreateProject,
 } from '../types';
 import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
 import {
@@ -48,20 +52,16 @@ import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 import { arraysHaveSameItems } from '../util';
 import { GroupService } from './group-service';
-import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
+import { IGroupRole } from 'lib/types/group';
 import { FavoritesService } from './favorites-service';
 import { calculateAverageTimeToProd } from '../features/feature-toggle/time-to-production/time-to-production';
 import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 import { uniqueByKey } from '../util/unique';
-import { PermissionError } from '../error';
+import { BadDataError, PermissionError } from '../error';
+import { ProjectDoraMetricsSchema } from 'lib/openapi';
+import { checkFeatureNamingData } from '../features/feature-naming-pattern/feature-naming-validation';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
-
-export interface AccessWithRoles {
-    users: IUserWithRole[];
-    roles: IRoleDescriptor[];
-    groups: IGroupModelWithProjectRole[];
-}
 
 type Days = number;
 type Count = number;
@@ -170,15 +170,42 @@ export default class ProjectService {
         return this.store.get(id);
     }
 
+    private validateAndProcessFeatureNamingPattern = (
+        featureNaming: IFeatureNaming,
+    ): IFeatureNaming => {
+        const validationResult = checkFeatureNamingData(featureNaming);
+
+        if (validationResult.state === 'invalid') {
+            const [firstReason, ...remainingReasons] =
+                validationResult.reasons.map((message) => ({
+                    message,
+                }));
+            throw new BadDataError(
+                'The feature naming pattern data you provided was invalid.',
+                [firstReason, ...remainingReasons],
+            );
+        }
+
+        if (featureNaming.pattern && !featureNaming.example) {
+            featureNaming.example = null;
+        }
+        if (featureNaming.pattern && !featureNaming.description) {
+            featureNaming.description = null;
+        }
+
+        return featureNaming;
+    };
+
     async createProject(
-        newProject: Pick<
-            IProject,
-            'id' | 'name' | 'mode' | 'defaultStickiness'
-        >,
+        newProject: CreateProject,
         user: IUser,
     ): Promise<IProject> {
         const data = await projectSchema.validateAsync(newProject);
         await this.validateUniqueId(data.id);
+
+        if (data.featureNaming) {
+            this.validateAndProcessFeatureNamingPattern(data.featureNaming);
+        }
 
         await this.store.create(data);
 
@@ -210,15 +237,20 @@ export default class ProjectService {
 
     async updateProject(updatedProject: IProject, user: User): Promise<void> {
         const preData = await this.store.get(updatedProject.id);
-        const project = await projectSchema.validateAsync(updatedProject);
 
-        await this.store.update(project);
+        if (updatedProject.featureNaming) {
+            this.validateAndProcessFeatureNamingPattern(
+                updatedProject.featureNaming,
+            );
+        }
+
+        await this.store.update(updatedProject);
 
         await this.eventStore.store({
             type: PROJECT_UPDATED,
-            project: project.id,
+            project: updatedProject.id,
             createdBy: getCreatedBy(user),
-            data: project,
+            data: updatedProject,
             preData,
         });
     }
@@ -335,14 +367,7 @@ export default class ProjectService {
 
     // RBAC methods
     async getAccessToProject(projectId: string): Promise<AccessWithRoles> {
-        const [roles, users, groups] =
-            await this.accessService.getProjectRoleAccess(projectId);
-
-        return {
-            roles,
-            users,
-            groups,
-        };
+        return this.accessService.getProjectRoleAccess(projectId);
     }
 
     // Deprecated: See addAccess instead.
@@ -352,7 +377,7 @@ export default class ProjectService {
         userId: number,
         createdBy: string,
     ): Promise<void> {
-        const [roles, users] = await this.accessService.getProjectRoleAccess(
+        const { roles, users } = await this.accessService.getProjectRoleAccess(
             projectId,
         );
         const user = await this.accountStore.get(userId);
@@ -408,6 +433,54 @@ export default class ProjectService {
                     userId,
                     roleName: role.name,
                     email: user.email,
+                },
+            }),
+        );
+    }
+
+    async removeUserAccess(
+        projectId: string,
+        userId: number,
+        createdBy: string,
+    ): Promise<void> {
+        const existingRoles = await this.accessService.getProjectRolesForUser(
+            projectId,
+            userId,
+        );
+
+        await this.accessService.removeUserAccess(projectId, userId);
+
+        await this.eventStore.store(
+            new ProjectAccessUserRolesDeleted({
+                project: projectId,
+                createdBy,
+                preData: {
+                    roles: existingRoles,
+                    userId,
+                },
+            }),
+        );
+    }
+
+    async removeGroupAccess(
+        projectId: string,
+        groupId: number,
+        createdBy: string,
+    ): Promise<void> {
+        const existingRoles = await this.accessService.getProjectRolesForGroup(
+            projectId,
+            groupId,
+        );
+
+        await this.accessService.removeGroupAccess(projectId, groupId);
+
+        await this.eventStore.store(
+            new ProjectAccessUserRolesDeleted({
+                project: projectId,
+                createdBy,
+                preData: {
+                    roles: existingRoles,
+                    groupId,
                 },
             }),
         );
@@ -484,13 +557,13 @@ export default class ProjectService {
         );
     }
 
-    async addAccess(
+    async addRoleAccess(
         projectId: string,
         roleId: number,
         usersAndGroups: IProjectAccessModel,
         createdBy: string,
     ): Promise<void> {
-        await this.accessService.addAccessToProject(
+        await this.accessService.addRoleAccessToProject(
             usersAndGroups.users,
             usersAndGroups.groups,
             projectId,
@@ -506,6 +579,97 @@ export default class ProjectService {
                     roleId,
                     groups: usersAndGroups.groups.map(({ id }) => id),
                     users: usersAndGroups.users.map(({ id }) => id),
+                },
+            }),
+        );
+    }
+
+    async addAccess(
+        projectId: string,
+        roles: number[],
+        groups: number[],
+        users: number[],
+        createdBy: string,
+    ): Promise<void> {
+        await this.accessService.addAccessToProject(
+            roles,
+            groups,
+            users,
+            projectId,
+            createdBy,
+        );
+
+        await this.eventStore.store(
+            new ProjectAccessAddedEvent({
+                project: projectId,
+                createdBy,
+                data: {
+                    roles,
+                    groups,
+                    users,
+                },
+            }),
+        );
+    }
+
+    async setRolesForUser(
+        projectId: string,
+        userId: number,
+        roles: number[],
+        createdByUserName: string,
+    ): Promise<void> {
+        const existingRoles = await this.accessService.getProjectRolesForUser(
+            projectId,
+            userId,
+        );
+        await this.accessService.setProjectRolesForUser(
+            projectId,
+            userId,
+            roles,
+        );
+        await this.eventStore.store(
+            new ProjectAccessUserRolesUpdated({
+                project: projectId,
+                createdBy: createdByUserName,
+                data: {
+                    roles,
+                    userId,
+                },
+                preData: {
+                    roles: existingRoles,
+                    userId,
+                },
+            }),
+        );
+    }
+
+    async setRolesForGroup(
+        projectId: string,
+        groupId: number,
+        roles: number[],
+        createdBy: string,
+    ): Promise<void> {
+        const existingRoles = await this.accessService.getProjectRolesForGroup(
+            projectId,
+            groupId,
+        );
+        await this.accessService.setProjectRolesForGroup(
+            projectId,
+            groupId,
+            roles,
+            createdBy,
+        );
+        await this.eventStore.store(
+            new ProjectAccessGroupRolesUpdated({
+                project: projectId,
+                createdBy,
+                data: {
+                    roles,
+                    groupId,
+                },
+                preData: {
+                    roles: existingRoles,
+                    groupId,
                 },
             }),
         );
@@ -554,6 +718,36 @@ export default class ProjectService {
                 throw new ProjectWithoutOwnerError();
             }
         }
+    }
+
+    async getDoraMetrics(projectId: string): Promise<ProjectDoraMetricsSchema> {
+        const activeFeatureToggles = (
+            await this.featureToggleStore.getAll({ project: projectId })
+        ).map((feature) => feature.name);
+
+        const archivedFeatureToggles = (
+            await this.featureToggleStore.getAll({
+                project: projectId,
+                archived: true,
+            })
+        ).map((feature) => feature.name);
+
+        const featureToggleNames = [
+            ...activeFeatureToggles,
+            ...archivedFeatureToggles,
+        ];
+
+        const projectAverage = calculateAverageTimeToProd(
+            await this.projectStatsStore.getTimeToProdDates(projectId),
+        );
+
+        const toggleAverage =
+            await this.projectStatsStore.getTimeToProdDatesForFeatureToggles(
+                projectId,
+                featureToggleNames,
+            );
+
+        return { features: toggleAverage, projectAverage: projectAverage };
     }
 
     async changeRole(
@@ -670,7 +864,7 @@ export default class ProjectService {
     async getProjectUsers(
         projectId: string,
     ): Promise<Array<Pick<IUser, 'id' | 'email' | 'username'>>> {
-        const [, users, groups] = await this.accessService.getProjectRoleAccess(
+        const { groups, users } = await this.accessService.getProjectRoleAccess(
             projectId,
         );
         const actualUsers = users.map((user) => ({
@@ -831,12 +1025,14 @@ export default class ProjectService {
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
         ]);
+
         return {
             stats: projectStats,
             name: project.name,
             description: project.description,
             mode: project.mode,
             featureLimit: project.featureLimit,
+            featureNaming: project.featureNaming,
             defaultStickiness: project.defaultStickiness,
             health: project.health || 0,
             favorite: favorite,

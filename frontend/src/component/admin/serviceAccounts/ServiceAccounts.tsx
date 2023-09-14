@@ -3,7 +3,6 @@ import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuar
 import { ServiceAccountsTable } from './ServiceAccountsTable/ServiceAccountsTable';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
-import { AdminTabsMenu } from '../menu/AdminTabsMenu';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 export const ServiceAccounts = () => {

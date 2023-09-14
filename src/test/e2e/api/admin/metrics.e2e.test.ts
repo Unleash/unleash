@@ -1,13 +1,16 @@
 import dbInit, { ITestDb } from '../../helpers/database-init';
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('metrics_serial', getLogger);
-    app = await setupApp(db.stores);
+    db = await dbInit('metrics_serial', getLogger, {});
+    app = await setupAppWithCustomConfig(db.stores, {});
 });
 
 beforeEach(async () => {
@@ -44,6 +47,14 @@ beforeEach(async () => {
         appName: 'deletable-app',
         instanceId: 'inst-1',
     });
+
+    await app.services.clientInstanceService.createApplication({
+        appName: 'usage-app',
+        strategies: ['default'],
+        description: 'Some desc',
+        project: 'default',
+        environment: 'dev',
+    });
 });
 
 afterAll(async () => {
@@ -74,7 +85,7 @@ test('should get list of applications', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            expect(res.body.applications).toHaveLength(3);
+            expect(res.body.applications).toHaveLength(4);
         });
 });
 
@@ -89,7 +100,7 @@ test('should delete application', async () => {
         .get('/api/admin/metrics/applications')
         .expect('Content-Type', /json/)
         .expect((res) => {
-            expect(res.body.applications).toHaveLength(2);
+            expect(res.body.applications).toHaveLength(3);
         });
 });
 
@@ -100,4 +111,18 @@ test('deleting an application should be idempotent, so expect 200', async () => 
         .expect((res) => {
             expect(res.status).toBe(200);
         });
+});
+
+test('should get list of application usage', async () => {
+    const { body } = await app.request
+        .get('/api/admin/metrics/applications')
+        .expect('Content-Type', /json/)
+        .expect(200);
+    const application = body.applications.find(
+        (selectableApp) => selectableApp.appName === 'usage-app',
+    );
+    expect(application).toMatchObject({
+        appName: 'usage-app',
+        usage: [{ project: 'default', environments: ['dev'] }],
+    });
 });

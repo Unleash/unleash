@@ -27,7 +27,10 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { PlaygroundEditor } from './PlaygroundEditor/PlaygroundEditor';
 import { parseDateValue, parseValidDate } from 'component/common/util';
-import { isStringOrStringArray } from '../../playground.utils';
+import {
+    isStringOrStringArray,
+    normalizeCustomContextProperties,
+} from '../../playground.utils';
 interface IPlaygroundCodeFieldsetProps {
     context: string | undefined;
     setContext: Dispatch<SetStateAction<string | undefined>>;
@@ -58,7 +61,10 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                 try {
                     const contextValue = JSON.parse(input);
 
-                    setFieldExist(contextValue[contextField] !== undefined);
+                    setFieldExist(
+                        contextValue[contextField] !== undefined ||
+                            contextValue?.properties[contextField] !== undefined
+                    );
                 } catch (error: unknown) {
                     return setError(formatUnknownError(error));
                 }
@@ -75,12 +81,13 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
     const onAddField = () => {
         try {
             const currentValue = JSON.parse(context || '{}');
+
             setContext(
                 JSON.stringify(
-                    {
+                    normalizeCustomContextProperties({
                         ...currentValue,
                         [contextField]: contextValue,
-                    },
+                    }),
                     null,
                     2
                 )

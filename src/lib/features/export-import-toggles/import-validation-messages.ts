@@ -3,6 +3,24 @@ import {
     ImportTogglesValidateItemSchema,
 } from '../../openapi';
 import { IContextFieldDto } from '../../types/stores/context-field-store';
+import { FeatureNameCheckResultWithFeaturePattern } from '../../services/feature-toggle-service';
+import { ProjectFeaturesLimit } from './import-toggles-store-type';
+
+export interface IErrorsParams {
+    projectName: string;
+    strategies: FeatureStrategySchema[];
+    contextFields: IContextFieldDto[];
+    otherProjectFeatures: string[];
+    duplicateFeatures: string[];
+    featureNameCheckResult: FeatureNameCheckResultWithFeaturePattern;
+    featureLimitResult: ProjectFeaturesLimit;
+}
+
+export interface IWarningParams {
+    usedCustomStrategies: string[];
+    archivedFeatures: string[];
+    existingFeatures: string[];
+}
 
 export class ImportValidationMessages {
     static compilePermissionErrors(
@@ -20,14 +38,15 @@ export class ImportValidationMessages {
         return errors;
     }
 
-    static compileErrors(
-        projectName: string,
-        strategies: FeatureStrategySchema[],
-        contextFields: IContextFieldDto[],
-        segments: string[],
-        otherProjectFeatures: string[],
-        changeRequestExists: boolean,
-    ): ImportTogglesValidateItemSchema[] {
+    static compileErrors({
+        projectName,
+        strategies,
+        contextFields,
+        otherProjectFeatures,
+        duplicateFeatures,
+        featureNameCheckResult,
+        featureLimitResult,
+    }: IErrorsParams): ImportTogglesValidateItemSchema[] {
         const errors: ImportTogglesValidateItemSchema[] = [];
 
         if (strategies.length > 0) {
@@ -46,34 +65,55 @@ export class ImportValidationMessages {
                 ),
             });
         }
-        if (segments.length > 0) {
-            errors.push({
-                message:
-                    'We detected the following segments in the import file that need to be created first:',
-                affectedItems: segments,
-            });
-        }
-        if (changeRequestExists) {
-            errors.push({
-                message:
-                    'Before importing any data, please resolve your pending change request in this project and environment as it is preventing you from importing at this time',
-                affectedItems: [],
-            });
-        }
         if (otherProjectFeatures.length > 0) {
             errors.push({
                 message: `You cannot import a features that already exist in other projects. You already have the following features defined outside of project ${projectName}:`,
                 affectedItems: otherProjectFeatures,
             });
         }
+        if (duplicateFeatures.length > 0) {
+            errors.push({
+                message:
+                    'We detected the following features are duplicate in your import data:',
+                affectedItems: duplicateFeatures,
+            });
+        }
+        if (featureNameCheckResult.state === 'invalid') {
+            const baseError = `Features imported into this project must match the project's feature naming pattern: "${featureNameCheckResult.featureNaming.pattern}".`;
+
+            const exampleInfo = featureNameCheckResult.featureNaming.example
+                ? ` For example: "${featureNameCheckResult.featureNaming.example}".`
+                : '';
+
+            const descriptionInfo = featureNameCheckResult.featureNaming
+                .description
+                ? ` The pattern is described as follows: "${featureNameCheckResult.featureNaming.description}"`
+                : '';
+
+            errors.push({
+                message: `${baseError}${exampleInfo}${descriptionInfo} The following features do not match the pattern:`,
+                affectedItems: [...featureNameCheckResult.invalidNames].sort(),
+            });
+        }
+        if (
+            featureLimitResult.currentFeaturesCount +
+                featureLimitResult.newFeaturesCount >
+            featureLimitResult.limit
+        ) {
+            errors.push({
+                message: `We detected you want to create ${featureLimitResult.newFeaturesCount} new features to a project that already has ${featureLimitResult.currentFeaturesCount} existing features, exceeding the maximum limit of ${featureLimitResult.limit}.`,
+                affectedItems: [],
+            });
+        }
 
         return errors;
     }
 
-    static compileWarnings(
-        usedCustomStrategies: string[],
-        archivedFeatures: string[],
-    ): ImportTogglesValidateItemSchema[] {
+    static compileWarnings({
+        usedCustomStrategies,
+        existingFeatures,
+        archivedFeatures,
+    }: IWarningParams): ImportTogglesValidateItemSchema[] {
         const warnings: ImportTogglesValidateItemSchema[] = [];
         if (usedCustomStrategies.length > 0) {
             warnings.push({
@@ -87,6 +127,13 @@ export class ImportValidationMessages {
                 message:
                     'The following features will not be imported as they are currently archived. To import them, please unarchive them first:',
                 affectedItems: archivedFeatures,
+            });
+        }
+        if (existingFeatures.length > 0) {
+            warnings.push({
+                message:
+                    'The following features already exist in this project and will be overwritten:',
+                affectedItems: existingFeatures,
             });
         }
         return warnings;

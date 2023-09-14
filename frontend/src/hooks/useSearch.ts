@@ -12,32 +12,45 @@ type IUseSearchOutput<T extends any> = {
     getSearchContext: () => IGetSearchContextOutput<T>;
 };
 
+// https://stackoverflow.com/questions/9577930/regular-expression-to-select-all-whitespace-that-isnt-in-quotes
+const SPACES_WITHOUT_QUOTES = /\s+(?=(?:[^\'"]*[\'"][^\'"]*[\'"])*[^\'"]*$)/g;
+
+const normalizeSearchValue = (value: string) =>
+    value.replaceAll(/\s*,\s*/g, ',');
+
+const removeQuotes = (value: string) =>
+    value.replaceAll("'", '').replaceAll('"', '');
+
 export const useSearch = <T extends any>(
     columns: any[],
     searchValue: string,
     data: T[]
 ): IUseSearchOutput<T> => {
     const getSearchText = useCallback(
-        (value: string) => getSearchTextGenerator(columns)(value),
+        (value: string) =>
+            removeQuotes(
+                getSearchTextGenerator(columns)(normalizeSearchValue(value))
+            ),
         [columns]
     );
+    const normalizedSearchValue = normalizeSearchValue(searchValue);
 
     const getSearchContext = useCallback(() => {
-        return { data, searchValue, columns };
-    }, [data, searchValue, columns]);
+        return { data, searchValue: normalizedSearchValue, columns };
+    }, [data, normalizedSearchValue, columns]);
 
     const search = useMemo(() => {
-        if (!searchValue) return data;
+        if (!normalizedSearchValue) return data;
 
-        const filteredData = filter(columns, searchValue, data);
+        const filteredData = filter(columns, normalizedSearchValue, data);
         const searchedData = searchInFilteredData(
             columns,
-            getSearchText(searchValue),
+            getSearchText(normalizedSearchValue),
             filteredData
         );
 
         return searchedData;
-    }, [columns, searchValue, data, getSearchText]);
+    }, [columns, normalizedSearchValue, data, getSearchText]);
 
     return { data: search, getSearchText, getSearchContext };
 };
@@ -67,6 +80,7 @@ export const searchInFilteredData = <T extends any>(
     searchValue: string,
     filteredData: T[]
 ) => {
+    const trimmedSearchValue = searchValue.trim();
     const searchableColumns = columns.filter(
         column => column.searchable && column.accessor
     );
@@ -74,16 +88,24 @@ export const searchInFilteredData = <T extends any>(
     return filteredData.filter(row => {
         return searchableColumns.some(column => {
             if (column.searchBy) {
-                return column.searchBy(row, searchValue);
+                return column.searchBy(row, trimmedSearchValue);
             }
 
-            return defaultSearch(getColumnValues(column, row), searchValue);
+            return defaultSearch(
+                getColumnValues(column, row),
+                trimmedSearchValue
+            );
         });
     });
 };
 
 const defaultFilter = (fieldValue: string, values: string[]) =>
     values.some(value => fieldValue?.toLowerCase() === value?.toLowerCase());
+
+export const includesFilter = (fieldValue: string, values: string[]) =>
+    values.some(value =>
+        fieldValue?.toLowerCase().includes(value?.toLowerCase())
+    );
 
 const defaultSearch = (fieldValue: string, value: string) =>
     fieldValue?.toLowerCase().includes(value?.toLowerCase());
@@ -99,13 +121,14 @@ export const getSearchTextGenerator = (columns: any[]) => {
 
     return (searchValue: string) =>
         searchValue
-            .split(' ')
+            .split(SPACES_WITHOUT_QUOTES)
             .filter(fragment => !isValidSearch(fragment))
             .join(' ');
 };
 
 export const isValidFilter = (input: string, match: string) =>
-    new RegExp(`${match}:\\w+`).test(input);
+    // name:"hello world" or name:'hello world' or name:simple
+    new RegExp(`${match}:(?:\\w+|["'][^"']+["'])`).test(input);
 
 export const getFilterableColumns = (columns: any[]) =>
     columns.filter(column => column.filterName && column.accessor);
@@ -130,6 +153,7 @@ export const getColumnValues = (column: any, row: any) => {
 export const getFilterValues = (filterName: string, searchValue: string) =>
     searchValue
         ?.split(`${filterName}:`)[1]
-        ?.split(' ')[0]
+        ?.split(SPACES_WITHOUT_QUOTES)[0]
         ?.split(',')
+        .map(removeQuotes)
         .filter(value => value) ?? [];

@@ -20,17 +20,15 @@ export type IFlagKey =
     | 'disableBulkToggle'
     | 'disableNotifications'
     | 'advancedPlayground'
-    | 'strategyVariant'
-    | 'newProjectLayout'
     | 'slackAppAddon'
-    | 'emitPotentiallyStaleEvents'
-    | 'configurableFeatureTypeLifetimes'
     | 'filterInvalidClientMetrics'
-    | 'frontendNavigationUpdate'
     | 'lastSeenByEnvironment'
-    | 'segmentChangeRequests'
-    | 'changeRequestReject'
-    | 'customRootRolesKillSwitch';
+    | 'customRootRolesKillSwitch'
+    | 'integrationsRework'
+    | 'multipleRoles'
+    | 'featureNamingPattern'
+    | 'doraMetrics'
+    | 'variantTypeNumber';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -98,48 +96,40 @@ const flags: IFlags = {
         process.env.DISABLE_NOTIFICATIONS,
         false,
     ),
-    newProjectLayout: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_PROJECT_LAYOUT,
-        false,
-    ),
-    strategyVariant: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_VARIANT,
-        false,
-    ),
     slackAppAddon: parseEnvVarBoolean(
         process.env.UNLEASH_SLACK_APP_ADDON,
-        false,
-    ),
-    emitPotentiallyStaleEvents: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EMIT_POTENTIALLY_STALE_EVENTS,
-        false,
-    ),
-    configurableFeatureTypeLifetimes: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CONFIGURABLE_FEATURE_TYPE_LIFETIMES,
         false,
     ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
         process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
     ),
-    frontendNavigationUpdate: parseEnvVarBoolean(
-        process.env.UNLEASH_NAVIGATION_UPDATE,
-        false,
-    ),
     lastSeenByEnvironment: parseEnvVarBoolean(
         process.env.LAST_SEEN_BY_ENVIRONMENT,
         false,
     ),
-    segmentChangeRequests: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SEGMENT_CHANGE_REQUESTS,
-        false,
-    ),
-    changeRequestReject: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_REJECT,
-        false,
-    ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
+        false,
+    ),
+    integrationsRework: parseEnvVarBoolean(
+        process.env.UNLEASH_INTEGRATIONS,
+        false,
+    ),
+    multipleRoles: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MULTIPLE_ROLES,
+        false,
+    ),
+    featureNamingPattern: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_NAMING_PATTERN,
+        false,
+    ),
+    doraMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DORA_METRICS,
+        false,
+    ),
+    variantTypeNumber: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_VARIANT_TYPE_NUMBER,
         false,
     ),
 };

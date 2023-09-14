@@ -1,4 +1,3 @@
-import { applicationSchema } from './schema';
 import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../types/events';
 import { IApplication } from './models';
 import { IUnleashStores } from '../../types/stores';
@@ -205,8 +204,7 @@ export default class ClientInstanceService {
     }
 
     async createApplication(input: IApplication): Promise<void> {
-        const applicationData = await applicationSchema.validateAsync(input);
-        await this.clientApplicationsStore.upsert(applicationData);
+        await this.clientApplicationsStore.upsert(input);
     }
 
     async removeInstancesOlderThanTwoDays(): Promise<void> {

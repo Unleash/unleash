@@ -1,6 +1,5 @@
 import {
     FEATURE_CREATED,
-    FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
     FEATURE_STALE_ON,
@@ -14,6 +13,7 @@ import {
     FEATURE_PROJECT_CHANGE,
     FEATURE_VARIANTS_UPDATED,
     FEATURE_POTENTIALLY_STALE_ON,
+    FEATURE_ENVIRONMENT_VARIANTS_UPDATED,
 } from '../types/events';
 import { IAddonDefinition } from '../types/model';
 
@@ -21,7 +21,8 @@ const slackAppDefinition: IAddonDefinition = {
     name: 'slack-app',
     displayName: 'Slack App',
     description:
-        'The Unleash Slack App posts messages to your Slack workspace. You can decide which channels to post to by configuring your feature toggles with "slack" tags. For example, if you\'d like the bot to post messages to the #general channel, you should configure your feature toggle with the "slack:general" tag.',
+        'The Unleash Slack App posts messages to your Slack workspace. You can decide which channels to post to by configuring your feature toggles with "slack" tags.',
+    howTo: 'You can decide which channels to post by configuring your feature toggles with “slack” tags. For example, if you’d like the bot to post messages to the #general channel, you should configure your feature toggle with the “slack:general” tag. The Unleash Slack App bot has access to public channels by default. If you want the bot to post messages to private channels, you’ll need to invite it to those channels.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/slack-app',
     alerts: [
         {
@@ -37,7 +38,7 @@ const slackAppDefinition: IAddonDefinition = {
         url: 'https://unleash-slack-app.vercel.app/install',
         title: 'Slack App installation',
         helpText:
-            'After installing the Unleash Slack app in your Slack workspace, paste the access token into the appropriate field below in order to configure this addon.',
+            'After installing the Unleash Slack app in your Slack workspace, paste the access token into the appropriate field below in order to configure this integration.',
     },
     parameters: [
         {
@@ -57,16 +58,24 @@ const slackAppDefinition: IAddonDefinition = {
             required: false,
             sensitive: false,
         },
+        {
+            name: 'alwaysPostToDefault',
+            displayName: 'Always post to default channels',
+            description: `If set to 'true' or 'yes', the app will always post events to the default channels, even if the feature toggle has slack tags`,
+            type: 'text',
+            required: false,
+            sensitive: false,
+        },
     ],
     events: [
         FEATURE_CREATED,
-        FEATURE_UPDATED,
         FEATURE_ARCHIVED,
         FEATURE_REVIVED,
         FEATURE_STALE_ON,
         FEATURE_STALE_OFF,
         FEATURE_ENVIRONMENT_ENABLED,
         FEATURE_ENVIRONMENT_DISABLED,
+        FEATURE_ENVIRONMENT_VARIANTS_UPDATED,
         FEATURE_STRATEGY_REMOVE,
         FEATURE_STRATEGY_UPDATE,
         FEATURE_STRATEGY_ADD,

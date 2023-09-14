@@ -23,11 +23,6 @@ export const getCreateTogglePath = (
     return path;
 };
 
-export const getProjectEditPath = (
-    projectId: string,
-    newProjectPath: boolean
-) => {
-    return newProjectPath
-        ? `/projects/${projectId}/settings`
-        : `/projects/${projectId}/edit`;
+export const getProjectEditPath = (projectId: string) => {
+    return `/projects/${projectId}/settings`;
 };

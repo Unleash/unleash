@@ -7,4 +7,4 @@
 /**
  * Extra associated data related to the event, such as feature toggle state, segment configuration, etc., if applicable.
  */
-export type EventSchemaData = { [key: string]: any } | null;
+export type EventSchemaData = { [key: string]: any };

@@ -36,7 +36,7 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
-import { useSearch } from 'hooks/useSearch';
+import { getColumnValues, includesFilter, useSearch } from 'hooks/useSearch';
 import { Search } from 'component/common/Search/Search';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { ChangeRequestDialogue } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestConfirmDialog';
@@ -234,6 +234,7 @@ export const ProjectFeatureToggles = ({
                 accessor: 'type',
                 Cell: FeatureTypeCell,
                 align: 'center',
+                filterName: 'type',
                 maxWidth: 80,
             },
             {
@@ -265,6 +266,16 @@ export const ProjectFeatureToggles = ({
                           Cell: FeatureTagCell,
                           width: 80,
                           searchable: true,
+                          filterName: 'tags',
+                          filterBy(
+                              row: IFeatureToggleListItem,
+                              values: string[]
+                          ) {
+                              return includesFilter(
+                                  getColumnValues(this, row),
+                                  values
+                              );
+                          },
                       },
                   ]
                 : []),
@@ -343,6 +354,8 @@ export const ProjectFeatureToggles = ({
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || ''
     );
+
+    const [showTitle, setShowTitle] = useState(true);
 
     const featuresData = useMemo(
         () =>
@@ -451,6 +464,7 @@ export const ProjectFeatureToggles = ({
         state: { selectedRowIds, sortBy, hiddenColumns },
         prepareRow,
         setHiddenColumns,
+        toggleAllRowsSelected,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
@@ -521,17 +535,26 @@ export const ProjectFeatureToggles = ({
                 className={styles.container}
                 header={
                     <PageHeader
-                        titleElement={`Feature toggles (${rows.length})`}
+                        titleElement={
+                            showTitle
+                                ? `Feature toggles (${rows.length})`
+                                : null
+                        }
                         actions={
                             <>
                                 <ConditionallyRender
                                     condition={!isSmallScreen}
                                     show={
                                         <Search
+                                            placeholder="Search and Filter"
+                                            expandable
                                             initialValue={searchValue}
                                             onChange={setSearchValue}
+                                            onFocus={() => setShowTitle(false)}
+                                            onBlur={() => setShowTitle(true)}
                                             hasFilters
                                             getSearchContext={getSearchContext}
+                                            id="projectFeatureToggles"
                                         />
                                     }
                                 />
@@ -590,6 +613,7 @@ export const ProjectFeatureToggles = ({
                                     onChange={setSearchValue}
                                     hasFilters
                                     getSearchContext={getSearchContext}
+                                    id="projectFeatureToggles"
                                 />
                             }
                         />
@@ -694,6 +718,7 @@ export const ProjectFeatureToggles = ({
                     selectedIds={Object.keys(selectedRowIds)}
                     data={features}
                     projectId={projectId}
+                    onResetSelection={() => toggleAllRowsSelected(false)}
                 />
             </BatchSelectionActionsBar>
         </>

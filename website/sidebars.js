@@ -92,6 +92,7 @@ module.exports = {
                     label: 'Feature toggles, strategies, context',
                     items: [
                         'how-to/how-to-add-strategy-constraints',
+                        'how-to/how-to-add-feature-flag-naming-patterns',
                         'how-to/how-to-capture-impression-data',
                         'how-to/how-to-create-feature-toggles',
                         'how-to/how-to-define-custom-context-fields',
@@ -154,7 +155,22 @@ module.exports = {
                         slug: '/how-to/sso',
                     },
                 },
-                ,
+                {
+                    label: 'Troubleshooting',
+                    items: [
+                        'how-to/how-to-troubleshoot-flag-exposure',
+                        'how-to/how-to-troubleshoot-flag-not-returned',
+                        'how-to/how-to-troubleshoot-cors',
+                    ],
+                    type: 'category',
+                    link: {
+                        type: 'generated-index',
+                        title: 'How-to: troubleshooting',
+                        description:
+                            'Troubleshooting common problems. If you want to contribute, please make sure the title is phrased as a concrete user problem',
+                        slug: '/how-to/troubleshooting',
+                    },
+                },
             ],
         },
         {
@@ -321,6 +337,7 @@ module.exports = {
                         'reference/custom-activation-strategies',
                         'reference/environments',
                         'reference/strategy-variants',
+                        'reference/feature-flag-naming-patterns',
                         'reference/feature-toggles',
                         'reference/feature-toggle-types',
                         'reference/feature-toggle-variants',

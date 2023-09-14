@@ -33,6 +33,12 @@ const CreateProject = () => {
         projectMode,
         projectDesc,
         featureLimit,
+        featureNamingPattern,
+        featureNamingExample,
+        featureNamingDescription,
+        setFeatureNamingExample,
+        setFeatureNamingPattern,
+        setFeatureNamingDescription,
         setProjectId,
         setProjectName,
         setProjectDesc,
@@ -108,6 +114,12 @@ const CreateProject = () => {
                 projectMode={projectMode}
                 projectStickiness={projectStickiness}
                 featureLimit={featureLimit}
+                featureNamingExample={featureNamingExample}
+                featureNamingPattern={featureNamingPattern}
+                setFeatureNamingPattern={setFeatureNamingPattern}
+                featureNamingDescription={featureNamingDescription}
+                setFeatureNamingDescription={setFeatureNamingDescription}
+                setFeatureNamingExample={setFeatureNamingExample}
                 setProjectStickiness={setProjectStickiness}
                 setFeatureLimit={setFeatureLimit}
                 setProjectMode={setProjectMode}

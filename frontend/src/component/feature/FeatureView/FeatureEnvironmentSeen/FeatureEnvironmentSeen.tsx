@@ -91,6 +91,7 @@ export const FeatureEnvironmentSeen = ({
                                     sx={sx}
                                     tooltip={
                                         <LastSeenTooltip
+                                            featureLastSeen={featureLastSeen}
                                             environments={environments}
                                         />
                                     }

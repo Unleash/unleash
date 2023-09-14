@@ -16,7 +16,7 @@ export interface IEnvironments {
     name: string;
     enabled: boolean;
     variantCount: number;
-    lastSeenAt: Date | null;
+    lastSeenAt?: string | null;
 }
 
 export interface IFeatureToggle {

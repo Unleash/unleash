@@ -22,6 +22,7 @@ const teamsDefinition: IAddonDefinition = {
     displayName: 'Microsoft Teams',
     description: 'Allows Unleash to post updates to Microsoft Teams.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/teams',
+    howTo: 'The Microsoft Teams integration allows Unleash to post Updates when a feature toggle is updated.',
     parameters: [
         {
             name: 'url',
@@ -34,11 +35,9 @@ const teamsDefinition: IAddonDefinition = {
         {
             name: 'customHeaders',
             displayName: 'Extra HTTP Headers',
-            placeholder: `{
-                "ISTIO_USER_KEY": "hunter2",
-                "SOME_OTHER_CUSTOM_HTTP_HEADER": "SOMEVALUE"
-            }`,
-            description: `(Optional) Used to add extra HTTP Headers to the request the plugin fires off. Format here needs to be a valid json object of key value pairs where both key and value are strings`,
+            placeholder:
+                '{\n"ISTIO_USER_KEY": "hunter2",\n"SOME_OTHER_CUSTOM_HTTP_HEADER": "SOMEVALUE"\n}',
+            description: `(Optional) Used to add extra HTTP Headers to the request the plugin fires off. This must be a valid json object of key-value pairs where both the key and the value are strings`,
             required: false,
             sensitive: true,
             type: 'textfield',

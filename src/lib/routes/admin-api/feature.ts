@@ -307,9 +307,13 @@ class FeatureController extends Controller {
         req: Request<any, any, ValidateFeatureSchema, any>,
         res: Response<void>,
     ): Promise<void> {
-        const { name } = req.body;
+        const { name, projectId } = req.body;
 
         await this.service.validateName(name);
+        await this.service.validateFeatureFlagNameAgainstPattern(
+            name,
+            projectId ?? undefined,
+        );
         res.status(200).end();
     }
 

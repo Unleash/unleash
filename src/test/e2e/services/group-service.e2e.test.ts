@@ -98,7 +98,7 @@ test('should not remove user from no SSO definition group', async () => {
     expect(groups[0].name).toEqual('no_mapping_group');
 });
 
-test('adding a root role to a group with a project role should fail', async () => {
+test('adding a root role to a group with a project role should not fail', async () => {
     const group = await groupStore.create({
         name: 'root_group',
         description: 'root_group',
@@ -106,21 +106,25 @@ test('adding a root role to a group with a project role should fail', async () =
 
     await stores.accessStore.addGroupToRole(group.id, 1, 'test', 'default');
 
-    await expect(() => {
-        return groupService.updateGroup(
-            {
-                id: group.id,
-                name: group.name,
-                users: [],
-                rootRole: 1,
-                createdAt: new Date(),
-                createdBy: 'test',
-            },
-            'test',
-        );
-    }).rejects.toThrow(
-        'This group already has a project role and cannot also be given a root role',
+    const updatedGroup = await groupService.updateGroup(
+        {
+            id: group.id!,
+            name: group.name,
+            users: [],
+            rootRole: 1,
+            createdAt: new Date(),
+            createdBy: 'test',
+        },
+        'test',
     );
+
+    expect(updatedGroup).toMatchObject({
+        description: group.description,
+        id: group.id,
+        mappingsSSO: [],
+        name: group.name,
+        rootRole: 1,
+    });
 
     expect.assertions(1);
 });

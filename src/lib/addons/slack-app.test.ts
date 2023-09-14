@@ -4,7 +4,7 @@ import { ChatPostMessageArguments, ErrorCode } from '@slack/web-api';
 
 const slackApiCalls: ChatPostMessageArguments[] = [];
 
-let scheduleMessage = jest.fn().mockImplementation((options) => {
+let postMessage = jest.fn().mockImplementation((options) => {
     slackApiCalls.push(options);
     return Promise.resolve();
 });
@@ -12,7 +12,7 @@ let scheduleMessage = jest.fn().mockImplementation((options) => {
 jest.mock('@slack/web-api', () => ({
     WebClient: jest.fn().mockImplementation(() => ({
         chat: {
-            scheduleMessage,
+            postMessage,
         },
         on: jest.fn(),
     })),
@@ -60,7 +60,7 @@ describe('SlackAppAddon', () => {
     beforeEach(() => {
         jest.useFakeTimers();
         slackApiCalls.length = 0;
-        scheduleMessage.mockClear();
+        postMessage.mockClear();
         addon = new SlackAppAddon({
             getLogger,
             unleashUrl: 'http://some-url.com',
@@ -124,7 +124,7 @@ describe('SlackAppAddon', () => {
     });
 
     it('should log error when an API call fails', async () => {
-        scheduleMessage = jest.fn().mockRejectedValue(mockError);
+        postMessage = jest.fn().mockRejectedValue(mockError);
 
         await addon.handleEvent(event, { accessToken });
 
@@ -134,7 +134,7 @@ describe('SlackAppAddon', () => {
         );
     });
 
-    it('should handle rejections in chat.scheduleMessage', async () => {
+    it('should handle rejections in chat.postMessage', async () => {
         const eventWith3Tags: IEvent = {
             ...event,
             tags: [
@@ -144,7 +144,7 @@ describe('SlackAppAddon', () => {
             ],
         };
 
-        scheduleMessage = jest
+        postMessage = jest
             .fn()
             .mockResolvedValueOnce({ ok: true })
             .mockResolvedValueOnce({ ok: true })
@@ -152,7 +152,7 @@ describe('SlackAppAddon', () => {
 
         await addon.handleEvent(eventWith3Tags, { accessToken });
 
-        expect(scheduleMessage).toHaveBeenCalledTimes(3);
+        expect(postMessage).toHaveBeenCalledTimes(3);
         expect(loggerMock.warn).toHaveBeenCalledWith(
             `Error handling event ${FEATURE_ENVIRONMENT_ENABLED}. A platform error occurred: Platform error message`,
             expect.any(Object),

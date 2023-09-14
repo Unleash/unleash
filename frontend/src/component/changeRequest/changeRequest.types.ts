@@ -78,7 +78,8 @@ type ChangeRequestPayload =
     | ChangeRequestVariantPatch
     | IChangeRequestUpdateSegment
     | IChangeRequestDeleteSegment
-    | SetStrategySortOrderSchema;
+    | SetStrategySortOrderSchema
+    | IChangeRequestArchiveFeature;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestChangeBase {
     action: 'addStrategy';
@@ -103,6 +104,10 @@ export interface IChangeRequestEnabled extends IChangeRequestChangeBase {
 export interface IChangeRequestPatchVariant extends IChangeRequestChangeBase {
     action: 'patchVariant';
     payload: ChangeRequestVariantPatch;
+}
+
+export interface IChangeRequestArchiveFeature extends IChangeRequestChangeBase {
+    action: 'archiveFeature';
 }
 
 export interface IChangeRequestReorderStrategy
@@ -144,7 +149,8 @@ export type IFeatureChange =
     | IChangeRequestUpdateStrategy
     | IChangeRequestEnabled
     | IChangeRequestPatchVariant
-    | IChangeRequestReorderStrategy;
+    | IChangeRequestReorderStrategy
+    | IChangeRequestArchiveFeature;
 
 export type ISegmentChange =
     | IChangeRequestUpdateSegment
@@ -178,4 +184,5 @@ export type ChangeRequestAction =
     | 'patchVariant'
     | 'reorderStrategy'
     | 'updateSegment'
-    | 'deleteSegment';
+    | 'deleteSegment'
+    | 'archiveFeature';

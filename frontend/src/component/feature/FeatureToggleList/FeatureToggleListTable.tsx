@@ -37,6 +37,7 @@ import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironmen
 import { ExportDialog } from './ExportDialog';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
+import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -69,6 +70,9 @@ export const FeatureToggleListTable: VFC = () => {
     const { features = [], loading, refetchFeatures } = useFeatures();
     const [searchParams, setSearchParams] = useSearchParams();
     const { uiConfig } = useUiConfig();
+    const showEnvironmentLastSeen = Boolean(
+        uiConfig.flags.lastSeenByEnvironment
+    );
     const [initialState] = useState(() => ({
         sortBy: [
             {
@@ -125,10 +129,15 @@ export const FeatureToggleListTable: VFC = () => {
             {
                 Header: 'Seen',
                 accessor: 'lastSeenAt',
-                Cell: FeatureSeenCell,
-                sortType: 'date',
+                Cell: ({ value, row: { original: feature } }: any) => {
+                    return showEnvironmentLastSeen ? (
+                        <FeatureEnvironmentSeenCell feature={feature} />
+                    ) : (
+                        <FeatureSeenCell value={value} />
+                    );
+                },
                 align: 'center',
-                maxWidth: 85,
+                maxWidth: 80,
             },
             {
                 Header: 'Type',
@@ -190,7 +199,7 @@ export const FeatureToggleListTable: VFC = () => {
                 searchable: true,
             },
         ],
-        [isFavoritesPinned]
+        [isFavoritesPinned, showEnvironmentLastSeen]
     );
 
     const {
@@ -294,6 +303,8 @@ export const FeatureToggleListTable: VFC = () => {
                                 show={
                                     <>
                                         <Search
+                                            placeholder="Search and Filter"
+                                            expandable
                                             initialValue={searchValue}
                                             onChange={setSearchValue}
                                             hasFilters

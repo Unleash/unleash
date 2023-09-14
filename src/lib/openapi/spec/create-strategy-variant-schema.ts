@@ -40,9 +40,9 @@ export const createStrategyVariantSchema = {
             properties: {
                 type: {
                     description:
-                        'The type of the value. Commonly used types are string, json and csv.',
+                        'The type of the value. Commonly used types are string, number, json and csv.',
                     type: 'string',
-                    enum: ['json', 'csv', 'string'],
+                    enum: ['json', 'csv', 'string', 'number'],
                 },
                 value: {
                     description: 'The actual value of payload',

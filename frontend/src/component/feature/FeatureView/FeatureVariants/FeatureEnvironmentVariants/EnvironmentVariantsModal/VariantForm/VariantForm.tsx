@@ -4,7 +4,6 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import SelectMenu from 'component/common/select';
 import { OverrideConfig } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/VariantOverrides';
 import {
-    Box,
     Button,
     FormControlLabel,
     IconButton,
@@ -20,6 +19,7 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import { WeightType } from 'constants/variantTypes';
 import { IFeatureVariantEdit } from '../EnvironmentVariantsModal';
 import { Delete } from '@mui/icons-material';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledVariantForm = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -86,8 +86,12 @@ const StyledFieldColumn = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledInput = styled(Input)(() => ({
+const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
+    '& textarea': {
+        minHeight: theme.spacing(3),
+        resize: 'vertical',
+    },
 }));
 
 const StyledPercentageContainer = styled('div')(({ theme }) => ({
@@ -192,6 +196,14 @@ export const VariantForm = ({
 
     const [errors, setErrors] = useState<IVariantFormErrors>({});
 
+    const variantTypeNumber = useUiFlag('variantTypeNumber');
+
+    useEffect(() => {
+        if (variantTypeNumber) {
+            payloadOptions.push({ key: 'number', label: 'number' });
+        }
+    }, [variantTypeNumber]);
+
     const clearError = (field: ErrorField) => {
         setErrors(errors => ({ ...errors, [field]: undefined }));
     };
@@ -250,7 +262,10 @@ export const VariantForm = ({
 
     const validatePayload = (payload: IPayload) => {
         if (!isValidPayload(payload)) {
-            setError(ErrorField.PAYLOAD, 'Invalid JSON.');
+            setError(
+                ErrorField.PAYLOAD,
+                payload.type === 'json' ? 'Invalid json' : 'Invalid number'
+            );
         }
     };
 
@@ -279,6 +294,9 @@ export const VariantForm = ({
         try {
             if (payload.type === 'json') {
                 JSON.parse(payload.value);
+            }
+            if (variantTypeNumber && payload.type === 'number') {
+                return !Number.isNaN(Number(payload.value));
             }
             return true;
         } catch (e: unknown) {
@@ -425,7 +443,12 @@ export const VariantForm = ({
                         name="variant-payload-value"
                         label="Value"
                         multiline={payload.type !== 'string'}
-                        rows={payload.type === 'string' ? 1 : 4}
+                        rows={
+                            payload.type === 'string' ||
+                            payload.type === 'number'
+                                ? 1
+                                : 4
+                        }
                         value={payload.value}
                         onChange={e => {
                             clearError(ErrorField.PAYLOAD);

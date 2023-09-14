@@ -45,7 +45,6 @@ export const adminRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/api',
         title: 'API access',
-        flag: 'frontendNavigationUpdate',
         menu: { adminSettings: true },
         group: 'access',
     },
@@ -90,7 +89,7 @@ export const adminRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/admin-invoices',
         title: 'Billing & invoices',
-        menu: { adminSettings: true, mode: ['pro'], billing: true },
+        menu: { adminSettings: true, billing: true },
         group: 'instance',
     },
     {

@@ -21,13 +21,10 @@ const StyledBadgeContainer = styled('div')(({ theme }) => ({
 }));
 
 export const AdminTabsMenu: VFC = () => {
-    const { uiConfig, isPro, isOss } = useUiConfig();
+    const { isPro, isOss } = useUiConfig();
     const { pathname } = useLocation();
 
     const activeTab = pathname.split('/')[2];
-
-    const showEnterpriseFeaturesInPro =
-        uiConfig?.flags?.frontendNavigationUpdate;
 
     const adminRoutes = useAdminRoutes();
     const group = adminRoutes.find(route =>
@@ -55,6 +52,7 @@ export const AdminTabsMenu: VFC = () => {
             >
                 {tabs.map(tab => (
                     <Tab
+                        sx={{ padding: 0 }}
                         key={tab.route}
                         value={tab.route?.split('/')?.[2]}
                         label={
@@ -64,8 +62,7 @@ export const AdminTabsMenu: VFC = () => {
                                     condition={Boolean(
                                         tab.menu.mode?.includes('enterprise') &&
                                             !tab.menu.mode?.includes('pro') &&
-                                            isPro() &&
-                                            showEnterpriseFeaturesInPro
+                                            isPro()
                                     )}
                                     show={
                                         <StyledBadgeContainer>

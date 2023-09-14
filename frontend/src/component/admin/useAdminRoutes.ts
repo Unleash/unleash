@@ -7,22 +7,26 @@ import { filterByConfig, mapRouteLink } from 'component/common/util';
 export const useAdminRoutes = () => {
     const { uiConfig, isPro, isEnterprise } = useUiConfig();
     const { isBilling } = useInstanceStatus();
-    const showEnterpriseOptionsInPro = Boolean(
-        uiConfig?.flags?.frontendNavigationUpdate
-    );
+    const routes = [...adminRoutes];
 
-    return adminRoutes
+    if (uiConfig.flags.UNLEASH_CLOUD) {
+        const adminBillingMenuItem = adminRoutes.findIndex(
+            route => route.title === 'Billing & invoices'
+        );
+        routes[adminBillingMenuItem] = {
+            ...routes[adminBillingMenuItem],
+            path: '/admin/billing',
+        };
+    }
+
+    return routes
         .filter(filterByConfig(uiConfig))
         .filter(route =>
-            filterAdminRoutes(
-                route?.menu,
-                {
-                    enterprise: isEnterprise(),
-                    pro: isPro(),
-                    billing: isBilling,
-                },
-                showEnterpriseOptionsInPro
-            )
+            filterAdminRoutes(route?.menu, {
+                enterprise: isEnterprise(),
+                pro: isPro(),
+                billing: isBilling,
+            })
         )
         .map(mapRouteLink);
 };

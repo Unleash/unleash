@@ -38,6 +38,7 @@ test('Returns empty list of tokens', async () => {
             expect(res.body.tokens.length).toBe(0);
         });
 });
+
 test('Returns list of tokens', async () => {
     const tokenSecret = 'random-secret';
 
@@ -62,9 +63,9 @@ test('Returns 404 when given non-existant projectId', async () => {
     return app.request
         .get('/api/admin/projects/wrong/api-tokens')
         .expect('Content-Type', /json/)
-        .expect(200)
+        .expect(404)
         .expect((res) => {
-            expect(res.body.tokens.length).toBe(0);
+            expect(res.body.tokens).toBe(undefined);
         });
 });
 
@@ -78,7 +79,7 @@ test('fails to create new client token when given wrong project', async () => {
             environment: 'default',
         })
         .set('Content-Type', 'application/json')
-        .expect(400);
+        .expect(404);
 });
 
 test('creates new client token', async () => {
@@ -112,4 +113,37 @@ test('Deletes existing tokens', async () => {
         .delete(`/api/admin/projects/default/api-tokens/${tokenSecret}`)
         .set('Content-Type', 'application/json')
         .expect(200);
+});
+
+test('Returns Not Found when deleting non-existing tokens', async () => {
+    const tokenSecret = 'random-secret';
+
+    return app.request
+        .delete(`/api/admin/projects/default/api-tokens/${tokenSecret}`)
+        .set('Content-Type', 'application/json')
+        .expect(404);
+});
+
+test('Returns Bad Request when deleting tokens with more than one project', async () => {
+    const tokenSecret = 'random-secret';
+
+    await db.stores.projectStore.create({
+        id: 'other',
+        name: 'other',
+        description: 'other',
+        mode: 'open',
+    });
+
+    await db.stores.apiTokenStore.insert({
+        tokenName: 'test',
+        secret: tokenSecret,
+        type: ApiTokenType.CLIENT,
+        environment: 'default',
+        projects: ['default', 'other'],
+    });
+
+    return app.request
+        .delete(`/api/admin/projects/default/api-tokens/${tokenSecret}`)
+        .set('Content-Type', 'application/json')
+        .expect(400);
 });

@@ -25,4 +25,6 @@ export interface UserWithProjectRoleSchema {
     addedAt?: string;
     /** The ID of the role this user has in the given project */
     roleId?: number;
+    /** A list of roles this user has in the given project */
+    roles?: number[];
 }

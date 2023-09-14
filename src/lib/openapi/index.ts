@@ -12,6 +12,7 @@ import {
     apiTokenSchema,
     apiTokensSchema,
     applicationSchema,
+    applicationUsageSchema,
     applicationsSchema,
     batchFeaturesSchema,
     bulkToggleFeaturesSchema,
@@ -154,6 +155,8 @@ import {
     createStrategyVariantSchema,
     clientSegmentSchema,
     createGroupSchema,
+    doraFeaturesSchema,
+    projectDoraMetricsSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -170,6 +173,7 @@ import { batchStaleSchema } from './spec/batch-stale-schema';
 import { createApplicationSchema } from './spec/create-application-schema';
 import { contextFieldStrategiesSchema } from './spec/context-field-strategies-schema';
 import { advancedPlaygroundEnvironmentFeatureSchema } from './spec/advanced-playground-environment-feature-schema';
+import { createFeatureNamingPatternSchema } from './spec/create-feature-naming-pattern-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
@@ -215,6 +219,7 @@ export const schemas: UnleashSchemas = {
     apiTokenSchema,
     apiTokensSchema,
     applicationSchema,
+    applicationUsageSchema,
     applicationsSchema,
     batchFeaturesSchema,
     batchStaleSchema,
@@ -365,6 +370,9 @@ export const schemas: UnleashSchemas = {
     createStrategyVariantSchema,
     clientSegmentSchema,
     createGroupSchema,
+    createFeatureNamingPatternSchema,
+    doraFeaturesSchema,
+    projectDoraMetricsSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

@@ -12,10 +12,7 @@ const StyledHeader = styled('span')(({ theme }) => ({
 }));
 
 const StyledCode = styled('span')(({ theme }) => ({
-    backgroundColor: theme.palette.background.elevation2,
     color: theme.palette.text.primary,
-    padding: theme.spacing(0, 0.5),
-    borderRadius: theme.spacing(0.5),
 }));
 
 interface ISearchDescriptionProps {
@@ -61,7 +58,9 @@ export const SearchDescription: VFC<ISearchDescriptionProps> = ({
                                     {filter.values.join(',')}
                                 </StyledCode>{' '}
                                 in {filter.header}. Options:{' '}
-                                {filter.options.join(', ')}
+                                {[...new Set(filter.options)]
+                                    .slice(0, 10)
+                                    .join(', ')}
                             </p>
                         ))}
                     </>

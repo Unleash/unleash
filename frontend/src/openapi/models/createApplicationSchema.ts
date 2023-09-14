@@ -20,5 +20,4 @@ export interface CreateApplicationSchema {
     color?: string;
     /** An URL to an icon file to be used for the applications's entry in the application list */
     icon?: string;
-    [key: string]: any;
 }

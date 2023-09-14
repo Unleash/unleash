@@ -2,6 +2,8 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Link, styled, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { Highlighter } from 'component/common/Highlighter/Highlighter';
 
 interface IChangeRequestTitleCellProps {
     value?: any;
@@ -18,6 +20,7 @@ export const ChangeRequestTitleCell = ({
     value,
     row: { original },
 }: IChangeRequestTitleCellProps) => {
+    const { searchQuery } = useSearchHighlightContext();
     const projectId = useRequiredPathParam('projectId');
     const {
         id,
@@ -49,7 +52,7 @@ export const ChangeRequestTitleCell = ({
                             },
                         })}
                     >
-                        {title}
+                        <Highlighter search={searchQuery}>{title}</Highlighter>
                     </Link>
                 </Typography>
             </StyledLink>

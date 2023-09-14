@@ -12,11 +12,28 @@ export const createStrategySchema = {
             description: 'The name of the strategy type. Must be unique.',
             example: 'my-custom-strategy',
         },
+        title: {
+            type: 'string',
+            description: 'The title of the strategy',
+            example: 'My awesome strategy',
+        },
         description: {
             type: 'string',
             description: 'A description of the strategy type.',
             example:
                 'Enable the feature for users who have not logged in before.',
+        },
+        editable: {
+            type: 'boolean',
+            description:
+                'Whether the strategy type is editable or not. Defaults to `true`.',
+            example: false,
+        },
+        deprecated: {
+            type: 'boolean',
+            description:
+                'Whether the strategy type is deprecated or not. Defaults to `false`.',
+            example: true,
         },
         parameters: {
             type: 'array',

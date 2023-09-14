@@ -8,6 +8,7 @@ import { FeatureToggle, FeatureToggleDTO, IVariant } from '../types/model';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { Db } from './db';
 import { LastSeenInput } from '../services/client-metrics/last-seen-service';
+import { NameExistsError } from '../error';
 
 export type EnvironmentFeatureNames = { [key: string]: string[] };
 
@@ -289,8 +290,16 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             return this.rowToFeature(row[0]);
         } catch (err) {
             this.logger.error('Could not insert feature, error: ', err);
+            if (
+                typeof err.detail === 'string' &&
+                err.detail.includes('already exists')
+            ) {
+                throw new NameExistsError(
+                    `Feature ${data.name} already exists`,
+                );
+            }
+            throw err;
         }
-        return undefined;
     }
 
     async update(

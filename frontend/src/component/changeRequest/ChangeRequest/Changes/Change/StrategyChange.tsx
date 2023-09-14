@@ -25,7 +25,8 @@ export const ChangeItemWrapper = styled(Box)({
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'auto 40px',
+    gridTemplateColumns: 'auto auto',
+    justifyContent: 'space-between',
     gap: theme.spacing(1),
     alignItems: 'center',
     marginBottom: theme.spacing(2),

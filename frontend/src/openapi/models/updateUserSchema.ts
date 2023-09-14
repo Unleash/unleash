@@ -15,5 +15,4 @@ export interface UpdateUserSchema {
     name?: string;
     /** The role to assign to the user. Can be either the role's ID or its unique name. */
     rootRole?: UpdateUserSchemaRootRole;
-    [key: string]: any;
 }

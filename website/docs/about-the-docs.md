@@ -37,6 +37,7 @@ The guides are organized into the following categories:
 - [Feature toggles, strategies, context, and general how-tos](./how-to/misc)
 - [Users and permissions how-tos](./how-to/users-and-permissions)
 - [Single Sign-On (SSO) how-tos](./how-to/sso)
+- [Troubleshooting how-tos](./how-to/troubleshooting)
 
 ### Reference documentation
 

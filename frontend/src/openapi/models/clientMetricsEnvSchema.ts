@@ -24,5 +24,4 @@ export interface ClientMetricsEnvSchema {
     no?: number;
     /** How many times each variant was returned */
     variants?: ClientMetricsEnvSchemaVariants;
-    [key: string]: any;
 }

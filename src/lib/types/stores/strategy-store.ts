@@ -1,3 +1,4 @@
+import { CreateStrategySchema } from 'lib/openapi';
 import { Store } from './store';
 
 export interface IStrategy {
@@ -18,24 +19,22 @@ export interface IEditableStrategy {
     title?: string;
 }
 
-export interface IMinimalStrategy {
-    name: string;
-    description?: string;
-    editable?: boolean;
-    parameters?: any[];
-    title?: string;
-}
+export type IMinimalStrategy = Pick<
+    CreateStrategySchema,
+    'name' | 'description' | 'editable' | 'parameters' | 'title'
+>;
 
-export interface IStrategyImport {
-    name: string;
-    description?: string;
-    deprecated?: boolean;
-    parameters?: object[];
-    builtIn?: boolean;
-    sortOrder?: number;
-    displayName?: string;
-    title?: string;
-}
+export type IStrategyImport = Pick<
+    CreateStrategySchema,
+    | 'name'
+    | 'description'
+    | 'deprecated'
+    | 'parameters'
+    | 'builtIn'
+    | 'sortOrder'
+    | 'displayName'
+    | 'title'
+>;
 
 export interface IMinimalStrategyRow {
     name: string;

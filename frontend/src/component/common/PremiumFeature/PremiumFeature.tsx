@@ -98,6 +98,11 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/reference/rbac#user-group-sso-integration',
         label: 'Single Sign-On',
     },
+    'project-settings': {
+        plan: FeaturePlan.PRO,
+        url: 'https://docs.getunleash.io/reference/projects',
+        label: 'Project settings',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;

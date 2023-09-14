@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react';
 import { useTable, useSortBy, useFlexLayout, Column } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { IProjectRoleUsageCount } from 'interfaces/project';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 

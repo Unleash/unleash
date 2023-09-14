@@ -153,3 +153,6 @@ export * from './strategy-variant-schema';
 export * from './client-segment-schema';
 export * from './update-feature-type-lifetime-schema';
 export * from './create-group-schema';
+export * from './application-usage-schema';
+export * from './dora-features-schema';
+export * from './project-dora-metrics-schema';

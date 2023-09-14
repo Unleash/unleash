@@ -42,8 +42,11 @@ import {
     WeightType,
     StrategiesOrderChangedEvent,
     PotentiallyStaleOnEvent,
+    IStrategyStore,
+    IFeatureNaming,
 } from '../types';
 import { Logger } from '../logger';
+import { PatternError } from '../error';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
@@ -91,6 +94,7 @@ import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-f
 import { unique } from '../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
+import { checkFeatureFlagNamesAgainstPattern } from '../features/feature-naming-pattern/feature-naming-validation';
 
 interface IFeatureContext {
     featureName: string;
@@ -109,6 +113,14 @@ export interface IGetFeatureParams {
     userId?: number;
 }
 
+export type FeatureNameCheckResultWithFeaturePattern =
+    | { state: 'valid' }
+    | {
+          state: 'invalid';
+          invalidNames: Set<string>;
+          featureNaming: IFeatureNaming;
+      };
+
 const oneOf = (values: string[], match: string) => {
     return values.some((value) => value === match);
 };
@@ -117,6 +129,8 @@ class FeatureToggleService {
     private logger: Logger;
 
     private featureStrategiesStore: IFeatureStrategiesStore;
+
+    private strategyStore: IStrategyStore;
 
     private featureToggleStore: IFeatureToggleStore;
 
@@ -150,6 +164,7 @@ class FeatureToggleService {
             featureTagStore,
             featureEnvironmentStore,
             contextFieldStore,
+            strategyStore,
         }: Pick<
             IUnleashStores,
             | 'featureStrategiesStore'
@@ -160,6 +175,7 @@ class FeatureToggleService {
             | 'featureTagStore'
             | 'featureEnvironmentStore'
             | 'contextFieldStore'
+            | 'strategyStore'
         >,
         {
             getLogger,
@@ -171,6 +187,7 @@ class FeatureToggleService {
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
+        this.strategyStore = strategyStore;
         this.featureToggleStore = featureToggleStore;
         this.featureToggleClientStore = featureToggleClientStore;
         this.tagStore = featureTagStore;
@@ -225,24 +242,24 @@ class FeatureToggleService {
 
     validateUpdatedProperties(
         { featureName, projectId }: IFeatureContext,
-        strategy: IFeatureStrategy,
+        existingStrategy: IFeatureStrategy,
     ): void {
-        if (strategy.projectId !== projectId) {
+        if (existingStrategy.projectId !== projectId) {
             throw new InvalidOperationError(
                 'You can not change the projectId for an activation strategy.',
             );
         }
 
-        if (strategy.featureName !== featureName) {
+        if (existingStrategy.featureName !== featureName) {
             throw new InvalidOperationError(
                 'You can not change the featureName for an activation strategy.',
             );
         }
 
         if (
-            strategy.parameters &&
-            'stickiness' in strategy.parameters &&
-            strategy.parameters.stickiness === ''
+            existingStrategy.parameters &&
+            'stickiness' in existingStrategy.parameters &&
+            existingStrategy.parameters.stickiness === ''
         ) {
             throw new InvalidOperationError(
                 'You can not have an empty string for stickiness.',
@@ -268,6 +285,19 @@ class FeatureToggleService {
                     }
                 }),
             );
+        }
+    }
+
+    async validateStrategyType(
+        strategyName: string | undefined,
+    ): Promise<void> {
+        if (strategyName !== undefined) {
+            const exists = await this.strategyStore.exists(strategyName);
+            if (!exists) {
+                throw new BadDataError(
+                    `Could not find strategy type with name ${strategyName}`,
+                );
+            }
         }
     }
 
@@ -379,12 +409,11 @@ class FeatureToggleService {
             disabled: featureStrategy.disabled,
             constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
+            variants: featureStrategy.variants || [],
+            sortOrder: featureStrategy.sortOrder,
             segments: segments.map((segment) => segment.id) ?? [],
         };
 
-        if (this.flagResolver.isEnabled('strategyVariant')) {
-            result.sortOrder = featureStrategy.sortOrder;
-        }
         return result;
     }
 
@@ -441,39 +470,37 @@ class FeatureToggleService {
                 );
             }),
         );
-        if (this.flagResolver.isEnabled('strategyVariant')) {
-            const newOrder = (
-                await this.getStrategiesForEnvironment(
-                    project,
-                    featureName,
-                    environment,
-                )
-            )
-                .sort((strategy1, strategy2) => {
-                    if (
-                        typeof strategy1.sortOrder === 'number' &&
-                        typeof strategy2.sortOrder === 'number'
-                    ) {
-                        return strategy1.sortOrder - strategy2.sortOrder;
-                    }
-                    return 0;
-                })
-                .map((strategy) => strategy.id);
-
-            const eventData: StrategyIds = { strategyIds: newOrder };
-
-            const tags = await this.tagStore.getAllTagsForFeature(featureName);
-            const event = new StrategiesOrderChangedEvent({
+        const newOrder = (
+            await this.getStrategiesForEnvironment(
+                project,
                 featureName,
                 environment,
-                project,
-                createdBy,
-                preData: eventPreData,
-                data: eventData,
-                tags: tags,
-            });
-            await this.eventStore.store(event);
-        }
+            )
+        )
+            .sort((strategy1, strategy2) => {
+                if (
+                    typeof strategy1.sortOrder === 'number' &&
+                    typeof strategy2.sortOrder === 'number'
+                ) {
+                    return strategy1.sortOrder - strategy2.sortOrder;
+                }
+                return 0;
+            })
+            .map((strategy) => strategy.id);
+
+        const eventData: StrategyIds = { strategyIds: newOrder };
+
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+        const event = new StrategiesOrderChangedEvent({
+            featureName,
+            environment,
+            project,
+            createdBy,
+            preData: eventPreData,
+            data: eventData,
+            tags: tags,
+        });
+        await this.eventStore.store(event);
     }
 
     async createStrategy(
@@ -502,6 +529,7 @@ class FeatureToggleService {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureBelongsToProject(context);
 
+        await this.validateStrategyType(strategyConfig.name);
         await this.validateProjectCanAccessSegments(
             projectId,
             strategyConfig.segments,
@@ -602,7 +630,7 @@ class FeatureToggleService {
      */
     async updateStrategy(
         id: string,
-        updates: Partial<IFeatureStrategy>,
+        updates: Partial<IStrategyConfig>,
         context: IFeatureStrategyContext,
         userName: string,
         user?: User,
@@ -640,13 +668,15 @@ class FeatureToggleService {
 
     async unprotectedUpdateStrategy(
         id: string,
-        updates: Partial<IFeatureStrategy>,
+        updates: Partial<IStrategyConfig>,
         context: IFeatureStrategyContext,
         userName: string,
     ): Promise<Saved<IStrategyConfig>> {
         const { projectId, environment, featureName } = context;
         const existingStrategy = await this.featureStrategiesStore.get(id);
+
         this.validateUpdatedProperties(context, existingStrategy);
+        await this.validateStrategyType(updates.name);
         await this.validateProjectCanAccessSegments(
             projectId,
             updates.segments,
@@ -1016,12 +1046,11 @@ class FeatureToggleService {
     ): Promise<FeatureToggle> {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
+        await this.validateFeatureFlagNameAgainstPattern(value.name, projectId);
+
         const exists = await this.projectStore.hasProject(projectId);
 
-        if (
-            this.flagResolver.isEnabled('newProjectLayout') &&
-            (await this.projectStore.isFeatureLimitReached(projectId))
-        ) {
+        if (await this.projectStore.isFeatureLimitReached(projectId)) {
             throw new InvalidOperationError(
                 'You have reached the maximum number of feature toggles for this project.',
             );
@@ -1071,6 +1100,59 @@ class FeatureToggleService {
             return createdToggle;
         }
         throw new NotFoundError(`Project with id ${projectId} does not exist`);
+    }
+
+    async checkFeatureFlagNamesAgainstProjectPattern(
+        projectId: string,
+        featureNames: string[],
+    ): Promise<FeatureNameCheckResultWithFeaturePattern> {
+        if (this.flagResolver.isEnabled('featureNamingPattern')) {
+            const project = await this.projectStore.get(projectId);
+            const patternData = project.featureNaming;
+            const namingPattern = patternData?.pattern;
+
+            if (namingPattern) {
+                const result = checkFeatureFlagNamesAgainstPattern(
+                    featureNames,
+                    namingPattern,
+                );
+
+                if (result.state === 'invalid') {
+                    return { ...result, featureNaming: patternData };
+                }
+            }
+        }
+        return { state: 'valid' };
+    }
+
+    async validateFeatureFlagNameAgainstPattern(
+        featureName: string,
+        projectId?: string,
+    ): Promise<void> {
+        if (projectId) {
+            const result =
+                await this.checkFeatureFlagNamesAgainstProjectPattern(
+                    projectId,
+                    [featureName],
+                );
+
+            if (result.state === 'invalid') {
+                const namingPattern = result.featureNaming.pattern;
+                const namingExample = result.featureNaming.example;
+                const namingDescription = result.featureNaming.description;
+
+                const error = `The feature flag name "${featureName}" does not match the project's naming pattern: "${namingPattern}".`;
+                const example = namingExample
+                    ? ` Here's an example of a name that does match the pattern: "${namingExample}"."`
+                    : '';
+                const description = namingDescription
+                    ? ` The pattern's description is: "${namingDescription}"`
+                    : '';
+                throw new PatternError(`${error}${example}${description}`, [
+                    `The flag name does not match the pattern.`,
+                ]);
+            }
+        }
     }
 
     async cloneFeatureToggle(
@@ -1204,10 +1286,11 @@ class FeatureToggleService {
             name: strategy.strategyName,
             constraints: strategy.constraints || [],
             parameters: strategy.parameters,
+            variants: strategy.variants || [],
             segments: [],
             title: strategy.title,
             disabled: strategy.disabled,
-            // FIXME: Should we return sortOrder here, or adjust OpenAPI?
+            sortOrder: strategy.sortOrder,
         };
 
         if (segments && segments.length > 0) {
@@ -1742,7 +1825,7 @@ class FeatureToggleService {
     }
 
     // TODO: add project id.
-    async reviveToggle(featureName: string, createdBy: string): Promise<void> {
+    async reviveFeature(featureName: string, createdBy: string): Promise<void> {
         const toggle = await this.featureToggleStore.revive(featureName);
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
         await this.eventStore.store(
@@ -1817,7 +1900,10 @@ class FeatureToggleService {
             featureName,
             environment,
         );
-        const { newDocument } = await applyPatch(oldVariants, newVariants);
+        const { newDocument } = await applyPatch(
+            deepClone(oldVariants),
+            newVariants,
+        );
         return this.crProtectedSaveVariantsOnEnv(
             project,
             featureName,
@@ -1878,6 +1964,8 @@ class FeatureToggleService {
             ).variants ||
             [];
 
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+
         await this.eventStore.store(
             new EnvironmentVariantEvent({
                 featureName,
@@ -1886,6 +1974,7 @@ class FeatureToggleService {
                 createdBy: user,
                 oldVariants: theOldVariants,
                 newVariants: fixedVariants,
+                tags,
             }),
         );
         await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
@@ -1951,6 +2040,9 @@ class FeatureToggleService {
             });
             oldVariants[env] = featureEnv.variants || [];
         }
+
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+
         await this.eventStore.batchStore(
             environments.map(
                 (environment) =>
@@ -1961,6 +2053,7 @@ class FeatureToggleService {
                         createdBy: user,
                         oldVariants: oldVariants[environment],
                         newVariants: fixedVariants,
+                        tags,
                     }),
             ),
         );
@@ -2066,25 +2159,23 @@ class FeatureToggleService {
     async updatePotentiallyStaleFeatures(): Promise<void> {
         const potentiallyStaleFeatures =
             await this.featureToggleStore.updatePotentiallyStaleFeatures();
-        if (this.flagResolver.isEnabled('emitPotentiallyStaleEvents')) {
-            if (potentiallyStaleFeatures.length > 0) {
-                return this.eventStore.batchStore(
-                    await Promise.all(
-                        potentiallyStaleFeatures
-                            .filter((feature) => feature.potentiallyStale)
-                            .map(
-                                async ({ name, project }) =>
-                                    new PotentiallyStaleOnEvent({
-                                        featureName: name,
-                                        project,
-                                        tags: await this.tagStore.getAllTagsForFeature(
-                                            name,
-                                        ),
-                                    }),
-                            ),
-                    ),
-                );
-            }
+        if (potentiallyStaleFeatures.length > 0) {
+            return this.eventStore.batchStore(
+                await Promise.all(
+                    potentiallyStaleFeatures
+                        .filter((feature) => feature.potentiallyStale)
+                        .map(
+                            async ({ name, project }) =>
+                                new PotentiallyStaleOnEvent({
+                                    featureName: name,
+                                    project,
+                                    tags: await this.tagStore.getAllTagsForFeature(
+                                        name,
+                                    ),
+                                }),
+                        ),
+                ),
+            );
         }
     }
 }

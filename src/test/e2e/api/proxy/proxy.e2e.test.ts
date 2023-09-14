@@ -464,17 +464,9 @@ test('should filter features by strategies', async () => {
         strategies: [],
     });
     await createFeatureToggle({
-        name: 'featureWithUnknownStrategy',
-        enabled: true,
-        strategies: [{ name: 'unknown', constraints: [], parameters: {} }],
-    });
-    await createFeatureToggle({
         name: 'featureWithMultipleStrategies',
         enabled: true,
-        strategies: [
-            { name: 'default', constraints: [], parameters: {} },
-            { name: 'unknown', constraints: [], parameters: {} },
-        ],
+        strategies: [{ name: 'default', constraints: [], parameters: {} }],
     });
     await app.request
         .get('/api/frontend')

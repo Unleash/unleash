@@ -105,10 +105,7 @@ export class GroupService {
         return newGroup;
     }
 
-    async updateGroup(
-        group: ICreateGroupModel,
-        userName: string,
-    ): Promise<IGroup> {
+    async updateGroup(group: IGroupModel, userName: string): Promise<IGroup> {
         const preData = await this.groupStore.get(group.id);
 
         await this.validateGroup(group, preData);
@@ -147,29 +144,27 @@ export class GroupService {
     }
 
     async getProjectGroups(
-        projectId?: string,
+        projectId: string,
     ): Promise<IGroupModelWithProjectRole[]> {
-        const groupRoles = await this.groupStore.getProjectGroupRoles(
-            projectId,
-        );
-        if (groupRoles.length > 0) {
+        const projectGroups = await this.groupStore.getProjectGroups(projectId);
+
+        if (projectGroups.length > 0) {
             const groups = await this.groupStore.getAllWithId(
-                groupRoles.map((a) => a.groupId),
+                projectGroups.map((g) => g.id),
             );
             const groupUsers = await this.groupStore.getAllUsersByGroups(
                 groups.map((g) => g.id),
             );
-
             const users = await this.accountStore.getAllWithId(
                 groupUsers.map((u) => u.userId),
             );
-            return groups.map((group) => {
-                const groupRole = groupRoles.find((g) => g.groupId == group.id);
-                return {
-                    ...this.mapGroupWithUsers(group, groupUsers, users),
-                    roleId: groupRole.roleId,
-                    addedAt: groupRole.createdAt,
-                };
+            return groups.flatMap((group) => {
+                return projectGroups
+                    .filter((gr) => gr.id === group.id)
+                    .map((groupRole) => ({
+                        ...this.mapGroupWithUsers(group, groupUsers, users),
+                        ...groupRole,
+                    }));
             });
         }
         return [];
@@ -180,7 +175,7 @@ export class GroupService {
     }
 
     async validateGroup(
-        group: ICreateGroupModel,
+        group: IGroupModel | ICreateGroupModel,
         existingGroup?: IGroup,
     ): Promise<void> {
         if (!group.name) {
@@ -191,16 +186,6 @@ export class GroupService {
             if (await this.groupStore.existsWithName(group.name)) {
                 throw new NameExistsError('Group name already exists');
             }
-        }
-
-        if (
-            group.id &&
-            group.rootRole &&
-            (await this.groupStore.hasProjectRole(group.id))
-        ) {
-            throw new BadDataError(
-                'This group already has a project role and cannot also be given a root role',
-            );
         }
     }
 

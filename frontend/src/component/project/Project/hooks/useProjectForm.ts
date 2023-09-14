@@ -10,7 +10,10 @@ const useProjectForm = (
     initialProjectDesc = '',
     initialProjectStickiness = DEFAULT_PROJECT_STICKINESS,
     initialProjectMode: ProjectMode = 'open',
-    initialFeatureLimit = ''
+    initialFeatureLimit = '',
+    initialFeatureNamingPattern = '',
+    initialFeatureNamingExample = '',
+    initialFeatureNamingDescription = ''
 ) => {
     const [projectId, setProjectId] = useState(initialProjectId);
 
@@ -23,6 +26,17 @@ const useProjectForm = (
         useState<ProjectMode>(initialProjectMode);
     const [featureLimit, setFeatureLimit] =
         useState<string>(initialFeatureLimit);
+    const [featureNamingPattern, setFeatureNamingPattern] = useState(
+        initialFeatureNamingPattern
+    );
+    const [featureNamingExample, setFeatureNamingExample] = useState(
+        initialFeatureNamingExample
+    );
+
+    const [featureNamingDescription, setFeatureNamingDescription] = useState(
+        initialFeatureNamingDescription
+    );
+
     const [errors, setErrors] = useState({});
 
     const { validateId } = useProjectApi();
@@ -48,6 +62,18 @@ const useProjectForm = (
     }, [initialFeatureLimit]);
 
     useEffect(() => {
+        setFeatureNamingPattern(initialFeatureNamingPattern);
+    }, [initialFeatureNamingPattern]);
+
+    useEffect(() => {
+        setFeatureNamingExample(initialFeatureNamingExample);
+    }, [initialFeatureNamingExample]);
+
+    useEffect(() => {
+        setFeatureNamingDescription(initialFeatureNamingDescription);
+    }, [initialFeatureNamingDescription]);
+
+    useEffect(() => {
         setProjectStickiness(initialProjectStickiness);
     }, [initialProjectStickiness]);
 
@@ -59,6 +85,11 @@ const useProjectForm = (
             defaultStickiness: projectStickiness,
             featureLimit: getFeatureLimitAsNumber(),
             mode: projectMode,
+            featureNaming: {
+                pattern: featureNamingPattern,
+                example: featureNamingExample,
+                description: featureNamingDescription,
+            },
         };
     };
 
@@ -103,6 +134,12 @@ const useProjectForm = (
         projectStickiness,
         projectMode,
         featureLimit,
+        featureNamingPattern,
+        featureNamingExample,
+        featureNamingDescription,
+        setFeatureNamingPattern,
+        setFeatureNamingExample,
+        setFeatureNamingDescription,
         setProjectId,
         setProjectName,
         setProjectDesc,

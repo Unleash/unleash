@@ -409,6 +409,7 @@ class FeatureToggleService {
             disabled: featureStrategy.disabled,
             constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
+            variants: featureStrategy.variants || [],
             sortOrder: featureStrategy.sortOrder,
             segments: segments.map((segment) => segment.id) ?? [],
         };
@@ -1285,6 +1286,7 @@ class FeatureToggleService {
             name: strategy.strategyName,
             constraints: strategy.constraints || [],
             parameters: strategy.parameters,
+            variants: strategy.variants || [],
             segments: [],
             title: strategy.title,
             disabled: strategy.disabled,

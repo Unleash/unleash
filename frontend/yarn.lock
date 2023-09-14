@@ -3023,10 +3023,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-test-renderer@17.0.2":
-  version "17.0.2"
-  resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-17.0.2.tgz#5f800a39b12ac8d2a2149e7e1885215bcf4edbbf"
-  integrity sha512-+F1KONQTBHDBBhbHuT2GNydeMpPuviduXIVJRB7Y4nma4NR5DrTJfMMZ+jbhEHbpwL+Uqhs1WXh4KHiyrtYTPg==
+"@types/react-test-renderer@17.0.3":
+  version "17.0.3"
+  resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-17.0.3.tgz#e9f25232916c56971ee34c5b2c0f466c3c81d4a7"
+  integrity sha512-420ZAwdKEDsMrExYulRYsTPl1Mm2kHNAFjetwd3bByCnutoZ0ueGLAHtq6purwOEgYdrjHvzeBIjxcFftheuIQ==
   dependencies:
     "@types/react" "^17"
 

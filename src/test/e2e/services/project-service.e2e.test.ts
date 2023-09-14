@@ -1791,6 +1791,7 @@ describe('feature flag naming patterns', () => {
             name: 'Project',
             mode: 'open' as const,
             defaultStickiness: 'clientId',
+            description: 'description',
             featureNaming,
         };
 
@@ -1803,8 +1804,7 @@ describe('feature flag naming patterns', () => {
         const newPattern = 'new-pattern.+';
         await projectService.updateProject(
             {
-                id: project.id,
-                name: project.name,
+                ...project,
                 featureNaming: { pattern: newPattern },
             },
             user.id,

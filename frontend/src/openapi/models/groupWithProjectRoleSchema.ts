@@ -17,6 +17,8 @@ export interface GroupWithProjectRoleSchema {
     addedAt?: string;
     /** The ID of the role this group has in the given project */
     roleId?: number;
+    /** A list of roles this user has in the given project */
+    roles?: number[];
     /** A custom description of the group */
     description?: string | null;
     /** A list of SSO groups that should map to this Unleash group */

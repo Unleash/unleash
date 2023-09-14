@@ -1823,7 +1823,7 @@ class FeatureToggleService {
     }
 
     // TODO: add project id.
-    async reviveToggle(featureName: string, createdBy: string): Promise<void> {
+    async reviveFeature(featureName: string, createdBy: string): Promise<void> {
         const toggle = await this.featureToggleStore.revive(featureName);
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
         await this.eventStore.store(

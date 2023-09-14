@@ -352,7 +352,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 <p>
                                     Define a{' '}
                                     <a
-                                        href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions`}
+                                        href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet`}
                                         target="_blank"
                                         rel="noreferrer"
                                     >

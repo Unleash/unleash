@@ -145,6 +145,7 @@ test('Should be able to get strategy by id', async () => {
     const config: Omit<FeatureStrategySchema, 'id'> = {
         name: 'default',
         constraints: [],
+        variants: [],
         parameters: {},
         title: 'some-title',
     };

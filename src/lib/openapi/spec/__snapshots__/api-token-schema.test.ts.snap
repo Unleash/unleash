@@ -12,51 +12,6 @@ exports[`apiTokenSchema empty 1`] = `
       },
       "schemaPath": "#/required",
     },
-    {
-      "instancePath": "",
-      "keyword": "required",
-      "message": "must have required property 'tokenName'",
-      "params": {
-        "missingProperty": "tokenName",
-      },
-      "schemaPath": "#/required",
-    },
-    {
-      "instancePath": "",
-      "keyword": "required",
-      "message": "must have required property 'type'",
-      "params": {
-        "missingProperty": "type",
-      },
-      "schemaPath": "#/required",
-    },
-    {
-      "instancePath": "",
-      "keyword": "required",
-      "message": "must have required property 'project'",
-      "params": {
-        "missingProperty": "project",
-      },
-      "schemaPath": "#/required",
-    },
-    {
-      "instancePath": "",
-      "keyword": "required",
-      "message": "must have required property 'projects'",
-      "params": {
-        "missingProperty": "projects",
-      },
-      "schemaPath": "#/required",
-    },
-    {
-      "instancePath": "",
-      "keyword": "required",
-      "message": "must have required property 'createdAt'",
-      "params": {
-        "missingProperty": "createdAt",
-      },
-      "schemaPath": "#/required",
-    },
   ],
   "schema": "#/components/schemas/apiTokenSchema",
 }

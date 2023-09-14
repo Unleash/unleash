@@ -193,8 +193,12 @@ const ProjectForm: React.FC<IProjectForm> = ({
     useEffect(() => {
         setPreviousPattern(featureNamingPattern || '');
     }, [projectId]);
+
     useEffect(() => {
-        if (privateProjects) {
+        if (
+            privateProjects &&
+            !projectModeOptions.includes({ key: 'private', label: 'private' })
+        ) {
             projectModeOptions.push({ key: 'private', label: 'private' });
         }
         setPreviousPattern(featureNamingPattern || '');

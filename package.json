@@ -211,7 +211,7 @@
     "jest": "29.6.2",
     "jest-junit": "^16.0.0",
     "lint-staged": "13.2.3",
-    "nock": "13.3.2",
+    "nock": "13.3.3",
     "openapi-enforcer": "1.22.3",
     "prettier": "2.8.1",
     "proxyquire": "2.1.3",

@@ -18,7 +18,6 @@ const ajv = new Ajv({
         'date-time': true,
         uri: true,
     },
-    allErrors: true,
 });
 
 export const addAjvSchema = (schemaObjects: any[]): any => {

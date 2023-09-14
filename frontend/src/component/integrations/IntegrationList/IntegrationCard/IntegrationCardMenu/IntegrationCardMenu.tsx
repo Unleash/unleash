@@ -22,7 +22,6 @@ import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { event } from 'cypress/types/jquery';
 
 interface IIntegrationCardMenuProps {
     addon: AddonSchema;

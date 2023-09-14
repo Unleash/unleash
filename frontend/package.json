@@ -46,7 +46,7 @@
     "@testing-library/user-event": "14.4.3",
     "@types/debounce": "1.2.1",
     "@types/deep-diff": "1.0.2",
-    "@types/jest": "29.5.3",
+    "@types/jest": "29.5.4",
     "@types/lodash.clonedeep": "4.5.7",
     "@types/lodash.omit": "4.5.7",
     "@types/node": "18.17.14",
@@ -106,7 +106,7 @@
     "react-timeago": "7.1.0",
     "sass": "1.65.1",
     "semver": "7.5.4",
-    "swr": "2.2.0",
+    "swr": "2.2.2",
     "tss-react": "4.8.8",
     "typescript": "4.8.4",
     "vite": "4.4.9",
@@ -114,7 +114,7 @@
     "vite-plugin-svgr": "3.2.0",
     "vite-tsconfig-paths": "4.2.0",
     "vitest": "0.33.0",
-    "whatwg-fetch": "3.6.17"
+    "whatwg-fetch": "3.6.18"
   },
   "optionalDependencies": {
     "orval": "^6.17.0"

@@ -217,7 +217,7 @@ export const addonsSchema = {
                             name: 'url',
                             displayName: 'Datadog Events URL',
                             description:
-                                'Default url: https://api.datadoghq.com/api/v1/events. Needs to be changed if your not using the US1 site.',
+                                "Default URL: https://api.datadoghq.com/api/v1/events. Needs to be changed if your're not using the US1 site.",
                             type: 'url',
                             required: false,
                             sensitive: false,
@@ -226,7 +226,8 @@ export const addonsSchema = {
                             name: 'apiKey',
                             displayName: 'Datadog API key',
                             placeholder: 'j96c23b0f12a6b3434a8d710110bd862',
-                            description: '(Required) API key from Datadog',
+                            description:
+                                '(Required) API key to connect to Datadog',
                             type: 'text',
                             required: true,
                             sensitive: true,

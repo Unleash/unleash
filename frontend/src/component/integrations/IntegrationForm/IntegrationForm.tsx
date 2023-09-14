@@ -259,7 +259,8 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         <FormTemplate
             title={
                 <>
-                    {submitText} {name ? capitalizeFirst(`${name} `) : ''}
+                    {submitText}{' '}
+                    {displayName || (name ? capitalizeFirst(name) : '')}{' '}
                     integration
                 </>
             }
@@ -368,7 +369,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 entityName="event"
                                 selectAllEnabled={false}
                                 error={errors.events}
-                                description="Select what events you want your integration to be notified about."
+                                description="Select which events you want your integration to be notified about."
                                 required
                             />
                         </div>

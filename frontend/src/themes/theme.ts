@@ -3,7 +3,7 @@ import { colors } from './colors';
 import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
 
-const theme = {
+export const theme = {
     breakpoints: {
         values: {
             xs: 0,

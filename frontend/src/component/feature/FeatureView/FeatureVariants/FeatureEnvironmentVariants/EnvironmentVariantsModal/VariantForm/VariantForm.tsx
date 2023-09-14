@@ -201,7 +201,7 @@ export const VariantForm = ({
     useEffect(() => {
         if (
             variantTypeNumber &&
-            !payloadOptions.includes({ key: 'number', label: 'number' })
+            !payloadOptions.some(option => option.key === 'number')
         ) {
             payloadOptions.push({ key: 'number', label: 'number' });
         }

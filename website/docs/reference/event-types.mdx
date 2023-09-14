@@ -1171,11 +1171,11 @@ This event fires when you drop all existing tag types as part of a configuration
 }
 ```
 
-## Addon events
+## Integration events
 
 ### `addon-config-created`
 
-This event fires when you create an addon configuration. The `data` property contains the provider type.
+This event fires when you create an integration configuration. The `data` property contains the provider type.
 
 ```json title="example event: addon-config-created"
 {
@@ -1196,7 +1196,7 @@ This event fires when you create an addon configuration. The `data` property con
 
 ### `addon-config-updated`
 
-This event fires when you update an addon configuration. The `data` property contains the addon's ID and provider type.
+This event fires when you update an integration configuration. The `data` property contains the integration's ID and provider type.
 
 ```json title="example event: addon-config-updated"
 {
@@ -1218,7 +1218,7 @@ This event fires when you update an addon configuration. The `data` property con
 
 ### `addon-config-deleted`
 
-This event fires when you update an addon configuration. The `data` property contains the addon's ID.
+This event fires when you update an integration configuration. The `data` property contains the integration's ID.
 
 ```json title="example event: addon-config-deleted"
 {

@@ -1286,6 +1286,7 @@ class FeatureToggleService {
             name: strategy.strategyName,
             constraints: strategy.constraints || [],
             parameters: strategy.parameters,
+            variants: strategy.variants || [],
             segments: [],
             title: strategy.title,
             disabled: strategy.disabled,

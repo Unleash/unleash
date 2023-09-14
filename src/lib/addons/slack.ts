@@ -1,7 +1,7 @@
 import Addon from './addon';
 
 import slackDefinition from './slack-definition';
-import { IAddonConfig } from '../types/model';
+import { IAddonConfig, ITag } from '../types/model';
 
 import {
     FeatureEventFormatter,
@@ -9,6 +9,7 @@ import {
     LinkStyle,
 } from './feature-event-formatter-md';
 import { IEvent } from '../types/events';
+import { IFeatureTagStore } from '../types';
 
 interface ISlackAddonParameters {
     url: string;
@@ -17,15 +18,23 @@ interface ISlackAddonParameters {
     emojiIcon?: string;
     customHeaders?: string;
 }
+
+interface ISlackAddonConfig extends IAddonConfig {
+    featureTagStore: IFeatureTagStore;
+}
+
 export default class SlackAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    constructor(args: IAddonConfig) {
+    private featureTagStore: IFeatureTagStore;
+
+    constructor(args: ISlackAddonConfig) {
         super(slackDefinition, args);
         this.msgFormatter = new FeatureEventFormatterMd(
             args.unleashUrl,
             LinkStyle.SLACK,
         );
+        this.featureTagStore = args.featureTagStore;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -41,7 +50,7 @@ export default class SlackAddon extends Addon {
             customHeaders,
         } = parameters;
 
-        const slackChannels = this.findSlackChannels(event);
+        const slackChannels = await this.findTaggedSlackChannels(event);
 
         if (slackChannels.length === 0) {
             slackChannels.push(defaultChannel);
@@ -98,8 +107,18 @@ export default class SlackAddon extends Addon {
         this.logger.info(`Handled event ${event.type}. Status codes=${codes}`);
     }
 
-    findSlackChannels({ tags }: Pick<IEvent, 'tags'>): string[] {
-        if (tags) {
+    async getFeatureTags(featureName?: string): Promise<ITag[]> {
+        if (featureName) {
+            return this.featureTagStore.getAllTagsForFeature(featureName);
+        }
+        return [];
+    }
+
+    async findTaggedSlackChannels({
+        featureName,
+    }: Pick<IEvent, 'featureName'>): Promise<string[]> {
+        const tags = await this.getFeatureTags(featureName);
+        if (tags.length) {
             return tags
                 .filter((tag) => tag.type === 'slack')
                 .map((t) => t.value);

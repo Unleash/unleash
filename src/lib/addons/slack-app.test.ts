@@ -1,3 +1,4 @@
+import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 import { IEvent, FEATURE_ENVIRONMENT_ENABLED } from '../types/events';
 import SlackAppAddon from './slack-app';
 import { ChatPostMessageArguments, ErrorCode } from '@slack/web-api';
@@ -35,10 +36,44 @@ describe('SlackAppAddon', () => {
         fatal: jest.fn(),
     };
     const getLogger = jest.fn(() => loggerMock);
+    const featureTagStore = new FakeFeatureTagStore();
     const mockError = {
         code: ErrorCode.PlatformError,
         data: 'Platform error message',
     };
+
+    featureTagStore.tagFeatures([
+        {
+            featureName: 'some-toggle',
+            tagType: 'slack',
+            tagValue: 'general',
+        },
+        {
+            featureName: 'toggle-2tags',
+            tagType: 'slack',
+            tagValue: 'general',
+        },
+        {
+            featureName: 'toggle-2tags',
+            tagType: 'slack',
+            tagValue: 'another-channel-1',
+        },
+        {
+            featureName: 'toggle-3tags',
+            tagType: 'slack',
+            tagValue: 'general',
+        },
+        {
+            featureName: 'toggle-3tags',
+            tagType: 'slack',
+            tagValue: 'another-channel-1',
+        },
+        {
+            featureName: 'toggle-3tags',
+            tagType: 'slack',
+            tagValue: 'another-channel-2',
+        },
+    ]);
 
     const event: IEvent = {
         id: 1,
@@ -54,7 +89,6 @@ describe('SlackAppAddon', () => {
             type: 'release',
             strategies: [{ name: 'default' }],
         },
-        tags: [{ type: 'slack', value: 'general' }],
     };
 
     beforeEach(() => {
@@ -64,6 +98,7 @@ describe('SlackAppAddon', () => {
         addon = new SlackAppAddon({
             getLogger,
             unleashUrl: 'http://some-url.com',
+            featureTagStore: featureTagStore,
         });
     });
 
@@ -81,10 +116,7 @@ describe('SlackAppAddon', () => {
     it('should post to all channels in tags', async () => {
         const eventWith2Tags: IEvent = {
             ...event,
-            tags: [
-                { type: 'slack', value: 'general' },
-                { type: 'slack', value: 'another-channel-1' },
-            ],
+            featureName: 'toggle-2tags',
         };
 
         await addon.handleEvent(eventWith2Tags, { accessToken });
@@ -97,7 +129,7 @@ describe('SlackAppAddon', () => {
     it('should not post a message if there are no tagged channels and no defaultChannels', async () => {
         const eventWithoutTags: IEvent = {
             ...event,
-            tags: [],
+            featureName: 'toggle-no-tags',
         };
 
         await addon.handleEvent(eventWithoutTags, {
@@ -110,7 +142,7 @@ describe('SlackAppAddon', () => {
     it('should use defaultChannels if no tagged channels are found', async () => {
         const eventWithoutTags: IEvent = {
             ...event,
-            tags: [],
+            featureName: 'toggle-no-tags',
         };
 
         await addon.handleEvent(eventWithoutTags, {
@@ -137,11 +169,7 @@ describe('SlackAppAddon', () => {
     it('should handle rejections in chat.postMessage', async () => {
         const eventWith3Tags: IEvent = {
             ...event,
-            tags: [
-                { type: 'slack', value: 'general' },
-                { type: 'slack', value: 'another-channel-1' },
-                { type: 'slack', value: 'another-channel-2' },
-            ],
+            featureName: 'toggle-3tags',
         };
 
         postMessage = jest

@@ -9,6 +9,7 @@ import { Logger } from '../logger';
 import DatadogAddon from './datadog';
 
 import noLogger from '../../test/fixtures/no-logger';
+import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 
 let fetchRetryCalls: any[] = [];
 
@@ -39,6 +40,7 @@ test('Should call datadog webhook', async () => {
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore: new FakeFeatureTagStore(),
     });
     const event: IEvent = {
         id: 1,
@@ -68,6 +70,7 @@ test('Should call datadog webhook  for archived toggle', async () => {
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore: new FakeFeatureTagStore(),
     });
     const event: IEvent = {
         id: 2,
@@ -95,6 +98,7 @@ test('Should call datadog webhook  for archived toggle with project info', async
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore: new FakeFeatureTagStore(),
     });
     const event: IEvent = {
         id: 2,
@@ -123,6 +127,7 @@ test(`Should call datadog webhook for toggled environment`, async () => {
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore: new FakeFeatureTagStore(),
     });
     const event: IEvent = {
         id: 2,
@@ -153,6 +158,7 @@ test(`Should include customHeaders in headers when calling service`, async () =>
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore: new FakeFeatureTagStore(),
     });
     const event: IEvent = {
         id: 2,
@@ -184,6 +190,7 @@ test(`Should not include source_type_name when included in the config`, async ()
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore: new FakeFeatureTagStore(),
     });
     const event: IEvent = {
         id: 2,

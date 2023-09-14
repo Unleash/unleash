@@ -52,33 +52,6 @@ test('Should include id and createdAt when saving', async () => {
     jest.useRealTimers();
 });
 
-test('Should include empty tags array for new event', async () => {
-    expect.assertions(2);
-    const event = {
-        type: FEATURE_CREATED,
-        createdBy: 'me@mail.com',
-        data: {
-            name: 'someName',
-            enabled: true,
-            strategies: [{ name: 'default' }],
-        },
-    };
-
-    const promise = new Promise<void>((resolve) => {
-        eventStore.on(FEATURE_CREATED, (storedEvent: IEvent) => {
-            expect(storedEvent.data.name).toBe(event.data.name);
-            expect(Array.isArray(storedEvent.tags)).toBe(true);
-            resolve();
-        });
-    });
-
-    // Trigger
-    await eventStore.store(event);
-    await eventStore.publishUnannouncedEvents();
-
-    return promise;
-});
-
 test('Should be able to store multiple events at once', async () => {
     jest.useFakeTimers();
     const event1 = {
@@ -104,10 +77,9 @@ test('Should be able to store multiple events at once', async () => {
             clientIp: '127.0.0.1',
             appName: 'test3',
         },
-        tags: [{ type: 'simple', value: 'mytest' }],
     };
-    const seen = [];
-    eventStore.on(APPLICATION_CREATED, (e) => seen.push(e));
+    const seen: IEvent[] = [];
+    eventStore.on(APPLICATION_CREATED, (e: IEvent) => seen.push(e));
     await eventStore.batchStore([event1, event2, event3]);
     await eventStore.publishUnannouncedEvents();
     expect(seen.length).toBe(3);
@@ -198,14 +170,12 @@ test('Should get all events of type', async () => {
                           featureName: data.name,
                           createdBy: 'test-user',
                           data,
-                          tags: [],
                       })
                     : new FeatureDeletedEvent({
                           project: data.project,
                           preData: data,
                           featureName: data.name,
                           createdBy: 'test-user',
-                          tags: [],
                       });
             return eventStore.store(event);
         }),

@@ -5,7 +5,7 @@ import DatadogAddon from './datadog';
 import Addon from './addon';
 import { LogProvider } from '../logger';
 import SlackAppAddon from './slack-app';
-import { IFlagResolver } from '../types';
+import { IFeatureTagStore, IFlagResolver } from '../types';
 
 export interface IAddonProviders {
     [key: string]: Addon;
@@ -15,10 +15,20 @@ export const getAddons: (args: {
     getLogger: LogProvider;
     unleashUrl: string;
     flagResolver: IFlagResolver;
-}) => IAddonProviders = ({ getLogger, unleashUrl, flagResolver }) => {
+    featureTagStore: IFeatureTagStore;
+}) => IAddonProviders = ({
+    getLogger,
+    unleashUrl,
+    flagResolver,
+    featureTagStore,
+}) => {
     const slackAppAddonEnabled = flagResolver.isEnabled('slackAppAddon');
 
-    const slackAddon = new SlackAddon({ getLogger, unleashUrl });
+    const slackAddon = new SlackAddon({
+        getLogger,
+        unleashUrl,
+        featureTagStore,
+    });
 
     if (slackAppAddonEnabled) {
         slackAddon.definition.deprecated =
@@ -29,11 +39,13 @@ export const getAddons: (args: {
         new Webhook({ getLogger }),
         slackAddon,
         new TeamsAddon({ getLogger, unleashUrl }),
-        new DatadogAddon({ getLogger, unleashUrl }),
+        new DatadogAddon({ getLogger, unleashUrl, featureTagStore }),
     ];
 
     if (slackAppAddonEnabled) {
-        addons.push(new SlackAppAddon({ getLogger, unleashUrl }));
+        addons.push(
+            new SlackAppAddon({ getLogger, unleashUrl, featureTagStore }),
+        );
     }
 
     return addons.reduce((map, addon) => {

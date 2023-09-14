@@ -45,7 +45,6 @@ test('should get events list via admin', async () => {
             data: { name: 'test', project: 'default' },
             featureName: 'test',
             project: 'default',
-            tags: [],
         }),
     );
     const { body } = await request
@@ -65,7 +64,6 @@ test('should anonymise events list via admin', async () => {
             data: { name: 'test', project: 'default' },
             featureName: 'test',
             project: 'default',
-            tags: [],
         }),
     );
     const { body } = await request

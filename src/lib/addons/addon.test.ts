@@ -2,6 +2,7 @@ import nock from 'nock';
 import noLogger from '../../test/fixtures/no-logger';
 
 import SlackAddon from './slack';
+import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 
 beforeEach(() => {
     nock.disableNetConnect();
@@ -12,6 +13,7 @@ test('Does not retry if request succeeds', async () => {
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: url,
+        featureTagStore: new FakeFeatureTagStore(),
     });
     nock(url).get('/').reply(201);
     const res = await addon.fetchRetry(url);
@@ -23,6 +25,7 @@ test('Retries once, and succeeds', async () => {
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: url,
+        featureTagStore: new FakeFeatureTagStore(),
     });
     nock(url).get('/').replyWithError('testing retry');
     nock(url).get('/').reply(200);
@@ -36,6 +39,7 @@ test('Does not throw if response is error', async () => {
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: url,
+        featureTagStore: new FakeFeatureTagStore(),
     });
     nock(url).get('/').twice().replyWithError('testing retry');
     const res = await addon.fetchRetry(url);
@@ -47,6 +51,7 @@ test('Supports custom number of retries', async () => {
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: url,
+        featureTagStore: new FakeFeatureTagStore(),
     });
     let retries = 0;
     nock(url).get('/').twice().replyWithError('testing retry');

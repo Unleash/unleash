@@ -54,7 +54,6 @@ test('Can filter by project', async () => {
         type: FEATURE_CREATED,
         project: 'something-else',
         data: { id: 'some-other-feature' },
-        tags: [],
         createdBy: 'test-user',
         environment: 'test',
     });
@@ -62,7 +61,6 @@ test('Can filter by project', async () => {
         type: FEATURE_CREATED,
         project: 'default',
         data: { id: 'feature' },
-        tags: [],
         createdBy: 'test-user',
         environment: 'test',
     });
@@ -81,7 +79,6 @@ test('can search for events', async () => {
             type: FEATURE_CREATED,
             project: randomId(),
             data: { id: randomId() },
-            tags: [],
             createdBy: randomId(),
         },
         {
@@ -89,7 +86,6 @@ test('can search for events', async () => {
             project: randomId(),
             data: { id: randomId() },
             preData: { id: randomId() },
-            tags: [{ type: 'simple', value: randomId() }],
             createdBy: randomId(),
         },
     ];
@@ -129,13 +125,5 @@ test('can search for events', async () => {
         .expect((res) => {
             expect(res.body.events).toHaveLength(1);
             expect(res.body.events[0].preData.id).toEqual(events[1].preData.id);
-        });
-    await app.request
-        .post('/api/admin/events/search')
-        .send({ query: events[1].tags![0].value })
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.events).toHaveLength(1);
-            expect(res.body.events[0].data.id).toEqual(events[1].data.id);
         });
 });

@@ -8,6 +8,7 @@ import {
     LinkStyle,
 } from './feature-event-formatter-md';
 import { IEvent } from '../types/events';
+import { IFeatureTagStore, ITag } from '../types';
 
 interface IDatadogParameters {
     url: string;
@@ -23,15 +24,22 @@ interface DDRequestBody {
     source_type_name?: string;
 }
 
+interface IDatadogAddonConfig extends IAddonConfig {
+    featureTagStore: IFeatureTagStore;
+}
+
 export default class DatadogAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    constructor(config: IAddonConfig) {
+    private featureTagStore: IFeatureTagStore;
+
+    constructor(config: IDatadogAddonConfig) {
         super(definition, config);
         this.msgFormatter = new FeatureEventFormatterMd(
             config.unleashUrl,
             LinkStyle.MD,
         );
+        this.featureTagStore = config.featureTagStore;
     }
 
     async handleEvent(
@@ -47,7 +55,8 @@ export default class DatadogAddon extends Addon {
 
         const text = this.msgFormatter.format(event);
 
-        const { tags: eventTags } = event;
+        const eventTags = await this.getFeatureTags(event);
+
         const tags =
             eventTags && eventTags.map((tag) => `${tag.type}:${tag.value}`);
         const body: DDRequestBody = {
@@ -81,5 +90,14 @@ export default class DatadogAddon extends Addon {
         this.logger.info(
             `Handled event ${event.type}. Status codes=${res.status}`,
         );
+    }
+
+    async getFeatureTags({
+        featureName,
+    }: Pick<IEvent, 'featureName'>): Promise<ITag[]> {
+        if (featureName) {
+            return this.featureTagStore.getAllTagsForFeature(featureName);
+        }
+        return [];
     }
 }

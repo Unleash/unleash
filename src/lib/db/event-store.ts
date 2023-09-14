@@ -6,7 +6,6 @@ import {
 } from '../types/events';
 import { LogProvider, Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
-import { ITag } from '../types/model';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
 import { sharedEventEmitter } from '../util/anyEventEmitter';
 import { Db } from './db';
@@ -20,7 +19,6 @@ const EVENT_COLUMNS = [
     'created_at',
     'data',
     'pre_data',
-    'tags',
     'feature_name',
     'project',
     'environment',
@@ -77,7 +75,6 @@ export interface IEventTable {
     feature_name?: string;
     project?: string;
     environment?: string;
-    tags: ITag[];
 }
 
 const TABLE = 'events';
@@ -342,7 +339,6 @@ class EventStore implements IEventStore {
                     .orWhereRaw('type::text ILIKE ?', `%${search.query}%`)
                     .orWhereRaw('created_by::text ILIKE ?', `%${search.query}%`)
                     .orWhereRaw('data::text ILIKE ?', `%${search.query}%`)
-                    .orWhereRaw('tags::text ILIKE ?', `%${search.query}%`)
                     .orWhereRaw('pre_data::text ILIKE ?', `%${search.query}%`),
             );
         }
@@ -362,7 +358,6 @@ class EventStore implements IEventStore {
             createdAt: row.created_at,
             data: row.data,
             preData: row.pre_data,
-            tags: row.tags || [],
             featureName: row.feature_name,
             project: row.project,
             environment: row.environment,
@@ -377,8 +372,6 @@ class EventStore implements IEventStore {
             pre_data: Array.isArray(e.preData)
                 ? JSON.stringify(e.preData)
                 : e.preData,
-            // @ts-expect-error workaround for json-array
-            tags: JSON.stringify(e.tags),
             feature_name: e.featureName,
             project: e.project,
             environment: e.environment,

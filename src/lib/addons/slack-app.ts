@@ -11,18 +11,23 @@ import {
 import Addon from './addon';
 
 import slackAppDefinition from './slack-app-definition';
-import { IAddonConfig } from '../types/model';
+import { IAddonConfig, ITag } from '../types/model';
 import {
     FeatureEventFormatter,
     FeatureEventFormatterMd,
     LinkStyle,
 } from './feature-event-formatter-md';
 import { IEvent } from '../types/events';
+import { IFeatureTagStore } from '../types';
 
 interface ISlackAppAddonParameters {
     accessToken: string;
     defaultChannels: string;
     alwaysPostToDefault: string;
+}
+
+interface ISlackAppAddonConfig extends IAddonConfig {
+    featureTagStore: IFeatureTagStore;
 }
 
 export default class SlackAppAddon extends Addon {
@@ -32,12 +37,15 @@ export default class SlackAppAddon extends Addon {
 
     private slackClient?: WebClient;
 
-    constructor(args: IAddonConfig) {
+    private featureTagStore: IFeatureTagStore;
+
+    constructor(args: ISlackAppAddonConfig) {
         super(slackAppDefinition, args);
         this.msgFormatter = new FeatureEventFormatterMd(
             args.unleashUrl,
             LinkStyle.SLACK,
         );
+        this.featureTagStore = args.featureTagStore;
     }
 
     async handleEvent(
@@ -56,7 +64,8 @@ export default class SlackAppAddon extends Addon {
                 alwaysPostToDefault === 'true' || alwaysPostToDefault === 'yes';
             this.logger.debug(`Post to default was set to ${postToDefault}`);
 
-            const taggedChannels = this.findTaggedChannels(event);
+            const taggedChannels = await this.findTaggedSlackChannels(event);
+
             let eventChannels: string[];
             if (postToDefault) {
                 eventChannels = taggedChannels.concat(
@@ -139,8 +148,18 @@ export default class SlackAppAddon extends Addon {
         }
     }
 
-    findTaggedChannels({ tags }: Pick<IEvent, 'tags'>): string[] {
-        if (tags) {
+    async getFeatureTags(featureName?: string): Promise<ITag[]> {
+        if (featureName) {
+            return this.featureTagStore.getAllTagsForFeature(featureName);
+        }
+        return [];
+    }
+
+    async findTaggedSlackChannels({
+        featureName,
+    }: Pick<IEvent, 'featureName'>): Promise<string[]> {
+        const tags = await this.getFeatureTags(featureName);
+        if (tags.length) {
             return tags
                 .filter((tag) => tag.type === 'slack')
                 .map((t) => t.value);

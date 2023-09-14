@@ -1323,7 +1323,6 @@ test('should calculate average time to production', async () => {
                     featureName: toggle.name,
                     environment: 'default',
                     createdBy: 'Fredrik',
-                    tags: [],
                 }),
             );
         }),
@@ -1599,7 +1598,6 @@ test('should return average time to production per toggle', async () => {
                     featureName: toggle.name,
                     environment: 'default',
                     createdBy: 'Fredrik',
-                    tags: [],
                 }),
             );
         }),
@@ -1678,7 +1676,6 @@ test('should return average time to production per toggle for a specific project
                     featureName: toggle.name,
                     environment: 'default',
                     createdBy: 'Fredrik',
-                    tags: [],
                 }),
             );
         }),
@@ -1693,7 +1690,6 @@ test('should return average time to production per toggle for a specific project
                     featureName: toggle.name,
                     environment: 'default',
                     createdBy: 'Fredrik',
-                    tags: [],
                 }),
             );
         }),
@@ -1757,7 +1753,6 @@ test('should return average time to production per toggle and include archived t
                     featureName: toggle.name,
                     environment: 'default',
                     createdBy: 'Fredrik',
-                    tags: [],
                 }),
             );
         }),

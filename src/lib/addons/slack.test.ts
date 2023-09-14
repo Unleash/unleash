@@ -9,6 +9,9 @@ import { Logger } from '../logger';
 import SlackAddon from './slack';
 
 import noLogger from '../../test/fixtures/no-logger';
+import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
+
+const featureTagStore = new FakeFeatureTagStore();
 
 let fetchRetryCalls: any[] = [];
 
@@ -35,10 +38,15 @@ jest.mock(
         },
 );
 
+beforeEach(() => {
+    featureTagStore.deleteAll();
+});
+
 test('Should call slack webhook', async () => {
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore,
     });
     const event: IEvent = {
         id: 1,
@@ -70,6 +78,7 @@ test('Should call slack webhook for archived toggle', async () => {
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore,
     });
     const event: IEvent = {
         id: 2,
@@ -97,6 +106,7 @@ test('Should call slack webhook for archived toggle with project info', async ()
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore,
     });
     const event: IEvent = {
         id: 2,
@@ -125,6 +135,7 @@ test(`Should call webhook for toggled environment`, async () => {
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore,
     });
     const event: IEvent = {
         id: 2,
@@ -155,6 +166,7 @@ test('Should use default channel', async () => {
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore,
     });
     const event: IEvent = {
         id: 3,
@@ -185,6 +197,7 @@ test('Should override default channel with data from tag', async () => {
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore,
     });
     const event: IEvent = {
         id: 4,
@@ -197,13 +210,12 @@ test('Should override default channel with data from tag', async () => {
             enabled: false,
             strategies: [{ name: 'default' }],
         },
-        tags: [
-            {
-                type: 'slack',
-                value: 'another-channel',
-            },
-        ],
     };
+
+    featureTagStore.tagFeature('some-toggle', {
+        type: 'slack',
+        value: 'another-channel',
+    });
 
     const parameters = {
         url: 'http://hooks.slack.com',
@@ -221,6 +233,7 @@ test('Should post to all channels in tags', async () => {
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore,
     });
     const event: IEvent = {
         id: 5,
@@ -233,17 +246,20 @@ test('Should post to all channels in tags', async () => {
             enabled: false,
             strategies: [{ name: 'default' }],
         },
-        tags: [
-            {
-                type: 'slack',
-                value: 'another-channel-1',
-            },
-            {
-                type: 'slack',
-                value: 'another-channel-2',
-            },
-        ],
     };
+
+    featureTagStore.tagFeatures([
+        {
+            featureName: 'some-toggle',
+            tagType: 'slack',
+            tagValue: 'another-channel-1',
+        },
+        {
+            featureName: 'some-toggle',
+            tagType: 'slack',
+            tagValue: 'another-channel-2',
+        },
+    ]);
 
     const parameters = {
         url: 'http://hooks.slack.com',
@@ -264,6 +280,7 @@ test('Should include custom headers from parameters in call to service', async (
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
+        featureTagStore,
     });
     const event: IEvent = {
         id: 2,

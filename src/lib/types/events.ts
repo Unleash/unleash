@@ -1,5 +1,5 @@
 import { extractUsernameFromUser } from '../util';
-import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
+import { FeatureToggle, IStrategyConfig, IVariant } from './model';
 import { IApiToken } from './models/api-token';
 import { IUser } from './user';
 
@@ -258,7 +258,6 @@ export interface IBaseEvent {
     featureName?: string;
     data?: any;
     preData?: any;
-    tags?: ITag[];
 }
 
 export interface IEvent extends IBaseEvent {
@@ -276,22 +275,15 @@ class BaseEvent implements IBaseEvent {
 
     readonly createdBy: string;
 
-    readonly tags: ITag[];
-
     /**
      * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
      */
-    constructor(
-        type: IEventType,
-        createdBy: string | IUser,
-        tags: ITag[] = [],
-    ) {
+    constructor(type: IEventType, createdBy: string | IUser) {
         this.type = type;
         this.createdBy =
             typeof createdBy === 'string'
                 ? createdBy
                 : extractUsernameFromUser(createdBy);
-        this.tags = tags;
     }
 }
 
@@ -308,13 +300,8 @@ export class FeatureStaleEvent extends BaseEvent {
         project: string;
         featureName: string;
         createdBy: string | IUser;
-        tags: ITag[];
     }) {
-        super(
-            p.stale ? FEATURE_STALE_ON : FEATURE_STALE_OFF,
-            p.createdBy,
-            p.tags,
-        );
+        super(p.stale ? FEATURE_STALE_ON : FEATURE_STALE_OFF, p.createdBy);
         this.project = p.project;
         this.featureName = p.featureName;
     }
@@ -336,14 +323,12 @@ export class FeatureEnvironmentEvent extends BaseEvent {
         featureName: string;
         environment: string;
         createdBy: string | IUser;
-        tags: ITag[];
     }) {
         super(
             p.enabled
                 ? FEATURE_ENVIRONMENT_ENABLED
                 : FEATURE_ENVIRONMENT_DISABLED,
             p.createdBy,
-            p.tags,
         );
         this.project = p.project;
         this.featureName = p.featureName;
@@ -372,9 +357,8 @@ export class StrategiesOrderChangedEvent extends BaseEvent {
         createdBy: string | IUser;
         data: StrategyIds;
         preData: StrategyIds;
-        tags: ITag[];
     }) {
-        super(STRATEGY_ORDER_CHANGED, p.createdBy, p.tags);
+        super(STRATEGY_ORDER_CHANGED, p.createdBy);
         const { project, featureName, environment, data, preData } = p;
         this.project = project;
         this.featureName = featureName;
@@ -400,11 +384,10 @@ export class FeatureVariantEvent extends BaseEvent {
         project: string;
         featureName: string;
         createdBy: string | IUser;
-        tags: ITag[];
         newVariants: IVariant[];
         oldVariants: IVariant[];
     }) {
-        super(FEATURE_VARIANTS_UPDATED, p.createdBy, p.tags);
+        super(FEATURE_VARIANTS_UPDATED, p.createdBy);
         this.project = p.project;
         this.featureName = p.featureName;
         this.data = { variants: p.newVariants };
@@ -431,11 +414,10 @@ export class EnvironmentVariantEvent extends BaseEvent {
         environment: string;
         project: string;
         createdBy: string | IUser;
-        tags: ITag[];
         newVariants: IVariant[];
         oldVariants: IVariant[];
     }) {
-        super(FEATURE_ENVIRONMENT_VARIANTS_UPDATED, p.createdBy, p.tags);
+        super(FEATURE_ENVIRONMENT_VARIANTS_UPDATED, p.createdBy);
         this.featureName = p.featureName;
         this.environment = p.environment;
         this.project = p.project;
@@ -462,9 +444,8 @@ export class FeatureChangeProjectEvent extends BaseEvent {
         newProject: string;
         featureName: string;
         createdBy: string | IUser;
-        tags: ITag[];
     }) {
-        super(FEATURE_PROJECT_CHANGE, p.createdBy, p.tags);
+        super(FEATURE_PROJECT_CHANGE, p.createdBy);
         const { newProject, oldProject, featureName } = p;
         this.project = newProject;
         this.featureName = featureName;
@@ -487,9 +468,8 @@ export class FeatureCreatedEvent extends BaseEvent {
         featureName: string;
         createdBy: string | IUser;
         data: FeatureToggle;
-        tags: ITag[];
     }) {
-        super(FEATURE_CREATED, p.createdBy, p.tags);
+        super(FEATURE_CREATED, p.createdBy);
         const { project, featureName, data } = p;
         this.project = project;
         this.featureName = featureName;
@@ -509,9 +489,8 @@ export class FeatureArchivedEvent extends BaseEvent {
         project: string;
         featureName: string;
         createdBy: string | IUser;
-        tags: ITag[];
     }) {
-        super(FEATURE_ARCHIVED, p.createdBy, p.tags);
+        super(FEATURE_ARCHIVED, p.createdBy);
         const { project, featureName } = p;
         this.project = project;
         this.featureName = featureName;
@@ -530,9 +509,8 @@ export class FeatureRevivedEvent extends BaseEvent {
         project: string;
         featureName: string;
         createdBy: string | IUser;
-        tags: ITag[];
     }) {
-        super(FEATURE_REVIVED, p.createdBy, p.tags);
+        super(FEATURE_REVIVED, p.createdBy);
         const { project, featureName } = p;
         this.project = project;
         this.featureName = featureName;
@@ -554,9 +532,8 @@ export class FeatureDeletedEvent extends BaseEvent {
         featureName: string;
         preData: FeatureToggle;
         createdBy: string | IUser;
-        tags: ITag[];
     }) {
-        super(FEATURE_DELETED, p.createdBy, p.tags);
+        super(FEATURE_DELETED, p.createdBy);
         const { project, featureName, preData } = p;
         this.project = project;
         this.featureName = featureName;
@@ -582,9 +559,8 @@ export class FeatureMetadataUpdateEvent extends BaseEvent {
         project: string;
         data: FeatureToggle;
         preData: FeatureToggle;
-        tags: ITag[];
     }) {
-        super(FEATURE_METADATA_UPDATED, p.createdBy, p.tags);
+        super(FEATURE_METADATA_UPDATED, p.createdBy);
         const { project, featureName, data, preData } = p;
         this.project = project;
         this.featureName = featureName;
@@ -611,9 +587,8 @@ export class FeatureStrategyAddEvent extends BaseEvent {
         environment: string;
         createdBy: string | IUser;
         data: IStrategyConfig;
-        tags: ITag[];
     }) {
-        super(FEATURE_STRATEGY_ADD, p.createdBy, p.tags);
+        super(FEATURE_STRATEGY_ADD, p.createdBy);
         const { project, featureName, environment, data } = p;
         this.project = project;
         this.featureName = featureName;
@@ -643,9 +618,8 @@ export class FeatureStrategyUpdateEvent extends BaseEvent {
         createdBy: string | IUser;
         data: IStrategyConfig;
         preData: IStrategyConfig;
-        tags: ITag[];
     }) {
-        super(FEATURE_STRATEGY_UPDATE, p.createdBy, p.tags);
+        super(FEATURE_STRATEGY_UPDATE, p.createdBy);
         const { project, featureName, environment, data, preData } = p;
         this.project = project;
         this.featureName = featureName;
@@ -673,9 +647,8 @@ export class FeatureStrategyRemoveEvent extends BaseEvent {
         environment: string;
         createdBy: string | IUser;
         preData: IStrategyConfig;
-        tags: ITag[];
     }) {
-        super(FEATURE_STRATEGY_REMOVE, p.createdBy, p.tags);
+        super(FEATURE_STRATEGY_REMOVE, p.createdBy);
         const { project, featureName, environment, preData } = p;
         this.project = project;
         this.featureName = featureName;
@@ -1073,12 +1046,8 @@ export class PotentiallyStaleOnEvent extends BaseEvent {
 
     readonly project: string;
 
-    constructor(eventData: {
-        featureName: string;
-        project: string;
-        tags: ITag[];
-    }) {
-        super(FEATURE_POTENTIALLY_STALE_ON, 'unleash-system', eventData.tags);
+    constructor(eventData: { featureName: string; project: string }) {
+        super(FEATURE_POTENTIALLY_STALE_ON, 'unleash-system');
         this.featureName = eventData.featureName;
         this.project = eventData.project;
     }

@@ -7,7 +7,6 @@ import FeatureStrategiesStore from '../../db/feature-strategy-store';
 import FeatureToggleStore from '../../db/feature-toggle-store';
 import FeatureToggleClientStore from '../../db/feature-toggle-client-store';
 import ProjectStore from '../../db/project-store';
-import FeatureTagStore from '../../db/feature-tag-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
 import ContextFieldStore from '../../db/context-field-store';
 import GroupStore from '../../db/group-store';
@@ -22,7 +21,6 @@ import FakeFeatureStrategiesStore from '../../../test/fixtures/fake-feature-stra
 import FakeFeatureToggleStore from '../../../test/fixtures/fake-feature-toggle-store';
 import FakeFeatureToggleClientStore from '../../../test/fixtures/fake-feature-toggle-client-store';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
-import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeContextFieldStore from '../../../test/fixtures/fake-context-field-store';
 import FakeGroupStore from '../../../test/fixtures/fake-group-store';
@@ -66,7 +64,6 @@ export const createFeatureToggleService = (
         getLogger,
         flagResolver,
     );
-    const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
     const featureEnvironmentStore = new FeatureEnvironmentStore(
         db,
         eventBus,
@@ -105,7 +102,6 @@ export const createFeatureToggleService = (
             featureToggleClientStore,
             projectStore,
             eventStore,
-            featureTagStore,
             featureEnvironmentStore,
             contextFieldStore,
             strategyStore,
@@ -128,7 +124,6 @@ export const createFakeFeatureToggleService = (
     const featureToggleStore = new FakeFeatureToggleStore();
     const featureToggleClientStore = new FakeFeatureToggleClientStore();
     const projectStore = new FakeProjectStore();
-    const featureTagStore = new FakeFeatureTagStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
     const contextFieldStore = new FakeContextFieldStore();
     const groupStore = new FakeGroupStore();
@@ -154,7 +149,6 @@ export const createFakeFeatureToggleService = (
             featureToggleClientStore,
             projectStore,
             eventStore,
-            featureTagStore,
             featureEnvironmentStore,
             contextFieldStore,
             strategyStore,

@@ -58,8 +58,8 @@ export const OFFICIAL_SDKS: Sdk[] = [
     },
     {
         name: 'dotnet',
-        displayName: '.Net SDK',
-        description: 'Officially Unleash Client for .Net',
+        displayName: '.NET SDK',
+        description: 'Officially Unleash Client for .NET',
         documentationUrl: 'https://docs.getunleash.io/reference/sdks/dotnet ',
         type: 'server',
     },

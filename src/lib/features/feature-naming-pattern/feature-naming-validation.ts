@@ -20,27 +20,28 @@ export const checkFeatureNamingData = (
             '\\v',
         ];
 
-        if (disallowedStrings.some((str) => pattern.includes(str))) {
-            return {
-                state: 'invalid',
-                reason: `Feature flag names can not contain whitespace. You've provided a feature flag naming pattern that contains a whitespace character: "${pattern}". Remove any whitespace characters from your pattern.`,
-            };
-        } else if (pattern && example && !example.match(compileRegex(pattern))) {
-            errors.push(
-                `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern. Bear in mind that the pattern must match the whole example, as if it were surrounded by '^' and "$".`,
-            );
-        }
+        if (pattern) {
+            if (disallowedStrings.some((str) => pattern.includes(str))) {
+                errors.push(
+                    `Feature flag names can not contain whitespace. You've provided a feature flag naming pattern that contains a whitespace character: "${pattern}". Remove any whitespace characters from your pattern.`,
+                );
+            } else if (example && !example.match(compileRegex(pattern))) {
+                errors.push(
+                    `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern. Bear in mind that the pattern must match the whole example, as if it were surrounded by '^' and "$".`,
+                );
+            }
+        } else {
+            if (example) {
+                errors.push(
+                    "You've provided a feature flag naming example, but no feature flag naming pattern. You must specify a pattern to use an example.",
+                );
+            }
 
-        if (!pattern && example) {
-            errors.push(
-                "You've provided a feature flag naming example, but no feature flag naming pattern. You must specify a pattern to use an example.",
-            );
-        }
-
-        if (!pattern && description) {
-            errors.push(
-                "You've provided a feature flag naming pattern description, but no feature flag naming pattern. You must have a pattern to use a description.",
-            );
+            if (description) {
+                errors.push(
+                    "You've provided a feature flag naming pattern description, but no feature flag naming pattern. You must have a pattern to use a description.",
+                );
+            }
         }
 
         const [first, ...rest] = errors;

@@ -73,7 +73,7 @@ describe('validate incoming feature naming data', () => {
             ).toMatchObject({ state: 'invalid' });
         },
     );
-  
+
     test('feature naming data with a non-empty example but an empty pattern is invalid', () => {
         expect(
             checkFeatureNamingData({

@@ -7,7 +7,10 @@ export const projectSchema = joi
         id: nameType,
         name: joi.string().required(),
         description: joi.string().allow(null).allow('').optional(),
-        mode: joi.string().valid('open', 'protected').default('open'),
+        mode: joi
+            .string()
+            .valid('open', 'protected', 'private')
+            .default('open'),
         defaultStickiness: joi.string().default('default'),
         featureLimit: joi.number().allow(null).optional(),
         featureNaming: joi.object().keys({

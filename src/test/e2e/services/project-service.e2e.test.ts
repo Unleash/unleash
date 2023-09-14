@@ -47,7 +47,9 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
         // @ts-ignore
-        experimental: { environments: { enabled: true } },
+        experimental: {
+            flags: { privateProjects: true },
+        },
     });
     groupService = new GroupService(stores, config);
     accessService = new AccessService(stores, config, groupService);
@@ -132,6 +134,24 @@ test('should create new project', async () => {
     expect(project.description).toEqual(ret.description);
     expect(ret.createdAt).toBeTruthy();
     expect(ret.mode).toEqual('protected');
+});
+
+test('should create new private project', async () => {
+    const project = {
+        id: 'testPrivate',
+        name: 'New private project',
+        description: 'Blah',
+        mode: 'private' as const,
+        defaultStickiness: 'default',
+    };
+
+    await projectService.createProject(project, user);
+    const ret = await projectService.getProject('testPrivate');
+    expect(project.id).toEqual(ret.id);
+    expect(project.name).toEqual(ret.name);
+    expect(project.description).toEqual(ret.description);
+    expect(ret.createdAt).toBeTruthy();
+    expect(ret.mode).toEqual('private');
 });
 
 test('should delete project', async () => {

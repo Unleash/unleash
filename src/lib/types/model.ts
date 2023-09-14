@@ -187,7 +187,7 @@ export interface IFeatureOverview {
     environments: IEnvironmentOverview[];
 }
 
-export type ProjectMode = 'open' | 'protected';
+export type ProjectMode = 'open' | 'protected' | 'private';
 
 export interface IFeatureNaming {
     pattern: string | null;

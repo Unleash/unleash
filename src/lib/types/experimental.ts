@@ -28,7 +28,8 @@ export type IFlagKey =
     | 'multipleRoles'
     | 'featureNamingPattern'
     | 'doraMetrics'
-    | 'variantTypeNumber';
+    | 'variantTypeNumber'
+    | 'privateProjects';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -130,6 +131,10 @@ const flags: IFlags = {
     ),
     variantTypeNumber: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_VARIANT_TYPE_NUMBER,
+        false,
+    ),
+    privateProjects: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECTS,
         false,
     ),
 };

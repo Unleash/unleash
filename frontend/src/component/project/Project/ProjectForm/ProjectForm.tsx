@@ -11,6 +11,7 @@ import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
 import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useUiFlag } from '../../../../hooks/useUiFlag';
 
 interface IProjectForm {
     projectId: string;
@@ -182,9 +183,22 @@ const ProjectForm: React.FC<IProjectForm> = ({
     const { setPreviousPattern, trackPattern } =
         useFeatureNamePatternTracking();
 
+    const privateProjects = useUiFlag('privateProjects');
+
+    const projectModeOptions = [
+        { key: 'open', label: 'open' },
+        { key: 'protected', label: 'protected' },
+    ];
+
     useEffect(() => {
         setPreviousPattern(featureNamingPattern || '');
     }, [projectId]);
+    useEffect(() => {
+        if (privateProjects) {
+            projectModeOptions.push({ key: 'private', label: 'private' });
+        }
+        setPreviousPattern(featureNamingPattern || '');
+    }, [privateProjects]);
 
     const updateNamingExampleError = ({
         example,
@@ -342,10 +356,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     onChange={e => {
                         setProjectMode?.(e.target.value as ProjectMode);
                     }}
-                    options={[
-                        { key: 'open', label: 'open' },
-                        { key: 'protected', label: 'protected' },
-                    ]}
+                    options={projectModeOptions}
                 ></StyledSelect>
             </>
             <>

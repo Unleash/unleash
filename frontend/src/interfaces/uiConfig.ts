@@ -65,6 +65,7 @@ export type UiFlags = {
     featureNamingPattern?: boolean;
     doraMetrics?: boolean;
     variantTypeNumber?: boolean;
+    privateProjects?: boolean;
     [key: string]: boolean | Variant | undefined;
 };
 

@@ -1,11 +1,12 @@
 import type { BatchStaleSchema, CreateFeatureStrategySchema } from 'openapi';
 import useAPI from '../useApi/useApi';
+import { ProjectMode } from 'component/project/Project/hooks/useProjectForm';
 
 interface ICreatePayload {
     id: string;
     name: string;
     description: string;
-    mode: 'open' | 'protected';
+    mode: ProjectMode;
     defaultStickiness: string;
 }
 

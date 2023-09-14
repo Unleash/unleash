@@ -5,9 +5,9 @@ title: Datadog
 
 > This feature was introduced in _Unleash v4.0.0_.
 
-The Datadog addon allows Unleash to post Updates to Datadog when a feature toggle is updated. To set up this addon, you need to set up a webhook connector for your channel. You can follow [Submitting events to Datadog](https://docs.datadoghq.com/api/latest/events/#post-an-event) on how to do that.
+The Datadog integration allows Unleash to post Updates to Datadog when a feature toggle is updated. To set up this integration, you need to set up a webhook connector for your channel. You can follow [Submitting events to Datadog](https://docs.datadoghq.com/api/latest/events/#post-an-event) on how to do that.
 
-The Datadog addon will perform a single retry if the HTTP POST against the Datadog Webhook URL fails (either a 50x or network error). Duplicate events may happen, and you should never assume events always comes in order.
+The Datadog integration will perform a single retry if the HTTP POST against the Datadog Webhook URL fails (either a 50x or network error). Duplicate events may happen, and you should never assume events always comes in order.
 
 ## Configuration {#configuration}
 
@@ -33,7 +33,7 @@ You can choose to trigger updates for the following events:
 
 #### Parameters {#parameters}
 
-Unleash Datadog addon takes the following parameters.
+Unleash Datadog integration takes the following parameters.
 
 - **Datadog Events URL** - This property is optional. The default url is https://api.datadoghq.com/api/v1/events. Needs to be changed if you are not not on the US1 [Datadog site](https://docs.datadoghq.com/getting_started/site/). Possible alternatives:
   - EU: https://app.datadoghq.eu/api/v1/events
@@ -44,4 +44,4 @@ Unleash Datadog addon takes the following parameters.
 
 #### Tags {#tags}
 
-Datadog's incoming webhooks are app specific. You will be able to create multiple addons to support messaging on different apps.
+Datadog's incoming webhooks are app specific. You will be able to create multiple integrations to support messaging on different apps.

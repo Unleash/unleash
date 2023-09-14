@@ -4,7 +4,7 @@ title: Feature Updates To slack
 
 :::caution
 
-This guide is deprecated. If you're looking for ways to integrate with Slack, you should refer to [the Slack add-on guide](../reference/addons/slack.md) instead.
+This guide is deprecated. If you're looking for ways to integrate with Slack, you should refer to [the Slack integration guide](../reference/integrations/slack.md) instead.
 
 Event hook option is removed in Unleash v5
 

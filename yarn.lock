@@ -2734,10 +2734,10 @@ db-migrate-shared@1.2.0, db-migrate-shared@^1.2.0:
   resolved "https://registry.yarnpkg.com/db-migrate-shared/-/db-migrate-shared-1.2.0.tgz#6125be1b3a5e661229fc75d50c85f6c3ffadbede"
   integrity sha512-65k86bVeHaMxb2L0Gw3y5V+CgZSRwhVQMwDMydmw5MvIpHHwD6SmBciqIwHsZfzJ9yzV/yYhdRefRM6FV5/siw==
 
-db-migrate@0.11.13:
-  version "0.11.13"
-  resolved "https://registry.yarnpkg.com/db-migrate/-/db-migrate-0.11.13.tgz#b9e5b242c62e82ef8ed2b29e118698813e953d67"
-  integrity sha512-OE/bbDo/mQvLmZrui/2jNAiAECJROSURCOU5xs6qKr3FvtUE2O6b0xBUI6WyAAKdili3LJQHFlpqugiYCGTSBA==
+db-migrate@0.11.14:
+  version "0.11.14"
+  resolved "https://registry.yarnpkg.com/db-migrate/-/db-migrate-0.11.14.tgz#a9fb80e70adc281355f5be3cf6eec141ffd1be5a"
+  integrity sha512-8e+/YsIlM3d69hj+cb6qG6WyubR8nwXfDf9gGLWl4AxHpI6mTomcqhRLNfPrs7Le7AZv2eEsgK8hkXDSQqfIvg==
   dependencies:
     balanced-match "^1.0.0"
     bluebird "^3.1.1"
@@ -2835,18 +2835,18 @@ define-properties@^1.2.0:
     has-property-descriptors "^1.0.0"
     object-keys "^1.1.1"
 
-del-cli@5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/del-cli/-/del-cli-5.0.0.tgz#fa79fd57e888ecaaf8a468d87e8a175142a24aa9"
-  integrity sha512-rENFhUaYcjoMODwFhhlON+ogN7DoG+4+GFN+bsA1XeDt4w2OKQnQadFP1thHSAlK9FAtl88qgP66wOV+eFZZiQ==
+del-cli@5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/del-cli/-/del-cli-5.1.0.tgz#740eca1c7a9eb13043e68d8a361cf0ff9a18d5c8"
+  integrity sha512-xwMeh2acluWeccsfzE7VLsG3yTr7nWikbfw+xhMnpRrF15pGSkw+3/vJZWlGoE4I86UiLRNHicmKt4tkIX9Jtg==
   dependencies:
-    del "^7.0.0"
+    del "^7.1.0"
     meow "^10.1.3"
 
-del@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/del/-/del-7.0.0.tgz#79db048bec96f83f344b46c1a66e35d9c09fe8ac"
-  integrity sha512-tQbV/4u5WVB8HMJr08pgw0b6nG4RGt/tj+7Numvq+zqcvUFeMaIWWOUFltiU+6go8BSO2/ogsB4EasDaj0y68Q==
+del@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/del/-/del-7.1.0.tgz#0de0044d556b649ff05387f1fa7c885e155fd1b6"
+  integrity sha512-v2KyNk7efxhlyHpjEvfyxaAihKKK0nWCuf6ZtqZcFFpQRG0bJ12Qsr0RpvsICMjAAZ8DOVCxrlqpxISlMHC4Kg==
   dependencies:
     globby "^13.1.2"
     graceful-fs "^4.2.10"
@@ -5911,9 +5911,9 @@ node-releases@^2.0.6:
   integrity sha512-dFSmB8fFHEH/s81Xi+Y/15DQY6VHW81nXRj86EMSL3lmuTmK1e+aT4wrFCkTbm+gSwkw4KpX+rT/pMM2c1mF+A==
 
 nodemailer@^6.5.0:
-  version "6.9.4"
-  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.9.4.tgz#93bd4a60eb0be6fa088a0483340551ebabfd2abf"
-  integrity sha512-CXjQvrQZV4+6X5wP6ZIgdehJamI63MFoYFGGPtHudWym9qaEHDNdPzaj5bfMCvxG1vhAileSWW90q7nL0N36mA==
+  version "6.9.5"
+  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.9.5.tgz#eaeae949c62ec84ef1e9128df89fc146a1017aca"
+  integrity sha512-/dmdWo62XjumuLc5+AYQZeiRj+PRR8y8qKtFCOyuOl1k/hckZd8durUUHs/ucKx6/8kN+wFxqKJlQ/LK/qR5FA==
 
 noms@0.0.0:
   version "0.0.0"
@@ -6321,9 +6321,9 @@ pg-types@^4.0.1:
     postgres-range "^1.1.1"
 
 pg@^8.0.3, pg@^8.7.3:
-  version "8.11.2"
-  resolved "https://registry.yarnpkg.com/pg/-/pg-8.11.2.tgz#1a23f6de7bfb65ba56e4dd15df96668d319900c4"
-  integrity sha512-l4rmVeV8qTIrrPrIR3kZQqBgSN93331s9i6wiUiLOSk0Q7PmUxZD/m1rQI622l3NfqBby9Ar5PABfS/SulfieQ==
+  version "8.11.3"
+  resolved "https://registry.yarnpkg.com/pg/-/pg-8.11.3.tgz#d7db6e3fe268fcedd65b8e4599cda0b8b4bf76cb"
+  integrity sha512-+9iuvG8QfaaUrrph+kpF24cXkH1YOOUeArRNYIxq1viYHZagBxrTno7cecY1Fa44tJeZvaoG+Djpkc3JwehN5g==
   dependencies:
     buffer-writer "2.0.0"
     packet-reader "1.0.0"

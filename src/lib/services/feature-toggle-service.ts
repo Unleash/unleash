@@ -1898,7 +1898,10 @@ class FeatureToggleService {
             featureName,
             environment,
         );
-        const { newDocument } = await applyPatch(oldVariants, newVariants);
+        const { newDocument } = await applyPatch(
+            deepClone(oldVariants),
+            newVariants,
+        );
         return this.crProtectedSaveVariantsOnEnv(
             project,
             featureName,

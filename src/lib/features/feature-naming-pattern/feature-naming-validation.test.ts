@@ -60,6 +60,24 @@ describe('validate incoming feature naming data', () => {
             ).toMatchObject({ state: 'invalid' });
         }
     });
+
+    test('feature naming data with a non-empty example but an empty pattern is invalid', () => {
+        expect(
+            checkFeatureNamingData({
+                pattern: '',
+                example: 'example',
+            }),
+        ).toMatchObject({ state: 'invalid' });
+    });
+
+    test('feature naming data with a non-empty description but an empty pattern is invalid', () => {
+        expect(
+            checkFeatureNamingData({
+                pattern: '',
+                description: 'description',
+            }),
+        ).toMatchObject({ state: 'invalid' });
+    });
 });
 
 describe('validate feature flag names against a pattern', () => {

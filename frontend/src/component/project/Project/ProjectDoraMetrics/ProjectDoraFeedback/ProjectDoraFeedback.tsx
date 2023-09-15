@@ -14,6 +14,18 @@ const StyledOuterContainer = styled(Box)(({ theme }) => ({
 
 const StyledBtnContainer = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(3),
+    [theme.breakpoints.down('md')]: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+}));
+
+const StyledBtn = styled(Button)(({ theme }) => ({
+    marginRight: theme.spacing(1),
+    [theme.breakpoints.down('md')]: {
+        marginRight: 0,
+        marginBottom: theme.spacing(1),
+    },
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -26,6 +38,10 @@ const StyledFlexBox = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     marginTop: theme.spacing(1),
     marginRight: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
 }));
 
 const StyledIconWrapper = styled(Box)(({ theme }) => ({
@@ -73,7 +89,7 @@ export const ProjectDoraFeedback = () => {
         }
     };
 
-    const recipientEmail = 'recipient@example.com';
+    const recipientEmail = 'ux@getunleash.io';
     const emailSubject = "I'd like to get involved";
     const emailBody = `Hello Unleash,\n\nI just saw the new metrics page you are experimenting with in Unleash. I'd like to be involved in user tests and give my feedback on this feature.\n\nRegards,\n`;
 
@@ -95,6 +111,22 @@ export const ProjectDoraFeedback = () => {
                 production.
             </Typography>
 
+            <br />
+
+            <Typography>
+                DORA is a method for measuring the performance of your DevOps
+                teams. It measures four different metrics. You can read Google's
+                blog post about{' '}
+                <a
+                    href="https://cloud.google.com/blog/products/devops-sre/using-the-four-keys-to-measure-your-devops-performance"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    DORA metrics
+                </a>{' '}
+                for more information.
+            </Typography>
+
             <ConditionallyRender
                 condition={!metrics.sent}
                 show={
@@ -102,16 +134,13 @@ export const ProjectDoraFeedback = () => {
                         {' '}
                         <Typography>Is this useful to you?</Typography>
                         <StyledBtnContainer>
-                            <Button
-                                sx={theme => ({
-                                    marginRight: theme.spacing(1),
-                                })}
+                            <StyledBtn
                                 variant="contained"
                                 color="primary"
                                 onClick={() => onBtnClick('useful')}
                             >
                                 Yes, I like the direction
-                            </Button>
+                            </StyledBtn>
                             <Button
                                 variant="outlined"
                                 color="primary"

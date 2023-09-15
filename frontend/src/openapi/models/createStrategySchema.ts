@@ -11,8 +11,14 @@ import type { CreateStrategySchemaParametersItem } from './createStrategySchemaP
 export interface CreateStrategySchema {
     /** The name of the strategy type. Must be unique. */
     name: string;
+    /** The title of the strategy */
+    title?: string;
     /** A description of the strategy type. */
     description?: string;
+    /** Whether the strategy type is editable or not. Defaults to `true`. */
+    editable?: boolean;
+    /** Whether the strategy type is deprecated or not. Defaults to `false`. */
+    deprecated?: boolean;
     /** The parameter list lets you pass arguments to your custom activation strategy. These will be made available to your custom strategy implementation. */
     parameters: CreateStrategySchemaParametersItem[];
 }

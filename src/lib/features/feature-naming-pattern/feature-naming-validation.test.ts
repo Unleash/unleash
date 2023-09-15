@@ -60,6 +60,50 @@ describe('validate incoming feature naming data', () => {
             ).toMatchObject({ state: 'invalid' });
         }
     });
+
+    test.each([' ', '\\t', '\\n'])(
+        'patterns with illegal characters (%s) are invalid',
+        (string) => {
+            const pattern = `-${string}[0-9]+`;
+
+            expect(
+                checkFeatureNamingData({
+                    pattern,
+                }),
+            ).toMatchObject({ state: 'invalid' });
+        },
+    );
+
+    test('feature naming data with a non-empty example but an empty pattern is invalid', () => {
+        expect(
+            checkFeatureNamingData({
+                pattern: '',
+                example: 'example',
+            }),
+        ).toMatchObject({ state: 'invalid' });
+    });
+
+    test('feature naming data with a non-empty description but an empty pattern is invalid', () => {
+        expect(
+            checkFeatureNamingData({
+                pattern: '',
+                description: 'description',
+            }),
+        ).toMatchObject({ state: 'invalid' });
+    });
+
+    test('if the pattern contains disallowed characters, a match is not attempted against the example', () => {
+        const result = checkFeatureNamingData({
+            pattern: 'a. [0-9]+',
+            example: 'obviously-not-a-match',
+        });
+
+        if (result.state === 'valid') {
+            fail('Expected invalid result');
+        }
+
+        expect(result.reasons.length).toBe(1);
+    });
 });
 
 describe('validate feature flag names against a pattern', () => {

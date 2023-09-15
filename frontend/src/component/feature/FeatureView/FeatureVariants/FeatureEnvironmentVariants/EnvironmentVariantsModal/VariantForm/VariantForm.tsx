@@ -199,7 +199,10 @@ export const VariantForm = ({
     const variantTypeNumber = useUiFlag('variantTypeNumber');
 
     useEffect(() => {
-        if (variantTypeNumber) {
+        if (
+            variantTypeNumber &&
+            !payloadOptions.some(option => option.key === 'number')
+        ) {
             payloadOptions.push({ key: 'number', label: 'number' });
         }
     }, [variantTypeNumber]);

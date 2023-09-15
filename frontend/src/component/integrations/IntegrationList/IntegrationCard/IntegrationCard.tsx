@@ -36,6 +36,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
         backgroundColor: theme.palette.action.hover,
     },
 }));
+
 const StyledAnchor = styled('a')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',

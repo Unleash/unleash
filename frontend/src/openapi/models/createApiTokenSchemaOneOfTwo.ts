@@ -4,7 +4,11 @@
  * See `gen:api` script in package.json
  */
 
-export type CreateApiTokenSchemaOneOfFourAllOfTwo = {
+export type CreateApiTokenSchemaOneOfTwo = {
+    /** The time when this token should expire. */
+    expiresAt?: string;
+    /** An admin token. Must be the string "admin" (not case sensitive). */
+    type: string;
     /**
      * The name of the token. This property is deprecated. Use `tokenName` instead.
      * @deprecated

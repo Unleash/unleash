@@ -12,7 +12,6 @@ import Addon from './addon';
 
 import slackAppDefinition from './slack-app-definition';
 import { IAddonConfig } from '../types/model';
-const SCHEDULE_MESSAGE_DELAY_IN_SECONDS = 10;
 import {
     FeatureEventFormatter,
     FeatureEventFormatterMd,
@@ -52,9 +51,11 @@ export default class SlackAppAddon extends Addon {
                 this.logger.warn('No access token provided.');
                 return;
             }
-            let postToDefault =
+
+            const postToDefault =
                 alwaysPostToDefault === 'true' || alwaysPostToDefault === 'yes';
             this.logger.debug(`Post to default was set to ${postToDefault}`);
+
             const taggedChannels = this.findTaggedChannels(event);
             let eventChannels: string[];
             if (postToDefault) {
@@ -89,9 +90,7 @@ export default class SlackAppAddon extends Addon {
             const text = this.msgFormatter.format(event);
             const url = this.msgFormatter.featureLink(event);
             const requests = eventChannels.map((name) => {
-                const now = Math.floor(new Date().getTime() / 1000);
-                const postAt = now + SCHEDULE_MESSAGE_DELAY_IN_SECONDS;
-                return this.slackClient!.chat.scheduleMessage({
+                return this.slackClient!.chat.postMessage({
                     channel: name,
                     text,
                     blocks: [
@@ -118,7 +117,6 @@ export default class SlackAppAddon extends Addon {
                             ],
                         },
                     ],
-                    post_at: postAt,
                 });
             });
 

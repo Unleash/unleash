@@ -114,6 +114,7 @@ export default class AddonService {
                     .filter((addon) => addon.events.includes(eventName))
                     .filter(
                         (addon) =>
+                            !event.project ||
                             !addon.projects ||
                             addon.projects.length == 0 ||
                             addon.projects[0] === WILDCARD_OPTION ||

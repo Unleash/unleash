@@ -3,14 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateFeatureSchemaOneOfOnefourAction } from './changeRequestCreateFeatureSchemaOneOfOnefourAction';
+import type { ChangeRequestCreateFeatureSchemaOneOfOnesixAction } from './changeRequestCreateFeatureSchemaOneOfOnesixAction';
 import type { SetStrategySortOrderSchema } from './setStrategySortOrderSchema';
 
 /**
  * Reorder strategies for this feature
  */
-export type ChangeRequestCreateFeatureSchemaOneOfOnefour = {
+export type ChangeRequestCreateFeatureSchemaOneOfOnesix = {
     /** The name of this action. */
-    action: ChangeRequestCreateFeatureSchemaOneOfOnefourAction;
+    action: ChangeRequestCreateFeatureSchemaOneOfOnesixAction;
     payload: SetStrategySortOrderSchema;
 };

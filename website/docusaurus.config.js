@@ -328,24 +328,24 @@ module.exports = {
                         to: '/reference/deploy/securing-unleash-v3',
                     },
                     {
-                        from: '/addons',
-                        to: '/reference/addons',
+                        from: ['/addons', '/reference/addons'],
+                        to: '/reference/integrations',
                     },
                     {
-                        from: '/addons/datadog',
-                        to: '/reference/addons/datadog',
+                        from: ['/addons/datadog', '/reference/addons/datadog'],
+                        to: '/reference/integrations/datadog',
                     },
                     {
-                        from: '/addons/slack',
-                        to: '/reference/addons/slack',
+                        from: ['/addons/slack', '/reference/addons/slack'],
+                        to: '/reference/integrations/slack',
                     },
                     {
-                        from: '/addons/teams',
-                        to: '/reference/addons/teams',
+                        from: ['/addons/teams', '/reference/addons/teams'],
+                        to: '/reference/integrations/teams',
                     },
                     {
-                        from: '/addons/webhook',
-                        to: '/reference/addons/webhook',
+                        from: ['/addons/webhook', '/reference/addons/webhook'],
+                        to: '/reference/integrations/webhook',
                     },
                     {
                         from: '/guides/feature_updates_to_slack',

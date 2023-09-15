@@ -59,6 +59,7 @@ export * from './environment-schema';
 export * from './feature-tag-schema';
 export * from './legal-value-schema';
 export * from './sdk-context-schema';
+export * from './sdk-flat-context-schema';
 export * from './update-user-schema';
 export * from './applications-schema';
 export * from './environments-schema';

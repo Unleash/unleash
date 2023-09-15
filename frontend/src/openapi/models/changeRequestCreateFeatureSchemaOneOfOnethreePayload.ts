@@ -5,6 +5,6 @@
  */
 import type { VariantSchema } from './variantSchema';
 
-export type ChangeRequestCreateFeatureSchemaOneOfOneonePayload = {
+export type ChangeRequestCreateFeatureSchemaOneOfOnethreePayload = {
     variants: VariantSchema[];
 };

@@ -51,6 +51,7 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                                 isEnabled={enabled}
                                 description={description || ''}
                                 link={`/integrations/edit/${id}`}
+                                configureActionText="Configure"
                             />
                         );
                     })}

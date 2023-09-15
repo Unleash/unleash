@@ -44,6 +44,7 @@ process.nextTick(async () => {
                         doraMetrics: true,
                         variantTypeNumber: true,
                         privateProjects: true,
+                        accessOverview: true,
                     },
                 },
                 authentication: {

@@ -46,15 +46,6 @@ exports[`upsertSegmentSchema 3`] = `
       },
       "schemaPath": "#/required",
     },
-    {
-      "instancePath": "",
-      "keyword": "required",
-      "message": "must have required property 'constraints'",
-      "params": {
-        "missingProperty": "constraints",
-      },
-      "schemaPath": "#/required",
-    },
   ],
   "schema": "#/components/schemas/upsertSegmentSchema",
 }

@@ -31,15 +31,6 @@ exports[`updateEnvironmentSchema 3`] = `
       },
       "schemaPath": "#/required",
     },
-    {
-      "instancePath": "",
-      "keyword": "required",
-      "message": "must have required property 'createdAt'",
-      "params": {
-        "missingProperty": "createdAt",
-      },
-      "schemaPath": "#/required",
-    },
   ],
   "schema": "#/components/schemas/adminSegmentSchema",
 }

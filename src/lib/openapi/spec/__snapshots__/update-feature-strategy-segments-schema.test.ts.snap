@@ -12,33 +12,6 @@ exports[`updateFeatureStrategySegmentsSchema schema 1`] = `
       },
       "schemaPath": "#/required",
     },
-    {
-      "instancePath": "",
-      "keyword": "required",
-      "message": "must have required property 'strategyId'",
-      "params": {
-        "missingProperty": "strategyId",
-      },
-      "schemaPath": "#/required",
-    },
-    {
-      "instancePath": "",
-      "keyword": "required",
-      "message": "must have required property 'environmentId'",
-      "params": {
-        "missingProperty": "environmentId",
-      },
-      "schemaPath": "#/required",
-    },
-    {
-      "instancePath": "",
-      "keyword": "required",
-      "message": "must have required property 'segmentIds'",
-      "params": {
-        "missingProperty": "segmentIds",
-      },
-      "schemaPath": "#/required",
-    },
   ],
   "schema": "#/components/schemas/updateFeatureStrategySegmentsSchema",
 }
@@ -53,15 +26,6 @@ exports[`updateFeatureStrategySegmentsSchema schema 2`] = `
       "message": "must have required property 'projectId'",
       "params": {
         "missingProperty": "projectId",
-      },
-      "schemaPath": "#/required",
-    },
-    {
-      "instancePath": "",
-      "keyword": "required",
-      "message": "must have required property 'environmentId'",
-      "params": {
-        "missingProperty": "environmentId",
       },
       "schemaPath": "#/required",
     },

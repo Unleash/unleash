@@ -63,15 +63,6 @@ exports[`segmentStrategiesSchema 4`] = `
       },
       "schemaPath": "#/properties/strategies/items/required",
     },
-    {
-      "instancePath": "/strategies/0",
-      "keyword": "required",
-      "message": "must have required property 'projectId'",
-      "params": {
-        "missingProperty": "projectId",
-      },
-      "schemaPath": "#/properties/strategies/items/required",
-    },
   ],
   "schema": "#/components/schemas/segmentStrategiesSchema",
 }

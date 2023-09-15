@@ -184,7 +184,7 @@ export const addonTypeSchema = {
             description:
                 'This should be used to inform the user that this addon type is deprecated and should not be used. Deprecated addons will show a badge with this information on the UI.',
             example:
-                'This addon is deprecated. Please try the new addon instead.',
+                'This integration is deprecated. Please try the new integration instead.',
         },
     },
     components: {

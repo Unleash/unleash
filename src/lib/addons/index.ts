@@ -22,7 +22,7 @@ export const getAddons: (args: {
 
     if (slackAppAddonEnabled) {
         slackAddon.definition.deprecated =
-            'This addon is deprecated. Please try the new Slack App integration instead.';
+            'This integration is deprecated. Please try the new Slack App integration instead.';
     }
 
     const addons: Addon[] = [

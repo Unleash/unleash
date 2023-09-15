@@ -14,11 +14,18 @@ function findParam(
 
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 const projectPermissionMiddleware = (
-    { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+    {
+        getLogger,
+        flagResolver,
+    }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
     { projectService, accessService }: IUnleashServices,
 ): any => {
     const logger = getLogger('/middleware/project-middleware.ts');
     logger.debug('Enabling Project permissions middleware');
+
+    if (!flagResolver.isEnabled('privateProjects')) {
+        return (req, res, next) => next();
+    }
 
     return async (req, res, next) => {
         req.checkProjectPermissions = async () => {

@@ -56,7 +56,7 @@ const checkPermission =
     };
 
 const checkProjectPermissions = () => async (req, res, next) => {
-    if (req.checkProjectPermissions && (await req.checkProjectPermissions())) {
+    if (!req.checkProjectPermissions || (await req.checkProjectPermissions())) {
         return next();
     }
 

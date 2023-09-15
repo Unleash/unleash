@@ -1028,7 +1028,7 @@ class FeatureToggleService {
             archived,
         });
 
-        if (userId) {
+        if (this.flagResolver.isEnabled('privateProjects') && userId) {
             const projects =
                 await this.projectPermissionChecker.getUserAccessibleProjects(
                     userId,

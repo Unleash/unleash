@@ -41,6 +41,10 @@ import {
 } from '../segment/createSegmentService';
 import StrategyStore from '../../db/strategy-store';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
+import {
+    createFakeprivateProjectChecker,
+    createPrivateProjectChecker,
+} from '../private-project/createPrivateProjectChecker';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -98,6 +102,9 @@ export const createFeatureToggleService = (
         db,
         config,
     );
+
+    const privateProjectChecker = createPrivateProjectChecker(db, config);
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -114,6 +121,7 @@ export const createFeatureToggleService = (
         segmentService,
         accessService,
         changeRequestAccessReadModel,
+        privateProjectChecker,
     );
     return featureToggleService;
 };
@@ -147,6 +155,7 @@ export const createFakeFeatureToggleService = (
     );
     const segmentService = createFakeSegmentService(config);
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
+    const fakeprivateProjectChecker = createFakeprivateProjectChecker();
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -163,6 +172,7 @@ export const createFakeFeatureToggleService = (
         segmentService,
         accessService,
         changeRequestAccessReadModel,
+        fakeprivateProjectChecker,
     );
     return featureToggleService;
 };

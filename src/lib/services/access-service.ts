@@ -404,10 +404,6 @@ export class AccessService {
                 `ProjectId cannot be empty for permission=${permission}`,
             );
         }
-        // return this.store.addPermissionsToRole(roleId, [
-        //     { name: permission, environment },
-        // ]);
-        // console.log('addPermissionToRole', roleId, permission, environment);
         return this.store.addPermissionsToRole(
             roleId,
             [{ name: permission }],

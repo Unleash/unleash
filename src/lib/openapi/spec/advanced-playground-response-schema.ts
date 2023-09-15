@@ -10,6 +10,7 @@ import { playgroundStrategySchema } from './playground-strategy-schema';
 import { advancedPlaygroundRequestSchema } from './advanced-playground-request-schema';
 import { advancedPlaygroundFeatureSchema } from './advanced-playground-feature-schema';
 import { advancedPlaygroundEnvironmentFeatureSchema } from './advanced-playground-environment-feature-schema';
+import { sdkFlatContextSchema } from './sdk-flat-context-schema';
 
 export const advancedPlaygroundResponseSchema = {
     $id: '#/components/schemas/advancedPlaygroundResponseSchema',
@@ -41,6 +42,7 @@ export const advancedPlaygroundResponseSchema = {
             playgroundSegmentSchema,
             playgroundStrategySchema,
             sdkContextSchema,
+            sdkFlatContextSchema,
             variantSchema,
             overrideSchema,
         },

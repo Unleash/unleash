@@ -1,8 +1,8 @@
 import { Db } from '../../db/db';
 import { Logger, LogProvider } from '../../logger';
-import { IProjectPermissionStore } from './projectPermissionStoreType';
+import { IPrivateProjectStore } from './privateProjectStoreType';
 
-class ProjectPermissionStore implements IProjectPermissionStore {
+class PrivateProjectStore implements IPrivateProjectStore {
     private db: Db;
 
     private logger: Logger;
@@ -39,4 +39,4 @@ class ProjectPermissionStore implements IProjectPermissionStore {
     }
 }
 
-export default ProjectPermissionStore;
+export default PrivateProjectStore;

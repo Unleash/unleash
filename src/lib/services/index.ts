@@ -61,9 +61,9 @@ import { createFeatureToggleService } from '../features';
 import EventAnnouncerService from './event-announcer-service';
 import { createGroupService } from '../features/group/createGroupService';
 import {
-    createFakeProjectPermissionChecker,
-    createProjectPermissionChecker,
-} from '../features/project-permissions/createProjectPermissionChecker';
+    createFakeprivateProjectChecker,
+    createPrivateProjectChecker,
+} from '../features/private-project/createPrivateProjectChecker';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -188,16 +188,16 @@ export const createServices = (
         changeRequestAccessReadModel,
         config,
     );
-    const projectPermissionChecker = db
-        ? createProjectPermissionChecker(db, config)
-        : createFakeProjectPermissionChecker();
+    const privateProjectChecker = db
+        ? createPrivateProjectChecker(db, config)
+        : createFakeprivateProjectChecker();
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,
         segmentService,
         accessService,
         changeRequestAccessReadModel,
-        projectPermissionChecker,
+        privateProjectChecker,
     );
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);

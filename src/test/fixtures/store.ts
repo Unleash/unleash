@@ -17,7 +17,7 @@ import FakeEnvironmentStore from './fake-environment-store';
 import FakeStrategiesStore from './fake-strategies-store';
 import {
     IImportTogglesStore,
-    IProjectPermissionStore,
+    IPrivateProjectStore,
     IUnleashStores,
 } from '../../lib/types';
 import FakeSessionStore from './fake-session-store';
@@ -82,7 +82,7 @@ const createStores: () => IUnleashStores = () => {
         favoriteProjectsStore: new FakeFavoriteProjectsStore(),
         projectStatsStore: new FakeProjectStatsStore(),
         importTogglesStore: {} as IImportTogglesStore,
-        projectPermissionStore: {} as IProjectPermissionStore,
+        privateProjectStore: {} as IPrivateProjectStore,
     };
 };
 

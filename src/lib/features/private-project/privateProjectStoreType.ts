@@ -1,3 +1,3 @@
-export interface IProjectPermissionChecker {
+export interface IPrivateProjectStore {
     getUserAccessibleProjects(userId: number): Promise<string[]>;
 }

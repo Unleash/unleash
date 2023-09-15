@@ -25,7 +25,7 @@ import { GroupService } from '../../../lib/services/group-service';
 import { AccessService } from '../../../lib/services/access-service';
 import { ISegmentService } from '../../../lib/segments/segment-service-interface';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
-import { createProjectPermissionChecker } from '../../../lib/features/project-permissions/createProjectPermissionChecker';
+import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -48,7 +48,7 @@ beforeAll(async () => {
         changeRequestAccessReadModel,
         config,
     );
-    const projectPermissionChecker = createProjectPermissionChecker(
+    const privateProjectChecker = createPrivateProjectChecker(
         db.rawDatabase,
         config,
     );
@@ -58,7 +58,7 @@ beforeAll(async () => {
         segmentService,
         accessService,
         changeRequestAccessReadModel,
-        projectPermissionChecker,
+        privateProjectChecker,
     );
     service = new PlaygroundService(config, {
         featureToggleServiceV2: featureToggleService,

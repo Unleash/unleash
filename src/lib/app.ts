@@ -29,7 +29,7 @@ import maintenanceMiddleware from './middleware/maintenance-middleware';
 import { unless } from './middleware/unless-middleware';
 import { catchAllErrorHandler } from './middleware/catch-all-error-handler';
 import NotFoundError from './error/notfound-error';
-import projectPermissionMiddleware from './features/project-permissions/projectPermissionMiddleware';
+import privateProjectMiddleware from './features/private-project/privateProjectMiddleware';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -158,7 +158,7 @@ export default async function getApp(
         }
     }
 
-    app.use(baseUriPath, projectPermissionMiddleware(config, services));
+    app.use(baseUriPath, privateProjectMiddleware(config, services));
 
     app.use(
         baseUriPath,

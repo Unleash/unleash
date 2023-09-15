@@ -55,8 +55,11 @@ const checkPermission =
         return res.status(403).json(new PermissionError(permissions)).end();
     };
 
-const checkProjectPermissions = () => async (req, res, next) => {
-    if (!req.checkProjectPermissions || (await req.checkProjectPermissions())) {
+const checkPrivateProjectPermissions = () => async (req, res, next) => {
+    if (
+        !req.checkPrivateProjectPermissions ||
+        (await req.checkPrivateProjectPermissions())
+    ) {
         return next();
     }
 
@@ -108,7 +111,7 @@ export default class Controller {
         this.app[options.method](
             options.path,
             checkPermission(options.permission),
-            checkProjectPermissions(),
+            checkPrivateProjectPermissions(),
             this.useContentTypeMiddleware(options),
             this.useRouteErrorHandler(options.handler.bind(this)),
         );
@@ -195,7 +198,7 @@ export default class Controller {
         this.app.post(
             path,
             checkPermission(permission),
-            checkProjectPermissions(),
+            checkPrivateProjectPermissions(),
             filehandler.bind(this),
             this.useRouteErrorHandler(handler.bind(this)),
         );

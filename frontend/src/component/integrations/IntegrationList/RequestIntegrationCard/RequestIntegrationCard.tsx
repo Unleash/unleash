@@ -34,7 +34,7 @@ export const RequestIntegrationCard: VFC = () => (
         rel="noopener noreferrer"
     >
         <Typography variant="body2" color="text.secondary" data-loading>
-            Are we missing any integration that you need?
+            Are we missing an integration that you need?
         </Typography>
         <Typography variant="body2" color="text.secondary" data-loading>
             Go ahead and request it!

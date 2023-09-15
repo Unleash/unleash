@@ -100,11 +100,11 @@ If you're currently using strategy constraints together with the â€œenvironmentâ
 
 ![A strategy constraint using the environment field of the unleash context.](/img/environments_strategy_constraints.png 'You will not use strategy constraints for environments any more.')
 
-### Addons
+### Integrations
 
 We have made some slight changes to events related to feature toggles: there's one deprecation and several new event types. Most of the new events contain _project_ and _environment_ data.
 
-To avoid missing important updates, you will also need to update your addon configuration to subscribe to the new events.
+To avoid missing important updates, you will also need to update your integration configuration to subscribe to the new events.
 
 **Deprecated events:**
 

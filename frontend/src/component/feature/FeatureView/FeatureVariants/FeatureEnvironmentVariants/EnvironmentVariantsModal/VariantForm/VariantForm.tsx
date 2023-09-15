@@ -199,7 +199,10 @@ export const VariantForm = ({
     const variantTypeNumber = useUiFlag('variantTypeNumber');
 
     useEffect(() => {
-        if (variantTypeNumber) {
+        if (
+            variantTypeNumber &&
+            !payloadOptions.some(option => option.key === 'number')
+        ) {
             payloadOptions.push({ key: 'number', label: 'number' });
         }
     }, [variantTypeNumber]);
@@ -262,7 +265,10 @@ export const VariantForm = ({
 
     const validatePayload = (payload: IPayload) => {
         if (!isValidPayload(payload)) {
-            setError(ErrorField.PAYLOAD, 'Invalid JSON.');
+            setError(
+                ErrorField.PAYLOAD,
+                payload.type === 'json' ? 'Invalid json' : 'Invalid number'
+            );
         }
     };
 
@@ -293,7 +299,7 @@ export const VariantForm = ({
                 JSON.parse(payload.value);
             }
             if (variantTypeNumber && payload.type === 'number') {
-                Number(payload.value);
+                return !Number.isNaN(Number(payload.value));
             }
             return true;
         } catch (e: unknown) {

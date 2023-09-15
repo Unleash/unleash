@@ -7,7 +7,10 @@ exports[`should create default config 1`] = `
     "connectSrc": [],
     "defaultSrc": [],
     "fontSrc": [],
+    "frameSrc": [],
     "imgSrc": [],
+    "mediaSrc": [],
+    "objectSrc": [],
     "scriptSrc": [],
     "styleSrc": [],
   },
@@ -68,6 +71,7 @@ exports[`should create default config 1`] = `
       "isEnabled": [Function],
     },
     "flags": {
+      "accessOverview": false,
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
       "customRootRolesKillSwitch": false,
@@ -95,6 +99,7 @@ exports[`should create default config 1`] = `
       "migrationLock": true,
       "multipleRoles": false,
       "personalAccessTokensKillSwitch": false,
+      "privateProjects": false,
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
       "slackAppAddon": false,
@@ -104,6 +109,7 @@ exports[`should create default config 1`] = `
   },
   "flagResolver": FlagResolver {
     "experiments": {
+      "accessOverview": false,
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
       "customRootRolesKillSwitch": false,
@@ -131,6 +137,7 @@ exports[`should create default config 1`] = `
       "migrationLock": true,
       "multipleRoles": false,
       "personalAccessTokensKillSwitch": false,
+      "privateProjects": false,
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
       "slackAppAddon": false,

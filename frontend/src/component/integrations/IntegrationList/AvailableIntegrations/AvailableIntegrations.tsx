@@ -1,7 +1,6 @@
 import { type VFC } from 'react';
 import { Box, Typography, styled } from '@mui/material';
 import type { AddonTypeSchema } from 'openapi';
-import useLoading from 'hooks/useLoading';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
@@ -18,10 +17,22 @@ interface IAvailableIntegrationsProps {
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(12),
+    gap: theme.spacing(8),
 }));
 
 const StyledSection = styled('section')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
+
+const StyledSdksSection = styled('section')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(4),
+}));
+
+const StyledSdksGroup = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
@@ -48,34 +59,39 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
     const serverSdks = OFFICIAL_SDKS.filter(sdk => sdk.type === 'server');
     const clientSdks = OFFICIAL_SDKS.filter(sdk => sdk.type === 'client');
 
-    const ref = useLoading(loading || false);
-
     return (
         <PageContent
             header={<PageHeader title="Integrations" secondary />}
             isLoading={loading}
-            ref={ref}
         >
             <StyledContainer>
                 <StyledSection>
                     <StyledCardsGrid>
-                        {providers?.map(
-                            ({
-                                name,
-                                displayName,
-                                description,
-                                deprecated,
-                            }) => (
-                                <IntegrationCard
-                                    key={name}
-                                    icon={name}
-                                    title={displayName || name}
-                                    description={description}
-                                    link={`/integrations/create/${name}`}
-                                    deprecated={deprecated}
-                                />
+                        {providers
+                            ?.sort(
+                                (a, b) =>
+                                    a.displayName?.localeCompare(
+                                        b.displayName
+                                    ) || 0
                             )
-                        )}
+                            .map(
+                                ({
+                                    name,
+                                    displayName,
+                                    description,
+                                    deprecated,
+                                }) => (
+                                    <IntegrationCard
+                                        key={name}
+                                        icon={name}
+                                        title={displayName || name}
+                                        description={description}
+                                        link={`/integrations/create/${name}`}
+                                        deprecated={deprecated}
+                                    />
+                                )
+                            )}
+                        {/* TODO: sort providers from backend with custom providers */}
                         {customProviders?.map(
                             ({ name, displayName, description }) => (
                                 <IntegrationCard
@@ -84,7 +100,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                     title={displayName || name}
                                     description={description}
                                     link={`/integrations/view/${name}`}
-                                    configureActionText={'View integration'}
+                                    configureActionText="Learn more"
                                 />
                             )
                         )}
@@ -97,9 +113,8 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             Performance and security
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            Connect Unleash to private, scalable and distributed
-                            relays. Additional layer for handling massive number
-                            of requests.
+                            Connect Unleash to private, scalable, and
+                            distributed relays.
                         </Typography>
                     </div>
                     <StyledCardsGrid>
@@ -139,99 +154,116 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             </a>
                         </Typography>
                     </div>
-                    <Box sx={theme => ({ marginTop: theme.spacing(2) })}>
-                        <Typography component="h4" variant="h4">
-                            Server-side SDKs
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            Server-side clients run on your server and
-                            communicate directly with your Unleash instance.
-                        </Typography>
-                    </Box>
-                    <StyledCardsGrid small>
-                        {serverSdks?.map(
-                            ({
-                                name,
-                                displayName,
-                                description,
-                                documentationUrl,
-                            }) => (
-                                <IntegrationCard
-                                    key={name}
-                                    icon={name}
-                                    title={displayName || name}
-                                    description={description}
-                                    link={documentationUrl}
-                                    configureActionText={'View documentation'}
-                                    isExternal
-                                />
-                            )
-                        )}
-                    </StyledCardsGrid>
-                    <Box sx={theme => ({ marginTop: theme.spacing(2) })}>
-                        <Typography component="h4" variant="h4">
-                            Client-side SDKs
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            Client-side SDKs can connect to the{' '}
-                            <a
-                                href="https://docs.getunleash.io/reference/unleash-edge"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                Unleash Edge
-                            </a>{' '}
-                            or to the{' '}
-                            <a
-                                href="https://docs.getunleash.io/reference/front-end-api"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                Unleash front-end API
-                            </a>
-                            , but not to the regular Unleash client API.
-                        </Typography>
-                    </Box>
-                    <StyledCardsGrid small>
-                        {clientSdks?.map(
-                            ({
-                                name,
-                                displayName,
-                                description,
-                                documentationUrl,
-                            }) => (
-                                <IntegrationCard
-                                    key={name}
-                                    icon={name}
-                                    title={displayName || name}
-                                    description={description}
-                                    link={documentationUrl}
-                                    configureActionText={'View documentation'}
-                                    isExternal
-                                />
-                            )
-                        )}
-                    </StyledCardsGrid>
-                </StyledSection>
-                <StyledSection>
-                    <StyledGrayContainer>
-                        <div>
-                            <Typography component="h3" variant="h4">
-                                Community SDKs
-                            </Typography>
-                            <Typography>
-                                <a
-                                    href="https://docs.getunleash.io/reference/sdks#community-sdks"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                    <StyledSdksSection>
+                        <StyledSdksGroup>
+                            <Box>
+                                <Typography component="h4" variant="h4">
+                                    Server-side SDKs
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
                                 >
-                                    Here's some of the fantastic work
-                                </a>{' '}
-                                our community has build to make Unleash work in
-                                even more contexts.
-                            </Typography>
-                        </div>
-                    </StyledGrayContainer>
+                                    Server-side clients run on your server and
+                                    communicate directly with your Unleash
+                                    instance.
+                                </Typography>
+                            </Box>
+                            <StyledCardsGrid small>
+                                {serverSdks?.map(
+                                    ({
+                                        name,
+                                        displayName,
+                                        description,
+                                        documentationUrl,
+                                    }) => (
+                                        <IntegrationCard
+                                            key={name}
+                                            icon={name}
+                                            title={displayName || name}
+                                            description={description}
+                                            link={documentationUrl}
+                                            configureActionText={
+                                                'View documentation'
+                                            }
+                                            isExternal
+                                        />
+                                    )
+                                )}
+                            </StyledCardsGrid>
+                        </StyledSdksGroup>
+                        <StyledSdksGroup>
+                            <Box>
+                                <Typography component="h4" variant="h4">
+                                    Client-side SDKs
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                >
+                                    Client-side SDKs can connect to the{' '}
+                                    <a
+                                        href="https://docs.getunleash.io/reference/unleash-edge"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Unleash Edge
+                                    </a>{' '}
+                                    or to the{' '}
+                                    <a
+                                        href="https://docs.getunleash.io/reference/front-end-api"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Unleash front-end API
+                                    </a>
+                                    , but not to the regular Unleash client API.
+                                </Typography>
+                            </Box>
+                            <StyledCardsGrid small>
+                                {clientSdks?.map(
+                                    ({
+                                        name,
+                                        displayName,
+                                        description,
+                                        documentationUrl,
+                                    }) => (
+                                        <IntegrationCard
+                                            key={name}
+                                            icon={name}
+                                            title={displayName || name}
+                                            description={description}
+                                            link={documentationUrl}
+                                            configureActionText={
+                                                'View documentation'
+                                            }
+                                            isExternal
+                                        />
+                                    )
+                                )}
+                            </StyledCardsGrid>
+                        </StyledSdksGroup>
+                        <StyledSdksGroup>
+                            <StyledGrayContainer>
+                                <div>
+                                    <Typography component="h4" variant="h3">
+                                        Community SDKs
+                                    </Typography>
+                                    <Typography>
+                                        <a
+                                            href="https://docs.getunleash.io/reference/sdks#community-sdks"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Here's some of the fantastic work
+                                        </a>{' '}
+                                        our community has build to make Unleash
+                                        work in even more contexts.
+                                    </Typography>
+                                </div>
+                            </StyledGrayContainer>
+                        </StyledSdksGroup>
+                    </StyledSdksSection>
                 </StyledSection>
             </StyledContainer>
         </PageContent>

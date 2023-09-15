@@ -73,3 +73,55 @@ export const isStringOrStringArray = (
 
     return false;
 };
+
+type InputContextProperties = {
+    appName?: string;
+    environment?: string;
+    userId?: string;
+    sessionId?: string;
+    remoteAddress?: string;
+    currentTime?: string;
+    properties?: { [key: string]: any };
+    [key: string]: any;
+};
+
+export type NormalizedContextProperties = Omit<
+    InputContextProperties,
+    'properties'
+> & {
+    properties?: { [key: string]: any };
+};
+
+export const normalizeCustomContextProperties = (
+    input: InputContextProperties
+): NormalizedContextProperties => {
+    const standardProps = new Set([
+        'appName',
+        'environment',
+        'userId',
+        'sessionId',
+        'remoteAddress',
+        'currentTime',
+        'properties',
+    ]);
+
+    const output: InputContextProperties = { ...input };
+    let hasCustomProperties = false;
+
+    for (const key in input) {
+        if (!standardProps.has(key)) {
+            if (!output.properties) {
+                output.properties = {};
+            }
+            output.properties[key] = input[key];
+            delete output[key];
+            hasCustomProperties = true;
+        }
+    }
+
+    if (!hasCustomProperties && !input.properties) {
+        delete output.properties;
+    }
+
+    return output;
+};

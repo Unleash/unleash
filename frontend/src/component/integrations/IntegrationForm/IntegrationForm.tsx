@@ -224,7 +224,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                 navigate(integrationsRework ? '/integrations' : '/addons');
                 setToastData({
                     type: 'success',
-                    title: 'Addon updated successfully',
+                    title: 'Integration updated successfully',
                 });
             } else {
                 await createAddon(formValues as Omit<AddonSchema, 'id'>);
@@ -232,7 +232,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                 setToastData({
                     type: 'success',
                     confetti: true,
-                    title: 'Addon created successfully',
+                    title: 'Integration created successfully',
                 });
             }
         } catch (error) {
@@ -248,6 +248,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
 
     const {
         name,
+        displayName,
         description,
         documentationUrl = 'https://unleash.github.io/docs/addons',
         installation,
@@ -258,13 +259,16 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         <FormTemplate
             title={
                 <>
-                    {submitText} {name ? capitalizeFirst(`${name} `) : ''}
+                    {submitText}{' '}
+                    {displayName || (name ? capitalizeFirst(name) : '')}{' '}
                     integration
                 </>
             }
             description={description || ''}
             documentationLink={documentationUrl}
-            documentationLinkLabel="Addon documentation"
+            documentationLinkLabel={`${
+                displayName || capitalizeFirst(`${name} `)
+            } documentation`}
             formatApiCode={formatApiCode}
             footer={
                 <StyledButtonContainer>
@@ -292,7 +296,9 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                         show={() => (
                             <StyledAlerts>
                                 {alerts?.map(({ type, text }) => (
-                                    <Alert severity={type}>{text}</Alert>
+                                    <Alert severity={type} key={text}>
+                                        {text}
+                                    </Alert>
                                 ))}
                             </StyledAlerts>
                         )}
@@ -363,7 +369,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 entityName="event"
                                 selectAllEnabled={false}
                                 error={errors.events}
-                                description="Select what events you want your integration to be notified about."
+                                description="Select which events you want your integration to be notified about."
                                 required
                             />
                         </div>
@@ -383,6 +389,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 onChange={setEnvironments}
                                 entityName="environment"
                                 selectAllEnabled={true}
+                                description="Global events that are not specific to an environment will still be received."
                             />
                         </div>
                     </StyledConfigurationSection>

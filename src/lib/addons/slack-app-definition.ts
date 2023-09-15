@@ -1,6 +1,5 @@
 import {
     FEATURE_CREATED,
-    FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
     FEATURE_STALE_ON,
@@ -39,7 +38,7 @@ const slackAppDefinition: IAddonDefinition = {
         url: 'https://unleash-slack-app.vercel.app/install',
         title: 'Slack App installation',
         helpText:
-            'After installing the Unleash Slack app in your Slack workspace, paste the access token into the appropriate field below in order to configure this addon.',
+            'After installing the Unleash Slack app in your Slack workspace, paste the access token into the appropriate field below in order to configure this integration.',
     },
     parameters: [
         {
@@ -70,7 +69,6 @@ const slackAppDefinition: IAddonDefinition = {
     ],
     events: [
         FEATURE_CREATED,
-        FEATURE_UPDATED,
         FEATURE_ARCHIVED,
         FEATURE_REVIVED,
         FEATURE_STALE_ON,

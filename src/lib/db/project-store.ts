@@ -104,7 +104,7 @@ class ProjectStore implements IProjectStore {
             `SELECT EXISTS(SELECT 1
              FROM project_settings
              LEFT JOIN features ON project_settings.project = features.project
-             WHERE project_settings.project = ?
+             WHERE project_settings.project = ? AND features.archived_at IS NULL
              GROUP BY project_settings.project
              HAVING project_settings.feature_limit <= COUNT(features.project)) AS present`,
             [id],

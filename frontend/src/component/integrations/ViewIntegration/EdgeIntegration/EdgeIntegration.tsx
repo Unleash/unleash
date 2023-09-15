@@ -35,6 +35,9 @@ const StyledDescriptionHeader = styled(Typography)(({ theme }) => ({
 
 const StyledLink = styled('a')({
     textDecoration: 'none',
+    '&:hover': {
+        textDecoration: 'underline',
+    },
 });
 
 const StyledFigure = styled('figure')(({ theme }) => ({

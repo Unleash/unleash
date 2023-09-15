@@ -46,8 +46,9 @@ export const IntegrationDelete: VFC<IIntegrationDeleteProps> = ({ id }) => {
         <>
             <StyledTitle>Delete integration</StyledTitle>
             <StyledHelpText>
-                Deleting an integration it will delete the entire configuration
-                and it will automatically disable the integration
+                Deleting an integration instance will delete all its
+                configuration. It will stop working immediately. Other instances
+                of the same integration are unaffected.
             </StyledHelpText>
             <StyledContainer>
                 <PermissionButton
@@ -69,7 +70,7 @@ export const IntegrationDelete: VFC<IIntegrationDeleteProps> = ({ id }) => {
                 onClose={() => setIsOpen(false)}
                 title="Confirm deletion"
             >
-                <div>Are you sure you want to delete this Addon?</div>
+                <div>Are you sure you want to delete this Integration?</div>
             </Dialogue>
         </>
     );

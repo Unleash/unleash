@@ -36,6 +36,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
         backgroundColor: theme.palette.action.hover,
     },
 }));
+
 const StyledAnchor = styled('a')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -67,6 +68,7 @@ const StyledAction = styled(Typography)(({ theme }) => ({
     alignItems: 'center',
     color: theme.palette.primary.main,
     fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.body2.fontSize,
     marginTop: 'auto',
     paddingTop: theme.spacing(1),
     gap: theme.spacing(0.5),
@@ -81,7 +83,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     title,
     description,
     isEnabled,
-    configureActionText = 'Configure',
+    configureActionText = 'Open',
     link,
     addon,
     deprecated,

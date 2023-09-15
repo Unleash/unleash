@@ -41,11 +41,14 @@ import {
     TagTypeService,
 } from '../../services';
 import { isValidField } from './import-context-validation';
-import { IImportTogglesStore } from './import-toggles-store-type';
+import {
+    IImportTogglesStore,
+    ProjectFeaturesLimit,
+} from './import-toggles-store-type';
 import { ImportPermissionsService, Mode } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
 import { findDuplicates } from '../../util/findDuplicates';
-import { FeatureNameCheckResult } from 'lib/services/feature-toggle-service';
+import { FeatureNameCheckResultWithFeaturePattern } from '../../services/feature-toggle-service';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -158,6 +161,7 @@ export default class ExportImportService {
             missingPermissions,
             duplicateFeatures,
             featureNameCheckResult,
+            featureLimitResult,
         ] = await Promise.all([
             this.getUnsupportedStrategies(dto),
             this.getUsedCustomStrategies(dto),
@@ -172,6 +176,7 @@ export default class ExportImportService {
             ),
             this.getDuplicateFeatures(dto),
             this.getInvalidFeatureNames(dto),
+            this.getFeatureLimit(dto),
         ]);
 
         const errors = ImportValidationMessages.compileErrors({
@@ -181,6 +186,7 @@ export default class ExportImportService {
             otherProjectFeatures,
             duplicateFeatures,
             featureNameCheckResult,
+            featureLimitResult,
         });
         const warnings = ImportValidationMessages.compileWarnings({
             archivedFeatures,
@@ -504,10 +510,20 @@ export default class ExportImportService {
     private async getInvalidFeatureNames({
         project,
         data,
-    }: ImportTogglesSchema): Promise<FeatureNameCheckResult> {
+    }: ImportTogglesSchema): Promise<FeatureNameCheckResultWithFeaturePattern> {
         return this.featureToggleService.checkFeatureFlagNamesAgainstProjectPattern(
             project,
             data.features.map((f) => f.name),
+        );
+    }
+
+    private async getFeatureLimit({
+        project,
+        data,
+    }: ImportTogglesSchema): Promise<ProjectFeaturesLimit> {
+        return this.importTogglesStore.getProjectFeaturesLimit(
+            [...new Set(data.features.map((f) => f.name))],
+            project,
         );
     }
 

@@ -187,7 +187,7 @@ export interface IFeatureOverview {
     environments: IEnvironmentOverview[];
 }
 
-export type ProjectMode = 'open' | 'protected';
+export type ProjectMode = 'open' | 'protected' | 'private';
 
 export interface IFeatureNaming {
     pattern: string | null;
@@ -402,6 +402,14 @@ export interface IImportData extends ImportCommon {
     data: any;
 }
 
+// Create project aligns with #/components/schemas/createProjectSchema
+// joi is providing default values when the optional inputs are not provided
+// const data = await projectSchema.validateAsync(newProject);
+export type CreateProject = Pick<IProject, 'id' | 'name'> & {
+    mode?: ProjectMode;
+    defaultStickiness?: string;
+};
+
 export interface IProject {
     id: string;
     name: string;
@@ -450,4 +458,16 @@ export interface ISegment {
 export interface IFeatureStrategySegment {
     featureStrategyId: string;
     segmentId: number;
+}
+
+export interface IUserAccessOverview {
+    userId: number;
+    createdAt?: Date;
+    userName?: string;
+    userEmail: number;
+    lastSeen?: Date;
+    accessibleProjects: string[];
+    groups: string[];
+    rootRole: string;
+    groupProjects: string[];
 }

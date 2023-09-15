@@ -92,8 +92,6 @@ export const StyledRaisedSection: FC<ComponentProps<typeof Paper>> = ({
             flexDirection: 'column',
             width: '100%',
             borderRadius: `${theme.shape.borderRadiusLarge}px`,
-            fontSize: theme.fontSizes.smallBody,
-            gap: theme.spacing(1.5),
         })}
         {...props}
     />

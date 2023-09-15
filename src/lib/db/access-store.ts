@@ -761,7 +761,7 @@ export class AccessStore implements IAccessStore {
 
     async getUserAccessOverview(): Promise<IUserAccessOverview[]> {
         const result = await this.db
-            .raw(`SELECT u.id, u.created_at, u.name, u.email, u.seen_at, up.p_array as projects, gr.p_array as groups, r.name as root_role
+            .raw(`SELECT u.id, u.created_at, u.name, u.email, u.seen_at, up.p_array as projects, gr.p_array as groups, gp.p_array as group_projects, r.name as root_role
                 FROM users u, LATERAL (
                 SELECT ARRAY (
                     SELECT ru.project
@@ -771,15 +771,24 @@ export class AccessStore implements IAccessStore {
                 ) up, LATERAL (
                     SELECT r.name
                     FROM   role_user ru
-                    inner join roles r on ru.role_id = r.id
-                    where ru.user_id = u.id and r.type='root'
+                    INNER JOIN roles r on ru.role_id = r.id
+                    WHERE ru.user_id = u.id and r.type='root'
                 ) r, LATERAL (
                 SELECT ARRAY (
-                    select g.name from group_user gu
-                    left join groups g on g.id = gu.group_id
+                    SELECT g.name FROM group_user gu
+                    JOIN groups g on g.id = gu.group_id
                     WHERE  gu.user_id = u.id
                     ) AS p_array
-                ) gr
+                ) gr, LATERAL (
+                SELECT ARRAY (
+                    SELECT  gr.project
+                        FROM group_user gu
+                        JOIN group_role gr ON gu.group_id = gr.group_id
+                    WHERE gu.user_id = u.id
+                    )
+                    AS p_array
+                ) gp
+
                 order by u.id;`);
         return result.rows.map((row) => {
             return {
@@ -791,6 +800,7 @@ export class AccessStore implements IAccessStore {
                 accessibleProjects: row.projects,
                 groups: row.groups,
                 rootRole: row.root_role,
+                groupProjects: row.group_projects,
             };
         });
     }

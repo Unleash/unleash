@@ -469,4 +469,5 @@ export interface IUserAccessOverview {
     accessibleProjects: string[];
     groups: string[];
     rootRole: string;
+    groupProjects: string[];
 }

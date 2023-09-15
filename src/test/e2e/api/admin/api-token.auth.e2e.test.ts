@@ -18,7 +18,6 @@ let stores;
 let db;
 
 beforeAll(async () => {
-    //getLogger.setVerbose(true);
     db = await dbInit('token_api_auth_serial', getLogger);
     stores = db.stores;
 });
@@ -201,10 +200,6 @@ test('A role with only CREATE_PROJECT_API_TOKEN can create project tokens', asyn
                 user.id,
                 createClientApiTokenRole.id,
                 'default',
-            );
-            console.log(
-                'Created role',
-                await accessService.getRole(createClientApiTokenRole.id),
             );
             req.user = user;
             next();

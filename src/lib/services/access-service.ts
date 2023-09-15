@@ -162,14 +162,7 @@ export class AccessService {
 
         try {
             const userP = await this.getPermissionsForUser(user);
-            this.logger.debug(
-                'User permissions',
-                userP,
-                // userP.filter(
-                //     (p) => p.permission === permissions.CREATE_FEATURE,
-                // ),
-            );
-            const found = userP
+            return userP
                 .filter(
                     (p) =>
                         !p.project ||
@@ -182,13 +175,11 @@ export class AccessService {
                         p.environment === environment ||
                         p.environment === ALL_ENVS,
                 )
-                .find(
+                .some(
                     (p) =>
                         permissionsArray.includes(p.permission) ||
                         p.permission === ADMIN,
                 );
-            this.logger.debug('Permission', found);
-            return found !== undefined;
         } catch (e) {
             this.logger.error(
                 `Error checking ${permissionLogInfo}, userId=${user.id} projectId=${projectId}`,
@@ -206,7 +197,6 @@ export class AccessService {
                 permission: p,
             }));
         }
-        this.logger.debug('Fetching permissions for user', user.id);
         return this.store.getPermissionsForUser(user.id);
     }
 
@@ -247,7 +237,6 @@ export class AccessService {
         roleId: number,
         projectId: string,
     ): Promise<void> {
-        this.logger.debug(`Adding user=${userId} to role=${roleId}`);
         return this.store.addUserToRole(userId, roleId, projectId);
     }
 
@@ -644,10 +633,6 @@ export class AccessService {
         const rolePermissions = role.permissions;
         const newRole = await this.roleStore.create(baseRole);
         if (rolePermissions) {
-            this.logger.debug(
-                `Adding permissions to ${roleType} ${newRole.id}`,
-                rolePermissions,
-            );
             if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
                 // this branch uses named permissions
                 await this.store.addPermissionsToRole(

@@ -8,7 +8,7 @@ export interface IUiConfig {
      * @deprecated `useUiFlags` can be used instead
      * @example
      * ```ts
-     *   const yourFlag = useUiFlags("yourFlag")
+     *   const yourFlag = useUiFlag("yourFlag")
      * ```
      */
     flags: UiFlags;

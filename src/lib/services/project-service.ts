@@ -203,9 +203,7 @@ export default class ProjectService {
         const data = await projectSchema.validateAsync(newProject);
         await this.validateUniqueId(data.id);
 
-        if (data.featureNaming) {
-            this.validateAndProcessFeatureNamingPattern(data.featureNaming);
-        }
+        this.validateAndProcessFeatureNamingPattern(data.featureNaming);
 
         await this.store.create(data);
 
@@ -238,11 +236,9 @@ export default class ProjectService {
     async updateProject(updatedProject: IProject, user: User): Promise<void> {
         const preData = await this.store.get(updatedProject.id);
 
-        if (updatedProject.featureNaming) {
-            this.validateAndProcessFeatureNamingPattern(
-                updatedProject.featureNaming,
-            );
-        }
+        this.validateAndProcessFeatureNamingPattern(
+            updatedProject.featureNaming,
+        );
 
         await this.store.update(updatedProject);
 

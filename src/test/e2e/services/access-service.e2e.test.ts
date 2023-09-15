@@ -1855,8 +1855,6 @@ test('access overview should have group access for groups that they are in', asy
         {
             id: 13,
             name: 'UPDATE_PROJECT',
-            displayName: 'Can update projects',
-            type: 'project',
         },
     ]);
 

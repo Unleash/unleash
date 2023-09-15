@@ -316,6 +316,9 @@ const parseCspConfig = (
         imgSrc: cspConfig.imgSrc || [],
         styleSrc: cspConfig.styleSrc || [],
         connectSrc: cspConfig.connectSrc || [],
+        mediaSrc: cspConfig.mediaSrc || [],
+        objectSrc: cspConfig.objectSrc || [],
+        frameSrc: cspConfig.frameSrc || [],
     };
 };
 
@@ -326,6 +329,10 @@ const parseCspEnvironmentVariables = (): ICspDomainConfig => {
     const scriptSrc = process.env.CSP_ALLOWED_SCRIPT?.split(',') || [];
     const imgSrc = process.env.CSP_ALLOWED_IMG?.split(',') || [];
     const connectSrc = process.env.CSP_ALLOWED_CONNECT?.split(',') || [];
+    const mediaSrc = process.env.CSP_ALLOWED_MEDIA?.split(',') || [];
+    const objectSrc = process.env.CSP_ALLOWED_OBJECT?.split(',') || [];
+    const frameSrc = process.env.CSP_ALLOWED_FRAME?.split(',') || [];
+
     return {
         defaultSrc,
         fontSrc,
@@ -333,6 +340,9 @@ const parseCspEnvironmentVariables = (): ICspDomainConfig => {
         scriptSrc,
         imgSrc,
         connectSrc,
+        mediaSrc,
+        objectSrc,
+        frameSrc,
     };
 };
 

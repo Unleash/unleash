@@ -12,7 +12,7 @@ import {
     IUserRole,
     IUserWithProjectRoles,
 } from '../types/stores/access-store';
-import { IPermission } from '../types/model';
+import { IPermission, IUserAccessOverview } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import {
     ENVIRONMENT_PERMISSION_TYPE,
@@ -827,5 +827,41 @@ export class AccessStore implements IAccessStore {
                 from ${T.ROLE_PERMISSION} where environment = ?)`,
             [destinationEnvironment, sourceEnvironment],
         );
+    }
+
+    async getUserAccessOverview(): Promise<IUserAccessOverview[]> {
+        const result = await this.db
+            .raw(`SELECT u.id, u.created_at, u.name, u.email, u.seen_at, up.p_array as projects, gr.p_array as groups, r.name as root_role
+                FROM users u, LATERAL (
+                SELECT ARRAY (
+                    SELECT ru.project
+                    FROM   role_user ru
+                    WHERE  ru.user_id = u.id
+                    ) AS p_array
+                ) up, LATERAL (
+                    SELECT r.name
+                    FROM   role_user ru
+                    inner join roles r on ru.role_id = r.id
+                    where ru.user_id = u.id and r.type='root'
+                ) r, LATERAL (
+                SELECT ARRAY (
+                    select g.name from group_user gu
+                    left join groups g on g.id = gu.group_id
+                    WHERE  gu.user_id = u.id
+                    ) AS p_array
+                ) gr
+                order by u.id;`);
+        return result.rows.map((row) => {
+            return {
+                userId: row.id,
+                createdAt: row.created_at,
+                userName: row.name,
+                userEmail: row.email,
+                lastSeen: row.seen_at,
+                accessibleProjects: row.projects,
+                groups: row.groups,
+                rootRole: row.root_role,
+            };
+        });
     }
 }

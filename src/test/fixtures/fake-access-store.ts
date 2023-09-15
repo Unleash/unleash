@@ -10,7 +10,7 @@ import {
     IUserWithProjectRoles,
 } from '../../lib/types/stores/access-store';
 import { IPermission } from 'lib/types/model';
-import { IRoleStore } from 'lib/types';
+import { IRoleStore, IUserAccessOverview } from 'lib/types';
 import FakeRoleStore from './fake-role-store';
 import { PermissionRef } from 'lib/services/access-service';
 
@@ -287,6 +287,10 @@ class AccessStoreMock implements IAccessStore {
     }
 
     removeGroupAccess(projectId: string, groupId: number): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    getUserAccessOverview(): Promise<IUserAccessOverview[]> {
         throw new Error('Method not implemented.');
     }
 }

@@ -187,17 +187,6 @@ module.exports = {
             items: [
                 {
                     type: 'category',
-                    link: { type: 'doc', id: 'reference/addons/index' },
-                    items: [
-                        'reference/addons/datadog',
-                        'reference/addons/slack',
-                        'reference/addons/teams',
-                        'reference/addons/webhook',
-                    ],
-                    label: 'Addons',
-                },
-                {
-                    type: 'category',
                     label: 'APIs',
                     items: [
                         {
@@ -309,12 +298,9 @@ module.exports = {
                 },
                 {
                     type: 'category',
-                    label: 'Integrations',
-                    link: {
-                        type: 'doc',
-                        id: 'reference/integrations/integrations',
-                    },
+                    link: { type: 'doc', id: 'reference/integrations/index' },
                     items: [
+                        'reference/integrations/datadog',
                         {
                             'Jira Server': [
                                 'reference/integrations/jira-server-plugin-installation',
@@ -325,8 +311,11 @@ module.exports = {
                                 'reference/integrations/jira-cloud-plugin-usage',
                             ],
                         },
-                        ,
+                        'reference/integrations/slack',
+                        'reference/integrations/teams',
+                        'reference/integrations/webhook',
                     ],
+                    label: 'Integrations',
                 },
                 {
                     type: 'category',

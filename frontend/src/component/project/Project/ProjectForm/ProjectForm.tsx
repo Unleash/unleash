@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { trim } from 'component/common/util';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -10,6 +10,8 @@ import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
 import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IProjectForm {
     projectId: string;
@@ -127,6 +129,27 @@ export const validateFeatureNamingExample = ({
     return { state: 'valid' };
 };
 
+const useFeatureNamePatternTracking = () => {
+    const [previousPattern, setPreviousPattern] = React.useState<string>('');
+    const { trackEvent } = usePlausibleTracker();
+    const eventName = 'feature-naming-pattern' as const;
+
+    const trackPattern = (pattern: string = '') => {
+        if (pattern === previousPattern) {
+            // do nothing; they've probably updated something else in the
+            // project.
+        } else if (pattern === '' && previousPattern !== '') {
+            trackEvent(eventName, { props: { action: 'removed' } });
+        } else if (pattern !== '' && previousPattern === '') {
+            trackEvent(eventName, { props: { action: 'added' } });
+        } else if (pattern !== '' && previousPattern !== '') {
+            trackEvent(eventName, { props: { action: 'edited' } });
+        }
+    };
+
+    return { trackPattern, setPreviousPattern };
+};
+
 const ProjectForm: React.FC<IProjectForm> = ({
     children,
     handleSubmit,
@@ -157,6 +180,26 @@ const ProjectForm: React.FC<IProjectForm> = ({
     const { uiConfig } = useUiConfig();
     const shouldShowFlagNaming = uiConfig.flags.featureNamingPattern;
 
+    const { setPreviousPattern, trackPattern } =
+        useFeatureNamePatternTracking();
+
+    const privateProjects = useUiFlag('privateProjects');
+
+    const projectModeOptions = privateProjects
+        ? [
+              { key: 'open', label: 'open' },
+              { key: 'protected', label: 'protected' },
+              { key: 'private', label: 'private' },
+          ]
+        : [
+              { key: 'open', label: 'open' },
+              { key: 'protected', label: 'protected' },
+          ];
+
+    useEffect(() => {
+        setPreviousPattern(featureNamingPattern || '');
+    }, [projectId]);
+
     const updateNamingExampleError = ({
         example,
         pattern,
@@ -181,14 +224,31 @@ const ProjectForm: React.FC<IProjectForm> = ({
     };
 
     const onSetFeatureNamingPattern = (regex: string) => {
-        try {
-            new RegExp(regex);
-            setFeatureNamingPattern && setFeatureNamingPattern(regex);
-            delete errors.featureNamingPattern;
-        } catch (e) {
-            errors.featureNamingPattern = 'Invalid regular expression';
-            setFeatureNamingPattern && setFeatureNamingPattern(regex);
+        const disallowedStrings = [
+            ' ',
+            '\\t',
+            '\\s',
+            '\\n',
+            '\\r',
+            '\\f',
+            '\\v',
+        ];
+        if (
+            disallowedStrings.some(blockedString =>
+                regex.includes(blockedString)
+            )
+        ) {
+            errors.featureNamingPattern =
+                'Whitespace is not allowed in the expression';
+        } else {
+            try {
+                new RegExp(regex);
+                delete errors.featureNamingPattern;
+            } catch (e) {
+                errors.featureNamingPattern = 'Invalid regular expression';
+            }
         }
+        setFeatureNamingPattern && setFeatureNamingPattern(regex);
         updateNamingExampleError({
             pattern: regex,
             example: featureNamingExample || '',
@@ -208,7 +268,12 @@ const ProjectForm: React.FC<IProjectForm> = ({
     };
 
     return (
-        <StyledForm onSubmit={handleSubmit}>
+        <StyledForm
+            onSubmit={submitEvent => {
+                handleSubmit(submitEvent);
+                trackPattern(featureNamingPattern);
+            }}
+        >
             <StyledDescription>What is your project Id?</StyledDescription>
             <StyledInput
                 label="Project Id"
@@ -291,10 +356,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     onChange={e => {
                         setProjectMode?.(e.target.value as ProjectMode);
                     }}
-                    options={[
-                        { key: 'open', label: 'open' },
-                        { key: 'protected', label: 'protected' },
-                    ]}
+                    options={projectModeOptions}
                 ></StyledSelect>
             </>
             <>
@@ -352,7 +414,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 <p>
                                     Define a{' '}
                                     <a
-                                        href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions`}
+                                        href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet`}
                                         target="_blank"
                                         rel="noreferrer"
                                     >

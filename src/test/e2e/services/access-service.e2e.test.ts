@@ -8,7 +8,11 @@ import {
 
 import * as permissions from '../../../lib/types/permissions';
 import { RoleName } from '../../../lib/types/model';
-import { ICreateGroupUserModel, IUnleashStores } from '../../../lib/types';
+import {
+    ICreateGroupUserModel,
+    IUnleashStores,
+    IUserAccessOverview,
+} from '../../../lib/types';
 import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { createTestConfig } from '../../config/test-config';
@@ -1795,4 +1799,66 @@ test('remove group access should remove all project roles, while leaving root ro
 
     expect(newAssignedPermissions.length).toBe(1);
     expect(newAssignedPermissions[0].permission).toBe(permissions.ADMIN);
+});
+
+test('access overview should have admin access and default project for admin user', async () => {
+    const email = 'a-person@places.com';
+
+    const { userStore } = stores;
+    const user = await userStore.insert({
+        name: 'Some User',
+        email,
+    });
+
+    await accessService.setUserRootRole(user.id, adminRole.id);
+
+    const accessOverView: IUserAccessOverview[] =
+        await accessService.getUserAccessOverview();
+    const userAccess = accessOverView.find(
+        (overviewRow) => overviewRow.userId == user.id,
+    )!;
+
+    expect(userAccess.userId).toBe(user.id);
+
+    expect(userAccess.rootRole).toBe('Admin');
+    expect(userAccess.accessibleProjects).toStrictEqual(['default']);
+});
+
+test('access overview should have group access for groups that they are in', async () => {
+    const email = 'a-nother-person@places.com';
+
+    const { userStore } = stores;
+    const user = await userStore.insert({
+        name: 'Some Other User',
+        email,
+    });
+
+    await accessService.setUserRootRole(user.id, adminRole.id);
+
+    const group = await stores.groupStore.create({
+        name: 'Test Group',
+    });
+
+    await stores.groupStore.addUsersToGroup(
+        group.id,
+        [
+            {
+                user: {
+                    id: user.id,
+                },
+            },
+        ],
+        'Admin',
+    );
+
+    const accessOverView: IUserAccessOverview[] =
+        await accessService.getUserAccessOverview();
+    const userAccess = accessOverView.find(
+        (overviewRow) => overviewRow.userId == user.id,
+    )!;
+
+    expect(userAccess.userId).toBe(user.id);
+
+    expect(userAccess.rootRole).toBe('Admin');
+    expect(userAccess.groups).toStrictEqual(['Test Group']);
 });

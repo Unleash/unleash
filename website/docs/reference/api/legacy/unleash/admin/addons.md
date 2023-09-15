@@ -4,11 +4,11 @@ title: /api/admin/addons
 
 > In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](/how-to/how-to-create-api-tokens) and add an Authorization header using the token.
 
-### List addons and providers {#list-addons-and-providers}
+### List integrations and providers {#list-integrations-and-providers}
 
 `GET https://unleash.host.com/api/admin/addons`
 
-Returns a list of _configured addons_ and available _addon providers_.
+Returns a list of _configured integrations_ and available _integration providers_.
 
 **Example response:**
 
@@ -92,7 +92,7 @@ Returns a list of _configured addons_ and available _addon providers_.
       "tags": [
         {
           "name": "slack",
-          "description": "Slack tag used by the slack-addon to specify the slack channel.",
+          "description": "Slack tag used by the slack integration to specify the slack channel.",
           "icon": "S"
         }
       ]
@@ -101,11 +101,11 @@ Returns a list of _configured addons_ and available _addon providers_.
 }
 ```
 
-### Create a new addon configuration {#create-a-new-addon-configuration}
+### Create a new integration configuration {#create-a-new-integration-configuration}
 
 `POST https://unleash.host.com/api/addons`
 
-Creates an addon configuration for an addon provider.
+Creates an integration configuration for an integration provider.
 
 **Body**
 
@@ -123,13 +123,13 @@ Creates an addon configuration for an addon provider.
 
 ### Notes {#notes}
 
-- `provider` must be a valid addon provider
+- `provider` must be a valid integration provider
 
-### Update new addon configuration {#update-new-addon-configuration}
+### Update new integration configuration {#update-new-integration-configuration}
 
 `POST https://unleash.host.com/api/addons/:id`
 
-Updates an addon configuration.
+Updates an integration configuration.
 
 **Body**
 
@@ -149,8 +149,8 @@ Updates an addon configuration.
 
 - `provider` can not be changed.
 
-### Delete an addon configuration {#delete-an-addon-configuration}
+### Delete an integration configuration {#delete-an-integration-configuration}
 
 `DELETE https://unleash.host.com/api/admin/addons/:id`
 
-Deletes the addon with id=`id`.
+Deletes the integration with id=`id`.

@@ -176,7 +176,14 @@ export default class ProjectService {
         const validationResult = checkFeatureNamingData(featureNaming);
 
         if (validationResult.state === 'invalid') {
-            throw new BadDataError(validationResult.reason);
+            const [firstReason, ...remainingReasons] =
+                validationResult.reasons.map((message) => ({
+                    message,
+                }));
+            throw new BadDataError(
+                'The feature naming pattern data you provided was invalid.',
+                [firstReason, ...remainingReasons],
+            );
         }
 
         if (featureNaming.pattern && !featureNaming.example) {

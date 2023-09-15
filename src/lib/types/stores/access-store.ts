@@ -1,6 +1,6 @@
 import { PermissionRef } from 'lib/services/access-service';
 import { IGroupModelWithProjectRole } from '../group';
-import { IPermission, IUserWithRole } from '../model';
+import { IPermission, IUserAccessOverview, IUserWithRole } from '../model';
 import { Store } from './store';
 
 export interface IUserPermission {
@@ -200,4 +200,5 @@ export interface IAccessStore extends Store<IRole, number> {
     ): Promise<number[]>;
     removeUserAccess(projectId: string, userId: number): Promise<void>;
     removeGroupAccess(projectId: string, groupId: number): Promise<void>;
+    getUserAccessOverview(): Promise<IUserAccessOverview[]>;
 }

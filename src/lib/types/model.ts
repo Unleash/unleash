@@ -187,7 +187,7 @@ export interface IFeatureOverview {
     environments: IEnvironmentOverview[];
 }
 
-export type ProjectMode = 'open' | 'protected';
+export type ProjectMode = 'open' | 'protected' | 'private';
 
 export interface IFeatureNaming {
     pattern: string | null;
@@ -458,4 +458,15 @@ export interface ISegment {
 export interface IFeatureStrategySegment {
     featureStrategyId: string;
     segmentId: number;
+}
+
+export interface IUserAccessOverview {
+    userId: number;
+    createdAt?: Date;
+    userName?: string;
+    userEmail: number;
+    lastSeen?: Date;
+    accessibleProjects: string[];
+    groups: string[];
+    rootRole: string;
 }

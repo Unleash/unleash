@@ -11,7 +11,7 @@ import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
 import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useUiFlag } from '../../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IProjectForm {
     projectId: string;

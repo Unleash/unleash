@@ -1,8 +1,8 @@
 import { Box, styled, Typography } from '@mui/material';
 import { FC } from 'react';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { useUiFlag } from '../../../../hooks/useUiFlag';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,

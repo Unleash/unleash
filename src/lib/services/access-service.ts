@@ -70,7 +70,7 @@ export interface IRoleValidation {
     permissions?: PermissionRef[];
 }
 
-interface IRoleUpdate {
+export interface IRoleUpdate {
     id: number;
     name: string;
     description: string;
@@ -162,7 +162,14 @@ export class AccessService {
 
         try {
             const userP = await this.getPermissionsForUser(user);
-            return userP
+            this.logger.debug(
+                'User permissions',
+                userP,
+                // userP.filter(
+                //     (p) => p.permission === permissions.CREATE_FEATURE,
+                // ),
+            );
+            const found = userP
                 .filter(
                     (p) =>
                         !p.project ||
@@ -175,11 +182,13 @@ export class AccessService {
                         p.environment === environment ||
                         p.environment === ALL_ENVS,
                 )
-                .some(
+                .find(
                     (p) =>
                         permissionsArray.includes(p.permission) ||
                         p.permission === ADMIN,
                 );
+            this.logger.debug('Permission', found);
+            return found !== undefined;
         } catch (e) {
             this.logger.error(
                 `Error checking ${permissionLogInfo}, userId=${user.id} projectId=${projectId}`,
@@ -197,6 +206,7 @@ export class AccessService {
                 permission: p,
             }));
         }
+        this.logger.debug('Fetching permissions for user', user.id);
         return this.store.getPermissionsForUser(user.id);
     }
 
@@ -237,6 +247,7 @@ export class AccessService {
         roleId: number,
         projectId: string,
     ): Promise<void> {
+        this.logger.debug(`Adding user=${userId} to role=${roleId}`);
         return this.store.addUserToRole(userId, roleId, projectId);
     }
 
@@ -404,9 +415,13 @@ export class AccessService {
                 `ProjectId cannot be empty for permission=${permission}`,
             );
         }
+        // return this.store.addPermissionsToRole(roleId, [
+        //     { name: permission, environment },
+        // ]);
+        // console.log('addPermissionToRole', roleId, permission, environment);
         return this.store.addPermissionsToRole(
             roleId,
-            [permission],
+            [{ name: permission }],
             environment,
         );
     }
@@ -629,12 +644,18 @@ export class AccessService {
         const rolePermissions = role.permissions;
         const newRole = await this.roleStore.create(baseRole);
         if (rolePermissions) {
+            this.logger.debug(
+                `Adding permissions to ${roleType} ${newRole.id}`,
+                rolePermissions,
+            );
             if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
+                // this branch uses named permissions
                 await this.store.addPermissionsToRole(
                     newRole.id,
-                    rolePermissions.map((p: NamePermissionRef) => p.name),
+                    rolePermissions,
                 );
             } else {
+                // this branch uses id permissions
                 await this.store.addEnvironmentPermissionsToRole(
                     newRole.id,
                     rolePermissions,
@@ -673,7 +694,7 @@ export class AccessService {
             if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
                 await this.store.addPermissionsToRole(
                     newRole.id,
-                    rolePermissions.map((p: NamePermissionRef) => p.name),
+                    rolePermissions,
                 );
             } else {
                 await this.store.addEnvironmentPermissionsToRole(

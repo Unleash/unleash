@@ -20,7 +20,11 @@ import {
     ROOT_PERMISSION_TYPE,
 } from '../util/constants';
 import { Db } from './db';
-import { IdPermissionRef } from 'lib/services/access-service';
+import {
+    IdPermissionRef,
+    NamePermissionRef,
+    PermissionRef,
+} from 'lib/services/access-service';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -46,12 +50,78 @@ interface IPermissionRow {
     role_id: number;
 }
 
+type ResolvedPermission = {
+    id: number;
+    name?: string;
+    environment?: string;
+};
+
 export class AccessStore implements IAccessStore {
     private logger: Logger;
 
     private timer: Function;
 
     private db: Db;
+
+    // for internal usage only
+
+    private isIdPermissionRef = (permission: PermissionRef): boolean => {
+        return (permission as IdPermissionRef).id !== undefined;
+    };
+
+    private permissionNamesToIds = async (
+        permissions: NamePermissionRef[],
+    ): Promise<ResolvedPermission[]> => {
+        if (permissions === undefined || permissions.length === 0) {
+            return [];
+        }
+        const permissionNames = permissions
+            .filter((p) => p.name !== undefined)
+            .map((p) => p.name);
+
+        const rows = await this.db
+            .select('id as permissionId', 'permission')
+            .from(T.PERMISSIONS)
+            .whereIn('permission', permissionNames);
+
+        return rows.map((row) => ({
+            id: row.permissionId as number,
+            name: row.permission as string,
+            environment: permissions.find(
+                (p) => p.name === (row.permission as string),
+            )?.environment,
+        }));
+    };
+
+    private resolvePermissions = async (
+        permissions: PermissionRef[],
+    ): Promise<ResolvedPermission[]> => {
+        // permissions without ids (just names)
+        const permissionsWithoutIds = permissions.filter(
+            (p) => !this.isIdPermissionRef(p),
+        ) as NamePermissionRef[];
+        const idPermissionsFromNamed = await this.permissionNamesToIds(
+            permissionsWithoutIds,
+        );
+
+        if (permissionsWithoutIds.length === permissions.length) {
+            // all named permissions without ids
+            return idPermissionsFromNamed;
+        } else if (permissionsWithoutIds.length === 0) {
+            // all permissions have ids
+            return permissions as ResolvedPermission[];
+        }
+        // some permissions have ids, some don't (should not happen!)
+        return permissions.map((permission) => {
+            if (this.isIdPermissionRef(permission)) {
+                return permission as ResolvedPermission;
+            } else {
+                return idPermissionsFromNamed.find(
+                    (p) => p.name === (permission as NamePermissionRef).name,
+                )!;
+            }
+        });
+    };
 
     constructor(db: Db, eventBus: EventEmitter, getLogger: Function) {
         this.db = db;
@@ -222,9 +292,11 @@ export class AccessStore implements IAccessStore {
 
     async addEnvironmentPermissionsToRole(
         role_id: number,
-        permissions: IdPermissionRef[],
+        permissions: PermissionRef[],
     ): Promise<void> {
-        const rows = permissions.map((permission) => {
+        const resolvedPermission = await this.resolvePermissions(permissions);
+
+        const rows = resolvedPermission.map((permission) => {
             return {
                 role_id,
                 permission_id: permission.id,
@@ -700,18 +772,16 @@ export class AccessStore implements IAccessStore {
 
     async addPermissionsToRole(
         role_id: number,
-        permissions: string[],
+        permissions: Omit<PermissionRef, 'environment'>[],
         environment?: string,
     ): Promise<void> {
-        const rows = await this.db
-            .select('id as permissionId')
-            .from<number>(T.PERMISSIONS)
-            .whereIn('permission', permissions);
+        // no need to pass down the environment in this particular case
+        const permissionsWithIds = await this.resolvePermissions(permissions);
 
-        const newRoles = rows.map((row) => ({
+        const newRoles = permissionsWithIds.map((p) => ({
             role_id,
             environment,
-            permission_id: row.permissionId,
+            permission_id: p.id,
         }));
 
         return this.db.batchInsert(T.ROLE_PERMISSION, newRoles);

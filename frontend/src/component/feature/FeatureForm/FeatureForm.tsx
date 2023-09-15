@@ -23,6 +23,8 @@ import React from 'react';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 import { FeatureNamingType } from 'interfaces/project';
 import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureToggleForm {
     type: string;
@@ -121,12 +123,15 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     const navigate = useNavigate();
     const { permissions } = useAuthPermissions();
     const editable = mode !== 'Edit';
+    const featureNamingPatternEnabled = useUiFlag('featureNamingPattern');
 
     const renderToggleDescription = () => {
         return featureTypes.find(toggle => toggle.id === type)?.description;
     };
 
-    const displayFeatureNamingInfo = Boolean(featureNaming?.pattern);
+    const displayFeatureNamingInfo = Boolean(
+        featureNamingPatternEnabled && featureNaming?.pattern
+    );
 
     React.useEffect(() => {
         if (featureNaming?.pattern && validateToggleName && name) {

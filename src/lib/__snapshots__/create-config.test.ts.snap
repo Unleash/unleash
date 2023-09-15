@@ -71,6 +71,7 @@ exports[`should create default config 1`] = `
       "isEnabled": [Function],
     },
     "flags": {
+      "accessOverview": false,
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
       "customRootRolesKillSwitch": false,
@@ -108,6 +109,7 @@ exports[`should create default config 1`] = `
   },
   "flagResolver": FlagResolver {
     "experiments": {
+      "accessOverview": false,
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
       "customRootRolesKillSwitch": false,

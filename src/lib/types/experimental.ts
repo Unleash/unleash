@@ -29,6 +29,7 @@ export type IFlagKey =
     | 'featureNamingPattern'
     | 'doraMetrics'
     | 'variantTypeNumber'
+    | 'accessOverview'
     | 'privateProjects';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -135,6 +136,10 @@ const flags: IFlags = {
     ),
     privateProjects: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECTS,
+        false,
+    ),
+    accessOverview: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW,
         false,
     ),
 };

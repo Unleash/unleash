@@ -1851,6 +1851,22 @@ test('access overview should have group access for groups that they are in', asy
         'Admin',
     );
 
+    const someGroupRole = await createRole([
+        {
+            id: 13,
+            name: 'UPDATE_PROJECT',
+            displayName: 'Can update projects',
+            type: 'project',
+        },
+    ]);
+
+    await accessService.addGroupToRole(
+        group.id,
+        someGroupRole.id,
+        'creator',
+        'default',
+    );
+
     const accessOverView: IUserAccessOverview[] =
         await accessService.getUserAccessOverview();
     const userAccess = accessOverView.find(
@@ -1861,4 +1877,6 @@ test('access overview should have group access for groups that they are in', asy
 
     expect(userAccess.rootRole).toBe('Admin');
     expect(userAccess.groups).toStrictEqual(['Test Group']);
+
+    expect(userAccess.groupProjects).toStrictEqual(['default']);
 });

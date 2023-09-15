@@ -1,18 +1,7 @@
 import { IUnleashConfig, IUnleashServices } from '../../types';
+import { findParam } from '../../middleware';
+import { NextFunction, Response } from 'express';
 
-function findParam(
-    name: string,
-    { params, body }: any,
-    defaultValue?: string,
-): string | undefined {
-    let found = params ? params[name] : undefined;
-    if (found === undefined) {
-        found = body ? body[name] : undefined;
-    }
-    return found || defaultValue;
-}
-
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 const privateProjectMiddleware = (
     {
         getLogger,
@@ -27,7 +16,7 @@ const privateProjectMiddleware = (
         return (req, res, next) => next();
     }
 
-    return async (req, res, next) => {
+    return async (req, res: Response, next: NextFunction) => {
         req.checkPrivateProjectPermissions = async () => {
             const { user } = req;
 

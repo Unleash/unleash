@@ -1,7 +1,6 @@
 import { IRouter, Router, Request, Response, RequestHandler } from 'express';
 import { Logger } from 'lib/logger';
-import { IUnleashConfig } from '../types/option';
-import { NONE } from '../types/permissions';
+import { IUnleashConfig, NONE } from '../types';
 import { handleErrors } from './util';
 import requireContentType from '../middleware/content_type_checker';
 import { PermissionError } from '../error';
@@ -63,7 +62,7 @@ const checkPrivateProjectPermissions = () => async (req, res, next) => {
         return next();
     }
 
-    return res.status(403).json().end();
+    return res.status(404).end();
 };
 
 /**

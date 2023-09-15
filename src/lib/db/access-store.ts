@@ -80,22 +80,27 @@ export class AccessStore implements IAccessStore {
             .map((p) => p.name);
 
         const rows = await this.db
-            .select('id as permissionId', 'permission')
+            .select('id', 'permission')
             .from(T.PERMISSIONS)
             .whereIn('permission', permissionNames);
 
-        return rows.map((row) => ({
-            id: row.permissionId as number,
-            name: row.permission as string,
-            environment: permissions.find(
-                (p) => p.name === (row.permission as string),
-            )?.environment,
+        const rowByPermissionName = rows.reduce((acc, row) => {
+            acc[row.permission] = row;
+            return acc;
+        }, {} as Map<string, IPermissionRow>);
+
+        return permissions.map((permission) => ({
+            id: rowByPermissionName[permission.name].id,
+            ...permission,
         }));
     };
 
-    private resolvePermissions = async (
+    resolvePermissions = async (
         permissions: PermissionRef[],
     ): Promise<ResolvedPermission[]> => {
+        if (permissions === undefined || permissions.length === 0) {
+            return [];
+        }
         // permissions without ids (just names)
         const permissionsWithoutIds = permissions.filter(
             (p) => !this.isIdPermissionRef(p),

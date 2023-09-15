@@ -20,6 +20,7 @@ import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
 import { FavoritesService } from '../../../lib/services';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
+import { createProjectPermissionChecker } from '../../../lib/features/project-permissions/createProjectPermissionChecker';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -243,12 +244,17 @@ beforeAll(async () => {
         db.rawDatabase,
         accessService,
     );
+    const projectPermissionChecker = createProjectPermissionChecker(
+        db.rawDatabase,
+        config,
+    );
     featureToggleService = new FeatureToggleService(
         stores,
         config,
         new SegmentService(stores, changeRequestAccessReadModel, config),
         accessService,
         changeRequestAccessReadModel,
+        projectPermissionChecker,
     );
     favoritesService = new FavoritesService(stores, config);
     projectService = new ProjectService(

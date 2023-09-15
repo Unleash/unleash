@@ -15,6 +15,7 @@ import { FavoritesService } from '../../../lib/services';
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';
 import { addDays, subDays } from 'date-fns';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
+import { createProjectPermissionChecker } from '../../../lib/features/project-permissions/createProjectPermissionChecker';
 
 let stores;
 let db: ITestDb;
@@ -55,12 +56,17 @@ beforeAll(async () => {
         db.rawDatabase,
         accessService,
     );
+    const projectPermissionChecker = createProjectPermissionChecker(
+        db.rawDatabase,
+        config,
+    );
     featureToggleService = new FeatureToggleService(
         stores,
         config,
         new SegmentService(stores, changeRequestAccessReadModel, config),
         accessService,
         changeRequestAccessReadModel,
+        projectPermissionChecker,
     );
 
     favoritesService = new FavoritesService(stores, config);

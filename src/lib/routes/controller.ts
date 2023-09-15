@@ -55,6 +55,14 @@ const checkPermission =
         return res.status(403).json(new PermissionError(permissions)).end();
     };
 
+const checkProjectPermissions = () => async (req, res, next) => {
+    if (req.checkProjectPermissions && (await req.checkProjectPermissions())) {
+        return next();
+    }
+
+    return res.status(403).json().end();
+};
+
 /**
  * Base class for Controllers to standardize binding to express Router.
  *
@@ -100,6 +108,7 @@ export default class Controller {
         this.app[options.method](
             options.path,
             checkPermission(options.permission),
+            checkProjectPermissions(),
             this.useContentTypeMiddleware(options),
             this.useRouteErrorHandler(options.handler.bind(this)),
         );
@@ -186,6 +195,7 @@ export default class Controller {
         this.app.post(
             path,
             checkPermission(permission),
+            checkProjectPermissions(),
             filehandler.bind(this),
             this.useRouteErrorHandler(handler.bind(this)),
         );

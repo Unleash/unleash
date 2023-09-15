@@ -28,7 +28,8 @@ export type IFlagKey =
     | 'multipleRoles'
     | 'featureNamingPattern'
     | 'doraMetrics'
-    | 'variantTypeNumber';
+    | 'variantTypeNumber'
+    | 'datadogJsonTemplate';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -130,6 +131,10 @@ const flags: IFlags = {
     ),
     variantTypeNumber: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_VARIANT_TYPE_NUMBER,
+        false,
+    ),
+    datadogJsonTemplate: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DATADOG_JSON_TEMPLATE,
         false,
     ),
 };

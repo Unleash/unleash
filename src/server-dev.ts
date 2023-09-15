@@ -43,6 +43,7 @@ process.nextTick(async () => {
                         featureNamingPattern: true,
                         doraMetrics: true,
                         variantTypeNumber: true,
+                        datadogJsonTemplate: true,
                     },
                 },
                 authentication: {

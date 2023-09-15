@@ -1,6 +1,8 @@
 import Addon from './addon';
 
 import definition from './datadog-definition';
+import Mustache from 'mustache';
+import { IFlagResolver } from '../types/experimental';
 import { IAddonConfig } from '../types/model';
 import {
     FeatureEventFormatter,
@@ -8,12 +10,14 @@ import {
     LinkStyle,
 } from './feature-event-formatter-md';
 import { IEvent } from '../types/events';
+import { IUnleashConfig } from 'lib/types';
 
 interface IDatadogParameters {
     url: string;
     apiKey: string;
     sourceTypeName?: string;
     customHeaders?: string;
+    bodyTemplate?: string;
 }
 
 interface DDRequestBody {
@@ -26,12 +30,18 @@ interface DDRequestBody {
 export default class DatadogAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    constructor(config: IAddonConfig) {
+    private flagResolver: IFlagResolver;
+
+    constructor(
+        config: IAddonConfig,
+        { flagResolver }: Pick<IUnleashConfig, 'flagResolver'>,
+    ) {
         super(definition, config);
         this.msgFormatter = new FeatureEventFormatterMd(
             config.unleashUrl,
             LinkStyle.MD,
         );
+        this.flagResolver = flagResolver;
     }
 
     async handleEvent(
@@ -43,15 +53,29 @@ export default class DatadogAddon extends Addon {
             apiKey,
             sourceTypeName,
             customHeaders,
+            bodyTemplate,
         } = parameters;
 
-        const text = this.msgFormatter.format(event);
+        const context = {
+            event,
+        };
+
+        let text;
+        if (
+            this.flagResolver.isEnabled('datadogJsonTemplate') &&
+            typeof bodyTemplate === 'string' &&
+            bodyTemplate.length > 1
+        ) {
+            text = Mustache.render(bodyTemplate, context);
+        } else {
+            text = `%%% \n ${this.msgFormatter.format(event)} \n %%% `;
+        }
 
         const { tags: eventTags } = event;
         const tags =
             eventTags && eventTags.map((tag) => `${tag.type}:${tag.value}`);
         const body: DDRequestBody = {
-            text: `%%% \n ${text} \n %%% `,
+            text: text,
             title: 'Unleash notification update',
             tags,
         };

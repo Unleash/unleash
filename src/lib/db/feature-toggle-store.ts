@@ -174,7 +174,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const environmentArrays = this.mapMetricDataToEnvBuckets(data);
         try {
             for (const env of Object.keys(environmentArrays)) {
-                const toggleNames = environmentArrays[env];
+                const toggleNames = environmentArrays[env].sort();
                 await this.db(FEATURE_ENVIRONMENTS_TABLE)
                     .update({ last_seen_at: now })
                     .where('environment', env)

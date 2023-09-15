@@ -38,7 +38,6 @@ export const SegmentProjectAlert = ({
         });
     };
 
-    
     const projectList = (
         <StyledUl>
             {Array.from(projectsUsed).map(projectId => (

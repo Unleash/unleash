@@ -19,13 +19,9 @@ export const useSegments = (strategyId?: string): IUseSegmentsOutput => {
         ? formatApiPath(`api/admin/segments/strategies/${strategyId}`)
         : formatApiPath('api/admin/segments');
 
-    const { data, error, mutate } = useSWR(
-        url,
-        () => fetchSegments(url),
-        {
-            refreshInterval: 15 * 1000,
-        }
-    );
+    const { data, error, mutate } = useSWR(url, () => fetchSegments(url), {
+        refreshInterval: 15 * 1000,
+    });
 
     const refetchSegments = useCallback(() => {
         mutate().catch(console.warn);

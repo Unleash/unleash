@@ -243,8 +243,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     }
 
     const listItems = [
-        strategySegments &&
-        strategySegments.length > 0 && (
+        strategySegments && strategySegments.length > 0 && (
             <FeatureOverviewSegment segments={strategySegments} />
         ),
         constraints.length > 0 && (

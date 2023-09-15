@@ -86,10 +86,7 @@ const EditDefaultStrategy = () => {
         }
     }, [JSON.stringify(allSegments), JSON.stringify(strategy?.segments)]);
 
-    const payload = createStrategyPayload(
-        defaultStrategy as any,
-        segments
-    );
+    const payload = createStrategyPayload(defaultStrategy as any, segments);
 
     const onDefaultStrategyEdit = async (
         payload: CreateFeatureStrategySchema

@@ -117,8 +117,11 @@ export const ProjectDoraMetrics = () => {
                             sx={{ display: 'flex', justifyContent: 'center' }}
                             data-loading
                         >
-                            {(dora.projectAverage ? dora.projectAverage : 0) -
-                                original.timeToProduction}{' '}
+                            {Math.round(
+                                (dora.projectAverage
+                                    ? dora.projectAverage
+                                    : 0) - original.timeToProduction
+                            )}{' '}
                             days
                         </Box>
                     </Tooltip>

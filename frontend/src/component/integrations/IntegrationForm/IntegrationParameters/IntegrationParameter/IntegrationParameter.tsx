@@ -30,8 +30,7 @@ export const IntegrationParameter = ({
                 definition={definition}
                 parametersErrors={parametersErrors}
                 setParameterValue={setParameterValue}
-                enableTitle='Data format'
-                enableDescription="Choose the data format for the event body"
+                enableTitle="Data format"
                 disableOptionText="Standard"
                 enableOptionText="Custom template (JSON)"
             />

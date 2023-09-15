@@ -12,7 +12,6 @@ export interface IIntegrationParameterEnableWithDropdownProps {
     setParameterValue: (param: string) => ChangeEventHandler<HTMLInputElement>;
     config: AddonSchema;
     enableTitle: string;
-    enableDescription: string;
     enableOptionText: string;
     disableOptionText: string;
 }
@@ -23,7 +22,6 @@ export const IntegrationParameterEnableWithDropdown = ({
     parametersErrors,
     setParameterValue,
     enableTitle,
-    enableDescription,
     enableOptionText,
     disableOptionText,
 }: IIntegrationParameterEnableWithDropdownProps) => {
@@ -46,7 +44,7 @@ export const IntegrationParameterEnableWithDropdown = ({
                 target: {
                     value: '',
                 },
-            }
+            };
             setParameterValue(definition.name)(fakeEvent as any);
         }
     };

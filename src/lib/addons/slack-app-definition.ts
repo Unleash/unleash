@@ -51,17 +51,9 @@ const slackAppDefinition: IAddonDefinition = {
         },
         {
             name: 'defaultChannels',
-            displayName: 'Default channels',
+            displayName: 'Channels',
             description:
-                'A comma-separated list of channels to post to if no tagged channels are found (e.g. a toggle without tags, or an event with no tags associated).',
-            type: 'text',
-            required: false,
-            sensitive: false,
-        },
-        {
-            name: 'alwaysPostToDefault',
-            displayName: 'Always post to default channels',
-            description: `If set to 'true' or 'yes', the app will always post events to the default channels, even if the feature toggle has slack tags`,
+                'A comma-separated list of channels to post the configured events to. These channels are always notified, regardless of the event type or the presence of a slack tag.',
             type: 'text',
             required: false,
             sensitive: false,

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 export const useOnBlur = (
     containerRef: React.RefObject<HTMLElement>,
-    callback: () => void
+    callback: () => void,
 ): void => {
     useEffect(() => {
         let mouseDownInside = false;

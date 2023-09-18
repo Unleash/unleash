@@ -30,11 +30,6 @@ process.nextTick(async () => {
                 versionCheck: {
                     enable: false,
                 },
-                ui: {
-                    flags: {
-                        S: true,
-                    },
-                },
                 experimental: {
                     // externalResolver: unleash,
                     flags: {

@@ -61,7 +61,7 @@ import { createFeatureToggleService } from '../features';
 import EventAnnouncerService from './event-announcer-service';
 import { createGroupService } from '../features/group/createGroupService';
 import {
-    createFakeprivateProjectChecker,
+    createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../features/private-project/createPrivateProjectChecker';
 
@@ -190,7 +190,7 @@ export const createServices = (
     );
     const privateProjectChecker = db
         ? createPrivateProjectChecker(db, config)
-        : createFakeprivateProjectChecker();
+        : createFakePrivateProjectChecker();
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,
@@ -209,6 +209,7 @@ export const createServices = (
         featureToggleServiceV2,
         groupService,
         favoritesService,
+        privateProjectChecker,
     );
     const projectHealthService = new ProjectHealthService(
         stores,
@@ -323,6 +324,7 @@ export const createServices = (
         configurationRevisionService,
         transactionalFeatureToggleService,
         transactionalGroupService,
+        privateProjectChecker,
     };
 };
 

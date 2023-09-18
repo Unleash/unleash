@@ -1,7 +1,7 @@
 import { Db, IUnleashConfig } from 'lib/server-impl';
 import PrivateProjectStore from './privateProjectStore';
 import { PrivateProjectChecker } from './privateProjectChecker';
-import { FakeprivateProjectChecker } from './fakePrivateProjectChecker';
+import { FakePrivateProjectChecker } from './fakePrivateProjectChecker';
 
 export const createPrivateProjectChecker = (
     db: Db,
@@ -15,7 +15,7 @@ export const createPrivateProjectChecker = (
     });
 };
 
-export const createFakeprivateProjectChecker =
-    (): FakeprivateProjectChecker => {
-        return new FakeprivateProjectChecker();
+export const createFakePrivateProjectChecker =
+    (): FakePrivateProjectChecker => {
+        return new FakePrivateProjectChecker();
     };

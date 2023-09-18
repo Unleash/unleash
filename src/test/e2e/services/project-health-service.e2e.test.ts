@@ -58,6 +58,7 @@ beforeAll(async () => {
         featureToggleService,
         groupService,
         favoritesService,
+        privateProjectChecker,
     );
     projectHealthService = new ProjectHealthService(
         stores,

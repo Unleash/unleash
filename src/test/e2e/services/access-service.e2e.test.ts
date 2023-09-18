@@ -265,6 +265,7 @@ beforeAll(async () => {
         featureToggleService,
         groupService,
         favoritesService,
+        privateProjectChecker,
     );
 
     editorUser = await createUser(editorRole.id);

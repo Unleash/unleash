@@ -61,7 +61,6 @@ const checkPrivateProjectPermissions = () => async (req, res, next) => {
     ) {
         return next();
     }
-
     return res.status(404).end();
 };
 

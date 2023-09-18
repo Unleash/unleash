@@ -48,7 +48,6 @@ import {
 } from '../types/stores/access-store';
 import FeatureToggleService from './feature-toggle-service';
 import IncompatibleProjectError from '../error/incompatible-project-error';
-import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 import { arraysHaveSameItems } from '../util';
 import { GroupService } from './group-service';
@@ -60,6 +59,7 @@ import { uniqueByKey } from '../util/unique';
 import { BadDataError, PermissionError } from '../error';
 import { ProjectDoraMetricsSchema } from 'lib/openapi';
 import { checkFeatureNamingData } from '../features/feature-naming-pattern/feature-naming-validation';
+import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -103,7 +103,7 @@ export default class ProjectService {
 
     private featureToggleService: FeatureToggleService;
 
-    private tagStore: IFeatureTagStore;
+    private privateProjectChecker: IPrivateProjectChecker;
 
     private accountStore: IAccountStore;
 
@@ -121,7 +121,6 @@ export default class ProjectService {
             featureTypeStore,
             environmentStore,
             featureEnvironmentStore,
-            featureTagStore,
             accountStore,
             projectStatsStore,
         }: Pick<
@@ -132,7 +131,6 @@ export default class ProjectService {
             | 'featureTypeStore'
             | 'environmentStore'
             | 'featureEnvironmentStore'
-            | 'featureTagStore'
             | 'accountStore'
             | 'projectStatsStore'
         >,
@@ -141,6 +139,7 @@ export default class ProjectService {
         featureToggleService: FeatureToggleService,
         groupService: GroupService,
         favoriteService: FavoritesService,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.store = projectStore;
         this.environmentStore = environmentStore;
@@ -151,7 +150,7 @@ export default class ProjectService {
         this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
         this.favoritesService = favoriteService;
-        this.tagStore = featureTagStore;
+        this.privateProjectChecker = privateProjectChecker;
         this.accountStore = accountStore;
         this.groupService = groupService;
         this.projectStatsStore = projectStatsStore;
@@ -163,7 +162,17 @@ export default class ProjectService {
         query?: IProjectQuery,
         userId?: number,
     ): Promise<IProjectWithCount[]> {
-        return this.store.getProjectsWithCounts(query, userId);
+        const projects = await this.store.getProjectsWithCounts(query, userId);
+        if (this.flagResolver.isEnabled('privateProjects') && userId) {
+            const accessibleProjects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            return projects.filter((project) =>
+                accessibleProjects.includes(project.id),
+            );
+        }
+        return projects;
     }
 
     async getProject(id: string): Promise<IProject> {

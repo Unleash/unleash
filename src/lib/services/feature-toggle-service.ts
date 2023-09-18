@@ -1854,8 +1854,17 @@ class FeatureToggleService {
 
     async getMetadataForAllFeatures(
         archived: boolean,
+        userId: number,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleStore.getAll({ archived });
+        const features = await this.featureToggleStore.getAll({ archived });
+        if (this.flagResolver.isEnabled('privateProjects')) {
+            const projects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            return features.filter((f) => projects.includes(f.project));
+        }
+        return features;
     }
 
     async getMetadataForAllFeaturesByProjectId(

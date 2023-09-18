@@ -10,6 +10,7 @@ import {
     ICreateGroupUserModel,
     IPermission,
     IUnleashStores,
+    IUserAccessOverview,
 } from '../../../lib/types';
 import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
@@ -20,6 +21,7 @@ import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
 import { FavoritesService } from '../../../lib/services';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
+import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -243,12 +245,17 @@ beforeAll(async () => {
         db.rawDatabase,
         accessService,
     );
+    const privateProjectChecker = createPrivateProjectChecker(
+        db.rawDatabase,
+        config,
+    );
     featureToggleService = new FeatureToggleService(
         stores,
         config,
         new SegmentService(stores, changeRequestAccessReadModel, config),
         accessService,
         changeRequestAccessReadModel,
+        privateProjectChecker,
     );
     favoritesService = new FavoritesService(stores, config);
     projectService = new ProjectService(
@@ -258,6 +265,7 @@ beforeAll(async () => {
         featureToggleService,
         groupService,
         favoritesService,
+        privateProjectChecker,
     );
 
     editorUser = await createUser(editorRole.id);
@@ -1850,4 +1858,84 @@ test('remove group access should remove all project roles, while leaving root ro
 
     expect(newAssignedPermissions.length).toBe(1);
     expect(newAssignedPermissions[0].permission).toBe(permissions.ADMIN);
+});
+
+test('access overview should have admin access and default project for admin user', async () => {
+    const email = 'a-person@places.com';
+
+    const { userStore } = stores;
+    const user = await userStore.insert({
+        name: 'Some User',
+        email,
+    });
+
+    await accessService.setUserRootRole(user.id, adminRole.id);
+
+    const accessOverView: IUserAccessOverview[] =
+        await accessService.getUserAccessOverview();
+    const userAccess = accessOverView.find(
+        (overviewRow) => overviewRow.userId == user.id,
+    )!;
+
+    expect(userAccess.userId).toBe(user.id);
+
+    expect(userAccess.rootRole).toBe('Admin');
+    expect(userAccess.accessibleProjects).toStrictEqual(['default']);
+});
+
+test('access overview should have group access for groups that they are in', async () => {
+    const email = 'a-nother-person@places.com';
+
+    const { userStore } = stores;
+    const user = await userStore.insert({
+        name: 'Some Other User',
+        email,
+    });
+
+    await accessService.setUserRootRole(user.id, adminRole.id);
+
+    const group = await stores.groupStore.create({
+        name: 'Test Group',
+    });
+
+    await stores.groupStore.addUsersToGroup(
+        group.id,
+        [
+            {
+                user: {
+                    id: user.id,
+                },
+            },
+        ],
+        'Admin',
+    );
+
+    const someGroupRole = await createRole([
+        {
+            id: 13,
+            name: 'UPDATE_PROJECT',
+            displayName: 'Can update projects',
+            type: 'project',
+        },
+    ]);
+
+    await accessService.addGroupToRole(
+        group.id,
+        someGroupRole.id,
+        'creator',
+        'default',
+    );
+
+    const accessOverView: IUserAccessOverview[] =
+        await accessService.getUserAccessOverview();
+    const userAccess = accessOverView.find(
+        (overviewRow) => overviewRow.userId == user.id,
+    )!;
+
+    expect(userAccess.userId).toBe(user.id);
+
+    expect(userAccess.rootRole).toBe('Admin');
+    expect(userAccess.groups).toStrictEqual(['Test Group']);
+
+    expect(userAccess.groupProjects).toStrictEqual(['default']);
 });

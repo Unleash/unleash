@@ -34,15 +34,6 @@ exports[`featureSchema variant override values must be an array 1`] = `
       },
       "schemaPath": "#/properties/payload/properties/type/enum",
     },
-    {
-      "instancePath": "/variants/0/overrides/0/values",
-      "keyword": "type",
-      "message": "must be array",
-      "params": {
-        "type": "array",
-      },
-      "schemaPath": "#/components/schemas/overrideSchema/properties/values/type",
-    },
   ],
   "schema": "#/components/schemas/featureSchema",
 }

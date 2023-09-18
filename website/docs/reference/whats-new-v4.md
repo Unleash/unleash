@@ -21,12 +21,12 @@ With Role-Based Access Control you can now assign groups to users in order to co
 
 [Read more](rbac.md)
 
-### New Addons {#new-addons}
+### New Integrations {#new-integrations}
 
-Addons make it easy to integrate Unleash with other systems. In version 4 we bring two new integrations to Unleash:
+Integrations make it easy to integrate Unleash with other systems. In version 4 we bring two new integrations to Unleash:
 
-- [Microsoft Teams](../reference/addons/teams.md)
-- [Datadog](../reference/addons/datadog.md)
+- [Microsoft Teams](../reference/integrations/teams.md)
+- [Datadog](../reference/integrations/datadog.md)
 
 ### Improved UX {#improved-ux}
 

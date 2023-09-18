@@ -36,6 +36,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
         backgroundColor: theme.palette.action.hover,
     },
 }));
+
 const StyledAnchor = styled('a')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -82,7 +83,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     title,
     description,
     isEnabled,
-    configureActionText = 'Open',
+    configureActionText = 'Configure',
     link,
     addon,
     deprecated,

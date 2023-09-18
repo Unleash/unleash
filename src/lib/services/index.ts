@@ -60,6 +60,10 @@ import ConfigurationRevisionService from '../features/feature-toggle/configurati
 import { createFeatureToggleService } from '../features';
 import EventAnnouncerService from './event-announcer-service';
 import { createGroupService } from '../features/group/createGroupService';
+import {
+    createFakePrivateProjectChecker,
+    createPrivateProjectChecker,
+} from '../features/private-project/createPrivateProjectChecker';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -184,12 +188,16 @@ export const createServices = (
         changeRequestAccessReadModel,
         config,
     );
+    const privateProjectChecker = db
+        ? createPrivateProjectChecker(db, config)
+        : createFakePrivateProjectChecker();
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,
         segmentService,
         accessService,
         changeRequestAccessReadModel,
+        privateProjectChecker,
     );
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
@@ -201,6 +209,7 @@ export const createServices = (
         featureToggleServiceV2,
         groupService,
         favoritesService,
+        privateProjectChecker,
     );
     const projectHealthService = new ProjectHealthService(
         stores,
@@ -315,6 +324,7 @@ export const createServices = (
         configurationRevisionService,
         transactionalFeatureToggleService,
         transactionalGroupService,
+        privateProjectChecker,
     };
 };
 

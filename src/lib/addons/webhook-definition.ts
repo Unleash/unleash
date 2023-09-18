@@ -34,7 +34,7 @@ const webhookDefinition: IAddonDefinition = {
     description:
         'A Webhook is a generic way to post messages from Unleash to third party services.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/webhook',
-    howTo: 'The Webhook Addon introduces a generic way to post messages from Unleash to third party services. Unleash allows you to define a webhook which listens changes in Unleash and post them to a third party services.',
+    howTo: 'The Webhook Addon introduces a generic way to post messages from Unleash to third party services. Unleash allows you to define a webhook which listens for changes in Unleash and posts them to a third party services.',
     parameters: [
         {
             name: 'url',
@@ -85,7 +85,7 @@ const webhookDefinition: IAddonDefinition = {
             displayName: 'Extra HTTP Headers',
             placeholder:
                 '{\n"ISTIO_USER_KEY": "hunter2",\n"SOME_OTHER_CUSTOM_HTTP_HEADER": "SOMEVALUE"\n}',
-            description: `(Optional) Used to add extra HTTP Headers to the request the plugin fires off. Format here needs to be a valid json object of key value pairs where both key and value are strings`,
+            description: `(Optional) Used to add extra HTTP Headers to the request the plugin fires off. This must be a valid json object of key-value pairs where both the key and the value are strings`,
             required: false,
             sensitive: true,
             type: 'textfield',

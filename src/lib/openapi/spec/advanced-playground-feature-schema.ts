@@ -7,6 +7,7 @@ import { playgroundConstraintSchema } from './playground-constraint-schema';
 import { playgroundSegmentSchema } from './playground-segment-schema';
 import { sdkContextSchema } from './sdk-context-schema';
 import { advancedPlaygroundEnvironmentFeatureSchema } from './advanced-playground-environment-feature-schema';
+import { sdkFlatContextSchema } from './sdk-flat-context-schema';
 
 export const advancedPlaygroundFeatureSchema = {
     $id: '#/components/schemas/advancedPlaygroundFeatureSchema',
@@ -46,6 +47,7 @@ export const advancedPlaygroundFeatureSchema = {
             variantSchema,
             overrideSchema,
             sdkContextSchema,
+            sdkFlatContextSchema,
         },
     },
 } as const;

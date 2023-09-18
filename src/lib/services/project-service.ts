@@ -48,7 +48,6 @@ import {
 } from '../types/stores/access-store';
 import FeatureToggleService from './feature-toggle-service';
 import IncompatibleProjectError from '../error/incompatible-project-error';
-import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 import { arraysHaveSameItems } from '../util';
 import { GroupService } from './group-service';
@@ -59,6 +58,8 @@ import { IProjectStatsStore } from 'lib/types/stores/project-stats-store-type';
 import { uniqueByKey } from '../util/unique';
 import { BadDataError, PermissionError } from '../error';
 import { ProjectDoraMetricsSchema } from 'lib/openapi';
+import { checkFeatureNamingData } from '../features/feature-naming-pattern/feature-naming-validation';
+import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -102,7 +103,7 @@ export default class ProjectService {
 
     private featureToggleService: FeatureToggleService;
 
-    private tagStore: IFeatureTagStore;
+    private privateProjectChecker: IPrivateProjectChecker;
 
     private accountStore: IAccountStore;
 
@@ -120,7 +121,6 @@ export default class ProjectService {
             featureTypeStore,
             environmentStore,
             featureEnvironmentStore,
-            featureTagStore,
             accountStore,
             projectStatsStore,
         }: Pick<
@@ -131,7 +131,6 @@ export default class ProjectService {
             | 'featureTypeStore'
             | 'environmentStore'
             | 'featureEnvironmentStore'
-            | 'featureTagStore'
             | 'accountStore'
             | 'projectStatsStore'
         >,
@@ -140,6 +139,7 @@ export default class ProjectService {
         featureToggleService: FeatureToggleService,
         groupService: GroupService,
         favoriteService: FavoritesService,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.store = projectStore;
         this.environmentStore = environmentStore;
@@ -150,7 +150,7 @@ export default class ProjectService {
         this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
         this.favoritesService = favoriteService;
-        this.tagStore = featureTagStore;
+        this.privateProjectChecker = privateProjectChecker;
         this.accountStore = accountStore;
         this.groupService = groupService;
         this.projectStatsStore = projectStatsStore;
@@ -162,32 +162,47 @@ export default class ProjectService {
         query?: IProjectQuery,
         userId?: number,
     ): Promise<IProjectWithCount[]> {
-        return this.store.getProjectsWithCounts(query, userId);
+        const projects = await this.store.getProjectsWithCounts(query, userId);
+        if (this.flagResolver.isEnabled('privateProjects') && userId) {
+            const accessibleProjects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            return projects.filter((project) =>
+                accessibleProjects.includes(project.id),
+            );
+        }
+        return projects;
     }
 
     async getProject(id: string): Promise<IProject> {
         return this.store.get(id);
     }
 
-    private validateFlagNaming = (naming?: IFeatureNaming) => {
-        if (naming) {
-            const { pattern, example } = naming;
-            if (
-                pattern != null &&
-                example &&
-                !example.match(new RegExp(pattern))
-            ) {
-                throw new BadDataError(
-                    `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}"). Please provide an example that matches your supplied pattern.`,
-                );
-            }
+    private validateAndProcessFeatureNamingPattern = (
+        featureNaming: IFeatureNaming,
+    ): IFeatureNaming => {
+        const validationResult = checkFeatureNamingData(featureNaming);
 
-            if (!pattern && example) {
-                throw new BadDataError(
-                    "You've provided a feature flag naming example, but no feature flag naming pattern. You must specify a pattern to use an example.",
-                );
-            }
+        if (validationResult.state === 'invalid') {
+            const [firstReason, ...remainingReasons] =
+                validationResult.reasons.map((message) => ({
+                    message,
+                }));
+            throw new BadDataError(
+                'The feature naming pattern data you provided was invalid.',
+                [firstReason, ...remainingReasons],
+            );
         }
+
+        if (featureNaming.pattern && !featureNaming.example) {
+            featureNaming.example = null;
+        }
+        if (featureNaming.pattern && !featureNaming.description) {
+            featureNaming.description = null;
+        }
+
+        return featureNaming;
     };
 
     async createProject(
@@ -197,7 +212,9 @@ export default class ProjectService {
         const data = await projectSchema.validateAsync(newProject);
         await this.validateUniqueId(data.id);
 
-        this.validateFlagNaming(data.featureNaming);
+        if (data.featureNaming) {
+            this.validateAndProcessFeatureNamingPattern(data.featureNaming);
+        }
 
         await this.store.create(data);
 
@@ -231,13 +248,9 @@ export default class ProjectService {
         const preData = await this.store.get(updatedProject.id);
 
         if (updatedProject.featureNaming) {
-            this.validateFlagNaming(updatedProject.featureNaming);
-        }
-        if (
-            updatedProject.featureNaming?.pattern &&
-            !updatedProject.featureNaming?.example
-        ) {
-            updatedProject.featureNaming.example = null;
+            this.validateAndProcessFeatureNamingPattern(
+                updatedProject.featureNaming,
+            );
         }
 
         await this.store.update(updatedProject);

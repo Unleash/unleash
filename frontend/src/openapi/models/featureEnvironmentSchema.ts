@@ -28,4 +28,6 @@ export interface FeatureEnvironmentSchema {
     strategies?: FeatureStrategySchema[];
     /** A list of variants for the feature environment */
     variants?: VariantSchema[];
+    /** The date when metrics where last collected for the feature environment */
+    lastSeenAt?: string | null;
 }

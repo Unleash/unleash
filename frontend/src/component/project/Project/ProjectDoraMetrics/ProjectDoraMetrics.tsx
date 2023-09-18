@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Tooltip, useMediaQuery } from '@mui/material';
 import { useProjectDoraMetrics } from 'hooks/api/getters/useProjectDoraMetrics/useProjectDoraMetrics';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useMemo } from 'react';
@@ -16,6 +16,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Badge } from 'component/common/Badge/Badge';
 import { ProjectDoraFeedback } from './ProjectDoraFeedback/ProjectDoraFeedback';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import theme from 'themes/theme';
 
 const resolveDoraMetrics = (input: number) => {
     const ONE_MONTH = 30;
@@ -81,15 +83,20 @@ export const ProjectDoraMetrics = () => {
             },
             {
                 Header: 'Time to production',
-                id: 'Time to production',
+                id: 'timetoproduction',
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
-                    <Box
-                        sx={{ display: 'flex', justifyContent: 'center' }}
-                        data-loading
+                    <Tooltip
+                        title="The time from the feature toggle of type release was created until it was turned on in a production environment"
+                        arrow
                     >
-                        {original.timeToProduction} days
-                    </Box>
+                        <Box
+                            sx={{ display: 'flex', justifyContent: 'center' }}
+                            data-loading
+                        >
+                            {original.timeToProduction} days
+                        </Box>
+                    </Tooltip>
                 ),
                 width: 200,
                 disableGlobalFilter: true,
@@ -97,15 +104,27 @@ export const ProjectDoraMetrics = () => {
             },
             {
                 Header: `Deviation`,
-                id: 'Deviation from average',
+                id: 'deviation',
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
-                    <Box
-                        sx={{ display: 'flex', justifyContent: 'center' }}
-                        data-loading
+                    <Tooltip
+                        title={`Deviation from project average. Average for this project is: ${
+                            dora.projectAverage || 0
+                        } days`}
+                        arrow
                     >
-                        {dora.projectAverage - original.timeToProduction} days
-                    </Box>
+                        <Box
+                            sx={{ display: 'flex', justifyContent: 'center' }}
+                            data-loading
+                        >
+                            {Math.round(
+                                (dora.projectAverage
+                                    ? dora.projectAverage
+                                    : 0) - original.timeToProduction
+                            )}{' '}
+                            days
+                        </Box>
+                    </Tooltip>
                 ),
                 width: 300,
                 disableGlobalFilter: true,
@@ -116,12 +135,17 @@ export const ProjectDoraMetrics = () => {
                 id: 'dora',
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
-                    <Box
-                        sx={{ display: 'flex', justifyContent: 'center' }}
-                        data-loading
+                    <Tooltip
+                        title="Dora score. High = less than a week to production. Medium = less than a month to production. Low = Less than 6 months to production"
+                        arrow
                     >
-                        {resolveDoraMetrics(original.timeToProduction)}
-                    </Box>
+                        <Box
+                            sx={{ display: 'flex', justifyContent: 'center' }}
+                            data-loading
+                        >
+                            {resolveDoraMetrics(original.timeToProduction)}
+                        </Box>
+                    </Tooltip>
                 ),
                 width: 200,
                 disableGlobalFilter: true,
@@ -134,10 +158,11 @@ export const ProjectDoraMetrics = () => {
     const initialState = useMemo(
         () => ({
             sortBy: [{ id: 'name', desc: false }],
-            hiddenColumns: ['description'],
         }),
         []
     );
+
+    const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const {
         getTableProps,
@@ -146,6 +171,7 @@ export const ProjectDoraMetrics = () => {
         rows,
         prepareRow,
         state: { globalFilter },
+        setHiddenColumns,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
@@ -157,6 +183,17 @@ export const ProjectDoraMetrics = () => {
         },
         useGlobalFilter,
         useSortBy
+    );
+
+    useConditionallyHiddenColumns(
+        [
+            {
+                condition: isExtraSmallScreen,
+                columns: ['deviation'],
+            },
+        ],
+        setHiddenColumns,
+        columns
     );
 
     return (

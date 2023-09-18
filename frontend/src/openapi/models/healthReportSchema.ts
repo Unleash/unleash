@@ -7,6 +7,7 @@ import type { HealthReportSchemaMode } from './healthReportSchemaMode';
 import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
 import type { FeatureSchema } from './featureSchema';
 import type { ProjectStatsSchema } from './projectStatsSchema';
+import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
 
 /**
  * A report of the current health of the requested project, with datapoints like counters of currently active, stale, and potentially stale feature toggles.
@@ -40,6 +41,7 @@ export interface HealthReportSchema {
     favorite?: boolean;
     /** Project statistics */
     stats?: ProjectStatsSchema;
+    featureNaming?: CreateFeatureNamingPatternSchema;
     /** The number of potentially stale feature toggles. */
     potentiallyStaleCount: number;
     /** The number of active feature toggles. */

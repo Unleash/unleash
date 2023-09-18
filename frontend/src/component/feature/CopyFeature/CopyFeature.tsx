@@ -20,6 +20,7 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
 import useProject from 'hooks/api/getters/useProject/useProject';
+import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
 
 const StyledPage = styled(Paper)(({ theme }) => ({
     overflow: 'visible',
@@ -141,41 +142,9 @@ export const CopyFeatureToggle = () => {
                 <ConditionallyRender
                     condition={displayFeatureNamingInfo}
                     show={
-                        <>
-                            <p>
-                                This project has feature flag naming patterns
-                                enabled, so the name must also match the
-                                configured pattern.
-                            </p>
-                            <dl id="feature-naming-pattern-info">
-                                <dt>Pattern</dt>
-                                <dd>
-                                    <code>{featureNaming?.pattern}</code>
-                                </dd>
-                                <ConditionallyRender
-                                    condition={Boolean(featureNaming?.example)}
-                                    show={
-                                        <>
-                                            <dt>Example</dt>
-                                            <dd>{featureNaming?.example}</dd>
-                                        </>
-                                    }
-                                />
-                                <ConditionallyRender
-                                    condition={Boolean(
-                                        featureNaming?.description
-                                    )}
-                                    show={
-                                        <>
-                                            <dt>Description</dt>
-                                            <dd>
-                                                {featureNaming?.description}
-                                            </dd>
-                                        </>
-                                    }
-                                />
-                            </dl>
-                        </>
+                        <FeatureNamingPatternInfo
+                            featureNaming={featureNaming!}
+                        />
                     }
                 />
                 <StyledForm onSubmit={onSubmit}>

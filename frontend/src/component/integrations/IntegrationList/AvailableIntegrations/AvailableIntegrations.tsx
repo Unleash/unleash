@@ -1,7 +1,6 @@
 import { type VFC } from 'react';
 import { Box, Typography, styled } from '@mui/material';
 import type { AddonTypeSchema } from 'openapi';
-import useLoading from 'hooks/useLoading';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
@@ -60,13 +59,10 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
     const serverSdks = OFFICIAL_SDKS.filter(sdk => sdk.type === 'server');
     const clientSdks = OFFICIAL_SDKS.filter(sdk => sdk.type === 'client');
 
-    const ref = useLoading(loading || false);
-
     return (
         <PageContent
             header={<PageHeader title="Integrations" secondary />}
             isLoading={loading}
-            ref={ref}
         >
             <StyledContainer>
                 <StyledSection>
@@ -117,9 +113,8 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             Performance and security
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            Connect Unleash to private, scalable and distributed
-                            relays. Additional layer for handling massive number
-                            of requests.
+                            Connect Unleash to private, scalable, and
+                            distributed relays.
                         </Typography>
                     </div>
                     <StyledCardsGrid>
@@ -262,7 +257,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                         >
                                             Here's some of the fantastic work
                                         </a>{' '}
-                                        our community has build to make Unleash
+                                        our community has built to make Unleash
                                         work in even more contexts.
                                     </Typography>
                                 </div>

@@ -12,7 +12,6 @@ import Addon from './addon';
 
 import slackAppDefinition from './slack-app-definition';
 import { IAddonConfig } from '../types/model';
-const SCHEDULE_MESSAGE_DELAY_IN_SECONDS = 10;
 import {
     FeatureEventFormatter,
     FeatureEventFormatterMd,
@@ -23,7 +22,6 @@ import { IEvent } from '../types/events';
 interface ISlackAppAddonParameters {
     accessToken: string;
     defaultChannels: string;
-    alwaysPostToDefault: string;
 }
 
 export default class SlackAppAddon extends Addon {
@@ -46,26 +44,20 @@ export default class SlackAppAddon extends Addon {
         parameters: ISlackAppAddonParameters,
     ): Promise<void> {
         try {
-            const { accessToken, defaultChannels, alwaysPostToDefault } =
-                parameters;
+            const { accessToken, defaultChannels } = parameters;
             if (!accessToken) {
                 this.logger.warn('No access token provided.');
                 return;
             }
-            let postToDefault =
-                alwaysPostToDefault === 'true' || alwaysPostToDefault === 'yes';
-            this.logger.debug(`Post to default was set to ${postToDefault}`);
+
             const taggedChannels = this.findTaggedChannels(event);
-            let eventChannels: string[];
-            if (postToDefault) {
-                eventChannels = taggedChannels.concat(
-                    this.getDefaultChannels(defaultChannels),
-                );
-            } else {
-                eventChannels = taggedChannels.length
-                    ? taggedChannels
-                    : this.getDefaultChannels(defaultChannels);
-            }
+            const eventChannels = [
+                ...new Set(
+                    taggedChannels.concat(
+                        this.getDefaultChannels(defaultChannels),
+                    ),
+                ),
+            ];
 
             if (!eventChannels.length) {
                 this.logger.debug(
@@ -89,9 +81,7 @@ export default class SlackAppAddon extends Addon {
             const text = this.msgFormatter.format(event);
             const url = this.msgFormatter.featureLink(event);
             const requests = eventChannels.map((name) => {
-                const now = Math.floor(new Date().getTime() / 1000);
-                const postAt = now + SCHEDULE_MESSAGE_DELAY_IN_SECONDS;
-                return this.slackClient!.chat.scheduleMessage({
+                return this.slackClient!.chat.postMessage({
                     channel: name,
                     text,
                     blocks: [
@@ -118,7 +108,6 @@ export default class SlackAppAddon extends Addon {
                             ],
                         },
                     ],
-                    post_at: postAt,
                 });
             });
 

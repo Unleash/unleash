@@ -48,7 +48,7 @@ import {
 import { ImportPermissionsService, Mode } from './import-permissions-service';
 import { ImportValidationMessages } from './import-validation-messages';
 import { findDuplicates } from '../../util/findDuplicates';
-import { FeatureNameCheckResult } from 'lib/services/feature-toggle-service';
+import { FeatureNameCheckResultWithFeaturePattern } from '../../services/feature-toggle-service';
 
 export default class ExportImportService {
     private logger: Logger;
@@ -510,7 +510,7 @@ export default class ExportImportService {
     private async getInvalidFeatureNames({
         project,
         data,
-    }: ImportTogglesSchema): Promise<FeatureNameCheckResult> {
+    }: ImportTogglesSchema): Promise<FeatureNameCheckResultWithFeaturePattern> {
         return this.featureToggleService.checkFeatureFlagNamesAgainstProjectPattern(
             project,
             data.features.map((f) => f.name),

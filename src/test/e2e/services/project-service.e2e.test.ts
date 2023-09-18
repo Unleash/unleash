@@ -15,6 +15,7 @@ import { FavoritesService } from '../../../lib/services';
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';
 import { addDays, subDays } from 'date-fns';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
+import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
 
 let stores;
 let db: ITestDb;
@@ -47,7 +48,9 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
         // @ts-ignore
-        experimental: { environments: { enabled: true } },
+        experimental: {
+            flags: { privateProjects: true },
+        },
     });
     groupService = new GroupService(stores, config);
     accessService = new AccessService(stores, config, groupService);
@@ -55,12 +58,17 @@ beforeAll(async () => {
         db.rawDatabase,
         accessService,
     );
+    const privateProjectChecker = createPrivateProjectChecker(
+        db.rawDatabase,
+        config,
+    );
     featureToggleService = new FeatureToggleService(
         stores,
         config,
         new SegmentService(stores, changeRequestAccessReadModel, config),
         accessService,
         changeRequestAccessReadModel,
+        privateProjectChecker,
     );
 
     favoritesService = new FavoritesService(stores, config);
@@ -72,6 +80,7 @@ beforeAll(async () => {
         featureToggleService,
         groupService,
         favoritesService,
+        privateProjectChecker,
     );
 });
 
@@ -132,6 +141,24 @@ test('should create new project', async () => {
     expect(project.description).toEqual(ret.description);
     expect(ret.createdAt).toBeTruthy();
     expect(ret.mode).toEqual('protected');
+});
+
+test('should create new private project', async () => {
+    const project = {
+        id: 'testPrivate',
+        name: 'New private project',
+        description: 'Blah',
+        mode: 'private' as const,
+        defaultStickiness: 'default',
+    };
+
+    await projectService.createProject(project, user);
+    const ret = await projectService.getProject('testPrivate');
+    expect(project.id).toEqual(ret.id);
+    expect(project.name).toEqual(ret.name);
+    expect(project.description).toEqual(ret.description);
+    expect(ret.createdAt).toBeTruthy();
+    expect(ret.mode).toEqual('private');
 });
 
 test('should delete project', async () => {
@@ -1776,4 +1803,44 @@ test('should return average time to production per toggle and include archived t
     const resultProject1 = await projectService.getDoraMetrics(project1.id);
 
     expect(resultProject1.features).toHaveLength(3);
+});
+
+describe('feature flag naming patterns', () => {
+    test(`should clear existing example and description if the payload doesn't contain them`, async () => {
+        const featureNaming = {
+            pattern: '.+',
+            example: 'example',
+            description: 'description',
+        };
+
+        const project = {
+            id: 'feature-flag-naming-patterns-cleanup',
+            name: 'Project',
+            mode: 'open' as const,
+            defaultStickiness: 'clientId',
+            description: 'description',
+            featureNaming,
+        };
+
+        await projectService.createProject(project, user.id);
+
+        expect(
+            (await projectService.getProject(project.id)).featureNaming,
+        ).toMatchObject(featureNaming);
+
+        const newPattern = 'new-pattern.+';
+        await projectService.updateProject(
+            {
+                ...project,
+                featureNaming: { pattern: newPattern },
+            },
+            user.id,
+        );
+
+        const updatedProject = await projectService.getProject(project.id);
+
+        expect(updatedProject.featureNaming!.pattern).toBe(newPattern);
+        expect(updatedProject.featureNaming!.example).toBeFalsy();
+        expect(updatedProject.featureNaming!.description).toBeFalsy();
+    });
 });

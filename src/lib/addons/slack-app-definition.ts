@@ -1,6 +1,5 @@
 import {
     FEATURE_CREATED,
-    FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
     FEATURE_STALE_ON,
@@ -22,19 +21,9 @@ const slackAppDefinition: IAddonDefinition = {
     name: 'slack-app',
     displayName: 'Slack App',
     description:
-        'The Unleash Slack App posts messages to your Slack workspace. You can decide which channels to post to by configuring your feature toggles with "slack" tags.',
-    howTo: 'You can decide which channels to post by configuring your feature toggles with “slack” tags. For example, if you’d like the bot to post messages to the #general channel, you should configure your feature toggle with the “slack:general” tag. The Unleash Slack App bot has access to public channels by default. If you want the bot to post messages to private channels, you’ll need to invite it to those channels.',
+        'The Unleash Slack App posts messages to the selected channels in your Slack workspace.',
+    howTo: 'Below you can specify which Slack channels receive event notifications. The configuration settings allow you to choose the events and whether you want to filter them by projects and environments.\n\nYou can also select which channels to post to by configuring your feature toggles with “slack” tags. For example, if you’d like the bot to post messages to the #general channel, you can configure your feature toggle with the “slack:general” tag.\n\nThe Unleash Slack App bot has access to public channels by default. If you want the bot to post messages to private channels, you’ll need to invite it to those channels.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/slack-app',
-    alerts: [
-        {
-            type: 'info',
-            text: `The Unleash Slack App bot has access to public channels by default. If you want the bot to post messages to private channels, you'll need to invite it to those channels.`,
-        },
-        {
-            type: 'warning',
-            text: `Please ensure you have the Unleash Slack App installed in your Slack workspace if you haven't installed it already.`,
-        },
-    ],
     installation: {
         url: 'https://unleash-slack-app.vercel.app/install',
         title: 'Slack App installation',
@@ -52,17 +41,9 @@ const slackAppDefinition: IAddonDefinition = {
         },
         {
             name: 'defaultChannels',
-            displayName: 'Default channels',
+            displayName: 'Channels',
             description:
-                'A comma-separated list of channels to post to if no tagged channels are found (e.g. a toggle without tags, or an event with no tags associated).',
-            type: 'text',
-            required: false,
-            sensitive: false,
-        },
-        {
-            name: 'alwaysPostToDefault',
-            displayName: 'Always post to default channels',
-            description: `If set to 'true' or 'yes', the app will always post events to the default channels, even if the feature toggle has slack tags`,
+                'A comma-separated list of channels to post the configured events to. These channels are always notified, regardless of the event type or the presence of a slack tag.',
             type: 'text',
             required: false,
             sensitive: false,
@@ -70,7 +51,6 @@ const slackAppDefinition: IAddonDefinition = {
     ],
     events: [
         FEATURE_CREATED,
-        FEATURE_UPDATED,
         FEATURE_ARCHIVED,
         FEATURE_REVIVED,
         FEATURE_STALE_ON,

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Fragment, useState, VFC } from 'react';
+import React, { ChangeEvent, Fragment, VFC } from 'react';
 import { IAutocompleteBoxOption } from '../../../common/AutocompleteBox/AutocompleteBox';
 import {
     AutocompleteRenderGroupParams,
@@ -55,9 +55,6 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
     description,
     required,
 }) => {
-    const [isWildcardSelected, selectWildcard] = useState(
-        selectedItems.includes(ALL_OPTIONS)
-    );
     const renderInput = (params: AutocompleteRenderInputParams) => (
         <TextField
             {...params}
@@ -76,15 +73,15 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
         selectedItems.length === options.length &&
         selectedItems[0] !== ALL_OPTIONS;
 
+    const isWildcardSelected = selectedItems.includes(ALL_OPTIONS);
+
     const onAllItemsChange = (
         e: ChangeEvent<HTMLInputElement>,
         checked: boolean
     ) => {
         if (checked) {
-            selectWildcard(true);
             onChange([ALL_OPTIONS]);
         } else {
-            selectWildcard(false);
             onChange(selectedItems.includes(ALL_OPTIONS) ? [] : selectedItems);
         }
     };
@@ -138,9 +135,9 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
 
     const DefaultHelpText = () => (
         <StyledHelpText>
-            Selecting {entityName}(s) here will filter events so that your
-            integration will only receive events that are tagged with one of
-            your {entityName}s.
+            Selecting {entityName}(s) will filter events, so that your
+            integration only receives events related to those specific{' '}
+            {entityName}s.
         </StyledHelpText>
     );
 
@@ -155,12 +152,12 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
                 ) : null}
             </StyledTitle>
             <ConditionallyRender
-                condition={description !== undefined}
-                show={<StyledHelpText>{description}</StyledHelpText>}
-            />
-            <ConditionallyRender
                 condition={selectAllEnabled}
                 show={<DefaultHelpText />}
+            />
+            <ConditionallyRender
+                condition={description !== undefined}
+                show={<StyledHelpText>{description}</StyledHelpText>}
             />
             <ConditionallyRender
                 condition={selectAllEnabled}

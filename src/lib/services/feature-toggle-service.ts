@@ -94,6 +94,8 @@ import { IFeatureProjectUserParams } from '../routes/admin-api/project/project-f
 import { unique } from '../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
+import { checkFeatureFlagNamesAgainstPattern } from '../features/feature-naming-pattern/feature-naming-validation';
+import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 
 interface IFeatureContext {
     featureName: string;
@@ -112,7 +114,7 @@ export interface IGetFeatureParams {
     userId?: number;
 }
 
-export type FeatureNameCheckResult =
+export type FeatureNameCheckResultWithFeaturePattern =
     | { state: 'valid' }
     | {
           state: 'invalid';
@@ -153,6 +155,8 @@ class FeatureToggleService {
 
     private changeRequestAccessReadModel: IChangeRequestAccessReadModel;
 
+    private privateProjectChecker: IPrivateProjectChecker;
+
     constructor(
         {
             featureStrategiesStore,
@@ -183,6 +187,7 @@ class FeatureToggleService {
         segmentService: ISegmentService,
         accessService: AccessService,
         changeRequestAccessReadModel: IChangeRequestAccessReadModel,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -198,6 +203,7 @@ class FeatureToggleService {
         this.accessService = accessService;
         this.flagResolver = flagResolver;
         this.changeRequestAccessReadModel = changeRequestAccessReadModel;
+        this.privateProjectChecker = privateProjectChecker;
     }
 
     async validateFeaturesContext(
@@ -408,6 +414,7 @@ class FeatureToggleService {
             disabled: featureStrategy.disabled,
             constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
+            variants: featureStrategy.variants || [],
             sortOrder: featureStrategy.sortOrder,
             segments: segments.map((segment) => segment.id) ?? [],
         };
@@ -1015,11 +1022,20 @@ class FeatureToggleService {
         userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleClientStore.getAdmin({
+        const features = await this.featureToggleClientStore.getAdmin({
             featureQuery: query,
             userId,
             archived,
         });
+
+        if (this.flagResolver.isEnabled('privateProjects') && userId) {
+            const projects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            return features.filter((f) => projects.includes(f.project));
+        }
+        return features;
     }
 
     async getFeatureOverview(
@@ -1103,24 +1119,20 @@ class FeatureToggleService {
     async checkFeatureFlagNamesAgainstProjectPattern(
         projectId: string,
         featureNames: string[],
-    ): Promise<FeatureNameCheckResult> {
+    ): Promise<FeatureNameCheckResultWithFeaturePattern> {
         if (this.flagResolver.isEnabled('featureNamingPattern')) {
             const project = await this.projectStore.get(projectId);
             const patternData = project.featureNaming;
             const namingPattern = patternData?.pattern;
 
             if (namingPattern) {
-                const regex = new RegExp(namingPattern);
-                const mismatchedNames = featureNames.filter(
-                    (name) => !regex.test(name),
+                const result = checkFeatureFlagNamesAgainstPattern(
+                    featureNames,
+                    namingPattern,
                 );
 
-                if (mismatchedNames.length > 0) {
-                    return {
-                        state: 'invalid',
-                        invalidNames: new Set(mismatchedNames),
-                        featureNaming: patternData,
-                    };
+                if (result.state === 'invalid') {
+                    return { ...result, featureNaming: patternData };
                 }
             }
         }
@@ -1288,6 +1300,7 @@ class FeatureToggleService {
             name: strategy.strategyName,
             constraints: strategy.constraints || [],
             parameters: strategy.parameters,
+            variants: strategy.variants || [],
             segments: [],
             title: strategy.title,
             disabled: strategy.disabled,
@@ -1826,7 +1839,7 @@ class FeatureToggleService {
     }
 
     // TODO: add project id.
-    async reviveToggle(featureName: string, createdBy: string): Promise<void> {
+    async reviveFeature(featureName: string, createdBy: string): Promise<void> {
         const toggle = await this.featureToggleStore.revive(featureName);
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
         await this.eventStore.store(
@@ -1841,8 +1854,17 @@ class FeatureToggleService {
 
     async getMetadataForAllFeatures(
         archived: boolean,
+        userId: number,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleStore.getAll({ archived });
+        const features = await this.featureToggleStore.getAll({ archived });
+        if (this.flagResolver.isEnabled('privateProjects')) {
+            const projects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            return features.filter((f) => projects.includes(f.project));
+        }
+        return features;
     }
 
     async getMetadataForAllFeaturesByProjectId(
@@ -1901,7 +1923,10 @@ class FeatureToggleService {
             featureName,
             environment,
         );
-        const { newDocument } = await applyPatch(oldVariants, newVariants);
+        const { newDocument } = await applyPatch(
+            deepClone(oldVariants),
+            newVariants,
+        );
         return this.crProtectedSaveVariantsOnEnv(
             project,
             featureName,
@@ -1962,6 +1987,8 @@ class FeatureToggleService {
             ).variants ||
             [];
 
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+
         await this.eventStore.store(
             new EnvironmentVariantEvent({
                 featureName,
@@ -1970,6 +1997,7 @@ class FeatureToggleService {
                 createdBy: user,
                 oldVariants: theOldVariants,
                 newVariants: fixedVariants,
+                tags,
             }),
         );
         await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
@@ -2035,6 +2063,9 @@ class FeatureToggleService {
             });
             oldVariants[env] = featureEnv.variants || [];
         }
+
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+
         await this.eventStore.batchStore(
             environments.map(
                 (environment) =>
@@ -2045,6 +2076,7 @@ class FeatureToggleService {
                         createdBy: user,
                         oldVariants: oldVariants[environment],
                         newVariants: fixedVariants,
+                        tags,
                     }),
             ),
         );

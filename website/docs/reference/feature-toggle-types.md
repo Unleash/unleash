@@ -48,7 +48,7 @@ Unleash admins can change the expected lifetime of Unleash's feature types from 
 
 You can mark feature toggles as `stale`. This is a way to deprecate a feature toggle without removing the active configuration for connected applications. Use this to signal that you should stop using the feature in your applications. Stale toggles will show as stale in the ["technical debt dashboard"](technical-debt.md).
 
-When you mark a toggle as stale, Unleash will emit an event. You can use [an addon](addons/addons.md) to integrate this with your systems, for instance to post a message in a Slack channel.
+When you mark a toggle as stale, Unleash will emit an event. You can use [an integration](integrations/integrations.md) to integrate this with your systems, for instance to post a message in a Slack channel.
 
 Additionally, with some extra work, you can also use the `stale` property to:
 

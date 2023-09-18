@@ -1,5 +1,6 @@
 import { useCallback, useState, VFC } from 'react';
 import {
+    Alert,
     IconButton,
     ListItemIcon,
     ListItemText,
@@ -21,6 +22,7 @@ import type { AddonSchema } from 'openapi';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 
 interface IIntegrationCardMenuProps {
     addon: AddonSchema;
@@ -38,20 +40,25 @@ const StyledMenu = styled('div')(({ theme }) => ({
 export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
     addon,
 }) => {
-    const [open, setOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [isToggleOpen, setIsToggleOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const { updateAddon, removeAddon } = useAddonsApi();
     const { refetchAddons } = useAddons();
     const { setToastData, setToastApiError } = useToast();
 
+    const closeMenu = () => {
+        setIsMenuOpen(false);
+        setAnchorEl(null);
+    };
+
     const handleMenuClick = (event: React.SyntheticEvent) => {
-        event.preventDefault();
-        if (open) {
-            setOpen(false);
-            setAnchorEl(null);
+        if (isMenuOpen) {
+            closeMenu();
         } else {
             setAnchorEl(event.currentTarget);
-            setOpen(true);
+            setIsMenuOpen(true);
         }
     };
     const updateAccess = useHasRootAccess(UPDATE_ADDON);
@@ -88,14 +95,14 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
     }, [setToastApiError, refetchAddons, setToastData, removeAddon]);
 
     return (
-        <StyledMenu>
+        <StyledMenu onClick={e => e.preventDefault()}>
             <Tooltip title="More actions" arrow>
                 <IconButton
                     onClick={handleMenuClick}
                     size="small"
-                    aria-controls={open ? 'actions-menu' : undefined}
+                    aria-controls={isMenuOpen ? 'actions-menu' : undefined}
                     aria-haspopup="true"
-                    aria-expanded={open ? 'true' : undefined}
+                    aria-expanded={isMenuOpen ? 'true' : undefined}
                     data-loading
                 >
                     <MoreVertIcon sx={{ width: 32, height: 32 }} />
@@ -113,15 +120,12 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
                     vertical: 'top',
                     horizontal: 'right',
                 }}
-                onClick={event => {
-                    event.preventDefault();
-                }}
                 onClose={handleMenuClick}
             >
                 <MenuItem
-                    onClick={e => {
-                        e.preventDefault();
-                        toggleIntegration();
+                    onClick={() => {
+                        setIsToggleOpen(true);
+                        closeMenu();
                     }}
                     disabled={!updateAccess}
                 >
@@ -134,9 +138,9 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
                 </MenuItem>{' '}
                 <MenuItem
                     disabled={!deleteAccess}
-                    onClick={e => {
-                        e.preventDefault();
-                        deleteIntegration();
+                    onClick={() => {
+                        setIsDeleteOpen(true);
+                        closeMenu();
                     }}
                 >
                     <ListItemIcon>
@@ -145,6 +149,36 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
                     <ListItemText>Delete</ListItemText>
                 </MenuItem>
             </Menu>
+
+            <Dialogue
+                open={isToggleOpen}
+                onClick={toggleIntegration}
+                onClose={() => setIsToggleOpen(false)}
+                title={
+                    addon.enabled
+                        ? `Disable integration?`
+                        : `Enable integration?`
+                }
+            >
+                <div>
+                    {addon.enabled ? 'Disabling' : 'Enabling'} this integration
+                    will{' '}
+                    {addon.enabled
+                        ? 'prevent it from sending updates'
+                        : 'allow it to send updates'}
+                </div>
+            </Dialogue>
+            <Dialogue
+                open={isDeleteOpen}
+                onClick={deleteIntegration}
+                onClose={() => setIsDeleteOpen(false)}
+                title="Delete integration?"
+            >
+                <Alert severity="warning">
+                    Deleting this integration instance will delete all its
+                    configuration. It will stop working immediately.
+                </Alert>
+            </Dialogue>
         </StyledMenu>
     );
 };

@@ -40,7 +40,7 @@ import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
 import { IGroup } from '../types/group';
 import { GroupService } from './group-service';
-import { IFlagResolver, IUnleashConfig } from 'lib/types';
+import { IFlagResolver, IUnleashConfig, IUserAccessOverview } from 'lib/types';
 
 const { ADMIN } = permissions;
 
@@ -735,5 +735,9 @@ export class AccessService {
         }
         await this.validateRoleIsUnique(role.name, existingId);
         return cleanedRole;
+    }
+
+    async getUserAccessOverview(): Promise<IUserAccessOverview[]> {
+        return this.store.getUserAccessOverview();
     }
 }

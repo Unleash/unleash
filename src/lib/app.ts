@@ -187,7 +187,7 @@ export default async function getApp(
         app.use(catchAllErrorHandler(config.getLogger));
     }
 
-    app.get(`${baseUriPath}`, (reqinde, res) => {
+    app.get(`${baseUriPath}`, (req, res) => {
         res.send(indexHTML);
     });
 

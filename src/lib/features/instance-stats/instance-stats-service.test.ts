@@ -1,7 +1,7 @@
-import { createTestConfig } from '../../test/config/test-config';
+import { createTestConfig } from '../../../test/config/test-config';
 import { InstanceStatsService } from './instance-stats-service';
-import createStores from '../../test/fixtures/store';
-import VersionService from './version-service';
+import createStores from '../../../test/fixtures/store';
+import VersionService from '../../services/version-service';
 
 let instanceStatsService: InstanceStatsService;
 let versionService: VersionService;

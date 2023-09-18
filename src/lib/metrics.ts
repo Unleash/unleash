@@ -22,7 +22,7 @@ import { IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import Timer = NodeJS.Timer;
-import { InstanceStatsService } from './services/instance-stats-service';
+import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
 import { ValidatedClientMetrics } from './services/client-metrics/schema';
 
 export default class MetricsMonitor {

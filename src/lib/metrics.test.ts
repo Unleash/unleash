@@ -10,7 +10,7 @@ import {
 } from './types/events';
 import { createMetricsMonitor } from './metrics';
 import createStores from '../test/fixtures/store';
-import { InstanceStatsService } from './services/instance-stats-service';
+import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
 import VersionService from './services/version-service';
 
 const monitor = createMetricsMonitor();

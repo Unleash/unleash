@@ -10,7 +10,7 @@ import {
     InstanceStats,
     InstanceStatsService,
     InstanceStatsSigned,
-} from '../../services/instance-stats-service';
+} from '../../features/instance-stats/instance-stats-service';
 import { OpenApiService } from '../../services/openapi-service';
 import {
     createCsvResponseSchema,

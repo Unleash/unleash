@@ -1,24 +1,24 @@
 import { sha256 } from 'js-sha256';
-import { Logger } from '../logger';
-import { IUnleashConfig } from '../types/option';
+import { Logger } from '../../logger';
+import { IUnleashConfig } from '../../types/option';
 import {
     IClientInstanceStore,
     IEventStore,
     IUnleashStores,
-} from '../types/stores';
-import { IContextFieldStore } from '../types/stores/context-field-store';
-import { IEnvironmentStore } from '../types/stores/environment-store';
-import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
-import { IGroupStore } from '../types/stores/group-store';
-import { IProjectStore } from '../types/stores/project-store';
-import { IStrategyStore } from '../types/stores/strategy-store';
-import { IActiveUsers, IUserStore } from '../types/stores/user-store';
-import { ISegmentStore } from '../types/stores/segment-store';
-import { IRoleStore } from '../types/stores/role-store';
-import VersionService from './version-service';
-import { ISettingStore } from '../types/stores/settings-store';
-import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
-import { CUSTOM_ROOT_ROLE_TYPE } from '../util';
+} from '../../types/stores';
+import { IContextFieldStore } from '../../types/stores/context-field-store';
+import { IEnvironmentStore } from '../../types/stores/environment-store';
+import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
+import { IGroupStore } from '../../types/stores/group-store';
+import { IProjectStore } from '../../types/stores/project-store';
+import { IStrategyStore } from '../../types/stores/strategy-store';
+import { IActiveUsers, IUserStore } from '../../types/stores/user-store';
+import { ISegmentStore } from '../../types/stores/segment-store';
+import { IRoleStore } from '../../types/stores/role-store';
+import VersionService from '../../services/version-service';
+import { ISettingStore } from '../../types/stores/settings-store';
+import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../../types';
+import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 

@@ -27,7 +27,7 @@ export class SchedulerService {
                     }
                 } catch (e) {
                     this.logger.error(
-                        `scheduled job failed | id: ${id} | error: ${e}`,
+                        `scheduled job failed | id: ${id} | ${e}`,
                     );
                 }
             }, timeMs).unref(),
@@ -37,7 +37,7 @@ export class SchedulerService {
                 await scheduledFunction();
             }
         } catch (e) {
-            this.logger.error(`scheduled job failed | id: ${id} | error: ${e}`);
+            this.logger.error(`scheduled job failed | id: ${id} | ${e}`);
         }
     }
 

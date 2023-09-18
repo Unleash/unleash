@@ -49,11 +49,7 @@ export default class AddonService {
             IUnleashStores,
             'addonStore' | 'eventStore' | 'featureToggleStore'
         >,
-        {
-            getLogger,
-            server,
-            flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'server' | 'flagResolver'>,
+        { getLogger, server }: Pick<IUnleashConfig, 'getLogger' | 'server'>,
         tagTypeService: TagTypeService,
         addons?: IAddonProviders,
     ) {
@@ -68,7 +64,6 @@ export default class AddonService {
             getAddons({
                 getLogger,
                 unleashUrl: server.unleashUrl,
-                flagResolver,
             });
         this.sensitiveParams = this.loadSensitiveParams(this.addonProviders);
         if (addonStore) {

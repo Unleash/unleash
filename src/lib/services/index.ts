@@ -93,16 +93,19 @@ export const scheduleServices = async (
     schedulerService.schedule(
         apiTokenService.fetchActiveTokens.bind(apiTokenService),
         minutesToMilliseconds(1),
+        'fetchActiveTokens',
     );
 
     schedulerService.schedule(
         apiTokenService.updateLastSeen.bind(apiTokenService),
         minutesToMilliseconds(3),
+        'updateLastSeen',
     );
 
     schedulerService.schedule(
         instanceStatsService.refreshStatsSnapshot.bind(instanceStatsService),
         minutesToMilliseconds(5),
+        'refreshStatsSnapshot',
     );
 
     schedulerService.schedule(
@@ -110,16 +113,19 @@ export const scheduleServices = async (
             clientInstanceService,
         ),
         hoursToMilliseconds(24),
+        'removeInstancesOlderThanTwoDays',
     );
 
     schedulerService.schedule(
         projectService.statusJob.bind(projectService),
         hoursToMilliseconds(24),
+        'statusJob',
     );
 
     schedulerService.schedule(
         projectHealthService.setHealthRating.bind(projectHealthService),
         hoursToMilliseconds(1),
+        'setHealthRating',
     );
 
     schedulerService.schedule(
@@ -127,6 +133,7 @@ export const scheduleServices = async (
             configurationRevisionService,
         ),
         secondsToMilliseconds(1),
+        'updateMaxRevisionId',
     );
 
     schedulerService.schedule(
@@ -134,6 +141,7 @@ export const scheduleServices = async (
             eventAnnouncerService,
         ),
         secondsToMilliseconds(1),
+        'publishUnannouncedEvents',
     );
 
     schedulerService.schedule(
@@ -141,6 +149,7 @@ export const scheduleServices = async (
             featureToggleService,
         ),
         minutesToMilliseconds(1),
+        'updatePotentiallyStaleFeatures',
     );
 };
 

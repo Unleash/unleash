@@ -10,8 +10,9 @@ import {
 } from './types/events';
 import { createMetricsMonitor } from './metrics';
 import createStores from '../test/fixtures/store';
-import { InstanceStatsService } from './services/instance-stats-service';
+import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
 import VersionService from './services/version-service';
+import { createFakeGetActiveUsers } from './features/instance-stats/getActiveUsers';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
@@ -28,7 +29,13 @@ beforeAll(() => {
     stores = createStores();
     eventStore = stores.eventStore;
     const versionService = new VersionService(stores, config);
-    statsService = new InstanceStatsService(stores, config, versionService);
+    statsService = new InstanceStatsService(
+        stores,
+        config,
+        versionService,
+        createFakeGetActiveUsers(),
+    );
+
     const db = {
         client: {
             pool: {

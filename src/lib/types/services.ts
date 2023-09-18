@@ -33,7 +33,7 @@ import EdgeService from '../services/edge-service';
 import PatService from '../services/pat-service';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';
 import { LastSeenService } from '../services/client-metrics/last-seen-service';
-import { InstanceStatsService } from '../services/instance-stats-service';
+import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from '../services/favorites-service';
 import MaintenanceService from '../services/maintenance-service';
 import { AccountService } from '../services/account-service';

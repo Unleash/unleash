@@ -36,7 +36,7 @@ import EdgeService from './edge-service';
 import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
 import { LastSeenService } from './client-metrics/last-seen-service';
-import { InstanceStatsService } from './instance-stats-service';
+import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from './maintenance-service';
 import {
@@ -64,6 +64,10 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../features/private-project/createPrivateProjectChecker';
+import {
+    createFakeGetActiveUsers,
+    createGetActiveUsers,
+} from '../features/instance-stats/getActiveUsers';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -262,6 +266,7 @@ export const createServices = (
         stores,
         config,
         versionService,
+        db ? createGetActiveUsers(db) : createFakeGetActiveUsers(),
     );
 
     const schedulerService = new SchedulerService(config.getLogger);

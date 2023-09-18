@@ -18,8 +18,8 @@ export const IntegrationParameter = ({
     parametersErrors,
     setParameterValue,
 }: IIntegrationParameterProps) => {
+    const datadogJson = useUiFlag('datadogJsonTemplate');
     if (config.provider === 'datadog' && definition.name === 'bodyTemplate') {
-        const datadogJson = useUiFlag('datadogJsonTemplate');
         if (!datadogJson) {
             return null;
         }

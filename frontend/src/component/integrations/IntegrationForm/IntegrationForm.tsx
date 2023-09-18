@@ -37,6 +37,7 @@ import {
     StyledConfigurationSection,
     StyledTitle,
     StyledRaisedSection,
+    StyledHelpText,
 } from './IntegrationForm.styles';
 import { GO_BACK } from 'constants/navigate';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -367,9 +368,13 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 selectedItems={formValues.events}
                                 onChange={setEventValues}
                                 entityName="event"
-                                selectAllEnabled={false}
                                 error={errors.events}
-                                description="Select which events you want your integration to be notified about."
+                                description={
+                                    <StyledHelpText>
+                                        Select which events you want your
+                                        integration to be notified about.
+                                    </StyledHelpText>
+                                }
                                 required
                             />
                         </div>
@@ -379,7 +384,14 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 selectedItems={formValues.projects || []}
                                 onChange={setProjects}
                                 entityName="project"
-                                selectAllEnabled={true}
+                                description={
+                                    <StyledHelpText>
+                                        Selecting project(s) will filter events,
+                                        so that your integration only receives
+                                        events related to those specific
+                                        projects.
+                                    </StyledHelpText>
+                                }
                             />
                         </div>
                         <div>
@@ -388,8 +400,21 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 selectedItems={formValues.environments || []}
                                 onChange={setEnvironments}
                                 entityName="environment"
-                                selectAllEnabled={true}
-                                description="Global events that are not specific to an environment will still be received."
+                                description={
+                                    <>
+                                        <StyledHelpText>
+                                            Selecting environment(s) will filter
+                                            events, so that your integration
+                                            only receives events related to
+                                            those specific environments.
+                                        </StyledHelpText>
+                                        <StyledHelpText>
+                                            Global events that are not specific
+                                            to an environment will still be
+                                            received.
+                                        </StyledHelpText>
+                                    </>
+                                }
                             />
                         </div>
                     </StyledConfigurationSection>

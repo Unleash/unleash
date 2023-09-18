@@ -1,7 +1,6 @@
-import React, { ChangeEvent, Fragment, VFC } from 'react';
+import { VFC } from 'react';
 import { IAutocompleteBoxOption } from '../../../common/AutocompleteBox/AutocompleteBox';
 import {
-    AutocompleteRenderGroupParams,
     AutocompleteRenderInputParams,
     AutocompleteRenderOptionState,
 } from '@mui/material/Autocomplete';
@@ -16,13 +15,7 @@ import {
 } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
-import { SelectAllButton } from '../../../admin/apiToken/ApiTokenForm/ProjectSelector/SelectProjectInput/SelectAllButton/SelectAllButton';
-import {
-    StyledHelpText,
-    StyledSelectAllFormControlLabel,
-    StyledTitle,
-} from '../IntegrationForm.styles';
+import { StyledTitle } from '../IntegrationForm.styles';
 
 export interface IIntegrationMultiSelectorProps {
     options: IAutocompleteBoxOption[];
@@ -31,12 +24,9 @@ export interface IIntegrationMultiSelectorProps {
     error?: string;
     onFocus?: () => void;
     entityName: string;
-    selectAllEnabled: boolean;
-    description?: string;
+    description: React.ReactNode;
     required?: boolean;
 }
-
-const ALL_OPTIONS = '*';
 
 const StyledCheckbox = styled(Checkbox)(() => ({
     marginRight: '0.2em',
@@ -51,7 +41,6 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
     error,
     onFocus,
     entityName,
-    selectAllEnabled = true,
     description,
     required,
 }) => {
@@ -68,28 +57,6 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
         />
     );
 
-    const isAllSelected =
-        selectedItems.length > 0 &&
-        selectedItems.length === options.length &&
-        selectedItems[0] !== ALL_OPTIONS;
-
-    const isWildcardSelected = selectedItems.includes(ALL_OPTIONS);
-
-    const onAllItemsChange = (
-        e: ChangeEvent<HTMLInputElement>,
-        checked: boolean
-    ) => {
-        if (checked) {
-            onChange([ALL_OPTIONS]);
-        } else {
-            onChange(selectedItems.includes(ALL_OPTIONS) ? [] : selectedItems);
-        }
-    };
-
-    const onSelectAllClick = () => {
-        const newItems = isAllSelected ? [] : options.map(({ value }) => value);
-        onChange(newItems);
-    };
     const renderOption = (
         props: object,
         option: IAutocompleteBoxOption,
@@ -106,43 +73,9 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
             </li>
         );
     };
-    const renderGroup = ({ key, children }: AutocompleteRenderGroupParams) => (
-        <Fragment key={key}>
-            <ConditionallyRender
-                condition={options.length > 2 && selectAllEnabled}
-                show={
-                    <SelectAllButton
-                        isAllSelected={isAllSelected}
-                        onClick={onSelectAllClick}
-                    />
-                }
-            />
-            {children}
-        </Fragment>
-    );
-    const SelectAllFormControl = () => (
-        <StyledSelectAllFormControlLabel
-            data-testid={`select-all-${entityName}s`}
-            control={
-                <Checkbox
-                    checked={isWildcardSelected}
-                    onChange={onAllItemsChange}
-                />
-            }
-            label={`ALL current and future ${entityName}s`}
-        />
-    );
-
-    const DefaultHelpText = () => (
-        <StyledHelpText>
-            Selecting {entityName}(s) will filter events, so that your
-            integration only receives events related to those specific{' '}
-            {entityName}s.
-        </StyledHelpText>
-    );
 
     return (
-        <React.Fragment>
+        <>
             <StyledTitle>
                 {capitalize(`${entityName}s`)}
                 {required ? (
@@ -151,44 +84,29 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
                     </Typography>
                 ) : null}
             </StyledTitle>
-            <ConditionallyRender
-                condition={selectAllEnabled}
-                show={<DefaultHelpText />}
-            />
-            <ConditionallyRender
-                condition={description !== undefined}
-                show={<StyledHelpText>{description}</StyledHelpText>}
-            />
-            <ConditionallyRender
-                condition={selectAllEnabled}
-                show={<SelectAllFormControl />}
-            />
+            {description}
             <Autocomplete
+                sx={{
+                    marginTop: 1.5,
+                }}
                 size="small"
-                disabled={isWildcardSelected}
                 multiple
                 limitTags={2}
                 options={options}
                 disableCloseOnSelect
                 getOptionLabel={({ label }) => label}
                 fullWidth
-                groupBy={() => 'Select/Deselect all'}
-                renderGroup={renderGroup}
                 PaperComponent={CustomPaper}
                 renderOption={renderOption}
                 renderInput={renderInput}
-                value={
-                    isWildcardSelected
-                        ? options
-                        : options.filter(option =>
-                              selectedItems.includes(option.value)
-                          )
-                }
+                value={options.filter(option =>
+                    selectedItems.includes(option.value)
+                )}
                 onChange={(_, input) => {
                     const state = input.map(({ value }) => value);
                     onChange(state);
                 }}
             />
-        </React.Fragment>
+        </>
     );
 };

@@ -114,7 +114,6 @@ export const Search = ({
     useKeyboardShortcut({ key: 'Escape' }, () => {
         if (searchContainerRef.current?.contains(document.activeElement)) {
             searchInputRef.current?.blur();
-            hideSuggestions();
         }
     });
     const placeholder = `${customPlaceholder ?? 'Search'} (${hotkey})`;

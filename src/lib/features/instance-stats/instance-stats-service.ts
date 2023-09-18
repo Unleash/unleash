@@ -12,7 +12,7 @@ import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
 import { IGroupStore } from '../../types/stores/group-store';
 import { IProjectStore } from '../../types/stores/project-store';
 import { IStrategyStore } from '../../types/stores/strategy-store';
-import { IActiveUsers, IUserStore } from '../../types/stores/user-store';
+import { IUserStore } from '../../types/stores/user-store';
 import { ISegmentStore } from '../../types/stores/segment-store';
 import { IRoleStore } from '../../types/stores/role-store';
 import VersionService from '../../services/version-service';
@@ -44,7 +44,7 @@ export interface InstanceStats {
     SAMLenabled: boolean;
     OIDCenabled: boolean;
     clientApps: { range: TimeRange; count: number }[];
-    activeUsers: IActiveUsers;
+    activeUsers: Awaited<ReturnType<GetActiveUsers>>;
 }
 
 export interface InstanceStatsSigned extends InstanceStats {

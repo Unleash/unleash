@@ -19,13 +19,6 @@ export interface IUserUpdateFields {
     email?: string;
 }
 
-export interface IActiveUsers {
-    last7: number;
-    last30: number;
-    last60: number;
-    last90: number;
-}
-
 export interface IUserStore extends Store<IUser, number> {
     update(id: number, fields: IUserUpdateFields): Promise<IUser>;
     insert(user: ICreateUser): Promise<IUser>;

@@ -15,26 +15,29 @@ class PrivateProjectStore implements IPrivateProjectStore {
     destroy(): void {}
 
     async getUserAccessibleProjects(userId: number): Promise<string[]> {
-        const isNotViewer = await this.db('role_user')
+        // -1 user is ADMIN api token
+        if (userId === -1) {
+            const allProjects = await this.db('projects').pluck('id');
+            return allProjects;
+        }
+        const isViewer = await this.db('role_user')
             .join('roles', 'role_user.role_id', 'roles.id')
             .where('role_user.user_id', userId)
-            .andWhere((db) => {
-                db.whereNot({
-                    'roles.name': 'Viewer',
-                    'roles.type': 'root',
-                });
+            .andWhere({
+                'roles.name': 'Viewer',
+                'roles.type': 'root',
             })
             .count('*')
             .first();
 
-        if (isNotViewer && isNotViewer.count > 0) {
+        if (!isViewer || isViewer.count == 0) {
             const allProjects = await this.db('projects').pluck('id');
             return allProjects;
         }
 
         const accessibleProjects = await this.db
             .from((db) => {
-                db.distinct('accessible_projects.project_id')
+                db.distinct()
                     .select('projects.id as project_id')
                     .from('projects')
                     .leftJoin(
@@ -82,7 +85,8 @@ class PrivateProjectStore implements IPrivateProjectStore {
                     })
                     .as('accessible_projects');
             })
-            .select('*');
+            .select('*')
+            .pluck('project_id');
 
         return accessibleProjects;
     }

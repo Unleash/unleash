@@ -64,6 +64,10 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../features/private-project/createPrivateProjectChecker';
+import {
+    createFakeGetActiveUsers,
+    createGetActiveUsers,
+} from '../features/instance-stats/getActiveUsers';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -262,6 +266,7 @@ export const createServices = (
         stores,
         config,
         versionService,
+        db ? createGetActiveUsers(db) : createFakeGetActiveUsers(),
     );
 
     const schedulerService = new SchedulerService(config.getLogger);

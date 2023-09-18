@@ -19,6 +19,7 @@ import VersionService from '../../services/version-service';
 import { ISettingStore } from '../../types/stores/settings-store';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
+import { type GetActiveUsers } from './getActiveUsers';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -83,6 +84,8 @@ export class InstanceStatsService {
 
     private appCount?: Partial<{ [key in TimeRange]: number }>;
 
+    private getActiveUsers: GetActiveUsers;
+
     constructor(
         {
             featureToggleStore,
@@ -114,6 +117,7 @@ export class InstanceStatsService {
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         versionService: VersionService,
+        getActiveUsers: GetActiveUsers,
     ) {
         this.strategyStore = strategyStore;
         this.userStore = userStore;
@@ -129,6 +133,7 @@ export class InstanceStatsService {
         this.eventStore = eventStore;
         this.clientInstanceStore = clientInstanceStore;
         this.logger = getLogger('services/stats-service.js');
+        this.getActiveUsers = getActiveUsers;
     }
 
     async refreshStatsSnapshot(): Promise<void> {
@@ -195,7 +200,7 @@ export class InstanceStatsService {
         ] = await Promise.all([
             this.getToggleCount(),
             this.userStore.count(),
-            this.userStore.getActiveUsersCount(),
+            this.getActiveUsers(),
             this.projectStore.count(),
             this.contextFieldStore.count(),
             this.groupStore.count(),

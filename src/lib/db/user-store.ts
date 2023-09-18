@@ -201,54 +201,6 @@ class UserStore implements IUserStore {
             .then((res) => Number(res[0].count));
     }
 
-    async getActiveUsersCount(): Promise<{
-        last7: number;
-        last30: number;
-        last60: number;
-        last90: number;
-    }> {
-        const combinedQuery = this.db
-            .select('id as user_id', 'seen_at')
-            .from('users')
-            .unionAll(
-                this.db
-                    .select('user_id', 'seen_at')
-                    .from('personal_access_tokens'),
-            );
-
-        const result = await this.db
-            .with('Combined', combinedQuery)
-            .select({
-                last_week: this.db.raw(
-                    "COUNT(DISTINCT CASE WHEN seen_at > NOW() - INTERVAL '1 week' THEN user_id END)",
-                ),
-                last_month: this.db.raw(
-                    "COUNT(DISTINCT CASE WHEN seen_at > NOW() - INTERVAL '1 month' THEN user_id END)",
-                ),
-                last_two_months: this.db.raw(
-                    "COUNT(DISTINCT CASE WHEN seen_at > NOW() - INTERVAL '2 months' THEN user_id END)",
-                ),
-                last_quarter: this.db.raw(
-                    "COUNT(DISTINCT CASE WHEN seen_at > NOW() - INTERVAL '3 months' THEN user_id END)",
-                ),
-            })
-            .from('Combined');
-
-        const {
-            last_week: last7,
-            last_month: last30,
-            last_quarter: last90,
-            last_two_months: last60,
-        } = result[0];
-
-        return {
-            last7,
-            last30,
-            last60,
-            last90,
-        };
-    }
-
     destroy(): void {}
 
     async exists(id: number): Promise<boolean> {

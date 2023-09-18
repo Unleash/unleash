@@ -17,6 +17,7 @@ export class SchedulerService {
     async schedule(
         scheduledFunction: () => void,
         timeMs: number,
+        id: string,
     ): Promise<void> {
         this.intervalIds.push(
             setInterval(async () => {
@@ -25,7 +26,9 @@ export class SchedulerService {
                         await scheduledFunction();
                     }
                 } catch (e) {
-                    this.logger.error('scheduled job failed', e);
+                    this.logger.error(
+                        `scheduled job failed | id: ${id} | error: ${e}`,
+                    );
                 }
             }, timeMs).unref(),
         );
@@ -34,7 +37,7 @@ export class SchedulerService {
                 await scheduledFunction();
             }
         } catch (e) {
-            this.logger.error('scheduled job failed', e);
+            this.logger.error(`scheduled job failed | id: ${id} | error: ${e}`);
         }
     }
 

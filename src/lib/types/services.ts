@@ -43,6 +43,7 @@ import ExportImportService from '../features/export-import-toggles/export-import
 import { ISegmentService } from '../segments/segment-service-interface';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import EventAnnouncerService from 'lib/services/event-announcer-service';
+import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -97,4 +98,5 @@ export interface IUnleashServices {
         db: Knex.Transaction,
     ) => FeatureToggleService;
     transactionalGroupService: (db: Knex.Transaction) => GroupService;
+    privateProjectChecker: IPrivateProjectChecker;
 }

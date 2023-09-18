@@ -7,7 +7,7 @@ const privateProjectMiddleware = (
         getLogger,
         flagResolver,
     }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
-    { projectService, accessService }: IUnleashServices,
+    { accessService, privateProjectChecker }: IUnleashServices,
 ): any => {
     const logger = getLogger('/middleware/project-middleware.ts');
     logger.debug('Enabling private project middleware');
@@ -27,10 +27,9 @@ const privateProjectMiddleware = (
                 return true;
             }
             const permissions = await accessService.getPermissionsForUser(user);
-
             return (
                 permissions.map((p) => p.permission).includes('ADMIN') ||
-                projectService.isProjectUser(user.id, projectId)
+                privateProjectChecker.hasAccessToProject(user.id, projectId)
             );
         };
         next();

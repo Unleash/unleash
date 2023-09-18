@@ -63,6 +63,7 @@ beforeAll(async () => {
         featureToggleService,
         groupService,
         favoritesService,
+        privateProjectChecker,
     );
 
     await projectService.createProject(project, user);

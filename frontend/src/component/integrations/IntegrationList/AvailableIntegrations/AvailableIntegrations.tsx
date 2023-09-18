@@ -257,7 +257,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                         >
                                             Here's some of the fantastic work
                                         </a>{' '}
-                                        our community has build to make Unleash
+                                        our community has built to make Unleash
                                         work in even more contexts.
                                     </Typography>
                                 </div>

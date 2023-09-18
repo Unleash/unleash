@@ -95,6 +95,7 @@ import { unique } from '../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 import { checkFeatureFlagNamesAgainstPattern } from '../features/feature-naming-pattern/feature-naming-validation';
+import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 
 interface IFeatureContext {
     featureName: string;
@@ -154,6 +155,8 @@ class FeatureToggleService {
 
     private changeRequestAccessReadModel: IChangeRequestAccessReadModel;
 
+    private privateProjectChecker: IPrivateProjectChecker;
+
     constructor(
         {
             featureStrategiesStore,
@@ -184,6 +187,7 @@ class FeatureToggleService {
         segmentService: ISegmentService,
         accessService: AccessService,
         changeRequestAccessReadModel: IChangeRequestAccessReadModel,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -199,6 +203,7 @@ class FeatureToggleService {
         this.accessService = accessService;
         this.flagResolver = flagResolver;
         this.changeRequestAccessReadModel = changeRequestAccessReadModel;
+        this.privateProjectChecker = privateProjectChecker;
     }
 
     async validateFeaturesContext(
@@ -1017,11 +1022,20 @@ class FeatureToggleService {
         userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleClientStore.getAdmin({
+        const features = await this.featureToggleClientStore.getAdmin({
             featureQuery: query,
             userId,
             archived,
         });
+
+        if (this.flagResolver.isEnabled('privateProjects') && userId) {
+            const projects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            return features.filter((f) => projects.includes(f.project));
+        }
+        return features;
     }
 
     async getFeatureOverview(

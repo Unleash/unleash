@@ -22,6 +22,12 @@ const slackDefinition: IAddonDefinition = {
     displayName: 'Slack',
     description: 'Allows Unleash to post updates to Slack.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/slack',
+    alerts: [
+        {
+            type: 'warning',
+            text: `This integration is deprecated. Please try the new Slack App integration instead.`,
+        },
+    ],
     parameters: [
         {
             name: 'url',

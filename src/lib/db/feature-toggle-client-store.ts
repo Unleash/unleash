@@ -67,6 +67,8 @@ export default class FeatureToggleClientStore
         const isPlayground = requestType === 'playground';
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer('getFeatureAdmin');
+        const dependentFeaturesEnabled =
+            this.flagResolver.isEnabled('dependentFeatures');
 
         let selectColumns = [
             'features.name as name',
@@ -91,6 +93,9 @@ export default class FeatureToggleClientStore
             'fs.variants as strategy_variants',
             'segments.id as segment_id',
             'segments.constraints as segment_constraints',
+            'df.parent as parent',
+            'df.variants as parent_variants',
+            'df.enabled as parent_enabled',
         ] as (string | Raw<any>)[];
 
         let query = this.db('features')
@@ -122,7 +127,8 @@ export default class FeatureToggleClientStore
                 `fss.feature_strategy_id`,
                 `fs.id`,
             )
-            .leftJoin('segments', `segments.id`, `fss.segment_id`);
+            .leftJoin('segments', `segments.id`, `fss.segment_id`)
+            .leftJoin('dependent_features as df', 'df.child', 'features.name');
 
         if (isAdmin) {
             query = query.leftJoin(
@@ -194,6 +200,14 @@ export default class FeatureToggleClientStore
                 r.segment_id
             ) {
                 this.addSegmentIdsToStrategy(feature, r);
+            }
+            if (r.parent && !isAdmin && dependentFeaturesEnabled) {
+                feature.dependencies = feature.dependencies || [];
+                feature.dependencies.push({
+                    feature: r.parent,
+                    enabled: r.parent_enabled,
+                    variants: r.parent_variants,
+                });
             }
             feature.impressionData = r.impression_data;
             feature.enabled = !!r.enabled;

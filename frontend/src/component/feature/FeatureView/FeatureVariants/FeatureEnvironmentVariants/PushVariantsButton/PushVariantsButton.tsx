@@ -100,7 +100,7 @@ export const PushVariantsButton = ({
                         aria-expanded={pushToOpen ? 'true' : undefined}
                         variant="outlined"
                     >
-                        Push to environment
+                        Copy to environment
                     </Button>
 
                     <StyledMenu

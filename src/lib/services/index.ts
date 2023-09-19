@@ -36,7 +36,7 @@ import EdgeService from './edge-service';
 import PatService from './pat-service';
 import { PublicSignupTokenService } from './public-signup-token-service';
 import { LastSeenService } from './client-metrics/last-seen-service';
-import { InstanceStatsService } from './instance-stats-service';
+import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from './favorites-service';
 import MaintenanceService from './maintenance-service';
 import {
@@ -61,9 +61,13 @@ import { createFeatureToggleService } from '../features';
 import EventAnnouncerService from './event-announcer-service';
 import { createGroupService } from '../features/group/createGroupService';
 import {
-    createFakeprivateProjectChecker,
+    createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../features/private-project/createPrivateProjectChecker';
+import {
+    createFakeGetActiveUsers,
+    createGetActiveUsers,
+} from '../features/instance-stats/getActiveUsers';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -89,16 +93,19 @@ export const scheduleServices = async (
     schedulerService.schedule(
         apiTokenService.fetchActiveTokens.bind(apiTokenService),
         minutesToMilliseconds(1),
+        'fetchActiveTokens',
     );
 
     schedulerService.schedule(
         apiTokenService.updateLastSeen.bind(apiTokenService),
         minutesToMilliseconds(3),
+        'updateLastSeen',
     );
 
     schedulerService.schedule(
         instanceStatsService.refreshStatsSnapshot.bind(instanceStatsService),
         minutesToMilliseconds(5),
+        'refreshStatsSnapshot',
     );
 
     schedulerService.schedule(
@@ -106,16 +113,19 @@ export const scheduleServices = async (
             clientInstanceService,
         ),
         hoursToMilliseconds(24),
+        'removeInstancesOlderThanTwoDays',
     );
 
     schedulerService.schedule(
         projectService.statusJob.bind(projectService),
         hoursToMilliseconds(24),
+        'statusJob',
     );
 
     schedulerService.schedule(
         projectHealthService.setHealthRating.bind(projectHealthService),
         hoursToMilliseconds(1),
+        'setHealthRating',
     );
 
     schedulerService.schedule(
@@ -123,6 +133,7 @@ export const scheduleServices = async (
             configurationRevisionService,
         ),
         secondsToMilliseconds(1),
+        'updateMaxRevisionId',
     );
 
     schedulerService.schedule(
@@ -130,6 +141,7 @@ export const scheduleServices = async (
             eventAnnouncerService,
         ),
         secondsToMilliseconds(1),
+        'publishUnannouncedEvents',
     );
 
     schedulerService.schedule(
@@ -137,6 +149,7 @@ export const scheduleServices = async (
             featureToggleService,
         ),
         minutesToMilliseconds(1),
+        'updatePotentiallyStaleFeatures',
     );
 };
 
@@ -190,7 +203,7 @@ export const createServices = (
     );
     const privateProjectChecker = db
         ? createPrivateProjectChecker(db, config)
-        : createFakeprivateProjectChecker();
+        : createFakePrivateProjectChecker();
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,
@@ -209,6 +222,7 @@ export const createServices = (
         featureToggleServiceV2,
         groupService,
         favoritesService,
+        privateProjectChecker,
     );
     const projectHealthService = new ProjectHealthService(
         stores,
@@ -261,6 +275,7 @@ export const createServices = (
         stores,
         config,
         versionService,
+        db ? createGetActiveUsers(db) : createFakeGetActiveUsers(),
     );
 
     const schedulerService = new SchedulerService(config.getLogger);
@@ -323,6 +338,7 @@ export const createServices = (
         configurationRevisionService,
         transactionalFeatureToggleService,
         transactionalGroupService,
+        privateProjectChecker,
     };
 };
 

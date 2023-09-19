@@ -72,7 +72,7 @@ const dataDogDefinition: IAddonDefinition = {
   "timestamp": "{{event.data.createdAt}}"
 }`,
             description:
-                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will be similar to the events format (https://docs.getunleash.io/reference/api/legacy/unleash/admin/events)",
+                '(Optional) The default format is a markdown string formatted by Unleash. You may override the format of the body using a mustache template.',
             required: false,
             sensitive: false,
             type: 'textfield',

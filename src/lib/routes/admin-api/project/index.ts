@@ -30,6 +30,7 @@ import ProjectArchiveController from './project-archive';
 import { createKnexTransactionStarter } from '../../../db/transaction';
 import { Db } from '../../../db/db';
 import { InvalidOperationError } from '../../../error';
+import DependentFeaturesController from '../../../features/dependent-features/dependent-features-controller';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;
@@ -112,6 +113,7 @@ export default class ProjectApi extends Controller {
                 createKnexTransactionStarter(db),
             ).router,
         );
+        this.use('/', new DependentFeaturesController(config, services).router);
         this.use('/', new EnvironmentsController(config, services).router);
         this.use('/', new ProjectHealthReport(config, services).router);
         this.use('/', new VariantsController(config, services).router);

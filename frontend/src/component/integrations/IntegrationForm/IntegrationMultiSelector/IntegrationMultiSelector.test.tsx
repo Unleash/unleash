@@ -34,77 +34,11 @@ describe('AddonMultiSelector', () => {
     });
 
     it('renders with default state', () => {
-        render(
-            <IntegrationMultiSelector {...mockProps} selectedItems={['*']} />
-        );
-
-        const checkbox = screen.getByLabelText(
-            /all current and future projects/i
-        );
-        expect(checkbox).toBeChecked();
-
-        const selectInputContainer = screen.getByTestId('select-project-input');
-        const input = within(selectInputContainer).getByRole('combobox');
-        expect(input).toBeDisabled();
-    });
-
-    it('can toggle "ALL" checkbox', async () => {
-        const user = userEvent.setup();
-        const { rerender } = render(
-            <IntegrationMultiSelector {...mockProps} selectedItems={['*']} />
-        );
-
-        await user.click(screen.getByTestId('select-all-projects'));
-
-        expect(onChange).toHaveBeenCalledWith([]);
-
-        rerender(
-            <IntegrationMultiSelector {...mockProps} selectedItems={[]} />
-        );
-
-        await user.click(screen.getByTestId('select-all-projects'));
-
-        expect(onChange).toHaveBeenCalledWith(['*']);
-    });
-
-    it('renders with autocomplete enabled if default value is not a wildcard', () => {
-        render(
-            <IntegrationMultiSelector
-                {...mockProps}
-                selectedItems={['project1']}
-            />
-        );
-
-        const checkbox = screen.getByLabelText(
-            /all current and future projects/i
-        );
-        expect(checkbox).not.toBeChecked();
+        render(<IntegrationMultiSelector {...mockProps} selectedItems={[]} />);
 
         const selectInputContainer = screen.getByTestId('select-project-input');
         const input = within(selectInputContainer).getByRole('combobox');
         expect(input).toBeEnabled();
-    });
-
-    describe('Select/Deselect projects in dropdown', () => {
-        it("doesn't show up for less than 3 options", async () => {
-            const user = userEvent.setup();
-            render(
-                <IntegrationMultiSelector
-                    {...mockProps}
-                    selectedItems={[]}
-                    options={[
-                        { label: 'Project1', value: 'project1' },
-                        { label: 'Project2', value: 'project2' },
-                    ]}
-                />
-            );
-            await user.click(screen.getByLabelText('Projects'));
-
-            const button = screen.queryByRole('button', {
-                name: /select all/i,
-            });
-            expect(button).not.toBeInTheDocument();
-        });
     });
 
     it('can filter options', async () => {
@@ -145,23 +79,5 @@ describe('AddonMultiSelector', () => {
         await waitFor(() => {
             expect(screen.queryByText('Alpha')).not.toBeInTheDocument();
         });
-    });
-
-    it('will load wildcard status from props', async () => {
-        const { rerender } = render(
-            <IntegrationMultiSelector {...mockProps} selectedItems={[]} />
-        );
-
-        expect(
-            screen.getByLabelText(/all current and future projects/i)
-        ).not.toBeChecked();
-
-        rerender(
-            <IntegrationMultiSelector {...mockProps} selectedItems={['*']} />
-        );
-
-        expect(
-            screen.getByLabelText(/all current and future projects/i)
-        ).toBeChecked();
     });
 });

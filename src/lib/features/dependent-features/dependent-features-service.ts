@@ -1,5 +1,5 @@
 import { CreateDependentFeatureSchema } from '../../openapi';
-import { IDependentFeaturesStore } from './dependent-feature-store-type';
+import { IDependentFeaturesStore } from './dependent-features-store-type';
 
 export type FeatureDependency =
     | {

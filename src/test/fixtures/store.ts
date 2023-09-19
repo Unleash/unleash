@@ -37,7 +37,7 @@ import FakeFavoriteFeaturesStore from './fake-favorite-features-store';
 import FakeFavoriteProjectsStore from './fake-favorite-projects-store';
 import { FakeAccountStore } from './fake-account-store';
 import FakeProjectStatsStore from './fake-project-stats-store';
-import { FakeDependentFeaturesStore } from '../../lib/features/dependent-features/fake-dependent-feature-store';
+import { FakeDependentFeaturesStore } from '../../lib/features/dependent-features/fake-dependent-features-store';
 
 const db = {
     select: () => ({

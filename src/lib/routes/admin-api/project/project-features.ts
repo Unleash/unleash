@@ -2,18 +2,18 @@ import { Request, Response } from 'express';
 import { applyPatch, Operation } from 'fast-json-patch';
 import Controller from '../../controller';
 import {
-    IUnleashConfig,
-    IUnleashServices,
-    serializeDates,
     CREATE_FEATURE,
     CREATE_FEATURE_STRATEGY,
     DELETE_FEATURE,
     DELETE_FEATURE_STRATEGY,
+    IFlagResolver,
+    IUnleashConfig,
+    IUnleashServices,
     NONE,
+    serializeDates,
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
-    IFlagResolver,
 } from '../../../types';
 import { Logger } from '../../../logger';
 import { extractUsername } from '../../../util';
@@ -42,9 +42,9 @@ import {
     UpdateFeatureStrategySchema,
 } from '../../../openapi';
 import {
-    OpenApiService,
-    FeatureToggleService,
     FeatureTagService,
+    FeatureToggleService,
+    OpenApiService,
 } from '../../../services';
 import { querySchema } from '../../../schema/feature-schema';
 import { BatchStaleSchema } from '../../../openapi/spec/batch-stale-schema';

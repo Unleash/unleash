@@ -68,6 +68,7 @@ import {
     createFakeGetActiveUsers,
     createGetActiveUsers,
 } from '../features/instance-stats/getActiveUsers';
+import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -289,6 +290,8 @@ export const createServices = (
 
     const eventAnnouncerService = new EventAnnouncerService(stores, config);
 
+    const dependentFeaturesService = new DependentFeaturesService();
+
     return {
         accessService,
         accountService,
@@ -339,6 +342,7 @@ export const createServices = (
         transactionalFeatureToggleService,
         transactionalGroupService,
         privateProjectChecker,
+        dependentFeaturesService,
     };
 };
 
@@ -382,4 +386,5 @@ export {
     InstanceStatsService,
     FavoritesService,
     SchedulerService,
+    DependentFeaturesService,
 };

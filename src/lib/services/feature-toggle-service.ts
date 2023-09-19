@@ -1,6 +1,5 @@
 import {
     CREATE_FEATURE_STRATEGY,
-    StrategyIds,
     EnvironmentVariantEvent,
     FEATURE_UPDATED,
     FeatureArchivedEvent,
@@ -23,6 +22,7 @@ import {
     IEventStore,
     IFeatureEnvironmentInfo,
     IFeatureEnvironmentStore,
+    IFeatureNaming,
     IFeatureOverview,
     IFeatureStrategy,
     IFeatureTagStore,
@@ -33,29 +33,29 @@ import {
     IProjectStore,
     ISegment,
     IStrategyConfig,
+    IStrategyStore,
     IUnleashConfig,
     IUnleashStores,
     IVariant,
+    PotentiallyStaleOnEvent,
     Saved,
     SKIP_CHANGE_REQUEST,
+    StrategiesOrderChangedEvent,
+    StrategyIds,
     Unsaved,
     WeightType,
-    StrategiesOrderChangedEvent,
-    PotentiallyStaleOnEvent,
-    IStrategyStore,
-    IFeatureNaming,
 } from '../types';
 import { Logger } from '../logger';
-import { PatternError } from '../error';
+import {
+    ForbiddenError,
+    FOREIGN_KEY_VIOLATION,
+    OperationDeniedError,
+    PatternError,
+    PermissionError,
+} from '../error';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
-import {
-    FOREIGN_KEY_VIOLATION,
-    OperationDeniedError,
-    PermissionError,
-    ForbiddenError,
-} from '../error';
 import {
     constraintSchema,
     featureMetadataSchema,

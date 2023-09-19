@@ -39,7 +39,6 @@ process.nextTick(async () => {
                         responseTimeWithAppNameKillSwitch: false,
                         slackAppAddon: true,
                         lastSeenByEnvironment: true,
-                        integrationsRework: true,
                         featureNamingPattern: true,
                         doraMetrics: true,
                         variantTypeNumber: true,

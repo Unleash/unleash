@@ -24,7 +24,6 @@ export type IFlagKey =
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
     | 'customRootRolesKillSwitch'
-    | 'integrationsRework'
     | 'multipleRoles'
     | 'featureNamingPattern'
     | 'doraMetrics'
@@ -113,10 +112,6 @@ const flags: IFlags = {
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
-        false,
-    ),
-    integrationsRework: parseEnvVarBoolean(
-        process.env.UNLEASH_INTEGRATIONS,
         false,
     ),
     multipleRoles: parseEnvVarBoolean(

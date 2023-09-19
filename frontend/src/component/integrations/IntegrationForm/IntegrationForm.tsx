@@ -43,7 +43,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { IntegrationDelete } from './IntegrationDelete/IntegrationDelete';
 import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStateSwitch';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { IntegrationHowToSection } from '../IntegrationHowToSection/IntegrationHowToSection';
 
 type IntegrationFormProps = {
@@ -77,7 +76,6 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         label: event,
     }));
     const { uiConfig } = useUiConfig();
-    const integrationsRework = useUiFlag('integrationsRework');
     const [formValues, setFormValues] = useState(initialValues);
     const [errors, setErrors] = useState<{
         containsErrors: boolean;
@@ -221,14 +219,14 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         try {
             if (editMode) {
                 await updateAddon(formValues as AddonSchema);
-                navigate(integrationsRework ? '/integrations' : '/addons');
+                navigate('/integrations');
                 setToastData({
                     type: 'success',
                     title: 'Integration updated successfully',
                 });
             } else {
                 await createAddon(formValues as Omit<AddonSchema, 'id'>);
-                navigate(integrationsRework ? '/integrations' : '/addons');
+                navigate('/integrations');
                 setToastData({
                     type: 'success',
                     confetti: true,
@@ -393,19 +391,12 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                             />
                         </div>
                     </StyledConfigurationSection>
-                    <ConditionallyRender
-                        condition={Boolean(integrationsRework && editMode)}
-                        show={() => (
-                            <>
-                                <Divider />
-                                <section>
-                                    <IntegrationDelete
-                                        id={(formValues as AddonSchema).id}
-                                    />
-                                </section>
-                            </>
-                        )}
-                    />
+                    <Divider />
+                    <section>
+                        <IntegrationDelete
+                            id={(formValues as AddonSchema).id}
+                        />
+                    </section>
                 </StyledContainer>
             </StyledForm>
         </FormTemplate>

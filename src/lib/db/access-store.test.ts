@@ -34,9 +34,7 @@ test('resolvePermissions returns empty list if undefined', async () => {
 
 test('resolvePermissions returns empty list if empty list', async () => {
     const access = db.stores.accessStore as AccessStore;
-    const result = await access.resolvePermissions(
-        [] as PermissionRef[],
-    );
+    const result = await access.resolvePermissions([] as PermissionRef[]);
     expect(result).toStrictEqual([]);
 });
 

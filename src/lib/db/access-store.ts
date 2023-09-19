@@ -63,21 +63,32 @@ export class AccessStore implements IAccessStore {
 
     private db: Db;
 
-    // for internal usage only
+    constructor(db: Db, eventBus: EventEmitter, getLogger: Function) {
+        this.db = db;
+        this.logger = getLogger('access-store.ts');
+        this.timer = (action: string) =>
+            metricsHelper.wrapTimer(eventBus, DB_TIME, {
+                store: 'access-store',
+                action,
+            });
+    }
 
-    private isIdPermissionRef = (permission: PermissionRef): boolean => {
+    private permissionHasId = (permission: PermissionRef): boolean => {
         return (permission as IdPermissionRef).id !== undefined;
     };
 
     private permissionNamesToIds = async (
         permissions: NamePermissionRef[],
     ): Promise<ResolvedPermission[]> => {
-        if (permissions === undefined || permissions.length === 0) {
-            return [];
-        }
-        const permissionNames = permissions
+        const permissionNames = (permissions ?? [])
             .filter((p) => p.name !== undefined)
             .map((p) => p.name);
+
+        if (permissionNames.length === 0) {
+            return [];
+        }
+
+        const stopTimer = this.timer('permissionNamesToIds');
 
         const rows = await this.db
             .select('id', 'permission')
@@ -89,10 +100,13 @@ export class AccessStore implements IAccessStore {
             return acc;
         }, {} as Map<string, IPermissionRow>);
 
-        return permissions.map((permission) => ({
+        const permissionsWithIds = permissions.map((permission) => ({
             id: rowByPermissionName[permission.name].id,
             ...permission,
         }));
+
+        stopTimer();
+        return permissionsWithIds;
     };
 
     resolvePermissions = async (
@@ -103,7 +117,7 @@ export class AccessStore implements IAccessStore {
         }
         // permissions without ids (just names)
         const permissionsWithoutIds = permissions.filter(
-            (p) => !this.isIdPermissionRef(p),
+            (p) => !this.permissionHasId(p),
         ) as NamePermissionRef[];
         const idPermissionsFromNamed = await this.permissionNamesToIds(
             permissionsWithoutIds,
@@ -118,7 +132,7 @@ export class AccessStore implements IAccessStore {
         }
         // some permissions have ids, some don't (should not happen!)
         return permissions.map((permission) => {
-            if (this.isIdPermissionRef(permission)) {
+            if (this.permissionHasId(permission)) {
                 return permission as ResolvedPermission;
             } else {
                 return idPermissionsFromNamed.find(
@@ -127,16 +141,6 @@ export class AccessStore implements IAccessStore {
             }
         });
     };
-
-    constructor(db: Db, eventBus: EventEmitter, getLogger: Function) {
-        this.db = db;
-        this.logger = getLogger('access-store.ts');
-        this.timer = (action: string) =>
-            metricsHelper.wrapTimer(eventBus, DB_TIME, {
-                store: 'access-store',
-                action,
-            });
-    }
 
     async delete(key: number): Promise<void> {
         await this.db(T.ROLES).where({ id: key }).del();

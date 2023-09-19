@@ -508,6 +508,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'features.name',
             )
             .leftJoin(
+                'feature_environments_metrics',
+                'feature_environments_metrics.feature_name',
+                'features.name',
+            )
+            .leftJoin(
                 'environments',
                 'feature_environments.environment',
                 'environments.name',
@@ -525,7 +530,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'feature_environments.enabled as enabled',
             'feature_environments.environment as environment',
             'feature_environments.variants as variants',
-            'feature_environments.last_seen_at as env_last_seen_at',
+            'feature_environments_metrics.last_seen_at as env_last_seen_at',
             'environments.type as environment_type',
             'environments.sort_order as environment_sort_order',
             'ft.tag_value as tag_value',

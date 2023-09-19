@@ -42,6 +42,7 @@ interface VariantDTO {
 }
 
 const TABLE = 'features';
+const FEATURE_ENVIRONMENTS_METRICS_TABLE = 'feature_environments_metrics';
 const FEATURE_ENVIRONMENTS_TABLE = 'feature_environments';
 
 export default class FeatureToggleStore implements IFeatureToggleStore {
@@ -175,12 +176,12 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         try {
             for (const env of Object.keys(environmentArrays)) {
                 const toggleNames = environmentArrays[env].sort();
-                await this.db(FEATURE_ENVIRONMENTS_TABLE)
+                await this.db(FEATURE_ENVIRONMENTS_METRICS_TABLE)
                     .update({ last_seen_at: now })
                     .where('environment', env)
                     .whereIn(
                         'feature_name',
-                        this.db(FEATURE_ENVIRONMENTS_TABLE)
+                        this.db(FEATURE_ENVIRONMENTS_METRICS_TABLE)
                             .select('feature_name')
                             .whereIn('feature_name', toggleNames)
                             .forUpdate()

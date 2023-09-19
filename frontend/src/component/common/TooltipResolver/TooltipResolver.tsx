@@ -19,8 +19,6 @@ export const TooltipResolver = ({
         return children;
     }
     if (variant === 'custom') {
-        console.log(variant, titleComponent);
-
         return (
             <HtmlTooltip {...rest} title={title || titleComponent} arrow>
                 {children}

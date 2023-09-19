@@ -43,8 +43,6 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
         strategy.id
     );
 
-    console.log(strategy);
-
     return (
         <StrategyItemContainer
             strategy={strategy}

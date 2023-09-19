@@ -6,7 +6,7 @@ import { AccessStore } from './access-store';
 let db;
 
 beforeAll(async () => {
-    db = await dbInit('feature_strategy_store_serial', getLogger);
+    db = await dbInit('access_store_serial', getLogger);
 });
 
 afterAll(async () => {

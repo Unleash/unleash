@@ -154,6 +154,7 @@ test('should be able to validate and cleanup with additional properties', async 
         permissions: [
             {
                 id: 1,
+                name: 'name',
                 environment: 'development',
             },
         ],

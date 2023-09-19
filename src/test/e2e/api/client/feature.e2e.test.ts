@@ -157,7 +157,6 @@ test('returns dependencies', async () => {
                     {
                         feature: 'featureZ',
                         enabled: false,
-                        variants: [],
                     },
                 ],
             });

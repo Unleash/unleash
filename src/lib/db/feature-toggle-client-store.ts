@@ -206,7 +206,9 @@ export default class FeatureToggleClientStore
                 feature.dependencies.push({
                     feature: r.parent,
                     enabled: r.parent_enabled,
-                    variants: r.parent_variants,
+                    ...(r.parent_enabled
+                        ? { variants: r.parent_variants }
+                        : {}),
                 });
             }
             feature.impressionData = r.impression_data;

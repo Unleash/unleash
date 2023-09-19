@@ -17,7 +17,7 @@ export interface FeatureConfigurationClient {
     stale: boolean;
     strategies: IStrategyConfig[];
     variants: IVariant[];
-    dependencies: IDependency[];
+    dependencies?: IDependency[];
 }
 export interface IFeatureStrategiesStore
     extends Store<IFeatureStrategy, string> {

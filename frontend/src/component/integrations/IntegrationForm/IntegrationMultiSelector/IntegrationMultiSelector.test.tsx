@@ -34,7 +34,7 @@ describe('AddonMultiSelector', () => {
     });
 
     it('renders with default state', () => {
-        render(<IntegrationMultiSelector {...mockProps} selectedItems={[]} />);
+        render(<IntegrationMultiSelector {...mockProps} />);
 
         const selectInputContainer = screen.getByTestId('select-project-input');
         const input = within(selectInputContainer).getByRole('combobox');
@@ -46,7 +46,6 @@ describe('AddonMultiSelector', () => {
         render(
             <IntegrationMultiSelector
                 {...mockProps}
-                selectedItems={[]}
                 options={[
                     { label: 'Alpha', value: 'alpha' },
                     { label: 'Bravo', value: 'bravo' },

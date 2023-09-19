@@ -88,9 +88,6 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
             <StyledTitle>{capitalize(`${entityName}s`)}</StyledTitle>
             <StyledHelpText>{description}</StyledHelpText>
             <Autocomplete
-                sx={{
-                    marginTop: 1.5,
-                }}
                 size="small"
                 multiple
                 limitTags={2}

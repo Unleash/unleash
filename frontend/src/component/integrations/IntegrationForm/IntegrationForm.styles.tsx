@@ -17,7 +17,7 @@ export const StyledAlerts = styled('section')(({ theme }) => ({
 }));
 
 export const StyledHelpText = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(0.5),
+    marginBottom: theme.spacing(1),
     color: theme.palette.text.secondary,
     fontSize: theme.typography.body2.fontSize,
 }));

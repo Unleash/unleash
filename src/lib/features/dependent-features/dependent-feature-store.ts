@@ -24,7 +24,7 @@ export class DependentFeaturesStore implements DependentFeaturesStore {
         }
         await this.db('dependent_features')
             .insert(serializableFeatureDependency)
-            .onConflict(['parent', 'child', 'variants'])
+            .onConflict(['parent', 'child'])
             .merge();
     }
 }

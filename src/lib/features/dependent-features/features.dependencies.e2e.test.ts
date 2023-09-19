@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
-import { CreateDependentFeatureSchema } from '../../../../../lib/openapi';
+import dbInit, { ITestDb } from '../../../test/e2e/helpers/database-init';
 import {
     IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../helpers/test-helper';
-import dbInit, { ITestDb } from '../../../helpers/database-init';
-import getLogger from '../../../../fixtures/no-logger';
+} from '../../../test/e2e/helpers/test-helper';
+import getLogger from '../../../test/fixtures/no-logger';
+import { CreateDependentFeatureSchema } from '../../openapi';
 
 let app: IUnleashTest;
 let db: ITestDb;

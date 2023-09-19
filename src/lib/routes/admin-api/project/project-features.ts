@@ -52,8 +52,7 @@ import {
     TransactionCreator,
     UnleashTransaction,
 } from '../../../db/transaction';
-import { BadDataError, InvalidOperationError } from '../../../error';
-import { CreateDependentFeatureSchema } from '../../../openapi/spec/create-dependent-feature-schema';
+import { BadDataError } from '../../../error';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -100,7 +99,6 @@ const PATH_ENV = `${PATH_FEATURE}/environments/:environment`;
 const BULK_PATH_ENV = `/:projectId/bulk_features/environments/:environment`;
 const PATH_STRATEGIES = `${PATH_ENV}/strategies`;
 const PATH_STRATEGY = `${PATH_STRATEGIES}/:strategyId`;
-const PATH_DEPENDENCIES = `${PATH_FEATURE}/dependencies`;
 
 type ProjectFeaturesServices = Pick<
     IUnleashServices,
@@ -293,29 +291,6 @@ export default class ProjectFeaturesController extends Controller {
                     ),
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
-                        ...getStandardResponses(401, 403, 404),
-                    },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'post',
-            path: PATH_DEPENDENCIES,
-            handler: this.addFeatureDependency,
-            permission: CREATE_FEATURE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Features'],
-                    summary: 'Add a feature dependency.',
-                    description:
-                        'Add a dependency to a parent feature. Each environment will resolve corresponding dependency independently.',
-                    operationId: 'addFeatureDependency',
-                    requestBody: createRequestSchema(
-                        'createDependentFeatureSchema',
-                    ),
-                    responses: {
-                        200: emptyResponse,
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
@@ -995,27 +970,6 @@ export default class ProjectFeaturesController extends Controller {
             strategy.id,
         );
         res.status(200).json(updatedStrategy);
-    }
-
-    async addFeatureDependency(
-        req: IAuthRequest<FeatureParams, any, CreateDependentFeatureSchema>,
-        res: Response,
-    ): Promise<void> {
-        const { featureName } = req.params;
-        const { variants, enabled, feature } = req.body;
-
-        if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            await this.featureService.upsertFeatureDependency(featureName, {
-                variants,
-                enabled,
-                feature,
-            });
-            res.status(200).end();
-        } else {
-            throw new InvalidOperationError(
-                'Dependent features are not enabled',
-            );
-        }
     }
 
     async getFeatureStrategies(

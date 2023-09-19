@@ -290,7 +290,9 @@ export const createServices = (
 
     const eventAnnouncerService = new EventAnnouncerService(stores, config);
 
-    const dependentFeaturesService = new DependentFeaturesService();
+    const dependentFeaturesService = new DependentFeaturesService(
+        stores.dependentFeaturesStore,
+    );
 
     return {
         accessService,

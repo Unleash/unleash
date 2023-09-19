@@ -22,9 +22,9 @@ export interface IIntegrationParameterTextFieldProps {
     config: AddonSchema;
 }
 
-const StyledTextField = styled(TextField)(({}) => ({
+const StyledTextField = styled(TextField)({
     width: '100%',
-})) as typeof TextField;
+});
 
 export const IntegrationParameterTextField = ({
     definition,

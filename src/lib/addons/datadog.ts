@@ -10,7 +10,6 @@ import {
     LinkStyle,
 } from './feature-event-formatter-md';
 import { IEvent } from '../types/events';
-import { IUnleashConfig } from 'lib/types';
 
 interface IDatadogParameters {
     url: string;
@@ -27,21 +26,22 @@ interface DDRequestBody {
     source_type_name?: string;
 }
 
+export interface IDatadogAddonConfig extends IAddonConfig {
+    flagResolver: IFlagResolver;
+}
+
 export default class DatadogAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
     private flagResolver: IFlagResolver;
 
-    constructor(
-        config: IAddonConfig,
-        { flagResolver }: Pick<IUnleashConfig, 'flagResolver'>,
-    ) {
+    constructor(config: IDatadogAddonConfig) {
         super(definition, config);
         this.msgFormatter = new FeatureEventFormatterMd(
             config.unleashUrl,
             LinkStyle.MD,
         );
-        this.flagResolver = flagResolver;
+        this.flagResolver = config.flagResolver;
     }
 
     async handleEvent(

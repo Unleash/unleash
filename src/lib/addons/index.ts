@@ -29,7 +29,7 @@ export const getAddons: (args: {
         new Webhook({ getLogger }),
         slackAddon,
         new TeamsAddon({ getLogger, unleashUrl }),
-        new DatadogAddon({ getLogger, unleashUrl }, { flagResolver }),
+        new DatadogAddon({ getLogger, unleashUrl, flagResolver }),
     ];
 
     if (slackAppAddonEnabled) {

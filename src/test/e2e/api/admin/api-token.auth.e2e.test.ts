@@ -12,7 +12,6 @@ import {
     UPDATE_CLIENT_API_TOKEN,
 } from '../../../../lib/types';
 import { addDays } from 'date-fns';
-import { AccessService, UserService } from 'lib/services';
 
 let stores;
 let db;
@@ -176,32 +175,33 @@ test('Token-admin should be allowed to create token', async () => {
 test('A role with only CREATE_PROJECT_API_TOKEN can create project tokens', async () => {
     expect.assertions(0);
 
-    const preHook = (
-        app,
-        config,
-        {
-            userService,
-            accessService,
-        }: { userService: UserService; accessService: AccessService },
-    ) => {
+    const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
-            const role = (await accessService.getRootRole(RoleName.VIEWER))!;
+            const role = await accessService.getRootRole(RoleName.VIEWER);
             const user = await userService.createUser({
                 email: 'powerpuffgirls_viewer@example.com',
                 rootRole: role.id,
             });
+            req.user = user;
             const createClientApiTokenRole = await accessService.createRole({
                 name: 'project_client_token_creator',
                 description: 'Can create client tokens',
-                permissions: [{ name: CREATE_PROJECT_API_TOKEN }],
+                permissions: [],
                 type: 'root-custom',
             });
+            await accessService.addPermissionToRole(
+                role.id,
+                CREATE_PROJECT_API_TOKEN,
+            );
             await accessService.addUserToRole(
                 user.id,
                 createClientApiTokenRole.id,
                 'default',
             );
-            req.user = user;
+            req.user = await userService.createUser({
+                email: 'someguyinplaces@example.com',
+                rootRole: role.id,
+            });
             next();
         });
     };
@@ -225,12 +225,12 @@ describe('Fine grained API token permissions', () => {
         test('should be allowed to create client tokens', async () => {
             const preHook = (app, config, { userService, accessService }) => {
                 app.use('/api/admin/', async (req, res, next) => {
-                    const builtInRole = await accessService.getRootRole(
+                    const role = await accessService.getRootRole(
                         RoleName.VIEWER,
                     );
                     const user = await userService.createUser({
                         email: 'mylittlepony_viewer@example.com',
-                        rootRole: builtInRole.id,
+                        rootRole: role.id,
                     });
                     req.user = user;
                     const createClientApiTokenRole =
@@ -240,9 +240,8 @@ describe('Fine grained API token permissions', () => {
                             permissions: [],
                             type: 'root-custom',
                         });
-                    // not sure if we should add the permission to the builtin role or to the newly created role
                     await accessService.addPermissionToRole(
-                        builtInRole.id,
+                        role.id,
                         CREATE_CLIENT_API_TOKEN,
                     );
                     await accessService.addUserToRole(

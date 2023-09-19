@@ -180,8 +180,8 @@ class AccessStoreMock implements IAccessStore {
 
     addPermissionsToRole(
         role_id: number,
-        permissions: PermissionRef[],
-        environment?: string,
+        permissions: string[],
+        projectId?: string,
     ): Promise<void> {
         // do nothing for now
         return Promise.resolve(undefined);

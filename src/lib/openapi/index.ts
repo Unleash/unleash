@@ -6,6 +6,7 @@ import {
     addonsSchema,
     addonTypeSchema,
     adminCountSchema,
+    adminSegmentSchema,
     adminFeaturesQuerySchema,
     advancedPlaygroundRequestSchema,
     advancedPlaygroundResponseSchema,
@@ -158,6 +159,8 @@ import {
     createGroupSchema,
     doraFeaturesSchema,
     projectDoraMetricsSchema,
+    segmentsSchema,
+    updateFeatureStrategySegmentsSchema,
     dependentFeatureSchema,
     createDependentFeatureSchema,
 } from './spec';
@@ -177,6 +180,7 @@ import { createApplicationSchema } from './spec/create-application-schema';
 import { contextFieldStrategiesSchema } from './spec/context-field-strategies-schema';
 import { advancedPlaygroundEnvironmentFeatureSchema } from './spec/advanced-playground-environment-feature-schema';
 import { createFeatureNamingPatternSchema } from './spec/create-feature-naming-pattern-schema';
+import { segmentStrategiesSchema } from './spec/admin-strategies-schema';
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
@@ -210,6 +214,8 @@ interface OpenAPIV3DocumentWithServers extends OpenAPIV3.Document {
 export const schemas: UnleashSchemas = {
     adminCountSchema,
     adminFeaturesQuerySchema,
+    adminSegmentSchema,
+    adminStrategiesSchema: segmentStrategiesSchema,
     addonParameterSchema,
     addonSchema,
     addonCreateUpdateSchema,
@@ -377,6 +383,8 @@ export const schemas: UnleashSchemas = {
     createFeatureNamingPatternSchema,
     doraFeaturesSchema,
     projectDoraMetricsSchema,
+    segmentsSchema,
+    updateFeatureStrategySegmentsSchema,
     dependentFeatureSchema,
     createDependentFeatureSchema,
 };

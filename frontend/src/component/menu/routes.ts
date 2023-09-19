@@ -4,7 +4,7 @@ import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesLi
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { IntegrationList } from 'component/integrations/IntegrationList/IntegrationList';
 import Login from 'component/user/Login/Login';
-import { EEA, P, SE } from 'component/common/flags';
+import { EEA, P } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -374,7 +374,6 @@ export const routes: IRoute[] = [
         type: 'protected',
         layout: 'main',
         menu: {},
-        flag: SE,
     },
     {
         path: '/segments/edit/:segmentId',
@@ -384,7 +383,6 @@ export const routes: IRoute[] = [
         type: 'protected',
         layout: 'main',
         menu: {},
-        flag: SE,
     },
     {
         path: '/segments',
@@ -393,7 +391,6 @@ export const routes: IRoute[] = [
         hidden: false,
         type: 'protected',
         menu: { mobile: true, advanced: true },
-        flag: SE,
     },
 
     // History

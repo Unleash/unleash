@@ -355,7 +355,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "SE",
     "hidden": false,
     "layout": "main",
     "menu": {},
@@ -365,7 +364,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "SE",
     "hidden": false,
     "layout": "main",
     "menu": {},
@@ -375,7 +373,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "SE",
     "hidden": false,
     "menu": {
       "advanced": true,

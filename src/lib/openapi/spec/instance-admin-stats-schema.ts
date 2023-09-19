@@ -58,6 +58,13 @@ export const instanceAdminStatsSchema = {
                     example: 10,
                     minimum: 0,
                 },
+                last60: {
+                    type: 'number',
+                    description:
+                        'The number of active users in the last 60 days',
+                    example: 12,
+                    minimum: 0,
+                },
                 last90: {
                     type: 'number',
                     description:

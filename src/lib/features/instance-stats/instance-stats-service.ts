@@ -1,24 +1,25 @@
 import { sha256 } from 'js-sha256';
-import { Logger } from '../logger';
-import { IUnleashConfig } from '../types/option';
+import { Logger } from '../../logger';
+import { IUnleashConfig } from '../../types/option';
 import {
     IClientInstanceStore,
     IEventStore,
     IUnleashStores,
-} from '../types/stores';
-import { IContextFieldStore } from '../types/stores/context-field-store';
-import { IEnvironmentStore } from '../types/stores/environment-store';
-import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
-import { IGroupStore } from '../types/stores/group-store';
-import { IProjectStore } from '../types/stores/project-store';
-import { IStrategyStore } from '../types/stores/strategy-store';
-import { IActiveUsers, IUserStore } from '../types/stores/user-store';
-import { ISegmentStore } from '../types/stores/segment-store';
-import { IRoleStore } from '../types/stores/role-store';
-import VersionService from './version-service';
-import { ISettingStore } from '../types/stores/settings-store';
-import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
-import { CUSTOM_ROOT_ROLE_TYPE } from '../util';
+} from '../../types/stores';
+import { IContextFieldStore } from '../../types/stores/context-field-store';
+import { IEnvironmentStore } from '../../types/stores/environment-store';
+import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
+import { IGroupStore } from '../../types/stores/group-store';
+import { IProjectStore } from '../../types/stores/project-store';
+import { IStrategyStore } from '../../types/stores/strategy-store';
+import { IUserStore } from '../../types/stores/user-store';
+import { ISegmentStore } from '../../types/stores/segment-store';
+import { IRoleStore } from '../../types/stores/role-store';
+import VersionService from '../../services/version-service';
+import { ISettingStore } from '../../types/stores/settings-store';
+import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../../types';
+import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
+import { type GetActiveUsers } from './getActiveUsers';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -43,7 +44,7 @@ export interface InstanceStats {
     SAMLenabled: boolean;
     OIDCenabled: boolean;
     clientApps: { range: TimeRange; count: number }[];
-    activeUsers: IActiveUsers;
+    activeUsers: Awaited<ReturnType<GetActiveUsers>>;
 }
 
 export interface InstanceStatsSigned extends InstanceStats {
@@ -83,6 +84,8 @@ export class InstanceStatsService {
 
     private appCount?: Partial<{ [key in TimeRange]: number }>;
 
+    private getActiveUsers: GetActiveUsers;
+
     constructor(
         {
             featureToggleStore,
@@ -114,6 +117,7 @@ export class InstanceStatsService {
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         versionService: VersionService,
+        getActiveUsers: GetActiveUsers,
     ) {
         this.strategyStore = strategyStore;
         this.userStore = userStore;
@@ -129,6 +133,7 @@ export class InstanceStatsService {
         this.eventStore = eventStore;
         this.clientInstanceStore = clientInstanceStore;
         this.logger = getLogger('services/stats-service.js');
+        this.getActiveUsers = getActiveUsers;
     }
 
     async refreshStatsSnapshot(): Promise<void> {
@@ -195,7 +200,7 @@ export class InstanceStatsService {
         ] = await Promise.all([
             this.getToggleCount(),
             this.userStore.count(),
-            this.userStore.getActiveUsersCount(),
+            this.getActiveUsers(),
             this.projectStore.count(),
             this.contextFieldStore.count(),
             this.groupStore.count(),

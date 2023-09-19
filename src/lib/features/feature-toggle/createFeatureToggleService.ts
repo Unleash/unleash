@@ -42,7 +42,7 @@ import {
 import StrategyStore from '../../db/strategy-store';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
 import {
-    createFakeprivateProjectChecker,
+    createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
 
@@ -155,7 +155,7 @@ export const createFakeFeatureToggleService = (
     );
     const segmentService = createFakeSegmentService(config);
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
-    const fakeprivateProjectChecker = createFakeprivateProjectChecker();
+    const fakeprivateProjectChecker = createFakePrivateProjectChecker();
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,

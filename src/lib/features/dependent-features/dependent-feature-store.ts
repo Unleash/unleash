@@ -1,10 +1,11 @@
 import { FeatureDependency } from './dependent-features-service';
 import { Db } from '../../db/db';
+import { IDependentFeaturesStore } from './dependent-feature-store-type';
 
 type SerializableFeatureDependency = Omit<FeatureDependency, 'variants'> & {
     variants?: string;
 };
-export class DependentFeaturesStore implements DependentFeaturesStore {
+export class DependentFeaturesStore implements IDependentFeaturesStore {
     private db: Db;
 
     constructor(db: Db) {

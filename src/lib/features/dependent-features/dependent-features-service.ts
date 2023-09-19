@@ -1,4 +1,5 @@
 import { CreateDependentFeatureSchema } from '../../openapi';
+import { IDependentFeaturesStore } from './dependent-feature-store-type';
 
 export type FeatureDependency =
     | {
@@ -9,6 +10,12 @@ export type FeatureDependency =
       }
     | { parent: string; child: string; enabled: false };
 export class DependentFeaturesService {
+    private dependentFeaturesStore: IDependentFeaturesStore;
+
+    constructor(dependentFeaturesStore: IDependentFeaturesStore) {
+        this.dependentFeaturesStore = dependentFeaturesStore;
+    }
+
     async upsertFeatureDependency(
         parentFeature: string,
         dependentFeature: CreateDependentFeatureSchema,
@@ -27,6 +34,6 @@ export class DependentFeaturesService {
                       enabled: true,
                       variants,
                   };
-        console.log(featureDependency);
+        await this.dependentFeaturesStore.upsert(featureDependency);
     }
 }

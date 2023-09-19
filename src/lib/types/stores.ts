@@ -34,6 +34,7 @@ import { IAccountStore } from './stores/account-store';
 import { IProjectStatsStore } from './stores/project-stats-store-type';
 import { IImportTogglesStore } from '../features/export-import-toggles/import-toggles-store-type';
 import { IPrivateProjectStore } from '../features/private-project/privateProjectStoreType';
+import { IDependentFeaturesStore } from '../features/dependent-features/dependent-feature-store-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -72,6 +73,7 @@ export interface IUnleashStores {
     projectStatsStore: IProjectStatsStore;
     importTogglesStore: IImportTogglesStore;
     privateProjectStore: IPrivateProjectStore;
+    dependentFeaturesStore: IDependentFeaturesStore;
 }
 
 export {
@@ -110,4 +112,5 @@ export {
     IFavoriteProjectsStore,
     IImportTogglesStore,
     IPrivateProjectStore,
+    IDependentFeaturesStore,
 };

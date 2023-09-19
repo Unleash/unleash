@@ -160,3 +160,5 @@ export * from './project-dora-metrics-schema';
 export * from './admin-segment-schema';
 export * from './segments-schema';
 export * from './update-feature-strategy-segments-schema';
+export * from './dependent-feature-schema';
+export * from './create-dependent-feature-schema';

@@ -22,7 +22,6 @@ import { IEvent } from '../types/events';
 interface ISlackAppAddonParameters {
     accessToken: string;
     defaultChannels: string;
-    alwaysPostToDefault: string;
 }
 
 export default class SlackAppAddon extends Addon {
@@ -45,28 +44,20 @@ export default class SlackAppAddon extends Addon {
         parameters: ISlackAppAddonParameters,
     ): Promise<void> {
         try {
-            const { accessToken, defaultChannels, alwaysPostToDefault } =
-                parameters;
+            const { accessToken, defaultChannels } = parameters;
             if (!accessToken) {
                 this.logger.warn('No access token provided.');
                 return;
             }
 
-            const postToDefault =
-                alwaysPostToDefault === 'true' || alwaysPostToDefault === 'yes';
-            this.logger.debug(`Post to default was set to ${postToDefault}`);
-
             const taggedChannels = this.findTaggedChannels(event);
-            let eventChannels: string[];
-            if (postToDefault) {
-                eventChannels = taggedChannels.concat(
-                    this.getDefaultChannels(defaultChannels),
-                );
-            } else {
-                eventChannels = taggedChannels.length
-                    ? taggedChannels
-                    : this.getDefaultChannels(defaultChannels);
-            }
+            const eventChannels = [
+                ...new Set(
+                    taggedChannels.concat(
+                        this.getDefaultChannels(defaultChannels),
+                    ),
+                ),
+            ];
 
             if (!eventChannels.length) {
                 this.logger.debug(

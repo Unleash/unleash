@@ -83,7 +83,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     title,
     description,
     isEnabled,
-    configureActionText = 'Open',
+    configureActionText = 'Configure',
     link,
     addon,
     deprecated,

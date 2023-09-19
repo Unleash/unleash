@@ -15,6 +15,7 @@ import { FavoritesService } from '../../../lib/services';
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';
 import { addDays, subDays } from 'date-fns';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
+import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
 
 let stores;
 let db: ITestDb;
@@ -57,12 +58,17 @@ beforeAll(async () => {
         db.rawDatabase,
         accessService,
     );
+    const privateProjectChecker = createPrivateProjectChecker(
+        db.rawDatabase,
+        config,
+    );
     featureToggleService = new FeatureToggleService(
         stores,
         config,
         new SegmentService(stores, changeRequestAccessReadModel, config),
         accessService,
         changeRequestAccessReadModel,
+        privateProjectChecker,
     );
 
     favoritesService = new FavoritesService(stores, config);
@@ -74,6 +80,7 @@ beforeAll(async () => {
         featureToggleService,
         groupService,
         favoritesService,
+        privateProjectChecker,
     );
 });
 

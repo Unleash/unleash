@@ -1,6 +1,5 @@
 import {
     CREATE_FEATURE_STRATEGY,
-    StrategyIds,
     EnvironmentVariantEvent,
     FEATURE_UPDATED,
     FeatureArchivedEvent,
@@ -23,6 +22,7 @@ import {
     IEventStore,
     IFeatureEnvironmentInfo,
     IFeatureEnvironmentStore,
+    IFeatureNaming,
     IFeatureOverview,
     IFeatureStrategy,
     IFeatureTagStore,
@@ -33,29 +33,29 @@ import {
     IProjectStore,
     ISegment,
     IStrategyConfig,
+    IStrategyStore,
     IUnleashConfig,
     IUnleashStores,
     IVariant,
+    PotentiallyStaleOnEvent,
     Saved,
     SKIP_CHANGE_REQUEST,
+    StrategiesOrderChangedEvent,
+    StrategyIds,
     Unsaved,
     WeightType,
-    StrategiesOrderChangedEvent,
-    PotentiallyStaleOnEvent,
-    IStrategyStore,
-    IFeatureNaming,
 } from '../types';
 import { Logger } from '../logger';
-import { PatternError } from '../error';
+import {
+    ForbiddenError,
+    FOREIGN_KEY_VIOLATION,
+    OperationDeniedError,
+    PatternError,
+    PermissionError,
+} from '../error';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
-import {
-    FOREIGN_KEY_VIOLATION,
-    OperationDeniedError,
-    PermissionError,
-    ForbiddenError,
-} from '../error';
 import {
     constraintSchema,
     featureMetadataSchema,
@@ -95,6 +95,7 @@ import { unique } from '../util/unique';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 import { checkFeatureFlagNamesAgainstPattern } from '../features/feature-naming-pattern/feature-naming-validation';
+import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 
 interface IFeatureContext {
     featureName: string;
@@ -154,6 +155,8 @@ class FeatureToggleService {
 
     private changeRequestAccessReadModel: IChangeRequestAccessReadModel;
 
+    private privateProjectChecker: IPrivateProjectChecker;
+
     constructor(
         {
             featureStrategiesStore,
@@ -184,6 +187,7 @@ class FeatureToggleService {
         segmentService: ISegmentService,
         accessService: AccessService,
         changeRequestAccessReadModel: IChangeRequestAccessReadModel,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -199,6 +203,7 @@ class FeatureToggleService {
         this.accessService = accessService;
         this.flagResolver = flagResolver;
         this.changeRequestAccessReadModel = changeRequestAccessReadModel;
+        this.privateProjectChecker = privateProjectChecker;
     }
 
     async validateFeaturesContext(
@@ -1017,11 +1022,20 @@ class FeatureToggleService {
         userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleClientStore.getAdmin({
+        const features = await this.featureToggleClientStore.getAdmin({
             featureQuery: query,
             userId,
             archived,
         });
+
+        if (this.flagResolver.isEnabled('privateProjects') && userId) {
+            const projects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            return features.filter((f) => projects.includes(f.project));
+        }
+        return features;
     }
 
     async getFeatureOverview(
@@ -1840,8 +1854,17 @@ class FeatureToggleService {
 
     async getMetadataForAllFeatures(
         archived: boolean,
+        userId: number,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleStore.getAll({ archived });
+        const features = await this.featureToggleStore.getAll({ archived });
+        if (this.flagResolver.isEnabled('privateProjects')) {
+            const projects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            return features.filter((f) => projects.includes(f.project));
+        }
+        return features;
     }
 
     async getMetadataForAllFeaturesByProjectId(

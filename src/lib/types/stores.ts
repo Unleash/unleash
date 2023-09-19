@@ -33,6 +33,7 @@ import { IFavoriteProjectsStore } from './stores/favorite-projects';
 import { IAccountStore } from './stores/account-store';
 import { IProjectStatsStore } from './stores/project-stats-store-type';
 import { IImportTogglesStore } from '../features/export-import-toggles/import-toggles-store-type';
+import { IPrivateProjectStore } from '../features/private-project/privateProjectStoreType';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -70,6 +71,7 @@ export interface IUnleashStores {
     favoriteProjectsStore: IFavoriteProjectsStore;
     projectStatsStore: IProjectStatsStore;
     importTogglesStore: IImportTogglesStore;
+    privateProjectStore: IPrivateProjectStore;
 }
 
 export {
@@ -107,4 +109,5 @@ export {
     IFavoriteFeaturesStore,
     IFavoriteProjectsStore,
     IImportTogglesStore,
+    IPrivateProjectStore,
 };

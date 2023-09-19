@@ -8,6 +8,8 @@ exports[`Should call datadog webhook 1`] = `"{"text":"%%% \\n some@user.com crea
 
 exports[`Should call datadog webhook for toggled environment 1`] = `"{"text":"%%% \\n some@user.com *disabled* [some-toggle](http://some-url.com/projects/default/features/some-toggle) in *development* environment in project *default* \\n %%% ","title":"Unleash notification update"}"`;
 
+exports[`Should call datadog webhook with JSON when template set 1`] = `"{"text":"{\\n  \\"event\\": \\"feature-created\\",\\n  \\"createdBy\\": \\"some@user.com\\"\\n}","title":"Unleash notification update"}"`;
+
 exports[`Should include customHeaders in headers when calling service 1`] = `"{"text":"%%% \\n some@user.com *disabled* [some-toggle](http://some-url.com/projects/default/features/some-toggle) in *development* environment in project *default* \\n %%% ","title":"Unleash notification update"}"`;
 
 exports[`Should include customHeaders in headers when calling service 2`] = `

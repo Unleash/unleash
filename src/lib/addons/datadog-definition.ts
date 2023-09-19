@@ -62,6 +62,21 @@ const dataDogDefinition: IAddonDefinition = {
             sensitive: true,
             type: 'textfield',
         },
+        {
+            name: 'bodyTemplate',
+            displayName: 'Body template',
+            placeholder: `{
+  "event": "{{event.type}}",
+  "createdBy": "{{event.createdBy}}",
+  "featureToggle": "{{event.data.name}}",
+  "timestamp": "{{event.data.createdAt}}"
+}`,
+            description:
+                '(Optional) The default format is a markdown string formatted by Unleash. You may override the format of the body using a mustache template.',
+            required: false,
+            sensitive: false,
+            type: 'textfield',
+        },
     ],
     events: [
         FEATURE_CREATED,

@@ -66,6 +66,16 @@ const webhookDefinition: IAddonDefinition = {
             sensitive: true,
         },
         {
+            name: 'customHeaders',
+            displayName: 'Extra HTTP Headers',
+            placeholder:
+                '{\n"ISTIO_USER_KEY": "hunter2",\n"SOME_OTHER_CUSTOM_HTTP_HEADER": "SOMEVALUE"\n}',
+            description: `(Optional) Used to add extra HTTP Headers to the request the plugin fires off. This must be a valid json object of key-value pairs where both the key and the value are strings`,
+            required: false,
+            sensitive: true,
+            type: 'textfield',
+        },
+        {
             name: 'bodyTemplate',
             displayName: 'Body template',
             placeholder: `{
@@ -79,16 +89,6 @@ const webhookDefinition: IAddonDefinition = {
             type: 'textfield',
             required: false,
             sensitive: false,
-        },
-        {
-            name: 'customHeaders',
-            displayName: 'Extra HTTP Headers',
-            placeholder:
-                '{\n"ISTIO_USER_KEY": "hunter2",\n"SOME_OTHER_CUSTOM_HTTP_HEADER": "SOMEVALUE"\n}',
-            description: `(Optional) Used to add extra HTTP Headers to the request the plugin fires off. This must be a valid json object of key-value pairs where both the key and the value are strings`,
-            required: false,
-            sensitive: true,
-            type: 'textfield',
         },
     ],
     events: [

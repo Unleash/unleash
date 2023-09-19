@@ -45,6 +45,7 @@ process.nextTick(async () => {
                         variantTypeNumber: true,
                         privateProjects: false,
                         accessOverview: true,
+                        datadogJsonTemplate: true,
                     },
                 },
                 authentication: {

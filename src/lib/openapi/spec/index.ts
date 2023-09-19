@@ -157,5 +157,5 @@ export * from './create-group-schema';
 export * from './application-usage-schema';
 export * from './dora-features-schema';
 export * from './project-dora-metrics-schema';
-export * from './depedent-feature-schema';
-export * from './create-depedent-feature-schema';
+export * from './dependent-feature-schema';
+export * from './create-dependent-feature-schema';

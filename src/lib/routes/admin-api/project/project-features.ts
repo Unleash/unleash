@@ -53,7 +53,7 @@ import {
     UnleashTransaction,
 } from '../../../db/transaction';
 import { BadDataError, InvalidOperationError } from '../../../error';
-import { CreateDependentFeatureSchema } from '../../../openapi/spec/create-depedent-feature-schema';
+import { CreateDependentFeatureSchema } from '../../../openapi/spec/create-dependent-feature-schema';
 
 interface FeatureStrategyParams {
     projectId: string;

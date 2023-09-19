@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { StyledTitle } from '../IntegrationForm.styles';
+import { StyledHelpText, StyledTitle } from '../IntegrationForm.styles';
 
 export interface IIntegrationMultiSelectorProps {
     options: IAutocompleteBoxOption[];
@@ -24,7 +24,8 @@ export interface IIntegrationMultiSelectorProps {
     error?: string;
     onFocus?: () => void;
     entityName: string;
-    description: React.ReactNode;
+    description: string;
+    note?: string;
     required?: boolean;
 }
 
@@ -42,15 +43,23 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
     onFocus,
     entityName,
     description,
+    note,
     required,
 }) => {
     const renderInput = (params: AutocompleteRenderInputParams) => (
         <TextField
             {...params}
             error={Boolean(error)}
-            helperText={error}
+            helperText={error || note}
             variant="outlined"
-            label={`${capitalize(entityName)}s`}
+            label={
+                <>
+                    {capitalize(`${entityName}s`)}
+                    {required ? (
+                        <Typography component="span">*</Typography>
+                    ) : null}
+                </>
+            }
             placeholder={`Select ${entityName}s to filter by`}
             onFocus={onFocus}
             data-testid={`select-${entityName}-input`}
@@ -76,15 +85,8 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
 
     return (
         <>
-            <StyledTitle>
-                {capitalize(`${entityName}s`)}
-                {required ? (
-                    <Typography component="span" color="error">
-                        *
-                    </Typography>
-                ) : null}
-            </StyledTitle>
-            {description}
+            <StyledTitle>{capitalize(`${entityName}s`)}</StyledTitle>
+            <StyledHelpText>{description}</StyledHelpText>
             <Autocomplete
                 sx={{
                     marginTop: 1.5,

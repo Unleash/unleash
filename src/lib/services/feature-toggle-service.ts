@@ -96,6 +96,7 @@ import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 import { checkFeatureFlagNamesAgainstPattern } from '../features/feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
+import { CreateDependentFeatureSchema } from '../openapi';
 
 interface IFeatureContext {
     featureName: string;
@@ -121,6 +122,15 @@ export type FeatureNameCheckResultWithFeaturePattern =
           invalidNames: Set<string>;
           featureNaming: IFeatureNaming;
       };
+
+export type FeatureDependency =
+    | {
+          parent: string;
+          child: string;
+          enabled: true;
+          variants?: string[];
+      }
+    | { parent: string; child: string; enabled: false };
 
 const oneOf = (values: string[], match: string) => {
     return values.some((value) => value === match);
@@ -2200,6 +2210,27 @@ class FeatureToggleService {
                 ),
             );
         }
+    }
+
+    async upsertFeatureDependency(
+        parentFeature: string,
+        dependentFeature: CreateDependentFeatureSchema,
+    ): Promise<void> {
+        const { enabled, feature, variants } = dependentFeature;
+        const featureDependency: FeatureDependency =
+            enabled === false
+                ? {
+                      parent: parentFeature,
+                      child: feature,
+                      enabled,
+                  }
+                : {
+                      parent: parentFeature,
+                      child: feature,
+                      enabled: true,
+                      variants,
+                  };
+        console.log(featureDependency);
     }
 }
 

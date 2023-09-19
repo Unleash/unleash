@@ -164,7 +164,7 @@ export interface IAccessStore extends Store<IRole, number> {
 
     addPermissionsToRole(
         role_id: number,
-        permissions: PermissionRef[],
+        permissions: PermissionRef[] | string[],
         environment?: string,
     ): Promise<void>;
 

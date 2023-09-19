@@ -781,11 +781,20 @@ export class AccessStore implements IAccessStore {
 
     async addPermissionsToRole(
         role_id: number,
-        permissions: PermissionRef[],
+        permissions: PermissionRef[] | string[],
         environment?: string,
     ): Promise<void> {
+        const permissionsAsRefs = (permissions ?? []).map((p) => {
+            if (typeof p === 'string') {
+                return { name: p };
+            } else {
+                return p;
+            }
+        });
         // no need to pass down the environment in this particular case because it'll be overriden
-        const permissionsWithIds = await this.resolvePermissions(permissions);
+        const permissionsWithIds = await this.resolvePermissions(
+            permissionsAsRefs,
+        );
 
         const newRoles = permissionsWithIds.map((p) => ({
             role_id,

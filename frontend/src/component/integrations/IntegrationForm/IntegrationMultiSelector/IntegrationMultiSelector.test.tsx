@@ -1,5 +1,4 @@
 import { vi } from 'vitest';
-import React from 'react';
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
@@ -21,8 +20,8 @@ const mockProps: IIntegrationMultiSelectorProps = {
     selectedItems: [],
     onChange,
     onFocus,
-    selectAllEnabled: true,
     entityName: 'project',
+    description: 'some description',
 };
 
 const server = testServerSetup();

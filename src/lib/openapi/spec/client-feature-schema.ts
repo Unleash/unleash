@@ -5,6 +5,7 @@ import { featureStrategySchema } from './feature-strategy-schema';
 import { variantSchema } from './variant-schema';
 import { overrideSchema } from './override-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
+import { dependentFeatureSchema } from './dependent-feature-schema';
 
 export const clientFeatureSchema = {
     $id: '#/components/schemas/clientFeatureSchema',
@@ -73,6 +74,13 @@ export const clientFeatureSchema = {
             },
             nullable: true,
         },
+        dependencies: {
+            type: 'array',
+            description: 'Feature dependencies for this toggle',
+            items: {
+                $ref: '#/components/schemas/dependentFeatureSchema',
+            },
+        },
     },
     components: {
         schemas: {
@@ -82,6 +90,7 @@ export const clientFeatureSchema = {
             strategyVariantSchema,
             variantSchema,
             overrideSchema,
+            dependentFeatureSchema,
         },
     },
 } as const;

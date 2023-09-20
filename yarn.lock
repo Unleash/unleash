@@ -3603,10 +3603,10 @@ faker@5.5.3:
   resolved "https://registry.yarnpkg.com/faker/-/faker-5.5.3.tgz#c57974ee484431b25205c2c8dc09fda861e51e0e"
   integrity sha512-wLTv2a28wjUyWkbnX7u/ABZBkUkIF2fCd73V6P2oFqEGEktDfzWx4UxrSqtPRw0xPRAcjeAOIiJWqZm3pP4u3g==
 
-fast-check@3.12.1:
-  version "3.12.1"
-  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.12.1.tgz#00c35e83bcbec80fd35e0c204f9996309f004b3d"
-  integrity sha512-aRN6WrO+q3TZV8CjXnpebx9bTHrpYIOVi6v3ttxciZiWqS739yy8b1oVx+qNEyV1b8RdVjlp/+miTY6yAp90HA==
+fast-check@3.13.0:
+  version "3.13.0"
+  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.13.0.tgz#1099a36fd945fb06f6e68e261c91fa8c70c29802"
+  integrity sha512-m6+3gZ/yTiCWTuV/1e/UuPPjyyyHdQ5gu0pMd84C6705VTDjAgAE6nqFT5jhgegFllCJ95yOzBpqvJSs2DZAxQ==
   dependencies:
     pure-rand "^6.0.0"
 
@@ -7962,9 +7962,9 @@ uuid@^8.3.2:
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 uuid@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
-  integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
+  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
 v8-compile-cache-lib@^3.0.1:
   version "3.0.1"

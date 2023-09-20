@@ -9,6 +9,7 @@ import { featureStrategySchema } from './feature-strategy-schema';
 import { clientFeatureSchema } from './client-feature-schema';
 import { variantSchema } from './variant-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
+import { dependentFeatureSchema } from './dependent-feature-schema';
 
 export const clientFeaturesSchema = {
     $id: '#/components/schemas/clientFeaturesSchema',
@@ -57,6 +58,7 @@ export const clientFeaturesSchema = {
             featureStrategySchema,
             strategyVariantSchema,
             variantSchema,
+            dependentFeatureSchema,
         },
     },
 } as const;

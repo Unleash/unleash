@@ -75,7 +75,7 @@
     "debounce": "1.2.1",
     "deep-diff": "1.0.2",
     "dequal": "2.0.3",
-    "eslint": "8.48.0",
+    "eslint": "8.49.0",
     "eslint-config-react-app": "7.0.1",
     "fast-json-patch": "3.1.1",
     "http-proxy-middleware": "2.0.6",
@@ -114,7 +114,7 @@
     "vite-plugin-svgr": "3.2.0",
     "vite-tsconfig-paths": "4.2.1",
     "vitest": "0.33.0",
-    "whatwg-fetch": "3.6.18"
+    "whatwg-fetch": "3.6.19"
   },
   "optionalDependencies": {
     "orval": "^6.17.0"

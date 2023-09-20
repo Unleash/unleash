@@ -87,7 +87,6 @@ exports[`should create default config 1`] = `
       "featuresExportImport": true,
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
-      "integrationsRework": false,
       "lastSeenByEnvironment": false,
       "maintenanceMode": false,
       "messageBanner": {
@@ -127,7 +126,6 @@ exports[`should create default config 1`] = `
       "featuresExportImport": true,
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
-      "integrationsRework": false,
       "lastSeenByEnvironment": false,
       "maintenanceMode": false,
       "messageBanner": {

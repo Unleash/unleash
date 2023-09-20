@@ -1,4 +1,6 @@
-**Make the business case for feature flag migration**
+---
+title: Make the business case for feature flag migration
+---
 
 Once you have scoped your migration, you need to make a business case. Even the most well-planned migrations are work. Work means time, money, and energy dedicated to a project.  If you don’t have the proper buy-in, you risk not being under-resourced or worse, being unable to complete the migration at all.
 

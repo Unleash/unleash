@@ -1,7 +1,6 @@
 import {
     CREATE_FEATURE_STRATEGY,
     EnvironmentVariantEvent,
-    FEATURE_UPDATED,
     FeatureArchivedEvent,
     FeatureChangeProjectEvent,
     FeatureCreatedEvent,
@@ -1653,27 +1652,6 @@ class FeatureToggleService {
                 }),
             );
         }
-        return feature;
-    }
-
-    // @deprecated
-    async storeFeatureUpdatedEventLegacy(
-        featureName: string,
-        createdBy: string,
-    ): Promise<FeatureToggleLegacy> {
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
-        const feature = await this.getFeatureToggleLegacy(featureName);
-
-        // Legacy event. Will not be used from v4.3.
-        // We do not include 'preData' on purpose.
-        await this.eventStore.store({
-            type: FEATURE_UPDATED,
-            createdBy,
-            featureName,
-            data: feature,
-            tags,
-            project: feature.project,
-        });
         return feature;
     }
 

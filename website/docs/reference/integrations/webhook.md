@@ -16,7 +16,6 @@ The webhook will perform a single retry if the HTTP POST call fails (either a 50
 You can choose to trigger updates for the following events (we might add more event types in the future):
 
 - feature-created
-- feature-updated (*)
 - feature-metadata-updated
 - feature-project-change
 - feature-archived
@@ -28,8 +27,6 @@ You can choose to trigger updates for the following events (we might add more ev
 - feature-stale-off
 - feature-environment-enabled
 - feature-environment-disabled
-
-> *) Deprecated, and will not be used after transition to environments in Unleash v4.3
 
 #### Parameters {#parameters}
 

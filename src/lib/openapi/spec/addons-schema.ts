@@ -76,7 +76,6 @@ export const addonsSchema = {
                     ],
                     events: [
                         'feature-created',
-                        'feature-updated',
                         'feature-archived',
                         'feature-revived',
                         'feature-stale-on',
@@ -149,7 +148,6 @@ export const addonsSchema = {
                     ],
                     events: [
                         'feature-created',
-                        'feature-updated',
                         'feature-archived',
                         'feature-revived',
                         'feature-stale-on',
@@ -191,7 +189,6 @@ export const addonsSchema = {
                     ],
                     events: [
                         'feature-created',
-                        'feature-updated',
                         'feature-archived',
                         'feature-revived',
                         'feature-stale-on',
@@ -235,7 +232,6 @@ export const addonsSchema = {
                     ],
                     events: [
                         'feature-created',
-                        'feature-updated',
                         'feature-archived',
                         'feature-revived',
                         'feature-stale-on',

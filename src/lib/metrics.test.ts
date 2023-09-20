@@ -3,11 +3,7 @@ import EventEmitter from 'events';
 import { IEventStore } from './types/stores/event-store';
 import { createTestConfig } from '../test/config/test-config';
 import { REQUEST_TIME, DB_TIME } from './metric-events';
-import {
-    CLIENT_METRICS,
-    CLIENT_REGISTER,
-    FEATURE_UPDATED,
-} from './types/events';
+import { CLIENT_METRICS, CLIENT_REGISTER } from './types/events';
 import { createMetricsMonitor } from './metrics';
 import createStores from '../test/fixtures/store';
 import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
@@ -74,19 +70,6 @@ test('should collect metrics for requests', async () => {
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
         /http_request_duration_milliseconds\{quantile="0\.99",path="somePath",method="GET",status="200",appName="undefined"\}.*1337/,
-    );
-});
-
-test('should collect metrics for updated toggles', async () => {
-    stores.eventStore.emit(FEATURE_UPDATED, {
-        featureName: 'TestToggle',
-        project: 'default',
-        data: { name: 'TestToggle' },
-    });
-
-    const metrics = await prometheusRegister.metrics();
-    expect(metrics).toMatch(
-        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="default"\} 1/,
     );
 });
 

@@ -12,7 +12,6 @@ import {
     FEATURE_STRATEGY_ADD,
     FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
-    FEATURE_UPDATED,
     FEATURE_VARIANTS_UPDATED,
     IConstraint,
     IEvent,
@@ -325,8 +324,6 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         switch (type) {
             case FEATURE_CREATED:
                 return 'created';
-            case FEATURE_UPDATED:
-                return 'updated';
             case FEATURE_VARIANTS_UPDATED:
                 return 'updated variants for';
             default:

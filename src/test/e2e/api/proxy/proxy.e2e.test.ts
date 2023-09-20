@@ -9,7 +9,7 @@ import {
 } from '../../../../lib/types/models/api-token';
 import { startOfHour } from 'date-fns';
 import {
-    FEATURE_UPDATED,
+    FEATURE_CREATED,
     IConstraint,
     IStrategyConfig,
 } from '../../../../lib/types';
@@ -922,7 +922,7 @@ test('Should not recursively set off timers on events', async () => {
 
     await proxyRepository.start();
 
-    db.stores.eventStore.emit(FEATURE_UPDATED);
+    db.stores.eventStore.emit(FEATURE_CREATED);
 
     jest.advanceTimersByTime(10000);
 

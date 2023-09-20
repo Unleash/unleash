@@ -51,7 +51,7 @@ export const addonSchema = {
             items: {
                 type: 'string',
             },
-            example: ['feature-created', 'feature-updated'],
+            example: ['feature-created', 'feature-archived'],
         },
         projects: {
             type: 'array',

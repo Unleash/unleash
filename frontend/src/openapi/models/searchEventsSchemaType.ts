@@ -15,7 +15,6 @@ export const SearchEventsSchemaType = {
     'application-created': 'application-created',
     'feature-created': 'feature-created',
     'feature-deleted': 'feature-deleted',
-    'feature-updated': 'feature-updated',
     'feature-metadata-updated': 'feature-metadata-updated',
     'feature-variants-updated': 'feature-variants-updated',
     'feature-environment-variants-updated':

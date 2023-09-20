@@ -14,7 +14,6 @@ import {
     FEATURE_ENVIRONMENT_DISABLED,
     FEATURE_VARIANTS_UPDATED,
     FEATURE_METADATA_UPDATED,
-    FEATURE_UPDATED,
     CLIENT_METRICS,
     CLIENT_REGISTER,
 } from './types/events';
@@ -267,11 +266,6 @@ export default class MetricsMonitor {
         });
         eventStore.on(FEATURE_METADATA_UPDATED, ({ featureName, project }) => {
             featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
-        });
-        eventStore.on(FEATURE_UPDATED, ({ featureName, project }) => {
-            featureToggleUpdateTotal
-                .labels(featureName, project, 'default')
-                .inc();
         });
         eventStore.on(
             FEATURE_STRATEGY_ADD,

@@ -12,7 +12,6 @@ import {
     FEATURE_STRATEGY_ADD,
     FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
-    FEATURE_UPDATED,
     FEATURE_TAGGED,
     FEATURE_UNTAGGED,
     CHANGE_REQUEST_CREATED,
@@ -93,7 +92,6 @@ const webhookDefinition: IAddonDefinition = {
     ],
     events: [
         FEATURE_CREATED,
-        FEATURE_UPDATED,
         FEATURE_ARCHIVED,
         FEATURE_REVIVED,
         FEATURE_STALE_ON,

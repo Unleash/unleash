@@ -8,7 +8,6 @@ export const APPLICATION_CREATED = 'application-created' as const;
 // feature event types
 export const FEATURE_CREATED = 'feature-created' as const;
 export const FEATURE_DELETED = 'feature-deleted' as const;
-export const FEATURE_UPDATED = 'feature-updated' as const;
 export const FEATURE_METADATA_UPDATED = 'feature-metadata-updated' as const;
 export const FEATURE_VARIANTS_UPDATED = 'feature-variants-updated' as const;
 export const FEATURE_ENVIRONMENT_VARIANTS_UPDATED =
@@ -143,7 +142,6 @@ export const IEventTypes = [
     APPLICATION_CREATED,
     FEATURE_CREATED,
     FEATURE_DELETED,
-    FEATURE_UPDATED,
     FEATURE_METADATA_UPDATED,
     FEATURE_VARIANTS_UPDATED,
     FEATURE_ENVIRONMENT_VARIANTS_UPDATED,

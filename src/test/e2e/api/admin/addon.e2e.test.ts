@@ -56,7 +56,7 @@ test('should create addon configuration', async () => {
             url: 'http://localhost:4242/webhook',
             bodyTemplate: "{'name': '{{event.data.name}}' }",
         },
-        events: ['feature-updated', 'feature-created'],
+        events: ['feature-archived', 'feature-created'],
     };
 
     return app.request.post('/api/admin/addons').send(config).expect(201);
@@ -72,7 +72,7 @@ test('should delete addon configuration', async () => {
             url: 'http://localhost:4242/webhook',
             bodyTemplate: "{'name': '{{event.data.name}}' }",
         },
-        events: ['feature-updated', 'feature-created'],
+        events: ['feature-archived', 'feature-created'],
     };
 
     const res = await app.request
@@ -94,7 +94,7 @@ test('should update addon configuration', async () => {
             url: 'http://localhost:4242/webhook',
             bodyTemplate: "{'name': '{{event.data.name}}' }",
         },
-        events: ['feature-updated', 'feature-created'],
+        events: ['feature-archived', 'feature-created'],
     };
 
     const res = await app.request
@@ -138,7 +138,7 @@ test('should not update with invalid addon configuration', async () => {
             url: 'http://localhost:4242/webhook',
             bodyTemplate: "{'name': '{{event.data.name}}' }",
         },
-        events: ['feature-updated', 'feature-created'],
+        events: ['feature-archived', 'feature-created'],
     };
 
     await app.request.put('/api/admin/addons/1').send(config).expect(400);
@@ -154,7 +154,7 @@ test('should not update unknown addon configuration', async () => {
             url: 'http://localhost:4242/webhook',
             bodyTemplate: "{'name': '{{event.data.name}}' }",
         },
-        events: ['feature-updated', 'feature-created'],
+        events: ['feature-archived', 'feature-created'],
     };
 
     await app.request.put('/api/admin/addons/123123').send(config).expect(404);
@@ -170,7 +170,7 @@ test('should get addon configuration', async () => {
             url: 'http://localhost:4242/webhook',
             bodyTemplate: "{'name': '{{event.data.name}}' }",
         },
-        events: ['feature-updated', 'feature-created'],
+        events: ['feature-archived', 'feature-created'],
     };
 
     const res = await app.request
@@ -247,7 +247,7 @@ describe('missing descriptions', () => {
         parameters: {
             url: 'http://localhost:4242/webhook',
         },
-        events: ['feature-created', 'feature-updated'],
+        events: ['feature-created', 'feature-archived'],
     };
 
     test('creating an addon without a description, sets the description to `null`', async () => {

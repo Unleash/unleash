@@ -5,7 +5,6 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
-    FEATURE_UPDATED,
     IEvent,
 } from '../types/events';
 
@@ -39,12 +38,7 @@ const definition: IAddonDefinition = {
         },
     ],
     documentationUrl: 'https://www.example.com',
-    events: [
-        FEATURE_CREATED,
-        FEATURE_UPDATED,
-        FEATURE_ARCHIVED,
-        FEATURE_REVIVED,
-    ],
+    events: [FEATURE_CREATED, FEATURE_ARCHIVED, FEATURE_REVIVED],
     tagTypes: [
         {
             name: 'me',

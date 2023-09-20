@@ -66,41 +66,6 @@ This event fires when you create a feature. The `data` property contains the det
 }
 ```
 
-### `feature-updated`
-
-:::caution Deprecation notice
-
-This event type was replaced by more granular event types in Unleash 4.3. From Unleash 4.3 onwards, you'll need to use the events listed later in this section instead.
-
-:::
-
-This event fires when a feature gets updated in some way. The `data` property contains the new state of the toggle. This is a legacy event, so it does not populate `preData` property.
-
-```json title="example event: feature-updated"
-{
-  "id": 899,
-  "type": "feature-updated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-05-31T13:32:20.560Z",
-  "data": {
-    "name": "new-feature",
-    "description": "Toggle description",
-    "type": "release",
-    "project": "my-project",
-    "stale": false,
-    "variants": [],
-    "createdAt": "2022-05-31T13:32:20.547Z",
-    "lastSeenAt": null,
-    "impressionData": true
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-project",
-  "environment": null
-}
-```
-
 ### `feature-deleted`
 
 This event fires when you delete a feature toggle. The `preData` property contains the deleted toggle data.

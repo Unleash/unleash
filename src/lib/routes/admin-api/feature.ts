@@ -370,7 +370,7 @@ class FeatureController extends Controller {
         const projectId = await this.service.getProjectId(featureName);
         const value = await featureSchema.validateAsync(updatedFeature);
 
-        await this.service.updateFeatureToggle(
+        const feature = await this.service.updateFeatureToggle(
             projectId,
             value,
             userName,
@@ -405,11 +405,6 @@ class FeatureController extends Controller {
             userName,
         );
 
-        const feature = await this.service.storeFeatureUpdatedEventLegacy(
-            featureName,
-            userName,
-        );
-
         res.status(200).json(feature);
     }
 
@@ -428,10 +423,7 @@ class FeatureController extends Controller {
             DEFAULT_ENV,
             userName,
         );
-        await this.service.storeFeatureUpdatedEventLegacy(
-            featureName,
-            userName,
-        );
+
         res.status(200).json(feature);
     }
 
@@ -446,10 +438,7 @@ class FeatureController extends Controller {
             true,
             userName,
         );
-        await this.service.storeFeatureUpdatedEventLegacy(
-            featureName,
-            userName,
-        );
+
         res.json(feature);
     }
 
@@ -464,10 +453,7 @@ class FeatureController extends Controller {
             false,
             userName,
         );
-        await this.service.storeFeatureUpdatedEventLegacy(
-            featureName,
-            userName,
-        );
+
         res.json(feature);
     }
 

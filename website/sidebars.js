@@ -45,21 +45,21 @@ module.exports = {
                 'topics/managing-constraints',
                 'topics/proxy-hosting',
                 'topics/data-collection',
-            ],
-        },
-        {
-            type: 'category',
-            label: 'Feature Flags Migrations',
-            link: {
-                type: 'generated-index',
-                slug: '/topics/feature-flag-migration-best-practices',
-            },
-            items: [
-                'topics/feature-flag-migration/feature-flag-migration-scope',
-                'topics/feature-flag-migration/business-case-feature-flag-migration',
-                'topics/feature-flag-migration/planning-feature-flag-migration',
-                'topics/feature-flag-migration/how-to-execute-feature-flag-migration',
-                'topics/feature-flag-migration/onbording-users-to-feature-flag-service',
+                {
+                    type: 'category',
+                    label: 'Feature Flags Migrations',
+                    link: {
+                        type: 'doc',
+                        id: 'topics/feature-flag-migration/feature-flag-migration-best-practices',
+                    },
+                    items: [
+                        'topics/feature-flag-migration/feature-flag-migration-scope',
+                        'topics/feature-flag-migration/business-case-feature-flag-migration',
+                        'topics/feature-flag-migration/planning-feature-flag-migration',
+                        'topics/feature-flag-migration/how-to-execute-feature-flag-migration',
+                        'topics/feature-flag-migration/onbording-users-to-feature-flag-service',
+                    ],
+                },
             ],
         },
         {

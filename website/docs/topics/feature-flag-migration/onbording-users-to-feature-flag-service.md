@@ -1,4 +1,6 @@
-### Onboarding
+---
+title: Onboarding users
+---
 
 Finally, after the migration has been completed and everyone has celebrated, you need to onboard team members onto the platform.
 

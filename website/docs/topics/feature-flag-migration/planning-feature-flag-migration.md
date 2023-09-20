@@ -1,4 +1,6 @@
-### Planning Feature Flag Migration
+---
+title: Planning Feature Flag Migration
+---
 
 When planning your feature flag migration, it is essential to focus on four key areas:
 

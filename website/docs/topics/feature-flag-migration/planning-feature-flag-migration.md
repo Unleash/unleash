@@ -17,7 +17,7 @@ Below are some of the most common use cases for feature flags. Start by selectin
 
 Use cases for feature flags:
 
-* Operational or Permission flags (also known as “Kill Switches”
+* Operational or Permission flags (also known as "Kill Switches")
 * Gradual rollouts
 * Canary releases
 * A/B testing / Experimentation

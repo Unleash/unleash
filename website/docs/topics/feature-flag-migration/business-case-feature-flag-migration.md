@@ -11,6 +11,6 @@ To structure your thinking, ask yourself:
 * What practices related to feature deployments, debugging and rollbacks are overburdening teams today and driving down productivity?
 * What specific deficiencies are there in the current platform
 * What business outcomes are you looking to drive?
-* After the migration, what does “better” look like?
+* After the migration, what does "better" look like?
 
 Use our [Feature Flag Migration template](https://docs.google.com/spreadsheets/d/1MKc95v7Tc-9tznWMDVSy2vvmVJTvOFLRVZpx1QrL-_U/edit#gid=996250264) to fill in details about your business case.

@@ -11,4 +11,4 @@ To structure your thinking, ask yourself:
 * What business outcomes are you looking to drive?
 * After the migration, what does “better” look like?
 
-Use our Build a Business Case for Feature Flag Migration Template to answer specific questions for your company.
+Use our [Feature Flag Migration template](https://docs.google.com/spreadsheets/d/1MKc95v7Tc-9tznWMDVSy2vvmVJTvOFLRVZpx1QrL-_U/edit#gid=996250264) to fill in details about your business case.

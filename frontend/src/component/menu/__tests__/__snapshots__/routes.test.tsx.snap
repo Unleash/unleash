@@ -308,11 +308,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "hidden": false,
-    "menu": {
-      "advanced": true,
-      "mobile": true,
-    },
-    "notFlag": "integrationsRework",
+    "menu": {},
     "path": "/addons",
     "title": "Addons",
     "type": "protected",
@@ -343,7 +339,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "integrationsRework",
     "hidden": false,
     "menu": {
       "advanced": true,

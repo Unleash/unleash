@@ -1604,10 +1604,10 @@
   dependencies:
     "@types/superagent" "*"
 
-"@types/type-is@1.6.3":
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/@types/type-is/-/type-is-1.6.3.tgz#45285b3be846a4afc9d488910a8e4b7bc2e8a169"
-  integrity sha512-PNs5wHaNcBgCQG5nAeeZ7OvosrEsI9O4W2jAOO9BCCg4ux9ZZvH2+0iSCOIDBiKuQsiNS8CBlmfX9f5YBQ22cA==
+"@types/type-is@1.6.4":
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/@types/type-is/-/type-is-1.6.4.tgz#41792b6ff39dbb8165ccbbda5fe429368ec5262b"
+  integrity sha512-2ONCAm+KdTDcSZdYj3xWT+GAfgLNXpEUIyCMYofzwoVYORXf7tqq2jDf3dd4J+4y96YVcTXbZsdJf4LSGGUc/A==
   dependencies:
     "@types/node" "*"
 

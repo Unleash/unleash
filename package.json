@@ -188,7 +188,7 @@
     "@types/semver": "7.5.1",
     "@types/stoppable": "1.1.1",
     "@types/supertest": "2.0.12",
-    "@types/type-is": "1.6.3",
+    "@types/type-is": "1.6.4",
     "@types/uuid": "9.0.3",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",

@@ -4,7 +4,7 @@ Based on experiences working with dozens of large enterprises migrating homegrow
 
 #### 1- Separate the migration of old flags from the existing system from new flags created in Unleash.
 
-The older the system, the more existing flags there are.  One recent customer we will look at later in this post had 25,000 flags in their legacy system. It might take weeks or months to hunt down the developer responsible for an old flag in an obscure part of the code base. In the meantime, hundreds of developers are trying to create new flags today.  By separating these concerns, you can get to the “happy end state” for your development team faster, and burn down your flag migrations over time.
+The older the system, the more existing flags there are. It might take weeks or months to hunt down the developer responsible for an old flag in an obscure part of the code base. In the meantime, hundreds of developers are trying to create new flags today.  By separating these concerns, you can get to the “happy end state” for your development team faster, and burn down your flag migrations over time.
 
 So you should end up with two separate tracks as part of your project scope.
 

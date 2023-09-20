@@ -18,7 +18,7 @@ In parallel, the second track:
 
 2. Clean up stale feature flags in the current platform. You should decide strategically on what should be migrated and what should be cleaned up. Many old flags can simply be deleted rather than migrated.  
 
-#### 2- Do not make end-to-end app modernization a dependency of your feature flag migration
+## 2- Do not make end-to-end app modernization a dependency of your feature flag migration
 
 Organizations who adopt feature flags see improvements in all key operational metrics for DevOps: Lead time to changes, mean-time-to-recovery, deployment frequency, and change failure rate.  So it is natural as part of a feature flag migration to also improve other parts of the software development lifecycle. From the perspective of feature flag migration, this is a mistake.
 

@@ -59,8 +59,6 @@ module.exports = {
                         'topics/onbording-users-to-feature-flag-service',
                     ],
                 },
-            ],
-        },
         {
             label: 'How-to guides',
             collapsed: false,

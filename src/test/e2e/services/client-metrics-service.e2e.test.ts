@@ -3,6 +3,7 @@ import { IClientApp } from '../../../lib/types/model';
 import { secondsToMilliseconds } from 'date-fns';
 import { createTestConfig } from '../../config/test-config';
 import { IUnleashConfig } from '../../../lib/types';
+import { FakePrivateProjectChecker } from '../../../lib/features/private-project/fakePrivateProjectChecker';
 
 const faker = require('faker');
 const dbInit = require('../helpers/database-init');
@@ -23,6 +24,7 @@ beforeAll(async () => {
     clientInstanceService = new ClientInstanceService(
         stores,
         config,
+        new FakePrivateProjectChecker(),
         bulkInterval,
         announcementInterval,
     );

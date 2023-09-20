@@ -36,7 +36,7 @@ module.exports = {
                 type: 'generated-index',
                 title: 'Topic guides',
                 description:
-                    'Discussions, explanations, and explorations regarding topics related to Unleash.',
+                    'Discussions, explanations, and explorations regarding topics related to feature flags and Unleash.',
                 slug: '/topics',
             },
             items: [
@@ -45,6 +45,18 @@ module.exports = {
                 'topics/managing-constraints',
                 'topics/proxy-hosting',
                 'topics/data-collection',
+                {
+                    type: 'category',
+                    label: 'Feature Flags',
+                    link: { type: 'doc', id: 'topics/feature-flag-migrations' },
+                    items: [
+                        'topics/feature-flag-migration-scope',
+                        'topics/business-case-feature-flag-migration',
+                        'topics/planning-feature-flag-migration',
+                        'topics/how-to-execute-feature-flag-migration',
+                        'topics/onbording-users-to-feature-flag-service',
+                    ],
+                },
             ],
         },
         {

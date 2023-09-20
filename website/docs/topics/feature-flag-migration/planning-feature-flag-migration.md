@@ -60,7 +60,7 @@ This part is key to understanding how Unleash needs to be implemented. This play
 * Where are our applications hosted?
 * Where are end users of the application based geographically?
 
-#### Security and organizational policy requirements
+## Security and organizational policy requirements
 
 You will also want to pay attention to Security & Organisational Policy requirements.
 

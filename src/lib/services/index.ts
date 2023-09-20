@@ -251,6 +251,7 @@ export const createServices = (
     const playgroundService = new PlaygroundService(config, {
         featureToggleServiceV2,
         segmentService,
+        privateProjectChecker,
     });
 
     const configurationRevisionService = new ConfigurationRevisionService(

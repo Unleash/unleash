@@ -63,6 +63,7 @@ beforeAll(async () => {
     service = new PlaygroundService(config, {
         featureToggleServiceV2: featureToggleService,
         segmentService,
+        privateProjectChecker,
     });
 });
 

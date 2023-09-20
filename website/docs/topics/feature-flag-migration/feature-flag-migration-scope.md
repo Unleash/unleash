@@ -6,7 +6,7 @@ Scoping a feature flag migration properly is the single biggest thing you can do
 
 Based on experiences working with dozens of large enterprises migrating homegrown systems to Unleash, we recommend two best practices when scoping your feature flag migration.
 
-#### 1- Separate the migration of old flags from the existing system from new flags created in Unleash.
+## 1- Separate the migration of old flags from the existing system from new flags created in Unleash.
 
 The older the system, the more existing flags there are. It might take weeks or months to hunt down the developer responsible for an old flag in an obscure part of the code base. In the meantime, hundreds of developers are trying to create new flags today.  By separating these concerns, you can get to the “happy end state” for your development team faster, and burn down your flag migrations over time.
 

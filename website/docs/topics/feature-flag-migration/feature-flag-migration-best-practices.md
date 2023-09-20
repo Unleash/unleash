@@ -1,4 +1,6 @@
-## Best Practices for Migrating from a Homegrown Feature Management Solution
+---
+title: Best Practices for Migrating from a Homegrown Feature Management Solution
+---
 
 Many large organizations have an existing feature management solution that they have outgrown and plan to migrate to a feature flag service.
 

@@ -81,6 +81,4 @@ Other areas of system architecture to investigate during the planning phase are:
 * Do we consume feature flag data, such as events, in any other systems downstream? 
     * For example, Jira Cloud for issue management, Datadog for real-time telemetry, Slack or Microsoft Teams for notifications or Google Analytics for user interactions.
 
-Use our Feature Flag Migration Planning Template to fill in detailed information about each category.  ** \
- \
-**
+Use our [Feature Flag Migration template](https://docs.google.com/spreadsheets/d/1MKc95v7Tc-9tznWMDVSy2vvmVJTvOFLRVZpx1QrL-_U/edit#gid=996250264) to fill in details about your project planning.

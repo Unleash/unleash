@@ -50,7 +50,7 @@ module.exports = {
                 {
                     type: 'category',
                     label: 'Feature Flags Migrations',
-                    link: { type: 'doc', id: 'topics/feature-flag-migration-best-practices'
+                    link: { type: 'doc', id: 'topics/feature-flag-migration-best-practices'},
                     items: [
                         'topics/feature-flag-migration-scope',
                         'topics/business-case-feature-flag-migration',

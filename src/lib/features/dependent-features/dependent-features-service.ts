@@ -17,20 +17,20 @@ export class DependentFeaturesService {
     }
 
     async upsertFeatureDependency(
-        parentFeature: string,
+        childFeature: string,
         dependentFeature: CreateDependentFeatureSchema,
     ): Promise<void> {
         const { enabled, feature, variants } = dependentFeature;
         const featureDependency: FeatureDependency =
             enabled === false
                 ? {
-                      parent: parentFeature,
-                      child: feature,
+                      parent: feature,
+                      child: childFeature,
                       enabled,
                   }
                 : {
-                      parent: parentFeature,
-                      child: feature,
+                      parent: feature,
+                      child: childFeature,
                       enabled: true,
                       variants,
                   };

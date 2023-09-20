@@ -167,7 +167,7 @@
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
     "@babel/core": "7.22.17",
-    "@swc/core": "1.3.83",
+    "@swc/core": "1.3.84",
     "@swc/jest": "0.2.29",
     "@types/bcryptjs": "2.4.3",
     "@types/cors": "2.8.14",

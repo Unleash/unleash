@@ -311,6 +311,7 @@ module.exports = {
                                 'reference/integrations/jira-cloud-plugin-usage',
                             ],
                         },
+                        'reference/integrations/slack-app',
                         'reference/integrations/slack',
                         'reference/integrations/teams',
                         'reference/integrations/webhook',

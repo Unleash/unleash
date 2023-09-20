@@ -1,7 +1,13 @@
 ---
 id: slack
-title: Slack
+title: Slack (deprecated)
 ---
+
+:::caution Deprecation notice
+
+This Slack integration is deprecated and will be removed in a future release. We recommend using the new [Slack App](./slack-app.md) integration instead.
+
+:::
 
 > This feature was introduced in _Unleash v3.11.0_.
 

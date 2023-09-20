@@ -7,7 +7,7 @@ When planning your feature flag migration, it is essential to focus on four key 
 * Key stakeholders
 * System architecture
 
-#### Use Cases
+## Use Cases
 
 It is essential to know how feature flags will be used so that you can set up the proper data model, user permissions, and system architecture.  
 

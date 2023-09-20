@@ -985,6 +985,7 @@ class FeatureToggleService {
                 variants,
                 description,
                 impressionData,
+                dependencies,
             }) => ({
                 name,
                 type,
@@ -995,6 +996,7 @@ class FeatureToggleService {
                 variants,
                 description,
                 impressionData,
+                dependencies,
             }),
         );
     }

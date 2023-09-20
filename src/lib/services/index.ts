@@ -162,7 +162,6 @@ export const createServices = (
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
     const apiTokenService = new ApiTokenService(stores, config);
-    const clientInstanceService = new ClientInstanceService(stores, config);
     const lastSeenService = new LastSeenService(stores, config);
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(
         stores,
@@ -205,6 +204,11 @@ export const createServices = (
     const privateProjectChecker = db
         ? createPrivateProjectChecker(db, config)
         : createFakePrivateProjectChecker();
+    const clientInstanceService = new ClientInstanceService(
+        stores,
+        config,
+        privateProjectChecker,
+    );
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,

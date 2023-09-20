@@ -1,3 +1,7 @@
+---
+title: Defining the scope of the feature flag migration
+---
+
 Scoping a feature flag migration properly is the single biggest thing you can do to ensure the success of your project.  
 
 Based on experiences working with dozens of large enterprises migrating homegrown systems to Unleash, we recommend two best practices when scoping your feature flag migration.

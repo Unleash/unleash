@@ -52,7 +52,7 @@ System Architecture
 You will also need to plan how you set up Unleash itself as part of your migration planning process. Unleash is extremely flexible with lots of hosting and security configuration options to align with the unique requirements of large enterprises.
 
 
-#### How is our current feature flag architecture set up?
+## How is our current feature flag architecture set up?
 
 This part is key to understanding how Unleash needs to be implemented. This plays a part in resource planning for both personnel and infrastructure cost allocation.  For instance
 

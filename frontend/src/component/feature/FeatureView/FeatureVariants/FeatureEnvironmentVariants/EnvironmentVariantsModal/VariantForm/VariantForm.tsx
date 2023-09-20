@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import Input from 'component/common/Input/Input';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import SelectMenu from 'component/common/select';
@@ -20,6 +20,8 @@ import { WeightType } from 'constants/variantTypes';
 import { IFeatureVariantEdit } from '../EnvironmentVariantsModal';
 import { Delete } from '@mui/icons-material';
 import { useUiFlag } from 'hooks/useUiFlag';
+
+const LazyReactJSONEditor = React.lazy(() => import('./ReactJSONEditor'));
 
 const StyledVariantForm = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -441,34 +443,50 @@ export const VariantForm = ({
                     }}
                 />
                 <StyledFieldColumn>
-                    <StyledInput
-                        id="variant-payload-value"
-                        name="variant-payload-value"
-                        label="Value"
-                        multiline={payload.type !== 'string'}
-                        rows={
-                            payload.type === 'string' ||
-                            payload.type === 'number'
-                                ? 1
-                                : 4
-                        }
-                        value={payload.value}
-                        onChange={e => {
-                            clearError(ErrorField.PAYLOAD);
-                            setPayload(payload => ({
-                                ...payload,
-                                value: e.target.value,
-                            }));
-                        }}
-                        placeholder={
-                            payload.type === 'json'
-                                ? '{ "hello": "world" }'
-                                : ''
-                        }
-                        onBlur={() => validatePayload(payload)}
-                        error={Boolean(errors.payload)}
-                        errorText={errors.payload}
-                    />
+                    {payload.type === 'json' ? (
+                        <Suspense fallback={null}>
+                            <LazyReactJSONEditor
+                                content={{ text: payload.value }}
+                                onChange={content =>
+                                    setPayload(payload => {
+                                        return {
+                                            ...payload,
+                                            value:
+                                                'json' in content
+                                                    ? content.json?.toString() ||
+                                                      ''
+                                                    : content.text,
+                                        };
+                                    })
+                                }
+                            />
+                        </Suspense>
+                    ) : (
+                        <StyledInput
+                            id="variant-payload-value"
+                            name="variant-payload-value"
+                            label="Value"
+                            multiline={payload.type !== 'string'}
+                            rows={
+                                payload.type === 'string' ||
+                                payload.type === 'number'
+                                    ? 1
+                                    : 4
+                            }
+                            value={payload.value}
+                            onChange={e => {
+                                clearError(ErrorField.PAYLOAD);
+                                setPayload(payload => ({
+                                    ...payload,
+                                    value: e.target.value,
+                                }));
+                            }}
+                            placeholder={''}
+                            onBlur={() => validatePayload(payload)}
+                            error={Boolean(errors.payload)}
+                            errorText={errors.payload}
+                        />
+                    )}
                 </StyledFieldColumn>
             </StyledRow>
             {!disableOverrides ? (

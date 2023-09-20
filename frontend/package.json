@@ -163,5 +163,8 @@
     "ignorePatterns": [
       "cypress"
     ]
+  },
+  "dependencies": {
+    "vanilla-jsoneditor": "^0.18.3"
   }
 }

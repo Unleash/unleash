@@ -183,7 +183,6 @@ export default class ClientInstanceService {
                 await this.privateProjectChecker.getUserAccessibleProjects(
                     userId,
                 );
-            console.log(accessibleProjects);
             return applications.map((application) => {
                 return {
                     ...application,

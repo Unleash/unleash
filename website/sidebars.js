@@ -45,6 +45,8 @@ module.exports = {
                 'topics/managing-constraints',
                 'topics/proxy-hosting',
                 'topics/data-collection',
+                    ],
+                },
                 {
                     type: 'category',
                     label: 'Feature Flags Migrations',

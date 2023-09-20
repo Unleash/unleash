@@ -41,7 +41,7 @@ Our experience tells us that organizing flags by the development teams that work
 * By organization hierarchy
     * E.g. Frontend, backend, platform teams
 
-#### Key stakeholders
+## Key stakeholders
 
 When planning your migration, it is important to understand who will be managing the feature flag system and who will be using the feature flag system on a day-to-day basis.  Additionally, you need to know who will be responsible for key migration tasks.
 

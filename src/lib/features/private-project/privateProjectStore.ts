@@ -2,6 +2,8 @@ import { Db } from '../../db/db';
 import { Logger, LogProvider } from '../../logger';
 import { IPrivateProjectStore } from './privateProjectStoreType';
 
+const ADMIN_TOKEN_ID = -1;
+
 class PrivateProjectStore implements IPrivateProjectStore {
     private db: Db;
 
@@ -15,8 +17,7 @@ class PrivateProjectStore implements IPrivateProjectStore {
     destroy(): void {}
 
     async getUserAccessibleProjects(userId: number): Promise<string[]> {
-        // -1 user is ADMIN api token
-        if (userId === -1) {
+        if (userId === ADMIN_TOKEN_ID) {
             const allProjects = await this.db('projects').pluck('id');
             return allProjects;
         }

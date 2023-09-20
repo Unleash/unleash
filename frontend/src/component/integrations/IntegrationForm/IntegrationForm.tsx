@@ -367,7 +367,6 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 selectedItems={formValues.events}
                                 onChange={setEventValues}
                                 entityName="event"
-                                selectAllEnabled={false}
                                 error={errors.events}
                                 description="Select which events you want your integration to be notified about."
                                 required
@@ -379,7 +378,8 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 selectedItems={formValues.projects || []}
                                 onChange={setProjects}
                                 entityName="project"
-                                selectAllEnabled={true}
+                                description="Selecting project(s) will filter events, so that your integration only receives events related to those specific projects."
+                                note="If no projects are selected, the integration will receive events from all projects."
                             />
                         </div>
                         <div>
@@ -388,8 +388,8 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 selectedItems={formValues.environments || []}
                                 onChange={setEnvironments}
                                 entityName="environment"
-                                selectAllEnabled={true}
-                                description="Global events that are not specific to an environment will still be received."
+                                description="Selecting environment(s) will filter events, so that your integration only receives events related to those specific environments. Global events that are not specific to an environment will still be received."
+                                note="If no environments are selected, the integration will receive events from all environments."
                             />
                         </div>
                     </StyledConfigurationSection>

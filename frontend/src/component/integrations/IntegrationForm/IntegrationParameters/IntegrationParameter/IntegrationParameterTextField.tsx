@@ -49,9 +49,7 @@ export const IntegrationParameterTextField = ({
                 <>
                     {definition.displayName}
                     {definition.required ? (
-                        <Typography component="span" color="error">
-                            *
-                        </Typography>
+                        <Typography component="span">*</Typography>
                     ) : null}
                 </>
             }

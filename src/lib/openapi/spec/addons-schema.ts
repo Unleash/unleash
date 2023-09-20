@@ -65,8 +65,12 @@ export const addonsSchema = {
                         {
                             name: 'bodyTemplate',
                             displayName: 'Body template',
-                            placeholder:
-                                '{\n  "event": "{{event.type}}",\n  "createdBy": "{{event.createdBy}}",\n  "featureToggle": "{{event.data.name}}",\n  "timestamp": "{{event.data.createdAt}}"\n}',
+                            placeholder: `{
+  "event": "{{event.type}}",
+  "createdBy": "{{event.createdBy}}",
+  "featureToggle": "{{event.data.name}}",
+  "timestamp": "{{event.data.createdAt}}"
+}`,
                             description:
                                 "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/reference/api/legacy/unleash/admin/events)",
                             type: 'textfield',

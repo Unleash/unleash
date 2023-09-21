@@ -11,7 +11,7 @@ When planning your feature flag migration, it is essential to focus on four key 
 
 ## Use Cases
 
-It is essential to know how feature flags will be used so that you can set up the proper data model, user permissions, and system architecture.  
+A key requirement is to understand how feature flags will be used so that you can set up the proper data model, user permissions, and system architecture.  
 
 Below are some of the most common use cases for feature flags. Start by selecting those that are in scope for your initial rollout. It is common to start with some, but not all, of these and roll out the remaining in the future.
 

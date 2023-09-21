@@ -8,17 +8,17 @@ There are 11 principles for building a large-scale feature flag system. These pr
 
 These principles are:
 
-1. Enable run-time control. Control flags dynamically, not using config files.
-2. Never expose PII. Follow the principle of least privilege.
-3. Evaluate flags as close to the user as possible. Reduce latency.
-4. Scale Horizontally. Decouple reading and writing flags.
-5. Limit payloads. Feature flag payload should be as small as possible.
-6. Design for failure. Favor availability over consistency.
-7. Make feature flags short-lived. Do not confuse flags with application configuration.
-8. Use unique names across all applications. Enforce naming conventions.
-9. Choose open by default. Democratize feature flag access.
-10. Do no harm. Prioritize consistent user experience.
-11.  Enable traceability. Make it easy to understand flag evaluation
+1. [Enable run-time control. Control flags dynamically, not using config files.](./runtime-control.md)
+2. [Never expose PII. Follow the principle of least privilege.](./never-expose-pii.md)
+3. [Evaluate flags as close to the user as possible. Reduce latency.](./evaluate-flags-close-to-user.md)
+4. [Scale Horizontally. Decouple reading and writing flags.](./scale-horizontally.md)
+5. [Limit payloads. Feature flag payload should be as small as possible.](./limit-payloads.md)
+6. [Design for failure. Favor availability over consistency.](./availability-over-consistency.md)
+7. [Make feature flags short-lived. Do not confuse flags with application configuration.](./short-lived-feature-flags.md)
+8. [Use unique names across all applications. Enforce naming conventions.](./unique-names.md)
+9. [Choose open by default. Democratize feature flag access.](./democratize-feature-flag-access.md)
+10. [Do no harm. Prioritize consistent user experience.](./prioritize-ux.md)
+11.  [Enable traceability. Make it easy to understand flag evaluation](./enable-traceability.md)
 
 ## Background
 

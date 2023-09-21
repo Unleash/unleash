@@ -2,7 +2,7 @@
 title: 9. Choose open by default. Democratize feature flag access.
 ---
 
-Allowing engineers and product owners to have open access to a feature flagging system is essential for effective development, debugging, and decision-making. Both groups should have access to the system, along with access to the codebase and  visibility into configuration changes:
+Allowing engineers, product owners, and even technical support to have open access to a feature flagging system is essential for effective development, debugging, and decision-making. These groups should have access to the system, along with access to the codebase and  visibility into configuration changes:
 
 1. **Debugging and Issue Resolution**:
 

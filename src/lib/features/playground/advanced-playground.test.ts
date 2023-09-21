@@ -19,6 +19,7 @@ beforeAll(async () => {
                     advancedPlayground: true,
                     strictSchemaValidation: true,
                     strategyVariant: true,
+                    privateProjects: true,
                 },
             },
         },

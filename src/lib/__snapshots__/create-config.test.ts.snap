@@ -75,6 +75,7 @@ exports[`should create default config 1`] = `
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
       "customRootRolesKillSwitch": false,
+      "datadogJsonTemplate": false,
       "demo": false,
       "dependentFeatures": false,
       "disableBulkToggle": false,
@@ -86,7 +87,6 @@ exports[`should create default config 1`] = `
       "featuresExportImport": true,
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
-      "integrationsRework": false,
       "lastSeenByEnvironment": false,
       "maintenanceMode": false,
       "messageBanner": {
@@ -114,6 +114,7 @@ exports[`should create default config 1`] = `
       "anonymiseEventLog": false,
       "caseInsensitiveInOperators": false,
       "customRootRolesKillSwitch": false,
+      "datadogJsonTemplate": false,
       "demo": false,
       "dependentFeatures": false,
       "disableBulkToggle": false,
@@ -125,7 +126,6 @@ exports[`should create default config 1`] = `
       "featuresExportImport": true,
       "filterInvalidClientMetrics": false,
       "googleAuthEnabled": false,
-      "integrationsRework": false,
       "lastSeenByEnvironment": false,
       "maintenanceMode": false,
       "messageBanner": {

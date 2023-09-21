@@ -34,6 +34,7 @@ import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 import { useSearch } from 'hooks/useSearch';
 import { Download } from '@mui/icons-material';
 import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -44,6 +45,7 @@ const UsersList = () => {
     const [pwDialog, setPwDialog] = useState<{ open: boolean; user?: IUser }>({
         open: false,
     });
+    const { isEnterprise } = useUiConfig();
     const [delDialog, setDelDialog] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
@@ -271,7 +273,10 @@ const UsersList = () => {
                             <PageHeader.Divider />
 
                             <ConditionallyRender
-                                condition={Boolean(accessOverviewEnabled)}
+                                condition={
+                                    isEnterprise() &&
+                                    Boolean(accessOverviewEnabled)
+                                }
                                 show={() => (
                                     <>
                                         <Tooltip

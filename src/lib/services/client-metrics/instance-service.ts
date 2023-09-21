@@ -18,6 +18,9 @@ import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { IClientMetricsStoreV2 } from '../../types/stores/client-metrics-store-v2';
 import { clientMetricsSchema } from './schema';
 import { PartialSome } from '../../types/partial';
+import { IPrivateProjectChecker } from '../../features/private-project/privateProjectCheckerType';
+import { IFlagResolver } from '../../types';
+import { ALL_PROJECTS } from '../../util';
 
 export default class ClientInstanceService {
     apps = {};
@@ -40,6 +43,10 @@ export default class ClientInstanceService {
 
     private eventStore: IEventStore;
 
+    private privateProjectChecker: IPrivateProjectChecker;
+
+    private flagResolver: IFlagResolver;
+
     private bulkInterval: number;
 
     private announcementInterval: number;
@@ -61,7 +68,11 @@ export default class ClientInstanceService {
             | 'clientInstanceStore'
             | 'eventStore'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        privateProjectChecker: IPrivateProjectChecker,
         bulkInterval = secondsToMilliseconds(5),
         announcementInterval = minutesToMilliseconds(5),
     ) {
@@ -71,6 +82,8 @@ export default class ClientInstanceService {
         this.clientApplicationsStore = clientApplicationsStore;
         this.clientInstanceStore = clientInstanceStore;
         this.eventStore = eventStore;
+        this.privateProjectChecker = privateProjectChecker;
+        this.flagResolver = flagResolver;
         this.logger = getLogger(
             '/services/client-metrics/client-instance-service.ts',
         );
@@ -162,8 +175,27 @@ export default class ClientInstanceService {
 
     async getApplications(
         query: IApplicationQuery,
+        userId: number,
     ): Promise<IClientApplication[]> {
-        return this.clientApplicationsStore.getAppsForStrategy(query);
+        const applications =
+            await this.clientApplicationsStore.getAppsForStrategy(query);
+        if (this.flagResolver.isEnabled('privateProjects')) {
+            const accessibleProjects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            return applications.map((application) => {
+                return {
+                    ...application,
+                    usage: application.usage?.filter(
+                        (usageItem) =>
+                            usageItem.project === ALL_PROJECTS ||
+                            accessibleProjects.includes(usageItem.project),
+                    ),
+                };
+            });
+        }
+        return applications;
     }
 
     async getApplication(appName: string): Promise<IApplication> {

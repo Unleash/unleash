@@ -86,11 +86,7 @@ const EditDefaultStrategy = () => {
         }
     }, [JSON.stringify(allSegments), JSON.stringify(strategy?.segments)]);
 
-    const segmentsToSubmit = uiConfig?.flags.SE ? segments : [];
-    const payload = createStrategyPayload(
-        defaultStrategy as any,
-        segmentsToSubmit
-    );
+    const payload = createStrategyPayload(defaultStrategy as any, segments);
 
     const onDefaultStrategyEdit = async (
         payload: CreateFeatureStrategySchema

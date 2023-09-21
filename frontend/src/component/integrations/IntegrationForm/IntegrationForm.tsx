@@ -43,7 +43,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { IntegrationDelete } from './IntegrationDelete/IntegrationDelete';
 import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStateSwitch';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { IntegrationHowToSection } from '../IntegrationHowToSection/IntegrationHowToSection';
 
 type IntegrationFormProps = {
@@ -77,7 +76,6 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         label: event,
     }));
     const { uiConfig } = useUiConfig();
-    const integrationsRework = useUiFlag('integrationsRework');
     const [formValues, setFormValues] = useState(initialValues);
     const [errors, setErrors] = useState<{
         containsErrors: boolean;
@@ -221,14 +219,14 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         try {
             if (editMode) {
                 await updateAddon(formValues as AddonSchema);
-                navigate(integrationsRework ? '/integrations' : '/addons');
+                navigate('/integrations');
                 setToastData({
                     type: 'success',
                     title: 'Integration updated successfully',
                 });
             } else {
                 await createAddon(formValues as Omit<AddonSchema, 'id'>);
-                navigate(integrationsRework ? '/integrations' : '/addons');
+                navigate('/integrations');
                 setToastData({
                     type: 'success',
                     confetti: true,
@@ -367,7 +365,6 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 selectedItems={formValues.events}
                                 onChange={setEventValues}
                                 entityName="event"
-                                selectAllEnabled={false}
                                 error={errors.events}
                                 description="Select which events you want your integration to be notified about."
                                 required
@@ -379,7 +376,8 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 selectedItems={formValues.projects || []}
                                 onChange={setProjects}
                                 entityName="project"
-                                selectAllEnabled={true}
+                                description="Selecting project(s) will filter events, so that your integration only receives events related to those specific projects."
+                                note="If no projects are selected, the integration will receive events from all projects."
                             />
                         </div>
                         <div>
@@ -388,24 +386,17 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 selectedItems={formValues.environments || []}
                                 onChange={setEnvironments}
                                 entityName="environment"
-                                selectAllEnabled={true}
-                                description="Global events that are not specific to an environment will still be received."
+                                description="Selecting environment(s) will filter events, so that your integration only receives events related to those specific environments. Global events that are not specific to an environment will still be received."
+                                note="If no environments are selected, the integration will receive events from all environments."
                             />
                         </div>
                     </StyledConfigurationSection>
-                    <ConditionallyRender
-                        condition={Boolean(integrationsRework && editMode)}
-                        show={() => (
-                            <>
-                                <Divider />
-                                <section>
-                                    <IntegrationDelete
-                                        id={(formValues as AddonSchema).id}
-                                    />
-                                </section>
-                            </>
-                        )}
-                    />
+                    <Divider />
+                    <section>
+                        <IntegrationDelete
+                            id={(formValues as AddonSchema).id}
+                        />
+                    </section>
                 </StyledContainer>
             </StyledForm>
         </FormTemplate>

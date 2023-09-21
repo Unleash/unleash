@@ -11,7 +11,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('feature_dependencies', getLogger);
+    db = await dbInit('dependent_features', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -50,7 +50,14 @@ test('should add feature dependency', async () => {
     await app.createFeature(parent);
     await app.createFeature(child);
 
+    // save explicit enabled and variants
     await addFeatureDependency(parent, {
         feature: child,
+        enabled: false,
+    });
+    // overwrite with implicit enabled: true and variants
+    await addFeatureDependency(parent, {
+        feature: child,
+        variants: ['variantB'],
     });
 });

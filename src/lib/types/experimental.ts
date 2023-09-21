@@ -24,14 +24,14 @@ export type IFlagKey =
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
     | 'customRootRolesKillSwitch'
-    | 'integrationsRework'
     | 'multipleRoles'
     | 'featureNamingPattern'
     | 'doraMetrics'
     | 'variantTypeNumber'
     | 'accessOverview'
     | 'privateProjects'
-    | 'dependentFeatures';
+    | 'dependentFeatures'
+    | 'datadogJsonTemplate';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -115,10 +115,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
         false,
     ),
-    integrationsRework: parseEnvVarBoolean(
-        process.env.UNLEASH_INTEGRATIONS,
-        false,
-    ),
     multipleRoles: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MULTIPLE_ROLES,
         false,
@@ -145,6 +141,10 @@ const flags: IFlags = {
     ),
     accessOverview: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW,
+        false,
+    ),
+    datadogJsonTemplate: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DATADOG_JSON_TEMPLATE,
         false,
     ),
 };

@@ -17,4 +17,9 @@ jobs:
           UNLEASH_PROXY_URL: ${{ secrets.UNLEASH_PROXY_URL_DEVELOPMENT }}
         run: |
           # Build the site
-          cd website && yarn && yarn build
+          cd website && yarn
+          # give better error messages when the build fails (refer to website/readme.md#troubleshooting)
+          echo "Removing references to chalk in node_modules/@docusaurus/core/lib/client/serverEntry.js"
+          sed -i 's/chalk\(\w\|\.\)\+//g' node_modules/@docusaurus/core/lib/client/serverEntry.js
+          echo "Chalk removed"
+          yarn build

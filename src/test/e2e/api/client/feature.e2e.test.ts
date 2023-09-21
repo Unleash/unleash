@@ -10,7 +10,9 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('feature_api_client', getLogger);
+    db = await dbInit('feature_api_client', getLogger, {
+        experimental: { flags: { dependentFeatures: true } },
+    });
     app = await setupAppWithCustomConfig(db.stores, {
         experimental: {
             flags: {
@@ -36,6 +38,7 @@ beforeAll(async () => {
         },
         'test',
     );
+
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         {
@@ -51,6 +54,16 @@ beforeAll(async () => {
             description: 'the #1 feature',
         },
         'test',
+    );
+    // depend on enabled feature with variant
+    await app.services.dependentFeaturesService.upsertFeatureDependency(
+        'featureY',
+        { feature: 'featureX', variants: ['featureXVariant'] },
+    );
+    // depend on parent being disabled
+    await app.services.dependentFeaturesService.upsertFeatureDependency(
+        'featureY',
+        { feature: 'featureZ', enabled: false },
     );
 
     await app.services.featureToggleServiceV2.archiveToggle(
@@ -124,6 +137,30 @@ test('returns four feature toggles', async () => {
         .expect(200)
         .expect((res) => {
             expect(res.body.features).toHaveLength(4);
+        });
+});
+
+test('returns dependencies', async () => {
+    return app.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.features[0]).toMatchObject({
+                name: 'featureY',
+                dependencies: [
+                    {
+                        feature: 'featureX',
+                        enabled: true,
+                        variants: ['featureXVariant'],
+                    },
+                    {
+                        feature: 'featureZ',
+                        enabled: false,
+                    },
+                ],
+            });
+            expect(res.body.features[1].dependencies).toBe(undefined);
         });
 });
 

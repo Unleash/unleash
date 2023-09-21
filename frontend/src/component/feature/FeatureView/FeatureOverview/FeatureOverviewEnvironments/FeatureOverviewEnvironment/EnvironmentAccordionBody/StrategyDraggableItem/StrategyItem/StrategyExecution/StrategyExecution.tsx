@@ -243,11 +243,9 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     }
 
     const listItems = [
-        Boolean(uiConfig.flags.SE) &&
-            strategySegments &&
-            strategySegments.length > 0 && (
-                <FeatureOverviewSegment segments={strategySegments} />
-            ),
+        strategySegments && strategySegments.length > 0 && (
+            <FeatureOverviewSegment segments={strategySegments} />
+        ),
         constraints.length > 0 && (
             <ConstraintAccordionList
                 constraints={constraints}

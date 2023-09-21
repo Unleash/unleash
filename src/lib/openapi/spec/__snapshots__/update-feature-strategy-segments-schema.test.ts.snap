@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`updateFeatureStrategySegmentsSchema schema 1`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'projectId'",
+      "params": {
+        "missingProperty": "projectId",
+      },
+      "schemaPath": "#/required",
+    },
+  ],
+  "schema": "#/components/schemas/updateFeatureStrategySegmentsSchema",
+}
+`;
+
+exports[`updateFeatureStrategySegmentsSchema schema 2`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'projectId'",
+      "params": {
+        "missingProperty": "projectId",
+      },
+      "schemaPath": "#/required",
+    },
+  ],
+  "schema": "#/components/schemas/updateFeatureStrategySegmentsSchema",
+}
+`;

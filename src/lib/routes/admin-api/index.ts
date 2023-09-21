@@ -32,6 +32,7 @@ import MaintenanceController from './maintenance';
 import { createKnexTransactionStarter } from '../../db/transaction';
 import { Db } from '../../db/db';
 import ExportImportController from '../../features/export-import-toggles/export-import-controller';
+import { SegmentsController } from '../../features/segment/segment-controller';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -133,7 +134,10 @@ class AdminApi extends Controller {
             `/projects`,
             new FavoritesController(config, services).router,
         );
-
+        this.app.use(
+            `/segments`,
+            new SegmentsController(config, services).router,
+        );
         this.app.use(
             '/maintenance',
             new MaintenanceController(config, services).router,

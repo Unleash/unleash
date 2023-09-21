@@ -76,6 +76,7 @@ export interface IFeatureToggleClient {
     variants: IVariant[];
     enabled: boolean;
     strategies: Omit<IStrategyConfig, 'disabled'>[];
+    dependencies?: IDependency[];
     impressionData?: boolean;
     lastSeenAt?: Date;
     createdAt?: Date;
@@ -131,6 +132,12 @@ export interface IVariant {
         contextName: string;
         values: string[];
     }[];
+}
+
+export interface IDependency {
+    feature: string;
+    variants?: string[];
+    enabled?: boolean;
 }
 
 export type IStrategyVariant = Omit<IVariant, 'overrides'>;

@@ -1,4 +1,6 @@
-#### 4. Scale Horizontally. Decouple reading and writing flags.
+---
+title: 4. Scale Horizontally. Decouple reading and writing flags.
+---
 
 Separating the reading and writing of feature flags into distinct APIs is a critical architectural decision for building a scalable and efficient feature flag system, particularly when considering horizontal scaling. This separation provides several benefits:
 

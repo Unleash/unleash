@@ -45,7 +45,7 @@ Unleash Datadog integration takes the following parameters.
 
 **Datadog Source Type Name** - This property is optional. Sets source_type_name parameter to be included in Datadog events.
 
-**Extra HTTP Headers** This property is optional. Used to set the additional headers when unleash communicates with Datadog.
+**Extra HTTP Headers** - This property is optional. Used to set the additional headers when Unleash communicates with Datadog.
 
 **Body template** - This property is optional. Used to override the body template used by Unleash when performing the HTTP POST. You may format you message using a [Mustache template](https://mustache.github.io). You will have the [Unleash event format](/reference/api/legacy/unleash/admin/events) available in the rendering context.
 

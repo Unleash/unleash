@@ -1,5 +1,5 @@
 ---
-title: Enable run-time control. Control flags dynamically, not using config files.
+title: 1. Enable run-time control. Control flags dynamically, not using config files.
 ---
 
 A scalable feature management system evaluates flags at runtime. Flags are dynamic, not static. If you need to restart your application to turn on a flag, you are using configuration, not feature flags.

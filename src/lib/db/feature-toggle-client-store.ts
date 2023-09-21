@@ -77,10 +77,9 @@ export default class FeatureToggleClientStore
             'features.project as project',
             'features.stale as stale',
             'features.impression_data as impression_data',
-            'features.last_seen_at as last_seen_at',
             'features.created_at as created_at',
             'fe.variants as variants',
-            'fe.last_seen_at as env_last_seen_at',
+            'fem.last_seen_at as env_last_seen_at',
             'fe.enabled as enabled',
             'fe.environment as environment',
             'fs.id as strategy_id',
@@ -96,6 +95,15 @@ export default class FeatureToggleClientStore
             'df.parent as parent',
             'df.variants as parent_variants',
             'df.enabled as parent_enabled',
+            this.db.raw(`(
+                   SELECT
+                      CASE
+                        WHEN COUNT(*) > 0 THEN MAX(last_seen_at)
+                        ELSE NULL
+                      END
+                   FROM feature_environments_metrics
+                   WHERE features.name = feature_environments_metrics.feature_name
+                  ) as last_seen_at`),
         ] as (string | Raw<any>)[];
 
         let query = this.db('features')
@@ -115,13 +123,18 @@ export default class FeatureToggleClientStore
                         'enabled',
                         'environment',
                         'variants',
-                        'last_seen_at',
                     )
                     .where({ environment })
                     .as('fe'),
                 'fe.feature_name',
                 'features.name',
             )
+            .leftJoin('feature_environments_metrics as fem', function () {
+                this.on('fem.feature_name', '=', 'features.name').andOnVal(
+                    'fem.environment',
+                    environment,
+                );
+            })
             .leftJoin(
                 'feature_strategy_segment as fss',
                 `fss.feature_strategy_id`,

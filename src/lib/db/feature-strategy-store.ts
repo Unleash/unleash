@@ -349,7 +349,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 acc.project = r.project;
                 acc.stale = r.stale;
                 acc.lastSeenAt = r.last_seen_at;
-
                 acc.createdAt = r.created_at;
                 acc.type = r.type;
                 if (!acc.environments[r.environment]) {
@@ -414,6 +413,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             });
 
             featureToggle.archived = archived;
+
             return featureToggle;
         }
         throw new NotFoundError(
@@ -507,15 +507,21 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_environments.feature_name',
                 'features.name',
             )
-            .leftJoin(
-                'feature_environments_metrics',
-                'feature_environments_metrics.feature_name',
-                'features.name',
-            )
+            .leftJoin('feature_environments_metrics', function () {
+                this.on(
+                    'feature_environments_metrics.feature_name',
+                    '=',
+                    'feature_environments.feature_name',
+                ).andOn(
+                    'feature_environments_metrics.environment',
+                    '=',
+                    'feature_environments.environment',
+                );
+            })
             .leftJoin(
                 'environments',
-                'feature_environments.environment',
                 'environments.name',
+                'feature_environments.environment',
             )
             .leftJoin('feature_tag as ft', 'ft.feature_name', 'features.name');
 
@@ -524,7 +530,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'features.description as description',
             'features.type as type',
             'features.created_at as created_at',
-            'features.last_seen_at as last_seen_at',
             'features.stale as stale',
             'features.impression_data as impression_data',
             'feature_environments.enabled as enabled',
@@ -559,26 +564,36 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         if (rows.length > 0) {
             const overview = rows.reduce((acc, row) => {
                 if (acc[row.feature_name] !== undefined) {
-                    acc[row.feature_name].environments.push(
-                        FeatureStrategiesStore.getEnvironment(row),
-                    );
+                    const currentEnv =
+                        FeatureStrategiesStore.getEnvironment(row);
+                    acc[row.feature_name].environments.push(currentEnv);
                     if (this.isNewTag(acc[row.feature_name], row)) {
                         this.addTag(acc[row.feature_name], row);
                     }
+
+                    if (
+                        new Date(currentEnv.lastSeenAt) >
+                        new Date(acc[row.feature_name].lastSeenAt)
+                    ) {
+                        acc[row.feature_name].lastSeenAt =
+                            currentEnv.lastSeenAt;
+                    }
                 } else {
+                    const envOverview =
+                        FeatureStrategiesStore.getEnvironment(row);
+
                     acc[row.feature_name] = {
                         type: row.type,
                         description: row.description,
                         favorite: row.favorite,
                         name: row.feature_name,
+                        lastSeenAt: row.env_last_seen_at,
                         createdAt: row.created_at,
-                        lastSeenAt: row.last_seen_at,
                         stale: row.stale,
                         impressionData: row.impression_data,
-                        environments: [
-                            FeatureStrategiesStore.getEnvironment(row),
-                        ],
+                        environments: [envOverview],
                     };
+
                     if (this.isNewTag(acc[row.feature_name], row)) {
                         this.addTag(acc[row.feature_name], row);
                     }

@@ -20,7 +20,6 @@ const FEATURE_COLUMNS = [
     'stale',
     'created_at',
     'impression_data',
-    'last_seen_at',
     'archived_at',
 ];
 
@@ -86,7 +85,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     async get(name: string): Promise<FeatureToggle> {
         return this.db
-            .first(FEATURE_COLUMNS)
+            .first(this.columnsWithMetrics())
             .from(TABLE)
             .where({ name })
             .then(this.rowToFeature);
@@ -101,7 +100,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     ): Promise<FeatureToggle[]> {
         const { archived, ...rest } = query;
         const rows = await this.db
-            .select(FEATURE_COLUMNS)
+            .select(this.columnsWithMetrics())
             .from(TABLE)
             .where(rest)
             .modify(FeatureToggleStore.filterByArchived, archived);
@@ -109,9 +108,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async getAllByNames(names: string[]): Promise<FeatureToggle[]> {
-        const query = this.db<FeaturesTable>(TABLE).orderBy('name', 'asc');
-        query.whereIn('name', names);
-        const rows = await query;
+        const rows = await this.db
+            .select(this.columnsWithMetrics())
+            .from(TABLE)
+            .orderBy('name', 'asc')
+            .whereIn('name', names);
         return rows.map(this.rowToFeature);
     }
 
@@ -184,18 +185,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
                         this.db(FEATURE_ENVIRONMENTS_METRICS_TABLE)
                             .select('feature_name')
                             .whereIn('feature_name', toggleNames)
-                            .forUpdate()
-                            .skipLocked(),
-                    );
-
-                // Updating the toggle's last_seen_at also for backwards compatibility
-                await this.db(TABLE)
-                    .update({ last_seen_at: now })
-                    .whereIn(
-                        'name',
-                        this.db(TABLE)
-                            .select('name')
-                            .whereIn('name', toggleNames)
                             .forUpdate()
                             .skipLocked(),
                     );
@@ -286,7 +275,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         try {
             const row = await this.db(TABLE)
                 .insert(this.dtoToRow(project, data))
-                .returning(FEATURE_COLUMNS);
+                .returning(this.columnsWithMetrics());
 
             return this.rowToFeature(row[0]);
         } catch (err) {
@@ -310,7 +299,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const row = await this.db(TABLE)
             .where({ name: data.name })
             .update(this.dtoToRow(project, data))
-            .returning(FEATURE_COLUMNS);
+            .returning(this.columnsWithMetrics());
 
         return this.rowToFeature(row[0]);
     }
@@ -320,7 +309,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const row = await this.db(TABLE)
             .where({ name })
             .update({ archived_at: now })
-            .returning(FEATURE_COLUMNS);
+            .returning(this.columnsWithMetrics());
         return this.rowToFeature(row[0]);
     }
 
@@ -329,7 +318,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const rows = await this.db(TABLE)
             .whereIn('name', names)
             .update({ archived_at: now })
-            .returning(FEATURE_COLUMNS);
+            .returning(this.columnsWithMetrics());
         return rows.map((row) => this.rowToFeature(row));
     }
 
@@ -340,7 +329,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const rows = await this.db(TABLE)
             .whereIn('name', names)
             .update({ stale })
-            .returning(FEATURE_COLUMNS);
+            .returning(this.columnsWithMetrics());
         return rows.map((row) => this.rowToFeature(row));
     }
 
@@ -362,7 +351,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const row = await this.db(TABLE)
             .where({ name })
             .update({ archived_at: null })
-            .returning(FEATURE_COLUMNS);
+            .returning(this.columnsWithMetrics());
         return this.rowToFeature(row[0]);
     }
 
@@ -370,7 +359,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const rows = await this.db(TABLE)
             .whereIn('name', names)
             .update({ archived_at: null })
-            .returning(FEATURE_COLUMNS);
+            .returning(this.columnsWithMetrics());
         return rows.map((row) => this.rowToFeature(row));
     }
 
@@ -418,11 +407,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .update('variants', variantsString)
             .where('feature_name', featureName);
 
-        const row = await this.db(TABLE)
-            .select(FEATURE_COLUMNS)
+        const rows = await this.db(TABLE)
+            .select(this.columnsWithMetrics())
             .where({ project: project, name: featureName });
 
-        const toggle = this.rowToFeature(row[0]);
+        const toggle = this.rowToFeature(
+            (rows as unknown as FeaturesTable[])[0],
+        );
         toggle.variants = newVariants;
 
         return toggle;
@@ -483,6 +474,21 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
         return result?.potentially_stale ?? false;
     }
+
+    private columnsWithMetrics = () => {
+        return [
+            ...FEATURE_COLUMNS,
+            this.db.raw(`(
+                   SELECT
+                      CASE
+                        WHEN COUNT(*) > 0 THEN MAX(last_seen_at)
+                        ELSE NULL
+                      END
+                   FROM feature_environments_metrics
+                   WHERE features.name = feature_environments_metrics.feature_name
+                  ) as last_seen_at`),
+        ];
+    };
 }
 
 module.exports = FeatureToggleStore;

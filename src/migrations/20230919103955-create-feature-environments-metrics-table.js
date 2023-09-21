@@ -34,7 +34,14 @@ exports.up = function (db, cb) {
                features.impression_data          as impression_data,
                features.created_at               as created_at,
                features.archived_at              as archived_at,
-               features.last_seen_at             as last_seen_at,
+               (
+                   SELECT
+                       CASE
+                           WHEN COUNT(*) > 0 THEN MAX(last_seen_at)
+                           END
+                   FROM feature_environments_metrics
+                   WHERE features.name = feature_environments_metrics.feature_name
+               ) as last_seen_at,
                feature_environments_metrics.last_seen_at as env_last_seen_at,
                feature_environments.enabled      as enabled,
                feature_environments.environment  as environment,
@@ -53,9 +60,10 @@ exports.up = function (db, cb) {
                feature_strategies.variants       as strategy_variants
         FROM features
                  LEFT JOIN feature_environments ON feature_environments.feature_name = features.name
-                 LEFT JOIN feature_environments_metrics ON feature_environments_metrics.feature_name = features.name
                  LEFT JOIN feature_strategies ON feature_strategies.feature_name = feature_environments.feature_name
-            and feature_strategies.environment = feature_environments.environment
+                   AND feature_strategies.environment = feature_environments.environment
+                 LEFT JOIN feature_environments_metrics ON feature_environments_metrics.feature_name = feature_environments.feature_name
+                   AND feature_environments_metrics.environment = feature_environments.environment
                  LEFT JOIN environments ON feature_environments.environment = environments.name
                  LEFT JOIN feature_strategy_segment as fss ON fss.feature_strategy_id = feature_strategies.id;
         `,

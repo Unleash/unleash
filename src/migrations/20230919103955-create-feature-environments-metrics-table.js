@@ -6,12 +6,12 @@ exports.up = function (db, cb) {
         CREATE TABLE IF NOT EXISTS feature_environments_metrics(
            environment  varchar(100) not null
                references environments(name)
-                   on delete cascade,
+                   ON DELETE CASCADE,
            feature_name varchar(255) not null
                references features(name)
-                   on delete cascade,
+                   ON DELETE CASCADE,
            last_seen_at timestamp with time zone,
-           primary key (environment, feature_name)
+           PRIMARY KEY (environment, feature_name)
         );
 
         INSERT INTO feature_environments_metrics (environment, feature_name, last_seen_at)
@@ -68,8 +68,8 @@ exports.down = function (db, cb) {
         `
          DROP VIEW features_view;
 
-        CREATE VIEW features_view AS
-        SELECT
+         CREATE VIEW features_view AS
+         SELECT
             features.name as name,
             features.description as description,
             features.type as type,
@@ -95,7 +95,7 @@ exports.down = function (db, cb) {
             feature_strategies.title as strategy_title,
             feature_strategies.disabled as strategy_disabled,
             feature_strategies.variants as strategy_variants
-        FROM
+         FROM
             features
                 LEFT JOIN feature_environments ON feature_environments.feature_name = features.name
                 LEFT JOIN feature_strategies ON feature_strategies.feature_name = feature_environments.feature_name
@@ -103,7 +103,8 @@ exports.down = function (db, cb) {
                 LEFT JOIN environments ON feature_environments.environment = environments.name
                 LEFT JOIN feature_strategy_segment as fss ON fss.feature_strategy_id = feature_strategies.id;
 
-          DROP TABLE IF EXISTS feature_environments_metrics
+
+         DROP TABLE IF EXISTS feature_environments_metrics;
         `,
         cb,
     );

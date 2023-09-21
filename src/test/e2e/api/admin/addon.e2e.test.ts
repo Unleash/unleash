@@ -13,7 +13,6 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 strictSchemaValidation: true,
-                slackAppAddon: true,
             },
         },
     });

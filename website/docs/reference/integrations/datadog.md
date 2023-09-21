@@ -74,6 +74,12 @@ Example:
 
 If you don't specify anything Unleash will send a formatted markdown body.
 
+Example:
+
+```markdown
+username created feature toggle (featurename)[http://your.url/projects/projectname/features/featurename] in project *projectname*
+```
+
 #### Tags {#tags}
 
 Datadog's incoming webhooks are app specific. You will be able to create multiple integrations to support messaging on different apps.

@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react';
+
 import { render } from 'utils/testRenderer';
 import { ChangeRequest } from './ChangeRequest';
 import {
@@ -95,4 +96,46 @@ test('Display default disable feature', async () => {
     expect(screen.getByText('Feature Toggle Name')).toBeInTheDocument();
     expect(screen.getByText('Disabled')).toBeInTheDocument();
     expect(screen.getByText('Feature status will change')).toBeInTheDocument();
+});
+
+test('Display feature strategy variants list', async () => {
+    jest.mock('hooks/useRequiredPathParam', () => {
+        return jest.fn(() => 'projectId');
+    });
+
+    render(
+        <ChangeRequest
+            changeRequest={changeRequestWithDefaultChange({
+                id: 0,
+                action: 'addStrategy',
+                payload: {
+                    name: 'flexibleRollout',
+                    constraints: [],
+                    parameters: {
+                        rollout: '100',
+                        stickiness: 'default',
+                        groupId: 'test123',
+                    },
+                    variants: [
+                        {
+                            name: 'variant2',
+                            weight: 500,
+                            stickiness: 'default',
+                            weightType: 'variable',
+                        },
+                        {
+                            name: 'variant1',
+                            weight: 500,
+                            stickiness: 'default',
+                            weightType: 'variable',
+                        },
+                    ],
+                },
+            })}
+        />
+    );
+
+    expect(
+        screen.getByText('Updating feature variants to:')
+    ).toBeInTheDocument();
 });

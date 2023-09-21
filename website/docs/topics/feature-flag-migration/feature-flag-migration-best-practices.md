@@ -4,7 +4,7 @@ title: Best Practices for Migrating from a Homegrown Feature Management Solution
 
 Many large organizations have an existing feature management solution that they have outgrown and plan to migrate to a feature flag service.
 
-This guide outlines best practices for feature flag migrations.  Approaching the migration from your current feature flag solution to Unleash the right way will save you time, money, and a lot of headaches. 
+This guide outlines Best Practices for feature flag migrations.  Approaching the migration from your current feature flag solution to Unleash the right way will save you time, money, and a lot of headaches. 
 
 Based on our work with organizations having millions of flags and thousands of users, there are five phases of a feature flag migration:
 

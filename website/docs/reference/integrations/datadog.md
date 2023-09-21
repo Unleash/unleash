@@ -16,7 +16,6 @@ The Datadog integration will perform a single retry if the HTTP POST against the
 You can choose to trigger updates for the following events:
 
 - feature-created
-- feature-updated (*)
 - feature-metadata-updated
 - feature-project-change
 - feature-archived
@@ -28,19 +27,40 @@ You can choose to trigger updates for the following events:
 - feature-stale-off
 - feature-environment-enabled
 - feature-environment-disabled
+- feature-variants-updated
+- feature-potentially-stale-on
 
-> *) Deprecated, and will not be used after transition to environments in Unleash v4.3
-
-#### Parameters {#parameters}
+### Parameters {#parameters}
 
 Unleash Datadog integration takes the following parameters.
 
-- **Datadog Events URL** - This property is optional. The default url is https://api.datadoghq.com/api/v1/events. Needs to be changed if you are not not on the US1 [Datadog site](https://docs.datadoghq.com/getting_started/site/). Possible alternatives:
+**Datadog Events URL** - This property is optional. The default url is https://api.datadoghq.com/api/v1/events. Needs to be changed if you are not not on the US1 [Datadog site](https://docs.datadoghq.com/getting_started/site/). Possible alternatives:
   - EU: https://app.datadoghq.eu/api/v1/events
   - US1: https://app.datadoghq.com/api/v1/events
   - US3: https://us3.datadoghq.com/api/v1/events
   - US1-FED: https://app.ddog-gov.com/api/v1/events
-- **DD API KEY** - This is a required property.
+
+
+**Datadog API key** - This is a required property. The API key to use to authenticate with Datadog.
+
+**Datadog Source Type Name** - This property is optional. Sets source_type_name parameter to be included in Datadog events.
+
+**Extra HTTP Headers** This property is optional. Used to set the additional headers when unleash communicates with Datadog.
+
+**Body template** This property is optional. Used to override the body template used by Unleash when performing the HTTP POST. You may format you message using a [Mustache template](https://mustache.github.io). You will have the [Unleash event format](/reference/api/legacy/unleash/admin/events) available in the rendering context.
+
+Example:
+
+```mustache
+{
+  "event": "{{event.type}}",
+  "createdBy": "{{event.createdBy}}",
+  "featureToggle": "{{event.data.name}}",
+  "timestamp": "{{event.data.createdAt}}"
+}
+```
+
+If you don't specify anything Unleash will send a formatted markdown body.
 
 #### Tags {#tags}
 

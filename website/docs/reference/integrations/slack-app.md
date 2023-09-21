@@ -19,7 +19,7 @@ To install the Slack App integration, follow these steps:
 2. On the integration configuration form, click the "install & connect" button.
 3. A new tab will open, asking you to select the Slack workspace where you'd like to install the app.
 4. After successful installation of the Unleash Slack App in your chosen Slack workspace, you'll be automatically redirected to a page displaying a newly generated access token.
-5. Copy this access token and paste it into the designated field within the integration settings.
+5. Copy this access token and paste it into the `Access token` field within the integration settings.
 
 By default, the Unleash Slack App is granted access to public channels. If you want the app to post messages to private channels, you'll need to manually invite it to each of those channels.
 

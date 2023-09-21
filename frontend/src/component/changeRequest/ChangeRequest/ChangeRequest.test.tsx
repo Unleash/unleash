@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react';
+import jest from 'jest';
 
 import { render } from 'utils/testRenderer';
 import { ChangeRequest } from './ChangeRequest';

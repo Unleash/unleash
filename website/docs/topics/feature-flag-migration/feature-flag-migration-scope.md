@@ -24,6 +24,6 @@ Organizations who adopt feature flags see improvements in all key operational me
 
 Making feature flag migration dependent on breaking down mission-critical monolithic applications into microservices, for example, will slow down your feature flag migration.
 
-Rather, enable feature flags for all codebases, independent of your state of modernization.  Even monolithic applications can benefit from feature flags in some instances. And when this monolith is broken down, the accrued benefits will be even greater.  And you will ship your new feature management system a lot faster.
+Rather, enable feature flags for all codebases, independent of your state of modernization.  Even monolithic applications can benefit from feature flags in some instances. When this monolith is broken down, the accrued benefits will be even greater, and you will ship your new feature management system a lot faster.
 
 Use our [Feature Flag Migration template](https://docs.google.com/spreadsheets/d/1MKc95v7Tc-9tznWMDVSy2vvmVJTvOFLRVZpx1QrL-_U/edit#gid=996250264) to fill in details about your project scope.

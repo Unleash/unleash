@@ -1,4 +1,6 @@
-11. Enable traceability. Make it easy to understand flag evaluation.
+---
+title: 11. Enable traceability. Make it easy to understand flag evaluation.
+---
 
 Developer experience is a critical factor to consider when implementing a feature flag solution. A positive developer experience enhances the efficiency of the development process and contributes to the overall success and effectiveness of feature flagging. One crucial aspect of developer experience is ensuring the testability of the SDK and providing tools for developers to understand how and why feature flags are evaluated. This is important because:
 

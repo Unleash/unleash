@@ -8,7 +8,7 @@ A large-scale feature flag system that enables runtime control should have at mi
 
 **1. Feature Flag Control Service**: Use a centralized feature flag service that acts as the control plane for your feature flags. This service will handle flag configuration. The scope of this service should reflect the boundaries of your organization. 
 
-Independent business units should have their own instance, while business units that work closely together should use the same instance in order to facilitate collaboration. This will always be a contextual decision based on your organization and how you organize the work, but keep in mind that you’d like to keep the management of the flags as simple as possible to avoid the complexity of cross-instance synchronization of feature flag configuration.
+Independent business units or product lines should potentially have their own instances, while business units or product lines that work closely together should most likely use the same instance in order to facilitate collaboration. This will always be a contextual decision based on your organization and how you organize the work, but keep in mind that you’d like to keep the management of the flags as simple as possible to avoid the complexity of cross-instance synchronization of feature flag configuration.
 
 **2. Database or Data Store**: Use a robust and scalable database or data store to store feature flag configurations. Popular choices include SQL or NoSQL databases or key-value stores. Ensure that this store is highly available and reliable.
 

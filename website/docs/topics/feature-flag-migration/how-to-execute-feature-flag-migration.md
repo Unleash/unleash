@@ -12,7 +12,7 @@ First, it can help to break the migration down into an order of activities, for 
     * Matching use cases of the legacy platform
     * Legacy system fallback available
 * **Medium-term**
-    * Rollout to additional groups, adoption of further, less critical use cases
+    * Rollout to additional groups; adoption of further, less critical use cases
     * Sunset of legacy system
 * **Longer term**
     * Adoption of new use cases

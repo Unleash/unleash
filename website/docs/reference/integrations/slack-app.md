@@ -8,7 +8,7 @@ The Slack App integration was introduced in **Unleash 5.5**.
 
 :::
 
-The Slack App integration posts messages to the selected channels in your Slack workspace.
+The Slack App integration posts messages to a specified set of channels in your Slack workspace. The channels can be public or private, and can be specified on a per-flag basis.
 
 ## Installation {#installation}
 

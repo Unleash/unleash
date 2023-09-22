@@ -162,6 +162,7 @@ exports[`should create default config 1`] = `
     "keepExisting": false,
   },
   "inlineSegmentConstraints": true,
+  "isEnterprise": false,
   "listen": {
     "host": undefined,
     "port": 4242,

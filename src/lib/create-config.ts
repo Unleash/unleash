@@ -483,7 +483,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const prometheusApi = options.prometheusApi || process.env.PROMETHEUS_API;
 
     const isEnterprise =
-        Boolean(options.enterpriseVersion) && ui.name?.toLowerCase() !== 'pro';
+        Boolean(options.enterpriseVersion) &&
+        ui.environment?.toLowerCase() !== 'pro';
 
     return {
         db,

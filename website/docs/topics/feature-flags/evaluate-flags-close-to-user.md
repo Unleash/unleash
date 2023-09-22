@@ -2,7 +2,7 @@
 title: 3. Evaluate flags as close to the user as possible. Reduce latency.
 ---
 
-Feature flags should be evaluated as close to your users as possible, and the evaluation should always happen server side as discussed in Principle 3. In addition to security and privacy benefits, performing evaluation as close as possible to your users has multiple benefits:
+Feature flags should be evaluated as close to your users as possible, and the evaluation should always happen server side as discussed in Principle 2. In addition to security and privacy benefits, performing evaluation as close as possible to your users has multiple benefits:
 
 1. **Performance Efficiency**:
 

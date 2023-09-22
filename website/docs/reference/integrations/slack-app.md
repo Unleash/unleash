@@ -1,5 +1,4 @@
 ---
-id: slack-app
 title: Slack App
 ---
 

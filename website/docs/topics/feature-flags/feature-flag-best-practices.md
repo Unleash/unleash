@@ -30,6 +30,6 @@ This set of principles for building a large-scale feature management platform is
 
 Before Unleash was a community and a company, it was an internal project, started by [one dev](https://github.com/ivarconr), for one company. As the community behind Unleash grew, patterns and anti-patterns of large-scale feature flag systems emerged. Our community quickly discovered that these are important principles for anyone who wanted to avoid spending weekends debugging the production system that is supposed to make debugging in production easier.
 
-“Large scale” means the ability to support millions of flags served to end-users with minimal latency or impact on application uptime or performance. That is the type of system most large enterprises are building today. That is the type of feature flag system that this guide focuses on.
+“Large scale” means the ability to support millions of flags served to end-users with minimal latency or impact on application uptime or performance. That is the type of system most large enterprises are building today and the type of feature flag system that this guide focuses on.
 
 Our motivation for writing these principles is to share what we’ve learned building a large-scale feature flag solution with other architects and engineers solving similar challenges. Unleash is open-source, and so are these principles. Have something to contribute? [Open a PR](https://github.com/Unleash/unleash/pulls) or [discussion](https://github.com/orgs/Unleash/discussions) on our Github.

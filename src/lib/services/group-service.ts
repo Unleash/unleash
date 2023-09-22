@@ -11,7 +11,7 @@ import { IUnleashConfig, IUnleashStores } from '../types';
 import { IGroupStore } from '../types/stores/group-store';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
-import { GROUP_CREATED, GROUP_UPDATED } from '../types/events';
+import { GROUP_CREATED, GROUP_DELETED, GROUP_UPDATED } from '../types/events';
 import { IEventStore } from '../types/stores/event-store';
 import NameExistsError from '../error/name-exists-error';
 import { IAccountStore } from '../types/stores/account-store';
@@ -170,8 +170,18 @@ export class GroupService {
         return [];
     }
 
-    async deleteGroup(id: number): Promise<void> {
-        return this.groupStore.delete(id);
+    async deleteGroup(id: number, userName?: string): Promise<void> {
+        const group = await this.groupStore.get(id);
+
+        await this.groupStore.delete(id);
+
+        if (userName) {
+            await this.eventStore.store({
+                type: GROUP_DELETED,
+                createdBy: userName,
+                data: group,
+            });
+        }
     }
 
     async validateGroup(

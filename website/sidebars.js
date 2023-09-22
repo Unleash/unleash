@@ -40,11 +40,6 @@ module.exports = {
                 slug: '/topics',
             },
             items: [
-                'topics/the-anatomy-of-unleash',
-                'topics/a-b-testing',
-                'topics/managing-constraints',
-                'topics/proxy-hosting',
-                'topics/data-collection',
                 {
                     type: 'category',
                     label: '11 Principles for building and scaling feature flag systems',
@@ -66,6 +61,26 @@ module.exports = {
                         'topics/feature-flags/enable-traceability',
                     ],
                 },
+                'topics/the-anatomy-of-unleash',
+                'topics/a-b-testing',
+                {
+                    type: 'category',
+                    label: 'Feature Flag Migrations',
+                    link: {
+                        type: 'doc',
+                        id: 'topics/feature-flag-migration/feature-flag-migration-best-practices',
+                    },
+                    items: [
+                        'topics/feature-flag-migration/feature-flag-migration-scope',
+                        'topics/feature-flag-migration/business-case-feature-flag-migration',
+                        'topics/feature-flag-migration/planning-feature-flag-migration',
+                        'topics/feature-flag-migration/how-to-execute-feature-flag-migration',
+                        'topics/feature-flag-migration/onbording-users-to-feature-flag-service',
+                    ],
+                },
+                'topics/data-collection',
+                'topics/managing-constraints',
+                'topics/proxy-hosting',
             ],
         },
         {

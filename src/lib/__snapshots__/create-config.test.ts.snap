@@ -103,7 +103,6 @@ exports[`should create default config 1`] = `
       "privateProjects": false,
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
-      "slackAppAddon": false,
       "strictSchemaValidation": false,
       "variantTypeNumber": false,
     },
@@ -142,7 +141,6 @@ exports[`should create default config 1`] = `
       "privateProjects": false,
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
-      "slackAppAddon": false,
       "strictSchemaValidation": false,
       "variantTypeNumber": false,
     },
@@ -164,6 +162,7 @@ exports[`should create default config 1`] = `
     "keepExisting": false,
   },
   "inlineSegmentConstraints": true,
+  "isEnterprise": false,
   "listen": {
     "host": undefined,
     "port": 4242,

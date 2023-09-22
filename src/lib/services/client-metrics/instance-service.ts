@@ -184,16 +184,22 @@ export default class ClientInstanceService {
                 await this.privateProjectChecker.getUserAccessibleProjects(
                     userId,
                 );
-            return applications.map((application) => {
-                return {
-                    ...application,
-                    usage: application.usage?.filter(
-                        (usageItem) =>
-                            usageItem.project === ALL_PROJECTS ||
-                            accessibleProjects.includes(usageItem.project),
-                    ),
-                };
-            });
+            if (accessibleProjects.mode === 'all') {
+                return applications;
+            } else {
+                return applications.map((application) => {
+                    return {
+                        ...application,
+                        usage: application.usage?.filter(
+                            (usageItem) =>
+                                usageItem.project === ALL_PROJECTS ||
+                                accessibleProjects.projects.includes(
+                                    usageItem.project,
+                                ),
+                        ),
+                    };
+                });
+            }
         }
         return applications;
     }

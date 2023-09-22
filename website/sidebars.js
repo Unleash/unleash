@@ -28,7 +28,7 @@ module.exports = {
                 'tutorials/quickstart',
             ],
         },
-        {
+         {
             label: 'Topic guides',
             collapsed: false,
             type: 'category',
@@ -36,7 +36,7 @@ module.exports = {
                 type: 'generated-index',
                 title: 'Topic guides',
                 description:
-                    'Discussions, explanations, and explorations regarding topics related to Unleash.',
+                    'Discussions, explanations, and explorations regarding topics related to feature flags and Unleash.',
                 slug: '/topics',
             },
             items: [
@@ -45,6 +45,27 @@ module.exports = {
                 'topics/managing-constraints',
                 'topics/proxy-hosting',
                 'topics/data-collection',
+                {
+                    type: 'category',
+                    label: '11 Principles for building and scaling feature flag systems',
+                    link: {
+                        type: 'doc',
+                        id: 'topics/feature-flags/feature-flag-best-practices',
+                    },
+                    items: [
+                        'topics/feature-flags/runtime-control',
+                        'topics/feature-flags/never-expose-pii',
+                        'topics/feature-flags/evaluate-flags-close-to-user',
+                        'topics/feature-flags/scale-horizontally',
+                        'topics/feature-flags/limit-payloads',
+                        'topics/feature-flags/availability-over-consistency',
+                        'topics/feature-flags/short-lived-feature-flags',
+                        'topics/feature-flags/unique-names',
+                        'topics/feature-flags/democratize-feature-flag-access',
+                        'topics/feature-flags/prioritize-ux',
+                        'topics/feature-flags/enable-traceability',
+                    ],
+                },
             ],
         },
         {

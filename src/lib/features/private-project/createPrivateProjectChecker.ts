@@ -10,9 +10,12 @@ export const createPrivateProjectChecker = (
     const { getLogger } = config;
     const privateProjectStore = new PrivateProjectStore(db, getLogger);
 
-    return new PrivateProjectChecker({
-        privateProjectStore: privateProjectStore,
-    });
+    return new PrivateProjectChecker(
+        {
+            privateProjectStore: privateProjectStore,
+        },
+        config,
+    );
 };
 
 export const createFakePrivateProjectChecker =

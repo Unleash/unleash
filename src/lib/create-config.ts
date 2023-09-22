@@ -481,6 +481,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const clientFeatureCaching = loadClientCachingOptions(options);
 
     const prometheusApi = options.prometheusApi || process.env.PROMETHEUS_API;
+
+    const isEnterprise =
+        Boolean(options.enterpriseVersion) && ui.name?.toLowerCase() !== 'pro';
+
     return {
         db,
         session,
@@ -513,6 +517,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         prometheusApi,
         publicFolder: options.publicFolder,
         disableScheduler: options.disableScheduler,
+        isEnterprise: isEnterprise,
     };
 }
 

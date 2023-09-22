@@ -201,6 +201,7 @@ export const createServices = (
         changeRequestAccessReadModel,
         config,
     );
+
     const privateProjectChecker = db
         ? createPrivateProjectChecker(db, config)
         : createFakePrivateProjectChecker();

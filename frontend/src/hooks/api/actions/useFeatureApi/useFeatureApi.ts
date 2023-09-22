@@ -196,8 +196,12 @@ const useFeatureApi = () => {
         type: string,
         value: string
     ) => {
+        const encodedTagPath = `${encodeURIComponent(
+            type
+        )}/${encodeURIComponent(value)}`;
+
         // TODO: Change this path to the new API when moved.
-        const path = `api/admin/features/${featureId}/tags/${type}/${value}`;
+        const path = `api/admin/features/${featureId}/tags/${encodedTagPath}`;
         const req = createRequest(path, {
             method: 'DELETE',
         });

@@ -4,4 +4,8 @@ export class FakeDependentFeaturesStore implements IDependentFeaturesStore {
     async upsert(): Promise<void> {
         return Promise.resolve();
     }
+
+    getChildren(): Promise<string[]> {
+        return Promise.resolve([]);
+    }
 }

@@ -5,6 +5,7 @@ import { IDependentFeaturesStore } from './dependent-features-store-type';
 type SerializableFeatureDependency = Omit<FeatureDependency, 'variants'> & {
     variants?: string;
 };
+
 export class DependentFeaturesStore implements IDependentFeaturesStore {
     private db: Db;
 
@@ -27,5 +28,14 @@ export class DependentFeaturesStore implements IDependentFeaturesStore {
             .insert(serializableFeatureDependency)
             .onConflict(['parent', 'child'])
             .merge();
+    }
+
+    async getChildren(parent: string): Promise<string[]> {
+        const rows = await this.db('dependent_features').where(
+            'parent',
+            parent,
+        );
+
+        return rows.map((row) => row.child);
     }
 }

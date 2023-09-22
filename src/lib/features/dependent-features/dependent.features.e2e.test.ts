@@ -61,3 +61,23 @@ test('should add feature dependency', async () => {
         variants: ['variantB'],
     });
 });
+
+test('should not allow to add a parent dependency to a feature that already has children', async () => {
+    const grandparent = uuidv4();
+    const parent = uuidv4();
+    const child = uuidv4();
+    await app.createFeature(grandparent);
+    await app.createFeature(parent);
+    await app.createFeature(child);
+
+    await addFeatureDependency(child, {
+        feature: parent,
+    });
+    await addFeatureDependency(
+        parent,
+        {
+            feature: grandparent,
+        },
+        403,
+    );
+});

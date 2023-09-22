@@ -58,6 +58,6 @@ Besides the configured channels, you can choose to notify other channels by tagg
 
 To exclusively use tags for determining notification channels, you can leave the "channels" field blank in the integration configuration. Since you can have multiple configurations for the integration, you're free to mix and match settings to meet your precise needs. Before posting a message, all channels for that event, both configured and tagged, are combined and duplicates are removed.
 
-![Slack Tags](/img/slack_addon_tags.png)
+![Slack Tags](/img/slack-addon-tags.png)
 
 In the picture you can see we have defined two slack tags for the "new-payment-system" toggle. In this example Unleash will post updates to the **#notifications** and **#random** channel, along with any channels defined in the integration configuration.

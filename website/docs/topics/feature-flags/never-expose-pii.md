@@ -20,7 +20,7 @@ Here’s how you can architect your solution to minimize PII or configuration le
 
 In Principle 1, we proposed a set of architectural principles and components to set up a Feature Flag Control Service. The same architecture patterns apply here, with additional suggestions for achieving local evaluation. Refer to Principle 1 for patterns to set up a feature flagging service.
 
-   - **Feature Flag Evaluation Service**: If you need to use feature flags on the client side, where code is delivered to users' devices, you’ll need an evaluation server that can evaluate feature flags and pass evaluated results down to the SDK in the client application.
+**Feature Flag Evaluation Service**: If you need to use feature flags on the client side, where code is delivered to users' devices, you’ll need an evaluation server that can evaluate feature flags and pass evaluated results down to the SDK in the client application.
 
 2. **SDKs**:
 

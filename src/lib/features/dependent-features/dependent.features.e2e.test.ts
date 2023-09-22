@@ -32,13 +32,13 @@ afterAll(async () => {
 });
 
 const addFeatureDependency = async (
-    parentFeature: string,
+    childFeature: string,
     payload: CreateDependentFeatureSchema,
     expectedCode = 200,
 ) => {
     return app.request
         .post(
-            `/api/admin/projects/default/features/${parentFeature}/dependencies`,
+            `/api/admin/projects/default/features/${childFeature}/dependencies`,
         )
         .send(payload)
         .expect(expectedCode);
@@ -51,13 +51,13 @@ test('should add feature dependency', async () => {
     await app.createFeature(child);
 
     // save explicit enabled and variants
-    await addFeatureDependency(parent, {
-        feature: child,
+    await addFeatureDependency(child, {
+        feature: parent,
         enabled: false,
     });
     // overwrite with implicit enabled: true and variants
-    await addFeatureDependency(parent, {
-        feature: child,
+    await addFeatureDependency(child, {
+        feature: parent,
         variants: ['variantB'],
     });
 });

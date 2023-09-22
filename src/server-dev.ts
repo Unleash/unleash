@@ -44,6 +44,7 @@ process.nextTick(async () => {
                         privateProjects: true,
                         accessOverview: true,
                         datadogJsonTemplate: true,
+                        dependentFeatures: true,
                     },
                 },
                 authentication: {

@@ -56,7 +56,15 @@ class PrivateProjectStore implements IPrivateProjectStore {
                         'projects.id',
                         'project_settings.project',
                     )
-                    .where('project_settings.project_mode', '!=', 'private')
+                    .where((builder) => {
+                        builder
+                            .whereNull('project_settings.project')
+                            .orWhere(
+                                'project_settings.project_mode',
+                                '!=',
+                                'private',
+                            );
+                    })
                     .unionAll((queryBuilder) => {
                         queryBuilder
                             .select('projects.id as project_id')

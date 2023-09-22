@@ -108,14 +108,12 @@ export class PlaygroundService {
                 );
             if (projectAccess.mode === 'all') {
                 filteredProjects = projects;
+            } else if (projects === ALL) {
+                filteredProjects = projectAccess.projects;
             } else {
-                if (projects === ALL) {
-                    filteredProjects = projectAccess.projects;
-                } else {
-                    filteredProjects = projects.filter((project) =>
-                        projectAccess.projects.includes(project),
-                    );
-                }
+                filteredProjects = projects.filter((project) =>
+                    projectAccess.projects.includes(project),
+                );
             }
         }
 

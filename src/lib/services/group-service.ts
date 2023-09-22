@@ -170,18 +170,16 @@ export class GroupService {
         return [];
     }
 
-    async deleteGroup(id: number, userName?: string): Promise<void> {
+    async deleteGroup(id: number, userName: string): Promise<void> {
         const group = await this.groupStore.get(id);
 
         await this.groupStore.delete(id);
 
-        if (userName) {
-            await this.eventStore.store({
-                type: GROUP_DELETED,
-                createdBy: userName,
-                data: group,
-            });
-        }
+        await this.eventStore.store({
+            type: GROUP_DELETED,
+            createdBy: userName,
+            data: group,
+        });
     }
 
     async validateGroup(

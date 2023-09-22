@@ -24,7 +24,7 @@ By default, the Unleash Slack App is granted access to public channels. If you w
 
 ## Configuration {#configuration}
 
-The configuration settings allow you to choose the events you're interested in and whether you want to filter them by projects and environments. You can configure a comma-separated list of channels to post the configured events to. These channels are always notified, regardless of the event type or the presence of tags.
+The configuration settings allow you to choose the events you're interested in and whether you want to filter them by projects and environments. You can configure a comma-separated list of channels to post the configured events to. These channels are always notified, regardless of the event type or the presence of [slack tags](#tags).
 
 #### Events {#events}
 

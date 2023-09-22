@@ -471,3 +471,19 @@ test.each(['demo', '/demo', '/demo/'])(
         expect(config.server.baseUriPath).toBe('/demo');
     },
 );
+
+test('Config with enterpriseVersion set and pro environment should set isEnterprise to false', async () => {
+    let config = createConfig({
+        enterpriseVersion: '5.3.0',
+        ui: { environment: 'pro' },
+    });
+    expect(config.isEnterprise).toBe(false);
+});
+
+test('Config with enterpriseVersion set and not pro environment should set isEnterprise to true', async () => {
+    let config = createConfig({
+        enterpriseVersion: '5.3.0',
+        ui: { environment: 'Enterprise' },
+    });
+    expect(config.isEnterprise).toBe(true);
+});

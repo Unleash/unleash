@@ -1,6 +1,7 @@
 import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
+    ProjectModeCount,
 } from '../../db/project-store';
 import {
     IEnvironment,
@@ -30,21 +31,6 @@ export interface IProjectSettings {
     featureNamingPattern?: string;
     featureNamingExample?: string;
     featureNamingDescription?: string;
-}
-
-export interface IProjectSettingsRow {
-    project_mode: ProjectMode;
-    default_stickiness: string;
-}
-
-export interface IProjectEnvironmenDefaultStrategyRow {
-    environment: string;
-    default_strategy: any;
-}
-
-export interface IProjectArchived {
-    id: string;
-    archived: boolean;
 }
 
 export interface IProjectHealthUpdate {
@@ -115,6 +101,7 @@ export interface IProjectStore extends Store<IProject, string> {
         projectId: string,
         environment: string,
     ): Promise<CreateFeatureStrategySchema | null>;
+
     updateDefaultStrategy(
         projectId: string,
         environment: string,
@@ -122,4 +109,6 @@ export interface IProjectStore extends Store<IProject, string> {
     ): Promise<CreateFeatureStrategySchema>;
 
     isFeatureLimitReached(id: string): Promise<boolean>;
+
+    getProjectModeCounts(): Promise<ProjectModeCount[]>;
 }

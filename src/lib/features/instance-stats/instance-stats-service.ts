@@ -20,6 +20,7 @@ import { ISettingStore } from '../../types/stores/settings-store';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 import { type GetActiveUsers } from './getActiveUsers';
+import { ProjectModeCount } from '../../db/project-store';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -30,7 +31,7 @@ export interface InstanceStats {
     versionEnterprise?: string;
     users: number;
     featureToggles: number;
-    projects: number;
+    projects: ProjectModeCount[];
     contextFields: number;
     roles: number;
     customRootRoles: number;
@@ -152,6 +153,10 @@ export class InstanceStatsService {
         }
     }
 
+    getProjectModeCount(): Promise<ProjectModeCount[]> {
+        return this.projectStore.getProjectModeCounts();
+    }
+
     getToggleCount(): Promise<number> {
         return this.featureToggleStore.count({
             archived: false,
@@ -201,7 +206,7 @@ export class InstanceStatsService {
             this.getToggleCount(),
             this.userStore.count(),
             this.getActiveUsers(),
-            this.projectStore.count(),
+            this.getProjectModeCount(),
             this.contextFieldStore.count(),
             this.groupStore.count(),
             this.roleStore.count(),

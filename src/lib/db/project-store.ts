@@ -7,6 +7,7 @@ import {
     IFlagResolver,
     IProject,
     IProjectWithCount,
+    ProjectMode,
 } from '../types';
 import {
     IProjectHealthUpdate,
@@ -47,6 +48,11 @@ const PROJECT_ENVIRONMENTS = 'project_environments';
 export interface IEnvironmentProjectLink {
     environmentName: string;
     projectId: string;
+}
+
+export interface ProjectModeCount {
+    mode: ProjectMode;
+    count: number;
 }
 
 export interface IProjectMembersCount {
@@ -549,6 +555,28 @@ class ProjectStore implements IProjectStore {
             .from(TABLE)
             .count('*')
             .then((res) => Number(res[0].count));
+    }
+
+    async getProjectModeCounts(): Promise<ProjectModeCount[]> {
+        const result: ProjectModeCount[] = await this.db
+            .select(`${SETTINGS_TABLE}.project_mode as mode`)
+            .count(`${TABLE}.id as count`)
+            .from(`${TABLE}`)
+            .join(
+                `${SETTINGS_TABLE}`,
+                `${TABLE}.id`,
+                `${SETTINGS_TABLE}.project`,
+            )
+            .groupBy(`${SETTINGS_TABLE}.project_mode`);
+        return result.map(this.mapProjectModeCount);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    mapProjectModeCount(row): ProjectModeCount {
+        return {
+            mode: row.mode,
+            count: parseInt(row.count, 10),
+        };
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

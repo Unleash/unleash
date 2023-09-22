@@ -97,7 +97,11 @@ class InstanceAdminController extends Controller {
             featureToggles: 29,
             groups: 3,
             instanceId: 'ed3861ae-78f9-4e8c-8e57-b57efc15f82b',
-            projects: 1,
+            projects: [
+                { mode: 'open', count: 5 },
+                { mode: 'protected', count: 2 },
+                { mode: 'private', count: 1 },
+            ],
             roles: 5,
             customRootRoles: 2,
             customRootRolesInUse: 1,

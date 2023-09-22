@@ -47,7 +47,7 @@ module.exports = {
                 'topics/data-collection',
                 {
                     type: 'category',
-                    label: 'Feature Flags Migrations',
+                    label: 'Feature Flag Migrations',
                     link: {
                         type: 'doc',
                         id: 'topics/feature-flag-migration/feature-flag-migration-best-practices',

@@ -54,7 +54,7 @@ The Unleash Slack App integration takes the following parameters.
 
 ## Tags {#tags}
 
-Besides the configured channels, you have the flexibility to choose to notify other channels by tagging your feature toggles with Slack-specific tags. For instance, if you want the Unleash Slack App to send notifications to the `#general` channel, simply configure your feature toggle with the "slack:general" tag. This will ensure that any configured events related to that feature toggle will notify the tagged channel in addition to any configured channels.
+Besides the configured channels, you can choose to notify other channels by tagging your feature flags with Slack-specific tags. For instance, if you want the Unleash Slack App to send notifications to the `#general` channel, add a slack-type tag with the value "general" (or "#general"; both will work) to your flag. This will ensure that any configured events related to that feature flag will notify the tagged channel in addition to any channels configured on the integration-level.
 
 To exclusively use tags for determining notification channels, you can leave the "channels" field blank in the integration configuration. Since you can have multiple configurations for the integration, you're free to mix and match settings to meet your precise needs. Before posting a message, all channels for that event, both configured and tagged, are combined and duplicates are removed.
 

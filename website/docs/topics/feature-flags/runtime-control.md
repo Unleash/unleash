@@ -20,4 +20,4 @@ Build SDK bindings for each relevant language in your organization. Make sure th
 
 ![feature-flag-scalable-architecture](https://github.com/Unleash/unleash/assets/87366358/e0ac76e0-992c-49ef-80be-70d2971ed937)
 
-**5. Continuous updates**: Implement updates in your application so that changes to feature flag configurations are reflected without requiring application restarts or redeployments. The SDK should handle subscriptions or polling to the feature flag service for updates.
+**5. Continuously Updated**: Implement update mechanisms in your application so that changes to feature flag configurations are reflected without requiring application restarts or redeployments. The SDK should handle subscriptions or polling to the feature flag service for updates.

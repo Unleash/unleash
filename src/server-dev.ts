@@ -37,7 +37,6 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        slackAppAddon: true,
                         lastSeenByEnvironment: true,
                         featureNamingPattern: true,
                         doraMetrics: true,
@@ -45,6 +44,7 @@ process.nextTick(async () => {
                         privateProjects: true,
                         accessOverview: true,
                         datadogJsonTemplate: true,
+                        dependentFeatures: true,
                     },
                 },
                 authentication: {

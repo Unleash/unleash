@@ -1,5 +1,6 @@
 import { ADMIN } from './permissions';
 
+export const ADMIN_TOKEN_ID = -1;
 export default class NoAuthUser {
     isAPI: boolean;
 
@@ -11,7 +12,7 @@ export default class NoAuthUser {
 
     constructor(
         username: string = 'unknown',
-        id: number = -1,
+        id: number = ADMIN_TOKEN_ID,
         permissions: string[] = [ADMIN],
     ) {
         this.isAPI = true;

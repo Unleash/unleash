@@ -201,6 +201,7 @@ export const createServices = (
         changeRequestAccessReadModel,
         config,
     );
+
     const privateProjectChecker = db
         ? createPrivateProjectChecker(db, config)
         : createFakePrivateProjectChecker();
@@ -251,6 +252,7 @@ export const createServices = (
     const playgroundService = new PlaygroundService(config, {
         featureToggleServiceV2,
         segmentService,
+        privateProjectChecker,
     });
 
     const configurationRevisionService = new ConfigurationRevisionService(

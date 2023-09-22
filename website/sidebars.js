@@ -28,7 +28,7 @@ module.exports = {
                 'tutorials/quickstart',
             ],
         },
-        {
+         {
             label: 'Topic guides',
             collapsed: false,
             type: 'category',
@@ -40,11 +40,29 @@ module.exports = {
                 slug: '/topics',
             },
             items: [
+                {
+                    type: 'category',
+                    label: '11 Principles for building and scaling feature flag systems',
+                    link: {
+                        type: 'doc',
+                        id: 'topics/feature-flags/feature-flag-best-practices',
+                    },
+                    items: [
+                        'topics/feature-flags/runtime-control',
+                        'topics/feature-flags/never-expose-pii',
+                        'topics/feature-flags/evaluate-flags-close-to-user',
+                        'topics/feature-flags/scale-horizontally',
+                        'topics/feature-flags/limit-payloads',
+                        'topics/feature-flags/availability-over-consistency',
+                        'topics/feature-flags/short-lived-feature-flags',
+                        'topics/feature-flags/unique-names',
+                        'topics/feature-flags/democratize-feature-flag-access',
+                        'topics/feature-flags/prioritize-ux',
+                        'topics/feature-flags/enable-traceability',
+                    ],
+                },
                 'topics/the-anatomy-of-unleash',
                 'topics/a-b-testing',
-                'topics/managing-constraints',
-                'topics/proxy-hosting',
-                'topics/data-collection',
                 {
                     type: 'category',
                     label: 'Feature Flag Migrations',
@@ -60,6 +78,9 @@ module.exports = {
                         'topics/feature-flag-migration/onbording-users-to-feature-flag-service',
                     ],
                 },
+                'topics/data-collection',
+                'topics/managing-constraints',
+                'topics/proxy-hosting',
             ],
         },
         {

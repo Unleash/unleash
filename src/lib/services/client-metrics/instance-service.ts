@@ -20,6 +20,7 @@ import { clientMetricsSchema } from './schema';
 import { PartialSome } from '../../types/partial';
 import { IPrivateProjectChecker } from '../../features/private-project/privateProjectCheckerType';
 import { IFlagResolver } from '../../types';
+import { ALL_PROJECTS } from '../../util';
 
 export default class ClientInstanceService {
     apps = {};
@@ -178,21 +179,27 @@ export default class ClientInstanceService {
     ): Promise<IClientApplication[]> {
         const applications =
             await this.clientApplicationsStore.getAppsForStrategy(query);
-        if (this.flagResolver.isEnabled('privateProjects') && userId) {
+        if (this.flagResolver.isEnabled('privateProjects')) {
             const accessibleProjects =
                 await this.privateProjectChecker.getUserAccessibleProjects(
                     userId,
                 );
-            return applications.map((application) => {
-                return {
-                    ...application,
-                    usage: application.usage?.filter(
-                        (usageItem) =>
-                            usageItem.project === '*' ||
-                            accessibleProjects.includes(usageItem.project),
-                    ),
-                };
-            });
+            if (accessibleProjects.mode === 'all') {
+                return applications;
+            } else {
+                return applications.map((application) => {
+                    return {
+                        ...application,
+                        usage: application.usage?.filter(
+                            (usageItem) =>
+                                usageItem.project === ALL_PROJECTS ||
+                                accessibleProjects.projects.includes(
+                                    usageItem.project,
+                                ),
+                        ),
+                    };
+                });
+            }
         }
         return applications;
     }

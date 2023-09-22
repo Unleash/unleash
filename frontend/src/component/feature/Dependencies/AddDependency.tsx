@@ -2,7 +2,7 @@ import { Box, styled } from '@mui/material';
 import { trim } from '../../common/util';
 import React, { FC, useState } from 'react';
 import Input from '../../common/Input/Input';
-import { CREATE_FEATURE_STRATEGY } from '../../providers/AccessProvider/permissions';
+import { CREATE_FEATURE } from '../../providers/AccessProvider/permissions';
 import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 
@@ -45,7 +45,7 @@ export const AddDependency: FC<IAddDependencyProps> = ({
                     onChange={e => setParent(trim(e.target.value))}
                 />
                 <PermissionButton
-                    permission={CREATE_FEATURE_STRATEGY}
+                    permission={CREATE_FEATURE}
                     projectId={projectId}
                     onClick={() => {
                         addDependency(featureId, { feature: parent });

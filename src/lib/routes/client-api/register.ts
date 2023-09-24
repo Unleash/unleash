@@ -63,12 +63,23 @@ export default class RegisterController extends Controller {
         return 'default';
     }
 
+    private static extractProjectFromRequest(
+        req: IAuthRequest<unknown, void, ClientApplicationSchema>,
+    ) {
+        const token = req.get('Authorisation');
+        if (token) {
+            return token.split(':')[0];
+        }
+        return 'default';
+    }
+
     async registerClientApplication(
         req: IAuthRequest<unknown, void, ClientApplicationSchema>,
         res: Response<void>,
     ): Promise<void> {
         const { body: data, ip: clientIp, user } = req;
         data.environment = RegisterController.resolveEnvironment(user, data);
+        data.project = RegisterController.extractProjectFromRequest(req);
         await this.clientInstanceService.registerClient(data, clientIp);
         res.status(202).end();
     }

@@ -292,6 +292,79 @@ test('should filter events on environment if addon is setup to filter for it', a
     expect(events[0].event.data.name).toBe('some-toggle');
 });
 
+test('should not filter out global events (no specific environment) even if addon is setup to filter for environments', async () => {
+    const { addonService, stores } = getSetup();
+    const filteredEnvironment = 'filtered';
+    const config = {
+        provider: 'simple',
+        enabled: true,
+        events: [FEATURE_CREATED],
+        projects: [],
+        environments: [filteredEnvironment],
+        description: '',
+        parameters: {
+            url: 'http://localhost:wh',
+        },
+    };
+
+    const globalEventWithNoEnvironment = {
+        type: FEATURE_CREATED,
+        createdBy: 'some@user.com',
+        project: 'some-project',
+        data: {
+            name: 'some-toggle',
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        },
+    };
+
+    await addonService.createAddon(config, 'me@mail.com');
+    await stores.eventStore.store(globalEventWithNoEnvironment);
+    const simpleProvider = addonService.addonProviders.simple;
+    // @ts-expect-error
+    const events = simpleProvider.getEvents();
+
+    expect(events.length).toBe(1);
+    expect(events[0].event.type).toBe(FEATURE_CREATED);
+    expect(events[0].event.data.name).toBe('some-toggle');
+});
+
+test('should not filter out global events (no specific project) even if addon is setup to filter for projects', async () => {
+    const { addonService, stores } = getSetup();
+    const filteredProject = 'filtered';
+    const config = {
+        provider: 'simple',
+        enabled: true,
+        events: [FEATURE_CREATED],
+        projects: [filteredProject],
+        environments: [],
+        description: '',
+        parameters: {
+            url: 'http://localhost:wh',
+        },
+    };
+
+    const globalEventWithNoProject = {
+        type: FEATURE_CREATED,
+        createdBy: 'some@user.com',
+        data: {
+            name: 'some-toggle',
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        },
+    };
+
+    await addonService.createAddon(config, 'me@mail.com');
+    await stores.eventStore.store(globalEventWithNoProject);
+    const simpleProvider = addonService.addonProviders.simple;
+    // @ts-expect-error
+    const events = simpleProvider.getEvents();
+
+    expect(events.length).toBe(1);
+    expect(events[0].event.type).toBe(FEATURE_CREATED);
+    expect(events[0].event.data.name).toBe('some-toggle');
+});
+
 test('should support wildcard option for filtering addons', async () => {
     const { addonService, stores } = getSetup();
     const desiredProjects = ['desired', 'desired2'];

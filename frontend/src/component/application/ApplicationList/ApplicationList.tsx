@@ -1,41 +1,29 @@
-import { useEffect, useMemo, useState } from 'react';
-import { CircularProgress, Link } from '@mui/material';
+import { useMemo } from 'react';
+import { Avatar, CircularProgress, Icon, Link } from '@mui/material';
 import { Warning } from '@mui/icons-material';
-import { AppsLinkList, styles as themeStyles } from 'component/common';
+import { styles as themeStyles } from 'component/common';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import useApplications from 'hooks/api/getters/useApplications/useApplications';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useSearchParams } from 'react-router-dom';
 import { Search } from 'component/common/Search/Search';
-import { safeRegExp } from '@server/util/escape-regex';
-
-type PageQueryType = Partial<Record<'search', string>>;
+import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import {
+    SortableTableHeader,
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
+} from 'component/common/Table';
+import { useGlobalFilter, useSortBy, useTable } from 'react-table';
+import { sortTypes } from 'utils/sortTypes';
+import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
+import { ApplicationUsageCell } from './ApplicationUsageCell/ApplicationUsageCell';
+import { ApplicationSchema } from '../../../openapi';
 
 export const ApplicationList = () => {
-    const { applications, loading } = useApplications();
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [searchValue, setSearchValue] = useState(
-        searchParams.get('search') || ''
-    );
-
-    useEffect(() => {
-        const tableState: PageQueryType = {};
-        if (searchValue) {
-            tableState.search = searchValue;
-        }
-
-        setSearchParams(tableState, {
-            replace: true,
-        });
-    }, [searchValue, setSearchParams]);
-
-    const filteredApplications = useMemo(() => {
-        const regExp = safeRegExp(searchValue, 'i');
-        return searchValue
-            ? applications?.filter(a => regExp.test(a.appName))
-            : applications;
-    }, [applications, searchValue]);
+    const { applications: data, loading } = useApplications();
 
     const renderNoApplications = () => (
         <>
@@ -56,25 +44,110 @@ export const ApplicationList = () => {
         </>
     );
 
-    if (!filteredApplications) {
+    const initialState = useMemo(
+        () => ({
+            sortBy: [{ id: 'name', desc: false }],
+            hiddenColumns: ['description', 'sortOrder'],
+        }),
+        []
+    );
+
+    const columns = useMemo(
+        () => [
+            {
+                id: 'Icon',
+                Cell: ({
+                    row: {
+                        original: { icon },
+                    },
+                }: any) => (
+                    <IconCell
+                        icon={
+                            <Avatar>
+                                <Icon>{icon}</Icon>
+                            </Avatar>
+                        }
+                    />
+                ),
+                disableGlobalFilter: true,
+            },
+            {
+                Header: 'Name',
+                accessor: 'appName',
+                width: '50%',
+                Cell: ({
+                    row: {
+                        original: { appName, description },
+                    },
+                }: any) => (
+                    <LinkCell
+                        title={appName}
+                        to={`/applications/${appName}`}
+                        subtitle={description}
+                    />
+                ),
+                sortType: 'alphanumeric',
+            },
+            {
+                Header: 'Project(environment)',
+                accessor: 'usage',
+                width: '50%',
+                Cell: ({
+                    row: { original },
+                }: {
+                    row: { original: ApplicationSchema };
+                }) => <ApplicationUsageCell usage={original.usage} />,
+                sortType: 'alphanumeric',
+            },
+            {
+                accessor: 'description',
+                disableSortBy: true,
+            },
+            {
+                accessor: 'sortOrder',
+                disableGlobalFilter: true,
+                sortType: 'number',
+            },
+        ],
+        []
+    );
+
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        state: { globalFilter },
+        setGlobalFilter,
+    } = useTable(
+        {
+            columns: columns as any[], // TODO: fix after `react-table` v8 update
+            data,
+            initialState,
+            sortTypes,
+            autoResetGlobalFilter: false,
+            autoResetSortBy: false,
+            disableSortRemove: true,
+        },
+        useGlobalFilter,
+        useSortBy
+    );
+
+    if (!data) {
         return <CircularProgress variant="indeterminate" />;
     }
-
-    let applicationCount =
-        filteredApplications.length < applications.length
-            ? `${filteredApplications.length} of ${applications.length}`
-            : applications.length;
 
     return (
         <>
             <PageContent
                 header={
                     <PageHeader
-                        title={`Applications (${applicationCount})`}
+                        title={`Applications (${rows.length})`}
                         actions={
                             <Search
-                                initialValue={searchValue}
-                                onChange={setSearchValue}
+                                initialValue={globalFilter}
+                                onChange={setGlobalFilter}
                             />
                         }
                     />
@@ -82,8 +155,37 @@ export const ApplicationList = () => {
             >
                 <div className={themeStyles.fullwidth}>
                     <ConditionallyRender
-                        condition={filteredApplications.length > 0}
-                        show={<AppsLinkList apps={filteredApplications} />}
+                        condition={data.length > 0}
+                        show={
+                            <SearchHighlightProvider value={globalFilter}>
+                                <Table {...getTableProps()}>
+                                    <SortableTableHeader
+                                        headerGroups={headerGroups}
+                                    />
+                                    <TableBody {...getTableBodyProps()}>
+                                        {rows.map(row => {
+                                            prepareRow(row);
+                                            return (
+                                                <TableRow
+                                                    hover
+                                                    {...row.getRowProps()}
+                                                >
+                                                    {row.cells.map(cell => (
+                                                        <TableCell
+                                                            {...cell.getCellProps()}
+                                                        >
+                                                            {cell.render(
+                                                                'Cell'
+                                                            )}
+                                                        </TableCell>
+                                                    ))}
+                                                </TableRow>
+                                            );
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </SearchHighlightProvider>
+                        }
                         elseShow={
                             <ConditionallyRender
                                 condition={loading}

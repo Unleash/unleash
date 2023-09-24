@@ -230,15 +230,10 @@ export const FeatureStrategyForm = ({
                     }));
                 }}
             />
-            <ConditionallyRender
-                condition={Boolean(uiConfig.flags.SE)}
-                show={
-                    <FeatureStrategySegment
-                        segments={segments}
-                        setSegments={setSegments}
-                        projectId={projectId}
-                    />
-                }
+            <FeatureStrategySegment
+                segments={segments}
+                setSegments={setSegments}
+                projectId={projectId}
             />
             <FeatureStrategyConstraints
                 projectId={feature.project}
@@ -258,7 +253,6 @@ export const FeatureStrategyForm = ({
             <StyledHr />
             <ConditionallyRender
                 condition={
-                    Boolean(uiConfig?.flags?.strategyVariant) &&
                     strategy.parameters != null &&
                     'stickiness' in strategy.parameters
                 }

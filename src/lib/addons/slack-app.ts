@@ -1,6 +1,5 @@
 import {
     WebClient,
-    ConversationsListResponse,
     ErrorCode,
     WebClientEvent,
     CodedError,
@@ -13,15 +12,12 @@ import Addon from './addon';
 
 import slackAppDefinition from './slack-app-definition';
 import { IAddonConfig } from '../types/model';
-
 import {
     FeatureEventFormatter,
     FeatureEventFormatterMd,
     LinkStyle,
 } from './feature-event-formatter-md';
 import { IEvent } from '../types/events';
-
-const CACHE_SECONDS = 30;
 
 interface ISlackAppAddonParameters {
     accessToken: string;
@@ -35,17 +31,12 @@ export default class SlackAppAddon extends Addon {
 
     private slackClient?: WebClient;
 
-    private slackChannels?: ConversationsListResponse['channels'];
-
-    private slackChannelsCacheTimeout?: NodeJS.Timeout;
-
     constructor(args: IAddonConfig) {
         super(slackAppDefinition, args);
         this.msgFormatter = new FeatureEventFormatterMd(
             args.unleashUrl,
             LinkStyle.SLACK,
         );
-        this.startCacheInvalidation();
     }
 
     async handleEvent(
@@ -60,9 +51,13 @@ export default class SlackAppAddon extends Addon {
             }
 
             const taggedChannels = this.findTaggedChannels(event);
-            const eventChannels = taggedChannels.length
-                ? taggedChannels
-                : this.getDefaultChannels(defaultChannels);
+            const eventChannels = [
+                ...new Set(
+                    taggedChannels.concat(
+                        this.getDefaultChannels(defaultChannels),
+                    ),
+                ),
+            ];
 
             if (!eventChannels.length) {
                 this.logger.debug(
@@ -83,95 +78,38 @@ export default class SlackAppAddon extends Addon {
                 this.accessToken = accessToken;
             }
 
-            if (!this.slackChannels) {
-                const slackConversationsList =
-                    await this.slackClient.conversations.list({
-                        types: 'public_channel,private_channel',
-                        exclude_archived: true,
-                        limit: 200,
-                    });
-                this.slackChannels = slackConversationsList.channels || [];
-                let nextCursor =
-                    slackConversationsList.response_metadata?.next_cursor;
-                while (nextCursor !== undefined && nextCursor !== '') {
-                    this.logger.debug('Fetching next page of channels');
-                    const moreChannels =
-                        await this.slackClient.conversations.list({
-                            cursor: nextCursor,
-                            types: 'public_channel,private_channel',
-                            exclude_archived: true,
-                            limit: 200,
-                        });
-                    const channels = moreChannels.channels;
-                    if (channels === undefined) {
-                        this.logger.debug(
-                            'Channels list was empty, breaking pagination',
-                        );
-                        nextCursor = undefined;
-                        break;
-                    }
-                    nextCursor = moreChannels.response_metadata?.next_cursor;
-                    this.logger.debug(
-                        `This page had ${channels.length} channels`,
-                    );
-
-                    channels.forEach((channel) =>
-                        this.slackChannels?.push(channel),
-                    );
-                }
-
-                this.logger.debug(
-                    `Fetched ${
-                        this.slackChannels.length
-                    } available Slack channels: ${this.slackChannels.map(
-                        ({ name }) => name,
-                    )}`,
-                );
-            }
-
-            const currentSlackChannels = [...this.slackChannels];
-            if (!currentSlackChannels.length) {
-                this.logger.warn('No available Slack channels found.');
-                return;
-            }
-
             const text = this.msgFormatter.format(event);
             const url = this.msgFormatter.featureLink(event);
-
-            const slackChannelsToPostTo = currentSlackChannels.filter(
-                ({ id, name }) => id && name && eventChannels.includes(name),
-            );
-
-            if (!slackChannelsToPostTo.length) {
-                this.logger.info('No eligible Slack channel found.');
-                return;
-            }
-            this.logger.debug(
-                `Posting event to ${slackChannelsToPostTo.map(
-                    ({ name }) => name,
-                )}.`,
-            );
-
-            const requests = slackChannelsToPostTo.map(({ id }) =>
-                this.slackClient!.chat.postMessage({
-                    channel: id!,
+            const requests = eventChannels.map((name) => {
+                return this.slackClient!.chat.postMessage({
+                    channel: name,
                     text,
-                    attachments: [
+                    blocks: [
                         {
-                            actions: [
+                            type: 'section',
+                            text: {
+                                type: 'mrkdwn',
+                                text,
+                            },
+                        },
+                        {
+                            type: 'actions',
+                            elements: [
                                 {
-                                    name: 'featureToggle',
-                                    text: 'Open in Unleash',
                                     type: 'button',
+                                    url,
+                                    text: {
+                                        type: 'plain_text',
+                                        text: 'Open in Unleash',
+                                    },
                                     value: 'featureToggle',
                                     style: 'primary',
-                                    url,
                                 },
                             ],
                         },
                     ],
-                }),
-            );
+                });
+            });
 
             const results = await Promise.allSettled(requests);
 
@@ -208,12 +146,6 @@ export default class SlackAppAddon extends Addon {
         return [];
     }
 
-    startCacheInvalidation(): void {
-        this.slackChannelsCacheTimeout = setInterval(() => {
-            this.slackChannels = undefined;
-        }, CACHE_SECONDS * 1000);
-    }
-
     logError(event: IEvent, error: Error | CodedError): void {
         if (!('code' in error)) {
             this.logger.warn(`Error handling event ${event.type}.`, error);
@@ -246,13 +178,6 @@ export default class SlackAppAddon extends Addon {
             );
         } else {
             this.logger.warn(`Error handling event ${event.type}.`, error);
-        }
-    }
-
-    destroy(): void {
-        if (this.slackChannelsCacheTimeout) {
-            clearInterval(this.slackChannelsCacheTimeout);
-            this.slackChannelsCacheTimeout = undefined;
         }
     }
 }

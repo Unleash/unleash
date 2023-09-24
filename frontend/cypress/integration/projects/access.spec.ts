@@ -65,6 +65,20 @@ describe('project-access', () => {
 
     beforeEach(() => {
         cy.login_UI();
+
+        cy.intercept('GET', `${baseUrl}/api/admin/ui-config`, req => {
+            req.headers['cache-control'] =
+                'no-cache, no-store, must-revalidate';
+            req.on('response', res => {
+                if (res.body) {
+                    res.body.flags = {
+                        ...res.body.flags,
+                        multipleRoles: true,
+                    };
+                }
+            });
+        });
+
         cy.visit(`/projects/${groupAndProjectName}/settings/access`);
         if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
             cy.get("[data-testid='CLOSE_SPLASH']").click();
@@ -76,7 +90,7 @@ describe('project-access', () => {
 
         cy.intercept(
             'POST',
-            `/api/admin/projects/${groupAndProjectName}/role/4/access`
+            `/api/admin/projects/${groupAndProjectName}/access`
         ).as('assignAccess');
 
         cy.get(`[data-testid='${PA_USERS_GROUPS_ID}']`).click();
@@ -95,7 +109,7 @@ describe('project-access', () => {
 
         cy.intercept(
             'POST',
-            `/api/admin/projects/${groupAndProjectName}/role/4/access`
+            `/api/admin/projects/${groupAndProjectName}/access`
         ).as('assignAccess');
 
         cy.get(`[data-testid='${PA_USERS_GROUPS_ID}']`).click();
@@ -114,11 +128,14 @@ describe('project-access', () => {
 
         cy.intercept(
             'PUT',
-            `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles/5`
+            `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`
         ).as('editAccess');
 
+        cy.get(`[data-testid='CancelIcon']`).last().click();
         cy.get(`[data-testid='${PA_ROLE_ID}']`).click();
-        cy.contains('within a project are allowed').click({ force: true });
+        cy.contains('update feature toggles within a project').click({
+            force: true,
+        });
 
         cy.get(`[data-testid='${PA_ASSIGN_CREATE_ID}']`).click();
         cy.wait('@editAccess');
@@ -126,12 +143,31 @@ describe('project-access', () => {
         cy.get("td span:contains('Member')").should('have.length', 1);
     });
 
+    it('can edit role to multiple roles', () => {
+        cy.get(`[data-testid='${PA_EDIT_BUTTON_ID}']`).first().click();
+
+        cy.intercept(
+            'PUT',
+            `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`
+        ).as('editAccess');
+
+        cy.get(`[data-testid='${PA_ROLE_ID}']`).click();
+        cy.contains('full control over the project').click({
+            force: true,
+        });
+
+        cy.get(`[data-testid='${PA_ASSIGN_CREATE_ID}']`).click();
+        cy.wait('@editAccess');
+        cy.get("td span:contains('Owner')").should('have.length', 2);
+        cy.get("td span:contains('2 roles')").should('have.length', 1);
+    });
+
     it('can remove access', () => {
         cy.get(`[data-testid='${PA_REMOVE_BUTTON_ID}']`).first().click();
 
         cy.intercept(
             'DELETE',
-            `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles/5`
+            `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`
         ).as('removeAccess');
 
         cy.contains("Yes, I'm sure").click();

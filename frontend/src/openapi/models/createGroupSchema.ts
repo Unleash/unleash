@@ -19,5 +19,4 @@ export interface CreateGroupSchema {
     rootRole?: number | null;
     /** A list of users belonging to this group */
     users?: CreateGroupSchemaUsersItem[];
-    [key: string]: any;
 }

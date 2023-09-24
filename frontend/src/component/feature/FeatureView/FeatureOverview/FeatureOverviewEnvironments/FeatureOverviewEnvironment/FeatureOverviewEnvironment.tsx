@@ -22,7 +22,6 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { Badge } from 'component/common/Badge/Badge';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;
@@ -141,6 +140,7 @@ const FeatureOverviewEnvironment = ({
             show={
                 <StyledFeatureOverviewEnvironment enabled={env.enabled}>
                     <StyledAccordion
+                        TransitionProps={{ mountOnEnter: true }}
                         data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${env.name}`}
                         className={`environment-accordion ${
                             env.enabled ? '' : 'accordion-disabled'

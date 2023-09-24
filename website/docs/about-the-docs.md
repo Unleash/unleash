@@ -14,10 +14,10 @@ Have questions that you can't find the answer to in these docs? You can always t
 
 Our documentation is split into four parts, using the [Diátaxis documentation framework](https://diataxis.fr/):
 
-- [tutorials and introductory material](#tutorials)
-- [how-to guides](#how-to-guides)
-- [reference documentation](#reference-documentation)
-- [topic guides](#topic-guides)
+- [Tutorials and introductory material](#tutorials)
+- [How-to guides](#how-to-guides)
+- [Reference documentation](#reference-documentation)
+- [Topic guides](#topic-guides)
 
 ### Tutorials and introductory material {#tutorials}
 
@@ -37,6 +37,7 @@ The guides are organized into the following categories:
 - [Feature flags, strategies, context, and general how-tos](./how-to/misc)
 - [Users and permissions how-tos](./how-to/users-and-permissions)
 - [Single Sign-On (SSO) how-tos](./how-to/sso)
+- [Troubleshooting how-tos](./how-to/troubleshooting)
 
 ### Reference documentation
 
@@ -44,11 +45,10 @@ The reference docs contain technical reference for Unleash and the API. Go here 
 
 The reference docs are organized into the following topics:
 
-- [Addons](./reference/addons/addons.md)
 - [API documentation](./reference/api/legacy/unleash/index.md)
 - [Unleash SDKs](./reference/sdks/index.md)
 - [Deployment and management of Unleash](./reference/deploy)
-- [Integrations with other systems](./reference/integrations/integrations.md)
+- [Integrations](./reference/integrations/integrations.md)
 - [Unleash concepts](./reference/concepts)
 
 ### Topic guides

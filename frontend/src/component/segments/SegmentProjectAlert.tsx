@@ -37,6 +37,7 @@ export const SegmentProjectAlert = ({
             },
         });
     };
+
     const projectList = (
         <StyledUl>
             {Array.from(projectsUsed).map(projectId => (
@@ -82,17 +83,6 @@ export const SegmentProjectAlert = ({
             <StyledAlert severity="info">
                 You can't specify a project for this segment because it is used
                 in multiple projects:
-                {projectList}
-            </StyledAlert>
-        );
-    }
-
-    if (availableProjects.length === 1) {
-        return (
-            <StyledAlert severity="info">
-                You can't specify a project other than{' '}
-                <strong>{availableProjects[0].name}</strong> for this segment
-                because it is used here:
                 {projectList}
             </StyledAlert>
         );

@@ -43,6 +43,19 @@ export const CONTEXT_FIELD_CREATED = 'context-field-created' as const;
 export const CONTEXT_FIELD_UPDATED = 'context-field-updated' as const;
 export const CONTEXT_FIELD_DELETED = 'context-field-deleted' as const;
 export const PROJECT_ACCESS_ADDED = 'project-access-added' as const;
+
+export const PROJECT_ACCESS_USER_ROLES_UPDATED =
+    'project-access-user-roles-updated';
+
+export const PROJECT_ACCESS_GROUP_ROLES_UPDATED =
+    'project-access-group-roles-updated';
+
+export const PROJECT_ACCESS_USER_ROLES_DELETED =
+    'project-access-user-roles-deleted';
+
+export const PROJECT_ACCESS_GROUP_ROLES_DELETED =
+    'project-access-group-roles-deleted';
+
 export const PROJECT_CREATED = 'project-created' as const;
 export const PROJECT_UPDATED = 'project-updated' as const;
 export const PROJECT_DELETED = 'project-deleted' as const;
@@ -77,6 +90,7 @@ export const SEGMENT_UPDATED = 'segment-updated' as const;
 export const SEGMENT_DELETED = 'segment-deleted' as const;
 export const GROUP_CREATED = 'group-created' as const;
 export const GROUP_UPDATED = 'group-updated' as const;
+export const GROUP_DELETED = 'group-deleted' as const;
 export const SETTING_CREATED = 'setting-created' as const;
 export const SETTING_UPDATED = 'setting-updated' as const;
 export const SETTING_DELETED = 'setting-deleted' as const;
@@ -100,6 +114,7 @@ export const CHANGE_ADDED = 'change-added' as const;
 export const CHANGE_DISCARDED = 'change-discarded' as const;
 export const CHANGE_EDITED = 'change-edited' as const;
 export const CHANGE_REQUEST_APPROVED = 'change-request-approved' as const;
+export const CHANGE_REQUEST_REJECTED = 'change-request-rejected' as const;
 export const CHANGE_REQUEST_APPROVAL_ADDED =
     'change-request-approval-added' as const;
 export const CHANGE_REQUEST_CANCELLED = 'change-request-cancelled' as const;
@@ -161,6 +176,10 @@ export const IEventTypes = [
     CONTEXT_FIELD_UPDATED,
     CONTEXT_FIELD_DELETED,
     PROJECT_ACCESS_ADDED,
+    PROJECT_ACCESS_USER_ROLES_UPDATED,
+    PROJECT_ACCESS_GROUP_ROLES_UPDATED,
+    PROJECT_ACCESS_USER_ROLES_DELETED,
+    PROJECT_ACCESS_GROUP_ROLES_DELETED,
     PROJECT_CREATED,
     PROJECT_UPDATED,
     PROJECT_DELETED,
@@ -195,6 +214,7 @@ export const IEventTypes = [
     SEGMENT_DELETED,
     GROUP_CREATED,
     GROUP_UPDATED,
+    GROUP_DELETED,
     SETTING_CREATED,
     SETTING_UPDATED,
     SETTING_DELETED,
@@ -210,6 +230,7 @@ export const IEventTypes = [
     CHANGE_ADDED,
     CHANGE_DISCARDED,
     CHANGE_EDITED,
+    CHANGE_REQUEST_REJECTED,
     CHANGE_REQUEST_APPROVED,
     CHANGE_REQUEST_APPROVAL_ADDED,
     CHANGE_REQUEST_CANCELLED,
@@ -412,10 +433,11 @@ export class EnvironmentVariantEvent extends BaseEvent {
         environment: string;
         project: string;
         createdBy: string | IUser;
+        tags: ITag[];
         newVariants: IVariant[];
         oldVariants: IVariant[];
     }) {
-        super(FEATURE_ENVIRONMENT_VARIANTS_UPDATED, p.createdBy);
+        super(FEATURE_ENVIRONMENT_VARIANTS_UPDATED, p.createdBy, p.tags);
         this.featureName = p.featureName;
         this.environment = p.environment;
         this.project = p.project;
@@ -812,6 +834,100 @@ export class ProjectAccessAddedEvent extends BaseEvent {
         this.project = project;
         this.data = data;
         this.preData = null;
+    }
+}
+
+export class ProjectAccessUserRolesUpdated extends BaseEvent {
+    readonly project: string;
+
+    readonly data: any;
+
+    readonly preData: any;
+
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(p: {
+        project: string;
+        createdBy: string | IUser;
+        data: any;
+        preData: any;
+    }) {
+        super(PROJECT_ACCESS_USER_ROLES_UPDATED, p.createdBy);
+        const { project, data, preData } = p;
+        this.project = project;
+        this.data = data;
+        this.preData = preData;
+    }
+}
+
+export class ProjectAccessGroupRolesUpdated extends BaseEvent {
+    readonly project: string;
+
+    readonly data: any;
+
+    readonly preData: any;
+
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(p: {
+        project: string;
+        createdBy: string | IUser;
+        data: any;
+        preData: any;
+    }) {
+        super(PROJECT_ACCESS_GROUP_ROLES_UPDATED, p.createdBy);
+        const { project, data, preData } = p;
+        this.project = project;
+        this.data = data;
+        this.preData = preData;
+    }
+}
+
+export class ProjectAccessUserRolesDeleted extends BaseEvent {
+    readonly project: string;
+
+    readonly data: null;
+
+    readonly preData: any;
+
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(p: {
+        project: string;
+        createdBy: string | IUser;
+        preData: any;
+    }) {
+        super(PROJECT_ACCESS_USER_ROLES_DELETED, p.createdBy);
+        const { project, preData } = p;
+        this.project = project;
+        this.data = null;
+        this.preData = preData;
+    }
+}
+
+export class ProjectAccessGroupRolesDeleted extends BaseEvent {
+    readonly project: string;
+
+    readonly data: null;
+
+    readonly preData: any;
+
+    /**
+     * @param createdBy accepts a string for backward compatibility. Prefer using IUser for standardization
+     */
+    constructor(p: {
+        project: string;
+        createdBy: string | IUser;
+        preData: any;
+    }) {
+        super(PROJECT_ACCESS_GROUP_ROLES_DELETED, p.createdBy);
+        const { project, preData } = p;
+        this.project = project;
+        this.data = null;
+        this.preData = preData;
     }
 }
 

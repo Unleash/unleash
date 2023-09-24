@@ -8,6 +8,7 @@ import { FeatureToggle, FeatureToggleDTO, IVariant } from '../types/model';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { Db } from './db';
 import { LastSeenInput } from '../services/client-metrics/last-seen-service';
+import { NameExistsError } from '../error';
 
 export type EnvironmentFeatureNames = { [key: string]: string[] };
 
@@ -173,7 +174,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const environmentArrays = this.mapMetricDataToEnvBuckets(data);
         try {
             for (const env of Object.keys(environmentArrays)) {
-                const toggleNames = environmentArrays[env];
+                const toggleNames = environmentArrays[env].sort();
                 await this.db(FEATURE_ENVIRONMENTS_TABLE)
                     .update({ last_seen_at: now })
                     .where('environment', env)
@@ -289,8 +290,16 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             return this.rowToFeature(row[0]);
         } catch (err) {
             this.logger.error('Could not insert feature, error: ', err);
+            if (
+                typeof err.detail === 'string' &&
+                err.detail.includes('already exists')
+            ) {
+                throw new NameExistsError(
+                    `Feature ${data.name} already exists`,
+                );
+            }
+            throw err;
         }
-        return undefined;
     }
 
     async update(

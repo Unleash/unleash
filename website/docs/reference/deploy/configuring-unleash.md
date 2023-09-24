@@ -20,7 +20,7 @@ In order for Unleash server to work, you need a running database and its connect
 - Used to create
   - Reset password URLs
   - Welcome link for new users
-  - Links in events for our Slack, Microsoft Teams and Datadog addons
+  - Links in events for our Slack, Microsoft Teams and Datadog integrations
 
 ### Email server details {#email-server-details}
 
@@ -95,19 +95,23 @@ unleash.start(unleashOptions);
   - `sender` - Which email should be set as sender of mails being sent from Unleash?
   - `smtpuser` - Username for your SMTP server
   - `smtppass` - Password for your SMTP server
-- ~~eventHook~~ (`function(event, data)`) - (_deprecated in Unleash 4.3_ in favor of the [Webhook addon](../addons/webhook.md). **Removed in Unleash 5**) If provided, this function will be invoked whenever a feature is mutated. The possible values for `event` are `'feature-created'`, `'feature-archived'` and `'feature-revived'`. The `data` argument contains information about the mutation. Its fields are `type` (string) - the event type (same as `event`); `createdBy` (string) - the user who performed the mutation; `data` - the contents of the change. The contents in `data` differs based on the event type; For `'feature-archived'` and `'feature-revived'`, the only field will be `name` - the name of the feature. For `'feature-created'` the data follows a schema defined in the code [here](https://github.com/Unleash/unleash/blob/7b7f0b84e8cddd5880dcf29c231672113224b9a7/src/lib/schema/feature-schema.ts#L77). See an [api here](/reference/api/legacy/unleash/admin/events).
+- ~~eventHook~~ (`function(event, data)`) - (_deprecated in Unleash 4.3_ in favor of the [Webhook integration](../integrations/webhook.md). **Removed in Unleash 5**) If provided, this function will be invoked whenever a feature is mutated. The possible values for `event` are `'feature-created'`, `'feature-archived'` and `'feature-revived'`. The `data` argument contains information about the mutation. Its fields are `type` (string) - the event type (same as `event`); `createdBy` (string) - the user who performed the mutation; `data` - the contents of the change. The contents in `data` differs based on the event type; For `'feature-archived'` and `'feature-revived'`, the only field will be `name` - the name of the feature. For `'feature-created'` the data follows a schema defined in the code [here](https://github.com/Unleash/unleash/blob/7b7f0b84e8cddd5880dcf29c231672113224b9a7/src/lib/schema/feature-schema.ts#L77). See an [api here](/reference/api/legacy/unleash/admin/events).
 - **getLogger** (function) - Used to register a [custom log provider](#how-do-i-configure-the-log-output).
 - **logLevel** (`debug` | `info` | `warn` | `error` | `fatal`) - The lowest level to log at, also configurable using environment variable `LOG_LEVEL`.
+- **enableRequestLogger** (boolean) - use this to enable logging for requested urls and response codes (default: false).
 - **preHook** (function) - this is a hook if you need to provide any middlewares to express before `unleash` adds any. Express app instance is injected as first argument.
 - **preRouterHook** (function) - use this to register custom express middlewares before the `unleash` specific routers are added.
 - **secureHeaders** (boolean) - use this to enable security headers (HSTS, CSP, etc) when serving Unleash from HTTPS. Can also be configured through the environment variable `SECURE_HEADERS`.
-- **additionalCspAllowedDomains** (CspAllowedDomains) - use this when you want to enable security headers but have additional domains you need to allow traffic to
-  - You can set the environment variable CSP_ALLOWED_DEFAULT to allow new defaultSrc (comma separated list)
-  - You can set the environment variable CSP_ALLOWED_FONT to allow new fontSrc (comma separated list)
-  - You can set the environment variable CSP_ALLOWED_STYLE to allow new styleSrc (comma separated list)
-  - You can set the environment variable CSP_ALLOWED_SCRIPT to allow new scriptSrc (comma separated list)
-  - You can set the environment variable CSP_ALLOWED_IMG to allow new imgSrc (comma separated list)
-  - You can set the environment variable CSP_ALLOWED_CONNECT to allow new connectSrc (comma separated list)
+- **additionalCspAllowedDomains** (CspAllowedDomains) - use this when you want to enable security headers but have additional domains you need to allow traffic to. You can set the following environment variables:
+  - `CSP_ALLOWED_DEFAULT` to allow new defaultSrc (comma separated list)
+  - `CSP_ALLOWED_FONT` to allow new fontSrc (comma separated list)
+  - `CSP_ALLOWED_STYLE` to allow new styleSrc (comma separated list)
+  - `CSP_ALLOWED_SCRIPT` to allow new scriptSrc (comma separated list)
+  - `CSP_ALLOWED_IMG` to allow new imgSrc (comma separated list)
+  - `CSP_ALLOWED_CONNECT` to allow new connectSrc (comma separated list)
+  - `CSP_ALLOWED_FRAME` to allow new frameSrc (comma separated listed)
+  - `CSP_ALLOWED_MEDIA` to allow new mediaSrc (comma separated list)
+  - `CSP_ALLOWED_OBJECT` to allow new objectSrc (comma separated list)
 - **server** - The server config object taking the following properties
   - _port_ - which port the unleash-server should bind to. If port is omitted or is 0, the operating system will assign an arbitrary unused port. Will be ignored if pipe is specified. This value may also be set via the `HTTP_PORT` environment variable
   - _host_ - which host the unleash-server should bind to. If host is omitted, the server will accept connections on the unspecified IPv6 address (::) when IPv6 is available, or the unspecified IPv4 address (0.0.0.0) otherwise. This value may also be set via the `HTTP_HOST` environment variable
@@ -352,7 +356,7 @@ Unleash builds directly on the [node-postgres library](https://node-postgres.com
 
 ### Proxying requests from Unleash
 
-You can configure proxy services that intercept all outgoing requests from Unleash. This lets you use the Microsoft Teams or the Webhook addon for external services, even if the internet can only be reached via a proxy on your machine or container (for example if restricted by a firewall or similiar).
+You can configure proxy services that intercept all outgoing requests from Unleash. This lets you use the Microsoft Teams or the Webhook integration for external services, even if the internet can only be reached via a proxy on your machine or container (for example if restricted by a firewall or similiar).
 
 As an example, here's how you could do it using the [node-global-proxy](https://www.npmjs.com/package/node-global-proxy) package:
 
@@ -367,6 +371,6 @@ proxy.setConfig({
 proxy.start();      //this starts the proxy, after this call all requests will be proxied
 ```
 
-Using above code-snippet, every outgoing request from unleash or its addons will be subsequently routed through set proxy. If the proxy routing needs to be bypassed or stopped, its possible to stop it by using
+Using above code-snippet, every outgoing request from unleash or its integrations will be subsequently routed through set proxy. If the proxy routing needs to be bypassed or stopped, its possible to stop it by using
 
 `proxy.stop();`

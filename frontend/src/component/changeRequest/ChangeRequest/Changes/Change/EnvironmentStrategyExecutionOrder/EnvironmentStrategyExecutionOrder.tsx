@@ -40,7 +40,7 @@ interface IEnvironmentStrategyExecutionOrderProps {
     project: string;
     environment: string;
     change: IChangeRequestReorderStrategy;
-    discard?: ReactNode;
+    actions?: ReactNode;
 }
 
 export const EnvironmentStrategyExecutionOrder = ({
@@ -48,9 +48,12 @@ export const EnvironmentStrategyExecutionOrder = ({
     environment,
     change,
     project,
-    discard,
+    actions,
 }: IEnvironmentStrategyExecutionOrderProps) => {
-    const { feature: featureData } = useFeature(project, feature);
+    const { feature: featureData, loading } = useFeature(project, feature);
+
+    if (loading) return null;
+
     const featureEnvironment = featureData.environments.find(
         ({ name }) => environment === name
     );
@@ -71,9 +74,11 @@ export const EnvironmentStrategyExecutionOrder = ({
                 .map(strategy => strategy.id) ?? [],
     };
 
-    const updatedStrategies = change.payload.map(({ id }) => {
-        return environmentStrategies.find(s => s.id === id);
-    });
+    const updatedStrategies = change.payload
+        .map(({ id }) => {
+            return environmentStrategies.find(s => s.id === id);
+        })
+        .filter(Boolean);
 
     const data = {
         strategyIds: updatedStrategies.map(strategy => strategy!.id),
@@ -96,7 +101,7 @@ export const EnvironmentStrategyExecutionOrder = ({
                 >
                     Updating strategy execution order to:
                 </TooltipLink>
-                {discard}
+                {actions}
             </StyledChangeHeader>
             <StyledStrategyExecutionWrapper>
                 {updatedStrategies.map((strategy, index) => (

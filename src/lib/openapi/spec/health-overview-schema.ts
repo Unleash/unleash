@@ -12,6 +12,7 @@ import { createFeatureStrategySchema } from './create-feature-strategy-schema';
 import { projectEnvironmentSchema } from './project-environment-schema';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
+import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema';
 
 export const healthOverviewSchema = {
     $id: '#/components/schemas/healthOverviewSchema',
@@ -53,7 +54,7 @@ export const healthOverviewSchema = {
         },
         mode: {
             type: 'string',
-            enum: ['open', 'protected'],
+            enum: ['open', 'protected', 'private'],
             example: 'open',
             description:
                 "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
@@ -117,6 +118,9 @@ export const healthOverviewSchema = {
             $ref: '#/components/schemas/projectStatsSchema',
             description: 'Project statistics',
         },
+        featureNaming: {
+            $ref: '#/components/schemas/createFeatureNamingPatternSchema',
+        },
     },
     components: {
         schemas: {
@@ -133,6 +137,7 @@ export const healthOverviewSchema = {
             strategyVariantSchema,
             variantSchema,
             projectStatsSchema,
+            createFeatureNamingPatternSchema,
         },
     },
 } as const;

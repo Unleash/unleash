@@ -73,13 +73,24 @@ export const ChangeRequestProcessHelp: VFC<
                             <ul>
                                 <li>
                                     If changes are Approved then someone who has{' '}
-                                    <strong>“Apply change request”</strong>{' '}
+                                    <strong>
+                                        “Apply/Reject change request”
+                                    </strong>{' '}
                                     permission needs to apply these changes to
                                     be live on the feature toggles and request
                                     is Closed
                                 </li>
                                 <li>
-                                    If changes are Cancelled by the author or
+                                    If changes are Rejected bu someone who has{' '}
+                                    <strong>
+                                        “Apply/Reject change request”
+                                    </strong>{' '}
+                                    permission or an admin then change request
+                                    goes automatically to Rejected and request
+                                    is Closed.
+                                </li>
+                                <li>
+                                    If changes are Cancelled by the author or an
                                     admin then change request goes automatically
                                     to Cancelled and request is Closed.
                                 </li>

@@ -15,7 +15,6 @@ import { strategyVariantSchema } from './strategy-variant-schema';
 export const stateSchema = {
     $id: '#/components/schemas/stateSchema',
     type: 'object',
-    additionalProperties: true,
     deprecated: true,
     description:
         'The application state as used by the deprecated export/import APIs.',

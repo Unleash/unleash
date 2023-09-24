@@ -170,7 +170,10 @@ const defaultServerOption: IServerOption = {
         parseEnvVarNumber(process.env.SERVER_KEEPALIVE_TIMEOUT, 15),
     ),
     headersTimeout: secondsToMilliseconds(61),
-    enableRequestLogger: false,
+    enableRequestLogger: parseEnvVarBoolean(
+        process.env.REQUEST_LOGGER_ENABLE,
+        false,
+    ),
     gracefulShutdownEnable: parseEnvVarBoolean(
         process.env.GRACEFUL_SHUTDOWN_ENABLE,
         true,
@@ -313,6 +316,9 @@ const parseCspConfig = (
         imgSrc: cspConfig.imgSrc || [],
         styleSrc: cspConfig.styleSrc || [],
         connectSrc: cspConfig.connectSrc || [],
+        mediaSrc: cspConfig.mediaSrc || [],
+        objectSrc: cspConfig.objectSrc || [],
+        frameSrc: cspConfig.frameSrc || [],
     };
 };
 
@@ -323,6 +329,10 @@ const parseCspEnvironmentVariables = (): ICspDomainConfig => {
     const scriptSrc = process.env.CSP_ALLOWED_SCRIPT?.split(',') || [];
     const imgSrc = process.env.CSP_ALLOWED_IMG?.split(',') || [];
     const connectSrc = process.env.CSP_ALLOWED_CONNECT?.split(',') || [];
+    const mediaSrc = process.env.CSP_ALLOWED_MEDIA?.split(',') || [];
+    const objectSrc = process.env.CSP_ALLOWED_OBJECT?.split(',') || [];
+    const frameSrc = process.env.CSP_ALLOWED_FRAME?.split(',') || [];
+
     return {
         defaultSrc,
         fontSrc,
@@ -330,6 +340,9 @@ const parseCspEnvironmentVariables = (): ICspDomainConfig => {
         scriptSrc,
         imgSrc,
         connectSrc,
+        mediaSrc,
+        objectSrc,
+        frameSrc,
     };
 };
 
@@ -468,6 +481,11 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const clientFeatureCaching = loadClientCachingOptions(options);
 
     const prometheusApi = options.prometheusApi || process.env.PROMETHEUS_API;
+
+    const isEnterprise =
+        Boolean(options.enterpriseVersion) &&
+        ui.environment?.toLowerCase() !== 'pro';
+
     return {
         db,
         session,
@@ -499,6 +517,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         accessControlMaxAge,
         prometheusApi,
         publicFolder: options.publicFolder,
+        disableScheduler: options.disableScheduler,
+        isEnterprise: isEnterprise,
     };
 }
 

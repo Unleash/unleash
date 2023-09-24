@@ -11,11 +11,14 @@ const useFeatureApi = () => {
         propagateErrors: true,
     });
 
-    const validateFeatureToggleName = async (name: string | undefined) => {
+    const validateFeatureToggleName = async (
+        name: string | undefined,
+        project: string | undefined
+    ) => {
         const path = `api/admin/features/validate`;
         const req = createRequest(path, {
             method: 'POST',
-            body: JSON.stringify({ name }),
+            body: JSON.stringify({ name, projectId: project }),
         });
 
         try {
@@ -193,8 +196,12 @@ const useFeatureApi = () => {
         type: string,
         value: string
     ) => {
+        const encodedTagPath = `${encodeURIComponent(
+            type
+        )}/${encodeURIComponent(value)}`;
+
         // TODO: Change this path to the new API when moved.
-        const path = `api/admin/features/${featureId}/tags/${type}/${value}`;
+        const path = `api/admin/features/${featureId}/tags/${encodedTagPath}`;
         const req = createRequest(path, {
             method: 'DELETE',
         });

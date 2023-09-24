@@ -29,6 +29,11 @@ export const useImportApi = () => {
             });
             return res;
         } catch (e) {
+            trackEvent('export_import', {
+                props: {
+                    eventType: `features import failed`,
+                },
+            });
             throw e;
         }
     };

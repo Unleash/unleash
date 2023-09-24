@@ -93,10 +93,15 @@ export const ProjectAccessTable: VFC = () => {
     const { setToastData } = useToast();
 
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
-    const { removeUserFromRole, removeGroupFromRole } = useProjectApi();
+    const { removeUserAccess, removeGroupAccess } = useProjectApi();
     const [removeOpen, setRemoveOpen] = useState(false);
     const [groupOpen, setGroupOpen] = useState(false);
     const [selectedRow, setSelectedRow] = useState<IProjectAccess>();
+
+    const roleText = (roles: number[]): string =>
+        roles.length > 1
+            ? `${roles.length} roles`
+            : access?.roles.find(({ id }) => id === roles[0])?.name || '';
 
     const columns = useMemo(
         () => [
@@ -150,12 +155,14 @@ export const ProjectAccessTable: VFC = () => {
             {
                 id: 'role',
                 Header: 'Role',
-                accessor: (row: IProjectAccess) =>
-                    access?.roles.find(({ id }) => id === row.entity.roleId)
-                        ?.name,
-                Cell: ({ value, row: { original: row } }: any) => (
-                    <RoleCell roleId={row.entity.roleId} value={value} />
-                ),
+                accessor: (row: IProjectAccess) => roleText(row.entity.roles),
+                Cell: ({
+                    value,
+                    row: { original: row },
+                }: {
+                    row: { original: IProjectAccess };
+                    value: string;
+                }) => <RoleCell value={value} roles={row.entity.roles} />,
                 maxWidth: 125,
                 filterName: 'role',
             },
@@ -345,7 +352,7 @@ export const ProjectAccessTable: VFC = () => {
 
     const removeAccess = async (userOrGroup?: IProjectAccess) => {
         if (!userOrGroup) return;
-        const { id, roleId } = userOrGroup.entity;
+        const { id } = userOrGroup.entity;
         let name = userOrGroup.entity.name;
         if (userOrGroup.type !== ENTITY_TYPE.GROUP) {
             const user = userOrGroup.entity as IUser;
@@ -354,9 +361,9 @@ export const ProjectAccessTable: VFC = () => {
 
         try {
             if (userOrGroup.type !== ENTITY_TYPE.GROUP) {
-                await removeUserFromRole(projectId, roleId, id);
+                await removeUserAccess(projectId, id);
             } else {
-                await removeGroupFromRole(projectId, roleId, id);
+                await removeGroupAccess(projectId, id);
             }
             refetchProjectAccess();
             setToastData({
@@ -481,11 +488,17 @@ export const ProjectAccessTable: VFC = () => {
                 setOpen={setGroupOpen}
                 group={selectedRow?.entity as IGroup}
                 projectId={projectId}
-                subtitle={`Role: ${
-                    access?.roles.find(
-                        ({ id }) => id === selectedRow?.entity.roleId
-                    )?.name
-                }`}
+                subtitle={
+                    <>
+                        {selectedRow && selectedRow.entity.roles.length > 1
+                            ? 'Roles:'
+                            : 'Role:'}
+                        <RoleCell
+                            value={roleText(selectedRow?.entity.roles || [])}
+                            roles={selectedRow?.entity.roles || []}
+                        />
+                    </>
+                }
                 onEdit={() => {
                     navigate(`edit/group/${selectedRow?.entity.id}`);
                 }}

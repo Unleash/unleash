@@ -1,4 +1,4 @@
-import { FC, VFC } from 'react';
+import { VFC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -64,22 +64,6 @@ export const Separator = () => (
     >
         |
     </Typography>
-);
-
-export const UpdateCount: FC<{ count: number }> = ({ count }) => (
-    <Box>
-        <Typography component="span" variant="body1" color="text.secondary">
-            Updates:{' '}
-        </Typography>
-        <Typography
-            component="span"
-            sx={{
-                fontWeight: 'bold',
-            }}
-        >
-            {count} {count === 1 ? 'feature toggle' : 'feature toggles'}
-        </Typography>
-    </Box>
 );
 
 export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({

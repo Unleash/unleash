@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`updateEnvironmentSchema 1`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "additional",
+      },
+      "schemaPath": "#/additionalProperties",
+    },
+  ],
+  "schema": "#/components/schemas/adminSegmentSchema",
+}
+`;
+
+exports[`updateEnvironmentSchema 2`] = `undefined`;
+
+exports[`updateEnvironmentSchema 3`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'id'",
+      "params": {
+        "missingProperty": "id",
+      },
+      "schemaPath": "#/required",
+    },
+  ],
+  "schema": "#/components/schemas/adminSegmentSchema",
+}
+`;
+
+exports[`updateEnvironmentSchema 4`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "type",
+      "message": "must be object",
+      "params": {
+        "type": "object",
+      },
+      "schemaPath": "#/type",
+    },
+  ],
+  "schema": "#/components/schemas/adminSegmentSchema",
+}
+`;

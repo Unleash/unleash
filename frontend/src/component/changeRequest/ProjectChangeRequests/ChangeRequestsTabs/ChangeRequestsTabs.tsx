@@ -3,12 +3,15 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import {
     SortableTableHeader,
     Table,
+    TableBody,
     TableCell,
     TablePlaceholder,
+    TableRow,
 } from 'component/common/Table';
 import { SortingRule, useSortBy, useTable } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { styled, Tab, Tabs, useMediaQuery } from '@mui/material';
+import { Box, styled, Tab, Tabs, useMediaQuery } from '@mui/material';
+import { Link, useSearchParams } from 'react-router-dom';
 import { sortTypes } from 'utils/sortTypes';
 import { useEffect, useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -16,17 +19,16 @@ import { Search } from 'component/common/Search/Search';
 import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
 import { useSearch } from 'hooks/useSearch';
-import { useSearchParams } from 'react-router-dom';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ChangeRequestStatusCell } from './ChangeRequestStatusCell';
 import { AvatarCell } from './AvatarCell';
 import { ChangeRequestTitleCell } from './ChangeRequestTitleCell';
-import { TableBody, TableRow } from 'component/common/Table';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useStyles } from './ChangeRequestsTabs.styles';
 import { FeaturesCell } from './FeaturesCell';
+import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
 
 export interface IChangeRequestTableProps {
     changeRequests: any[];
@@ -52,6 +54,12 @@ const StyledTabButton = styled(Tab)(({ theme }) => ({
     },
 }));
 
+const ConftigurationLinkBox = styled(Box)(({ theme }) => ({
+    textAlign: 'right',
+    paddingBottom: theme.spacing(2),
+    fontSize: theme.fontSizes.smallBody,
+}));
+
 export const ChangeRequestsTabs = ({
     changeRequests = [],
     loading,
@@ -72,11 +80,13 @@ export const ChangeRequestsTabs = ({
         const open = changeRequests.filter(
             changeRequest =>
                 changeRequest.state !== 'Cancelled' &&
+                changeRequest.state !== 'Rejected' &&
                 changeRequest.state !== 'Applied'
         );
         const closed = changeRequests.filter(
             changeRequest =>
                 changeRequest.state === 'Cancelled' ||
+                changeRequest.state === 'Rejected' ||
                 changeRequest.state === 'Applied'
         );
 
@@ -112,6 +122,21 @@ export const ChangeRequestsTabs = ({
                 Header: 'Updated feature toggles',
                 canSort: false,
                 accessor: 'features',
+                searchable: true,
+                filterName: 'feature',
+                filterParsing: (values: Array<{ name: string }>) => {
+                    return values?.map(({ name }) => name).join('\n') || '';
+                },
+                filterBy: (
+                    row: { features: Array<{ name: string }> },
+                    values: Array<string>
+                ) => {
+                    return row.features.find(feature =>
+                        values
+                            .map(value => value.toLowerCase())
+                            .includes(feature.name.toLowerCase())
+                    );
+                },
                 Cell: ({
                     value,
                     row: {
@@ -132,11 +157,14 @@ export const ChangeRequestsTabs = ({
                 canSort: false,
                 Cell: AvatarCell,
                 align: 'left',
+                searchable: true,
+                filterName: 'by',
+                filterParsing: (value: { username?: string }) =>
+                    value?.username || '',
             },
             {
                 Header: 'Submitted',
                 accessor: 'createdAt',
-                searchable: true,
                 maxWidth: 100,
                 Cell: TimeAgoCell,
                 sortType: 'alphanumeric',
@@ -146,7 +174,8 @@ export const ChangeRequestsTabs = ({
                 accessor: 'environment',
                 searchable: true,
                 maxWidth: 100,
-                Cell: TextCell,
+                Cell: HighlightCell,
+                filterName: 'environment',
             },
             {
                 Header: 'Status',
@@ -154,6 +183,7 @@ export const ChangeRequestsTabs = ({
                 searchable: true,
                 maxWidth: '170px',
                 Cell: ChangeRequestStatusCell,
+                filterName: 'status',
             },
         ],
         //eslint-disable-next-line
@@ -271,15 +301,23 @@ export const ChangeRequestsTabs = ({
                     }
                     actions={
                         <Search
+                            placeholder="Search and Filter"
+                            expandable
                             initialValue={searchValue}
                             onChange={setSearchValue}
                             hasFilters
                             getSearchContext={getSearchContext}
+                            id="changeRequestList"
                         />
                     }
                 />
             }
         >
+            <ConftigurationLinkBox>
+                <Link to={`/projects/${projectId}/settings/change-requests`}>
+                    Change request configuration
+                </Link>
+            </ConftigurationLinkBox>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <Table {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups} />

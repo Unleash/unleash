@@ -1,14 +1,19 @@
-type Dict<T> = { [K in keyof T]: string[] };
+type Dict<T> = { [K in keyof T]: (string | number)[] };
 
 export const splitByComma = <T extends Record<string, unknown>>(
     obj: T,
-): Dict<T> =>
-    Object.fromEntries(
-        Object.entries(obj).map(([key, value]) => [
-            key,
-            typeof value === 'string' ? value.split(',') : [value],
-        ]),
-    ) as Dict<T>;
+): Dict<T> => {
+    return Object.entries(obj).reduce((acc, [key, value]) => {
+        if (key === 'properties' && typeof value === 'object') {
+            const nested = splitByComma(value as any);
+            return { ...acc, ...nested };
+        } else if (typeof value === 'string') {
+            return { ...acc, [key]: value.split(',') };
+        } else {
+            return { ...acc, [key]: [value] };
+        }
+    }, {} as Dict<T>);
+};
 
 export const generateCombinations = <T extends Record<string, unknown>>(
     obj: Dict<T>,

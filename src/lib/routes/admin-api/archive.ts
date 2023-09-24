@@ -122,11 +122,13 @@ export default class ArchiveController extends Controller {
     }
 
     async getArchivedFeatures(
-        req: Request,
+        req: IAuthRequest,
         res: Response<FeaturesSchema>,
     ): Promise<void> {
+        const { user } = req;
         const features = await this.featureService.getMetadataForAllFeatures(
             true,
+            user.id,
         );
         this.openApiService.respondWithValidation(
             200,
@@ -170,7 +172,7 @@ export default class ArchiveController extends Controller {
     ): Promise<void> {
         const userName = extractUsername(req);
         const { featureName } = req.params;
-        await this.featureService.reviveToggle(featureName, userName);
+        await this.featureService.reviveFeature(featureName, userName);
         res.status(200).end();
     }
 }

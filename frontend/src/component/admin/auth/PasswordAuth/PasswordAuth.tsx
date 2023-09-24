@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
 import { Alert } from '@mui/material';
-import { PageContent } from 'component/common/PageContent/PageContent';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useAuthSettingsApi, {
     ISimpleAuthSettings,
@@ -63,7 +62,7 @@ export const PasswordAuth = () => {
     };
 
     return (
-        <PageContent>
+        <>
             <form onSubmit={onSubmit}>
                 <Alert severity="info" sx={{ mb: 3 }}>
                     Overview of administrators on your Unleash instance:
@@ -134,6 +133,6 @@ export const PasswordAuth = () => {
                     tokens={tokens}
                 />
             </form>
-        </PageContent>
+        </>
     );
 };

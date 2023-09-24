@@ -14,12 +14,12 @@ import FakeEventStore from '../../test/fixtures/fake-event-store';
 import { IRole } from 'lib/types/stores/access-store';
 import { IGroup } from 'lib/types';
 
-function getSetup(customRootRoles: boolean = false) {
+function getSetup(customRootRolesKillSwitch: boolean = true) {
     const config = createTestConfig({
         getLogger,
         experimental: {
             flags: {
-                customRootRoles: customRootRoles,
+                customRootRolesKillSwitch,
             },
         },
     });
@@ -154,6 +154,7 @@ test('should be able to validate and cleanup with additional properties', async 
         permissions: [
             {
                 id: 1,
+                name: 'name',
                 environment: 'development',
             },
         ],
@@ -161,7 +162,7 @@ test('should be able to validate and cleanup with additional properties', async 
 });
 
 test('user with custom root role should get a user root role', async () => {
-    const { accessService } = getSetup(true);
+    const { accessService } = getSetup(false);
     const customRootRole = await accessService.createRole({
         name: 'custom-root-role',
         description: 'test custom root role',
@@ -185,17 +186,12 @@ test('throws error when trying to delete a project role in use by group', async 
     };
     const config = createTestConfig({
         getLogger,
-        experimental: {
-            flags: {
-                customRootRoles: false,
-            },
-        },
     });
 
     const eventStore = new FakeEventStore();
     const groupStore = new FakeGroupStore();
     groupStore.getAllWithId = async (): Promise<IGroup[]> => {
-        return [{ name: 'group' }];
+        return [{ id: 1, name: 'group' }];
     };
     const accountStore = new FakeAccountStore();
     const roleStore = new FakeRoleStore();

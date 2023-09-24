@@ -16,6 +16,7 @@ import { useCurrentStrategy } from './hooks/useCurrentStrategy';
 import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
+import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -25,7 +26,8 @@ export const ChangeItemWrapper = styled(Box)({
 
 const ChangeItemCreateEditWrapper = styled(Box)(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'auto 40px',
+    gridTemplateColumns: 'auto auto',
+    justifyContent: 'space-between',
     gap: theme.spacing(1),
     alignItems: 'center',
     marginBottom: theme.spacing(2),
@@ -39,6 +41,14 @@ const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     flexGrow: 1,
     gap: theme.spacing(1),
+}));
+
+const StyledBox: FC = styled(Box)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+}));
+
+const StyledTypography: FC = styled(Typography)(({ theme }) => ({
+    margin: `${theme.spacing(1)} 0`,
 }));
 
 const hasNameField = (payload: unknown): payload is { name: string } =>
@@ -101,7 +111,7 @@ const EditHeader: VFC<{
 };
 
 export const StrategyChange: VFC<{
-    discard?: ReactNode;
+    actions?: ReactNode;
     change:
         | IChangeRequestAddStrategy
         | IChangeRequestDeleteStrategy
@@ -109,13 +119,26 @@ export const StrategyChange: VFC<{
     environmentName: string;
     featureName: string;
     projectId: string;
-}> = ({ discard, change, featureName, environmentName, projectId }) => {
+}> = ({ actions, change, featureName, environmentName, projectId }) => {
     const currentStrategy = useCurrentStrategy(
         change,
         projectId,
         featureName,
         environmentName
     );
+
+    const isStrategyAction =
+        change.action === 'addStrategy' || change.action === 'updateStrategy';
+
+    const featureStrategyVariantsDisplay =
+        isStrategyAction && change.payload.variants ? (
+            <StyledBox>
+                <StyledTypography>
+                    Updating feature variants to:
+                </StyledTypography>
+                <EnvironmentVariantsTable variants={change.payload.variants} />
+            </StyledBox>
+        ) : null;
 
     return (
         <>
@@ -145,9 +168,10 @@ export const StrategyChange: VFC<{
                                 />
                             </div>
                         </ChangeItemInfo>
-                        <div>{discard}</div>
+                        <div>{actions}</div>
                     </ChangeItemCreateEditWrapper>
                     <StrategyExecution strategy={change.payload} />
+                    {featureStrategyVariantsDisplay}
                 </>
             )}
             {change.action === 'deleteStrategy' && (
@@ -169,7 +193,7 @@ export const StrategyChange: VFC<{
                             </StrategyTooltipLink>
                         )}
                     </ChangeItemInfo>
-                    <div>{discard}</div>
+                    <div>{actions}</div>
                 </ChangeItemWrapper>
             )}
             {change.action === 'updateStrategy' && (
@@ -190,7 +214,7 @@ export const StrategyChange: VFC<{
                                 />
                             </StrategyTooltipLink>
                         </ChangeItemInfo>
-                        <div>{discard}</div>
+                        <div>{actions}</div>
                     </ChangeItemCreateEditWrapper>
                     <ConditionallyRender
                         condition={
@@ -214,6 +238,7 @@ export const StrategyChange: VFC<{
                         }
                     />
                     <StrategyExecution strategy={change.payload} />
+                    {featureStrategyVariantsDisplay}
                 </>
             )}
         </>

@@ -9,6 +9,7 @@ import {
 import { playgroundConstraintSchema } from './playground-constraint-schema';
 import { playgroundSegmentSchema } from './playground-segment-schema';
 import { sdkContextSchema } from './sdk-context-schema';
+import { sdkFlatContextSchema } from './sdk-flat-context-schema';
 
 export const advancedPlaygroundEnvironmentFeatureSchema = {
     $id: '#/components/schemas/advancedPlaygroundEnvironmentFeatureSchema',
@@ -40,7 +41,7 @@ export const advancedPlaygroundEnvironmentFeatureSchema = {
         },
         context: {
             description: 'The context to use when evaluating toggles',
-            $ref: sdkContextSchema.$id,
+            $ref: sdkFlatContextSchema.$id,
         },
         projectId: {
             type: 'string',
@@ -144,6 +145,7 @@ export const advancedPlaygroundEnvironmentFeatureSchema = {
             parametersSchema,
             variantSchema,
             overrideSchema,
+            sdkFlatContextSchema,
             sdkContextSchema,
         },
         variants: { type: 'array', items: { $ref: variantSchema.$id } },

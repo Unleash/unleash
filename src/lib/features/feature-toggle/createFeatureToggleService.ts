@@ -39,6 +39,12 @@ import {
     createFakeSegmentService,
     createSegmentService,
 } from '../segment/createSegmentService';
+import StrategyStore from '../../db/strategy-store';
+import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
+import {
+    createFakePrivateProjectChecker,
+    createPrivateProjectChecker,
+} from '../private-project/createPrivateProjectChecker';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -76,6 +82,7 @@ export const createFeatureToggleService = (
         flagResolver,
     );
     const groupStore = new GroupStore(db);
+    const strategyStore = new StrategyStore(db, getLogger);
     const accountStore = new AccountStore(db, getLogger);
     const accessStore = new AccessStore(db, eventBus, getLogger);
     const roleStore = new RoleStore(db, eventBus, getLogger);
@@ -95,6 +102,9 @@ export const createFeatureToggleService = (
         db,
         config,
     );
+
+    const privateProjectChecker = createPrivateProjectChecker(db, config);
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -105,11 +115,13 @@ export const createFeatureToggleService = (
             featureTagStore,
             featureEnvironmentStore,
             contextFieldStore,
+            strategyStore,
         },
         { getLogger, flagResolver },
         segmentService,
         accessService,
         changeRequestAccessReadModel,
+        privateProjectChecker,
     );
     return featureToggleService;
 };
@@ -119,6 +131,7 @@ export const createFakeFeatureToggleService = (
 ): FeatureToggleService => {
     const { getLogger, flagResolver } = config;
     const eventStore = new FakeEventStore();
+    const strategyStore = new FakeStrategiesStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const featureToggleStore = new FakeFeatureToggleStore();
     const featureToggleClientStore = new FakeFeatureToggleClientStore();
@@ -142,6 +155,7 @@ export const createFakeFeatureToggleService = (
     );
     const segmentService = createFakeSegmentService(config);
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
+    const fakeprivateProjectChecker = createFakePrivateProjectChecker();
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -152,11 +166,13 @@ export const createFakeFeatureToggleService = (
             featureTagStore,
             featureEnvironmentStore,
             contextFieldStore,
+            strategyStore,
         },
         { getLogger, flagResolver },
         segmentService,
         accessService,
         changeRequestAccessReadModel,
+        fakeprivateProjectChecker,
     );
     return featureToggleService;
 };

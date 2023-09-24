@@ -1,5 +1,4 @@
-import { IUnleashConfig } from '../types/option';
-import { IUnleashStores } from '../types/stores';
+import { IUnleashConfig, IUnleashStores } from '../types';
 
 import EventStore from './event-store';
 import FeatureToggleStore from './feature-toggle-store';
@@ -37,6 +36,8 @@ import { AccountStore } from './account-store';
 import ProjectStatsStore from './project-stats-store';
 import { Db } from './db';
 import { ImportTogglesStore } from '../features/export-import-toggles/import-toggles-store';
+import PrivateProjectStore from '../features/private-project/privateProjectStore';
+import { DependentFeaturesStore } from '../features/dependent-features/dependent-features-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -129,6 +130,8 @@ export const createStores = (
         ),
         projectStatsStore: new ProjectStatsStore(db, eventBus, getLogger),
         importTogglesStore: new ImportTogglesStore(db),
+        privateProjectStore: new PrivateProjectStore(db, getLogger),
+        dependentFeaturesStore: new DependentFeaturesStore(db),
     };
 };
 

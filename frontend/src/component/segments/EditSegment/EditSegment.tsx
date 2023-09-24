@@ -76,8 +76,6 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
     const highestPermissionChangeRequestEnv =
         useHighestPermissionChangeRequestEnvironment(segment?.project);
     const changeRequestEnv = highestPermissionChangeRequestEnv();
-    const activateSegmentChangeRequests =
-        uiConfig?.flags?.segmentChangeRequests && changeRequestEnv;
     const { addChange } = useChangeRequestApi();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -85,7 +83,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
             e.preventDefault();
             clearErrors();
             try {
-                if (activateSegmentChangeRequests) {
+                if (changeRequestEnv) {
                     await addChange(segment.project || '', changeRequestEnv, {
                         action: 'updateSegment',
                         feature: null,
@@ -102,9 +100,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
                 }
                 setToastData({
                     title: `Segment ${
-                        activateSegmentChangeRequests
-                            ? 'change added to draft'
-                            : 'updated'
+                        changeRequestEnv ? 'change added to draft' : 'updated'
                     }`,
                     type: 'success',
                 });
@@ -143,7 +139,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
                     disabled={!hasValidConstraints || overSegmentValuesLimit}
                     data-testid={SEGMENT_SAVE_BTN_ID}
                 >
-                    {activateSegmentChangeRequests ? 'Add to draft' : 'Save'}
+                    {changeRequestEnv ? 'Add to draft' : 'Save'}
                 </UpdateButton>
             </SegmentForm>
         </FormTemplate>

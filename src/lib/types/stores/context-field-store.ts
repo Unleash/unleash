@@ -2,11 +2,11 @@ import { Store } from './store';
 
 export interface IContextFieldDto {
     name: string;
-    description?: string;
+    description?: string | null;
     stickiness?: boolean;
     sortOrder?: number;
-    usedInProjects?: number;
-    usedInFeatures?: number;
+    usedInProjects?: number | null;
+    usedInFeatures?: number | null;
     legalValues?: ILegalValue[];
 }
 

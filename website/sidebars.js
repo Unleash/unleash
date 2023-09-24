@@ -28,7 +28,7 @@ module.exports = {
                 'tutorials/quickstart',
             ],
         },
-        {
+         {
             label: 'Topic guides',
             collapsed: false,
             type: 'category',
@@ -36,15 +36,51 @@ module.exports = {
                 type: 'generated-index',
                 title: 'Topic guides',
                 description:
-                    'Discussions, explanations, and explorations regarding topics related to Unleash.',
+                    'Discussions, explanations, and explorations regarding topics related to feature flags and Unleash.',
                 slug: '/topics',
             },
             items: [
+                {
+                    type: 'category',
+                    label: '11 Principles for building and scaling feature flag systems',
+                    link: {
+                        type: 'doc',
+                        id: 'topics/feature-flags/feature-flag-best-practices',
+                    },
+                    items: [
+                        'topics/feature-flags/runtime-control',
+                        'topics/feature-flags/never-expose-pii',
+                        'topics/feature-flags/evaluate-flags-close-to-user',
+                        'topics/feature-flags/scale-horizontally',
+                        'topics/feature-flags/limit-payloads',
+                        'topics/feature-flags/availability-over-consistency',
+                        'topics/feature-flags/short-lived-feature-flags',
+                        'topics/feature-flags/unique-names',
+                        'topics/feature-flags/democratize-feature-flag-access',
+                        'topics/feature-flags/prioritize-ux',
+                        'topics/feature-flags/enable-traceability',
+                    ],
+                },
                 'topics/the-anatomy-of-unleash',
                 'topics/a-b-testing',
+                {
+                    type: 'category',
+                    label: 'Feature Flag Migrations',
+                    link: {
+                        type: 'doc',
+                        id: 'topics/feature-flag-migration/feature-flag-migration-best-practices',
+                    },
+                    items: [
+                        'topics/feature-flag-migration/feature-flag-migration-scope',
+                        'topics/feature-flag-migration/business-case-feature-flag-migration',
+                        'topics/feature-flag-migration/planning-feature-flag-migration',
+                        'topics/feature-flag-migration/how-to-execute-feature-flag-migration',
+                        'topics/feature-flag-migration/onbording-users-to-feature-flag-service',
+                    ],
+                },
+                'topics/data-collection',
                 'topics/managing-constraints',
                 'topics/proxy-hosting',
-                'topics/data-collection',
             ],
         },
         {
@@ -92,6 +128,7 @@ module.exports = {
                     label: 'Feature flags, strategies, context',
                     items: [
                         'how-to/how-to-add-strategy-constraints',
+                        'how-to/how-to-add-feature-flag-naming-patterns',
                         'how-to/how-to-capture-impression-data',
                         'how-to/how-to-create-feature-toggles',
                         'how-to/how-to-define-custom-context-fields',
@@ -123,6 +160,7 @@ module.exports = {
                     label: 'Users and permissions',
                     items: [
                         'how-to/how-to-add-users-to-unleash',
+                        'how-to/how-to-create-and-assign-custom-root-roles',
                         'how-to/how-to-create-and-assign-custom-project-roles',
                         'how-to/how-to-create-and-manage-user-groups',
                         'how-to/how-to-set-up-group-sso-sync',
@@ -153,7 +191,22 @@ module.exports = {
                         slug: '/how-to/sso',
                     },
                 },
-                ,
+                {
+                    label: 'Troubleshooting',
+                    items: [
+                        'how-to/how-to-troubleshoot-flag-exposure',
+                        'how-to/how-to-troubleshoot-flag-not-returned',
+                        'how-to/how-to-troubleshoot-cors',
+                    ],
+                    type: 'category',
+                    link: {
+                        type: 'generated-index',
+                        title: 'How-to: troubleshooting',
+                        description:
+                            'Troubleshooting common problems. If you want to contribute, please make sure the title is phrased as a concrete user problem',
+                        slug: '/how-to/troubleshooting',
+                    },
+                },
             ],
         },
         {
@@ -168,17 +221,6 @@ module.exports = {
                 slug: '/reference',
             },
             items: [
-                {
-                    type: 'category',
-                    link: { type: 'doc', id: 'reference/addons/index' },
-                    items: [
-                        'reference/addons/datadog',
-                        'reference/addons/slack',
-                        'reference/addons/teams',
-                        'reference/addons/webhook',
-                    ],
-                    label: 'Addons',
-                },
                 {
                     type: 'category',
                     label: 'APIs',
@@ -292,12 +334,9 @@ module.exports = {
                 },
                 {
                     type: 'category',
-                    label: 'Integrations',
-                    link: {
-                        type: 'doc',
-                        id: 'reference/integrations/integrations',
-                    },
+                    link: { type: 'doc', id: 'reference/integrations/index' },
                     items: [
+                        'reference/integrations/datadog',
                         {
                             'Jira Server': [
                                 'reference/integrations/jira-server-plugin-installation',
@@ -308,8 +347,12 @@ module.exports = {
                                 'reference/integrations/jira-cloud-plugin-usage',
                             ],
                         },
-                        ,
+                        'reference/integrations/slack-app',
+                        'reference/integrations/slack',
+                        'reference/integrations/teams',
+                        'reference/integrations/webhook',
                     ],
+                    label: 'Integrations',
                 },
                 {
                     type: 'category',
@@ -330,7 +373,8 @@ module.exports = {
                         'reference/impression-data',
                         'reference/custom-activation-strategies',
                         'reference/environments',
-                        'reference/feature-strategy-variants',
+                        'reference/strategy-variants',
+                        'reference/feature-flag-naming-patterns',
                         'reference/feature-toggles',
                         'reference/feature-toggle-types',
                         'reference/feature-toggle-variants',

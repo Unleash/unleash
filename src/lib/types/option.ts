@@ -118,6 +118,7 @@ export interface IUnleashOptions {
     accessControlMaxAge?: number;
     prometheusApi?: string;
     publicFolder?: string;
+    disableScheduler?: boolean;
 }
 
 export interface IEmailOption {
@@ -161,6 +162,9 @@ export interface ICspDomainOptions {
     scriptSrc?: string[];
     imgSrc?: string[];
     connectSrc?: string[];
+    frameSrc?: string[];
+    objectSrc?: string[];
+    mediaSrc?: string[];
 }
 
 export interface ICspDomainConfig {
@@ -170,6 +174,9 @@ export interface ICspDomainConfig {
     scriptSrc: string[];
     imgSrc: string[];
     connectSrc: string[];
+    frameSrc: string[];
+    objectSrc: string[];
+    mediaSrc: string[];
 }
 
 interface IFrontendApi {
@@ -207,4 +214,6 @@ export interface IUnleashConfig {
     accessControlMaxAge: number;
     prometheusApi?: string;
     publicFolder?: string;
+    disableScheduler?: boolean;
+    isEnterprise: boolean;
 }

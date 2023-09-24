@@ -11,9 +11,14 @@ import { FeatureStrategySchema } from '../../../lib/openapi';
 import User from '../../../lib/types/user';
 import { IConstraint, IVariant, SKIP_CHANGE_REQUEST } from '../../../lib/types';
 import EnvironmentService from '../../../lib/services/environment-service';
-import { ForbiddenError, PermissionError } from '../../../lib/error';
+import {
+    ForbiddenError,
+    PatternError,
+    PermissionError,
+} from '../../../lib/error';
 import { ISegmentService } from '../../../lib/segments/segment-service-interface';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
+import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
 
 let stores;
 let db;
@@ -33,7 +38,9 @@ const mockConstraints = (): IConstraint[] => {
 const irrelevantDate = new Date();
 
 beforeAll(async () => {
-    const config = createTestConfig();
+    const config = createTestConfig({
+        experimental: { flags: { featureNamingPattern: true } },
+    });
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',
         config.getLogger,
@@ -52,12 +59,17 @@ beforeAll(async () => {
         changeRequestAccessReadModel,
         config,
     );
+    const privateProjectChecker = createPrivateProjectChecker(
+        db.rawDatabase,
+        config,
+    );
     service = new FeatureToggleService(
         stores,
         config,
         segmentService,
         accessService,
         changeRequestAccessReadModel,
+        privateProjectChecker,
     );
 });
 
@@ -139,6 +151,7 @@ test('Should be able to get strategy by id', async () => {
     const config: Omit<FeatureStrategySchema, 'id'> = {
         name: 'default',
         constraints: [],
+        variants: [],
         parameters: {},
         title: 'some-title',
     };
@@ -442,6 +455,10 @@ test('If change requests are enabled, cannot change variants without going via C
         db.rawDatabase,
         accessService,
     );
+    const privateProjectChecker = createPrivateProjectChecker(
+        db.rawDatabase,
+        unleashConfig,
+    );
     // Force all feature flags on to make sure we have Change requests on
     const customFeatureService = new FeatureToggleService(
         stores,
@@ -454,6 +471,7 @@ test('If change requests are enabled, cannot change variants without going via C
         segmentService,
         accessService,
         changeRequestAccessReadModel,
+        privateProjectChecker,
     );
 
     const newVariant: IVariant = {
@@ -525,6 +543,10 @@ test('If CRs are protected for any environment in the project stops bulk update 
         db.rawDatabase,
         accessService,
     );
+    const privateProjectChecker = createPrivateProjectChecker(
+        db.rawDatabase,
+        unleashConfig,
+    );
     // Force all feature flags on to make sure we have Change requests on
     const customFeatureService = new FeatureToggleService(
         stores,
@@ -537,6 +559,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
         segmentService,
         accessService,
         changeRequestAccessReadModel,
+        privateProjectChecker,
     );
 
     const toggle = await service.createFeatureToggle(
@@ -637,4 +660,45 @@ test('getPlaygroundFeatures should return ids and titles (if they exist) on clie
     )) {
         expect(strategy.id).not.toBeUndefined();
     }
+});
+
+describe('flag name validation', () => {
+    test('should validate feature names if the project has flag name pattern', async () => {
+        const projectId = 'pattern-validation';
+        const featureNaming = {
+            pattern: 'testpattern.+',
+            example: 'testpattern-one!',
+            description: 'naming description',
+        };
+        const project = {
+            id: projectId,
+            name: projectId,
+            mode: 'open' as const,
+            defaultStickiness: 'default',
+            featureNaming,
+        };
+
+        await stores.projectStore.create(project);
+
+        const validFeatures = ['testpattern-feature', 'testpattern-feature2'];
+        const invalidFeatures = ['a', 'b', 'c'];
+
+        for (const feature of invalidFeatures) {
+            await expect(
+                service.validateFeatureFlagNameAgainstPattern(
+                    feature,
+                    projectId,
+                ),
+            ).rejects.toBeInstanceOf(PatternError);
+        }
+
+        for (const feature of validFeatures) {
+            await expect(
+                service.validateFeatureFlagNameAgainstPattern(
+                    feature,
+                    projectId,
+                ),
+            ).resolves.toBeFalsy();
+        }
+    });
 });

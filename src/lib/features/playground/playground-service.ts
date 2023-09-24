@@ -4,7 +4,7 @@ import { IUnleashServices } from 'lib/types/services';
 import { ALL } from '../../types/models/api-token';
 import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
 import { Logger } from '../../logger';
-import { ISegment, IUnleashConfig } from 'lib/types';
+import { IFlagResolver, ISegment, IUnleashConfig } from 'lib/types';
 import { offlineUnleashClient } from './offline-unleash-client';
 import { FeatureInterface } from 'lib/features/playground/feature-evaluator/feature';
 import {
@@ -16,10 +16,11 @@ import { FeatureConfigurationClient } from '../../types/stores/feature-strategie
 import { generateObjectCombinations } from './generateObjectCombinations';
 import groupBy from 'lodash.groupby';
 import { omitKeys } from '../../util';
-import { AdvancedPlaygroundFeatureSchema } from '../../openapi/spec/advanced-playground-feature-schema';
+import { AdvancedPlaygroundFeatureSchema } from '../../openapi';
 import { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema';
 import { validateQueryComplexity } from './validateQueryComplexity';
 import { playgroundStrategyEvaluation } from 'lib/openapi';
+import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -66,16 +67,28 @@ export class PlaygroundService {
 
     private readonly segmentService: ISegmentService;
 
+    private flagResolver: IFlagResolver;
+
+    private privateProjectChecker: IPrivateProjectChecker;
+
     constructor(
         config: IUnleashConfig,
         {
             featureToggleServiceV2,
             segmentService,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'segmentService'>,
+            privateProjectChecker,
+        }: Pick<
+            IUnleashServices,
+            | 'featureToggleServiceV2'
+            | 'segmentService'
+            | 'privateProjectChecker'
+        >,
     ) {
         this.logger = config.getLogger('services/playground-service.ts');
+        this.flagResolver = config.flagResolver;
         this.featureToggleService = featureToggleServiceV2;
         this.segmentService = segmentService;
+        this.privateProjectChecker = privateProjectChecker;
     }
 
     async evaluateAdvancedQuery(
@@ -83,10 +96,31 @@ export class PlaygroundService {
         environments: string[],
         context: SdkContextSchema,
         limit: number,
+        userId: number,
     ): Promise<AdvancedPlaygroundFeatureEvaluationResult[]> {
         const segments = await this.segmentService.getActive();
+
+        let filteredProjects: typeof projects;
+        if (this.flagResolver.isEnabled('privateProjects')) {
+            const projectAccess =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            if (projectAccess.mode === 'all') {
+                filteredProjects = projects;
+            } else if (projects === ALL) {
+                filteredProjects = projectAccess.projects;
+            } else {
+                filteredProjects = projects.filter((project) =>
+                    projectAccess.projects.includes(project),
+                );
+            }
+        }
+
         const environmentFeatures = await Promise.all(
-            environments.map((env) => this.resolveFeatures(projects, env)),
+            environments.map((env) =>
+                this.resolveFeatures(filteredProjects, env),
+            ),
         );
         const contexts = generateObjectCombinations(context);
 

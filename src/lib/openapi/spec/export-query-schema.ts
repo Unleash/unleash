@@ -1,28 +1,28 @@
 import { FromSchema } from 'json-schema-to-ts';
 
+const commonProps = {
+    environment: {
+        type: 'string',
+        example: 'development',
+        description: 'The environment to export from',
+    },
+    downloadFile: {
+        type: 'boolean',
+        example: true,
+        description: 'Whether to return a downloadable file',
+    },
+} as const;
+
 export const exportQuerySchema = {
     $id: '#/components/schemas/exportQuerySchema',
     type: 'object',
-    additionalProperties: true,
-    required: ['environment'],
     description:
         'Available query parameters for  the [deprecated export/import](https://docs.getunleash.io/reference/deploy/import-export) functionality.',
-    properties: {
-        environment: {
-            type: 'string',
-            example: 'development',
-            description: 'The environment to export from',
-        },
-        downloadFile: {
-            type: 'boolean',
-            example: true,
-            description: 'Whether to return a downloadable file',
-        },
-    },
     oneOf: [
         {
-            required: ['features'],
+            required: ['environment', 'features'],
             properties: {
+                ...commonProps,
                 features: {
                     type: 'array',
                     example: ['MyAwesomeFeature'],
@@ -35,8 +35,9 @@ export const exportQuerySchema = {
             },
         },
         {
-            required: ['tag'],
+            required: ['environment', 'tag'],
             properties: {
+                ...commonProps,
                 tag: {
                     type: 'string',
                     example: 'release',

@@ -13,6 +13,7 @@ import {
 } from './ChangeRequestHeader.styles';
 import { Separator } from '../../ChangeRequestSidebar/ChangeRequestSidebar';
 import { ChangeRequestTitle } from '../../ChangeRequestSidebar/EnvironmentChangeRequest/ChangeRequestTitle';
+import { UpdateCount } from 'component/changeRequest/UpdateCount';
 
 export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
     changeRequest,
@@ -73,18 +74,12 @@ export const ChangeRequestHeader: FC<{ changeRequest: IChangeRequest }> = ({
                             >
                                 {changeRequest?.environment}
                             </Typography>{' '}
-                            <Separator /> Updates:{' '}
-                            <Typography
-                                variant="body2"
-                                display="inline"
-                                fontWeight="bold"
-                                component="span"
-                            >
-                                {changeRequest.features.length}{' '}
-                                {changeRequest.features.length === 1
-                                    ? 'feature toggle'
-                                    : 'feature toggles'}
-                            </Typography>
+                            <Separator />
+                            Updates:
+                            <UpdateCount
+                                featuresCount={changeRequest.features.length}
+                                segmentsCount={changeRequest.segments.length}
+                            />
                         </Typography>
                     </StyledCard>
                 </Box>

@@ -15,6 +15,7 @@ export interface IChangeRequest {
     features: IChangeRequestFeature[];
     segments: ISegmentChange[];
     approvals: IChangeRequestApproval[];
+    rejections: IChangeRequestApproval[];
     comments: IChangeRequestComment[];
     conflict?: string;
 }
@@ -66,7 +67,8 @@ export type ChangeRequestState =
     | 'Approved'
     | 'In review'
     | 'Applied'
-    | 'Cancelled';
+    | 'Cancelled'
+    | 'Rejected';
 
 type ChangeRequestPayload =
     | ChangeRequestEnabled
@@ -76,7 +78,8 @@ type ChangeRequestPayload =
     | ChangeRequestVariantPatch
     | IChangeRequestUpdateSegment
     | IChangeRequestDeleteSegment
-    | SetStrategySortOrderSchema;
+    | SetStrategySortOrderSchema
+    | IChangeRequestArchiveFeature;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestChangeBase {
     action: 'addStrategy';
@@ -103,6 +106,10 @@ export interface IChangeRequestPatchVariant extends IChangeRequestChangeBase {
     payload: ChangeRequestVariantPatch;
 }
 
+export interface IChangeRequestArchiveFeature extends IChangeRequestChangeBase {
+    action: 'archiveFeature';
+}
+
 export interface IChangeRequestReorderStrategy
     extends IChangeRequestChangeBase {
     action: 'reorderStrategy';
@@ -110,8 +117,10 @@ export interface IChangeRequestReorderStrategy
 }
 
 export interface IChangeRequestUpdateSegment {
+    id: number;
     action: 'updateSegment';
     conflict?: string;
+    name: string;
     payload: {
         id: number;
         name: string;
@@ -122,8 +131,10 @@ export interface IChangeRequestUpdateSegment {
 }
 
 export interface IChangeRequestDeleteSegment {
+    id: number;
     action: 'deleteSegment';
     conflict?: string;
+    name: string;
     payload: {
         id: number;
         name: string;
@@ -138,7 +149,8 @@ export type IFeatureChange =
     | IChangeRequestUpdateStrategy
     | IChangeRequestEnabled
     | IChangeRequestPatchVariant
-    | IChangeRequestReorderStrategy;
+    | IChangeRequestReorderStrategy
+    | IChangeRequestArchiveFeature;
 
 export type ISegmentChange =
     | IChangeRequestUpdateSegment
@@ -152,7 +164,12 @@ type ChangeRequestEnabled = { enabled: boolean };
 
 type ChangeRequestAddStrategy = Pick<
     IFeatureStrategy,
-    'parameters' | 'constraints' | 'segments' | 'title' | 'disabled'
+    | 'parameters'
+    | 'constraints'
+    | 'segments'
+    | 'title'
+    | 'disabled'
+    | 'variants'
 > & { name: string };
 
 type ChangeRequestEditStrategy = ChangeRequestAddStrategy & { id: string };
@@ -172,4 +189,5 @@ export type ChangeRequestAction =
     | 'patchVariant'
     | 'reorderStrategy'
     | 'updateSegment'
-    | 'deleteSegment';
+    | 'deleteSegment'
+    | 'archiveFeature';

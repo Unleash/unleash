@@ -38,8 +38,9 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
-const StyledButtonContainer = styled('div')(() => ({
+const StyledButtonContainer = styled('div')(({ theme }) => ({
     display: 'flex',
+    gap: theme.spacing(1.5),
 }));
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -87,6 +88,21 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/reference/login-history',
         label: 'Login history',
     },
+    groups: {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/reference/rbac#user-groups',
+        label: 'User groups',
+    },
+    sso: {
+        plan: FeaturePlan.PRO,
+        url: 'https://docs.getunleash.io/reference/rbac#user-group-sso-integration',
+        label: 'Single Sign-On',
+    },
+    'project-settings': {
+        plan: FeaturePlan.PRO,
+        url: 'https://docs.getunleash.io/reference/projects',
+        label: 'Project settings',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;
@@ -108,8 +124,14 @@ export const PremiumFeature = ({
 
     const tracker = usePlausibleTracker();
 
-    const handleClick = () => {
+    const trackUpgradePlan = () => {
         tracker.trackEvent('upgrade_plan_clicked', {
+            props: { feature: label },
+        });
+    };
+
+    const trackReadAbout = () => {
+        tracker.trackEvent('read_about', {
             props: { feature: label },
         });
     };
@@ -126,7 +148,7 @@ export const PremiumFeature = ({
         <>
             {featureLabel} is a feature available for the{' '}
             <strong>{plan}</strong>{' '}
-            {plan === FeaturePlan.PRO ? 'plans' : 'plan'}
+            {plan === FeaturePlan.PRO ? 'plans' : 'plan'}.
         </>
     );
 
@@ -148,7 +170,7 @@ export const PremiumFeature = ({
                         <StyledBody tooltip>
                             <StyledTypography>
                                 {featureMessage}. You need to upgrade your plan
-                                if you want to use it
+                                if you want to use it.
                             </StyledTypography>
                         </StyledBody>
                         <StyledButtonContainer>
@@ -156,9 +178,9 @@ export const PremiumFeature = ({
                                 href={upgradeUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                onClick={handleClick}
+                                onClick={trackUpgradePlan}
                             >
-                                Upgrade now
+                                Compare plans
                             </StyledLink>
                         </StyledButtonContainer>
                     </>
@@ -171,18 +193,26 @@ export const PremiumFeature = ({
                             </StyledTypography>
                             <StyledTypography>
                                 You need to upgrade your plan if you want to use
-                                it
+                                it.
                             </StyledTypography>
                         </StyledBody>
                         <StyledButtonContainer>
                             <Button
-                                variant="outlined"
+                                variant="contained"
                                 href={upgradeUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                onClick={handleClick}
+                                onClick={trackUpgradePlan}
                             >
-                                Upgrade now
+                                Compare plans
+                            </Button>
+                            <Button
+                                href={url}
+                                target="_blank"
+                                rel="noreferrer"
+                                onClick={trackReadAbout}
+                            >
+                                Read about {label}
                             </Button>
                         </StyledButtonContainer>
                     </>

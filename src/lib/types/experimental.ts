@@ -20,16 +20,17 @@ export type IFlagKey =
     | 'disableBulkToggle'
     | 'disableNotifications'
     | 'advancedPlayground'
-    | 'customRootRoles'
-    | 'strategyVariant'
-    | 'newProjectLayout'
-    | 'slackAppAddon'
-    | 'emitPotentiallyStaleEvents'
-    | 'configurableFeatureTypeLifetimes'
     | 'filterInvalidClientMetrics'
-    | 'frontendNavigationUpdate'
     | 'lastSeenByEnvironment'
-    | 'segmentChangeRequests';
+    | 'customRootRolesKillSwitch'
+    | 'multipleRoles'
+    | 'featureNamingPattern'
+    | 'doraMetrics'
+    | 'variantTypeNumber'
+    | 'accessOverview'
+    | 'privateProjects'
+    | 'dependentFeatures'
+    | 'datadogJsonTemplate';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -83,7 +84,7 @@ const flags: IFlags = {
         process.env.UNLEASH_PAT_KILL_SWITCH,
         false,
     ),
-    migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
+    migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, true),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
@@ -97,45 +98,48 @@ const flags: IFlags = {
         process.env.DISABLE_NOTIFICATIONS,
         false,
     ),
-    customRootRoles: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES,
-        false,
-    ),
-    newProjectLayout: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_PROJECT_LAYOUT,
-        false,
-    ),
-    strategyVariant: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_VARIANT,
-        false,
-    ),
-    slackAppAddon: parseEnvVarBoolean(
-        process.env.UNLEASH_SLACK_APP_ADDON,
-        false,
-    ),
-
-    emitPotentiallyStaleEvents: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EMIT_POTENTIALLY_STALE_EVENTS,
-        false,
-    ),
-    configurableFeatureTypeLifetimes: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CONFIGURABLE_FEATURE_TYPE_LIFETIMES,
-        false,
-    ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
         process.env.FILTER_INVALID_CLIENT_METRICS,
-        false,
-    ),
-    frontendNavigationUpdate: parseEnvVarBoolean(
-        process.env.UNLEASH_NAVIGATION_UPDATE,
         false,
     ),
     lastSeenByEnvironment: parseEnvVarBoolean(
         process.env.LAST_SEEN_BY_ENVIRONMENT,
         false,
     ),
-    segmentChangeRequests: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SEGMENT_CHANGE_REQUESTS,
+    customRootRolesKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
+        false,
+    ),
+    multipleRoles: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MULTIPLE_ROLES,
+        false,
+    ),
+    featureNamingPattern: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_NAMING_PATTERN,
+        false,
+    ),
+    doraMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DORA_METRICS,
+        false,
+    ),
+    dependentFeatures: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DEPENDENT_FEATURES,
+        false,
+    ),
+    variantTypeNumber: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_VARIANT_TYPE_NUMBER,
+        false,
+    ),
+    privateProjects: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECTS,
+        false,
+    ),
+    accessOverview: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW,
+        false,
+    ),
+    datadogJsonTemplate: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DATADOG_JSON_TEMPLATE,
         false,
     ),
 };

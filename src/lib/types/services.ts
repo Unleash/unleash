@@ -33,7 +33,7 @@ import EdgeService from '../services/edge-service';
 import PatService from '../services/pat-service';
 import { PublicSignupTokenService } from '../services/public-signup-token-service';
 import { LastSeenService } from '../services/client-metrics/last-seen-service';
-import { InstanceStatsService } from '../services/instance-stats-service';
+import { InstanceStatsService } from '../features/instance-stats/instance-stats-service';
 import { FavoritesService } from '../services/favorites-service';
 import MaintenanceService from '../services/maintenance-service';
 import { AccountService } from '../services/account-service';
@@ -43,6 +43,8 @@ import ExportImportService from '../features/export-import-toggles/export-import
 import { ISegmentService } from '../segments/segment-service-interface';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import EventAnnouncerService from 'lib/services/event-announcer-service';
+import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
+import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -97,4 +99,6 @@ export interface IUnleashServices {
         db: Knex.Transaction,
     ) => FeatureToggleService;
     transactionalGroupService: (db: Knex.Transaction) => GroupService;
+    privateProjectChecker: IPrivateProjectChecker;
+    dependentFeaturesService: DependentFeaturesService;
 }

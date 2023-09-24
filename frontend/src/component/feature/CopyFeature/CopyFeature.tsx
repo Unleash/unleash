@@ -19,6 +19,8 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from '../../../hooks/useChangeRequestsEnabled';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
 
 const StyledPage = styled(Paper)(({ theme }) => ({
     overflow: 'visible',
@@ -69,6 +71,10 @@ export const CopyFeatureToggle = () => {
     const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(projectId);
 
+    const {
+        project: { featureNaming },
+    } = useProject(projectId);
+
     const setValue: ChangeEventHandler<HTMLInputElement> = event => {
         const value = trim(event.target.value);
         setNewToggleName(value);
@@ -80,7 +86,7 @@ export const CopyFeatureToggle = () => {
 
     const onValidateName = async () => {
         try {
-            await validateFeatureToggleName(newToggleName);
+            await validateFeatureToggleName(newToggleName, projectId);
             setNameError(undefined);
             return true;
         } catch (error) {
@@ -111,6 +117,8 @@ export const CopyFeatureToggle = () => {
 
     if (!feature || !feature.name) return <span>Toggle not found</span>;
 
+    const displayFeatureNamingInfo = Boolean(featureNaming?.pattern);
+
     return (
         <StyledPage className={themeStyles.fullwidth}>
             <StyledHeader>
@@ -130,6 +138,15 @@ export const CopyFeatureToggle = () => {
                     . You must give the new feature toggle a unique name before
                     you can proceed.
                 </StyledDescription>
+
+                <ConditionallyRender
+                    condition={displayFeatureNamingInfo}
+                    show={
+                        <FeatureNamingPatternInfo
+                            featureNaming={featureNaming!}
+                        />
+                    }
+                />
                 <StyledForm onSubmit={onSubmit}>
                     <TextField
                         label="Name"
@@ -142,6 +159,11 @@ export const CopyFeatureToggle = () => {
                         variant="outlined"
                         size="small"
                         aria-required
+                        aria-details={
+                            displayFeatureNamingInfo
+                                ? 'feature-naming-pattern-info'
+                                : undefined
+                        }
                         autoFocus
                     />
                     <StyledFormControlLabel

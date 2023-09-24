@@ -16,25 +16,13 @@ export const getAddons: (args: {
     unleashUrl: string;
     flagResolver: IFlagResolver;
 }) => IAddonProviders = ({ getLogger, unleashUrl, flagResolver }) => {
-    const slackAppAddonEnabled = flagResolver.isEnabled('slackAppAddon');
-
-    const slackAddon = new SlackAddon({ getLogger, unleashUrl });
-
-    if (slackAppAddonEnabled) {
-        slackAddon.definition.deprecated =
-            'This addon is deprecated. Please try the new Slack App addon instead.';
-    }
-
     const addons: Addon[] = [
         new Webhook({ getLogger }),
-        slackAddon,
+        new SlackAddon({ getLogger, unleashUrl }),
+        new SlackAppAddon({ getLogger, unleashUrl }),
         new TeamsAddon({ getLogger, unleashUrl }),
-        new DatadogAddon({ getLogger, unleashUrl }),
+        new DatadogAddon({ getLogger, unleashUrl, flagResolver }),
     ];
-
-    if (slackAppAddonEnabled) {
-        addons.push(new SlackAppAddon({ getLogger, unleashUrl }));
-    }
 
     return addons.reduce((map, addon) => {
         // eslint-disable-next-line no-param-reassign

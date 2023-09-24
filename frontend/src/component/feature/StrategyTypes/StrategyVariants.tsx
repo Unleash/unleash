@@ -12,7 +12,6 @@ import SplitPreviewSlider from './SplitPreviewSlider/SplitPreviewSlider';
 import { HelpIcon } from '../../common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from '../../common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { VariantInfoAlert } from '../../common/VariantInfoAlert/VariantInfoAlert';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
@@ -111,7 +110,7 @@ export const StrategyVariants: FC<{
                             </span>
                             <Link
                                 target="_blank"
-                                href="https://docs.getunleash.io/reference/feature-strategy-variants"
+                                href="https://docs.getunleash.io/reference/strategy-variants"
                             >
                                 Learn more
                             </Link>
@@ -120,7 +119,6 @@ export const StrategyVariants: FC<{
                 />
             </Typography>
             <StyledVariantForms>
-                <VariantInfoAlert mode="strategy" />
                 <StrategyVariantsUpgradeAlert />
                 {variantsEdit.map((variant, i) => (
                     <VariantForm
@@ -155,12 +153,11 @@ export const StrategyVariants: FC<{
                 permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
                 projectId={projectId}
                 environmentId={environment}
+                data-testid="ADD_STRATEGY_VARIANT_BUTTON"
             >
                 Add variant
             </PermissionButton>
-            <SplitPreviewSlider
-                values={variantsEdit.map(variant => variant.weight / 10)}
-            />
+            <SplitPreviewSlider variants={variantsEdit} />
         </>
     );
 };

@@ -58,9 +58,15 @@ yarn run e2e
 The frontend uses an OpenAPI client generated from the backend's OpenAPI spec.
 Whenever there are changes to the backend API, the client should be regenerated:
 
+For now we only use generated types (src/openapi/models).
+We will use methods (src/openapi/apis) for new features soon.
+
 ```
-./scripts/generate-openapi.sh
+yarn gen:api
+rm -rf src/openapi/apis
 ```
+
+clean up `src/openapi/index.ts` imports, only keep first line `export * from './models';`
 
 This script assumes that you have a running instance of the enterprise backend at `http://localhost:4242`.
 The new OpenAPI client will be generated from the runtime schema of this instance.

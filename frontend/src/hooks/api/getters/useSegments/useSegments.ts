@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
+import useSWR, { mutate } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { ISegment } from 'interfaces/segment';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
 export interface IUseSegmentsOutput {
     segments?: ISegment[];
@@ -19,15 +19,9 @@ export const useSegments = (strategyId?: string): IUseSegmentsOutput => {
         ? formatApiPath(`api/admin/segments/strategies/${strategyId}`)
         : formatApiPath('api/admin/segments');
 
-    const { data, error, mutate } = useConditionalSWR(
-        Boolean(uiConfig.flags?.SE),
-        [],
-        url,
-        () => fetchSegments(url),
-        {
-            refreshInterval: 15 * 1000,
-        }
-    );
+    const { data, error, mutate } = useSWR(url, () => fetchSegments(url), {
+        refreshInterval: 15 * 1000,
+    });
 
     const refetchSegments = useCallback(() => {
         mutate().catch(console.warn);

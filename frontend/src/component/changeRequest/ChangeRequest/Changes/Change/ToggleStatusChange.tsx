@@ -5,12 +5,12 @@ import { ChangeItemWrapper } from './StrategyChange';
 
 interface IToggleStatusChange {
     enabled: boolean;
-    discard?: ReactNode;
+    actions?: ReactNode;
 }
 
 export const ToggleStatusChange: VFC<IToggleStatusChange> = ({
     enabled,
-    discard,
+    actions,
 }) => {
     return (
         <ChangeItemWrapper>
@@ -23,7 +23,7 @@ export const ToggleStatusChange: VFC<IToggleStatusChange> = ({
                     {enabled ? ' Enabled' : 'Disabled'}
                 </Badge>
             </Box>
-            {discard}
+            {actions}
         </ChangeItemWrapper>
     );
 };

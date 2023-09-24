@@ -102,6 +102,7 @@ export const ApplicationView = () => {
             />
         </ListItem>
     );
+
     return (
         <Grid container style={{ margin: 0 }}>
             <Grid item xl={6} md={6} xs={12}>

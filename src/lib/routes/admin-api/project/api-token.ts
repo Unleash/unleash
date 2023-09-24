@@ -24,6 +24,7 @@ import {
     AccessService,
     ApiTokenService,
     OpenApiService,
+    ProjectService,
     ProxyService,
 } from '../../../services';
 import { extractUsername } from '../../../util';
@@ -51,6 +52,8 @@ export class ProjectApiTokenController extends Controller {
 
     private openApiService: OpenApiService;
 
+    private projectService: ProjectService;
+
     private logger: Logger;
 
     constructor(
@@ -60,12 +63,14 @@ export class ProjectApiTokenController extends Controller {
             accessService,
             proxyService,
             openApiService,
+            projectService,
         }: Pick<
             IUnleashServices,
             | 'apiTokenService'
             | 'accessService'
             | 'proxyService'
             | 'openApiService'
+            | 'projectService'
         >,
     ) {
         super(config);
@@ -73,6 +78,7 @@ export class ProjectApiTokenController extends Controller {
         this.accessService = accessService;
         this.proxyService = proxyService;
         this.openApiService = openApiService;
+        this.projectService = projectService;
         this.logger = config.getLogger('project-api-token-controller.js');
 
         this.route({
@@ -110,7 +116,7 @@ export class ProjectApiTokenController extends Controller {
                         'Endpoint that allows creation of [project API tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys#api-token-visibility) for the specified project.',
                     responses: {
                         201: resourceCreatedResponseSchema('apiTokenSchema'),
-                        ...getStandardResponses(400, 401, 403),
+                        ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
             ],
@@ -130,7 +136,7 @@ export class ProjectApiTokenController extends Controller {
                     description: `This operation deletes the API token specified in the request URL. If the token doesn't exist, returns an OK response (status code 200).`,
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(401, 403),
+                        ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
             ],
@@ -143,6 +149,8 @@ export class ProjectApiTokenController extends Controller {
     ): Promise<void> {
         const { user } = req;
         const { projectId } = req.params;
+        await this.projectService.getProject(projectId); // Validates that the project exists
+
         const projectTokens = await this.accessibleTokens(user, projectId);
         this.openApiService.respondWithValidation(
             200,
@@ -158,6 +166,8 @@ export class ProjectApiTokenController extends Controller {
     ): Promise<any> {
         const createToken = await createApiToken.validateAsync(req.body);
         const { projectId } = req.params;
+        await this.projectService.getProject(projectId); // Validates that the project exists
+
         const permissionRequired = CREATE_PROJECT_API_TOKEN;
         const hasPermission = await this.accessService.hasPermission(
             req.user,
@@ -213,6 +223,10 @@ export class ProjectApiTokenController extends Controller {
             await this.apiTokenService.delete(token, extractUsername(req));
             await this.proxyService.deleteClientForProxyToken(token);
             res.status(200).end();
+        } else if (!storedToken) {
+            res.status(404).end();
+        } else {
+            res.status(400).end();
         }
     }
 

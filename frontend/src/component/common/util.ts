@@ -5,12 +5,21 @@ import { IFeatureVariant } from 'interfaces/featureToggle';
 import { format, isValid } from 'date-fns';
 import { IFeatureVariantEdit } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
 
+/**
+ * Handle feature flags and configuration for different plans.
+ */
 export const filterByConfig =
     (config: IUiConfig) => (r: INavigationMenuItem) => {
         if (r.flag) {
             // Check if the route's `flag` is enabled in IUiConfig.flags.
             const flags = config.flags as unknown as Record<string, boolean>;
             return Boolean(flags[r.flag]);
+        }
+
+        if (r.notFlag) {
+            const flags = config.flags as unknown as Record<string, boolean>;
+
+            return !(flags[r.notFlag] === true);
         }
 
         if (r.configFlag) {
@@ -24,6 +33,12 @@ export const filterByConfig =
 export const scrollToTop = () => {
     window.scrollTo(0, 0);
 };
+
+export const mapRouteLink = (route: INavigationMenuItem) => ({
+    ...route,
+    path: route.path.replace('/*', ''),
+    route: route.path,
+});
 
 export const trim = (value: string): string => {
     if (value && value.trim) {

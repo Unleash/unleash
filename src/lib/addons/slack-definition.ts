@@ -22,6 +22,14 @@ const slackDefinition: IAddonDefinition = {
     displayName: 'Slack',
     description: 'Allows Unleash to post updates to Slack.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/slack',
+    deprecated:
+        'This integration is deprecated. Please try the new Slack App integration instead.',
+    alerts: [
+        {
+            type: 'warning',
+            text: `This integration is deprecated. Please try the new Slack App integration instead.`,
+        },
+    ],
     parameters: [
         {
             name: 'url',
@@ -64,10 +72,10 @@ const slackDefinition: IAddonDefinition = {
             name: 'customHeaders',
             displayName: 'Extra HTTP Headers',
             placeholder: `{
-                "ISTIO_USER_KEY": "hunter2",
-                "SOME_OTHER_CUSTOM_HTTP_HEADER": "SOMEVALUE"
-            }`,
-            description: `(Optional) Used to add extra HTTP Headers to the request the plugin fires off. Format here needs to be a valid json object of key value pairs where both key and value are strings`,
+  "ISTIO_USER_KEY": "hunter2",
+  "SOME_OTHER_CUSTOM_HTTP_HEADER": "SOMEVALUE"
+}`,
+            description: `(Optional) Used to add extra HTTP Headers to the request the plugin fires off. This must be a valid json object of key-value pairs where both the key and the value are strings`,
             required: false,
             sensitive: true,
             type: 'textfield',

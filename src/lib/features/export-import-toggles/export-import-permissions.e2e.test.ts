@@ -335,6 +335,11 @@ test('validate import data', async () => {
                     'The following features will not be imported as they are currently archived. To import them, please unarchive them first:',
                 affectedItems: [archivedFeature],
             },
+            {
+                message:
+                    'The following features already exist in this project and will be overwritten:',
+                affectedItems: ['existing_feature'],
+            },
         ],
         permissions: [
             {

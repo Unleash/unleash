@@ -58,7 +58,7 @@ export default class MaintenanceService {
     ): Promise<void> {
         if (setting.enabled) {
             this.schedulerService.pause();
-        } else {
+        } else if (!this.config.disableScheduler) {
             this.schedulerService.resume();
         }
         return this.settingService.insert(

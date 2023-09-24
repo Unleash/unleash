@@ -3,7 +3,7 @@ import SlackAppAddon from './slack-app';
 import { ChatPostMessageArguments, ErrorCode } from '@slack/web-api';
 
 const slackApiCalls: ChatPostMessageArguments[] = [];
-const conversationsList = jest.fn();
+
 let postMessage = jest.fn().mockImplementation((options) => {
     slackApiCalls.push(options);
     return Promise.resolve();
@@ -11,24 +11,6 @@ let postMessage = jest.fn().mockImplementation((options) => {
 
 jest.mock('@slack/web-api', () => ({
     WebClient: jest.fn().mockImplementation(() => ({
-        conversations: {
-            list: conversationsList.mockImplementation(() => ({
-                channels: [
-                    {
-                        id: 1,
-                        name: 'general',
-                    },
-                    {
-                        id: 2,
-                        name: 'another-channel-1',
-                    },
-                    {
-                        id: 3,
-                        name: 'another-channel-2',
-                    },
-                ],
-            })),
-        },
         chat: {
             postMessage,
         },
@@ -72,13 +54,11 @@ describe('SlackAppAddon', () => {
             type: 'release',
             strategies: [{ name: 'default' }],
         },
-        tags: [{ type: 'slack', value: 'general' }],
     };
 
     beforeEach(() => {
         jest.useFakeTimers();
         slackApiCalls.length = 0;
-        conversationsList.mockClear();
         postMessage.mockClear();
         addon = new SlackAppAddon({
             getLogger,
@@ -88,15 +68,27 @@ describe('SlackAppAddon', () => {
 
     afterEach(() => {
         jest.useRealTimers();
-        addon.destroy();
     });
 
     it('should post message when feature is toggled', async () => {
-        await addon.handleEvent(event, { accessToken });
+        await addon.handleEvent(event, {
+            accessToken,
+            defaultChannels: 'general',
+        });
 
         expect(slackApiCalls.length).toBe(1);
-        expect(slackApiCalls[0].channel).toBe(1);
-        expect(slackApiCalls[0]).toMatchSnapshot();
+        expect(slackApiCalls[0].channel).toBe('general');
+    });
+
+    it('should post to all channels in defaultChannels', async () => {
+        await addon.handleEvent(event, {
+            accessToken,
+            defaultChannels: 'general, another-channel-1',
+        });
+
+        expect(slackApiCalls.length).toBe(2);
+        expect(slackApiCalls[0].channel).toBe('general');
+        expect(slackApiCalls[1].channel).toBe('another-channel-1');
     });
 
     it('should post to all channels in tags', async () => {
@@ -111,84 +103,45 @@ describe('SlackAppAddon', () => {
         await addon.handleEvent(eventWith2Tags, { accessToken });
 
         expect(slackApiCalls.length).toBe(2);
-        expect(slackApiCalls[0].channel).toBe(1);
-        expect(slackApiCalls[0]).toMatchSnapshot();
-        expect(slackApiCalls[1].channel).toBe(2);
-        expect(slackApiCalls[1]).toMatchSnapshot();
+        expect(slackApiCalls[0].channel).toBe('general');
+        expect(slackApiCalls[1].channel).toBe('another-channel-1');
     });
 
-    it('should not post to unexisting tagged channels', async () => {
-        const eventWithUnexistingTaggedChannel: IEvent = {
+    it('should concatenate defaultChannels and channels in tags to post to all unique channels found', async () => {
+        const eventWith2Tags: IEvent = {
             ...event,
             tags: [
-                { type: 'slack', value: 'random' },
+                { type: 'slack', value: 'general' },
                 { type: 'slack', value: 'another-channel-1' },
             ],
         };
 
-        await addon.handleEvent(eventWithUnexistingTaggedChannel, {
+        await addon.handleEvent(eventWith2Tags, {
             accessToken,
+            defaultChannels: 'another-channel-1, another-channel-2',
         });
 
-        expect(slackApiCalls.length).toBe(1);
-        expect(slackApiCalls[0].channel).toBe(2);
-        expect(slackApiCalls[0]).toMatchSnapshot();
-    });
-
-    it('should cache Slack channels', async () => {
-        await addon.handleEvent(event, { accessToken });
-        await addon.handleEvent(event, { accessToken });
-
-        expect(slackApiCalls.length).toBe(2);
-        expect(conversationsList).toHaveBeenCalledTimes(1);
-    });
-
-    it('should refresh Slack channels cache after 30 seconds', async () => {
-        await addon.handleEvent(event, { accessToken });
-
-        jest.advanceTimersByTime(30000);
-
-        await addon.handleEvent(event, { accessToken });
-
-        expect(slackApiCalls.length).toBe(2);
-        expect(conversationsList).toHaveBeenCalledTimes(2);
+        expect(slackApiCalls.length).toBe(3);
+        expect(slackApiCalls[0].channel).toBe('general');
+        expect(slackApiCalls[1].channel).toBe('another-channel-1');
+        expect(slackApiCalls[2].channel).toBe('another-channel-2');
     });
 
     it('should not post a message if there are no tagged channels and no defaultChannels', async () => {
-        const eventWithoutTags: IEvent = {
-            ...event,
-            tags: [],
-        };
-
-        await addon.handleEvent(eventWithoutTags, {
+        await addon.handleEvent(event, {
             accessToken,
         });
 
         expect(slackApiCalls.length).toBe(0);
     });
 
-    it('should use defaultChannels if no tagged channels are found', async () => {
-        const eventWithoutTags: IEvent = {
-            ...event,
-            tags: [],
-        };
-
-        await addon.handleEvent(eventWithoutTags, {
-            accessToken,
-            defaultChannels: 'general, another-channel-1',
-        });
-
-        expect(slackApiCalls.length).toBe(2);
-        expect(slackApiCalls[0].channel).toBe(1);
-        expect(slackApiCalls[0]).toMatchSnapshot();
-        expect(slackApiCalls[1].channel).toBe(2);
-        expect(slackApiCalls[1]).toMatchSnapshot();
-    });
-
     it('should log error when an API call fails', async () => {
         postMessage = jest.fn().mockRejectedValue(mockError);
 
-        await addon.handleEvent(event, { accessToken });
+        await addon.handleEvent(event, {
+            accessToken,
+            defaultChannels: 'general',
+        });
 
         expect(loggerMock.warn).toHaveBeenCalledWith(
             `Error handling event ${event.type}. A platform error occurred: Platform error message`,

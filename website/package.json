@@ -27,7 +27,7 @@
     "@docusaurus/remark-plugin-npm2yarn": "2.3.1",
     "@docusaurus/theme-mermaid": "2.3.1",
     "@mdx-js/react": "1.6.22",
-    "@svgr/webpack": "6.5.1",
+    "@svgr/webpack": "8.1.0",
     "browserslist": "^4.16.5",
     "clsx": "1.2.1",
     "docusaurus-plugin-openapi-docs": "2.0.0-beta.3",
@@ -70,7 +70,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.22.9",
+    "@babel/core": "7.22.17",
     "@docusaurus/module-type-aliases": "2.3.1",
     "@storybook/addon-actions": "6.5.16",
     "@storybook/addon-essentials": "6.5.16",
@@ -81,7 +81,7 @@
     "@tsconfig/docusaurus": "2.0.0",
     "babel-loader": "9.1.3",
     "enhanced-resolve": "5.15.0",
-    "react-router": "6.14.2",
+    "react-router": "6.15.0",
     "replace-in-file": "7.0.1",
     "storybook-addon-root-attribute": "1.0.2",
     "typescript": "4.8.4"

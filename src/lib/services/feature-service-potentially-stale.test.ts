@@ -9,6 +9,7 @@ import FeatureToggleService from './feature-toggle-service';
 import { AccessService } from './access-service';
 import { IChangeRequestAccessReadModel } from 'lib/features/change-request-access-service/change-request-access-read-model';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
+import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 
 test('Should only store events for potentially stale on', async () => {
     expect.assertions(2);
@@ -44,12 +45,12 @@ test('Should only store events for potentially stale on', async () => {
             flagResolver: { isEnabled: () => true },
             experimental: {
                 ...(config.experimental ?? {}),
-                emitPotentiallyStaleEvents: true,
             },
         } as unknown as IUnleashConfig,
         {} as ISegmentService,
         {} as AccessService,
         {} as IChangeRequestAccessReadModel,
+        {} as IPrivateProjectChecker,
     );
 
     await featureToggleService.updatePotentiallyStaleFeatures();

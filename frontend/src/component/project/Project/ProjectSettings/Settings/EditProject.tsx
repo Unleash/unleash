@@ -36,12 +36,18 @@ const EditProject = () => {
         projectStickiness,
         projectMode,
         featureLimit,
+        featureNamingPattern,
+        featureNamingExample,
+        featureNamingDescription,
         setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectStickiness,
         setProjectMode,
         setFeatureLimit,
+        setFeatureNamingPattern,
+        setFeatureNamingExample,
+        setFeatureNamingDescription,
         getProjectPayload,
         clearErrors,
         validateProjectId,
@@ -53,7 +59,10 @@ const EditProject = () => {
         project.description,
         defaultStickiness,
         project.mode,
-        project.featureLimit ? String(project.featureLimit) : ''
+        project.featureLimit ? String(project.featureLimit) : '',
+        project.featureNaming?.pattern || '',
+        project.featureNaming?.example || '',
+        project.featureNaming?.description || ''
     );
 
     const formatApiCode = () => {
@@ -115,10 +124,16 @@ const EditProject = () => {
                     projectMode={projectMode}
                     featureLimit={featureLimit}
                     featureCount={project.features.length}
+                    featureNamingPattern={featureNamingPattern}
+                    featureNamingExample={featureNamingExample}
+                    featureNamingDescription={featureNamingDescription}
                     setProjectName={setProjectName}
                     projectStickiness={projectStickiness}
                     setProjectStickiness={setProjectStickiness}
                     setProjectMode={setProjectMode}
+                    setFeatureNamingPattern={setFeatureNamingPattern}
+                    setFeatureNamingExample={setFeatureNamingExample}
+                    setFeatureNamingDescription={setFeatureNamingDescription}
                     projectDesc={projectDesc}
                     mode="Edit"
                     setProjectDesc={setProjectDesc}

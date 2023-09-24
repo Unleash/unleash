@@ -10,7 +10,7 @@ import {
     InstanceStats,
     InstanceStatsService,
     InstanceStatsSigned,
-} from '../../services/instance-stats-service';
+} from '../../features/instance-stats/instance-stats-service';
 import { OpenApiService } from '../../services/openapi-service';
 import {
     createCsvResponseSchema,
@@ -108,6 +108,12 @@ class InstanceAdminController extends Controller {
             users: 10,
             versionEnterprise: '5.1.7',
             versionOSS: '5.1.7',
+            activeUsers: {
+                last90: 15,
+                last60: 12,
+                last30: 10,
+                last7: 5,
+            },
         };
     }
 

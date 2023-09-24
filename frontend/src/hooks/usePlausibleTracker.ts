@@ -11,6 +11,7 @@ import { EventOptions, PlausibleOptions } from 'plausible-tracker';
 export type CustomEvents =
     | 'invite'
     | 'upgrade_plan_clicked'
+    | 'read_about'
     | 'change_request'
     | 'favorite'
     | 'maintenance'
@@ -42,7 +43,11 @@ export type CustomEvents =
     | 'strategy-add'
     | 'playground'
     | 'feature-type-edit'
-    | 'strategy-variants';
+    | 'strategy-variants'
+    | 'search-filter-suggestions'
+    | 'project-metrics'
+    | 'open-integration'
+    | 'feature-naming-pattern';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

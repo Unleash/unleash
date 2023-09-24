@@ -3,13 +3,13 @@ import {
     IChangeRequestUpdateSegment,
 } from 'component/changeRequest/changeRequest.types';
 import { FC } from 'react';
-import { formatStrategyName } from 'utils/strategyNames';
 import EventDiff from 'component/events/EventDiff/EventDiff';
 import omit from 'lodash.omit';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
-import { Typography, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
 import { ISegment } from 'interfaces/segment';
+import { NameWithChangeInfo } from './NameWithChangeInfo/NameWithChangeInfo';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -26,15 +26,15 @@ export const SegmentDiff: FC<{
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
     currentSegment?: ISegment;
 }> = ({ change, currentSegment }) => {
-    const changeRequestStrategy =
+    const changeRequestSegment =
         change.action === 'deleteSegment' ? undefined : change.payload;
 
     return (
         <StyledCodeSection>
             <EventDiff
                 entry={{
-                    preData: omit(currentSegment, 'sortOrder'),
-                    data: changeRequestStrategy,
+                    preData: omit(currentSegment, ['createdAt', 'createdBy']),
+                    data: changeRequestSegment,
                 }}
             />
         </StyledCodeSection>
@@ -70,9 +70,10 @@ export const SegmentTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     maxHeight: 600,
                 }}
             >
-                <Typography component="span">
-                    {formatStrategyName(change.payload.name)}
-                </Typography>
+                <NameWithChangeInfo
+                    previousName={change.name}
+                    newName={change.payload.name}
+                />
             </TooltipLink>
         </Truncated>
     </StyledContainer>

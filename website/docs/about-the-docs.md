@@ -34,7 +34,7 @@ Our how-to guides show you how to perform a number of common tasks that you'll w
 The guides are organized into the following categories:
 
 - [API how-tos](./how-to/api)
-- [Feature toggles, strategies, context, and general how-tos](./how-to/misc)
+- [Feature flags, strategies, context, and general how-tos](./how-to/misc)
 - [Users and permissions how-tos](./how-to/users-and-permissions)
 - [Single Sign-On (SSO) how-tos](./how-to/sso)
 

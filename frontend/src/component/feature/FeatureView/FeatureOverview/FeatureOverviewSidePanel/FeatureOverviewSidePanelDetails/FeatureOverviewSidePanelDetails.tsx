@@ -1,14 +1,20 @@
 import { IFeatureToggle } from 'interfaces/featureToggle';
-import { styled } from '@mui/material';
+import { Button, styled, Box } from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
 import { FeatureEnvironmentSeen } from '../../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { Add } from '@mui/icons-material';
+import { useUiFlag } from '../../../../../../hooks/useUiFlag';
+import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
+import { AddDependencyDialogue } from '../../../../Dependencies/AddDependencyDialogue';
+import { useState } from 'react';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+    justifyItems: 'center',
     padding: theme.spacing(3),
     fontSize: theme.fontSizes.smallBody,
 }));
@@ -40,10 +46,13 @@ export const FeatureOverviewSidePanelDetails = ({
 }: IFeatureOverviewSidePanelDetailsProps) => {
     const { locationSettings } = useLocationSettings();
     const { uiConfig } = useUiConfig();
+    const dependentFeatures = useUiFlag('dependentFeatures');
 
     const showLastSeenByEnvironment = Boolean(
         uiConfig.flags.lastSeenByEnvironment
     );
+
+    const [showDependencyDialogue, setShowDependencyDialogue] = useState(false);
 
     return (
         <StyledContainer>
@@ -66,6 +75,30 @@ export const FeatureOverviewSidePanelDetails = ({
                     />
                 )}
             </FlexRow>
+            <ConditionallyRender
+                condition={dependentFeatures}
+                show={
+                    <FlexRow>
+                        <StyledDetail>
+                            <StyledLabel>Dependency:</StyledLabel>
+                            <Button
+                                startIcon={<Add />}
+                                onClick={() => {
+                                    setShowDependencyDialogue(true);
+                                }}
+                            >
+                                Add parent feature
+                            </Button>
+                        </StyledDetail>
+                    </FlexRow>
+                }
+            />
+            <AddDependencyDialogue
+                onClose={() => setShowDependencyDialogue(false)}
+                showDependencyDialogue={
+                    dependentFeatures && showDependencyDialogue
+                }
+            />
         </StyledContainer>
     );
 };

@@ -38,11 +38,15 @@ import FakeFeatureStrategiesStore from '../../../test/fixtures/fake-feature-stra
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
 import EventStore from '../../db/event-store';
+import {
+    createFakePrivateProjectChecker,
+    createPrivateProjectChecker,
+} from '../private-project/createPrivateProjectChecker';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
 ): ExportImportService => {
-    const { getLogger } = config;
+    const { getLogger, flagResolver } = config;
     const importTogglesStore = {} as ImportTogglesStore;
     const featureToggleStore = new FakeFeatureToggleStore();
     const tagStore = new FakeTagStore();
@@ -57,6 +61,7 @@ export const createFakeExportImportTogglesService = (
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
     const accessService = createFakeAccessService(config);
     const featureToggleService = createFakeFeatureToggleService(config);
+    const privateProjectChecker = createFakePrivateProjectChecker();
 
     const featureTagService = new FeatureTagService(
         {
@@ -74,7 +79,8 @@ export const createFakeExportImportTogglesService = (
             contextFieldStore,
             featureStrategiesStore,
         },
-        { getLogger },
+        { getLogger, flagResolver },
+        privateProjectChecker,
     );
     const strategyService = new StrategyService(
         { strategyStore, eventStore },
@@ -152,6 +158,7 @@ export const createExportImportTogglesService = (
     const eventStore = new EventStore(db, getLogger);
     const accessService = createAccessService(db, config);
     const featureToggleService = createFeatureToggleService(db, config);
+    const privateProjectChecker = createPrivateProjectChecker(db, config);
 
     const featureTagService = new FeatureTagService(
         {
@@ -169,7 +176,8 @@ export const createExportImportTogglesService = (
             contextFieldStore,
             featureStrategiesStore,
         },
-        { getLogger },
+        { getLogger, flagResolver },
+        privateProjectChecker,
     );
     const strategyService = new StrategyService(
         { strategyStore, eventStore },

@@ -22,6 +22,7 @@ import BadDataError from '../error/bad-data-error';
 import { ISegmentService } from '../segments/segment-service-interface';
 import { PermissionError } from '../error';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
+import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 
 export class SegmentService implements ISegmentService {
     private logger: Logger;
@@ -38,6 +39,8 @@ export class SegmentService implements ISegmentService {
 
     private flagResolver: IFlagResolver;
 
+    private privateProjectChecker: IPrivateProjectChecker;
+
     constructor(
         {
             segmentStore,
@@ -49,11 +52,13 @@ export class SegmentService implements ISegmentService {
         >,
         changeRequestAccessReadModel: IChangeRequestAccessReadModel,
         config: IUnleashConfig,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.segmentStore = segmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
         this.eventStore = eventStore;
         this.changeRequestAccessReadModel = changeRequestAccessReadModel;
+        this.privateProjectChecker = privateProjectChecker;
         this.logger = config.getLogger('services/segment-service.ts');
         this.flagResolver = config.flagResolver;
         this.config = config;
@@ -81,8 +86,26 @@ export class SegmentService implements ISegmentService {
     }
 
     // Used by unleash-enterprise.
-    async getStrategies(id: number): Promise<IFeatureStrategy[]> {
-        return this.featureStrategiesStore.getStrategiesBySegment(id);
+    async getStrategies(
+        id: number,
+        userId: number,
+    ): Promise<IFeatureStrategy[]> {
+        const strategies =
+            await this.featureStrategiesStore.getStrategiesBySegment(id);
+        if (this.flagResolver.isEnabled('privateProjects')) {
+            const accessibleProjects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            if (accessibleProjects.mode === 'all') {
+                return strategies;
+            } else {
+                return strategies.filter((strategy) =>
+                    accessibleProjects.projects.includes(strategy.projectId),
+                );
+            }
+        }
+        return strategies;
     }
 
     async create(

@@ -20,6 +20,7 @@ import { ISettingStore } from '../../types/stores/settings-store';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../../types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 import { type GetActiveUsers } from './getActiveUsers';
+import { ProjectModeCount } from '../../db/project-store';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -30,7 +31,7 @@ export interface InstanceStats {
     versionEnterprise?: string;
     users: number;
     featureToggles: number;
-    projects: number;
+    projects: ProjectModeCount[];
     contextFields: number;
     roles: number;
     customRootRoles: number;
@@ -47,9 +48,10 @@ export interface InstanceStats {
     activeUsers: Awaited<ReturnType<GetActiveUsers>>;
 }
 
-export interface InstanceStatsSigned extends InstanceStats {
+export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
+    projects: number;
     sum: string;
-}
+};
 
 export class InstanceStatsService {
     private logger: Logger;
@@ -152,6 +154,10 @@ export class InstanceStatsService {
         }
     }
 
+    getProjectModeCount(): Promise<ProjectModeCount[]> {
+        return this.projectStore.getProjectModeCounts();
+    }
+
     getToggleCount(): Promise<number> {
         return this.featureToggleStore.count({
             archived: false,
@@ -201,7 +207,7 @@ export class InstanceStatsService {
             this.getToggleCount(),
             this.userStore.count(),
             this.getActiveUsers(),
-            this.projectStore.count(),
+            this.getProjectModeCount(),
             this.contextFieldStore.count(),
             this.groupStore.count(),
             this.roleStore.count(),
@@ -275,10 +281,13 @@ export class InstanceStatsService {
 
     async getSignedStats(): Promise<InstanceStatsSigned> {
         const instanceStats = await this.getStats();
+        const totalProjects = instanceStats.projects
+            .map((p) => p.count)
+            .reduce((a, b) => a + b, 0);
 
         const sum = sha256(
-            `${instanceStats.instanceId}${instanceStats.users}${instanceStats.featureToggles}${instanceStats.projects}${instanceStats.roles}${instanceStats.groups}${instanceStats.environments}${instanceStats.segments}`,
+            `${instanceStats.instanceId}${instanceStats.users}${instanceStats.featureToggles}${totalProjects}${instanceStats.roles}${instanceStats.groups}${instanceStats.environments}${instanceStats.segments}`,
         );
-        return { ...instanceStats, sum };
+        return { ...instanceStats, sum, projects: totalProjects };
     }
 }

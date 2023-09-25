@@ -169,7 +169,15 @@ export const createServices = (
         config,
         lastSeenService,
     );
-    const contextService = new ContextService(stores, config);
+    const privateProjectChecker = db
+        ? createPrivateProjectChecker(db, config)
+        : createFakePrivateProjectChecker();
+
+    const contextService = new ContextService(
+        stores,
+        config,
+        privateProjectChecker,
+    );
     const emailService = new EmailService(config.email, config.getLogger);
     const eventService = new EventService(stores, config);
     const featureTypeService = new FeatureTypeService(stores, config);
@@ -201,11 +209,9 @@ export const createServices = (
         stores,
         changeRequestAccessReadModel,
         config,
+        privateProjectChecker,
     );
 
-    const privateProjectChecker = db
-        ? createPrivateProjectChecker(db, config)
-        : createFakePrivateProjectChecker();
     const clientInstanceService = new ClientInstanceService(
         stores,
         config,

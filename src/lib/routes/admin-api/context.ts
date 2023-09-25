@@ -301,8 +301,12 @@ export class ContextController extends Controller {
         res: Response<ContextFieldStrategiesSchema>,
     ): Promise<void> {
         const { contextField } = req.params;
+        const { user } = req;
         const contextFields =
-            await this.contextService.getStrategiesByContextField(contextField);
+            await this.contextService.getStrategiesByContextField(
+                contextField,
+                user.id,
+            );
 
         this.openApiService.respondWithValidation(
             200,

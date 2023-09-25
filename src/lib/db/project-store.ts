@@ -581,7 +581,7 @@ class ProjectStore implements IProjectStore {
     mapProjectModeCount(row): ProjectModeCount {
         return {
             mode: row.mode,
-            count: parseInt(row.count, 10),
+            count: Number(row.count),
         };
     }
 

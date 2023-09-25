@@ -32,20 +32,56 @@ The configuration settings allow you to choose the events you're interested in a
 
 You can choose to trigger updates for the following events:
 
-- feature-created
-- feature-metadata-updated
-- feature-project-change
+- addon-config-created
+- addon-config-deleted
+- addon-config-updated
+- api-token-created
+- api-token-deleted
+- change-added
+- change-discarded
+- change-edited
+- change-request-applied
+- change-request-approval-added
+- change-request-approved
+- change-request-cancelled
+- change-request-created
+- change-request-discarded
+- change-request-rejected
+- change-request-sent-to-review
+- context-field-created
+- context-field-deleted
+- context-field-updated
 - feature-archived
+- feature-created
+- feature-deleted
+- feature-environment-disabled
+- feature-environment-enabled
+- feature-environment-variants-updated
+- feature-metadata-updated
+- feature-potentially-stale-on
+- feature-project-change
 - feature-revived
-- feature-strategy-update
+- feature-stale-off
+- feature-stale-on
 - feature-strategy-add
 - feature-strategy-remove
-- feature-stale-on
-- feature-stale-off
-- feature-environment-enabled
-- feature-environment-disabled
-- feature-environment-variants-updated
-- feature-potentially-stale-on
+- feature-strategy-update
+- feature-tagged
+- feature-untagged
+- group-created
+- group-deleted
+- group-updated
+- project-created
+- project-deleted
+- segment-created
+- segment-deleted
+- segment-updated
+- service-account-created
+- service-account-deleted
+- service-account-updated
+- user-created
+- user-deleted
+- user-updated
 
 #### Parameters {#parameters}
 

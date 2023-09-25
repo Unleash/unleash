@@ -28,4 +28,13 @@ export class DependentFeaturesStore implements IDependentFeaturesStore {
             .onConflict(['parent', 'child'])
             .merge();
     }
+
+    async delete(
+        dependency: Pick<FeatureDependency, 'parent' | 'child'>,
+    ): Promise<void> {
+        await this.db('dependent_features')
+            .where('parent', dependency.parent)
+            .andWhere('child', dependency.child)
+            .del();
+    }
 }

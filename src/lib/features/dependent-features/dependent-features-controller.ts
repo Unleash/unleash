@@ -2,10 +2,10 @@ import { Response } from 'express';
 import Controller from '../../routes/controller';
 import { OpenApiService } from '../../services';
 import {
-    CREATE_FEATURE,
     IFlagResolver,
     IUnleashConfig,
     IUnleashServices,
+    UPDATE_FEATURE,
 } from '../../types';
 import { Logger } from '../../logger';
 import {
@@ -22,9 +22,15 @@ interface FeatureParams {
     featureName: string;
 }
 
+interface DeleteDependencyParams {
+    featureName: string;
+    dependency: string;
+}
+
 const PATH = '/:projectId/features';
 const PATH_FEATURE = `${PATH}/:featureName`;
 const PATH_DEPENDENCIES = `${PATH_FEATURE}/dependencies`;
+const PATH_DEPENDENCY = `${PATH_FEATURE}/dependencies/:dependency`;
 
 type DependentFeaturesServices = Pick<
     IUnleashServices,
@@ -56,7 +62,7 @@ export default class DependentFeaturesController extends Controller {
             method: 'post',
             path: PATH_DEPENDENCIES,
             handler: this.addFeatureDependency,
-            permission: CREATE_FEATURE,
+            permission: UPDATE_FEATURE,
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
@@ -67,6 +73,25 @@ export default class DependentFeaturesController extends Controller {
                     requestBody: createRequestSchema(
                         'createDependentFeatureSchema',
                     ),
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'delete',
+            path: PATH_DEPENDENCY,
+            handler: this.deleteFeatureDependency,
+            permission: UPDATE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    summary: 'Deletes a feature dependency.',
+                    description: 'Remove a dependency to a parent feature.',
+                    operationId: 'deleteFeatureDependency',
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403, 404),
@@ -92,6 +117,25 @@ export default class DependentFeaturesController extends Controller {
                     feature,
                 },
             );
+            res.status(200).end();
+        } else {
+            throw new InvalidOperationError(
+                'Dependent features are not enabled',
+            );
+        }
+    }
+
+    async deleteFeatureDependency(
+        req: IAuthRequest<DeleteDependencyParams, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { featureName, dependency } = req.params;
+
+        if (this.config.flagResolver.isEnabled('dependentFeatures')) {
+            await this.dependentFeaturesService.deleteFeatureDependency({
+                parent: dependency,
+                child: featureName,
+            });
             res.status(200).end();
         } else {
             throw new InvalidOperationError(

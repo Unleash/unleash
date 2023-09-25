@@ -36,4 +36,10 @@ export class DependentFeaturesService {
                   };
         await this.dependentFeaturesStore.upsert(featureDependency);
     }
+
+    async deleteFeatureDependency(
+        dependency: Pick<FeatureDependency, 'parent' | 'child'>,
+    ): Promise<void> {
+        await this.dependentFeaturesStore.delete(dependency);
+    }
 }

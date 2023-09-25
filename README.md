@@ -15,11 +15,11 @@
 
 ## About Unleash
 
-Unleash is an open source [feature flag](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices) solution. It improves the workflow of your development team and leads to quicker software delivery. Unleash increases efficiency and gives teams _full control_ of how and when they enable new functionality for end users. Unleash lets teams ship code to production in _smaller_ releases _whenever_ they want.
+Unleash is an open source feature management solution. It improves the workflow of your development team and leads to quicker software delivery. Unleash increases efficiency and gives teams _full control_ of how and when they enable new functionality for end users. Unleash lets teams ship code to production in _smaller_ releases _whenever_ they want.
 
-Feature toggles make it easy to test how your code works with real production data without the fear that you'll accidentally break your users' experience. It also helps your team work on multiple features in parallel without each maintaining an separate feature branch.
+Feature toggles make it easy to test how your code works with real production data without the fear that you'll accidentally break your users' experience. It also helps your team work on multiple features in parallel without each maintaining a separate feature branch.
 
-Unleash is the largest [open source feature flag solution](https://www.getunleash.io/) on GitHub. There's 12 official client and server SDKs and 10+ community SDKs available; you can even make your own if you want to. You can use Unleash with any language and any framework.
+Unleash is the largest open source solution for feature flagging on GitHub. There are 12 official client and server SDKs and 10+ community SDKs available; you can even make your own if you want to. You can use Unleash with any language and any framework.
 
 <br/>
 
@@ -103,11 +103,13 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 
 📚 [Visit the documentation](https://docs.getunleash.io/) for more in-depth descriptions, how-to guides, and more.
 
+📖 Learn more about the principles of building and scaling [feature flag](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices) solutions.
+
 <br/>
 
 ## Contribute to Unleash
 
-Building Unleash is a collaborative effort, and we owe a lot of gratitude to many smart and talented individuals. Building it together with community ensures that we build a product that solves real problems for real people. We'd love to have your help too: Please feel free to open issues or provide pull requests.
+Unleash is the largest [open source feature flag solution](https://www.getunleash.io/) on GitHub. Building Unleash is a collaborative effort, and we owe a lot of gratitude to many smart and talented individuals. Building it together with the community ensures that we build a product that solves real problems for real people. We'd love to have your help too: Please feel free to open issues or provide pull requests.
 
 Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guidelines and the [Unleash developer guide](./website/docs/contributing/developer-guide.md) for tips on environment setup, running the tests, and running Unleash from source.
 

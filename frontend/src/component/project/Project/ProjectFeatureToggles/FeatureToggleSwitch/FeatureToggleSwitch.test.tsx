@@ -32,27 +32,39 @@ const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
     </UIProviderContainer>
 );
 
-test('it should show prod guard when production environment', () => {
+test('it should show prod guard when production environment', async () => {
     testServerRoute(server, '/api/admin/ui-config', {});
     testServerRoute(
         server,
-        '/api/admin/projects/default/features/some-feature',
+        '/api/admin/projects/default/features/somefeature',
         {
             name: 'feature1',
             environments: [
-                { name: 'env1', type: 'production', enabled: false },
-                { name: 'env2', enabled: false },
+                {
+                    name: 'env1',
+                    type: 'production',
+                    enabled: false,
+                    strategies: [],
+                },
+                {
+                    name: 'env2',
+                    type: 'development',
+                    enabled: false,
+                    strategies: [],
+                },
             ],
         }
     );
 
     render(
         <UnleashUiSetup
-            path={'/projects/default/features/some-feature'}
+            path={
+                '/projects/default/features/somefeature?variantEnvironments=true'
+            }
             pathTemplate={'/projects/:projectId/features/:featureId/*'}
         >
             <FeatureToggleSwitch
-                featureId={'some-feature'}
+                featureId={'somefeature'}
                 environmentName={'env1'}
                 projectId={'default'}
                 value={false}
@@ -60,9 +72,7 @@ test('it should show prod guard when production environment', () => {
         </UnleashUiSetup>
     );
 
-    const toggle = screen.getByRole(`checkbox`);
+    const toggle = screen.getByTestId(`permission-switch`);
     toggle.click();
-    expect(
-        screen.getByText('Changing production environment')
-    ).toBeInTheDocument();
+    await screen.findByText('Changing production environment');
 });

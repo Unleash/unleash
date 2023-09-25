@@ -1,4 +1,7 @@
-import { FeatureDependency } from './dependent-features-service';
+import {
+    FeatureDependency,
+    FeatureDependencyId,
+} from './dependent-features-service';
 import { Db } from '../../db/db';
 import { IDependentFeaturesStore } from './dependent-features-store-type';
 
@@ -38,9 +41,7 @@ export class DependentFeaturesStore implements IDependentFeaturesStore {
         return rows.map((row) => row.child);
     }
 
-    async delete(
-        dependency: Pick<FeatureDependency, 'parent' | 'child'>,
-    ): Promise<void> {
+    async delete(dependency: FeatureDependencyId): Promise<void> {
         await this.db('dependent_features')
             .where('parent', dependency.parent)
             .andWhere('child', dependency.child)

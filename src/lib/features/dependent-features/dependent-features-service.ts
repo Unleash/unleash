@@ -2,6 +2,7 @@ import { InvalidOperationError } from '../../error';
 import { CreateDependentFeatureSchema } from '../../openapi';
 import { IDependentFeaturesStore } from './dependent-features-store-type';
 
+export type FeatureDependencyId = { parent: string; child: string };
 export type FeatureDependency =
     | {
           parent: string;
@@ -47,7 +48,7 @@ export class DependentFeaturesService {
     }
 
     async deleteFeatureDependency(
-        dependency: Pick<FeatureDependency, 'parent' | 'child'>,
+        dependency: FeatureDependencyId,
     ): Promise<void> {
         await this.dependentFeaturesStore.delete(dependency);
     }

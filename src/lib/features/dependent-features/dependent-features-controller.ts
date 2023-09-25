@@ -35,13 +35,17 @@ const PATH_DEPENDENCY = `${PATH_FEATURE}/dependencies/:dependency`;
 
 type DependentFeaturesServices = Pick<
     IUnleashServices,
-    'transactionalDependentFeaturesService' | 'openApiService'
+    | 'transactionalDependentFeaturesService'
+    | 'dependentFeaturesService'
+    | 'openApiService'
 >;
 
 export default class DependentFeaturesController extends Controller {
     private transactionalDependentFeaturesService: (
         db: UnleashTransaction,
     ) => DependentFeaturesService;
+
+    private dependentFeaturesService: DependentFeaturesService;
 
     private readonly startTransaction: TransactionCreator<UnleashTransaction>;
 
@@ -55,6 +59,7 @@ export default class DependentFeaturesController extends Controller {
         config: IUnleashConfig,
         {
             transactionalDependentFeaturesService,
+            dependentFeaturesService,
             openApiService,
         }: DependentFeaturesServices,
         startTransaction: TransactionCreator<UnleashTransaction>,
@@ -62,6 +67,7 @@ export default class DependentFeaturesController extends Controller {
         super(config);
         this.transactionalDependentFeaturesService =
             transactionalDependentFeaturesService;
+        this.dependentFeaturesService = dependentFeaturesService;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
         this.startTransaction = startTransaction;
@@ -97,6 +103,7 @@ export default class DependentFeaturesController extends Controller {
             path: PATH_DEPENDENCY,
             handler: this.deleteFeatureDependency,
             permission: UPDATE_FEATURE,
+            acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],

@@ -85,7 +85,6 @@ const slackAppDefinition: IAddonDefinition = {
         },
     ],
     events: [
-        // TODO: Update docs
         ADDON_CONFIG_CREATED,
         ADDON_CONFIG_DELETED,
         ADDON_CONFIG_UPDATED,

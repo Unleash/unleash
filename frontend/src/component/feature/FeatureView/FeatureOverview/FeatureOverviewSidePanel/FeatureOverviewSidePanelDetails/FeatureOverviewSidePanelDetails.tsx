@@ -6,9 +6,9 @@ import { parseISO } from 'date-fns';
 import { FeatureEnvironmentSeen } from '../../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Add } from '@mui/icons-material';
-import { useUiFlag } from '../../../../../../hooks/useUiFlag';
-import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
-import { AddDependencyDialogue } from '../../../../Dependencies/AddDependencyDialogue';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { AddDependencyDialogue } from 'component/feature/Dependencies/AddDependencyDialogue';
 import { useState } from 'react';
 
 const StyledContainer = styled('div')(({ theme }) => ({

@@ -204,6 +204,7 @@ test('Should get all events of type', async () => {
                           preData: data,
                           featureName: data.name,
                           createdBy: 'test-user',
+                          tags: [],
                       });
             return eventStore.store(event);
         }),

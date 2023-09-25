@@ -79,7 +79,6 @@ export default class FeatureToggleClientStore
             'features.impression_data as impression_data',
             'features.created_at as created_at',
             'fe.variants as variants',
-            'fem.last_seen_at as env_last_seen_at',
             'fe.enabled as enabled',
             'fe.environment as environment',
             'fs.id as strategy_id',
@@ -95,15 +94,6 @@ export default class FeatureToggleClientStore
             'df.parent as parent',
             'df.variants as parent_variants',
             'df.enabled as parent_enabled',
-            this.db.raw(`(
-                   SELECT
-                      CASE
-                        WHEN COUNT(*) > 0 THEN MAX(last_seen_at)
-                        ELSE NULL
-                      END
-                   FROM feature_environments_metrics
-                   WHERE features.name = feature_environments_metrics.feature_name
-                  ) as last_seen_at`),
         ] as (string | Raw<any>)[];
 
         let query = this.db('features')
@@ -129,12 +119,6 @@ export default class FeatureToggleClientStore
                 'fe.feature_name',
                 'features.name',
             )
-            .leftJoin('feature_environments_metrics as fem', function () {
-                this.on('fem.feature_name', '=', 'features.name').andOnVal(
-                    'fem.environment',
-                    environment,
-                );
-            })
             .leftJoin(
                 'feature_strategy_segment as fss',
                 `fss.feature_strategy_id`,
@@ -144,15 +128,36 @@ export default class FeatureToggleClientStore
             .leftJoin('dependent_features as df', 'df.child', 'features.name');
 
         if (isAdmin) {
-            query = query.leftJoin(
-                'feature_tag as ft',
-                'ft.feature_name',
-                'features.name',
-            );
+            query = query
+                .leftJoin(
+                    'feature_tag as ft',
+                    'ft.feature_name',
+                    'features.name',
+                )
+                .leftJoin('feature_environments_metrics', function () {
+                    this.on(
+                        'feature_environments_metrics.feature_name',
+                        'features.name',
+                    ).andOnVal(
+                        'feature_environments_metrics.environment',
+                        '=',
+                        environment,
+                    );
+                });
             selectColumns = [
                 ...selectColumns,
                 'ft.tag_value as tag_value',
                 'ft.tag_type as tag_type',
+                'feature_environments_metrics.last_seen_at as env_last_seen_at',
+                this.db.raw(`(
+                   SELECT
+                      CASE
+                        WHEN COUNT(*) > 0 THEN MAX(last_seen_at)
+                        ELSE NULL
+                      END
+                   FROM feature_environments_metrics
+                   WHERE features.name = feature_environments_metrics.feature_name
+                  ) as last_seen_at`),
             ];
 
             if (userId) {
@@ -231,7 +236,6 @@ export default class FeatureToggleClientStore
             feature.project = r.project;
             feature.stale = r.stale;
             feature.type = r.type;
-            feature.lastSeenAt = r.last_seen_at;
             feature.variants = r.variants || [];
             feature.project = r.project;
             if (isAdmin) {

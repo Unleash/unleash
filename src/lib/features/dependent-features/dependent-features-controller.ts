@@ -20,18 +20,18 @@ import { DependentFeaturesService } from './dependent-features-service';
 import { TransactionCreator, UnleashTransaction } from '../../db/transaction';
 
 interface FeatureParams {
-    featureName: string;
+    child: string;
 }
 
 interface DeleteDependencyParams {
-    featureName: string;
-    dependency: string;
+    child: string;
+    parent: string;
 }
 
 const PATH = '/:projectId/features';
-const PATH_FEATURE = `${PATH}/:featureName`;
+const PATH_FEATURE = `${PATH}/:child`;
 const PATH_DEPENDENCIES = `${PATH_FEATURE}/dependencies`;
-const PATH_DEPENDENCY = `${PATH_FEATURE}/dependencies/:dependency`;
+const PATH_DEPENDENCY = `${PATH_FEATURE}/dependencies/:parent`;
 
 type DependentFeaturesServices = Pick<
     IUnleashServices,
@@ -123,14 +123,14 @@ export default class DependentFeaturesController extends Controller {
         req: IAuthRequest<FeatureParams, any, CreateDependentFeatureSchema>,
         res: Response,
     ): Promise<void> {
-        const { featureName } = req.params;
+        const { child } = req.params;
         const { variants, enabled, feature } = req.body;
 
         if (this.config.flagResolver.isEnabled('dependentFeatures')) {
             await this.startTransaction(async (tx) =>
                 this.transactionalDependentFeaturesService(
                     tx,
-                ).upsertFeatureDependency(featureName, {
+                ).upsertFeatureDependency(child, {
                     variants,
                     enabled,
                     feature,
@@ -148,12 +148,12 @@ export default class DependentFeaturesController extends Controller {
         req: IAuthRequest<DeleteDependencyParams, any, any>,
         res: Response,
     ): Promise<void> {
-        const { featureName, dependency } = req.params;
+        const { child, parent } = req.params;
 
         if (this.config.flagResolver.isEnabled('dependentFeatures')) {
             await this.dependentFeaturesService.deleteFeatureDependency({
-                parent: dependency,
-                child: featureName,
+                parent,
+                child,
             });
             res.status(200).end();
         } else {

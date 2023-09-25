@@ -105,6 +105,7 @@ export default class MetricsMonitor {
         const projectsTotal = new client.Gauge({
             name: 'projects_total',
             help: 'Number of projects',
+            labelNames: ['mode'],
         });
         const environmentsTotal = new client.Gauge({
             name: 'environments_total',
@@ -193,7 +194,11 @@ export default class MetricsMonitor {
                 usersActive90days.set(stats.activeUsers.last90);
 
                 projectsTotal.reset();
-                projectsTotal.set(stats.projects);
+                stats.projects.forEach((projectStat) => {
+                    projectsTotal
+                        .labels({ mode: projectStat.mode })
+                        .set(projectStat.count);
+                });
 
                 environmentsTotal.reset();
                 environmentsTotal.set(stats.environments);

@@ -1,9 +1,6 @@
-import {
-    FeatureDependency,
-    FeatureDependencyId,
-} from './dependent-features-service';
 import { Db } from '../../db/db';
 import { IDependentFeaturesStore } from './dependent-features-store-type';
+import { FeatureDependency, FeatureDependencyId } from './dependent-features';
 
 type SerializableFeatureDependency = Omit<FeatureDependency, 'variants'> & {
     variants?: string;

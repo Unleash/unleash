@@ -1,16 +1,8 @@
 import { InvalidOperationError } from '../../error';
 import { CreateDependentFeatureSchema } from '../../openapi';
 import { IDependentFeaturesStore } from './dependent-features-store-type';
+import { FeatureDependency, FeatureDependencyId } from './dependent-features';
 
-export type FeatureDependencyId = { parent: string; child: string };
-export type FeatureDependency =
-    | {
-          parent: string;
-          child: string;
-          enabled: true;
-          variants?: string[];
-      }
-    | { parent: string; child: string; enabled: false };
 export class DependentFeaturesService {
     private dependentFeaturesStore: IDependentFeaturesStore;
 

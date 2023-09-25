@@ -171,19 +171,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return present;
     }
 
-    private upsert = (params: any) => {
-        const { table, object, constraint } = params;
-        const insert = this.db(table).insert(object);
-        const update = this.db.queryBuilder().update(object);
-        return this.db
-            .raw(`? ON CONFLICT ${constraint} DO ? returning *`, [
-                insert,
-                update,
-            ])
-            .get('rows')
-            .get(0);
-    };
-
     async setLastSeen(data: LastSeenInput[]): Promise<void> {
         const now = new Date();
         const enhancedData = data.map((value) => ({

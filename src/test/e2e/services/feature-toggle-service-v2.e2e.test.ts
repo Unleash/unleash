@@ -54,15 +54,17 @@ beforeAll(async () => {
         db.rawDatabase,
         accessService,
     );
-    segmentService = new SegmentService(
-        stores,
-        changeRequestAccessReadModel,
-        config,
-    );
     const privateProjectChecker = createPrivateProjectChecker(
         db.rawDatabase,
         config,
     );
+    segmentService = new SegmentService(
+        stores,
+        changeRequestAccessReadModel,
+        config,
+        privateProjectChecker,
+    );
+
     service = new FeatureToggleService(
         stores,
         config,

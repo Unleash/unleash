@@ -566,7 +566,7 @@ class ProjectStore implements IProjectStore {
             )
             .count(`${TABLE}.id as count`)
             .from(`${TABLE}`)
-            .join(
+            .leftJoin(
                 `${SETTINGS_TABLE}`,
                 `${TABLE}.id`,
                 `${SETTINGS_TABLE}.project`,

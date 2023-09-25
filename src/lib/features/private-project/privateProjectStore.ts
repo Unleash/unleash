@@ -1,8 +1,20 @@
 import { Db } from '../../db/db';
 import { Logger, LogProvider } from '../../logger';
 import { IPrivateProjectStore } from './privateProjectStoreType';
+import { ADMIN_TOKEN_ID } from '../../types';
 
-const ADMIN_TOKEN_ID = -1;
+export type ProjectAccess =
+    | {
+          mode: 'all';
+      }
+    | {
+          mode: 'limited';
+          projects: string[];
+      };
+
+export const ALL_PROJECT_ACCESS: ProjectAccess = {
+    mode: 'all',
+};
 
 class PrivateProjectStore implements IPrivateProjectStore {
     private db: Db;
@@ -16,10 +28,9 @@ class PrivateProjectStore implements IPrivateProjectStore {
 
     destroy(): void {}
 
-    async getUserAccessibleProjects(userId: number): Promise<string[]> {
+    async getUserAccessibleProjects(userId: number): Promise<ProjectAccess> {
         if (userId === ADMIN_TOKEN_ID) {
-            const allProjects = await this.db('projects').pluck('id');
-            return allProjects;
+            return ALL_PROJECT_ACCESS;
         }
         const isViewer = await this.db('role_user')
             .join('roles', 'role_user.role_id', 'roles.id')
@@ -32,11 +43,10 @@ class PrivateProjectStore implements IPrivateProjectStore {
             .first();
 
         if (!isViewer || isViewer.count == 0) {
-            const allProjects = await this.db('projects').pluck('id');
-            return allProjects;
+            return ALL_PROJECT_ACCESS;
         }
 
-        const accessibleProjects = await this.db
+        const accessibleProjects: string[] = await this.db
             .from((db) => {
                 db.distinct()
                     .select('projects.id as project_id')
@@ -46,7 +56,15 @@ class PrivateProjectStore implements IPrivateProjectStore {
                         'projects.id',
                         'project_settings.project',
                     )
-                    .where('project_settings.project_mode', '!=', 'private')
+                    .where((builder) => {
+                        builder
+                            .whereNull('project_settings.project')
+                            .orWhere(
+                                'project_settings.project_mode',
+                                '!=',
+                                'private',
+                            );
+                    })
                     .unionAll((queryBuilder) => {
                         queryBuilder
                             .select('projects.id as project_id')
@@ -89,7 +107,7 @@ class PrivateProjectStore implements IPrivateProjectStore {
             .select('*')
             .pluck('project_id');
 
-        return accessibleProjects;
+        return { mode: 'limited', projects: accessibleProjects };
     }
 }
 

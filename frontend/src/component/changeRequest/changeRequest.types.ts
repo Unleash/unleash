@@ -164,7 +164,12 @@ type ChangeRequestEnabled = { enabled: boolean };
 
 type ChangeRequestAddStrategy = Pick<
     IFeatureStrategy,
-    'parameters' | 'constraints' | 'segments' | 'title' | 'disabled'
+    | 'parameters'
+    | 'constraints'
+    | 'segments'
+    | 'title'
+    | 'disabled'
+    | 'variants'
 > & { name: string };
 
 type ChangeRequestEditStrategy = ChangeRequestAddStrategy & { id: string };

@@ -65,6 +65,7 @@ export type UiFlags = {
     variantTypeNumber?: boolean;
     privateProjects?: boolean;
     accessOverview?: boolean;
+    dependentFeatures?: boolean;
     [key: string]: boolean | Variant | undefined;
 };
 

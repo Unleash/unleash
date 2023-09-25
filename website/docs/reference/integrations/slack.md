@@ -1,7 +1,13 @@
 ---
 id: slack
-title: Slack
+title: Slack (deprecated)
 ---
+
+:::caution Deprecation notice
+
+This Slack integration is deprecated and will be removed in a future release. We recommend using the new [Slack App](./slack-app.md) integration instead.
+
+:::
 
 > This feature was introduced in _Unleash v3.11.0_.
 
@@ -48,6 +54,6 @@ Unleash Slack integration takes the following parameters.
 
 The Slack integration also defined the Tag type "slack". You may use this tag to override which Slack channel Unleash should post updates to for this feature toggle.
 
-![Slack Tags](/img/slack_addon_tags.png)
+![Slack Tags](/img/slack-addon-tags.png)
 
 In the picture you can see we have defined two slack tags for the "new-payment-system" toggle. In this example Unleash will post updates to the **#notifications** and **#random** channel.

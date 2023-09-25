@@ -69,6 +69,7 @@ import {
     createGetActiveUsers,
 } from '../features/instance-stats/getActiveUsers';
 import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
+import { createDependentFeaturesService } from '../features/dependent-features/createDependentFeaturesService';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -201,6 +202,7 @@ export const createServices = (
         changeRequestAccessReadModel,
         config,
     );
+
     const privateProjectChecker = db
         ? createPrivateProjectChecker(db, config)
         : createFakePrivateProjectChecker();
@@ -298,6 +300,8 @@ export const createServices = (
     const dependentFeaturesService = new DependentFeaturesService(
         stores.dependentFeaturesStore,
     );
+    const transactionalDependentFeaturesService = (txDb: Knex.Transaction) =>
+        createDependentFeaturesService(txDb);
 
     return {
         accessService,
@@ -350,6 +354,7 @@ export const createServices = (
         transactionalGroupService,
         privateProjectChecker,
         dependentFeaturesService,
+        transactionalDependentFeaturesService,
     };
 };
 

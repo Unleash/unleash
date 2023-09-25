@@ -23,3 +23,12 @@ jobs:
           sed -i 's/chalk\(\w\|\.\)\+//g' node_modules/@docusaurus/core/lib/client/serverEntry.js
           echo "Chalk removed"
           yarn build
+  build:
+    runs-on: ubuntu-latest
+    name: build
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - run: echo "Fake build step for docs only PRs"

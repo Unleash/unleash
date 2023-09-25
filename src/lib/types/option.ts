@@ -215,4 +215,5 @@ export interface IUnleashConfig {
     prometheusApi?: string;
     publicFolder?: string;
     disableScheduler?: boolean;
+    isEnterprise: boolean;
 }

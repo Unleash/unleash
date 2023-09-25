@@ -1,3 +1,5 @@
+import { ProjectAccess } from './privateProjectStore';
+
 export interface IPrivateProjectStore {
-    getUserAccessibleProjects(userId: number): Promise<string[]>;
+    getUserAccessibleProjects(userId: number): Promise<ProjectAccess>;
 }

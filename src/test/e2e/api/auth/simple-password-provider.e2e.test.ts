@@ -12,6 +12,7 @@ import { RoleName } from '../../../../lib/types/model';
 import SettingService from '../../../../lib/services/setting-service';
 import { GroupService } from '../../../../lib/services/group-service';
 import ResetTokenService from '../../../../lib/services/reset-token-service';
+import { EventService } from '../../../../lib/services';
 
 let app;
 let stores;
@@ -34,18 +35,20 @@ beforeEach(async () => {
     db = await dbInit('simple_password_provider_api_serial', getLogger);
     stores = db.stores;
     app = await setupApp(stores);
-    const groupService = new GroupService(stores, config);
+    const eventService = new EventService(stores, config);
+    const groupService = new GroupService(stores, config, eventService);
     const accessService = new AccessService(stores, config, groupService);
     const resetTokenService = new ResetTokenService(stores, config);
     // @ts-ignore
     const emailService = new EmailService(undefined, config.getLogger);
     const sessionService = new SessionService(stores, config);
-    const settingService = new SettingService(stores, config);
+    const settingService = new SettingService(stores, config, eventService);
 
     userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });

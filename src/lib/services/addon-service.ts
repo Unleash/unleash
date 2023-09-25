@@ -12,6 +12,7 @@ import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';
 import { IUnleashStores, IUnleashConfig } from '../types';
 import { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
+import EventService from './event-service';
 
 const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
 
@@ -32,6 +33,8 @@ export default class AddonService {
     logger: Logger;
 
     tagTypeService: TagTypeService;
+
+    eventService: EventService;
 
     addonProviders: IAddonProviders;
 
@@ -55,6 +58,7 @@ export default class AddonService {
             flagResolver,
         }: Pick<IUnleashConfig, 'getLogger' | 'server' | 'flagResolver'>,
         tagTypeService: TagTypeService,
+        eventService: EventService,
         addons?: IAddonProviders,
     ) {
         this.eventStore = eventStore;
@@ -62,6 +66,7 @@ export default class AddonService {
         this.featureToggleStore = featureToggleStore;
         this.logger = getLogger('services/addon-service.js');
         this.tagTypeService = tagTypeService;
+        this.eventService = eventService;
 
         this.addonProviders =
             addons ||
@@ -205,7 +210,7 @@ export default class AddonService {
             `User ${userName} created addon ${addonConfig.provider}`,
         );
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: events.ADDON_CONFIG_CREATED,
             createdBy: userName,
             data: { provider: addonConfig.provider },
@@ -238,7 +243,7 @@ export default class AddonService {
             );
         }
         const result = await this.addonStore.update(id, addonConfig);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: events.ADDON_CONFIG_UPDATED,
             createdBy: userName,
             data: { id, provider: addonConfig.provider },
@@ -249,7 +254,7 @@ export default class AddonService {
 
     async removeAddon(id: number, userName: string): Promise<void> {
         await this.addonStore.delete(id);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: events.ADDON_CONFIG_DELETED,
             createdBy: userName,
             data: { id },

@@ -4,13 +4,13 @@ import {
     IContextFieldDto,
     IContextFieldStore,
 } from '../types/stores/context-field-store';
-import { IEventStore } from '../types/stores/event-store';
 import { IProjectStore } from '../types/stores/project-store';
 import { IFeatureStrategiesStore, IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import { ContextFieldStrategiesSchema } from '../openapi/spec/context-field-strategies-schema';
 import { IFeatureStrategy, IFlagResolver } from '../types';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
+import EventService from './event-service';
 
 const { contextSchema, nameSchema } = require('./context-schema');
 const NameExistsError = require('../error/name-exists-error');
@@ -24,7 +24,7 @@ const {
 class ContextService {
     private projectStore: IProjectStore;
 
-    private eventStore: IEventStore;
+    private eventService: EventService;
 
     private contextFieldStore: IContextFieldStore;
 
@@ -39,25 +39,22 @@ class ContextService {
     constructor(
         {
             projectStore,
-            eventStore,
             contextFieldStore,
             featureStrategiesStore,
         }: Pick<
             IUnleashStores,
-            | 'projectStore'
-            | 'eventStore'
-            | 'contextFieldStore'
-            | 'featureStrategiesStore'
+            'projectStore' | 'contextFieldStore' | 'featureStrategiesStore'
         >,
         {
             getLogger,
             flagResolver,
         }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.privateProjectChecker = privateProjectChecker;
         this.projectStore = projectStore;
-        this.eventStore = eventStore;
+        this.eventService = eventService;
         this.flagResolver = flagResolver;
         this.contextFieldStore = contextFieldStore;
         this.featureStrategiesStore = featureStrategiesStore;
@@ -120,7 +117,7 @@ class ContextService {
 
         // creations
         const createdField = await this.contextFieldStore.create(value);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: CONTEXT_FIELD_CREATED,
             createdBy: userName,
             data: contextField,
@@ -139,7 +136,7 @@ class ContextService {
 
         // update
         await this.contextFieldStore.update(value);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
             createdBy: userName,
             data: value,
@@ -152,7 +149,7 @@ class ContextService {
 
         // delete
         await this.contextFieldStore.delete(name);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: CONTEXT_FIELD_DELETED,
             createdBy: userName,
             data: { name },

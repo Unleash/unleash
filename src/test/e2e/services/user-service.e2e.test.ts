@@ -17,6 +17,7 @@ import { GroupService } from '../../../lib/services/group-service';
 import { randomId } from '../../../lib/util/random-id';
 import { BadDataError } from '../../../lib/error';
 import PasswordMismatch from '../../../lib/error/password-mismatch';
+import { EventService } from '../../../lib/services';
 
 let db;
 let stores;
@@ -31,17 +32,19 @@ beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
     const config = createTestConfig();
-    const groupService = new GroupService(stores, config);
+    const eventService = new EventService(stores, config);
+    const groupService = new GroupService(stores, config, eventService);
     const accessService = new AccessService(stores, config, groupService);
     const resetTokenService = new ResetTokenService(stores, config);
     const emailService = new EmailService(undefined, config.getLogger);
     sessionService = new SessionService(stores, config);
-    settingService = new SettingService(stores, config);
+    settingService = new SettingService(stores, config, eventService);
 
     userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });

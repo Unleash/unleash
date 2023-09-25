@@ -3,6 +3,7 @@ import dbInit from '../helpers/database-init';
 import StateService from '../../../lib/services/state-service';
 import oldFormat from '../../examples/variantsexport_v3.json';
 import { WeightType } from '../../../lib/types/model';
+import { EventService } from '../../../lib/services';
 
 let stores;
 let db;
@@ -12,7 +13,8 @@ beforeAll(async () => {
     const config = createTestConfig();
     db = await dbInit('state_service_serial', config.getLogger);
     stores = db.stores;
-    stateService = new StateService(stores, config);
+    const eventService = new EventService(stores, config);
+    stateService = new StateService(stores, config, eventService);
 });
 
 afterAll(async () => {

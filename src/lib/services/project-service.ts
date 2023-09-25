@@ -64,6 +64,7 @@ import { BadDataError, PermissionError } from '../error';
 import { ProjectDoraMetricsSchema } from 'lib/openapi';
 import { checkFeatureNamingData } from '../features/feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
+import EventService from './event-service';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -113,6 +114,8 @@ export default class ProjectService {
 
     private favoritesService: FavoritesService;
 
+    private eventService: EventService;
+
     private projectStatsStore: IProjectStatsStore;
 
     private flagResolver: IFlagResolver;
@@ -145,6 +148,7 @@ export default class ProjectService {
         featureToggleService: FeatureToggleService,
         groupService: GroupService,
         favoriteService: FavoritesService,
+        eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.projectStore = projectStore;
@@ -159,6 +163,7 @@ export default class ProjectService {
         this.privateProjectChecker = privateProjectChecker;
         this.accountStore = accountStore;
         this.groupService = groupService;
+        this.eventService = eventService;
         this.projectStatsStore = projectStatsStore;
         this.logger = config.getLogger('services/project-service.js');
         this.flagResolver = config.flagResolver;
@@ -246,7 +251,7 @@ export default class ProjectService {
 
         await this.accessService.createDefaultProjectRoles(user, data.id);
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: PROJECT_CREATED,
             createdBy: getCreatedBy(user),
             data,
@@ -284,7 +289,7 @@ export default class ProjectService {
 
         await this.projectStore.updateProjectEnterpriseSettings(updatedProject);
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: PROJECT_UPDATED,
             project: updatedProject.id,
             createdBy: getCreatedBy(user),
@@ -381,7 +386,7 @@ export default class ProjectService {
 
         await this.projectStore.delete(id);
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: PROJECT_DELETED,
             createdBy: getCreatedBy(user),
             project: id,
@@ -434,7 +439,7 @@ export default class ProjectService {
 
         await this.accessService.addUserToRole(userId, role.id, projectId);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectUserAddedEvent({
                 project: projectId,
                 createdBy: createdBy || 'system-user',
@@ -462,7 +467,7 @@ export default class ProjectService {
 
         const user = await this.accountStore.get(userId);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectUserRemovedEvent({
                 project: projectId,
                 createdBy,
@@ -488,7 +493,7 @@ export default class ProjectService {
 
         await this.accessService.removeUserAccess(projectId, userId);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectAccessUserRolesDeleted({
                 project: projectId,
                 createdBy,
@@ -512,7 +517,7 @@ export default class ProjectService {
 
         await this.accessService.removeGroupAccess(projectId, groupId);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectAccessUserRolesDeleted({
                 project: projectId,
                 createdBy,
@@ -547,7 +552,7 @@ export default class ProjectService {
             project.id,
         );
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectGroupAddedEvent({
                 project: project.id,
                 createdBy: modifiedBy,
@@ -582,7 +587,7 @@ export default class ProjectService {
             project.id,
         );
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectGroupRemovedEvent({
                 project: projectId,
                 createdBy: modifiedBy,
@@ -609,7 +614,7 @@ export default class ProjectService {
             createdBy,
         );
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectAccessAddedEvent({
                 project: projectId,
                 createdBy,
@@ -637,7 +642,7 @@ export default class ProjectService {
             createdBy,
         );
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectAccessAddedEvent({
                 project: projectId,
                 createdBy,
@@ -665,7 +670,7 @@ export default class ProjectService {
             userId,
             roles,
         );
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectAccessUserRolesUpdated({
                 project: projectId,
                 createdBy: createdByUserName,
@@ -697,7 +702,7 @@ export default class ProjectService {
             roles,
             createdBy,
         );
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectAccessGroupRolesUpdated({
                 project: projectId,
                 createdBy,
@@ -823,7 +828,7 @@ export default class ProjectService {
         );
         const role = await this.findProjectRole(projectId, roleId);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectUserUpdateRoleEvent({
                 project: projectId,
                 createdBy,
@@ -877,7 +882,7 @@ export default class ProjectService {
         );
         const role = await this.findProjectGroupRole(projectId, roleId);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectGroupUpdateRoleEvent({
                 project: projectId,
                 createdBy,

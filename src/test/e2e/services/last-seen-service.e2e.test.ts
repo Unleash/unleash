@@ -129,3 +129,46 @@ test('Should not update anything for 0 toggles', async () => {
 
     service.destroy();
 });
+
+test('Should handle 1000 toggle updates', async () => {
+    // jest.useFakeTimers();
+    const service = new LastSeenService(stores, config, 30);
+    const time = Date.now();
+    for (let i = 0; i <= 1000; i++) {
+        await stores.featureToggleStore.create('default', { name: `tb${i}` });
+    }
+    const metrics: IClientMetricsEnv[] = [];
+
+    for (let i = 0; i < 999; i++) {
+        metrics.push({
+            featureName: `tb${i}`,
+            appName: 'some-App',
+            environment: 'default',
+            timestamp: new Date(time),
+            yes: 1,
+            no: 0,
+        });
+    }
+
+    metrics.push({
+        featureName: 'tb1000',
+        appName: 'some-App',
+        environment: 'default',
+        timestamp: new Date(time),
+        yes: 0,
+        no: 0,
+    });
+
+    service.updateLastSeen(metrics);
+
+    // bypass interval waiting
+    await service.store();
+
+    const t1 = await stores.featureToggleStore.get('tb1');
+    const t2 = await stores.featureToggleStore.get('tb1000');
+
+    expect(t2.lastSeenAt).toBeNull();
+    expect(t1.lastSeenAt.getTime()).toBeGreaterThanOrEqual(time);
+
+    service.destroy();
+});

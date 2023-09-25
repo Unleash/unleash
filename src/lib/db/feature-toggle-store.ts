@@ -171,24 +171,37 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return present;
     }
 
+    private upsert = (params: any) => {
+        const { table, object, constraint } = params;
+        const insert = this.db(table).insert(object);
+        const update = this.db.queryBuilder().update(object);
+        return this.db
+            .raw(`? ON CONFLICT ${constraint} DO ? returning *`, [
+                insert,
+                update,
+            ])
+            .get('rows')
+            .get(0);
+    };
+
     async setLastSeen(data: LastSeenInput[]): Promise<void> {
         const now = new Date();
-        const environmentArrays = this.mapMetricDataToEnvBuckets(data);
-        try {
-            for (const env of Object.keys(environmentArrays)) {
-                const toggleNames = environmentArrays[env].sort();
-                await this.db(FEATURE_ENVIRONMENTS_METRICS_TABLE)
-                    .upsert({ last_seen_at: now })
-                    .where('environment', env)
-                    .whereIn(
-                        'feature_name',
-                        this.db(FEATURE_ENVIRONMENTS_METRICS_TABLE)
-                            .select('feature_name')
-                            .whereIn('feature_name', toggleNames)
-                            .forUpdate()
-                            .skipLocked(),
-                    );
+        const enhancedData = data.map((value) => ({
+            feature_name: value.featureName,
+            last_seen_at: now,
+            environment: value.environment,
+        }));
+        const dataToPersist: typeof enhancedData = [];
+        for (const input of enhancedData) {
+            if (await this.exists(input.feature_name)) {
+                dataToPersist.push(input);
             }
+        }
+        try {
+            await this.db(FEATURE_ENVIRONMENTS_METRICS_TABLE)
+                .insert(dataToPersist)
+                .onConflict(['feature_name', 'environment'])
+                .merge(['last_seen_at']);
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);
         }

@@ -29,6 +29,15 @@ export class DependentFeaturesStore implements IDependentFeaturesStore {
             .merge();
     }
 
+    async getChildren(parent: string): Promise<string[]> {
+        const rows = await this.db('dependent_features').where(
+            'parent',
+            parent,
+        );
+
+        return rows.map((row) => row.child);
+    }
+
     async delete(
         dependency: Pick<FeatureDependency, 'parent' | 'child'>,
     ): Promise<void> {

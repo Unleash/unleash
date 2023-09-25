@@ -17,6 +17,7 @@ import {
 import { IAuthRequest } from '../../routes/unleash-types';
 import { InvalidOperationError } from '../../error';
 import { DependentFeaturesService } from './dependent-features-service';
+import { TransactionCreator, UnleashTransaction } from '../../db/transaction';
 
 interface FeatureParams {
     featureName: string;
@@ -34,11 +35,15 @@ const PATH_DEPENDENCY = `${PATH_FEATURE}/dependencies/:dependency`;
 
 type DependentFeaturesServices = Pick<
     IUnleashServices,
-    'dependentFeaturesService' | 'openApiService'
+    'transactionalDependentFeaturesService' | 'openApiService'
 >;
 
 export default class DependentFeaturesController extends Controller {
-    private dependentFeaturesService: DependentFeaturesService;
+    private transactionalDependentFeaturesService: (
+        db: UnleashTransaction,
+    ) => DependentFeaturesService;
+
+    private readonly startTransaction: TransactionCreator<UnleashTransaction>;
 
     private openApiService: OpenApiService;
 
@@ -48,12 +53,18 @@ export default class DependentFeaturesController extends Controller {
 
     constructor(
         config: IUnleashConfig,
-        { dependentFeaturesService, openApiService }: DependentFeaturesServices,
+        {
+            transactionalDependentFeaturesService,
+            openApiService,
+        }: DependentFeaturesServices,
+        startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
-        this.dependentFeaturesService = dependentFeaturesService;
+        this.transactionalDependentFeaturesService =
+            transactionalDependentFeaturesService;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
+        this.startTransaction = startTransaction;
         this.logger = config.getLogger(
             '/dependent-features/dependent-feature-service.ts',
         );
@@ -109,13 +120,14 @@ export default class DependentFeaturesController extends Controller {
         const { variants, enabled, feature } = req.body;
 
         if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            await this.dependentFeaturesService.upsertFeatureDependency(
-                featureName,
-                {
+            await this.startTransaction(async (tx) =>
+                this.transactionalDependentFeaturesService(
+                    tx,
+                ).upsertFeatureDependency(featureName, {
                     variants,
                     enabled,
                     feature,
-                },
+                }),
             );
             res.status(200).end();
         } else {

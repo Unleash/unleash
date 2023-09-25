@@ -5,6 +5,10 @@ export class FakeDependentFeaturesStore implements IDependentFeaturesStore {
         return Promise.resolve();
     }
 
+    getChildren(): Promise<string[]> {
+        return Promise.resolve([]);
+    }
+
     delete(): Promise<void> {
         return Promise.resolve();
     }

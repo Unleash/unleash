@@ -189,6 +189,11 @@ export default class ProxyController extends Controller {
         if (!this.config.flagResolver.isEnabled('embedProxy')) {
             throw new NotFoundError();
         }
+
+        if (this.config.flagResolver.isEnabled('disableMetrics')) {
+            return res.status(204).end();
+        }
+
         await this.services.proxyService.registerProxyMetrics(
             req.user,
             req.body,

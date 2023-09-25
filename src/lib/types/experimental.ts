@@ -30,7 +30,8 @@ export type IFlagKey =
     | 'accessOverview'
     | 'privateProjects'
     | 'dependentFeatures'
-    | 'datadogJsonTemplate';
+    | 'datadogJsonTemplate'
+    | 'disableMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -140,6 +141,10 @@ const flags: IFlags = {
     ),
     datadogJsonTemplate: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DATADOG_JSON_TEMPLATE,
+        false,
+    ),
+    disableMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
         false,
     ),
 };

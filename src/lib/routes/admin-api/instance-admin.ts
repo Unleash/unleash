@@ -7,7 +7,6 @@ import Controller from '../controller';
 import { NONE } from '../../types/permissions';
 import { UiConfigSchema } from '../../openapi/spec/ui-config-schema';
 import {
-    InstanceStats,
     InstanceStatsService,
     InstanceStatsSigned,
 } from '../../features/instance-stats/instance-stats-service';
@@ -97,11 +96,7 @@ class InstanceAdminController extends Controller {
             featureToggles: 29,
             groups: 3,
             instanceId: 'ed3861ae-78f9-4e8c-8e57-b57efc15f82b',
-            projects: [
-                { mode: 'open', count: 5 },
-                { mode: 'protected', count: 2 },
-                { mode: 'private', count: 1 },
-            ],
+            projects: 4,
             roles: 5,
             customRootRoles: 2,
             customRootRolesInUse: 1,
@@ -123,7 +118,7 @@ class InstanceAdminController extends Controller {
 
     async getStatistics(
         req: AuthedRequest,
-        res: Response<InstanceStats>,
+        res: Response<InstanceStatsSigned>,
     ): Promise<void> {
         const instanceStats = await this.instanceStatsService.getSignedStats();
         res.json(instanceStats);

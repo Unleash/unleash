@@ -559,7 +559,11 @@ class ProjectStore implements IProjectStore {
 
     async getProjectModeCounts(): Promise<ProjectModeCount[]> {
         const result: ProjectModeCount[] = await this.db
-            .select(`${SETTINGS_TABLE}.project_mode as mode`)
+            .select(
+                this.db.raw(
+                    `COALESCE(${SETTINGS_TABLE}.project_mode, 'open') as mode`,
+                ),
+            )
             .count(`${TABLE}.id as count`)
             .from(`${TABLE}`)
             .join(
@@ -567,7 +571,9 @@ class ProjectStore implements IProjectStore {
                 `${TABLE}.id`,
                 `${SETTINGS_TABLE}.project`,
             )
-            .groupBy(`${SETTINGS_TABLE}.project_mode`);
+            .groupBy(
+                this.db.raw(`COALESCE(${SETTINGS_TABLE}.project_mode, 'open')`),
+            );
         return result.map(this.mapProjectModeCount);
     }
 

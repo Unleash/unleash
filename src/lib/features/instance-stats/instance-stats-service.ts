@@ -48,9 +48,10 @@ export interface InstanceStats {
     activeUsers: Awaited<ReturnType<GetActiveUsers>>;
 }
 
-export interface InstanceStatsSigned extends InstanceStats {
+export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
+    projects: number;
     sum: string;
-}
+};
 
 export class InstanceStatsService {
     private logger: Logger;
@@ -280,10 +281,13 @@ export class InstanceStatsService {
 
     async getSignedStats(): Promise<InstanceStatsSigned> {
         const instanceStats = await this.getStats();
+        const totalProjects = instanceStats.projects
+            .map((p) => p.count)
+            .reduce((a, b) => a + b, 0);
 
         const sum = sha256(
-            `${instanceStats.instanceId}${instanceStats.users}${instanceStats.featureToggles}${instanceStats.projects}${instanceStats.roles}${instanceStats.groups}${instanceStats.environments}${instanceStats.segments}`,
+            `${instanceStats.instanceId}${instanceStats.users}${instanceStats.featureToggles}${totalProjects}${instanceStats.roles}${instanceStats.groups}${instanceStats.environments}${instanceStats.segments}`,
         );
-        return { ...instanceStats, sum };
+        return { ...instanceStats, sum, projects: totalProjects };
     }
 }

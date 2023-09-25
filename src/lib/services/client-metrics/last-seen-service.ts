@@ -58,7 +58,7 @@ export class LastSeenService {
             .filter(
                 (clientMetric) => clientMetric.yes > 0 || clientMetric.no > 0,
             )
-            .forEach(async (clientMetric) => {
+            .forEach((clientMetric) => {
                 const key = `${clientMetric.featureName}:${clientMetric.environment}`;
                 this.lastSeenToggles.set(key, {
                     featureName: clientMetric.featureName,

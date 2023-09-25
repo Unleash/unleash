@@ -58,6 +58,7 @@ export default class ClientMetricsController extends Controller {
                     responses: {
                         ...getStandardResponses(400),
                         202: emptyResponse,
+                        204: emptyResponse,
                     },
                 }),
             ],

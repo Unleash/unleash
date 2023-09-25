@@ -108,6 +108,7 @@ export default class ProxyController extends Controller {
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {
                         200: emptyResponse,
+                        204: emptyResponse,
                         ...getStandardResponses(400, 401, 404),
                     },
                 }),
@@ -191,7 +192,8 @@ export default class ProxyController extends Controller {
         }
 
         if (this.config.flagResolver.isEnabled('disableMetrics')) {
-            return res.status(204).end();
+            res.sendStatus(204);
+            return;
         }
 
         await this.services.proxyService.registerProxyMetrics(

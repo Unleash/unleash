@@ -5,13 +5,11 @@ import {
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { FEATURE_CREATED, IBaseEvent } from '../../../../lib/types/events';
-import { IEventStore } from '../../../../lib/types/stores/event-store';
 import { randomId } from '../../../../lib/util/random-id';
 import { EventService } from '../../../../lib/services';
 
 let app: IUnleashTest;
 let db: ITestDb;
-let eventStore: IEventStore;
 let eventService: EventService;
 
 beforeAll(async () => {
@@ -23,12 +21,11 @@ beforeAll(async () => {
             },
         },
     });
-    eventStore = db.stores.eventStore;
     eventService = new EventService(db.stores, { getLogger });
 });
 
 beforeEach(async () => {
-    await eventStore.deleteAll();
+    await db.stores.eventStore.deleteAll();
 });
 
 afterAll(async () => {

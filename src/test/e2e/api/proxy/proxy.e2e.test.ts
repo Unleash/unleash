@@ -1194,7 +1194,7 @@ test('should NOT evaluate disabled strategies when returning toggles', async () 
         });
 });
 
-test('should return 204 if metrics are disabled', async () => {
+test('should return 429 if metrics are disabled', async () => {
     const localApp = await setupAppWithAuth(db.stores, {
         frontendApiOrigins: ['https://example.com'],
         experimental: {
@@ -1230,5 +1230,5 @@ test('should return 204 if metrics are disabled', async () => {
                 toggles: { [featureName]: { yes: 2, no: 20 } },
             },
         })
-        .expect(204);
+        .expect(429);
 });

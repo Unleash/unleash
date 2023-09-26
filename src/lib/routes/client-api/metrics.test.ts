@@ -281,5 +281,5 @@ test('should return 204 if metrics are disabled by feature flag', async () => {
                 },
             },
         })
-        .expect(204);
+        .expect(429);
 });

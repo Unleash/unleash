@@ -58,7 +58,7 @@ export default class ClientMetricsController extends Controller {
                     responses: {
                         ...getStandardResponses(400),
                         202: emptyResponse,
-                        204: emptyResponse,
+                        429: emptyResponse,
                     },
                 }),
             ],
@@ -67,7 +67,7 @@ export default class ClientMetricsController extends Controller {
 
     async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
         if (this.config.flagResolver.isEnabled('disableMetrics')) {
-            res.status(204).end();
+            res.status(429).end();
         } else {
             try {
                 const { body: data, ip: clientIp, user } = req;

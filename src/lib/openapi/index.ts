@@ -163,6 +163,7 @@ import {
     updateFeatureStrategySegmentsSchema,
     dependentFeatureSchema,
     createDependentFeatureSchema,
+    parentFeatureOptionsSchema,
 } from './spec';
 import { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
@@ -387,6 +388,7 @@ export const schemas: UnleashSchemas = {
     updateFeatureStrategySegmentsSchema,
     dependentFeatureSchema,
     createDependentFeatureSchema,
+    parentFeatureOptionsSchema,
 };
 
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.

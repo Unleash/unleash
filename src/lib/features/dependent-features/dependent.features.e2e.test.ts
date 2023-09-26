@@ -67,11 +67,20 @@ const deleteFeatureDependencies = async (
         .expect(expectedCode);
 };
 
+const getParentOptions = async (childFeature: string, expectedCode = 200) => {
+    return app.request
+        .get(`/api/admin/projects/default/features/${childFeature}/parents`)
+        .expect(expectedCode);
+};
+
 test('should add and delete feature dependencies', async () => {
     const parent = uuidv4();
     const child = uuidv4();
     await app.createFeature(parent);
     await app.createFeature(child);
+
+    const { body: parentOptions } = await getParentOptions(child);
+    expect(parentOptions).toStrictEqual([parent]);
 
     // save explicit enabled and variants
     await addFeatureDependency(child, {

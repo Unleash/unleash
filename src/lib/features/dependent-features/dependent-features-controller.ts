@@ -5,12 +5,14 @@ import {
     IFlagResolver,
     IUnleashConfig,
     IUnleashServices,
+    NONE,
     UPDATE_FEATURE,
 } from '../../types';
 import { Logger } from '../../logger';
 import {
     CreateDependentFeatureSchema,
     createRequestSchema,
+    createResponseSchema,
     emptyResponse,
     getStandardResponses,
 } from '../../openapi';
@@ -31,6 +33,7 @@ interface DeleteDependencyParams {
 const PATH = '/:projectId/features';
 const PATH_FEATURE = `${PATH}/:child`;
 const PATH_DEPENDENCIES = `${PATH_FEATURE}/dependencies`;
+const PATH_PARENTS = `${PATH_FEATURE}/parents`;
 const PATH_DEPENDENCY = `${PATH_FEATURE}/dependencies/:parent`;
 
 type DependentFeaturesServices = Pick<
@@ -91,7 +94,7 @@ export default class DependentFeaturesController extends Controller {
                         'createDependentFeatureSchema',
                     ),
                     responses: {
-                        200: emptyResponse,
+                        200: createResponseSchema('parentFeatureOptionsSchema'),
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
@@ -130,6 +133,26 @@ export default class DependentFeaturesController extends Controller {
                     summary: 'Deletes feature dependencies.',
                     description: 'Remove dependencies to all parent features.',
                     operationId: 'deleteFeatureDependencies',
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: PATH_PARENTS,
+            handler: this.getParentOptions,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    summary: 'List parent options.',
+                    description:
+                        'List available parents who have no transitive dependencies.',
+                    operationId: 'listParentOptions',
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403, 404),
@@ -194,6 +217,23 @@ export default class DependentFeaturesController extends Controller {
                 child,
             );
             res.status(200).end();
+        } else {
+            throw new InvalidOperationError(
+                'Dependent features are not enabled',
+            );
+        }
+    }
+
+    async getParentOptions(
+        req: IAuthRequest<FeatureParams, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { child } = req.params;
+
+        if (this.config.flagResolver.isEnabled('dependentFeatures')) {
+            const parentOptions =
+                await this.dependentFeaturesService.getParentOptions(child);
+            res.send(parentOptions);
         } else {
             throw new InvalidOperationError(
                 'Dependent features are not enabled',

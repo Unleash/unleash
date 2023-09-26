@@ -56,7 +56,18 @@ const deleteFeatureDependency = async (
         .expect(expectedCode);
 };
 
-test('should add feature dependency', async () => {
+const deleteFeatureDependencies = async (
+    childFeature: string,
+    expectedCode = 200,
+) => {
+    return app.request
+        .delete(
+            `/api/admin/projects/default/features/${childFeature}/dependencies`,
+        )
+        .expect(expectedCode);
+};
+
+test('should add and delete feature dependencies', async () => {
     const parent = uuidv4();
     const child = uuidv4();
     await app.createFeature(parent);
@@ -73,7 +84,8 @@ test('should add feature dependency', async () => {
         variants: ['variantB'],
     });
 
-    await deleteFeatureDependency(child, parent);
+    await deleteFeatureDependency(child, parent); // single
+    await deleteFeatureDependencies(child); // all
 });
 
 test('should not allow to add a parent dependency to a feature that already has children', async () => {

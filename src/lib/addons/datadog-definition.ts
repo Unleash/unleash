@@ -55,8 +55,8 @@ const dataDogDefinition: IAddonDefinition = {
             name: 'customHeaders',
             displayName: 'Extra HTTP Headers',
             placeholder: `{
-  "ISTIO_USER_KEY": "hunter2",
-  "SOME_OTHER_CUSTOM_HTTP_HEADER": "SOMEVALUE"
+  "SOME_CUSTOM_HTTP_HEADER": "SOME_VALUE",
+  "SOME_OTHER_CUSTOM_HTTP_HEADER": "SOME_OTHER_VALUE"
 }`,
             description:
                 '(Optional) Used to add extra HTTP Headers to the request the plugin fires off. This must be a valid json object of key-value pairs where both the key and the value are strings',

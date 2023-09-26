@@ -117,6 +117,26 @@ export default class DependentFeaturesController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'delete',
+            path: PATH_DEPENDENCIES,
+            handler: this.deleteFeatureDependencies,
+            permission: UPDATE_FEATURE,
+            acceptAnyContentType: true,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Features'],
+                    summary: 'Deletes feature dependencies.',
+                    description: 'Remove dependencies to all parent features.',
+                    operationId: 'deleteFeatureDependencies',
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
     }
 
     async addFeatureDependency(
@@ -155,6 +175,24 @@ export default class DependentFeaturesController extends Controller {
                 parent,
                 child,
             });
+            res.status(200).end();
+        } else {
+            throw new InvalidOperationError(
+                'Dependent features are not enabled',
+            );
+        }
+    }
+
+    async deleteFeatureDependencies(
+        req: IAuthRequest<FeatureParams, any, any>,
+        res: Response,
+    ): Promise<void> {
+        const { child } = req.params;
+
+        if (this.config.flagResolver.isEnabled('dependentFeatures')) {
+            await this.dependentFeaturesService.deleteFeatureDependencies(
+                child,
+            );
             res.status(200).end();
         } else {
             throw new InvalidOperationError(

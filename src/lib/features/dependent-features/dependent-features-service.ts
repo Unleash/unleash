@@ -44,4 +44,8 @@ export class DependentFeaturesService {
     ): Promise<void> {
         await this.dependentFeaturesStore.delete(dependency);
     }
+
+    async deleteFeatureDependencies(feature: string): Promise<void> {
+        await this.dependentFeaturesStore.deleteAll(feature);
+    }
 }

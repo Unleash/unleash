@@ -1193,3 +1193,42 @@ test('should NOT evaluate disabled strategies when returning toggles', async () 
             });
         });
 });
+
+test('should return 204 if metrics are disabled', async () => {
+    const localApp = await setupAppWithAuth(db.stores, {
+        frontendApiOrigins: ['https://example.com'],
+        experimental: {
+            flags: {
+                disableMetrics: true,
+            },
+        },
+    });
+
+    const frontendToken =
+        await localApp.services.apiTokenService.createApiTokenWithProjects({
+            type: ApiTokenType.FRONTEND,
+            projects: ['*'],
+            environment: 'default',
+            tokenName: `disabledMetric-token-${randomId()}`,
+        });
+
+    const appName = randomId();
+    const instanceId = randomId();
+    const featureName = 'metricsDisabled';
+
+    const now = new Date();
+
+    await localApp.request
+        .post('/api/frontend/client/metrics')
+        .set('Authorization', frontendToken.secret)
+        .send({
+            appName,
+            instanceId,
+            bucket: {
+                start: now,
+                stop: now,
+                toggles: { [featureName]: { yes: 2, no: 20 } },
+            },
+        })
+        .expect(204);
+});

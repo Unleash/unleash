@@ -26,9 +26,9 @@ export const AddDependencyDialogue = ({
     showDependencyDialogue,
     onClose,
 }: IAddDependencyDialogueProps) => {
-    const [parent, setParent] = useState('');
+    const [parent, setParent] = useState(REMOVE_DEPENDENCY_OPTION.key);
     const { addDependency, removeDependencies } = useDependentFeaturesApi();
-    const { parentOptions } = useParentOptions(featureId);
+    const { parentOptions, loading } = useParentOptions(featureId);
     const options = parentOptions
         ? [
               REMOVE_DEPENDENCY_OPTION,
@@ -49,8 +49,11 @@ export const AddDependencyDialogue = ({
                 }
                 onClose();
             }}
-            primaryButtonText="Add"
+            primaryButtonText={
+                parent === REMOVE_DEPENDENCY_OPTION.key ? 'Remove' : 'Add'
+            }
             secondaryButtonText="Cancel"
+            disabledPrimaryButton={loading}
         >
             <Box>
                 You feature will be evaluated only when the selected parent
@@ -63,6 +66,7 @@ export const AddDependencyDialogue = ({
                     options={options}
                     value={parent}
                     onChange={setParent}
+                    id={'selectDependency'}
                 />
             </Box>
         </Dialogue>

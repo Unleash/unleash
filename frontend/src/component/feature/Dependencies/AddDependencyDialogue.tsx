@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { useDependentFeaturesApi } from '../../../hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
+import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 
 interface IAddDependencyDialogueProps {
     featureId: string;

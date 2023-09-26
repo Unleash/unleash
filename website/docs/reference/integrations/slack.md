@@ -22,7 +22,6 @@ The Slack integration will perform a single retry if the HTTP POST against the S
 You can choose to trigger updates for the following events:
 
 - feature-created
-- feature-updated (*)
 - feature-metadata-updated
 - feature-project-change
 - feature-archived
@@ -34,8 +33,6 @@ You can choose to trigger updates for the following events:
 - feature-stale-off
 - feature-environment-enabled
 - feature-environment-disabled
-
-> *) Deprecated, and will not be used after transition to environments in Unleash v4.3
 
 #### Parameters {#parameters}
 

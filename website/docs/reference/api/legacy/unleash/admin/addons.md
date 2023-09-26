@@ -23,7 +23,7 @@ Returns a list of _configured integrations_ and available _integration providers
       "parameters": {
         "url": "http://localhost:4242/webhook"
       },
-      "events": ["feature-created", "feature-updated"]
+      "events": ["feature-created", "feature-archived"]
     },
     {
       "id": 33,
@@ -34,7 +34,7 @@ Returns a list of _configured integrations_ and available _integration providers
         "defaultChannel": "integration-demo-instance",
         "url": "https://hooks.slack.com/someurl"
       },
-      "events": ["feature-created", "feature-updated"]
+      "events": ["feature-created", "feature-archived"]
     }
   ],
   "providers": [
@@ -59,7 +59,6 @@ Returns a list of _configured integrations_ and available _integration providers
       ],
       "events": [
         "feature-created",
-        "feature-updated",
         "feature-archived",
         "feature-revived"
       ]
@@ -85,7 +84,6 @@ Returns a list of _configured integrations_ and available _integration providers
       ],
       "events": [
         "feature-created",
-        "feature-updated",
         "feature-archived",
         "feature-revived"
       ],
@@ -117,7 +115,7 @@ Creates an integration configuration for an integration provider.
   "parameters": {
     "url": "http://localhost:4242/webhook"
   },
-  "events": ["feature-created", "feature-updated"]
+  "events": ["feature-created", "feature-archived"]
 }
 ```
 
@@ -141,7 +139,7 @@ Updates an integration configuration.
   "parameters": {
     "url": "http://localhost:4242/webhook"
   },
-  "events": ["feature-created", "feature-updated"]
+  "events": ["feature-created", "feature-archived"]
 }
 ```
 

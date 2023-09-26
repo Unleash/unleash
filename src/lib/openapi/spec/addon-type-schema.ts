@@ -111,7 +111,6 @@ export const addonTypeSchema = {
             },
             example: [
                 'feature-created',
-                'feature-updated',
                 'feature-archived',
                 'feature-revived',
                 'feature-stale-on',

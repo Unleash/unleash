@@ -1,6 +1,5 @@
 import {
     FEATURE_CREATED,
-    FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
     FEATURE_STALE_ON,
@@ -47,7 +46,6 @@ const teamsDefinition: IAddonDefinition = {
     ],
     events: [
         FEATURE_CREATED,
-        FEATURE_UPDATED,
         FEATURE_ARCHIVED,
         FEATURE_REVIVED,
         FEATURE_STALE_ON,

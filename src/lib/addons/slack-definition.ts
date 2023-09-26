@@ -1,6 +1,5 @@
 import {
     FEATURE_CREATED,
-    FEATURE_UPDATED,
     FEATURE_ARCHIVED,
     FEATURE_REVIVED,
     FEATURE_STALE_ON,
@@ -83,7 +82,6 @@ const slackDefinition: IAddonDefinition = {
     ],
     events: [
         FEATURE_CREATED,
-        FEATURE_UPDATED,
         FEATURE_ARCHIVED,
         FEATURE_REVIVED,
         FEATURE_STALE_ON,

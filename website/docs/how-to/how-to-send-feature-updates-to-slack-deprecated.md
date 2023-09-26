@@ -34,11 +34,8 @@ function onEventHook(event, eventData) {
   const feature = `<${unleashUrl}/#/features/strategies/${data.name}|${data.name}>`;
 
   switch (event) {
-    case 'feature-created':
-    case 'feature-updated': {
-      const verb =
-        event === 'feature-created' ? 'created a new' : 'updated the';
-      text = `${user} ${verb} feature ${feature}\ndescription: ${
+    case 'feature-created': {
+      text = `${user} created a new feature ${feature}\ndescription: ${
         data.description
       }\nenabled: ${data.enabled}\nstrategies: \`${JSON.stringify(
         data.strategies,

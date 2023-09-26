@@ -37,7 +37,7 @@ You can choose to trigger updates for the following events:
 
 Unleash Datadog integration takes the following parameters.
 
-- **Datadog Events URL** - This property is optional. The default URL is https://api.datadoghq.com/api/v1/events. Needs to be changed if you are not not on the US1 [Datadog site](https://docs.datadoghq.com/getting_started/site/). Possible alternatives:
+- **Datadog Events URL** - This property is optional. The default URL is https://api.datadoghq.com/api/v1/events. If you are not not using the US1 [Datadog site](https://docs.datadoghq.com/getting_started/site/), you'll need to change this. Some instances and their URLs are:
   - EU: https://app.datadoghq.eu/api/v1/events
   - US1: https://app.datadoghq.com/api/v1/events
   - US3: https://us3.datadoghq.com/api/v1/events

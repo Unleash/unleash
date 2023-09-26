@@ -37,7 +37,7 @@ You can choose to trigger updates for the following events:
 
 Unleash Datadog integration takes the following parameters.
 
-- **Datadog Events URL** - This property is optional. The default URL is https://api.datadoghq.com/api/v1/events. If you are not not using the US1 [Datadog site](https://docs.datadoghq.com/getting_started/site/), you'll need to change this. Some instances and their URLs are:
+- **Datadog Events URL** - This is an optional property. The default URL is https://api.datadoghq.com/api/v1/events. If you are not not using the US1 [Datadog site](https://docs.datadoghq.com/getting_started/site/), you'll need to change this. Some instances and their URLs are:
   - EU: https://app.datadoghq.eu/api/v1/events
   - US1: https://app.datadoghq.com/api/v1/events
   - US3: https://us3.datadoghq.com/api/v1/events
@@ -46,9 +46,9 @@ Unleash Datadog integration takes the following parameters.
 
 - **Datadog API key** - This is a required property. The API key to use to authenticate with Datadog.
 
-- **Datadog Source Type Name** - This property is optional. Sets `source_type_name` parameter to be included in Datadog events.
+- **Datadog Source Type Name** - This is an optional property. Sets `source_type_name` parameter to be included in Datadog events.
 
-- **Extra HTTP Headers** - This property is optional. Used to set the additional headers when Unleash communicates with Datadog.
+- **Extra HTTP Headers** - This is an optional property. Used to set the additional headers when Unleash communicates with Datadog.
 
 Example:
 
@@ -65,7 +65,7 @@ The body template property will be introduced as a beta feature in Unleash 5.5 a
 
 :::
 
-- **Body template** - This property is optional. Used to override the body template used by Unleash when performing the HTTP POST. You may format you message using a [Mustache template](https://mustache.github.io). You will have the [Unleash event format](/reference/api/legacy/unleash/admin/events) available in the rendering context.
+- **Body template** - This is an optional property. The template is used to override the body template used by Unleash when performing the HTTP POST. You can format your message using a [Mustache template](https://mustache.github.io). Refer to the [Unleash event types](/reference/event-types) reference to find out which event properties you have access to in the template.
 
 Example:
 

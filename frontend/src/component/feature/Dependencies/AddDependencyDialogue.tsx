@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { useDependentFeaturesApi } from '../../../hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 
 interface IAddDependencyDialogueProps {
+    featureId: string;
     showDependencyDialogue: boolean;
     onClose: () => void;
 }
@@ -14,17 +16,26 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
 }));
 
 export const AddDependencyDialogue = ({
+    featureId,
     showDependencyDialogue,
     onClose,
 }: IAddDependencyDialogueProps) => {
-    const [dependency, setDependency] = useState('');
+    const [parent, setParent] = useState('');
+    const { addDependency, removeDependencies } = useDependentFeaturesApi();
 
     return (
         <Dialogue
             open={showDependencyDialogue}
             title="Add parent feature dependency"
             onClose={onClose}
-            onClick={() => {}}
+            onClick={async () => {
+                if (parent === '') {
+                    await removeDependencies(featureId);
+                } else {
+                    await addDependency(featureId, { feature: parent });
+                }
+                onClose();
+            }}
             primaryButtonText={'Add'}
             secondaryButtonText="Cancel"
         >
@@ -37,11 +48,12 @@ export const AddDependencyDialogue = ({
                 <StyledSelect
                     fullWidth
                     options={[
-                        { key: 'a', label: 'featureA' },
+                        { key: 'colors', label: 'colors' },
+                        { key: 'parent', label: 'parent' },
                         { key: 'empty', label: '' },
                     ]}
-                    value={dependency}
-                    onChange={setDependency}
+                    value={parent}
+                    onChange={setParent}
                 />
             </Box>
         </Dialogue>

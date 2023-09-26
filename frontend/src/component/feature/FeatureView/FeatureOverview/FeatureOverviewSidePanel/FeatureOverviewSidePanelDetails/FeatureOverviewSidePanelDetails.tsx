@@ -94,6 +94,7 @@ export const FeatureOverviewSidePanelDetails = ({
                 }
             />
             <AddDependencyDialogue
+                featureId={feature.name}
                 onClose={() => setShowDependencyDialogue(false)}
                 showDependencyDialogue={
                     dependentFeatures && showDependencyDialogue

@@ -36,7 +36,7 @@ export const AddDependencyDialogue = ({
                 }
                 onClose();
             }}
-            primaryButtonText={'Add'}
+            primaryButtonText="Add"
             secondaryButtonText="Cancel"
         >
             <Box>

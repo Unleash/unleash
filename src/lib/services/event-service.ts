@@ -4,6 +4,7 @@ import { Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { IBaseEvent, IEventList } from '../types/events';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
+import EventEmitter from 'events';
 
 export default class EventService {
     private logger: Logger;
@@ -40,6 +41,13 @@ export default class EventService {
             events,
             totalEvents,
         };
+    }
+
+    async onEvent(
+        eventName: string | symbol,
+        listener: (...args: any[]) => void,
+    ): Promise<EventEmitter> {
+        return this.eventStore.on(eventName, listener);
     }
 
     async storeEvent(event: IBaseEvent): Promise<void> {

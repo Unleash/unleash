@@ -4,7 +4,6 @@ import { getAddons, IAddonProviders } from '../addons';
 import * as events from '../types/events';
 import { addonSchema } from './addon-schema';
 import NameExistsError from '../error/name-exists-error';
-import { IEventStore } from '../types/stores/event-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { Logger } from '../logger';
 import TagTypeService from './tag-type-service';
@@ -24,8 +23,6 @@ interface ISensitiveParams {
     [key: string]: string[];
 }
 export default class AddonService {
-    eventStore: IEventStore;
-
     addonStore: IAddonStore;
 
     featureToggleStore: IFeatureToggleStore;
@@ -46,12 +43,8 @@ export default class AddonService {
     constructor(
         {
             addonStore,
-            eventStore,
             featureToggleStore,
-        }: Pick<
-            IUnleashStores,
-            'addonStore' | 'eventStore' | 'featureToggleStore'
-        >,
+        }: Pick<IUnleashStores, 'addonStore' | 'featureToggleStore'>,
         {
             getLogger,
             server,
@@ -61,7 +54,6 @@ export default class AddonService {
         eventService: EventService,
         addons?: IAddonProviders,
     ) {
-        this.eventStore = eventStore;
         this.addonStore = addonStore;
         this.featureToggleStore = featureToggleStore;
         this.logger = getLogger('services/addon-service.js');
@@ -107,7 +99,7 @@ export default class AddonService {
 
     registerEventHandler(): void {
         SUPPORTED_EVENTS.forEach((eventName) =>
-            this.eventStore.on(eventName, this.handleEvent(eventName)),
+            this.eventService.onEvent(eventName, this.handleEvent(eventName)),
         );
     }
 

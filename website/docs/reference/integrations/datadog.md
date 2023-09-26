@@ -59,7 +59,13 @@ Example:
 }
 ```
 
-- **Body template** - This property will be introduced as `beta` in `5.5` and is expected to enter `GA` in `5.6`. It is optional. Used to override the body template used by Unleash when performing the HTTP POST. You may format you message using a [Mustache template](https://mustache.github.io). You will have the [Unleash event format](/reference/api/legacy/unleash/admin/events) available in the rendering context.
+:::info Body template availability
+
+The body template property will be introduced as a beta feature in Unleash 5.5 and is expected to be made generally available in Unleash 5.6.
+
+:::
+
+- **Body template** - This property is optional. Used to override the body template used by Unleash when performing the HTTP POST. You may format you message using a [Mustache template](https://mustache.github.io). You will have the [Unleash event format](/reference/api/legacy/unleash/admin/events) available in the rendering context.
 
 Example:
 

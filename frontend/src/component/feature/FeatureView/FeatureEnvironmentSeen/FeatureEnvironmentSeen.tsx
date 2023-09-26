@@ -105,7 +105,10 @@ export const FeatureEnvironmentSeen = ({
                 )
             }
             elseShow={
-                <TooltipContainer tooltip="No usage reported from connected applications">
+                <TooltipContainer
+                    sx={sx}
+                    tooltip="No usage reported from connected applications"
+                >
                     <UsageLine />
                 </TooltipContainer>
             }

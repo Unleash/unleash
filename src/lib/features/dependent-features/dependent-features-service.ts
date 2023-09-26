@@ -48,4 +48,8 @@ export class DependentFeaturesService {
     async deleteFeatureDependencies(feature: string): Promise<void> {
         await this.dependentFeaturesStore.deleteAll(feature);
     }
+
+    async getParentOptions(feature: string): Promise<string[]> {
+        return this.dependentFeaturesStore.getParentOptions(feature);
+    }
 }

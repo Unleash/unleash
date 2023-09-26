@@ -51,13 +51,7 @@ export default class EventService {
     }
 
     async storeEvent(event: IBaseEvent): Promise<void> {
-        if (event.featureName && !event.tags) {
-            const tags = await this.featureTagStore.getAllTagsForFeature(
-                event.featureName,
-            );
-            return this.eventStore.store({ ...event, tags });
-        }
-        return this.eventStore.store(event);
+        return this.storeEvents([event]);
     }
 
     async storeEvents(events: IBaseEvent[]): Promise<void> {

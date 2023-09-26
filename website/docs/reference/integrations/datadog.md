@@ -28,7 +28,7 @@ You can choose to trigger updates for the following events:
 - feature-stale-off
 - feature-environment-enabled
 - feature-environment-disabled
-- feature-variants-updated
+- feature-environment-variants-updated
 - feature-potentially-stale-on
 
 > *) Deprecated, and will not be used after transition to environments in Unleash v4.3

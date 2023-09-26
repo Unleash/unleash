@@ -12,8 +12,8 @@ import {
     FEATURE_STRATEGY_ADD,
     FEATURE_METADATA_UPDATED,
     FEATURE_PROJECT_CHANGE,
-    FEATURE_VARIANTS_UPDATED,
     FEATURE_POTENTIALLY_STALE_ON,
+    FEATURE_ENVIRONMENT_VARIANTS_UPDATED,
 } from '../types/events';
 import { IAddonDefinition } from '../types/model';
 
@@ -94,7 +94,7 @@ const dataDogDefinition: IAddonDefinition = {
         FEATURE_STRATEGY_ADD,
         FEATURE_METADATA_UPDATED,
         FEATURE_PROJECT_CHANGE,
-        FEATURE_VARIANTS_UPDATED,
+        FEATURE_ENVIRONMENT_VARIANTS_UPDATED,
         FEATURE_POTENTIALLY_STALE_ON,
     ],
     tagTypes: [

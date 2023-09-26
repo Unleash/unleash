@@ -15,6 +15,7 @@ import {
     createResponseSchema,
     emptyResponse,
     getStandardResponses,
+    ParentFeatureOptionsSchema,
 } from '../../openapi';
 import { IAuthRequest } from '../../routes/unleash-types';
 import { InvalidOperationError } from '../../error';
@@ -226,7 +227,7 @@ export default class DependentFeaturesController extends Controller {
 
     async getParentOptions(
         req: IAuthRequest<FeatureParams, any, any>,
-        res: Response,
+        res: Response<ParentFeatureOptionsSchema>,
     ): Promise<void> {
         const { child } = req.params;
 

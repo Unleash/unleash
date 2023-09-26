@@ -2,10 +2,9 @@ import { FromSchema } from 'json-schema-to-ts';
 
 export const parentFeatureOptionsSchema = {
     $id: '#/components/schemas/parentFeatureOptionsSchema',
-    type: 'object',
+    type: 'array',
     description:
         'A list of parent feature names available for a given child feature. Features that have their own parents are excluded.',
-    additionalProperties: false,
     items: {
         type: 'string',
     },

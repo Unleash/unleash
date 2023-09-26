@@ -254,3 +254,32 @@ test('should return a 200 if required fields are there', async () => {
         })
         .expect(202);
 });
+
+test('should return 204 if metrics are disabled by feature flag', async () => {
+    const { request: localRequest } = await getSetup({
+        experimental: {
+            flags: {
+                disableMetrics: true,
+            },
+        },
+    });
+
+    await localRequest
+        .post('/api/client/metrics')
+        .send({
+            appName: 'demo',
+            someParam: 'some-value',
+            somOtherParam: 'some--other-value',
+            bucket: {
+                start: Date.now(),
+                stop: Date.now(),
+                toggles: {
+                    toggleLastSeen: {
+                        yes: 200,
+                        no: 0,
+                    },
+                },
+            },
+        })
+        .expect(204);
+});

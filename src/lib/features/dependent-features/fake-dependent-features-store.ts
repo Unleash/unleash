@@ -12,4 +12,8 @@ export class FakeDependentFeaturesStore implements IDependentFeaturesStore {
     delete(): Promise<void> {
         return Promise.resolve();
     }
+
+    deleteAll(): Promise<void> {
+        return Promise.resolve();
+    }
 }

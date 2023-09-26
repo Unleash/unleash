@@ -44,4 +44,8 @@ export class DependentFeaturesStore implements IDependentFeaturesStore {
             .andWhere('child', dependency.child)
             .del();
     }
+
+    async deleteAll(feature: string): Promise<void> {
+        await this.db('dependent_features').andWhere('child', feature).del();
+    }
 }

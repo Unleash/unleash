@@ -50,37 +50,29 @@ export default class EventService {
         return this.eventStore.on(eventName, listener);
     }
 
+    private async enhanceEventsWithTags(
+        events: IBaseEvent[],
+    ): Promise<IBaseEvent[]> {
+        for (const event of events) {
+            if (event.featureName && !event.tags) {
+                event.tags = await this.featureTagStore.getAllTagsForFeature(
+                    event.featureName,
+                );
+            }
+        }
+
+        return events;
+    }
+
     async storeEvent(event: IBaseEvent): Promise<void> {
         return this.storeEvents([event]);
     }
 
     async storeEvents(events: IBaseEvent[]): Promise<void> {
-        const featureNames: string[] = events
-            .map((event) => event.featureName)
-            .filter(
-                (featureName): featureName is string =>
-                    featureName !== undefined,
-            );
-
-        if (featureNames.length) {
-            const tags = await this.featureTagStore.getAllByFeatures(
-                featureNames,
-            );
-
-            const eventsWithTags = events.map((event) => ({
-                ...event,
-                tags:
-                    event.tags ||
-                    tags
-                        .filter((tag) => tag.featureName === event.featureName)
-                        .map((tag) => ({
-                            value: tag.tagValue,
-                            type: tag.tagType,
-                        })),
-            }));
-
-            return this.eventStore.batchStore(eventsWithTags);
+        let enhancedEvents = events;
+        for (const enhancer of [this.enhanceEventsWithTags.bind(this)]) {
+            enhancedEvents = await enhancer(enhancedEvents);
         }
-        return this.eventStore.batchStore(events);
+        return this.eventStore.batchStore(enhancedEvents);
     }
 }

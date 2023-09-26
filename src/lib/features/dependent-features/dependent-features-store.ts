@@ -23,6 +23,11 @@ export class DependentFeaturesStore implements IDependentFeaturesStore {
                 featureDependency.variants,
             );
         }
+        // TODO: remove when we support multiple parents
+        await this.db('dependent_features')
+            .where('child', featureDependency.child)
+            .del();
+
         await this.db('dependent_features')
             .insert(serializableFeatureDependency)
             .onConflict(['parent', 'child'])

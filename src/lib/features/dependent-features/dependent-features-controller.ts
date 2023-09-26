@@ -94,7 +94,7 @@ export default class DependentFeaturesController extends Controller {
                         'createDependentFeatureSchema',
                     ),
                     responses: {
-                        200: createResponseSchema('parentFeatureOptionsSchema'),
+                        200: emptyResponse,
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
@@ -154,7 +154,7 @@ export default class DependentFeaturesController extends Controller {
                         'List available parents who have no transitive dependencies.',
                     operationId: 'listParentOptions',
                     responses: {
-                        200: emptyResponse,
+                        200: createResponseSchema('parentFeatureOptionsSchema'),
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),

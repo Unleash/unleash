@@ -96,7 +96,7 @@ export const createFeatureToggleService = (
         { getLogger },
     );
     const groupService = new GroupService(
-        { groupStore, eventStore, accountStore },
+        { groupStore, accountStore },
         { getLogger },
         eventService,
     );
@@ -160,7 +160,7 @@ export const createFakeFeatureToggleService = (
         { getLogger },
     );
     const groupService = new GroupService(
-        { groupStore, eventStore, accountStore },
+        { groupStore, accountStore },
         { getLogger },
         eventService,
     );

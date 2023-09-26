@@ -32,7 +32,7 @@ export const createAccessService = (
         config,
     );
     const groupService = new GroupService(
-        { groupStore, eventStore, accountStore },
+        { groupStore, accountStore },
         { getLogger },
         eventService,
     );
@@ -60,7 +60,7 @@ export const createFakeAccessService = (
         config,
     );
     const groupService = new GroupService(
-        { groupStore, eventStore, accountStore },
+        { groupStore, accountStore },
         { getLogger },
         eventService,
     );

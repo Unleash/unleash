@@ -27,10 +27,7 @@ export class GroupService {
     private logger: Logger;
 
     constructor(
-        stores: Pick<
-            IUnleashStores,
-            'groupStore' | 'eventStore' | 'accountStore'
-        >,
+        stores: Pick<IUnleashStores, 'groupStore' | 'accountStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         eventService: EventService,
     ) {

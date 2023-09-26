@@ -20,7 +20,7 @@ export const createGroupService = (
         { getLogger },
     );
     const groupService = new GroupService(
-        { groupStore, eventStore, accountStore },
+        { groupStore, accountStore },
         { getLogger },
         eventService,
     );

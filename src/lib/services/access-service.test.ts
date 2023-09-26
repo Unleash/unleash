@@ -211,7 +211,7 @@ test('throws error when trying to delete a project role in use by group', async 
         config,
     );
     const groupService = new GroupService(
-        { groupStore, eventStore, accountStore },
+        { groupStore, accountStore },
         { getLogger },
         eventService,
     );

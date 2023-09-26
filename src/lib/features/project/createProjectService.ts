@@ -93,7 +93,7 @@ export const createProjectService = (
         eventService,
     );
     const groupService = new GroupService(
-        { groupStore, eventStore, accountStore },
+        { groupStore, accountStore },
         { getLogger },
         eventService,
     );
@@ -154,7 +154,7 @@ export const createFakeProjectService = (
         eventService,
     );
     const groupService = new GroupService(
-        { groupStore, eventStore, accountStore },
+        { groupStore, accountStore },
         { getLogger },
         eventService,
     );

@@ -39,7 +39,12 @@ beforeAll(async () => {
     const featureToggleService = new FeatureToggleService(
         stores,
         config,
-        new SegmentService(stores, changeRequestAccessReadModel, config),
+        new SegmentService(
+            stores,
+            changeRequestAccessReadModel,
+            config,
+            privateProjectChecker,
+        ),
         accessService,
         changeRequestAccessReadModel,
         privateProjectChecker,

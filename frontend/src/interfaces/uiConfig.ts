@@ -40,7 +40,6 @@ export type UiFlags = {
     P: boolean;
     RE: boolean;
     EEA?: boolean;
-    SE?: boolean;
     T?: boolean;
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;
@@ -60,13 +59,13 @@ export type UiFlags = {
     customRootRolesKillSwitch?: boolean;
     strategyVariant?: boolean;
     lastSeenByEnvironment?: boolean;
-    integrationsRework?: boolean;
     multipleRoles?: boolean;
     featureNamingPattern?: boolean;
     doraMetrics?: boolean;
     variantTypeNumber?: boolean;
     privateProjects?: boolean;
     accessOverview?: boolean;
+    dependentFeatures?: boolean;
     [key: string]: boolean | Variant | undefined;
 };
 

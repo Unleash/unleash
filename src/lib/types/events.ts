@@ -90,6 +90,7 @@ export const SEGMENT_UPDATED = 'segment-updated' as const;
 export const SEGMENT_DELETED = 'segment-deleted' as const;
 export const GROUP_CREATED = 'group-created' as const;
 export const GROUP_UPDATED = 'group-updated' as const;
+export const GROUP_DELETED = 'group-deleted' as const;
 export const SETTING_CREATED = 'setting-created' as const;
 export const SETTING_UPDATED = 'setting-updated' as const;
 export const SETTING_DELETED = 'setting-deleted' as const;
@@ -213,6 +214,7 @@ export const IEventTypes = [
     SEGMENT_DELETED,
     GROUP_CREATED,
     GROUP_UPDATED,
+    GROUP_DELETED,
     SETTING_CREATED,
     SETTING_UPDATED,
     SETTING_DELETED,

@@ -5,6 +5,7 @@ import { IFeatureStrategy } from 'interfaces/strategy';
 import { Link } from 'react-router-dom';
 import { formatStrategyName } from 'utils/strategyNames';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledUl = styled('ul')(({ theme }) => ({
     listStyle: 'none',
@@ -77,22 +78,19 @@ export const SegmentProjectAlert = ({
         </StyledUl>
     );
 
-    if (projectsUsed.length > 1) {
+    if (projectsUsed.length > 0) {
         return (
             <StyledAlert severity="info">
-                You can't specify a project for this segment because it is used
-                in multiple projects:
-                {projectList}
-            </StyledAlert>
-        );
-    }
-
-    if (availableProjects.length === 1) {
-        return (
-            <StyledAlert severity="info">
-                You can't specify a project other than{' '}
-                <strong>{availableProjects[0].name}</strong> for this segment
-                because it is used here:
+                <ConditionallyRender
+                    condition={projectsUsed.length > 1}
+                    show={
+                        <span>
+                            You can't specify a project for this segment because
+                            it is used in multiple projects:
+                        </span>
+                    }
+                    elseShow={<span>Usage of this segment:</span>}
+                />
                 {projectList}
             </StyledAlert>
         );

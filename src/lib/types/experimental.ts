@@ -20,18 +20,18 @@ export type IFlagKey =
     | 'disableBulkToggle'
     | 'disableNotifications'
     | 'advancedPlayground'
-    | 'slackAppAddon'
     | 'filterInvalidClientMetrics'
     | 'lastSeenByEnvironment'
     | 'customRootRolesKillSwitch'
-    | 'integrationsRework'
     | 'multipleRoles'
     | 'featureNamingPattern'
     | 'doraMetrics'
     | 'variantTypeNumber'
     | 'accessOverview'
     | 'privateProjects'
-    | 'dependentFeatures';
+    | 'dependentFeatures'
+    | 'datadogJsonTemplate'
+    | 'disableMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -99,10 +99,6 @@ const flags: IFlags = {
         process.env.DISABLE_NOTIFICATIONS,
         false,
     ),
-    slackAppAddon: parseEnvVarBoolean(
-        process.env.UNLEASH_SLACK_APP_ADDON,
-        false,
-    ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
         process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
@@ -113,10 +109,6 @@ const flags: IFlags = {
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
-        false,
-    ),
-    integrationsRework: parseEnvVarBoolean(
-        process.env.UNLEASH_INTEGRATIONS,
         false,
     ),
     multipleRoles: parseEnvVarBoolean(
@@ -145,6 +137,14 @@ const flags: IFlags = {
     ),
     accessOverview: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW,
+        false,
+    ),
+    datadogJsonTemplate: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DATADOG_JSON_TEMPLATE,
+        false,
+    ),
+    disableMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
         false,
     ),
 };

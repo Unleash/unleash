@@ -20,6 +20,7 @@ import {
     advancedPlaygroundViewModel,
     playgroundViewModel,
 } from './playground-view-model';
+import { IAuthRequest } from '../../routes/unleash-types';
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;
@@ -112,9 +113,10 @@ export default class PlaygroundController extends Controller {
     }
 
     async evaluateAdvancedContext(
-        req: Request<any, any, AdvancedPlaygroundRequestSchema>,
+        req: IAuthRequest<any, any, AdvancedPlaygroundRequestSchema>,
         res: Response<AdvancedPlaygroundResponseSchema>,
     ): Promise<void> {
+        const { user } = req;
         // used for runtime control, do not remove
         const { payload } = this.flagResolver.getVariant('advancedPlayground');
         const limit =
@@ -127,6 +129,7 @@ export default class PlaygroundController extends Controller {
             req.body.environments,
             req.body.context,
             limit,
+            user.id,
         );
 
         const response: AdvancedPlaygroundResponseSchema =

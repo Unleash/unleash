@@ -16,6 +16,7 @@ import { useCurrentStrategy } from './hooks/useCurrentStrategy';
 import { Badge } from 'component/common/Badge/Badge';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow } from 'themes/themeStyles';
+import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -40,6 +41,14 @@ const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     flexGrow: 1,
     gap: theme.spacing(1),
+}));
+
+const StyledBox: FC = styled(Box)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+}));
+
+const StyledTypography: FC = styled(Typography)(({ theme }) => ({
+    margin: `${theme.spacing(1)} 0`,
 }));
 
 const hasNameField = (payload: unknown): payload is { name: string } =>
@@ -118,6 +127,19 @@ export const StrategyChange: VFC<{
         environmentName
     );
 
+    const isStrategyAction =
+        change.action === 'addStrategy' || change.action === 'updateStrategy';
+
+    const featureStrategyVariantsDisplay =
+        isStrategyAction && change.payload.variants ? (
+            <StyledBox>
+                <StyledTypography>
+                    Updating feature variants to:
+                </StyledTypography>
+                <EnvironmentVariantsTable variants={change.payload.variants} />
+            </StyledBox>
+        ) : null;
+
     return (
         <>
             {change.action === 'addStrategy' && (
@@ -149,6 +171,7 @@ export const StrategyChange: VFC<{
                         <div>{actions}</div>
                     </ChangeItemCreateEditWrapper>
                     <StrategyExecution strategy={change.payload} />
+                    {featureStrategyVariantsDisplay}
                 </>
             )}
             {change.action === 'deleteStrategy' && (
@@ -215,6 +238,7 @@ export const StrategyChange: VFC<{
                         }
                     />
                     <StrategyExecution strategy={change.payload} />
+                    {featureStrategyVariantsDisplay}
                 </>
             )}
         </>

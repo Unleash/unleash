@@ -986,6 +986,7 @@ class FeatureToggleService {
                 variants,
                 description,
                 impressionData,
+                dependencies,
             }) => ({
                 name,
                 type,
@@ -996,6 +997,7 @@ class FeatureToggleService {
                 variants,
                 description,
                 impressionData,
+                dependencies,
             }),
         );
     }
@@ -1029,11 +1031,15 @@ class FeatureToggleService {
         });
 
         if (this.flagResolver.isEnabled('privateProjects') && userId) {
-            const projects =
+            const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
                     userId,
                 );
-            return features.filter((f) => projects.includes(f.project));
+            return projectAccess.mode === 'all'
+                ? features
+                : features.filter((f) =>
+                      projectAccess.projects.includes(f.project),
+                  );
         }
         return features;
     }
@@ -1858,11 +1864,17 @@ class FeatureToggleService {
     ): Promise<FeatureToggle[]> {
         const features = await this.featureToggleStore.getAll({ archived });
         if (this.flagResolver.isEnabled('privateProjects')) {
-            const projects =
+            const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
                     userId,
                 );
-            return features.filter((f) => projects.includes(f.project));
+            if (projectAccess.mode === 'all') {
+                return features;
+            } else {
+                return features.filter((f) =>
+                    projectAccess.projects.includes(f.project),
+                );
+            }
         }
         return features;
     }

@@ -164,13 +164,18 @@ export default class ProjectService {
     ): Promise<IProjectWithCount[]> {
         const projects = await this.store.getProjectsWithCounts(query, userId);
         if (this.flagResolver.isEnabled('privateProjects') && userId) {
-            const accessibleProjects =
+            const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
                     userId,
                 );
-            return projects.filter((project) =>
-                accessibleProjects.includes(project.id),
-            );
+
+            if (projectAccess.mode === 'all') {
+                return projects;
+            } else {
+                return projects.filter((project) =>
+                    projectAccess.projects.includes(project.id),
+                );
+            }
         }
         return projects;
     }

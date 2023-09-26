@@ -70,7 +70,7 @@ export interface IRoleValidation {
     permissions?: PermissionRef[];
 }
 
-interface IRoleUpdate {
+export interface IRoleUpdate {
     id: number;
     name: string;
     description: string;
@@ -406,7 +406,7 @@ export class AccessService {
         }
         return this.store.addPermissionsToRole(
             roleId,
-            [permission],
+            [{ name: permission }],
             environment,
         );
     }
@@ -630,11 +630,13 @@ export class AccessService {
         const newRole = await this.roleStore.create(baseRole);
         if (rolePermissions) {
             if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
+                // this branch uses named permissions
                 await this.store.addPermissionsToRole(
                     newRole.id,
-                    rolePermissions.map((p: NamePermissionRef) => p.name),
+                    rolePermissions,
                 );
             } else {
+                // this branch uses id permissions
                 await this.store.addEnvironmentPermissionsToRole(
                     newRole.id,
                     rolePermissions,
@@ -673,7 +675,7 @@ export class AccessService {
             if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
                 await this.store.addPermissionsToRole(
                     newRole.id,
-                    rolePermissions.map((p: NamePermissionRef) => p.name),
+                    rolePermissions,
                 );
             } else {
                 await this.store.addEnvironmentPermissionsToRole(

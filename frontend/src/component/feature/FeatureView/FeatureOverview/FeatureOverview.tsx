@@ -1,6 +1,6 @@
 import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData';
 import FeatureOverviewEnvironments from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import {

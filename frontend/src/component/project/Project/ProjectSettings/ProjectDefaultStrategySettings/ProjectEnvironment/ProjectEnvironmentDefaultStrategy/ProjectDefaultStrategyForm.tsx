@@ -155,15 +155,10 @@ export const ProjectDefaultStrategyForm = ({
                     }));
                 }}
             />
-            <ConditionallyRender
-                condition={Boolean(uiConfig.flags.SE)}
-                show={
-                    <FeatureStrategySegment
-                        segments={segments}
-                        setSegments={setSegments}
-                        projectId={projectId}
-                    />
-                }
+            <FeatureStrategySegment
+                segments={segments}
+                setSegments={setSegments}
+                projectId={projectId}
             />
             <FeatureStrategyConstraints
                 projectId={projectId}

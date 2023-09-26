@@ -1,5 +1,5 @@
 import { Paper, styled } from '@mui/material';
-import { FormControlLabel, TextField, Typography } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
 import { forwardRef, type FC, type ReactNode, ComponentProps } from 'react';
 
 export const StyledForm = styled('form')(({ theme }) => ({
@@ -42,12 +42,6 @@ export const StyledButtonSection = styled('section')(({ theme }) => ({
 export const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
 }));
-
-export const StyledSelectAllFormControlLabel = styled(FormControlLabel)(
-    ({ theme }) => ({
-        paddingBottom: theme.spacing(1),
-    })
-);
 
 export const StyledTitle = forwardRef<
     HTMLHeadingElement,

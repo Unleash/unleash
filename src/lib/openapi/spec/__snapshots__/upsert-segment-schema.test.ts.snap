@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`upsertSegmentSchema 1`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'constraints'",
+      "params": {
+        "missingProperty": "constraints",
+      },
+      "schemaPath": "#/required",
+    },
+  ],
+  "schema": "#/components/schemas/upsertSegmentSchema",
+}
+`;
+
+exports[`upsertSegmentSchema 2`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'name'",
+      "params": {
+        "missingProperty": "name",
+      },
+      "schemaPath": "#/required",
+    },
+  ],
+  "schema": "#/components/schemas/upsertSegmentSchema",
+}
+`;
+
+exports[`upsertSegmentSchema 3`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'name'",
+      "params": {
+        "missingProperty": "name",
+      },
+      "schemaPath": "#/required",
+    },
+  ],
+  "schema": "#/components/schemas/upsertSegmentSchema",
+}
+`;

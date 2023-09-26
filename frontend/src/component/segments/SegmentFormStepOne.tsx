@@ -77,7 +77,6 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     const projectsUsed = new Set<string>(
         strategies.map(({ projectId }) => projectId!).filter(Boolean)
     );
-
     const availableProjects = projects.filter(
         ({ id }) =>
             !projectsUsed.size ||

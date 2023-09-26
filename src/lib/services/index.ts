@@ -69,6 +69,7 @@ import {
     createGetActiveUsers,
 } from '../features/instance-stats/getActiveUsers';
 import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
+import { createDependentFeaturesService } from '../features/dependent-features/createDependentFeaturesService';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -162,14 +163,21 @@ export const createServices = (
     const groupService = new GroupService(stores, config);
     const accessService = new AccessService(stores, config, groupService);
     const apiTokenService = new ApiTokenService(stores, config);
-    const clientInstanceService = new ClientInstanceService(stores, config);
     const lastSeenService = new LastSeenService(stores, config);
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(
         stores,
         config,
         lastSeenService,
     );
-    const contextService = new ContextService(stores, config);
+    const privateProjectChecker = db
+        ? createPrivateProjectChecker(db, config)
+        : createFakePrivateProjectChecker();
+
+    const contextService = new ContextService(
+        stores,
+        config,
+        privateProjectChecker,
+    );
     const emailService = new EmailService(config.email, config.getLogger);
     const eventService = new EventService(stores, config);
     const featureTypeService = new FeatureTypeService(stores, config);
@@ -201,10 +209,14 @@ export const createServices = (
         stores,
         changeRequestAccessReadModel,
         config,
+        privateProjectChecker,
     );
-    const privateProjectChecker = db
-        ? createPrivateProjectChecker(db, config)
-        : createFakePrivateProjectChecker();
+
+    const clientInstanceService = new ClientInstanceService(
+        stores,
+        config,
+        privateProjectChecker,
+    );
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,
@@ -247,6 +259,7 @@ export const createServices = (
     const playgroundService = new PlaygroundService(config, {
         featureToggleServiceV2,
         segmentService,
+        privateProjectChecker,
     });
 
     const configurationRevisionService = new ConfigurationRevisionService(
@@ -290,7 +303,11 @@ export const createServices = (
 
     const eventAnnouncerService = new EventAnnouncerService(stores, config);
 
-    const dependentFeaturesService = new DependentFeaturesService();
+    const dependentFeaturesService = new DependentFeaturesService(
+        stores.dependentFeaturesStore,
+    );
+    const transactionalDependentFeaturesService = (txDb: Knex.Transaction) =>
+        createDependentFeaturesService(txDb);
 
     return {
         accessService,
@@ -343,6 +360,7 @@ export const createServices = (
         transactionalGroupService,
         privateProjectChecker,
         dependentFeaturesService,
+        transactionalDependentFeaturesService,
     };
 };
 

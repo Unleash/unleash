@@ -4,7 +4,7 @@ import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesLi
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { IntegrationList } from 'component/integrations/IntegrationList/IntegrationList';
 import Login from 'component/user/Login/Login';
-import { EEA, P, SE } from 'component/common/flags';
+import { EEA, P } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -43,9 +43,9 @@ import { LazyAdmin } from 'component/admin/LazyAdmin';
 import { LazyProject } from 'component/project/Project/LazyProject';
 import { LoginHistory } from 'component/loginHistory/LoginHistory';
 import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
-import { AddonsList } from 'component/integrations/IntegrationList/AddonsList';
 import { ViewIntegration } from 'component/integrations/ViewIntegration/ViewIntegration';
 import { ApplicationList } from '../application/ApplicationList/ApplicationList';
+import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 
 export const routes: IRoute[] = [
     // Splash
@@ -306,8 +306,7 @@ export const routes: IRoute[] = [
         path: '/addons/create/:providerId',
         parent: '/addons',
         title: 'Create',
-        component: CreateIntegration,
-        // TODO: use AddonRedirect after removing `integrationsRework` menu flag
+        component: AddonRedirect,
         type: 'protected',
         menu: {},
     },
@@ -315,21 +314,17 @@ export const routes: IRoute[] = [
         path: '/addons/edit/:addonId',
         parent: '/addons',
         title: 'Edit',
-        component: EditIntegration,
-        // TODO: use AddonRedirect after removing `integrationsRework` menu flag
+        component: AddonRedirect,
         type: 'protected',
         menu: {},
     },
     {
         path: '/addons',
         title: 'Addons',
-        component: AddonsList,
-        // TODO: use AddonRedirect after removing `integrationsRework` menu flag
+        component: AddonRedirect,
         hidden: false,
         type: 'protected',
-        notFlag: 'integrationsRework',
-        menu: { mobile: true, advanced: true },
-        // TODO: remove 'addons' from menu after removing `integrationsRework` menu flag
+        menu: {},
     },
     {
         path: '/integrations/create/:providerId',
@@ -362,7 +357,6 @@ export const routes: IRoute[] = [
         hidden: false,
         type: 'protected',
         menu: { mobile: true, advanced: true },
-        flag: 'integrationsRework',
     },
 
     // Segments
@@ -374,7 +368,6 @@ export const routes: IRoute[] = [
         type: 'protected',
         layout: 'main',
         menu: {},
-        flag: SE,
     },
     {
         path: '/segments/edit/:segmentId',
@@ -384,7 +377,6 @@ export const routes: IRoute[] = [
         type: 'protected',
         layout: 'main',
         menu: {},
-        flag: SE,
     },
     {
         path: '/segments',
@@ -393,7 +385,6 @@ export const routes: IRoute[] = [
         hidden: false,
         type: 'protected',
         menu: { mobile: true, advanced: true },
-        flag: SE,
     },
 
     // History

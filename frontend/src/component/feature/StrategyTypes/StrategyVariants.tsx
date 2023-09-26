@@ -157,9 +157,7 @@ export const StrategyVariants: FC<{
             >
                 Add variant
             </PermissionButton>
-            <SplitPreviewSlider
-                values={variantsEdit.map(variant => variant.weight / 10)}
-            />
+            <SplitPreviewSlider variants={variantsEdit} />
         </>
     );
 };

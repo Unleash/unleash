@@ -1,9 +1,10 @@
 import { IPrivateProjectChecker } from './privateProjectCheckerType';
 import { Promise } from 'ts-toolbelt/out/Any/Promise';
+import { ProjectAccess } from './privateProjectStore';
 
 export class FakePrivateProjectChecker implements IPrivateProjectChecker {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async getUserAccessibleProjects(userId: number): Promise<string[]> {
+    async getUserAccessibleProjects(userId: number): Promise<ProjectAccess> {
         throw new Error('Method not implemented.');
     }
 

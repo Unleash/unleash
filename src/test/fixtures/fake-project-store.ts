@@ -9,6 +9,7 @@ import NotFoundError from '../../lib/error/notfound-error';
 import {
     IEnvironmentProjectLink,
     IProjectMembersCount,
+    ProjectModeCount,
 } from 'lib/db/project-store';
 import { CreateFeatureStrategySchema } from '../../lib/openapi';
 
@@ -184,5 +185,9 @@ export default class FakeProjectStore implements IProjectStore {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isFeatureLimitReached(id: string): Promise<boolean> {
         return Promise.resolve(false);
+    }
+
+    getProjectModeCounts(): Promise<ProjectModeCount[]> {
+        return Promise.resolve([]);
     }
 }

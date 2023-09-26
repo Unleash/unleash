@@ -9,6 +9,8 @@ import { IProjectStore } from '../types/stores/project-store';
 import { IFeatureStrategiesStore, IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import { ContextFieldStrategiesSchema } from '../openapi/spec/context-field-strategies-schema';
+import { IFeatureStrategy, IFlagResolver } from '../types';
+import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 
 const { contextSchema, nameSchema } = require('./context-schema');
 const NameExistsError = require('../error/name-exists-error');
@@ -30,6 +32,10 @@ class ContextService {
 
     private logger: Logger;
 
+    private flagResolver: IFlagResolver;
+
+    private privateProjectChecker: IPrivateProjectChecker;
+
     constructor(
         {
             projectStore,
@@ -43,10 +49,16 @@ class ContextService {
             | 'contextFieldStore'
             | 'featureStrategiesStore'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
+        this.privateProjectChecker = privateProjectChecker;
         this.projectStore = projectStore;
         this.eventStore = eventStore;
+        this.flagResolver = flagResolver;
         this.contextFieldStore = contextFieldStore;
         this.featureStrategiesStore = featureStrategiesStore;
         this.logger = getLogger('services/context-service.js');
@@ -62,9 +74,31 @@ class ContextService {
 
     async getStrategiesByContextField(
         name: string,
+        userId: number,
     ): Promise<ContextFieldStrategiesSchema> {
         const strategies =
             await this.featureStrategiesStore.getStrategiesByContextField(name);
+        if (this.flagResolver.isEnabled('privateProjects')) {
+            const accessibleProjects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+            if (accessibleProjects.mode === 'all') {
+                return this.mapStrategies(strategies);
+            } else {
+                return this.mapStrategies(
+                    strategies.filter((strategy) =>
+                        accessibleProjects.projects.includes(
+                            strategy.projectId,
+                        ),
+                    ),
+                );
+            }
+        }
+        return this.mapStrategies(strategies);
+    }
+
+    private mapStrategies(strategies: IFeatureStrategy[]) {
         return {
             strategies: strategies.map((strategy) => ({
                 id: strategy.id,

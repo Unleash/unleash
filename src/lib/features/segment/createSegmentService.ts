@@ -11,6 +11,10 @@ import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
 } from '../change-request-access-service/createChangeRequestAccessReadModel';
+import {
+    createFakePrivateProjectChecker,
+    createPrivateProjectChecker,
+} from '../private-project/createPrivateProjectChecker';
 
 export const createSegmentService = (
     db: Db,
@@ -34,11 +38,13 @@ export const createSegmentService = (
         db,
         config,
     );
+    const privateProjectChecker = createPrivateProjectChecker(db, config);
 
     return new SegmentService(
         { segmentStore, featureStrategiesStore, eventStore },
         changeRequestAccessReadModel,
         config,
+        privateProjectChecker,
     );
 };
 
@@ -50,9 +56,12 @@ export const createFakeSegmentService = (
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
 
+    const privateProjectChecker = createFakePrivateProjectChecker();
+
     return new SegmentService(
         { segmentStore, featureStrategiesStore, eventStore },
         changeRequestAccessReadModel,
         config,
+        privateProjectChecker,
     );
 };

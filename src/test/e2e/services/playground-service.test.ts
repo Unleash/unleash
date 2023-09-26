@@ -43,15 +43,17 @@ beforeAll(async () => {
         db.rawDatabase,
         accessService,
     );
-    segmentService = new SegmentService(
-        stores,
-        changeRequestAccessReadModel,
-        config,
-    );
     const privateProjectChecker = createPrivateProjectChecker(
         db.rawDatabase,
         config,
     );
+    segmentService = new SegmentService(
+        stores,
+        changeRequestAccessReadModel,
+        config,
+        privateProjectChecker,
+    );
+
     featureToggleService = new FeatureToggleService(
         stores,
         config,
@@ -63,6 +65,7 @@ beforeAll(async () => {
     service = new PlaygroundService(config, {
         featureToggleServiceV2: featureToggleService,
         segmentService,
+        privateProjectChecker,
     });
 });
 

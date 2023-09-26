@@ -1,32 +1,51 @@
+import { InvalidOperationError } from '../../error';
 import { CreateDependentFeatureSchema } from '../../openapi';
+import { IDependentFeaturesStore } from './dependent-features-store-type';
+import { FeatureDependency, FeatureDependencyId } from './dependent-features';
 
-export type FeatureDependency =
-    | {
-          parent: string;
-          child: string;
-          enabled: true;
-          variants?: string[];
-      }
-    | { parent: string; child: string; enabled: false };
 export class DependentFeaturesService {
+    private dependentFeaturesStore: IDependentFeaturesStore;
+
+    constructor(dependentFeaturesStore: IDependentFeaturesStore) {
+        this.dependentFeaturesStore = dependentFeaturesStore;
+    }
+
     async upsertFeatureDependency(
-        parentFeature: string,
+        child: string,
         dependentFeature: CreateDependentFeatureSchema,
     ): Promise<void> {
-        const { enabled, feature, variants } = dependentFeature;
+        const { enabled, feature: parent, variants } = dependentFeature;
+
+        const children = await this.dependentFeaturesStore.getChildren(child);
+        if (children.length > 0) {
+            throw new InvalidOperationError(
+                'Transitive dependency detected. Cannot add a dependency to the feature that other features depend on.',
+            );
+        }
+
         const featureDependency: FeatureDependency =
             enabled === false
                 ? {
-                      parent: parentFeature,
-                      child: feature,
+                      parent,
+                      child,
                       enabled,
                   }
                 : {
-                      parent: parentFeature,
-                      child: feature,
+                      parent,
+                      child,
                       enabled: true,
                       variants,
                   };
-        console.log(featureDependency);
+        await this.dependentFeaturesStore.upsert(featureDependency);
+    }
+
+    async deleteFeatureDependency(
+        dependency: FeatureDependencyId,
+    ): Promise<void> {
+        await this.dependentFeaturesStore.delete(dependency);
+    }
+
+    async deleteFeatureDependencies(feature: string): Promise<void> {
+        await this.dependentFeaturesStore.deleteAll(feature);
     }
 }

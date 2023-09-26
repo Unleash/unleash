@@ -3,7 +3,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { styled } from '@mui/material';
 import { PlaygroundRequestSchema, PlaygroundStrategySchema } from 'openapi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
 import { SegmentExecution } from './SegmentExecution/SegmentExecution';
 import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecutionParameters/StrategyExecutionParameters';
@@ -28,10 +27,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
 }) => {
     const { name, constraints, segments, parameters } = strategyResult;
 
-    const { uiConfig } = useUiConfig();
-
-    const hasSegments =
-        Boolean(uiConfig.flags.SE) && Boolean(segments && segments.length > 0);
+    const hasSegments = Boolean(segments && segments.length > 0);
     const hasConstraints = Boolean(constraints && constraints?.length > 0);
     const hasExecutionParameters =
         name !== 'default' &&

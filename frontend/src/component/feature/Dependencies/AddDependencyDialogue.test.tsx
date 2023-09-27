@@ -41,6 +41,7 @@ test('Delete dependency', async () => {
     render(
         <UIProviderContainer>
             <AddDependencyDialogue
+                project="default"
                 featureId="child"
                 showDependencyDialogue={true}
                 onClose={() => {
@@ -69,6 +70,7 @@ test('Add dependency', async () => {
     render(
         <UIProviderContainer>
             <AddDependencyDialogue
+                project="default"
                 featureId="child"
                 showDependencyDialogue={true}
                 onClose={() => {

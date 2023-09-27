@@ -3,11 +3,12 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
 export const useParentOptions = (
+    project: string,
     childFeatureId: string,
     options: SWRConfiguration = {}
 ) => {
     const path = formatApiPath(
-        `/api/admin/projects/default/features/${childFeatureId}/parents`
+        `/api/admin/projects/${project}/features/${childFeatureId}/parents`
     );
     const { data, error, mutate } = useSWR(path, fetcher, options);
 

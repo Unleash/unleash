@@ -6,6 +6,7 @@ import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesA
 import { useParentOptions } from 'hooks/api/getters/useParentOptions/useParentOptions';
 
 interface IAddDependencyDialogueProps {
+    project: string;
     featureId: string;
     showDependencyDialogue: boolean;
     onClose: () => void;
@@ -22,13 +23,15 @@ const REMOVE_DEPENDENCY_OPTION = {
 };
 
 export const AddDependencyDialogue = ({
+    project,
     featureId,
     showDependencyDialogue,
     onClose,
 }: IAddDependencyDialogueProps) => {
     const [parent, setParent] = useState(REMOVE_DEPENDENCY_OPTION.key);
-    const { addDependency, removeDependencies } = useDependentFeaturesApi();
-    const { parentOptions, loading } = useParentOptions(featureId);
+    const { addDependency, removeDependencies } =
+        useDependentFeaturesApi(project);
+    const { parentOptions, loading } = useParentOptions(project, featureId);
     const options = parentOptions
         ? [
               REMOVE_DEPENDENCY_OPTION,

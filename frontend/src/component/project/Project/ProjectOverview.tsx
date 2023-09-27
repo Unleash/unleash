@@ -60,6 +60,7 @@ const ProjectOverview = () => {
                 <ProjectStats stats={project.stats} />
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
+                        key={loading ? 'loading' : 'ready'}
                         features={features}
                         environments={environments}
                         loading={loading}

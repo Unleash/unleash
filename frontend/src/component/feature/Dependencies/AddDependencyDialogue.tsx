@@ -66,7 +66,6 @@ export const AddDependencyDialogue = ({
                     options={options}
                     value={parent}
                     onChange={setParent}
-                    id={'selectDependency'}
                 />
             </Box>
         </Dialogue>

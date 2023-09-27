@@ -203,13 +203,17 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             Leave it empty if you don’t want to add a limit
                         </StyledSubtitle>
                         <StyledInputContainer>
-                            <StyledInput
-                                label={'Limit'}
-                                name="value"
-                                type={'number'}
-                                value={featureLimit}
-                                onChange={e => setFeatureLimit(e.target.value)}
-                            />
+                            {featureLimit && setFeatureLimit && (
+                                <StyledInput
+                                    label={'Limit'}
+                                    name="value"
+                                    type={'number'}
+                                    value={featureLimit}
+                                    onChange={e =>
+                                        setFeatureLimit(e.target.value)
+                                    }
+                                />
+                            )}
                             <ConditionallyRender
                                 condition={
                                     featureCount !== undefined &&

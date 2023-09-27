@@ -131,7 +131,9 @@ export const StrategyChange: VFC<{
         change.action === 'addStrategy' || change.action === 'updateStrategy';
 
     const featureStrategyVariantsDisplay =
-        isStrategyAction && change.payload.variants ? (
+        isStrategyAction &&
+        change.payload.variants &&
+        change.payload.variants.length > 0 ? (
             <StyledBox>
                 <StyledTypography>
                     Updating feature variants to:

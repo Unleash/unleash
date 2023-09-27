@@ -24,6 +24,7 @@ import {
 import { ISegmentService } from '../../../lib/segments/segment-service-interface';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
+import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
 
 let stores: IUnleashStores;
 let db;
@@ -63,6 +64,9 @@ beforeAll(async () => {
         db.rawDatabase,
         config,
     );
+    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
+        db.rawDatabase,
+    );
     segmentService = new SegmentService(
         stores,
         changeRequestAccessReadModel,
@@ -77,6 +81,7 @@ beforeAll(async () => {
         accessService,
         changeRequestAccessReadModel,
         privateProjectChecker,
+        dependentFeaturesReadModel,
     );
 });
 
@@ -466,6 +471,9 @@ test('If change requests are enabled, cannot change variants without going via C
         db.rawDatabase,
         unleashConfig,
     );
+    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
+        db.rawDatabase,
+    );
     // Force all feature flags on to make sure we have Change requests on
     const customFeatureService = new FeatureToggleService(
         stores,
@@ -479,6 +487,7 @@ test('If change requests are enabled, cannot change variants without going via C
         accessService,
         changeRequestAccessReadModel,
         privateProjectChecker,
+        dependentFeaturesReadModel,
     );
 
     const newVariant: IVariant = {
@@ -554,6 +563,9 @@ test('If CRs are protected for any environment in the project stops bulk update 
         db.rawDatabase,
         unleashConfig,
     );
+    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
+        db.rawDatabase,
+    );
     // Force all feature flags on to make sure we have Change requests on
     const customFeatureService = new FeatureToggleService(
         stores,
@@ -567,6 +579,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
         accessService,
         changeRequestAccessReadModel,
         privateProjectChecker,
+        dependentFeaturesReadModel,
     );
 
     const toggle = await service.createFeatureToggle(

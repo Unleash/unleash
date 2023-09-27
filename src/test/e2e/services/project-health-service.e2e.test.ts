@@ -12,6 +12,7 @@ import { GroupService } from '../../../lib/services/group-service';
 import { FavoritesService } from '../../../lib/services';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
+import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -41,6 +42,9 @@ beforeAll(async () => {
         db.rawDatabase,
         config,
     );
+    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
+        db.rawDatabase,
+    );
     featureToggleService = new FeatureToggleService(
         stores,
         config,
@@ -53,6 +57,7 @@ beforeAll(async () => {
         accessService,
         changeRequestAccessReadModel,
         privateProjectChecker,
+        dependentFeaturesReadModel,
     );
     favoritesService = new FavoritesService(stores, config);
 

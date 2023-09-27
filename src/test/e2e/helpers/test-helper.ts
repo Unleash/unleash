@@ -63,6 +63,8 @@ export interface IUnleashHttpAPI {
         importPayload: ImportTogglesSchema,
         expectedResponseCode?: number,
     ): supertest.Test;
+
+    addDependency(child: string, parent: string): supertest.Test;
 }
 
 function httpApis(
@@ -158,6 +160,21 @@ function httpApis(
             return request
                 .post('/api/admin/features-batch/import')
                 .send(importPayload)
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
+
+        addDependency(
+            child: string,
+            parent: string,
+            project = DEFAULT_PROJECT,
+            expectedResponseCode: number = 200,
+        ): supertest.Test {
+            return request
+                .post(
+                    `/api/admin/projects/${project}/features/${child}/dependencies`,
+                )
+                .send({ feature: parent })
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },

@@ -91,6 +91,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    dependentFeatures: true,
                 },
             },
         },
@@ -212,6 +213,32 @@ test('Can get project overview', async () => {
             expect(r.body.features).toHaveLength(2);
             expect(r.body.members).toBe(0);
         });
+});
+
+test('should list dependencies and children', async () => {
+    const parent = uuidv4();
+    const child = uuidv4();
+    await app.createFeature(parent, 'default');
+    await app.createFeature(child, 'default');
+    await app.addDependency(child, parent);
+
+    const { body: childFeature } = await app.getProjectFeatures(
+        'default',
+        child,
+    );
+    const { body: parentFeature } = await app.getProjectFeatures(
+        'default',
+        parent,
+    );
+
+    expect(childFeature).toMatchObject({
+        children: [],
+        dependencies: [{ feature: parent, enabled: true, variants: [] }],
+    });
+    expect(parentFeature).toMatchObject({
+        children: [child],
+        dependencies: [],
+    });
 });
 
 test('Can get features for project', async () => {

@@ -16,9 +16,11 @@ import {
     FeatureToggle,
     FeatureToggleDTO,
     FeatureToggleLegacy,
+    FeatureToggleWithDependencies,
     FeatureToggleWithEnvironment,
     FeatureVariantEvent,
     IConstraint,
+    IDependency,
     IEventStore,
     IFeatureEnvironmentInfo,
     IFeatureEnvironmentStore,
@@ -96,6 +98,7 @@ import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 import { checkFeatureFlagNamesAgainstPattern } from '../features/feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
+import { IDependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model-type';
 
 interface IFeatureContext {
     featureName: string;
@@ -157,6 +160,8 @@ class FeatureToggleService {
 
     private privateProjectChecker: IPrivateProjectChecker;
 
+    private dependentFeaturesReadModel: IDependentFeaturesReadModel;
+
     constructor(
         {
             featureStrategiesStore,
@@ -188,6 +193,7 @@ class FeatureToggleService {
         accessService: AccessService,
         changeRequestAccessReadModel: IChangeRequestAccessReadModel,
         privateProjectChecker: IPrivateProjectChecker,
+        dependentFeaturesReadModel: IDependentFeaturesReadModel,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -204,6 +210,7 @@ class FeatureToggleService {
         this.flagResolver = flagResolver;
         this.changeRequestAccessReadModel = changeRequestAccessReadModel;
         this.privateProjectChecker = privateProjectChecker;
+        this.dependentFeaturesReadModel = dependentFeaturesReadModel;
     }
 
     async validateFeaturesContext(
@@ -921,7 +928,7 @@ class FeatureToggleService {
         projectId,
         environmentVariants,
         userId,
-    }: IGetFeatureParams): Promise<FeatureToggleWithEnvironment> {
+    }: IGetFeatureParams): Promise<FeatureToggleWithDependencies> {
         if (projectId) {
             await this.validateFeatureBelongsToProject({
                 featureName,
@@ -929,18 +936,31 @@ class FeatureToggleService {
             });
         }
 
+        let dependencies: IDependency[] = [];
+        let children: string[] = [];
+        if (this.flagResolver.isEnabled('dependentFeatures')) {
+            [dependencies, children] = await Promise.all([
+                this.dependentFeaturesReadModel.getParents(featureName),
+                this.dependentFeaturesReadModel.getChildren(featureName),
+            ]);
+        }
+
         if (environmentVariants) {
-            return this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
-                featureName,
-                userId,
-                archived,
-            );
+            const result =
+                await this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
+                    featureName,
+                    userId,
+                    archived,
+                );
+            return { ...result, dependencies, children };
         } else {
-            return this.featureStrategiesStore.getFeatureToggleWithEnvs(
-                featureName,
-                userId,
-                archived,
-            );
+            const result =
+                await this.featureStrategiesStore.getFeatureToggleWithEnvs(
+                    featureName,
+                    userId,
+                    archived,
+                );
+            return { ...result, dependencies, children };
         }
     }
 

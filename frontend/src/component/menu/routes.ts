@@ -15,7 +15,6 @@ import EditEnvironment from 'component/environments/EditEnvironment/EditEnvironm
 import { EditContext } from 'component/context/EditContext/EditContext';
 import EditTagType from 'component/tags/EditTagType/EditTagType';
 import CreateTagType from 'component/tags/CreateTagType/CreateTagType';
-import EditProject from 'component/project/Project/EditProject/EditProject';
 import CreateFeature from 'component/feature/CreateFeature/CreateFeature';
 import EditFeature from 'component/feature/EditFeature/EditFeature';
 import { ApplicationEdit } from 'component/application/ApplicationEdit/ApplicationEdit';

@@ -10,6 +10,12 @@ const JSONEditorThemeWrapper = styled('div')(({ theme }) => ({
         '--jse-panel-background': theme.palette.background.default,
         '--jse-main-border': `1px solid #646382`,
     },
+    '&:hover': {
+        '--jse-main-border': `1px solid #8B8BA7`,
+    },
+    '& .jse-focus': {
+        '--jse-main-border': `1px solid ${theme.palette.primary.main}`,
+    },
     '& .jse-text-mode, .jse-contents': {
         borderTopLeftRadius: theme.shape.borderRadius,
         borderTopRightRadius: theme.shape.borderRadius,

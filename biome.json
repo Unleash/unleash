@@ -7,10 +7,14 @@
       "performance": {
         "noDelete": "off"
       },
+      "correctness": {
+        "noUnsafeOptionalChaining": "off"
+      },
       "complexity": {
         "noBannedTypes": "off",
         "noUselessConstructor": "off",
-        "useOptionalChain": "warn"
+        "useOptionalChain": "warn",
+        "noStaticOnlyClass": "off"
       },
       "style": {
         "noNonNullAssertion": "off",
@@ -20,7 +24,8 @@
       },
       "suspicious": {
         "noExplicitAny": "off",
-        "noExtraNonNullAssertion": "off"
+        "noExtraNonNullAssertion": "off",
+        "noRedeclare": "off"
       }
     },
     "ignore": [

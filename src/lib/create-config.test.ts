@@ -463,7 +463,7 @@ test('environment variable takes precedence over configured variable', async () 
 test.each(['demo', '/demo', '/demo/'])(
     'Trailing and leading slashes gets normalized for base path %s',
     async (path) => {
-        let config = createConfig({
+        const config = createConfig({
             server: {
                 baseUriPath: path,
             },

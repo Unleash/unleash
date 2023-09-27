@@ -51,46 +51,44 @@ interface TokenParam {
 interface TokenNameParam {
     name: string;
 }
-export const tokenTypeToCreatePermission: (
-    tokenType: ApiTokenType,
-) => string = (tokenType) => {
-    switch (tokenType) {
-        case ApiTokenType.ADMIN:
-            return ADMIN;
-        case ApiTokenType.CLIENT:
-            return CREATE_CLIENT_API_TOKEN;
-        case ApiTokenType.FRONTEND:
-            return CREATE_FRONTEND_API_TOKEN;
-    }
-};
+export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
+    (tokenType) => {
+        switch (tokenType) {
+            case ApiTokenType.ADMIN:
+                return ADMIN;
+            case ApiTokenType.CLIENT:
+                return CREATE_CLIENT_API_TOKEN;
+            case ApiTokenType.FRONTEND:
+                return CREATE_FRONTEND_API_TOKEN;
+        }
+    };
 
-const permissionToTokenType: (
-    permission: string,
-) => ApiTokenType | undefined = (permission) => {
-    if (
-        [
-            CREATE_FRONTEND_API_TOKEN,
-            READ_FRONTEND_API_TOKEN,
-            DELETE_FRONTEND_API_TOKEN,
-            UPDATE_FRONTEND_API_TOKEN,
-        ].includes(permission)
-    ) {
-        return ApiTokenType.FRONTEND;
-    } else if (
-        [
-            CREATE_CLIENT_API_TOKEN,
-            READ_CLIENT_API_TOKEN,
-            DELETE_CLIENT_API_TOKEN,
-            UPDATE_CLIENT_API_TOKEN,
-        ].includes(permission)
-    ) {
-        return ApiTokenType.CLIENT;
-    } else if (ADMIN === permission) {
-        return ApiTokenType.ADMIN;
-    } else {
-        return undefined;
-    }
-};
+const permissionToTokenType: (permission: string) => ApiTokenType | undefined =
+    (permission) => {
+        if (
+            [
+                CREATE_FRONTEND_API_TOKEN,
+                READ_FRONTEND_API_TOKEN,
+                DELETE_FRONTEND_API_TOKEN,
+                UPDATE_FRONTEND_API_TOKEN,
+            ].includes(permission)
+        ) {
+            return ApiTokenType.FRONTEND;
+        } else if (
+            [
+                CREATE_CLIENT_API_TOKEN,
+                READ_CLIENT_API_TOKEN,
+                DELETE_CLIENT_API_TOKEN,
+                UPDATE_CLIENT_API_TOKEN,
+            ].includes(permission)
+        ) {
+            return ApiTokenType.CLIENT;
+        } else if (ADMIN === permission) {
+            return ApiTokenType.ADMIN;
+        } else {
+            return undefined;
+        }
+    };
 
 const tokenTypeToUpdatePermission: (tokenType: ApiTokenType) => string = (
     tokenType,

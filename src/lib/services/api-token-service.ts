@@ -78,12 +78,7 @@ export class ApiTokenService {
     }
 
     async fetchActiveTokens(): Promise<void> {
-        try {
-            this.activeTokens = await this.getAllActiveTokens();
-        } finally {
-            // eslint-disable-next-line no-unsafe-finally
-            return;
-        }
+        this.activeTokens = await this.getAllActiveTokens();
     }
 
     async getToken(secret: string): Promise<IApiToken> {
@@ -259,7 +254,7 @@ export class ApiTokenService {
         if (!errorDetails) {
             return 'invalid';
         }
-        let invalidProject = projects.find((project) => {
+        const invalidProject = projects.find((project) => {
             return errorDetails.includes(`=(${project})`);
         });
         return invalidProject || 'invalid';

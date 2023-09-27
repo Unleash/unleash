@@ -111,7 +111,7 @@ test('should call next if accountService throws exception', async () => {
 });
 
 test('Should not log at error level if user not found', async () => {
-    let fakeLogger = {
+    const fakeLogger = {
         debug: () => {},
         info: () => {},
         warn: jest.fn(),

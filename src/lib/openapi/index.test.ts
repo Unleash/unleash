@@ -18,8 +18,9 @@ test('all schema files should be added to the schemas object', () => {
 });
 
 test('removeJsonSchemaProps', () => {
-    expect(removeJsonSchemaProps({ a: 'b', $id: 'c', components: {} }))
-        .toMatchInlineSnapshot(`
+    expect(
+        removeJsonSchemaProps({ a: 'b', $id: 'c', components: {} }),
+    ).toMatchInlineSnapshot(`
         {
           "a": "b",
         }

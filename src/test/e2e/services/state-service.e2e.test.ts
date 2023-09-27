@@ -155,13 +155,13 @@ test('Should import variants in new format (per environment)', async () => {
         keepExisting: false,
         dropBeforeImport: true,
     });
-    let exportedJson = await stateService.export({});
+    const exportedJson = await stateService.export({});
     await stateService.import({
         data: exportedJson,
         keepExisting: false,
         dropBeforeImport: true,
     });
-    let featureEnvironments = await stores.featureEnvironmentStore.getAll();
+    const featureEnvironments = await stores.featureEnvironmentStore.getAll();
     expect(featureEnvironments).toHaveLength(6); // 3 environments, 2 features === 6 rows
 });
 

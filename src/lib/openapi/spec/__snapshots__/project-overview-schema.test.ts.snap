@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`updateProjectEnterpriseSettings schema 1`] = `
+{
+  "errors": [
+    {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'version'",
+      "params": {
+        "missingProperty": "version",
+      },
+      "schemaPath": "#/required",
+    },
+  ],
+  "schema": "#/components/schemas/projectOverviewSchema",
+}
+`;
+
 exports[`updateProjectSettings schema 1`] = `
 {
   "errors": [

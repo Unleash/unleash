@@ -408,7 +408,7 @@ class EventStore implements IEventStore {
         return this.eventEmitter.off(eventName, listener);
     }
 
-    private async setUnannouncedToAnnounced(): Promise<IEvent[]> {
+    async setUnannouncedToAnnounced(): Promise<IEvent[]> {
         const rows = await this.db(TABLE)
             .update({ announced: true })
             .where('announced', false)

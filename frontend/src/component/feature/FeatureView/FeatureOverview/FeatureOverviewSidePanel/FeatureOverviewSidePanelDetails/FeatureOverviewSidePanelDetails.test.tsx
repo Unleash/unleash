@@ -15,7 +15,7 @@ testServerRoute(server, '/api/admin/ui-config', {
 test('show dependency dialogue', async () => {
     render(
         <FeatureOverviewSidePanelDetails
-            feature={{ name: 'feature' } as IFeatureToggle}
+            feature={{ name: 'feature', project: 'default' } as IFeatureToggle}
             header={''}
         />
     );

@@ -76,7 +76,7 @@ export const FeatureOverviewSidePanelDetails = ({
                 )}
             </FlexRow>
             <ConditionallyRender
-                condition={dependentFeatures}
+                condition={dependentFeatures && Boolean(feature.project)}
                 show={
                     <FlexRow>
                         <StyledDetail>
@@ -93,11 +93,17 @@ export const FeatureOverviewSidePanelDetails = ({
                     </FlexRow>
                 }
             />
-            <AddDependencyDialogue
-                featureId={feature.name}
-                onClose={() => setShowDependencyDialogue(false)}
-                showDependencyDialogue={
-                    dependentFeatures && showDependencyDialogue
+            <ConditionallyRender
+                condition={dependentFeatures && Boolean(feature.project)}
+                show={
+                    <AddDependencyDialogue
+                        project={feature.project}
+                        featureId={feature.name}
+                        onClose={() => setShowDependencyDialogue(false)}
+                        showDependencyDialogue={
+                            dependentFeatures && showDependencyDialogue
+                        }
+                    />
                 }
             />
         </StyledContainer>

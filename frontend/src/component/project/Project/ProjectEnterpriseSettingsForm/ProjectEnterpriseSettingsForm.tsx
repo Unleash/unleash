@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Select from 'component/common/select';
-import { ProjectMode } from 'component/project/Project/hooks/useProjectEnterpriseSettingsForm';
+import { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import { Box, InputAdornment, styled, TextField } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 import Input from 'component/common/Input/Input';
 import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IProjectEnterpriseSettingsForm {
     projectId: string;
-    projectMode: string;
+    projectMode?: string;
     featureNamingPattern?: string;
     featureNamingExample?: string;
     featureNamingDescription?: string;
@@ -25,7 +26,7 @@ interface IProjectEnterpriseSettingsForm {
 
 const StyledForm = styled('form')(({ theme }) => ({
     height: '100%',
-    paddingBottom: theme.spacing(1),
+    paddingBottom: theme.spacing(4),
 }));
 
 const StyledSubtitle = styled('div')(({ theme }) => ({
@@ -97,11 +98,33 @@ export const validateFeatureNamingExample = ({
     return { state: 'valid' };
 };
 
+const useFeatureNamePatternTracking = () => {
+    const [previousPattern, setPreviousPattern] = React.useState<string>('');
+    const { trackEvent } = usePlausibleTracker();
+    const eventName = 'feature-naming-pattern' as const;
+
+    const trackPattern = (pattern: string = '') => {
+        if (pattern === previousPattern) {
+            // do nothing; they've probably updated something else in the
+            // project.
+        } else if (pattern === '' && previousPattern !== '') {
+            trackEvent(eventName, { props: { action: 'removed' } });
+        } else if (pattern !== '' && previousPattern === '') {
+            trackEvent(eventName, { props: { action: 'added' } });
+        } else if (pattern !== '' && previousPattern !== '') {
+            trackEvent(eventName, { props: { action: 'edited' } });
+        }
+    };
+
+    return { trackPattern, setPreviousPattern };
+};
+
 const ProjectEnterpriseSettingsForm: React.FC<
     IProjectEnterpriseSettingsForm
 > = ({
     children,
     handleSubmit,
+    projectId,
     projectMode,
     featureNamingExample,
     featureNamingPattern,
@@ -111,9 +134,13 @@ const ProjectEnterpriseSettingsForm: React.FC<
     setFeatureNamingDescription,
     setProjectMode,
     errors,
+    clearErrors,
 }) => {
     const privateProjects = useUiFlag('privateProjects');
     const shouldShowFlagNaming = useUiFlag('featureNamingPattern');
+
+    const { setPreviousPattern, trackPattern } =
+        useFeatureNamePatternTracking();
 
     const projectModeOptions = privateProjects
         ? [
@@ -125,6 +152,10 @@ const ProjectEnterpriseSettingsForm: React.FC<
               { key: 'open', label: 'open' },
               { key: 'protected', label: 'protected' },
           ];
+
+    useEffect(() => {
+        setPreviousPattern(featureNamingPattern || '');
+    }, [projectId]);
 
     const updateNamingExampleError = ({
         example,
@@ -197,6 +228,7 @@ const ProjectEnterpriseSettingsForm: React.FC<
         <StyledForm
             onSubmit={submitEvent => {
                 handleSubmit(submitEvent);
+                trackPattern(featureNamingPattern);
             }}
         >
             <>

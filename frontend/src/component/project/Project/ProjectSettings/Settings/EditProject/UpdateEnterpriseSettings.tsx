@@ -1,11 +1,11 @@
 import React from 'react';
-import useUiConfig from 'component/../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from 'component/../hooks/useToast';
-import { useRequiredPathParam } from 'component/../hooks/useRequiredPathParam';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useProjectEnterpriseSettingsForm from '../../../hooks/useProjectEnterpriseSettingsForm';
-import useProject from 'component/../hooks/api/getters/useProject/useProject';
-import useProjectApi from 'component/../hooks/api/actions/useProjectApi/useProjectApi';
-import { formatUnknownError } from 'component/../utils/formatUnknownError';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ProjectEnterpriseSettingsForm from '../../../ProjectEnterpriseSettingsForm/ProjectEnterpriseSettingsForm';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';

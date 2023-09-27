@@ -9,21 +9,21 @@ import { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { CollaborationModeTooltip } from '../ProjectEnterpriseSettingsForm/CollaborationModeTooltip';
 import Select from '../../../common/select';
-import { useUiFlag } from '../../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IProjectForm {
     projectId: string;
     projectName: string;
     projectDesc: string;
     projectStickiness?: string;
-    featureLimit: string;
+    featureLimit?: string;
     featureCount?: number;
     projectMode?: string;
     setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
-    setFeatureLimit: React.Dispatch<React.SetStateAction<string>>;
+    setFeatureLimit?: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
@@ -185,7 +185,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 }
             />
             <ConditionallyRender
-                condition={mode === 'Edit'}
+                condition={mode === 'Edit' && Boolean(setFeatureLimit)}
                 show={
                     <>
                         <Box

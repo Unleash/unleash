@@ -220,7 +220,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                     permission={UPDATE_FEATURE_ENVIRONMENT}
                     inputProps={{ 'aria-label': environmentName }}
                     onClick={onClick}
-                    data-testId={'permission-switch'}
+                    data-testid={'permission-switch'}
                 />
             </StyledBoxContainer>
             <EnableEnvironmentDialog

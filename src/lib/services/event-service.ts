@@ -5,6 +5,7 @@ import { IEventStore } from '../types/stores/event-store';
 import { IBaseEvent, IEventList } from '../types/events';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
 import EventEmitter from 'events';
+import { ITag } from '../types';
 
 export default class EventService {
     private logger: Logger;
@@ -53,11 +54,27 @@ export default class EventService {
     private async enhanceEventsWithTags(
         events: IBaseEvent[],
     ): Promise<IBaseEvent[]> {
+        const featureNamesSet = new Set<string>();
         for (const event of events) {
             if (event.featureName && !event.tags) {
-                event.tags = await this.featureTagStore.getAllTagsForFeature(
-                    event.featureName,
-                );
+                featureNamesSet.add(event.featureName);
+            }
+        }
+
+        const featureTagsMap: Map<string, ITag[]> = new Map();
+        const allTagsInFeatures = await this.featureTagStore.getAllByFeatures(
+            Array.from(featureNamesSet),
+        );
+
+        for (const tag of allTagsInFeatures) {
+            const featureTags = featureTagsMap.get(tag.featureName) || [];
+            featureTags.push({ value: tag.tagValue, type: tag.tagType });
+            featureTagsMap.set(tag.featureName, featureTags);
+        }
+
+        for (const event of events) {
+            if (event.featureName && !event.tags) {
+                event.tags = featureTagsMap.get(event.featureName);
             }
         }
 

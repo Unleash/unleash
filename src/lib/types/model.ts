@@ -420,7 +420,7 @@ export type CreateProject = Pick<IProject, 'id' | 'name'> & {
 export interface IProject {
     id: string;
     name: string;
-    description: string;
+    description?: string;
     health?: number;
     createdAt?: Date;
     updatedAt?: Date;

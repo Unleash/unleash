@@ -14,6 +14,7 @@ import {
     IProjectInsert,
     IProjectQuery,
     IProjectSettings,
+    IProjectEnterpriseSettingsUpdate,
     IProjectStore,
     ProjectEnvironment,
 } from '../types/stores/project-store';
@@ -244,10 +245,6 @@ class ProjectStore implements IProjectStore {
                 project: project.id,
                 project_mode: project.mode,
                 default_stickiness: project.defaultStickiness,
-                feature_limit: project.featureLimit,
-                feature_naming_pattern: project.featureNaming?.pattern,
-                feature_naming_example: project.featureNaming?.example,
-                feature_naming_description: project.featureNaming?.description,
             })
             .returning('*');
         return this.mapRow({ ...row[0], ...settingsRow[0] });
@@ -272,9 +269,30 @@ class ProjectStore implements IProjectStore {
                 await this.db(SETTINGS_TABLE)
                     .where({ project: data.id })
                     .update({
-                        project_mode: data.mode,
                         default_stickiness: data.defaultStickiness,
                         feature_limit: data.featureLimit,
+                    });
+            } else {
+                await this.db(SETTINGS_TABLE).insert({
+                    project: data.id,
+                    default_stickiness: data.defaultStickiness,
+                    feature_limit: data.featureLimit,
+                });
+            }
+        } catch (err) {
+            this.logger.error('Could not update project, error: ', err);
+        }
+    }
+
+    async updateProjectEnterpriseSettings(
+        data: IProjectEnterpriseSettingsUpdate,
+    ): Promise<void> {
+        try {
+            if (await this.hasProjectSettings(data.id)) {
+                await this.db(SETTINGS_TABLE)
+                    .where({ project: data.id })
+                    .update({
+                        project_mode: data.mode,
                         feature_naming_pattern: data.featureNaming?.pattern,
                         feature_naming_example: data.featureNaming?.example,
                         feature_naming_description:
@@ -284,15 +302,16 @@ class ProjectStore implements IProjectStore {
                 await this.db(SETTINGS_TABLE).insert({
                     project: data.id,
                     project_mode: data.mode,
-                    default_stickiness: data.defaultStickiness,
-                    feature_limit: data.featureLimit,
                     feature_naming_pattern: data.featureNaming?.pattern,
                     feature_naming_example: data.featureNaming?.example,
                     feature_naming_description: data.featureNaming?.description,
                 });
             }
         } catch (err) {
-            this.logger.error('Could not update project, error: ', err);
+            this.logger.error(
+                'Could not update project settings, error: ',
+                err,
+            );
         }
     }
 

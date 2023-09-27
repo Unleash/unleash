@@ -7,7 +7,7 @@ import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
-import EditProject from './EditProject';
+import EditProject from './EditProject/EditProject';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 

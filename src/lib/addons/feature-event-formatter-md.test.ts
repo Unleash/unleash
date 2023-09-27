@@ -315,8 +315,7 @@ const testCases: [string, IEvent, string][] = [
     ].map(
         ([operator, display]) =>
             <[string, IEvent, string]>[
-                'when default strategy updated with numeric constraint ' +
-                    operator,
+                `when default strategy updated with numeric constraint ${operator}`,
                 {
                     id: 39,
                     type: FEATURE_STRATEGY_UPDATE,
@@ -504,7 +503,7 @@ const testCases: [string, IEvent, string][] = [
 ];
 
 testCases.forEach(([description, event, expected]) =>
-    test('Should format specialised text for events ' + description, () => {
+    test(`Should format specialised text for events ${description}`, () => {
         const formatter = new FeatureEventFormatterMd('unleashUrl');
         const actual = formatter.format(event);
         expect(actual).toBe(expected);

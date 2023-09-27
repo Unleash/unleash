@@ -55,7 +55,7 @@ const createUser = async (role?: number) => {
     return user;
 };
 
-let groupIndex = 0;
+const groupIndex = 0;
 const createGroup = async ({
     users,
     role,
@@ -1837,7 +1837,7 @@ test('access overview should have admin access and default project for admin use
     const accessOverView: IUserAccessOverview[] =
         await accessService.getUserAccessOverview();
     const userAccess = accessOverView.find(
-        (overviewRow) => overviewRow.userId == user.id,
+        (overviewRow) => overviewRow.userId === user.id,
     )!;
 
     expect(userAccess.userId).toBe(user.id);
@@ -1890,7 +1890,7 @@ test('access overview should have group access for groups that they are in', asy
     const accessOverView: IUserAccessOverview[] =
         await accessService.getUserAccessOverview();
     const userAccess = accessOverView.find(
-        (overviewRow) => overviewRow.userId == user.id,
+        (overviewRow) => overviewRow.userId === user.id,
     )!;
 
     expect(userAccess.userId).toBe(user.id);

@@ -141,7 +141,7 @@ test('Should import variants from old format and convert to new format (per envi
         keepExisting: false,
         dropBeforeImport: true,
     });
-    let featureEnvironments = await stores.featureEnvironmentStore.getAll();
+    const featureEnvironments = await stores.featureEnvironmentStore.getAll();
     expect(featureEnvironments).toHaveLength(6); // There are 3 environments enabled and 2 features
     expect(
         featureEnvironments

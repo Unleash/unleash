@@ -493,10 +493,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 .whereIn(['tag_type', 'tag_value'], tag);
             query = query.whereIn('features.name', tagQuery);
         }
-        if (namePrefix && namePrefix.trim()) {
+        if (namePrefix?.trim()) {
             let namePrefixQuery = namePrefix;
             if (!namePrefix.endsWith('%')) {
-                namePrefixQuery = namePrefixQuery + '%';
+                namePrefixQuery = `${namePrefixQuery}%`;
             }
             query = query.whereILike('features.name', namePrefixQuery);
         }

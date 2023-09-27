@@ -120,7 +120,7 @@ class ConfigController extends Controller {
 
         const disablePasswordAuth =
             simpleAuthSettings?.disabled ||
-            this.config.authentication.type == IAuthType.NONE;
+            this.config.authentication.type === IAuthType.NONE;
 
         const expFlags = this.config.flagResolver.getAll({
             email: req.user.email,

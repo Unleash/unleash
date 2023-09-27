@@ -9,9 +9,9 @@ function isPrerelease(version) {
     return arr && arr.length > 0;
 }
 
-if(isPrerelease(version)){
-    console.log('beta')
-}else if(semver.gt(version, latestUnleashVersion)) {
+if (isPrerelease(version)) {
+    console.log('beta');
+} else if (semver.gt(version, latestUnleashVersion)) {
     console.log('latest');
 } else {
     console.log('previous');

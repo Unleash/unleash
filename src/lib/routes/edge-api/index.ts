@@ -118,7 +118,7 @@ export default class EdgeController extends Controller {
         const { metrics, applications } = body;
 
         try {
-            let promises: Promise<void>[] = [];
+            const promises: Promise<void>[] = [];
             for (const app of applications) {
                 promises.push(
                     this.clientInstanceService.registerClient(app, clientIp),

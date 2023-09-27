@@ -386,7 +386,7 @@ export class ApiTokenController extends Controller {
         const permissionRequired = tokenTypeToDeletePermission(
             tokenToUpdate.type,
         );
-        let hasPermission = await this.accessService.hasPermission(
+        const hasPermission = await this.accessService.hasPermission(
             req.user,
             permissionRequired,
         );

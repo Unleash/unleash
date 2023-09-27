@@ -141,7 +141,7 @@ export class ProxyService {
     }
 
     async deleteClientForProxyToken(secret: string): Promise<void> {
-        let clientPromise = this.clients.get(secret);
+        const clientPromise = this.clients.get(secret);
         if (clientPromise) {
             const client = await clientPromise;
             client.destroy();

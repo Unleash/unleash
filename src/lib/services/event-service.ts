@@ -27,8 +27,8 @@ export default class EventService {
     }
 
     async getEvents(): Promise<IEventList> {
-        let totalEvents = await this.eventStore.count();
-        let events = await this.eventStore.getEvents();
+        const totalEvents = await this.eventStore.count();
+        const events = await this.eventStore.getEvents();
         return {
             events,
             totalEvents,
@@ -36,8 +36,8 @@ export default class EventService {
     }
 
     async searchEvents(search: SearchEventsSchema): Promise<IEventList> {
-        let totalEvents = await this.eventStore.filteredCount(search);
-        let events = await this.eventStore.searchEvents(search);
+        const totalEvents = await this.eventStore.filteredCount(search);
+        const events = await this.eventStore.searchEvents(search);
         return {
             events,
             totalEvents,

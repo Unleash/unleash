@@ -80,7 +80,7 @@ const rbacMiddleware = (
                 projectId === undefined &&
                 permissionsArray.some(
                     (permission) =>
-                        permission == CREATE_FEATURE ||
+                        permission === CREATE_FEATURE ||
                         permission.endsWith('FEATURE_STRATEGY'),
                 )
             ) {

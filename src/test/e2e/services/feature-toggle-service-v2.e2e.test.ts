@@ -407,7 +407,7 @@ test('Cloning a feature toggle also clones segments correctly', async () => {
     const featureName = 'ToggleWithSegments';
     const clonedFeatureName = 'AWholeNewFeatureToggle';
 
-    let segment = await segmentService.create(
+    const segment = await segmentService.create(
         {
             name: 'SomeSegment',
             constraints: mockConstraints(),
@@ -446,7 +446,9 @@ test('Cloning a feature toggle also clones segments correctly', async () => {
         'test-user',
     );
 
-    let feature = await service.getFeature({ featureName: clonedFeatureName });
+    const feature = await service.getFeature({
+        featureName: clonedFeatureName,
+    });
     expect(
         feature.environments.find((x) => x.name === 'default')?.strategies[0]
             .segments,

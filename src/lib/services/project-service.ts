@@ -756,7 +756,9 @@ export default class ProjectService {
                 projectId,
             );
             const groups = await this.groupService.getProjectGroups(projectId);
-            const roleGroups = groups.filter((g) => g.roleId == currentRole.id);
+            const roleGroups = groups.filter(
+                (g) => g.roleId === currentRole.id,
+            );
             if (users.length + roleGroups.length < 2) {
                 throw new ProjectWithoutOwnerError();
             }

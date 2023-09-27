@@ -44,7 +44,7 @@ describe('updating lifetimes', () => {
         'it updates to the lifetime correctly: `%s`',
         async (lifetimeDays) => {
             const { body } = await app.request
-                .put(`/api/admin/feature-types/release/lifetime`)
+                .put('/api/admin/feature-types/release/lifetime')
                 .send({ lifetimeDays })
                 .expect(200);
 
@@ -53,7 +53,7 @@ describe('updating lifetimes', () => {
     );
     test("if the feature type doesn't exist, you get a 404", async () => {
         await app.request
-            .put(`/api/admin/feature-types/bogus-feature-type/lifetime`)
+            .put('/api/admin/feature-types/bogus-feature-type/lifetime')
             .send({ lifetimeDays: 45 })
             .expect(404);
     });
@@ -72,7 +72,7 @@ describe('updating lifetimes', () => {
     test('the :id parameter is not case sensitive', async () => {
         const lifetimeDays = 45;
         const { body } = await app.request
-            .put(`/api/admin/feature-types/kIlL-SwItCh/lifetime`)
+            .put('/api/admin/feature-types/kIlL-SwItCh/lifetime')
             .send({ lifetimeDays })
             .expect(200);
 

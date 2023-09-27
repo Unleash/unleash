@@ -80,7 +80,7 @@ export interface ITestDb {
 }
 
 export default async function init(
-    databaseSchema: string = 'test',
+    databaseSchema = 'test',
     getLogger: LogProvider = noLoggerProvider,
     configOverride: Partial<IUnleashOptions> = {},
 ): Promise<ITestDb> {

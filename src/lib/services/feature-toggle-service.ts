@@ -348,8 +348,7 @@ class FeatureToggleService {
         }
 
         if (
-            contextDefinition &&
-            contextDefinition.legalValues &&
+            contextDefinition?.legalValues &&
             contextDefinition.legalValues.length > 0
         ) {
             const valuesToValidate = oneOf(
@@ -1181,7 +1180,7 @@ class FeatureToggleService {
         featureName: string,
         projectId: string,
         newFeatureName: string,
-        replaceGroupId: boolean = true, // eslint-disable-line
+        replaceGroupId: boolean,
         userName: string,
     ): Promise<FeatureToggle> {
         const changeRequestEnabled =
@@ -1227,7 +1226,7 @@ class FeatureToggleService {
                 if (
                     replaceGroupId &&
                     s.parameters &&
-                    s.parameters.hasOwnProperty('groupId')
+                    Object.hasOwn(s.parameters, 'groupId')
                 ) {
                     s.parameters.groupId = newFeatureName;
                 }
@@ -1890,7 +1889,9 @@ class FeatureToggleService {
                 env.name,
                 newVariants,
                 user,
-            ).then((resultingVariants) => (env.variants = resultingVariants)),
+            ).then((resultingVariants) => {
+                env.variants = resultingVariants;
+            }),
         );
         await Promise.all(promises);
         ft.variants = ft.environments[0].variants;
@@ -2077,11 +2078,11 @@ class FeatureToggleService {
             );
         }
 
-        let fixedVariants = variants.filter((x) => {
+        const fixedVariants = variants.filter((x) => {
             return x.weightType === WeightType.FIX;
         });
 
-        let fixedWeights = fixedVariants.reduce((a, v) => a + v.weight, 0);
+        const fixedWeights = fixedVariants.reduce((a, v) => a + v.weight, 0);
 
         if (fixedWeights > 1000) {
             throw new BadDataError(
@@ -2089,7 +2090,7 @@ class FeatureToggleService {
             );
         }
 
-        let averageWeight = Math.floor(
+        const averageWeight = Math.floor(
             (1000 - fixedWeights) / variableVariants.length,
         );
         let remainder = (1000 - fixedWeights) % variableVariants.length;

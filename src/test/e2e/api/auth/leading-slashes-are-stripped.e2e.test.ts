@@ -46,13 +46,15 @@ test('multiple slashes after base path is also rejected with 404', async () => {
     await appWithBaseUrl.request.get('/demo/api/client/features').expect(401);
 });
 
-test(`Access with API token is granted`, async () => {
-    let token = await app.services.apiTokenService.createApiTokenWithProjects({
-        environment: 'default',
-        projects: ['default'],
-        tokenName: 'test',
-        type: ApiTokenType.CLIENT,
-    });
+test('Access with API token is granted', async () => {
+    const token = await app.services.apiTokenService.createApiTokenWithProjects(
+        {
+            environment: 'default',
+            projects: ['default'],
+            tokenName: 'test',
+            type: ApiTokenType.CLIENT,
+        },
+    );
     await app.request
         .get('/api/client/features')
         .set('Authorization', token.secret)

@@ -439,19 +439,19 @@ test('Environment variables for frontend CORS origins takes priority over option
 });
 
 test('baseUriPath defaults to the empty string', async () => {
-    let config = createConfig({});
+    const config = createConfig({});
     expect(config.server.baseUriPath).toBe('');
 });
 test('BASE_URI_PATH defined in env is passed through', async () => {
     process.env.BASE_URI_PATH = '/demo';
-    let config = createConfig({});
+    const config = createConfig({});
     expect(config.server.baseUriPath).toBe('/demo');
     delete process.env.BASE_URI_PATH;
 });
 
 test('environment variable takes precedence over configured variable', async () => {
     process.env.BASE_URI_PATH = '/demo';
-    let config = createConfig({
+    const config = createConfig({
         server: {
             baseUriPath: '/other',
         },
@@ -473,7 +473,7 @@ test.each(['demo', '/demo', '/demo/'])(
 );
 
 test('Config with enterpriseVersion set and pro environment should set isEnterprise to false', async () => {
-    let config = createConfig({
+    const config = createConfig({
         enterpriseVersion: '5.3.0',
         ui: { environment: 'pro' },
     });
@@ -481,7 +481,7 @@ test('Config with enterpriseVersion set and pro environment should set isEnterpr
 });
 
 test('Config with enterpriseVersion set and not pro environment should set isEnterprise to true', async () => {
-    let config = createConfig({
+    const config = createConfig({
         enterpriseVersion: '5.3.0',
         ui: { environment: 'Enterprise' },
     });

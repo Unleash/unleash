@@ -131,7 +131,7 @@ test('Should not log at error level if user not found', async () => {
             throw new NotFoundError('Could not find pat');
         }),
     };
-    let mw = patMiddleware(conf, { accountService });
+    const mw = patMiddleware(conf, { accountService });
     const cb = jest.fn();
 
     const req = {

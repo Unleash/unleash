@@ -380,8 +380,7 @@ test('should send all segments that are in use by feature', async () => {
 
     const globalSegmentIds = globalSegments.map((segment) => segment.id);
     const allSegmentIds = clientFeatures.features
-        .map((feat) => feat.strategies.map((strategy) => strategy.segments))
-        .flat()
+        .flatMap((feat) => feat.strategies.map((strategy) => strategy.segments))
         .flat()
         .filter((x) => !!x);
     const toggleSegmentIds = [...new Set(allSegmentIds)];

@@ -120,7 +120,7 @@ test('should not be able to login with deleted user', async () => {
         userService.loginUser('deleted_user', 'unleash4all'),
     ).rejects.toThrow(
         new PasswordMismatch(
-            `The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.`,
+            'The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.',
         ),
     );
 });
@@ -139,7 +139,7 @@ test('should not be able to login without password_hash on user', async () => {
         userService.loginUser('deleted_user', 'anything-should-fail'),
     ).rejects.toThrow(
         new PasswordMismatch(
-            `The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.`,
+            'The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.',
         ),
     );
 });
@@ -273,7 +273,7 @@ test('should throw if rootRole is wrong via SSO', async () => {
             name: 'some',
             autoCreate: true,
         }),
-    ).rejects.toThrow(new BadDataError(`Could not find rootRole=Member`));
+    ).rejects.toThrow(new BadDataError('Could not find rootRole=Member'));
 });
 
 test('should update user name when signing in via SSO', async () => {
@@ -330,5 +330,5 @@ test('should throw if autoCreate is false via SSO', async () => {
             name: 'some',
             autoCreate: false,
         }),
-    ).rejects.toThrow(new NotFoundError(`No user found`));
+    ).rejects.toThrow(new NotFoundError('No user found'));
 });

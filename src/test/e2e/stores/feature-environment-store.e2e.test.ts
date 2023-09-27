@@ -24,8 +24,8 @@ afterEach(async () => {
 });
 
 test('Setting enabled to same as existing value returns 0', async () => {
-    let envName = 'enabled-to-true';
-    let featureName = 'enabled-to-true-feature';
+    const envName = 'enabled-to-true';
+    const featureName = 'enabled-to-true-feature';
     await environmentStore.create({
         name: envName,
         enabled: true,
@@ -47,8 +47,8 @@ test('Setting enabled to same as existing value returns 0', async () => {
 });
 
 test('Setting enabled to not existing value returns 1', async () => {
-    let envName = 'enabled-toggle';
-    let featureName = 'enabled-toggle-feature';
+    const envName = 'enabled-toggle';
+    const featureName = 'enabled-toggle-feature';
     await environmentStore.create({
         name: envName,
         enabled: true,

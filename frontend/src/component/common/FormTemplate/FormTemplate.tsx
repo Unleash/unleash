@@ -28,12 +28,13 @@ interface ICreateProps {
     disablePadding?: boolean;
     formatApiCode?: () => string;
     footer?: ReactNode;
+    compact?: boolean;
 }
 
 const StyledContainer = styled('section', {
-    shouldForwardProp: (prop) => prop !== 'modal',
-})<{ modal?: boolean }>(({ theme, modal }) => ({
-    minHeight: modal ? '100vh' : '80vh',
+    shouldForwardProp: prop => prop !== 'modal',
+})<{ modal?: boolean; compact?: boolean }>(({ theme, modal, compact }) => ({
+    minHeight: modal ? (compact ? '50vh' : '100vh') : compact ? '40vh' : '80vh',
     borderRadius: modal ? 0 : theme.spacing(2),
     width: '100%',
     display: 'flex',
@@ -59,7 +60,7 @@ const StyledMain = styled('div')(({ theme }) => ({
 }));
 
 const StyledFormContent = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'disablePadding',
+    shouldForwardProp: prop => prop !== 'disablePadding',
 })<{ disablePadding?: boolean }>(({ theme, disablePadding }) => ({
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
@@ -185,6 +186,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     formatApiCode,
     disablePadding,
     footer,
+    compact,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
@@ -217,8 +219,8 @@ const FormTemplate: React.FC<ICreateProps> = ({
                     <StyledSidebarDivider />
                     <StyledSubtitle>
                         API Command{' '}
-                        <Tooltip title='Copy command' arrow>
-                            <IconButton onClick={copyCommand} size='large'>
+                        <Tooltip title="Copy command" arrow>
+                            <IconButton onClick={copyCommand} size="large">
                                 <StyledIcon />
                             </IconButton>
                         </Tooltip>
@@ -230,7 +232,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     };
 
     return (
-        <StyledContainer modal={modal}>
+        <StyledContainer modal={modal} compact={compact}>
             <ConditionallyRender
                 condition={smallScreen}
                 show={
@@ -303,10 +305,10 @@ const MobileGuidance = ({
             <StyledMobileGuidanceContainer>
                 <StyledMobileGuidanceBackground />
             </StyledMobileGuidanceContainer>
-            <Tooltip title='Toggle help' arrow>
+            <Tooltip title="Toggle help" arrow>
                 <StyledMobileGuidanceButton
-                    onClick={() => setOpen((prev) => !prev)}
-                    size='large'
+                    onClick={() => setOpen(prev => !prev)}
+                    size="large"
                 >
                     <StyledInfoIcon />
                 </StyledMobileGuidanceButton>
@@ -342,8 +344,8 @@ const Guidance: React.FC<IGuidanceProps> = ({
                 <StyledLinkIcon />
                 <StyledDocumentationLink
                     href={documentationLink}
-                    rel='noopener noreferrer'
-                    target='_blank'
+                    rel="noopener noreferrer"
+                    target="_blank"
                 >
                     {documentationLinkLabel}
                 </StyledDocumentationLink>

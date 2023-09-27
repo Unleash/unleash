@@ -14,7 +14,7 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IProject } from 'interfaces/project';
 import useProject from 'hooks/api/getters/useProject/useProject';
-import { useRequiredPathParam } from '../../../../../../hooks/useRequiredPathParam';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { styled } from '@mui/material';
 
 const StyledContainer = styled('div')<{ isPro: boolean }>(

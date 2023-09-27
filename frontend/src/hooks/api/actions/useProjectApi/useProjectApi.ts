@@ -1,13 +1,27 @@
 import type { BatchStaleSchema, CreateFeatureStrategySchema } from 'openapi';
 import useAPI from '../useApi/useApi';
-import { ProjectMode } from 'component/project/Project/hooks/useProjectForm';
+import { ProjectMode } from 'component/project/Project/hooks/useProjectEnterpriseSettingsForm';
+import { FeatureNamingType } from 'interfaces/project';
 
 interface ICreatePayload {
     id: string;
     name: string;
     description: string;
-    mode: ProjectMode;
     defaultStickiness: string;
+    mode?: ProjectMode;
+}
+
+interface IEditPayload {
+    id: string;
+    name: string;
+    description: string;
+    defaultStickiness: string;
+    featureLimit?: number;
+}
+
+interface IEditSettingsPayload {
+    featureNaming?: FeatureNamingType;
+    mode?: ProjectMode;
 }
 
 interface IAccessPayload {
@@ -52,8 +66,27 @@ const useProjectApi = () => {
         }
     };
 
-    const editProject = async (id: string, payload: ICreatePayload) => {
+    const editProject = async (id: string, payload: IEditPayload) => {
         const path = `api/admin/projects/${id}`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify(payload),
+        });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
+    const editProjectSettings = async (
+        id: string,
+        payload: IEditSettingsPayload
+    ) => {
+        const path = `api/admin/projects/${id}/settings`;
         const req = createRequest(path, {
             method: 'PUT',
             body: JSON.stringify(payload),
@@ -247,6 +280,7 @@ const useProjectApi = () => {
         createProject,
         validateId,
         editProject,
+        editProjectSettings,
         deleteProject,
         addEnvironmentToProject,
         removeEnvironmentFromProject,

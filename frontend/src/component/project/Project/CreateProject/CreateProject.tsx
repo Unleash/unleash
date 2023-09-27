@@ -30,25 +30,17 @@ const CreateProject = () => {
     const {
         projectId,
         projectName,
-        projectMode,
         projectDesc,
         featureLimit,
-        featureNamingPattern,
-        featureNamingExample,
-        featureNamingDescription,
-        setFeatureNamingExample,
-        setFeatureNamingPattern,
-        setFeatureNamingDescription,
         setProjectId,
         setProjectName,
         setProjectDesc,
-        getProjectPayload,
+        getCreateProjectPayload,
         clearErrors,
         validateProjectId,
         validateName,
         setProjectStickiness,
         setFeatureLimit,
-        setProjectMode,
         projectStickiness,
         errors,
     } = useProjectForm();
@@ -62,7 +54,7 @@ const CreateProject = () => {
         const validId = await validateProjectId();
 
         if (validName && validId) {
-            const payload = getProjectPayload();
+            const payload = getCreateProjectPayload();
             try {
                 await createProject(payload);
                 refetchUser();
@@ -89,7 +81,7 @@ const CreateProject = () => {
         }/api/admin/projects' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
---data-raw '${JSON.stringify(getProjectPayload(), undefined, 2)}'`;
+--data-raw '${JSON.stringify(getCreateProjectPayload(), undefined, 2)}'`;
     };
 
     const handleCancel = () => {
@@ -111,18 +103,10 @@ const CreateProject = () => {
                 projectId={projectId}
                 setProjectId={setProjectId}
                 projectName={projectName}
-                projectMode={projectMode}
                 projectStickiness={projectStickiness}
-                featureLimit={featureLimit}
-                featureNamingExample={featureNamingExample}
-                featureNamingPattern={featureNamingPattern}
-                setFeatureNamingPattern={setFeatureNamingPattern}
-                featureNamingDescription={featureNamingDescription}
-                setFeatureNamingDescription={setFeatureNamingDescription}
-                setFeatureNamingExample={setFeatureNamingExample}
+                featureLimit={''}
                 setProjectStickiness={setProjectStickiness}
-                setFeatureLimit={setFeatureLimit}
-                setProjectMode={setProjectMode}
+                setFeatureLimit={() => {}}
                 setProjectName={setProjectName}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}

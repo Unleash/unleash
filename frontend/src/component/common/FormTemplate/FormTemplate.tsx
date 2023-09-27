@@ -28,12 +28,13 @@ interface ICreateProps {
     disablePadding?: boolean;
     formatApiCode?: () => string;
     footer?: ReactNode;
+    compact?: boolean;
 }
 
 const StyledContainer = styled('section', {
     shouldForwardProp: prop => prop !== 'modal',
-})<{ modal?: boolean }>(({ theme, modal }) => ({
-    minHeight: modal ? '100vh' : '80vh',
+})<{ modal?: boolean; compact?: boolean }>(({ theme, modal, compact }) => ({
+    minHeight: modal ? (compact ? '50vh' : '100vh') : compact ? '40vh' : '80vh',
     borderRadius: modal ? 0 : theme.spacing(2),
     width: '100%',
     display: 'flex',
@@ -185,6 +186,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     formatApiCode,
     disablePadding,
     footer,
+    compact,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
@@ -230,7 +232,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     };
 
     return (
-        <StyledContainer modal={modal}>
+        <StyledContainer modal={modal} compact={compact}>
             <ConditionallyRender
                 condition={smallScreen}
                 show={

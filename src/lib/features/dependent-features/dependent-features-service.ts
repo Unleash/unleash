@@ -2,12 +2,19 @@ import { InvalidOperationError } from '../../error';
 import { CreateDependentFeatureSchema } from '../../openapi';
 import { IDependentFeaturesStore } from './dependent-features-store-type';
 import { FeatureDependency, FeatureDependencyId } from './dependent-features';
+import { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
 
 export class DependentFeaturesService {
     private dependentFeaturesStore: IDependentFeaturesStore;
 
-    constructor(dependentFeaturesStore: IDependentFeaturesStore) {
+    private dependentFeaturesReadModel: IDependentFeaturesReadModel;
+
+    constructor(
+        dependentFeaturesStore: IDependentFeaturesStore,
+        dependentFeaturesReadModel: IDependentFeaturesReadModel,
+    ) {
         this.dependentFeaturesStore = dependentFeaturesStore;
+        this.dependentFeaturesReadModel = dependentFeaturesReadModel;
     }
 
     async upsertFeatureDependency(
@@ -16,7 +23,9 @@ export class DependentFeaturesService {
     ): Promise<void> {
         const { enabled, feature: parent, variants } = dependentFeature;
 
-        const children = await this.dependentFeaturesStore.getChildren(child);
+        const children = await this.dependentFeaturesReadModel.getChildren(
+            child,
+        );
         if (children.length > 0) {
             throw new InvalidOperationError(
                 'Transitive dependency detected. Cannot add a dependency to the feature that other features depend on.',
@@ -50,6 +59,6 @@ export class DependentFeaturesService {
     }
 
     async getParentOptions(feature: string): Promise<string[]> {
-        return this.dependentFeaturesStore.getParentOptions(feature);
+        return this.dependentFeaturesReadModel.getParentOptions(feature);
     }
 }

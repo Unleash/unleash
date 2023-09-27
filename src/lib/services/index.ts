@@ -69,7 +69,10 @@ import {
     createGetActiveUsers,
 } from '../features/instance-stats/getActiveUsers';
 import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
-import { createDependentFeaturesService } from '../features/dependent-features/createDependentFeaturesService';
+import {
+    createDependentFeaturesService,
+    createFakeDependentFeaturesService,
+} from '../features/dependent-features/createDependentFeaturesService';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -303,9 +306,9 @@ export const createServices = (
 
     const eventAnnouncerService = new EventAnnouncerService(stores, config);
 
-    const dependentFeaturesService = new DependentFeaturesService(
-        stores.dependentFeaturesStore,
-    );
+    const dependentFeaturesService = db
+        ? createDependentFeaturesService(db)
+        : createFakeDependentFeaturesService();
     const transactionalDependentFeaturesService = (txDb: Knex.Transaction) =>
         createDependentFeaturesService(txDb);
 

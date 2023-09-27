@@ -6,24 +6,24 @@ import { Box, styled, TextField } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
 import { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { CollaborationModeTooltip } from '../ProjectEnterpriseSettingsForm/CollaborationModeTooltip';
-import Select from 'component/common/select';
-import { useUiFlag } from 'hooks/useUiFlag';
+import Select from '../../../common/select';
+import { useUiFlag } from '../../../../hooks/useUiFlag';
 
 interface IProjectForm {
     projectId: string;
     projectName: string;
     projectDesc: string;
     projectStickiness?: string;
-    featureLimit?: string;
+    featureLimit: string;
     featureCount?: number;
     projectMode?: string;
     setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
     setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
-    setFeatureLimit?: React.Dispatch<React.SetStateAction<string>>;
+    setFeatureLimit: React.Dispatch<React.SetStateAction<string>>;
     setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
@@ -39,7 +39,7 @@ const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
 
 const StyledForm = styled('form')(({ theme }) => ({
     height: '100%',
-    paddingBottom: theme.spacing(1),
+    paddingBottom: theme.spacing(4),
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({
@@ -185,7 +185,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 }
             />
             <ConditionallyRender
-                condition={mode === 'Edit' && Boolean(setFeatureLimit)}
+                condition={mode === 'Edit'}
                 show={
                     <>
                         <Box
@@ -203,17 +203,13 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             Leave it empty if you don’t want to add a limit
                         </StyledSubtitle>
                         <StyledInputContainer>
-                            {featureLimit && setFeatureLimit && (
-                                <StyledInput
-                                    label={'Limit'}
-                                    name="value"
-                                    type={'number'}
-                                    value={featureLimit}
-                                    onChange={e =>
-                                        setFeatureLimit(e.target.value)
-                                    }
-                                />
-                            )}
+                            <StyledInput
+                                label={'Limit'}
+                                name="value"
+                                type={'number'}
+                                value={featureLimit}
+                                onChange={e => setFeatureLimit(e.target.value)}
+                            />
                             <ConditionallyRender
                                 condition={
                                     featureCount !== undefined &&

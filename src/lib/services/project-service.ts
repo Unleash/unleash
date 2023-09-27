@@ -43,7 +43,7 @@ import {
 } from '../types';
 import {
     IProjectQuery,
-    IProjectSettingsUpdate,
+    IProjectEnterpriseSettingsUpdate,
     IProjectStore,
 } from '../types/stores/project-store';
 import {
@@ -271,7 +271,7 @@ export default class ProjectService {
     }
 
     async updateProjectEnterpriseSettings(
-        updatedProject: IProjectSettingsUpdate,
+        updatedProject: IProjectEnterpriseSettingsUpdate,
         user: User,
     ): Promise<void> {
         const preData = await this.projectStore.get(updatedProject.id);

@@ -14,7 +14,7 @@ import {
     IProjectInsert,
     IProjectQuery,
     IProjectSettings,
-    IProjectSettingsUpdate,
+    IProjectEnterpriseSettingsUpdate,
     IProjectStore,
     ProjectEnvironment,
 } from '../types/stores/project-store';
@@ -285,7 +285,7 @@ class ProjectStore implements IProjectStore {
     }
 
     async updateProjectEnterpriseSettings(
-        data: IProjectSettingsUpdate,
+        data: IProjectEnterpriseSettingsUpdate,
     ): Promise<void> {
         try {
             if (await this.hasProjectSettings(data.id)) {

@@ -24,7 +24,7 @@ export interface IProjectInsert {
     featureNaming?: IFeatureNaming;
 }
 
-export interface IProjectSettingsUpdate {
+export interface IProjectEnterpriseSettingsUpdate {
     id: string;
     mode?: ProjectMode;
     featureNaming?: IFeatureNaming;
@@ -64,7 +64,7 @@ export interface IProjectStore extends Store<IProject, string> {
     update(update: IProjectInsert): Promise<void>;
 
     updateProjectEnterpriseSettings(
-        update: IProjectSettingsUpdate,
+        update: IProjectEnterpriseSettingsUpdate,
     ): Promise<void>;
 
     importProjects(

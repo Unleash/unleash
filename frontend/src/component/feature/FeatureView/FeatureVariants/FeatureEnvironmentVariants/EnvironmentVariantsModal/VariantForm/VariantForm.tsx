@@ -443,50 +443,54 @@ export const VariantForm = ({
                     }}
                 />
                 <StyledFieldColumn>
-                    {payload.type === 'json' ? (
-                        <Suspense fallback={null}>
-                            <LazyReactJSONEditor
-                                content={{ text: payload.value }}
-                                onChange={content =>
-                                    setPayload(payload => {
-                                        return {
-                                            ...payload,
-                                            value:
-                                                'json' in content
-                                                    ? content.json?.toString() ||
-                                                      ''
-                                                    : content.text,
-                                        };
-                                    })
+                    <ConditionallyRender
+                        condition={payload.type === 'json'}
+                        show={
+                            <Suspense fallback={null}>
+                                <LazyReactJSONEditor
+                                    content={{ text: payload.value }}
+                                    onChange={content =>
+                                        setPayload(payload => {
+                                            return {
+                                                ...payload,
+                                                value:
+                                                    'json' in content
+                                                        ? content.json?.toString() ||
+                                                          ''
+                                                        : content.text,
+                                            };
+                                        })
+                                    }
+                                />
+                            </Suspense>
+                        }
+                        elseShow={
+                            <StyledInput
+                                id="variant-payload-value"
+                                name="variant-payload-value"
+                                label="Value"
+                                multiline={payload.type !== 'string'}
+                                rows={
+                                    payload.type === 'string' ||
+                                    payload.type === 'number'
+                                        ? 1
+                                        : 4
                                 }
+                                value={payload.value}
+                                onChange={e => {
+                                    clearError(ErrorField.PAYLOAD);
+                                    setPayload(payload => ({
+                                        ...payload,
+                                        value: e.target.value,
+                                    }));
+                                }}
+                                placeholder={''}
+                                onBlur={() => validatePayload(payload)}
+                                error={Boolean(errors.payload)}
+                                errorText={errors.payload}
                             />
-                        </Suspense>
-                    ) : (
-                        <StyledInput
-                            id="variant-payload-value"
-                            name="variant-payload-value"
-                            label="Value"
-                            multiline={payload.type !== 'string'}
-                            rows={
-                                payload.type === 'string' ||
-                                payload.type === 'number'
-                                    ? 1
-                                    : 4
-                            }
-                            value={payload.value}
-                            onChange={e => {
-                                clearError(ErrorField.PAYLOAD);
-                                setPayload(payload => ({
-                                    ...payload,
-                                    value: e.target.value,
-                                }));
-                            }}
-                            placeholder={''}
-                            onBlur={() => validatePayload(payload)}
-                            error={Boolean(errors.payload)}
-                            errorText={errors.payload}
-                        />
-                    )}
+                        }
+                    />
                 </StyledFieldColumn>
             </StyledRow>
             {!disableOverrides ? (

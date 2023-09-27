@@ -1,5 +1,24 @@
 import { JSONEditorPropsOptional, JSONEditor, Mode } from 'vanilla-jsoneditor';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
+import 'vanilla-jsoneditor/themes/jse-theme-dark.css';
+import { styled } from '@mui/material';
+import UIContext from 'contexts/UIContext';
+
+const JSONEditorThemeWrapper = styled('div')(({ theme }) => ({
+    '&.jse-theme-dark': {
+        '--jse-background-color': theme.palette.background.default,
+        '--jse-panel-background': theme.palette.background.default,
+        '--jse-main-border': `1px solid #646382`,
+    },
+    '& .jse-text-mode, .jse-contents': {
+        borderTopLeftRadius: theme.shape.borderRadius,
+        borderTopRightRadius: theme.shape.borderRadius,
+    },
+    '& .jse-status-bar': {
+        borderBottomLeftRadius: theme.shape.borderRadius,
+        borderBottomRightRadius: theme.shape.borderRadius,
+    },
+}));
 
 const VanillaJSONEditor: React.FC<JSONEditorPropsOptional> = props => {
     const refContainer = useRef<HTMLDivElement | null>(null);
@@ -30,17 +49,22 @@ const VanillaJSONEditor: React.FC<JSONEditorPropsOptional> = props => {
         }
     }, [props]);
 
-    return <div className="vanilla-jsoneditor-react" ref={refContainer}></div>;
+    return <div ref={refContainer}></div>;
 };
 
 const ReactJSONEditor: React.FC<JSONEditorPropsOptional> = props => {
+    const { themeMode } = useContext(UIContext);
     return (
-        <VanillaJSONEditor
-            mainMenuBar={false}
-            navigationBar={false}
-            mode={Mode.text}
-            {...props}
-        />
+        <JSONEditorThemeWrapper
+            className={themeMode === 'dark' ? 'jse-theme-dark' : ''}
+        >
+            <VanillaJSONEditor
+                mainMenuBar={false}
+                navigationBar={false}
+                mode={Mode.text}
+                {...props}
+            />
+        </JSONEditorThemeWrapper>
     );
 };
 

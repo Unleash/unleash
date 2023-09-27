@@ -412,7 +412,9 @@ class EventStore implements IEventStore {
             .update({ announced: true })
             .where('announced', false)
             .whereNotNull('announced')
-            .returning(EVENT_COLUMNS);
+            .where('created_at', '>', new Date(Date.now() - 1000 * 60 * 60))
+            .returning(EVENT_COLUMNS)
+            .limit(500);
 
         return rows.map(this.rowToEvent);
     }

@@ -31,7 +31,8 @@ const CreateProject = () => {
         projectId,
         projectName,
         projectDesc,
-        featureLimit,
+        projectMode,
+        setProjectMode,
         setProjectId,
         setProjectName,
         setProjectDesc,
@@ -104,9 +105,9 @@ const CreateProject = () => {
                 setProjectId={setProjectId}
                 projectName={projectName}
                 projectStickiness={projectStickiness}
-                featureLimit={''}
+                projectMode={projectMode}
+                setProjectMode={setProjectMode}
                 setProjectStickiness={setProjectStickiness}
-                setFeatureLimit={() => {}}
                 setProjectName={setProjectName}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}

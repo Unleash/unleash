@@ -113,13 +113,16 @@ const createProjects = async (
         type: 'production',
     });
     for (const project of projects) {
-        await db.stores.projectStore.create({
+        const storedProject = {
             name: project,
             description: '',
             id: project,
             mode: 'open' as const,
             featureLimit,
-        });
+        };
+        await db.stores.projectStore.create(storedProject);
+        await db.stores.projectStore.update(storedProject);
+
         await app.linkProjectToEnvironment(project, DEFAULT_ENV);
     }
 };
@@ -884,10 +887,8 @@ test('validate import data', async () => {
 
     // note: this must be done after creating the feature on the earlier lines,
     // to prevent the pattern from blocking the creation.
-    await projectStore.update({
+    await projectStore.updateProjectEnterpriseSettings({
         id: DEFAULT_PROJECT,
-        name: 'default',
-        description: '',
         mode: 'open',
         featureNaming: { pattern: 'testpattern.+' },
     });
@@ -996,6 +997,9 @@ test(`should give errors with flag names if the flags don't match the project pa
             description: '',
             id: project,
             mode: 'open' as const,
+        });
+        await db.stores.projectStore.updateProjectEnterpriseSettings({
+            id: project,
             featureNaming: { pattern },
         });
         await app.linkProjectToEnvironment(project, DEFAULT_ENV);

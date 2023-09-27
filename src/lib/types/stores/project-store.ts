@@ -16,11 +16,17 @@ import { CreateFeatureStrategySchema } from '../../openapi';
 export interface IProjectInsert {
     id: string;
     name: string;
-    description: string;
+    description?: string;
     updatedAt?: Date;
     changeRequestsEnabled?: boolean;
-    mode: ProjectMode;
+    mode?: ProjectMode;
     featureLimit?: number;
+    featureNaming?: IFeatureNaming;
+}
+
+export interface IProjectSettingsUpdate {
+    id: string;
+    mode?: ProjectMode;
     featureNaming?: IFeatureNaming;
 }
 
@@ -56,6 +62,10 @@ export interface IProjectStore extends Store<IProject, string> {
     create(project: IProjectInsert): Promise<IProject>;
 
     update(update: IProjectInsert): Promise<void>;
+
+    updateProjectEnterpriseSettings(
+        update: IProjectSettingsUpdate,
+    ): Promise<void>;
 
     importProjects(
         projects: IProjectInsert[],

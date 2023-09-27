@@ -215,6 +215,32 @@ test('Can get project overview', async () => {
         });
 });
 
+test('should list dependencies and children', async () => {
+    const parent = uuidv4();
+    const child = uuidv4();
+    await app.createFeature(parent, 'default');
+    await app.createFeature(child, 'default');
+    await app.addDependency(child, parent);
+
+    const { body: childFeature } = await app.getProjectFeatures(
+        'default',
+        child,
+    );
+    const { body: parentFeature } = await app.getProjectFeatures(
+        'default',
+        parent,
+    );
+
+    expect(childFeature).toMatchObject({
+        children: [],
+        dependencies: [{ feature: parent, enabled: true, variants: [] }],
+    });
+    expect(parentFeature).toMatchObject({
+        children: [child],
+        dependencies: [],
+    });
+});
+
 test('Can get features for project', async () => {
     await app.request
         .post('/api/admin/projects/default/features')
@@ -3394,30 +3420,4 @@ test('should not be allowed to update with invalid strategy type name', async ()
         },
         400,
     );
-});
-
-test('should list dependencies and children', async () => {
-    const parent = uuidv4();
-    const child = uuidv4();
-    await app.createFeature(parent, 'default');
-    await app.createFeature(child, 'default');
-    await app.addDependency(child, parent);
-
-    const { body: childFeature } = await app.getProjectFeatures(
-        'default',
-        child,
-    );
-    const { body: parentFeature } = await app.getProjectFeatures(
-        'default',
-        parent,
-    );
-
-    expect(childFeature).toMatchObject({
-        children: [],
-        dependencies: [{ feature: parent, enabled: true, variants: [] }],
-    });
-    expect(parentFeature).toMatchObject({
-        children: [child],
-        dependencies: [],
-    });
 });

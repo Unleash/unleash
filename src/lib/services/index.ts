@@ -73,6 +73,8 @@ import {
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
 } from '../features/dependent-features/createDependentFeaturesService';
+import { DependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model';
+import { FakeDependentFeaturesReadModel } from '../features/dependent-features/fake-dependent-features-read-model';
 
 // TODO: will be moved to scheduler feature directory
 export const scheduleServices = async (
@@ -175,6 +177,9 @@ export const createServices = (
     const privateProjectChecker = db
         ? createPrivateProjectChecker(db, config)
         : createFakePrivateProjectChecker();
+    const dependentFeaturesReadModel = db
+        ? new DependentFeaturesReadModel(db)
+        : new FakeDependentFeaturesReadModel();
 
     const contextService = new ContextService(
         stores,
@@ -227,6 +232,7 @@ export const createServices = (
         accessService,
         changeRequestAccessReadModel,
         privateProjectChecker,
+        dependentFeaturesReadModel,
     );
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);

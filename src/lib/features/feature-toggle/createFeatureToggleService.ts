@@ -45,6 +45,8 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
+import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model';
+import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -105,6 +107,8 @@ export const createFeatureToggleService = (
 
     const privateProjectChecker = createPrivateProjectChecker(db, config);
 
+    const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -122,6 +126,7 @@ export const createFeatureToggleService = (
         accessService,
         changeRequestAccessReadModel,
         privateProjectChecker,
+        dependentFeaturesReadModel,
     );
     return featureToggleService;
 };
@@ -155,7 +160,8 @@ export const createFakeFeatureToggleService = (
     );
     const segmentService = createFakeSegmentService(config);
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
-    const fakeprivateProjectChecker = createFakePrivateProjectChecker();
+    const fakePrivateProjectChecker = createFakePrivateProjectChecker();
+    const dependentFeaturesReadModel = new FakeDependentFeaturesReadModel();
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -172,7 +178,8 @@ export const createFakeFeatureToggleService = (
         segmentService,
         accessService,
         changeRequestAccessReadModel,
-        fakeprivateProjectChecker,
+        fakePrivateProjectChecker,
+        dependentFeaturesReadModel,
     );
     return featureToggleService;
 };

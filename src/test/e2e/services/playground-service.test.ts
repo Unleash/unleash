@@ -26,6 +26,7 @@ import { AccessService } from '../../../lib/services/access-service';
 import { ISegmentService } from '../../../lib/segments/segment-service-interface';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
+import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -47,6 +48,9 @@ beforeAll(async () => {
         db.rawDatabase,
         config,
     );
+    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
+        db.rawDatabase,
+    );
     segmentService = new SegmentService(
         stores,
         changeRequestAccessReadModel,
@@ -61,6 +65,7 @@ beforeAll(async () => {
         accessService,
         changeRequestAccessReadModel,
         privateProjectChecker,
+        dependentFeaturesReadModel,
     );
     service = new PlaygroundService(config, {
         featureToggleServiceV2: featureToggleService,

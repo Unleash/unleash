@@ -10,6 +10,7 @@ import { AccessService } from './access-service';
 import { IChangeRequestAccessReadModel } from 'lib/features/change-request-access-service/change-request-access-read-model';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
+import { IDependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model-type';
 
 test('Should only store events for potentially stale on', async () => {
     expect.assertions(2);
@@ -51,6 +52,7 @@ test('Should only store events for potentially stale on', async () => {
         {} as AccessService,
         {} as IChangeRequestAccessReadModel,
         {} as IPrivateProjectChecker,
+        {} as IDependentFeaturesReadModel,
     );
 
     await featureToggleService.updatePotentiallyStaleFeatures();

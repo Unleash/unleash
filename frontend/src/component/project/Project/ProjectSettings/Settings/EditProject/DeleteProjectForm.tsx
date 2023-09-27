@@ -21,14 +21,11 @@ export const DeleteProjectForm = ({ featureCount }: IDeleteProjectForm) => {
         <FormTemplate
             loading={loading}
             title="Delete Project"
-            description=""
+            description="Projects allows you to group feature toggles together in the management UI."
             documentationLink="https://docs.getunleash.io/reference/projects"
             documentationLinkLabel="Projects documentation"
             formatApiCode={formatProjectDeleteApiCode}
             compact
-            compactPadding
-            showDescription={false}
-            showLink={false}
         >
             <DeleteProject projectId={id} featureCount={featureCount} />
         </FormTemplate>

@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { HelpIcon } from '../../../common/HelpIcon/HelpIcon';
 
 export const FeatureFlagNamingTooltip: FC = () => {
     return (

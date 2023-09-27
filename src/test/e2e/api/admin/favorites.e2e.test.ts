@@ -102,6 +102,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
     await app.destroy();
+    await db.destroy();
 });
 
 afterEach(async () => {

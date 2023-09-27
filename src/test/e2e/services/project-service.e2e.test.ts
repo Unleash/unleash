@@ -140,7 +140,6 @@ test('should create new project', async () => {
         id: 'test',
         name: 'New project',
         description: 'Blah',
-        mode: 'protected' as const,
         defaultStickiness: 'default',
     };
 
@@ -150,7 +149,6 @@ test('should create new project', async () => {
     expect(project.name).toEqual(ret.name);
     expect(project.description).toEqual(ret.description);
     expect(ret.createdAt).toBeTruthy();
-    expect(ret.mode).toEqual('protected');
 });
 
 test('should create new private project', async () => {
@@ -158,7 +156,6 @@ test('should create new private project', async () => {
         id: 'testPrivate',
         name: 'New private project',
         description: 'Blah',
-        mode: 'private' as const,
         defaultStickiness: 'default',
     };
 
@@ -168,7 +165,6 @@ test('should create new private project', async () => {
     expect(project.name).toEqual(ret.name);
     expect(project.description).toEqual(ret.description);
     expect(ret.createdAt).toBeTruthy();
-    expect(ret.mode).toEqual('private');
 });
 
 test('should delete project', async () => {
@@ -1834,12 +1830,14 @@ describe('feature flag naming patterns', () => {
 
         await projectService.createProject(project, user.id);
 
+        await projectService.updateProjectEnterpriseSettings(project, user);
+
         expect(
             (await projectService.getProject(project.id)).featureNaming,
         ).toMatchObject(featureNaming);
 
         const newPattern = 'new-pattern.+';
-        await projectService.updateProject(
+        await projectService.updateProjectEnterpriseSettings(
             {
                 ...project,
                 featureNaming: { pattern: newPattern },

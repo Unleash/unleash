@@ -9,7 +9,12 @@ import {
 } from '../../../lib/services';
 import { FeatureStrategySchema } from '../../../lib/openapi';
 import User from '../../../lib/types/user';
-import { IConstraint, IVariant, SKIP_CHANGE_REQUEST } from '../../../lib/types';
+import {
+    IConstraint,
+    IUnleashStores,
+    IVariant,
+    SKIP_CHANGE_REQUEST,
+} from '../../../lib/types';
 import EnvironmentService from '../../../lib/services/environment-service';
 import {
     ForbiddenError,
@@ -21,7 +26,7 @@ import { ChangeRequestAccessReadModel } from '../../../lib/features/change-reque
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
 import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
 
-let stores;
+let stores: IUnleashStores;
 let db;
 let service: FeatureToggleService;
 let segmentService: ISegmentService;
@@ -690,10 +695,13 @@ describe('flag name validation', () => {
             name: projectId,
             mode: 'open' as const,
             defaultStickiness: 'default',
-            featureNaming,
         };
 
         await stores.projectStore.create(project);
+        await stores.projectStore.updateProjectEnterpriseSettings({
+            id: projectId,
+            featureNaming,
+        });
 
         const validFeatures = ['testpattern-feature', 'testpattern-feature2'];
         const invalidFeatures = ['a', 'b', 'c'];

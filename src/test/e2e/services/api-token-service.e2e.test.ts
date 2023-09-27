@@ -10,7 +10,7 @@ import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { AccessService } from '../../../lib/services/access-service';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
-import { FavoritesService } from '../../../lib/services';
+import { EventService, FavoritesService } from '../../../lib/services';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
 import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
@@ -27,7 +27,8 @@ beforeAll(async () => {
     });
     db = await dbInit('api_token_service_serial', getLogger);
     stores = db.stores;
-    const groupService = new GroupService(stores, config);
+    const eventService = new EventService(stores, config);
+    const groupService = new GroupService(stores, config, eventService);
     const accessService = new AccessService(stores, config, groupService);
     const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
         db.rawDatabase,
@@ -47,9 +48,11 @@ beforeAll(async () => {
             stores,
             changeRequestAccessReadModel,
             config,
+            eventService,
             privateProjectChecker,
         ),
         accessService,
+        eventService,
         changeRequestAccessReadModel,
         privateProjectChecker,
         dependentFeaturesReadModel,
@@ -65,7 +68,7 @@ beforeAll(async () => {
         name: 'Some Name',
         email: 'test@getunleash.io',
     });
-    favoritesService = new FavoritesService(stores, config);
+    favoritesService = new FavoritesService(stores, config, eventService);
     projectService = new ProjectService(
         stores,
         config,
@@ -73,12 +76,13 @@ beforeAll(async () => {
         featureToggleService,
         groupService,
         favoritesService,
+        eventService,
         privateProjectChecker,
     );
 
     await projectService.createProject(project, user);
 
-    apiTokenService = new ApiTokenService(stores, config);
+    apiTokenService = new ApiTokenService(stores, config, eventService);
 });
 
 afterAll(async () => {

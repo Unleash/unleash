@@ -27,6 +27,7 @@ import { ISegmentService } from '../../../lib/segments/segment-service-interface
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
 import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
+import { EventService } from '../../../lib/services';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -38,7 +39,8 @@ beforeAll(async () => {
     const config = createTestConfig();
     db = await dbInit('playground_service_serial', config.getLogger);
     stores = db.stores;
-    const groupService = new GroupService(stores, config);
+    const eventService = new EventService(stores, config);
+    const groupService = new GroupService(stores, config, eventService);
     const accessService = new AccessService(stores, config, groupService);
     const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
         db.rawDatabase,
@@ -55,6 +57,7 @@ beforeAll(async () => {
         stores,
         changeRequestAccessReadModel,
         config,
+        eventService,
         privateProjectChecker,
     );
 
@@ -63,6 +66,7 @@ beforeAll(async () => {
         config,
         segmentService,
         accessService,
+        eventService,
         changeRequestAccessReadModel,
         privateProjectChecker,
         dependentFeaturesReadModel,

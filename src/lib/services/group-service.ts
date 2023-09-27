@@ -12,30 +12,28 @@ import { IGroupStore } from '../types/stores/group-store';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
 import { GROUP_CREATED, GROUP_DELETED, GROUP_UPDATED } from '../types/events';
-import { IEventStore } from '../types/stores/event-store';
 import NameExistsError from '../error/name-exists-error';
 import { IAccountStore } from '../types/stores/account-store';
 import { IUser } from '../types/user';
+import EventService from './event-service';
 
 export class GroupService {
     private groupStore: IGroupStore;
 
-    private eventStore: IEventStore;
+    private eventService: EventService;
 
     private accountStore: IAccountStore;
 
     private logger: Logger;
 
     constructor(
-        stores: Pick<
-            IUnleashStores,
-            'groupStore' | 'eventStore' | 'accountStore'
-        >,
+        stores: Pick<IUnleashStores, 'groupStore' | 'accountStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        eventService: EventService,
     ) {
         this.logger = getLogger('service/group-service.js');
         this.groupStore = stores.groupStore;
-        this.eventStore = stores.eventStore;
+        this.eventService = eventService;
         this.accountStore = stores.accountStore;
     }
 
@@ -96,7 +94,7 @@ export class GroupService {
             userName,
         );
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: GROUP_CREATED,
             createdBy: userName,
             data: group,
@@ -133,7 +131,7 @@ export class GroupService {
             userName,
         );
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: GROUP_UPDATED,
             createdBy: userName,
             data: newGroup,
@@ -175,7 +173,7 @@ export class GroupService {
 
         await this.groupStore.delete(id);
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: GROUP_DELETED,
             createdBy: userName,
             data: group,

@@ -1,6 +1,6 @@
 import { Db, IUnleashConfig } from 'lib/server-impl';
 import EventStore from '../../db/event-store';
-import { SegmentService } from '../../services';
+import { EventService, SegmentService } from '../../services';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import { ISegmentService } from '../../segments/segment-service-interface';
 import FeatureStrategiesStore from '../../db/feature-strategy-store';
@@ -15,6 +15,8 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
+import FeatureTagStore from '../../db/feature-tag-store';
+import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
 
 export const createSegmentService = (
     db: Db,
@@ -40,10 +42,19 @@ export const createSegmentService = (
     );
     const privateProjectChecker = createPrivateProjectChecker(db, config);
 
+    const eventService = new EventService(
+        {
+            eventStore,
+            featureTagStore: new FeatureTagStore(db, eventBus, getLogger),
+        },
+        config,
+    );
+
     return new SegmentService(
-        { segmentStore, featureStrategiesStore, eventStore },
+        { segmentStore, featureStrategiesStore },
         changeRequestAccessReadModel,
         config,
+        eventService,
         privateProjectChecker,
     );
 };
@@ -58,10 +69,19 @@ export const createFakeSegmentService = (
 
     const privateProjectChecker = createFakePrivateProjectChecker();
 
+    const eventService = new EventService(
+        {
+            eventStore,
+            featureTagStore: new FakeFeatureTagStore(),
+        },
+        config,
+    );
+
     return new SegmentService(
-        { segmentStore, featureStrategiesStore, eventStore },
+        { segmentStore, featureStrategiesStore },
         changeRequestAccessReadModel,
         config,
+        eventService,
         privateProjectChecker,
     );
 };

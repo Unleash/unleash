@@ -9,7 +9,7 @@ import { IUnleashStores } from '../../../lib/types';
 import { IUser } from '../../../lib/server-impl';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
-import { FavoritesService } from '../../../lib/services';
+import { EventService, FavoritesService } from '../../../lib/services';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
 import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
@@ -19,6 +19,7 @@ let db: ITestDb;
 let projectService;
 let groupService;
 let accessService;
+let eventService: EventService;
 let projectHealthService;
 let featureToggleService;
 let favoritesService;
@@ -32,7 +33,8 @@ beforeAll(async () => {
         name: 'Some Name',
         email: 'test@getunleash.io',
     });
-    groupService = new GroupService(stores, config);
+    eventService = new EventService(stores, config);
+    groupService = new GroupService(stores, config, eventService);
     accessService = new AccessService(stores, config, groupService);
     const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
         db.rawDatabase,
@@ -52,14 +54,16 @@ beforeAll(async () => {
             stores,
             changeRequestAccessReadModel,
             config,
+            eventService,
             privateProjectChecker,
         ),
         accessService,
+        eventService,
         changeRequestAccessReadModel,
         privateProjectChecker,
         dependentFeaturesReadModel,
     );
-    favoritesService = new FavoritesService(stores, config);
+    favoritesService = new FavoritesService(stores, config, eventService);
 
     projectService = new ProjectService(
         stores,
@@ -68,6 +72,7 @@ beforeAll(async () => {
         featureToggleService,
         groupService,
         favoritesService,
+        eventService,
         privateProjectChecker,
     );
     projectHealthService = new ProjectHealthService(

@@ -16,7 +16,7 @@ import { RoleName } from '../../../../lib/types/model';
 import SettingService from '../../../../lib/services/setting-service';
 import FakeSettingStore from '../../../fixtures/fake-setting-store';
 import { GroupService } from '../../../../lib/services/group-service';
-import FakeEventStore from '../../../fixtures/fake-event-store';
+import { EventService } from '../../../../lib/services';
 
 let app;
 let stores;
@@ -49,7 +49,8 @@ beforeAll(async () => {
     db = await dbInit('reset_password_api_serial', getLogger);
     stores = db.stores;
     app = await setupApp(stores);
-    const groupService = new GroupService(stores, config);
+    const eventService = new EventService(stores, config);
+    const groupService = new GroupService(stores, config, eventService);
     accessService = new AccessService(stores, config, groupService);
     const emailService = new EmailService(config.email, config.getLogger);
     const sessionStore = new SessionStore(
@@ -61,14 +62,15 @@ beforeAll(async () => {
     const settingService = new SettingService(
         {
             settingStore: new FakeSettingStore(),
-            eventStore: new FakeEventStore(),
         },
         config,
+        eventService,
     );
     userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });

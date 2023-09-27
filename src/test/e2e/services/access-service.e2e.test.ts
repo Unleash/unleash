@@ -20,7 +20,7 @@ import { DEFAULT_PROJECT } from '../../../lib/types/project';
 import { ALL_PROJECTS } from '../../../lib/util/constants';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { GroupService } from '../../../lib/services/group-service';
-import { FavoritesService } from '../../../lib/services';
+import { EventService, FavoritesService } from '../../../lib/services';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
 import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
@@ -28,6 +28,7 @@ import { DependentFeaturesReadModel } from '../../../lib/features/dependent-feat
 let db: ITestDb;
 let stores: IUnleashStores;
 let accessService: AccessService;
+let eventService: EventService;
 let groupService: GroupService;
 let featureToggleService;
 let favoritesService;
@@ -237,7 +238,8 @@ beforeAll(async () => {
         // @ts-ignore
         experimental: { environments: { enabled: true } },
     });
-    groupService = new GroupService(stores, { getLogger });
+    eventService = new EventService(stores, config);
+    groupService = new GroupService(stores, { getLogger }, eventService);
     accessService = new AccessService(stores, config, groupService);
     const roles = await accessService.getRootRoles();
     editorRole = roles.find((r) => r.name === RoleName.EDITOR);
@@ -261,14 +263,16 @@ beforeAll(async () => {
             stores,
             changeRequestAccessReadModel,
             config,
+            eventService,
             privateProjectChecker,
         ),
         accessService,
+        eventService,
         changeRequestAccessReadModel,
         privateProjectChecker,
         dependentFeaturesReadModel,
     );
-    favoritesService = new FavoritesService(stores, config);
+    favoritesService = new FavoritesService(stores, config, eventService);
     projectService = new ProjectService(
         stores,
         config,
@@ -276,6 +280,7 @@ beforeAll(async () => {
         featureToggleService,
         groupService,
         favoritesService,
+        eventService,
         privateProjectChecker,
     );
 

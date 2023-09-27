@@ -4,6 +4,7 @@ import dbInit from '../helpers/database-init';
 import { DEFAULT_ENV } from '../../../lib/util';
 import {
     AccessService,
+    EventService,
     GroupService,
     SegmentService,
 } from '../../../lib/services';
@@ -53,8 +54,8 @@ beforeAll(async () => {
     );
     unleashConfig = config;
     stores = db.stores;
-
-    const groupService = new GroupService(stores, config);
+    const eventService = new EventService(stores, config);
+    const groupService = new GroupService(stores, config, eventService);
     const accessService = new AccessService(stores, config, groupService);
     const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
         db.rawDatabase,
@@ -71,6 +72,7 @@ beforeAll(async () => {
         stores,
         changeRequestAccessReadModel,
         config,
+        eventService,
         privateProjectChecker,
     );
 
@@ -79,6 +81,7 @@ beforeAll(async () => {
         config,
         segmentService,
         accessService,
+        eventService,
         changeRequestAccessReadModel,
         privateProjectChecker,
         dependentFeaturesReadModel,
@@ -457,7 +460,8 @@ test('If change requests are enabled, cannot change variants without going via C
         { name: featureName },
         'test-user',
     );
-    const groupService = new GroupService(stores, unleashConfig);
+    const eventService = new EventService(stores, unleashConfig);
+    const groupService = new GroupService(stores, unleashConfig, eventService);
     const accessService = new AccessService(
         stores,
         unleashConfig,
@@ -485,6 +489,7 @@ test('If change requests are enabled, cannot change variants without going via C
         },
         segmentService,
         accessService,
+        eventService,
         changeRequestAccessReadModel,
         privateProjectChecker,
         dependentFeaturesReadModel,
@@ -549,7 +554,8 @@ test('If CRs are protected for any environment in the project stops bulk update 
         project.id,
         disabledEnv.name,
     );
-    const groupService = new GroupService(stores, unleashConfig);
+    const eventService = new EventService(stores, unleashConfig);
+    const groupService = new GroupService(stores, unleashConfig, eventService);
     const accessService = new AccessService(
         stores,
         unleashConfig,
@@ -577,6 +583,7 @@ test('If CRs are protected for any environment in the project stops bulk update 
         },
         segmentService,
         accessService,
+        eventService,
         changeRequestAccessReadModel,
         privateProjectChecker,
         dependentFeaturesReadModel,

@@ -3,10 +3,12 @@ import getLogger from '../../fixtures/no-logger';
 import { createTestConfig } from '../../config/test-config';
 import { GroupService } from '../../../lib/services/group-service';
 import GroupStore from '../../../lib/db/group-store';
+import { EventService } from '../../../lib/services';
 
 let stores;
 let db: ITestDb;
 
+let eventService: EventService;
 let groupService: GroupService;
 let groupStore: GroupStore;
 let user;
@@ -21,7 +23,8 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
     });
-    groupService = new GroupService(stores, config);
+    eventService = new EventService(stores, config);
+    groupService = new GroupService(stores, config, eventService);
     groupStore = stores.groupStore;
 
     await stores.groupStore.create({

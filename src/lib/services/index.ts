@@ -165,9 +165,10 @@ export const createServices = (
     config: IUnleashConfig,
     db?: Db,
 ): IUnleashServices => {
-    const groupService = new GroupService(stores, config);
+    const eventService = new EventService(stores, config);
+    const groupService = new GroupService(stores, config, eventService);
     const accessService = new AccessService(stores, config, groupService);
-    const apiTokenService = new ApiTokenService(stores, config);
+    const apiTokenService = new ApiTokenService(stores, config, eventService);
     const lastSeenService = new LastSeenService(stores, config);
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(
         stores,
@@ -184,23 +185,29 @@ export const createServices = (
     const contextService = new ContextService(
         stores,
         config,
+        eventService,
         privateProjectChecker,
     );
     const emailService = new EmailService(config.email, config.getLogger);
-    const eventService = new EventService(stores, config);
     const featureTypeService = new FeatureTypeService(stores, config);
     const resetTokenService = new ResetTokenService(stores, config);
-    const stateService = new StateService(stores, config);
-    const strategyService = new StrategyService(stores, config);
-    const tagService = new TagService(stores, config);
-    const tagTypeService = new TagTypeService(stores, config);
-    const addonService = new AddonService(stores, config, tagTypeService);
+    const stateService = new StateService(stores, config, eventService);
+    const strategyService = new StrategyService(stores, config, eventService);
+    const tagService = new TagService(stores, config, eventService);
+    const tagTypeService = new TagTypeService(stores, config, eventService);
+    const addonService = new AddonService(
+        stores,
+        config,
+        tagTypeService,
+        eventService,
+    );
     const sessionService = new SessionService(stores, config);
-    const settingService = new SettingService(stores, config);
+    const settingService = new SettingService(stores, config, eventService);
     const userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
         emailService,
+        eventService,
         sessionService,
         settingService,
     });
@@ -217,6 +224,7 @@ export const createServices = (
         stores,
         changeRequestAccessReadModel,
         config,
+        eventService,
         privateProjectChecker,
     );
 
@@ -230,13 +238,18 @@ export const createServices = (
         config,
         segmentService,
         accessService,
+        eventService,
         changeRequestAccessReadModel,
         privateProjectChecker,
         dependentFeaturesReadModel,
     );
     const environmentService = new EnvironmentService(stores, config);
-    const featureTagService = new FeatureTagService(stores, config);
-    const favoritesService = new FavoritesService(stores, config);
+    const featureTagService = new FeatureTagService(
+        stores,
+        config,
+        eventService,
+    );
+    const favoritesService = new FavoritesService(stores, config, eventService);
     const projectService = new ProjectService(
         stores,
         config,
@@ -244,6 +257,7 @@ export const createServices = (
         featureToggleServiceV2,
         groupService,
         favoritesService,
+        eventService,
         privateProjectChecker,
     );
     const projectHealthService = new ProjectHealthService(
@@ -286,12 +300,13 @@ export const createServices = (
 
     const edgeService = new EdgeService(stores, config);
 
-    const patService = new PatService(stores, config);
+    const patService = new PatService(stores, config, eventService);
 
     const publicSignupTokenService = new PublicSignupTokenService(
         stores,
         config,
         userService,
+        eventService,
     );
 
     const instanceStatsService = new InstanceStatsService(

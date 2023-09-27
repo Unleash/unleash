@@ -14,6 +14,7 @@ import AddonService from './addon-service';
 import { IAddonDto } from '../types/stores/addon-store';
 import SimpleAddon from './addon-service-test-simple-addon';
 import { IAddonProviders } from '../addons';
+import EventService from './event-service';
 
 const MASKED_VALUE = '*****';
 
@@ -21,7 +22,12 @@ let addonProvider: IAddonProviders;
 
 function getSetup() {
     const stores = createStores();
-    const tagTypeService = new TagTypeService(stores, { getLogger });
+    const eventService = new EventService(stores, { getLogger });
+    const tagTypeService = new TagTypeService(
+        stores,
+        { getLogger },
+        eventService,
+    );
 
     addonProvider = { simple: new SimpleAddon() };
     return {
@@ -33,8 +39,10 @@ function getSetup() {
                 server: { unleashUrl: 'http://test' },
             },
             tagTypeService,
+            eventService,
             addonProvider,
         ),
+        eventService,
         stores,
         tagTypeService,
     };
@@ -77,7 +85,7 @@ test('should not allow addon-config for unknown provider', async () => {
 });
 
 test('should trigger simple-addon eventHandler', async () => {
-    const { addonService, stores } = getSetup();
+    const { addonService, eventService } = getSetup();
 
     const config = {
         provider: 'simple',
@@ -93,7 +101,7 @@ test('should trigger simple-addon eventHandler', async () => {
     await addonService.createAddon(config, 'me@mail.com');
 
     // Feature toggle was created
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         data: {
@@ -113,7 +121,7 @@ test('should trigger simple-addon eventHandler', async () => {
 });
 
 test('should not trigger event handler if project of event is different from addon', async () => {
-    const { addonService, stores } = getSetup();
+    const { addonService, eventService } = getSetup();
     const config = {
         provider: 'simple',
         enabled: true,
@@ -126,7 +134,7 @@ test('should not trigger event handler if project of event is different from add
     };
 
     await addonService.createAddon(config, 'me@mail.com');
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: 'someotherproject',
@@ -144,7 +152,7 @@ test('should not trigger event handler if project of event is different from add
 });
 
 test('should trigger event handler if project for event is one of the desired projects for addon', async () => {
-    const { addonService, stores } = getSetup();
+    const { addonService, eventService } = getSetup();
     const desiredProject = 'desired';
     const otherProject = 'other';
     const config = {
@@ -159,7 +167,7 @@ test('should trigger event handler if project for event is one of the desired pr
     };
 
     await addonService.createAddon(config, 'me@mail.com');
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: desiredProject,
@@ -169,7 +177,7 @@ test('should trigger event handler if project for event is one of the desired pr
             strategies: [{ name: 'default' }],
         },
     });
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: otherProject,
@@ -189,7 +197,7 @@ test('should trigger event handler if project for event is one of the desired pr
 });
 
 test('should trigger events for multiple projects if addon is setup to filter multiple projects', async () => {
-    const { addonService, stores } = getSetup();
+    const { addonService, eventService } = getSetup();
     const desiredProjects = ['desired', 'desired2'];
     const otherProject = 'other';
     const config = {
@@ -204,7 +212,7 @@ test('should trigger events for multiple projects if addon is setup to filter mu
     };
 
     await addonService.createAddon(config, 'me@mail.com');
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: desiredProjects[0],
@@ -214,7 +222,7 @@ test('should trigger events for multiple projects if addon is setup to filter mu
             strategies: [{ name: 'default' }],
         },
     });
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: otherProject,
@@ -224,7 +232,7 @@ test('should trigger events for multiple projects if addon is setup to filter mu
             strategies: [{ name: 'default' }],
         },
     });
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: desiredProjects[1],
@@ -246,7 +254,7 @@ test('should trigger events for multiple projects if addon is setup to filter mu
 });
 
 test('should filter events on environment if addon is setup to filter for it', async () => {
-    const { addonService, stores } = getSetup();
+    const { addonService, eventService } = getSetup();
     const desiredEnvironment = 'desired';
     const otherEnvironment = 'other';
     const config = {
@@ -262,7 +270,7 @@ test('should filter events on environment if addon is setup to filter for it', a
     };
 
     await addonService.createAddon(config, 'me@mail.com');
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: desiredEnvironment,
@@ -273,7 +281,7 @@ test('should filter events on environment if addon is setup to filter for it', a
             strategies: [{ name: 'default' }],
         },
     });
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         environment: otherEnvironment,
@@ -293,7 +301,7 @@ test('should filter events on environment if addon is setup to filter for it', a
 });
 
 test('should not filter out global events (no specific environment) even if addon is setup to filter for environments', async () => {
-    const { addonService, stores } = getSetup();
+    const { addonService, eventService } = getSetup();
     const filteredEnvironment = 'filtered';
     const config = {
         provider: 'simple',
@@ -319,7 +327,7 @@ test('should not filter out global events (no specific environment) even if addo
     };
 
     await addonService.createAddon(config, 'me@mail.com');
-    await stores.eventStore.store(globalEventWithNoEnvironment);
+    await eventService.storeEvent(globalEventWithNoEnvironment);
     const simpleProvider = addonService.addonProviders.simple;
     // @ts-expect-error
     const events = simpleProvider.getEvents();
@@ -330,7 +338,7 @@ test('should not filter out global events (no specific environment) even if addo
 });
 
 test('should not filter out global events (no specific project) even if addon is setup to filter for projects', async () => {
-    const { addonService, stores } = getSetup();
+    const { addonService, eventService } = getSetup();
     const filteredProject = 'filtered';
     const config = {
         provider: 'simple',
@@ -355,7 +363,7 @@ test('should not filter out global events (no specific project) even if addon is
     };
 
     await addonService.createAddon(config, 'me@mail.com');
-    await stores.eventStore.store(globalEventWithNoProject);
+    await eventService.storeEvent(globalEventWithNoProject);
     const simpleProvider = addonService.addonProviders.simple;
     // @ts-expect-error
     const events = simpleProvider.getEvents();
@@ -366,7 +374,7 @@ test('should not filter out global events (no specific project) even if addon is
 });
 
 test('should support wildcard option for filtering addons', async () => {
-    const { addonService, stores } = getSetup();
+    const { addonService, eventService } = getSetup();
     const desiredProjects = ['desired', 'desired2'];
     const otherProject = 'other';
     const config = {
@@ -381,7 +389,7 @@ test('should support wildcard option for filtering addons', async () => {
     };
 
     await addonService.createAddon(config, 'me@mail.com');
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: desiredProjects[0],
@@ -391,7 +399,7 @@ test('should support wildcard option for filtering addons', async () => {
             strategies: [{ name: 'default' }],
         },
     });
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: otherProject,
@@ -401,7 +409,7 @@ test('should support wildcard option for filtering addons', async () => {
             strategies: [{ name: 'default' }],
         },
     });
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: desiredProjects[1],
@@ -425,7 +433,7 @@ test('should support wildcard option for filtering addons', async () => {
 });
 
 test('Should support filtering by both project and environment', async () => {
-    const { addonService, stores } = getSetup();
+    const { addonService, eventService } = getSetup();
     const desiredProjects = ['desired1', 'desired2', 'desired3'];
     const desiredEnvironments = ['env1', 'env2', 'env3'];
     const config = {
@@ -445,7 +453,7 @@ test('Should support filtering by both project and environment', async () => {
         'desired-toggle3',
     ];
     await addonService.createAddon(config, 'me@mail.com');
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: desiredProjects[0],
@@ -456,7 +464,7 @@ test('Should support filtering by both project and environment', async () => {
             strategies: [{ name: 'default' }],
         },
     });
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: desiredProjects[0],
@@ -467,7 +475,7 @@ test('Should support filtering by both project and environment', async () => {
             strategies: [{ name: 'default' }],
         },
     });
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: desiredProjects[2],
@@ -478,7 +486,7 @@ test('Should support filtering by both project and environment', async () => {
             strategies: [{ name: 'default' }],
         },
     });
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: desiredProjects[2],
@@ -489,7 +497,7 @@ test('Should support filtering by both project and environment', async () => {
             strategies: [{ name: 'default' }],
         },
     });
-    await stores.eventStore.store({
+    await eventService.storeEvent({
         type: FEATURE_CREATED,
         createdBy: 'some@user.com',
         project: 'wrongproject',
@@ -556,7 +564,7 @@ test('should create tag type for simple-addon', async () => {
 });
 
 test('should store ADDON_CONFIG_CREATE event', async () => {
-    const { addonService, stores } = getSetup();
+    const { addonService, eventService } = getSetup();
 
     const config = {
         provider: 'simple',
@@ -571,7 +579,7 @@ test('should store ADDON_CONFIG_CREATE event', async () => {
 
     await addonService.createAddon(config, 'me@mail.com');
 
-    const events = await stores.eventStore.getEvents();
+    const { events } = await eventService.getEvents();
 
     expect(events.length).toBe(2); // Also tag-types where created
     expect(events[1].type).toBe(ADDON_CONFIG_CREATED);
@@ -579,7 +587,7 @@ test('should store ADDON_CONFIG_CREATE event', async () => {
 });
 
 test('should store ADDON_CONFIG_UPDATE event', async () => {
-    const { addonService, stores } = getSetup();
+    const { addonService, eventService } = getSetup();
 
     const config: IAddonDto = {
         description: '',
@@ -597,7 +605,7 @@ test('should store ADDON_CONFIG_UPDATE event', async () => {
     const updated = { ...addonConfig, description: 'test' };
     await addonService.updateAddon(addonConfig.id, updated, 'me@mail.com');
 
-    const events = await stores.eventStore.getEvents();
+    const { events } = await eventService.getEvents();
 
     expect(events.length).toBe(3);
     expect(events[2].type).toBe(ADDON_CONFIG_UPDATED);
@@ -605,7 +613,7 @@ test('should store ADDON_CONFIG_UPDATE event', async () => {
 });
 
 test('should store ADDON_CONFIG_REMOVE event', async () => {
-    const { addonService, stores } = getSetup();
+    const { addonService, eventService } = getSetup();
 
     const config: IAddonDto = {
         provider: 'simple',
@@ -622,7 +630,7 @@ test('should store ADDON_CONFIG_REMOVE event', async () => {
 
     await addonService.removeAddon(addonConfig.id, 'me@mail.com');
 
-    const events = await stores.eventStore.getEvents();
+    const { events } = await eventService.getEvents();
 
     expect(events.length).toBe(3);
     expect(events[2].type).toBe(ADDON_CONFIG_DELETED);

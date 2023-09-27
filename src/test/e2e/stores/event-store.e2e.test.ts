@@ -198,7 +198,6 @@ test('Should get all events of type', async () => {
                           featureName: data.name,
                           createdBy: 'test-user',
                           data,
-                          tags: [],
                       })
                     : new FeatureDeletedEvent({
                           project: data.project,

@@ -12,6 +12,7 @@ import ContextFieldStore from '../../db/context-field-store';
 import FeatureStrategiesStore from '../../db/feature-strategy-store';
 import {
     ContextService,
+    EventService,
     FeatureTagService,
     StrategyService,
     TagTypeService,
@@ -63,36 +64,45 @@ export const createFakeExportImportTogglesService = (
     const featureToggleService = createFakeFeatureToggleService(config);
     const privateProjectChecker = createFakePrivateProjectChecker();
 
+    const eventService = new EventService(
+        {
+            eventStore,
+            featureTagStore,
+        },
+        config,
+    );
+
     const featureTagService = new FeatureTagService(
         {
             tagStore,
             featureTagStore,
-            eventStore,
             featureToggleStore,
         },
         { getLogger },
+        eventService,
     );
     const contextService = new ContextService(
         {
             projectStore,
-            eventStore,
             contextFieldStore,
             featureStrategiesStore,
         },
         { getLogger, flagResolver },
+        eventService,
         privateProjectChecker,
     );
     const strategyService = new StrategyService(
-        { strategyStore, eventStore },
+        { strategyStore },
         { getLogger },
+        eventService,
     );
     const tagTypeService = new TagTypeService(
-        { tagTypeStore, eventStore },
+        { tagTypeStore },
         { getLogger },
+        eventService,
     );
     const exportImportService = new ExportImportService(
         {
-            eventStore,
             importTogglesStore,
             featureStrategiesStore,
             contextFieldStore,
@@ -107,6 +117,7 @@ export const createFakeExportImportTogglesService = (
             featureToggleService,
             featureTagService,
             accessService,
+            eventService,
             contextService,
             strategyService,
             tagTypeService,
@@ -160,36 +171,45 @@ export const createExportImportTogglesService = (
     const featureToggleService = createFeatureToggleService(db, config);
     const privateProjectChecker = createPrivateProjectChecker(db, config);
 
+    const eventService = new EventService(
+        {
+            eventStore,
+            featureTagStore,
+        },
+        config,
+    );
+
     const featureTagService = new FeatureTagService(
         {
             tagStore,
             featureTagStore,
-            eventStore,
             featureToggleStore,
         },
         { getLogger },
+        eventService,
     );
     const contextService = new ContextService(
         {
             projectStore,
-            eventStore,
             contextFieldStore,
             featureStrategiesStore,
         },
         { getLogger, flagResolver },
+        eventService,
         privateProjectChecker,
     );
     const strategyService = new StrategyService(
-        { strategyStore, eventStore },
+        { strategyStore },
         { getLogger },
+        eventService,
     );
     const tagTypeService = new TagTypeService(
-        { tagTypeStore, eventStore },
+        { tagTypeStore },
         { getLogger },
+        eventService,
     );
     const exportImportService = new ExportImportService(
         {
-            eventStore,
             importTogglesStore,
             featureStrategiesStore,
             contextFieldStore,
@@ -204,6 +224,7 @@ export const createExportImportTogglesService = (
             featureToggleService,
             featureTagService,
             accessService,
+            eventService,
             contextService,
             strategyService,
             tagTypeService,

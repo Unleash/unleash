@@ -7,7 +7,7 @@ import { PublicSignupTokenCreateSchema } from '../../../../lib/openapi/spec/publ
 let stores;
 let db;
 
-beforeEach(async () => {
+beforeAll(async () => {
     db = await dbInit('test', getLogger);
     stores = db.stores;
 });

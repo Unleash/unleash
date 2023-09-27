@@ -16,9 +16,11 @@ import {
     FeatureToggle,
     FeatureToggleDTO,
     FeatureToggleLegacy,
+    FeatureToggleWithDependencies,
     FeatureToggleWithEnvironment,
     FeatureVariantEvent,
     IConstraint,
+    IDependency,
     IEventStore,
     IFeatureEnvironmentInfo,
     IFeatureEnvironmentStore,
@@ -926,7 +928,7 @@ class FeatureToggleService {
         projectId,
         environmentVariants,
         userId,
-    }: IGetFeatureParams): Promise<FeatureToggleWithEnvironment> {
+    }: IGetFeatureParams): Promise<FeatureToggleWithDependencies> {
         if (projectId) {
             await this.validateFeatureBelongsToProject({
                 featureName,
@@ -934,18 +936,31 @@ class FeatureToggleService {
             });
         }
 
+        let dependencies: IDependency[] = [];
+        let children: string[] = [];
+        if (this.flagResolver.isEnabled('dependentFeatures')) {
+            [dependencies, children] = await Promise.all([
+                this.dependentFeaturesReadModel.getParents(featureName),
+                this.dependentFeaturesReadModel.getChildren(featureName),
+            ]);
+        }
+
         if (environmentVariants) {
-            return this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
-                featureName,
-                userId,
-                archived,
-            );
+            const result =
+                await this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
+                    featureName,
+                    userId,
+                    archived,
+                );
+            return { ...result, dependencies, children };
         } else {
-            return this.featureStrategiesStore.getFeatureToggleWithEnvs(
-                featureName,
-                userId,
-                archived,
-            );
+            const result =
+                await this.featureStrategiesStore.getFeatureToggleWithEnvs(
+                    featureName,
+                    userId,
+                    archived,
+                );
+            return { ...result, dependencies, children };
         }
     }
 

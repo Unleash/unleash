@@ -29,18 +29,22 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
     }
 
     async getParentOptions(child: string): Promise<string[]> {
-        const result = await this.db('features as f')
-            .where('f.name', child)
-            .select('f.project');
+        const result = await this.db('features')
+            .where('features.name', child)
+            .select('features.project');
         if (result.length === 0) {
             return [];
         }
-        const rows = await this.db('features as f')
-            .leftJoin('dependent_features as df', 'f.name', 'df.child')
-            .where('f.project', result[0].project)
-            .andWhere('f.name', '!=', child)
-            .andWhere('df.child', null)
-            .select('f.name');
+        const rows = await this.db('features')
+            .leftJoin(
+                'dependent_features',
+                'features.name',
+                'dependent_features.child',
+            )
+            .where('features.project', result[0].project)
+            .andWhere('features.name', '!=', child)
+            .andWhere('dependent_features.child', null)
+            .select('features.name');
 
         return rows.map((item) => item.name);
     }

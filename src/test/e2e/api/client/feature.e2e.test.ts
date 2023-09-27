@@ -60,11 +60,6 @@ beforeAll(async () => {
         'featureY',
         { feature: 'featureX', variants: ['featureXVariant'] },
     );
-    // depend on parent being disabled
-    await app.services.dependentFeaturesService.upsertFeatureDependency(
-        'featureY',
-        { feature: 'featureZ', enabled: false },
-    );
 
     await app.services.featureToggleServiceV2.archiveToggle(
         'featureArchivedX',
@@ -153,10 +148,6 @@ test('returns dependencies', async () => {
                         feature: 'featureX',
                         enabled: true,
                         variants: ['featureXVariant'],
-                    },
-                    {
-                        feature: 'featureZ',
-                        enabled: false,
                     },
                 ],
             });

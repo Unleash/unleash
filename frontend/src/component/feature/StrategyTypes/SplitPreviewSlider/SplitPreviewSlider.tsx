@@ -75,7 +75,7 @@ interface ISplitPreviewSliderProps {
 }
 
 const SplitPreviewSlider = ({ variants }: ISplitPreviewSliderProps) => {
-    if (variants.length < 2) {
+    if (variants.length < 1) {
         return null;
     }
 

@@ -34,32 +34,6 @@ export class DependentFeaturesStore implements IDependentFeaturesStore {
             .merge();
     }
 
-    async getChildren(parent: string): Promise<string[]> {
-        const rows = await this.db('dependent_features').where(
-            'parent',
-            parent,
-        );
-
-        return rows.map((row) => row.child);
-    }
-
-    async getParentOptions(child: string): Promise<string[]> {
-        const result = await this.db('features as f')
-            .where('f.name', child)
-            .select('f.project');
-        if (result.length === 0) {
-            return [];
-        }
-        const rows = await this.db('features as f')
-            .leftJoin('dependent_features as df', 'f.name', 'df.child')
-            .where('f.project', result[0].project)
-            .andWhere('f.name', '!=', child)
-            .andWhere('df.child', null)
-            .select('f.name');
-
-        return rows.map((item) => item.name);
-    }
-
     async delete(dependency: FeatureDependencyId): Promise<void> {
         await this.db('dependent_features')
             .where('parent', dependency.parent)

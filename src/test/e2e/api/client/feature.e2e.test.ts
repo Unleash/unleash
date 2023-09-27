@@ -13,14 +13,18 @@ beforeAll(async () => {
     db = await dbInit('feature_api_client', getLogger, {
         experimental: { flags: { dependentFeatures: true } },
     });
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
-                featureNamingPattern: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                    featureNamingPattern: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         {

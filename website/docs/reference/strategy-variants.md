@@ -1,10 +1,20 @@
 ---
 title: Strategy Variants
 ---
+
+import VideoContent from '@site/src/components/VideoContent.jsx'
+
 :::info Availability
 
-**Strategy variants** were first introduced in Unleash 5.4.
+**Strategy variants** were first introduced in Unleash 5.4.  
 :::
+
+
+<VideoContent videoUrls={["https://www.youtube.com/embed/M0oyGHtva0o"]}>
+
+In addition to the written reference below, the following video provides for details on Strategy Variants, including setup, migration tips and use cases. 🍿  
+
+</VideoContent>
 
 Gradual rollout strategies in Unleash can have _strategy variants_. _Strategy variants_ allow each matching activation strategy to return not just simple enabled/disabled status, but
 also attach any custom data or even multiple data items. 

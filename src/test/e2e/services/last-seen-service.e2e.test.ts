@@ -164,7 +164,7 @@ test('Should handle 1000 toggle updates', async () => {
     // bypass interval waiting
     await service.store();
 
-    const t1 = await stores.featureToggleStore.get('tb1');
+    const t1 = await stores.featureToggleStore.get('tb0');
     const t2 = await stores.featureToggleStore.get('tb1000');
 
     expect(t2.lastSeenAt).toBeNull();

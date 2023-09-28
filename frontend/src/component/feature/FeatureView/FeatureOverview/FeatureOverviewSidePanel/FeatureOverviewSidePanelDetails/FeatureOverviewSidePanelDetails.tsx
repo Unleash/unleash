@@ -7,6 +7,8 @@ import { FeatureEnvironmentSeen } from '../../../FeatureEnvironmentSeen/FeatureE
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { DependencyRow } from './DependencyRow';
 import { FlexRow, StyledDetail, StyledLabel } from './StyledRow';
+import { useUiFlag } from '../../../../../../hooks/useUiFlag';
+import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -26,6 +28,7 @@ export const FeatureOverviewSidePanelDetails = ({
 }: IFeatureOverviewSidePanelDetailsProps) => {
     const { locationSettings } = useLocationSettings();
     const { uiConfig } = useUiConfig();
+    const dependentFeatures = useUiFlag('dependentFeatures');
 
     const showLastSeenByEnvironment = Boolean(
         uiConfig.flags.lastSeenByEnvironment
@@ -52,7 +55,10 @@ export const FeatureOverviewSidePanelDetails = ({
                     />
                 )}
             </FlexRow>
-            <DependencyRow feature={feature} />
+            <ConditionallyRender
+                condition={dependentFeatures}
+                show={<DependencyRow feature={feature} />}
+            />
         </StyledContainer>
     );
 };

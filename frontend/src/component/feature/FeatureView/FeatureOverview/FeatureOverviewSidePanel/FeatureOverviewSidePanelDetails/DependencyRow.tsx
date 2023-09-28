@@ -9,21 +9,14 @@ import { FC, useState } from 'react';
 import { FlexRow, StyledDetail, StyledLabel, StyledLink } from './StyledRow';
 
 export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
-    const dependentFeatures = useUiFlag('dependentFeatures');
     const [showDependencyDialogue, setShowDependencyDialogue] = useState(false);
     const canAddParentDependency =
-        dependentFeatures &&
         Boolean(feature.project) &&
         feature.dependencies.length === 0 &&
         feature.children.length === 0;
     const hasParentDependency =
-        dependentFeatures &&
-        Boolean(feature.project) &&
-        Boolean(feature.dependencies.length > 0);
-    const hasChildren =
-        dependentFeatures &&
-        Boolean(feature.project) &&
-        feature.children.length > 0;
+        Boolean(feature.project) && Boolean(feature.dependencies.length > 0);
+    const hasChildren = Boolean(feature.project) && feature.children.length > 0;
 
     return (
         <>
@@ -88,15 +81,13 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                 }
             />
             <ConditionallyRender
-                condition={dependentFeatures && Boolean(feature.project)}
+                condition={Boolean(feature.project)}
                 show={
                     <AddDependencyDialogue
                         project={feature.project}
                         featureId={feature.name}
                         onClose={() => setShowDependencyDialogue(false)}
-                        showDependencyDialogue={
-                            dependentFeatures && showDependencyDialogue
-                        }
+                        showDependencyDialogue={showDependencyDialogue}
                     />
                 }
             />

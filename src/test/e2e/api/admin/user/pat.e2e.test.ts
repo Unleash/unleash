@@ -31,6 +31,7 @@ beforeAll(async () => {
 afterAll(async () => {
     getLogger.setMuteError(false);
     await app.destroy();
+    await db.destroy();
 });
 
 test('should create a PAT', async () => {

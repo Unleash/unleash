@@ -1,5 +1,9 @@
 name: Update version for version checker
 
+permissions:
+  id-token: write
+  contents: read
+
 on:
   release:
     types: [published]

@@ -4,7 +4,7 @@ import useAPI from '../useApi/useApi';
 interface IRolePayload {
     name: string;
     description: string;
-    permissions: IPermission[];
+    permissions: Pick<IPermission, 'name' | 'environment'>[];
 }
 
 export const useRolesApi = () => {

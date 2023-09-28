@@ -216,10 +216,14 @@ async function createApp(
     const request = supertest.agent(app);
 
     const destroy = async () => {
-        services.versionService.destroy();
-        services.clientInstanceService.destroy();
-        services.clientMetricsServiceV2.destroy();
-        services.proxyService.destroy();
+        // iterate on the keys of services and if the services at that key has a function called destroy then call it
+        await Promise.all(
+            Object.keys(services).map(async (key) => {
+                if (services[key].destroy) {
+                    await services[key].destroy();
+                }
+            }),
+        );
     };
 
     // TODO: use create from server-impl instead?

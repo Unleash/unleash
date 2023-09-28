@@ -4,7 +4,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 import { useParentOptions } from 'hooks/api/getters/useParentOptions/useParentOptions';
-import { useFeature } from '../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 interface IAddDependencyDialogueProps {
     project: string;

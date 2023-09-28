@@ -61,7 +61,7 @@ beforeEach(async () => {
     });
 });
 
-afterAll(async () => {
+afterEach(async () => {
     await app.destroy();
     await db.destroy();
 });

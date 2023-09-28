@@ -1,4 +1,4 @@
-import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';

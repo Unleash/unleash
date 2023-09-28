@@ -26,7 +26,7 @@ interface IProjectEnterpriseSettingsForm {
 
 const StyledForm = styled('form')(({ theme }) => ({
     height: '100%',
-    paddingBottom: theme.spacing(4),
+    paddingBottom: theme.spacing(1),
 }));
 
 const StyledSubtitle = styled('div')(({ theme }) => ({

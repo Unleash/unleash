@@ -19,7 +19,7 @@ import { styled } from '@mui/material';
 
 const StyledContainer = styled('div')<{ isPro: boolean }>(
     ({ theme, isPro }) => ({
-        minHeight: '60vh',
+        minHeight: '40vh',
         borderRadius: theme.spacing(2),
         border: isPro ? '0' : `1px solid ${theme.palette.divider}`,
         width: '100%',

@@ -178,17 +178,35 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             last_seen_at: now,
             environment: value.environment,
         }));
-        const dataToPersist: typeof enhancedData = [];
-        for (const input of enhancedData) {
-            if (await this.exists(input.feature_name)) {
-                dataToPersist.push(input);
-            }
-        }
+
         try {
-            await this.db(FEATURE_ENVIRONMENTS_METRICS_TABLE)
-                .insert(dataToPersist)
-                .onConflict(['feature_name', 'environment'])
-                .merge(['last_seen_at']);
+            await this.db.transaction(async (trx) => {
+                // Create a CTE with the data to be inserted
+                const cte = trx('features')
+                    .select('name')
+                    .whereIn(
+                        'name',
+                        enhancedData.map((entry) => entry.feature_name),
+                    );
+
+                // Insert only the rows that exist in the CTE (subquery)
+                await trx.raw(
+                    `
+                INSERT INTO ${FEATURE_ENVIRONMENTS_METRICS_TABLE} (feature_name, last_seen_at, environment)
+                SELECT ed.feature_name, ?, ed.environment
+                FROM (SELECT ? AS feature_name, ? AS environment) AS ed
+                WHERE EXISTS (SELECT 1 FROM ? AS cte WHERE cte.name = ed.feature_name)
+                ON CONFLICT (feature_name, environment)
+                DO UPDATE SET last_seen_at = EXCLUDED.last_seen_at
+                `,
+                    [
+                        now,
+                        enhancedData[0].feature_name,
+                        enhancedData[0].environment,
+                        cte,
+                    ],
+                );
+            });
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);
         }

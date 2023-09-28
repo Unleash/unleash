@@ -5,6 +5,7 @@ import { AccountStore } from '../../db/account-store';
 import EnvironmentStore from '../../db/environment-store';
 import {
     AccessService,
+    EventService,
     FavoritesService,
     GroupService,
     ProjectService,
@@ -39,6 +40,7 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
+import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
 
 export const createProjectService = (
     db: Db,
@@ -75,17 +77,25 @@ export const createProjectService = (
         eventBus,
         getLogger,
     );
+    const eventService = new EventService(
+        {
+            eventStore,
+            featureTagStore: new FakeFeatureTagStore(),
+        },
+        config,
+    );
     const favoriteService = new FavoritesService(
         {
             favoriteFeaturesStore,
             favoriteProjectsStore,
-            eventStore,
         },
         config,
+        eventService,
     );
     const groupService = new GroupService(
-        { groupStore, eventStore, accountStore },
+        { groupStore, accountStore },
         { getLogger },
+        eventService,
     );
 
     const privateProjectChecker = createPrivateProjectChecker(db, config);
@@ -106,6 +116,7 @@ export const createProjectService = (
         featureToggleService,
         groupService,
         favoriteService,
+        eventService,
         privateProjectChecker,
     );
 };
@@ -127,17 +138,25 @@ export const createFakeProjectService = (
     const featureToggleService = createFakeFeatureToggleService(config);
     const favoriteFeaturesStore = new FakeFavoriteFeaturesStore();
     const favoriteProjectsStore = new FakeFavoriteProjectsStore();
+    const eventService = new EventService(
+        {
+            eventStore,
+            featureTagStore: new FakeFeatureTagStore(),
+        },
+        config,
+    );
     const favoriteService = new FavoritesService(
         {
             favoriteFeaturesStore,
             favoriteProjectsStore,
-            eventStore,
         },
         config,
+        eventService,
     );
     const groupService = new GroupService(
-        { groupStore, eventStore, accountStore },
+        { groupStore, accountStore },
         { getLogger },
+        eventService,
     );
 
     const privateProjectChecker = createFakePrivateProjectChecker();
@@ -158,6 +177,7 @@ export const createFakeProjectService = (
         featureToggleService,
         groupService,
         favoriteService,
+        eventService,
         privateProjectChecker,
     );
 };

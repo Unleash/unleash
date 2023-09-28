@@ -8,7 +8,6 @@ import { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
 import { PublicSignupTokenCreateSchema } from '../openapi/spec/public-signup-token-create-schema';
 import { CreateInvitedUserSchema } from 'lib/openapi/spec/create-invited-user-schema';
 import { RoleName } from '../types/model';
-import { IEventStore } from '../types/stores/event-store';
 import {
     PublicSignupTokenCreatedEvent,
     PublicSignupTokenUpdatedEvent,
@@ -18,15 +17,16 @@ import UserService from './user-service';
 import { IUser } from '../types/user';
 import { URL } from 'url';
 import { add } from 'date-fns';
+import EventService from './event-service';
 
 export class PublicSignupTokenService {
     private store: IPublicSignupTokenStore;
 
     private roleStore: IRoleStore;
 
-    private eventStore: IEventStore;
-
     private userService: UserService;
+
+    private eventService: EventService;
 
     private logger: Logger;
 
@@ -38,18 +38,15 @@ export class PublicSignupTokenService {
         {
             publicSignupTokenStore,
             roleStore,
-            eventStore,
-        }: Pick<
-            IUnleashStores,
-            'publicSignupTokenStore' | 'roleStore' | 'eventStore'
-        >,
+        }: Pick<IUnleashStores, 'publicSignupTokenStore' | 'roleStore'>,
         config: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'server'>,
         userService: UserService,
+        eventService: EventService,
     ) {
         this.store = publicSignupTokenStore;
         this.userService = userService;
+        this.eventService = eventService;
         this.roleStore = roleStore;
-        this.eventStore = eventStore;
         this.logger = config.getLogger(
             '/services/public-signup-token-service.ts',
         );
@@ -84,7 +81,7 @@ export class PublicSignupTokenService {
         createdBy: string,
     ): Promise<PublicSignupTokenSchema> {
         const result = await this.store.update(secret, { expiresAt, enabled });
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new PublicSignupTokenUpdatedEvent({
                 createdBy,
                 data: { secret, enabled, expiresAt },
@@ -103,7 +100,7 @@ export class PublicSignupTokenService {
             rootRole: token.role.id,
         });
         await this.store.addTokenUser(secret, user.id);
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new PublicSignupTokenUserAddedEvent({
                 createdBy: 'System',
                 data: { secret, userId: user.id },
@@ -133,7 +130,7 @@ export class PublicSignupTokenService {
         };
         const token = await this.store.insert(newToken);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new PublicSignupTokenCreatedEvent({
                 createdBy: createdBy,
                 data: token,

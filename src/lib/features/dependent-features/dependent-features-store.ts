@@ -23,19 +23,15 @@ export class DependentFeaturesStore implements IDependentFeaturesStore {
                 featureDependency.variants,
             );
         }
+        // TODO: remove when we support multiple parents
+        await this.db('dependent_features')
+            .where('child', featureDependency.child)
+            .del();
+
         await this.db('dependent_features')
             .insert(serializableFeatureDependency)
             .onConflict(['parent', 'child'])
             .merge();
-    }
-
-    async getChildren(parent: string): Promise<string[]> {
-        const rows = await this.db('dependent_features').where(
-            'parent',
-            parent,
-        );
-
-        return rows.map((row) => row.child);
     }
 
     async delete(dependency: FeatureDependencyId): Promise<void> {

@@ -10,6 +10,9 @@ import { AccessService } from './access-service';
 import { IChangeRequestAccessReadModel } from 'lib/features/change-request-access-service/change-request-access-read-model';
 import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
+import { IDependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model-type';
+import EventService from './event-service';
+import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 
 test('Should only store events for potentially stale on', async () => {
     expect.assertions(2);
@@ -19,16 +22,11 @@ test('Should only store events for potentially stale on', async () => {
     ];
 
     const config = createTestConfig();
-    const featureToggleService = new FeatureToggleService(
+    const eventService = new EventService(
         {
-            featureToggleStore: {
-                updatePotentiallyStaleFeatures: () => featureUpdates,
-            },
-            featureTagStore: {
-                getAllTagsForFeature: () => [],
-            },
+            // @ts-expect-error
             eventStore: {
-                batchStore: (events: IEvent[]) => {
+                batchStore: async (events: IEvent[]) => {
                     expect(events.length).toBe(1);
                     const [event1] = events;
 
@@ -38,6 +36,19 @@ test('Should only store events for potentially stale on', async () => {
                         type: FEATURE_POTENTIALLY_STALE_ON,
                     });
                 },
+            },
+            featureTagStore: new FakeFeatureTagStore(),
+        },
+        config,
+    );
+
+    const featureToggleService = new FeatureToggleService(
+        {
+            featureToggleStore: {
+                updatePotentiallyStaleFeatures: () => featureUpdates,
+            },
+            featureTagStore: {
+                getAllTagsForFeature: () => [],
             },
         } as unknown as IUnleashStores,
         {
@@ -49,8 +60,10 @@ test('Should only store events for potentially stale on', async () => {
         } as unknown as IUnleashConfig,
         {} as ISegmentService,
         {} as AccessService,
+        eventService,
         {} as IChangeRequestAccessReadModel,
         {} as IPrivateProjectChecker,
+        {} as IDependentFeaturesReadModel,
     );
 
     await featureToggleService.updatePotentiallyStaleFeatures();

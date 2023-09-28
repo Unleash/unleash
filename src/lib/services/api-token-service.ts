@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { Logger } from '../logger';
 import { ADMIN, CLIENT, FRONTEND } from '../types/permissions';
-import { IEventStore, IUnleashStores } from '../types/stores';
+import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
 import {
@@ -25,6 +25,7 @@ import {
     ApiTokenUpdatedEvent,
 } from '../types';
 import { omitKeys } from '../util';
+import EventService from './event-service';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -51,7 +52,7 @@ export class ApiTokenService {
 
     private activeTokens: IApiToken[] = [];
 
-    private eventStore: IEventStore;
+    private eventService: EventService;
 
     private lastSeenSecrets: Set<string> = new Set<string>();
 
@@ -59,15 +60,12 @@ export class ApiTokenService {
         {
             apiTokenStore,
             environmentStore,
-            eventStore,
-        }: Pick<
-            IUnleashStores,
-            'apiTokenStore' | 'environmentStore' | 'eventStore'
-        >,
+        }: Pick<IUnleashStores, 'apiTokenStore' | 'environmentStore'>,
         config: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
+        eventService: EventService,
     ) {
         this.store = apiTokenStore;
-        this.eventStore = eventStore;
+        this.eventService = eventService;
         this.environmentStore = environmentStore;
         this.logger = config.getLogger('/services/api-token-service.ts');
         this.fetchActiveTokens();
@@ -167,7 +165,7 @@ export class ApiTokenService {
     ): Promise<IApiToken> {
         const previous = await this.store.get(secret);
         const token = await this.store.setExpiry(secret, expiresAt);
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ApiTokenUpdatedEvent({
                 createdBy: updatedBy,
                 previousToken: omitKeys(previous, 'secret'),
@@ -181,7 +179,7 @@ export class ApiTokenService {
         if (await this.store.exists(secret)) {
             const token = await this.store.get(secret);
             await this.store.delete(secret);
-            await this.eventStore.store(
+            await this.eventService.storeEvent(
                 new ApiTokenDeletedEvent({
                     createdBy: deletedBy,
                     apiToken: omitKeys(token, 'secret'),
@@ -233,7 +231,7 @@ export class ApiTokenService {
         try {
             const token = await this.store.insert(newApiToken);
             this.activeTokens.push(token);
-            await this.eventStore.store(
+            await this.eventService.storeEvent(
                 new ApiTokenCreatedEvent({
                     createdBy,
                     apiToken: omitKeys(token, 'secret'),

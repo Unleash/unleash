@@ -11,6 +11,8 @@ import {
     API_TOKEN_UPDATED,
 } from '../types';
 import { addDays } from 'date-fns';
+import EventService from './event-service';
+import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 
 test('Should init api token', async () => {
     const token = {
@@ -28,14 +30,22 @@ test('Should init api token', async () => {
     });
     const apiTokenStore = new FakeApiTokenStore();
     const environmentStore = new FakeEnvironmentStore();
-    const eventStore = new FakeEventStore();
     const insertCalled = new Promise((resolve) => {
         apiTokenStore.on('insert', resolve);
     });
 
-    new ApiTokenService(
-        { apiTokenStore, environmentStore, eventStore },
+    const eventService = new EventService(
+        {
+            eventStore: new FakeEventStore(),
+            featureTagStore: new FakeFeatureTagStore(),
+        },
         config,
+    );
+
+    new ApiTokenService(
+        { apiTokenStore, environmentStore },
+        config,
+        eventService,
     );
 
     await insertCalled;
@@ -58,7 +68,14 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
     const config: IUnleashConfig = createTestConfig({});
     const apiTokenStore = new FakeApiTokenStore();
     const environmentStore = new FakeEnvironmentStore();
-    const eventStore = new FakeEventStore();
+
+    const eventService = new EventService(
+        {
+            eventStore: new FakeEventStore(),
+            featureTagStore: new FakeFeatureTagStore(),
+        },
+        config,
+    );
 
     await environmentStore.create({
         name: 'default',
@@ -69,8 +86,9 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
     });
 
     const apiTokenService = new ApiTokenService(
-        { apiTokenStore, environmentStore, eventStore },
+        { apiTokenStore, environmentStore },
         config,
+        eventService,
     );
 
     await apiTokenService.createApiTokenWithProjects(token);
@@ -93,7 +111,14 @@ test('Api token operations should all have events attached', async () => {
     const config: IUnleashConfig = createTestConfig({});
     const apiTokenStore = new FakeApiTokenStore();
     const environmentStore = new FakeEnvironmentStore();
-    const eventStore = new FakeEventStore();
+
+    const eventService = new EventService(
+        {
+            eventStore: new FakeEventStore(),
+            featureTagStore: new FakeFeatureTagStore(),
+        },
+        config,
+    );
 
     await environmentStore.create({
         name: 'default',
@@ -104,14 +129,15 @@ test('Api token operations should all have events attached', async () => {
     });
 
     const apiTokenService = new ApiTokenService(
-        { apiTokenStore, environmentStore, eventStore },
+        { apiTokenStore, environmentStore },
         config,
+        eventService,
     );
     let saved = await apiTokenService.createApiTokenWithProjects(token);
     let newExpiry = addDays(new Date(), 30);
     await apiTokenService.updateExpiry(saved.secret, newExpiry, 'test');
     await apiTokenService.delete(saved.secret, 'test');
-    const events = await eventStore.getEvents();
+    const { events } = await eventService.getEvents();
     const createdApiTokenEvents = events.filter(
         (e) => e.type === API_TOKEN_CREATED,
     );

@@ -17,7 +17,6 @@ import SessionService from './session-service';
 import { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
 import { USER_UPDATED, USER_CREATED, USER_DELETED } from '../types/events';
-import { IEventStore } from '../types/stores/event-store';
 import { IUserStore } from '../types/stores/user-store';
 import { RoleName } from '../types/model';
 import SettingService from './setting-service';
@@ -28,6 +27,7 @@ import BadDataError from '../error/bad-data-error';
 import { isDefined } from '../util/isDefined';
 import { TokenUserSchema } from '../openapi/spec/token-user-schema';
 import PasswordMismatch from '../error/password-mismatch';
+import EventService from './event-service';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -64,7 +64,7 @@ class UserService {
 
     private store: IUserStore;
 
-    private eventStore: IEventStore;
+    private eventService: EventService;
 
     private accessService: AccessService;
 
@@ -81,7 +81,7 @@ class UserService {
     private baseUriPath: string;
 
     constructor(
-        stores: Pick<IUnleashStores, 'userStore' | 'eventStore'>,
+        stores: Pick<IUnleashStores, 'userStore'>,
         {
             server,
             getLogger,
@@ -91,13 +91,14 @@ class UserService {
             accessService: AccessService;
             resetTokenService: ResetTokenService;
             emailService: EmailService;
+            eventService: EventService;
             sessionService: SessionService;
             settingService: SettingService;
         },
     ) {
         this.logger = getLogger('service/user-service.js');
         this.store = stores.userStore;
-        this.eventStore = stores.eventStore;
+        this.eventService = services.eventService;
         this.accessService = services.accessService;
         this.resetTokenService = services.resetTokenService;
         this.emailService = services.emailService;
@@ -208,7 +209,7 @@ class UserService {
             await this.store.setPasswordHash(user.id, passwordHash);
         }
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: USER_CREATED,
             createdBy: this.getCreatedBy(updatedBy),
             data: this.mapUserToData(user),
@@ -257,7 +258,7 @@ class UserService {
             ? await this.store.update(id, payload)
             : preUser;
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: USER_UPDATED,
             createdBy: this.getCreatedBy(updatedBy),
             data: this.mapUserToData(user),
@@ -274,7 +275,7 @@ class UserService {
 
         await this.store.delete(userId);
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: USER_DELETED,
             createdBy: this.getCreatedBy(updatedBy),
             preData: this.mapUserToData(user),

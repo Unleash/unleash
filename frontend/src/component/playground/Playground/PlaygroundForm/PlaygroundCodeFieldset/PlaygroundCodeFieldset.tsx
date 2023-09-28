@@ -63,7 +63,8 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
 
                     setFieldExist(
                         contextValue[contextField] !== undefined ||
-                            contextValue?.properties[contextField] !== undefined
+                            contextValue?.properties?.[contextField] !==
+                                undefined
                     );
                 } catch (error: unknown) {
                     return setError(formatUnknownError(error));

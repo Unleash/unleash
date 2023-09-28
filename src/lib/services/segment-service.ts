@@ -1,5 +1,4 @@
 import { IUnleashConfig } from '../types/option';
-import { IEventStore } from '../types/stores/event-store';
 import {
     IClientSegment,
     IFlagResolver,
@@ -23,6 +22,7 @@ import { ISegmentService } from '../segments/segment-service-interface';
 import { PermissionError } from '../error';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
+import EventService from './event-service';
 
 export class SegmentService implements ISegmentService {
     private logger: Logger;
@@ -31,13 +31,13 @@ export class SegmentService implements ISegmentService {
 
     private featureStrategiesStore: IFeatureStrategiesStore;
 
-    private eventStore: IEventStore;
-
     private changeRequestAccessReadModel: IChangeRequestAccessReadModel;
 
     private config: IUnleashConfig;
 
     private flagResolver: IFlagResolver;
+
+    private eventService: EventService;
 
     private privateProjectChecker: IPrivateProjectChecker;
 
@@ -45,18 +45,15 @@ export class SegmentService implements ISegmentService {
         {
             segmentStore,
             featureStrategiesStore,
-            eventStore,
-        }: Pick<
-            IUnleashStores,
-            'segmentStore' | 'featureStrategiesStore' | 'eventStore'
-        >,
+        }: Pick<IUnleashStores, 'segmentStore' | 'featureStrategiesStore'>,
         changeRequestAccessReadModel: IChangeRequestAccessReadModel,
         config: IUnleashConfig,
+        eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.segmentStore = segmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
-        this.eventStore = eventStore;
+        this.eventService = eventService;
         this.changeRequestAccessReadModel = changeRequestAccessReadModel;
         this.privateProjectChecker = privateProjectChecker;
         this.logger = config.getLogger('services/segment-service.ts');
@@ -117,7 +114,7 @@ export class SegmentService implements ISegmentService {
         await this.validateName(input.name);
         const segment = await this.segmentStore.create(input, user);
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: SEGMENT_CREATED,
             createdBy: user.email || user.username || 'unknown',
             data: segment,
@@ -149,7 +146,7 @@ export class SegmentService implements ISegmentService {
 
         const segment = await this.segmentStore.update(id, input);
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: SEGMENT_UPDATED,
             createdBy: user.email || user.username || 'unknown',
             data: segment,
@@ -161,7 +158,7 @@ export class SegmentService implements ISegmentService {
         const segment = await this.segmentStore.get(id);
         await this.stopWhenChangeRequestsEnabled(segment.project, user);
         await this.segmentStore.delete(id);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: SEGMENT_DELETED,
             createdBy: user.email || user.username,
             data: segment,
@@ -171,7 +168,7 @@ export class SegmentService implements ISegmentService {
     async unprotectedDelete(id: number, user: User): Promise<void> {
         const segment = await this.segmentStore.get(id);
         await this.segmentStore.delete(id);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: SEGMENT_DELETED,
             createdBy: user.email || user.username,
             data: segment,

@@ -96,6 +96,12 @@ export interface FeatureToggleWithEnvironment extends FeatureToggle {
     environments: IEnvironmentDetail[];
 }
 
+export interface FeatureToggleWithDependencies
+    extends FeatureToggleWithEnvironment {
+    dependencies: IDependency[];
+    children: string[];
+}
+
 // @deprecated
 export interface FeatureToggleLegacy extends FeatureToggle {
     strategies: IStrategyConfig[];
@@ -420,7 +426,7 @@ export type CreateProject = Pick<IProject, 'id' | 'name'> & {
 export interface IProject {
     id: string;
     name: string;
-    description: string;
+    description?: string;
     health?: number;
     createdAt?: Date;
     updatedAt?: Date;

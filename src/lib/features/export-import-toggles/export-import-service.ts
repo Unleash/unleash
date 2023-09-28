@@ -8,7 +8,6 @@ import {
 import { Logger } from '../../logger';
 import { IFeatureTagStore } from '../../types/stores/feature-tag-store';
 import { ITagTypeStore } from '../../types/stores/tag-type-store';
-import { IEventStore } from '../../types/stores/event-store';
 import { IStrategy } from '../../types/stores/strategy-store';
 import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
 import { IFeatureStrategiesStore } from '../../types/stores/feature-strategies-store';
@@ -35,6 +34,7 @@ import { extractUsernameFromUser } from '../../util';
 import {
     AccessService,
     ContextService,
+    EventService,
     FeatureTagService,
     FeatureToggleService,
     StrategyService,
@@ -56,8 +56,6 @@ export default class ExportImportService {
     private toggleStore: IFeatureToggleStore;
 
     private featureStrategiesStore: IFeatureStrategiesStore;
-
-    private eventStore: IEventStore;
 
     private importTogglesStore: IImportTogglesStore;
 
@@ -81,6 +79,8 @@ export default class ExportImportService {
 
     private accessService: AccessService;
 
+    private eventService: EventService;
+
     private tagTypeService: TagTypeService;
 
     private featureTagService: FeatureTagService;
@@ -91,7 +91,6 @@ export default class ExportImportService {
         stores: Pick<
             IUnleashStores,
             | 'importTogglesStore'
-            | 'eventStore'
             | 'featureStrategiesStore'
             | 'featureToggleStore'
             | 'featureEnvironmentStore'
@@ -109,6 +108,7 @@ export default class ExportImportService {
             strategyService,
             contextService,
             accessService,
+            eventService,
             tagTypeService,
             featureTagService,
         }: Pick<
@@ -117,11 +117,11 @@ export default class ExportImportService {
             | 'strategyService'
             | 'contextService'
             | 'accessService'
+            | 'eventService'
             | 'tagTypeService'
             | 'featureTagService'
         >,
     ) {
-        this.eventStore = stores.eventStore;
         this.toggleStore = stores.featureToggleStore;
         this.importTogglesStore = stores.importTogglesStore;
         this.featureStrategiesStore = stores.featureStrategiesStore;
@@ -135,6 +135,7 @@ export default class ExportImportService {
         this.strategyService = strategyService;
         this.contextService = contextService;
         this.accessService = accessService;
+        this.eventService = eventService;
         this.tagTypeService = tagTypeService;
         this.featureTagService = featureTagService;
         this.importPermissionsService = new ImportPermissionsService(
@@ -237,7 +238,7 @@ export default class ExportImportService {
         await this.importToggleLevelInfo(cleanedDto, user);
 
         await this.importDefault(cleanedDto, user);
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             project: cleanedDto.project,
             environment: cleanedDto.environment,
             type: FEATURES_IMPORTED,
@@ -726,7 +727,7 @@ export default class ExportImportService {
             }),
             tagTypes: filteredTagTypes,
         };
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: FEATURES_EXPORTED,
             createdBy: userName,
             data: result,

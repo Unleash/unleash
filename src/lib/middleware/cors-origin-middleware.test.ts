@@ -4,10 +4,11 @@ import { createTestConfig } from '../../test/config/test-config';
 import FakeEventStore from '../../test/fixtures/fake-event-store';
 import { randomId } from '../util/random-id';
 import FakeProjectStore from '../../test/fixtures/fake-project-store';
-import { ProxyService, SettingService } from '../../lib/services';
+import { EventService, ProxyService, SettingService } from '../../lib/services';
 import { ISettingStore } from '../../lib/types';
 import { frontendSettingsKey } from '../../lib/types/settings/frontend-settings';
 import { minutesToMilliseconds } from 'date-fns';
+import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
 
 const createSettingService = (
     frontendApiOrigins: string[],
@@ -17,11 +18,14 @@ const createSettingService = (
     const stores = {
         settingStore: new FakeSettingStore(),
         eventStore: new FakeEventStore(),
+        featureTagStore: new FakeFeatureTagStore(),
         projectStore: new FakeProjectStore(),
     };
 
+    const eventService = new EventService(stores, config);
+
     const services = {
-        settingService: new SettingService(stores, config),
+        settingService: new SettingService(stores, config, eventService),
     };
 
     return {
@@ -135,8 +139,8 @@ test('corsOriginMiddleware with caching enabled', async () => {
 
     /*
     This is needed because it is not enough to fake time to test the
-    updated cache, we also need to make sure that all promises are 
-    executed and completed, in the right order. 
+    updated cache, we also need to make sure that all promises are
+    executed and completed, in the right order.
     */
     await new Promise<void>((resolve) =>
         process.nextTick(async () => {

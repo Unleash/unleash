@@ -13,14 +13,20 @@ import {
 } from '../types/events';
 import { GLOBAL_ENV } from '../types/environment';
 import variantsExportV3 from '../../test/examples/variantsexport_v3.json';
+import EventService from './event-service';
 const oldExportExample = require('./state-service-export-v1.json');
 
 function getSetup() {
     const stores = createStores();
+    const eventService = new EventService(stores, { getLogger });
     return {
-        stateService: new StateService(stores, {
-            getLogger,
-        }),
+        stateService: new StateService(
+            stores,
+            {
+                getLogger,
+            },
+            eventService,
+        ),
         stores,
     };
 }
@@ -61,10 +67,15 @@ async function setupV3VariantsCompatibilityScenario(
             ],
         );
     });
+    const eventService = new EventService(stores, { getLogger });
     return {
-        stateService: new StateService(stores, {
-            getLogger,
-        }),
+        stateService: new StateService(
+            stores,
+            {
+                getLogger,
+            },
+            eventService,
+        ),
         stores,
     };
 }
@@ -576,9 +587,14 @@ test('Should export projects', async () => {
 
 test('exporting to new format works', async () => {
     const stores = createStores();
-    const stateService = new StateService(stores, {
-        getLogger,
-    });
+    const eventService = new EventService(stores, { getLogger });
+    const stateService = new StateService(
+        stores,
+        {
+            getLogger,
+        },
+        eventService,
+    );
     await stores.projectStore.create({
         id: 'fancy',
         name: 'extra',

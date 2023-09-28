@@ -13,14 +13,19 @@ beforeAll(async () => {
     db = await dbInit('feature_api_client', getLogger, {
         experimental: { flags: { dependentFeatures: true } },
     });
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
-                featureNamingPattern: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                    featureNamingPattern: true,
+                    dependentFeatures: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
     await app.services.featureToggleServiceV2.createFeatureToggle(
         'default',
         {
@@ -59,11 +64,6 @@ beforeAll(async () => {
     await app.services.dependentFeaturesService.upsertFeatureDependency(
         'featureY',
         { feature: 'featureX', variants: ['featureXVariant'] },
-    );
-    // depend on parent being disabled
-    await app.services.dependentFeaturesService.upsertFeatureDependency(
-        'featureY',
-        { feature: 'featureZ', enabled: false },
     );
 
     await app.services.featureToggleServiceV2.archiveToggle(
@@ -153,10 +153,6 @@ test('returns dependencies', async () => {
                         feature: 'featureX',
                         enabled: true,
                         variants: ['featureXVariant'],
-                    },
-                    {
-                        feature: 'featureZ',
-                        enabled: false,
                     },
                 ],
             });

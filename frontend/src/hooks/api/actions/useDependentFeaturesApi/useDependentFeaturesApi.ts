@@ -7,7 +7,7 @@ import { useCallback } from 'react';
 interface IParentFeaturePayload {
     feature: string;
 }
-export const useDependentFeaturesApi = () => {
+export const useDependentFeaturesApi = (project: string) => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
@@ -18,7 +18,7 @@ export const useDependentFeaturesApi = () => {
         parentFeaturePayload: IParentFeaturePayload
     ) => {
         const req = createRequest(
-            `/api/admin/projects/default/features/${childFeature}/dependencies`,
+            `/api/admin/projects/${project}/features/${childFeature}/dependencies`,
             {
                 method: 'POST',
                 body: JSON.stringify(parentFeaturePayload),
@@ -41,7 +41,7 @@ export const useDependentFeaturesApi = () => {
         parentFeature: string
     ) => {
         const req = createRequest(
-            `/api/admin/projects/default/features/${childFeature}/dependencies/${parentFeature}`,
+            `/api/admin/projects/${project}/features/${childFeature}/dependencies/${parentFeature}`,
             {
                 method: 'DELETE',
             }
@@ -60,7 +60,7 @@ export const useDependentFeaturesApi = () => {
 
     const removeDependencies = async (childFeature: string) => {
         const req = createRequest(
-            `/api/admin/projects/default/features/${childFeature}/dependencies`,
+            `/api/admin/projects/${project}/features/${childFeature}/dependencies`,
             {
                 method: 'DELETE',
             }

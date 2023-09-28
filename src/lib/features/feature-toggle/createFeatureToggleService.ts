@@ -1,5 +1,6 @@
 import {
     AccessService,
+    EventService,
     FeatureToggleService,
     GroupService,
 } from '../../services';
@@ -7,7 +8,6 @@ import FeatureStrategiesStore from '../../db/feature-strategy-store';
 import FeatureToggleStore from '../../db/feature-toggle-store';
 import FeatureToggleClientStore from '../../db/feature-toggle-client-store';
 import ProjectStore from '../../db/project-store';
-import FeatureTagStore from '../../db/feature-tag-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
 import ContextFieldStore from '../../db/context-field-store';
 import GroupStore from '../../db/group-store';
@@ -22,7 +22,6 @@ import FakeFeatureStrategiesStore from '../../../test/fixtures/fake-feature-stra
 import FakeFeatureToggleStore from '../../../test/fixtures/fake-feature-toggle-store';
 import FakeFeatureToggleClientStore from '../../../test/fixtures/fake-feature-toggle-client-store';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
-import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeContextFieldStore from '../../../test/fixtures/fake-context-field-store';
 import FakeGroupStore from '../../../test/fixtures/fake-group-store';
@@ -45,6 +44,10 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
+import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model';
+import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
+import FeatureTagStore from '../../db/feature-tag-store';
+import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -70,7 +73,6 @@ export const createFeatureToggleService = (
         getLogger,
         flagResolver,
     );
-    const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
     const featureEnvironmentStore = new FeatureEnvironmentStore(
         db,
         eventBus,
@@ -85,12 +87,18 @@ export const createFeatureToggleService = (
     const strategyStore = new StrategyStore(db, getLogger);
     const accountStore = new AccountStore(db, getLogger);
     const accessStore = new AccessStore(db, eventBus, getLogger);
+    const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
     const roleStore = new RoleStore(db, eventBus, getLogger);
     const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
     const eventStore = new EventStore(db, getLogger);
-    const groupService = new GroupService(
-        { groupStore, eventStore, accountStore },
+    const eventService = new EventService(
+        { eventStore, featureTagStore },
         { getLogger },
+    );
+    const groupService = new GroupService(
+        { groupStore, accountStore },
+        { getLogger },
+        eventService,
     );
     const accessService = new AccessService(
         { accessStore, accountStore, roleStore, environmentStore, groupStore },
@@ -105,13 +113,14 @@ export const createFeatureToggleService = (
 
     const privateProjectChecker = createPrivateProjectChecker(db, config);
 
+    const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
             featureToggleStore,
             featureToggleClientStore,
             projectStore,
-            eventStore,
             featureTagStore,
             featureEnvironmentStore,
             contextFieldStore,
@@ -120,8 +129,10 @@ export const createFeatureToggleService = (
         { getLogger, flagResolver },
         segmentService,
         accessService,
+        eventService,
         changeRequestAccessReadModel,
         privateProjectChecker,
+        dependentFeaturesReadModel,
     );
     return featureToggleService;
 };
@@ -136,17 +147,22 @@ export const createFakeFeatureToggleService = (
     const featureToggleStore = new FakeFeatureToggleStore();
     const featureToggleClientStore = new FakeFeatureToggleClientStore();
     const projectStore = new FakeProjectStore();
-    const featureTagStore = new FakeFeatureTagStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
     const contextFieldStore = new FakeContextFieldStore();
     const groupStore = new FakeGroupStore();
     const accountStore = new FakeAccountStore();
     const accessStore = new FakeAccessStore();
+    const featureTagStore = new FakeFeatureTagStore();
     const roleStore = new FakeRoleStore();
     const environmentStore = new FakeEnvironmentStore();
-    const groupService = new GroupService(
-        { groupStore, eventStore, accountStore },
+    const eventService = new EventService(
+        { eventStore, featureTagStore },
         { getLogger },
+    );
+    const groupService = new GroupService(
+        { groupStore, accountStore },
+        { getLogger },
+        eventService,
     );
     const accessService = new AccessService(
         { accessStore, accountStore, roleStore, environmentStore, groupStore },
@@ -155,14 +171,14 @@ export const createFakeFeatureToggleService = (
     );
     const segmentService = createFakeSegmentService(config);
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
-    const fakeprivateProjectChecker = createFakePrivateProjectChecker();
+    const fakePrivateProjectChecker = createFakePrivateProjectChecker();
+    const dependentFeaturesReadModel = new FakeDependentFeaturesReadModel();
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
             featureToggleStore,
             featureToggleClientStore,
             projectStore,
-            eventStore,
             featureTagStore,
             featureEnvironmentStore,
             contextFieldStore,
@@ -171,8 +187,10 @@ export const createFakeFeatureToggleService = (
         { getLogger, flagResolver },
         segmentService,
         accessService,
+        eventService,
         changeRequestAccessReadModel,
-        fakeprivateProjectChecker,
+        fakePrivateProjectChecker,
+        dependentFeaturesReadModel,
     );
     return featureToggleService;
 };

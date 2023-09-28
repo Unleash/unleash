@@ -4,12 +4,18 @@ import dbInit from '../helpers/database-init';
 import { DEFAULT_ENV } from '../../../lib/util';
 import {
     AccessService,
+    EventService,
     GroupService,
     SegmentService,
 } from '../../../lib/services';
 import { FeatureStrategySchema } from '../../../lib/openapi';
 import User from '../../../lib/types/user';
-import { IConstraint, IVariant, SKIP_CHANGE_REQUEST } from '../../../lib/types';
+import {
+    IConstraint,
+    IUnleashStores,
+    IVariant,
+    SKIP_CHANGE_REQUEST,
+} from '../../../lib/types';
 import EnvironmentService from '../../../lib/services/environment-service';
 import {
     ForbiddenError,
@@ -19,8 +25,9 @@ import {
 import { ISegmentService } from '../../../lib/segments/segment-service-interface';
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
+import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
 
-let stores;
+let stores: IUnleashStores;
 let db;
 let service: FeatureToggleService;
 let segmentService: ISegmentService;
@@ -47,8 +54,8 @@ beforeAll(async () => {
     );
     unleashConfig = config;
     stores = db.stores;
-
-    const groupService = new GroupService(stores, config);
+    const eventService = new EventService(stores, config);
+    const groupService = new GroupService(stores, config, eventService);
     const accessService = new AccessService(stores, config, groupService);
     const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
         db.rawDatabase,
@@ -58,10 +65,14 @@ beforeAll(async () => {
         db.rawDatabase,
         config,
     );
+    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
+        db.rawDatabase,
+    );
     segmentService = new SegmentService(
         stores,
         changeRequestAccessReadModel,
         config,
+        eventService,
         privateProjectChecker,
     );
 
@@ -70,8 +81,10 @@ beforeAll(async () => {
         config,
         segmentService,
         accessService,
+        eventService,
         changeRequestAccessReadModel,
         privateProjectChecker,
+        dependentFeaturesReadModel,
     );
 });
 
@@ -447,7 +460,8 @@ test('If change requests are enabled, cannot change variants without going via C
         { name: featureName },
         'test-user',
     );
-    const groupService = new GroupService(stores, unleashConfig);
+    const eventService = new EventService(stores, unleashConfig);
+    const groupService = new GroupService(stores, unleashConfig, eventService);
     const accessService = new AccessService(
         stores,
         unleashConfig,
@@ -461,6 +475,9 @@ test('If change requests are enabled, cannot change variants without going via C
         db.rawDatabase,
         unleashConfig,
     );
+    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
+        db.rawDatabase,
+    );
     // Force all feature flags on to make sure we have Change requests on
     const customFeatureService = new FeatureToggleService(
         stores,
@@ -472,8 +489,10 @@ test('If change requests are enabled, cannot change variants without going via C
         },
         segmentService,
         accessService,
+        eventService,
         changeRequestAccessReadModel,
         privateProjectChecker,
+        dependentFeaturesReadModel,
     );
 
     const newVariant: IVariant = {
@@ -535,7 +554,8 @@ test('If CRs are protected for any environment in the project stops bulk update 
         project.id,
         disabledEnv.name,
     );
-    const groupService = new GroupService(stores, unleashConfig);
+    const eventService = new EventService(stores, unleashConfig);
+    const groupService = new GroupService(stores, unleashConfig, eventService);
     const accessService = new AccessService(
         stores,
         unleashConfig,
@@ -549,6 +569,9 @@ test('If CRs are protected for any environment in the project stops bulk update 
         db.rawDatabase,
         unleashConfig,
     );
+    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
+        db.rawDatabase,
+    );
     // Force all feature flags on to make sure we have Change requests on
     const customFeatureService = new FeatureToggleService(
         stores,
@@ -560,8 +583,10 @@ test('If CRs are protected for any environment in the project stops bulk update 
         },
         segmentService,
         accessService,
+        eventService,
         changeRequestAccessReadModel,
         privateProjectChecker,
+        dependentFeaturesReadModel,
     );
 
     const toggle = await service.createFeatureToggle(
@@ -677,10 +702,13 @@ describe('flag name validation', () => {
             name: projectId,
             mode: 'open' as const,
             defaultStickiness: 'default',
-            featureNaming,
         };
 
         await stores.projectStore.create(project);
+        await stores.projectStore.updateProjectEnterpriseSettings({
+            id: projectId,
+            featureNaming,
+        });
 
         const validFeatures = ['testpattern-feature', 'testpattern-feature2'];
         const invalidFeatures = ['a', 'b', 'c'];

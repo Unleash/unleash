@@ -16,10 +16,11 @@ import {
     FeatureToggle,
     FeatureToggleDTO,
     FeatureToggleLegacy,
+    FeatureToggleWithDependencies,
     FeatureToggleWithEnvironment,
     FeatureVariantEvent,
     IConstraint,
-    IEventStore,
+    IDependency,
     IFeatureEnvironmentInfo,
     IFeatureEnvironmentStore,
     IFeatureNaming,
@@ -96,6 +97,8 @@ import { ISegmentService } from 'lib/segments/segment-service-interface';
 import { IChangeRequestAccessReadModel } from '../features/change-request-access-service/change-request-access-read-model';
 import { checkFeatureFlagNamesAgainstPattern } from '../features/feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
+import { IDependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model-type';
+import EventService from './event-service';
 
 interface IFeatureContext {
     featureName: string;
@@ -143,13 +146,13 @@ class FeatureToggleService {
 
     private projectStore: IProjectStore;
 
-    private eventStore: IEventStore;
-
     private contextFieldStore: IContextFieldStore;
 
     private segmentService: ISegmentService;
 
     private accessService: AccessService;
+
+    private eventService: EventService;
 
     private flagResolver: IFlagResolver;
 
@@ -157,13 +160,14 @@ class FeatureToggleService {
 
     private privateProjectChecker: IPrivateProjectChecker;
 
+    private dependentFeaturesReadModel: IDependentFeaturesReadModel;
+
     constructor(
         {
             featureStrategiesStore,
             featureToggleStore,
             featureToggleClientStore,
             projectStore,
-            eventStore,
             featureTagStore,
             featureEnvironmentStore,
             contextFieldStore,
@@ -174,7 +178,6 @@ class FeatureToggleService {
             | 'featureToggleStore'
             | 'featureToggleClientStore'
             | 'projectStore'
-            | 'eventStore'
             | 'featureTagStore'
             | 'featureEnvironmentStore'
             | 'contextFieldStore'
@@ -186,8 +189,10 @@ class FeatureToggleService {
         }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
         segmentService: ISegmentService,
         accessService: AccessService,
+        eventService: EventService,
         changeRequestAccessReadModel: IChangeRequestAccessReadModel,
         privateProjectChecker: IPrivateProjectChecker,
+        dependentFeaturesReadModel: IDependentFeaturesReadModel,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -196,14 +201,15 @@ class FeatureToggleService {
         this.featureToggleClientStore = featureToggleClientStore;
         this.tagStore = featureTagStore;
         this.projectStore = projectStore;
-        this.eventStore = eventStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
         this.contextFieldStore = contextFieldStore;
         this.segmentService = segmentService;
         this.accessService = accessService;
+        this.eventService = eventService;
         this.flagResolver = flagResolver;
         this.changeRequestAccessReadModel = changeRequestAccessReadModel;
         this.privateProjectChecker = privateProjectChecker;
+        this.dependentFeaturesReadModel = dependentFeaturesReadModel;
     }
 
     async validateFeaturesContext(
@@ -387,15 +393,12 @@ class FeatureToggleService {
         );
 
         if (featureToggle.stale !== newDocument.stale) {
-            const tags = await this.tagStore.getAllTagsForFeature(featureName);
-
-            await this.eventStore.store(
+            await this.eventService.storeEvent(
                 new FeatureStaleEvent({
                     stale: newDocument.stale,
                     project,
                     featureName,
                     createdBy,
-                    tags,
                 }),
             );
         }
@@ -495,7 +498,6 @@ class FeatureToggleService {
 
         const eventData: StrategyIds = { strategyIds: newOrder };
 
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
         const event = new StrategiesOrderChangedEvent({
             featureName,
             environment,
@@ -503,9 +505,8 @@ class FeatureToggleService {
             createdBy,
             preData: eventPreData,
             data: eventData,
-            tags: tags,
         });
-        await this.eventStore.store(event);
+        await this.eventService.storeEvent(event);
     }
 
     async createStrategy(
@@ -599,16 +600,13 @@ class FeatureToggleService {
                 segments,
             );
 
-            const tags = await this.tagStore.getAllTagsForFeature(featureName);
-
-            await this.eventStore.store(
+            await this.eventService.storeEvent(
                 new FeatureStrategyAddEvent({
                     project: projectId,
                     featureName,
                     createdBy,
                     environment,
                     data: strategy,
-                    tags,
                 }),
             );
             return strategy;
@@ -717,13 +715,12 @@ class FeatureToggleService {
             );
 
             // Store event!
-            const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const data = this.featureStrategyToPublic(strategy, segments);
             const preData = this.featureStrategyToPublic(
                 existingStrategy,
                 segments,
             );
-            await this.eventStore.store(
+            await this.eventService.storeEvent(
                 new FeatureStrategyUpdateEvent({
                     project: projectId,
                     featureName,
@@ -731,7 +728,6 @@ class FeatureToggleService {
                     createdBy: userName,
                     data,
                     preData,
-                    tags,
                 }),
             );
             await this.optionallyDisableFeature(
@@ -763,7 +759,6 @@ class FeatureToggleService {
                 id,
                 existingStrategy,
             );
-            const tags = await this.tagStore.getAllTagsForFeature(featureName);
             const segments = await this.segmentService.getByStrategy(
                 strategy.id,
             );
@@ -772,7 +767,7 @@ class FeatureToggleService {
                 existingStrategy,
                 segments,
             );
-            await this.eventStore.store(
+            await this.eventService.storeEvent(
                 new FeatureStrategyUpdateEvent({
                     featureName,
                     project: projectId,
@@ -780,7 +775,6 @@ class FeatureToggleService {
                     createdBy: userName,
                     data,
                     preData,
-                    tags,
                 }),
             );
             return data;
@@ -845,17 +839,15 @@ class FeatureToggleService {
             );
         }
 
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
         const preData = this.featureStrategyToPublic(existingStrategy);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new FeatureStrategyRemoveEvent({
                 featureName,
                 project: projectId,
                 environment,
                 createdBy,
                 preData,
-                tags,
             }),
         );
 
@@ -921,7 +913,7 @@ class FeatureToggleService {
         projectId,
         environmentVariants,
         userId,
-    }: IGetFeatureParams): Promise<FeatureToggleWithEnvironment> {
+    }: IGetFeatureParams): Promise<FeatureToggleWithDependencies> {
         if (projectId) {
             await this.validateFeatureBelongsToProject({
                 featureName,
@@ -929,18 +921,31 @@ class FeatureToggleService {
             });
         }
 
+        let dependencies: IDependency[] = [];
+        let children: string[] = [];
+        if (this.flagResolver.isEnabled('dependentFeatures')) {
+            [dependencies, children] = await Promise.all([
+                this.dependentFeaturesReadModel.getParents(featureName),
+                this.dependentFeaturesReadModel.getChildren(featureName),
+            ]);
+        }
+
         if (environmentVariants) {
-            return this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
-                featureName,
-                userId,
-                archived,
-            );
+            const result =
+                await this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
+                    featureName,
+                    userId,
+                    archived,
+                );
+            return { ...result, dependencies, children };
         } else {
-            return this.featureStrategiesStore.getFeatureToggleWithEnvs(
-                featureName,
-                userId,
-                archived,
-            );
+            const result =
+                await this.featureStrategiesStore.getFeatureToggleWithEnvs(
+                    featureName,
+                    userId,
+                    archived,
+                );
+            return { ...result, dependencies, children };
         }
     }
 
@@ -1105,15 +1110,12 @@ class FeatureToggleService {
                 );
             }
 
-            const tags = await this.tagStore.getAllTagsForFeature(featureName);
-
-            await this.eventStore.store(
+            await this.eventService.storeEvent(
                 new FeatureCreatedEvent({
                     featureName,
                     createdBy,
                     project: projectId,
                     data: createdToggle,
-                    tags,
                 }),
             );
 
@@ -1263,16 +1265,13 @@ class FeatureToggleService {
             name: featureName,
         });
 
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
-
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new FeatureMetadataUpdateEvent({
                 createdBy: userName,
                 data: featureToggle,
                 preData,
                 featureName,
                 project: projectId,
-                tags,
             }),
         );
         return featureToggle;
@@ -1399,15 +1398,13 @@ class FeatureToggleService {
         const { project } = feature;
         feature.stale = isStale;
         await this.featureToggleStore.update(project, feature);
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new FeatureStaleEvent({
                 stale: isStale,
                 project,
                 featureName,
                 createdBy,
-                tags,
             }),
         );
 
@@ -1429,13 +1426,12 @@ class FeatureToggleService {
         }
 
         await this.featureToggleStore.archive(featureName);
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
-        await this.eventStore.store(
+
+        await this.eventService.storeEvent(
             new FeatureArchivedEvent({
                 featureName,
                 createdBy,
                 project: feature.project,
-                tags,
             }),
         );
     }
@@ -1451,20 +1447,14 @@ class FeatureToggleService {
             featureNames,
         );
         await this.featureToggleStore.batchArchive(featureNames);
-        const tags = await this.tagStore.getAllByFeatures(featureNames);
-        await this.eventStore.batchStore(
+
+        await this.eventService.storeEvents(
             features.map(
                 (feature) =>
                     new FeatureArchivedEvent({
                         featureName: feature.name,
                         createdBy,
                         project: feature.project,
-                        tags: tags
-                            .filter((tag) => tag.featureName === feature.name)
-                            .map((tag) => ({
-                                value: tag.tagValue,
-                                type: tag.tagType,
-                            })),
                     }),
             ),
         );
@@ -1488,8 +1478,8 @@ class FeatureToggleService {
             (feature) => feature.name,
         );
         await this.featureToggleStore.batchStale(relevantFeatureNames, stale);
-        const tags = await this.tagStore.getAllByFeatures(relevantFeatureNames);
-        await this.eventStore.batchStore(
+
+        await this.eventService.storeEvents(
             relevantFeatures.map(
                 (feature) =>
                     new FeatureStaleEvent({
@@ -1497,12 +1487,6 @@ class FeatureToggleService {
                         project: projectId,
                         featureName: feature.name,
                         createdBy,
-                        tags: tags
-                            .filter((tag) => tag.featureName === feature.name)
-                            .map((tag) => ({
-                                value: tag.tagValue,
-                                type: tag.tagType,
-                            })),
                     }),
             ),
         );
@@ -1647,15 +1631,13 @@ class FeatureToggleService {
         const feature = await this.featureToggleStore.get(featureName);
 
         if (updatedEnvironmentStatus > 0) {
-            const tags = await this.tagStore.getAllTagsForFeature(featureName);
-            await this.eventStore.store(
+            await this.eventService.storeEvent(
                 new FeatureEnvironmentEvent({
                     enabled,
                     project,
                     featureName,
                     environment,
                     createdBy,
-                    tags,
                 }),
             );
         }
@@ -1667,17 +1649,15 @@ class FeatureToggleService {
         featureName: string,
         createdBy: string,
     ): Promise<FeatureToggleLegacy> {
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
         const feature = await this.getFeatureToggleLegacy(featureName);
 
         // Legacy event. Will not be used from v4.3.
         // We do not include 'preData' on purpose.
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: FEATURE_UPDATED,
             createdBy,
             featureName,
             data: feature,
-            tags,
             project: feature.project,
         });
         return feature;
@@ -1739,14 +1719,12 @@ class FeatureToggleService {
         feature.project = newProject;
         await this.featureToggleStore.update(newProject, feature);
 
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new FeatureChangeProjectEvent({
                 createdBy,
                 oldProject,
                 newProject,
                 featureName,
-                tags,
             }),
         );
     }
@@ -1760,7 +1738,8 @@ class FeatureToggleService {
         const toggle = await this.featureToggleStore.get(featureName);
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
         await this.featureToggleStore.delete(featureName);
-        await this.eventStore.store(
+
+        await this.eventService.storeEvent(
             new FeatureDeletedEvent({
                 featureName,
                 project: toggle.project,
@@ -1789,7 +1768,8 @@ class FeatureToggleService {
         );
         const tags = await this.tagStore.getAllByFeatures(eligibleFeatureNames);
         await this.featureToggleStore.batchDelete(eligibleFeatureNames);
-        await this.eventStore.batchStore(
+
+        await this.eventService.storeEvents(
             eligibleFeatures.map(
                 (feature) =>
                     new FeatureDeletedEvent({
@@ -1824,21 +1804,15 @@ class FeatureToggleService {
         const eligibleFeatureNames = eligibleFeatures.map(
             (toggle) => toggle.name,
         );
-        const tags = await this.tagStore.getAllByFeatures(eligibleFeatureNames);
         await this.featureToggleStore.batchRevive(eligibleFeatureNames);
-        await this.eventStore.batchStore(
+
+        await this.eventService.storeEvents(
             eligibleFeatures.map(
                 (feature) =>
                     new FeatureRevivedEvent({
                         featureName: feature.name,
                         createdBy,
                         project: feature.project,
-                        tags: tags
-                            .filter((tag) => tag.featureName === feature.name)
-                            .map((tag) => ({
-                                value: tag.tagValue,
-                                type: tag.tagType,
-                            })),
                     }),
             ),
         );
@@ -1847,13 +1821,12 @@ class FeatureToggleService {
     // TODO: add project id.
     async reviveFeature(featureName: string, createdBy: string): Promise<void> {
         const toggle = await this.featureToggleStore.revive(featureName);
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
-        await this.eventStore.store(
+
+        await this.eventService.storeEvent(
             new FeatureRevivedEvent({
                 createdBy,
                 featureName,
                 project: toggle.project,
-                tags,
             }),
         );
     }
@@ -1965,13 +1938,12 @@ class FeatureToggleService {
             featureName,
             fixedVariants,
         );
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
-        await this.eventStore.store(
+
+        await this.eventService.storeEvent(
             new FeatureVariantEvent({
                 project,
                 featureName,
                 createdBy,
-                tags,
                 oldVariants,
                 newVariants: featureToggle.variants as IVariant[],
             }),
@@ -1999,9 +1971,7 @@ class FeatureToggleService {
             ).variants ||
             [];
 
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
-
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new EnvironmentVariantEvent({
                 featureName,
                 environment,
@@ -2009,7 +1979,6 @@ class FeatureToggleService {
                 createdBy: user,
                 oldVariants: theOldVariants,
                 newVariants: fixedVariants,
-                tags,
             }),
         );
         await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
@@ -2076,9 +2045,7 @@ class FeatureToggleService {
             oldVariants[env] = featureEnv.variants || [];
         }
 
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
-
-        await this.eventStore.batchStore(
+        await this.eventService.storeEvents(
             environments.map(
                 (environment) =>
                     new EnvironmentVariantEvent({
@@ -2088,7 +2055,6 @@ class FeatureToggleService {
                         createdBy: user,
                         oldVariants: oldVariants[environment],
                         newVariants: fixedVariants,
-                        tags,
                     }),
             ),
         );
@@ -2194,22 +2160,18 @@ class FeatureToggleService {
     async updatePotentiallyStaleFeatures(): Promise<void> {
         const potentiallyStaleFeatures =
             await this.featureToggleStore.updatePotentiallyStaleFeatures();
+
         if (potentiallyStaleFeatures.length > 0) {
-            return this.eventStore.batchStore(
-                await Promise.all(
-                    potentiallyStaleFeatures
-                        .filter((feature) => feature.potentiallyStale)
-                        .map(
-                            async ({ name, project }) =>
-                                new PotentiallyStaleOnEvent({
-                                    featureName: name,
-                                    project,
-                                    tags: await this.tagStore.getAllTagsForFeature(
-                                        name,
-                                    ),
-                                }),
-                        ),
-                ),
+            return this.eventService.storeEvents(
+                potentiallyStaleFeatures
+                    .filter((feature) => feature.potentiallyStale)
+                    .map(
+                        ({ name, project }) =>
+                            new PotentiallyStaleOnEvent({
+                                featureName: name,
+                                project,
+                            }),
+                    ),
             );
         }
     }

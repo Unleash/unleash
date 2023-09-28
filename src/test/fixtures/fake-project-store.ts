@@ -190,4 +190,9 @@ export default class FakeProjectStore implements IProjectStore {
     getProjectModeCounts(): Promise<ProjectModeCount[]> {
         return Promise.resolve([]);
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    updateProjectEnterpriseSettings(update: IProjectInsert): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
 }

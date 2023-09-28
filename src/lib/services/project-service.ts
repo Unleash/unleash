@@ -41,7 +41,11 @@ import {
     IFeatureNaming,
     CreateProject,
 } from '../types';
-import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
+import {
+    IProjectQuery,
+    IProjectEnterpriseSettingsUpdate,
+    IProjectStore,
+} from '../types/stores/project-store';
 import {
     IProjectAccessModel,
     IRoleDescriptor,
@@ -60,6 +64,7 @@ import { BadDataError, PermissionError } from '../error';
 import { ProjectDoraMetricsSchema } from 'lib/openapi';
 import { checkFeatureNamingData } from '../features/feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
+import EventService from './event-service';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -83,7 +88,7 @@ interface ICalculateStatus {
 }
 
 export default class ProjectService {
-    private store: IProjectStore;
+    private projectStore: IProjectStore;
 
     private accessService: AccessService;
 
@@ -109,9 +114,13 @@ export default class ProjectService {
 
     private favoritesService: FavoritesService;
 
+    private eventService: EventService;
+
     private projectStatsStore: IProjectStatsStore;
 
     private flagResolver: IFlagResolver;
+
+    private isEnterprise: boolean;
 
     constructor(
         {
@@ -139,9 +148,10 @@ export default class ProjectService {
         featureToggleService: FeatureToggleService,
         groupService: GroupService,
         favoriteService: FavoritesService,
+        eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
     ) {
-        this.store = projectStore;
+        this.projectStore = projectStore;
         this.environmentStore = environmentStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
         this.accessService = accessService;
@@ -153,16 +163,21 @@ export default class ProjectService {
         this.privateProjectChecker = privateProjectChecker;
         this.accountStore = accountStore;
         this.groupService = groupService;
+        this.eventService = eventService;
         this.projectStatsStore = projectStatsStore;
         this.logger = config.getLogger('services/project-service.js');
         this.flagResolver = config.flagResolver;
+        this.isEnterprise = config.isEnterprise;
     }
 
     async getProjects(
         query?: IProjectQuery,
         userId?: number,
     ): Promise<IProjectWithCount[]> {
-        const projects = await this.store.getProjectsWithCounts(query, userId);
+        const projects = await this.projectStore.getProjectsWithCounts(
+            query,
+            userId,
+        );
         if (this.flagResolver.isEnabled('privateProjects') && userId) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
@@ -181,7 +196,7 @@ export default class ProjectService {
     }
 
     async getProject(id: string): Promise<IProject> {
-        return this.store.get(id);
+        return this.projectStore.get(id);
     }
 
     private validateAndProcessFeatureNamingPattern = (
@@ -214,14 +229,11 @@ export default class ProjectService {
         newProject: CreateProject,
         user: IUser,
     ): Promise<IProject> {
-        const data = await projectSchema.validateAsync(newProject);
+        const validatedData = await projectSchema.validateAsync(newProject);
+        const data = this.removeModeForNonEnterprise(validatedData);
         await this.validateUniqueId(data.id);
 
-        if (data.featureNaming) {
-            this.validateAndProcessFeatureNamingPattern(data.featureNaming);
-        }
-
-        await this.store.create(data);
+        await this.projectStore.create(data);
 
         const enabledEnvironments = await this.environmentStore.getAll({
             enabled: true,
@@ -239,7 +251,7 @@ export default class ProjectService {
 
         await this.accessService.createDefaultProjectRoles(user, data.id);
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: PROJECT_CREATED,
             createdBy: getCreatedBy(user),
             data,
@@ -250,7 +262,24 @@ export default class ProjectService {
     }
 
     async updateProject(updatedProject: IProject, user: User): Promise<void> {
-        const preData = await this.store.get(updatedProject.id);
+        const preData = await this.projectStore.get(updatedProject.id);
+
+        await this.projectStore.update(updatedProject);
+
+        await this.eventStore.store({
+            type: PROJECT_UPDATED,
+            project: updatedProject.id,
+            createdBy: getCreatedBy(user),
+            data: updatedProject,
+            preData,
+        });
+    }
+
+    async updateProjectEnterpriseSettings(
+        updatedProject: IProjectEnterpriseSettingsUpdate,
+        user: User,
+    ): Promise<void> {
+        const preData = await this.projectStore.get(updatedProject.id);
 
         if (updatedProject.featureNaming) {
             this.validateAndProcessFeatureNamingPattern(
@@ -258,9 +287,9 @@ export default class ProjectService {
             );
         }
 
-        await this.store.update(updatedProject);
+        await this.projectStore.updateProjectEnterpriseSettings(updatedProject);
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: PROJECT_UPDATED,
             project: updatedProject.id,
             createdBy: getCreatedBy(user),
@@ -276,7 +305,7 @@ export default class ProjectService {
         const featureEnvs = await this.featureEnvironmentStore.getAll({
             feature_name: feature.name,
         });
-        const newEnvs = await this.store.getEnvironmentsForProject(
+        const newEnvs = await this.projectStore.getEnvironmentsForProject(
             newProjectId,
         );
         return arraysHaveSameItems(
@@ -289,7 +318,7 @@ export default class ProjectService {
         project: string,
         environment: string,
     ): Promise<void> {
-        await this.store.addEnvironmentToProject(project, environment);
+        await this.projectStore.addEnvironmentToProject(project, environment);
     }
 
     async changeProject(
@@ -355,9 +384,9 @@ export default class ProjectService {
             );
         }
 
-        await this.store.delete(id);
+        await this.projectStore.delete(id);
 
-        await this.eventStore.store({
+        await this.eventService.storeEvent({
             type: PROJECT_DELETED,
             createdBy: getCreatedBy(user),
             project: id,
@@ -373,7 +402,7 @@ export default class ProjectService {
     }
 
     async validateUniqueId(id: string): Promise<void> {
-        const exists = await this.store.hasProject(id);
+        const exists = await this.projectStore.hasProject(id);
         if (exists) {
             throw new NameExistsError('A project with this id already exists.');
         }
@@ -410,7 +439,7 @@ export default class ProjectService {
 
         await this.accessService.addUserToRole(userId, role.id, projectId);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectUserAddedEvent({
                 project: projectId,
                 createdBy: createdBy || 'system-user',
@@ -438,7 +467,7 @@ export default class ProjectService {
 
         const user = await this.accountStore.get(userId);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectUserRemovedEvent({
                 project: projectId,
                 createdBy,
@@ -464,7 +493,7 @@ export default class ProjectService {
 
         await this.accessService.removeUserAccess(projectId, userId);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectAccessUserRolesDeleted({
                 project: projectId,
                 createdBy,
@@ -488,7 +517,7 @@ export default class ProjectService {
 
         await this.accessService.removeGroupAccess(projectId, groupId);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectAccessUserRolesDeleted({
                 project: projectId,
                 createdBy,
@@ -523,7 +552,7 @@ export default class ProjectService {
             project.id,
         );
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectGroupAddedEvent({
                 project: project.id,
                 createdBy: modifiedBy,
@@ -558,7 +587,7 @@ export default class ProjectService {
             project.id,
         );
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectGroupRemovedEvent({
                 project: projectId,
                 createdBy: modifiedBy,
@@ -585,7 +614,7 @@ export default class ProjectService {
             createdBy,
         );
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectAccessAddedEvent({
                 project: projectId,
                 createdBy,
@@ -613,7 +642,7 @@ export default class ProjectService {
             createdBy,
         );
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectAccessAddedEvent({
                 project: projectId,
                 createdBy,
@@ -641,7 +670,7 @@ export default class ProjectService {
             userId,
             roles,
         );
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectAccessUserRolesUpdated({
                 project: projectId,
                 createdBy: createdByUserName,
@@ -673,7 +702,7 @@ export default class ProjectService {
             roles,
             createdBy,
         );
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectAccessGroupRolesUpdated({
                 project: projectId,
                 createdBy,
@@ -799,7 +828,7 @@ export default class ProjectService {
         );
         const role = await this.findProjectRole(projectId, roleId);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectUserUpdateRoleEvent({
                 project: projectId,
                 createdBy,
@@ -853,7 +882,7 @@ export default class ProjectService {
         );
         const role = await this.findProjectGroupRole(projectId, roleId);
 
-        await this.eventStore.store(
+        await this.eventService.storeEvent(
             new ProjectGroupUpdateRoleEvent({
                 project: projectId,
                 createdBy,
@@ -872,7 +901,7 @@ export default class ProjectService {
     }
 
     async getMembers(projectId: string): Promise<number> {
-        return this.store.getMembersCountByProject(projectId);
+        return this.projectStore.getMembersCountByProject(projectId);
     }
 
     async getProjectUsers(
@@ -903,7 +932,7 @@ export default class ProjectService {
     }
 
     async getProjectsByUser(userId: number): Promise<string[]> {
-        return this.store.getProjectsByUser(userId);
+        return this.projectStore.getProjectsByUser(userId);
     }
 
     async getProjectRoleUsage(roleId: number): Promise<IProjectRoleUsage[]> {
@@ -911,7 +940,7 @@ export default class ProjectService {
     }
 
     async statusJob(): Promise<void> {
-        const projects = await this.store.getAll();
+        const projects = await this.projectStore.getAll();
 
         const statusUpdates = await Promise.all(
             projects.map((project) => this.getStatusUpdates(project.id)),
@@ -990,7 +1019,7 @@ export default class ProjectService {
         );
 
         const projectMembersAddedCurrentWindow =
-            await this.store.getMembersCountByProjectAfterDate(
+            await this.projectStore.getMembersCountByProjectAfterDate(
                 projectId,
                 dateMinusThirtyDays,
             );
@@ -1023,14 +1052,14 @@ export default class ProjectService {
             favorite,
             projectStats,
         ] = await Promise.all([
-            this.store.get(projectId),
-            this.store.getEnvironmentsForProject(projectId),
+            this.projectStore.get(projectId),
+            this.projectStore.getEnvironmentsForProject(projectId),
             this.featureToggleService.getFeatureOverview({
                 projectId,
                 archived,
                 userId,
             }),
-            this.store.getMembersCountByProject(projectId),
+            this.projectStore.getMembersCountByProject(projectId),
             userId
                 ? this.favoritesService.isFavoriteProject({
                       project: projectId,
@@ -1057,5 +1086,14 @@ export default class ProjectService {
             members,
             version: 1,
         };
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    removeModeForNonEnterprise(data): any {
+        if (this.isEnterprise) {
+            return data;
+        }
+        const { mode, ...proData } = data;
+        return proData;
     }
 }

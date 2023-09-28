@@ -11,16 +11,24 @@ import { FlexRow, StyledDetail, StyledLabel, StyledLink } from './StyledRow';
 export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
     const dependentFeatures = useUiFlag('dependentFeatures');
     const [showDependencyDialogue, setShowDependencyDialogue] = useState(false);
+    const noParentsAndChildren =
+        dependentFeatures &&
+        Boolean(feature.project) &&
+        feature.dependencies.length === 0 &&
+        feature.children.length === 0;
+    const hasParentDependency =
+        dependentFeatures &&
+        Boolean(feature.project) &&
+        Boolean(feature.dependencies.length > 0);
+    const hasChildren =
+        dependentFeatures &&
+        Boolean(feature.project) &&
+        feature.children.length > 0;
 
     return (
         <>
             <ConditionallyRender
-                condition={
-                    dependentFeatures &&
-                    Boolean(feature.project) &&
-                    feature.dependencies.length === 0 &&
-                    feature.children.length === 0
-                }
+                condition={noParentsAndChildren}
                 show={
                     <FlexRow>
                         <StyledDetail>
@@ -38,11 +46,7 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                 }
             />
             <ConditionallyRender
-                condition={
-                    dependentFeatures &&
-                    Boolean(feature.project) &&
-                    Boolean(feature.dependencies.length > 0)
-                }
+                condition={hasParentDependency}
                 show={
                     <FlexRow>
                         <StyledDetail>
@@ -57,11 +61,7 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                 }
             />
             <ConditionallyRender
-                condition={
-                    dependentFeatures &&
-                    Boolean(feature.project) &&
-                    feature.children.length > 0
-                }
+                condition={hasChildren}
                 show={
                     <FlexRow>
                         <StyledDetail>

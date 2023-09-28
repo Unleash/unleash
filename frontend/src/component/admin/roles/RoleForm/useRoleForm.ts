@@ -44,7 +44,9 @@ export const useRoleForm = (
         name,
         description,
         type: type === ROOT_ROLE_TYPE ? 'root-custom' : 'custom',
-        permissions: Object.values(checkedPermissions),
+        permissions: Object.values(checkedPermissions).map(
+            ({ name, environment }) => ({ name, environment })
+        ),
     });
 
     const isNameUnique = (name: string) => {

@@ -12,6 +12,8 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { IProject } from 'component/../interfaces/project';
 import { styled } from '@mui/material';
+import { PageHeader } from '../../../../../common/PageHeader/PageHeader';
+import { PageContent } from '../../../../../common/PageContent/PageContent';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     minHeight: '40vh',
@@ -25,6 +27,11 @@ const StyledContainer = styled('div')(({ theme }) => ({
         flexDirection: 'column',
         minHeight: 0,
     },
+}));
+
+const StyledFormContainer = styled('div')(({ theme }) => ({
+    borderTop: `1px solid ${theme.palette.divider}`,
+    paddingTop: theme.spacing(4),
 }));
 
 interface IUpdateEnterpriseSettings {
@@ -93,30 +100,37 @@ export const UpdateEnterpriseSettings = ({
                 documentationLink="https://docs.getunleash.io/reference/projects"
                 documentationLinkLabel="Projects documentation"
                 formatApiCode={formatProjectSettingsApiCode}
+                compactPadding
+                showDescription={false}
+                showLink={false}
             >
-                <ProjectEnterpriseSettingsForm
-                    projectId={id}
-                    projectMode={projectMode}
-                    featureNamingPattern={featureNamingPattern}
-                    featureNamingExample={featureNamingExample}
-                    featureNamingDescription={featureNamingDescription}
-                    setFeatureNamingPattern={setFeatureNamingPattern}
-                    setFeatureNamingExample={setFeatureNamingExample}
-                    setFeatureNamingDescription={setFeatureNamingDescription}
-                    setProjectMode={setProjectMode}
-                    handleSubmit={handleEditProjectSettings}
-                    errors={settingsErrors}
-                    clearErrors={clearSettingsErrors}
-                >
-                    <PermissionButton
-                        type="submit"
-                        permission={UPDATE_PROJECT}
+                <StyledFormContainer>
+                    <ProjectEnterpriseSettingsForm
                         projectId={id}
-                        data-testid={EDIT_PROJECT_SETTINGS_BTN}
+                        projectMode={projectMode}
+                        featureNamingPattern={featureNamingPattern}
+                        featureNamingExample={featureNamingExample}
+                        featureNamingDescription={featureNamingDescription}
+                        setFeatureNamingPattern={setFeatureNamingPattern}
+                        setFeatureNamingExample={setFeatureNamingExample}
+                        setFeatureNamingDescription={
+                            setFeatureNamingDescription
+                        }
+                        setProjectMode={setProjectMode}
+                        handleSubmit={handleEditProjectSettings}
+                        errors={settingsErrors}
+                        clearErrors={clearSettingsErrors}
                     >
-                        Save
-                    </PermissionButton>
-                </ProjectEnterpriseSettingsForm>
+                        <PermissionButton
+                            type="submit"
+                            permission={UPDATE_PROJECT}
+                            projectId={id}
+                            data-testid={EDIT_PROJECT_SETTINGS_BTN}
+                        >
+                            Save changes
+                        </PermissionButton>
+                    </ProjectEnterpriseSettingsForm>
+                </StyledFormContainer>
             </FormTemplate>
         </StyledContainer>
     );

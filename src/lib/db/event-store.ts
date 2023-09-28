@@ -12,7 +12,6 @@ import { sharedEventEmitter } from '../util/anyEventEmitter';
 import { Db } from './db';
 import { Knex } from 'knex';
 import EventEmitter from 'events';
-import { subDays } from 'date-fns';
 
 const EVENT_COLUMNS = [
     'id',
@@ -412,11 +411,7 @@ class EventStore implements IEventStore {
         const rows = await this.db(TABLE)
             .update({ announced: true })
             .where('announced', false)
-            .whereNotNull('announced')
-            .where('created_at', '>', subDays(Date.now(), 1))
-            .returning(EVENT_COLUMNS)
-            .limit(500);
-
+            .returning(EVENT_COLUMNS);
         return rows.map(this.rowToEvent);
     }
 

@@ -11,7 +11,7 @@ import { FlexRow, StyledDetail, StyledLabel, StyledLink } from './StyledRow';
 export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
     const dependentFeatures = useUiFlag('dependentFeatures');
     const [showDependencyDialogue, setShowDependencyDialogue] = useState(false);
-    const noParentsAndChildren =
+    const canAddParentDependency =
         dependentFeatures &&
         Boolean(feature.project) &&
         feature.dependencies.length === 0 &&
@@ -28,7 +28,7 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
     return (
         <>
             <ConditionallyRender
-                condition={noParentsAndChildren}
+                condition={canAddParentDependency}
                 show={
                     <FlexRow>
                         <StyledDetail>

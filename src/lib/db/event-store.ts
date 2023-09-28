@@ -3,6 +3,7 @@ import {
     IBaseEvent,
     SEGMENT_UPDATED,
     FEATURE_IMPORT,
+    FEATURES_IMPORTED,
     IEventType,
 } from '../types/events';
 import { LogProvider, Logger } from '../logger';
@@ -159,7 +160,11 @@ class EventStore implements IEventStore {
             .where((builder) =>
                 builder
                     .whereNotNull('feature_name')
-                    .orWhereIn('type', [SEGMENT_UPDATED, FEATURE_IMPORT]),
+                    .orWhereIn('type', [
+                        SEGMENT_UPDATED,
+                        FEATURE_IMPORT,
+                        FEATURES_IMPORTED,
+                    ]),
             )
             .andWhere('id', '>=', largerThan)
             .first();

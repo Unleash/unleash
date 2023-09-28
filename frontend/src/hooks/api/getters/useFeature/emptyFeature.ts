@@ -13,4 +13,6 @@ export const emptyFeature: IFeatureToggle = {
     description: '',
     favorite: false,
     impressionData: false,
+    dependencies: [],
+    children: [],
 };

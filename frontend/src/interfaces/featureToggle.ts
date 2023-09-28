@@ -35,6 +35,8 @@ export interface IFeatureToggle {
     variants: IFeatureVariant[];
     impressionData: boolean;
     strategies?: IFeatureStrategy[];
+    dependencies: Array<{ feature: string }>;
+    children: Array<string>;
 }
 
 export interface IFeatureEnvironment {

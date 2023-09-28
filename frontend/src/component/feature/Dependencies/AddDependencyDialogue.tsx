@@ -4,6 +4,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 import { useParentOptions } from 'hooks/api/getters/useParentOptions/useParentOptions';
+import { useFeature } from '../../../hooks/api/getters/useFeature/useFeature';
 
 interface IAddDependencyDialogueProps {
     project: string;
@@ -32,6 +33,7 @@ export const AddDependencyDialogue = ({
     const { addDependency, removeDependencies } =
         useDependentFeaturesApi(project);
     const { parentOptions, loading } = useParentOptions(project, featureId);
+    const { refetchFeature } = useFeature(project, featureId);
     const options = parentOptions
         ? [
               REMOVE_DEPENDENCY_OPTION,
@@ -50,6 +52,7 @@ export const AddDependencyDialogue = ({
                 } else {
                     await addDependency(featureId, { feature: parent });
                 }
+                await refetchFeature();
                 onClose();
             }}
             primaryButtonText={

@@ -26,6 +26,9 @@ interface ICreateProps {
     loading?: boolean;
     modal?: boolean;
     disablePadding?: boolean;
+    compactPadding?: boolean;
+    showDescription?: boolean;
+    showLink?: boolean;
     formatApiCode?: () => string;
     footer?: ReactNode;
     compact?: boolean;
@@ -60,23 +63,31 @@ const StyledMain = styled('div')(({ theme }) => ({
 }));
 
 const StyledFormContent = styled('div', {
-    shouldForwardProp: prop => prop !== 'disablePadding',
-})<{ disablePadding?: boolean }>(({ theme, disablePadding }) => ({
-    backgroundColor: theme.palette.background.paper,
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    padding: disablePadding ? 0 : theme.spacing(6),
-    [theme.breakpoints.down('lg')]: {
-        padding: disablePadding ? 0 : theme.spacing(4),
+    shouldForwardProp: prop => {
+        return !['disablePadding', 'compactPadding'].includes(prop.toString());
     },
-    [theme.breakpoints.down(1100)]: {
-        width: '100%',
-    },
-    [theme.breakpoints.down(500)]: {
-        padding: disablePadding ? 0 : theme.spacing(4, 2),
-    },
-}));
+})<{ disablePadding?: boolean; compactPadding?: boolean }>(
+    ({ theme, disablePadding, compactPadding }) => ({
+        backgroundColor: theme.palette.background.paper,
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+        padding: disablePadding
+            ? 0
+            : compactPadding
+            ? theme.spacing(4)
+            : theme.spacing(6),
+        [theme.breakpoints.down('lg')]: {
+            padding: disablePadding ? 0 : theme.spacing(4),
+        },
+        [theme.breakpoints.down(1100)]: {
+            width: '100%',
+        },
+        [theme.breakpoints.down(500)]: {
+            padding: disablePadding ? 0 : theme.spacing(4, 2),
+        },
+    })
+);
 
 const StyledFooter = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -185,6 +196,9 @@ const FormTemplate: React.FC<ICreateProps> = ({
     modal,
     formatApiCode,
     disablePadding,
+    compactPadding = false,
+    showDescription = true,
+    showLink = true,
     footer,
     compact,
 }) => {
@@ -212,11 +226,14 @@ const FormTemplate: React.FC<ICreateProps> = ({
         }
     };
 
-    const renderApiInfo = (apiDisabled: boolean) => {
+    const renderApiInfo = (apiDisabled: boolean, dividerDisabled = false) => {
         if (!apiDisabled) {
             return (
                 <>
-                    <StyledSidebarDivider />
+                    <ConditionallyRender
+                        condition={!dividerDisabled}
+                        show={<StyledSidebarDivider />}
+                    />
                     <StyledSubtitle>
                         API Command{' '}
                         <Tooltip title="Copy command" arrow>
@@ -246,7 +263,10 @@ const FormTemplate: React.FC<ICreateProps> = ({
                 }
             />
             <StyledMain>
-                <StyledFormContent disablePadding={disablePadding}>
+                <StyledFormContent
+                    disablePadding={disablePadding}
+                    compactPadding={compactPadding}
+                >
                     <ConditionallyRender
                         condition={loading || false}
                         show={<Loader />}
@@ -278,8 +298,13 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         description={description}
                         documentationLink={documentationLink}
                         documentationLinkLabel={documentationLinkLabel}
+                        showDescription={showDescription}
+                        showLink={showLink}
                     >
-                        {renderApiInfo(formatApiCode === undefined)}
+                        {renderApiInfo(
+                            formatApiCode === undefined,
+                            !(showDescription || showLink)
+                        )}
                     </Guidance>
                 }
             />
@@ -328,6 +353,8 @@ interface IGuidanceProps {
     description: string;
     documentationLink: string;
     documentationLinkLabel?: string;
+    showDescription?: boolean;
+    showLink?: boolean;
 }
 
 const Guidance: React.FC<IGuidanceProps> = ({
@@ -335,21 +362,31 @@ const Guidance: React.FC<IGuidanceProps> = ({
     children,
     documentationLink,
     documentationLinkLabel = 'Learn more',
+    showDescription = true,
+    showLink = true,
 }) => {
     return (
         <StyledSidebar>
-            <StyledDescription>{description}</StyledDescription>
+            <ConditionallyRender
+                condition={showDescription}
+                show={<StyledDescription>{description}</StyledDescription>}
+            />
 
-            <StyledLinkContainer>
-                <StyledLinkIcon />
-                <StyledDocumentationLink
-                    href={documentationLink}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                >
-                    {documentationLinkLabel}
-                </StyledDocumentationLink>
-            </StyledLinkContainer>
+            <ConditionallyRender
+                condition={showLink}
+                show={
+                    <StyledLinkContainer>
+                        <StyledLinkIcon />
+                        <StyledDocumentationLink
+                            href={documentationLink}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                        >
+                            {documentationLinkLabel}
+                        </StyledDocumentationLink>
+                    </StyledLinkContainer>
+                }
+            />
 
             {children}
         </StyledSidebar>

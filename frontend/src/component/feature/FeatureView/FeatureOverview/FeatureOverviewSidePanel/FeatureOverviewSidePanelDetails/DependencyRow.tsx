@@ -41,7 +41,7 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                 condition={
                     dependentFeatures &&
                     Boolean(feature.project) &&
-                    Boolean(feature.dependencies[0]?.feature)
+                    Boolean(feature.dependencies.length > 0)
                 }
                 show={
                     <FlexRow>

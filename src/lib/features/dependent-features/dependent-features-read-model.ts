@@ -44,6 +44,7 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
             .where('features.project', result[0].project)
             .andWhere('features.name', '!=', child)
             .andWhere('dependent_features.child', null)
+            .andWhere('features.archived_at', null)
             .select('features.name');
 
         return rows.map((item) => item.name);

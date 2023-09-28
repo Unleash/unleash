@@ -34,7 +34,7 @@ test('Trying to get events by name if db fails should yield empty list', async (
 });
 
 // We might want to cap this to 500 and this test can help checking that
-test('Find unannounced events returns all events', async () => { 
+test('Find unannounced events returns all events', async () => {
     const db = await dbInit('events_test', getLogger);
     const type = 'application-created' as const;
 

@@ -39,7 +39,7 @@ const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
 
 const StyledForm = styled('form')(({ theme }) => ({
     height: '100%',
-    paddingBottom: theme.spacing(4),
+    paddingBottom: theme.spacing(1),
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({

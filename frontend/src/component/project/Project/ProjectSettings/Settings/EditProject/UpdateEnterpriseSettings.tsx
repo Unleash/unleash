@@ -12,8 +12,6 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { IProject } from 'component/../interfaces/project';
 import { styled } from '@mui/material';
-import { PageHeader } from '../../../../../common/PageHeader/PageHeader';
-import { PageContent } from '../../../../../common/PageContent/PageContent';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     minHeight: '40vh',

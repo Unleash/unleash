@@ -4,6 +4,8 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { PageContent } from '../../../../../common/PageContent/PageContent';
+import { PageHeader } from '../../../../../common/PageHeader/PageHeader';
 
 interface IDeleteProjectForm {
     featureCount: number;
@@ -26,6 +28,9 @@ export const DeleteProjectForm = ({ featureCount }: IDeleteProjectForm) => {
             documentationLinkLabel="Projects documentation"
             formatApiCode={formatProjectDeleteApiCode}
             compact
+            compactPadding
+            showDescription={false}
+            showLink={false}
         >
             <DeleteProject projectId={id} featureCount={featureCount} />
         </FormTemplate>

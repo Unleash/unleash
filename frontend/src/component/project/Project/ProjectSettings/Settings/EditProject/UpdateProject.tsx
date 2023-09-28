@@ -33,6 +33,11 @@ const StyledContainer = styled('div')<{ isPro: boolean }>(
     })
 );
 
+const StyledFormContainer = styled('div')(({ theme }) => ({
+    borderTop: `1px solid ${theme.palette.divider}`,
+    paddingTop: theme.spacing(4),
+}));
+
 interface IUpdateProject {
     project: IProject;
 }
@@ -110,33 +115,36 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
                 documentationLink="https://docs.getunleash.io/reference/projects"
                 documentationLinkLabel="Projects documentation"
                 formatApiCode={formatProjectApiCode}
+                compactPadding
             >
-                <ProjectForm
-                    errors={errors}
-                    handleSubmit={handleEditProject}
-                    projectId={projectId}
-                    setProjectId={setProjectId}
-                    projectName={projectName}
-                    setProjectName={setProjectName}
-                    projectStickiness={projectStickiness}
-                    setProjectStickiness={setProjectStickiness}
-                    setFeatureLimit={setFeatureLimit}
-                    featureLimit={featureLimit}
-                    projectDesc={projectDesc}
-                    setProjectDesc={setProjectDesc}
-                    mode="Edit"
-                    clearErrors={clearErrors}
-                    validateProjectId={validateProjectId}
-                >
-                    <PermissionButton
-                        type="submit"
-                        permission={UPDATE_PROJECT}
+                <StyledFormContainer>
+                    <ProjectForm
+                        errors={errors}
+                        handleSubmit={handleEditProject}
                         projectId={projectId}
-                        data-testid={EDIT_PROJECT_BTN}
+                        setProjectId={setProjectId}
+                        projectName={projectName}
+                        setProjectName={setProjectName}
+                        projectStickiness={projectStickiness}
+                        setProjectStickiness={setProjectStickiness}
+                        setFeatureLimit={setFeatureLimit}
+                        featureLimit={featureLimit}
+                        projectDesc={projectDesc}
+                        setProjectDesc={setProjectDesc}
+                        mode="Edit"
+                        clearErrors={clearErrors}
+                        validateProjectId={validateProjectId}
                     >
-                        Save
-                    </PermissionButton>
-                </ProjectForm>
+                        <PermissionButton
+                            type="submit"
+                            permission={UPDATE_PROJECT}
+                            projectId={projectId}
+                            data-testid={EDIT_PROJECT_BTN}
+                        >
+                            Save changes
+                        </PermissionButton>
+                    </ProjectForm>
+                </StyledFormContainer>
             </FormTemplate>
         </StyledContainer>
     );

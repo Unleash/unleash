@@ -7,8 +7,8 @@ import { FeatureEnvironmentSeen } from '../../../FeatureEnvironmentSeen/FeatureE
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { DependencyRow } from './DependencyRow';
 import { FlexRow, StyledDetail, StyledLabel } from './StyledRow';
-import { useUiFlag } from '../../../../../../hooks/useUiFlag';
-import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',

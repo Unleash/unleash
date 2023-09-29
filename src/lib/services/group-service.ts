@@ -176,7 +176,7 @@ export class GroupService {
         await this.eventService.storeEvent({
             type: GROUP_DELETED,
             createdBy: userName,
-            data: group,
+            preData: group,
         });
     }
 

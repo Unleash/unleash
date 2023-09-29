@@ -161,7 +161,7 @@ export class SegmentService implements ISegmentService {
         await this.eventService.storeEvent({
             type: SEGMENT_DELETED,
             createdBy: user.email || user.username,
-            data: segment,
+            preData: segment,
         });
     }
 
@@ -171,7 +171,7 @@ export class SegmentService implements ISegmentService {
         await this.eventService.storeEvent({
             type: SEGMENT_DELETED,
             createdBy: user.email || user.username,
-            data: segment,
+            preData: segment,
         });
     }
 

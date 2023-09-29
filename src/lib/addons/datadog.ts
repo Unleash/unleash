@@ -68,7 +68,7 @@ export default class DatadogAddon extends Addon {
         ) {
             text = Mustache.render(bodyTemplate, context);
         } else {
-            text = `%%% \n ${this.msgFormatter.format(event)} \n %%% `;
+            text = `%%% \n ${this.msgFormatter.format(event).text} \n %%% `;
         }
 
         const { tags: eventTags } = event;

@@ -293,7 +293,7 @@ test('should store segment-created and segment-deleted events', async () => {
     const events = await db.stores.eventStore.getEvents();
 
     expect(events[0].type).toEqual('segment-deleted');
-    expect(events[0].data.id).toEqual(segment1.id);
+    expect(events[0].preData.id).toEqual(segment1.id);
     expect(events[1].type).toEqual('segment-created');
     expect(events[1].data.id).toEqual(segment1.id);
 });

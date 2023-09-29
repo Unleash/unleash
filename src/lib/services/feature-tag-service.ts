@@ -122,7 +122,7 @@ class FeatureTagService {
                 createdBy: userName,
                 featureName: featureToggle.name,
                 project: featureToggle.project,
-                data: removedTag,
+                preData: removedTag,
             })),
         );
 
@@ -171,7 +171,7 @@ class FeatureTagService {
             createdBy: userName,
             featureName,
             project: featureToggle.project,
-            data: tag,
+            preData: tag,
             tags,
         });
     }

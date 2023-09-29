@@ -130,8 +130,9 @@ class ContextService {
         updatedContextField: IContextFieldDto,
         userName: string,
     ): Promise<void> {
-        // validations
-        await this.contextFieldStore.get(updatedContextField.name);
+        const contextField = await this.contextFieldStore.get(
+            updatedContextField.name,
+        );
         const value = await contextSchema.validateAsync(updatedContextField);
 
         // update
@@ -139,20 +140,20 @@ class ContextService {
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
             createdBy: userName,
+            preData: contextField,
             data: value,
         });
     }
 
     async deleteContextField(name: string, userName: string): Promise<void> {
-        // validate existence
-        await this.contextFieldStore.get(name);
+        const contextField = await this.contextFieldStore.get(name);
 
         // delete
         await this.contextFieldStore.delete(name);
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_DELETED,
             createdBy: userName,
-            data: { name },
+            preData: contextField,
         });
     }
 

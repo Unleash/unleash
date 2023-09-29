@@ -80,8 +80,7 @@ export default class SlackAppAddon extends Addon {
                 this.accessToken = accessToken;
             }
 
-            const text = this.msgFormatter.format(event);
-            const url = this.msgFormatter.featureLink(event);
+            const { text, url } = this.msgFormatter.format(event);
 
             const blocks: (Block | KnownBlock)[] = [
                 {

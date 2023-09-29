@@ -12,6 +12,7 @@ import { IUnleashStores, IUnleashConfig } from '../types';
 import { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
 import EventService from './event-service';
+import { omitKeys } from '../util';
 
 const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
 
@@ -205,7 +206,7 @@ export default class AddonService {
         await this.eventService.storeEvent({
             type: events.ADDON_CONFIG_CREATED,
             createdBy: userName,
-            data: { provider: addonConfig.provider },
+            data: omitKeys(createdAddon, 'parameters'),
         });
 
         return createdAddon;
@@ -238,18 +239,20 @@ export default class AddonService {
         await this.eventService.storeEvent({
             type: events.ADDON_CONFIG_UPDATED,
             createdBy: userName,
-            data: { id, provider: addonConfig.provider },
+            preData: omitKeys(existingConfig, 'parameters'),
+            data: omitKeys(result, 'parameters'),
         });
         this.logger.info(`User ${userName} updated addon ${id}`);
         return result;
     }
 
     async removeAddon(id: number, userName: string): Promise<void> {
+        const existingConfig = await this.addonStore.get(id);
         await this.addonStore.delete(id);
         await this.eventService.storeEvent({
             type: events.ADDON_CONFIG_DELETED,
             createdBy: userName,
-            data: { id },
+            preData: omitKeys(existingConfig, 'parameters'),
         });
         this.logger.info(`User ${userName} removed addon ${id}`);
     }

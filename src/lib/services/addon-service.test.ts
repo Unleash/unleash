@@ -634,7 +634,7 @@ test('should store ADDON_CONFIG_REMOVE event', async () => {
 
     expect(events.length).toBe(3);
     expect(events[2].type).toBe(ADDON_CONFIG_DELETED);
-    expect(events[2].data.id).toBe(addonConfig.id);
+    expect(events[2].preData.id).toBe(addonConfig.id);
 });
 
 test('should hide sensitive fields when fetching', async () => {

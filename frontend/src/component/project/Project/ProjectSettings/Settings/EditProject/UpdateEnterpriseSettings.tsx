@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -12,6 +12,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { IProject } from 'component/../interfaces/project';
 import { styled } from '@mui/material';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     minHeight: 0,
@@ -36,6 +37,23 @@ interface IUpdateEnterpriseSettings {
     project: IProject;
 }
 const EDIT_PROJECT_SETTINGS_BTN = 'EDIT_PROJECT_SETTINGS_BTN';
+
+export const useModeTracking = () => {
+    const [previousMode, setPreviousMode] = React.useState<string>('');
+    const { trackEvent } = usePlausibleTracker();
+    const eventName = 'project-mode' as const;
+
+    const trackModePattern = (newMode: string) => {
+        if (newMode !== previousMode) {
+            trackEvent(eventName, {
+                props: { mode: newMode, action: 'updated' },
+            });
+        }
+    };
+
+    return { trackModePattern, setPreviousMode };
+};
+
 export const UpdateEnterpriseSettings = ({
     project,
 }: IUpdateEnterpriseSettings) => {
@@ -74,6 +92,33 @@ export const UpdateEnterpriseSettings = ({
     const { refetch } = useProject(id);
     const { editProjectSettings, loading } = useProjectApi();
 
+    const useFeatureNamePatternTracking = () => {
+        const [previousPattern, setPreviousPattern] =
+            React.useState<string>('');
+        const { trackEvent } = usePlausibleTracker();
+        const eventName = 'feature-naming-pattern' as const;
+
+        const trackPattern = (newPattern: string = '') => {
+            if (newPattern === previousPattern) {
+                // do nothing; they've probably updated something else in the
+                // project.
+            } else if (newPattern === '' && previousPattern !== '') {
+                trackEvent(eventName, { props: { action: 'removed' } });
+            } else if (newPattern !== '' && previousPattern === '') {
+                trackEvent(eventName, { props: { action: 'added' } });
+            } else if (newPattern !== '' && previousPattern !== '') {
+                trackEvent(eventName, { props: { action: 'edited' } });
+            }
+        };
+
+        return { trackPattern, setPreviousPattern };
+    };
+
+    const { setPreviousPattern, trackPattern } =
+        useFeatureNamePatternTracking();
+
+    const { setPreviousMode, trackModePattern } = useModeTracking();
+
     const handleEditProjectSettings = async (e: Event) => {
         e.preventDefault();
         const payload = getEnterpriseSettingsPayload();
@@ -84,10 +129,17 @@ export const UpdateEnterpriseSettings = ({
                 title: 'Project information updated',
                 type: 'success',
             });
+            trackPattern(featureNamingPattern);
+            trackModePattern(projectMode);
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
     };
+
+    useEffect(() => {
+        setPreviousPattern(featureNamingPattern || '');
+        setPreviousMode(projectMode);
+    }, [project]);
 
     return (
         <StyledContainer>

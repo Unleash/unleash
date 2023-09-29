@@ -40,8 +40,8 @@ const getRecordedEventTypesForDependencies = async () =>
         .filter((type) => type.includes('depend'));
 
 afterAll(async () => {
-    // await app.destroy();
-    // await db.destroy();
+    await app.destroy();
+    await db.destroy();
 });
 
 const addFeatureDependency = async (

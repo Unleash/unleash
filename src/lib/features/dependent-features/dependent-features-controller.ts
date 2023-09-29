@@ -21,12 +21,17 @@ import { IAuthRequest } from '../../routes/unleash-types';
 import { InvalidOperationError } from '../../error';
 import { DependentFeaturesService } from './dependent-features-service';
 import { TransactionCreator, UnleashTransaction } from '../../db/transaction';
+import { extractUsernameFromUser } from '../../util';
 
-interface FeatureParams {
+interface ProjectParams {
+    projectId: string;
+}
+
+interface FeatureParams extends ProjectParams {
     child: string;
 }
 
-interface DeleteDependencyParams {
+interface DeleteDependencyParams extends ProjectParams {
     child: string;
     parent: string;
 }
@@ -167,18 +172,22 @@ export default class DependentFeaturesController extends Controller {
         req: IAuthRequest<FeatureParams, any, CreateDependentFeatureSchema>,
         res: Response,
     ): Promise<void> {
-        const { child } = req.params;
+        const { child, projectId } = req.params;
         const { variants, enabled, feature } = req.body;
 
         if (this.config.flagResolver.isEnabled('dependentFeatures')) {
             await this.startTransaction(async (tx) =>
                 this.transactionalDependentFeaturesService(
                     tx,
-                ).upsertFeatureDependency(child, {
-                    variants,
-                    enabled,
-                    feature,
-                }),
+                ).upsertFeatureDependency(
+                    { child, projectId },
+                    {
+                        variants,
+                        enabled,
+                        feature,
+                    },
+                    extractUsernameFromUser(req.user),
+                ),
             );
             res.status(200).end();
         } else {
@@ -192,13 +201,17 @@ export default class DependentFeaturesController extends Controller {
         req: IAuthRequest<DeleteDependencyParams, any, any>,
         res: Response,
     ): Promise<void> {
-        const { child, parent } = req.params;
+        const { child, parent, projectId } = req.params;
 
         if (this.config.flagResolver.isEnabled('dependentFeatures')) {
-            await this.dependentFeaturesService.deleteFeatureDependency({
-                parent,
-                child,
-            });
+            await this.dependentFeaturesService.deleteFeatureDependency(
+                {
+                    parent,
+                    child,
+                },
+                projectId,
+                extractUsernameFromUser(req.user),
+            );
             res.status(200).end();
         } else {
             throw new InvalidOperationError(
@@ -211,11 +224,13 @@ export default class DependentFeaturesController extends Controller {
         req: IAuthRequest<FeatureParams, any, any>,
         res: Response,
     ): Promise<void> {
-        const { child } = req.params;
+        const { child, projectId } = req.params;
 
         if (this.config.flagResolver.isEnabled('dependentFeatures')) {
             await this.dependentFeaturesService.deleteFeatureDependencies(
                 child,
+                projectId,
+                extractUsernameFromUser(req.user),
             );
             res.status(200).end();
         } else {

@@ -9,6 +9,10 @@ export const APPLICATION_CREATED = 'application-created' as const;
 export const FEATURE_CREATED = 'feature-created' as const;
 export const FEATURE_DELETED = 'feature-deleted' as const;
 export const FEATURE_UPDATED = 'feature-updated' as const;
+export const FEATURE_DEPENDENCY_ADDED = 'feature-dependency-added' as const;
+export const FEATURE_DEPENDENCY_REMOVED = 'feature-dependency-removed' as const;
+export const FEATURE_DEPENDENCIES_REMOVED =
+    'feature-dependencies-removed' as const;
 export const FEATURE_METADATA_UPDATED = 'feature-metadata-updated' as const;
 export const FEATURE_VARIANTS_UPDATED = 'feature-variants-updated' as const;
 export const FEATURE_ENVIRONMENT_VARIANTS_UPDATED =
@@ -249,6 +253,9 @@ export const IEventTypes = [
     SERVICE_ACCOUNT_DELETED,
     SERVICE_ACCOUNT_UPDATED,
     FEATURE_POTENTIALLY_STALE_ON,
+    FEATURE_DEPENDENCY_ADDED,
+    FEATURE_DEPENDENCY_REMOVED,
+    FEATURE_DEPENDENCIES_REMOVED,
 ] as const;
 export type IEventType = typeof IEventTypes[number];
 

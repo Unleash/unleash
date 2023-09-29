@@ -3048,10 +3048,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-test-renderer@17.0.3":
-  version "17.0.3"
-  resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-17.0.3.tgz#e9f25232916c56971ee34c5b2c0f466c3c81d4a7"
-  integrity sha512-420ZAwdKEDsMrExYulRYsTPl1Mm2kHNAFjetwd3bByCnutoZ0ueGLAHtq6purwOEgYdrjHvzeBIjxcFftheuIQ==
+"@types/react-test-renderer@17.0.4":
+  version "17.0.4"
+  resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-17.0.4.tgz#4e358780cb2331ab4efba7bba226dee0799170de"
+  integrity sha512-CAHQEOK6Urcw3NMWDnCwoEVgM33xAo7gdbocAlx7o3As7x8mM0+H0E1WjNKRTiG9djg9AuiY09F0lXwKcmpRtQ==
   dependencies:
     "@types/react" "^17"
 

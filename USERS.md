@@ -10,7 +10,7 @@
 | Deutsche Telekom                            | https://www.telekom.com/       |
 | Docker                                      | https://www.docker.com/        |
 | Federal Reserve Bank of Kansas City         | https://www.kansascityfed.org/ |
-| Finn.no                                     | https://www.finn.no/           |
+| FINN.no                                     | https://www.finn.no/           |
 | H-E-B                                       | https://www.heb.com/           |
 | Interflora                                  | https://www.interflora.co.uk/  |
 | Medidata                                    | https://www.medidata.com/      |

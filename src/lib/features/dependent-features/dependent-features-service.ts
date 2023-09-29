@@ -3,23 +3,29 @@ import { CreateDependentFeatureSchema } from '../../openapi';
 import { IDependentFeaturesStore } from './dependent-features-store-type';
 import { FeatureDependency, FeatureDependencyId } from './dependent-features';
 import { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
+import { EventService } from '../../services';
 
 export class DependentFeaturesService {
     private dependentFeaturesStore: IDependentFeaturesStore;
 
     private dependentFeaturesReadModel: IDependentFeaturesReadModel;
 
+    private eventService: EventService;
+
     constructor(
         dependentFeaturesStore: IDependentFeaturesStore,
         dependentFeaturesReadModel: IDependentFeaturesReadModel,
+        eventService: EventService,
     ) {
         this.dependentFeaturesStore = dependentFeaturesStore;
         this.dependentFeaturesReadModel = dependentFeaturesReadModel;
+        this.eventService = eventService;
     }
 
     async upsertFeatureDependency(
-        child: string,
+        { child, projectId }: { child: string; projectId: string },
         dependentFeature: CreateDependentFeatureSchema,
+        user: string,
     ): Promise<void> {
         const { enabled, feature: parent, variants } = dependentFeature;
 
@@ -46,16 +52,46 @@ export class DependentFeaturesService {
                       variants,
                   };
         await this.dependentFeaturesStore.upsert(featureDependency);
+        await this.eventService.storeEvent({
+            type: 'feature-dependency-added',
+            project: projectId,
+            featureName: child,
+            createdBy: user,
+            data: {
+                feature: parent,
+                enabled: featureDependency.enabled,
+                ...(variants !== undefined && { variants }),
+            },
+        });
     }
 
     async deleteFeatureDependency(
         dependency: FeatureDependencyId,
+        projectId: string,
+        user: string,
     ): Promise<void> {
         await this.dependentFeaturesStore.delete(dependency);
+        await this.eventService.storeEvent({
+            type: 'feature-dependency-removed',
+            project: projectId,
+            featureName: dependency.child,
+            createdBy: user,
+            data: { feature: dependency.parent },
+        });
     }
 
-    async deleteFeatureDependencies(feature: string): Promise<void> {
+    async deleteFeatureDependencies(
+        feature: string,
+        projectId: string,
+        user: string,
+    ): Promise<void> {
         await this.dependentFeaturesStore.deleteAll(feature);
+        await this.eventService.storeEvent({
+            type: 'feature-dependencies-removed',
+            project: projectId,
+            featureName: feature,
+            createdBy: user,
+        });
     }
 
     async getParentOptions(feature: string): Promise<string[]> {

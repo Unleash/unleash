@@ -328,10 +328,10 @@ export const createServices = (
     const eventAnnouncerService = new EventAnnouncerService(stores, config);
 
     const dependentFeaturesService = db
-        ? createDependentFeaturesService(db)
-        : createFakeDependentFeaturesService();
+        ? createDependentFeaturesService(db, config)
+        : createFakeDependentFeaturesService(config);
     const transactionalDependentFeaturesService = (txDb: Knex.Transaction) =>
-        createDependentFeaturesService(txDb);
+        createDependentFeaturesService(txDb, config);
 
     return {
         accessService,

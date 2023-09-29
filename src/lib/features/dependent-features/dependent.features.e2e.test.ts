@@ -6,9 +6,16 @@ import {
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 import { CreateDependentFeatureSchema } from '../../openapi';
+import {
+    FEATURE_DEPENDENCIES_REMOVED,
+    FEATURE_DEPENDENCY_ADDED,
+    FEATURE_DEPENDENCY_REMOVED,
+    IEventStore,
+} from '../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;
+let eventStore: IEventStore;
 
 beforeAll(async () => {
     db = await dbInit('dependent_features', getLogger);
@@ -24,11 +31,17 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
+    eventStore = db.stores.eventStore;
 });
 
+const getRecordedEventTypesForDependencies = async () =>
+    (await eventStore.getEvents())
+        .map((event) => event.type)
+        .filter((type) => type.includes('depend'));
+
 afterAll(async () => {
-    await app.destroy();
-    await db.destroy();
+    // await app.destroy();
+    // await db.destroy();
 });
 
 const addFeatureDependency = async (
@@ -95,6 +108,13 @@ test('should add and delete feature dependencies', async () => {
 
     await deleteFeatureDependency(child, parent); // single
     await deleteFeatureDependencies(child); // all
+
+    expect(await getRecordedEventTypesForDependencies()).toStrictEqual([
+        FEATURE_DEPENDENCIES_REMOVED,
+        FEATURE_DEPENDENCY_REMOVED,
+        FEATURE_DEPENDENCY_ADDED,
+        FEATURE_DEPENDENCY_ADDED,
+    ]);
 });
 
 test('should not allow to add a parent dependency to a feature that already has children', async () => {

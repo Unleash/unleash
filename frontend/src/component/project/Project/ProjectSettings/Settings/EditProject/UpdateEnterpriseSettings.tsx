@@ -14,7 +14,7 @@ import { IProject } from 'component/../interfaces/project';
 import { styled } from '@mui/material';
 
 const StyledContainer = styled('div')(({ theme }) => ({
-    minHeight: '40vh',
+    minHeight: 0,
     borderRadius: theme.spacing(2),
     border: `1px solid ${theme.palette.divider}`,
     width: '100%',

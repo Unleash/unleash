@@ -351,8 +351,8 @@ test('cloning a feature toggle copies variant environments correctly', async () 
         newToggleName,
         'default',
         clonedToggleName,
-        true,
         'test-user',
+        true,
     );
 
     const clonedToggle =
@@ -379,8 +379,8 @@ test('cloning a feature toggle not allowed for change requests enabled', async (
             'newToggleName',
             'default',
             'clonedToggleName',
-            true,
             'test-user',
+            true,
         ),
     ).rejects.toEqual(
         new ForbiddenError(
@@ -442,8 +442,8 @@ test('Cloning a feature toggle also clones segments correctly', async () => {
         featureName,
         'default',
         clonedFeatureName,
-        true,
         'test-user',
+        true,
     );
 
     const feature = await service.getFeature({

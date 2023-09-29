@@ -1180,8 +1180,8 @@ class FeatureToggleService {
         featureName: string,
         projectId: string,
         newFeatureName: string,
-        replaceGroupId: boolean,
         userName: string,
+        replaceGroupId: boolean = true,
     ): Promise<FeatureToggle> {
         const changeRequestEnabled =
             await this.changeRequestAccessReadModel.isChangeRequestsEnabledForProject(

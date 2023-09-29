@@ -70,6 +70,9 @@ const CreateProject = () => {
                 if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
                     trackEvent('project_stickiness_set');
                 }
+                trackEvent('project-mode', {
+                    props: { mode: projectMode, action: 'added' },
+                });
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }

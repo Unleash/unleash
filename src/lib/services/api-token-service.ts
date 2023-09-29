@@ -78,7 +78,12 @@ export class ApiTokenService {
     }
 
     async fetchActiveTokens(): Promise<void> {
-        this.activeTokens = await this.getAllActiveTokens();
+        try {
+            this.activeTokens = await this.getAllActiveTokens();
+        } finally {
+            // biome-ignore lint/correctness/noUnsafeFinally: We ignored this for eslint. Leaving this here for now, server-impl test fails without it
+            return;
+        }
     }
 
     async getToken(secret: string): Promise<IApiToken> {

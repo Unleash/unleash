@@ -6,9 +6,9 @@ import { Box, styled, TextField } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
 import { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { CollaborationModeTooltip } from '../ProjectEnterpriseSettingsForm/CollaborationModeTooltip';
-import Select from '../../../common/select';
+import Select from 'component/common/select';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IProjectForm {

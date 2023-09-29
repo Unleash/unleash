@@ -3,12 +3,16 @@ import { Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { AddDependencyDialogue } from 'component/feature/Dependencies/AddDependencyDialogue';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { FC, useState } from 'react';
 import { FlexRow, StyledDetail, StyledLabel, StyledLink } from './StyledRow';
+import { DependencyActions } from './DependencyActions';
+import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
+    const { removeDependencies } = useDependentFeaturesApi(feature.project);
+    const { refetchFeature } = useFeature(feature.project, feature.name);
     const [showDependencyDialogue, setShowDependencyDialogue] = useState(false);
     const canAddParentDependency =
         Boolean(feature.project) &&
@@ -50,6 +54,14 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                                 {feature.dependencies[0]?.feature}
                             </StyledLink>
                         </StyledDetail>
+                        <DependencyActions
+                            feature={feature.name}
+                            onEdit={() => setShowDependencyDialogue(true)}
+                            onDelete={async () => {
+                                await removeDependencies(feature.name);
+                                await refetchFeature();
+                            }}
+                        />
                     </FlexRow>
                 }
             />

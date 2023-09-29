@@ -51,7 +51,7 @@ export const FeatureOverviewSidePanelDetails = ({
                     <FeatureEnvironmentSeen
                         featureLastSeen={feature.lastSeenAt}
                         environments={feature.environments}
-                        sx={{ pt: 0 }}
+                        sx={{ p: 0 }}
                     />
                 )}
             </FlexRow>

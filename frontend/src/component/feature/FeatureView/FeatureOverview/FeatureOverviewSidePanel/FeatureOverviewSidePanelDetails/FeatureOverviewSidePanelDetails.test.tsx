@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { FeatureOverviewSidePanelDetails } from './FeatureOverviewSidePanelDetails';
 import { IDependency, IFeatureToggle } from 'interfaces/featureToggle';
@@ -12,6 +13,12 @@ const setupApi = () => {
             dependentFeatures: true,
         },
     });
+    testServerRoute(server, '/api/admin/projects/default/features/feature', {});
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/features/feature/parents',
+        {}
+    );
 };
 
 beforeEach(() => {
@@ -80,7 +87,7 @@ test('show children', async () => {
     await screen.findByText('2 features');
 });
 
-test('show parent dependencies', async () => {
+test('delete dependency', async () => {
     render(
         <FeatureOverviewSidePanelDetails
             feature={
@@ -97,4 +104,41 @@ test('show parent dependencies', async () => {
 
     await screen.findByText('Dependency:');
     await screen.findByText('some_parent');
+
+    const actionsButton = screen.getByRole('button', {
+        name: /Dependency actions/i,
+    });
+    userEvent.click(actionsButton);
+
+    const deleteButton = await screen.findByText('Delete');
+    userEvent.click(deleteButton);
+});
+
+test('edit dependency', async () => {
+    render(
+        <FeatureOverviewSidePanelDetails
+            feature={
+                {
+                    name: 'feature',
+                    project: 'default',
+                    dependencies: [{ feature: 'some_parent' }],
+                    children: [] as string[],
+                } as IFeatureToggle
+            }
+            header={''}
+        />
+    );
+
+    await screen.findByText('Dependency:');
+    await screen.findByText('some_parent');
+
+    const actionsButton = screen.getByRole('button', {
+        name: /Dependency actions/i,
+    });
+    userEvent.click(actionsButton);
+
+    const editButton = await screen.findByText('Edit');
+    userEvent.click(editButton);
+
+    await screen.findByText('Add parent feature dependency');
 });

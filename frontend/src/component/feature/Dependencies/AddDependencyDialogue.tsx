@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 import { useParentOptions } from 'hooks/api/getters/useParentOptions/useParentOptions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 
 interface IAddDependencyDialogueProps {
     project: string;
@@ -23,6 +24,31 @@ const REMOVE_DEPENDENCY_OPTION = {
     label: 'none (remove dependency)',
 };
 
+// Project can have 100s of parents. We want to read them only when the modal for dependencies opens.
+const LazyOptions: FC<{
+    project: string;
+    featureId: string;
+    parent: string;
+    onSelect: (parent: string) => void;
+}> = ({ project, featureId, parent, onSelect }) => {
+    const { parentOptions, loading } = useParentOptions(project, featureId);
+
+    const options = parentOptions
+        ? [
+              REMOVE_DEPENDENCY_OPTION,
+              ...parentOptions.map(parent => ({ key: parent, label: parent })),
+          ]
+        : [REMOVE_DEPENDENCY_OPTION];
+    return (
+        <StyledSelect
+            fullWidth
+            options={options}
+            value={parent}
+            onChange={onSelect}
+        />
+    );
+};
+
 export const AddDependencyDialogue = ({
     project,
     featureId,
@@ -32,14 +58,8 @@ export const AddDependencyDialogue = ({
     const [parent, setParent] = useState(REMOVE_DEPENDENCY_OPTION.key);
     const { addDependency, removeDependencies } =
         useDependentFeaturesApi(project);
-    const { parentOptions, loading } = useParentOptions(project, featureId);
+
     const { refetchFeature } = useFeature(project, featureId);
-    const options = parentOptions
-        ? [
-              REMOVE_DEPENDENCY_OPTION,
-              ...parentOptions.map(parent => ({ key: parent, label: parent })),
-          ]
-        : [REMOVE_DEPENDENCY_OPTION];
 
     return (
         <Dialogue
@@ -59,7 +79,6 @@ export const AddDependencyDialogue = ({
                 parent === REMOVE_DEPENDENCY_OPTION.key ? 'Remove' : 'Add'
             }
             secondaryButtonText="Cancel"
-            disabledPrimaryButton={loading}
         >
             <Box>
                 You feature will be evaluated only when the selected parent
@@ -67,11 +86,16 @@ export const AddDependencyDialogue = ({
                 <br />
                 <br />
                 <Typography>What feature do you want to depend on?</Typography>
-                <StyledSelect
-                    fullWidth
-                    options={options}
-                    value={parent}
-                    onChange={setParent}
+                <ConditionallyRender
+                    condition={showDependencyDialogue}
+                    show={
+                        <LazyOptions
+                            project={project}
+                            featureId={featureId}
+                            parent={parent}
+                            onSelect={setParent}
+                        />
+                    }
                 />
             </Box>
         </Dialogue>

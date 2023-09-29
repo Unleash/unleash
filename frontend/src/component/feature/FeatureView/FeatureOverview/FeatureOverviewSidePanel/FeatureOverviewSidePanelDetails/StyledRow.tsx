@@ -6,6 +6,7 @@ export const FlexRow = styled('div')({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
 });
 
 export const StyledDetail = styled('div')(({ theme }) => ({

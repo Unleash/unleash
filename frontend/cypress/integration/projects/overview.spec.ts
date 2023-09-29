@@ -48,7 +48,8 @@ describe('project overview', () => {
         cy.visit('/projects/default');
 
         // Use search to filter feature toggles and check that the feature toggle is listed in the table.
-        cy.get("[data-testid='SEARCH_INPUT']").click().type(featureToggleName);
+        cy.get(`[data-testid="${SEARCH_INPUT}"]`).as('search').click();
+        cy.get('@search').type(featureToggleName);
         cy.get('table').contains('td', `${featureToggleName}-A`);
         cy.get('table tbody tr').should('have.length', 2);
     });
@@ -57,7 +58,8 @@ describe('project overview', () => {
         cy.login_UI();
         cy.visit('/projects/default');
         cy.viewport(1920, 1080);
-        cy.get("[data-testid='SEARCH_INPUT']").click().type(featureToggleName);
+        cy.get(`[data-testid="${SEARCH_INPUT}"]`).as('search').click();
+        cy.get('@search').type(featureToggleName);
         cy.get('body').type('{esc}');
         cy.get('table tbody tr').should('have.length', 2);
         const counter = `[data-testid="${BATCH_SELECTED_COUNT}"]`;
@@ -106,9 +108,8 @@ describe('project overview', () => {
         cy.login_UI();
         cy.visit('/projects/default');
         cy.viewport(1920, 1080);
-        cy.get(`[data-testid='${SEARCH_INPUT}']`)
-            .click()
-            .type(featureToggleName);
+        cy.get(`[data-testid="${SEARCH_INPUT}"]`).as('search').click();
+        cy.get('@search').type(featureToggleName);
         cy.get('body').type('{esc}');
         cy.get('table tbody tr').should('have.length', 2);
         cy.get(selectAll).click();
@@ -125,9 +126,8 @@ describe('project overview', () => {
         cy.login_UI();
         cy.visit('/projects/default');
         cy.viewport(1920, 1080);
-        cy.get(`[data-testid='${SEARCH_INPUT}']`)
-            .click()
-            .type(featureToggleName);
+        cy.get(`[data-testid="${SEARCH_INPUT}"]`).as('search').click();
+        cy.get('@search').type(featureToggleName);
         cy.get('body').type('{esc}');
 
         cy.get('table tbody tr').should('have.length', 2);

@@ -11,7 +11,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IProjectEnterpriseSettingsForm {
     projectId: string;
-    projectMode?: string;
+    projectMode: string;
     featureNamingPattern?: string;
     featureNamingExample?: string;
     featureNamingDescription?: string;
@@ -98,20 +98,36 @@ export const validateFeatureNamingExample = ({
     return { state: 'valid' };
 };
 
+export const useModeTracking = () => {
+    const [previousMode, setPreviousMode] = React.useState<string>('');
+    const { trackEvent } = usePlausibleTracker();
+    const eventName = 'project-mode' as const;
+
+    const trackModePattern = (newMode: string = 'open') => {
+        if (newMode !== previousMode) {
+            trackEvent(eventName, {
+                props: { mode: newMode, action: 'updated' },
+            });
+        }
+    };
+
+    return { trackModePattern, setPreviousMode };
+};
+
 const useFeatureNamePatternTracking = () => {
     const [previousPattern, setPreviousPattern] = React.useState<string>('');
     const { trackEvent } = usePlausibleTracker();
     const eventName = 'feature-naming-pattern' as const;
 
-    const trackPattern = (pattern: string = '') => {
-        if (pattern === previousPattern) {
+    const trackPattern = (newPattern: string = '') => {
+        if (newPattern === previousPattern) {
             // do nothing; they've probably updated something else in the
             // project.
-        } else if (pattern === '' && previousPattern !== '') {
+        } else if (newPattern === '' && previousPattern !== '') {
             trackEvent(eventName, { props: { action: 'removed' } });
-        } else if (pattern !== '' && previousPattern === '') {
+        } else if (newPattern !== '' && previousPattern === '') {
             trackEvent(eventName, { props: { action: 'added' } });
-        } else if (pattern !== '' && previousPattern !== '') {
+        } else if (newPattern !== '' && previousPattern !== '') {
             trackEvent(eventName, { props: { action: 'edited' } });
         }
     };
@@ -142,6 +158,8 @@ const ProjectEnterpriseSettingsForm: React.FC<
     const { setPreviousPattern, trackPattern } =
         useFeatureNamePatternTracking();
 
+    const { setPreviousMode, trackModePattern } = useModeTracking();
+
     const projectModeOptions = privateProjects
         ? [
               { key: 'open', label: 'open' },
@@ -155,6 +173,7 @@ const ProjectEnterpriseSettingsForm: React.FC<
 
     useEffect(() => {
         setPreviousPattern(featureNamingPattern || '');
+        setPreviousMode(projectMode);
     }, [projectId]);
 
     const updateNamingExampleError = ({
@@ -229,6 +248,7 @@ const ProjectEnterpriseSettingsForm: React.FC<
             onSubmit={submitEvent => {
                 handleSubmit(submitEvent);
                 trackPattern(featureNamingPattern);
+                trackModePattern(projectMode);
             }}
         >
             <>

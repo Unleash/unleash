@@ -12,7 +12,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { IProject } from 'component/../interfaces/project';
 import { styled } from '@mui/material';
-import { usePlausibleTracker } from '../../../../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     minHeight: 0,

@@ -113,7 +113,7 @@ export default class AddonService {
                         (addon) =>
                             !event.project ||
                             !addon.projects ||
-                            addon.projects.length == 0 ||
+                            addon.projects.length === 0 ||
                             addon.projects[0] === WILDCARD_OPTION ||
                             addon.projects.includes(event.project),
                     )
@@ -121,7 +121,7 @@ export default class AddonService {
                         (addon) =>
                             !event.environment ||
                             !addon.environments ||
-                            addon.environments.length == 0 ||
+                            addon.environments.length === 0 ||
                             addon.environments[0] === WILDCARD_OPTION ||
                             addon.environments.includes(event.environment),
                     )

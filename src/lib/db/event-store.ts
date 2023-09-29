@@ -107,7 +107,7 @@ class EventStore implements IEventStore {
     }
 
     async count(): Promise<number> {
-        let count = await this.db(TABLE)
+        const count = await this.db(TABLE)
             .count<Record<string, number>>()
             .first();
         if (!count) {
@@ -131,7 +131,7 @@ class EventStore implements IEventStore {
         if (eventSearch.feature) {
             query = query.andWhere({ feature_name: eventSearch.feature });
         }
-        let count = await query.count().first();
+        const count = await query.count().first();
         if (!count) {
             return 0;
         }

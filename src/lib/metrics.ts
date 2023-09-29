@@ -351,7 +351,7 @@ export default class MetricsMonitor {
     }
 
     configureDbMetrics(db: Knex, eventBus: EventEmitter): void {
-        if (db && db.client) {
+        if (db?.client) {
             const dbPoolMin = new client.Gauge({
                 name: 'db_pool_min',
                 help: 'Minimum DB pool size',

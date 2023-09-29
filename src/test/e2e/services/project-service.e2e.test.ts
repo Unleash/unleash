@@ -940,7 +940,7 @@ test('should change a users role in the project', async () => {
 
     await projectService.addUser(project.id, member.id, projectUser.id, 'test');
     const { users } = await projectService.getAccessToProject(project.id);
-    let memberUser = users.filter((u) => u.roleId === member.id);
+    const memberUser = users.filter((u) => u.roleId === member.id);
 
     expect(memberUser).toHaveLength(1);
     expect(memberUser[0].id).toBe(projectUser.id);
@@ -958,7 +958,7 @@ test('should change a users role in the project', async () => {
         'test',
     );
 
-    let { users: updatedUsers } = await projectService.getAccessToProject(
+    const { users: updatedUsers } = await projectService.getAccessToProject(
         project.id,
     );
     const customUser = updatedUsers.filter((u) => u.roleId === customRole.id);

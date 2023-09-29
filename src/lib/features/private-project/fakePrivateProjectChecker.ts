@@ -1,5 +1,4 @@
 import { IPrivateProjectChecker } from './privateProjectCheckerType';
-import { Promise } from 'ts-toolbelt/out/Any/Promise';
 import { ProjectAccess } from './privateProjectStore';
 
 export class FakePrivateProjectChecker implements IPrivateProjectChecker {

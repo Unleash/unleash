@@ -661,8 +661,8 @@ export default class ProjectFeaturesController extends Controller {
             featureName,
             projectId,
             name,
-            replaceGroupId,
             userName,
+            replaceGroupId,
         );
 
         this.openApiService.respondWithValidation(

@@ -62,7 +62,7 @@ const rbacMiddleware = (
 
             let projectId =
                 findParam('projectId', req) || findParam('project', req);
-            let environment =
+            const environment =
                 findParam('environment', req) ||
                 findParam('environmentId', req);
 
@@ -80,7 +80,7 @@ const rbacMiddleware = (
                 projectId === undefined &&
                 permissionsArray.some(
                     (permission) =>
-                        permission == CREATE_FEATURE ||
+                        permission === CREATE_FEATURE ||
                         permission.endsWith('FEATURE_STRATEGY'),
                 )
             ) {

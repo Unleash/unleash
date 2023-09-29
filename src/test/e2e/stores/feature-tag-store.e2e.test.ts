@@ -112,6 +112,6 @@ test('should throw not found error if feature does not exist', async () => {
 test('Returns empty tag list for existing feature with no tags', async () => {
     const name = 'feature.with.no.tags';
     await featureToggleStore.create('default', { name });
-    let tags = await featureTagStore.getAllTagsForFeature(name);
+    const tags = await featureTagStore.getAllTagsForFeature(name);
     expect(tags).toHaveLength(0);
 });

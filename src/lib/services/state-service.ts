@@ -153,7 +153,7 @@ export default class StateService {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     moveVariantsToFeatureEnvironments(data: any) {
         data.featureEnvironments?.forEach((featureEnvironment) => {
-            let feature = data.features?.find(
+            const feature = data.features?.find(
                 (f) => f.name === featureEnvironment.featureName,
             );
             if (feature) {
@@ -634,7 +634,7 @@ export default class StateService {
     async importTagTypes(
         tagTypes: ITagType[],
         keepExisting: boolean,
-        oldTagTypes: ITagType[] = [], // eslint-disable-line
+        oldTagTypes: ITagType[],
         userName: string,
     ): Promise<void> {
         const tagTypesToInsert = tagTypes.filter((tagType) =>

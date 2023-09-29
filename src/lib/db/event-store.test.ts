@@ -47,7 +47,7 @@ test('Find unannounced events returns all events', async () => {
     await db.rawDatabase('events').insert(allEvents).returning(['id']);
 
     const store = new EventStore(db.rawDatabase, getLogger);
-    let events = await store.setUnannouncedToAnnounced();
+    const events = await store.setUnannouncedToAnnounced();
     expect(events).toBeTruthy();
     expect(events.length).toBe(505);
     await db.destroy();

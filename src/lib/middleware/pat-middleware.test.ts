@@ -111,7 +111,7 @@ test('should call next if accountService throws exception', async () => {
 });
 
 test('Should not log at error level if user not found', async () => {
-    let fakeLogger = {
+    const fakeLogger = {
         debug: () => {},
         info: () => {},
         warn: jest.fn(),
@@ -131,7 +131,7 @@ test('Should not log at error level if user not found', async () => {
             throw new NotFoundError('Could not find pat');
         }),
     };
-    let mw = patMiddleware(conf, { accountService });
+    const mw = patMiddleware(conf, { accountService });
     const cb = jest.fn();
 
     const req = {

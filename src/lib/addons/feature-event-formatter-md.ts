@@ -22,10 +22,9 @@ export interface FeatureEventFormatter {
     format: (event: IEvent) => string;
     featureLink: (event: IEvent) => string;
 }
-
 export enum LinkStyle {
-    SLACK,
-    MD,
+    SLACK = 0,
+    MD = 1,
 }
 
 export class FeatureEventFormatterMd implements FeatureEventFormatter {
@@ -254,10 +253,11 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                 SEMVER_LT: 'is a SemVer less than',
             };
             const formatConstraint = (constraint: IConstraint) => {
-                const val = constraint.hasOwnProperty('value')
+                const val = Object.hasOwn(constraint, 'value')
                     ? constraint.value
                     : `(${constraint.values.join(',')})`;
-                const operator = constraintOperatorDescriptions.hasOwnProperty(
+                const operator = Object.hasOwn(
+                    constraintOperatorDescriptions,
                     constraint.operator,
                 )
                     ? constraintOperatorDescriptions[constraint.operator]

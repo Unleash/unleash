@@ -68,7 +68,7 @@ export default class TagTypeService {
 
     async validate(tagType: Partial<ITagType> | undefined): Promise<void> {
         await tagTypeSchema.validateAsync(tagType);
-        if (tagType && tagType.name) {
+        if (tagType?.name) {
             await this.validateUnique(tagType.name);
         }
     }

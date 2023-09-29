@@ -81,7 +81,7 @@ export class ApiTokenService {
         try {
             this.activeTokens = await this.getAllActiveTokens();
         } finally {
-            // eslint-disable-next-line no-unsafe-finally
+            // biome-ignore lint/correctness/noUnsafeFinally: We ignored this for eslint. Leaving this here for now, server-impl test fails without it
             return;
         }
     }
@@ -259,7 +259,7 @@ export class ApiTokenService {
         if (!errorDetails) {
             return 'invalid';
         }
-        let invalidProject = projects.find((project) => {
+        const invalidProject = projects.find((project) => {
             return errorDetails.includes(`=(${project})`);
         });
         return invalidProject || 'invalid';

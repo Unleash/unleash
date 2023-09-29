@@ -198,8 +198,8 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     }
 
     async getAllVariants(): Promise<IFeatureEnvironment[]> {
-        let features = await this.getAll();
-        let variants = features.flatMap((feature) => ({
+        const features = await this.getAll();
+        const variants = features.flatMap((feature) => ({
             featureName: feature.name,
             environment: 'development',
             variants: feature.variants,
@@ -271,7 +271,9 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     }
 
     dropAllVariants(): Promise<void> {
-        this.features.forEach((feature) => (feature.variants = []));
+        this.features.forEach((feature) => {
+            feature.variants = [];
+        });
         return Promise.resolve();
     }
 

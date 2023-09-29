@@ -78,7 +78,7 @@ const defaultClientCachingOptions: IClientCachingOption = {
 function loadClientCachingOptions(
     options: IUnleashOptions,
 ): IClientCachingOption {
-    let envs: Partial<IClientCachingOption> = {};
+    const envs: Partial<IClientCachingOption> = {};
     if (process.env.CLIENT_FEATURE_CACHING_MAXAGE) {
         envs.maxAge = parseEnvVarNumber(
             process.env.CLIENT_FEATURE_CACHING_MAXAGE,

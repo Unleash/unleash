@@ -361,7 +361,7 @@ class ProjectStore implements IProjectStore {
     async getProjectLinksForEnvironments(
         environments: string[],
     ): Promise<IEnvironmentProjectLink[]> {
-        let rows = await this.db('project_environments')
+        const rows = await this.db('project_environments')
             .select(['project_id', 'environment_name'])
             .whereIn('environment_name', environments);
         return rows.map(this.mapLinkRow);

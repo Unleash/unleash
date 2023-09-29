@@ -5,7 +5,7 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 import { useParentOptions } from 'hooks/api/getters/useParentOptions/useParentOptions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IAddDependencyDialogueProps {
     project: string;

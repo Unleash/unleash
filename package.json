@@ -172,7 +172,7 @@
     "@swc/jest": "0.2.29",
     "@types/bcryptjs": "2.4.4",
     "@types/cors": "2.8.14",
-    "@types/express": "4.17.17",
+    "@types/express": "4.17.18",
     "@types/express-session": "1.17.7",
     "@types/faker": "5.5.9",
     "@types/hash-sum": "^1.0.0",

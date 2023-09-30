@@ -2846,10 +2846,10 @@
   dependencies:
     "@types/ms" "*"
 
-"@types/deep-diff@1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@types/deep-diff/-/deep-diff-1.0.2.tgz#36f1291f0aead8aceb847cde6f07ae613a78ac4f"
-  integrity sha512-WD2O611C7Oz7RSwKbSls8LaznKfWfXh39CHY9Amd8FhQz+NJRe20nUHhYpOopVq9M2oqDZd4L6AzqJIXQycxiA==
+"@types/deep-diff@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@types/deep-diff/-/deep-diff-1.0.3.tgz#70f3974d2567d484f260dc459cdb70cefa2e1bf9"
+  integrity sha512-/UKphL2AFqEhbbBf/x65UcVratlCRbDkPYbf23tNykDSPo4Aw/V/NS464JFCeK4KusBBPkWL8DJsQoRIJcY0vw==
 
 "@types/es-aggregate-error@^1.0.2":
   version "1.0.2"

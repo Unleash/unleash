@@ -2592,15 +2592,15 @@ db-migrate-base@^2.3.0:
   dependencies:
     bluebird "^3.1.1"
 
-db-migrate-pg@1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/db-migrate-pg/-/db-migrate-pg-1.4.2.tgz#af1f40fdbe89405e6ee4b476c1e3e4aeb71144e7"
-  integrity sha512-OqZMM74A74+1w1MpjTGKAelI6bVjjvFWJcdd9z3VADH+NTKocmcX20qFBmnWJrzIyCyBcUiYf4/akJebyB39zQ==
+db-migrate-pg@1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/db-migrate-pg/-/db-migrate-pg-1.5.2.tgz#43f0fe8ccf6aaf777959d84ed43897ae4695b011"
+  integrity sha512-agbT9biJi43E7wld9JgnpMKadYgIobMlRXdtRO8JLRWHI1Jc7mObl9pM7iv4AQ4UTLDgjtkqUqtXlfeWtRuRbA==
   dependencies:
     bluebird "^3.1.1"
     db-migrate-base "^2.3.0"
-    pg "^8.0.3"
-    semver "^5.0.3"
+    pg "^8.11.2"
+    semver "^7.5.4"
 
 db-migrate-shared@1.2.0, db-migrate-shared@^1.2.0:
   version "1.2.0"
@@ -5484,7 +5484,7 @@ pg-types@^4.0.1:
     postgres-interval "^3.0.0"
     postgres-range "^1.1.1"
 
-pg@^8.0.3, pg@^8.7.3:
+pg@^8.11.2, pg@^8.7.3:
   version "8.11.3"
   resolved "https://registry.yarnpkg.com/pg/-/pg-8.11.3.tgz#d7db6e3fe268fcedd65b8e4599cda0b8b4bf76cb"
   integrity sha512-+9iuvG8QfaaUrrph+kpF24cXkH1YOOUeArRNYIxq1viYHZagBxrTno7cecY1Fa44tJeZvaoG+Djpkc3JwehN5g==
@@ -6032,7 +6032,7 @@ sanitize-filename@^1.6.3:
   dependencies:
     truncate-utf8-bytes "^1.0.0"
 
-semver@^5.0.3, semver@^5.3.0, semver@^6.0.0, semver@^6.3.0, semver@^6.3.1, semver@^7.3.4, semver@^7.3.5, semver@^7.3.8, semver@^7.5.3, semver@^7.5.4:
+semver@^5.3.0, semver@^6.0.0, semver@^6.3.0, semver@^6.3.1, semver@^7.3.4, semver@^7.3.5, semver@^7.3.8, semver@^7.5.3, semver@^7.5.4:
   version "7.5.4"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.4.tgz#483986ec4ed38e1c6c48c34894a9182dbff68a6e"
   integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==

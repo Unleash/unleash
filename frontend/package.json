@@ -112,7 +112,7 @@
     "vanilla-jsoneditor": "^0.18.4",
     "vite": "4.4.9",
     "vite-plugin-env-compatible": "1.1.1",
-    "vite-plugin-svgr": "3.2.0",
+    "vite-plugin-svgr": "3.3.0",
     "vite-tsconfig-paths": "4.2.1",
     "vitest": "0.33.0",
     "whatwg-fetch": "3.6.19"

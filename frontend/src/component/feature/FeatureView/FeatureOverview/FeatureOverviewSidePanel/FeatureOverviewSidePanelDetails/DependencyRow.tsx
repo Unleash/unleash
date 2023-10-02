@@ -9,6 +9,7 @@ import { FlexRow, StyledDetail, StyledLabel, StyledLink } from './StyledRow';
 import { DependencyActions } from './DependencyActions';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { ChildrenTooltip } from './ChildrenTooltip';
 
 export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
     const { removeDependencies } = useDependentFeaturesApi(feature.project);
@@ -71,23 +72,10 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                     <FlexRow>
                         <StyledDetail>
                             <StyledLabel>Children:</StyledLabel>
-                            <TooltipLink
-                                tooltip={
-                                    <>
-                                        {feature.children.map(child => (
-                                            <StyledLink
-                                                to={`/projects/${feature.project}/features/${child}`}
-                                            >
-                                                <div>{child}</div>
-                                            </StyledLink>
-                                        ))}
-                                    </>
-                                }
-                            >
-                                {feature.children.length === 1
-                                    ? '1 feature'
-                                    : `${feature.children.length} features`}
-                            </TooltipLink>
+                            <ChildrenTooltip
+                                childFeatures={feature.children}
+                                project={feature.project}
+                            />
                         </StyledDetail>
                     </FlexRow>
                 }

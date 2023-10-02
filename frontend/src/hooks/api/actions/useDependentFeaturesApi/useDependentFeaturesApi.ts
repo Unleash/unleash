@@ -2,11 +2,8 @@ import useAPI from '../useApi/useApi';
 import useToast from '../../../useToast';
 import { formatUnknownError } from '../../../../utils/formatUnknownError';
 import { useCallback } from 'react';
+import { DependentFeatureSchema } from '../../../../openapi';
 
-// TODO: generate from orval
-interface IParentFeaturePayload {
-    feature: string;
-}
 export const useDependentFeaturesApi = (project: string) => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
@@ -15,7 +12,7 @@ export const useDependentFeaturesApi = (project: string) => {
 
     const addDependency = async (
         childFeature: string,
-        parentFeaturePayload: IParentFeaturePayload
+        parentFeaturePayload: DependentFeatureSchema
     ) => {
         const req = createRequest(
             `/api/admin/projects/${project}/features/${childFeature}/dependencies`,

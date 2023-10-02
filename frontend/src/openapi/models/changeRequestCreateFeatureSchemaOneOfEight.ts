@@ -10,6 +10,8 @@ import type { ChangeRequestCreateFeatureSchemaOneOfEightPayload } from './change
  * Delete a strategy from this feature.
  */
 export type ChangeRequestCreateFeatureSchemaOneOfEight = {
+    /** The name of the feature that this change applies to. */
+    feature: string;
     /** The name of this action. */
     action: ChangeRequestCreateFeatureSchemaOneOfEightAction;
     payload: ChangeRequestCreateFeatureSchemaOneOfEightPayload;

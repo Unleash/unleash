@@ -86,6 +86,7 @@ export const EventSchemaType = {
     'segment-deleted': 'segment-deleted',
     'group-created': 'group-created',
     'group-updated': 'group-updated',
+    'group-deleted': 'group-deleted',
     'setting-created': 'setting-created',
     'setting-updated': 'setting-updated',
     'setting-deleted': 'setting-deleted',

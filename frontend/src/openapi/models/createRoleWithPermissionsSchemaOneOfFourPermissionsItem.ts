@@ -4,9 +4,11 @@
  * See `gen:api` script in package.json
  */
 
-export type CreateRoleWithPermissionsSchemaPermissionsItem = {
+export type CreateRoleWithPermissionsSchemaOneOfFourPermissionsItem = {
     /** The id of the permission */
     id: number;
+    /** The name of the permission */
+    name?: string;
     /** The environments of the permission if the permission is environment specific */
     environment?: string;
 };

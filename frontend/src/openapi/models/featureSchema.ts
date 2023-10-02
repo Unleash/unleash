@@ -7,6 +7,7 @@ import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
 import type { VariantSchema } from './variantSchema';
 import type { FeatureSchemaStrategiesItem } from './featureSchemaStrategiesItem';
 import type { TagSchema } from './tagSchema';
+import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem';
 
 /**
  * A feature toggle definition
@@ -53,4 +54,8 @@ export interface FeatureSchema {
     strategies?: FeatureSchemaStrategiesItem[];
     /** The list of feature tags */
     tags?: TagSchema[] | null;
+    /** The list of child feature names. This is an experimental field and may change. */
+    children?: string[];
+    /** The list of parent dependencies. This is an experimental field and may change. */
+    dependencies?: FeatureSchemaDependenciesItem[];
 }

@@ -38,6 +38,7 @@ test('show dependency dialogue', async () => {
             }
             header={''}
         />,
+        {permissions: [{permission: 'UPDATE_DEPENDENCY', project: 'default'}]}
     );
 
     const addParentButton = await screen.findByText('Add parent feature');
@@ -100,6 +101,7 @@ test('delete dependency', async () => {
             }
             header={''}
         />,
+        {permissions: [{permission: 'UPDATE_DEPENDENCY', project: 'default'}]}
     );
 
     await screen.findByText('Dependency:');
@@ -127,6 +129,7 @@ test('edit dependency', async () => {
             }
             header={''}
         />,
+        {permissions: [{permission: 'UPDATE_DEPENDENCY', project: 'default'}]}
     );
 
     await screen.findByText('Dependency:');

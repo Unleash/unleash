@@ -2,6 +2,386 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.3.5] - 2023-08-15
+
+### Bug Fixes
+
+- Change slackapp to using scheduleMessage ([#4490](https://github.com/Unleash/unleash/issues/4490))
+
+
+## [5.3.4] - 2023-08-11
+
+### Bug Fixes
+
+- Added cursor pagination to slackapp conversations query ([#4442](https://github.com/Unleash/unleash/issues/4442))
+
+
+## [5.3.3] - 2023-08-02
+
+### Bug Fixes
+
+- EventStore#getMaxRevisionId can return null ([#4384](https://github.com/Unleash/unleash/issues/4384))
+
+
+## [5.3.2] - 2023-07-26
+
+### Bug Fixes
+
+- Playground variants
+
+
+## [5.3.1] - 2023-07-25
+
+### Bug Fixes
+
+- Default stickiness
+
+- Client metrics name validation ([#4339](https://github.com/Unleash/unleash/issues/4339)) ([#4342](https://github.com/Unleash/unleash/issues/4342))
+
+
+## [5.3.0] - 2023-07-25
+
+### #4205
+
+- Add flag for emitting potentially stale events ([#4237](https://github.com/Unleash/unleash/issues/4237))
+
+- Update to prepare for emitting potentially stale events ([#4239](https://github.com/Unleash/unleash/issues/4239))
+
+- Activate event emission ([#4240](https://github.com/Unleash/unleash/issues/4240))
+
+- Add openapi definition for the new endpoint ([#4256](https://github.com/Unleash/unleash/issues/4256))
+
+
+### Bug Fixes
+
+- Default email sender to getunleash.io domain ([#3739](https://github.com/Unleash/unleash/issues/3739))
+
+- Metrics performance patch ([#4108](https://github.com/Unleash/unleash/issues/4108))
+
+- Project 404 ([#4114](https://github.com/Unleash/unleash/issues/4114))
+
+- Default strategy groupId failure ([#4120](https://github.com/Unleash/unleash/issues/4120))
+
+- Demo flow with split strategy button by making step optional ([#4125](https://github.com/Unleash/unleash/issues/4125))
+
+- SERVER_KEEPALIVE_TIMEOUT env variable should be seconds ([#4130](https://github.com/Unleash/unleash/issues/4130))
+
+- Improve users search ([#4131](https://github.com/Unleash/unleash/issues/4131))
+
+- Add resolution for semver
+
+- Change to the proper author ([#4141](https://github.com/Unleash/unleash/issues/4141))
+
+- Hide users list extra searchable columns ([#4142](https://github.com/Unleash/unleash/issues/4142))
+
+- Ensure userId context exists when running demo ([#4144](https://github.com/Unleash/unleash/issues/4144))
+
+- Some security vulnerabilities ([#4143](https://github.com/Unleash/unleash/issues/4143))
+
+- Add resolution for semver
+
+- Disallow deletion of single login history entries ([#4149](https://github.com/Unleash/unleash/issues/4149))
+
+- Avoid expression injection ([#4157](https://github.com/Unleash/unleash/issues/4157))
+
+- Update yarn.lock ([#4160](https://github.com/Unleash/unleash/issues/4160))
+
+- Added service-account events ([#4164](https://github.com/Unleash/unleash/issues/4164))
+
+- Add change-edited event
+
+- Disallow deletion of all login history entries ([#4159](https://github.com/Unleash/unleash/issues/4159))
+
+- Project tokens can now be created with the correct permissions ([#4165](https://github.com/Unleash/unleash/issues/4165))
+
+- Initial playground env ([#4167](https://github.com/Unleash/unleash/issues/4167))
+
+- Resolution for semver in docker as well ([#4168](https://github.com/Unleash/unleash/issues/4168))
+
+- Update dependency pg to v8.11.1 ([#4172](https://github.com/Unleash/unleash/issues/4172))
+
+- Bulk tags will work now with project permissions ([#4177](https://github.com/Unleash/unleash/issues/4177))
+
+- Validate min constraint values in openapi ([#4179](https://github.com/Unleash/unleash/issues/4179))
+
+- Remove dangerouslySetInnerHTML ([#4181](https://github.com/Unleash/unleash/issues/4181))
+
+- Only load if document present
+
+- Do not include rio server-side
+
+- Constraint validation affecting disabled button ([#4183](https://github.com/Unleash/unleash/issues/4183))
+
+- Update dependency pg-connection-string to v2.6.1 ([#4173](https://github.com/Unleash/unleash/issues/4173))
+
+- Delete project dialog cancel redirect ([#4184](https://github.com/Unleash/unleash/issues/4184))
+
+- Add focus style to vertical tabs ([#4186](https://github.com/Unleash/unleash/issues/4186))
+
+- Correct escaping of ui flags for plausible ([#3907](https://github.com/Unleash/unleash/issues/3907))
+
+- Missing flags ([#4214](https://github.com/Unleash/unleash/issues/4214))
+
+- Return 400 on incorrect client metrics input ([#4193](https://github.com/Unleash/unleash/issues/4193))
+
+- Reduce severity of api token middleware errors ([#4216](https://github.com/Unleash/unleash/issues/4216))
+
+- Min items was breaking import ([#4219](https://github.com/Unleash/unleash/issues/4219))
+
+- Existing stickiness value should be available in the dropdown  ([#4228](https://github.com/Unleash/unleash/issues/4228))
+
+- Feature OpenAPI endpoints - project related ([#4212](https://github.com/Unleash/unleash/issues/4212))
+
+- Reactive stickiness strategy variants ([#4255](https://github.com/Unleash/unleash/issues/4255))
+
+- Unwrap create strategy event creation (bug) ([#4264](https://github.com/Unleash/unleash/issues/4264))
+
+- DigitalOcean template ([#4287](https://github.com/Unleash/unleash/issues/4287))
+
+- Update dependency express-rate-limit to v6.7.1 ([#4301](https://github.com/Unleash/unleash/issues/4301))
+
+- Variant table deadlocks ([#4309](https://github.com/Unleash/unleash/issues/4309))
+
+- Update dependency knex to v2.5.1 ([#4322](https://github.com/Unleash/unleash/issues/4322))
+
+- Group cleanup ([#4334](https://github.com/Unleash/unleash/issues/4334))
+
+- Missing events in the event store ([#4335](https://github.com/Unleash/unleash/issues/4335))
+
+- Global role is called root role ([#4336](https://github.com/Unleash/unleash/issues/4336))
+
+- Drop staleness column form features archive ([#4338](https://github.com/Unleash/unleash/issues/4338))
+
+- 404 in dark theme ([#4337](https://github.com/Unleash/unleash/issues/4337))
+
+- Addons toggle ([#4312](https://github.com/Unleash/unleash/issues/4312))
+
+
+### Chore
+
+- Add configurable feature type lifetimes flag ([#4253](https://github.com/Unleash/unleash/issues/4253))
+
+- Move event types into a separate reference doc. ([#4268](https://github.com/Unleash/unleash/issues/4268))
+
+
+### Documentation
+
+- Context api tag ([#4117](https://github.com/Unleash/unleash/issues/4117))
+
+- Not on latest unleash with openapi enabeld ([#4024](https://github.com/Unleash/unleash/issues/4024))
+
+- Auth tag ([#4126](https://github.com/Unleash/unleash/issues/4126))
+
+- Documentation around metrics API ([#4134](https://github.com/Unleash/unleash/issues/4134))
+
+- Switch order of api doc sidebar items; put legacy docs under legacy header ([#4135](https://github.com/Unleash/unleash/issues/4135))
+
+- Events tag ([#4152](https://github.com/Unleash/unleash/issues/4152))
+
+- Project overview ([#4176](https://github.com/Unleash/unleash/issues/4176))
+
+- Add description to requests per seconds schemas ([#4182](https://github.com/Unleash/unleash/issues/4182))
+
+- Add descriptions and examples to tag schemas ([#4194](https://github.com/Unleash/unleash/issues/4194))
+
+- Add impression events as supported in the java sdk ([#4213](https://github.com/Unleash/unleash/issues/4213))
+
+- Update proxy hosting to point to Frontend API ([#4191](https://github.com/Unleash/unleash/issues/4191))
+
+- Suggest to use strategy constraints instead of custom strategies ([#4215](https://github.com/Unleash/unleash/issues/4215))
+
+- Highlight unleash edge ([#4229](https://github.com/Unleash/unleash/issues/4229))
+
+- Add description of how to install jira cloud plugin ([#4197](https://github.com/Unleash/unleash/issues/4197))
+
+- Update playground docs to mention advanced features ([#4266](https://github.com/Unleash/unleash/issues/4266))
+
+- Update postgres ssl docs to accurately use ca over key ([#4271](https://github.com/Unleash/unleash/issues/4271))
+
+- Document feature potentially stale on events ([#4278](https://github.com/Unleash/unleash/issues/4278))
+
+
+### Features
+
+- Responsive strategy icons ([#4121](https://github.com/Unleash/unleash/issues/4121))
+
+- Remove experimental flag for telemetry ([#4123](https://github.com/Unleash/unleash/issues/4123))
+
+- Frontend api openapi spec ([#4133](https://github.com/Unleash/unleash/issues/4133))
+
+- Improve demo welcome screen options ([#4132](https://github.com/Unleash/unleash/issues/4132))
+
+- Advanced playground UI tweaks ([#4136](https://github.com/Unleash/unleash/issues/4136))
+
+- Hovering over feature shows full feature name ([#4138](https://github.com/Unleash/unleash/issues/4138))
+
+- Openapi schema for user admin ([#4146](https://github.com/Unleash/unleash/issues/4146))
+
+- User openapi spec ([#4162](https://github.com/Unleash/unleash/issues/4162))
+
+- No results on playground error ([#4170](https://github.com/Unleash/unleash/issues/4170))
+
+- Show username and email in name column (users tables) ([#4180](https://github.com/Unleash/unleash/issues/4180))
+
+- Project UI rework, move edit and delete buttons deeper ([#4195](https://github.com/Unleash/unleash/issues/4195))
+
+- Strategy variant test UI ([#4199](https://github.com/Unleash/unleash/issues/4199))
+
+- Project feature limit UI ([#4220](https://github.com/Unleash/unleash/issues/4220))
+
+- Sort feature strategies ([#4218](https://github.com/Unleash/unleash/issues/4218))
+
+- Strategy variant migrations ([#4225](https://github.com/Unleash/unleash/issues/4225))
+
+- Add slackAppAddon feature flag ([#4235](https://github.com/Unleash/unleash/issues/4235))
+
+- Feature creation limit crud together with frontend ([#4221](https://github.com/Unleash/unleash/issues/4221))
+
+- Strategy variant schema openapi ([#4232](https://github.com/Unleash/unleash/issues/4232))
+
+- Persist strategy variants ([#4236](https://github.com/Unleash/unleash/issues/4236))
+
+- Slack App addon ([#4238](https://github.com/Unleash/unleash/issues/4238))
+
+- Client api with proper client segments and strategy variants ([#4244](https://github.com/Unleash/unleash/issues/4244))
+
+- Strategy variant UI spike ([#4246](https://github.com/Unleash/unleash/issues/4246))
+
+- Strategy variants stickiness ([#4250](https://github.com/Unleash/unleash/issues/4250))
+
+- AdvancedPlayground flag used only for runtime control ([#4262](https://github.com/Unleash/unleash/issues/4262))
+
+- Group schema updates ([#4258](https://github.com/Unleash/unleash/issues/4258))
+
+- Feature toggle type - edit form ([#4269](https://github.com/Unleash/unleash/issues/4269))
+
+- Improve slack app addon scalability ([#4284](https://github.com/Unleash/unleash/issues/4284))
+
+- Strategy variants in playground ([#4281](https://github.com/Unleash/unleash/issues/4281))
+
+- Feature type lifetime API integration ([#4295](https://github.com/Unleash/unleash/issues/4295))
+
+- Slack app addon default channels ([#4308](https://github.com/Unleash/unleash/issues/4308))
+
+
+### Fix
+
+- Variants-batch ([#4222](https://github.com/Unleash/unleash/issues/4222))
+
+- Wrap reorder event to strategy variant feature ([#4265](https://github.com/Unleash/unleash/issues/4265))
+
+
+### Miscellaneous Tasks
+
+- Remove sync to enterprise from release branches ([#4112](https://github.com/Unleash/unleash/issues/4112))
+
+- Remove unused imports from `yarn lint` ([#4082](https://github.com/Unleash/unleash/issues/4082))
+
+- Openapi docs for archive ([#4127](https://github.com/Unleash/unleash/issues/4127))
+
+- Bump semver from 7.5.2 to 7.5.3 in /frontend ([#4088](https://github.com/Unleash/unleash/issues/4088))
+
+- Change request info ([#3971](https://github.com/Unleash/unleash/issues/3971))
+
+- Document endpoint tagged Unstable ([#4118](https://github.com/Unleash/unleash/issues/4118))
+
+- Add debug information ([#4140](https://github.com/Unleash/unleash/issues/4140))
+
+- Avoids code injection through git commit ([#4147](https://github.com/Unleash/unleash/issues/4147))
+
+- Add paths-ignore to more workflows ([#4041](https://github.com/Unleash/unleash/issues/4041))
+
+- Remove group root role toggle ([#4026](https://github.com/Unleash/unleash/issues/4026))
+
+- Remove OpenAPI snapshot tests ([#4153](https://github.com/Unleash/unleash/issues/4153))
+
+- Add reo to docs
+
+- Openapai favorite endpoints ([#4189](https://github.com/Unleash/unleash/issues/4189))
+
+- Datadog addon, ability to include source type name ([#4196](https://github.com/Unleash/unleash/issues/4196))
+
+- Add auto-generated doc index to gitignore ([#4198](https://github.com/Unleash/unleash/issues/4198))
+
+- Mark potentially stale features ([#4217](https://github.com/Unleash/unleash/issues/4217))
+
+- Update demo qr ([#4241](https://github.com/Unleash/unleash/issues/4241))
+
+- Remove context/segment usage flag ([#4242](https://github.com/Unleash/unleash/issues/4242))
+
+- Remove split button strategy flag ([#4245](https://github.com/Unleash/unleash/issues/4245))
+
+- Prepare next release ([#4257](https://github.com/Unleash/unleash/issues/4257))
+
+- Update OpenAPI definitions generated for frontend ([#4283](https://github.com/Unleash/unleash/issues/4283))
+
+
+### Refactor
+
+- Roles - make better plan assumptions ([#4113](https://github.com/Unleash/unleash/issues/4113))
+
+- Clean up deprecated permissions ([#4124](https://github.com/Unleash/unleash/issues/4124))
+
+- Use `requestType` instead of `isAdmin`, `optionalIncludes` ([#4115](https://github.com/Unleash/unleash/issues/4115))
+
+- Split NoAccessError into ForbiddenError + PermissionError ([#4190](https://github.com/Unleash/unleash/issues/4190))
+
+- Move status codes into classes ([#4200](https://github.com/Unleash/unleash/issues/4200))
+
+- Error param prop ([#4247](https://github.com/Unleash/unleash/issues/4247))
+
+
+### Testing
+
+- Don't use multiple expect.stringContaining in one statement ([#4158](https://github.com/Unleash/unleash/issues/4158))
+
+- Add some basic tests to the new slack app ([#4259](https://github.com/Unleash/unleash/issues/4259))
+
+
+### A11y
+
+- Change the playground diff link to be a button. ([#4274](https://github.com/Unleash/unleash/issues/4274))
+
+
+### Bug
+
+- Mark descriptions on strategies as nullable ([#4156](https://github.com/Unleash/unleash/issues/4156))
+
+
+### Openapi
+
+- `strategies` tag ([#4116](https://github.com/Unleash/unleash/issues/4116))
+
+- Update API tokens tag ([#4137](https://github.com/Unleash/unleash/issues/4137))
+
+- Update tag description ([#4178](https://github.com/Unleash/unleash/issues/4178))
+
+- Update misc 'features'-tagged endpoints ([#4192](https://github.com/Unleash/unleash/issues/4192))
+
+- Update the splash endpoints and schemas for splash ([#4227](https://github.com/Unleash/unleash/issues/4227))
+
+- Document operations for admin ui feedback ([#4226](https://github.com/Unleash/unleash/issues/4226))
+
+- Update ui-config endpoints ([#4280](https://github.com/Unleash/unleash/issues/4280))
+
+- Remove all the extra data info ([#4277](https://github.com/Unleash/unleash/issues/4277))
+
+
+### Semver
+
+- Pin at ^7.5.3
+
+
+### Task
+
+- Add customHeaders as possible parameter. ([#4139](https://github.com/Unleash/unleash/issues/4139))
+
+
+### Ux
+
+- Return better error message if a segment doesn't exist ([#4122](https://github.com/Unleash/unleash/issues/4122))
+
+
 ## [5.2.9] - 2023-07-25
 
 ### Bug Fixes

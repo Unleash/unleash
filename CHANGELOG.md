@@ -2,6 +2,81 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.18.9] - 2022-12-14
+
+### Bug Fixes
+
+- Background frontend settings should not crash tests
+
+
+## [4.18.8] - 2022-12-12
+
+### Bug Fixes
+
+- Move docker-compose to this repo ([#2666](https://github.com/Unleash/unleash/issues/2666))
+
+
+## [4.18.7] - 2022-12-09
+
+### Bug Fixes
+
+- Bump qs from 6.5.2 to 6.5.3 ([#2613](https://github.com/Unleash/unleash/issues/2613))
+
+- IsPro check on change request configuration ([#2610](https://github.com/Unleash/unleash/issues/2610))
+
+- Update vercel proxy paths ([#2623](https://github.com/Unleash/unleash/issues/2623))
+
+- Update package json and remove empty exports ([#2625](https://github.com/Unleash/unleash/issues/2625))
+
+- Add resulution for qs dep
+
+- Tags endpoint returning 404 when featureId is not set ([#2621](https://github.com/Unleash/unleash/issues/2621))
+
+- Update dependency docusaurus-plugin-openapi-docs to v1.4.7 ([#2646](https://github.com/Unleash/unleash/issues/2646))
+
+
+### Features
+
+- Add plan checks to uiconfig ([#2600](https://github.com/Unleash/unleash/issues/2600))
+
+- Add capability to write heap snapshot. ([#2611](https://github.com/Unleash/unleash/issues/2611))
+
+
+### POC
+
+- Integration tests ([#2422](https://github.com/Unleash/unleash/issues/2422))
+
+
+## [4.18.6] - 2022-12-06
+
+### Bug Fixes
+
+- Upgrade express to v4.18.2
+
+- Json-schema-to-ts is a dev-dependency
+
+
+## [4.18.5] - 2022-12-06
+
+### Bug Fixes
+
+- Add resulution for 'decode-uri-component'
+
+- Favorites column visibility ([#2605](https://github.com/Unleash/unleash/issues/2605))
+
+
+### Docs
+
+- Add more (missing) redirects, fix links ([#2592](https://github.com/Unleash/unleash/issues/2592))
+
+
+## [4.18.4] - 2022-12-06
+
+### Bug Fixes
+
+- Allow import @server ([#2601](https://github.com/Unleash/unleash/issues/2601))
+
+
 ## [4.17.3] - 2022-11-23
 
 ### Bug Fixes

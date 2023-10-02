@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { styled, Tab, Tabs, useMediaQuery } from '@mui/material';
+import { styled, Tab, Tabs, useMediaQuery, Box, Card } from '@mui/material';
 import { Archive, FileCopy, Label, WatchLater } from '@mui/icons-material';
 import {
     Link,
@@ -31,6 +31,10 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
+import { ReactComponent as ChildLinkIcon } from 'assets/icons/link-child.svg';
+import { ReactComponent as ParentLinkIcon } from 'assets/icons/link-parent.svg';
+import { TooltipLink } from '../../common/TooltipLink/TooltipLink';
+import { ChildrenTooltip } from './FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/ChildrenTooltip';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -52,6 +56,28 @@ const StyledToggleInfoContainer = styled('div')({
     display: 'flex',
     alignItems: 'center',
 });
+
+const StyledDependency = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    fontSize: theme.fontSizes.smallBody,
+    padding: theme.spacing(0.75, 1.5),
+    backgroundColor: theme.palette.background.elevation2,
+    borderRadius: `${theme.shape.borderRadiusMedium}px`,
+    width: 'max-content',
+}));
+
+const StyleChildLinkIcon = styled(ChildLinkIcon)(({ theme }) => ({
+    width: theme.fontSizes.smallBody,
+    height: theme.fontSizes.smallBody,
+}));
+
+const StyledParentLinkIcon = styled(ParentLinkIcon)(({ theme }) => ({
+    width: theme.fontSizes.smallBody,
+    height: theme.fontSizes.smallBody,
+}));
 
 const StyledFeatureViewHeader = styled('h1')(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -83,6 +109,14 @@ const StyledTabButton = styled(Tab)(({ theme }) => ({
     padding: '0 !important',
     [theme.breakpoints.up('md')]: {
         minWidth: 160,
+    },
+}));
+
+export const StyledLink = styled(Link)(({ theme }) => ({
+    maxWidth: '100%',
+    textDecoration: 'none',
+    '&:hover, &:focus': {
+        textDecoration: 'underline',
     },
 }));
 
@@ -157,13 +191,50 @@ export const FeatureView = () => {
                             onClick={onFavorite}
                             isFavorite={feature?.favorite}
                         />
-                        <StyledFeatureViewHeader data-loading>
-                            {feature.name}{' '}
-                        </StyledFeatureViewHeader>
-                        <ConditionallyRender
-                            condition={!smallScreen}
-                            show={<FeatureStatusChip stale={feature?.stale} />}
-                        />
+                        <div>
+                            <StyledToggleInfoContainer>
+                                <StyledFeatureViewHeader data-loading>
+                                    {feature.name}{' '}
+                                </StyledFeatureViewHeader>
+                                <ConditionallyRender
+                                    condition={!smallScreen}
+                                    show={
+                                        <FeatureStatusChip
+                                            stale={feature?.stale}
+                                        />
+                                    }
+                                />
+                            </StyledToggleInfoContainer>
+                            <ConditionallyRender
+                                condition={feature.dependencies.length > 0}
+                                show={
+                                    <StyledDependency>
+                                        <StyleChildLinkIcon />{' '}
+                                        <b>Child feature</b>
+                                        <span>{' < '}</span>
+                                        <StyledLink
+                                            to={`/projects/${feature.project}/features/${feature.dependencies[0]?.feature}`}
+                                        >
+                                            {feature.dependencies[0]?.feature}
+                                        </StyledLink>
+                                    </StyledDependency>
+                                }
+                            />
+                            <ConditionallyRender
+                                condition={feature.children.length > 0}
+                                show={
+                                    <StyledDependency>
+                                        <StyledParentLinkIcon />{' '}
+                                        <b>Parent feature</b>
+                                        <span>{' > '}</span>
+                                        <ChildrenTooltip
+                                            childFeatures={feature.children}
+                                            project={feature.project}
+                                        />
+                                    </StyledDependency>
+                                }
+                            />
+                        </div>
                     </StyledToggleInfoContainer>
 
                     <StyledToolbarContainer>

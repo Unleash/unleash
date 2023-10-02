@@ -36,7 +36,6 @@ unleash-server.tar.gz
 # Visual Studio Code
 jsconfig.json
 typings
-.vscode
 .nyc_output
 
 # We use yarn.lock

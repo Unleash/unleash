@@ -35,7 +35,7 @@ interface ICreateProps {
 }
 
 const StyledContainer = styled('section', {
-    shouldForwardProp: prop => prop !== 'modal',
+    shouldForwardProp: prop => !['modal', 'compact'].includes(prop.toString()),
 })<{ modal?: boolean; compact?: boolean }>(({ theme, modal, compact }) => ({
     minHeight: modal ? '100vh' : compact ? 0 : '80vh',
     borderRadius: modal ? 0 : theme.spacing(2),

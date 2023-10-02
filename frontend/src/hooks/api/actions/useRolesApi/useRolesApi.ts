@@ -24,7 +24,7 @@ export const useRolesApi = () => {
         );
 
         const response = await makeRequest(req.caller, req.id);
-        return await response.json();
+        return response.json();
     };
 
     const updateRole = async (roleId: number, role: IRolePayload) => {

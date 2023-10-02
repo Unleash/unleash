@@ -6,7 +6,7 @@ import {
     IUnleashConfig,
     IUnleashServices,
     NONE,
-    UPDATE_FEATURE,
+    UPDATE_DEPENDENCY,
 } from '../../types';
 import { Logger } from '../../logger';
 import {
@@ -88,7 +88,7 @@ export default class DependentFeaturesController extends Controller {
             method: 'post',
             path: PATH_DEPENDENCIES,
             handler: this.addFeatureDependency,
-            permission: UPDATE_FEATURE,
+            permission: UPDATE_DEPENDENCY,
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
@@ -111,7 +111,7 @@ export default class DependentFeaturesController extends Controller {
             method: 'delete',
             path: PATH_DEPENDENCY,
             handler: this.deleteFeatureDependency,
-            permission: UPDATE_FEATURE,
+            permission: UPDATE_DEPENDENCY,
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
@@ -131,7 +131,7 @@ export default class DependentFeaturesController extends Controller {
             method: 'delete',
             path: PATH_DEPENDENCIES,
             handler: this.deleteFeatureDependencies,
-            permission: UPDATE_FEATURE,
+            permission: UPDATE_DEPENDENCY,
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({

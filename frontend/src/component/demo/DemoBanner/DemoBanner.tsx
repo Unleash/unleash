@@ -50,11 +50,11 @@ export const DemoBanner = ({ onPlans }: IDemoBannerProps) => {
             </span>
             <StyledButtons>
                 <StyledQuestionsButton
-                    variant="outlined"
+                    variant='outlined'
                     sx={{ ml: 1 }}
-                    href="https://slack.unleash.run/"
-                    target="_blank"
-                    rel="noreferrer"
+                    href='https://slack.unleash.run/'
+                    target='_blank'
+                    rel='noreferrer'
                     onClick={() => {
                         trackEvent('demo-ask-questions');
                     }}
@@ -62,8 +62,8 @@ export const DemoBanner = ({ onPlans }: IDemoBannerProps) => {
                     Ask questions
                 </StyledQuestionsButton>
                 <StyledButton
-                    variant="contained"
-                    color="primary"
+                    variant='contained'
+                    color='primary'
                     onClick={onPlans}
                 >
                     Get started

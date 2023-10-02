@@ -62,7 +62,7 @@ const EditProject = () => {
         project.featureLimit ? String(project.featureLimit) : '',
         project.featureNaming?.pattern || '',
         project.featureNaming?.example || '',
-        project.featureNaming?.description || ''
+        project.featureNaming?.description || '',
     );
 
     const formatApiCode = () => {
@@ -99,7 +99,7 @@ const EditProject = () => {
     };
 
     const accessDeniedAlert = !hasAccess(UPDATE_PROJECT, projectId) && (
-        <Alert severity="error" sx={{ mb: 4 }}>
+        <Alert severity='error' sx={{ mb: 4 }}>
             You do not have the required permissions to edit this project.
         </Alert>
     );
@@ -108,13 +108,13 @@ const EditProject = () => {
         <FormTemplate
             loading={loading}
             disablePadding={true}
-            description="Projects allows you to group feature toggles together in the management UI."
-            documentationLink="https://docs.getunleash.io/reference/projects"
-            documentationLinkLabel="Projects documentation"
+            description='Projects allows you to group feature toggles together in the management UI.'
+            documentationLink='https://docs.getunleash.io/reference/projects'
+            documentationLinkLabel='Projects documentation'
             formatApiCode={formatApiCode}
         >
             {accessDeniedAlert}
-            <PageContent header={<PageHeader title="Settings" />}>
+            <PageContent header={<PageHeader title='Settings' />}>
                 <ProjectForm
                     errors={errors}
                     handleSubmit={handleSubmit}
@@ -135,14 +135,14 @@ const EditProject = () => {
                     setFeatureNamingExample={setFeatureNamingExample}
                     setFeatureNamingDescription={setFeatureNamingDescription}
                     projectDesc={projectDesc}
-                    mode="Edit"
+                    mode='Edit'
                     setProjectDesc={setProjectDesc}
                     setFeatureLimit={setFeatureLimit}
                     clearErrors={clearErrors}
                     validateProjectId={validateProjectId}
                 >
                     <PermissionButton
-                        type="submit"
+                        type='submit'
                         permission={UPDATE_PROJECT}
                         projectId={projectId}
                     >

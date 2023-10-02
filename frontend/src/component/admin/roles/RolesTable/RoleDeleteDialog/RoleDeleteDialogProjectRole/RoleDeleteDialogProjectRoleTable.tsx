@@ -63,7 +63,7 @@ export const RoleDeleteDialogProjectRoleTable = ({
                     maxWidth: 150,
                 },
             ] as Column<IProjectRoleUsageCount>[],
-        []
+        [],
     );
 
     const { headerGroups, rows, prepareRow } = useTable(
@@ -78,7 +78,7 @@ export const RoleDeleteDialogProjectRoleTable = ({
             disableMultiSort: true,
         },
         useSortBy,
-        useFlexLayout
+        useFlexLayout,
     );
 
     return (

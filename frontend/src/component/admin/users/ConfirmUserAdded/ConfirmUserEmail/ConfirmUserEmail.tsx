@@ -17,8 +17,8 @@ const ConfirmUserEmail = ({
 }: IConfirmUserEmailProps) => (
     <Dialogue
         open={open}
-        title="Team member added"
-        primaryButtonText="Close"
+        title='Team member added'
+        primaryButtonText='Close'
         onClick={closeConfirm}
     >
         <Typography>
@@ -29,7 +29,7 @@ const ConfirmUserEmail = ({
         <Box sx={{ width: '100%', textAlign: 'center', px: 'auto', py: 4 }}>
             <EmailIcon />
         </Box>
-        <Typography style={{ fontWeight: 'bold' }} variant="subtitle1">
+        <Typography style={{ fontWeight: 'bold' }} variant='subtitle1'>
             In a rush?
         </Typography>
         <Typography>

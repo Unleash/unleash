@@ -76,12 +76,12 @@ export const SamlAuth = () => {
         <>
             <Grid container sx={{ mb: 3 }}>
                 <Grid item md={12}>
-                    <Alert severity="info">
+                    <Alert severity='info'>
                         Please read the{' '}
                         <a
-                            href="https://www.unleash-hosted.com/docs/enterprise-authentication"
-                            target="_blank"
-                            rel="noreferrer"
+                            href='https://www.unleash-hosted.com/docs/enterprise-authentication'
+                            target='_blank'
+                            rel='noreferrer'
                         >
                             documentation
                         </a>{' '}
@@ -104,7 +104,7 @@ export const SamlAuth = () => {
                                 <Switch
                                     onChange={updateEnabled}
                                     value={data.enabled}
-                                    name="enabled"
+                                    name='enabled'
                                     checked={data.enabled}
                                 />
                             }
@@ -120,13 +120,13 @@ export const SamlAuth = () => {
                     <Grid item md={6}>
                         <TextField
                             onChange={updateField}
-                            label="Entity ID"
-                            name="entityId"
+                            label='Entity ID'
+                            name='entityId'
                             value={data.entityId}
                             disabled={!data.enabled}
                             style={{ width: '400px' }}
-                            variant="outlined"
-                            size="small"
+                            variant='outlined'
+                            size='small'
                             required
                         />
                     </Grid>
@@ -142,13 +142,13 @@ export const SamlAuth = () => {
                     <Grid item md={6}>
                         <TextField
                             onChange={updateField}
-                            label="Single Sign-On URL"
-                            name="signOnUrl"
+                            label='Single Sign-On URL'
+                            name='signOnUrl'
                             value={data.signOnUrl}
                             disabled={!data.enabled}
                             style={{ width: '400px' }}
-                            variant="outlined"
-                            size="small"
+                            variant='outlined'
+                            size='small'
                             required
                         />
                     </Grid>
@@ -164,8 +164,8 @@ export const SamlAuth = () => {
                     <Grid item md={7}>
                         <TextField
                             onChange={updateField}
-                            label="X.509 Certificate"
-                            name="certificate"
+                            label='X.509 Certificate'
+                            name='certificate'
                             value={data.certificate}
                             disabled={!data.enabled}
                             style={{ width: '100%' }}
@@ -178,8 +178,8 @@ export const SamlAuth = () => {
                             multiline
                             rows={14}
                             maxRows={14}
-                            variant="outlined"
-                            size="small"
+                            variant='outlined'
+                            size='small'
                             required
                         />
                     </Grid>
@@ -196,13 +196,13 @@ export const SamlAuth = () => {
                     <Grid item md={6}>
                         <TextField
                             onChange={updateField}
-                            label="Single Sign-out URL"
-                            name="signOutUrl"
+                            label='Single Sign-out URL'
+                            name='signOutUrl'
                             value={data.signOutUrl}
                             disabled={!data.enabled}
                             style={{ width: '400px' }}
-                            variant="outlined"
-                            size="small"
+                            variant='outlined'
+                            size='small'
                         />
                     </Grid>
                 </Grid>
@@ -219,8 +219,8 @@ export const SamlAuth = () => {
                     <Grid item md={7}>
                         <TextField
                             onChange={updateField}
-                            label="X.509 Certificate"
-                            name="spCertificate"
+                            label='X.509 Certificate'
+                            name='spCertificate'
                             value={data.spCertificate}
                             disabled={!data.enabled}
                             style={{ width: '100%' }}
@@ -233,14 +233,14 @@ export const SamlAuth = () => {
                             multiline
                             rows={14}
                             maxRows={14}
-                            variant="outlined"
-                            size="small"
+                            variant='outlined'
+                            size='small'
                         />
                     </Grid>
                 </Grid>
 
                 <SsoGroupSettings
-                    ssoType="SAML"
+                    ssoType='SAML'
                     data={data}
                     setValue={setValue}
                 />
@@ -249,9 +249,9 @@ export const SamlAuth = () => {
                 <Grid container spacing={3}>
                     <Grid item md={5}>
                         <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
+                            variant='contained'
+                            color='primary'
+                            type='submit'
                             disabled={loading}
                         >
                             Save

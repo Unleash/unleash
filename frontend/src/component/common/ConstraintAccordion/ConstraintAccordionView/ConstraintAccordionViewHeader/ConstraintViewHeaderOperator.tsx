@@ -51,11 +51,11 @@ export const ConstraintViewHeaderOperator = ({
             </StyledHeaderConstraintContainer>
             <ConditionallyRender
                 condition={
-                    !Boolean(constraint.caseInsensitive) &&
+                    !constraint.caseInsensitive &&
                     oneOf(stringOperators, constraint.operator)
                 }
                 show={
-                    <Tooltip title="Case sensitive is active" arrow>
+                    <Tooltip title='Case sensitive is active' arrow>
                         <StyledIconWrapper>
                             <CaseSensitive />
                         </StyledIconWrapper>

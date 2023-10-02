@@ -18,7 +18,7 @@ const useStrategiesApi = () => {
 
             return makeRequest(req.caller, req.id);
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     const updateStrategy = useCallback(
@@ -29,15 +29,9 @@ const useStrategiesApi = () => {
                 body: JSON.stringify(strategy),
             });
 
-            try {
-                const res = await makeRequest(req.caller, req.id);
-
-                return res;
-            } catch (e) {
-                throw e;
-            }
+            return makeRequest(req.caller, req.id);
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     const removeStrategy = useCallback(
@@ -45,15 +39,9 @@ const useStrategiesApi = () => {
             const path = `${URI}/${strategy.name}`;
             const req = createRequest(path, { method: 'DELETE' });
 
-            try {
-                const res = await makeRequest(req.caller, req.id);
-
-                return res;
-            } catch (e) {
-                throw e;
-            }
+            return makeRequest(req.caller, req.id);
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     const deprecateStrategy = useCallback(
@@ -63,15 +51,9 @@ const useStrategiesApi = () => {
                 method: 'POST',
             });
 
-            try {
-                const res = await makeRequest(req.caller, req.id);
-
-                return res;
-            } catch (e) {
-                throw e;
-            }
+            return makeRequest(req.caller, req.id);
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     const reactivateStrategy = useCallback(
@@ -79,15 +61,9 @@ const useStrategiesApi = () => {
             const path = `${URI}/${strategy.name}/reactivate`;
             const req = createRequest(path, { method: 'POST' });
 
-            try {
-                const res = await makeRequest(req.caller, req.id);
-
-                return res;
-            } catch (e) {
-                throw e;
-            }
+            return makeRequest(req.caller, req.id);
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     return {

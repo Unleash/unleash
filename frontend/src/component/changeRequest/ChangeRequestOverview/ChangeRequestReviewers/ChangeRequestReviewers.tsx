@@ -16,7 +16,7 @@ export const ChangeRequestReviewersHeader: FC<{
     return (
         <>
             Reviewers{' '}
-            <Typography component="span" color="text.secondary">
+            <Typography component='span' color='text.secondary'>
                 ({actualApprovals}/{minApprovals} required)
             </Typography>
         </>
@@ -30,10 +30,10 @@ export const ChangeRequestReviewersWrapper: FC<{ header: ReactNode }> = ({
     return (
         <Paper
             elevation={0}
-            sx={theme => ({
+            sx={(theme) => ({
                 marginTop: theme.spacing(2),
                 padding: theme.spacing(4),
-                borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
+                borderRadius: (theme) => `${theme.shape.borderRadiusLarge}px`,
             })}
         >
             <StyledBox>{header}</StyledBox>

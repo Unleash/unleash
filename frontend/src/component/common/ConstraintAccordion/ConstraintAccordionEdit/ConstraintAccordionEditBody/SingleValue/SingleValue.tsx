@@ -10,7 +10,7 @@ interface ISingleValueProps {
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const useStyles = makeStyles()(theme => ({
+const useStyles = makeStyles()((theme) => ({
     singleValueContainer: { maxWidth: '300px', marginTop: '-1rem' },
     singleValueInput: {
         width: '100%',
@@ -34,9 +34,9 @@ export const SingleValue = ({
             <div className={styles.singleValueContainer}>
                 <Input
                     label={type}
-                    name="value"
+                    name='value'
                     value={value || ''}
-                    onChange={e => {
+                    onChange={(e) => {
                         setError('');
                         setValue(e.target.value.trim());
                     }}

@@ -31,7 +31,7 @@ interface ICreateProps {
 }
 
 const StyledContainer = styled('section', {
-    shouldForwardProp: prop => prop !== 'modal',
+    shouldForwardProp: (prop) => prop !== 'modal',
 })<{ modal?: boolean }>(({ theme, modal }) => ({
     minHeight: modal ? '100vh' : '80vh',
     borderRadius: modal ? 0 : theme.spacing(2),
@@ -59,7 +59,7 @@ const StyledMain = styled('div')(({ theme }) => ({
 }));
 
 const StyledFormContent = styled('div', {
-    shouldForwardProp: prop => prop !== 'disablePadding',
+    shouldForwardProp: (prop) => prop !== 'disablePadding',
 })<{ disablePadding?: boolean }>(({ theme, disablePadding }) => ({
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
@@ -217,8 +217,8 @@ const FormTemplate: React.FC<ICreateProps> = ({
                     <StyledSidebarDivider />
                     <StyledSubtitle>
                         API Command{' '}
-                        <Tooltip title="Copy command" arrow>
-                            <IconButton onClick={copyCommand} size="large">
+                        <Tooltip title='Copy command' arrow>
+                            <IconButton onClick={copyCommand} size='large'>
                                 <StyledIcon />
                             </IconButton>
                         </Tooltip>
@@ -303,10 +303,10 @@ const MobileGuidance = ({
             <StyledMobileGuidanceContainer>
                 <StyledMobileGuidanceBackground />
             </StyledMobileGuidanceContainer>
-            <Tooltip title="Toggle help" arrow>
+            <Tooltip title='Toggle help' arrow>
                 <StyledMobileGuidanceButton
-                    onClick={() => setOpen(prev => !prev)}
-                    size="large"
+                    onClick={() => setOpen((prev) => !prev)}
+                    size='large'
                 >
                     <StyledInfoIcon />
                 </StyledMobileGuidanceButton>
@@ -342,8 +342,8 @@ const Guidance: React.FC<IGuidanceProps> = ({
                 <StyledLinkIcon />
                 <StyledDocumentationLink
                     href={documentationLink}
-                    rel="noopener noreferrer"
-                    target="_blank"
+                    rel='noopener noreferrer'
+                    target='_blank'
                 >
                     {documentationLinkLabel}
                 </StyledDocumentationLink>

@@ -14,7 +14,7 @@ interface IUseApplicationOutput {
 
 const useApplication = (
     name: string,
-    options: SWRConfiguration = {}
+    options: SWRConfiguration = {},
 ): IUseApplicationOutput => {
     const path = formatApiPath(`api/admin/metrics/applications/${name}`);
 
@@ -23,7 +23,7 @@ const useApplication = (
             method: 'GET',
         })
             .then(handleErrorResponses('Application'))
-            .then(res => res.json());
+            .then((res) => res.json());
     };
 
     const APPLICATION_CACHE_KEY = `api/admin/metrics/applications/${name}`;

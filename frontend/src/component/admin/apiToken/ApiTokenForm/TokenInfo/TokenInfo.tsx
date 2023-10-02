@@ -22,9 +22,9 @@ export const TokenInfo = ({
             </StyledInputDescription>
             <StyledInput
                 value={username}
-                name="username"
-                onChange={e => setUsername(e.target.value)}
-                label="Token name"
+                name='username'
+                onChange={(e) => setUsername(e.target.value)}
+                label='Token name'
                 error={errors.username !== undefined}
                 errorText={errors.username}
                 onFocus={() => clearErrors('username')}

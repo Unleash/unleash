@@ -48,7 +48,7 @@ export const RemoveApiTokenButton = ({
                 projectId={project}
                 tooltipProps={{ title: 'Delete token', arrow: true }}
                 onClick={() => setOpen(true)}
-                size="large"
+                size='large'
             >
                 <Delete />
             </PermissionIconButton>
@@ -56,7 +56,7 @@ export const RemoveApiTokenButton = ({
                 open={open}
                 onClick={onRemoveToken}
                 onClose={() => setOpen(false)}
-                title="Confirm deletion"
+                title='Confirm deletion'
             >
                 <div>
                     Are you sure you want to delete the following API token?

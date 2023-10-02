@@ -19,7 +19,7 @@ export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
     parameters,
 }) => {
     const { strategies } = useStrategies();
-    const definition = strategies.find(strategyDefinition => {
+    const definition = strategies.find((strategyDefinition) => {
         return strategyDefinition.name === strategyName;
     });
 
@@ -27,12 +27,12 @@ export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
         return null;
     }
 
-    const items = definition?.parameters.map(param => {
+    const items = definition?.parameters.map((param) => {
         const paramValue = parameters[param.name];
         const isRequired = param.required;
 
         switch (param?.type) {
-            case 'list':
+            case 'list': {
                 const values = parseParameterStrings(paramValue);
                 return (
                     <CustomParameterItem
@@ -41,7 +41,8 @@ export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
                         input={values?.length > 0 ? values.join(', ') : null}
                     />
                 );
-            case 'percentage':
+            }
+            case 'percentage': {
                 const percentage = parseParameterNumber(paramValue);
                 const correctPercentage = !(
                     paramValue === undefined ||
@@ -56,7 +57,8 @@ export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
                         input={correctPercentage ? `${percentage}%` : undefined}
                     />
                 );
-            case 'boolean':
+            }
+            case 'boolean': {
                 const bool = ['true', 'false'].includes(paramValue)
                     ? paramValue
                     : undefined;
@@ -67,7 +69,8 @@ export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
                         input={paramValue !== undefined ? bool : undefined}
                     />
                 );
-            case 'string':
+            }
+            case 'string': {
                 const value = parseParameterString(paramValue);
                 return (
                     <CustomParameterItem
@@ -76,7 +79,8 @@ export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
                         input={value !== undefined ? value : undefined}
                     />
                 );
-            case 'number':
+            }
+            case 'number': {
                 const isCorrect = !(
                     paramValue === undefined || paramValue === ''
                 );
@@ -88,6 +92,7 @@ export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
                         input={isCorrect ? `${number}` : undefined}
                     />
                 );
+            }
             case 'default':
                 return null;
         }
@@ -97,10 +102,11 @@ export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
     return (
         <>
             {items.map((item, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 <Fragment key={index}>
                     <ConditionallyRender
                         condition={index > 0}
-                        show={<StrategySeparator text="AND" />}
+                        show={<StrategySeparator text='AND' />}
                     />
                     {item}
                 </Fragment>

@@ -10,7 +10,7 @@ const getFetcher = (token: string, url: string) => () => {
     const path = formatApiPath(url);
     return fetch(path, {
         method: 'GET',
-    }).then(response => response.status === OK);
+    }).then((response) => response.status === OK);
 };
 
 export const useUserInvite = (options: SWRConfiguration = {}) => {
@@ -20,7 +20,7 @@ export const useUserInvite = (options: SWRConfiguration = {}) => {
     const { data, error } = useSWR<boolean>(
         url,
         getFetcher(secret, url),
-        options
+        options,
     );
     const [loading, setLoading] = useState(!error && !data);
 

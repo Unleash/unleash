@@ -58,7 +58,7 @@ const defaultSort: SortingRule<string> = { id: 'added' };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'ProjectAccess:v1',
-    defaultSort
+    defaultSort,
 );
 
 const StyledUserAvatars = styled('div')(({ theme }) => ({
@@ -174,7 +174,7 @@ export const ProjectAccessTable: VFC = () => {
                     return userRow.addedAt || '';
                 },
                 Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} emptyText="Never" />
+                    <TimeAgoCell value={value} emptyText='Never' />
                 ),
                 sortType: 'date',
                 maxWidth: 130,
@@ -194,7 +194,7 @@ export const ProjectAccessTable: VFC = () => {
                         .reverse()[0];
                 },
                 Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} emptyText="Never" />
+                    <TimeAgoCell value={value} emptyText='Never' />
                 ),
                 sortType: 'date',
                 maxWidth: 130,
@@ -271,7 +271,7 @@ export const ProjectAccessTable: VFC = () => {
                 searchable: true,
             },
         ],
-        [access, projectId]
+        [access, projectId],
     );
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -292,7 +292,7 @@ export const ProjectAccessTable: VFC = () => {
     const { data, getSearchText, getSearchContext } = useSearch(
         columns,
         searchValue,
-        access?.rows ?? []
+        access?.rows ?? [],
     );
 
     const {
@@ -316,7 +316,7 @@ export const ProjectAccessTable: VFC = () => {
             },
         },
         useSortBy,
-        useFlexLayout
+        useFlexLayout,
     );
 
     useConditionallyHiddenColumns(
@@ -331,7 +331,7 @@ export const ProjectAccessTable: VFC = () => {
             },
         ],
         setHiddenColumns,
-        columns
+        columns,
     );
 
     useEffect(() => {
@@ -411,7 +411,7 @@ export const ProjectAccessTable: VFC = () => {
                             />
                             <ResponsiveButton
                                 onClick={() => navigate('create')}
-                                maxWidth="700px"
+                                maxWidth='700px'
                                 Icon={Add}
                                 permission={UPDATE_PROJECT}
                                 projectId={projectId}
@@ -465,13 +465,13 @@ export const ProjectAccessTable: VFC = () => {
                 }
             />
             <Routes>
-                <Route path="create" element={<ProjectAccessCreate />} />
+                <Route path='create' element={<ProjectAccessCreate />} />
                 <Route
-                    path="edit/group/:groupId"
+                    path='edit/group/:groupId'
                     element={<ProjectAccessEditGroup />}
                 />
                 <Route
-                    path="edit/user/:userId"
+                    path='edit/user/:userId'
                     element={<ProjectAccessEditUser />}
                 />
             </Routes>

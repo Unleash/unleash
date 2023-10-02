@@ -7,7 +7,7 @@ export const useChangeRequest = (projectId: string, id: string) => {
     const { data, error, mutate } = useSWR<IChangeRequest>(
         formatApiPath(`api/admin/projects/${projectId}/change-requests/${id}`),
         fetcher,
-        { refreshInterval: 15000 }
+        { refreshInterval: 15000 },
     );
 
     return {
@@ -21,5 +21,5 @@ export const useChangeRequest = (projectId: string, id: string) => {
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Request changes'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

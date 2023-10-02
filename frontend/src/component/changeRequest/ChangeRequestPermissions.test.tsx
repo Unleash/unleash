@@ -17,7 +17,7 @@ const projectWithCollaborationMode = (mode: ProjectMode) =>
     testServerRoute(server, '/api/admin/projects/default', { mode });
 
 const changeRequestsEnabledIn = (
-    env: 'development' | 'production' | 'custom'
+    env: 'development' | 'production' | 'custom',
 ) =>
     testServerRoute(
         server,
@@ -41,7 +41,7 @@ const changeRequestsEnabledIn = (
                 requiredApprovals: null,
                 changeRequestEnabled: env === 'custom',
             },
-        ]
+        ],
     );
 
 const uiConfigForEnterprise = () =>
@@ -60,7 +60,7 @@ const setupOtherRoutes = (feature: string) => {
     testServerRoute(
         server,
         'api/admin/projects/default/change-requests/pending',
-        []
+        [],
     );
     testServerRoute(server, `api/admin/client-metrics/features/${feature}`, {
         version: 1,
@@ -134,25 +134,25 @@ const userHasPermissions = (permissions: Array<IPermission>) => {
 };
 const userIsMemberOfProjects = (projects: string[]) => {
     userHasPermissions(
-        projects.map(project => ({
+        projects.map((project) => ({
             project,
             environment: 'irrelevant',
             permission: 'irrelevant',
-        }))
+        })),
     );
 };
 
 const featureEnvironments = (
     feature: string,
-    environments: Array<{ name: string; strategies: Array<string> }>
+    environments: Array<{ name: string; strategies: Array<string> }>,
 ) => {
     testServerRoute(server, `/api/admin/projects/default/features/${feature}`, {
-        environments: environments.map(env => ({
+        environments: environments.map((env) => ({
             name: env.name,
             enabled: false,
             type: 'production',
             sortOrder: 1,
-            strategies: env.strategies.map(strategy => ({
+            strategies: env.strategies.map((strategy) => ({
                 name: strategy,
                 id: Math.random(),
                 constraints: [],
@@ -199,7 +199,7 @@ const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
 
 const strategiesAreDisplayed = async (
     firstStrategy: string,
-    secondStrategy: string
+    secondStrategy: string,
 ) => {
     await screen.findByText(firstStrategy);
     await screen.findByText(secondStrategy);
@@ -210,13 +210,13 @@ const getDeleteButtons = async () => {
     const deleteButtons: HTMLElement[] = [];
 
     await Promise.all(
-        removeMenus.map(async menu => {
+        removeMenus.map(async (menu) => {
             menu.click();
             const removeButton = screen.getAllByTestId(
-                'STRATEGY_FORM_REMOVE_ID'
+                'STRATEGY_FORM_REMOVE_ID',
             );
             deleteButtons.push(...removeButton);
-        })
+        }),
     );
     return deleteButtons;
 };
@@ -290,11 +290,11 @@ test('open mode + non-project member can perform basic change request actions', 
 
     render(
         <UnleashUiSetup
-            pathTemplate="/projects/:projectId/features/:featureId/*"
+            pathTemplate='/projects/:projectId/features/:featureId/*'
             path={`/projects/${project}/features/${featureName}`}
         >
             <FeatureView />
-        </UnleashUiSetup>
+        </UnleashUiSetup>,
     );
 
     await openEnvironments(['development', 'production', 'custom']);
@@ -320,11 +320,11 @@ test('protected mode + project member can perform basic change request actions',
 
     render(
         <UnleashUiSetup
-            pathTemplate="/projects/:projectId/features/:featureId/*"
+            pathTemplate='/projects/:projectId/features/:featureId/*'
             path={`/projects/${project}/features/${featureName}`}
         >
             <FeatureView />
-        </UnleashUiSetup>
+        </UnleashUiSetup>,
     );
 
     await openEnvironments(['development', 'production', 'custom']);
@@ -350,11 +350,11 @@ test('protected mode + non-project member cannot perform basic change request ac
 
     render(
         <UnleashUiSetup
-            pathTemplate="/projects/:projectId/features/:featureId/*"
+            pathTemplate='/projects/:projectId/features/:featureId/*'
             path={`/projects/${project}/features/${featureName}`}
         >
             <FeatureView />
-        </UnleashUiSetup>
+        </UnleashUiSetup>,
     );
 
     await openEnvironments(['development', 'production', 'custom']);

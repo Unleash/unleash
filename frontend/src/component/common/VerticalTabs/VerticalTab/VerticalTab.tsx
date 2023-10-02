@@ -38,7 +38,7 @@ const StyledTab = styled(Button)<{ selected: boolean }>(
             borderTopLeftRadius: 0,
             borderBottomLeftRadius: 0,
         },
-    })
+    }),
 );
 
 interface IVerticalTabProps {

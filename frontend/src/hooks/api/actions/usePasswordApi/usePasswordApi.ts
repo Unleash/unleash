@@ -16,11 +16,8 @@ export const usePasswordApi = () => {
             method: 'POST',
             body: JSON.stringify(payload),
         });
-        try {
-            await makeRequest(req.caller, req.id);
-        } catch (e) {
-            throw e;
-        }
+
+        await makeRequest(req.caller, req.id);
     };
 
     return {

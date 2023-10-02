@@ -17,8 +17,8 @@ export const ProjectAccessEditUser = () => {
     }
 
     const user = access.rows.find(
-        row =>
-            row.entity.id === Number(userId) && row.type !== ENTITY_TYPE.GROUP
+        (row) =>
+            row.entity.id === Number(userId) && row.type !== ENTITY_TYPE.GROUP,
     );
 
     return (

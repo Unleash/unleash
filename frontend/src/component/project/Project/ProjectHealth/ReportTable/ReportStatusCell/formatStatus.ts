@@ -6,7 +6,7 @@ import { parseISO } from 'date-fns';
 export type ReportingStatus = 'potentially-stale' | 'healthy';
 
 export const formatStatus = (
-    feature: IFeatureToggleListItem
+    feature: IFeatureToggleListItem,
 ): ReportingStatus => {
     const { type, createdAt } = feature;
     const date = parseISO(createdAt);

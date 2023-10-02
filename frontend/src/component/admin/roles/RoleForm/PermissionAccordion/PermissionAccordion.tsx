@@ -60,20 +60,20 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
                     acc[getRoleKey(curr)] = true;
                     return acc;
                 },
-                {}
+                {},
             ) || {},
-        [permissions]
+        [permissions],
     );
     const permissionCount = useMemo(
         () =>
-            Object.keys(checkedPermissions).filter(key => permissionMap[key])
+            Object.keys(checkedPermissions).filter((key) => permissionMap[key])
                 .length || 0,
-        [checkedPermissions, permissionMap]
+        [checkedPermissions, permissionMap],
     );
 
     const isAllChecked = useMemo(
         () => permissionCount === permissions?.length,
-        [permissionCount, permissions]
+        [permissionCount, permissions],
     );
 
     return (
@@ -90,14 +90,15 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
                     boxShadow: 'none',
                     px: 3,
                     py: 1,
-                    border: theme => `1px solid ${theme.palette.divider}`,
-                    borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
+                    border: (theme) => `1px solid ${theme.palette.divider}`,
+                    borderRadius: (theme) =>
+                        `${theme.shape.borderRadiusLarge}px`,
                 }}
             >
                 <AccordionSummary
                     expandIcon={
                         <IconButton>
-                            <ExpandMore titleAccess="Toggle" />
+                            <ExpandMore titleAccess='Toggle' />
                         </IconButton>
                     }
                     sx={{
@@ -109,10 +110,10 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
                         {Icon}
                         <StyledTitle
                             text={title}
-                            maxWidth="120"
+                            maxWidth='120'
                             maxLength={25}
                         />{' '}
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant='body2' color='text.secondary'>
                             ({permissionCount} / {permissions?.length}{' '}
                             permissions)
                         </Typography>
@@ -127,11 +128,11 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
                 >
                     <Divider sx={{ mb: 1 }} />
                     <Button
-                        variant="text"
-                        size="small"
+                        variant='text'
+                        size='small'
                         onClick={onCheckAll}
                         sx={{
-                            fontWeight: theme =>
+                            fontWeight: (theme) =>
                                 theme.typography.fontWeightRegular,
                         }}
                     >
@@ -154,12 +155,12 @@ export const PermissionAccordion: VFC<IEnvironmentPermissionAccordionProps> = ({
                                         checked={Boolean(
                                             checkedPermissions[
                                                 getRoleKey(permission)
-                                            ]
+                                            ],
                                         )}
                                         onChange={() =>
                                             onPermissionChange(permission)
                                         }
-                                        color="primary"
+                                        color='primary'
                                     />
                                 }
                                 label={permission.displayName}

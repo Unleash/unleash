@@ -54,7 +54,7 @@ test('should render environment diff table', async () => {
                     ],
                 }}
             />
-        </UIProviderContainer>
+        </UIProviderContainer>,
     );
 
     expect(screen.getByText('web')).toBeInTheDocument();

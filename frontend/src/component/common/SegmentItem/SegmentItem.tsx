@@ -61,7 +61,7 @@ export const SegmentItem: VFC<ISegmentItemProps> = ({
     return (
         <StyledAccordion expanded={isOpen}>
             <StyledAccordionSummary id={`segment-accordion-${segment.id}`}>
-                <DonutLarge color="secondary" sx={{ mr: 1 }} />
+                <DonutLarge color='secondary' sx={{ mr: 1 }} />
                 <span>Segment:</span>
                 <StyledLink to={`/segments/edit/${segment.id}`}>
                     {segment.name}
@@ -74,13 +74,13 @@ export const SegmentItem: VFC<ISegmentItemProps> = ({
                     condition={!isExpanded}
                     show={
                         <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={() => setIsOpen(value => !value)}
+                            size='small'
+                            variant='outlined'
+                            onClick={() => setIsOpen((value) => !value)}
                             sx={{
                                 my: 0,
                                 ml: 'auto',
-                                fontSize: theme =>
+                                fontSize: (theme) =>
                                     theme.typography.body2.fontSize,
                             }}
                         >

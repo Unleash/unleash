@@ -5,7 +5,7 @@ import { useImportApi } from 'hooks/api/actions/useImportApi/useImportApi';
 import useToast from 'hooks/useToast';
 import { Avatar, Button, styled, Typography } from '@mui/material';
 import { ActionsContainer } from '../ActionsContainer';
-import { Pending, Check, Error } from '@mui/icons-material';
+import { Pending, Check, Error as ErrorIcon } from '@mui/icons-material';
 import { PulsingAvatar } from '../PulsingAvatar';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Box } from '@mui/system';
@@ -49,7 +49,7 @@ type ApiStatus =
 
 const toApiStatus = (
     loading: boolean,
-    errors: Record<string, string>
+    errors: Record<string, string>,
 ): ApiStatus => {
     if (loading) return { status: 'loading' };
     if (Object.keys(errors).length > 0) return { status: 'error', errors };
@@ -75,7 +75,7 @@ export const ImportStage: FC<{
                 refreshProject();
                 refreshChangeRequests();
             })
-            .catch(error => {
+            .catch((error) => {
                 setToastData({
                     type: 'error',
                     title: formatUnknownError(error),
@@ -99,7 +99,7 @@ export const ImportStage: FC<{
                             sx={{ width: 80, height: 80 }}
                             active={true}
                         >
-                            <Pending fontSize="large" />
+                            <Pending fontSize='large' />
                         </PulsingAvatar>
                     }
                 />
@@ -107,7 +107,7 @@ export const ImportStage: FC<{
                     condition={importStatus.status === 'success'}
                     show={
                         <SuccessAvatar sx={{ width: 80, height: 80 }}>
-                            <Check fontSize="large" />
+                            <Check fontSize='large' />
                         </SuccessAvatar>
                     }
                 />
@@ -115,7 +115,7 @@ export const ImportStage: FC<{
                     condition={importStatus.status === 'error'}
                     show={
                         <ErrorAvatar sx={{ width: 80, height: 80 }}>
-                            <Error fontSize="large" />
+                            <ErrorIcon fontSize='large' />
                         </ErrorAvatar>
                     }
                 />
@@ -149,8 +149,8 @@ export const ImportStage: FC<{
             <ActionsContainer>
                 <Button
                     sx={{ position: 'static' }}
-                    variant="contained"
-                    type="submit"
+                    variant='contained'
+                    type='submit'
                     onClick={onClose}
                 >
                     Close

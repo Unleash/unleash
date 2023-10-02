@@ -473,14 +473,14 @@ export const routes: IRoute[] = [
 ];
 
 export const getRoute = (path: string) =>
-    routes.find(route => route.path === path);
+    routes.find((route) => route.path === path);
 
-export const baseRoutes = routes.filter(route => !route.hidden);
+export const baseRoutes = routes.filter((route) => !route.hidden);
 
 const computeRoutes = () => {
-    const mainNavRoutes = baseRoutes.filter(route => route.menu.advanced);
-    const adminRoutes = routes.filter(route => route.menu.adminSettings);
-    const mobileRoutes = routes.filter(route => route.menu.mobile);
+    const mainNavRoutes = baseRoutes.filter((route) => route.menu.advanced);
+    const adminRoutes = routes.filter((route) => route.menu.adminSettings);
+    const mobileRoutes = routes.filter((route) => route.menu.mobile);
 
     const computedRoutes = {
         mainNavRoutes,
@@ -493,7 +493,7 @@ const computeRoutes = () => {
 };
 
 export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
-    return routes.map(route => {
+    return routes.map((route) => {
         return {
             path: route.path,
             flag: route.flag,

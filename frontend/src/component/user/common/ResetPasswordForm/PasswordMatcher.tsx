@@ -13,7 +13,7 @@ const StyledMatcherContainer = styled('div')(({ theme }) => ({
 }));
 
 const StyledMatcher = styled(Typography, {
-    shouldForwardProp: prop => prop !== 'matchingPasswords',
+    shouldForwardProp: (prop) => prop !== 'matchingPasswords',
 })<{ matchingPasswords: boolean }>(({ theme, matchingPasswords }) => ({
     position: 'absolute',
     bottom: '-8px',
@@ -38,7 +38,7 @@ const PasswordMatcher = ({
                 condition={started}
                 show={
                     <StyledMatcher
-                        variant="body2"
+                        variant='body2'
                         data-loading
                         matchingPasswords={matchingPasswords}
                     >

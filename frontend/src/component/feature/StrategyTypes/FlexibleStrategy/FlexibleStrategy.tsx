@@ -73,7 +73,7 @@ const FlexibleStrategy = ({
     return (
         <div>
             <RolloutSlider
-                name="Rollout"
+                name='Rollout'
                 value={rollout}
                 disabled={!editable}
                 onChange={updateRollout}
@@ -82,45 +82,45 @@ const FlexibleStrategy = ({
             <br />
             <div>
                 <Typography
-                    variant="subtitle2"
+                    variant='subtitle2'
                     style={{
                         marginBottom: '1rem',
                         display: 'flex',
                         gap: '1ch',
                     }}
-                    component="h2"
+                    component='h2'
                 >
                     Stickiness
-                    <HelpIcon tooltip="Stickiness defines what parameter should be used to ensure that your users get consistency in features. By default unleash will use the first value present in the context in the order of userId, sessionId and random." />
+                    <HelpIcon tooltip='Stickiness defines what parameter should be used to ensure that your users get consistency in features. By default unleash will use the first value present in the context in the order of userId, sessionId and random.' />
                 </Typography>
                 <StickinessSelect
-                    label="Stickiness"
+                    label='Stickiness'
                     value={stickiness}
                     editable={editable}
                     dataTestId={FLEXIBLE_STRATEGY_STICKINESS_ID}
-                    onChange={e => onUpdate('stickiness')(e.target.value)}
+                    onChange={(e) => onUpdate('stickiness')(e.target.value)}
                 />
                 &nbsp;
                 <br />
                 <br />
                 <Typography
-                    variant="subtitle2"
+                    variant='subtitle2'
                     style={{
                         marginBottom: '1rem',
                         display: 'flex',
                         gap: '1ch',
                     }}
-                    component="h2"
+                    component='h2'
                 >
                     GroupId
-                    <HelpIcon tooltip="GroupId is used to ensure that different toggles will hash differently for the same user. The groupId defaults to feature toggle name, but you can override it to correlate rollout of multiple feature toggles." />
+                    <HelpIcon tooltip='GroupId is used to ensure that different toggles will hash differently for the same user. The groupId defaults to feature toggle name, but you can override it to correlate rollout of multiple feature toggles.' />
                 </Typography>
                 <Input
-                    label="groupId"
-                    id="groupId-input"
+                    label='groupId'
+                    id='groupId-input'
                     value={parseParameterString(parameters.groupId)}
                     disabled={!editable}
-                    onChange={e => onUpdate('groupId')(e.target.value)}
+                    onChange={(e) => onUpdate('groupId')(e.target.value)}
                     data-testid={FLEXIBLE_STRATEGY_GROUP_ID}
                 />
             </div>

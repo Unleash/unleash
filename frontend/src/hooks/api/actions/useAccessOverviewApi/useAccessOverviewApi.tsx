@@ -14,7 +14,7 @@ export const useAccessOverviewApi = () => {
                 responseType: 'blob',
                 headers: { Accept: 'text/csv' },
             },
-            requestId
+            requestId,
         );
 
         const file = await (await makeRequest(req.caller, req.id)).blob();

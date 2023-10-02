@@ -12,5 +12,5 @@ const StyledTableCell = styled(MUITableCell)(({ theme }) => ({
 export const TableCell: FC<TableCellProps> = forwardRef(
     ({ className, ...props }, ref: ForwardedRef<unknown>) => (
         <StyledTableCell {...props} ref={ref} />
-    )
+    ),
 );

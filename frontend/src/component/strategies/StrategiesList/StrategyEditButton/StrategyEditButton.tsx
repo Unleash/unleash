@@ -31,9 +31,9 @@ export const StrategyEditButton: VFC<IStrategyEditButtonProps> = ({
                 </PermissionIconButton>
             }
             elseShow={
-                <Tooltip title="You cannot edit a built-in strategy" arrow>
+                <Tooltip title='You cannot edit a built-in strategy' arrow>
                     <div id={id}>
-                        <IconButton disabled size="large">
+                        <IconButton disabled size='large'>
                             <Edit aria-labelledby={id} />
                         </IconButton>
                     </div>

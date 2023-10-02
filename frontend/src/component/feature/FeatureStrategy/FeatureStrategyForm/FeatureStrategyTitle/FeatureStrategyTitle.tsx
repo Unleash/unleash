@@ -12,19 +12,19 @@ export const FeatureStrategyTitle: VFC<IFeatureStrategyTitleProps> = ({
     setTitle,
 }) => {
     return (
-        <Box sx={{ paddingBottom: theme => theme.spacing(2) }}>
+        <Box sx={{ paddingBottom: (theme) => theme.spacing(2) }}>
             <Typography
                 sx={{
-                    paddingBottom: theme => theme.spacing(2),
+                    paddingBottom: (theme) => theme.spacing(2),
                 }}
             >
                 What would you like to call this strategy? (optional)
             </Typography>
             <Input
-                label="Strategy title"
-                id="title-input"
+                label='Strategy title'
+                id='title-input'
                 value={title}
-                onChange={e => setTitle(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
                 sx={{ width: '100%' }}
             />
         </Box>

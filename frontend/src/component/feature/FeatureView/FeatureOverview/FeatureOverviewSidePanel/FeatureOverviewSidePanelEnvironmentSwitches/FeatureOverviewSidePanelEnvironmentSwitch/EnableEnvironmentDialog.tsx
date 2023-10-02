@@ -28,11 +28,11 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
     return (
         <Dialogue
             open={isOpen}
-            secondaryButtonText="Cancel"
+            secondaryButtonText='Cancel'
             permissionButton={
                 <>
                     <PermissionButton
-                        type="button"
+                        type='button'
                         permission={UPDATE_FEATURE}
                         projectId={projectId}
                         environmentId={environment}
@@ -41,7 +41,7 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
                         Add default strategy
                     </PermissionButton>
                     <PermissionButton
-                        type="button"
+                        type='button'
                         variant={'text'}
                         permission={UPDATE_FEATURE}
                         projectId={projectId}
@@ -53,18 +53,18 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
                 </>
             }
             onClose={onClose}
-            title="Enable feature toggle"
+            title='Enable feature toggle'
             fullWidth
         >
             <Typography
-                variant="body1"
-                color="text.primary"
-                sx={{ mb: theme => theme.spacing(2) }}
+                variant='body1'
+                color='text.primary'
+                sx={{ mb: (theme) => theme.spacing(2) }}
             >
                 The feature toggle has {disabledStrategiesCount} disabled
                 {disabledStrategiesCount === 1 ? ' strategy' : ' strategies'}.
             </Typography>
-            <Typography variant="body1" color="text.primary">
+            <Typography variant='body1' color='text.primary'>
                 You can choose to enable all the disabled strategies or you can
                 add the default strategy to enable this feature toggle.
             </Typography>

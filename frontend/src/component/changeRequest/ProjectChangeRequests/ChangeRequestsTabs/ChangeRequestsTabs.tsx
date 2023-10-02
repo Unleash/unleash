@@ -70,7 +70,7 @@ export const ChangeRequestsTabs = ({
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [searchValue, setSearchValue] = useState(
-        searchParams.get('search') || ''
+        searchParams.get('search') || '',
     );
 
     const { value: storedParams, setValue: setStoredParams } =
@@ -78,16 +78,16 @@ export const ChangeRequestsTabs = ({
 
     const [openChangeRequests, closedChangeRequests] = useMemo(() => {
         const open = changeRequests.filter(
-            changeRequest =>
+            (changeRequest) =>
                 changeRequest.state !== 'Cancelled' &&
                 changeRequest.state !== 'Rejected' &&
-                changeRequest.state !== 'Applied'
+                changeRequest.state !== 'Applied',
         );
         const closed = changeRequests.filter(
-            changeRequest =>
+            (changeRequest) =>
                 changeRequest.state === 'Cancelled' ||
                 changeRequest.state === 'Rejected' ||
-                changeRequest.state === 'Applied'
+                changeRequest.state === 'Applied',
         );
 
         return [open, closed];
@@ -129,20 +129,15 @@ export const ChangeRequestsTabs = ({
                 },
                 filterBy: (
                     row: { features: Array<{ name: string }> },
-                    values: Array<string>
+                    values: Array<string>,
                 ) => {
-                    return row.features.find(feature =>
+                    return row.features.find((feature) =>
                         values
-                            .map(value => value.toLowerCase())
-                            .includes(feature.name.toLowerCase())
+                            .map((value) => value.toLowerCase())
+                            .includes(feature.name.toLowerCase()),
                     );
                 },
-                Cell: ({
-                    value,
-                    row: {
-                        original: { title },
-                    },
-                }: any) => (
+                Cell: ({ value, row: { original: { title } } }: any) => (
                     <FeaturesCell
                         project={projectId}
                         value={value}
@@ -187,7 +182,7 @@ export const ChangeRequestsTabs = ({
             },
         ],
         //eslint-disable-next-line
-        [projectId]
+        [projectId],
     );
 
     const {
@@ -198,7 +193,7 @@ export const ChangeRequestsTabs = ({
 
     const data = useMemo(
         () => (loading ? featuresPlaceholder : searchedData),
-        [searchedData, loading]
+        [searchedData, loading],
     );
 
     const [initialState] = useState(() => ({
@@ -234,7 +229,7 @@ export const ChangeRequestsTabs = ({
                 Cell: TextCell,
             },
         },
-        useSortBy
+        useSortBy,
     );
 
     useConditionallyHiddenColumns(
@@ -245,7 +240,7 @@ export const ChangeRequestsTabs = ({
             },
         ],
         setHiddenColumns,
-        columns
+        columns,
     );
 
     useEffect(() => {
@@ -264,7 +259,7 @@ export const ChangeRequestsTabs = ({
         setSearchParams(tableState, {
             replace: true,
         });
-        setStoredParams(params => ({
+        setStoredParams((params) => ({
             ...params,
             id: sortBy[0].id,
             desc: sortBy[0].desc || false,
@@ -283,9 +278,9 @@ export const ChangeRequestsTabs = ({
                         <StyledTabContainer>
                             <Tabs
                                 value={tabs[activeTab]?.title}
-                                indicatorColor="primary"
-                                textColor="primary"
-                                variant="scrollable"
+                                indicatorColor='primary'
+                                textColor='primary'
+                                variant='scrollable'
                                 allowScrollButtonsMobile
                             >
                                 {tabs.map((tab, index) => (
@@ -301,13 +296,13 @@ export const ChangeRequestsTabs = ({
                     }
                     actions={
                         <Search
-                            placeholder="Search and Filter"
+                            placeholder='Search and Filter'
                             expandable
                             initialValue={searchValue}
                             onChange={setSearchValue}
                             hasFilters
                             getSearchContext={getSearchContext}
-                            id="changeRequestList"
+                            id='changeRequestList'
                         />
                     }
                 />
@@ -322,14 +317,14 @@ export const ChangeRequestsTabs = ({
                 <Table {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups} />
                     <TableBody {...getTableBodyProps()}>
-                        {rows.map(row => {
+                        {rows.map((row) => {
                             prepareRow(row);
                             return (
                                 <TableRow hover {...row.getRowProps()}>
-                                    {row.cells.map(cell => (
+                                    {row.cells.map((cell) => (
                                         <TableCell
                                             {...cell.getCellProps()}
-                                            padding="none"
+                                            padding='none'
                                         >
                                             {cell.render('Cell')}
                                         </TableCell>

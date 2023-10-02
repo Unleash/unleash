@@ -50,7 +50,7 @@ export const PlaygroundResultStrategyLists = ({
                         <Fragment key={strategy.id}>
                             <ConditionallyRender
                                 condition={index > 0}
-                                show={<StrategySeparator text="OR" />}
+                                show={<StrategySeparator text='OR' />}
                             />
                             <FeatureStrategyItem
                                 key={strategy.id}

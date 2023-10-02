@@ -95,13 +95,13 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
     }, [setToastApiError, refetchAddons, setToastData, removeAddon]);
 
     return (
-        <StyledMenu onClick={e => e.preventDefault()}>
-            <Tooltip title="More actions" arrow>
+        <StyledMenu onClick={(e) => e.preventDefault()}>
+            <Tooltip title='More actions' arrow>
                 <IconButton
                     onClick={handleMenuClick}
-                    size="small"
+                    size='small'
                     aria-controls={isMenuOpen ? 'actions-menu' : undefined}
-                    aria-haspopup="true"
+                    aria-haspopup='true'
                     aria-expanded={isMenuOpen ? 'true' : undefined}
                     data-loading
                 >
@@ -109,7 +109,7 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
                 </IconButton>
             </Tooltip>
             <Menu
-                id="project-card-menu"
+                id='project-card-menu'
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
                 anchorOrigin={{
@@ -172,9 +172,9 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
                 open={isDeleteOpen}
                 onClick={deleteIntegration}
                 onClose={() => setIsDeleteOpen(false)}
-                title="Delete integration?"
+                title='Delete integration?'
             >
-                <Alert severity="warning">
+                <Alert severity='warning'>
                     Deleting this integration instance will delete all its
                     configuration. It will stop working immediately.
                 </Alert>

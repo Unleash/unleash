@@ -15,7 +15,7 @@ const RenderStrategy = () => {
 const RenderFallbackStrategy = () => {
     const { defaultStrategyFallback } = useDefaultStrategy(
         'default',
-        'development'
+        'development',
     );
 
     return <div>{defaultStrategyFallback.parameters.stickiness}</div>;

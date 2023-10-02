@@ -18,7 +18,7 @@ export const AccessProvider = ({
             isAdmin: checkAdmin(permissions),
             hasAccess: hasAccess.bind(null, permissions),
         }),
-        [permissions]
+        [permissions],
     );
 
     return (
@@ -33,7 +33,7 @@ export const checkAdmin = (permissions: IPermission[] | undefined): boolean => {
         return false;
     }
 
-    return permissions.some(p => {
+    return permissions.some((p) => {
         return p.permission === ADMIN;
     });
 };
@@ -42,7 +42,7 @@ export const hasAccess = (
     permissions: IPermission[] | undefined,
     permission: string | string[],
     project?: string,
-    environment?: string
+    environment?: string,
 ): boolean => {
     if (!permissions) {
         return false;
@@ -51,10 +51,10 @@ export const hasAccess = (
         ? permission
         : [permission];
 
-    return permissions.some(p =>
-        permissionsToCheck.some(permissionToCheck =>
-            checkPermission(p, permissionToCheck, project, environment)
-        )
+    return permissions.some((p) =>
+        permissionsToCheck.some((permissionToCheck) =>
+            checkPermission(p, permissionToCheck, project, environment),
+        ),
     );
 };
 
@@ -62,7 +62,7 @@ const checkPermission = (
     p: IPermission,
     permission: string,
     project?: string,
-    environment?: string
+    environment?: string,
 ): boolean => {
     if (!permission) {
         console.warn(`Missing permission for AccessProvider: ${permission}`);

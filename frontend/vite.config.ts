@@ -73,5 +73,5 @@ export default mergeConfig(
             logOverride: { 'this-is-undefined-in-esm': 'silent' },
         },
     }),
-    vitestConfig
+    vitestConfig,
 );

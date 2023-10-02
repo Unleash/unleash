@@ -25,7 +25,7 @@ export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
     const onChange = async (
         field: string,
         value: string,
-        event?: ChangeEvent
+        event?: ChangeEvent,
     ) => {
         event?.preventDefault();
         try {
@@ -46,35 +46,35 @@ export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
             <Grid item sm={12} xs={12} className={themeStyles.contentSpacingY}>
                 <Grid item>
                     <GeneralSelect
-                        name="iconSelect"
-                        id="selectIcon"
-                        label="Icon"
-                        options={icons.map(v => ({ key: v, label: v }))}
+                        name='iconSelect'
+                        id='selectIcon'
+                        label='Icon'
+                        options={icons.map((v) => ({ key: v, label: v }))}
                         value={icon || 'apps'}
-                        onChange={key => onChange('icon', key)}
+                        onChange={(key) => onChange('icon', key)}
                     />
                 </Grid>
                 <Grid item>
                     <TextField
                         value={localUrl}
-                        onChange={e => setLocalUrl(e.target.value)}
-                        label="Application URL"
-                        placeholder="https://example.com"
-                        type="url"
-                        variant="outlined"
-                        size="small"
-                        onBlur={e => onChange('url', localUrl, e)}
+                        onChange={(e) => setLocalUrl(e.target.value)}
+                        label='Application URL'
+                        placeholder='https://example.com'
+                        type='url'
+                        variant='outlined'
+                        size='small'
+                        onBlur={(e) => onChange('url', localUrl, e)}
                     />
                 </Grid>
                 <Grid item>
                     <TextField
                         value={localDescription}
-                        label="Description"
-                        variant="outlined"
-                        size="small"
+                        label='Description'
+                        variant='outlined'
+                        size='small'
                         rows={2}
-                        onChange={e => setLocalDescription(e.target.value)}
-                        onBlur={e =>
+                        onChange={(e) => setLocalDescription(e.target.value)}
+                        onBlur={(e) =>
                             onChange('description', localDescription, e)
                         }
                     />

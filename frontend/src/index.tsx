@@ -35,5 +35,5 @@ ReactDOM.render(
             </BrowserRouter>
         </AccessProvider>
     </UIProviderContainer>,
-    document.getElementById('app')
+    document.getElementById('app'),
 );

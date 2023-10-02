@@ -12,7 +12,7 @@ const StyledTable = styled(Table)(({ theme }) => ({
 }));
 
 const StyledToggleWarning = styled('p', {
-    shouldForwardProp: prop => prop !== 'warning',
+    shouldForwardProp: (prop) => prop !== 'warning',
 })<{ warning?: boolean }>(({ theme, warning }) => ({
     color: warning ? theme.palette.error.dark : theme.palette.text.primary,
 }));
@@ -68,7 +68,7 @@ export const EnvironmentTableSingle = ({
                                 <StyledToggleWarning
                                     warning={Boolean(
                                         original.enabledToggleCount &&
-                                            original.enabledToggleCount > 0
+                                            original.enabledToggleCount > 0,
                                     )}
                                 >
                                     {original.enabledToggleCount === 1
@@ -81,7 +81,7 @@ export const EnvironmentTableSingle = ({
                 ),
             },
         ],
-        [warnEnabledToggles]
+        [warnEnabledToggles],
     );
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -92,14 +92,14 @@ export const EnvironmentTableSingle = ({
         });
 
     return (
-        <StyledTable {...getTableProps()} rowHeight="compact">
+        <StyledTable {...getTableProps()} rowHeight='compact'>
             <SortableTableHeader headerGroups={headerGroups as any} />
             <TableBody {...getTableBodyProps()}>
-                {rows.map(row => {
+                {rows.map((row) => {
                     prepareRow(row);
                     return (
                         <TableRow hover {...row.getRowProps()}>
-                            {row.cells.map(cell => (
+                            {row.cells.map((cell) => (
                                 <TableCell {...cell.getCellProps()}>
                                     {cell.render('Cell')}
                                 </TableCell>

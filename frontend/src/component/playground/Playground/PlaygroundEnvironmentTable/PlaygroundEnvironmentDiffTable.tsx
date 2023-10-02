@@ -30,25 +30,25 @@ export const PlaygroundEnvironmentDiffTable = ({
         () =>
             firstEnvFeatures.map((item, index) => ({
                 ...Object.fromEntries(
-                    environments.map(env => [env, features[env][index]])
+                    environments.map((env) => [env, features[env][index]]),
                 ),
             })),
-        [JSON.stringify(features)]
+        [JSON.stringify(features)],
     );
     type RowType = typeof data[0];
 
     const contextFieldsHeaders = Object.keys(firstContext).map(
-        contextField => ({
+        (contextField) => ({
             Header: capitalizeFirst(contextField),
             accessor: (
-                row: Record<string, { context: Record<string, unknown> }>
-            ) => row[environments[0]]['context'][contextField],
+                row: Record<string, { context: Record<string, unknown> }>,
+            ) => row[environments[0]].context[contextField],
             minWidth: 160,
             Cell: HighlightCell,
-        })
+        }),
     );
 
-    const environmentHeaders = environments.map(environment => ({
+    const environmentHeaders = environments.map((environment) => ({
         Header: environment,
         accessor: (row: RowType) =>
             row[environment]?.isEnabled
@@ -91,7 +91,7 @@ export const PlaygroundEnvironmentDiffTable = ({
         },
         useGlobalFilter,
         useFlexLayout,
-        useSortBy
+        useSortBy,
     );
 
     const parentRef = useRef<HTMLElement | null>(null);

@@ -24,7 +24,7 @@ export const EmptyNotifications = ({ text }: IEmptyNotificationsProps) => {
     return (
         <StyledBox>
             <StyledNotificationsIcon />
-            <Typography color="neutral.main">{text}</Typography>
+            <Typography color='neutral.main'>{text}</Typography>
         </StyledBox>
     );
 };

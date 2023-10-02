@@ -20,11 +20,11 @@ export const useRolesApi = () => {
                 method: 'POST',
                 body: JSON.stringify(role),
             },
-            requestId
+            requestId,
         );
 
         const response = await makeRequest(req.caller, req.id);
-        return await response.json();
+        return response.json();
     };
 
     const updateRole = async (roleId: number, role: IRolePayload) => {
@@ -35,7 +35,7 @@ export const useRolesApi = () => {
                 method: 'PUT',
                 body: JSON.stringify(role),
             },
-            requestId
+            requestId,
         );
 
         await makeRequest(req.caller, req.id);
@@ -46,7 +46,7 @@ export const useRolesApi = () => {
         const req = createRequest(
             `api/admin/roles/${roleId}`,
             { method: 'DELETE' },
-            requestId
+            requestId,
         );
 
         await makeRequest(req.caller, req.id);
@@ -60,7 +60,7 @@ export const useRolesApi = () => {
                 method: 'POST',
                 body: JSON.stringify(payload),
             },
-            requestId
+            requestId,
         );
 
         await makeRequest(req.caller, req.id);

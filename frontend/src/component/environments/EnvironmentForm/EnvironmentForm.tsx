@@ -73,9 +73,9 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
                     What is your environment name? (Can't be changed later)
                 </StyledInputDescription>
                 <StyledInput
-                    label="Environment name"
+                    label='Environment name'
                     value={name}
-                    onChange={e => setName(trim(e.target.value))}
+                    onChange={(e) => setName(trim(e.target.value))}
                     error={Boolean(errors.name)}
                     errorText={errors.name}
                     onFocus={() => clearErrors()}
@@ -88,7 +88,7 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
                     What type of environment do you want to create?
                 </StyledInputDescription>
                 <EnvironmentTypeSelector
-                    onChange={e => setType(e.currentTarget.value)}
+                    onChange={(e) => setType(e.currentTarget.value)}
                     value={type}
                 />
             </StyledContainer>

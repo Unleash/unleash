@@ -31,7 +31,7 @@ export const ConstraintError = ({
     return (
         <StyledConstraintErrorDiv>
             <CancelOutlined style={{ marginRight: '0.25rem' }} />
-            <Typography variant="body2">{formatText()}</Typography>
+            <Typography variant='body2'>{formatText()}</Typography>
         </StyledConstraintErrorDiv>
     );
 };

@@ -62,17 +62,17 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
     const { projects: availableProjects } = useProjects();
-    const selectableProjects = availableProjects.map(project => ({
+    const selectableProjects = availableProjects.map((project) => ({
         value: project.id,
         label: project.name,
     }));
     const { environments: availableEnvironments } = useEnvironments();
-    const selectableEnvironments = availableEnvironments.map(environment => ({
+    const selectableEnvironments = availableEnvironments.map((environment) => ({
         value: environment.name,
         label: environment.name,
     }));
     const selectableEvents = provider?.events
-        ?.map(event => ({
+        ?.map((event) => ({
             value: event,
             label: event,
         }))
@@ -92,14 +92,12 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         parameters: {},
     });
     const submitText = editMode ? 'Update' : 'Create';
-    let url = `${uiConfig.unleashUrl}/api/admin/addons${
+    const url = `${uiConfig.unleashUrl}/api/admin/addons${
         editMode ? `/${(formValues as AddonSchema).id}` : ``
     }`;
 
     const formatApiCode = () => {
-        return `curl --location --request ${
-            editMode ? 'PUT' : 'POST'
-        } '${url}' \\
+        return `curl --location --request ${editMode ? 'PUT' : 'POST'} '${url}' \\
         --header 'Authorization: INSERT_API_KEY' \\
         --header 'Content-Type: application/json' \\
         --data-raw '${JSON.stringify(formValues, undefined, 2)}'`;
@@ -124,60 +122,60 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
 
     const setFieldValue =
         (field: string): ChangeEventHandler<HTMLInputElement> =>
-        event => {
+        (event) => {
             event.preventDefault();
             setFormValues({ ...formValues, [field]: event.target.value });
         };
 
-    const onEnabled: MouseEventHandler = event => {
+    const onEnabled: MouseEventHandler = (event) => {
         event.preventDefault();
         setFormValues(({ enabled }) => ({ ...formValues, enabled: !enabled }));
     };
 
     const setParameterValue =
         (param: string): ChangeEventHandler<HTMLInputElement> =>
-        event => {
+        (event) => {
             event.preventDefault();
             const value =
                 trim(event.target.value) === ''
                     ? undefined
                     : event.target.value;
             setFormValues(
-                produce(draft => {
+                produce((draft) => {
                     draft.parameters[param] = value;
-                })
+                }),
             );
         };
 
     const setEventValues = (events: string[]) => {
         setFormValues(
-            produce(draft => {
+            produce((draft) => {
                 draft.events = events;
-            })
+            }),
         );
-        setErrors(prev => ({
+        setErrors((prev) => ({
             ...prev,
             events: undefined,
         }));
     };
     const setProjects = (projects: string[]) => {
         setFormValues(
-            produce(draft => {
+            produce((draft) => {
                 draft.projects = projects;
-            })
+            }),
         );
-        setErrors(prev => ({
+        setErrors((prev) => ({
             ...prev,
             projects: undefined,
         }));
     };
     const setEnvironments = (environments: string[]) => {
         setFormValues(
-            produce(draft => {
+            produce((draft) => {
                 draft.environments = environments;
-            })
+            }),
         );
-        setErrors(prev => ({
+        setErrors((prev) => ({
             ...prev,
             environments: undefined,
         }));
@@ -187,7 +185,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         navigate(GO_BACK);
     };
 
-    const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
+    const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
         if (!provider) {
             return;
@@ -203,7 +201,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
             updatedErrors.containsErrors = true;
         }
 
-        provider.parameters?.forEach(parameterConfig => {
+        provider.parameters?.forEach((parameterConfig) => {
             let value = formValues.parameters[parameterConfig.name];
             value = typeof value === 'string' ? trim(value) : value;
             if (parameterConfig.required && !value) {
@@ -274,15 +272,15 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                 <StyledButtonContainer>
                     <StyledButtonSection>
                         <PermissionButton
-                            type="submit"
-                            color="primary"
-                            variant="contained"
+                            type='submit'
+                            color='primary'
+                            variant='contained'
                             permission={editMode ? UPDATE_ADDON : CREATE_ADDON}
                             onClick={onSubmit}
                         >
                             {submitText}
                         </PermissionButton>
-                        <Button type="button" onClick={onCancel}>
+                        <Button type='button' onClick={onCancel}>
                             Cancel
                         </Button>
                     </StyledButtonSection>
@@ -304,13 +302,13 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                         )}
                     />
                     <StyledTextField
-                        size="small"
-                        label="Provider"
-                        name="provider"
+                        size='small'
+                        label='Provider'
+                        name='provider'
                         value={formValues.provider}
                         disabled
                         hidden={true}
-                        variant="outlined"
+                        variant='outlined'
                     />
                     <IntegrationHowToSection provider={provider} />
                     <StyledRaisedSection>
@@ -339,7 +337,7 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                         />
                     </StyledRaisedSection>
                     <StyledConfigurationSection>
-                        <Typography component="h3" variant="h3">
+                        <Typography component='h3' variant='h3'>
                             Configuration
                         </Typography>
                         <div>
@@ -347,17 +345,17 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 What is your integration description?
                             </StyledTitle>
                             <StyledTextField
-                                size="small"
+                                size='small'
                                 minRows={1}
                                 multiline
-                                label="Description"
-                                name="description"
-                                placeholder=""
+                                label='Description'
+                                name='description'
+                                placeholder=''
                                 value={formValues.description}
                                 error={Boolean(errors.description)}
                                 helperText={errors.description}
                                 onChange={setFieldValue('description')}
-                                variant="outlined"
+                                variant='outlined'
                             />
                         </div>
 
@@ -366,9 +364,9 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 options={selectableEvents || []}
                                 selectedItems={formValues.events}
                                 onChange={setEventValues}
-                                entityName="event"
+                                entityName='event'
                                 error={errors.events}
-                                description="Select which events you want your integration to be notified about."
+                                description='Select which events you want your integration to be notified about.'
                                 required
                             />
                         </div>
@@ -377,9 +375,9 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 options={selectableProjects}
                                 selectedItems={formValues.projects || []}
                                 onChange={setProjects}
-                                entityName="project"
-                                description="Selecting project(s) will filter events, so that your integration only receives events related to those specific projects."
-                                note="If no projects are selected, the integration will receive events from all projects."
+                                entityName='project'
+                                description='Selecting project(s) will filter events, so that your integration only receives events related to those specific projects.'
+                                note='If no projects are selected, the integration will receive events from all projects.'
                             />
                         </div>
                         <div>
@@ -387,9 +385,9 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                                 options={selectableEnvironments}
                                 selectedItems={formValues.environments || []}
                                 onChange={setEnvironments}
-                                entityName="environment"
-                                description="Selecting environment(s) will filter events, so that your integration only receives events related to those specific environments. Global events that are not specific to an environment will still be received."
-                                note="If no environments are selected, the integration will receive events from all environments."
+                                entityName='environment'
+                                description='Selecting environment(s) will filter events, so that your integration only receives events related to those specific environments. Global events that are not specific to an environment will still be received.'
+                                note='If no environments are selected, the integration will receive events from all environments.'
                             />
                         </div>
                     </StyledConfigurationSection>

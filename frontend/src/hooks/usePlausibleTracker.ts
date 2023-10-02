@@ -56,7 +56,7 @@ export const usePlausibleTracker = () => {
         (
             eventName: CustomEvents,
             options?: EventOptions | undefined,
-            eventData?: PlausibleOptions | undefined
+            eventData?: PlausibleOptions | undefined,
         ) => {
             if (plausible?.trackEvent) {
                 plausible.trackEvent(eventName, options, eventData);
@@ -66,7 +66,7 @@ export const usePlausibleTracker = () => {
                 }
             }
         },
-        [plausible]
+        [plausible],
     );
 
     return { trackEvent };

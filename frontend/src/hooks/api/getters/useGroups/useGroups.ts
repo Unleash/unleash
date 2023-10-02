@@ -15,7 +15,7 @@ export interface IUseGroupsOutput {
 export const useGroups = (): IUseGroupsOutput => {
     const { data, error, mutate } = useSWR(
         formatApiPath(`api/admin/groups`),
-        fetcher
+        fetcher,
     );
 
     return useMemo(
@@ -29,12 +29,12 @@ export const useGroups = (): IUseGroupsOutput => {
             refetchGroups: () => mutate(),
             error,
         }),
-        [data, error, mutate]
+        [data, error, mutate],
     );
 };
 
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Groups'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

@@ -9,7 +9,7 @@ const useFeatureForm = (
     initialType = 'release',
     initialProject = 'default',
     initialDescription = '',
-    initialImpressionData = false
+    initialImpressionData = false,
 ) => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
@@ -20,7 +20,7 @@ const useFeatureForm = (
     const [project, setProject] = useState(projectId || initialProject);
     const [description, setDescription] = useState(initialDescription);
     const [impressionData, setImpressionData] = useState<boolean>(
-        initialImpressionData
+        initialImpressionData,
     );
     const [errors, setErrors] = useState({});
 
@@ -58,14 +58,14 @@ const useFeatureForm = (
 
     const validateToggleName = async () => {
         if (name.length === 0) {
-            setErrors(prev => ({ ...prev, name: 'Name can not be empty.' }));
+            setErrors((prev) => ({ ...prev, name: 'Name can not be empty.' }));
             return false;
         }
         try {
             await validateFeatureToggleName(name, project);
             return true;
         } catch (error: unknown) {
-            setErrors(prev => ({ ...prev, name: formatUnknownError(error) }));
+            setErrors((prev) => ({ ...prev, name: formatUnknownError(error) }));
             return false;
         }
     };

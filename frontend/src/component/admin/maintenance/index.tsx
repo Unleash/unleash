@@ -28,7 +28,7 @@ const MaintenancePage = () => {
     }
 
     return (
-        <PageContent header={<PageHeader title="Maintenance" />}>
+        <PageContent header={<PageHeader title='Maintenance' />}>
             <StyledBox>
                 <MaintenanceTooltip />
                 <MaintenanceToggle />

@@ -3,7 +3,7 @@ import { Slider, Typography } from '@mui/material';
 import { ROLLOUT_SLIDER_ID } from 'utils/testIds';
 import React from 'react';
 
-const StyledSlider = withStyles(Slider, theme => ({
+const StyledSlider = withStyles(Slider, (theme) => ({
     root: {
         height: 8,
     },
@@ -25,7 +25,7 @@ const StyledSlider = withStyles(Slider, theme => ({
     },
 }));
 
-const useStyles = makeStyles()(theme => ({
+const useStyles = makeStyles()((theme) => ({
     slider: {
         width: '100%',
         maxWidth: '100%',
@@ -80,10 +80,10 @@ const RolloutSlider = ({
     return (
         <div className={classes.slider}>
             <Typography
-                id="discrete-slider-always"
-                variant="h3"
+                id='discrete-slider-always'
+                variant='h3'
                 gutterBottom
-                component="h3"
+                component='h3'
             >
                 {name}
             </Typography>
@@ -92,12 +92,12 @@ const RolloutSlider = ({
                 max={100}
                 value={value}
                 getAriaValueText={valuetext}
-                aria-labelledby="discrete-slider-always"
+                aria-labelledby='discrete-slider-always'
                 step={1}
                 data-testid={ROLLOUT_SLIDER_ID}
                 marks={marks}
                 onChange={onChange}
-                valueLabelDisplay="on"
+                valueLabelDisplay='on'
                 disabled={disabled}
             />
         </div>

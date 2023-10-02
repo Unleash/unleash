@@ -23,12 +23,12 @@ export const PlaygroundResultStrategyExecutionParameters = ({
 }: PlaygroundResultStrategyExecutionParametersProps) => {
     return (
         <>
-            {Object.keys(parameters).map(key => {
+            {Object.keys(parameters).map((key) => {
                 switch (key) {
                     case 'rollout':
-                    case 'Rollout':
+                    case 'Rollout': {
                         const percentage = parseParameterNumber(
-                            parameters[key]
+                            parameters[key],
                         );
                         return (
                             <StyledBoxSummary
@@ -38,11 +38,11 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 <Box sx={{ mr: '1rem' }}>
                                     <PercentageCircle
                                         percentage={percentage}
-                                        size="2rem"
+                                        size='2rem'
                                     />
                                 </Box>
                                 <div>
-                                    <Badge color="success">{percentage}%</Badge>{' '}
+                                    <Badge color='success'>{percentage}%</Badge>{' '}
                                     of your base{' '}
                                     {constraints.length > 0
                                         ? 'who match constraints'
@@ -51,36 +51,34 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 </div>
                             </StyledBoxSummary>
                         );
+                    }
                     case 'userIds':
-                    case 'UserIds':
+                    case 'UserIds': {
                         const users = parseParameterStrings(parameters[key]);
                         return (
                             <PlaygroundParameterItem
                                 key={key}
                                 value={users}
-                                text="user"
+                                text='user'
                                 input={
-                                    Boolean(
-                                        input?.context?.[getMappedParam(key)]
-                                    )
+                                    input?.context?.[getMappedParam(key)]
                                         ? input?.context?.[getMappedParam(key)]
                                         : 'no value'
                                 }
                                 showReason={
-                                    Boolean(
-                                        input?.context?.[getMappedParam(key)]
-                                    )
+                                    input?.context?.[getMappedParam(key)]
                                         ? !users.includes(
                                               input?.context?.[
                                                   getMappedParam(key)
-                                              ]
+                                              ],
                                           )
                                         : undefined
                                 }
                             />
                         );
+                    }
                     case 'hostNames':
-                    case 'HostNames':
+                    case 'HostNames': {
                         const hosts = parseParameterStrings(parameters[key]);
                         return (
                             <PlaygroundParameterItem
@@ -91,7 +89,8 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 showReason={undefined}
                             />
                         );
-                    case 'IPs':
+                    }
+                    case 'IPs': {
                         const IPs = parseParameterStrings(parameters[key]);
                         return (
                             <PlaygroundParameterItem
@@ -99,25 +98,22 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                 value={IPs}
                                 text={'IP'}
                                 input={
-                                    Boolean(
-                                        input?.context?.[getMappedParam(key)]
-                                    )
+                                    input?.context?.[getMappedParam(key)]
                                         ? input?.context?.[getMappedParam(key)]
                                         : 'no value'
                                 }
                                 showReason={
-                                    Boolean(
-                                        input?.context?.[getMappedParam(key)]
-                                    )
+                                    input?.context?.[getMappedParam(key)]
                                         ? !IPs.includes(
                                               input?.context?.[
                                                   getMappedParam(key)
-                                              ]
+                                              ],
                                           )
                                         : undefined
                                 }
                             />
                         );
+                    }
                     case 'stickiness':
                     case 'groupId':
                         return null;

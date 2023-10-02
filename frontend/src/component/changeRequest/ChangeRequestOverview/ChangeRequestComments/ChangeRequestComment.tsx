@@ -32,11 +32,11 @@ export const ChangeRequestComment: FC<{ comment: IChangeRequestComment }> = ({
         <Tooltip title={comment.createdBy.username}>
             <StyledAvatar src={comment.createdBy.imageUrl} />
         </Tooltip>
-        <CommentPaper variant="outlined">
+        <CommentPaper variant='outlined'>
             <CommentHeader>
                 <Box>
                     <strong>{comment.createdBy.username}</strong>{' '}
-                    <Typography color="text.secondary" component="span">
+                    <Typography color='text.secondary' component='span'>
                         commented{' '}
                         <TimeAgo
                             minPeriod={60}

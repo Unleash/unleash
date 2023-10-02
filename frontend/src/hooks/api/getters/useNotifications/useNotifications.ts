@@ -9,7 +9,7 @@ export const useNotifications = (options: SWRConfiguration = {}) => {
     const { data, error, mutate } = useSWR<NotificationsSchema>(
         path,
         fetcher,
-        options
+        options,
     );
 
     const refetchNotifications = useCallback(() => {

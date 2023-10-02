@@ -57,12 +57,12 @@ export const CellSortable: FC<ICellSortableProps> = ({
             : 'ascending'
         : undefined;
 
-    const onSortClick: MouseEventHandler<HTMLButtonElement> = event => {
+    const onSortClick: MouseEventHandler<HTMLButtonElement> = (event) => {
         onClick(event);
         setAnnouncement(
             `Sorted${ariaTitle ? ` by ${ariaTitle} ` : ''}, ${
                 isDescending ? 'ascending' : 'descending'
-            }`
+            }`,
         );
     };
 
@@ -107,7 +107,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
 
     return (
         <StyledTableCell
-            component="th"
+            component='th'
             aria-sort={ariaSort}
             style={{ width, minWidth, maxWidth }}
             isFlex={isFlex}
@@ -120,7 +120,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
                     <Tooltip title={title} arrow>
                         <StyledButton
                             isSorted={isSorted}
-                            type="button"
+                            type='button'
                             onClick={onSortClick}
                         >
                             <StyledHiddenMeasurementLayer
@@ -142,7 +142,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
                                 <SortArrow
                                     isSorted={isSorted}
                                     isDesc={isDescending}
-                                    className="sort-arrow"
+                                    className='sort-arrow'
                                 />
                             </StyledVisibleAbsoluteLayer>
                         </StyledButton>

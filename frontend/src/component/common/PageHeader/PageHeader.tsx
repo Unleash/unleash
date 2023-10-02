@@ -111,7 +111,7 @@ const PageHeaderComponent: FC<IPageHeaderProps> & {
 };
 
 const PageHeaderDivider: VFC<{ sx?: SxProps<Theme> }> = ({ sx }) => {
-    return <StyledDivider orientation="vertical" variant="middle" sx={sx} />;
+    return <StyledDivider orientation='vertical' variant='middle' sx={sx} />;
 };
 
 PageHeaderComponent.Divider = PageHeaderDivider;

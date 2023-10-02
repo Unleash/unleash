@@ -28,11 +28,11 @@ export const IntegrationInstall = ({
                 </Box>
                 <Box>
                     <Button
-                        type="button"
-                        variant="contained"
+                        type='button'
+                        variant='contained'
                         component={Link}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        target='_blank'
+                        rel='noopener noreferrer'
                         to={url}
                     >
                         Install&nbsp;&amp;&nbsp;connect

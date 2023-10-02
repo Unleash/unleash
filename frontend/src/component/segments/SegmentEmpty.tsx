@@ -48,7 +48,7 @@ export const SegmentEmpty = () => {
             <ConditionallyRender
                 condition={hasAccess(CREATE_SEGMENT)}
                 show={
-                    <StyledLink to="/segments/create">
+                    <StyledLink to='/segments/create'>
                         Create your first segment
                     </StyledLink>
                 }

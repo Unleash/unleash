@@ -27,8 +27,7 @@ test('it creates the correct amount of pages when count is uneven', () => {
     expect(paginationResult.length).toBe(4);
 
     const paginationCount = paginationResult.reduce((acc, cur) => {
-        acc += cur.length;
-        return acc;
+        return acc + cur.length;
     }, 0);
 
     expect(paginationCount).toBe(33);

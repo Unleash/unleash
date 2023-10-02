@@ -24,16 +24,18 @@ type PageQueryType = Partial<Record<'search', string>>;
 const groupsSearch = (group: IGroup, searchValue: string) => {
     const search = searchValue.toLowerCase();
     const users = {
-        names: group.users?.map(user => user.name?.toLowerCase() || ''),
-        usernames: group.users?.map(user => user.username?.toLowerCase() || ''),
-        emails: group.users?.map(user => user.email?.toLowerCase() || ''),
+        names: group.users?.map((user) => user.name?.toLowerCase() || ''),
+        usernames: group.users?.map(
+            (user) => user.username?.toLowerCase() || '',
+        ),
+        emails: group.users?.map((user) => user.email?.toLowerCase() || ''),
     };
     return (
         group.name.toLowerCase().includes(search) ||
         group.description?.toLowerCase().includes(search) ||
-        users.names?.some(name => name.includes(search)) ||
-        users.usernames?.some(username => username.includes(search)) ||
-        users.emails?.some(email => email.includes(search))
+        users.names?.some((name) => name.includes(search)) ||
+        users.usernames?.some((username) => username.includes(search)) ||
+        users.emails?.some((email) => email.includes(search))
     );
 };
 
@@ -42,12 +44,12 @@ export const GroupsList: VFC = () => {
     const [editUsersOpen, setEditUsersOpen] = useState(false);
     const [removeOpen, setRemoveOpen] = useState(false);
     const [activeGroup, setActiveGroup] = useState<IGroup | undefined>(
-        undefined
+        undefined,
     );
     const { groups = [], loading } = useGroups();
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchValue, setSearchValue] = useState(
-        searchParams.get('search') || ''
+        searchParams.get('search') || '',
     );
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -65,10 +67,10 @@ export const GroupsList: VFC = () => {
 
     const data = useMemo(() => {
         const sortedGroups = groups.sort((a, b) =>
-            a.name.localeCompare(b.name)
+            a.name.localeCompare(b.name),
         );
         return searchValue
-            ? sortedGroups.filter(group => groupsSearch(group, searchValue))
+            ? sortedGroups.filter((group) => groupsSearch(group, searchValue))
             : sortedGroups;
     }, [groups, searchValue]);
 
@@ -106,7 +108,7 @@ export const GroupsList: VFC = () => {
                                 onClick={() =>
                                     navigate('/admin/groups/create-group')
                                 }
-                                maxWidth="700px"
+                                maxWidth='700px'
                                 Icon={Add}
                                 permission={ADMIN}
                                 data-testid={NAVIGATE_TO_CREATE_GROUP}
@@ -130,7 +132,7 @@ export const GroupsList: VFC = () => {
         >
             <SearchHighlightProvider value={searchValue}>
                 <Grid container spacing={2}>
-                    {data.map(group => (
+                    {data.map((group) => (
                         <Grid key={group.id} item xs={12} md={6}>
                             <GroupCard
                                 group={group}

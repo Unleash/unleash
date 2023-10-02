@@ -35,7 +35,7 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                             <PermissionButton
                                 permission={UPDATE_DEPENDENCY}
                                 projectId={feature.project}
-                                variant="text"
+                                variant='text'
                                 onClick={() => {
                                     setShowDependencyDialogue(true);
                                 }}

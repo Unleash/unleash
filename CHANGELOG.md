@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.23.4] - 2023-06-05
+
+### Bug Fixes
+
+- Remove consecutive slashes
+
+
+## [4.23.3] - 2023-05-10
+
+### Bug Fixes
+
+- Project tokens type bug fix ([#3734](https://github.com/Unleash/unleash/issues/3734))
+
+
+## [4.23.2] - 2023-05-08
+
+### Bug Fixes
+
+- Import tags ([#3709](https://github.com/Unleash/unleash/issues/3709))
+
+
 ## [4.22.9] - 2023-06-06
 
 ### Bug Fixes

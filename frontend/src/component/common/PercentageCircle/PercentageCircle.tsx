@@ -29,12 +29,11 @@ const PercentageCircle = ({
 
     return (
         <svg viewBox={`0 0 ${d} ${d}`} style={style} aria-hidden>
-            <title>A circle progress bar with {percentage}% completion.</title>
             <circle
                 r={r}
                 cx={r}
                 cy={r}
-                fill='none'
+                fill="none"
                 stroke={theme.palette.primary.light}
                 strokeWidth={d}
                 strokeDasharray={`${percentage} 100`}

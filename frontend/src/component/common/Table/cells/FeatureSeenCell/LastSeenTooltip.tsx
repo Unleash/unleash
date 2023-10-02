@@ -6,7 +6,7 @@ import { useLastSeenColors } from 'component/feature/FeatureView/FeatureEnvironm
 
 const StyledDescription = styled(
     'div',
-    {},
+    {}
 )(({ theme }) => ({
     width: '100%',
     maxWidth: theme.spacing(50),
@@ -47,7 +47,7 @@ const StyledValueContainer = styled('div')({
 });
 
 const StyledValue = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'color',
+    shouldForwardProp: prop => prop !== 'color',
 })(({ color }) => ({
     textAlign: 'left',
     width: '100%',
@@ -68,8 +68,8 @@ export const LastSeenTooltip = ({
 }: ILastSeenTooltipProps) => {
     const getColor = useLastSeenColors();
     const [, defaultTextColor] = getColor();
-    const environmentsHaveLastSeen = environments?.some((environment) =>
-        Boolean(environment.lastSeenAt),
+    const environmentsHaveLastSeen = environments?.some(environment =>
+        Boolean(environment.lastSeenAt)
     );
     return (
         <StyledDescription {...rest}>
@@ -96,12 +96,12 @@ export const LastSeenTooltip = ({
                                         show={
                                             <TimeAgo
                                                 date={lastSeenAt!}
-                                                title=''
+                                                title=""
                                                 live={false}
                                                 formatter={(
                                                     value: number,
                                                     unit: string,
-                                                    suffix: string,
+                                                    suffix: string
                                                 ) => {
                                                     const [, textColor] =
                                                         getColor(unit);
@@ -135,12 +135,12 @@ export const LastSeenTooltip = ({
                 elseShow={
                     <TimeAgo
                         date={featureLastSeen}
-                        title=''
+                        title=""
                         live={false}
                         formatter={(
                             value: number,
                             unit: string,
-                            suffix: string,
+                            suffix: string
                         ) => {
                             return (
                                 <Typography

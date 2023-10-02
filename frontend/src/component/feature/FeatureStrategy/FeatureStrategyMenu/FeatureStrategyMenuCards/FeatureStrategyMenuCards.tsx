@@ -22,11 +22,11 @@ export const FeatureStrategyMenuCards = ({
     const { strategies } = useStrategies();
 
     const preDefinedStrategies = strategies.filter(
-        (strategy) => !strategy.deprecated && !strategy.editable,
+        strategy => !strategy.deprecated && !strategy.editable
     );
 
     const customStrategies = strategies.filter(
-        (strategy) => !strategy.deprecated && strategy.editable,
+        strategy => !strategy.deprecated && strategy.editable
     );
 
     const defaultStrategy = {
@@ -38,7 +38,7 @@ export const FeatureStrategyMenuCards = ({
     return (
         <List dense>
             <>
-                <StyledTypography color='textSecondary'>
+                <StyledTypography color="textSecondary">
                     {environmentId} environment default strategy
                 </StyledTypography>
                 <ListItem key={defaultStrategy.name}>
@@ -51,10 +51,10 @@ export const FeatureStrategyMenuCards = ({
                     />
                 </ListItem>
             </>
-            <StyledTypography color='textSecondary'>
+            <StyledTypography color="textSecondary">
                 Predefined strategy types
             </StyledTypography>
-            {preDefinedStrategies.map((strategy) => (
+            {preDefinedStrategies.map(strategy => (
                 <ListItem key={strategy.name}>
                     <FeatureStrategyMenuCard
                         projectId={projectId}
@@ -68,10 +68,10 @@ export const FeatureStrategyMenuCards = ({
                 condition={customStrategies.length > 0}
                 show={
                     <>
-                        <StyledTypography color='textSecondary'>
+                        <StyledTypography color="textSecondary">
                             Custom strategies
                         </StyledTypography>
-                        {customStrategies.map((strategy) => (
+                        {customStrategies.map(strategy => (
                             <ListItem key={strategy.name}>
                                 <FeatureStrategyMenuCard
                                     projectId={projectId}

@@ -19,8 +19,8 @@ test('sortStrategyParameters', () => {
                     { name: 'b', description: '', type: '', required: false },
                     { name: 'c', description: '', type: '', required: false },
                 ],
-            },
-        ),
+            }
+        )
     ).toEqual({
         a: 3,
         b: 2,

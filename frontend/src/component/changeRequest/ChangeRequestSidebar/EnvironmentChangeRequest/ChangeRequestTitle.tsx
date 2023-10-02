@@ -43,7 +43,7 @@ export const ChangeRequestTitle: FC<{
             await updateTitle(
                 environmentChangeRequest.project,
                 environmentChangeRequest.id,
-                title,
+                title
             );
             setToastData({
                 type: 'success',
@@ -60,11 +60,11 @@ export const ChangeRequestTitle: FC<{
                 show={children}
                 elseShow={
                     <Input
-                        label='Change request title'
-                        id='group-name'
+                        label="Change request title"
+                        id="group-name"
                         value={title}
                         fullWidth
-                        onChange={(e) => setTitle(e.target.value)}
+                        onChange={e => setTitle(e.target.value)}
                         disabled={isDisabled}
                     />
                 }
@@ -82,16 +82,16 @@ export const ChangeRequestTitle: FC<{
                 show={
                     <>
                         <Button
-                            variant='contained'
-                            color='primary'
-                            sx={(theme) => ({ marginLeft: theme.spacing(2) })}
+                            variant="contained"
+                            color="primary"
+                            sx={theme => ({ marginLeft: theme.spacing(2) })}
                             onClick={() => saveTitle()}
                         >
                             Save
                         </Button>
                         <Button
-                            sx={(theme) => ({ marginLeft: theme.spacing(1) })}
-                            variant='outlined'
+                            sx={theme => ({ marginLeft: theme.spacing(1) })}
+                            variant="outlined"
                             onClick={toggleEditState}
                         >
                             Cancel

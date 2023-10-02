@@ -44,41 +44,39 @@ const StyledRightButton = styled(Button)(({ theme }) => ({
     minWidth: '125px',
 }));
 
-export const ConstraintAccordionEditBody: React.FC<IConstraintAccordionBody> =
-    ({ localConstraint, children, triggerTransition, setAction, onSubmit }) => {
-        return (
-            <>
-                <StyledInputContainer>
-                    <ConditionallyRender
-                        condition={oneOf(
-                            newOperators,
-                            localConstraint.operator,
-                        )}
-                        show={<OperatorUpgradeAlert />}
-                    />
-                    {children}
-                </StyledInputContainer>
-                <StyledButtonContainer>
-                    <StyledInputButtonContainer>
-                        <StyledLeftButton
-                            type='button'
-                            onClick={onSubmit}
-                            variant='contained'
-                            color='primary'
-                            data-testid='CONSTRAINT_SAVE_BUTTON'
-                        >
-                            Save
-                        </StyledLeftButton>
-                        <StyledRightButton
-                            onClick={() => {
-                                setAction(CANCEL);
-                                triggerTransition();
-                            }}
-                        >
-                            Cancel
-                        </StyledRightButton>
-                    </StyledInputButtonContainer>
-                </StyledButtonContainer>
-            </>
-        );
-    };
+export const ConstraintAccordionEditBody: React.FC<
+    IConstraintAccordionBody
+> = ({ localConstraint, children, triggerTransition, setAction, onSubmit }) => {
+    return (
+        <>
+            <StyledInputContainer>
+                <ConditionallyRender
+                    condition={oneOf(newOperators, localConstraint.operator)}
+                    show={<OperatorUpgradeAlert />}
+                />
+                {children}
+            </StyledInputContainer>
+            <StyledButtonContainer>
+                <StyledInputButtonContainer>
+                    <StyledLeftButton
+                        type="button"
+                        onClick={onSubmit}
+                        variant="contained"
+                        color="primary"
+                        data-testid="CONSTRAINT_SAVE_BUTTON"
+                    >
+                        Save
+                    </StyledLeftButton>
+                    <StyledRightButton
+                        onClick={() => {
+                            setAction(CANCEL);
+                            triggerTransition();
+                        }}
+                    >
+                        Cancel
+                    </StyledRightButton>
+                </StyledInputButtonContainer>
+            </StyledButtonContainer>
+        </>
+    );
+};

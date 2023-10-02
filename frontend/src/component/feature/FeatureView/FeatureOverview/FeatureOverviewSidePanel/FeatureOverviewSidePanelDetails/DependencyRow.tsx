@@ -1,6 +1,7 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
+import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { AddDependencyDialogue } from 'component/feature/Dependencies/AddDependencyDialogue';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { FC, useState } from 'react';

@@ -14,7 +14,7 @@ export const FeatureTypeEdit: VFC<FeatureTypeEditProps> = ({
 }) => {
     const { featureTypeId } = useParams();
     const featureType = featureTypes.find(
-        (featureType) => featureType.id === featureTypeId,
+        featureType => featureType.id === featureTypeId
     );
 
     return <FeatureTypeForm featureType={featureType} loading={loading} />;

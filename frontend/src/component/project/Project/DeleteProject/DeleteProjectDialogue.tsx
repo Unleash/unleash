@@ -44,7 +44,7 @@ export const DeleteProjectDialogue = ({
             open={open}
             onClick={onClick}
             onClose={onClose}
-            title='Really delete project'
+            title="Really delete project"
         />
     );
 };

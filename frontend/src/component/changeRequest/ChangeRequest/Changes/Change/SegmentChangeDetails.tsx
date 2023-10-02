@@ -33,7 +33,7 @@ const ChangeItemInfo: FC = styled(Box)(({ theme }) => ({
 }));
 
 const SegmentContainer = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'conflict',
+    shouldForwardProp: prop => prop !== 'conflict',
 })<{ conflict: string | undefined }>(({ theme, conflict }) => ({
     borderLeft: '1px solid',
     borderRight: '1px solid',
@@ -59,7 +59,7 @@ export const SegmentChangeDetails: VFC<{
                 <ChangeItemWrapper>
                     <ChangeItemInfo>
                         <Typography
-                            sx={(theme) => ({
+                            sx={theme => ({
                                 color: theme.palette.error.main,
                             })}
                         >

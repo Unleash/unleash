@@ -4,6 +4,6 @@ import { EventLog } from 'component/events/EventLog/EventLog';
 
 export const EventPage = () => (
     <PermissionGuard permissions={ADMIN}>
-        <EventLog title='Event log' />
+        <EventLog title="Event log" />
     </PermissionGuard>
 );

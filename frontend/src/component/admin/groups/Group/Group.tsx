@@ -48,7 +48,7 @@ const defaultSort: SortingRule<string> = { id: 'joinedAt' };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'Group:v1',
-    defaultSort,
+    defaultSort
 );
 
 export const Group: VFC = () => {
@@ -108,8 +108,8 @@ export const Group: VFC = () => {
                 Cell: ({ row: { original: user } }: any) => (
                     <TimeAgoCell
                         value={user.seenAt}
-                        emptyText='Never'
-                        title={(date) => `Last login: ${date}`}
+                        emptyText="Never"
+                        title={date => `Last login: ${date}`}
                     />
                 ),
                 sortType: 'date',
@@ -122,7 +122,7 @@ export const Group: VFC = () => {
                 Cell: ({ row: { original: rowUser } }: any) => (
                     <ActionCell>
                         <Tooltip
-                            title='Remove user from group'
+                            title="Remove user from group"
                             arrow
                             describeChild
                         >
@@ -156,7 +156,7 @@ export const Group: VFC = () => {
                 searchable: true,
             },
         ],
-        [setSelectedUser, setRemoveUserOpen],
+        [setSelectedUser, setRemoveUserOpen]
     );
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -185,7 +185,7 @@ export const Group: VFC = () => {
             searchedData?.length === 0 && loading
                 ? groupUsersPlaceholder
                 : searchedData,
-        [searchedData, loading],
+        [searchedData, loading]
     );
 
     const {
@@ -204,7 +204,7 @@ export const Group: VFC = () => {
             disableMultiSort: true,
         },
         useSortBy,
-        useFlexLayout,
+        useFlexLayout
     );
 
     useEffect(() => {
@@ -296,7 +296,7 @@ export const Group: VFC = () => {
                                             onClick={() => {
                                                 setEditUsersOpen(true);
                                             }}
-                                            maxWidth='700px'
+                                            maxWidth="700px"
                                             Icon={Add}
                                             permission={ADMIN}
                                         >

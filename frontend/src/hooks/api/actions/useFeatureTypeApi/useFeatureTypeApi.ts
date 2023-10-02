@@ -8,7 +8,7 @@ export const useFeatureTypeApi = () => {
 
     const updateFeatureTypeLifetime = async (
         featureTypeId: FeatureTypeSchema['id'],
-        lifetimeDays: UpdateFeatureTypeLifetimeSchema['lifetimeDays'],
+        lifetimeDays: UpdateFeatureTypeLifetimeSchema['lifetimeDays']
     ) => {
         const payload: UpdateFeatureTypeLifetimeSchema = {
             lifetimeDays,
@@ -19,8 +19,11 @@ export const useFeatureTypeApi = () => {
             method: 'PUT',
             body: JSON.stringify(payload),
         });
-
-        await makeRequest(req.caller, req.id);
+        try {
+            await makeRequest(req.caller, req.id);
+        } catch (e) {
+            throw e;
+        }
     };
 
     return {

@@ -59,7 +59,9 @@ export const CreateGroup = () => {
     };
 
     const formatApiCode = () => {
-        return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/groups' \\
+        return `curl --location --request POST '${
+            uiConfig.unleashUrl
+        }/api/admin/groups' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(getGroupPayload(), undefined, 2)}'`;
@@ -71,7 +73,7 @@ export const CreateGroup = () => {
 
     const isNameNotEmpty = (name: string) => name.length;
     const isNameUnique = (name: string) =>
-        !groups?.filter((group) => group.name === name).length;
+        !groups?.filter(group => group.name === name).length;
     const isValid = isNameNotEmpty(name) && isNameUnique(name);
 
     const onSetName = (name: string) => {
@@ -85,10 +87,10 @@ export const CreateGroup = () => {
     return (
         <FormTemplate
             loading={loading}
-            title='Create group'
-            description='Groups is the best and easiest way to organize users and then use them in projects to assign a specific role in one go to all the users in a group.'
-            documentationLink='https://docs.getunleash.io/advanced/groups'
-            documentationLinkLabel='Groups documentation'
+            title="Create group"
+            description="Groups is the best and easiest way to organize users and then use them in projects to assign a specific role in one go to all the users in a group."
+            documentationLink="https://docs.getunleash.io/advanced/groups"
+            documentationLinkLabel="Groups documentation"
             formatApiCode={formatApiCode}
         >
             <GroupForm
@@ -108,9 +110,9 @@ export const CreateGroup = () => {
                 mode={CREATE}
             >
                 <Button
-                    type='submit'
-                    variant='contained'
-                    color='primary'
+                    type="submit"
+                    variant="contained"
+                    color="primary"
                     disabled={!isValid}
                     data-testid={UG_CREATE_BTN_ID}
                 >

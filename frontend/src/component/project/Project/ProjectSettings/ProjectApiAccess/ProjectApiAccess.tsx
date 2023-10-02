@@ -49,7 +49,7 @@ export const ProjectApiAccess = () => {
         setGlobalFilter,
         setHiddenColumns,
         columns,
-    } = useApiTokenTable(tokens, (props) => (
+    } = useApiTokenTable(tokens, props => (
         <ActionCell>
             <CopyApiTokenButton
                 token={props.row.original}
@@ -68,7 +68,7 @@ export const ProjectApiAccess = () => {
                 onRemove={async () => {
                     await deleteProjectToken(
                         props.row.original.secret,
-                        projectId,
+                        projectId
                     );
                     trackEvent('project_api_tokens', {
                         props: { eventType: 'api_key_deleted' },
@@ -94,7 +94,7 @@ export const ProjectApiAccess = () => {
                                 <PageHeader.Divider />
                                 <CreateApiTokenButton
                                     permission={CREATE_PROJECT_API_TOKEN}
-                                    path='create'
+                                    path="create"
                                     project={projectId}
                                 />
                             </>
@@ -105,7 +105,7 @@ export const ProjectApiAccess = () => {
                 <ConditionallyRender
                     condition={!hasAccess(READ_PROJECT_API_TOKEN, projectId)}
                     show={
-                        <Alert severity='warning'>
+                        <Alert severity="warning">
                             You need to have the correct permissions to read API
                             tokens
                         </Alert>
@@ -128,7 +128,7 @@ export const ProjectApiAccess = () => {
             </PageContent>
 
             <Routes>
-                <Route path='create' element={<CreateProjectApiToken />} />
+                <Route path="create" element={<CreateProjectApiToken />} />
             </Routes>
         </div>
     );

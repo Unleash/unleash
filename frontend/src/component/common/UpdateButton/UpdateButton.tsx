@@ -7,7 +7,7 @@ export const UpdateButton = ({
     ...rest
 }: IPermissionButtonProps) => {
     return (
-        <PermissionButton type='submit' {...rest}>
+        <PermissionButton type="submit" {...rest}>
             {children}
         </PermissionButton>
     );

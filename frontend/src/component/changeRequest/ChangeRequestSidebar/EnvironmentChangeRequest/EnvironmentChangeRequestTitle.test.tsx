@@ -29,7 +29,7 @@ testServerRoute(
     server,
     `/api/admin/projects/${changeRequest.project}/change-requests/${changeRequest.id}/title`,
     {},
-    'put',
+    'put'
 );
 
 testServerRoute(server, '/api/admin/ui-config', {});
@@ -53,7 +53,7 @@ test('can edit and save title', async () => {
     render(
         <UIProviderContainer>
             <TestComponent />
-        </UIProviderContainer>,
+        </UIProviderContainer>
     );
 
     const editButton = await screen.findByTestId('EditIcon');

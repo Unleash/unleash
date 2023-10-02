@@ -3,13 +3,13 @@ import { createGlobalState } from 'react-hooks-global-state';
 
 type UseGlobalState<T> = () => [
     value: T,
-    setValue: React.Dispatch<React.SetStateAction<T>>,
+    setValue: React.Dispatch<React.SetStateAction<T>>
 ];
 
 // Create a hook that stores global state (shared across all hook instances).
 export const createGlobalStateHook = <T>(
     key: string,
-    initialValue: T,
+    initialValue: T
 ): UseGlobalState<T> => {
     const container = createGlobalState<{ [key: string]: T }>({
         [key]: initialValue,

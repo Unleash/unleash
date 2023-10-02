@@ -5,7 +5,7 @@ export interface IAccessContext {
     hasAccess: (
         permission: string | string[],
         project?: string,
-        environment?: string,
+        environment?: string
     ) => boolean;
 }
 

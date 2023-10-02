@@ -49,8 +49,8 @@ export const HighlightCell: VFC<IHighlightCellProps> = ({
         <StyledContainer>
             <StyledTitle
                 style={{
-                    WebkitLineClamp: subtitle ? 1 : 2,
-                    lineClamp: subtitle ? 1 : 2,
+                    WebkitLineClamp: Boolean(subtitle) ? 1 : 2,
+                    lineClamp: Boolean(subtitle) ? 1 : 2,
                 }}
                 data-loading
             >

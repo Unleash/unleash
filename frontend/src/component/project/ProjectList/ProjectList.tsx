@@ -65,14 +65,14 @@ const NAVIGATE_TO_CREATE_PROJECT = 'NAVIGATE_TO_CREATE_PROJECT';
 
 function resolveCreateButtonData(
     isOss: boolean,
-    hasAccess: boolean,
+    hasAccess: boolean
 ): ICreateButtonData {
     if (isOss) {
         return {
             disabled: true,
             tooltip: {
                 titleComponent: (
-                    <PremiumFeature feature='adding-new-projects' tooltip />
+                    <PremiumFeature feature="adding-new-projects" tooltip />
                 ),
                 sx: { maxWidth: '320px' },
                 variant: 'custom',
@@ -109,7 +109,7 @@ export const ProjectListNew = () => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchValue, setSearchValue] = useState(
-        searchParams.get('search') || '',
+        searchParams.get('search') || ''
     );
 
     useEffect(() => {
@@ -127,7 +127,7 @@ export const ProjectListNew = () => {
         const regExp = safeRegExp(searchValue, 'i');
         return (
             searchValue
-                ? projects.filter((project) => regExp.test(project.name))
+                ? projects.filter(project => regExp.test(project.name))
                 : projects
         ).sort((a, b) => {
             if (a?.favorite && !b?.favorite) {
@@ -147,21 +147,21 @@ export const ProjectListNew = () => {
 
         const { KEY, fetcher } = getProjectFetcher(projectId);
         mutate(KEY, fetcher);
-        setFetchedProjects((prev) => ({ ...prev, [projectId]: true }));
+        setFetchedProjects(prev => ({ ...prev, [projectId]: true }));
     };
 
     const createButtonData = resolveCreateButtonData(
         isOss(),
-        hasAccess(CREATE_PROJECT),
+        hasAccess(CREATE_PROJECT)
     );
 
     const renderError = () => {
         return (
-            <StyledApiError onClick={refetch} text='Error fetching projects' />
+            <StyledApiError onClick={refetch} text="Error fetching projects" />
         );
     };
 
-    const projectCount =
+    let projectCount =
         filteredProjects.length < projects.length
             ? `${filteredProjects.length} of ${projects.length}`
             : projects.length;
@@ -190,7 +190,7 @@ export const ProjectListNew = () => {
                                 Icon={Add}
                                 endIcon={createButtonData.endIcon}
                                 onClick={() => navigate('/projects/create')}
-                                maxWidth='700px'
+                                maxWidth="700px"
                                 permission={CREATE_PROJECT}
                                 disabled={createButtonData.disabled}
                                 tooltipProps={createButtonData.tooltip}
@@ -274,7 +274,7 @@ export const ProjectListNew = () => {
                                                 isFavorite={project.favorite}
                                             />
                                         </StyledCardLink>
-                                    ),
+                                    )
                                 )
                             }
                         />

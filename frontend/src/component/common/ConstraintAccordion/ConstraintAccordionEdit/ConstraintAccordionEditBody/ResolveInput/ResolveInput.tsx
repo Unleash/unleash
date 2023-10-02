@@ -34,7 +34,7 @@ interface IResolveInputProps {
 
 const resolveLegalValues = (
     values: IConstraint['values'],
-    legalValues: IUnleashContextDefinition['legalValues'],
+    legalValues: IUnleashContextDefinition['legalValues']
 ): { legalValues: ILegalValue[]; deletedLegalValues: ILegalValue[] } => {
     if (legalValues?.length === 0) {
         return {
@@ -45,12 +45,12 @@ const resolveLegalValues = (
 
     const deletedLegalValues = (values || [])
         .filter(
-            (value) =>
+            value =>
                 !(legalValues || []).some(
-                    ({ value: legalValue }) => legalValue === value,
-                ),
+                    ({ value: legalValue }) => legalValue === value
+                )
         )
-        .map((v) => ({ value: v, description: '' }));
+        .map(v => ({ value: v, description: '' }));
 
     return {
         legalValues: legalValues || [],
@@ -79,7 +79,7 @@ export const ResolveInput = ({
                         <RestrictiveLegalValues
                             data={resolveLegalValues(
                                 constraintValues,
-                                contextDefinition.legalValues,
+                                contextDefinition.legalValues
                             )}
                             constraintValues={constraintValues}
                             values={localConstraint.values || []}
@@ -95,15 +95,15 @@ export const ResolveInput = ({
                         <SingleLegalValue
                             data={resolveLegalValues(
                                 [constraintValue],
-                                contextDefinition.legalValues,
+                                contextDefinition.legalValues
                             )}
                             setValue={setValue}
                             value={localConstraint.value}
                             constraintValue={constraintValue}
-                            type='number'
+                            type="number"
                             legalValues={
                                 contextDefinition.legalValues?.filter(
-                                    (legalValue) => Number(legalValue.value),
+                                    legalValue => Number(legalValue.value)
                                 ) || []
                             }
                             error={error}
@@ -117,12 +117,12 @@ export const ResolveInput = ({
                         <SingleLegalValue
                             data={resolveLegalValues(
                                 [constraintValue],
-                                contextDefinition.legalValues,
+                                contextDefinition.legalValues
                             )}
                             setValue={setValue}
                             value={localConstraint.value}
                             constraintValue={constraintValue}
-                            type='semver'
+                            type="semver"
                             legalValues={contextDefinition.legalValues || []}
                             error={error}
                             setError={setError}
@@ -165,7 +165,7 @@ export const ResolveInput = ({
                     <SingleValue
                         setValue={setValue}
                         value={localConstraint.value}
-                        type='number'
+                        type="number"
                         error={error}
                         setError={setError}
                     />
@@ -175,7 +175,7 @@ export const ResolveInput = ({
                     <SingleValue
                         setValue={setValue}
                         value={localConstraint.value}
-                        type='semver'
+                        type="semver"
                         error={error}
                         setError={setError}
                     />

@@ -12,7 +12,7 @@ interface IFeedbackEndpointRequestBody {
 }
 
 export const sendFeedbackInput = async (
-    form: Partial<IFeedbackCESForm>,
+    form: Partial<IFeedbackCESForm>
 ): Promise<void> => {
     if (!form.score) {
         return;
@@ -35,6 +35,6 @@ export const sendFeedbackInput = async (
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
-        },
+        }
     );
 };

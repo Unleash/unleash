@@ -69,7 +69,7 @@ const FeatureOverviewMetaData = () => {
             <StyledPaddingContainerTop>
                 <StyledMetaDataHeader data-loading>
                     <IconComponent
-                        sx={(theme) => ({
+                        sx={theme => ({
                             marginRight: theme.spacing(2),
                             height: '40px',
                             width: '40px',
@@ -99,7 +99,7 @@ const FeatureOverviewMetaData = () => {
                                         }}
                                     >
                                         <Edit
-                                            sx={(theme) => ({
+                                            sx={theme => ({
                                                 color: theme.palette.primary
                                                     .contrastText,
                                             })}
@@ -122,7 +122,7 @@ const FeatureOverviewMetaData = () => {
                                         }}
                                     >
                                         <Edit
-                                            sx={(theme) => ({
+                                            sx={theme => ({
                                                 color: theme.palette.primary
                                                     .contrastText,
                                             })}

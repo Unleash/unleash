@@ -11,7 +11,7 @@ interface IUseApiGetterOutput<T> {
 export const useApiGetter = <T>(
     cacheKey: Key,
     fetcher: () => Promise<T>,
-    options?: SWRConfiguration,
+    options?: SWRConfiguration
 ): IUseApiGetterOutput<T> => {
     const { data, error, mutate } = useSWR<T>(cacheKey, fetcher, options);
 

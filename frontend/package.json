@@ -2,7 +2,10 @@
   "name": "unleash-frontend-local",
   "version": "0.0.0",
   "private": true,
-  "files": ["index.js", "build"],
+  "files": [
+    "index.js",
+    "build"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -18,10 +21,10 @@
     "test": "tsc && NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest run",
     "test:snapshot": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn test -u",
     "test:watch": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" vitest watch",
-    "lint": "biome lint src --apply",
-    "lint:check": "biome lint src",
-    "fmt": "biome format src --write",
-    "fmt:check": "biome format src",
+    "lint": "eslint --fix ./src",
+    "lint:check": "eslint ./src",
+    "fmt": "prettier src --write --loglevel warn",
+    "fmt:check": "prettier src --check",
     "ts:check": "tsc",
     "e2e": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
     "e2e:heroku": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" yarn run cypress open --config baseUrl='https://unleash.herokuapp.com' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
@@ -30,7 +33,6 @@
     "gen:api:sandbox": "NODE_OPTIONS=\"${NODE_OPTIONS} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/enterprise/docs/openapi.json yarn run gen:api"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.2.2",
     "@codemirror/lang-json": "6.0.1",
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
@@ -73,6 +75,8 @@
     "debounce": "1.2.1",
     "deep-diff": "1.0.2",
     "dequal": "2.0.3",
+    "eslint": "8.50.0",
+    "eslint-config-react-app": "7.0.1",
     "fast-json-patch": "3.1.1",
     "http-proxy-middleware": "2.0.6",
     "immer": "9.0.21",
@@ -84,6 +88,7 @@
     "msw": "0.49.3",
     "pkginfo": "0.4.1",
     "plausible-tracker": "0.3.8",
+    "prettier": "2.8.1",
     "prop-types": "15.8.1",
     "react": "17.0.2",
     "react-chartjs-2": "4.3.1",
@@ -131,11 +136,33 @@
     }
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "parserOptions": {
+      "warnOnUnsupportedTypeScriptVersion": false
+    },
+    "rules": {
+      "no-restricted-globals": "off",
+      "no-useless-computed-key": "off",
+      "import/no-anonymous-default-export": "off",
+      "react-hooks/exhaustive-deps": "off"
+    },
+    "ignorePatterns": [
+      "cypress"
     ]
   },
   "dependencies": {}

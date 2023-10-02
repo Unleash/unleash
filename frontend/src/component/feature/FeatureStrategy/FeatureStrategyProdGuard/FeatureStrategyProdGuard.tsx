@@ -27,20 +27,20 @@ export const FeatureStrategyProdGuard = ({
     const [settings, setSettings] = useFeatureStrategyProdGuardSettings();
 
     const toggleHideSetting = () => {
-        setSettings((prev) => ({ hide: !prev.hide }));
+        setSettings(prev => ({ hide: !prev.hide }));
     };
 
     return (
         <Dialogue
-            title='Changing production environment!'
+            title="Changing production environment!"
             primaryButtonText={label}
             disabledPrimaryButton={loading}
-            secondaryButtonText='Cancel'
+            secondaryButtonText="Cancel"
             onClick={onClick}
             onClose={onClose}
             open={open}
         >
-            <Alert severity='error'>
+            <Alert severity="error">
                 WARNING. You are about to make changes to a production
                 environment. These changes will affect your customers.
             </Alert>
@@ -63,11 +63,11 @@ export const FeatureStrategyProdGuard = ({
 // Check if the prod guard dialog should be enabled.
 export const useFeatureStrategyProdGuard = (
     feature: IFeatureToggle,
-    environmentId: string,
+    environmentId: string
 ): boolean => {
     const [settings] = useFeatureStrategyProdGuardSettings();
 
-    const environment = feature.environments.find((environment) => {
+    const environment = feature.environments.find(environment => {
         return environment.name === environmentId;
     });
 
@@ -84,5 +84,5 @@ const localStorageKey = 'useFeatureStrategyProdGuardSettings:v2';
 const useFeatureStrategyProdGuardSettings =
     createPersistentGlobalStateHook<IFeatureStrategyProdGuardSettings>(
         localStorageKey,
-        { hide: false },
+        { hide: false }
     );

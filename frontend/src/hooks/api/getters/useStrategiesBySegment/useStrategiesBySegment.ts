@@ -13,11 +13,11 @@ export interface IUseStrategiesBySegmentOutput {
 }
 
 export const useStrategiesBySegment = (
-    id?: string | number,
+    id?: string | number
 ): IUseStrategiesBySegmentOutput => {
     const path = formatApiPath(`api/admin/segments/${id}/strategies`);
     const { data, error } = useConditionalSWR(id, [], path, () =>
-        fetchUsedSegment(path),
+        fetchUsedSegment(path)
     );
 
     const refetchUsedSegments = useCallback(() => {
@@ -35,5 +35,5 @@ export const useStrategiesBySegment = (
 const fetchUsedSegment = (path: string) => {
     return fetch(path, { method: 'GET' })
         .then(handleErrorResponses('Strategies by segment'))
-        .then((res) => res.json());
+        .then(res => res.json());
 };

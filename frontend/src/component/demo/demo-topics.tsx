@@ -25,7 +25,7 @@ export interface ITutorialTopic {
 }
 
 const Description = (props: TypographyProps) => (
-    <Typography variant='body2' color='text.secondary' {...props} />
+    <Typography variant="body2" color="text.secondary" {...props} />
 );
 
 const StyledImg = styled('img')(({ theme }) => ({
@@ -47,9 +47,9 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/feature-toggles'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/feature-toggles"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 Feature toggles
                             </a>{' '}
@@ -58,9 +58,9 @@ export const TOPICS: ITutorialTopic[] = [
                         <Description sx={{ mt: 1 }}>
                             Feature toggles are organized within{' '}
                             <a
-                                href='https://docs.getunleash.io/reference/projects'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/projects"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 projects
                             </a>
@@ -100,9 +100,9 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/activation-strategies"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 Activation strategies
                             </a>{' '}
@@ -123,7 +123,7 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <Description>
                         First, open the feature toggle configuration for{' '}
-                        <Badge as='span'>demoApp.step2</Badge> by using this
+                        <Badge as="span">demoApp.step2</Badge> by using this
                         link.
                     </Description>
                 ),
@@ -143,7 +143,7 @@ export const TOPICS: ITutorialTopic[] = [
                 target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=default&defaultStrategy=false"]`,
                 content: (
                     <Description>
-                        Select the <Badge as='span'>Standard</Badge> strategy
+                        Select the <Badge as="span">Standard</Badge> strategy
                         type.
                     </Description>
                 ),
@@ -157,17 +157,17 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/strategy-constraints'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/strategy-constraints"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 Strategy constraints
                             </a>{' '}
                             are conditions that must be satisfied for an{' '}
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/activation-strategies"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 activation strategy
                             </a>{' '}
@@ -186,9 +186,9 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/unleash-context'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/unleash-context"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 Unleash context
                             </a>{' '}
@@ -207,7 +207,7 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'li[data-testid="SELECT_ITEM_ID-userId"]',
                 content: (
                     <Description>
-                        Select the <Badge as='span'>userId</Badge> context
+                        Select the <Badge as="span">userId</Badge> context
                         field.
                     </Description>
                 ),
@@ -219,7 +219,7 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Enter your <Badge as='span'>userId</Badge>
+                            Enter your <Badge as="span">userId</Badge>
                         </Description>
                         <Badge
                             sx={{ mt: 2, mb: 1, width: '100%' }}
@@ -229,7 +229,7 @@ export const TOPICS: ITutorialTopic[] = [
                         </Badge>
                         <StyledImg
                             src={formatAssetPath(demoUserId)}
-                            alt='You can find your userId on the demo page.'
+                            alt="You can find your userId on the demo page."
                         />
                         <Description sx={{ mt: 1 }}>
                             When you're done, use the "Next" button in the
@@ -307,17 +307,17 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies#gradual-rollout'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/activation-strategies#gradual-rollout"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 Gradual rollout
                             </a>{' '}
                             is one of the available{' '}
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/activation-strategies"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 activation strategies
                             </a>
@@ -337,7 +337,7 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <Description>
                         First, open the feature toggle configuration for{' '}
-                        <Badge as='span'>demoApp.step3</Badge> by using this
+                        <Badge as="span">demoApp.step3</Badge> by using this
                         link.
                     </Description>
                 ),
@@ -429,9 +429,9 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/strategy-variants'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/strategy-variants"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 Strategy variants
                             </a>{' '}
@@ -452,7 +452,7 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <Description>
                         First, open the feature toggle configuration for{' '}
-                        <Badge as='span'>demoApp.step4</Badge> by using this
+                        <Badge as="span">demoApp.step4</Badge> by using this
                         link.
                     </Description>
                 ),
@@ -474,17 +474,17 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/strategy-constraints'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/strategy-constraints"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 Strategy constraints
                             </a>{' '}
                             are conditions that must be satisfied for an{' '}
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/activation-strategies"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 activation strategy
                             </a>{' '}
@@ -503,9 +503,9 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/unleash-context'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/unleash-context"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 Unleash context
                             </a>{' '}
@@ -524,7 +524,7 @@ export const TOPICS: ITutorialTopic[] = [
                 target: 'li[data-testid="SELECT_ITEM_ID-userId"]',
                 content: (
                     <Description>
-                        Select the <Badge as='span'>userId</Badge> context
+                        Select the <Badge as="span">userId</Badge> context
                         field.
                     </Description>
                 ),
@@ -536,7 +536,7 @@ export const TOPICS: ITutorialTopic[] = [
                 content: (
                     <>
                         <Description>
-                            Enter your <Badge as='span'>userId</Badge>
+                            Enter your <Badge as="span">userId</Badge>
                         </Description>
                         <Badge
                             sx={{ mt: 2, mb: 1, width: '100%' }}
@@ -546,7 +546,7 @@ export const TOPICS: ITutorialTopic[] = [
                         </Badge>
                         <StyledImg
                             src={formatAssetPath(demoUserId)}
-                            alt='You can find your userId on the demo page.'
+                            alt="You can find your userId on the demo page."
                         />
                         <Description sx={{ mt: 1 }}>
                             When you're done, use the "Next" button in the
@@ -580,17 +580,17 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/strategy-variants'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/strategy-variants"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 Strategy variants
                             </a>{' '}
                             allow to attach one or more values to your{' '}
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://docs.getunleash.io/reference/activation-strategies"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 activation strategy
                             </a>{' '}
@@ -609,7 +609,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             Enter a name for your variant e.g.{' '}
-                            <Badge as='span'>color</Badge>
+                            <Badge as="span">color</Badge>
                         </Description>
                         <Description sx={{ mt: 1 }}>
                             When you're done, use the "Next" button in the
@@ -628,9 +628,9 @@ export const TOPICS: ITutorialTopic[] = [
                         <Description>
                             Enter a{' '}
                             <a
-                                href='https://developer.mozilla.org/en-US/docs/Web/CSS/named-color'
-                                target='_blank'
-                                rel='noreferrer'
+                                href="https://developer.mozilla.org/en-US/docs/Web/CSS/named-color"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 color
                             </a>{' '}
@@ -639,9 +639,9 @@ export const TOPICS: ITutorialTopic[] = [
                         </Description>
                         <Description sx={{ mt: 1 }}>
                             It can be any color. For example, you can use one of
-                            these: <Badge as='span'>teal</Badge>,{' '}
-                            <Badge as='span'>orange</Badge> or{' '}
-                            <Badge as='span'>purple</Badge>
+                            these: <Badge as="span">teal</Badge>,{' '}
+                            <Badge as="span">orange</Badge> or{' '}
+                            <Badge as="span">purple</Badge>
                         </Description>
                         <Description sx={{ mt: 1 }}>
                             When you're done, use the "Next" button in the

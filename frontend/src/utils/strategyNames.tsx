@@ -11,10 +11,10 @@ export const formatStrategyName = (strategyName: string): string => {
     return formattedStrategyNames[strategyName] ?? strategyName;
 };
 
-const RolloutSvgIcon: FC = (props) => (
+const RolloutSvgIcon: FC = props => (
     <SvgIcon
         {...props}
-        component={(rest) => <RolloutIcon {...rest} />}
+        component={rest => <RolloutIcon {...rest} />}
         inheritViewBox
     />
 );

@@ -40,7 +40,7 @@ export const FeatureMetricsTable = ({
             defaultColumn: { Cell: TextCell },
         },
         useGlobalFilter,
-        useSortBy,
+        useSortBy
     );
 
     useConditionallyHiddenColumns(
@@ -51,7 +51,7 @@ export const FeatureMetricsTable = ({
             },
         ],
         setHiddenColumns,
-        COLUMNS,
+        COLUMNS
     );
 
     if (metrics.length === 0) {
@@ -59,14 +59,14 @@ export const FeatureMetricsTable = ({
     }
 
     return (
-        <Table {...getTableProps()} rowHeight='standard' id={tableSectionId}>
+        <Table {...getTableProps()} rowHeight="standard" id={tableSectionId}>
             <SortableTableHeader headerGroups={headerGroups} />
             <TableBody {...getTableBodyProps()}>
-                {rows.map((row) => {
+                {rows.map(row => {
                     prepareRow(row);
                     return (
                         <TableRow hover {...row.getRowProps()}>
-                            {row.cells.map((cell) => (
+                            {row.cells.map(cell => (
                                 <TableCell {...cell.getCellProps()}>
                                     {cell.render('Cell')}
                                 </TableCell>
@@ -84,7 +84,7 @@ const COLUMNS = [
         id: 'Icon',
         width: '1%',
         disableSortBy: true,
-        Cell: () => <IconCell icon={<Assessment color='disabled' />} />,
+        Cell: () => <IconCell icon={<Assessment color="disabled" />} />,
     },
     {
         Header: 'Time',

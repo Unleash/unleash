@@ -79,7 +79,9 @@ const CreateProject = () => {
     };
 
     const formatApiCode = () => {
-        return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/projects' \\
+        return `curl --location --request POST '${
+            uiConfig.unleashUrl
+        }/api/admin/projects' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getCreateProjectPayload(), undefined, 2)}'`;
@@ -92,10 +94,10 @@ const CreateProject = () => {
     return (
         <FormTemplate
             loading={loading}
-            title='Create project'
-            description='Projects allows you to group feature toggles together in the management UI.'
-            documentationLink='https://docs.getunleash.io/reference/projects'
-            documentationLinkLabel='Projects documentation'
+            title="Create project"
+            description="Projects allows you to group feature toggles together in the management UI."
+            documentationLink="https://docs.getunleash.io/reference/projects"
+            documentationLinkLabel="Projects documentation"
             formatApiCode={formatApiCode}
         >
             <ProjectForm
@@ -111,12 +113,12 @@ const CreateProject = () => {
                 setProjectName={setProjectName}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}
-                mode='Create'
+                mode="Create"
                 clearErrors={clearErrors}
                 validateProjectId={validateProjectId}
             >
                 <CreateButton
-                    name='project'
+                    name="project"
                     permission={CREATE_PROJECT}
                     data-testid={CREATE_PROJECT_BTN}
                 />

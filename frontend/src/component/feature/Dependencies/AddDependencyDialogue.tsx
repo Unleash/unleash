@@ -36,10 +36,7 @@ const LazyOptions: FC<{
     const options = parentOptions
         ? [
               REMOVE_DEPENDENCY_OPTION,
-              ...parentOptions.map((parent) => ({
-                  key: parent,
-                  label: parent,
-              })),
+              ...parentOptions.map(parent => ({ key: parent, label: parent })),
           ]
         : [REMOVE_DEPENDENCY_OPTION];
     return (
@@ -67,7 +64,7 @@ export const AddDependencyDialogue = ({
     return (
         <Dialogue
             open={showDependencyDialogue}
-            title='Add parent feature dependency'
+            title="Add parent feature dependency"
             onClose={onClose}
             onClick={async () => {
                 if (parent === REMOVE_DEPENDENCY_OPTION.key) {
@@ -81,7 +78,7 @@ export const AddDependencyDialogue = ({
             primaryButtonText={
                 parent === REMOVE_DEPENDENCY_OPTION.key ? 'Remove' : 'Add'
             }
-            secondaryButtonText='Cancel'
+            secondaryButtonText="Cancel"
         >
             <Box>
                 You feature will be evaluated only when the selected parent

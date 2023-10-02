@@ -48,7 +48,7 @@ export const ArchivedFeatureDeleteConfirm = ({
                 type: 'success',
                 title: 'Feature toggles deleted',
                 text: `You have successfully deleted following features toggles: ${deletedFeatures.join(
-                    ', ',
+                    ', '
                 )}.`,
             });
         } catch (error: unknown) {
@@ -67,16 +67,16 @@ export const ArchivedFeatureDeleteConfirm = ({
 
     return (
         <Dialogue
-            title='Delete feature toggles?'
+            title="Delete feature toggles?"
             open={open}
-            primaryButtonText='Delete feature toggles'
-            secondaryButtonText='Cancel'
+            primaryButtonText="Delete feature toggles"
+            secondaryButtonText="Cancel"
             onClick={onDeleteFeatureToggle}
             onClose={clearModal}
             disabledPrimaryButton={confirmationText !== confirmName}
             formId={formId}
         >
-            <Alert severity='warning'>
+            <Alert severity="warning">
                 <b>Warning!</b> Before you delete a feature toggle, make sure
                 all in-code references to that feature toggle have been removed.
                 Otherwise, a new feature toggle with the same name could
@@ -96,8 +96,8 @@ export const ArchivedFeatureDeleteConfirm = ({
                         setConfirmName(e.currentTarget.value);
                     }}
                     value={confirmName}
-                    placeholder='<deletion confirmation>'
-                    label='Deletion confirmation'
+                    placeholder="<deletion confirmation>"
+                    label="Deletion confirmation"
                 />
             </form>
         </Dialogue>

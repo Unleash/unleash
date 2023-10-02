@@ -71,7 +71,7 @@ export const ConstraintAccordionView = ({
 
     const singleValue = oneOf(
         [...semVerOperators, ...numOperators, ...dateOperators],
-        constraint.operator,
+        constraint.operator
     );
     const handleClick = () => {
         if (expandable) {

@@ -3,7 +3,7 @@ import { Alert } from '@mui/material';
 
 export const MaintenanceTooltip = () => {
     return (
-        <Alert severity='warning'>
+        <Alert severity="warning">
             <p>
                 <b>Heads up!</b> If you enable maintenance mode, edit access in
                 the entire system will be disabled for all the users (admins,

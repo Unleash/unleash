@@ -129,11 +129,11 @@ export const EnvironmentCloneModal = ({
     const [errors, setErrors] = useState<IEnvironmentCloneModalErrors>({});
 
     const clearError = (field: ErrorField) => {
-        setErrors((errors) => ({ ...errors, [field]: undefined }));
+        setErrors(errors => ({ ...errors, [field]: undefined }));
     };
 
     const setError = (field: ErrorField, error: string) => {
-        setErrors((errors) => ({ ...errors, [field]: error }));
+        setErrors(errors => ({ ...errors, [field]: error }));
     };
 
     useEffect(() => {
@@ -176,7 +176,7 @@ export const EnvironmentCloneModal = ({
         try {
             await cloneEnvironment(
                 environment.name,
-                getCloneEnvironmentPayload(),
+                getCloneEnvironmentPayload()
             );
             if (apiTokenGeneration === APITokenGeneration.NOW) {
                 const response = await createToken(getApiTokenCreatePayload());
@@ -205,7 +205,7 @@ export const EnvironmentCloneModal = ({
 
     const isNameNotEmpty = (name: string) => name.length;
     const isNameUnique = (name: string) =>
-        !environments?.some((environment) => environment.name === name);
+        !environments?.some(environment => environment.name === name);
     const isValid =
         isNameNotEmpty(name) && isNameUnique(name) && tokenProjects.length;
 
@@ -214,13 +214,13 @@ export const EnvironmentCloneModal = ({
         if (!isNameUnique(name)) {
             setError(
                 ErrorField.NAME,
-                'An environment with that name already exists.',
+                'An environment with that name already exists.'
             );
         }
         setName(name);
     };
 
-    const selectableProjects = allProjects.map((project) => ({
+    const selectableProjects = allProjects.map(project => ({
         value: project.id,
         label: project.name,
     }));
@@ -237,9 +237,9 @@ export const EnvironmentCloneModal = ({
                 loading={loading}
                 modal
                 title={`Clone ${environment.name} environment`}
-                description='Cloning an environment will clone all feature toggles and their configuration (activation strategies, segments, status, etc) into a new environment.'
-                documentationLink='https://docs.getunleash.io/reference/environments#cloning-environments'
-                documentationLinkLabel='Cloning environments documentation'
+                description="Cloning an environment will clone all feature toggles and their configuration (activation strategies, segments, status, etc) into a new environment."
+                documentationLink="https://docs.getunleash.io/reference/environments#cloning-environments"
+                documentationLinkLabel="Cloning environments documentation"
                 formatApiCode={formatApiCode}
             >
                 <StyledForm onSubmit={handleSubmit}>
@@ -250,24 +250,24 @@ export const EnvironmentCloneModal = ({
                         </StyledInputDescription>
                         <StyledInput
                             autoFocus
-                            label='Environment name'
+                            label="Environment name"
                             error={Boolean(errors.name)}
                             errorText={errors.name}
                             value={name}
-                            onChange={(e) => onSetName(e.target.value)}
+                            onChange={e => onSetName(e.target.value)}
                             required
                         />
                         <StyledInputDescription>
                             What type of environment do you want to create?
                         </StyledInputDescription>
                         <EnvironmentTypeSelector
-                            onChange={(e) => setType(e.currentTarget.value)}
+                            onChange={e => setType(e.currentTarget.value)}
                             value={type}
                         />
                         <StyledInputDescription>
                             Select which projects you want to clone the
                             environment configuration in?
-                            <HelpIcon tooltip='The cloned environment will keep the feature toggle state for the selected projects, where it will be enabled by default.' />
+                            <HelpIcon tooltip="The cloned environment will keep the feature toggle state for the selected projects, where it will be enabled by default." />
                         </StyledInputDescription>
                         <EnvironmentProjectSelect
                             projects={projects}
@@ -285,7 +285,7 @@ export const EnvironmentCloneModal = ({
                             label={clonePermissions ? 'Yes' : 'No'}
                             control={
                                 <Switch
-                                    onChange={(e) =>
+                                    onChange={e =>
                                         setClonePermissions(e.target.checked)
                                     }
                                     checked={clonePermissions}
@@ -301,9 +301,9 @@ export const EnvironmentCloneModal = ({
                                 cloned environment, you will also need an API
                                 token.{' '}
                                 <Link
-                                    href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
-                                    target='_blank'
-                                    rel='noreferrer'
+                                    href="https://docs.getunleash.io/reference/api-tokens-and-client-keys"
+                                    target="_blank"
+                                    rel="noreferrer"
                                 >
                                     Read more about API tokens
                                 </Link>
@@ -312,23 +312,22 @@ export const EnvironmentCloneModal = ({
                             <FormControl>
                                 <RadioGroup
                                     value={apiTokenGeneration}
-                                    onChange={(e) =>
+                                    onChange={e =>
                                         setApiTokenGeneration(
-                                            e.target
-                                                .value as APITokenGeneration,
+                                            e.target.value as APITokenGeneration
                                         )
                                     }
-                                    name='api-token-generation'
+                                    name="api-token-generation"
                                 >
                                     <FormControlLabel
                                         value={APITokenGeneration.LATER}
                                         control={<Radio />}
-                                        label='I want to generate an API token later'
+                                        label="I want to generate an API token later"
                                     />
                                     <FormControlLabel
                                         value={APITokenGeneration.NOW}
                                         control={<Radio />}
-                                        label='Generate an API token now'
+                                        label="Generate an API token now"
                                     />
                                 </RadioGroup>
                             </FormControl>
@@ -357,7 +356,7 @@ export const EnvironmentCloneModal = ({
                                                 error={errors.projects}
                                                 onFocus={() =>
                                                     clearError(
-                                                        ErrorField.PROJECTS,
+                                                        ErrorField.PROJECTS
                                                     )
                                                 }
                                             />
@@ -370,9 +369,9 @@ export const EnvironmentCloneModal = ({
 
                     <StyledButtonContainer>
                         <Button
-                            type='submit'
-                            variant='contained'
-                            color='primary'
+                            type="submit"
+                            variant="contained"
+                            color="primary"
                             disabled={!isValid}
                         >
                             Clone environment

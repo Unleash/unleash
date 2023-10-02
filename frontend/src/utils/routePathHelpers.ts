@@ -4,14 +4,15 @@ export const getTogglePath = (projectId: string, featureToggleName: string) => {
 
 export const getCreateTogglePath = (
     projectId: string,
-    query?: Record<string, string>,
+    query?: Record<string, string>
 ) => {
     const path = `/projects/${projectId}/create-toggle`;
 
     let queryString;
     if (query) {
         queryString = Object.keys(query).reduce((acc, curr) => {
-            return `${acc}${curr}=${query[curr]}`;
+            acc += `${curr}=${query[curr]}`;
+            return acc;
         }, '');
     }
 

@@ -21,7 +21,7 @@ export const FeatureOverviewSegment = ({
                 <Fragment key={segment.id}>
                     <ConditionallyRender
                         condition={index > 0}
-                        show={<StrategySeparator text='AND' />}
+                        show={<StrategySeparator text="AND" />}
                     />
                     <SegmentItem segment={segment} />
                 </Fragment>

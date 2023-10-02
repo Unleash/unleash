@@ -7,13 +7,11 @@ function TestComponent(props: { onBlurHandler: () => void }) {
     useOnBlur(divRef, props.onBlurHandler);
 
     return (
-        <div data-testid='wrapper'>
-            {/* biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation> */}
-            <div tabIndex={0} data-testid='inside' ref={divRef}>
+        <div data-testid="wrapper">
+            <div tabIndex={0} data-testid="inside" ref={divRef}>
                 Inside
             </div>
-            {/* biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation> */}
-            <div tabIndex={0} data-testid='outside'>
+            <div tabIndex={0} data-testid="outside">
                 Outside
             </div>
         </div>

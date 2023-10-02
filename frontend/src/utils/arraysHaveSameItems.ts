@@ -6,7 +6,7 @@ export const arraysHaveSameItems = <T>(a: T[], b: T[]): boolean => {
         return false;
     }
 
-    return [...setA].every((itemA) => {
+    return [...setA].every(itemA => {
         return setB.has(itemA);
     });
 };

@@ -54,12 +54,12 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { uiConfig } = useUiConfig();
     const showEnvironmentLastSeen = Boolean(
-        uiConfig.flags.lastSeenByEnvironment,
+        uiConfig.flags.lastSeenByEnvironment
     );
 
     const data: IReportTableRow[] = useMemo<IReportTableRow[]>(
         () =>
-            features.map((report) => ({
+            features.map(report => ({
                 project: projectId,
                 name: report.name,
                 type: report.type,
@@ -70,7 +70,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
                 createdAt: report.createdAt,
                 expiredAt: formatExpiredAt(report),
             })),
-        [projectId, features],
+        [projectId, features]
     );
 
     const initialState = useMemo(
@@ -78,7 +78,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
             hiddenColumns: [],
             sortBy: [{ id: 'createdAt' }],
         }),
-        [],
+        []
     );
 
     const COLUMNS = useMemo(
@@ -143,7 +143,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
                 maxWidth: 120,
             },
         ],
-        [showEnvironmentLastSeen],
+        [showEnvironmentLastSeen]
     );
 
     const {
@@ -166,7 +166,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
         },
         useGlobalFilter,
         useFlexLayout,
-        useSortBy,
+        useSortBy
     );
 
     useConditionallyHiddenColumns(
@@ -185,7 +185,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
             },
         ],
         setHiddenColumns,
-        COLUMNS,
+        COLUMNS
     );
 
     const title =

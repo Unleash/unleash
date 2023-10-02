@@ -32,17 +32,17 @@ export const FavoriteIconCell: VFC<IFavoriteIconCellProps> = ({
         <ConditionallyRender
             condition={Boolean(value)}
             show={
-                <StyledIconButton onClick={onClick} size='small'>
-                    <StarIcon fontSize='small' />
+                <StyledIconButton onClick={onClick} size="small">
+                    <StarIcon fontSize="small" />
                 </StyledIconButton>
             }
             elseShow={
                 <StyledIconButtonInactive
-                    className='show-row-hover'
+                    className="show-row-hover"
                     onClick={onClick}
-                    size='small'
+                    size="small"
                 >
-                    <StarBorderIcon fontSize='small' />
+                    <StarBorderIcon fontSize="small" />
                 </StyledIconButtonInactive>
             }
         />

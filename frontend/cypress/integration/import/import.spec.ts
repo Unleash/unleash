@@ -15,13 +15,13 @@ describe('imports', () => {
                 email: `unleash-e2e-user${i}-${randomFeatureName}@test.com`,
                 sendEmail: false,
                 rootRole: 3,
-            }).then((response) => userIds.push(response.body.id));
+            }).then(response => userIds.push(response.body.id));
         }
     });
 
     after(() => {
-        userIds.forEach((id) =>
-            cy.request('DELETE', `${baseUrl}/api/admin/user-admin/${id}`),
+        userIds.forEach(id =>
+            cy.request('DELETE', `${baseUrl}/api/admin/user-admin/${id}`)
         );
     });
 
@@ -118,13 +118,13 @@ describe('imports', () => {
         cy.wait(500);
 
         cy.get(
-            "[data-testid='feature-toggle-status'] input[type='checkbox']:checked",
+            "[data-testid='feature-toggle-status'] input[type='checkbox']:checked"
         )
             .invoke('attr', 'aria-label')
             .should('eq', 'development');
 
         cy.get(
-            '[data-testid="FEATURE_ENVIRONMENT_ACCORDION_development"]',
+            '[data-testid="FEATURE_ENVIRONMENT_ACCORDION_development"]'
         ).click();
         cy.contains('50%');
     });

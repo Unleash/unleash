@@ -11,7 +11,7 @@ export const useAdminRoutes = () => {
 
     if (uiConfig.flags.UNLEASH_CLOUD) {
         const adminBillingMenuItem = adminRoutes.findIndex(
-            (route) => route.title === 'Billing & invoices',
+            route => route.title === 'Billing & invoices'
         );
         routes[adminBillingMenuItem] = {
             ...routes[adminBillingMenuItem],
@@ -21,12 +21,12 @@ export const useAdminRoutes = () => {
 
     return routes
         .filter(filterByConfig(uiConfig))
-        .filter((route) =>
+        .filter(route =>
             filterAdminRoutes(route?.menu, {
                 enterprise: isEnterprise(),
                 pro: isPro(),
                 billing: isBilling,
-            }),
+            })
         )
         .map(mapRouteLink);
 };

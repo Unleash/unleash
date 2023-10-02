@@ -81,7 +81,7 @@ export const RoleDeleteDialogServiceAccounts = ({
                     maxWidth: 150,
                 },
             ] as Column<IServiceAccount>[],
-        [],
+        []
     );
 
     const { headerGroups, rows, prepareRow } = useTable(
@@ -96,7 +96,7 @@ export const RoleDeleteDialogServiceAccounts = ({
             disableMultiSort: true,
         },
         useSortBy,
-        useFlexLayout,
+        useFlexLayout
     );
 
     return (

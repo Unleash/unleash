@@ -29,13 +29,13 @@ export const TokenTypeSelector = ({
     return (
         <StyledContainer>
             <FormControl sx={{ mb: 2, width: '100%' }}>
-                <StyledInputLabel id='token-type'>
+                <StyledInputLabel id="token-type">
                     What do you want to connect?
                 </StyledInputLabel>
                 <RadioGroup
-                    aria-labelledby='token-type'
-                    defaultValue='CLIENT'
-                    name='radio-buttons-group'
+                    aria-labelledby="token-type"
+                    defaultValue="CLIENT"
+                    name="radio-buttons-group"
                     value={type}
                     onChange={(_, value) => setType(value as TokenType)}
                 >
@@ -59,8 +59,8 @@ export const TokenTypeSelector = ({
                                         <Box>
                                             <Typography>{label}</Typography>
                                             <Typography
-                                                variant='body2'
-                                                color='text.secondary'
+                                                variant="body2"
+                                                color="text.secondary"
                                             >
                                                 {title}
                                             </Typography>
@@ -68,7 +68,7 @@ export const TokenTypeSelector = ({
                                     </Box>
                                 }
                             />
-                        ),
+                        )
                     )}
                 </RadioGroup>
             </FormControl>

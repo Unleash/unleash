@@ -13,7 +13,7 @@ const useFeatureApi = () => {
 
     const validateFeatureToggleName = async (
         name: string | undefined,
-        project: string | undefined,
+        project: string | undefined
     ) => {
         const path = `api/admin/features/validate`;
         const req = createRequest(path, {
@@ -21,11 +21,17 @@ const useFeatureApi = () => {
             body: JSON.stringify({ name, projectId: project }),
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     const validateConstraint = async (
-        constraint: IConstraint,
+        constraint: IConstraint
     ): Promise<void> => {
         const path = `api/admin/constraints/validate`;
         const req = createRequest(path, {
@@ -37,7 +43,7 @@ const useFeatureApi = () => {
 
     const createFeatureToggle = async (
         projectId: string,
-        createFeatureSchema: CreateFeatureSchema,
+        createFeatureSchema: CreateFeatureSchema
     ) => {
         const path = `/api/admin/projects/${projectId}/features`;
         const req = createRequest(path, {
@@ -52,18 +58,24 @@ const useFeatureApi = () => {
             projectId: string,
             featureId: string,
             environmentId: string,
-            shouldActivateDisabledStrategies = false,
+            shouldActivateDisabledStrategies = false
         ) => {
             const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/on?shouldActivateDisabledStrategies=${shouldActivateDisabledStrategies}`;
             const req = createRequest(
                 path,
                 { method: 'POST' },
-                'toggleFeatureEnvironmentOn',
+                'toggleFeatureEnvironmentOn'
             );
 
-            return makeRequest(req.caller, req.id);
+            try {
+                const res = await makeRequest(req.caller, req.id);
+
+                return res;
+            } catch (e) {
+                throw e;
+            }
         },
-        [createRequest, makeRequest],
+        [createRequest, makeRequest]
     );
 
     const bulkToggleFeaturesEnvironmentOn = useCallback(
@@ -71,7 +83,7 @@ const useFeatureApi = () => {
             projectId: string,
             featureIds: string[],
             environmentId: string,
-            shouldActivateDisabledStrategies = false,
+            shouldActivateDisabledStrategies = false
         ) => {
             const path = `api/admin/projects/${projectId}/bulk_features/environments/${environmentId}/on?shouldActivateDisabledStrategies=${shouldActivateDisabledStrategies}`;
             const req = createRequest(
@@ -80,12 +92,18 @@ const useFeatureApi = () => {
                     method: 'POST',
                     body: JSON.stringify({ features: featureIds }),
                 },
-                'bulkToggleFeaturesEnvironmentOn',
+                'bulkToggleFeaturesEnvironmentOn'
             );
 
-            return makeRequest(req.caller, req.id);
+            try {
+                const res = await makeRequest(req.caller, req.id);
+
+                return res;
+            } catch (e) {
+                throw e;
+            }
         },
-        [createRequest, makeRequest],
+        [createRequest, makeRequest]
     );
 
     const bulkToggleFeaturesEnvironmentOff = useCallback(
@@ -93,7 +111,7 @@ const useFeatureApi = () => {
             projectId: string,
             featureIds: string[],
             environmentId: string,
-            shouldActivateDisabledStrategies = false,
+            shouldActivateDisabledStrategies = false
         ) => {
             const path = `api/admin/projects/${projectId}/bulk_features/environments/${environmentId}/off?shouldActivateDisabledStrategies=${shouldActivateDisabledStrategies}`;
             const req = createRequest(
@@ -102,12 +120,18 @@ const useFeatureApi = () => {
                     method: 'POST',
                     body: JSON.stringify({ features: featureIds }),
                 },
-                'bulkToggleFeaturesEnvironmentOff',
+                'bulkToggleFeaturesEnvironmentOff'
             );
 
-            return makeRequest(req.caller, req.id);
+            try {
+                const res = await makeRequest(req.caller, req.id);
+
+                return res;
+            } catch (e) {
+                throw e;
+            }
         },
-        [createRequest, makeRequest],
+        [createRequest, makeRequest]
     );
 
     const toggleFeatureEnvironmentOff = useCallback(
@@ -116,18 +140,24 @@ const useFeatureApi = () => {
             const req = createRequest(
                 path,
                 { method: 'POST' },
-                'toggleFeatureEnvironmentOff',
+                'toggleFeatureEnvironmentOff'
             );
 
-            return makeRequest(req.caller, req.id);
+            try {
+                const res = await makeRequest(req.caller, req.id);
+
+                return res;
+            } catch (e) {
+                throw e;
+            }
         },
-        [createRequest, makeRequest],
+        [createRequest, makeRequest]
     );
 
     const changeFeatureProject = async (
         projectId: string,
         featureId: string,
-        newProjectId: string,
+        newProjectId: string
     ) => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/changeProject`;
         const req = createRequest(path, {
@@ -135,7 +165,13 @@ const useFeatureApi = () => {
             body: JSON.stringify({ newProjectId }),
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     const addTagToFeature = async (featureId: string, tag: ITag) => {
@@ -146,16 +182,22 @@ const useFeatureApi = () => {
             body: JSON.stringify({ ...tag }),
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     const deleteTagFromFeature = async (
         featureId: string,
         type: string,
-        value: string,
+        value: string
     ) => {
         const encodedTagPath = `${encodeURIComponent(
-            type,
+            type
         )}/${encodeURIComponent(value)}`;
 
         // TODO: Change this path to the new API when moved.
@@ -164,12 +206,18 @@ const useFeatureApi = () => {
             method: 'DELETE',
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     const updateFeatureTags = async (
         featureId: string,
-        update: UpdateTagsSchema,
+        update: UpdateTagsSchema
     ) => {
         // TODO: Change this path to the new API when moved.
         const path = `api/admin/features/${featureId}/tags`;
@@ -178,25 +226,37 @@ const useFeatureApi = () => {
             body: JSON.stringify({ ...update }),
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     const archiveFeatureToggle = async (
         projectId: string,
-        featureId: string,
+        featureId: string
     ) => {
         const path = `api/admin/projects/${projectId}/features/${featureId}`;
         const req = createRequest(path, {
             method: 'DELETE',
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     const patchFeatureToggle = async (
         projectId: string,
         featureId: string,
-        patchPayload: any,
+        patchPayload: any
     ) => {
         const path = `api/admin/projects/${projectId}/features/${featureId}`;
         const req = createRequest(path, {
@@ -204,13 +264,19 @@ const useFeatureApi = () => {
             body: JSON.stringify(patchPayload),
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     const patchFeatureVariants = async (
         projectId: string,
         featureId: string,
-        patchPayload: Operation[],
+        patchPayload: Operation[]
     ) => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/variants`;
         const req = createRequest(path, {
@@ -218,14 +284,19 @@ const useFeatureApi = () => {
             body: JSON.stringify(patchPayload),
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     const patchFeatureEnvironmentVariants = async (
         projectId: string,
         featureId: string,
         environmentName: string,
-        patchPayload: Operation[],
+        patchPayload: Operation[]
     ) => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentName}/variants`;
         const req = createRequest(path, {
@@ -233,14 +304,19 @@ const useFeatureApi = () => {
             body: JSON.stringify(patchPayload),
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     const overrideVariantsInEnvironments = async (
         projectId: string,
         featureId: string,
         variants: IFeatureVariant[],
-        environments: string[],
+        environments: string[]
     ) => {
         const put = `api/admin/projects/${projectId}/features/${featureId}/variants-batch`;
         const req = createRequest(put, {
@@ -248,13 +324,18 @@ const useFeatureApi = () => {
             body: JSON.stringify({ variants, environments }),
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     const cloneFeatureToggle = async (
         projectId: string,
         featureId: string,
-        payload: { name: string; replaceGroupId: boolean },
+        payload: { name: string; replaceGroupId: boolean }
     ) => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/clone`;
         const req = createRequest(path, {
@@ -262,7 +343,13 @@ const useFeatureApi = () => {
             body: JSON.stringify(payload),
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     return {

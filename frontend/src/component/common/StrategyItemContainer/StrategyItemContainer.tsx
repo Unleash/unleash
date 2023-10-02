@@ -64,7 +64,7 @@ const StyledHeaderContainer = styled('div')({
 });
 
 const StyledContainer = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'disabled',
+    shouldForwardProp: prop => prop !== 'disabled',
 })<{ disabled?: boolean }>(({ theme, disabled }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     border: `1px solid ${theme.palette.divider}`,
@@ -77,7 +77,7 @@ const StyledContainer = styled(Box, {
 }));
 
 const StyledHeader = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'draggable' && prop !== 'disabled',
+    shouldForwardProp: prop => prop !== 'draggable' && prop !== 'disabled',
 })<{ draggable: boolean; disabled: boolean }>(
     ({ theme, draggable, disabled }) => ({
         padding: theme.spacing(0.5, 2),
@@ -90,7 +90,7 @@ const StyledHeader = styled('div', {
         color: disabled
             ? theme.palette.text.secondary
             : theme.palette.text.primary,
-    }),
+    })
 );
 
 export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
@@ -130,14 +130,14 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                             <DragIcon
                                 draggable
                                 disableRipple
-                                size='small'
+                                size="small"
                                 onDragStart={onDragStart}
                                 onDragEnd={onDragEnd}
                                 sx={{ cursor: 'move' }}
                             >
                                 <DragIndicator
-                                    titleAccess='Drag to reorder'
-                                    cursor='grab'
+                                    titleAccess="Drag to reorder"
+                                    cursor="grab"
                                     sx={{ color: 'action.active' }}
                                 />
                             </DragIcon>
@@ -145,13 +145,13 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                     />
                     <Icon
                         sx={{
-                            fill: (theme) => theme.palette.action.disabled,
+                            fill: theme => theme.palette.action.disabled,
                         }}
                     />
                     <StyledHeaderContainer>
                         <StrategyHeaderLink>
                             <StringTruncator
-                                maxWidth='400'
+                                maxWidth="400"
                                 maxLength={15}
                                 text={formatStrategyName(String(strategy.name))}
                             />
@@ -160,7 +160,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                                 show={
                                     <StyledCustomTitle>
                                         {formatStrategyName(
-                                            String(strategy.title),
+                                            String(strategy.title)
                                         )}
                                     </StyledCustomTitle>
                                 }
@@ -180,7 +180,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                         condition={Boolean(strategy?.disabled)}
                         show={() => (
                             <>
-                                <Badge color='disabled'>Disabled</Badge>
+                                <Badge color="disabled">Disabled</Badge>
                             </>
                         )}
                     />
@@ -188,7 +188,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                         sx={{
                             marginLeft: 'auto',
                             display: 'flex',
-                            minHeight: (theme) => theme.spacing(6),
+                            minHeight: theme => theme.spacing(6),
                             alignItems: 'center',
                         }}
                     >

@@ -51,40 +51,30 @@ test('returns grey for Cancelled state regardless of displayed stage', () => {
         'Applied',
         'Rejected',
     ];
-    stages.forEach((stage) => {
+    stages.forEach(stage => {
         expect(
-            determineColor(
-                'Cancelled',
-                irrelevantIndex,
-                stage,
-                irrelevantIndex,
-            ),
+            determineColor('Cancelled', irrelevantIndex, stage, irrelevantIndex)
         ).toBe('grey');
     });
 });
 
 test('returns error for Rejected stage in Rejected state', () => {
     expect(
-        determineColor(
-            'Rejected',
-            irrelevantIndex,
-            'Rejected',
-            irrelevantIndex,
-        ),
+        determineColor('Rejected', irrelevantIndex, 'Rejected', irrelevantIndex)
     ).toBe('error');
 });
 
 test('returns success for stages other than Rejected in Rejected state', () => {
     expect(
-        determineColor('Rejected', irrelevantIndex, 'Draft', irrelevantIndex),
+        determineColor('Rejected', irrelevantIndex, 'Draft', irrelevantIndex)
     ).toBe('success');
     expect(
         determineColor(
             'Rejected',
             irrelevantIndex,
             'In review',
-            irrelevantIndex,
-        ),
+            irrelevantIndex
+        )
     ).toBe('success');
 });
 

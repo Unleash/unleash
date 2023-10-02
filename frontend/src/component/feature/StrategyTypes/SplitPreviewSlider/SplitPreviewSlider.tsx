@@ -26,7 +26,7 @@ const StyledSegment = styled(Box)(() => ({
 }));
 
 const StyledSegmentTrack = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'index',
+    shouldForwardProp: prop => prop !== 'index',
 })<{ index: number }>(({ theme, index }) => ({
     height: theme.spacing(1.8),
     width: '100%',
@@ -51,7 +51,7 @@ const StyledVariantBoxContainer = styled(Box)(() => ({
 }));
 
 const StyledVariantBox = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'index',
+    shouldForwardProp: prop => prop !== 'index',
 })<{ index: number }>(({ theme, index }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -80,7 +80,7 @@ const SplitPreviewSlider = ({ variants }: ISplitPreviewSliderProps) => {
     }
 
     return (
-        <Box sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+        <Box sx={theme => ({ marginTop: theme.spacing(2) })}>
             <SplitPreviewHeader variants={variants} />
             <StyledContainer>
                 <StyledTrack />
@@ -89,11 +89,10 @@ const SplitPreviewSlider = ({ variants }: ISplitPreviewSliderProps) => {
                     const value = variant.weight / 10;
                     return (
                         <TooltipResolver
-                            variant='custom'
-                            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                            variant="custom"
                             key={index}
                             arrow
-                            onClick={(e) => e.preventDefault()}
+                            onClick={e => e.preventDefault()}
                             titleComponent={
                                 <SplitPreviewTooltip
                                     variant={variant}
@@ -109,7 +108,7 @@ const SplitPreviewSlider = ({ variants }: ISplitPreviewSliderProps) => {
                                 {' '}
                                 <StyledSegment>
                                     <StyledSegmentTrack index={index} />
-                                    <StyledTypographySubtitle variant='subtitle2'>
+                                    <StyledTypographySubtitle variant="subtitle2">
                                         {value}%
                                     </StyledTypographySubtitle>
                                 </StyledSegment>
@@ -125,15 +124,14 @@ const SplitPreviewSlider = ({ variants }: ISplitPreviewSliderProps) => {
 const SplitPreviewHeader = ({ variants }: ISplitPreviewSliderProps) => {
     return (
         <StyledHeaderContainer>
-            <StyledTypography variant='body2'>
+            <StyledTypography variant="body2">
                 Feature variants ({variants.length})
             </StyledTypography>
             <StyledVariantBoxContainer>
                 {variants.map((variant, index) => (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                     <StyledVariantBox key={index} index={index}>
                         <Box />
-                        <StyledTypography variant='body2'>
+                        <StyledTypography variant="body2">
                             {variant.name}
                         </StyledTypography>
                     </StyledVariantBox>
@@ -177,14 +175,14 @@ const SplitPreviewTooltip = ({ variant, index }: ISplitPreviewTooltip) => {
                     <Box />
                 </StyledVariantBox>
 
-                <Typography variant='subtitle2'>
+                <Typography variant="subtitle2">
                     {variant.weight / 10}% - {variant.name}
                 </Typography>
             </StyledVariantContainer>
 
             {variant.payload ? (
                 <StyledPayloadContainer>
-                    <StyledPayloadLabel variant='body2'>
+                    <StyledPayloadLabel variant="body2">
                         Payload
                     </StyledPayloadLabel>
 
@@ -192,7 +190,7 @@ const SplitPreviewTooltip = ({ variant, index }: ISplitPreviewTooltip) => {
                         condition={variant.payload.type === 'json'}
                         show={<code>{variant.payload.value}</code>}
                         elseShow={
-                            <Typography variant='body2'>
+                            <Typography variant="body2">
                                 {variant.payload.value}
                             </Typography>
                         }

@@ -42,9 +42,9 @@ type ResultValue = [number, string];
 
 const createChartPoints = (
     values: ResultValue[],
-    y: (m: string) => number,
+    y: (m: string) => number
 ): IPoint[] => {
-    return values.map((row) => ({
+    return values.map(row => ({
         x: row[0],
         y: y(row[1]),
     }));
@@ -52,7 +52,7 @@ const createChartPoints = (
 
 const createInstanceChartOptions = (
     theme: Theme,
-    locationSettings: ILocationSettings,
+    locationSettings: ILocationSettings
 ): ChartOptions<'line'> => ({
     locale: locationSettings.locale,
     responsive: true,
@@ -73,10 +73,10 @@ const createInstanceChartOptions = (
             boxPadding: 5,
             usePointStyle: true,
             callbacks: {
-                title: (items) =>
+                title: items =>
                     formatDateHM(
                         1000 * items[0].parsed.x,
-                        locationSettings.locale,
+                        locationSettings.locale
                     ),
             },
             itemSort: (a, b) => b.parsed.y - a.parsed.y,
@@ -155,7 +155,7 @@ class ItemPicker<T> {
 
 const toChartData = (
     theme: Theme,
-    rps?: RequestsPerSecondSchema,
+    rps?: RequestsPerSecondSchema
 ): ChartDatasetType[] => {
     if (rps?.data?.result) {
         const colorPicker = new ItemPicker([
@@ -173,7 +173,7 @@ const toChartData = (
                 label: `${endpoint}: ${appName}`,
                 borderColor: color.main,
                 backgroundColor: color.main,
-                data: createChartPoints(values, (y) => parseFloat(y)),
+                data: createChartPoints(values, y => parseFloat(y)),
                 elements: {
                     point: {
                         radius: 4,
@@ -206,14 +206,14 @@ export const NetworkTraffic: VFC = () => {
     return (
         <ConditionallyRender
             condition={data.datasets.length === 0}
-            show={<Alert severity='warning'>No data available.</Alert>}
+            show={<Alert severity="warning">No data available.</Alert>}
             elseShow={
                 <Box sx={{ display: 'grid', gap: 4 }}>
                     <div style={{ height: 400 }}>
                         <Line
                             data={data}
                             options={options}
-                            aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API'
+                            aria-label="An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API"
                         />
                     </div>
                 </Box>
@@ -231,7 +231,7 @@ ChartJS.register(
     TimeScale,
     Legend,
     Tooltip,
-    Title,
+    Title
 );
 
 // Use a default export to lazy-load the charting library.

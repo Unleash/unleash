@@ -20,12 +20,12 @@ export const AddCommentField: FC<{
                 <StyledAvatar src={user?.imageUrl || ''} />
             </Tooltip>
             <TextField
-                variant='outlined'
-                placeholder='Add your comment here'
+                variant="outlined"
+                placeholder="Add your comment here"
                 fullWidth
                 multiline
                 minRows={2}
-                onChange={(e) => onTypeComment(e.target.value)}
+                onChange={e => onTypeComment(e.target.value)}
                 value={commentText}
             />
         </AddCommentWrapper>

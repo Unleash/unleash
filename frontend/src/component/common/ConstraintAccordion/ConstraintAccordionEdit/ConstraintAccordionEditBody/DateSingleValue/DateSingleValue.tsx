@@ -28,8 +28,8 @@ export const DateSingleValue = ({
     setError,
 }: IDateSingleValueProps) => {
     const timezones = Object.values(
-        TimezoneCountries.getAllTimezones({ deprecated: false }),
-    ).map((timezone) => ({
+        TimezoneCountries.getAllTimezones({ deprecated: false })
+    ).map(timezone => ({
         key: timezone.name,
         label: `${timezone.name}`,
         utcOffset: timezone.utcOffsetStr,
@@ -39,9 +39,7 @@ export const DateSingleValue = ({
     const [pickedDate, setPickedDate] = useState(value || '');
 
     const timezoneText = useMemo<string>(() => {
-        const localTimezone = timezones.find(
-            (t) => t.key === localTimezoneName,
-        );
+        const localTimezone = timezones.find(t => t.key === localTimezoneName);
         if (localTimezone != null) {
             return `${localTimezone.key} (UTC ${localTimezone.utcOffset})`;
         } else {
@@ -56,11 +54,11 @@ export const DateSingleValue = ({
             <ConstraintFormHeader>Select a date</ConstraintFormHeader>
             <StyledWrapper>
                 <Input
-                    id='date'
-                    label='Date'
-                    type='datetime-local'
+                    id="date"
+                    label="Date"
+                    type="datetime-local"
                     value={parseDateValue(pickedDate)}
-                    onChange={(e) => {
+                    onChange={e => {
                         setError('');
                         const parsedDate = parseValidDate(e.target.value);
                         const dateString = parsedDate?.toISOString();

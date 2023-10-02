@@ -35,8 +35,8 @@ const Input = ({
     return (
         <StyledDiv data-loading>
             <TextField
-                size='small'
-                variant='outlined'
+                size="small"
+                variant="outlined"
                 label={label}
                 placeholder={placeholder}
                 error={error}
@@ -46,7 +46,7 @@ const Input = ({
                 value={value}
                 onChange={onChange}
                 FormHelperTextProps={{
-                    'data-testid': INPUT_ERROR_TEXT,
+                    ['data-testid']: INPUT_ERROR_TEXT,
                     title: errorText,
                     classes: {
                         root: styles.helperText,

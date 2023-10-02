@@ -3,13 +3,13 @@ import { useRef, useEffect, RefObject } from 'react';
 export type MoveListItem = (
     dragIndex: number,
     dropIndex: number,
-    save?: boolean,
+    save?: boolean
 ) => void;
 
 export const useDragItem = <T extends HTMLElement>(
     listItemIndex: number,
     moveListItem: MoveListItem,
-    handle?: RefObject<HTMLElement>,
+    handle?: RefObject<HTMLElement>
 ): RefObject<T> => {
     const ref = useRef<T>(null);
 
@@ -19,7 +19,7 @@ export const useDragItem = <T extends HTMLElement>(
             return addEventListeners(
                 ref.current,
                 moveListItem,
-                handle?.current ?? undefined,
+                handle?.current ?? undefined
             );
         }
     }, [listItemIndex, moveListItem]);
@@ -30,14 +30,14 @@ export const useDragItem = <T extends HTMLElement>(
 const addEventListeners = (
     el: HTMLElement,
     moveListItem: MoveListItem,
-    handle?: HTMLElement,
+    handle?: HTMLElement
 ): (() => void) => {
     const moveDraggedElement = (save: boolean) => {
         if (globalDraggedElement) {
             moveListItem(
                 Number(globalDraggedElement.dataset.index),
                 Number(el.dataset.index),
-                save,
+                save
             );
         }
     };

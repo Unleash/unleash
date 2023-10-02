@@ -28,7 +28,7 @@ const ProjectenvironmentPermissionSwitch = React.forwardRef<
     const access = useHasProjectEnvironmentAccess(
         props.permission,
         props.projectId,
-        props.environmentId,
+        props.environmentId
     );
 
     return <BasePermissionSwitch {...props} access={access} ref={ref} />;
@@ -41,7 +41,7 @@ const RootPermissionSwitch = React.forwardRef<
     const access = useHasRootAccess(
         props.permission,
         props.projectId,
-        props.environmentId,
+        props.environmentId
     );
 
     return <BasePermissionSwitch {...props} access={access} ref={ref} />;
@@ -67,7 +67,7 @@ const BasePermissionSwitch = React.forwardRef<
         <TooltipResolver title={formatAccessText(access, tooltip)} arrow>
             <span data-loading>
                 <Switch
-                    data-testid='toggle-switch'
+                    data-testid="toggle-switch"
                     onChange={onChange}
                     disabled={disabled || !access}
                     checked={checked}

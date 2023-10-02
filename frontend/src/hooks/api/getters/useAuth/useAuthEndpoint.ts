@@ -55,7 +55,7 @@ export const useAuthEndpoint = (): IUseAuthEndpointOutput => {
     const { data, error } = useSWR<AuthEndpointResponse>(
         USER_ENDPOINT_PATH,
         fetchAuthStatus,
-        swrConfig,
+        swrConfig
     );
 
     const refetchAuth = useCallback(() => {
@@ -71,7 +71,7 @@ export const useAuthEndpoint = (): IUseAuthEndpointOutput => {
 };
 
 const fetchAuthStatus = (): Promise<AuthEndpointResponse> => {
-    return fetch(USER_ENDPOINT_PATH).then((res) => res.json());
+    return fetch(USER_ENDPOINT_PATH).then(res => res.json());
 };
 
 const swrConfig = {

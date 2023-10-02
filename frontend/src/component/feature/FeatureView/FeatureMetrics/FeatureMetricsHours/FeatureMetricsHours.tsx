@@ -22,7 +22,7 @@ export const FeatureMetricsHours = ({
     hoursBack,
     setHoursBack,
 }: IFeatureMetricsHoursProps) => {
-    const onChange: IGeneralSelectProps['onChange'] = (key) => {
+    const onChange: IGeneralSelectProps['onChange'] = key => {
         setHoursBack(parseFeatureMetricsHour(key));
     };
 
@@ -30,8 +30,8 @@ export const FeatureMetricsHours = ({
         <div>
             <StyledTitle>Period</StyledTitle>
             <GeneralSelect
-                name='feature-metrics-period'
-                id='feature-metrics-period'
+                name="feature-metrics-period"
+                id="feature-metrics-period"
                 options={hourOptions}
                 value={String(hoursBack)}
                 onChange={onChange}

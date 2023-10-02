@@ -441,7 +441,6 @@ export * from './featureEventsSchema';
 export * from './featureEventsSchemaVersion';
 export * from './featureMetricsSchema';
 export * from './featureSchema';
-export * from './featureSchemaDependenciesItem';
 export * from './featureSchemaStrategiesItem';
 export * from './featureStrategySchema';
 export * from './featureStrategySegmentSchema';

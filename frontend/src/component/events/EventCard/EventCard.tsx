@@ -71,7 +71,7 @@ const EventCard = ({ entry }: IEventCardProps) => {
 
     const createdAtFormatted = formatDateYMDHMS(
         entry.createdAt,
-        locationSettings.locale,
+        locationSettings.locale
     );
 
     return (

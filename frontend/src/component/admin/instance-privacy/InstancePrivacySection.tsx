@@ -153,12 +153,12 @@ export const InstancePrivacySection = ({
                     <ConditionallyRender
                         condition={enabled}
                         show={
-                            <Badge color='success' icon={<CheckIcon />}>
+                            <Badge color="success" icon={<CheckIcon />}>
                                 Data is collected
                             </Badge>
                         }
                         elseShow={
-                            <Badge color='neutral' icon={<ClearIcon />}>
+                            <Badge color="neutral" icon={<ClearIcon />}>
                                 No data is collected
                             </Badge>
                         }

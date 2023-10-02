@@ -34,7 +34,7 @@ export const RoleSelect = ({
 }: IRoleSelectProps) => {
     const renderRoleOption = (
         props: React.HTMLAttributes<HTMLLIElement>,
-        option: IRole,
+        option: IRole
     ) => (
         <li {...props}>
             <StyledRoleOption>
@@ -48,14 +48,14 @@ export const RoleSelect = ({
         <>
             <Autocomplete
                 openOnFocus
-                size='small'
+                size="small"
                 value={value}
                 onChange={(_, role) => setValue(role || null)}
                 options={roles}
                 renderOption={renderRoleOption}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                    <TextField {...params} label='Role' required={required} />
+                getOptionLabel={option => option.name}
+                renderInput={params => (
+                    <TextField {...params} label="Role" required={required} />
                 )}
                 {...rest}
             />

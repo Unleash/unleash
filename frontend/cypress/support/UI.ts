@@ -15,7 +15,7 @@ const disableActiveSplashScreens = () => {
 const disableFeatureStrategiesProdGuard = () => {
     localStorage.setItem(
         'useFeatureStrategyProdGuardSettings:v2',
-        JSON.stringify({ hide: true }),
+        JSON.stringify({ hide: true })
     );
 };
 
@@ -26,7 +26,7 @@ export const runBefore = () => {
 
 export const login_UI = (
     user = AUTH_USER,
-    password = AUTH_PASSWORD,
+    password = AUTH_PASSWORD
 ): Chainable<any> => {
     return cy.session(user, () => {
         cy.visit('/');
@@ -51,14 +51,14 @@ export const login_UI = (
 export const createFeature_UI = (
     name: string,
     shouldWait?: boolean,
-    project?: string,
+    project?: string
 ): Chainable<any> => {
     const projectName = project || 'default';
 
     cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click();
 
     cy.intercept('POST', `/api/admin/projects/${projectName}/features`).as(
-        'createFeature',
+        'createFeature'
     );
 
     cy.wait(300);
@@ -72,7 +72,7 @@ export const createFeature_UI = (
 
 export const createProject_UI = (
     projectName: string,
-    defaultStickiness: string,
+    defaultStickiness: string
 ): Chainable<any> => {
     cy.get('[data-testid=NAVIGATE_TO_CREATE_PROJECT').click();
 
@@ -111,7 +111,7 @@ export const deleteSegment_UI = (segmentName: string): Chainable<any> => {
 };
 
 export const addFlexibleRolloutStrategyToFeature_UI = (
-    options: AddStrategyOptions,
+    options: AddStrategyOptions
 ): Chainable<any> => {
     const { featureToggleName, project, environment, stickiness } = options;
     const projectName = project || 'default';
@@ -123,7 +123,7 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
     cy.intercept(
         'POST',
         `/api/admin/projects/${projectName}/features/${featureToggleName}/environments/development/strategies`,
-        (req) => {
+        req => {
             expect(req.body.name).to.equal('flexibleRollout');
             expect(req.body.parameters.groupId).to.equal(featureToggleName);
             expect(req.body.parameters.stickiness).to.equal(defaultStickiness);
@@ -135,14 +135,14 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
                 expect(req.body.constraints.length).to.equal(0);
             }
 
-            req.continue((res) => {
+            req.continue(res => {
                 strategyId = res.body.id;
             });
-        },
+        }
     ).as('addStrategyToFeature');
 
     cy.visit(
-        `/projects/${projectName}/features/${featureToggleName}/strategies/create?environmentId=${env}&strategyName=flexibleRollout`,
+        `/projects/${projectName}/features/${featureToggleName}/strategies/create?environmentId=${env}&strategyName=flexibleRollout`
     );
     cy.wait(500);
     //  Takes a bit to load the screen - this will wait until it finds it or fail
@@ -157,11 +157,11 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
 
 export const updateFlexibleRolloutStrategy_UI = (
     featureToggleName: string,
-    projectName?: string,
+    projectName?: string
 ) => {
     const project = projectName || 'default';
     cy.visit(
-        `/projects/${project}/features/${featureToggleName}/strategies/edit?environmentId=development&strategyId=${strategyId}`,
+        `/projects/${project}/features/${featureToggleName}/strategies/edit?environmentId=development&strategyId=${strategyId}`
     );
 
     cy.wait(500);
@@ -182,7 +182,7 @@ export const updateFlexibleRolloutStrategy_UI = (
     cy.intercept(
         'PUT',
         `/api/admin/projects/${project}/features/${featureToggleName}/environments/*/strategies/${strategyId}`,
-        (req) => {
+        req => {
             expect(req.body.parameters.groupId).to.equal('new-group-id');
             expect(req.body.parameters.stickiness).to.equal('sessionId');
             expect(req.body.parameters.rollout).to.equal('50');
@@ -193,10 +193,10 @@ export const updateFlexibleRolloutStrategy_UI = (
                 expect(req.body.constraints.length).to.equal(0);
             }
 
-            req.continue((res) => {
+            req.continue(res => {
                 expect(res.statusCode).to.equal(200);
             });
-        },
+        }
     ).as('updateStrategy');
 
     cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
@@ -206,18 +206,18 @@ export const updateFlexibleRolloutStrategy_UI = (
 export const deleteFeatureStrategy_UI = (
     featureToggleName: string,
     shouldWait?: boolean,
-    projectName?: string,
+    projectName?: string
 ): Chainable<any> => {
     const project = projectName || 'default';
 
     cy.intercept(
         'DELETE',
         `/api/admin/projects/${project}/features/${featureToggleName}/environments/*/strategies/${strategyId}`,
-        (req) => {
-            req.continue((res) => {
+        req => {
+            req.continue(res => {
                 expect(res.statusCode).to.equal(200);
             });
-        },
+        }
     ).as('deleteUserStrategy');
     cy.visit(`/projects/${project}/features/${featureToggleName}`);
     cy.get('[data-testid=FEATURE_ENVIRONMENT_ACCORDION_development]').click();
@@ -230,11 +230,11 @@ export const deleteFeatureStrategy_UI = (
 
 export const addUserIdStrategyToFeature_UI = (
     featureToggleName: string,
-    projectName: string,
+    projectName: string
 ): Chainable<any> => {
     const project = projectName || 'default';
     cy.visit(
-        `/projects/${project}/features/${featureToggleName}/strategies/create?environmentId=development&strategyName=userWithId`,
+        `/projects/${project}/features/${featureToggleName}/strategies/create?environmentId=development&strategyName=userWithId`
     );
 
     if (ENTERPRISE) {
@@ -255,7 +255,7 @@ export const addUserIdStrategyToFeature_UI = (
     cy.intercept(
         'POST',
         `/api/admin/projects/default/features/${featureToggleName}/environments/*/strategies`,
-        (req) => {
+        req => {
             expect(req.body.name).to.equal('userWithId');
 
             expect(req.body.parameters.userIds.length).to.equal(11);
@@ -266,10 +266,10 @@ export const addUserIdStrategyToFeature_UI = (
                 expect(req.body.constraints.length).to.equal(0);
             }
 
-            req.continue((res) => {
+            req.continue(res => {
                 strategyId = res.body.id;
             });
-        },
+        }
     ).as('addStrategyToFeature');
 
     cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
@@ -279,7 +279,7 @@ export const addUserIdStrategyToFeature_UI = (
 export const addVariantsToFeature_UI = (
     featureToggleName: string,
     variants: Array<string>,
-    projectName: string,
+    projectName: string
 ) => {
     const project = projectName || 'default';
     cy.visit(`/projects/${project}/features/${featureToggleName}/variants`);
@@ -287,16 +287,16 @@ export const addVariantsToFeature_UI = (
     cy.intercept(
         'PATCH',
         `/api/admin/projects/${project}/features/${featureToggleName}/environments/development/variants`,
-        (req) => {
+        req => {
             variants.forEach((variant, index) => {
                 expect(req.body[index].op).to.equal('add');
                 expect(req.body[index].path).to.equal(`/${index}`);
                 expect(req.body[index].value.name).to.equal(variant);
                 expect(req.body[index].value.weight).to.equal(
-                    1000 / variants.length,
+                    1000 / variants.length
                 );
             });
-        },
+        }
     ).as('variantCreation');
 
     cy.get('[data-testid=ADD_VARIANT_BUTTON]').first().click();
@@ -314,7 +314,7 @@ export const addVariantsToFeature_UI = (
 export const deleteVariant_UI = (
     featureToggleName: string,
     variant: string,
-    projectName?: string,
+    projectName?: string
 ): Chainable<any> => {
     const project = projectName || 'default';
     cy.visit(`/projects/${project}/features/${featureToggleName}/variants`);
@@ -325,13 +325,13 @@ export const deleteVariant_UI = (
     cy.intercept(
         'PATCH',
         `/api/admin/projects/${project}/features/${featureToggleName}/environments/development/variants`,
-        (req) => {
+        req => {
             expect(req.body[0].op).to.equal('remove');
             expect(req.body[0].path).to.equal('/1');
             expect(req.body[1].op).to.equal('replace');
             expect(req.body[1].path).to.equal('/0/weight');
             expect(req.body[1].value).to.equal(1000);
-        },
+        }
     ).as('delete');
 
     cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();

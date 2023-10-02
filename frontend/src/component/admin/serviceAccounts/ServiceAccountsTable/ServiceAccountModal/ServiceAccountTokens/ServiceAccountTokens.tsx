@@ -97,7 +97,7 @@ export const ServiceAccountTokens = ({
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const { tokens = [], refetchTokens } = useServiceAccountTokens(
-        serviceAccount.id,
+        serviceAccount.id
     );
     const { refetch } = useServiceAccounts();
     const { createServiceAccountToken, deleteServiceAccountToken } =
@@ -115,12 +115,12 @@ export const ServiceAccountTokens = ({
     const [selectedToken, setSelectedToken] = useState<IPersonalAPIToken>();
 
     const onCreateClick = async (
-        newToken: ICreateServiceAccountTokenPayload,
+        newToken: ICreateServiceAccountTokenPayload
     ) => {
         try {
             const token = await createServiceAccountToken(
                 serviceAccount.id,
-                newToken,
+                newToken
             );
             refetch();
             refetchTokens();
@@ -141,7 +141,7 @@ export const ServiceAccountTokens = ({
             try {
                 await deleteServiceAccountToken(
                     serviceAccount.id,
-                    selectedToken?.id,
+                    selectedToken?.id
                 );
                 refetch();
                 refetchTokens();
@@ -202,7 +202,7 @@ export const ServiceAccountTokens = ({
                     align: 'center',
                     Cell: ({ row: { original: rowToken } }: any) => (
                         <ActionCell>
-                            <Tooltip title='Delete token' arrow describeChild>
+                            <Tooltip title="Delete token" arrow describeChild>
                                 <span>
                                     <IconButton
                                         onClick={() => {
@@ -220,13 +220,13 @@ export const ServiceAccountTokens = ({
                     disableSortBy: true,
                 },
             ] as Column<IPersonalAPIToken>[],
-        [setSelectedToken, setDeleteOpen],
+        [setSelectedToken, setDeleteOpen]
     );
 
     const { data, getSearchText, getSearchContext } = useSearch(
         columns,
         searchValue,
-        tokens,
+        tokens
     );
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
@@ -241,7 +241,7 @@ export const ServiceAccountTokens = ({
             disableMultiSort: true,
         },
         useSortBy,
-        useFlexLayout,
+        useFlexLayout
     );
 
     useConditionallyHiddenColumns(
@@ -260,7 +260,7 @@ export const ServiceAccountTokens = ({
             },
         ],
         setHiddenColumns,
-        columns,
+        columns
     );
 
     return (
@@ -275,8 +275,8 @@ export const ServiceAccountTokens = ({
                             getSearchContext={getSearchContext}
                         />
                         <Button
-                            variant='contained'
-                            color='primary'
+                            variant="contained"
+                            color="primary"
                             disabled={tokens.length >= PAT_LIMIT}
                             onClick={() => setCreateOpen(true)}
                         >
@@ -315,7 +315,7 @@ export const ServiceAccountTokens = ({
                                     the Unleash API.
                                 </StyledPlaceholderSubtitle>
                                 <Button
-                                    variant='outlined'
+                                    variant="outlined"
                                     onClick={() => setCreateOpen(true)}
                                 >
                                     Create new service account token
@@ -338,13 +338,13 @@ export const ServiceAccountTokens = ({
             />
             <Dialogue
                 open={deleteOpen}
-                primaryButtonText='Delete token'
-                secondaryButtonText='Cancel'
+                primaryButtonText="Delete token"
+                secondaryButtonText="Cancel"
                 onClick={onDeleteClick}
                 onClose={() => {
                     setDeleteOpen(false);
                 }}
-                title='Delete token?'
+                title="Delete token?"
             >
                 <Typography>
                     Any applications or scripts using this token "

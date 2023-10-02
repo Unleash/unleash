@@ -20,13 +20,13 @@ const FeatureTypeSelect = ({
 }: IFeatureTypeSelectProps) => {
     const { featureTypes } = useFeatureTypes();
 
-    const options: ISelectOption[] = featureTypes.map((t) => ({
+    const options: ISelectOption[] = featureTypes.map(t => ({
         key: t.id,
         label: t.name,
         title: t.description,
     }));
 
-    if (!options.some((o) => o.key === value)) {
+    if (!options.some(o => o.key === value)) {
         options.push({ key: value, label: value });
     }
 

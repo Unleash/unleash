@@ -25,7 +25,7 @@ const DropdownMenu: VFC<IDropdownMenuProps> = ({
     id,
     title,
     callback,
-    icon = <ArrowDropDown titleAccess='Toggle' />,
+    icon = <ArrowDropDown titleAccess="Toggle" />,
     label,
     style,
     startIcon,
@@ -33,11 +33,11 @@ const DropdownMenu: VFC<IDropdownMenuProps> = ({
 }) => {
     const [anchor, setAnchor] = useState<Element | null>(null);
 
-    const handleOpen: MouseEventHandler<HTMLButtonElement> = (e) => {
+    const handleOpen: MouseEventHandler<HTMLButtonElement> = e => {
         setAnchor(e.currentTarget);
     };
 
-    const handleClose: MouseEventHandler<HTMLDivElement> = (e) => {
+    const handleClose: MouseEventHandler<HTMLDivElement> = e => {
         if (callback && typeof callback === 'function') {
             callback(e);
         }

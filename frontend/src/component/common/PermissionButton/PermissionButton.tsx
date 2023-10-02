@@ -34,10 +34,10 @@ export interface IProjectPermissionButtonProps extends IPermissionButtonProps {
 const getEndIcon = (
     access: boolean,
     fallBackIcon?: React.ReactNode,
-    hideLockIcon?: boolean,
+    hideLockIcon?: boolean
 ): React.ReactNode => {
     if (!access && !hideLockIcon) {
-        return <Lock titleAccess='Locked' />;
+        return <Lock titleAccess="Locked" />;
     }
 
     if (fallBackIcon) {
@@ -52,7 +52,7 @@ const ProjectEnvironmentPermissionButton: React.FC<IProjectPermissionButtonProps
         const access = useHasProjectEnvironmentAccess(
             props.permission,
             props.projectId,
-            props.environmentId,
+            props.environmentId
         );
 
         return <BasePermissionButton {...props} access={access} ref={ref} />;
@@ -63,11 +63,11 @@ const RootPermissionButton: React.FC<IPermissionButtonProps> = React.forwardRef(
         const access = useHasRootAccess(
             props.permission,
             props.projectId,
-            props.environmentId,
+            props.environmentId
         );
 
         return <BasePermissionButton {...props} access={access} ref={ref} />;
-    },
+    }
 );
 
 const BasePermissionButton: React.FC<IPermissionBaseButtonProps> =
@@ -87,7 +87,7 @@ const BasePermissionButton: React.FC<IPermissionBaseButtonProps> =
                 hideLockIcon,
                 ...rest
             },
-            ref,
+            ref
         ) => {
             const id = useId();
             const endIcon = getEndIcon(access, rest.endIcon, hideLockIcon);
@@ -114,7 +114,7 @@ const BasePermissionButton: React.FC<IPermissionBaseButtonProps> =
                     </span>
                 </TooltipResolver>
             );
-        },
+        }
     );
 
 const PermissionButton: React.FC<IPermissionButtonProps> = React.forwardRef(
@@ -133,7 +133,7 @@ const PermissionButton: React.FC<IPermissionButtonProps> = React.forwardRef(
             );
         }
         return <RootPermissionButton {...props} ref={ref} />;
-    },
+    }
 );
 
 export default PermissionButton;

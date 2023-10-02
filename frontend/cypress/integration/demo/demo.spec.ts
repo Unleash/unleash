@@ -16,7 +16,7 @@ describe('demo', () => {
                 name: 'dev',
                 type: 'development',
             },
-            optionsIgnore409,
+            optionsIgnore409
         );
         cy.createProject_API('demo-app', optionsIgnore409);
         cy.createFeature_API('demoApp.step1', 'demo-app', optionsIgnore409);
@@ -32,10 +32,10 @@ describe('demo', () => {
             cy.get("[data-testid='CLOSE_SPLASH']").click();
         }
 
-        cy.intercept('GET', `${baseUrl}/api/admin/ui-config`, (req) => {
+        cy.intercept('GET', `${baseUrl}/api/admin/ui-config`, req => {
             req.headers['cache-control'] =
                 'no-cache, no-store, must-revalidate';
-            req.on('response', (res) => {
+            req.on('response', res => {
                 if (res.body) {
                     res.body.flags = {
                         ...res.body.flags,
@@ -93,7 +93,7 @@ describe('demo', () => {
                     'log',
                     `Testing topic #${topic + 1} "${
                         currentTopic.title
-                    }", step #${step + 1}...`,
+                    }", step #${step + 1}...`
                 );
 
                 if (!currentStep.optional) {

@@ -42,7 +42,7 @@ export const TagsInput = ({
     disabled = false,
     onChange,
 }: ITagsInputProps) => {
-    const icon = <CheckBoxOutlineBlankIcon fontSize='small' />;
+    const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 
     const getOptionLabel = (option: TagOption) => {
         // Add "xxx" option created dynamically
@@ -58,26 +58,26 @@ export const TagsInput = ({
             React.ClassAttributes<HTMLLIElement> &
             React.LiHTMLAttributes<HTMLLIElement>,
         option: TagOption,
-        { selected }: { selected: boolean },
+        { selected }: { selected: boolean }
     ) => {
         const isIndeterminate =
             indeterminateOptions?.some(
-                (indeterminateOption) =>
-                    indeterminateOption.title === option.title,
+                indeterminateOption =>
+                    indeterminateOption.title === option.title
             ) ?? false;
         return (
             <li {...props}>
                 <ConditionallyRender
                     condition={Boolean(option.inputValue)}
-                    show={<Add sx={{ mr: (theme) => theme.spacing(0.5) }} />}
+                    show={<Add sx={{ mr: theme => theme.spacing(0.5) }} />}
                     elseShow={
                         <Checkbox
                             icon={icon}
-                            checkedIcon={<CheckBoxIcon fontSize='small' />}
+                            checkedIcon={<CheckBoxIcon fontSize="small" />}
                             indeterminateIcon={
-                                <IndeterminateCheckBoxIcon fontSize='small' />
+                                <IndeterminateCheckBoxIcon fontSize="small" />
                             }
-                            sx={{ mr: (theme) => theme.spacing(0.5) }}
+                            sx={{ mr: theme => theme.spacing(0.5) }}
                             checked={selected && !isIndeterminate}
                             indeterminate={isIndeterminate}
                         />
@@ -90,13 +90,13 @@ export const TagsInput = ({
 
     const renderTags = (
         tagValue: TagOption[],
-        getTagProps: AutocompleteRenderGetTagProps,
+        getTagProps: AutocompleteRenderGetTagProps
     ) =>
         tagValue.map((option, index) => {
             const exists = existingTags.some(
-                (existingTag) =>
+                existingTag =>
                     existingTag.value === option.title &&
-                    existingTag.type === tagType.name,
+                    existingTag.type === tagType.name
             );
             if (exists && indeterminateOptions === undefined) {
                 return null;
@@ -106,15 +106,13 @@ export const TagsInput = ({
 
     const filterOptions = (
         options: TagOption[],
-        params: FilterOptionsState<TagOption>,
+        params: FilterOptionsState<TagOption>
     ) => {
         const filtered = filter(options, params);
 
         const { inputValue } = params;
         // Suggest the creation of a new value
-        const isExisting = options.some(
-            (option) => inputValue === option.title,
-        );
+        const isExisting = options.some(option => inputValue === option.title);
         if (inputValue !== '' && !isExisting) {
             filtered.push({
                 inputValue,
@@ -128,10 +126,10 @@ export const TagsInput = ({
     return (
         <Autocomplete
             multiple
-            id='checkboxes-tag'
-            sx={{ marginTop: (theme) => theme.spacing(2), width: 500 }}
+            id="checkboxes-tag"
+            sx={{ marginTop: theme => theme.spacing(2), width: 500 }}
             disableCloseOnSelect
-            placeholder='Select Values'
+            placeholder="Select Values"
             options={options}
             value={selectedOptions}
             renderTags={renderTags}
@@ -147,11 +145,11 @@ export const TagsInput = ({
             filterOptions={filterOptions}
             ListboxProps={{ style: { maxHeight: 200, overflow: 'auto' } }}
             onChange={onChange}
-            renderInput={(params) => (
+            renderInput={params => (
                 <TextField
                     {...params}
-                    label='Select values'
-                    placeholder='Select values'
+                    label="Select values"
+                    placeholder="Select values"
                 />
             )}
             disabled={disabled}

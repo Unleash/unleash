@@ -23,10 +23,10 @@ export const ProjectSegments = () => {
     if (isOss()) {
         return (
             <PageContent
-                header={<PageHeader titleElement='Segments' />}
+                header={<PageHeader titleElement="Segments" />}
                 sx={{ justifyContent: 'center' }}
             >
-                <PremiumFeature feature='segments' />
+                <PremiumFeature feature="segments" />
             </PageContent>
         );
     }
@@ -34,30 +34,30 @@ export const ProjectSegments = () => {
     return (
         <Routes>
             <Route
-                path='create'
+                path="create"
                 element={
                     <SidebarModal
                         open
                         onClose={() => navigate(GO_BACK)}
-                        label='Create segment'
+                        label="Create segment"
                     >
                         <CreateSegment modal />
                     </SidebarModal>
                 }
             />
             <Route
-                path='edit/:segmentId'
+                path="edit/:segmentId"
                 element={
                     <SidebarModal
                         open
                         onClose={() => navigate(GO_BACK)}
-                        label='Edit segment'
+                        label="Edit segment"
                     >
                         <EditSegment modal />
                     </SidebarModal>
                 }
             />
-            <Route path='*' element={<SegmentTable />} />
+            <Route path="*" element={<SegmentTable />} />
         </Routes>
     );
 };

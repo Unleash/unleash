@@ -53,7 +53,7 @@ export const StyledButtonContainer = styled(Box, {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    svg: {
+    ['svg']: {
         color: svgColor,
     },
 }));

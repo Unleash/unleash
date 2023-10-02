@@ -6,7 +6,7 @@ export const useSegmentForm = (
     initialName = '',
     initialDescription = '',
     initialProject?: string,
-    initialConstraints: IConstraint[] = [],
+    initialConstraints: IConstraint[] = []
 ) => {
     const [name, setName] = useState(initialName);
     const [description, setDescription] = useState(initialDescription);
@@ -34,7 +34,7 @@ export const useSegmentForm = (
     }, [JSON.stringify(initialConstraints)]);
 
     useEffect(() => {
-        setErrors((errors) => ({
+        setErrors(errors => ({
             ...errors,
             name: nameError,
         }));

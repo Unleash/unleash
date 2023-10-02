@@ -22,7 +22,7 @@ export const CreateApiTokenButton = ({
             data-testid={CREATE_API_TOKEN_BUTTON}
             permission={permission}
             projectId={project}
-            maxWidth='700px'
+            maxWidth="700px"
         >
             New API token
         </ResponsiveButton>

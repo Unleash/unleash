@@ -46,10 +46,10 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
     const { updateFeatureTypeLifetime, loading: actionLoading } =
         useFeatureTypeApi();
     const [lifetime, setLifetime] = useState<number>(
-        featureType?.lifetimeDays || 0,
+        featureType?.lifetimeDays || 0
     );
     const [doesntExpire, setDoesntExpire] = useState<boolean>(
-        !featureType?.lifetimeDays,
+        !featureType?.lifetimeDays
     );
     const { setToastData, setToastApiError } = useToast();
     const tracker = usePlausibleTracker();
@@ -72,7 +72,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
     const isIncorrect =
         !doesntExpire && (Number.isNaN(lifetime) || lifetime < 0);
 
-    const onSubmit: FormEventHandler = async (e) => {
+    const onSubmit: FormEventHandler = async e => {
         e.preventDefault();
         try {
             if (!featureType?.id)
@@ -105,13 +105,13 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                 "--header 'Content-Type: application/json'",
                 '--data-raw \'{\n  "lifetimeDays": 7\n}\'',
             ].join(' \\\n'),
-        [uiConfig, featureType?.id],
+        [uiConfig, featureType?.id]
     );
 
     if (!loading && !featureType) {
         return (
             <NotFound>
-                <div data-testid='404_NOT_FOUND' />
+                <div data-testid="404_NOT_FOUND" />
             </NotFound>
         );
     }
@@ -125,19 +125,19 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                     : `Edit toggle type: ${featureType?.name}`
             }
             description={featureType?.description || ''}
-            documentationLink='https://docs.getunleash.io/reference/feature-toggle-types'
-            documentationLinkLabel='Feature toggle types documentation'
+            documentationLink="https://docs.getunleash.io/reference/feature-toggle-types"
+            documentationLinkLabel="Feature toggle types documentation"
             formatApiCode={formatApiCode}
         >
-            <StyledForm component='form' onSubmit={onSubmit}>
+            <StyledForm component="form" onSubmit={onSubmit}>
                 <Typography
-                    sx={(theme) => ({
+                    sx={theme => ({
                         margin: theme.spacing(3, 0, 1),
                         display: 'flex',
                         alignItems: 'center',
                     })}
                 >
-                    <Box component='label' htmlFor='feature-toggle-lifetime'>
+                    <Box component="label" htmlFor="feature-toggle-lifetime">
                         Expected lifetime
                     </Box>
                     <HelpIcon
@@ -150,9 +150,9 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                                 </p>
                                 <br />
                                 <a
-                                    href='https://docs.getunleash.io/reference/feature-toggle-types#expected-lifetime'
-                                    target='_blank'
-                                    rel='noreferrer'
+                                    href="https://docs.getunleash.io/reference/feature-toggle-types#expected-lifetime"
+                                    target="_blank"
+                                    rel="noreferrer"
                                 >
                                     Read more in the documentation
                                 </a>
@@ -161,19 +161,19 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                     />
                 </Typography>
                 <Box
-                    component='label'
-                    sx={(theme) => ({
+                    component="label"
+                    sx={theme => ({
                         display: 'flex',
                         alignItems: 'center',
                         cursor: 'pointer',
                         marginBottom: theme.spacing(1),
                         marginRight: 'auto',
                     })}
-                    htmlFor='feature-toggle-expire'
+                    htmlFor="feature-toggle-expire"
                 >
                     <Checkbox
                         checked={doesntExpire || lifetime === 0}
-                        id='feature-toggle-expire'
+                        id="feature-toggle-expire"
                         onChange={onChangeDoesntExpire}
                         disabled={loading}
                     />
@@ -182,9 +182,9 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                 <Input
                     autoFocus
                     disabled={doesntExpire || loading}
-                    type='number'
-                    label='Lifetime in days'
-                    id='feature-toggle-lifetime'
+                    type="number"
+                    label="Lifetime in days"
+                    id="feature-toggle-lifetime"
                     value={doesntExpire ? '0' : `${lifetime}`}
                     onChange={onChangeLifetime}
                     error={isIncorrect}
@@ -192,16 +192,16 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                 <StyledButtons>
                     <PermissionButton
                         permission={ADMIN}
-                        variant='contained'
-                        color='primary'
-                        type='submit'
+                        variant="contained"
+                        color="primary"
+                        type="submit"
                         disabled={loading || actionLoading}
                     >
                         Save feature toggle type
                     </PermissionButton>
                     <Button
-                        type='button'
-                        color='primary'
+                        type="button"
+                        color="primary"
                         onClick={() => navigate(GO_BACK)}
                     >
                         Cancel

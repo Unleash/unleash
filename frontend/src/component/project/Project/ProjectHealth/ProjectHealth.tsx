@@ -14,7 +14,7 @@ const ProjectHealth = () => {
 
     const { healthReport, refetchHealthReport, error } = useHealthReport(
         projectId,
-        { refreshInterval: 15 * 1000 },
+        { refreshInterval: 15 * 1000 }
     );
 
     if (!healthReport) {

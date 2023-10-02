@@ -4,17 +4,17 @@ export const useStrategyChangeFromRequest = (
     projectId: string,
     featureId: string,
     environment: string,
-    strategyId: string,
+    strategyId: string
 ) => {
     const { data } = usePendingChangeRequests(projectId);
 
     const environmentDraft = data?.find(
-        (draft) => draft.environment === environment,
+        draft => draft.environment === environment
     );
     const feature = environmentDraft?.features.find(
-        (feature) => feature.name === featureId,
+        feature => feature.name === featureId
     );
-    const change = feature?.changes.find((change) => {
+    const change = feature?.changes.find(change => {
         if (
             change.action === 'updateStrategy' ||
             change.action === 'deleteStrategy'

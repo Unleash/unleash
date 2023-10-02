@@ -64,7 +64,7 @@ export const NavigationMenu = ({
 
             return false;
         },
-        [isPro],
+        [isPro]
     );
 
     return (
@@ -76,7 +76,7 @@ export const NavigationMenu = ({
             style={style}
         >
             {options
-                .flatMap((option, i) => {
+                .map((option, i) => {
                     const previousGroup = options[i - 1]?.group;
                     const addDivider =
                         previousGroup &&
@@ -85,7 +85,7 @@ export const NavigationMenu = ({
 
                     return [
                         addDivider ? (
-                            <Divider variant='middle' key={option.group} />
+                            <Divider variant="middle" key={option.group} />
                         ) : null,
                         <Tooltip
                             title={
@@ -94,7 +94,7 @@ export const NavigationMenu = ({
                                     : ''
                             }
                             arrow
-                            placement='left'
+                            placement="left"
                             key={option.path}
                         >
                             <MenuItem
@@ -116,6 +116,7 @@ export const NavigationMenu = ({
                         </Tooltip>,
                     ];
                 })
+                .flat()
                 .filter(Boolean)}
         </Menu>
     );

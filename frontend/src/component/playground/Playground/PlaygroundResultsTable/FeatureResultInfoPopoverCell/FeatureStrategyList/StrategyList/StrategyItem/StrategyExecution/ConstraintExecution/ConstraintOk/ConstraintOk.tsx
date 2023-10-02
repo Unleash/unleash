@@ -16,7 +16,7 @@ export const ConstraintOk = () => {
     return (
         <StyledConstraintOKDiv>
             <StyledCheckOutline style={{ marginRight: '0.25rem' }} />
-            <Typography variant='body2'>
+            <Typography variant="body2">
                 Constraint met by value in context
             </Typography>
         </StyledConstraintOKDiv>

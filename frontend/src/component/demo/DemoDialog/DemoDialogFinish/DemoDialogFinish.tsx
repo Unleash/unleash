@@ -40,24 +40,24 @@ export const DemoDialogFinish = ({
         />
         <DemoDialog open={open} onClose={onClose}>
             <DemoDialog.Header>You finished the demo</DemoDialog.Header>
-            <Typography color='textSecondary' sx={{ mt: 4 }}>
+            <Typography color="textSecondary" sx={{ mt: 4 }}>
                 Great job! Keep exploring Unleash, as this was just a small
                 example of its full potential. You can do the demo again at any
                 moment.
             </Typography>
             <StyledActions>
                 <StyledButton
-                    variant='outlined'
-                    color='primary'
+                    variant="outlined"
+                    color="primary"
                     onClick={onRestart}
                 >
                     Restart demo
                 </StyledButton>
                 <StyledButton
-                    variant='contained'
-                    color='primary'
+                    variant="contained"
+                    color="primary"
                     onClick={onClose}
-                    data-testid='DEMO_FINISH_BUTTON'
+                    data-testid="DEMO_FINISH_BUTTON"
                 >
                     Continue
                 </StyledButton>

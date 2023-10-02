@@ -46,11 +46,11 @@ export const EditChange = ({
     const { editChange } = useChangeRequestApi();
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>(
-        change.payload,
+        change.payload
     );
 
     const { segments: allSegments } = useSegments();
-    const strategySegments = (allSegments || []).filter((segment) => {
+    const strategySegments = (allSegments || []).filter(segment => {
         return change.payload.segments?.includes(segment.id);
     });
 
@@ -83,7 +83,7 @@ export const EditChange = ({
             {
                 afterSubmitAction: refetchFeature,
             },
-            comparisonModerator,
+            comparisonModerator
         );
 
     useEffect(() => {
@@ -95,7 +95,7 @@ export const EditChange = ({
 
     const payload = {
         ...strategy,
-        segments: segments.map((segment) => segment.id),
+        segments: segments.map(segment => segment.id),
     };
 
     const onInternalSubmit = async () => {
@@ -125,8 +125,8 @@ export const EditChange = ({
         <SidebarModal
             open={open}
             onClose={onClose}
-            label='Edit change'
-            onClick={(e) => {
+            label="Edit change"
+            onClick={e => {
                 e.stopPropagation();
             }}
         >
@@ -142,7 +142,7 @@ export const EditChange = ({
                         changeRequestId,
                         change.id,
                         payload,
-                        unleashUrl,
+                        unleashUrl
                     )
                 }
             >
@@ -172,7 +172,7 @@ export const formatUpdateStrategyApiCode = (
     changeRequestId: number,
     changeId: number,
     strategy: Partial<IFeatureStrategy>,
-    unleashUrl?: string,
+    unleashUrl?: string
 ): string => {
     if (!unleashUrl) {
         return '';

@@ -20,7 +20,7 @@ export const RolesCell = ({ role }: IRolesCellProps) => (
         afterTitle={
             <ConditionallyRender
                 condition={PREDEFINED_ROLE_TYPES.includes(role.type)}
-                show={<StyledBadge color='success'>Predefined</StyledBadge>}
+                show={<StyledBadge color="success">Predefined</StyledBadge>}
             />
         }
     />

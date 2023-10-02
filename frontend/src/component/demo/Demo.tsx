@@ -34,22 +34,22 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
         createLocalStorage('Tutorial:v1.1', defaultProgress);
 
     const [welcomeOpen, setWelcomeOpen] = useState(
-        storedProgress.welcomeOpen ?? defaultProgress.welcomeOpen,
+        storedProgress.welcomeOpen ?? defaultProgress.welcomeOpen
     );
     const [finishOpen, setFinishOpen] = useState(false);
     const [plansOpen, setPlansOpen] = useState(false);
 
     const [expanded, setExpanded] = useState(
-        storedProgress.expanded ?? defaultProgress.expanded,
+        storedProgress.expanded ?? defaultProgress.expanded
     );
     const [topic, setTopic] = useState(
-        storedProgress.topic ?? defaultProgress.topic,
+        storedProgress.topic ?? defaultProgress.topic
     );
     const [step, setStep] = useState(
-        storedProgress.step ?? defaultProgress.step,
+        storedProgress.step ?? defaultProgress.step
     );
     const [stepsCompletion, setStepsCompletion] = useState(
-        storedProgress.stepsCompletion ?? defaultProgress.stepsCompletion,
+        storedProgress.stepsCompletion ?? defaultProgress.stepsCompletion
     );
 
     useEffect(() => {

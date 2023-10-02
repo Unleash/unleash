@@ -22,7 +22,7 @@ const setupRoutes = () => {
                     environment: 'development',
                 },
             ],
-        },
+        }
     );
     testServerRoute(server, '/api/admin/projects', {
         version: 1,
@@ -41,7 +41,7 @@ test('should show usage of context field', async () => {
     render(
         <UIProviderContainer>
             <ContextFieldUsage contextName={contextFieldName} />
-        </UIProviderContainer>,
+        </UIProviderContainer>
     );
 
     await screen.findByText('Usage of this context field:');

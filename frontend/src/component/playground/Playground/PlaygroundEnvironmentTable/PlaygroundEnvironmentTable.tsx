@@ -31,13 +31,13 @@ export const PlaygroundEnvironmentTable = ({
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const dynamicHeaders = Object.keys(features[0].context).map(
-        (contextField) => ({
+        contextField => ({
             Header: capitalizeFirst(contextField),
             accessor: (row: { context: Record<string, unknown> }) =>
-                row.context[contextField],
+                row['context'][contextField],
             minWidth: 160,
             Cell: HighlightCell,
-        }),
+        })
     );
 
     const COLUMNS = useMemo(() => {
@@ -111,7 +111,7 @@ export const PlaygroundEnvironmentTable = ({
         },
         useGlobalFilter,
         useFlexLayout,
-        useSortBy,
+        useSortBy
     );
 
     useConditionallyHiddenColumns(
@@ -122,7 +122,7 @@ export const PlaygroundEnvironmentTable = ({
             },
         ],
         setHiddenColumns,
-        COLUMNS,
+        COLUMNS
     );
 
     const parentRef = useRef<HTMLElement | null>(null);

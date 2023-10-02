@@ -13,7 +13,7 @@ export const useVirtualizedRange = (
     rowHeight: number,
     scrollOffset = 40,
     dampening = 5,
-    parentElement?: HTMLElement | null,
+    parentElement?: HTMLElement | null
 ) => {
     const parent = parentElement ? parentElement : window;
 
@@ -21,8 +21,8 @@ export const useVirtualizedRange = (
         Math.floor(
             (parent instanceof HTMLElement
                 ? parent.scrollTop
-                : parent.pageYOffset) / rowHeight,
-        ),
+                : parent.pageYOffset) / rowHeight
+        )
     );
 
     useEffect(() => {
@@ -33,8 +33,8 @@ export const useVirtualizedRange = (
                         (parent instanceof HTMLElement
                             ? parent.scrollTop
                             : parent.pageYOffset) /
-                            (rowHeight * dampening),
-                    ) * dampening,
+                            (rowHeight * dampening)
+                    ) * dampening
                 );
             });
         };

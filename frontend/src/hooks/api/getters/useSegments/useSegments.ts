@@ -38,6 +38,6 @@ export const useSegments = (strategyId?: string): IUseSegmentsOutput => {
 export const fetchSegments = async (url: string) => {
     return fetch(url)
         .then(handleErrorResponses('Segments'))
-        .then((res) => res.json())
-        .then((res) => res.segments);
+        .then(res => res.json())
+        .then(res => res.segments);
 };

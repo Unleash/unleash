@@ -16,7 +16,13 @@ const useApiTokensApi = () => {
         const path = `api/admin/api-tokens/${secret}`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     const createToken = async (newToken: IApiTokenCreate) => {
@@ -26,7 +32,13 @@ const useApiTokensApi = () => {
             body: JSON.stringify(newToken),
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     return { deleteToken, createToken, errors, loading };

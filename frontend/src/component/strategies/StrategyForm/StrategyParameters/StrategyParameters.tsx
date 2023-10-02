@@ -19,9 +19,8 @@ export const StrategyParameters = ({
         {input.map((item, index) => (
             <StrategyParameter
                 params={input}
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 key={index}
-                set={(value) => updateParameter(index, value)}
+                set={value => updateParameter(index, value)}
                 index={index}
                 input={input[index]}
                 setParams={setParams}

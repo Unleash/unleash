@@ -60,8 +60,8 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                     <Button
                         disabled={!hasAccess}
                         startIcon={<Undo />}
-                        variant='outlined'
-                        size='small'
+                        variant="outlined"
+                        size="small"
                         onClick={onRevive}
                     >
                         Revive
@@ -73,8 +73,8 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                     <Button
                         disabled={!hasAccess}
                         startIcon={<Delete />}
-                        variant='outlined'
-                        size='small'
+                        variant="outlined"
+                        size="small"
                         onClick={onDelete}
                     >
                         Delete

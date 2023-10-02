@@ -13,7 +13,7 @@ test('should render DrawerMenu', () => {
                     <Footer />
                 </MemoryRouter>
             </AnnouncerProvider>
-        </ThemeProvider>,
+        </ThemeProvider>
     );
 
     expect(tree).toMatchSnapshot();
@@ -27,7 +27,7 @@ test('should render DrawerMenu with "features" selected', () => {
                     <Footer />
                 </MemoryRouter>
             </AnnouncerProvider>
-        </ThemeProvider>,
+        </ThemeProvider>
     );
 
     expect(tree).toMatchSnapshot();

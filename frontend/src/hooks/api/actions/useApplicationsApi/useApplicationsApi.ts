@@ -10,7 +10,7 @@ const useApplicationsApi = () => {
     const storeApplicationMetaData = async (
         appName: string,
         key: string,
-        value: string,
+        value: string
     ) => {
         const data: { [key: string]: any } = {};
         data[key] = value;
@@ -19,15 +19,24 @@ const useApplicationsApi = () => {
             method: 'POST',
             body: JSON.stringify(data),
         });
-
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     const deleteApplication = async (appName: string) => {
         const path = `${URI}/${encodeURIComponent(appName)}`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     return {

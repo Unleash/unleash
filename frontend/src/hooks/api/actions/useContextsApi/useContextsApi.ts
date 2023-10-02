@@ -13,8 +13,13 @@ const useContextsApi = () => {
             method: 'POST',
             body: JSON.stringify({ name }),
         });
+        try {
+            const res = await makeRequest(req.caller, req.id);
 
-        return makeRequest(req.caller, req.id);
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     // @ts-expect-error
@@ -25,7 +30,13 @@ const useContextsApi = () => {
             body: JSON.stringify(payload),
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     // @ts-expect-error
@@ -36,14 +47,26 @@ const useContextsApi = () => {
             body: JSON.stringify(context),
         });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     const removeContext = async (contextName: string) => {
         const path = `${URI}/${contextName}`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        return makeRequest(req.caller, req.id);
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
     };
 
     return {

@@ -4,7 +4,7 @@ import { getDiffInDays, expired, toggleExpiryByTypeMap } from '../utils';
 import { subDays, parseISO } from 'date-fns';
 
 export const formatExpiredAt = (
-    feature: IFeatureToggleListItem,
+    feature: IFeatureToggleListItem
 ): string | undefined => {
     const { type, createdAt } = feature;
 

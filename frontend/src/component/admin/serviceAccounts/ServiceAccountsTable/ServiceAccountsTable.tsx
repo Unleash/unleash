@@ -174,7 +174,7 @@ export const ServiceAccountsTable = () => {
                 searchable: true,
             },
         ],
-        [roles],
+        [roles]
     );
 
     const [initialState] = useState({
@@ -185,7 +185,7 @@ export const ServiceAccountsTable = () => {
     const { data, getSearchText } = useSearch(
         columns,
         searchValue,
-        serviceAccounts,
+        serviceAccounts
     );
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
@@ -203,7 +203,7 @@ export const ServiceAccountsTable = () => {
             },
         },
         useSortBy,
-        useFlexLayout,
+        useFlexLayout
     );
 
     useConditionallyHiddenColumns(
@@ -218,7 +218,7 @@ export const ServiceAccountsTable = () => {
             },
         ],
         setHiddenColumns,
-        columns,
+        columns
     );
 
     return (
@@ -242,8 +242,8 @@ export const ServiceAccountsTable = () => {
                                 }
                             />
                             <Button
-                                variant='contained'
-                                color='primary'
+                                variant="contained"
+                                color="primary"
                                 onClick={() => {
                                     setSelectedServiceAccount(undefined);
                                     setModalOpen(true);

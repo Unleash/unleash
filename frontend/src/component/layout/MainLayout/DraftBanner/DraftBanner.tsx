@@ -43,7 +43,7 @@ const DraftBannerContent: FC<{
     const environments = changeRequests.map(({ environment }) => environment);
     const allChangesCount = changeRequests.reduce(
         (acc, curr) => acc + changesCount(curr),
-        0,
+        0
     );
     const showOneLongExplanation =
         changeRequests.length === 1 &&
@@ -60,7 +60,7 @@ const DraftBannerContent: FC<{
     return (
         <StyledBox>
             <DraftBannerContentWrapper>
-                <Typography variant='body2' sx={{ mr: 4 }}>
+                <Typography variant="body2" sx={{ mr: 4 }}>
                     <strong>Change request mode</strong> – You have changes{' '}
                     <ConditionallyRender
                         condition={Boolean(environments)}
@@ -79,7 +79,7 @@ const DraftBannerContent: FC<{
                                                 : ', '}
                                             <strong>{env}</strong>
                                         </Fragment>
-                                    ),
+                                    )
                                 )}
                             </>
                         }
@@ -87,7 +87,7 @@ const DraftBannerContent: FC<{
                     {explanation}.
                 </Typography>
                 <Button
-                    variant='contained'
+                    variant="contained"
                     onClick={onClick}
                     sx={{ ml: 'auto' }}
                 >
@@ -114,12 +114,10 @@ export const DraftBanner: VFC<IDraftBannerProps> = ({ project }) => {
 
     const unfinishedChangeRequests = useMemo(
         () =>
-            data?.filter((changeRequest) =>
-                ['Draft', 'In review', 'Approved'].includes(
-                    changeRequest.state,
-                ),
+            data?.filter(changeRequest =>
+                ['Draft', 'In review', 'Approved'].includes(changeRequest.state)
             ),
-        [data],
+        [data]
     );
 
     if ((!loading && !data) || data?.length === 0) {

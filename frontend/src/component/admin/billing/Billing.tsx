@@ -29,7 +29,7 @@ export const Billing = () => {
 
     return (
         <div>
-            <PageContent header='Billing' isLoading={loading}>
+            <PageContent header="Billing" isLoading={loading}>
                 <ConditionallyRender
                     condition={isBilling}
                     show={
@@ -43,7 +43,7 @@ export const Billing = () => {
                         </PermissionGuard>
                     }
                     elseShow={
-                        <Alert severity='error'>
+                        <Alert severity="error">
                             Billing is not enabled for this instance.
                         </Alert>
                     }

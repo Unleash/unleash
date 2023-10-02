@@ -71,7 +71,7 @@ const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
 }));
 
 const StyledSwitchContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'hasWarning',
+    shouldForwardProp: prop => prop !== 'hasWarning',
 })<{ hasWarning?: boolean }>(({ theme, hasWarning }) => ({
     flexGrow: 0,
     ...flexRow,
@@ -136,7 +136,7 @@ export const ProjectFeatureToggles = ({
     const { value: storedParams, setValue: setStoredParams } =
         createLocalStorage(
             `${projectId}:FeatureToggleListTable:v1`,
-            defaultSort,
+            defaultSort
         );
     const { value: globalStore, setValue: setGlobalStore } =
         useGlobalLocalStorage();
@@ -145,14 +145,14 @@ export const ProjectFeatureToggles = ({
     const environments = useEnvironmentsRef(
         loading
             ? [{ environment: 'a' }, { environment: 'b' }, { environment: 'c' }]
-            : newEnvironments,
+            : newEnvironments
     );
     const { refetch } = useProject(projectId);
     const { isFavoritesPinned, sortTypes, onChangeIsFavoritePinned } =
         usePinnedFavorites(
             searchParams.has('favorites')
                 ? searchParams.get('favorites') === 'true'
-                : globalStore.favorites,
+                : globalStore.favorites
         );
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const {
@@ -163,7 +163,7 @@ export const ProjectFeatureToggles = ({
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { uiConfig } = useUiConfig();
     const showEnvironmentLastSeen = Boolean(
-        uiConfig.flags.lastSeenByEnvironment,
+        uiConfig.flags.lastSeenByEnvironment
     );
 
     const onFavorite = useCallback(
@@ -175,12 +175,12 @@ export const ProjectFeatureToggles = ({
             }
             refetch();
         },
-        [projectId, refetch],
+        [projectId, refetch]
     );
 
     const showTagsColumn = useMemo(
-        () => features.some((feature) => feature?.tags?.length),
-        [features],
+        () => features.some(feature => feature?.tags?.length),
+        [features]
     );
 
     const columns = useMemo(
@@ -269,11 +269,11 @@ export const ProjectFeatureToggles = ({
                           filterName: 'tags',
                           filterBy(
                               row: IFeatureToggleListItem,
-                              values: string[],
+                              values: string[]
                           ) {
                               return includesFilter(
                                   getColumnValues(this, row),
-                                  values,
+                                  values
                               );
                           },
                       },
@@ -348,24 +348,24 @@ export const ProjectFeatureToggles = ({
                 hideInMenu: true,
             },
         ],
-        [projectId, environments, loading],
+        [projectId, environments, loading]
     );
 
     const [searchValue, setSearchValue] = useState(
-        searchParams.get('search') || '',
+        searchParams.get('search') || ''
     );
 
     const [showTitle, setShowTitle] = useState(true);
 
     const featuresData = useMemo(
         () =>
-            features.map((feature) => ({
+            features.map(feature => ({
                 ...feature,
                 environments: Object.fromEntries(
-                    environments.map((env) => {
+                    environments.map(env => {
                         const thisEnv = feature?.environments.find(
-                            (featureEnvironment) =>
-                                featureEnvironment?.name === env,
+                            featureEnvironment =>
+                                featureEnvironment?.name === env
                         );
                         return [
                             env,
@@ -376,16 +376,16 @@ export const ProjectFeatureToggles = ({
                                 lastSeenAt: thisEnv?.lastSeenAt,
                             },
                         ];
-                    }),
+                    })
                 ),
                 someEnabledEnvironmentHasVariants:
                     feature.environments?.some(
-                        (featureEnvironment) =>
+                        featureEnvironment =>
                             featureEnvironment.variantCount > 0 &&
-                            featureEnvironment.enabled,
+                            featureEnvironment.enabled
                     ) || false,
             })),
-        [features, environments],
+        [features, environments]
     );
 
     const {
@@ -416,19 +416,19 @@ export const ProjectFeatureToggles = ({
                         (column?.id as string) ||
                         (typeof column?.accessor === 'string'
                             ? (column?.accessor as string)
-                            : ''),
+                            : '')
                 )
                 .filter(Boolean);
             let hiddenColumns = environments
                 .filter((_, index) => index >= 3)
-                .map((environment) => `environments.${environment}`);
+                .map(environment => `environments.${environment}`);
 
             if (searchParams.has('columns')) {
                 const columnsInParams =
                     searchParams.get('columns')?.split(',') || [];
                 const visibleColumns = [...staticColumns, ...columnsInParams];
                 hiddenColumns = allColumnIds.filter(
-                    (columnId) => !visibleColumns.includes(columnId),
+                    columnId => !visibleColumns.includes(columnId)
                 );
             } else if (storedParams.columns) {
                 const visibleColumns = [
@@ -436,7 +436,7 @@ export const ProjectFeatureToggles = ({
                     ...storedParams.columns,
                 ];
                 hiddenColumns = allColumnIds.filter(
-                    (columnId) => !visibleColumns.includes(columnId),
+                    columnId => !visibleColumns.includes(columnId)
                 );
             }
 
@@ -453,7 +453,7 @@ export const ProjectFeatureToggles = ({
                 selectedRowIds: {},
             };
         },
-        [environments], // eslint-disable-line react-hooks/exhaustive-deps
+        [environments] // eslint-disable-line react-hooks/exhaustive-deps
     );
 
     const getRowId = useCallback((row: any) => row.name, []);
@@ -479,7 +479,7 @@ export const ProjectFeatureToggles = ({
         },
         useFlexLayout,
         useSortBy,
-        useRowSelect,
+        useRowSelect
     );
 
     useEffect(() => {
@@ -500,21 +500,21 @@ export const ProjectFeatureToggles = ({
         tableState.columns = allColumns
             .map(({ id }) => id)
             .filter(
-                (id) =>
-                    !staticColumns.includes(id) && !hiddenColumns?.includes(id),
+                id =>
+                    !staticColumns.includes(id) && !hiddenColumns?.includes(id)
             )
             .join(',');
 
         setSearchParams(tableState, {
             replace: true,
         });
-        setStoredParams((params) => ({
+        setStoredParams(params => ({
             ...params,
             id: sortBy[0].id,
             desc: sortBy[0].desc || false,
             columns: tableState.columns.split(','),
         }));
-        setGlobalStore((params) => ({
+        setGlobalStore(params => ({
             ...params,
             favorites: Boolean(isFavoritesPinned),
         }));
@@ -546,7 +546,7 @@ export const ProjectFeatureToggles = ({
                                     condition={!isSmallScreen}
                                     show={
                                         <Search
-                                            placeholder='Search and Filter'
+                                            placeholder="Search and Filter"
                                             expandable
                                             initialValue={searchValue}
                                             onChange={setSearchValue}
@@ -554,7 +554,7 @@ export const ProjectFeatureToggles = ({
                                             onBlur={() => setShowTitle(true)}
                                             hasFilters
                                             getSearchContext={getSearchContext}
-                                            id='projectFeatureToggles'
+                                            id="projectFeatureToggles"
                                         />
                                     }
                                 />
@@ -569,18 +569,18 @@ export const ProjectFeatureToggles = ({
                                 <PageHeader.Divider sx={{ marginLeft: 0 }} />
                                 <ConditionallyRender
                                     condition={Boolean(
-                                        uiConfig?.flags?.featuresExportImport,
+                                        uiConfig?.flags?.featuresExportImport
                                     )}
                                     show={
                                         <Tooltip
-                                            title='Export toggles visible in the table below'
+                                            title="Export toggles visible in the table below"
                                             arrow
                                         >
                                             <IconButton
                                                 onClick={() =>
                                                     setShowExportDialog(true)
                                                 }
-                                                sx={(theme) => ({
+                                                sx={theme => ({
                                                     marginRight:
                                                         theme.spacing(2),
                                                 })}
@@ -594,11 +594,11 @@ export const ProjectFeatureToggles = ({
                                     onClick={() =>
                                         navigate(getCreateTogglePath(projectId))
                                     }
-                                    maxWidth='960px'
+                                    maxWidth="960px"
                                     Icon={Add}
                                     projectId={projectId}
                                     permission={CREATE_FEATURE}
-                                    data-testid='NAVIGATE_TO_CREATE_FEATURE'
+                                    data-testid="NAVIGATE_TO_CREATE_FEATURE"
                                 >
                                     New feature toggle
                                 </StyledResponsiveButton>
@@ -613,7 +613,7 @@ export const ProjectFeatureToggles = ({
                                     onChange={setSearchValue}
                                     hasFilters
                                     getSearchContext={getSearchContext}
-                                    id='projectFeatureToggles'
+                                    id="projectFeatureToggles"
                                 />
                             }
                         />
@@ -650,7 +650,7 @@ export const ProjectFeatureToggles = ({
                 />
                 <EnvironmentStrategyDialog
                     onClose={() =>
-                        setStrategiesDialogState((prev) => ({
+                        setStrategiesDialogState(prev => ({
                             ...prev,
                             open: false,
                         }))

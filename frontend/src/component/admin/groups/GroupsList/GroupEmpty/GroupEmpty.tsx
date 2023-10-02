@@ -23,10 +23,10 @@ export const GroupEmpty = () => {
                 No groups available. Get started by adding a new group.
             </StyledTitle>
             <Button
-                to='/admin/groups/create-group'
+                to="/admin/groups/create-group"
                 component={Link}
-                variant='outlined'
-                color='primary'
+                variant="outlined"
+                color="primary"
             >
                 Create your first group
             </Button>

@@ -134,22 +134,22 @@ export const GroupCard = ({
                         <ProjectBadgeContainer>
                             <ConditionallyRender
                                 condition={group.projects.length > 0}
-                                show={group.projects.map((project) => (
+                                show={group.projects.map(project => (
                                     <Tooltip
                                         key={project}
-                                        title='View project'
+                                        title="View project"
                                         arrow
-                                        placement='bottom-end'
+                                        placement="bottom-end"
                                         describeChild
                                     >
                                         <Badge
-                                            onClick={(e) => {
+                                            onClick={e => {
                                                 e.preventDefault();
                                                 navigate(
-                                                    `/projects/${project}/settings/access`,
+                                                    `/projects/${project}/settings/access`
                                                 );
                                             }}
-                                            color='secondary'
+                                            color="secondary"
                                             icon={<TopicOutlinedIcon />}
                                         >
                                             {project}
@@ -158,7 +158,7 @@ export const GroupCard = ({
                                 ))}
                                 elseShow={
                                     <Tooltip
-                                        title='This group is not used in any project'
+                                        title="This group is not used in any project"
                                         arrow
                                         describeChild
                                     >

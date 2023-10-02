@@ -10,13 +10,13 @@ export const Table: FC<
         sx={{
             position: 'relative',
             '& tbody tr': {
-                height: (theme) =>
+                height: theme =>
                     ({
                         auto: 'auto',
                         standard: theme.shape.tableRowHeight,
                         compact: theme.shape.tableRowHeightCompact,
                         dense: theme.shape.tableRowHeightDense,
-                    })[rowHeight] ?? rowHeight,
+                    }[rowHeight] ?? rowHeight),
             },
         }}
         {...props}

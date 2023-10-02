@@ -6,8 +6,8 @@ type objectIdx = {
 };
 
 export const projectFilterGenerator = (
-    permissions: IPermission[],
-    matcherPermission: string,
+    permissions: IPermission[] = [],
+    matcherPermission: string
 ): ((projectId: string) => boolean) => {
     let admin = false;
 
@@ -23,7 +23,7 @@ export const projectFilterGenerator = (
 
             return acc;
         },
-        {},
+        {}
     );
 
     return (projectId: string) => {

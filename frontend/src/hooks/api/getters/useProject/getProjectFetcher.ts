@@ -8,7 +8,7 @@ export const getProjectFetcher = (id: string) => {
             method: 'GET',
         })
             .then(handleErrorResponses('Project overview'))
-            .then((res) => res.json());
+            .then(res => res.json());
     };
 
     const KEY = `api/admin/projects/${id}`;

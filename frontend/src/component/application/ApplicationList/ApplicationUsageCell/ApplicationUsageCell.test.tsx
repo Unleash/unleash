@@ -14,7 +14,7 @@ test('display project and environments in correct manner', () => {
             usage={[
                 { project: 'myProject', environments: ['dev', 'production'] },
             ]}
-        />,
+        />
     );
 
     const anchor = screen.getByRole('link');
@@ -26,7 +26,7 @@ test('when no specific project is defined, do not create link', () => {
     render(
         <ApplicationUsageCell
             usage={[{ project: '*', environments: ['dev', 'production'] }]}
-        />,
+        />
     );
 
     const anchor = screen.queryByRole('link');

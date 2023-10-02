@@ -2,8 +2,11 @@ import useAPI from '../useApi/useApi';
 import useToast from '../../../useToast';
 import { formatUnknownError } from '../../../../utils/formatUnknownError';
 import { useCallback } from 'react';
-import { DependentFeatureSchema } from '../../../../openapi';
 
+// TODO: generate from orval
+interface IParentFeaturePayload {
+    feature: string;
+}
 export const useDependentFeaturesApi = (project: string) => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
@@ -12,14 +15,14 @@ export const useDependentFeaturesApi = (project: string) => {
 
     const addDependency = async (
         childFeature: string,
-        parentFeaturePayload: DependentFeatureSchema,
+        parentFeaturePayload: IParentFeaturePayload
     ) => {
         const req = createRequest(
             `/api/admin/projects/${project}/features/${childFeature}/dependencies`,
             {
                 method: 'POST',
                 body: JSON.stringify(parentFeaturePayload),
-            },
+            }
         );
         try {
             await makeRequest(req.caller, req.id);
@@ -35,13 +38,13 @@ export const useDependentFeaturesApi = (project: string) => {
 
     const removeDependency = async (
         childFeature: string,
-        parentFeature: string,
+        parentFeature: string
     ) => {
         const req = createRequest(
             `/api/admin/projects/${project}/features/${childFeature}/dependencies/${parentFeature}`,
             {
                 method: 'DELETE',
-            },
+            }
         );
         try {
             await makeRequest(req.caller, req.id);
@@ -60,7 +63,7 @@ export const useDependentFeaturesApi = (project: string) => {
             `/api/admin/projects/${project}/features/${childFeature}/dependencies`,
             {
                 method: 'DELETE',
-            },
+            }
         );
         try {
             await makeRequest(req.caller, req.id);

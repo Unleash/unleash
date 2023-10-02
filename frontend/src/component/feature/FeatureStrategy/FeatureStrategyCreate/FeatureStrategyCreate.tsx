@@ -42,18 +42,18 @@ export const FeatureStrategyCreate = () => {
     const { strategy: defaultStrategy, defaultStrategyFallback } =
         useDefaultStrategy(projectId, environmentId);
     const shouldUseDefaultStrategy: boolean = JSON.parse(
-        useQueryParams().get('defaultStrategy') || 'false',
+        useQueryParams().get('defaultStrategy') || 'false'
     );
 
     const { segments: allSegments } = useSegments();
-    const strategySegments = (allSegments || []).filter((segment) => {
+    const strategySegments = (allSegments || []).filter(segment => {
         return defaultStrategy?.segments?.includes(segment.id);
     });
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
 
     const [segments, setSegments] = useState<ISegment[]>(
-        shouldUseDefaultStrategy ? strategySegments : [],
+        shouldUseDefaultStrategy ? strategySegments : []
     );
     const { strategyDefinition } = useStrategy(strategyName);
     const errors = useFormErrors();
@@ -85,7 +85,7 @@ export const FeatureStrategyCreate = () => {
             {
                 afterSubmitAction: refetchFeature,
             },
-            comparisonModerator,
+            comparisonModerator
         );
 
     useEffect(() => {
@@ -123,7 +123,7 @@ export const FeatureStrategyCreate = () => {
             projectId,
             featureId,
             environmentId,
-            payload,
+            payload
         );
 
         setToastData({
@@ -188,7 +188,7 @@ export const FeatureStrategyCreate = () => {
                     featureId,
                     environmentId,
                     payload,
-                    unleashUrl,
+                    unleashUrl
                 )
             }
         >
@@ -216,7 +216,7 @@ export const formatCreateStrategyPath = (
     featureId: string,
     environmentId: string,
     strategyName: string,
-    defaultStrategy: boolean = false,
+    defaultStrategy: boolean = false
 ): string => {
     const params = new URLSearchParams({
         environmentId,
@@ -232,7 +232,7 @@ export const formatAddStrategyApiCode = (
     featureId: string,
     environmentId: string,
     strategy: Partial<IFeatureStrategy>,
-    unleashUrl?: string,
+    unleashUrl?: string
 ): string => {
     if (!unleashUrl) {
         return '';

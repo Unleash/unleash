@@ -37,10 +37,10 @@ export const LinkField = ({ inviteLink, small }: ILinkFieldProps) => {
     return (
         <Box
             sx={{
-                backgroundColor: (theme) => theme.palette.background.elevation2,
+                backgroundColor: theme => theme.palette.background.elevation2,
                 py: 4,
                 px: 4,
-                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+                borderRadius: theme => `${theme.shape.borderRadius}px`,
                 mt: 2,
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -52,13 +52,13 @@ export const LinkField = ({ inviteLink, small }: ILinkFieldProps) => {
                           py: 0.5,
                           pl: 1.5,
                           pr: 0.5,
-                          fontSize: (theme) => theme.typography.body2.fontSize,
+                          fontSize: theme => theme.typography.body2.fontSize,
                       }
                     : {}),
             }}
         >
             {inviteLink}
-            <Tooltip title='Copy link' arrow>
+            <Tooltip title="Copy link" arrow>
                 <IconButton
                     onClick={handleCopy}
                     size={small ? 'small' : 'large'}

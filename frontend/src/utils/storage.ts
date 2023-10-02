@@ -15,8 +15,8 @@ export function setLocalStorageItem(key: string, value: unknown) {
         window.localStorage.setItem(
             key,
             JSON.stringify(value, (_key, value) =>
-                value instanceof Set ? [...value] : value,
-            ),
+                value instanceof Set ? [...value] : value
+            )
         );
     } catch (err: unknown) {
         console.warn(err);

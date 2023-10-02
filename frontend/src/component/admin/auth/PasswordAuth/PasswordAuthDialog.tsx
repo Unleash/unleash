@@ -24,11 +24,11 @@ export const PasswordAuthDialog = ({
             setOpen(false);
         }}
         onClick={onClick}
-        title='Disable password based login?'
-        primaryButtonText='Disable password based login'
-        secondaryButtonText='Cancel'
+        title="Disable password based login?"
+        primaryButtonText="Disable password based login"
+        secondaryButtonText="Cancel"
     >
-        <Alert severity='warning'>
+        <Alert severity="warning">
             <strong>Warning!</strong> Disabling password based login may lock
             you out of the system permanently if you do not have any alternative
             admin credentials (such as an admin SSO account or admin API token)

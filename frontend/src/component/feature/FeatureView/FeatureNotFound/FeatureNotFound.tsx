@@ -22,7 +22,7 @@ export const FeatureNotFound = () => {
         return null;
     }
 
-    const isArchived = archivedFeatures.some((archivedFeature) => {
+    const isArchived = archivedFeatures.some(archivedFeature => {
         return archivedFeature.name === featureId;
     });
 

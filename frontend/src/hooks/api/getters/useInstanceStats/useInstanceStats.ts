@@ -14,7 +14,7 @@ export interface IInstanceStatsResponse {
 export const useInstanceStats = (): IInstanceStatsResponse => {
     const { data, error, mutate } = useSWR(
         formatApiPath(`api/admin/instance-admin/statistics`),
-        fetcher,
+        fetcher
     );
 
     return useMemo(
@@ -24,12 +24,12 @@ export const useInstanceStats = (): IInstanceStatsResponse => {
             refetchGroup: () => mutate(),
             error,
         }),
-        [data, error, mutate],
+        [data, error, mutate]
     );
 };
 
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Instance Stats'))
-        .then((res) => res.json());
+        .then(res => res.json());
 };

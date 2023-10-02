@@ -38,19 +38,19 @@ const FeatureProjectSelect = ({
 
     if (filter) {
         options = projects
-            .filter((project) => filter(project.id))
+            .filter(project => filter(project.id))
             .map(formatOption);
     } else {
         options = projects.map(formatOption);
     }
 
-    if (value && !options.find((o) => o.key === value)) {
+    if (value && !options.find(o => o.key === value)) {
         options.push({ key: value, label: value });
     }
 
     return (
         <GeneralSelect
-            label='Project'
+            label="Project"
             options={options}
             value={value}
             onChange={onChange}

@@ -15,12 +15,12 @@ export interface IInstanceMetricsResponse {
 }
 
 export const useInstanceMetrics = (
-    options: SWRConfiguration = {},
+    options: SWRConfiguration = {}
 ): IInstanceMetricsResponse => {
     const { data, error, mutate } = useSWR(
         formatApiPath(`api/admin/metrics/rps`),
         fetcher,
-        options,
+        options
     );
 
     return useMemo(
@@ -30,12 +30,12 @@ export const useInstanceMetrics = (
             refetch: () => mutate(),
             error,
         }),
-        [data, error, mutate],
+        [data, error, mutate]
     );
 };
 
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Instance Metrics'))
-        .then((res) => res.json());
+        .then(res => res.json());
 };

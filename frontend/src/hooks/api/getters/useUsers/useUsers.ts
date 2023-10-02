@@ -16,7 +16,7 @@ interface IUseUsersOutput {
 export const useUsers = (): IUseUsersOutput => {
     const { data, error, mutate } = useSWR(
         formatApiPath(`api/admin/user-admin`),
-        fetcher,
+        fetcher
     );
 
     return useMemo(
@@ -27,12 +27,12 @@ export const useUsers = (): IUseUsersOutput => {
             refetch: () => mutate(),
             error,
         }),
-        [data, error, mutate],
+        [data, error, mutate]
     );
 };
 
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Users'))
-        .then((res) => res.json());
+        .then(res => res.json());
 };

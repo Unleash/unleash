@@ -34,7 +34,7 @@ export const ApiTokenPage = () => {
         setGlobalFilter,
         setHiddenColumns,
         columns,
-    } = useApiTokenTable(tokens, (props) => {
+    } = useApiTokenTable(tokens, props => {
         const READ_PERMISSION =
             props.row.original.type === 'client'
                 ? READ_CLIENT_API_TOKEN
@@ -91,7 +91,7 @@ export const ApiTokenPage = () => {
                                         CREATE_CLIENT_API_TOKEN,
                                         ADMIN,
                                     ]}
-                                    path='/admin/api/create-token'
+                                    path="/admin/api/create-token"
                                 />
                             </>
                         }

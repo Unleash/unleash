@@ -24,8 +24,8 @@ test('parseRedirectParam should parse the search query', async () => {
 test('parseRedirectParam should ignore external domains', async () => {
     expect(
         parseRedirectParam(
-            encodeURIComponent('https://example.com/foo?a=1&b=2'),
-        ),
+            encodeURIComponent('https://example.com/foo?a=1&b=2')
+        )
     ).toEqual({
         pathname: '/foo',
         search: '?a=1&b=2',

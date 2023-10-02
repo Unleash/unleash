@@ -37,7 +37,7 @@ export const AdvancedPlayground: VFC<{
     } = { projects: [], environments: [] };
     const { value, setValue } = createLocalStorage(
         'AdvancedPlayground:v1',
-        defaultSettings,
+        defaultSettings
     );
 
     const { environments: availableEnvironments } = useEnvironments();
@@ -46,7 +46,7 @@ export const AdvancedPlayground: VFC<{
 
     const [configurationError, setConfigurationError] = useState<string>();
     const [environments, setEnvironments] = useState<string[]>(
-        value.environments,
+        value.environments
     );
     const [projects, setProjects] = useState<string[]>(value.projects);
     const [context, setContext] = useState<string | undefined>(value.context);
@@ -81,7 +81,7 @@ export const AdvancedPlayground: VFC<{
                     await evaluatePlaygroundContext(
                         environments || [],
                         projects || '*',
-                        context,
+                        context
                     );
                 }
             };
@@ -91,7 +91,7 @@ export const AdvancedPlayground: VFC<{
             setToastData({
                 type: 'error',
                 title: `Failed to parse URL parameters: ${formatUnknownError(
-                    error,
+                    error
                 )}`,
             });
         }
@@ -108,7 +108,7 @@ export const AdvancedPlayground: VFC<{
     };
     const resolveProjectsFromUrl = (): string[] | null => {
         let projectsArray: string[] | null = null;
-        const projectsFromUrl = searchParams.get('projects');
+        let projectsFromUrl = searchParams.get('projects');
         if (projectsFromUrl) {
             projectsArray = projectsFromUrl.split(',');
             setProjects(projectsArray);
@@ -128,7 +128,7 @@ export const AdvancedPlayground: VFC<{
         environments: string[] | string,
         projects: string[] | string,
         context: string | undefined,
-        action?: () => void,
+        action?: () => void
     ) => {
         try {
             setConfigurationError(undefined);
@@ -153,7 +153,7 @@ export const AdvancedPlayground: VFC<{
                 setToastData({
                     type: 'error',
                     title: `Error parsing context: ${formatUnknownError(
-                        error,
+                        error
                     )}`,
                 });
             } else {
@@ -165,7 +165,7 @@ export const AdvancedPlayground: VFC<{
         }
     };
 
-    const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
+    const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
         event.preventDefault();
 
         setHasFormBeenSubmitted(true);
@@ -210,7 +210,7 @@ export const AdvancedPlayground: VFC<{
         <PageContent
             header={
                 <PageHeader
-                    title='Unleash playground'
+                    title="Unleash playground"
                     actions={<PlaygroundGuidancePopper />}
                 />
             }
@@ -255,7 +255,7 @@ export const AdvancedPlayground: VFC<{
                     </Paper>
                 </Box>
                 <Box
-                    sx={(theme) => ({
+                    sx={theme => ({
                         width: resultsWidth,
                         transition: 'width 0.4s ease',
                         padding: theme.spacing(4, 4),
@@ -264,7 +264,7 @@ export const AdvancedPlayground: VFC<{
                     <ConditionallyRender
                         condition={Boolean(configurationError)}
                         show={
-                            <StyledAlert severity='warning'>
+                            <StyledAlert severity="warning">
                                 {configurationError}
                             </StyledAlert>
                         }
@@ -289,7 +289,8 @@ export const AdvancedPlayground: VFC<{
                                 />
                                 <ConditionallyRender
                                     condition={
-                                        !results && !hasFormBeenSubmitted
+                                        !Boolean(results) &&
+                                        !hasFormBeenSubmitted
                                     }
                                     show={<PlaygroundGuidance />}
                                 />

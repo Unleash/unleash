@@ -13,7 +13,7 @@ test('FeedbackCESForm', () => {
                 onClose={onClose}
                 state={{ title: 'a', text: 'b', path: '/c' }}
             />
-        </ThemeProvider>,
+        </ThemeProvider>
     );
 
     expect(document.body).toMatchSnapshot();

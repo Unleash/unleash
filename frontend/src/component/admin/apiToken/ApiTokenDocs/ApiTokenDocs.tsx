@@ -5,13 +5,13 @@ export const ApiTokenDocs = () => {
     const { uiConfig } = useUiConfig();
 
     return (
-        <Alert severity='info'>
+        <Alert severity="info">
             <p>
                 Read the{' '}
                 <a
-                    href='https://docs.getunleash.io/reference/sdks'
-                    target='_blank'
-                    rel='noreferrer'
+                    href="https://docs.getunleash.io/reference/sdks"
+                    target="_blank"
+                    rel="noreferrer"
                 >
                     SDK overview
                 </a>{' '}

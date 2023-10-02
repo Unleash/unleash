@@ -65,7 +65,7 @@ export const ChangeRequestTable: VFC = () => {
         (
             enableEnvironment: string,
             isEnabled: boolean,
-            requiredApprovals: number,
+            requiredApprovals: number
         ) =>
         () => {
             setDialogState({
@@ -80,7 +80,7 @@ export const ChangeRequestTable: VFC = () => {
         if (dialogState.enableEnvironment) {
             await updateConfiguration();
         }
-        setDialogState((state) => ({ ...state, isOpen: false }));
+        setDialogState(state => ({ ...state, isOpen: false }));
     };
 
     async function updateConfiguration(config?: IChangeRequestConfig) {
@@ -91,7 +91,7 @@ export const ChangeRequestTable: VFC = () => {
                     environment: dialogState.enableEnvironment,
                     enabled: !dialogState.isEnabled,
                     requiredApprovals: dialogState.requiredApprovals,
-                },
+                }
             );
             setToastData({
                 type: 'success',
@@ -105,8 +105,8 @@ export const ChangeRequestTable: VFC = () => {
     }
 
     const approvalOptions = Array.from(Array(10).keys())
-        .map((key) => String(key + 1))
-        .map((key) => {
+        .map(key => String(key + 1))
+        .map(key => {
             const labelText = key === '1' ? 'approval' : 'approvals';
             return {
                 key,
@@ -151,16 +151,16 @@ export const ChangeRequestTable: VFC = () => {
                                         sx={{ width: '140px', marginLeft: 1 }}
                                         options={approvalOptions}
                                         value={original.requiredApprovals || 1}
-                                        onChange={(approvals) => {
+                                        onChange={approvals => {
                                             onRequiredApprovalsChange(
                                                 original,
-                                                approvals,
+                                                approvals
                                             );
                                         }}
                                         disabled={
                                             !hasAccess(
                                                 UPDATE_PROJECT,
-                                                projectId,
+                                                projectId
                                             )
                                         }
                                         IconComponent={
@@ -193,7 +193,7 @@ export const ChangeRequestTable: VFC = () => {
                             onClick={onRowChange(
                                 original.environment,
                                 original.changeRequestEnabled,
-                                original.requiredApprovals,
+                                original.requiredApprovals
                             )}
                         />
                     </StyledBox>
@@ -203,7 +203,7 @@ export const ChangeRequestTable: VFC = () => {
                 disableSortBy: true,
             },
         ],
-        [],
+        []
     );
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -219,19 +219,19 @@ export const ChangeRequestTable: VFC = () => {
                     Cell: TextCell,
                 },
             },
-            useGlobalFilter,
+            useGlobalFilter
         );
     return (
         <PageContent
             header={
                 <PageHeader
-                    titleElement='Change request configuration'
+                    titleElement="Change request configuration"
                     actions={<ChangeRequestProcessHelp />}
                 />
             }
             isLoading={loading}
         >
-            <Alert severity='info' sx={{ mb: 3 }}>
+            <Alert severity="info" sx={{ mb: 3 }}>
                 If change request is enabled for an environment, then any change
                 in that environment needs to be approved before it will be
                 applied
@@ -242,11 +242,11 @@ export const ChangeRequestTable: VFC = () => {
                     headerGroups={headerGroups as HeaderGroup<object>[]}
                 />
                 <TableBody {...getTableBodyProps()}>
-                    {rows.map((row) => {
+                    {rows.map(row => {
                         prepareRow(row);
                         return (
                             <TableRow hover {...row.getRowProps()}>
-                                {row.cells.map((cell) => (
+                                {row.cells.map(cell => (
                                     <TableCell {...cell.getCellProps()}>
                                         {cell.render('Cell')}
                                     </TableCell>
@@ -271,10 +271,10 @@ export const ChangeRequestTable: VFC = () => {
                 }}
                 open={dialogState.isOpen}
                 onClose={() =>
-                    setDialogState((state) => ({ ...state, isOpen: false }))
+                    setDialogState(state => ({ ...state, isOpen: false }))
                 }
                 primaryButtonText={dialogState.isEnabled ? 'Disable' : 'Enable'}
-                secondaryButtonText='Cancel'
+                secondaryButtonText="Cancel"
                 title={`${
                     dialogState.isEnabled ? 'Disable' : 'Enable'
                 } change requests`}
@@ -298,7 +298,7 @@ export const ChangeRequestTable: VFC = () => {
                 <ConditionallyRender
                     condition={!dialogState.isEnabled}
                     show={
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography variant="body2" color="text.secondary">
                             When enabling change request for an environment, you
                             need to be sure that your Unleash Admin already have
                             created the custom project roles in your Unleash

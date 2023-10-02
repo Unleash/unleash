@@ -27,15 +27,15 @@ export const ProjectFeaturesBatchActions: FC<
     const [showBulkDisableDialog, setShowBulkDisableDialog] = useState(false);
     const { trackEvent } = usePlausibleTracker();
     const selectedData = useMemo(
-        () => data.filter((d) => selectedIds.includes(d.name)),
-        [data, selectedIds],
+        () => data.filter(d => selectedIds.includes(d.name)),
+        [data, selectedIds]
     );
 
     const environments = useMemo(() => {
         const envs = selectedData
-            .flatMap((d) => d.environments)
-            .map((env) => env?.name)
-            .filter((env) => env !== undefined) as string[];
+            .flatMap(d => d.environments)
+            .map(env => env?.name)
+            .filter(env => env !== undefined) as string[];
         return Array.from(new Set(envs));
     }, [selectedData]);
 
@@ -68,8 +68,8 @@ export const ProjectFeaturesBatchActions: FC<
                 show={null}
                 elseShow={
                     <Button
-                        variant='outlined'
-                        size='small'
+                        variant="outlined"
+                        size="small"
                         onClick={() => setShowBulkEnableDialog(true)}
                     >
                         Enable
@@ -81,8 +81,8 @@ export const ProjectFeaturesBatchActions: FC<
                 show={null}
                 elseShow={
                     <Button
-                        variant='outlined'
-                        size='small'
+                        variant="outlined"
+                        size="small"
                         onClick={() => setShowBulkDisableDialog(true)}
                     >
                         Disable
@@ -96,8 +96,8 @@ export const ProjectFeaturesBatchActions: FC<
                 onConfirm={onResetSelection}
             />
             <Button
-                variant='outlined'
-                size='small'
+                variant="outlined"
+                size="small"
                 onClick={() => setShowExportDialog(true)}
             >
                 Export

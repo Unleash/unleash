@@ -44,7 +44,7 @@ export const ConstraintItem = ({ value, text }: IConstraintItemProps) => {
                                 key={v}
                                 label={
                                     <StringTruncator
-                                        maxWidth='300'
+                                        maxWidth="300"
                                         text={v}
                                         maxLength={50}
                                     />

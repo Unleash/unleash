@@ -4,7 +4,7 @@ import { useOverrides } from './useOverrides';
 describe('useOverrides', () => {
     it('should return initial value', () => {
         const { result } = renderHook(() =>
-            useOverrides([{ contextName: 'context', values: ['a', 'b'] }]),
+            useOverrides([{ contextName: 'context', values: ['a', 'b'] }])
         );
 
         expect(result.current[0]).toEqual([
@@ -17,7 +17,7 @@ describe('useOverrides', () => {
             useOverrides([
                 { contextName: 'X', values: ['a', 'b'] },
                 { contextName: 'Y', values: ['a', 'b', 'c'] },
-            ]),
+            ])
         );
 
         const [, dispatch] = result.current;
@@ -38,7 +38,7 @@ describe('useOverrides', () => {
             useOverrides([
                 { contextName: 'X', values: ['a', 'b'] },
                 { contextName: 'Y', values: ['a', 'b', 'c'] },
-            ]),
+            ])
         );
 
         const [, dispatch] = result.current;
@@ -56,7 +56,7 @@ describe('useOverrides', () => {
             useOverrides([
                 { contextName: 'X', values: ['a'] },
                 { contextName: 'Y', values: ['b'] },
-            ]),
+            ])
         );
 
         const [, dispatch] = result.current;
@@ -81,7 +81,7 @@ describe('useOverrides', () => {
                 { contextName: '2', values: ['a'] },
                 { contextName: '3', values: ['b'] },
                 { contextName: '4', values: ['c'] },
-            ]),
+            ])
         );
 
         const [, dispatch] = result.current;
@@ -110,7 +110,7 @@ describe('useOverrides', () => {
                 { contextName: '1', values: [] },
                 { contextName: '2', values: ['a'] },
                 { contextName: '3', values: ['b'] },
-            ]),
+            ])
         );
 
         const [, dispatch] = result.current;
@@ -134,7 +134,7 @@ describe('useOverrides', () => {
                 { contextName: '1', values: ['x'] },
                 { contextName: '2', values: ['y'] },
                 { contextName: '3', values: ['z'] },
-            ]),
+            ])
         );
 
         const [, dispatch] = result.current;

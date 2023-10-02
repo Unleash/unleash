@@ -15,20 +15,20 @@ const AuthOptions = ({ options }: IAuthOptionProps) => {
     const { classes: themeStyles } = useThemeStyles();
     return (
         <>
-            {options?.map((o) => (
+            {options?.map(o => (
                 <div
                     key={o.type}
                     className={classnames(
                         themeStyles.flexColumn,
-                        themeStyles.contentSpacingY,
+                        themeStyles.contentSpacingY
                     )}
                 >
                     <Button
-                        color='primary'
+                        color="primary"
                         data-loading
-                        variant='outlined'
+                        variant="outlined"
                         href={o.path}
-                        size='small'
+                        size="small"
                         data-testid={`${SSO_LOGIN_BUTTON}-${o.type}`}
                         style={{
                             height: '40px',

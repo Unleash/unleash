@@ -35,7 +35,7 @@ test('should render environment table', async () => {
                     },
                 ]}
             />
-        </UIProviderContainer>,
+        </UIProviderContainer>
     );
 
     expect(screen.getByText('web')).toBeInTheDocument();

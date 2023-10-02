@@ -73,14 +73,14 @@ export const EnvironmentActionCellPopover = ({
 
     return (
         <>
-            <Tooltip title='Environment actions' arrow describeChild>
+            <Tooltip title="Environment actions" arrow describeChild>
                 <IconButton
                     id={id}
                     aria-controls={open ? menuId : undefined}
-                    aria-haspopup='true'
+                    aria-haspopup="true"
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClick}
-                    type='button'
+                    type="button"
                 >
                     <MoreVertIcon />
                 </IconButton>
@@ -108,7 +108,7 @@ export const EnvironmentActionCellPopover = ({
                                     <Edit />
                                 </ListItemIcon>
                                 <ListItemText>
-                                    <Typography variant='body2'>
+                                    <Typography variant="body2">
                                         Edit
                                     </Typography>
                                 </ListItemText>
@@ -128,7 +128,7 @@ export const EnvironmentActionCellPopover = ({
                                     <CopyIcon />
                                 </ListItemIcon>
                                 <ListItemText>
-                                    <Typography variant='body2'>
+                                    <Typography variant="body2">
                                         Clone
                                     </Typography>
                                 </ListItemText>
@@ -152,7 +152,7 @@ export const EnvironmentActionCellPopover = ({
                                     />
                                 </ListItemIcon>
                                 <ListItemText>
-                                    <Typography variant='body2'>
+                                    <Typography variant="body2">
                                         {environment.enabled
                                             ? 'Deprecate'
                                             : 'Undeprecate'}
@@ -174,7 +174,7 @@ export const EnvironmentActionCellPopover = ({
                                     <Delete />
                                 </StyledListItemIconNegative>
                                 <ListItemText>
-                                    <Typography variant='body2'>
+                                    <Typography variant="body2">
                                         Delete
                                     </Typography>
                                 </ListItemText>

@@ -12,7 +12,7 @@ export const useServiceAccountsApi = () => {
     });
 
     const addServiceAccount = async (
-        serviceAccount: IServiceAccountPayload,
+        serviceAccount: IServiceAccountPayload
     ) => {
         const requestId = 'addServiceAccount';
         const req = createRequest(
@@ -21,11 +21,11 @@ export const useServiceAccountsApi = () => {
                 method: 'POST',
                 body: JSON.stringify(serviceAccount),
             },
-            requestId,
+            requestId
         );
 
         const response = await makeRequest(req.caller, req.id);
-        return response.json();
+        return await response.json();
     };
 
     const removeServiceAccount = async (serviceAccountId: number) => {
@@ -33,7 +33,7 @@ export const useServiceAccountsApi = () => {
         const req = createRequest(
             `api/admin/service-account/${serviceAccountId}`,
             { method: 'DELETE' },
-            requestId,
+            requestId
         );
 
         await makeRequest(req.caller, req.id);
@@ -41,7 +41,7 @@ export const useServiceAccountsApi = () => {
 
     const updateServiceAccount = async (
         serviceAccountId: number,
-        serviceAccount: IServiceAccountPayload,
+        serviceAccount: IServiceAccountPayload
     ) => {
         const requestId = 'updateServiceAccount';
         const req = createRequest(
@@ -50,7 +50,7 @@ export const useServiceAccountsApi = () => {
                 method: 'PUT',
                 body: JSON.stringify(serviceAccount),
             },
-            requestId,
+            requestId
         );
 
         await makeRequest(req.caller, req.id);

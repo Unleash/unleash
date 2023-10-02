@@ -2,6 +2,304 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.11.2] - 2022-05-23
+
+### Miscellaneous Tasks
+
+- Update unleash frontend to 4.11.2
+
+
+## [4.11.1] - 2022-05-20
+
+### Bug Fixes
+
+- Remove parametersSchema maxLength requirement ([#1616](https://github.com/Unleash/unleash/issues/1616))
+
+- Failing test
+
+
+### Miscellaneous Tasks
+
+- Update snapshot test since the cherry-pick is not clean
+
+
+## [4.11.0] - 2022-05-18
+
+### Features
+
+- Bump unleash frontend to 4.11.0
+
+
+## [4.10.5] - 2022-05-11
+
+### Bug Fixes
+
+- Correct patch for feature project id
+
+
+## [4.10.4] - 2022-05-11
+
+### Bug Fixes
+
+- Repair feature strategies with broken project ids ([#1593](https://github.com/Unleash/unleash/issues/1593))
+
+
+## [4.10.3] - 2022-05-11
+
+### Miscellaneous Tasks
+
+- Upgrade frontend
+
+
+## [4.10.2] - 2022-05-10
+
+### Bug Fixes
+
+- Upgrade unleash-frontend to v4.10.2
+
+
+## [4.10.1] - 2022-05-10
+
+### Bug Fixes
+
+- Update dependency unleash-frontend to v4.10.1
+
+- Set favicon icon to CDN if prefix is set ([#1553](https://github.com/Unleash/unleash/issues/1553))
+
+- Remove console.log from test
+
+- Correct types used in addon.ts
+
+
+## [4.10.0] - 2022-04-29
+
+### Bug Fixes
+
+- Update react monorepo to v18.1.0
+
+- Update dependency unleash-proxy-client to v2.0.1
+
+- Update dependency unleash-frontend to v4.10.0-beta.8 ([#1545](https://github.com/Unleash/unleash/issues/1545))
+
+- Pr-build use pull_request_target event
+
+
+### Documentation
+
+- Remove deprecation notices for tags.
+
+- Add more Api information + add disable toggle info
+
+- Link to the correct new endpoints in the features v2 API
+
+- Add docs for vue and svelte clients ([#1541](https://github.com/Unleash/unleash/issues/1541))
+
+- Update compat table with custom stickiness for go ([#1544](https://github.com/Unleash/unleash/issues/1544))
+
+- Change the remoteAddress description ([#1539](https://github.com/Unleash/unleash/issues/1539))
+
+- Correct custom activation strategies param types ([#1547](https://github.com/Unleash/unleash/issues/1547))
+
+
+### Features
+
+- Update ApiRequest to accept POST w/o payloads
+
+- Bump frontend to 4.10.0
+
+
+### Miscellaneous Tasks
+
+- Remove code leftover code
+
+
+### Refactor
+
+- Fix a few eslint module boundary type overrides ([#1542](https://github.com/Unleash/unleash/issues/1542))
+
+- Disallow additionalProperties in response schemas ([#1543](https://github.com/Unleash/unleash/issues/1543))
+
+
+### Task
+
+- Use make-fetch-happen ([#1500](https://github.com/Unleash/unleash/issues/1500))
+
+
+## [4.9.1] - 2022-03-23
+
+### Documentation
+
+- Add more content around database connections
+
+- Add code samples, move db configuration to separate section
+
+- Remove duplicate db connection options description
+
+- PR feedback: configure db url, db url file, precedence
+
+- Sort options alphabetically in example object.
+
+- Add note about PHP crashing if it doesn't recognize the op
+
+- List v1.3.1 of the PHP sdk as first compatible w/adv constr.
+
+
+### Features
+
+- Upgrade unleash-frontend to 4.9.0
+
+
+## [4.9.0] - 2022-03-23
+
+### Bug Fixes
+
+- Remove placeholder comment
+
+- Mark .NET sdk as not having `currentTime` context field
+
+- Delete empty table row
+
+- Remove empty ruleset
+
+- Make sure customer type is included in the payload.
+
+- Update dependency unleash-frontend to v4.9.0-beta.1
+
+- Update dependency knex to v1.0.4
+
+- Update config tests for enabled environments
+
+- Update dependency unleash-frontend to v4.9.0-beta.2
+
+- Update dependency unleash-frontend to v4.9.0-beta.3
+
+
+### Documentation
+
+- Minor rewording and clarification around strategy impl/eval
+
+- Start scaffolding out new constraint operator info
+
+- Add description of each of the strat constraint operators.
+
+- Update "constraint structure" section
+
+- Add availability note, finish first draft of constraint ops
+
+- Finish first draft of new strat constraints doc.
+
+- Add unleash context and compat table updates
+
+- Remove 'introduced in' column in Unleash Context table.
+
+- Move string operator case sensitivity note to table
+
+- Update SemVer section: clarify what requirements we have
+
+- Update description of `currentTime` in the Unleash context.
+
+- Add note about how invalid context field values are handled
+
+- Update semver format after discussion and alignment
+
+- Merge `currentTime` with "advanced constraints" row
+
+- Document how to get SEMVER_GTE/LTE functionality
+
+- Add a note saying passord is password for Norwegian
+
+- Create initial outline for how to schedule feature releases
+
+- Describe details of enabled_environments in unleash config docs
+
+- Add more placeholder / structural content.
+
+- Create first draft of schedule how-to
+
+- Bold important text
+
+- Add note to strategy constraints about undefined behavior
+
+- Add screenies and update descriptions accordingly
+
+- Clear up that constraints are available to pro customers too
+
+- Add note saying that some SDKs will crash with new operators.
+
+- Note the minimum SDK versions necessary for adv constraints
+
+- Add php support version for advanced constraints
+
+- Add more comprehensive overview of sdk incompatibilities
+
+- Change spec to specification, add link to spec
+
+- Update min versions for node, python, ruby
+
+- Only list feature versions for constraint ops inclusion
+
+- Link to strategy constraints from the schedule how-to guide
+
+- Add a link to the SDK incompatibility section
+
+
+### Features
+
+- Add data: "was the form opened manually" and "current page"
+
+- Validate strategies ([#1429](https://github.com/Unleash/unleash/issues/1429))
+
+- Add environment variable to set override enabled environments
+
+- Enabled environments override now also moves projects and toggles to new environments
+
+
+### Miscellaneous Tasks
+
+- Merge main ->  this branch
+
+- Extend tests for enabled environments
+
+
+### Refactor
+
+- Always add values to constraints ([#1448](https://github.com/Unleash/unleash/issues/1448))
+
+
+## [4.8.2] - 2022-03-01
+
+### Bug Fixes
+
+- Configure user endpoint when AuthType is NONE ([#1403](https://github.com/Unleash/unleash/issues/1403))
+
+
+## [4.8.1] - 2022-02-25
+
+### Bug Fixes
+
+- Readd orderBy statement to project query ([#1394](https://github.com/Unleash/unleash/issues/1394))
+
+
+### Documentation
+
+- Remove "future enhancements" section of environments doc
+
+
+## [4.8.0] - 2022-02-24
+
+### Bug Fixes
+
+- Update dependency unleash-frontend to v4.8.0-beta.10
+- Correct oas for creating feature toggle
+- Update dependency unleash-frontend to v4.8.0
+- Add migration patch
+- Remove project column from roles if exists
+
+### Documentation
+
+- Mark PHP as advanced constraint compatible in compatibility table
+- Update docs for Go SDK because wait until initialized already exists
+
 ## [4.7.5] - 2022-04-21
 
 ### Bug Fixes

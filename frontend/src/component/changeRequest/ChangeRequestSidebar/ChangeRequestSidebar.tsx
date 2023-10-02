@@ -55,7 +55,7 @@ export const StyledFlexAlignCenterBox = styled(Box)(() => ({
 
 export const Separator = () => (
     <Typography
-        component="span"
+        component='span'
         sx={{
             marginLeft: 1.5,
             marginRight: 1.5,
@@ -105,13 +105,11 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
             <DynamicSidebarModal
                 open={open}
                 onClose={onClose}
-                label="Review changes"
+                label='Review changes'
             >
                 <StyledPageContent
                     disableBorder={true}
-                    header={
-                        <PageHeader titleElement="Review your changes"></PageHeader>
-                    }
+                    header={<PageHeader titleElement='Review your changes' />}
                 >
                     There are no changes to review.
                     {/* FIXME: empty state */}
@@ -125,13 +123,13 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
         <DynamicSidebarModal
             open={open}
             onClose={onClose}
-            label="Review changes"
+            label='Review changes'
         >
             <StyledPageContent
                 disableBorder={true}
                 header={<ReviewChangesHeader />}
             >
-                {data?.map(environmentChangeRequest => (
+                {data?.map((environmentChangeRequest) => (
                     <EnvironmentChangeRequest
                         key={environmentChangeRequest.id}
                         environmentChangeRequest={environmentChangeRequest}

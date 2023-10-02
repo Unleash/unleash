@@ -17,7 +17,7 @@ it('should display Valid when constraints are valid', async () => {
         server,
         '/api/admin/constraints/validate',
         { data: 'OK' },
-        'post'
+        'post',
     );
 
     const validConstraints: IConstraint[] = [

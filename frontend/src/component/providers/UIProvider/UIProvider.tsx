@@ -9,9 +9,7 @@ const resolveMode = (): themeMode => {
         return value as themeMode;
     }
 
-    const osDark =
-        window.matchMedia &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const osDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
 
     if (osDark) {
         return 'dark';
@@ -33,7 +31,7 @@ const UIProvider: React.FC = ({ children }) => {
             themeMode,
             setThemeMode,
         }),
-        [toastData, showFeedback, themeMode]
+        [toastData, showFeedback, themeMode],
     );
 
     return <UIContext.Provider value={context}>{children}</UIContext.Provider>;

@@ -39,7 +39,7 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
     ...rest
 }) => {
     const renderSelectItems = () =>
-        options.map(option => (
+        options.map((option) => (
             <MenuItem
                 key={option.key}
                 value={option.key}
@@ -51,7 +51,7 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
         ));
 
     return (
-        <FormControl variant="outlined" size="small" classes={classes}>
+        <FormControl variant='outlined' size='small' classes={classes}>
             <InputLabel htmlFor={id}>{label}</InputLabel>
             <Select
                 name={name}

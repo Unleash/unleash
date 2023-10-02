@@ -17,16 +17,10 @@ const useEnvironmentApi = () => {
         const req = createRequest(
             path,
             { method: 'POST', body: JSON.stringify({ name: envName }) },
-            'validateEnvName'
+            'validateEnvName',
         );
 
-        try {
-            const res = await makeRequest(req.caller, req.id, false);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return makeRequest(req.caller, req.id, false);
     };
 
     const createEnvironment = async (payload: IEnvironmentPayload) => {
@@ -34,16 +28,10 @@ const useEnvironmentApi = () => {
         const req = createRequest(
             path,
             { method: 'POST', body: JSON.stringify(payload) },
-            'createEnvironment'
+            'createEnvironment',
         );
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return makeRequest(req.caller, req.id);
     };
 
     const deleteEnvironment = async (name: string) => {
@@ -51,50 +39,38 @@ const useEnvironmentApi = () => {
         const req = createRequest(
             path,
             { method: 'DELETE' },
-            'deleteEnvironment'
+            'deleteEnvironment',
         );
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return makeRequest(req.caller, req.id);
     };
 
     const updateEnvironment = async (
         name: string,
-        payload: IEnvironmentEditPayload
+        payload: IEnvironmentEditPayload,
     ) => {
         const path = `api/admin/environments/update/${name}`;
         const req = createRequest(
             path,
             { method: 'PUT', body: JSON.stringify(payload) },
-            'updateEnvironment'
+            'updateEnvironment',
         );
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return makeRequest(req.caller, req.id);
     };
 
     const cloneEnvironment = async (
         name: string,
-        payload: IEnvironmentClonePayload
+        payload: IEnvironmentClonePayload,
     ) => {
         const path = `api/admin/environments/${name}/clone`;
         const req = createRequest(
             path,
             { method: 'POST', body: JSON.stringify(payload) },
-            'cloneEnvironment'
+            'cloneEnvironment',
         );
 
-        return await makeRequest(req.caller, req.id);
+        return makeRequest(req.caller, req.id);
     };
 
     const changeSortOrder = async (payload: ISortOrderPayload) => {
@@ -102,16 +78,10 @@ const useEnvironmentApi = () => {
         const req = createRequest(
             path,
             { method: 'PUT', body: JSON.stringify(payload) },
-            'changeSortOrder'
+            'changeSortOrder',
         );
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return makeRequest(req.caller, req.id);
     };
 
     const toggleEnvironmentOn = async (name: string) => {
@@ -119,16 +89,10 @@ const useEnvironmentApi = () => {
         const req = createRequest(
             path,
             { method: 'POST' },
-            'toggleEnvironmentOn'
+            'toggleEnvironmentOn',
         );
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return makeRequest(req.caller, req.id);
     };
 
     const toggleEnvironmentOff = async (name: string) => {
@@ -136,16 +100,10 @@ const useEnvironmentApi = () => {
         const req = createRequest(
             path,
             { method: 'POST' },
-            'toggleEnvironmentOff'
+            'toggleEnvironmentOff',
         );
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return makeRequest(req.caller, req.id);
     };
 
     return {
@@ -163,7 +121,7 @@ const useEnvironmentApi = () => {
 };
 
 export const createSortOrderPayload = (
-    environments: Readonly<IEnvironment[]>
+    environments: Readonly<IEnvironment[]>,
 ): ISortOrderPayload => {
     return environments.reduce((payload, env, index) => {
         payload[env.name] = index + 1;

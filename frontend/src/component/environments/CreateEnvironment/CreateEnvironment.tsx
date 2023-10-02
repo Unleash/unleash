@@ -59,9 +59,7 @@ const CreateEnvironment = () => {
     };
 
     const formatApiCode = () => {
-        return `curl --location --request POST '${
-            uiConfig.unleashUrl
-        }/api/admin/environments' \\
+        return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/environments' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getEnvPayload(), undefined, 2)}'`;
@@ -77,8 +75,8 @@ const CreateEnvironment = () => {
             show={
                 <FormTemplate
                     loading={loading}
-                    title="Create environment"
-                    description="Environments allow you to manage your
+                    title='Create environment'
+                    description='Environments allow you to manage your
                             product lifecycle from local development
                             through production. Your projects and
                             feature toggles are accessible in all your
@@ -87,9 +85,9 @@ const CreateEnvironment = () => {
                             that you can enable a feature toggle in a
                             development or test environment without
                             enabling the feature toggle in the
-                            production environment."
-                    documentationLink="https://docs.getunleash.io/reference/environments"
-                    documentationLinkLabel="Environments documentation"
+                            production environment.'
+                    documentationLink='https://docs.getunleash.io/reference/environments'
+                    documentationLinkLabel='Environments documentation'
                     formatApiCode={formatApiCode}
                 >
                     <EnvironmentForm
@@ -101,19 +99,19 @@ const CreateEnvironment = () => {
                         type={type}
                         setName={setName}
                         setType={setType}
-                        mode="Create"
+                        mode='Create'
                         clearErrors={clearErrors}
                     >
-                        <CreateButton name="environment" permission={ADMIN} />
+                        <CreateButton name='environment' permission={ADMIN} />
                     </EnvironmentForm>
                 </FormTemplate>
             }
             elseShow={
                 <>
                     <PageContent
-                        header={<PageHeader title="Create environment" />}
+                        header={<PageHeader title='Create environment' />}
                     >
-                        <Alert severity="error">
+                        <Alert severity='error'>
                             <p>
                                 Currently Unleash does not support more than{' '}
                                 {ENV_LIMIT} environments. If you need more
@@ -123,8 +121,8 @@ const CreateEnvironment = () => {
                         <br />
                         <Button
                             onClick={handleCancel}
-                            variant="contained"
-                            color="primary"
+                            variant='contained'
+                            color='primary'
                         >
                             Go back
                         </Button>

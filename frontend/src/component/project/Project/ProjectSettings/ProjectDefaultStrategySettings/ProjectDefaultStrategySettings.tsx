@@ -28,9 +28,9 @@ export const ProjectDefaultStrategySettings = () => {
     if (!hasAccess(UPDATE_PROJECT, projectId)) {
         return (
             <PageContent
-                header={<PageHeader title="Default Strategy configuration" />}
+                header={<PageHeader title='Default Strategy configuration' />}
             >
-                <Alert severity="error">
+                <Alert severity='error'>
                     You need project owner permissions to access this section.
                 </Alert>
             </PageContent>
@@ -43,12 +43,12 @@ export const ProjectDefaultStrategySettings = () => {
     return (
         <>
             <PageContent header={<PageHeader title={`Default Strategy`} />}>
-                <StyledAlert severity="info">
+                <StyledAlert severity='info'>
                     Here you can customize your default strategy for each
                     specific environment. These will be used when you enable a
                     toggle environment that has no strategies defined
                 </StyledAlert>
-                {project?.environments.map(environment => (
+                {project?.environments.map((environment) => (
                     <ProjectEnvironment
                         environment={environment}
                         key={environment.environment}
@@ -57,10 +57,10 @@ export const ProjectDefaultStrategySettings = () => {
             </PageContent>
             <Routes>
                 <Route
-                    path="edit"
+                    path='edit'
                     element={
                         <SidebarModal
-                            label="Edit feature strategy"
+                            label='Edit feature strategy'
                             onClose={onSidebarClose}
                             open
                         >

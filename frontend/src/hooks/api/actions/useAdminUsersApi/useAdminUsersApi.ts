@@ -30,7 +30,7 @@ const useAdminUsersApi = () => {
                 method: 'POST',
                 body: JSON.stringify(user),
             },
-            requestId
+            requestId,
         );
 
         return makeRequest(req.caller, req.id);
@@ -41,7 +41,7 @@ const useAdminUsersApi = () => {
         const req = createRequest(
             `api/admin/user-admin/${userId}`,
             { method: 'DELETE' },
-            requestId
+            requestId,
         );
 
         return makeRequest(req.caller, req.id);
@@ -55,7 +55,7 @@ const useAdminUsersApi = () => {
                 method: 'PUT',
                 body: JSON.stringify(user),
             },
-            requestId
+            requestId,
         );
 
         return makeRequest(req.caller, req.id);
@@ -69,7 +69,7 @@ const useAdminUsersApi = () => {
                 method: 'POST',
                 body: JSON.stringify({ password }),
             },
-            requestId
+            requestId,
         );
 
         return makeRequest(req.caller, req.id);
@@ -83,7 +83,7 @@ const useAdminUsersApi = () => {
                 method: 'POST',
                 body: JSON.stringify({ password }),
             },
-            requestId
+            requestId,
         );
 
         return makeRequest(req.caller, req.id);

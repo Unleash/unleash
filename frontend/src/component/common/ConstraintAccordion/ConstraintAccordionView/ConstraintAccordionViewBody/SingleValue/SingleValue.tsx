@@ -33,7 +33,7 @@ export const SingleValue = ({ value, operator }: ISingleValueProps) => {
             <StyledChip
                 label={
                     <StringTruncator
-                        maxWidth="400"
+                        maxWidth='400'
                         text={value}
                         maxLength={50}
                     />

@@ -32,7 +32,7 @@ export const PermissionGuard = ({
 
     if (permissionsArray.length === 1) {
         return (
-            <Alert severity="error">
+            <Alert severity='error'>
                 You need the <strong>{permissionsArray[0]}</strong> permission
                 to access this section.
             </Alert>
@@ -40,10 +40,10 @@ export const PermissionGuard = ({
     }
 
     return (
-        <Alert severity="error">
+        <Alert severity='error'>
             You need one of the following permissions to access this section:
             <StyledList>
-                {permissionsArray.sort().map(permission => (
+                {permissionsArray.sort().map((permission) => (
                     <li key={permission}>
                         <strong>{permission}</strong>
                     </li>

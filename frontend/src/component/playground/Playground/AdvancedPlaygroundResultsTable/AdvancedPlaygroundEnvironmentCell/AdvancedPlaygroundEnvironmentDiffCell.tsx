@@ -6,7 +6,7 @@ import { PlaygroundEnvironmentDiffTable } from '../../PlaygroundEnvironmentTable
 
 const StyledContainer = styled(
     'div',
-    {}
+    {},
 )(({ theme }) => ({
     flexGrow: 0,
     ...flexRow,
@@ -64,7 +64,7 @@ export const AdvancedPlaygroundEnvironmentDiffCell = ({
                         horizontal: -320,
                     }}
                 >
-                    <Typography variant="subtitle2" sx={{ mb: 3 }}>
+                    <Typography variant='subtitle2' sx={{ mb: 3 }}>
                         Environments diff
                     </Typography>
                     <PlaygroundEnvironmentDiffTable features={value} />

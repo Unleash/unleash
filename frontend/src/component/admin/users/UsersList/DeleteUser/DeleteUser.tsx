@@ -38,11 +38,11 @@ const DeleteUser = ({
     return (
         <Dialogue
             open={showDialog}
-            title="Really delete user?"
+            title='Really delete user?'
             onClose={closeDialog}
             onClick={removeUser}
-            primaryButtonText="Delete user"
-            secondaryButtonText="Cancel"
+            primaryButtonText='Delete user'
+            secondaryButtonText='Cancel'
         >
             <div ref={ref}>
                 <ConditionallyRender
@@ -50,7 +50,7 @@ const DeleteUser = ({
                     show={
                         <Alert
                             data-loading
-                            severity="error"
+                            severity='error'
                             style={{ margin: '1rem 0' }}
                         >
                             {userApiErrors[REMOVE_USER_ERROR]}
@@ -58,9 +58,9 @@ const DeleteUser = ({
                     }
                 />
                 <div data-loading className={themeStyles.flexRow}>
-                    <StyledUserAvatar user={user} variant="rounded" />
+                    <StyledUserAvatar user={user} variant='rounded' />
                     <Typography
-                        variant="subtitle1"
+                        variant='subtitle1'
                         style={{ marginLeft: '1rem' }}
                     >
                         {user.username || user.email}
@@ -68,7 +68,7 @@ const DeleteUser = ({
                 </div>
                 <Typography
                     data-loading
-                    variant="body1"
+                    variant='body1'
                     style={{ marginTop: '1rem' }}
                 >
                     Are you sure you want to delete{' '}

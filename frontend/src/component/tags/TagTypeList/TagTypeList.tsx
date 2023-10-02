@@ -68,7 +68,7 @@ export const TagTypeList = () => {
                             alignItems: 'center',
                         }}
                     >
-                        <Label color="disabled" />
+                        <Label color='disabled' />
                     </Box>
                 ),
                 disableGlobalFilter: true,
@@ -77,11 +77,7 @@ export const TagTypeList = () => {
                 Header: 'Name',
                 accessor: 'name',
                 width: '90%',
-                Cell: ({
-                    row: {
-                        original: { name, description },
-                    },
-                }: any) => {
+                Cell: ({ row: { original: { name, description } } }: any) => {
                     return (
                         <LinkCell
                             data-loading
@@ -134,7 +130,7 @@ export const TagTypeList = () => {
                 disableSortBy: true,
             },
         ],
-        [navigate]
+        [navigate],
     );
 
     const initialState = useMemo(
@@ -142,7 +138,7 @@ export const TagTypeList = () => {
             sortBy: [{ id: 'name', desc: false }],
             hiddenColumns: ['description'],
         }),
-        []
+        [],
     );
 
     const {
@@ -164,7 +160,7 @@ export const TagTypeList = () => {
             disableSortRemove: true,
         },
         useGlobalFilter,
-        useSortBy
+        useSortBy,
     );
 
     const deleteTag = async () => {
@@ -206,11 +202,11 @@ export const TagTypeList = () => {
                 <Table {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups} />
                     <TableBody {...getTableBodyProps()}>
-                        {rows.map(row => {
+                        {rows.map((row) => {
                             prepareRow(row);
                             return (
                                 <TableRow hover {...row.getRowProps()}>
-                                    {row.cells.map(cell => (
+                                    {row.cells.map((cell) => (
                                         <TableCell {...cell.getCellProps()}>
                                             {cell.render('Cell')}
                                         </TableCell>
@@ -242,7 +238,7 @@ export const TagTypeList = () => {
                 }
             />
             <Dialogue
-                title="Really delete Tag type?"
+                title='Really delete Tag type?'
                 open={deletion.open}
                 onClick={deleteTag}
                 onClose={() => {

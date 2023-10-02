@@ -51,12 +51,12 @@ export const AutoCreateForm = ({
                         control={
                             <Switch
                                 onChange={updateAutoCreate}
-                                name="enabled"
+                                name='enabled'
                                 checked={data.autoCreate}
                                 disabled={!data.enabled}
                             />
                         }
-                        label="Auto-create users"
+                        label='Auto-create users'
                     />
                 </Grid>
             </Grid>
@@ -70,22 +70,22 @@ export const AutoCreateForm = ({
                 </Grid>
                 <Grid item md={6}>
                     <FormControl style={{ minWidth: '200px' }}>
-                        <InputLabel id="defaultRootRole-label">
+                        <InputLabel id='defaultRootRole-label'>
                             Default Role
                         </InputLabel>
                         <Select
-                            label="Default Role"
-                            labelId="defaultRootRole-label"
-                            id="defaultRootRole"
-                            name="defaultRootRole"
+                            label='Default Role'
+                            labelId='defaultRootRole-label'
+                            id='defaultRootRole'
+                            name='defaultRootRole'
                             disabled={!data.autoCreate || !data.enabled}
                             value={data.defaultRootRole || 'Editor'}
                             onChange={updateDefaultRootRole}
                         >
                             {/*consider these from API or constants. */}
-                            <MenuItem value="Viewer">Viewer</MenuItem>
-                            <MenuItem value="Editor">Editor</MenuItem>
-                            <MenuItem value="Admin">Admin</MenuItem>
+                            <MenuItem value='Viewer'>Viewer</MenuItem>
+                            <MenuItem value='Editor'>Editor</MenuItem>
+                            <MenuItem value='Admin'>Admin</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>
@@ -101,16 +101,16 @@ export const AutoCreateForm = ({
                 <Grid item md={6}>
                     <TextField
                         onChange={updateField}
-                        label="Email domains"
-                        name="emailDomains"
+                        label='Email domains'
+                        name='emailDomains'
                         disabled={!data.autoCreate || !data.enabled}
                         required={Boolean(data.autoCreate)}
                         value={data.emailDomains || ''}
-                        placeholder="@company.com, @anotherCompany.com"
+                        placeholder='@company.com, @anotherCompany.com'
                         style={{ width: '400px' }}
                         rows={2}
-                        variant="outlined"
-                        size="small"
+                        variant='outlined'
+                        size='small'
                     />
                 </Grid>
             </Grid>

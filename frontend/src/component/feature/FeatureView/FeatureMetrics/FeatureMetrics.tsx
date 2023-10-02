@@ -46,8 +46,8 @@ export const FeatureMetrics = () => {
 
     const filteredMetrics = useMemo(() => {
         return cachedMetrics
-            ?.filter(metric => metric.environment === environment)
-            .filter(metric => metric.appName === application);
+            ?.filter((metric) => metric.environment === environment)
+            .filter((metric) => metric.appName === application);
     }, [cachedMetrics, environment, application]);
 
     if (!filteredMetrics) {
@@ -56,13 +56,13 @@ export const FeatureMetrics = () => {
 
     return (
         <PageContent>
-            <Grid container component="header" spacing={2}>
+            <Grid container component='header' spacing={2}>
                 <Grid item xs={12} md={5}>
                     <ConditionallyRender
                         condition={environments.size > 0}
                         show={
                             <FeatureMetricsChips
-                                title="Environments"
+                                title='Environments'
                                 values={environments}
                                 value={environment}
                                 setValue={setEnvironment}
@@ -75,7 +75,7 @@ export const FeatureMetrics = () => {
                         condition={applications.size > 0}
                         show={
                             <FeatureMetricsChips
-                                title="Applications"
+                                title='Applications'
                                 values={applications}
                                 value={application}
                                 setValue={setApplication}
@@ -102,11 +102,11 @@ export const FeatureMetrics = () => {
 // not just the one's we have metrics for.
 const useFeatureMetricsEnvironments = (
     projectId: string,
-    featureId: string
+    featureId: string,
 ): Set<string> => {
     const { feature } = useFeature(projectId, featureId);
 
-    const environments = feature.environments.map(environment => {
+    const environments = feature.environments.map((environment) => {
         return environment.name;
     });
 
@@ -118,10 +118,10 @@ const useFeatureMetricsEnvironments = (
 const useFeatureMetricsApplications = (featureId: string): Set<string> => {
     const { featureMetrics = [] } = useFeatureMetricsRaw(
         featureId,
-        FEATURE_METRIC_HOURS_BACK_MAX
+        FEATURE_METRIC_HOURS_BACK_MAX,
     );
 
-    const applications = featureMetrics.map(metric => {
+    const applications = featureMetrics.map((metric) => {
         return metric.appName;
     });
 

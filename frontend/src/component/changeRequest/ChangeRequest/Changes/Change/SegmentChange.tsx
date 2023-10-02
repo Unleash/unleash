@@ -18,19 +18,19 @@ export const SegmentChange: FC<ISegmentChangeProps> = ({
 }) => (
     <Card
         elevation={0}
-        sx={theme => ({
+        sx={(theme) => ({
             marginTop: theme.spacing(2),
             marginBottom: theme.spacing(2),
             overflow: 'hidden',
         })}
     >
         <Box
-            sx={theme => ({
+            sx={(theme) => ({
                 backgroundColor: theme.palette.neutral.light,
-                borderRadius: theme =>
+                borderRadius: (theme) =>
                     `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
                 border: '1px solid',
-                borderColor: theme =>
+                borderColor: (theme) =>
                     segmentChange.conflict
                         ? theme.palette.warning.border
                         : theme.palette.divider,
@@ -52,8 +52,8 @@ export const SegmentChange: FC<ISegmentChangeProps> = ({
                 <Link
                     component={RouterLink}
                     to={`/segments/edit/${segmentChange.payload.id}`}
-                    color="primary"
-                    underline="hover"
+                    color='primary'
+                    underline='hover'
                     sx={{
                         marginLeft: 1,
                         '& :hover': {

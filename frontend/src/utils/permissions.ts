@@ -18,24 +18,24 @@ export const getRoleKey = (permission: IPermission): string => {
 };
 
 export const permissionsToCheckedPermissions = (
-    permissions: IPermission[]
+    permissions: IPermission[],
 ): ICheckedPermissions =>
     permissions.reduce(
         (
             checkedPermissions: { [key: string]: IPermission },
-            permission: IPermission
+            permission: IPermission,
         ) => {
             checkedPermissions[getRoleKey(permission)] = permission;
             return checkedPermissions;
         },
-        {}
+        {},
     );
 
 export const togglePermission = (
     checkedPermissions: ICheckedPermissions,
-    permission: IPermission
+    permission: IPermission,
 ): ICheckedPermissions => {
-    let checkedPermissionsCopy = cloneDeep(checkedPermissions);
+    const checkedPermissionsCopy = cloneDeep(checkedPermissions);
 
     if (checkedPermissionsCopy[getRoleKey(permission)]) {
         delete checkedPermissionsCopy[getRoleKey(permission)];
@@ -48,13 +48,13 @@ export const togglePermission = (
 
 export const toggleAllPermissions = (
     checkedPermissions: ICheckedPermissions,
-    toggledPermissions: IPermission[]
+    toggledPermissions: IPermission[],
 ): ICheckedPermissions => {
-    let checkedPermissionsCopy = cloneDeep(checkedPermissions);
+    const checkedPermissionsCopy = cloneDeep(checkedPermissions);
 
     const allChecked = toggledPermissions.every(
         (permission: IPermission) =>
-            checkedPermissionsCopy[getRoleKey(permission)]
+            checkedPermissionsCopy[getRoleKey(permission)],
     );
 
     if (allChecked) {
@@ -78,12 +78,12 @@ export const getCategorizedRootPermissions = (permissions: IPermission[]) => {
     return rootPermissions
         .reduce((categories: IPermissionCategory[], permission) => {
             const categoryLabel =
-                ROOT_PERMISSION_CATEGORIES.find(category =>
-                    category.permissions.includes(permission.name)
+                ROOT_PERMISSION_CATEGORIES.find((category) =>
+                    category.permissions.includes(permission.name),
                 )?.label || 'Other';
 
             const category = categories.find(
-                ({ label }) => label === categoryLabel
+                ({ label }) => label === categoryLabel,
             );
 
             if (category) {
@@ -102,13 +102,13 @@ export const getCategorizedRootPermissions = (permissions: IPermission[]) => {
 };
 
 export const getCategorizedProjectPermissions = (
-    permissions: IPermission[]
+    permissions: IPermission[],
 ) => {
     const projectPermissions = permissions.filter(
-        ({ type }) => type === PROJECT_PERMISSION_TYPE
+        ({ type }) => type === PROJECT_PERMISSION_TYPE,
     );
     const environmentPermissions = permissions.filter(
-        ({ type }) => type === ENVIRONMENT_PERMISSION_TYPE
+        ({ type }) => type === ENVIRONMENT_PERMISSION_TYPE,
     );
 
     const categories = [];
@@ -127,7 +127,7 @@ export const getCategorizedProjectPermissions = (
                 const categoryLabel = permission.environment;
 
                 const category = categories.find(
-                    ({ label }) => label === categoryLabel
+                    ({ label }) => label === categoryLabel,
                 );
 
                 if (category) {
@@ -142,8 +142,8 @@ export const getCategorizedProjectPermissions = (
 
                 return categories;
             },
-            []
-        )
+            [],
+        ),
     );
 
     return categories;
@@ -151,7 +151,7 @@ export const getCategorizedProjectPermissions = (
 
 export const flattenProjectPermissions = (
     projectPermissions: IPermission[],
-    environmentPermissions: IProjectEnvironmentPermissions[]
+    environmentPermissions: IProjectEnvironmentPermissions[],
 ) => [
     ...projectPermissions,
     ...environmentPermissions.flatMap(({ permissions }) => permissions),
@@ -159,7 +159,7 @@ export const flattenProjectPermissions = (
 
 const sortCategories = (
     { label: aLabel }: IPermissionCategory,
-    { label: bLabel }: IPermissionCategory
+    { label: bLabel }: IPermissionCategory,
 ) => {
     if (aLabel === 'Other' && bLabel !== 'Other') {
         return 1;

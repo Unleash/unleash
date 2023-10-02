@@ -42,11 +42,11 @@ export const getLegalValueSet = (values: ILegalValue[]) => {
 
 export const getIllegalValues = (
     constraintValues: string[],
-    deletedLegalValues: ILegalValue[]
+    deletedLegalValues: ILegalValue[],
 ) => {
     const deletedValuesSet = getLegalValueSet(deletedLegalValues);
 
-    return constraintValues.filter(value => deletedValuesSet.has(value));
+    return constraintValues.filter((value) => deletedValuesSet.has(value));
 };
 
 export const RestrictiveLegalValues = ({
@@ -69,14 +69,14 @@ export const RestrictiveLegalValues = ({
     const cleanDeletedLegalValues = (constraintValues: string[]): string[] => {
         const deletedValuesSet = getLegalValueSet(deletedLegalValues);
         return (
-            constraintValues?.filter(value => !deletedValuesSet.has(value)) ||
+            constraintValues?.filter((value) => !deletedValuesSet.has(value)) ||
             []
         );
     };
 
     const illegalValues = getIllegalValues(
         constraintValues,
-        deletedLegalValues
+        deletedLegalValues,
     );
 
     useEffect(() => {
@@ -93,7 +93,7 @@ export const RestrictiveLegalValues = ({
         setError('');
 
         if (valuesMap[legalValue]) {
-            const index = values.findIndex(value => value === legalValue);
+            const index = values.findIndex((value) => value === legalValue);
             const newValues = [...values];
             newValues.splice(index, 1);
             setValues(newValues);
@@ -108,13 +108,13 @@ export const RestrictiveLegalValues = ({
             <ConditionallyRender
                 condition={Boolean(illegalValues && illegalValues.length > 0)}
                 show={
-                    <Alert severity="warning">
+                    <Alert severity='warning'>
                         This constraint is using legal values that have been
                         deleted as valid options. If you save changes on this
                         constraint and then save the strategy the following
                         values will be removed:
                         <ul>
-                            {illegalValues?.map(value => (
+                            {illegalValues?.map((value) => (
                                 <li key={value}>{value}</li>
                             ))}
                         </ul>
@@ -134,7 +134,7 @@ export const RestrictiveLegalValues = ({
                     />
                 }
             />
-            {filteredValues.map(match => (
+            {filteredValues.map((match) => (
                 <LegalValueLabel
                     key={match.value}
                     legal={match}
@@ -143,7 +143,7 @@ export const RestrictiveLegalValues = ({
                             checked={Boolean(valuesMap[match.value])}
                             onChange={() => onChange(match.value)}
                             name={match.value}
-                            color="primary"
+                            color='primary'
                             disabled={deletedLegalValues
                                 .map(({ value }) => value)
                                 .includes(match.value)}

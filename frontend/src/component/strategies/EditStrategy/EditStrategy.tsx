@@ -35,7 +35,7 @@ export const EditStrategy = () => {
     } = useStrategyForm(
         strategyDefinition?.name,
         strategyDefinition?.description,
-        strategyDefinition?.parameters
+        strategyDefinition?.parameters,
     );
     const { updateStrategy, loading } = useStrategiesApi();
     const { refetchStrategies } = useStrategies();
@@ -76,11 +76,11 @@ export const EditStrategy = () => {
     return (
         <FormTemplate
             loading={loading}
-            title="Edit strategy type"
+            title='Edit strategy type'
             description="The strategy type and the parameters will be selectable when adding an activation strategy to a toggle in the environments.
             The parameter defines the type of activation strategy. E.g. you can create a type 'Teams' and add a parameter 'List'. Then it's easy to add team names to the activation strategy"
-            documentationLink="https://docs.getunleash.io/reference/custom-activation-strategies"
-            documentationLinkLabel="Custom strategies documentation"
+            documentationLink='https://docs.getunleash.io/reference/custom-activation-strategies'
+            documentationLinkLabel='Custom strategies documentation'
             formatApiCode={formatApiCode}
         >
             <StrategyForm
@@ -93,7 +93,7 @@ export const EditStrategy = () => {
                 setStrategyDesc={setStrategyDesc}
                 params={params}
                 setParams={setParams}
-                mode="Edit"
+                mode='Edit'
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >

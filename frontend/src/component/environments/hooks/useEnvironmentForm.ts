@@ -26,7 +26,7 @@ const useEnvironmentForm = (initialName = '', initialType = 'development') => {
 
     const validateEnvironmentName = async () => {
         if (name.length === 0) {
-            setErrors(prev => ({
+            setErrors((prev) => ({
                 ...prev,
                 name: 'Environment name can not be empty',
             }));
@@ -37,7 +37,7 @@ const useEnvironmentForm = (initialName = '', initialType = 'development') => {
             await validateEnvName(name);
             return true;
         } catch (error: unknown) {
-            setErrors(prev => ({ ...prev, name: formatUnknownError(error) }));
+            setErrors((prev) => ({ ...prev, name: formatUnknownError(error) }));
             return false;
         }
     };

@@ -14,21 +14,16 @@ export const usePlaygroundApi = () => {
     const URI = 'api/admin/playground';
 
     const evaluateAdvancedPlayground = async (
-        payload: AdvancedPlaygroundRequestSchema
-    ) => {
+        payload: AdvancedPlaygroundRequestSchema,
+    ): Promise<AdvancedPlaygroundResponseSchema> => {
         const path = `${URI}/advanced`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify(payload),
         });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res.json() as Promise<AdvancedPlaygroundResponseSchema>;
-        } catch (error) {
-            throw error;
-        }
+        const res = await makeRequest(req.caller, req.id);
+        return res.json();
     };
 
     return {

@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react';
 
-export type IGetSearchContextOutput<T extends any = any> = {
+export type IGetSearchContextOutput<T = any> = {
     data: T[];
     columns: any[];
     searchValue: string;
 };
 
-type IUseSearchOutput<T extends any> = {
+type IUseSearchOutput<T> = {
     getSearchText: (input: string) => string;
     data: T[];
     getSearchContext: () => IGetSearchContextOutput<T>;
@@ -21,17 +21,17 @@ const normalizeSearchValue = (value: string) =>
 const removeQuotes = (value: string) =>
     value.replaceAll("'", '').replaceAll('"', '');
 
-export const useSearch = <T extends any>(
+export const useSearch = <T>(
     columns: any[],
     searchValue: string,
-    data: T[]
+    data: T[],
 ): IUseSearchOutput<T> => {
     const getSearchText = useCallback(
         (value: string) =>
             removeQuotes(
-                getSearchTextGenerator(columns)(normalizeSearchValue(value))
+                getSearchTextGenerator(columns)(normalizeSearchValue(value)),
             ),
-        [columns]
+        [columns],
     );
     const normalizedSearchValue = normalizeSearchValue(searchValue);
 
@@ -46,7 +46,7 @@ export const useSearch = <T extends any>(
         const searchedData = searchInFilteredData(
             columns,
             getSearchText(normalizedSearchValue),
-            filteredData
+            filteredData,
         );
 
         return searchedData;
@@ -59,11 +59,11 @@ export const filter = (columns: any[], searchValue: string, data: any[]) => {
     let filteredDataSet = data;
 
     getFilterableColumns(columns)
-        .filter(column => isValidFilter(searchValue, column.filterName))
-        .forEach(column => {
+        .filter((column) => isValidFilter(searchValue, column.filterName))
+        .forEach((column) => {
             const values = getFilterValues(column.filterName, searchValue);
 
-            filteredDataSet = filteredDataSet.filter(row => {
+            filteredDataSet = filteredDataSet.filter((row) => {
                 if (column.filterBy) {
                     return column.filterBy(row, values);
                 }
@@ -75,36 +75,36 @@ export const filter = (columns: any[], searchValue: string, data: any[]) => {
     return filteredDataSet;
 };
 
-export const searchInFilteredData = <T extends any>(
+export const searchInFilteredData = <T>(
     columns: any[],
     searchValue: string,
-    filteredData: T[]
+    filteredData: T[],
 ) => {
     const trimmedSearchValue = searchValue.trim();
     const searchableColumns = columns.filter(
-        column => column.searchable && column.accessor
+        (column) => column.searchable && column.accessor,
     );
 
-    return filteredData.filter(row => {
-        return searchableColumns.some(column => {
+    return filteredData.filter((row) => {
+        return searchableColumns.some((column) => {
             if (column.searchBy) {
                 return column.searchBy(row, trimmedSearchValue);
             }
 
             return defaultSearch(
                 getColumnValues(column, row),
-                trimmedSearchValue
+                trimmedSearchValue,
             );
         });
     });
 };
 
 const defaultFilter = (fieldValue: string, values: string[]) =>
-    values.some(value => fieldValue?.toLowerCase() === value?.toLowerCase());
+    values.some((value) => fieldValue?.toLowerCase() === value?.toLowerCase());
 
 export const includesFilter = (fieldValue: string, values: string[]) =>
-    values.some(value =>
-        fieldValue?.toLowerCase().includes(value?.toLowerCase())
+    values.some((value) =>
+        fieldValue?.toLowerCase().includes(value?.toLowerCase()),
     );
 
 const defaultSearch = (fieldValue: string, value: string) =>
@@ -112,17 +112,17 @@ const defaultSearch = (fieldValue: string, value: string) =>
 
 export const getSearchTextGenerator = (columns: any[]) => {
     const filters = columns
-        .filter(column => column.filterName)
-        .map(column => column.filterName);
+        .filter((column) => column.filterName)
+        .map((column) => column.filterName);
 
     const isValidSearch = (fragment: string) => {
-        return filters.some(filter => isValidFilter(fragment, filter));
+        return filters.some((filter) => isValidFilter(fragment, filter));
     };
 
     return (searchValue: string) =>
         searchValue
             .split(SPACES_WITHOUT_QUOTES)
-            .filter(fragment => !isValidSearch(fragment))
+            .filter((fragment) => !isValidSearch(fragment))
             .join(' ');
 };
 
@@ -131,7 +131,7 @@ export const isValidFilter = (input: string, match: string) =>
     new RegExp(`${match}:(?:\\w+|["'][^"']+["'])`).test(input);
 
 export const getFilterableColumns = (columns: any[]) =>
-    columns.filter(column => column.filterName && column.accessor);
+    columns.filter((column) => column.filterName && column.accessor);
 
 export const getColumnValues = (column: any, row: any) => {
     const value =
@@ -156,4 +156,4 @@ export const getFilterValues = (filterName: string, searchValue: string) =>
         ?.split(SPACES_WITHOUT_QUOTES)[0]
         ?.split(',')
         .map(removeQuotes)
-        .filter(value => value) ?? [];
+        .filter((value) => value) ?? [];

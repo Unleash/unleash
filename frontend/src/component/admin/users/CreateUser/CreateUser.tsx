@@ -48,8 +48,8 @@ const CreateUser = () => {
             const payload = getAddUserPayload();
             try {
                 await addUser(payload)
-                    .then(res => res.json())
-                    .then(user => {
+                    .then((res) => res.json())
+                    .then((user) => {
                         scrollToTop();
                         setInviteLink(user.inviteLink);
                         setShowConfirm(true);
@@ -65,9 +65,7 @@ const CreateUser = () => {
     };
 
     const formatApiCode = () => {
-        return `curl --location --request POST '${
-            uiConfig.unleashUrl
-        }/api/admin/user-admin' \\
+        return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/user-admin' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getAddUserPayload(), undefined, 2)}'`;
@@ -80,10 +78,10 @@ const CreateUser = () => {
     return (
         <FormTemplate
             loading={loading}
-            title="Create Unleash user"
-            description="In order for a user to get access to Unleash, they need to be assigned a root role, such as Viewer, Editor, or Admin."
-            documentationLink="https://docs.getunleash.io/reference/rbac#predefined-roles"
-            documentationLinkLabel="User management documentation"
+            title='Create Unleash user'
+            description='In order for a user to get access to Unleash, they need to be assigned a root role, such as Viewer, Editor, or Admin.'
+            documentationLink='https://docs.getunleash.io/reference/rbac#predefined-roles'
+            documentationLinkLabel='User management documentation'
             formatApiCode={formatApiCode}
         >
             <SeatCostWarning />
@@ -101,7 +99,7 @@ const CreateUser = () => {
                 setRootRole={setRootRole}
                 clearErrors={clearErrors}
             >
-                <CreateButton name="user" permission={ADMIN} />
+                <CreateButton name='user' permission={ADMIN} />
             </UserForm>
             <ConfirmUserAdded
                 open={showConfirm}

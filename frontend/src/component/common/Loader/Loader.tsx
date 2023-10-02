@@ -17,8 +17,8 @@ const StyledImg = styled('img')(({ theme }) => ({
 
 const Loader = () => {
     return (
-        <StyledDiv role="alert" aria-label="Loading">
-            <StyledImg src={formatAssetPath(logo)} alt="" />
+        <StyledDiv role='alert' aria-label='Loading'>
+            <StyledImg src={formatAssetPath(logo)} alt='' />
         </StyledDiv>
     );
 };

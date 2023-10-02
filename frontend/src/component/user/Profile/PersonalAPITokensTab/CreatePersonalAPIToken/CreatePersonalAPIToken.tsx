@@ -56,7 +56,7 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
     const [expiration, setExpiration] =
         useState<ExpirationOption>(DEFAULT_EXPIRATION);
     const [expiresAt, setExpiresAt] = useState(
-        calculateExpirationDate(DEFAULT_EXPIRATION)
+        calculateExpirationDate(DEFAULT_EXPIRATION),
     );
     const [errors, setErrors] = useState<IPersonalAPITokenFormErrors>({});
 
@@ -79,7 +79,7 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
 
         try {
             const token = await createPersonalAPIToken(
-                getPersonalAPITokenPayload()
+                getPersonalAPITokenPayload(),
             );
             newToken(token);
             refetchTokens();
@@ -90,9 +90,7 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
     };
 
     const formatApiCode = () => {
-        return `curl --location --request POST '${
-            uiConfig.unleashUrl
-        }/api/admin/user/tokens' \\
+        return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/user/tokens' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(getPersonalAPITokenPayload(), undefined, 2)}'`;
@@ -100,7 +98,7 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
 
     const isDescriptionNotEmpty = (description: string) => description.length;
     const isDescriptionUnique = (description: string) =>
-        !tokens?.some(token => token.description === description);
+        !tokens?.some((token) => token.description === description);
     const isValid =
         isDescriptionNotEmpty(description) &&
         isDescriptionUnique(description) &&
@@ -112,17 +110,17 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
             onClose={() => {
                 setOpen(false);
             }}
-            label="Create personal API token"
+            label='Create personal API token'
         >
             <FormTemplate
                 loading={loading}
                 modal
-                title="Create personal API token"
-                description="Use personal API tokens to authenticate to the Unleash API as
+                title='Create personal API token'
+                description='Use personal API tokens to authenticate to the Unleash API as
                 yourself. A personal API token has the same access privileges as
-                your user."
-                documentationLink="https://docs.getunleash.io/reference/api-tokens-and-client-keys"
-                documentationLinkLabel="Tokens documentation"
+                your user.'
+                documentationLink='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
+                documentationLinkLabel='Tokens documentation'
                 formatApiCode={formatApiCode}
             >
                 <StyledForm onSubmit={handleSubmit}>
@@ -142,9 +140,9 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
 
                     <StyledButtonContainer>
                         <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
+                            type='submit'
+                            variant='contained'
+                            color='primary'
                             disabled={!isValid}
                         >
                             Create token

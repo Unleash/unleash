@@ -13,28 +13,28 @@ const useProjectForm = (
     initialFeatureLimit = '',
     initialFeatureNamingPattern = '',
     initialFeatureNamingExample = '',
-    initialFeatureNamingDescription = ''
+    initialFeatureNamingDescription = '',
 ) => {
     const [projectId, setProjectId] = useState(initialProjectId);
 
     const [projectName, setProjectName] = useState(initialProjectName);
     const [projectDesc, setProjectDesc] = useState(initialProjectDesc);
     const [projectStickiness, setProjectStickiness] = useState<string>(
-        initialProjectStickiness
+        initialProjectStickiness,
     );
     const [projectMode, setProjectMode] =
         useState<ProjectMode>(initialProjectMode);
     const [featureLimit, setFeatureLimit] =
         useState<string>(initialFeatureLimit);
     const [featureNamingPattern, setFeatureNamingPattern] = useState(
-        initialFeatureNamingPattern
+        initialFeatureNamingPattern,
     );
     const [featureNamingExample, setFeatureNamingExample] = useState(
-        initialFeatureNamingExample
+        initialFeatureNamingExample,
     );
 
     const [featureNamingDescription, setFeatureNamingDescription] = useState(
-        initialFeatureNamingDescription
+        initialFeatureNamingDescription,
     );
 
     const [errors, setErrors] = useState({});
@@ -102,21 +102,21 @@ const useProjectForm = (
 
     const validateProjectId = async () => {
         if (projectId.length === 0) {
-            setErrors(prev => ({ ...prev, id: 'Id can not be empty.' }));
+            setErrors((prev) => ({ ...prev, id: 'Id can not be empty.' }));
             return false;
         }
         try {
             await validateId(getProjectPayload().id);
             return true;
         } catch (error: unknown) {
-            setErrors(prev => ({ ...prev, id: formatUnknownError(error) }));
+            setErrors((prev) => ({ ...prev, id: formatUnknownError(error) }));
             return false;
         }
     };
 
     const validateName = () => {
         if (projectName.length === 0) {
-            setErrors(prev => ({ ...prev, name: 'Name can not be empty.' }));
+            setErrors((prev) => ({ ...prev, name: 'Name can not be empty.' }));
             return false;
         }
 

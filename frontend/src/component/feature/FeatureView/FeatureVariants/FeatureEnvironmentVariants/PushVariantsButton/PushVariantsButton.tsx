@@ -39,7 +39,7 @@ export const PushVariantsButton = ({
     onSubmit,
 }: IPushVariantsButtonProps) => {
     const [pushToAnchorEl, setPushToAnchorEl] = useState<null | HTMLElement>(
-        null
+        null,
     );
     const pushToOpen = Boolean(pushToAnchorEl);
 
@@ -48,26 +48,26 @@ export const PushVariantsButton = ({
     >([]);
 
     const addSelectedEnvironment = (
-        environment: IFeatureEnvironmentWithCrEnabled
+        environment: IFeatureEnvironmentWithCrEnabled,
     ) => {
-        setSelectedEnvironments(prevSelectedEnvironments => [
+        setSelectedEnvironments((prevSelectedEnvironments) => [
             ...prevSelectedEnvironments,
             environment,
         ]);
     };
 
     const removeSelectedEnvironment = (
-        environment: IFeatureEnvironmentWithCrEnabled
+        environment: IFeatureEnvironmentWithCrEnabled,
     ) => {
-        setSelectedEnvironments(prevSelectedEnvironments =>
+        setSelectedEnvironments((prevSelectedEnvironments) =>
             prevSelectedEnvironments.filter(
-                ({ name }) => name !== environment.name
-            )
+                ({ name }) => name !== environment.name,
+            ),
         );
     };
 
     const toggleSelectedEnvironment = (
-        environment: IFeatureEnvironmentWithCrEnabled
+        environment: IFeatureEnvironmentWithCrEnabled,
     ) => {
         if (selectedEnvironments.includes(environment)) {
             removeSelectedEnvironment(environment);
@@ -82,7 +82,7 @@ export const PushVariantsButton = ({
     };
 
     const variants =
-        environments.find(environment => environment.name === current)
+        environments.find((environment) => environment.name === current)
             ?.variants ?? [];
 
     return (
@@ -91,14 +91,14 @@ export const PushVariantsButton = ({
             show={
                 <>
                     <Button
-                        onClick={e => {
+                        onClick={(e) => {
                             setPushToAnchorEl(e.currentTarget);
                         }}
                         id={`push-to-menu-${current}`}
                         aria-controls={pushToOpen ? 'basic-menu' : undefined}
-                        aria-haspopup="true"
+                        aria-haspopup='true'
                         aria-expanded={pushToOpen ? 'true' : undefined}
-                        variant="outlined"
+                        variant='outlined'
                     >
                         Copy to environment
                     </Button>
@@ -112,19 +112,21 @@ export const PushVariantsButton = ({
                         }}
                     >
                         {environments
-                            .filter(environment => environment.name !== current)
-                            .map(otherEnvironment => (
+                            .filter(
+                                (environment) => environment.name !== current,
+                            )
+                            .map((otherEnvironment) => (
                                 <PermissionCheckboxMenuItem
                                     projectId={projectId}
                                     permission={permission}
                                     environment={otherEnvironment.name}
                                     key={otherEnvironment.name}
                                     checked={selectedEnvironments.includes(
-                                        otherEnvironment
+                                        otherEnvironment,
                                     )}
                                     onClick={() =>
                                         toggleSelectedEnvironment(
-                                            otherEnvironment
+                                            otherEnvironment,
                                         )
                                     }
                                 />
@@ -132,7 +134,7 @@ export const PushVariantsButton = ({
                         <StyledActions>
                             <Divider />
                             <StyledButton
-                                variant="outlined"
+                                variant='outlined'
                                 onClick={() => {
                                     onSubmit(selectedEnvironments);
                                     cleanupState();

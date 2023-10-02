@@ -9,7 +9,7 @@ const fetcher = () => {
     const path = formatApiPath(url);
     return fetch(path, {
         method: 'GET',
-    }).then(res => res.json());
+    }).then((res) => res.json());
 };
 
 export const useInviteTokens = (options: SWRConfiguration = {}) => {
@@ -22,7 +22,7 @@ export const useInviteTokens = (options: SWRConfiguration = {}) => {
 
     return {
         data: data
-            ? { tokens: data.tokens?.filter(token => token.enabled) }
+            ? { tokens: data.tokens?.filter((token) => token.enabled) }
             : undefined,
         error,
         loading,

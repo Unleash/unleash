@@ -55,7 +55,7 @@ export const EnvironmentStrategyExecutionOrder = ({
     if (loading) return null;
 
     const featureEnvironment = featureData.environments.find(
-        ({ name }) => environment === name
+        ({ name }) => environment === name,
     );
     const environmentStrategies = featureEnvironment?.strategies || [];
 
@@ -71,17 +71,17 @@ export const EnvironmentStrategyExecutionOrder = ({
                     }
                     return 0;
                 })
-                .map(strategy => strategy.id) ?? [],
+                .map((strategy) => strategy.id) ?? [],
     };
 
     const updatedStrategies = change.payload
         .map(({ id }) => {
-            return environmentStrategies.find(s => s.id === id);
+            return environmentStrategies.find((s) => s.id === id);
         })
         .filter(Boolean);
 
     const data = {
-        strategyIds: updatedStrategies.map(strategy => strategy!.id),
+        strategyIds: updatedStrategies.map((strategy) => strategy!.id),
     };
 
     return (

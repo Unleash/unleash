@@ -114,7 +114,7 @@ const Header: VFC = () => {
     const { uiConfig, isOss } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
-    const toggleDrawer = () => setOpenDrawer(prev => !prev);
+    const toggleDrawer = () => setOpenDrawer((prev) => !prev);
     const onAdminClose = () => setAdminRef(null);
     const onConfigureClose = () => setConfigRef(null);
 
@@ -133,15 +133,17 @@ const Header: VFC = () => {
 
     if (smallScreen) {
         return (
-            <StyledHeader position="static">
+            <StyledHeader position='static'>
                 <StyledContainer>
-                    <Tooltip title="Menu" arrow>
+                    <Tooltip title='Menu' arrow>
                         <IconButton
-                            sx={{ color: theme => theme.palette.text.primary }}
+                            sx={{
+                                color: (theme) => theme.palette.text.primary,
+                            }}
                             onClick={toggleDrawer}
-                            aria-controls="header-drawer"
+                            aria-controls='header-drawer'
                             aria-expanded={openDrawer}
-                            size="large"
+                            size='large'
                         >
                             <MenuIcon />
                         </IconButton>
@@ -161,26 +163,26 @@ const Header: VFC = () => {
     }
 
     return (
-        <StyledHeader position="static">
+        <StyledHeader position='static'>
             <StyledContainer>
-                <StyledLink to="/" sx={flexRow} aria-label="Home">
+                <StyledLink to='/' sx={flexRow} aria-label='Home'>
                     <ThemeMode
                         darkmode={
-                            <StyledUnleashLogoWhite aria-label="Unleash logo" />
+                            <StyledUnleashLogoWhite aria-label='Unleash logo' />
                         }
                         lightmode={
-                            <StyledUnleashLogo aria-label="Unleash logo" />
+                            <StyledUnleashLogo aria-label='Unleash logo' />
                         }
                     />
                 </StyledLink>
 
                 <StyledNav>
                     <StyledLinks>
-                        <StyledLink to="/projects">Projects</StyledLink>
-                        <StyledLink to="/features">Feature toggles</StyledLink>
-                        <StyledLink to="/playground">Playground</StyledLink>
+                        <StyledLink to='/projects'>Projects</StyledLink>
+                        <StyledLink to='/features'>Feature toggles</StyledLink>
+                        <StyledLink to='/playground'>Playground</StyledLink>
                         <StyledAdvancedNavButton
-                            onClick={e => setConfigRef(e.currentTarget)}
+                            onClick={(e) => setConfigRef(e.currentTarget)}
                             aria-controls={configRef ? configId : undefined}
                             aria-expanded={Boolean(configRef)}
                         >
@@ -219,24 +221,24 @@ const Header: VFC = () => {
                             }
                             show={<Notifications />}
                         />
-                        <Tooltip title="Documentation" arrow>
+                        <Tooltip title='Documentation' arrow>
                             <IconButton
-                                href="https://docs.getunleash.io/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                size="large"
+                                href='https://docs.getunleash.io/'
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                size='large'
                                 disableRipple
                                 sx={focusable}
                             >
                                 <MenuBookIcon />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Settings" arrow>
+                        <Tooltip title='Settings' arrow>
                             <StyledIconButton
-                                onClick={e => setAdminRef(e.currentTarget)}
+                                onClick={(e) => setAdminRef(e.currentTarget)}
                                 aria-controls={adminRef ? adminId : undefined}
                                 aria-expanded={Boolean(adminRef)}
-                                size="large"
+                                size='large'
                                 disableRipple
                             >
                                 <SettingsIcon />

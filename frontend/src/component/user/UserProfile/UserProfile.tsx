@@ -44,10 +44,10 @@ const UserProfile = ({ profile }: IUserProfileProps) => {
         <ClickAwayListener onClickAway={() => setShowProfile(false)}>
             <StyledProfileContainer>
                 <StyledButton
-                    onClick={() => setShowProfile(prev => !prev)}
+                    onClick={() => setShowProfile((prev) => !prev)}
                     aria-controls={showProfile ? modalId : undefined}
                     aria-expanded={showProfile}
-                    color="secondary"
+                    color='secondary'
                     disableRipple
                 >
                     <StyledUserAvatar

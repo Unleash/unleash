@@ -7,11 +7,11 @@ function TestComponent(props: { outsideClickHandler: () => void }) {
     useOnClickOutside([divRef], props.outsideClickHandler);
 
     return (
-        <div data-testid="wrapper">
-            <div data-testid="inside" ref={divRef}>
+        <div data-testid='wrapper'>
+            <div data-testid='inside' ref={divRef}>
                 Inside
             </div>
-            <div data-testid="outside">Outside</div>
+            <div data-testid='outside'>Outside</div>
         </div>
     );
 }

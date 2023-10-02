@@ -22,7 +22,7 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
     const { emailAuth } = useAuthApi();
     const { setToastApiError } = useToast();
 
-    const handleSubmit: FormEventHandler<HTMLFormElement> = async evt => {
+    const handleSubmit: FormEventHandler<HTMLFormElement> = async (evt) => {
         evt.preventDefault();
 
         try {
@@ -34,14 +34,14 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
         }
     };
 
-    const handleChange: ChangeEventHandler<HTMLInputElement> = e => {
+    const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
         const value = e.target.value;
         setEmail(value);
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <Logo className={styles.logo} aria-label="Unleash logo" />
+            <Logo className={styles.logo} aria-label='Unleash logo' />
             <div className={styles.container}>
                 <h2>Access the Unleash demo instance</h2>
                 <p>No further data or Credit Card required</p>
@@ -51,20 +51,20 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
                         className={styles.emailField}
                         onChange={handleChange}
                         inputProps={{ 'data-testid': 'email-input-field' }}
-                        size="small"
-                        variant="outlined"
-                        label="Email"
-                        name="email"
-                        id="email"
+                        size='small'
+                        variant='outlined'
+                        label='Email'
+                        name='email'
+                        id='email'
                         data-testid={LOGIN_EMAIL_ID}
                         required
-                        type="email"
+                        type='email'
                     />
 
                     <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
+                        type='submit'
+                        variant='contained'
+                        color='primary'
                         className={styles.button}
                         data-testid={LOGIN_BUTTON}
                     >
@@ -75,17 +75,17 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
                     By accessing our demo instance, you agree to the
                     Unleash&nbsp;
                     <a
-                        href="https://www.unleash-hosted.com/tos/"
-                        target="_blank"
-                        rel="noreferrer"
+                        href='https://www.unleash-hosted.com/tos/'
+                        target='_blank'
+                        rel='noreferrer'
                     >
                         Customer Terms of Service
                     </a>{' '}
                     and&nbsp;
                     <a
-                        href="https://www.unleash-hosted.com/privacy-policy/"
-                        target="_blank"
-                        rel="noreferrer"
+                        href='https://www.unleash-hosted.com/privacy-policy/'
+                        target='_blank'
+                        rel='noreferrer'
                     >
                         Privacy Policy
                     </a>

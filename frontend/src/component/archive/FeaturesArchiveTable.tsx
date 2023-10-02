@@ -7,7 +7,7 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 const defaultSort: SortingRule<string> = { id: 'createdAt' };
 const { value, setValue } = createLocalStorage(
     'FeaturesArchiveTable:v1',
-    defaultSort
+    defaultSort,
 );
 
 export const FeaturesArchiveTable = () => {
@@ -21,7 +21,7 @@ export const FeaturesArchiveTable = () => {
 
     return (
         <ArchiveTable
-            title="Archive"
+            title='Archive'
             archivedFeatures={archivedFeatures}
             loading={loading}
             storedParams={value}

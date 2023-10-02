@@ -19,7 +19,7 @@ export const ReportExpiredCell: VFC<IReportExpiredCellProps> = ({ row }) => {
 
     return (
         <TextCell>
-            <Typography variant="body2" color={theme.palette.text.secondary}>
+            <Typography variant='body2' color={theme.palette.text.secondary}>
                 N/A
             </Typography>
         </TextCell>

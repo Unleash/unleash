@@ -6,7 +6,7 @@ export const DEFAULT_PROJECT_ID = 'default';
 export const useDefaultProjectId = (): string | undefined => {
     const { projects = [] } = useProjects();
 
-    const defaultProject = projects.find(project => {
+    const defaultProject = projects.find((project) => {
         return project.id === DEFAULT_PROJECT_ID;
     });
 

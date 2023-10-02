@@ -20,13 +20,13 @@ export const InputListField: VFC<IInputListFieldProps> = ({
     error,
     ...rest
 }) => {
-    const handleChange: TextFieldProps['onChange'] = event => {
+    const handleChange: TextFieldProps['onChange'] = (event) => {
         const values = event.target.value.split(/,\s?/);
-        const trimmedValues = values.map(v => v.trim());
+        const trimmedValues = values.map((v) => v.trim());
         updateValues(trimmedValues);
     };
 
-    const handleKeyDown: TextFieldProps['onKeyDown'] = event => {
+    const handleKeyDown: TextFieldProps['onKeyDown'] = (event) => {
         if (event.key === 'Backspace') {
             const currentValue = (event.target as HTMLInputElement).value;
             if (currentValue.endsWith(', ')) {
@@ -46,8 +46,8 @@ export const InputListField: VFC<IInputListFieldProps> = ({
             onKeyDown={handleKeyDown}
             onChange={handleChange}
             style={{ width: '100%' }}
-            variant="outlined"
-            size="small"
+            variant='outlined'
+            size='small'
         />
     );
 };

@@ -13,7 +13,7 @@ export interface IUseServiceAccountTokensOutput {
 }
 
 export const useServiceAccountTokens = (
-    id: number
+    id: number,
 ): IUseServiceAccountTokensOutput => {
     const { isEnterprise } = useUiConfig();
 
@@ -21,7 +21,7 @@ export const useServiceAccountTokens = (
         isEnterprise(),
         { pats: [] },
         formatApiPath(`api/admin/service-account/${id}/token`),
-        fetcher
+        fetcher,
     );
 
     return {
@@ -36,5 +36,5 @@ export const useServiceAccountTokens = (
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Service Account Tokens'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

@@ -9,7 +9,7 @@ test('createFeatureStrategy', () => {
             deprecated: false,
             description: 'd',
             parameters: [],
-        })
+        }),
     ).toMatchInlineSnapshot(`
       {
         "constraints": [],
@@ -59,7 +59,7 @@ test('createFeatureStrategy with parameters', () => {
                     required: true,
                 },
             ],
-        })
+        }),
     ).toMatchInlineSnapshot(`
       {
         "constraints": [],

@@ -55,15 +55,15 @@ const defaultSort: SortingRule<string> = { id: 'createdAt' };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'FeatureToggleListTable:v1',
-    defaultSort
+    defaultSort,
 );
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
-        .filter(env => env.enabled)
-        .map(env => env.name);
+        .filter((env) => env.enabled)
+        .map((env) => env.name);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [showExportDialog, setShowExportDialog] = useState(false);
@@ -71,7 +71,7 @@ export const FeatureToggleListTable: VFC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const { uiConfig } = useUiConfig();
     const showEnvironmentLastSeen = Boolean(
-        uiConfig.flags.lastSeenByEnvironment
+        uiConfig.flags.lastSeenByEnvironment,
     );
     const [initialState] = useState(() => ({
         sortBy: [
@@ -91,7 +91,7 @@ export const FeatureToggleListTable: VFC = () => {
         usePinnedFavorites(
             searchParams.has('favorites')
                 ? searchParams.get('favorites') === 'true'
-                : globalStore.favorites
+                : globalStore.favorites,
         );
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
@@ -104,7 +104,7 @@ export const FeatureToggleListTable: VFC = () => {
             }
             refetchFeatures();
         },
-        [favorite, refetchFeatures, unfavorite]
+        [favorite, refetchFeatures, unfavorite],
     );
 
     const columns = useMemo(
@@ -199,7 +199,7 @@ export const FeatureToggleListTable: VFC = () => {
                 searchable: true,
             },
         ],
-        [isFavoritesPinned, showEnvironmentLastSeen]
+        [isFavoritesPinned, showEnvironmentLastSeen],
     );
 
     const {
@@ -213,7 +213,7 @@ export const FeatureToggleListTable: VFC = () => {
             searchedData?.length === 0 && loading
                 ? featuresPlaceholder
                 : searchedData,
-        [searchedData, loading]
+        [searchedData, loading],
     );
 
     const {
@@ -234,7 +234,7 @@ export const FeatureToggleListTable: VFC = () => {
             disableMultiSort: true,
         },
         useSortBy,
-        useFlexLayout
+        useFlexLayout,
     );
 
     useConditionallyHiddenColumns(
@@ -253,7 +253,7 @@ export const FeatureToggleListTable: VFC = () => {
             },
         ],
         setHiddenColumns,
-        columns
+        columns,
     );
 
     useEffect(() => {
@@ -276,7 +276,7 @@ export const FeatureToggleListTable: VFC = () => {
             id: sortBy[0].id,
             desc: sortBy[0].desc || false,
         });
-        setGlobalStore(params => ({
+        setGlobalStore((params) => ({
             ...params,
             favorites: Boolean(isFavoritesPinned),
         }));
@@ -303,7 +303,7 @@ export const FeatureToggleListTable: VFC = () => {
                                 show={
                                     <>
                                         <Search
-                                            placeholder="Search and Filter"
+                                            placeholder='Search and Filter'
                                             expandable
                                             initialValue={searchValue}
                                             onChange={setSearchValue}
@@ -316,26 +316,26 @@ export const FeatureToggleListTable: VFC = () => {
                             />
                             <Link
                                 component={RouterLink}
-                                to="/archive"
-                                underline="always"
+                                to='/archive'
+                                underline='always'
                                 sx={{ marginRight: 2, ...focusable(theme) }}
                             >
                                 View archive
                             </Link>
                             <ConditionallyRender
                                 condition={Boolean(
-                                    uiConfig?.flags?.featuresExportImport
+                                    uiConfig?.flags?.featuresExportImport,
                                 )}
                                 show={
                                     <Tooltip
-                                        title="Export current selection"
+                                        title='Export current selection'
                                         arrow
                                     >
                                         <IconButton
                                             onClick={() =>
                                                 setShowExportDialog(true)
                                             }
-                                            sx={theme => ({
+                                            sx={(theme) => ({
                                                 marginRight: theme.spacing(2),
                                             })}
                                         >

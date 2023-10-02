@@ -131,23 +131,23 @@ export const ServiceAccountModal = ({
     const [username, setUsername] = useState('');
     const [rootRole, setRootRole] = useState<IRole | null>(null);
     const [tokenGeneration, setTokenGeneration] = useState<TokenGeneration>(
-        TokenGeneration.LATER
+        TokenGeneration.LATER,
     );
     const [errors, setErrors] = useState<IServiceAccountModalErrors>({});
 
     const clearError = (field: ErrorField) => {
-        setErrors(errors => ({ ...errors, [field]: undefined }));
+        setErrors((errors) => ({ ...errors, [field]: undefined }));
     };
 
     const setError = (field: ErrorField, error: string) => {
-        setErrors(errors => ({ ...errors, [field]: error }));
+        setErrors((errors) => ({ ...errors, [field]: error }));
     };
 
     const [patDescription, setPatDescription] = useState('');
     const [patExpiration, setPatExpiration] =
         useState<ExpirationOption>(DEFAULT_EXPIRATION);
     const [patExpiresAt, setPatExpiresAt] = useState(
-        calculateExpirationDate(DEFAULT_EXPIRATION)
+        calculateExpirationDate(DEFAULT_EXPIRATION),
     );
     const [patErrors, setPatErrors] = useState<IPersonalAPITokenFormErrors>({});
 
@@ -157,7 +157,7 @@ export const ServiceAccountModal = ({
         setName(serviceAccount?.name || '');
         setUsername(serviceAccount?.username || '');
         setRootRole(
-            roles.find(({ id }) => id === serviceAccount?.rootRole) || null
+            roles.find(({ id }) => id === serviceAccount?.rootRole) || null,
         );
         setTokenGeneration(TokenGeneration.LATER);
         setErrors({});
@@ -181,11 +181,11 @@ export const ServiceAccountModal = ({
             if (editing) {
                 await updateServiceAccount(
                     serviceAccount.id,
-                    getServiceAccountPayload()
+                    getServiceAccountPayload(),
                 );
             } else {
                 const { id } = await addServiceAccount(
-                    getServiceAccountPayload()
+                    getServiceAccountPayload(),
                 );
                 if (tokenGeneration === TokenGeneration.NOW) {
                     const token = await createServiceAccountToken(id, {
@@ -222,7 +222,7 @@ export const ServiceAccountModal = ({
         !users?.some((user: IUser) => user.username === value) &&
         !serviceAccounts?.some(
             (serviceAccount: IServiceAccount) =>
-                serviceAccount.username === value
+                serviceAccount.username === value,
         );
     const isRoleValid = rootRole !== null;
     const isPATValid =
@@ -252,7 +252,7 @@ export const ServiceAccountModal = ({
         if (!isUnique(username)) {
             setError(
                 ErrorField.USERNAME,
-                'A service account or user with that username already exists.'
+                'A service account or user with that username already exists.',
             );
         }
         setUsername(username);
@@ -270,9 +270,9 @@ export const ServiceAccountModal = ({
                 loading={loading}
                 modal
                 title={editing ? 'Edit service account' : 'New service account'}
-                description="A service account is a special type of account that can only be used to authenticate with the Unleash API. Service accounts can be used to automate tasks."
-                documentationLink="https://docs.getunleash.io"
-                documentationLinkLabel="Service accounts documentation"
+                description='A service account is a special type of account that can only be used to authenticate with the Unleash API. Service accounts can be used to automate tasks.'
+                documentationLink='https://docs.getunleash.io'
+                documentationLinkLabel='Service accounts documentation'
                 formatApiCode={formatApiCode}
             >
                 <StyledForm onSubmit={handleSubmit}>
@@ -282,23 +282,23 @@ export const ServiceAccountModal = ({
                         </StyledInputDescription>
                         <StyledInput
                             autoFocus
-                            label="Service account name"
+                            label='Service account name'
                             value={name}
-                            onChange={e => setName(e.target.value)}
+                            onChange={(e) => setName(e.target.value)}
                             onBlur={suggestUsername}
-                            autoComplete="off"
+                            autoComplete='off'
                             required
                         />
                         <StyledInputDescription>
                             What is your new service account username?
                         </StyledInputDescription>
                         <StyledInput
-                            label="Service account username"
+                            label='Service account username'
                             error={Boolean(errors.username)}
                             errorText={errors.username}
                             value={username}
-                            onChange={e => onSetUsername(e.target.value)}
-                            autoComplete="off"
+                            onChange={(e) => onSetUsername(e.target.value)}
+                            autoComplete='off'
                             required
                             disabled={editing}
                         />
@@ -323,9 +323,9 @@ export const ServiceAccountModal = ({
                                         service account, you will also need a
                                         token.{' '}
                                         <Link
-                                            href="https://docs.getunleash.io/reference/api-tokens-and-client-keys"
-                                            target="_blank"
-                                            rel="noreferrer"
+                                            href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
+                                            target='_blank'
+                                            rel='noreferrer'
                                         >
                                             Read more about API tokens
                                         </Link>
@@ -334,23 +334,23 @@ export const ServiceAccountModal = ({
                                     <FormControl>
                                         <RadioGroup
                                             value={tokenGeneration}
-                                            onChange={e =>
+                                            onChange={(e) =>
                                                 setTokenGeneration(
                                                     e.target
-                                                        .value as TokenGeneration
+                                                        .value as TokenGeneration,
                                                 )
                                             }
-                                            name="token-generation"
+                                            name='token-generation'
                                         >
                                             <FormControlLabel
                                                 value={TokenGeneration.LATER}
                                                 control={<Radio />}
-                                                label="I want to generate a token later"
+                                                label='I want to generate a token later'
                                             />
                                             <FormControlLabel
                                                 value={TokenGeneration.NOW}
                                                 control={<Radio />}
-                                                label="Generate a token now"
+                                                label='Generate a token now'
                                             />
                                         </RadioGroup>
                                     </FormControl>
@@ -403,9 +403,9 @@ export const ServiceAccountModal = ({
 
                     <StyledButtonContainer>
                         <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
+                            type='submit'
+                            variant='contained'
+                            color='primary'
                             disabled={!isValid}
                         >
                             {editing ? 'Save' : 'Add'} service account

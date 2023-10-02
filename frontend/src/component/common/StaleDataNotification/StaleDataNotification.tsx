@@ -49,10 +49,10 @@ export const StaleDataNotification = ({
 
     return (
         <AnimateOnMount mounted={show} start={style} enter={fadeInBottomEnter}>
-            <Typography variant="h5" sx={{ my: 2, mb: 2 }}>
+            <Typography variant='h5' sx={{ my: 2, mb: 2 }}>
                 Your data is stale
             </Typography>
-            <Typography variant="body1" sx={{ my: 2, mb: 3 }}>
+            <Typography variant='body1' sx={{ my: 2, mb: 3 }}>
                 The data you have been working on is stale, would you like to
                 refresh your data? This may happen if someone has been making
                 changes to the data while you were working.
@@ -60,8 +60,8 @@ export const StaleDataNotification = ({
             <EventDiff entry={{ preData: cache, data }} />
             <Button
                 sx={{ mb: 2 }}
-                variant="contained"
-                color="primary"
+                variant='contained'
+                color='primary'
                 onClick={() => {
                     refresh();
                     afterSubmitAction();

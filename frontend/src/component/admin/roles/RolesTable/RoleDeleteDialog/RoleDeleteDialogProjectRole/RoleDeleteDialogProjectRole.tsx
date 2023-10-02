@@ -32,22 +32,22 @@ export const RoleDeleteDialogProjectRole = ({
 
     return (
         <Dialogue
-            title="Delete project role?"
+            title='Delete project role?'
             open={open}
-            primaryButtonText="Delete role"
-            secondaryButtonText="Cancel"
+            primaryButtonText='Delete role'
+            secondaryButtonText='Cancel'
             disabledPrimaryButton={entitiesWithRole}
             onClick={() => onConfirm(role!)}
             onClose={() => {
                 setOpen(false);
             }}
-            maxWidth="md"
+            maxWidth='md'
         >
             <ConditionallyRender
                 condition={entitiesWithRole}
                 show={
                     <>
-                        <Alert severity="error">
+                        <Alert severity='error'>
                             You are not allowed to delete a role that is
                             currently in use. Please change the role of the
                             following entities first:

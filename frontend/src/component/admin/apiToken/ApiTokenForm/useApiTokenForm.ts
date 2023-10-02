@@ -16,12 +16,12 @@ export type ApiTokenFormErrorType = 'username' | 'projects';
 export const useApiTokenForm = (project?: string) => {
     const { environments } = useEnvironments();
     const { uiConfig } = useUiConfig();
-    const initialEnvironment = environments?.find(e => e.enabled)?.name;
+    const initialEnvironment = environments?.find((e) => e.enabled)?.name;
 
     const hasCreateTokenPermission = useHasRootAccess(CREATE_CLIENT_API_TOKEN);
     const hasCreateProjectTokenPermission = useHasRootAccess(
         CREATE_PROJECT_API_TOKEN,
-        project
+        project,
     );
 
     const apiTokenTypes: SelectOption[] = [
@@ -38,7 +38,7 @@ export const useApiTokenForm = (project?: string) => {
     const hasCreateFrontendAccess = useHasRootAccess(CREATE_FRONTEND_API_TOKEN);
     const hasCreateFrontendTokenAccess = useHasRootAccess(
         CREATE_PROJECT_API_TOKEN,
-        project
+        project,
     );
     if (!project) {
         apiTokenTypes.push({
@@ -58,7 +58,7 @@ export const useApiTokenForm = (project?: string) => {
         });
     }
 
-    const firstAccessibleType = apiTokenTypes.find(t => t.enabled)?.key;
+    const firstAccessibleType = apiTokenTypes.find((t) => t.enabled)?.key;
 
     const [username, setUsername] = useState('');
     const [type, setType] = useState(firstAccessibleType || TokenType.CLIENT);
@@ -99,10 +99,10 @@ export const useApiTokenForm = (project?: string) => {
     const isValid = () => {
         const newErrors: Partial<Record<ApiTokenFormErrorType, string>> = {};
         if (!username) {
-            newErrors['username'] = 'Username is required';
+            newErrors.username = 'Username is required';
         }
         if (projects.length === 0) {
-            newErrors['projects'] = 'At least one project is required';
+            newErrors.projects = 'At least one project is required';
         }
 
         setErrors(newErrors);

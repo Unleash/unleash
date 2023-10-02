@@ -12,13 +12,13 @@ interface IUseStrategyOutput {
 }
 
 export const useStrategy = (
-    strategyName: string | undefined
+    strategyName: string | undefined,
 ): IUseStrategyOutput => {
     const { data, error, mutate } = useSWR(
         strategyName
             ? formatApiPath(`api/admin/strategies/${strategyName}`)
             : null, // Don't fetch until we have a strategyName.
-        fetcher
+        fetcher,
     );
 
     const refetchStrategy = useCallback(() => {
@@ -36,5 +36,5 @@ export const useStrategy = (
 const fetcher = (path: string): Promise<IStrategy> => {
     return fetch(path)
         .then(handleErrorResponses('Strategy'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

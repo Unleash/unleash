@@ -11,7 +11,7 @@ export interface IAdminCount {
 export const useAdminCount = () => {
     const { data, error, mutate } = useSWR<IAdminCount>(
         formatApiPath(`api/admin/user-admin/admin-count`),
-        fetcher
+        fetcher,
     );
 
     return {
@@ -25,5 +25,5 @@ export const useAdminCount = () => {
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Admin count'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

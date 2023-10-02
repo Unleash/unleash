@@ -69,7 +69,7 @@ export const useConstraintInput = ({
 }: IUseConstraintInputProps): IUseConstraintOutput => {
     const [input, setInput] = useState<Input>(IN_OPERATORS_LEGAL_VALUES);
     const [validator, setValidator] = useState<Validator>(
-        STRING_ARRAY_VALIDATOR
+        STRING_ARRAY_VALIDATOR,
     );
     const [error, setError] = useState('');
 
@@ -138,7 +138,7 @@ export const useConstraintInput = ({
                 setValidator(DATE_VALIDATOR);
             }
         },
-        [setValidator]
+        [setValidator],
     );
 
     useEffect(() => {

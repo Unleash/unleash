@@ -75,13 +75,13 @@ export const CopyFeatureToggle = () => {
         project: { featureNaming },
     } = useProject(projectId);
 
-    const setValue: ChangeEventHandler<HTMLInputElement> = event => {
+    const setValue: ChangeEventHandler<HTMLInputElement> = (event) => {
         const value = trim(event.target.value);
         setNewToggleName(value);
     };
 
     const toggleReplaceGroupId = () => {
-        setReplaceGroupId(prev => !prev);
+        setReplaceGroupId((prev) => !prev);
     };
 
     const onValidateName = async () => {
@@ -95,7 +95,7 @@ export const CopyFeatureToggle = () => {
         return false;
     };
 
-    const onSubmit: FormEventHandler = async event => {
+    const onSubmit: FormEventHandler = async (event) => {
         event.preventDefault();
 
         const isValidName = await onValidateName();
@@ -126,7 +126,7 @@ export const CopyFeatureToggle = () => {
             </StyledHeader>
             <ConditionallyRender
                 condition={Boolean(apiError)}
-                show={<Alert severity="error">{apiError}</Alert>}
+                show={<Alert severity='error'>{apiError}</Alert>}
             />
             <StyledSection>
                 <StyledDescription>
@@ -149,15 +149,15 @@ export const CopyFeatureToggle = () => {
                 />
                 <StyledForm onSubmit={onSubmit}>
                     <TextField
-                        label="Name"
-                        name="name"
+                        label='Name'
+                        name='name'
                         value={newToggleName || ''}
                         onBlur={onValidateName}
                         onChange={setValue}
                         error={nameError !== undefined}
                         helperText={nameError}
-                        variant="outlined"
-                        size="small"
+                        variant='outlined'
+                        size='small'
                         aria-required
                         aria-details={
                             displayFeatureNamingInfo
@@ -174,13 +174,13 @@ export const CopyFeatureToggle = () => {
                                 onChange={toggleReplaceGroupId}
                             />
                         }
-                        label="Replace groupId"
+                        label='Replace groupId'
                     />
 
                     <Button
-                        type="submit"
-                        color="primary"
-                        variant="contained"
+                        type='submit'
+                        color='primary'
+                        variant='contained'
                         disabled={isChangeRequestConfiguredInAnyEnv()}
                     >
                         <FileCopy />

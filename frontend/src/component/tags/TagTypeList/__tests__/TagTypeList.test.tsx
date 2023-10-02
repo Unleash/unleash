@@ -22,7 +22,7 @@ test('renders an empty list correctly', () => {
                     </UIProvider>
                 </AnnouncerProvider>
             </ThemeProvider>
-        </MemoryRouter>
+        </MemoryRouter>,
     );
     expect(tree).toMatchSnapshot();
 });

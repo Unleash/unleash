@@ -12,29 +12,23 @@ export const usePersonalAPITokensApi = () => {
     });
 
     const createPersonalAPIToken = async (
-        payload: ICreatePersonalApiTokenPayload
+        payload: ICreatePersonalApiTokenPayload,
     ): Promise<INewPersonalAPIToken> => {
         const req = createRequest('api/admin/user/tokens', {
             method: 'POST',
             body: JSON.stringify(payload),
         });
-        try {
-            const response = await makeRequest(req.caller, req.id);
-            return await response.json();
-        } catch (e) {
-            throw e;
-        }
+
+        const response = await makeRequest(req.caller, req.id);
+        return response.json();
     };
 
     const deletePersonalAPIToken = async (id: string) => {
         const req = createRequest(`api/admin/user/tokens/${id}`, {
             method: 'DELETE',
         });
-        try {
-            await makeRequest(req.caller, req.id);
-        } catch (e) {
-            throw e;
-        }
+
+        await makeRequest(req.caller, req.id);
     };
 
     return {

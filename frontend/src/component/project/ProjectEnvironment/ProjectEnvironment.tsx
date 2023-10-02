@@ -71,13 +71,13 @@ const ProjectEnvironmentList = () => {
 
     const projectEnvironments = useMemo<IProjectEnvironment[]>(
         () =>
-            environments.map(environment => ({
+            environments.map((environment) => ({
                 ...environment,
                 projectVisible: project?.environments
-                    .map(projectEnvironment => projectEnvironment.environment)
+                    .map((projectEnvironment) => projectEnvironment.environment)
                     .includes(environment.name),
             })),
-        [environments, project?.environments]
+        [environments, project?.environments],
     );
 
     const refetch = () => {
@@ -89,7 +89,7 @@ const ProjectEnvironmentList = () => {
         return (
             <StyledApiError
                 onClick={refetch}
-                text="Error fetching environments"
+                text='Error fetching environments'
             />
         );
     };
@@ -134,7 +134,7 @@ const ProjectEnvironmentList = () => {
             try {
                 await removeEnvironmentFromProject(
                     projectId,
-                    selectedEnvironment.name
+                    selectedEnvironment.name,
                 );
                 refetch();
                 setToastData({
@@ -189,7 +189,7 @@ const ProjectEnvironmentList = () => {
                                     ? 'Hide environment and disable feature toggles'
                                     : 'Make it visible'
                             }
-                            size="medium"
+                            size='medium'
                             disabled={envIsDisabled(original.name)}
                             projectId={projectId}
                             permission={UPDATE_PROJECT}
@@ -201,7 +201,7 @@ const ProjectEnvironmentList = () => {
                 disableGlobalFilter: true,
             },
         ],
-        [projectEnvironments]
+        [projectEnvironments],
     );
 
     const {
@@ -218,7 +218,7 @@ const ProjectEnvironmentList = () => {
             data: projectEnvironments,
             disableSortBy: true,
         },
-        useGlobalFilter
+        useGlobalFilter,
     );
 
     const header = (
@@ -240,30 +240,30 @@ const ProjectEnvironmentList = () => {
                     condition={Boolean(error)}
                     show={renderError()}
                 />
-                <StyledAlert severity="info">
+                <StyledAlert severity='info'>
                     <strong>Important!</strong> In order for your application to
                     retrieve configured activation strategies for a specific
                     environment, the application must use an environment
                     specific API token. You can look up the environment-specific{' '}
-                    <Link to="/admin/api">API tokens here</Link>.
+                    <Link to='/admin/api'>API tokens here</Link>.
                     <br />
                     <br />
                     Your administrator can configure an environment-specific API
                     token to be used in the SDK. If you are an administrator you
-                    can <Link to="/admin/api">create a new API token here</Link>
+                    can <Link to='/admin/api'>create a new API token here</Link>
                     .
                 </StyledAlert>
                 <SearchHighlightProvider value={globalFilter}>
-                    <Table {...getTableProps()} rowHeight="compact">
+                    <Table {...getTableProps()} rowHeight='compact'>
                         <SortableTableHeader
                             headerGroups={headerGroups as any}
                         />
                         <TableBody {...getTableBodyProps()}>
-                            {rows.map(row => {
+                            {rows.map((row) => {
                                 prepareRow(row);
                                 return (
                                     <TableRow hover {...row.getRowProps()}>
-                                        {row.cells.map(cell => (
+                                        {row.cells.map((cell) => (
                                             <TableCell {...cell.getCellProps()}>
                                                 {cell.render('Cell')}
                                             </TableCell>

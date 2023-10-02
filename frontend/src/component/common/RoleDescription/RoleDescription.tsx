@@ -12,7 +12,7 @@ import {
 } from 'utils/permissions';
 
 const StyledDescription = styled('div', {
-    shouldForwardProp: prop => prop !== 'tooltip',
+    shouldForwardProp: (prop) => prop !== 'tooltip',
 })<{ tooltip?: boolean }>(({ theme, tooltip }) => ({
     width: '100%',
     maxWidth: theme.spacing(50),
@@ -49,7 +49,7 @@ const StyledRoleHeader = styled('p')(({ theme }) => ({
 const StyledSupervisedUserCircle = styled(SupervisedUserCircle)(
     ({ theme }) => ({
         fontSize: theme.fontSizes.mainHeader,
-    })
+    }),
 );
 
 const StyledDescriptionHeader = styled('p')(({ theme }) => ({
@@ -93,7 +93,7 @@ export const RoleDescription = ({
     return (
         <StyledDescription tooltip={tooltip} {...rest}>
             <StyledRoleHeader>
-                <StyledSupervisedUserCircle color="disabled" />
+                <StyledSupervisedUserCircle color='disabled' />
                 {name}
             </StyledRoleHeader>
             <StyledDescriptionSubHeader>
@@ -113,7 +113,7 @@ export const RoleDescription = ({
                                         {label}
                                     </StyledDescriptionHeader>
                                     <StyledPermissionsList>
-                                        {permissions.map(permission => (
+                                        {permissions.map((permission) => (
                                             <li key={permission.id}>
                                                 {permission.displayName}
                                             </li>

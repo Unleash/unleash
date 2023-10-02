@@ -9,7 +9,7 @@ export const GridCol: FC<{ vertical?: boolean }> = ({
         <Grid
             container={vertical}
             item
-            display="flex"
+            display='flex'
             alignItems={vertical ? 'start' : 'center'}
             direction={vertical ? 'column' : undefined}
         >

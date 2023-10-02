@@ -38,7 +38,7 @@ const Login = () => {
                 <ConditionallyRender
                     condition={resetPassword}
                     show={
-                        <Alert severity="success" sx={{ mb: 4 }}>
+                        <Alert severity='success' sx={{ mb: 4 }}>
                             <AlertTitle>Success</AlertTitle>
                             You successfully reset your password.
                         </Alert>
@@ -47,7 +47,7 @@ const Login = () => {
                 <ConditionallyRender
                     condition={invited}
                     show={
-                        <Alert severity="success" sx={{ mb: 4 }}>
+                        <Alert severity='success' sx={{ mb: 4 }}>
                             <AlertTitle>Success</AlertTitle>
                             Your account has been created.
                         </Alert>

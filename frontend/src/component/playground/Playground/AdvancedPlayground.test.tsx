@@ -9,15 +9,15 @@ import userEvent from '@testing-library/user-event';
 const testDisplayComponent = (
     <UIProviderContainer>
         <AdvancedPlayground
-            FormComponent={props => (
+            FormComponent={(props) => (
                 <div>
-                    <div data-id="projects">
+                    <div data-id='projects'>
                         {JSON.stringify(props.projects)}
                     </div>
-                    <div data-id="environments">
+                    <div data-id='environments'>
                         {JSON.stringify(props.environments)}
                     </div>
-                    <div data-id="context">{JSON.stringify(props.context)}</div>
+                    <div data-id='context'>{JSON.stringify(props.context)}</div>
                 </div>
             )}
         />
@@ -27,9 +27,9 @@ const testDisplayComponent = (
 const testEvaluateComponent = (
     <UIProviderContainer>
         <AdvancedPlayground
-            FormComponent={props => (
+            FormComponent={(props) => (
                 <form onSubmit={props.onSubmit}>
-                    <button>Submit</button>
+                    <button type='submit'>Submit</button>
                 </form>
             )}
         />
@@ -54,7 +54,7 @@ test('should fetch initial form data from local storage', async () => {
     expect(screen.getByText('Unleash playground')).toBeInTheDocument();
     expect(screen.getByText('["projectA","projectB"]')).toBeInTheDocument();
     expect(
-        screen.getByText('["development","production"]')
+        screen.getByText('["development","production"]'),
     ).toBeInTheDocument();
     expect(screen.getByText('{"userId":"1"}')).toBeInTheDocument();
 });
@@ -88,7 +88,7 @@ test('should display error on submit', async () => {
             details: [{ message: 'some error about too many items' }],
         },
         'post',
-        400
+        400,
     );
 
     render(testEvaluateComponent);

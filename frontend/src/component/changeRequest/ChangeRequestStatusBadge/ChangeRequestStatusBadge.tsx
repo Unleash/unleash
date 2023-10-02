@@ -8,12 +8,12 @@ interface IChangeRequestStatusBadgeProps {
 }
 
 const ReviewRequiredBadge: VFC = () => (
-    <Badge color="secondary" icon={<CircleOutlined fontSize={'small'} />}>
+    <Badge color='secondary' icon={<CircleOutlined fontSize={'small'} />}>
         Review required
     </Badge>
 );
 
-const DraftBadge: VFC = () => <Badge color="warning">Draft</Badge>;
+const DraftBadge: VFC = () => <Badge color='warning'>Draft</Badge>;
 
 export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
     state,
@@ -25,25 +25,25 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             return <ReviewRequiredBadge />;
         case 'Approved':
             return (
-                <Badge color="success" icon={<Check fontSize={'small'} />}>
+                <Badge color='success' icon={<Check fontSize={'small'} />}>
                     Approved
                 </Badge>
             );
         case 'Applied':
             return (
-                <Badge color="success" icon={<Check fontSize={'small'} />}>
+                <Badge color='success' icon={<Check fontSize={'small'} />}>
                     Applied
                 </Badge>
             );
         case 'Cancelled':
             return (
-                <Badge color="error" icon={<Close fontSize={'small'} />}>
+                <Badge color='error' icon={<Close fontSize={'small'} />}>
                     Cancelled
                 </Badge>
             );
         case 'Rejected':
             return (
-                <Badge color="error" icon={<Close fontSize={'small'} />}>
+                <Badge color='error' icon={<Close fontSize={'small'} />}>
                     Rejected
                 </Badge>
             );

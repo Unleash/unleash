@@ -46,7 +46,7 @@ export const DemoSteps = ({
         setRun(false);
         if (step !== undefined) {
             if (stepsCompletion[topic] < step) {
-                setStepsCompletion(steps => {
+                setStepsCompletion((steps) => {
                     const newSteps = [...steps];
                     newSteps[topic] = step;
                     return newSteps;
@@ -86,7 +86,7 @@ export const DemoSteps = ({
             topics.findIndex(
                 (topic, index) =>
                     index !== currentTopic &&
-                    stepsCompletion[index] < topic.steps.length
+                    stepsCompletion[index] < topic.steps.length,
             ) ?? -1;
 
         if (nextUnfinishedTopic === -1) {
@@ -109,7 +109,7 @@ export const DemoSteps = ({
     const joyrideCallback = (
         data: CallBackProps & {
             step: ITutorialTopicStep;
-        }
+        },
     ) => {
         const { action, index, step } = data;
 
@@ -119,7 +119,7 @@ export const DemoSteps = ({
 
         if (action === ACTIONS.UPDATE) {
             const el = document.querySelector(
-                step.target as string
+                step.target as string,
             ) as HTMLElement | null;
             if (el) {
                 el.scrollIntoView({
@@ -131,7 +131,7 @@ export const DemoSteps = ({
                         el.focus();
                     } else {
                         const focusEl = el.querySelector(
-                            step.focus
+                            step.focus,
                         ) as HTMLElement | null;
                         focusEl?.focus();
                     }
@@ -149,19 +149,19 @@ export const DemoSteps = ({
                     if (step.anyClick) {
                         window.addEventListener(
                             'click',
-                            e => {
+                            (e) => {
                                 const targetEl = e.target as HTMLElement;
                                 if (
                                     !targetEl.closest('.__floater') &&
                                     !targetEl.className.includes(
-                                        'react-joyride__overlay'
+                                        'react-joyride__overlay',
                                     )
                                 )
                                     clickHandler(e);
                             },
                             {
                                 signal: abortController.signal,
-                            }
+                            },
                         );
                     } else {
                         el.addEventListener('click', clickHandler, {
@@ -182,7 +182,7 @@ export const DemoSteps = ({
         if (step.backCollapseExpanded) {
             (
                 document.querySelector(
-                    '.Mui-expanded[role="button"]'
+                    '.Mui-expanded[role="button"]',
                 ) as HTMLElement
             )?.click();
         }
@@ -228,7 +228,7 @@ export const DemoSteps = ({
 
     if (topic === -1) return null;
 
-    const joyrideSteps = topics[topic].steps.map(step => ({
+    const joyrideSteps = topics[topic].steps.map((step) => ({
         ...step,
         disableBeacon: true,
     }));
@@ -269,7 +269,7 @@ export const DemoSteps = ({
             tooltipComponent={(
                 props: TooltipRenderProps & {
                     step: ITutorialTopicStep;
-                }
+                },
             ) => (
                 <DemoStepTooltip
                     {...props}

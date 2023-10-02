@@ -9,7 +9,7 @@ export const Roles = () => {
     const { isEnterprise } = useUiConfig();
 
     if (!isEnterprise()) {
-        return <PremiumFeature feature="project-roles" page />;
+        return <PremiumFeature feature='project-roles' page />;
     }
 
     return (

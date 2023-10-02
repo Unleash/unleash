@@ -12,14 +12,14 @@ export const useDependentFeaturesApi = (project: string) => {
 
     const addDependency = async (
         childFeature: string,
-        parentFeaturePayload: DependentFeatureSchema
+        parentFeaturePayload: DependentFeatureSchema,
     ) => {
         const req = createRequest(
             `/api/admin/projects/${project}/features/${childFeature}/dependencies`,
             {
                 method: 'POST',
                 body: JSON.stringify(parentFeaturePayload),
-            }
+            },
         );
         try {
             await makeRequest(req.caller, req.id);
@@ -35,13 +35,13 @@ export const useDependentFeaturesApi = (project: string) => {
 
     const removeDependency = async (
         childFeature: string,
-        parentFeature: string
+        parentFeature: string,
     ) => {
         const req = createRequest(
             `/api/admin/projects/${project}/features/${childFeature}/dependencies/${parentFeature}`,
             {
                 method: 'DELETE',
-            }
+            },
         );
         try {
             await makeRequest(req.caller, req.id);
@@ -60,7 +60,7 @@ export const useDependentFeaturesApi = (project: string) => {
             `/api/admin/projects/${project}/features/${childFeature}/dependencies`,
             {
                 method: 'DELETE',
-            }
+            },
         );
         try {
             await makeRequest(req.caller, req.id);

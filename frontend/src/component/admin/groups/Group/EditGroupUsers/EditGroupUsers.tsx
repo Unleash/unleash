@@ -61,7 +61,7 @@ export const EditGroupUsers: FC<IEditGroupUsersProps> = ({
         group.description,
         group.mappingsSSO,
         group.users,
-        group.rootRole
+        group.rootRole,
     );
 
     useEffect(() => {
@@ -100,15 +100,15 @@ export const EditGroupUsers: FC<IEditGroupUsersProps> = ({
             onClose={() => {
                 setOpen(false);
             }}
-            label="Edit users"
+            label='Edit users'
         >
             <FormTemplate
                 loading={loading}
                 modal
-                title="Edit users"
-                description="Groups is the best and easiest way to organize users and then use them in projects to assign a specific role in one go to all the users in a group."
-                documentationLink="https://docs.getunleash.io/advanced/groups"
-                documentationLinkLabel="Groups documentation"
+                title='Edit users'
+                description='Groups is the best and easiest way to organize users and then use them in projects to assign a specific role in one go to all the users in a group.'
+                documentationLink='https://docs.getunleash.io/advanced/groups'
+                documentationLinkLabel='Groups documentation'
                 formatApiCode={formatApiCode}
             >
                 <StyledForm onSubmit={handleSubmit}>
@@ -129,9 +129,9 @@ export const EditGroupUsers: FC<IEditGroupUsersProps> = ({
                     <StyledButtonContainer>
                         <StyledBox>
                             <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
+                                type='submit'
+                                variant='contained'
+                                color='primary'
                                 data-testid={UG_SAVE_BTN_ID}
                             >
                                 Save

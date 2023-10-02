@@ -2,6 +2,214 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.1.0] - 2023-05-25
+
+### Bug Fixes
+
+- Allow null checker to not fail if it gets no output ([#3779](https://github.com/Unleash/unleash/issues/3779))
+
+- Block adding a root role to a group with a project role ([#3775](https://github.com/Unleash/unleash/issues/3775))
+
+- Change commit hash step name ([#3784](https://github.com/Unleash/unleash/issues/3784))
+
+- Prevent variant name from containing extra whitespace ([#3777](https://github.com/Unleash/unleash/issues/3777))
+
+- Demo QR code ([#3793](https://github.com/Unleash/unleash/issues/3793))
+
+- Fix deleting feature from global archive ([#3786](https://github.com/Unleash/unleash/issues/3786))
+
+- Strategy remove menu ([#3807](https://github.com/Unleash/unleash/issues/3807))
+
+- Properly handle flag resolver variants ([#3808](https://github.com/Unleash/unleash/issues/3808))
+
+- Move title at the top in default strategy ([#3812](https://github.com/Unleash/unleash/issues/3812))
+
+- Laggy switch ([#3814](https://github.com/Unleash/unleash/issues/3814))
+
+- Update dependency helmet to v6.2.0 ([#3824](https://github.com/Unleash/unleash/issues/3824))
+
+- Update dependency joi to v17.9.2 ([#3825](https://github.com/Unleash/unleash/issues/3825))
+
+- Make area behind bulk actions clickable ([#3838](https://github.com/Unleash/unleash/issues/3838))
+
+- Use the correct actor ([#3842](https://github.com/Unleash/unleash/issues/3842))
+
+- Only show names as changed when titles have changed. ([#3843](https://github.com/Unleash/unleash/issues/3843))
+
+- Default strategy screen not loading when no default strategy ([#3840](https://github.com/Unleash/unleash/issues/3840))
+
+- New workflow name ([#3845](https://github.com/Unleash/unleash/issues/3845))
+
+- Update dependency json-schema-to-ts to v2.8.2 ([#3844](https://github.com/Unleash/unleash/issues/3844))
+
+- Move application logic to service ([#3846](https://github.com/Unleash/unleash/issues/3846))
+
+- Add confirmation to disable password login ([#3829](https://github.com/Unleash/unleash/issues/3829))
+
+- Update dependency log4js to v6.9.1 ([#3847](https://github.com/Unleash/unleash/issues/3847))
+
+- Workflow was moved ([#3852](https://github.com/Unleash/unleash/issues/3852))
+
+- Hide password login when it's disabled ([#3851](https://github.com/Unleash/unleash/issues/3851))
+
+- Profile should wait for loaded state before rendering ([#3855](https://github.com/Unleash/unleash/issues/3855))
+
+- Change password alert when password based login is disabled ([#3856](https://github.com/Unleash/unleash/issues/3856))
+
+- Default strategy screen not loading ([#3857](https://github.com/Unleash/unleash/issues/3857))
+
+- Rollout not reflected correctly for default strategy ([#3859](https://github.com/Unleash/unleash/issues/3859))
+
+- Update dependency make-fetch-happen to v11.1.1 ([#3863](https://github.com/Unleash/unleash/issues/3863))
+
+- Update dependency nodemailer to v6.9.2 ([#3865](https://github.com/Unleash/unleash/issues/3865))
+
+
+### Documentation
+
+- Extend group documentation to include information on setting root roles ([#3696](https://github.com/Unleash/unleash/issues/3696))
+
+- Openapi schema specifications for Projects tag ([#3571](https://github.com/Unleash/unleash/issues/3571))
+
+- Maintanance mode impact ([#3858](https://github.com/Unleash/unleash/issues/3858))
+
+- Azure sso guide ([#3431](https://github.com/Unleash/unleash/issues/3431))
+
+- Remove "docs under restructuring note" ([#3864](https://github.com/Unleash/unleash/issues/3864))
+
+
+### Features
+
+- Release inputs added to dispatcher ([#3756](https://github.com/Unleash/unleash/issues/3756))
+
+- New notify enterprise workflow ([#3781](https://github.com/Unleash/unleash/issues/3781))
+
+- Set commit hash as static asset version ([#3783](https://github.com/Unleash/unleash/issues/3783))
+
+- Base path support for openapi ([#3780](https://github.com/Unleash/unleash/issues/3780))
+
+- Create stubs for bulk toggle ([#3792](https://github.com/Unleash/unleash/issues/3792))
+
+- Basic bulk update implementation ([#3794](https://github.com/Unleash/unleash/issues/3794))
+
+- Remove icons to prepare space for bulk toggle ([#3796](https://github.com/Unleash/unleash/issues/3796))
+
+- Bulk enabled disable ([#3797](https://github.com/Unleash/unleash/issues/3797))
+
+- Message banner (variants) ([#3788](https://github.com/Unleash/unleash/issues/3788))
+
+- Bulk enable disable change requests ([#3801](https://github.com/Unleash/unleash/issues/3801))
+
+- Bulk enable hints ([#3802](https://github.com/Unleash/unleash/issues/3802))
+
+- Transactional bulk update ([#3806](https://github.com/Unleash/unleash/issues/3806))
+
+- Change requests UI for activate disabled strategies ([#3787](https://github.com/Unleash/unleash/issues/3787))
+
+- Disable bulk toggles flag ([#3827](https://github.com/Unleash/unleash/issues/3827))
+
+- Disable bulk update env var ([#3828](https://github.com/Unleash/unleash/issues/3828))
+
+- Maintenance mode disables scheduler ([#3854](https://github.com/Unleash/unleash/issues/3854))
+
+
+### Miscellaneous Tasks
+
+- Use concurrently to run parallel builds ([#3785](https://github.com/Unleash/unleash/issues/3785))
+
+- Disable null checks until we have time to fix this ([#3830](https://github.com/Unleash/unleash/issues/3830))
+
+- Delay static asset generation ([#3848](https://github.com/Unleash/unleash/issues/3848))
+
+- Add Unit test result check task ([#3695](https://github.com/Unleash/unleash/issues/3695))
+
+
+### Refactor
+
+- Rename demo img assets ([#3795](https://github.com/Unleash/unleash/issues/3795))
+
+- Change plausible events to be more specific at the top level ([#3810](https://github.com/Unleash/unleash/issues/3810))
+
+
+### Testing
+
+- Bulk enable display ([#3803](https://github.com/Unleash/unleash/issues/3803))
+
+- Add debug logs ([#3841](https://github.com/Unleash/unleash/issues/3841))
+
+
+## [5.0.11] - 2023-06-07
+
+### Miscellaneous Tasks
+
+- Clarify error logs ([#3915](https://github.com/Unleash/unleash/issues/3915))
+
+
+## [5.0.10] - 2023-05-27
+
+### Bug Fixes
+
+- Remove consecutive slashes ([#3882](https://github.com/Unleash/unleash/issues/3882))
+
+
+## [5.0.9] - 2023-05-27
+
+### Bug Fixes
+
+- Reject unauthorized client requests ([#3881](https://github.com/Unleash/unleash/issues/3881))
+
+
+## [5.0.8] - 2023-05-27
+
+### Bug Fixes
+
+- Use username instead of tokenName
+
+- Hard code not found error to 404 in app
+
+
+### Security
+
+- Reject multiple successive slashes in path ([#3880](https://github.com/Unleash/unleash/issues/3880))
+
+
+## [5.0.7] - 2023-05-26
+
+### Bug Fixes
+
+- Anonymise PII fields in user access if flag is set ([#3773](https://github.com/Unleash/unleash/issues/3773))
+
+- Use correct event type for maxRevisionId ([#3870](https://github.com/Unleash/unleash/issues/3870))
+
+
+## [5.0.6] - 2023-05-12
+
+### Bug Fixes
+
+- Log missing user at warn level ([#3735](https://github.com/Unleash/unleash/issues/3735))
+
+
+## [5.0.5] - 2023-05-11
+
+### Miscellaneous Tasks
+
+- Tmp 5.0.5 ([#3746](https://github.com/Unleash/unleash/issues/3746))
+
+
+## [5.0.2] - 2023-05-08
+
+### Bug Fixes
+
+- Anonymize email in event payload ([#3672](https://github.com/Unleash/unleash/issues/3672))
+
+
+## [5.0.1] - 2023-04-28
+
+### Bug Fixes
+
+- Correct error for missing context field ([#3647](https://github.com/Unleash/unleash/issues/3647))
+
+
 ## [4.23.4] - 2023-06-05
 
 ### Bug Fixes

@@ -201,7 +201,10 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     });
                 }}
                 enabled={editable}
-                filter={projectFilterGenerator(permissions, CREATE_FEATURE)}
+                filter={projectFilterGenerator(
+                    permissions || [],
+                    CREATE_FEATURE,
+                )}
                 IconComponent={KeyboardArrowDownOutlined}
                 sx={styledSelectInput}
             />

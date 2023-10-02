@@ -125,7 +125,7 @@ module.exports = {
                     items: ['how-to/how-to-run-the-unleash-proxy'],
                 },
                 {
-                    label: 'Feature toggles, strategies, context',
+                    label: 'Feature flags, strategies, context',
                     items: [
                         'how-to/how-to-add-strategy-constraints',
                         'how-to/how-to-add-feature-flag-naming-patterns',

@@ -1,5 +1,273 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+## [4.4.1] - 2021-12-15
+
+### Bug Fixes
+
+- Update dependency unleash-frontend to v4.4.0
+- Update dependency @svgr/webpack to v6.1.2
+
+### Documentation
+
+- Add discussion topic on a/b testing
+- First draft of a/b testing discussion
+- Rename A/B testing file
+- Rename 'discussion' -> 'concepts'
+- Add a first iteration of the compatibility table.
+- Flesh out descriptions
+- Add links to concepts in table.
+- Add slack link to text
+- Add .net gradual rollout custom stickiness
+- Center icons in table
+- Link to sdks in table headers, use human strat names.
+- Rename 'concepts' -> 'topics'
+- Delete env strat constraint image, rewrite paragraph.
+- Update strategy constraints documentation.
+- Update variants screenshot
+- Update archive page.
+- Update audit log chapter.
+- Update API access document.
+- Update environments section.
+- Update project images.
+- Update text (and add alt text) in projects document.
+- Update control-rollout document.
+- Update the custom strategy documentation.
+- Update tech debt section.
+
+### Miscellaneous Tasks
+
+- Format compat table.
+- Unhyphenate kebab-menu -> kebab menu
+- Lowercase <br/> tag
+
+## [4.4.0] - 2021-12-10
+
+### Bug Fixes
+
+- Remove unused dep
+- Remove lastUpdate from fieldToRow
+- Rename last_update to updated_at
+- Add timestamp on project creation for update_at column
+- Bump unleash-frontend to v4.3.0
+- Update dependency @svgr/webpack to v6.1.1
+- Open validate endpoint (#1162)
+- Updated API docs to reflect v4.3
+- Update frontend
+- Rename metrics-service to client-instance service
+- Move toggle-counters to metrics service
+- Lint
+- Rename services
+- Drop client_metrics table
+- Uintroduce call to update last_seen on client-instance
+
+### Documentation
+
+- Adjust variant outline; add rough ideas.
+- Explain what the proxy configuration variables are.
+- JS proxy client: explain client keys
+- Android SDK: reformat and add more details on client secrets
+- React proxy sdk: explain clientKey and other config vars.
+- IOS proxy: add info about client keys and environments.
+- Start documenting variant properties and weights
+- Finish variant weight reference documentation
+- Document variant payloads.
+- Add some first info on overrides.
+- Stickiness, disabled variant.
+- Conflicting overrides; rm usage
+- Clarify weight distribution
+
+### Features
+
+- Remove old metrics service
+- Upgrade unleash-frontend to v4.4.0
+
+### Miscellaneous Tasks
+
+- Require json-schema 0.4.0 or higher
+- Fix syntax highlighting for a json code snippet.
+- (docs) keep list styling (internally) consistent
+
+## [4.3.4] - 2022-04-21
+
+### Bug Fixes
+
+- Add release script
+- Cleanup migrations after the 3.13.0 bug
+
+## [4.3.3] - 2022-03-31
+
+### Bug Fixes
+
+- Updated API docs to reflect v4.3
+
+### Features
+
+- Move front end to 4.3.2
+
+## [4.3.2] - 2021-12-06
+
+### Bug Fixes
+
+- Remove unused dep
+- Remove lastUpdate from fieldToRow
+- Rename last_update to updated_at
+- Add timestamp on project creation for update_at column
+- Bump unleash-frontend to v4.3.0
+- Update dependency @svgr/webpack to v6.1.1
+- Open validate endpoint (#1162)
+- Updated API docs to reflect v4.3
+- Update frontend
+
+### Documentation
+
+- Explain what the proxy configuration variables are.
+- JS proxy client: explain client keys
+- Android SDK: reformat and add more details on client secrets
+- React proxy sdk: explain clientKey and other config vars.
+- IOS proxy: add info about client keys and environments.
+
+### Miscellaneous Tasks
+
+- Require json-schema 0.4.0 or higher
+- Fix syntax highlighting for a json code snippet.
+- (docs) keep list styling (internally) consistent
+
+## [4.3.1] - 2021-12-03
+
+### Bug Fixes
+
+- Bump unleash-frontend to v4.3.0
+
+## [4.3.0] - 2021-12-03
+
+### Bug Fixes
+
+- Add migration
+- Styling
+- Remove record splash and update sql query in add-splash-entry
+- Update sql query in add-splash-entry
+- Update e2e test for splash
+- Remove req.body from the splash object when update
+- Add cascade query inside create table for splash
+- Return be object instead of array
+- Update dependency db-migrate to v0.11.13
+- Image inclusion and alt text syntax was wrong.
+- Make new variant api validate name uniqueness (#1126)
+- Stop healthrating from including archived (#1128)
+- Metrics v2 should await for the clearer (#1114)
+- Require json-schema v0.4.0 or later (#1135)
+- Correct version number for unleash-frontend
+- Cleanup old user permissions (#1150)
+- Upgrade unleash-frontend to v4.3.0-beta.1
+- Always require permission for POST, PATCH, PUT, DELETE (#1152)
+- Update dependency @svgr/webpack to v6 (#1136)
+
+### Docs
+
+- Update feature-toggles-api.md (#1105)
+- Add a tip about docker names having to be unique.
+
+### Documentation
+
+- Add docs for Jira server plugin
+- Mark Jira Cloud plugin as not recommended
+- Added screenshot successful install
+- Improve readability of jira server installation plugin slightly
+- Remove jira cloud plugin docs for now (#1118)
+- Add initial (untested) steps on how to run the proxy locally.
+- Fix up docker commands to have consistent formatting.
+- Add always pull to docker commands
+- Add always pull to getting started
+- First pass at updating the feature toggle types entry.
+- Fix internal links.
+- Link to feature-flag-types from important concepts.
+- Touch up the section on deprecating feature toggles.
+- Add initial outline id for custom stickiness.
+- Add basic info to stickiness.
+- Update reference to gradual rollout (was 'flexible rollout')
+- Add stickiness document to advanced section.
+- Remove link to old activation strategies document.
+- Delete old activation strategies file.
+- Delete old unleash-context doc.
+- Add image for custom stickiness.
+- Update stickiness docs.
+- Fix a typo in activation strategies: use -> user
+- Fix links to old versions of pages; link to new versions.
+- Remove link to non-existing page about sdk capabilities.
+- Use internal links for linking to other doc pages.
+- Add note about Unleash using MurmurHash for stickiness.
+- Clarify that health rating is only updated once an hour.
+- Add environments post to side bar.
+- Remove references to environments being a beta feature.
+- Typo; change "metics" -> "metrics"
+- Add section on (potentially) stale toggles to tech debt
+- Describe the shape of the data returned by the Unleash proxy
+
+### Miscellaneous Tasks
+
+- Upped postgres version for Heroku. (#1112)
+- Update frontend
+- Update frontend
+- Require json-schema 0.4.0 or higher
+
+### Task
+
+- Add a workflow that validates docs for PRs (#1123)
+- Add link to FCC video (#1127)
+- Ban changes to variants through feature (#1130)
+- Sort variants by name (#1132)
+
+## [4.2.4] - 2022-04-21
+
+### Bug Fixes
+
+- Add release script
+- Cleanup migrations after the 3.13.0 bug
+
+## [4.2.3] - 2021-11-12
+
+### Bug Fixes
+
+- Update dependency knex to v0.95.14
+- Prevent deadlock for batchinserting usage metrics (#1100)
+- Refactor client-metrics list and ttl-list to TypeScript (#1080)
+- Upgrade unleash-frontend to v4.2.13
+
+### Documentation
+
+- Clarify that the proxy does not expose disabled flags (#1094)
+- Add syntax highlighting to react-sdk
+- Polish text on environments.
+- Simplify language + pre-configure -> preconfigure
+- Add paragraph to intro: things will still work (default env)
+- Add notes about users having to add strats to enable envs.
+- Updated maven coordinates for java sdk
+
+### Features
+
+- Clean up events (#1089)
+
+## [4.2.2] - 2021-11-04
+
+### Bug Fixes
+
+- Convert iso-strings from db to date object
+
+## [4.2.1] - 2021-11-04
+
+### Bug Fixes
+
+- Be explicit when specifying time & replace moment with date-fns (#1072)
+- Update docusaurus monorepo to v2.0.0-beta.9 (#1081)
+- Update mime library method signature to 2.X (#1078)
+- Update dependency knex to v0.95.13
+- Update dependency unleash-frontend to v4.2.12
+- Disable projects (#1085)
+
+# Changelog
+
 # 4.2.0
 
 - ix: add default sort order for built in envs (#1076)

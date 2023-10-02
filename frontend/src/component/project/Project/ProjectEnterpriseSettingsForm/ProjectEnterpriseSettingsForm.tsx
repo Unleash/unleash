@@ -1,7 +1,7 @@
 import React from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Select from 'component/common/select';
-import { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
+import { ProjectMode } from 'component/project/Project/hooks/useProjectEnterpriseSettingsForm';
 import { Box, InputAdornment, styled, TextField } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip';
 import Input from 'component/common/Input/Input';

@@ -206,22 +206,28 @@ export const FeatureView = () => {
                                 />
                             </StyledToggleInfoContainer>
                             <ConditionallyRender
-                                condition={feature.dependencies.length > 0}
+                                condition={
+                                    Boolean(feature.dependencies) &&
+                                    feature.dependencies.length > 0
+                                }
                                 show={
                                     <StyledDependency>
                                         <StyleChildLinkIcon />{' '}
                                         <b>Child feature</b>
                                         <span>{' < '}</span>
                                         <StyledLink
-                                            to={`/projects/${feature.project}/features/${feature.dependencies[0]?.feature}`}
+                                            to={`/projects/${feature.project}/features/${feature?.dependencies[0]?.feature}`}
                                         >
-                                            {feature.dependencies[0]?.feature}
+                                            {feature?.dependencies[0]?.feature}
                                         </StyledLink>
                                     </StyledDependency>
                                 }
                             />
                             <ConditionallyRender
-                                condition={feature.children.length > 0}
+                                condition={
+                                    Boolean(feature.children) &&
+                                    feature.children.length > 0
+                                }
                                 show={
                                     <StyledDependency>
                                         <StyledParentLinkIcon />{' '}

@@ -170,6 +170,8 @@ const featureEnvironments = (
         lastSeenAt: null,
         type: 'release',
         archived: false,
+        children: [],
+        dependencies: [],
     });
 };
 

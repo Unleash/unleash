@@ -10,7 +10,7 @@ const testDisplayComponent = (
         <Search
             hasFilters
             onChange={() => {}}
-            id="localStorageId"
+            id='localStorageId'
             getSearchContext={() => ({
                 data: [],
                 columns: [],

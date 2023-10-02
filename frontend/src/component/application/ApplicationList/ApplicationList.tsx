@@ -28,7 +28,7 @@ export const ApplicationList = () => {
     const renderNoApplications = () => (
         <>
             <section style={{ textAlign: 'center' }}>
-                <Warning titleAccess="Warning" /> <br />
+                <Warning titleAccess='Warning' /> <br />
                 <br />
                 Oh snap, it does not seem like you have connected any
                 applications. To connect your application to Unleash you will
@@ -37,7 +37,7 @@ export const ApplicationList = () => {
                 <br />
                 You can read more about how to use Unleash in your application
                 in the{' '}
-                <Link href="https://docs.getunleash.io/docs/sdks/">
+                <Link href='https://docs.getunleash.io/docs/sdks/'>
                     documentation.
                 </Link>
             </section>
@@ -49,18 +49,14 @@ export const ApplicationList = () => {
             sortBy: [{ id: 'name', desc: false }],
             hiddenColumns: ['description', 'sortOrder'],
         }),
-        []
+        [],
     );
 
     const columns = useMemo(
         () => [
             {
                 id: 'Icon',
-                Cell: ({
-                    row: {
-                        original: { icon },
-                    },
-                }: any) => (
+                Cell: ({ row: { original: { icon } } }: any) => (
                     <IconCell
                         icon={
                             <Avatar>
@@ -76,9 +72,7 @@ export const ApplicationList = () => {
                 accessor: 'appName',
                 width: '50%',
                 Cell: ({
-                    row: {
-                        original: { appName, description },
-                    },
+                    row: { original: { appName, description } },
                 }: any) => (
                     <LinkCell
                         title={appName}
@@ -109,7 +103,7 @@ export const ApplicationList = () => {
                 sortType: 'number',
             },
         ],
-        []
+        [],
     );
 
     const {
@@ -131,11 +125,11 @@ export const ApplicationList = () => {
             disableSortRemove: true,
         },
         useGlobalFilter,
-        useSortBy
+        useSortBy,
     );
 
     if (!data) {
-        return <CircularProgress variant="indeterminate" />;
+        return <CircularProgress variant='indeterminate' />;
     }
 
     return (
@@ -163,19 +157,19 @@ export const ApplicationList = () => {
                                         headerGroups={headerGroups}
                                     />
                                     <TableBody {...getTableBodyProps()}>
-                                        {rows.map(row => {
+                                        {rows.map((row) => {
                                             prepareRow(row);
                                             return (
                                                 <TableRow
                                                     hover
                                                     {...row.getRowProps()}
                                                 >
-                                                    {row.cells.map(cell => (
+                                                    {row.cells.map((cell) => (
                                                         <TableCell
                                                             {...cell.getCellProps()}
                                                         >
                                                             {cell.render(
-                                                                'Cell'
+                                                                'Cell',
                                                             )}
                                                         </TableCell>
                                                     ))}

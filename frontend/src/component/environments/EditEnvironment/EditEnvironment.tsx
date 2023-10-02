@@ -62,8 +62,8 @@ const EditEnvironment = () => {
 
     return (
         <FormTemplate
-            title="Edit environment"
-            description="Environments allow you to manage your
+            title='Edit environment'
+            description='Environments allow you to manage your
             product lifecycle from local development
             through production. Your projects and
             feature toggles are accessible in all your
@@ -72,9 +72,9 @@ const EditEnvironment = () => {
             that you can enable a feature toggle in a
             development or test environment without
             enabling the feature toggle in the
-            production environment."
-            documentationLink="https://docs.getunleash.io/reference/environments"
-            documentationLinkLabel="Environments documentation"
+            production environment.'
+            documentationLink='https://docs.getunleash.io/reference/environments'
+            documentationLinkLabel='Environments documentation'
             formatApiCode={formatApiCode}
         >
             <EnvironmentForm
@@ -84,7 +84,7 @@ const EditEnvironment = () => {
                 type={type}
                 setName={setName}
                 setType={setType}
-                mode="Edit"
+                mode='Edit'
                 errors={errors}
                 clearErrors={clearErrors}
             >

@@ -43,7 +43,7 @@ export const FeatureMetricsChart = ({
             theme,
             sortedMetrics,
             hoursBack,
-            locationSettings
+            locationSettings,
         );
     }, [theme, sortedMetrics, hoursBack, locationSettings]);
 
@@ -56,7 +56,7 @@ export const FeatureMetricsChart = ({
             <Line
                 options={options}
                 data={data}
-                aria-label="A feature metrics line chart, with three lines: all requests, positive requests, and negative requests."
+                aria-label='A feature metrics line chart, with three lines: all requests, positive requests, and negative requests.'
                 aria-describedby={statsSectionId}
             />
         </div>
@@ -72,7 +72,7 @@ ChartJS.register(
     TimeScale,
     Legend,
     Tooltip,
-    Title
+    Title,
 );
 
 // Use a default export to lazy-load the charting library.

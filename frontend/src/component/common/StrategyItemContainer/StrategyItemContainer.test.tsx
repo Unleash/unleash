@@ -19,7 +19,7 @@ test('should render strategy name, custom title and description', async () => {
                 strategy={strategy}
                 description={'description'}
             />
-        </UIProviderContainer>
+        </UIProviderContainer>,
     );
 
     expect(screen.getByText('strategy name')).toBeInTheDocument();

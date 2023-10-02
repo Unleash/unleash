@@ -18,7 +18,7 @@ export const ConstraintIcon: VFC<IConstraintIconProps> = ({ compact }) => (
         }}
     >
         <TrackChanges
-            sx={theme => ({
+            sx={(theme) => ({
                 fill: theme.palette.common.white,
                 display: 'block',
                 width: compact ? theme.spacing(2) : theme.spacing(2.5),

@@ -12,7 +12,7 @@ export const SortableTableHeader = <T extends object>({
     flex?: boolean;
 }) => (
     <TableHead className={className}>
-        {headerGroups.map(headerGroup => (
+        {headerGroups.map((headerGroup) => (
             <TableRow {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column: HeaderGroup<T>) => {
                     const content = column.render('Header');
@@ -22,7 +22,7 @@ export const SortableTableHeader = <T extends object>({
                             {...column.getHeaderProps(
                                 column.canSort
                                     ? column.getSortByToggleProps()
-                                    : undefined
+                                    : undefined,
                             )}
                             ariaTitle={
                                 typeof content === 'string'

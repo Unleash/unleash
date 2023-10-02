@@ -26,10 +26,10 @@ export const PlaygroundGuidancePopper = () => {
                 id={id}
                 open={open}
                 anchorEl={anchor}
-                sx={theme => ({ zIndex: theme.zIndex.tooltip })}
+                sx={(theme) => ({ zIndex: theme.zIndex.tooltip })}
             >
                 <Paper
-                    sx={theme => ({
+                    sx={(theme) => ({
                         padding: theme.spacing(8, 4),
                         maxWidth: '500px',
                         borderRadius: `${theme.shape.borderRadiusExtraLarge}px`,

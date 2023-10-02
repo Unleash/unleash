@@ -10,12 +10,12 @@ const SelectOptionCheckbox = styled(Checkbox)(({ theme }) => ({
 export const renderOption = (
     props: object,
     option: { label: string },
-    { selected }: { selected: boolean }
+    { selected }: { selected: boolean },
 ) => (
     <li {...props}>
         <SelectOptionCheckbox
-            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-            checkedIcon={<CheckBoxIcon fontSize="small" />}
+            icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
+            checkedIcon={<CheckBoxIcon fontSize='small' />}
             checked={selected}
         />
         {option.label}

@@ -30,7 +30,7 @@ export const EnvironmentRow = ({ row, moveListItem }: IEnvironmentRowProps) => {
     const dragItemRef = useDragItem<HTMLTableRowElement>(
         row.index,
         moveListItem,
-        dragHandleRef
+        dragHandleRef,
     );
 
     const renderCell = (cell: any, ref: ForwardedRef<HTMLElement>) => {
@@ -39,7 +39,7 @@ export const EnvironmentRow = ({ row, moveListItem }: IEnvironmentRowProps) => {
                 <TableCell
                     {...cell.getCellProps()}
                     ref={ref}
-                    className="drag-handle"
+                    className='drag-handle'
                 >
                     {cell.render('Cell')}
                 </TableCell>

@@ -15,7 +15,7 @@ export const useAuthResetPasswordApi = () => {
 
             return makeRequest(req.caller, req.id);
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     return {

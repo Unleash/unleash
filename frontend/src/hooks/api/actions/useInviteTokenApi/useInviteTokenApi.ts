@@ -22,7 +22,7 @@ export const useInviteTokenApi = () => {
 
             return await makeRequest(req.caller, req.id);
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     const updateToken = useCallback(
@@ -39,7 +39,7 @@ export const useInviteTokenApi = () => {
 
             return await makeRequest(req.caller, req.id);
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     const addUser = useCallback(
@@ -51,7 +51,7 @@ export const useInviteTokenApi = () => {
 
             return await makeRequest(req.caller, req.id);
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     return {

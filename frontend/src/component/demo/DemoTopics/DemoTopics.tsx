@@ -96,7 +96,7 @@ const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 
 const StyledStep = styled('li', {
-    shouldForwardProp: prop => prop !== 'selected' && prop !== 'completed',
+    shouldForwardProp: (prop) => prop !== 'selected' && prop !== 'completed',
 })<{ selected?: boolean; completed?: boolean }>(
     ({ theme, selected, completed }) => ({
         padding: theme.spacing(1),
@@ -116,7 +116,7 @@ const StyledStep = styled('li', {
             backgroundColor: theme.palette.background.elevation1,
             textDecoration: 'line-through',
         }),
-    })
+    }),
 );
 
 const StyledCheckCircle = styled(CheckCircle)(({ theme }) => ({
@@ -163,7 +163,7 @@ export const DemoTopics = ({
 }: IDemoTopicsProps) => {
     const completedSteps = stepsCompletion.reduce(
         (acc, step) => acc + (step || 0),
-        0
+        0,
     );
     const totalSteps = topics.flatMap(({ steps }) => steps).length;
     const percentage = (completedSteps / totalSteps) * 100;
@@ -171,29 +171,29 @@ export const DemoTopics = ({
     return (
         <StyledAccordion
             expanded={expanded}
-            onChange={() => setExpanded(expanded => !expanded)}
+            onChange={() => setExpanded((expanded) => !expanded)}
         >
             <StyledAccordionSummary>
                 <StyledStars />
                 <StyledTitle>
-                    <Typography fontWeight="bold">Unleash demo</Typography>
-                    <StyledExpandMoreIcon className="expand-icon" />
+                    <Typography fontWeight='bold'>Unleash demo</Typography>
+                    <StyledExpandMoreIcon className='expand-icon' />
                 </StyledTitle>
                 <StyledSubtitle>
                     Complete all steps to finish demo
                 </StyledSubtitle>
                 <StyledProgress>
-                    <Typography variant="body2">
+                    <Typography variant='body2'>
                         {percentage.toFixed()}%
                     </Typography>
                     <StyledLinearProgress
-                        variant="determinate"
+                        variant='determinate'
                         value={percentage}
                     />
                 </StyledProgress>
             </StyledAccordionSummary>
             <AccordionDetails>
-                <Typography variant="body2" paddingTop={1}>
+                <Typography variant='body2' paddingTop={1}>
                     The steps will guide you
                 </Typography>
                 {topics.map((topic, index) => {
@@ -212,14 +212,14 @@ export const DemoTopics = ({
                                 show={<StyledCheckCircle />}
                                 elseShow={<StyledCircleOutlined />}
                             />
-                            <Typography variant="body2" sx={{ flex: 1 }}>
+                            <Typography variant='body2' sx={{ flex: 1 }}>
                                 {topic.title}
                             </Typography>
                             <StyledStepIcon />
                         </StyledStep>
                     );
                 })}
-                <StyledButton variant="outlined" onClick={onWelcome}>
+                <StyledButton variant='outlined' onClick={onWelcome}>
                     View demo page
                 </StyledButton>
             </AccordionDetails>

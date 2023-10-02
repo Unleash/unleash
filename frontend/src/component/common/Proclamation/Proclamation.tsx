@@ -54,13 +54,13 @@ const Proclamation = ({ toast }: IProclamationProps) => {
             condition={show}
             show={
                 <StyledProclamation severity={toast.severity} onClose={onClose}>
-                    <StyledContent variant="body2">
+                    <StyledContent variant='body2'>
                         {toast.message}
                     </StyledContent>
                     <StyledLink
                         href={toast.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        target='_blank'
+                        rel='noopener noreferrer'
                     >
                         View more
                     </StyledLink>

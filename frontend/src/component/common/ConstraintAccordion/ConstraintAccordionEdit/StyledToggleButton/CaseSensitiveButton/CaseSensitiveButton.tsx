@@ -20,7 +20,7 @@ export const CaseSensitiveButton = ({
 }: CaseSensitiveButtonProps) => (
     <Tooltip
         title={
-            Boolean(localConstraint.caseInsensitive)
+            localConstraint.caseInsensitive
                 ? 'Make it case sensitive'
                 : 'Make it case insensitive'
         }
@@ -39,7 +39,7 @@ export const CaseSensitiveButton = ({
                 }
                 elseShow={
                     <StyledToggleButtonOn
-                        className="operator-is-active"
+                        className='operator-is-active'
                         onClick={setCaseInsensitive}
                         disableRipple
                     >

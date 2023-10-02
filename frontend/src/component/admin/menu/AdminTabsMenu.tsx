@@ -27,15 +27,15 @@ export const AdminTabsMenu: VFC = () => {
     const activeTab = pathname.split('/')[2];
 
     const adminRoutes = useAdminRoutes();
-    const group = adminRoutes.find(route =>
-        pathname.includes(route.path)
+    const group = adminRoutes.find((route) =>
+        pathname.includes(route.path),
     )?.group;
 
     const tabs = adminRoutes.filter(
-        route =>
+        (route) =>
             !group ||
             route.group === group ||
-            (isOss() && route.group !== 'log')
+            (isOss() && route.group !== 'log'),
     );
 
     if (!group) {
@@ -46,11 +46,11 @@ export const AdminTabsMenu: VFC = () => {
         <StyledPaper>
             <Tabs
                 value={activeTab}
-                variant="scrollable"
-                scrollButtons="auto"
+                variant='scrollable'
+                scrollButtons='auto'
                 allowScrollButtonsMobile
             >
-                {tabs.map(tab => (
+                {tabs.map((tab) => (
                     <Tab
                         sx={{ padding: 0 }}
                         key={tab.route}
@@ -62,7 +62,7 @@ export const AdminTabsMenu: VFC = () => {
                                     condition={Boolean(
                                         tab.menu.mode?.includes('enterprise') &&
                                             !tab.menu.mode?.includes('pro') &&
-                                            isPro()
+                                            isPro(),
                                     )}
                                     show={
                                         <StyledBadgeContainer>

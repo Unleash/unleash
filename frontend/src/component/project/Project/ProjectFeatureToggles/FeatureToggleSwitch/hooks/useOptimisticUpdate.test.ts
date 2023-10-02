@@ -13,7 +13,7 @@ describe('useOptimisticUpdate', () => {
     });
 
     it('should have working setter', () => {
-        const { result } = renderHook(state => useOptimisticUpdate(state), {
+        const { result } = renderHook((state) => useOptimisticUpdate(state), {
             initialProps: 'initial',
         });
 
@@ -26,10 +26,10 @@ describe('useOptimisticUpdate', () => {
 
     it('should update reset state if input changed', () => {
         const { result, rerender } = renderHook(
-            state => useOptimisticUpdate(state),
+            (state) => useOptimisticUpdate(state),
             {
                 initialProps: 'A',
-            }
+            },
         );
 
         rerender('B');
@@ -38,7 +38,7 @@ describe('useOptimisticUpdate', () => {
     });
 
     it('should have working rollback', () => {
-        const { result } = renderHook(state => useOptimisticUpdate(state), {
+        const { result } = renderHook((state) => useOptimisticUpdate(state), {
             initialProps: 'initial',
         });
 

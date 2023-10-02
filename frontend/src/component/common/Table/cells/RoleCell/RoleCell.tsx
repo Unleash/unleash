@@ -40,7 +40,7 @@ export const RoleCell: VFC<TRoleCellProps> = ({ role, roles, value }) => {
                 <TooltipLink
                     tooltip={
                         <StyledRoleDescriptions>
-                            {rolesArray.map(roleId => (
+                            {rolesArray.map((roleId) => (
                                 <RoleDescription
                                     key={roleId}
                                     roleId={roleId}

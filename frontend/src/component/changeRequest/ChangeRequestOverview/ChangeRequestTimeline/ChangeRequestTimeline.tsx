@@ -41,7 +41,7 @@ export const determineColor = (
     changeRequestState: ChangeRequestState,
     changeRequestStateIndex: number,
     displayStage: ChangeRequestState,
-    displayStageIndex: number
+    displayStageIndex: number,
 ) => {
     if (changeRequestState === 'Cancelled') return 'grey';
     if (changeRequestState === 'Rejected')
@@ -59,7 +59,7 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
     state,
 }) => {
     const data = state === 'Rejected' ? rejectedSteps : steps;
-    const activeIndex = data.findIndex(item => item === state);
+    const activeIndex = data.findIndex((item) => item === state);
 
     return (
         <StyledPaper elevation={0}>
@@ -70,7 +70,7 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
                             state,
                             activeIndex,
                             title,
-                            index
+                            index,
                         );
                         let timelineDotProps = {};
 
@@ -86,7 +86,7 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
                             color,
                             title,
                             index < data.length - 1,
-                            timelineDotProps
+                            timelineDotProps,
                         );
                     })}
                 </StyledTimeline>
@@ -99,7 +99,7 @@ const createTimelineItem = (
     color: 'primary' | 'success' | 'grey' | 'error',
     title: string,
     shouldConnectToNextItem: boolean,
-    timelineDotProps: { [key: string]: string | undefined } = {}
+    timelineDotProps: { [key: string]: string | undefined } = {},
 ) => (
     <TimelineItem key={title}>
         <TimelineSeparator>

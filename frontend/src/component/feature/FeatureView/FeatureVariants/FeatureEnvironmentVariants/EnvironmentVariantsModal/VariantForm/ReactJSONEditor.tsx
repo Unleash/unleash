@@ -26,7 +26,7 @@ const JSONEditorThemeWrapper = styled('div')(({ theme }) => ({
     },
 }));
 
-const VanillaJSONEditor: React.FC<JSONEditorPropsOptional> = props => {
+const VanillaJSONEditor: React.FC<JSONEditorPropsOptional> = (props) => {
     const refContainer = useRef<HTMLDivElement | null>(null);
     const refEditor = useRef<JSONEditor | null>(null);
 
@@ -55,10 +55,10 @@ const VanillaJSONEditor: React.FC<JSONEditorPropsOptional> = props => {
         }
     }, [props]);
 
-    return <div ref={refContainer}></div>;
+    return <div ref={refContainer} />;
 };
 
-const ReactJSONEditor: React.FC<JSONEditorPropsOptional> = props => {
+const ReactJSONEditor: React.FC<JSONEditorPropsOptional> = (props) => {
     const { themeMode } = useContext(UIContext);
     return (
         <JSONEditorThemeWrapper

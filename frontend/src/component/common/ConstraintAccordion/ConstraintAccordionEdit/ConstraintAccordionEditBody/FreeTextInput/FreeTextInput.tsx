@@ -15,7 +15,7 @@ interface IFreeTextInputProps {
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const useStyles = makeStyles()(theme => ({
+const useStyles = makeStyles()((theme) => ({
     valueChip: {
         margin: '0 0.5rem 0.5rem 0',
     },
@@ -77,7 +77,7 @@ export const FreeTextInput = ({
 
         if (newValues.length === 0) {
             setError('values cannot be empty');
-        } else if (newValues.some(v => v.length > 100)) {
+        } else if (newValues.some((v) => v.length > 100)) {
             setError('values cannot be longer than 100 characters');
         } else {
             setError('');
@@ -95,26 +95,26 @@ export const FreeTextInput = ({
                 <div className={styles.inputInnerContainer}>
                     <Input
                         onKeyPress={onKeyPress}
-                        label="Values"
-                        name="values"
+                        label='Values'
+                        name='values'
                         value={inputValues}
                         onFocus={() => {
                             setError('');
                         }}
-                        onChange={e => setInputValues(e.target.value)}
-                        placeholder="value1, value2, value3..."
+                        onChange={(e) => setInputValues(e.target.value)}
+                        placeholder='value1, value2, value3...'
                         className={styles.input}
                         error={Boolean(error)}
                         errorText={error}
-                        data-testid="CONSTRAINT_VALUES_INPUT"
+                        data-testid='CONSTRAINT_VALUES_INPUT'
                     />
                 </div>
                 <Button
                     className={styles.button}
-                    variant="outlined"
-                    color="primary"
+                    variant='outlined'
+                    color='primary'
                     onClick={() => addValues()}
-                    data-testid="CONSTRAINT_VALUES_ADD_BUTTON"
+                    data-testid='CONSTRAINT_VALUES_ADD_BUTTON'
                 >
                     Add values
                 </Button>
@@ -150,7 +150,7 @@ const ConstraintValueChips = ({
                             <StringTruncator
                                 text={value}
                                 maxLength={35}
-                                maxWidth="100"
+                                maxWidth='100'
                                 className={styles.chipValue}
                             />
                         }

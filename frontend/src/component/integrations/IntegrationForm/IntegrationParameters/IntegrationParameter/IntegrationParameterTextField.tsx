@@ -35,13 +35,13 @@ export const IntegrationParameterTextField = ({
     const value = config.parameters[definition?.name] || '';
     const type = resolveType(
         definition,
-        typeof value === 'string' ? value : ''
+        typeof value === 'string' ? value : '',
     );
     const error = parametersErrors[definition.name];
 
     return (
         <StyledTextField
-            size="small"
+            size='small'
             minRows={definition.type === 'textfield' ? 5 : 0}
             multiline={definition.type === 'textfield'}
             type={type}
@@ -49,7 +49,7 @@ export const IntegrationParameterTextField = ({
                 <>
                     {definition.displayName}
                     {definition.required ? (
-                        <Typography component="span">*</Typography>
+                        <Typography component='span'>*</Typography>
                     ) : null}
                 </>
             }
@@ -61,7 +61,7 @@ export const IntegrationParameterTextField = ({
             value={value}
             error={Boolean(error)}
             onChange={setParameterValue(definition.name)}
-            variant="outlined"
+            variant='outlined'
             helperText={definition.description}
         />
     );

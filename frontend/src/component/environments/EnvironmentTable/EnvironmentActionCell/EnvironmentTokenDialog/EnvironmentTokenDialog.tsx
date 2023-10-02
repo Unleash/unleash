@@ -17,20 +17,20 @@ export const EnvironmentTokenDialog = ({
 }: IEnvironmentTokenDialogProps) => (
     <Dialogue
         open={open}
-        secondaryButtonText="Close"
+        secondaryButtonText='Close'
         onClose={(_, muiCloseReason?: string) => {
             if (!muiCloseReason) {
                 setOpen(false);
             }
         }}
-        title="New API token created"
+        title='New API token created'
     >
-        <Typography variant="body1">
+        <Typography variant='body1'>
             Your new token has been created successfully.
         </Typography>
-        <Typography variant="body1">
+        <Typography variant='body1'>
             You can also find it as "<strong>{token?.username}</strong>" in the{' '}
-            <Link to="/admin/api">API access page</Link>.
+            <Link to='/admin/api'>API access page</Link>.
         </Typography>
         <UserToken token={token?.secret || ''} />
     </Dialogue>

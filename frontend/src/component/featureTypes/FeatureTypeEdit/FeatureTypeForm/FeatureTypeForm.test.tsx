@@ -12,7 +12,7 @@ const mockFeatureType = {
 describe('FeatureTypeForm', () => {
     it('should render component', () => {
         render(
-            <FeatureTypeForm featureType={mockFeatureType} loading={false} />
+            <FeatureTypeForm featureType={mockFeatureType} loading={false} />,
         );
         expect(screen.getByText('Edit toggle type: Test')).toBeInTheDocument();
         expect(screen.getByText('Expected lifetime')).toBeInTheDocument();
@@ -25,7 +25,7 @@ describe('FeatureTypeForm', () => {
 
     it('should not enable inputs and submit button when loading', () => {
         render(
-            <FeatureTypeForm featureType={mockFeatureType} loading={true} />
+            <FeatureTypeForm featureType={mockFeatureType} loading={true} />,
         );
         expect(screen.getByLabelText('Expected lifetime')).toBeDisabled();
         expect(screen.getByLabelText("doesn't expire")).toBeDisabled();
@@ -40,7 +40,7 @@ describe('FeatureTypeForm', () => {
                     lifetimeDays: 0,
                 }}
                 loading={false}
-            />
+            />,
         );
         const doesntExpire = screen.getByLabelText("doesn't expire");
         expect(doesntExpire).toBeChecked();
@@ -49,7 +49,7 @@ describe('FeatureTypeForm', () => {
 
     it('should disable lifetime input when "doesn\'t expire" is checked', () => {
         render(
-            <FeatureTypeForm featureType={mockFeatureType} loading={false} />
+            <FeatureTypeForm featureType={mockFeatureType} loading={false} />,
         );
         const doesntExpire = screen.getByLabelText("doesn't expire");
         const lifetime = screen.getByLabelText('Expected lifetime');
@@ -66,7 +66,7 @@ describe('FeatureTypeForm', () => {
                     lifetimeDays: 7,
                 }}
                 loading={false}
-            />
+            />,
         );
         const doesntExpire = screen.getByLabelText("doesn't expire");
         const lifetime = screen.getByLabelText('Expected lifetime');
@@ -85,7 +85,7 @@ describe('FeatureTypeForm', () => {
                     lifetimeDays: -6,
                 }}
                 loading={false}
-            />
+            />,
         );
         expect(screen.getByText('Save feature toggle type')).toBeDisabled();
     });

@@ -67,7 +67,7 @@ export const MaintenanceToggle = () => {
                         <Switch
                             onChange={updateEnabled}
                             value={enabled}
-                            name="enabled"
+                            name='enabled'
                             checked={enabled}
                         />
                     }

@@ -25,11 +25,11 @@ export const StrategyView = () => {
     // work properly OR alternatively create an endpoint that abstracts this logic into the backend
     const toggles = features.filter((toggle: FeatureSchema) => {
         return toggle?.environments
-            ?.flatMap(env => env.strategies)
-            .some(strategy => strategy && strategy.name === name);
+            ?.flatMap((env) => env.strategies)
+            .some((strategy) => strategy && strategy.name === name);
     });
 
-    const strategy = strategies.find(strategy => strategy.name === name);
+    const strategy = strategies.find((strategy) => strategy.name === name);
 
     const handleEdit = () => {
         navigate(`/strategies/${name}/edit`);

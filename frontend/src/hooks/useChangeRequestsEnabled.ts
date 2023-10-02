@@ -11,34 +11,34 @@ export const useChangeRequestsEnabled = (projectId: string) => {
         (environment: string): boolean => {
             const canSkipChangeRequest = checkAccess(
                 SKIP_CHANGE_REQUEST,
-                environment
+                environment,
             );
             return canSkipChangeRequest
                 ? false
-                : data.some(draft => {
+                : data.some((draft) => {
                       return (
                           draft.environment === environment &&
                           draft.changeRequestEnabled
                       );
                   });
         },
-        [JSON.stringify(data)]
+        [JSON.stringify(data)],
     );
 
     const isChangeRequestConfiguredForReview = React.useCallback(
         (environment: string): boolean => {
-            return data.some(draft => {
+            return data.some((draft) => {
                 return (
                     draft.environment === environment &&
                     draft.changeRequestEnabled
                 );
             });
         },
-        [JSON.stringify(data)]
+        [JSON.stringify(data)],
     );
 
     const isChangeRequestConfiguredInAnyEnv = React.useCallback((): boolean => {
-        return data.some(draft => draft.changeRequestEnabled);
+        return data.some((draft) => draft.changeRequestEnabled);
     }, [JSON.stringify(data)]);
 
     return {

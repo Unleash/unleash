@@ -2,12 +2,7 @@
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
   "version": "5.6.0-main",
-  "keywords": [
-    "unleash",
-    "feature toggle",
-    "feature",
-    "toggle"
-  ],
+  "keywords": ["unleash", "feature toggle", "feature", "toggle"],
   "files": [
     "dist",
     "docs",
@@ -44,7 +39,8 @@
     "prestart:dev": "yarn run clean",
     "start:dev": "TZ=UTC NODE_ENV=development tsc-watch --strictNullChecks false --onSuccess \"node dist/server-dev.js\"",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
-    "lint": "biome check src",
+    "lint": "biome check src frontend",
+    "lint:fix": "biome check src frontend --apply",
     "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build",
     "prebuild:watch": "yarn run clean",
     "build:watch": "tsc -w --strictNullChecks false",
@@ -79,23 +75,11 @@
     "testTimeout": 10000,
     "globalSetup": "./scripts/jest-setup.js",
     "transform": {
-      "^.+\\.tsx?$": [
-        "@swc/jest"
-      ]
+      "^.+\\.tsx?$": ["@swc/jest"]
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "testPathIgnorePatterns": [
-      "/dist/",
-      "/node_modules/",
-      "/frontend/"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json"
-    ],
+    "testPathIgnorePatterns": ["/dist/", "/node_modules/", "/frontend/"],
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/dist/",
@@ -230,11 +214,7 @@
     "semver": "^7.5.3"
   },
   "lint-staged": {
-    "*.{js,ts}": [
-      "biome check --apply"
-    ],
-    "*.{json,yaml,md}": [
-      "biome format --write"
-    ]
+    "*.{js,ts}": ["biome check --apply"],
+    "*.{json,yaml,md}": ["biome format --write"]
   }
 }

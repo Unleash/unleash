@@ -40,7 +40,7 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
         projectId,
         featureId,
         environmentId,
-        strategy.id
+        strategy.id,
     );
 
     return (
@@ -54,7 +54,7 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                     {headerChildren}
                     <ConditionallyRender
                         condition={Boolean(
-                            otherEnvironments && otherEnvironments?.length > 0
+                            otherEnvironments && otherEnvironments?.length > 0,
                         )}
                         show={() => (
                             <CopyStrategyIconMenu

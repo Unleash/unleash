@@ -25,13 +25,13 @@ export const IntegrationStateSwitch: VFC<IIntegrationStateSwitchProps> = ({
 }) => {
     return (
         <StyledContainer>
-            <Typography component="span">Integration status</Typography>
+            <Typography component='span'>Integration status</Typography>
             <FormControlLabel
                 control={<Switch checked={checked} onClick={onClick} />}
                 label={
                     <Box
-                        component="span"
-                        sx={theme => ({ marginLeft: theme.spacing(0.5) })}
+                        component='span'
+                        sx={(theme) => ({ marginLeft: theme.spacing(0.5) })}
                     >
                         {checked ? 'Enabled' : 'Disabled'}
                     </Box>

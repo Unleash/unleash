@@ -31,6 +31,7 @@ const GeneralStrategy = ({
     return (
         <StyledContainer>
             {strategyDefinition.parameters.map((definition, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 <div key={index}>
                     <StrategyParameter
                         definition={definition}

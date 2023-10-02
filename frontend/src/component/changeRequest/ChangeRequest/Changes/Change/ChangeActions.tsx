@@ -28,10 +28,10 @@ import { EditChange } from './EditChange';
 
 const useShowActions = (changeRequest: IChangeRequest, change: IChange) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(
-        changeRequest.project
+        changeRequest.project,
     );
     const allowChangeRequestActions = isChangeRequestConfigured(
-        changeRequest.environment
+        changeRequest.environment,
     );
     const isPending = !['Cancelled', 'Applied'].includes(changeRequest.state);
 
@@ -89,7 +89,7 @@ export const ChangeActions: FC<{
             await discardChange(
                 changeRequest.project,
                 changeRequest.id,
-                change.id
+                change.id,
             );
             setToastData({
                 title: 'Change discarded from change request draft.',
@@ -106,14 +106,14 @@ export const ChangeActions: FC<{
             condition={showEdit || showDiscard}
             show={
                 <>
-                    <Tooltip title="Change request actions" arrow describeChild>
+                    <Tooltip title='Change request actions' arrow describeChild>
                         <IconButton
                             id={id}
                             aria-controls={open ? menuId : undefined}
-                            aria-haspopup="true"
+                            aria-haspopup='true'
                             aria-expanded={open ? 'true' : undefined}
                             onClick={handleClick}
-                            type="button"
+                            type='button'
                         >
                             <MoreVert />
                         </IconButton>
@@ -142,7 +142,7 @@ export const ChangeActions: FC<{
                                             <Edit />
                                         </ListItemIcon>
                                         <ListItemText>
-                                            <Typography variant="body2">
+                                            <Typography variant='body2'>
                                                 Edit change
                                             </Typography>
                                         </ListItemText>
@@ -182,7 +182,7 @@ export const ChangeActions: FC<{
                                             <Delete />
                                         </ListItemIcon>
                                         <ListItemText>
-                                            <Typography variant="body2">
+                                            <Typography variant='body2'>
                                                 Discard change
                                             </Typography>
                                         </ListItemText>

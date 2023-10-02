@@ -25,7 +25,7 @@ test('Show new data changes diff', async () => {
     render(
         <EventDiff
             entry={{ preData: { segments: 'a' }, data: { segments: 'b' } }}
-        />
+        />,
     );
 
     expect(screen.getByText('- segments: "a"')).toBeInTheDocument();
@@ -34,7 +34,7 @@ test('Show new data changes diff', async () => {
 
 test('Show new data only', async () => {
     render(
-        <EventDiff entry={{ preData: undefined, data: { segments: [] } }} />
+        <EventDiff entry={{ preData: undefined, data: { segments: [] } }} />,
     );
 
     expect(screen.getByText('{ "segments": [] }')).toBeInTheDocument();
@@ -42,7 +42,7 @@ test('Show new data only', async () => {
 
 test('Show old data only', async () => {
     render(
-        <EventDiff entry={{ preData: { segments: [] }, data: undefined }} />
+        <EventDiff entry={{ preData: { segments: [] }, data: undefined }} />,
     );
 
     expect(screen.getByText('{ "segments": [] }')).toBeInTheDocument();

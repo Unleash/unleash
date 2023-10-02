@@ -40,12 +40,13 @@ export const SegmentProjectAlert = ({
     };
     const projectList = (
         <StyledUl>
-            {Array.from(projectsUsed).map(projectId => (
+            {Array.from(projectsUsed).map((projectId) => (
+                // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
                 <li key={projectId} onClick={trackClick}>
                     <Link
                         to={`/projects/${projectId}`}
-                        target="_blank"
-                        rel="noreferrer"
+                        target='_blank'
+                        rel='noreferrer'
                     >
                         {projects.find(({ id }) => id === projectId)?.name ??
                             projectId}
@@ -53,19 +54,19 @@ export const SegmentProjectAlert = ({
                     <ul>
                         {strategies
                             ?.filter(
-                                strategy => strategy.projectId === projectId
+                                (strategy) => strategy.projectId === projectId,
                             )
-                            .map(strategy => (
+                            .map((strategy) => (
                                 <li key={strategy.id}>
                                     <Link
                                         to={formatEditStrategyPath(
                                             strategy.projectId!,
                                             strategy.featureName!,
                                             strategy.environment!,
-                                            strategy.id
+                                            strategy.id,
                                         )}
-                                        target="_blank"
-                                        rel="noreferrer"
+                                        target='_blank'
+                                        rel='noreferrer'
                                     >
                                         {strategy.featureName!}{' '}
                                         {formatStrategyNameParens(strategy)}
@@ -80,7 +81,7 @@ export const SegmentProjectAlert = ({
 
     if (projectsUsed.length > 0) {
         return (
-            <StyledAlert severity="info">
+            <StyledAlert severity='info'>
                 <ConditionallyRender
                     condition={projectsUsed.length > 1}
                     show={

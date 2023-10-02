@@ -17,7 +17,7 @@ const setupApi = () => {
     testServerRoute(
         server,
         '/api/admin/projects/default/features/feature/parents',
-        {}
+        {},
     );
 };
 
@@ -37,7 +37,7 @@ test('show dependency dialogue', async () => {
                 } as IFeatureToggle
             }
             header={''}
-        />
+        />,
     );
 
     const addParentButton = await screen.findByText('Add parent feature');
@@ -45,7 +45,7 @@ test('show dependency dialogue', async () => {
     addParentButton.click();
 
     expect(
-        screen.getByText('Add parent feature dependency')
+        screen.getByText('Add parent feature dependency'),
     ).toBeInTheDocument();
 });
 
@@ -61,7 +61,7 @@ test('show child', async () => {
                 } as IFeatureToggle
             }
             header={''}
-        />
+        />,
     );
 
     await screen.findByText('Children:');
@@ -80,7 +80,7 @@ test('show children', async () => {
                 } as IFeatureToggle
             }
             header={''}
-        />
+        />,
     );
 
     await screen.findByText('Children:');
@@ -99,7 +99,7 @@ test('delete dependency', async () => {
                 } as IFeatureToggle
             }
             header={''}
-        />
+        />,
     );
 
     await screen.findByText('Dependency:');
@@ -126,7 +126,7 @@ test('edit dependency', async () => {
                 } as IFeatureToggle
             }
             header={''}
-        />
+        />,
     );
 
     await screen.findByText('Dependency:');

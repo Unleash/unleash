@@ -51,7 +51,7 @@ export const SsoGroupSettings = ({
                             <Switch
                                 onChange={updateGroupSyncing}
                                 value={data.enableGroupSyncing}
-                                name="enableGroupSyncing"
+                                name='enableGroupSyncing'
                                 checked={data.enableGroupSyncing}
                                 disabled={!data.enabled}
                             />
@@ -71,13 +71,13 @@ export const SsoGroupSettings = ({
                 <Grid item md={6}>
                     <TextField
                         onChange={updateField}
-                        label="Group JSON Path"
-                        name="groupJsonPath"
+                        label='Group JSON Path'
+                        name='groupJsonPath'
                         value={data.groupJsonPath}
                         disabled={!data.enableGroupSyncing}
                         style={{ width: '400px' }}
-                        variant="outlined"
-                        size="small"
+                        variant='outlined'
+                        size='small'
                         required
                     />
                 </Grid>
@@ -100,7 +100,7 @@ export const SsoGroupSettings = ({
                                         onChange={updateAddGroupScope}
                                         value={data.addGroupsScope}
                                         disabled={!data.enableGroupSyncing}
-                                        name="addGroupsScope"
+                                        name='addGroupsScope'
                                         checked={data.addGroupsScope}
                                     />
                                 }

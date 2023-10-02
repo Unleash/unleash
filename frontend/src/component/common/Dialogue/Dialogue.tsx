@@ -113,8 +113,8 @@ export const Dialogue: React.FC<IDialogue> = ({
                                 show={
                                     <Button
                                         form={formId}
-                                        color="primary"
-                                        variant="contained"
+                                        color='primary'
+                                        variant='contained'
                                         onClick={handleClick}
                                         autoFocus={!formId}
                                         disabled={disabledPrimaryButton}

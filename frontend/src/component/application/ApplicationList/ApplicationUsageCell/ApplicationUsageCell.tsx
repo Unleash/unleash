@@ -41,18 +41,18 @@ const formatProject = (projectInfo: IApplicationUsage, index: number) => {
 export const ApplicationUsageCell = ({ usage }: IApplicationUsageCellProps) => {
     const theme = useTheme();
     const formattedProjects = usage?.flatMap((p, index) =>
-        formatProject(p, index)
+        formatProject(p, index),
     );
     return (
         <TextCell>
             <ConditionallyRender
                 condition={usage !== undefined && usage.length > 0}
                 show={
-                    <Typography variant="body2">{formattedProjects}</Typography>
+                    <Typography variant='body2'>{formattedProjects}</Typography>
                 }
                 elseShow={
                     <Typography
-                        variant="body2"
+                        variant='body2'
                         color={theme.palette.text.secondary}
                     >
                         not connected

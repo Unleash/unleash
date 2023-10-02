@@ -16,13 +16,13 @@ export const InviteLinkBar: VFC = () => {
     const ref = useLoading(loading);
     const { trackEvent } = usePlausibleTracker();
     const inviteToken =
-        data?.tokens?.find(token => token.name === 'default') ?? null;
+        data?.tokens?.find((token) => token.name === 'default') ?? null;
     const inviteLink = inviteToken?.url;
     const createdAt = data?.tokens?.[0]?.createdAt ?? '';
     const expiresAt = data?.tokens?.[0]?.expiresAt ?? '';
     const expires = expiresAt || false;
     const isExpired = Boolean(
-        expires && isAfter(new Date(), parseISO(expires))
+        expires && isAfter(new Date(), parseISO(expires)),
     );
     const willExpireSoon =
         expires && isAfter(add(new Date(), { days: 14 }), parseISO(expires));
@@ -33,10 +33,10 @@ export const InviteLinkBar: VFC = () => {
 
     const expireDateComponent = (
         <Typography
-            component="span"
-            variant="body2"
+            component='span'
+            variant='body2'
             color={willExpireSoon ? 'warning.dark' : 'inherit'}
-            fontWeight="bold"
+            fontWeight='bold'
         >
             {expiresIn}
         </Typography>
@@ -45,7 +45,7 @@ export const InviteLinkBar: VFC = () => {
     const onInviteLinkActionClick = () => {
         trackEvent('invite', {
             props: {
-                eventType: Boolean(inviteLink)
+                eventType: inviteLink
                     ? 'link bar action: edit'
                     : 'link bar action: create',
             },
@@ -56,7 +56,7 @@ export const InviteLinkBar: VFC = () => {
 
     return (
         <Box
-            sx={theme => ({
+            sx={(theme) => ({
                 backgroundColor: theme.palette.background.paper,
                 py: 2,
                 px: 4,
@@ -81,10 +81,10 @@ export const InviteLinkBar: VFC = () => {
                     condition={Boolean(inviteLink)}
                     show={
                         <>
-                            <Typography variant="body2" sx={{ mb: 1 }}>
+                            <Typography variant='body2' sx={{ mb: 1 }}>
                                 {`You have an invite link created on ${formatDateYMD(
                                     createdAt,
-                                    locationSettings.locale
+                                    locationSettings.locale,
                                 )} `}
                                 <ConditionallyRender
                                     condition={isExpired}
@@ -106,7 +106,7 @@ export const InviteLinkBar: VFC = () => {
                         </>
                     }
                     elseShow={
-                        <Typography variant="body2" data-loading>
+                        <Typography variant='body2' data-loading>
                             You can easily create an invite link here that you
                             can share and use to invite people from your company
                             to your Unleash setup.
@@ -124,7 +124,7 @@ export const InviteLinkBar: VFC = () => {
                 }}
             >
                 <Button
-                    variant="outlined"
+                    variant='outlined'
                     onClick={onInviteLinkActionClick}
                     data-loading
                 >

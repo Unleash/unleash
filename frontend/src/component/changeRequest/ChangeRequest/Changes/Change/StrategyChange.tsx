@@ -65,11 +65,11 @@ const DisabledEnabledState: VFC<{ show?: boolean; disabled: boolean }> = ({
     if (disabled) {
         return (
             <Tooltip
-                title="This strategy will not be taken into account when evaluating feature toggle."
+                title='This strategy will not be taken into account when evaluating feature toggle.'
                 arrow
                 sx={{ cursor: 'pointer' }}
             >
-                <Badge color="disabled" icon={<BlockIcon />}>
+                <Badge color='disabled' icon={<BlockIcon />}>
                     Disabled
                 </Badge>
             </Tooltip>
@@ -78,11 +78,11 @@ const DisabledEnabledState: VFC<{ show?: boolean; disabled: boolean }> = ({
 
     return (
         <Tooltip
-            title="This was disabled before and with this change it will be taken into account when evaluating feature toggle."
+            title='This was disabled before and with this change it will be taken into account when evaluating feature toggle.'
             arrow
             sx={{ cursor: 'pointer' }}
         >
-            <Badge color="success" icon={<TrackChangesIcon />}>
+            <Badge color='success' icon={<TrackChangesIcon />}>
                 Enabled
             </Badge>
         </Tooltip>
@@ -95,16 +95,16 @@ const EditHeader: VFC<{
 }> = ({ wasDisabled = false, willBeDisabled = false }) => {
     if (wasDisabled && willBeDisabled) {
         return (
-            <Typography color="action.disabled">Editing strategy:</Typography>
+            <Typography color='action.disabled'>Editing strategy:</Typography>
         );
     }
 
     if (!wasDisabled && willBeDisabled) {
-        return <Typography color="error.dark">Editing strategy:</Typography>;
+        return <Typography color='error.dark'>Editing strategy:</Typography>;
     }
 
     if (wasDisabled && !willBeDisabled) {
-        return <Typography color="success.dark">Editing strategy:</Typography>;
+        return <Typography color='success.dark'>Editing strategy:</Typography>;
     }
 
     return <Typography>Editing strategy:</Typography>;
@@ -124,7 +124,7 @@ export const StrategyChange: VFC<{
         change,
         projectId,
         featureName,
-        environmentName
+        environmentName,
     );
 
     const isStrategyAction =
@@ -180,7 +180,7 @@ export const StrategyChange: VFC<{
                 <ChangeItemWrapper>
                     <ChangeItemInfo>
                         <Typography
-                            sx={theme => ({
+                            sx={(theme) => ({
                                 color: theme.palette.error.main,
                             })}
                         >
@@ -226,10 +226,10 @@ export const StrategyChange: VFC<{
                         show={
                             <Typography
                                 sx={{
-                                    marginTop: theme => theme.spacing(2),
-                                    marginBottom: theme => theme.spacing(2),
+                                    marginTop: (theme) => theme.spacing(2),
+                                    marginBottom: (theme) => theme.spacing(2),
                                     ...flexRow,
-                                    gap: theme => theme.spacing(1),
+                                    gap: (theme) => theme.spacing(1),
                                 }}
                             >
                                 This strategy will be{' '}

@@ -6,7 +6,7 @@ export const filterAdminRoutes = (
         pro,
         enterprise,
         billing,
-    }: { pro?: boolean; enterprise?: boolean; billing?: boolean }
+    }: { pro?: boolean; enterprise?: boolean; billing?: boolean },
 ): boolean => {
     const mode = menu?.mode;
     if (menu?.billing && !billing) return false;

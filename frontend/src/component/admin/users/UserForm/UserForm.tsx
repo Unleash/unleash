@@ -88,24 +88,24 @@ const UserForm: React.FC<IUserForm> = ({
                     Who is the new Unleash user?
                 </StyledInputDescription>
                 <StyledInput
-                    label="Full name"
+                    label='Full name'
                     value={name}
-                    onChange={e => setName(e.target.value)}
+                    onChange={(e) => setName(e.target.value)}
                     error={Boolean(errors.name)}
                     errorText={errors.name}
                     onFocus={() => clearErrors()}
                     autoFocus
                 />
                 <StyledInput
-                    label="Email"
-                    type="email"
+                    label='Email'
+                    type='email'
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     error={Boolean(errors.email)}
                     errorText={errors.email}
                     onFocus={() => clearErrors()}
                 />
-                <StyledRoleSubtitle variant="subtitle1" data-loading>
+                <StyledRoleSubtitle variant='subtitle1' data-loading>
                     What is your team member allowed to do?
                 </StyledRoleSubtitle>
                 <RoleSelect
@@ -119,14 +119,14 @@ const UserForm: React.FC<IUserForm> = ({
                     show={
                         <FormControl>
                             <StyledRoleSubtitle
-                                variant="subtitle1"
+                                variant='subtitle1'
                                 data-loading
                             >
                                 Should we send an email to your new team member
                             </StyledRoleSubtitle>
                             <StyledFlexRow>
                                 <Switch
-                                    name="sendEmail"
+                                    name='sendEmail'
                                     onChange={() => setSendEmail(!sendEmail)}
                                     checked={sendEmail}
                                 />

@@ -234,8 +234,8 @@ const ProjectForm: React.FC<IProjectForm> = ({
             '\\v',
         ];
         if (
-            disallowedStrings.some(blockedString =>
-                regex.includes(blockedString)
+            disallowedStrings.some((blockedString) =>
+                regex.includes(blockedString),
             )
         ) {
             errors.featureNamingPattern =
@@ -248,7 +248,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 errors.featureNamingPattern = 'Invalid regular expression';
             }
         }
-        setFeatureNamingPattern && setFeatureNamingPattern(regex);
+        setFeatureNamingPattern?.(regex);
         updateNamingExampleError({
             pattern: regex,
             example: featureNamingExample || '',
@@ -256,7 +256,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
     };
 
     const onSetFeatureNamingExample = (example: string) => {
-        setFeatureNamingExample && setFeatureNamingExample(example);
+        setFeatureNamingExample?.(example);
         updateNamingExampleError({
             pattern: featureNamingPattern || '',
             example,
@@ -264,21 +264,21 @@ const ProjectForm: React.FC<IProjectForm> = ({
     };
 
     const onSetFeatureNamingDescription = (description: string) => {
-        setFeatureNamingDescription && setFeatureNamingDescription(description);
+        setFeatureNamingDescription?.(description);
     };
 
     return (
         <StyledForm
-            onSubmit={submitEvent => {
+            onSubmit={(submitEvent) => {
                 handleSubmit(submitEvent);
                 trackPattern(featureNamingPattern);
             }}
         >
             <StyledDescription>What is your project Id?</StyledDescription>
             <StyledInput
-                label="Project Id"
+                label='Project Id'
                 value={projectId}
-                onChange={e => setProjectId(trim(e.target.value))}
+                onChange={(e) => setProjectId(trim(e.target.value))}
                 error={Boolean(errors.id)}
                 errorText={errors.id}
                 onFocus={() => clearErrors()}
@@ -291,9 +291,9 @@ const ProjectForm: React.FC<IProjectForm> = ({
 
             <StyledDescription>What is your project name?</StyledDescription>
             <StyledInput
-                label="Project name"
+                label='Project name'
                 value={projectName}
-                onChange={e => setProjectName(e.target.value)}
+                onChange={(e) => setProjectName(e.target.value)}
                 error={Boolean(errors.name)}
                 errorText={errors.name}
                 onFocus={() => {
@@ -307,12 +307,12 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 What is your project description?
             </StyledDescription>
             <StyledTextField
-                label="Project description"
-                variant="outlined"
+                label='Project description'
+                variant='outlined'
                 multiline
                 maxRows={4}
                 value={projectDesc}
-                onChange={e => setProjectDesc(e.target.value)}
+                onChange={(e) => setProjectDesc(e.target.value)}
                 data-testid={PROJECT_DESCRIPTION_INPUT}
             />
 
@@ -324,12 +324,11 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             What is the default stickiness for the project?
                         </StyledDescription>
                         <StickinessSelect
-                            label="Stickiness"
+                            label='Stickiness'
                             value={projectStickiness}
                             data-testid={PROJECT_STICKINESS_SELECT}
-                            onChange={e =>
-                                setProjectStickiness &&
-                                setProjectStickiness(e.target.value)
+                            onChange={(e) =>
+                                setProjectStickiness?.(e.target.value)
                             }
                             editable
                         />
@@ -349,15 +348,15 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     <CollaborationModeTooltip />
                 </Box>
                 <StyledSelect
-                    id="project-mode"
+                    id='project-mode'
                     value={projectMode}
-                    label="Project collaboration mode"
-                    name="Project collaboration mode"
-                    onChange={e => {
+                    label='Project collaboration mode'
+                    name='Project collaboration mode'
+                    onChange={(e) => {
                         setProjectMode?.(e.target.value as ProjectMode);
                     }}
                     options={projectModeOptions}
-                ></StyledSelect>
+                />
             </>
             <>
                 <Box
@@ -377,10 +376,10 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 <StyledInputContainer>
                     <StyledInput
                         label={'Limit'}
-                        name="value"
+                        name='value'
                         type={'number'}
                         value={featureLimit}
-                        onChange={e => setFeatureLimit(e.target.value)}
+                        onChange={(e) => setFeatureLimit(e.target.value)}
                     />
                     <ConditionallyRender
                         condition={
@@ -410,13 +409,13 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             <FeatureFlagNamingTooltip />
                         </Box>
                         <StyledSubtitle>
-                            <StyledPatternNamingExplanation id="pattern-naming-description">
+                            <StyledPatternNamingExplanation id='pattern-naming-description'>
                                 <p>
                                     Define a{' '}
                                     <a
                                         href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet`}
-                                        target="_blank"
-                                        rel="noreferrer"
+                                        target='_blank'
+                                        rel='noreferrer'
                                     >
                                         JavaScript RegEx
                                     </a>{' '}
@@ -434,17 +433,17 @@ const ProjectForm: React.FC<IProjectForm> = ({
                         <StyledFlagNamingContainer>
                             <StyledInput
                                 label={'Naming Pattern'}
-                                name="feature flag naming pattern"
-                                aria-describedby="pattern-naming-description"
-                                placeholder="[A-Za-z]+\.[A-Za-z]+\.[A-Za-z0-9-]+"
+                                name='feature flag naming pattern'
+                                aria-describedby='pattern-naming-description'
+                                placeholder='[A-Za-z]+.[A-Za-z]+.[A-Za-z0-9-]+'
                                 InputProps={{
                                     startAdornment: (
-                                        <InputAdornment position="start">
+                                        <InputAdornment position='start'>
                                             ^
                                         </InputAdornment>
                                     ),
                                     endAdornment: (
-                                        <InputAdornment position="end">
+                                        <InputAdornment position='end'>
                                             $
                                         </InputAdornment>
                                     ),
@@ -453,12 +452,12 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 value={featureNamingPattern || ''}
                                 error={Boolean(errors.featureNamingPattern)}
                                 errorText={errors.featureNamingPattern}
-                                onChange={e =>
+                                onChange={(e) =>
                                     onSetFeatureNamingPattern(e.target.value)
                                 }
                             />
                             <StyledSubtitle>
-                                <p id="pattern-additional-description">
+                                <p id='pattern-additional-description'>
                                     The example and description will be shown to
                                     users when they create a new feature flag in
                                     this project.
@@ -467,31 +466,31 @@ const ProjectForm: React.FC<IProjectForm> = ({
 
                             <StyledInput
                                 label={'Naming Example'}
-                                name="feature flag naming example"
+                                name='feature flag naming example'
                                 type={'text'}
-                                aria-describedby="pattern-additional-description"
+                                aria-describedby='pattern-additional-description'
                                 value={featureNamingExample || ''}
-                                placeholder="dx.feature1.1-135"
+                                placeholder='dx.feature1.1-135'
                                 error={Boolean(errors.namingExample)}
                                 errorText={errors.namingExample}
-                                onChange={e =>
+                                onChange={(e) =>
                                     onSetFeatureNamingExample(e.target.value)
                                 }
                             />
                             <StyledTextField
                                 label={'Naming pattern description'}
-                                name="feature flag naming description"
+                                name='feature flag naming description'
                                 type={'text'}
-                                aria-describedby="pattern-additional-description"
+                                aria-describedby='pattern-additional-description'
                                 placeholder={`<project>.<featureName>.<ticket>
 
 The flag name should contain the project name, the feature name, and the ticket number, each separated by a dot.`}
                                 multiline
                                 minRows={5}
                                 value={featureNamingDescription || ''}
-                                onChange={e =>
+                                onChange={(e) =>
                                     onSetFeatureNamingDescription(
-                                        e.target.value
+                                        e.target.value,
                                     )
                                 }
                             />

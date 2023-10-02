@@ -38,7 +38,7 @@ const useAddonsApi = () => {
 
             return makeRequest(req.caller, req.id);
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     return {

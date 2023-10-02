@@ -19,7 +19,7 @@ test('should render authorization error on missing old password', async () => {
     render(
         <UIProviderContainer>
             <PasswordTab />
-        </UIProviderContainer>
+        </UIProviderContainer>,
     );
 
     await screen.findByText('Change password');
@@ -28,7 +28,7 @@ test('should render authorization error on missing old password', async () => {
     await user.type(passwordInput, 'IAmThePass1!@');
 
     const confirmPasswordInput = await screen.findByLabelText(
-        'Confirm password'
+        'Confirm password',
     );
     await user.clear(confirmPasswordInput);
     await user.type(confirmPasswordInput, 'IAmThePass1!@');

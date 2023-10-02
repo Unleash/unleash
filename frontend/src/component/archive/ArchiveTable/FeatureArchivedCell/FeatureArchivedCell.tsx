@@ -19,7 +19,7 @@ export const FeatureArchivedCell: VFC<IFeatureArchivedCellProps> = ({
         return (
             <TextCell>
                 <Typography
-                    variant="body2"
+                    variant='body2'
                     color={theme.palette.text.secondary}
                 >
                     not available
@@ -32,14 +32,14 @@ export const FeatureArchivedCell: VFC<IFeatureArchivedCellProps> = ({
             <Tooltip
                 title={`Archived on: ${formatDateYMD(
                     archivedAt,
-                    locationSettings.locale
+                    locationSettings.locale,
                 )}`}
                 arrow
             >
-                <Typography noWrap variant="body2" data-loading>
+                <Typography noWrap variant='body2' data-loading>
                     <TimeAgo
                         date={new Date(archivedAt)}
-                        title=""
+                        title=''
                         live={false}
                     />
                 </Typography>

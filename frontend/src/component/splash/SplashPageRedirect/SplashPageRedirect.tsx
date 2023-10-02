@@ -29,7 +29,7 @@ export const SplashPageRedirect = () => {
     }
 
     // Find the splash page to show (if any).
-    const showSplashId = activeSplashIds.find(splashId => {
+    const showSplashId = activeSplashIds.find((splashId) => {
         return !hasSeenSplashId(splashId, splash);
     });
 

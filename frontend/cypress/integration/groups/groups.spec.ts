@@ -15,13 +15,13 @@ describe('groups', () => {
                 email: `unleash-e2e-user${i}-${randomId}@test.com`,
                 sendEmail: false,
                 rootRole: 3,
-            }).then(response => userIds.push(response.body.id));
+            }).then((response) => userIds.push(response.body.id));
         }
     });
 
     after(() => {
-        userIds.forEach(id =>
-            cy.request('DELETE', `${baseUrl}/api/admin/user-admin/${id}`)
+        userIds.forEach((id) =>
+            cy.request('DELETE', `${baseUrl}/api/admin/user-admin/${id}`),
         );
     });
 
@@ -55,7 +55,7 @@ describe('groups', () => {
 
         cy.get("[data-testid='UG_NAME_ID']").type(groupName);
         cy.get("[data-testid='INPUT_ERROR_TEXT'").contains(
-            'A group with that name already exists.'
+            'A group with that name already exists.',
         );
     });
 

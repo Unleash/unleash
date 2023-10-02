@@ -66,7 +66,7 @@ export const EditGroup = ({
         group?.description,
         group?.mappingsSSO,
         group?.users,
-        group?.rootRole
+        group?.rootRole,
     );
 
     const { groups } = useGroups();
@@ -106,7 +106,7 @@ export const EditGroup = ({
 
     const isNameNotEmpty = (name: string) => name.length;
     const isNameUnique = (name: string) =>
-        !groups?.filter(group => group.name === name && group.id !== groupId)
+        !groups?.filter((group) => group.name === name && group.id !== groupId)
             .length;
     const isValid = isNameNotEmpty(name) && isNameUnique(name);
 
@@ -121,10 +121,10 @@ export const EditGroup = ({
     return (
         <FormTemplate
             loading={loading}
-            title="Edit group"
-            description="Groups is the best and easiest way to organize users and then use them in projects to assign a specific role in one go to all the users in a group."
-            documentationLink="https://docs.getunleash.io/advanced/groups"
-            documentationLinkLabel="Groups documentation"
+            title='Edit group'
+            description='Groups is the best and easiest way to organize users and then use them in projects to assign a specific role in one go to all the users in a group.'
+            documentationLink='https://docs.getunleash.io/advanced/groups'
+            documentationLinkLabel='Groups documentation'
             formatApiCode={formatApiCode}
         >
             <GroupForm
@@ -144,9 +144,9 @@ export const EditGroup = ({
                 mode={EDIT}
             >
                 <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
+                    type='submit'
+                    variant='contained'
+                    color='primary'
                     disabled={!isValid}
                     data-testid={UG_SAVE_BTN_ID}
                 >

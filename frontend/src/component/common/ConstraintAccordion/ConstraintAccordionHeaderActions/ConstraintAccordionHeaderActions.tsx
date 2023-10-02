@@ -43,9 +43,9 @@ export const ConstraintAccordionHeaderActions = ({
             <ConditionallyRender
                 condition={Boolean(onEditClick) && !disableEdit}
                 show={
-                    <Tooltip title="Edit constraint" arrow>
+                    <Tooltip title='Edit constraint' arrow>
                         <IconButton
-                            type="button"
+                            type='button'
                             onClick={onEditClick}
                             disabled={disableEdit}
                         >
@@ -57,9 +57,9 @@ export const ConstraintAccordionHeaderActions = ({
             <ConditionallyRender
                 condition={Boolean(onDeleteClick) && !disableDelete}
                 show={
-                    <Tooltip title="Delete constraint" arrow>
+                    <Tooltip title='Delete constraint' arrow>
                         <IconButton
-                            type="button"
+                            type='button'
                             onClick={onDeleteClick}
                             disabled={disableDelete}
                         >

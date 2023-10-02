@@ -21,9 +21,9 @@ const StyledHtmlTooltip = styled(
         />
     ),
     {
-        shouldForwardProp: prop =>
+        shouldForwardProp: (prop) =>
             prop !== 'maxWidth' && prop !== 'maxHeight' && prop !== 'fontSize',
-    }
+    },
 )<{
     maxWidth?: SpacingArgument;
     maxHeight?: SpacingArgument;
@@ -56,7 +56,7 @@ const StyledHtmlTooltip = styled(
             },
             color: theme.palette.background.paper,
         },
-    })
+    }),
 );
 
 export interface IHtmlTooltipProps extends TooltipProps {
@@ -66,6 +66,6 @@ export interface IHtmlTooltipProps extends TooltipProps {
 }
 
 export const HtmlTooltip = (props: IHtmlTooltipProps) => {
-    if (!Boolean(props.title)) return props.children;
+    if (!props.title) return props.children;
     return <StyledHtmlTooltip {...props}>{props.children}</StyledHtmlTooltip>;
 };

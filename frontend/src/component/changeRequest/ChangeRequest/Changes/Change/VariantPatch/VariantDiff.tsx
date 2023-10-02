@@ -21,7 +21,7 @@ interface IDiffProps {
 const variantsArrayToObject = (variants: IFeatureVariant[]) =>
     variants.reduce(
         (object, { name, ...variant }) => ({ ...object, [name]: variant }),
-        {}
+        {},
     );
 
 export const VariantDiff = ({ preData, data }: IDiffProps) => (

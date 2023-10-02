@@ -49,9 +49,9 @@ export const StyledTitle = forwardRef<
 >(({ children }, ref) => (
     <Typography
         ref={ref}
-        component="h4"
-        variant="h4"
-        sx={theme => ({
+        component='h4'
+        variant='h4'
+        sx={(theme) => ({
             margin: theme.spacing(1, 0),
         })}
     >
@@ -79,7 +79,7 @@ export const StyledRaisedSection: FC<ComponentProps<typeof Paper>> = ({
 }) => (
     <Paper
         elevation={0}
-        sx={theme => ({
+        sx={(theme) => ({
             background: theme.palette.background.elevation1,
             padding: theme.spacing(2, 3),
             display: 'flex',

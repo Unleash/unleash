@@ -93,7 +93,7 @@ const StandaloneBanner: FC<IStandaloneBannerProps> = ({ title }) => {
             to={theme.palette.loginGradient.to}
         >
             <StyledContainer>
-                <StyledTitle variant="h1">{title}</StyledTitle>
+                <StyledTitle variant='h1'>{title}</StyledTitle>
                 <StyledSubtitle>
                     Committed to creating new ways of developing software
                 </StyledSubtitle>
@@ -102,8 +102,8 @@ const StandaloneBanner: FC<IStandaloneBannerProps> = ({ title }) => {
             <StyledLogoContainer>
                 <ConditionallyRender
                     condition={smallScreen}
-                    show={<StyledLogoWithText aria-label="Unleash logo" />}
-                    elseShow={<StyledLogo aria-label="Unleash logo" />}
+                    show={<StyledLogoWithText aria-label='Unleash logo' />}
+                    elseShow={<StyledLogo aria-label='Unleash logo' />}
                 />
             </StyledLogoContainer>
         </StyledGradient>

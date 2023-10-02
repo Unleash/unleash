@@ -35,12 +35,12 @@ const StyledGroupFormUsersSelect = styled('div')(({ theme }) => ({
 const renderOption = (
     props: React.HTMLAttributes<HTMLLIElement>,
     option: IUser,
-    selected: boolean
+    selected: boolean,
 ) => (
     <li {...props}>
         <Checkbox
-            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-            checkedIcon={<CheckBoxIcon fontSize="small" />}
+            icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
+            checkedIcon={<CheckBoxIcon fontSize='small' />}
             style={{ marginRight: 8 }}
             checked={selected}
         />
@@ -103,7 +103,7 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
         <StyledGroupFormUsersSelect>
             <Autocomplete
                 data-testid={UG_USERS_ID}
-                size="small"
+                size='small'
                 multiple
                 limitTags={1}
                 openOnFocus
@@ -119,7 +119,7 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                     }
                     setUsers(newValue);
                 }}
-                groupBy={option => option.type}
+                groupBy={(option) => option.type}
                 options={options}
                 renderOption={(props, option, { selected }) =>
                     renderOption(props, option as UserOption, selected)
@@ -129,17 +129,17 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                         ({ name, username, email }) =>
                             caseInsensitiveSearch(inputValue, email) ||
                             caseInsensitiveSearch(inputValue, name) ||
-                            caseInsensitiveSearch(inputValue, username)
+                            caseInsensitiveSearch(inputValue, username),
                     )
                 }
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 getOptionLabel={(option: UserOption) =>
                     option.email || option.name || option.username || ''
                 }
-                renderInput={params => (
-                    <TextField {...params} label="Select users" />
+                renderInput={(params) => (
+                    <TextField {...params} label='Select users' />
                 )}
-                renderTags={value => renderTags(value)}
+                renderTags={(value) => renderTags(value)}
             />
         </StyledGroupFormUsersSelect>
     );

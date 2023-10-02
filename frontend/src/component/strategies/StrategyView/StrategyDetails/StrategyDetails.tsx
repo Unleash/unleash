@@ -37,14 +37,14 @@ export const StrategyDetails = ({
                         condition={required}
                         show={
                             <ListItemAvatar>
-                                <Tooltip title="Required parameter" arrow>
+                                <Tooltip title='Required parameter' arrow>
                                     <Add aria-hidden={false} />
                                 </Tooltip>
                             </ListItemAvatar>
                         }
                         elseShow={
                             <ListItemAvatar>
-                                <Tooltip title="Optional parameter" arrow>
+                                <Tooltip title='Optional parameter' arrow>
                                     <RadioButtonChecked aria-hidden={false} />
                                 </Tooltip>
                             </ListItemAvatar>

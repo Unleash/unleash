@@ -33,7 +33,7 @@ export const CustomParameterItem = ({
     return (
         <StyledWrapper>
             <Typography
-                variant="subtitle1"
+                variant='subtitle1'
                 color={theme.palette[color].main}
                 sx={{ minWidth: 118 }}
             >
@@ -51,18 +51,18 @@ export const CustomParameterItem = ({
                         show={
                             <>
                                 <Typography
-                                    component="span"
+                                    component='span'
                                     color={theme.palette.error.main}
                                 >
                                     {' required parameter '}
                                 </Typography>
                                 <StringTruncator
-                                    maxWidth="300"
+                                    maxWidth='300'
                                     text={text}
                                     maxLength={50}
                                 />
                                 <Typography
-                                    component="span"
+                                    component='span'
                                     color={theme.palette.error.main}
                                 >
                                     {' is not set '}
@@ -72,13 +72,13 @@ export const CustomParameterItem = ({
                         elseShow={
                             <>
                                 <Typography
-                                    component="span"
-                                    color="text.disabled"
+                                    component='span'
+                                    color='text.disabled'
                                 >
                                     {' set on parameter '}
                                 </Typography>
                                 <StringTruncator
-                                    maxWidth="300"
+                                    maxWidth='300'
                                     text={text}
                                     maxLength={50}
                                 />

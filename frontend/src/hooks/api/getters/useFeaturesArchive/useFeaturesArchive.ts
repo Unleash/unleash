@@ -13,22 +13,22 @@ export interface IUseFeaturesArchiveOutput {
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Feature toggle archive'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };
 
 export const useFeaturesArchive = (
-    projectId?: string
+    projectId?: string,
 ): IUseFeaturesArchiveOutput => {
     const { data, error, mutate, isLoading } = useSWR<FeaturesSchema>(
         formatApiPath(
             projectId
                 ? `/api/admin/archive/features/${projectId}`
-                : 'api/admin/archive/features'
+                : 'api/admin/archive/features',
         ),
         fetcher,
         {
             refreshInterval: 15 * 1000, // ms
-        }
+        },
     );
 
     return {

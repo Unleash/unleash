@@ -1,28 +1,11 @@
-import type { BatchStaleSchema, CreateFeatureStrategySchema } from 'openapi';
+import type {
+    BatchStaleSchema,
+    CreateFeatureStrategySchema,
+    CreateProjectSchema,
+    UpdateProjectSchema,
+    UpdateProjectEnterpriseSettingsSchema,
+} from 'openapi';
 import useAPI from '../useApi/useApi';
-import { ProjectMode } from 'component/project/Project/hooks/useProjectEnterpriseSettingsForm';
-import { FeatureNamingType } from 'interfaces/project';
-
-interface ICreatePayload {
-    id: string;
-    name: string;
-    description: string;
-    defaultStickiness: string;
-    mode?: ProjectMode;
-}
-
-interface IEditPayload {
-    id: string;
-    name: string;
-    description: string;
-    defaultStickiness: string;
-    featureLimit?: number;
-}
-
-interface IEditSettingsPayload {
-    featureNaming?: FeatureNamingType;
-    mode?: ProjectMode;
-}
 
 interface IAccessPayload {
     roles: number[];
@@ -35,7 +18,7 @@ const useProjectApi = () => {
         propagateErrors: true,
     });
 
-    const createProject = async (payload: ICreatePayload) => {
+    const createProject = async (payload: CreateProjectSchema) => {
         const path = `api/admin/projects`;
         const req = createRequest(path, {
             method: 'POST',
@@ -51,7 +34,7 @@ const useProjectApi = () => {
         }
     };
 
-    const validateId = async (id: ICreatePayload['id']) => {
+    const validateId = async (id: CreateProjectSchema['id']) => {
         const path = `api/admin/projects/validate`;
         const req = createRequest(path, {
             method: 'POST',
@@ -66,7 +49,7 @@ const useProjectApi = () => {
         }
     };
 
-    const editProject = async (id: string, payload: IEditPayload) => {
+    const editProject = async (id: string, payload: UpdateProjectSchema) => {
         const path = `api/admin/projects/${id}`;
         const req = createRequest(path, {
             method: 'PUT',
@@ -84,7 +67,7 @@ const useProjectApi = () => {
 
     const editProjectSettings = async (
         id: string,
-        payload: IEditSettingsPayload
+        payload: UpdateProjectEnterpriseSettingsSchema
     ) => {
         const path = `api/admin/projects/${id}/settings`;
         const req = createRequest(path, {

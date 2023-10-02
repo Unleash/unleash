@@ -15,31 +15,10 @@ import type { ChangeRequestCreateFeatureSchemaOneOfOnesix } from './changeReques
  * Data used to create a [change request](https://docs.getunleash.io/reference/change-requests) for a single feature change.
  */
 export type ChangeRequestCreateFeatureSchema =
-    | (ChangeRequestCreateFeatureSchemaOneOf & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      })
-    | (ChangeRequestCreateFeatureSchemaOneOfFour & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      })
-    | (ChangeRequestCreateFeatureSchemaOneOfSix & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      })
-    | (ChangeRequestCreateFeatureSchemaOneOfEight & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      })
-    | (ChangeRequestCreateFeatureSchemaOneOfOneone & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      })
-    | (ChangeRequestCreateFeatureSchemaOneOfOnethree & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      })
-    | (ChangeRequestCreateFeatureSchemaOneOfOnesix & {
-          /** The name of the feature that this change applies to. */
-          feature: string;
-      });
+    | ChangeRequestCreateFeatureSchemaOneOf
+    | ChangeRequestCreateFeatureSchemaOneOfFour
+    | ChangeRequestCreateFeatureSchemaOneOfSix
+    | ChangeRequestCreateFeatureSchemaOneOfEight
+    | ChangeRequestCreateFeatureSchemaOneOfOneone
+    | ChangeRequestCreateFeatureSchemaOneOfOnethree
+    | ChangeRequestCreateFeatureSchemaOneOfOnesix;

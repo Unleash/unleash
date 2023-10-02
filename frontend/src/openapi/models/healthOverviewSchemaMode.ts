@@ -14,4 +14,5 @@ export type HealthOverviewSchemaMode =
 export const HealthOverviewSchemaMode = {
     open: 'open',
     protected: 'protected',
+    private: 'private',
 } as const;

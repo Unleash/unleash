@@ -118,7 +118,7 @@ export class GroupService {
         const deletableUsers = existingUsers.filter(
             (existingUser) =>
                 !group.users.some(
-                    (groupUser) => groupUser.user.id == existingUser.userId,
+                    (groupUser) => groupUser.user.id === existingUser.userId,
                 ),
         );
 
@@ -176,7 +176,7 @@ export class GroupService {
         await this.eventService.storeEvent({
             type: GROUP_DELETED,
             createdBy: userName,
-            data: group,
+            preData: group,
         });
     }
 
@@ -188,7 +188,7 @@ export class GroupService {
             throw new BadDataError('Group name cannot be empty');
         }
 
-        if (!existingGroup || existingGroup.name != group.name) {
+        if (!existingGroup || existingGroup.name !== group.name) {
             if (await this.groupStore.existsWithName(group.name)) {
                 throw new NameExistsError('Group name already exists');
             }
@@ -205,18 +205,18 @@ export class GroupService {
         allUsers: IUser[],
     ): IGroupModel {
         const groupUsers = allGroupUsers.filter(
-            (user) => user.groupId == group.id,
+            (user) => user.groupId === group.id,
         );
         const groupUsersId = groupUsers.map((user) => user.userId);
         const selectedUsers = allUsers.filter((user) =>
             groupUsersId.includes(user.id),
         );
         const finalUsers = selectedUsers.map((user) => {
-            const roleUser = groupUsers.find((gu) => gu.userId == user.id);
+            const roleUser = groupUsers.find((gu) => gu.userId === user.id);
             return {
                 user: user,
-                joinedAt: roleUser.joinedAt,
-                createdBy: roleUser.createdBy,
+                joinedAt: roleUser?.joinedAt,
+                createdBy: roleUser?.createdBy,
             };
         });
         return { ...group, users: finalUsers };
@@ -228,7 +228,7 @@ export class GroupService {
         createdBy?: string,
     ): Promise<void> {
         if (Array.isArray(externalGroups)) {
-            let newGroups = await this.groupStore.getNewGroupsForExternalUser(
+            const newGroups = await this.groupStore.getNewGroupsForExternalUser(
                 userId,
                 externalGroups,
             );
@@ -237,7 +237,7 @@ export class GroupService {
                 newGroups.map((g) => g.id),
                 createdBy,
             );
-            let oldGroups = await this.groupStore.getOldGroupsForExternalUser(
+            const oldGroups = await this.groupStore.getOldGroupsForExternalUser(
                 userId,
                 externalGroups,
             );

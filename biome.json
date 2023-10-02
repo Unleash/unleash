@@ -1,0 +1,96 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.2.2/schema.json",
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "performance": {
+        "noDelete": "off"
+      },
+      "correctness": {
+        "noUnsafeOptionalChaining": "off"
+      },
+      "complexity": {
+        "noBannedTypes": "off",
+        "noUselessConstructor": "off",
+        "useOptionalChain": "warn",
+        "noStaticOnlyClass": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "noInferrableTypes": "off",
+        "noUnusedTemplateLiteral": "off",
+        "useSingleVarDeclarator": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noExtraNonNullAssertion": "off",
+        "noRedeclare": "off"
+      }
+    },
+    "ignore": [
+      "node_modules",
+      "docker",
+      "bundle.js",
+      "website/blog",
+      "website/build",
+      "website/core",
+      "website/docs",
+      "website/i18n/*.js",
+      "website/pages",
+      "website/translated_docs",
+      "website",
+      "setupJest.js",
+      "frontend",
+      "dist",
+      "src/migrations/*.js",
+      "src/test/examples/*.json",
+      "website/**/*.js",
+      "coverage"
+    ]
+  },
+  "organizeImports": {
+    "enabled": false
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "ignore": [
+      "node_modules",
+      "docker",
+      "bundle.js",
+      "website/blog",
+      "website/build",
+      "website/core",
+      "website/docs",
+      "website/i18n/*.js",
+      "website/pages",
+      "website/translated_docs",
+      "website",
+      "setupJest.js",
+      "frontend",
+      "dist",
+      "src/migrations/*.js",
+      "src/migrations/*.json",
+      "src/test/examples/*.json",
+      "website/**/*.js",
+      "coverage",
+      ".eslintrc",
+      ".eslintignore",
+      "package.json"
+    ],
+    "indentSize": 4
+  },
+  "javascript": {
+    "formatter": {
+      "semicolons": "always",
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "single",
+      "indentSize": 4
+    }
+  },
+  "json": {
+    "formatter": {
+      "indentSize": 2
+    }
+  }
+}

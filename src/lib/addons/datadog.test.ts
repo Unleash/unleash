@@ -134,7 +134,7 @@ test('Should call datadog webhook  for archived toggle with project info', async
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
-test(`Should call datadog webhook for toggled environment`, async () => {
+test('Should call datadog webhook for toggled environment', async () => {
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
@@ -169,7 +169,7 @@ test(`Should call datadog webhook for toggled environment`, async () => {
     expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
 });
 
-test(`Should include customHeaders in headers when calling service`, async () => {
+test('Should include customHeaders in headers when calling service', async () => {
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',
@@ -205,7 +205,7 @@ test(`Should include customHeaders in headers when calling service`, async () =>
     expect(fetchRetryCalls[0].options.headers).toMatchSnapshot();
 });
 
-test(`Should not include source_type_name when included in the config`, async () => {
+test('Should not include source_type_name when included in the config', async () => {
     const addon = new DatadogAddon({
         getLogger: noLogger,
         unleashUrl: 'http://some-url.com',

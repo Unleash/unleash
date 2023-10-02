@@ -68,12 +68,11 @@ export default class DatadogAddon extends Addon {
         ) {
             text = Mustache.render(bodyTemplate, context);
         } else {
-            text = `%%% \n ${this.msgFormatter.format(event)} \n %%% `;
+            text = `%%% \n ${this.msgFormatter.format(event).text} \n %%% `;
         }
 
         const { tags: eventTags } = event;
-        const tags =
-            eventTags && eventTags.map((tag) => `${tag.type}:${tag.value}`);
+        const tags = eventTags?.map((tag) => `${tag.type}:${tag.value}`);
         const body: DDRequestBody = {
             text: text,
             title: 'Unleash notification update',

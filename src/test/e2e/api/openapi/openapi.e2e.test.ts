@@ -149,8 +149,7 @@ test('all tags are listed in the root "tags" list', async () => {
                     // store other invalid tags that already exist on this
                     // operation
                     const preExistingTags =
-                        (invalidTags[path] ?? {})[operation]?.invalidTags ?? [];
-
+                        invalidTags[path]?.[operation]?.invalidTags ?? [];
                     // add information about the invalid tag to the invalid tags
                     // dict.
                     invalidTags = {

@@ -122,7 +122,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         dateAccessor: string;
     }): Promise<number> {
         const { project, archived, dateAccessor } = queryModifiers;
-        let query = this.db
+        const query = this.db
             .count()
             .from(TABLE)
             .where({ project })

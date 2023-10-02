@@ -152,12 +152,9 @@ export default class EnvironmentService {
         }
 
         const environmentsNotAlreadyEnabled =
-            existingEnvironmentsToEnable.filter((env) => env.enabled == false);
+            existingEnvironmentsToEnable.filter((env) => !env.enabled);
         const environmentsToDisable = allEnvironments.filter((env) => {
-            return (
-                !environmentNamesToEnable.includes(env.name) &&
-                env.enabled == true
-            );
+            return !environmentNamesToEnable.includes(env.name) && env.enabled;
         });
 
         await this.environmentStore.disable(environmentsToDisable);
@@ -190,13 +187,13 @@ export default class EnvironmentService {
             ...new Set(projectLinks.map((link) => link.projectId)),
         ];
 
-        let linkTasks = uniqueProjects.map((project) => {
+        const linkTasks = uniqueProjects.flatMap((project) => {
             return toEnable.map((enabledEnv) => {
                 return this.addEnvironmentToProject(enabledEnv.name, project);
             });
         });
 
-        await Promise.all(linkTasks.flat());
+        await Promise.all(linkTasks);
     }
 
     async forceRemoveEnvironmentFromProject(

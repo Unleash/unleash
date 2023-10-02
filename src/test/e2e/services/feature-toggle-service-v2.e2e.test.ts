@@ -351,8 +351,8 @@ test('cloning a feature toggle copies variant environments correctly', async () 
         newToggleName,
         'default',
         clonedToggleName,
-        true,
         'test-user',
+        true,
     );
 
     const clonedToggle =
@@ -379,8 +379,8 @@ test('cloning a feature toggle not allowed for change requests enabled', async (
             'newToggleName',
             'default',
             'clonedToggleName',
-            true,
             'test-user',
+            true,
         ),
     ).rejects.toEqual(
         new ForbiddenError(
@@ -407,7 +407,7 @@ test('Cloning a feature toggle also clones segments correctly', async () => {
     const featureName = 'ToggleWithSegments';
     const clonedFeatureName = 'AWholeNewFeatureToggle';
 
-    let segment = await segmentService.create(
+    const segment = await segmentService.create(
         {
             name: 'SomeSegment',
             constraints: mockConstraints(),
@@ -442,11 +442,13 @@ test('Cloning a feature toggle also clones segments correctly', async () => {
         featureName,
         'default',
         clonedFeatureName,
-        true,
         'test-user',
+        true,
     );
 
-    let feature = await service.getFeature({ featureName: clonedFeatureName });
+    const feature = await service.getFeature({
+        featureName: clonedFeatureName,
+    });
     expect(
         feature.environments.find((x) => x.name === 'default')?.strategies[0]
             .segments,

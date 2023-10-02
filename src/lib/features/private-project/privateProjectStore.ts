@@ -42,7 +42,7 @@ class PrivateProjectStore implements IPrivateProjectStore {
             .count('*')
             .first();
 
-        if (!isViewer || isViewer.count == 0) {
+        if (!isViewer || isViewer.count === 0) {
             return ALL_PROJECT_ACCESS;
         }
 

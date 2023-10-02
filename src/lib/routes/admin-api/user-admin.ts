@@ -425,7 +425,7 @@ export default class UserAdminController extends Controller {
         req: Request,
         res: Response<UsersGroupsBaseSchema>,
     ): Promise<void> {
-        let allUsers = await this.accountService.getAll();
+        const allUsers = await this.accountService.getAll();
         let users = allUsers.map((u) => {
             return {
                 id: u.id,
@@ -439,8 +439,8 @@ export default class UserAdminController extends Controller {
             users = this.anonymiseUsers(users);
         }
 
-        let allGroups = await this.groupService.getAll();
-        let groups = allGroups.map((g) => {
+        const allGroups = await this.groupService.getAll();
+        const groups = allGroups.map((g) => {
             return {
                 id: g.id,
                 name: g.name,

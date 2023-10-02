@@ -82,6 +82,7 @@ export const useDependentFeaturesApi = (project: string) => {
         makeRequest,
         setToastData,
         formatUnknownError,
+        project,
     ];
     return {
         addDependency: useCallback(addDependency, callbackDeps),

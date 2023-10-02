@@ -9,7 +9,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 let patStore: IPatStore;
 
-let tomorrow = new Date();
+const tomorrow = new Date();
 let firstSecret;
 let firstId;
 tomorrow.setDate(tomorrow.getDate() + 1);
@@ -149,7 +149,7 @@ test('should get only current user PATs', async () => {
 test('should fail creation of PAT with passed expiry', async () => {
     const { request } = app;
 
-    let yesterday = new Date();
+    const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     await request
         .post('/api/admin/user/tokens')

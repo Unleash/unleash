@@ -71,10 +71,12 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
         value: environment.name,
         label: environment.name,
     }));
-    const selectableEvents = provider?.events?.map(event => ({
-        value: event,
-        label: event,
-    }));
+    const selectableEvents = provider?.events
+        ?.map(event => ({
+            value: event,
+            label: event,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
     const { uiConfig } = useUiConfig();
     const [formValues, setFormValues] = useState(initialValues);
     const [errors, setErrors] = useState<{

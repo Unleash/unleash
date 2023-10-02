@@ -2,6 +2,8 @@ import {
     IEvent,
     IBaseEvent,
     SEGMENT_UPDATED,
+    FEATURE_IMPORT,
+    FEATURES_IMPORTED,
     IEventType,
 } from '../types/events';
 import { LogProvider, Logger } from '../logger';
@@ -107,7 +109,7 @@ class EventStore implements IEventStore {
     }
 
     async count(): Promise<number> {
-        let count = await this.db(TABLE)
+        const count = await this.db(TABLE)
             .count<Record<string, number>>()
             .first();
         if (!count) {
@@ -131,7 +133,7 @@ class EventStore implements IEventStore {
         if (eventSearch.feature) {
             query = query.andWhere({ feature_name: eventSearch.feature });
         }
-        let count = await query.count().first();
+        const count = await query.count().first();
         if (!count) {
             return 0;
         }
@@ -158,7 +160,11 @@ class EventStore implements IEventStore {
             .where((builder) =>
                 builder
                     .whereNotNull('feature_name')
-                    .orWhere('type', SEGMENT_UPDATED),
+                    .orWhereIn('type', [
+                        SEGMENT_UPDATED,
+                        FEATURE_IMPORT,
+                        FEATURES_IMPORTED,
+                    ]),
             )
             .andWhere('id', '>=', largerThan)
             .first();

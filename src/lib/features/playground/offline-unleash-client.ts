@@ -35,14 +35,12 @@ export const mapFeaturesForClient = (
                     type: variant.payload.type as PayloadType,
                 },
             })),
-            constraints:
-                strategy.constraints &&
-                strategy.constraints.map((constraint) => ({
-                    inverted: false,
-                    values: [],
-                    ...constraint,
-                    operator: constraint.operator as unknown as Operator,
-                })),
+            constraints: strategy.constraints?.map((constraint) => ({
+                inverted: false,
+                values: [],
+                ...constraint,
+                operator: constraint.operator as unknown as Operator,
+            })),
         })),
     }));
 

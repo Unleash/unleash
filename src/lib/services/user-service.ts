@@ -104,7 +104,7 @@ class UserService {
         this.emailService = services.emailService;
         this.sessionService = services.sessionService;
         this.settingService = services.settingService;
-        if (authentication && authentication.createAdminUser) {
+        if (authentication?.createAdminUser) {
             process.nextTick(() => this.initAdminUser());
         }
 

@@ -184,7 +184,7 @@ export default class FeatureToggleClientStore
         stopTimer();
 
         const featureToggles = rows.reduce((acc, r) => {
-            let feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
+            const feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
                 strategies: [],
             };
             if (this.isUnseenStrategyRow(feature, r) && !r.strategy_disabled) {

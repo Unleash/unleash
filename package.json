@@ -44,7 +44,7 @@
     "prestart:dev": "yarn run clean",
     "start:dev": "TZ=UTC NODE_ENV=development tsc-watch --strictNullChecks false --onSuccess \"node dist/server-dev.js\"",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
-    "lint": "eslint ./src",
+    "lint": "biome check src",
     "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build",
     "prebuild:watch": "yarn run clean",
     "build:watch": "tsc -w --strictNullChecks false",
@@ -117,7 +117,7 @@
     "cors": "^2.8.5",
     "date-fns": "^2.25.0",
     "db-migrate": "0.11.14",
-    "db-migrate-pg": "1.4.2",
+    "db-migrate-pg": "1.5.2",
     "db-migrate-shared": "1.2.0",
     "deep-object-diff": "^1.1.9",
     "deepmerge": "^4.2.2",
@@ -161,49 +161,40 @@
     "stoppable": "^1.1.0",
     "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
-    "unleash-client": "4.1.1",
+    "unleash-client": "4.2.0-beta.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
-    "@babel/core": "7.22.17",
+    "@babel/core": "7.22.20",
     "@swc/core": "1.3.88",
+    "@biomejs/biome": "1.2.2",
     "@swc/jest": "0.2.29",
-    "@types/bcryptjs": "2.4.3",
+    "@types/bcryptjs": "2.4.4",
     "@types/cors": "2.8.14",
-    "@types/express": "4.17.17",
-    "@types/express-session": "1.17.7",
+    "@types/express": "4.17.18",
+    "@types/express-session": "1.17.8",
     "@types/faker": "5.5.9",
     "@types/hash-sum": "^1.0.0",
-    "@types/jest": "29.5.4",
-    "@types/js-yaml": "4.0.5",
+    "@types/jest": "29.5.5",
+    "@types/js-yaml": "4.0.6",
     "@types/lodash.groupby": "4.6.7",
     "@types/make-fetch-happen": "10.0.1",
     "@types/memoizee": "0.4.8",
     "@types/mime": "3.0.1",
-    "@types/node": "18.17.15",
-    "@types/nodemailer": "6.4.10",
+    "@types/node": "18.17.19",
+    "@types/nodemailer": "6.4.11",
     "@types/owasp-password-strength-test": "1.3.0",
-    "@types/pg": "8.10.2",
-    "@types/semver": "7.5.1",
+    "@types/pg": "8.10.3",
+    "@types/semver": "7.5.2",
     "@types/stoppable": "1.1.1",
     "@types/supertest": "2.0.12",
     "@types/type-is": "1.6.4",
-    "@types/uuid": "9.0.3",
-    "@typescript-eslint/eslint-plugin": "5.62.0",
-    "@typescript-eslint/parser": "5.62.0",
+    "@types/uuid": "9.0.4",
     "concurrently": "^8.0.1",
     "copyfiles": "2.4.1",
     "coveralls": "3.1.1",
     "del-cli": "5.1.0",
-    "eslint": "^8.38.0",
-    "eslint-config-airbnb-base": "15.0.0",
-    "eslint-config-airbnb-typescript": "17.1.0",
-    "eslint-config-prettier": "8.10.0",
-    "eslint-plugin-import": "2.28.1",
-    "eslint-plugin-no-only-tests": "^3.1.0",
-    "eslint-plugin-prettier": "4.2.1",
-    "eslint-plugin-regexp": "^1.14.0",
     "faker": "5.5.3",
     "fast-check": "3.13.0",
     "fetch-mock": "9.11.0",
@@ -213,7 +204,6 @@
     "lint-staged": "13.2.3",
     "nock": "13.3.3",
     "openapi-enforcer": "1.22.3",
-    "prettier": "2.8.1",
     "proxyquire": "2.1.3",
     "source-map-support": "0.5.21",
     "superagent": "8.1.2",
@@ -241,24 +231,10 @@
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "eslint --fix"
+      "biome check --apply"
     ],
     "*.{json,yaml,md}": [
-      "prettier --write"
-    ]
-  },
-  "prettier": {
-    "proseWrap": "never",
-    "singleQuote": true,
-    "tabWidth": 4,
-    "trailingComma": "all",
-    "overrides": [
-      {
-        "files": "*.{json,yaml,yml,md}",
-        "options": {
-          "tabWidth": 2
-        }
-      }
+      "biome format --write"
     ]
   }
 }

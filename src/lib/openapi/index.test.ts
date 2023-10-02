@@ -18,8 +18,9 @@ test('all schema files should be added to the schemas object', () => {
 });
 
 test('removeJsonSchemaProps', () => {
-    expect(removeJsonSchemaProps({ a: 'b', $id: 'c', components: {} }))
-        .toMatchInlineSnapshot(`
+    expect(
+        removeJsonSchemaProps({ a: 'b', $id: 'c', components: {} }),
+    ).toMatchInlineSnapshot(`
         {
           "a": "b",
         }
@@ -41,7 +42,7 @@ describe('createOpenApiSchema', () => {
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/demo2',
                 baseUriPath: '/demo2',
-            }).servers![0].url,
+            }).servers?.[0].url,
         ).toEqual('https://example.com/demo2');
     });
 
@@ -50,7 +51,7 @@ describe('createOpenApiSchema', () => {
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/demo2',
                 baseUriPath: 'example',
-            }).servers![0].url,
+            }).servers?.[0].url,
         ).toEqual('https://example.com/demo2');
     });
 
@@ -59,13 +60,13 @@ describe('createOpenApiSchema', () => {
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/example/',
                 baseUriPath: 'example',
-            }).servers![0].url,
+            }).servers?.[0].url,
         ).toEqual('https://example.com');
         expect(
             createOpenApiSchema({
                 unleashUrl: 'https://example.com/example/',
                 baseUriPath: '/example',
-            }).servers![0].url,
+            }).servers?.[0].url,
         ).toEqual('https://example.com/example');
     });
 });

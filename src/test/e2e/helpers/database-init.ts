@@ -34,7 +34,9 @@ async function resetDatabase(knex) {
         knex.table('tag_types').del(),
         knex.table('addons').del(),
         knex.table('users').del(),
-        knex.table('reset_tokens').del(),
+        knex
+            .table('reset_tokens')
+            .del(),
         // knex.table('settings').del(),
     ]);
 }
@@ -80,7 +82,7 @@ export interface ITestDb {
 }
 
 export default async function init(
-    databaseSchema: string = 'test',
+    databaseSchema = 'test',
     getLogger: LogProvider = noLoggerProvider,
     configOverride: Partial<IUnleashOptions> = {},
 ): Promise<ITestDb> {

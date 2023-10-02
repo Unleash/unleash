@@ -7,6 +7,8 @@ import {
     WebAPIRequestError,
     WebAPIRateLimitedError,
     WebAPIHTTPError,
+    KnownBlock,
+    Block,
 } from '@slack/web-api';
 import Addon from './addon';
 
@@ -78,36 +80,41 @@ export default class SlackAppAddon extends Addon {
                 this.accessToken = accessToken;
             }
 
-            const text = this.msgFormatter.format(event);
-            const url = this.msgFormatter.featureLink(event);
+            const { text, url } = this.msgFormatter.format(event);
+
+            const blocks: (Block | KnownBlock)[] = [
+                {
+                    type: 'section',
+                    text: {
+                        type: 'mrkdwn',
+                        text,
+                    },
+                },
+            ];
+
+            if (url) {
+                blocks.push({
+                    type: 'actions',
+                    elements: [
+                        {
+                            type: 'button',
+                            url,
+                            text: {
+                                type: 'plain_text',
+                                text: 'Open in Unleash',
+                            },
+                            value: 'featureToggle',
+                            style: 'primary',
+                        },
+                    ],
+                });
+            }
+
             const requests = eventChannels.map((name) => {
                 return this.slackClient!.chat.postMessage({
                     channel: name,
                     text,
-                    blocks: [
-                        {
-                            type: 'section',
-                            text: {
-                                type: 'mrkdwn',
-                                text,
-                            },
-                        },
-                        {
-                            type: 'actions',
-                            elements: [
-                                {
-                                    type: 'button',
-                                    url,
-                                    text: {
-                                        type: 'plain_text',
-                                        text: 'Open in Unleash',
-                                    },
-                                    value: 'featureToggle',
-                                    style: 'primary',
-                                },
-                            ],
-                        },
-                    ],
+                    blocks,
                 });
             });
 

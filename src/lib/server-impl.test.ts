@@ -113,5 +113,5 @@ test('should shutdown the server when calling stop()', async () => {
         createTestConfig({ server: { port: 0 } }),
     );
     await stop();
-    expect(server!.address()).toBe(null);
+    expect(server?.address()).toBe(null);
 });

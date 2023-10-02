@@ -62,8 +62,9 @@ beforeAll(async () => {
     );
     // depend on enabled feature with variant
     await app.services.dependentFeaturesService.upsertFeatureDependency(
-        'featureY',
+        { child: 'featureY', projectId: 'default' },
         { feature: 'featureX', variants: ['featureXVariant'] },
+        'test',
     );
 
     await app.services.featureToggleServiceV2.archiveToggle(

@@ -192,7 +192,7 @@ test('Should get all events of type', async () => {
     await Promise.all(
         [0, 1, 2, 3, 4, 5].map(async (id) => {
             const event =
-                id % 2 == 0
+                id % 2 === 0
                     ? new FeatureCreatedEvent({
                           project: data.project,
                           featureName: data.name,

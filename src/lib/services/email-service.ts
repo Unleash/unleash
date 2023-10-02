@@ -43,7 +43,7 @@ export class EmailService {
 
     constructor(email: IEmailOption, getLogger: LogProvider) {
         this.logger = getLogger('services/email-service.ts');
-        if (email && email.host) {
+        if (email?.host) {
             this.sender = email.sender;
             if (email.host === 'test') {
                 this.mailer = createTransport({ jsonTransport: true });

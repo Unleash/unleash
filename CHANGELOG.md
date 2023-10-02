@@ -2,6 +2,461 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.5.3] - 2023-09-28
+
+### Bug Fixes
+
+- Permissions in the role payload ([#4861](https://github.com/Unleash/unleash/issues/4861))
+
+
+## [5.5.2] - 2023-09-28
+
+### Bug Fixes
+
+- Partial index on events announced ([#4856](https://github.com/Unleash/unleash/issues/4856))
+
+
+## [5.5.1] - 2023-09-27
+
+### Bug Fixes
+
+- Account for array length ([#4849](https://github.com/Unleash/unleash/issues/4849))
+
+
+### Miscellaneous Tasks
+
+- Limit the amount of unannounced events we announce ([#4845](https://github.com/Unleash/unleash/issues/4845))
+
+
+## [5.5.0] - 2023-09-27
+
+### 1-1307
+
+- Show info about flag naming patterns before making mistakes ([#4616](https://github.com/Unleash/unleash/issues/4616))
+
+
+### 1-1315
+
+- Revalidate feature name whenever the project changes ([#4628](https://github.com/Unleash/unleash/issues/4628))
+
+
+### 1-1319
+
+- Add feature naming pattern descriptions ([#4612](https://github.com/Unleash/unleash/issues/4612))
+
+
+### 1-1320
+
+- Allow you to update example with no pattern + update state better ([#4623](https://github.com/Unleash/unleash/issues/4623))
+
+
+### 1-1329
+
+- Return 400 when pattern is empty but example is not ([#4609](https://github.com/Unleash/unleash/issues/4609))
+
+
+### 1-1333
+
+- Fix type problems ([#4615](https://github.com/Unleash/unleash/issues/4615))
+
+
+### 1-1342
+
+- Show flag naming pattern info when you copy toggles ([#4629](https://github.com/Unleash/unleash/issues/4629))
+
+
+### 1-1385
+
+- Hide display of pattern info behind a flag ([#4744](https://github.com/Unleash/unleash/issues/4744))
+
+
+### Bug Fixes
+
+- Multiline textarea resizing for json input ([#4463](https://github.com/Unleash/unleash/issues/4463))
+
+- Do not allow creation/update of feature toggle with invalid strategy name ([#4555](https://github.com/Unleash/unleash/issues/4555))
+
+- Config snapshot ([#4593](https://github.com/Unleash/unleash/issues/4593))
+
+- Add feature environment variants updated event ([#4598](https://github.com/Unleash/unleash/issues/4598))
+
+- Reset selected toggle after archive or revive ([#4606](https://github.com/Unleash/unleash/issues/4606))
+
+- Group roles assumption, refactor group types ([#4576](https://github.com/Unleash/unleash/issues/4576))
+
+- Prevent 404 on auth settings hook ([#4619](https://github.com/Unleash/unleash/issues/4619))
+
+- Api token schema ([#4633](https://github.com/Unleash/unleash/issues/4633))
+
+- Fix failing group service test ([#4642](https://github.com/Unleash/unleash/issues/4642))
+
+- Addon schema validation ([#4643](https://github.com/Unleash/unleash/issues/4643))
+
+- Multi project roles UI improvements ([#4646](https://github.com/Unleash/unleash/issues/4646))
+
+- Add experimental flag ([#4649](https://github.com/Unleash/unleash/issues/4649))
+
+- Last seen environment remove duplicate entries ([#4663](https://github.com/Unleash/unleash/issues/4663))
+
+- Integrations UI ([#4670](https://github.com/Unleash/unleash/issues/4670))
+
+- API improvements aligning the types to our schemas ([#4650](https://github.com/Unleash/unleash/issues/4650))
+
+- Post global events even when filtering by env ([#4672](https://github.com/Unleash/unleash/issues/4672))
+
+- Validation for variant payload number type ([#4671](https://github.com/Unleash/unleash/issues/4671))
+
+- Add additionalproperties to the sdkContextSchema ([#4682](https://github.com/Unleash/unleash/issues/4682))
+
+- Use postmessage in slack app addon ([#4688](https://github.com/Unleash/unleash/issues/4688))
+
+- Integrations quality updates ([#4677](https://github.com/Unleash/unleash/issues/4677))
+
+- Include tags in variants event ([#4711](https://github.com/Unleash/unleash/issues/4711))
+
+- Env variants event changelog ([#4712](https://github.com/Unleash/unleash/issues/4712))
+
+- Include strategy variants in the event log ([#4716](https://github.com/Unleash/unleash/issues/4716))
+
+- Integrations text review ([#4706](https://github.com/Unleash/unleash/issues/4706))
+
+- Integration multiselector ([#4683](https://github.com/Unleash/unleash/issues/4683))
+
+- Update dependency json-schema-to-ts to v2.9.2 ([#4721](https://github.com/Unleash/unleash/issues/4721))
+
+- Update dependency db-migrate-pg to v1.3.2 ([#4720](https://github.com/Unleash/unleash/issues/4720))
+
+- Disable all errors ([#4707](https://github.com/Unleash/unleash/issues/4707))
+
+- Update dependency pg to v8.11.3 ([#4723](https://github.com/Unleash/unleash/issues/4723))
+
+- Update dependency nodemailer to v6.9.5 ([#4722](https://github.com/Unleash/unleash/issues/4722))
+
+- Variant type number duplicate options ([#4719](https://github.com/Unleash/unleash/issues/4719))
+
+- Update dependency db-migrate to v0.11.14 ([#4724](https://github.com/Unleash/unleash/issues/4724))
+
+- Update dependency db-migrate-pg to v1.4.2 ([#4735](https://github.com/Unleash/unleash/issues/4735))
+
+- Update dependency express-rate-limit to v6.11.0 ([#4736](https://github.com/Unleash/unleash/issues/4736))
+
+- Update dependency joi to v17.10.1 ([#4737](https://github.com/Unleash/unleash/issues/4737))
+
+- Update dependency js-sha256 to ^0.10.0 ([#4740](https://github.com/Unleash/unleash/issues/4740))
+
+- Sort toggleNames before updating last seen ([#4747](https://github.com/Unleash/unleash/issues/4747))
+
+- Point to `useUiFlag` instead of `useUiFlags` ([#4748](https://github.com/Unleash/unleash/issues/4748))
+
+- Round dora metrics ([#4755](https://github.com/Unleash/unleash/issues/4755))
+
+- Misc integration-related fixes and improvements ([#4754](https://github.com/Unleash/unleash/issues/4754))
+
+- Simplify channels logic in slack app integration ([#4756](https://github.com/Unleash/unleash/issues/4756))
+
+- Rename Push to Environment button ([#4759](https://github.com/Unleash/unleash/issues/4759))
+
+- Prevent blur when selecting text ([#4762](https://github.com/Unleash/unleash/issues/4762))
+
+- Update dependency uuid to v9.0.1 ([#4793](https://github.com/Unleash/unleash/issues/4793))
+
+- Force permissions export to only be enterprise in ui ([#4760](https://github.com/Unleash/unleash/issues/4760))
+
+- Datadog addon needs flagResolver ([#4806](https://github.com/Unleash/unleash/issues/4806))
+
+- String-width issue when running docker container ([#4808](https://github.com/Unleash/unleash/issues/4808))
+
+- Project mode count even if no settings exist ([#4825](https://github.com/Unleash/unleash/issues/4825))
+
+- Change check for slider ([#4838](https://github.com/Unleash/unleash/issues/4838))
+
+- Empty object playground ([#4842](https://github.com/Unleash/unleash/issues/4842))
+
+- Project features table initial state ([#4843](https://github.com/Unleash/unleash/issues/4843))
+
+
+### Documentation
+
+- Strategy variants ruby and dotnet sdk versions ([#4570](https://github.com/Unleash/unleash/issues/4570))
+
+- Troubleshooting guides ([#4592](https://github.com/Unleash/unleash/issues/4592))
+
+- Update compatibility matrix with strategy variants ([#4626](https://github.com/Unleash/unleash/issues/4626))
+
+- Feature flag naming patterns ([#4632](https://github.com/Unleash/unleash/issues/4632))
+
+- Add mention of multiple project roles ([#4648](https://github.com/Unleash/unleash/issues/4648))
+
+- Change addons -> integrations ([#4523](https://github.com/Unleash/unleash/issues/4523))
+
+- Add info on how to troubleshoot and better errors ([#4803](https://github.com/Unleash/unleash/issues/4803))
+
+- Update the bulleted list case in about-the-docs.md ([#4811](https://github.com/Unleash/unleash/issues/4811))
+
+- Create feature-flag-best-practices.md ([#4804](https://github.com/Unleash/unleash/issues/4804))
+
+- Add Feature Flag Migration guide to docs ([#4792](https://github.com/Unleash/unleash/issues/4792))
+
+- Unleash Slack App integration ([#4801](https://github.com/Unleash/unleash/issues/4801))
+
+- Improve datadog integration docs ([#4802](https://github.com/Unleash/unleash/issues/4802))
+
+
+### Feat
+
+- Add prod guard when toggling envs ([#4774](https://github.com/Unleash/unleash/issues/4774))
+
+
+### Features
+
+- Import service validate duplicates ([#4558](https://github.com/Unleash/unleash/issues/4558))
+
+- Application usage frontend ([#4561](https://github.com/Unleash/unleash/issues/4561))
+
+- Multiple project roles ([#4512](https://github.com/Unleash/unleash/issues/4512))
+
+- Application usage feature flag and cleanup ([#4568](https://github.com/Unleash/unleash/issues/4568))
+
+- Close dialog when esc is pressed ([#4567](https://github.com/Unleash/unleash/issues/4567))
+
+- Add a setting for toggling requesting additional scopes ([#4551](https://github.com/Unleash/unleash/issues/4551))
+
+- Archive toggles in change request UI ([#4563](https://github.com/Unleash/unleash/issues/4563))
+
+- Change request ui updates ([#4574](https://github.com/Unleash/unleash/issues/4574))
+
+- Update breakpoint from 1260 to 1280 ([#4575](https://github.com/Unleash/unleash/issues/4575))
+
+- DORA metrics lead time to production ([#4589](https://github.com/Unleash/unleash/issues/4589))
+
+- Feature naming patterns ([#4591](https://github.com/Unleash/unleash/issues/4591))
+
+- Search event log by tags ([#4604](https://github.com/Unleash/unleash/issues/4604))
+
+- Search suggestion selectable ([#4610](https://github.com/Unleash/unleash/issues/4610))
+
+- Add request logger env variable ([#4614](https://github.com/Unleash/unleash/issues/4614))
+
+- Search UI improvements ([#4613](https://github.com/Unleash/unleash/issues/4613))
+
+- Clickable search filter options ([#4618](https://github.com/Unleash/unleash/issues/4618))
+
+- Persistent search queries ([#4624](https://github.com/Unleash/unleash/issues/4624))
+
+- Plausible search ([#4625](https://github.com/Unleash/unleash/issues/4625))
+
+- Jira plugin page ([#4627](https://github.com/Unleash/unleash/issues/4627))
+
+- Integration sections ([#4631](https://github.com/Unleash/unleash/issues/4631))
+
+- Official sdks ([#4637](https://github.com/Unleash/unleash/issues/4637))
+
+- Integration urls, ux ([#4640](https://github.com/Unleash/unleash/issues/4640))
+
+- Proxy and edge integration cards ([#4636](https://github.com/Unleash/unleash/issues/4636))
+
+- Link to request integration ([#4634](https://github.com/Unleash/unleash/issues/4634))
+
+- Edge integrations page ([#4639](https://github.com/Unleash/unleash/issues/4639))
+
+- Add plausible to integrations ([#4647](https://github.com/Unleash/unleash/issues/4647))
+
+- UseUiFlag shorthand hook ([#4566](https://github.com/Unleash/unleash/issues/4566))
+
+- Remove newApplicationsList feature flag ([#4653](https://github.com/Unleash/unleash/issues/4653))
+
+- Keyboard navigation in search ([#4651](https://github.com/Unleash/unleash/issues/4651))
+
+- Variant with number payload ([#4654](https://github.com/Unleash/unleash/issues/4654))
+
+- Hide project settings for OSS ([#4662](https://github.com/Unleash/unleash/issues/4662))
+
+- Make import/export work with project patterns ([#4652](https://github.com/Unleash/unleash/issues/4652))
+
+- Check toggle limit on import ([#4665](https://github.com/Unleash/unleash/issues/4665))
+
+- Edge integration page ([#4657](https://github.com/Unleash/unleash/issues/4657))
+
+- Import limit validation ([#4669](https://github.com/Unleash/unleash/issues/4669))
+
+- Update UI to add hints about implicit ^ and $ ([#4667](https://github.com/Unleash/unleash/issues/4667))
+
+- Add implicit surrounding `^` and `$` to patterns ([#4664](https://github.com/Unleash/unleash/issues/4664))
+
+- Limit exclude archived features ([#4680](https://github.com/Unleash/unleash/issues/4680))
+
+- Disallow description when no pattern exists ([#4679](https://github.com/Unleash/unleash/issues/4679))
+
+- Add feature naming pattern tracking ([#4678](https://github.com/Unleash/unleash/issues/4678))
+
+- Stop regexes with whitespace ([#4681](https://github.com/Unleash/unleash/issues/4681))
+
+- Add service method to retrieve group and project access for all users ([#4708](https://github.com/Unleash/unleash/issues/4708))
+
+- Playground custom properties are nested ([#4686](https://github.com/Unleash/unleash/issues/4686))
+
+- Sdk flat context schema ([#4738](https://github.com/Unleash/unleash/issues/4738))
+
+- Add a button to download user access information ([#4746](https://github.com/Unleash/unleash/issues/4746))
+
+- Patch user access query to return projects provided by groups ([#4750](https://github.com/Unleash/unleash/issues/4750))
+
+- Walking skeleton of private projects ([#4753](https://github.com/Unleash/unleash/issues/4753))
+
+- Private project filtering and store implementation ([#4758](https://github.com/Unleash/unleash/issues/4758))
+
+- Add active users statistics to metrics ([#4674](https://github.com/Unleash/unleash/issues/4674))
+
+- Add ids to scheduled jobs ([#4764](https://github.com/Unleash/unleash/issues/4764))
+
+- Stub for create dependent features ([#4769](https://github.com/Unleash/unleash/issues/4769))
+
+- Persist dependent features ([#4772](https://github.com/Unleash/unleash/issues/4772))
+
+- Implement optional json payload and template ([#4752](https://github.com/Unleash/unleash/issues/4752))
+
+- Open-source segments 🚀 ([#4690](https://github.com/Unleash/unleash/issues/4690))
+
+- Move middleware to enterprise ([#4767](https://github.com/Unleash/unleash/issues/4767))
+
+- Make application usage private through project ([#4786](https://github.com/Unleash/unleash/issues/4786))
+
+- Simpler integration filters ([#4766](https://github.com/Unleash/unleash/issues/4766))
+
+- Client api dependent features ([#4778](https://github.com/Unleash/unleash/issues/4778))
+
+- Private projects handle in playground ([#4791](https://github.com/Unleash/unleash/issues/4791))
+
+- Strategy variants on strategy overview ([#4776](https://github.com/Unleash/unleash/issues/4776))
+
+- Optimize private projects for enterprise ([#4812](https://github.com/Unleash/unleash/issues/4812))
+
+- UI stub for adding dependent features ([#4814](https://github.com/Unleash/unleash/issues/4814))
+
+- Add group-deleted event ([#4816](https://github.com/Unleash/unleash/issues/4816))
+
+- Visualize feature variants on cr ([#4809](https://github.com/Unleash/unleash/issues/4809))
+
+- Enforce no transitive parents ([#4818](https://github.com/Unleash/unleash/issues/4818))
+
+- Add project collaboration mode to prometheus ([#4819](https://github.com/Unleash/unleash/issues/4819))
+
+- Context/segment usage private ([#4826](https://github.com/Unleash/unleash/issues/4826))
+
+- Delete dependency api ([#4824](https://github.com/Unleash/unleash/issues/4824))
+
+- Add kill switch for client metrics ([#4829](https://github.com/Unleash/unleash/issues/4829))
+
+- Add dependency dialogue ([#4828](https://github.com/Unleash/unleash/issues/4828))
+
+- Delete all feature dependencies ([#4832](https://github.com/Unleash/unleash/issues/4832))
+
+- Connect add dependency api ([#4831](https://github.com/Unleash/unleash/issues/4831))
+
+- Api to list available parent options ([#4833](https://github.com/Unleash/unleash/issues/4833))
+
+- Enforce one dependency ([#4835](https://github.com/Unleash/unleash/issues/4835))
+
+- Show available parent dependency options ([#4837](https://github.com/Unleash/unleash/issues/4837))
+
+- Add json editor ([#4784](https://github.com/Unleash/unleash/issues/4784))
+
+- Inject project id to dependencies hooks ([#4839](https://github.com/Unleash/unleash/issues/4839))
+
+
+### Fix
+
+- Integrations form ([#4655](https://github.com/Unleash/unleash/issues/4655))
+
+
+### Miscellaneous Tasks
+
+- Prepare next release
+
+- Prepare 5.4 release ([#4554](https://github.com/Unleash/unleash/issues/4554))
+
+- Remove configurableFeatureTypeLifetimes flag ([#4569](https://github.com/Unleash/unleash/issues/4569))
+
+- Deps update unleash client ([#4571](https://github.com/Unleash/unleash/issues/4571))
+
+- Remove duplicated tags ([#4580](https://github.com/Unleash/unleash/issues/4580))
+
+- Return 404 when projectid not found ([#4581](https://github.com/Unleash/unleash/issues/4581))
+
+- Change request flags removed ([#4601](https://github.com/Unleash/unleash/issues/4601))
+
+- Strategy variant flag removed ([#4603](https://github.com/Unleash/unleash/issues/4603))
+
+- Token api simplification ([#4600](https://github.com/Unleash/unleash/issues/4600))
+
+- Show short error message when validation fails ([#4617](https://github.com/Unleash/unleash/issues/4617))
+
+- Return 404 when adding environment to project that doesnt exist ([#4635](https://github.com/Unleash/unleash/issues/4635))
+
+- Explain implicit ^ and $ in docs ([#4668](https://github.com/Unleash/unleash/issues/4668))
+
+- Update design for feature naming pattern info ([#4656](https://github.com/Unleash/unleash/issues/4656))
+
+- Dora cleanup ([#4676](https://github.com/Unleash/unleash/issues/4676))
+
+- Merge one of with properties ([#4763](https://github.com/Unleash/unleash/issues/4763))
+
+- Improve access service ([#4689](https://github.com/Unleash/unleash/issues/4689))
+
+- Improve access service iter 2 ([#4779](https://github.com/Unleash/unleash/issues/4779))
+
+- Remove project select ([#4768](https://github.com/Unleash/unleash/issues/4768))
+
+- GA (remove flag) for Slack App integration ([#4765](https://github.com/Unleash/unleash/issues/4765))
+
+- Doc only should skip build ([#4820](https://github.com/Unleash/unleash/issues/4820))
+
+- Pin @swc/core to v1.3.83 ([#4823](https://github.com/Unleash/unleash/issues/4823))
+
+- Revert #4823 and bump @swc/core to 1.3.88 ([#4827](https://github.com/Unleash/unleash/issues/4827))
+
+- Pin node version 18.17.1 ([#4834](https://github.com/Unleash/unleash/issues/4834))
+
+
+### Refactor
+
+- Clean up some unused imports ([#4597](https://github.com/Unleash/unleash/issues/4597))
+
+- Instance health cleanup ([#4602](https://github.com/Unleash/unleash/issues/4602))
+
+- Use conditionally render instead of && ([#4620](https://github.com/Unleash/unleash/issues/4620))
+
+- Clean up no longer used PAT methods ([#4621](https://github.com/Unleash/unleash/issues/4621))
+
+- Simplify flag naming tooltip ([#4685](https://github.com/Unleash/unleash/issues/4685))
+
+- Remove check for feature naming data object ([#4745](https://github.com/Unleash/unleash/issues/4745))
+
+- Feature oriented architecture for feature dependencies ([#4771](https://github.com/Unleash/unleash/issues/4771))
+
+- Contract event group deleted after #4816 ([#4817](https://github.com/Unleash/unleash/issues/4817))
+
+
+### Testing
+
+- Enforce behavior via test ([#4701](https://github.com/Unleash/unleash/issues/4701))
+
+
+### UI
+
+- Make project settings / creation form full-width ([#4675](https://github.com/Unleash/unleash/issues/4675))
+
+
+### Openapi
+
+- Sort tags file ([#4595](https://github.com/Unleash/unleash/issues/4595))
+
+
+### Task
+
+- Added workflow for calling update-version-action ([#4805](https://github.com/Unleash/unleash/issues/4805))
+
+
 ## [5.4.4] - 2023-09-15
 
 ### Bug Fixes

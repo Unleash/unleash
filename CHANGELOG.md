@@ -2,6 +2,99 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.20.6] - 2023-06-06
+
+### Bug Fixes
+
+- Remove consecutive slashes
+
+
+## [4.20.5] - 2023-02-09
+
+### Bug Fixes
+
+- Make sure we have a user in event store
+
+
+## [4.20.4] - 2023-02-02
+
+### Bug Fixes
+
+- Latest changes in network overview
+
+
+## [4.20.3] - 2023-02-01
+
+### Bug Fixes
+
+- When app count is zero because it just started ([#3029](https://github.com/Unleash/unleash/issues/3029))
+
+
+## [4.20.2] - 2023-01-30
+
+### Bug Fixes
+
+- List projects with all archived toggles ([#3020](https://github.com/Unleash/unleash/issues/3020))
+
+
+## [4.20.0] - 2023-01-26
+
+### Bug Fixes
+
+- Prevent deleting the last variable variant on the ui ([#2964](https://github.com/Unleash/unleash/issues/2964))
+
+- Preload error ([#2980](https://github.com/Unleash/unleash/issues/2980))
+
+- Redirect only happening on root path with replace ([#2981](https://github.com/Unleash/unleash/issues/2981))
+
+- Project table overflow ([#2987](https://github.com/Unleash/unleash/issues/2987))
+
+- Revert table virtualization in variants per env ([#2990](https://github.com/Unleash/unleash/issues/2990))
+
+- Small fixes on variants push to env UI ([#2991](https://github.com/Unleash/unleash/issues/2991))
+
+- Check is flag enabled! ([#2993](https://github.com/Unleash/unleash/issues/2993))
+
+- Project without potential actions health items separation
+
+
+### Docs
+
+- Fix typo in front-end api url
+
+
+### Documentation
+
+- Add front-end API setup to the quickstart guide ([#2984](https://github.com/Unleash/unleash/issues/2984))
+
+- Generate client-side SDK docs from readme ([#2949](https://github.com/Unleash/unleash/issues/2949))
+
+
+### Features
+
+- Add push to all button to UI ([#2969](https://github.com/Unleash/unleash/issues/2969))
+
+- Visualize variants diff in CR ([#2979](https://github.com/Unleash/unleash/issues/2979))
+
+- Back transition from validate to configure ([#2982](https://github.com/Unleash/unleash/issues/2982))
+
+- Import stage ([#2985](https://github.com/Unleash/unleash/issues/2985))
+
+- Adds CR to variants per env UI ([#2989](https://github.com/Unleash/unleash/issues/2989))
+
+
+### Miscellaneous Tasks
+
+- Increase max number of environments from 15 to 50 ([#2968](https://github.com/Unleash/unleash/issues/2968))
+
+- Ignore Twitter link from being checked ([#2971](https://github.com/Unleash/unleash/issues/2971))
+
+
+### Task
+
+- Changing variants blocked by cr ([#2966](https://github.com/Unleash/unleash/issues/2966))
+
+
 ## [4.19.5] - 2023-06-06
 
 ### Bug Fixes

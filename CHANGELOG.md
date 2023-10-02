@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.19.5] - 2023-06-06
+
+### Bug Fixes
+
+- Remove consecutive slashes
+
+
+## [4.19.4] - 2023-01-13
+
+### Bug Fixes
+
+- Found an edge case exporting variants ([#2900](https://github.com/Unleash/unleash/issues/2900))
+
+
+## [4.19.3] - 2023-01-12
+
+### Bug Fixes
+
+- Export features with variants event when feature is disabled ([#2824](https://github.com/Unleash/unleash/issues/2824))
+
+
+## [4.19.2] - 2023-01-11
+
+### Bug Fixes
+
+- Dots in env name accessor
+
+
+## [4.19.0] - 2022-12-15
+
+### Bug Fixes
+
+- Allow publish-new-version action to run from branch ([#2698](https://github.com/Unleash/unleash/issues/2698))
+
+- Disable networkView for dev, fail more gracefully ([#2701](https://github.com/Unleash/unleash/issues/2701))
+
+
+### Docs
+
+- Update availability notice for sso keycloak group sync
+
+
+### Features
+
+- First draft of chart for instance traffic in frontend ([#2670](https://github.com/Unleash/unleash/issues/2670))
+
+
 ## [4.18.9] - 2022-12-14
 
 ### Bug Fixes

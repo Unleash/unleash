@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.13.1] - 2022-07-14
+
+### Bug Fixes
+
+- Use left join for segments to avoid nullmapping
+
+
+## [4.13.0] - 2022-06-29
+
+### Miscellaneous Tasks
+
+- Bump front end to 4.13.0
+
+
 ## [4.12.6] - 2022-06-14
 
 ### Bug Fixes

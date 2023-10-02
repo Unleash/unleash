@@ -1,19 +1,30 @@
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
-import { getDiffInDays, expired } from '../utils';
-import { PERMISSION, KILLSWITCH } from 'constants/featureToggleTypes';
+import { expired, getDiffInDays } from '../utils';
+import { KILLSWITCH, PERMISSION } from 'constants/featureToggleTypes';
 import { parseISO } from 'date-fns';
+import { FeatureTypeSchema } from 'openapi';
 
 export type ReportingStatus = 'potentially-stale' | 'healthy';
 
 export const formatStatus = (
-    feature: IFeatureToggleListItem
-): ReportingStatus => {
+    feature: IFeatureToggleListItem,
+    featureTypes: FeatureTypeSchema[]
+): string => {
     const { type, createdAt } = feature;
+
+    const featureType = featureTypes.find(
+        featureType => featureType.name === type
+    );
     const date = parseISO(createdAt);
     const now = new Date();
     const diff = getDiffInDays(date, now);
 
-    if (expired(diff, type) && type !== KILLSWITCH && type !== PERMISSION) {
+    if (
+        featureType &&
+        expired(diff, featureType) &&
+        type !== KILLSWITCH &&
+        type !== PERMISSION
+    ) {
         return 'potentially-stale';
     }
 

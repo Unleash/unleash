@@ -206,10 +206,7 @@ export const FeatureView = () => {
                                 />
                             </StyledToggleInfoContainer>
                             <ConditionallyRender
-                                condition={
-                                    Boolean(feature.dependencies) &&
-                                    feature.dependencies.length > 0
-                                }
+                                condition={feature.dependencies.length > 0}
                                 show={
                                     <StyledDependency>
                                         <StyleChildLinkIcon />{' '}
@@ -224,10 +221,7 @@ export const FeatureView = () => {
                                 }
                             />
                             <ConditionallyRender
-                                condition={
-                                    Boolean(feature.children) &&
-                                    feature.children.length > 0
-                                }
+                                condition={feature.children.length > 0}
                                 show={
                                     <StyledDependency>
                                         <StyledParentLinkIcon />{' '}

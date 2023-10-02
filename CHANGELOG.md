@@ -2,6 +2,319 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.4.4] - 2023-09-15
+
+### Bug Fixes
+
+- Include tags in variants event ([#4711](https://github.com/Unleash/unleash/issues/4711))
+
+
+## [5.4.3] - 2023-09-12
+
+### Bug Fixes
+
+- Last seen environment remove duplicate entries ([#4663](https://github.com/Unleash/unleash/issues/4663))
+
+
+## [5.4.2] - 2023-09-04
+
+### Bug Fixes
+
+- Add feature environment variants updated event ([#4598](https://github.com/Unleash/unleash/issues/4598))
+
+
+## [5.4.1] - 2023-08-25
+
+### Features
+
+- Cherry pick configurableFeatureTypeLifetimes ([#4572](https://github.com/Unleash/unleash/issues/4572))
+
+- Add a setting for toggling requesting additional scopes ([#4551](https://github.com/Unleash/unleash/issues/4551)) ([#4573](https://github.com/Unleash/unleash/issues/4573))
+
+
+## [5.4.0] - 2023-08-23
+
+### #4209
+
+- Add 'add to draft' button for segments. ([#4400](https://github.com/Unleash/unleash/issues/4400))
+
+
+### 1-1192
+
+- Track the feature type and the new lifetime ([#4395](https://github.com/Unleash/unleash/issues/4395))
+
+
+### Bug Fixes
+
+- Default strategy stickiness ([#4340](https://github.com/Unleash/unleash/issues/4340))
+
+- Client metrics name validation ([#4339](https://github.com/Unleash/unleash/issues/4339)) ([#4342](https://github.com/Unleash/unleash/issues/4342))
+
+- Sync enabled and variant status ([#4345](https://github.com/Unleash/unleash/issues/4345))
+
+- Do not split non string values ([#4346](https://github.com/Unleash/unleash/issues/4346))
+
+- Frontend variant weights distribution ([#4347](https://github.com/Unleash/unleash/issues/4347))
+
+- Stable bulk updates ([#4352](https://github.com/Unleash/unleash/issues/4352))
+
+- Update dependency nodemailer to v6.9.4 ([#4362](https://github.com/Unleash/unleash/issues/4362))
+
+- UI improvements on CR reorder strategy ([#4375](https://github.com/Unleash/unleash/issues/4375))
+
+- Update dependency unleash-client to v4.1.0 ([#4373](https://github.com/Unleash/unleash/issues/4373))
+
+- EventStore#getMaxRevisionId can return null ([#4384](https://github.com/Unleash/unleash/issues/4384))
+
+- Password hash is null should yield PasswordMissmatch ([#4392](https://github.com/Unleash/unleash/issues/4392))
+
+- Update dependency express-rate-limit to v6.8.1 ([#4406](https://github.com/Unleash/unleash/issues/4406))
+
+- Environment id missing bug ([#4397](https://github.com/Unleash/unleash/issues/4397))
+
+- Remove lastSeenAt when exporting FeatureEnvironment ([#4416](https://github.com/Unleash/unleash/issues/4416))
+
+- Dot in context fields ([#4434](https://github.com/Unleash/unleash/issues/4434))
+
+- Added cursor pagination to slackapp conversations query ([#4442](https://github.com/Unleash/unleash/issues/4442))
+
+- Deletion validation didnt account for groups ([#4441](https://github.com/Unleash/unleash/issues/4441))
+
+- Performance improvements for demo and docs update ([#4454](https://github.com/Unleash/unleash/issues/4454))
+
+- Demo for old variants ([#4455](https://github.com/Unleash/unleash/issues/4455))
+
+- CR strategy name changes code ([#4449](https://github.com/Unleash/unleash/issues/4449))
+
+- Proper aggregation of strategies ([#4456](https://github.com/Unleash/unleash/issues/4456))
+
+- Disable Edit constraint when context field was deleted ([#4460](https://github.com/Unleash/unleash/issues/4460))
+
+- Plain link for read about ([#4470](https://github.com/Unleash/unleash/issues/4470))
+
+- Remove lastSeenAt from useCollaborateData.tsx staleness check ([#4461](https://github.com/Unleash/unleash/issues/4461))
+
+- Strategy variants in demo link to new variants ([#4477](https://github.com/Unleash/unleash/issues/4477))
+
+- Diff no changes ([#4480](https://github.com/Unleash/unleash/issues/4480))
+
+- Add timezones to timestamps ([#4488](https://github.com/Unleash/unleash/issues/4488))
+
+- Change slackapp to using scheduleMessage ([#4490](https://github.com/Unleash/unleash/issues/4490))
+
+- Update slack-app tests to reflect what we now do
+
+- Update dependency @svgr/webpack to v8 ([#4407](https://github.com/Unleash/unleash/issues/4407))
+
+- Update dependency pg to v8.11.2 ([#4509](https://github.com/Unleash/unleash/issues/4509))
+
+- Update dependency pg-connection-string to v2.6.2 ([#4510](https://github.com/Unleash/unleash/issues/4510))
+
+- Update dependency express-rate-limit to v6.9.0 ([#4516](https://github.com/Unleash/unleash/issues/4516))
+
+- Set css preload to false ([#4524](https://github.com/Unleash/unleash/issues/4524))
+
+- Disallow empty summaries and descriptions ([#4529](https://github.com/Unleash/unleash/issues/4529))
+
+- Highlighter casing ([#4543](https://github.com/Unleash/unleash/issues/4543))
+
+- Import duplicate features ([#4550](https://github.com/Unleash/unleash/issues/4550))
+
+- Diff component for ordering ([#4552](https://github.com/Unleash/unleash/issues/4552))
+
+
+### Documentation
+
+- Strategy variants ([#4289](https://github.com/Unleash/unleash/issues/4289))
+
+- Strategy variants in 5.4 ([#4372](https://github.com/Unleash/unleash/issues/4372))
+
+- Edge updates for docs/proxy-hosting ([#4275](https://github.com/Unleash/unleash/issues/4275))
+
+- Update strategy variants sdks and add sidebar link ([#4436](https://github.com/Unleash/unleash/issues/4436))
+
+- Custom root roles ([#4451](https://github.com/Unleash/unleash/issues/4451))
+
+- Change requests for segments ([#4476](https://github.com/Unleash/unleash/issues/4476))
+
+
+### Feat
+
+- Strategy variant slider ([#4344](https://github.com/Unleash/unleash/issues/4344))
+
+- Last seen in feature environment ([#4391](https://github.com/Unleash/unleash/issues/4391))
+
+- Last seen by env UI ([#4439](https://github.com/Unleash/unleash/issues/4439))
+
+- Toggle overview env last seen ([#4445](https://github.com/Unleash/unleash/issues/4445))
+
+- Last seen toggle list ([#4541](https://github.com/Unleash/unleash/issues/4541))
+
+
+### Features
+
+- Change Request on Reorder UI ([#4249](https://github.com/Unleash/unleash/issues/4249))
+
+- Incrementing sort order for strategies ([#4343](https://github.com/Unleash/unleash/issues/4343))
+
+- Strategy variants infop ([#4348](https://github.com/Unleash/unleash/issues/4348))
+
+- Strategy variants alert ([#4371](https://github.com/Unleash/unleash/issues/4371))
+
+- Segments service DI ([#4376](https://github.com/Unleash/unleash/issues/4376))
+
+- Add last_seen_at column to feature_environments ([#4387](https://github.com/Unleash/unleash/issues/4387))
+
+- Optional change request feature ([#4394](https://github.com/Unleash/unleash/issues/4394))
+
+- Add lastSeenByEnvironment flag ([#4393](https://github.com/Unleash/unleash/issues/4393))
+
+- Allow trust proxy ([#4396](https://github.com/Unleash/unleash/issues/4396))
+
+- Protect segment operations for change requests ([#4417](https://github.com/Unleash/unleash/issues/4417))
+
+- Segments in pending CR screen ([#4420](https://github.com/Unleash/unleash/issues/4420))
+
+- Strategy variants events ([#4430](https://github.com/Unleash/unleash/issues/4430))
+
+- Add prom metric for total custom root roles ([#4435](https://github.com/Unleash/unleash/issues/4435))
+
+- Add prom metric for total custom root roles in use ([#4438](https://github.com/Unleash/unleash/issues/4438))
+
+- Default strategy variant ([#4443](https://github.com/Unleash/unleash/issues/4443))
+
+- Bulk archive usage warning ([#4448](https://github.com/Unleash/unleash/issues/4448))
+
+- Pointer to strategy variants ([#4440](https://github.com/Unleash/unleash/issues/4440))
+
+- Demo for strategy variants ([#4457](https://github.com/Unleash/unleash/issues/4457))
+
+- Cr sidebar segments count ([#4466](https://github.com/Unleash/unleash/issues/4466))
+
+- Count segment changes ([#4468](https://github.com/Unleash/unleash/issues/4468))
+
+- Delete segment from CR ([#4469](https://github.com/Unleash/unleash/issues/4469))
+
+- Segment constraints in UI ([#4472](https://github.com/Unleash/unleash/issues/4472))
+
+- Track read about ([#4478](https://github.com/Unleash/unleash/issues/4478))
+
+- Add margin for segment constraints ([#4481](https://github.com/Unleash/unleash/issues/4481))
+
+- Use update count in cr summary ([#4482](https://github.com/Unleash/unleash/issues/4482))
+
+- Change request rejected event ([#4485](https://github.com/Unleash/unleash/issues/4485))
+
+- Change request rejections db table ([#4486](https://github.com/Unleash/unleash/issues/4486))
+
+- Change request reject UI ([#4489](https://github.com/Unleash/unleash/issues/4489))
+
+- Reject change request dialog ([#4491](https://github.com/Unleash/unleash/issues/4491))
+
+- Do not update every second ([#4492](https://github.com/Unleash/unleash/issues/4492))
+
+- Link to change request configuration ([#4494](https://github.com/Unleash/unleash/issues/4494))
+
+- Enable migration lock by default ([#4495](https://github.com/Unleash/unleash/issues/4495))
+
+- Disable scheduler for tests ([#4496](https://github.com/Unleash/unleash/issues/4496))
+
+- Change request reject docs and step update ([#4493](https://github.com/Unleash/unleash/issues/4493))
+
+- Get api tokens by name ([#4507](https://github.com/Unleash/unleash/issues/4507))
+
+- Review buttons makeover ([#4513](https://github.com/Unleash/unleash/issues/4513))
+
+- Reject timeline state ([#4517](https://github.com/Unleash/unleash/issues/4517))
+
+- Add usage info to project role deletion dialog ([#4464](https://github.com/Unleash/unleash/issues/4464))
+
+- Create client_applications_usage table migration ([#4521](https://github.com/Unleash/unleash/issues/4521))
+
+- Application usage new ui ([#4528](https://github.com/Unleash/unleash/issues/4528))
+
+- Slack-app can now post to both tagged and default channel ([#4520](https://github.com/Unleash/unleash/issues/4520))
+
+- Features overwrite warning ([#4535](https://github.com/Unleash/unleash/issues/4535))
+
+- Persist client application usage ([#4534](https://github.com/Unleash/unleash/issues/4534))
+
+- Last seen for toggles that have an old usage reported ([#4538](https://github.com/Unleash/unleash/issues/4538))
+
+- Last seen per environment health ([#4539](https://github.com/Unleash/unleash/issues/4539))
+
+- Last seen per environment archive ([#4540](https://github.com/Unleash/unleash/issues/4540))
+
+- More powerful project search ([#4542](https://github.com/Unleash/unleash/issues/4542))
+
+- Change request advanced search and filter ([#4544](https://github.com/Unleash/unleash/issues/4544))
+
+- Applicaton usage endpoint ([#4548](https://github.com/Unleash/unleash/issues/4548))
+
+
+### Miscellaneous Tasks
+
+- Enable strict schema validation by default and fix ([#4355](https://github.com/Unleash/unleash/issues/4355))
+
+- Clean client api flag removed ([#4368](https://github.com/Unleash/unleash/issues/4368))
+
+- Add debug information to slack addon ([#4379](https://github.com/Unleash/unleash/issues/4379))
+
+- Add more debug logs ([#4388](https://github.com/Unleash/unleash/issues/4388))
+
+- Update orval types ([#4402](https://github.com/Unleash/unleash/issues/4402))
+
+- Reduce build time ([#4405](https://github.com/Unleash/unleash/issues/4405))
+
+- Increase max app names to 1000 ([#4421](https://github.com/Unleash/unleash/issues/4421))
+
+- Simplify coverage report ([#4429](https://github.com/Unleash/unleash/issues/4429))
+
+- Update orval with latest change request schema updates ([#4446](https://github.com/Unleash/unleash/issues/4446))
+
+- Remove customRootRoles flag in favor of killswitch ([#4431](https://github.com/Unleash/unleash/issues/4431))
+
+- Fix formatting of openapi description ([#4503](https://github.com/Unleash/unleash/issues/4503))
+
+- Remove `additionalProperterties: true` annotation. ([#4508](https://github.com/Unleash/unleash/issues/4508))
+
+- Remove newProjectLayout flag ([#4536](https://github.com/Unleash/unleash/issues/4536))
+
+- Remove emitPotentiallyStaleEvents flag ([#4537](https://github.com/Unleash/unleash/issues/4537))
+
+
+### OpenAPI
+
+- Clean up remaining schemas, part 1 ([#4351](https://github.com/Unleash/unleash/issues/4351))
+
+- More schema cleanup ([#4353](https://github.com/Unleash/unleash/issues/4353))
+
+- Remaining schema updates ([#4354](https://github.com/Unleash/unleash/issues/4354))
+
+- Add operation tests: require summaries and descriptions ([#4377](https://github.com/Unleash/unleash/issues/4377))
+
+
+### Testing
+
+- Default strategy stickiness ([#4341](https://github.com/Unleash/unleash/issues/4341))
+
+- Matching variants ([#4349](https://github.com/Unleash/unleash/issues/4349))
+
+- Fix import and access e2e tests due to recent changes ([#4467](https://github.com/Unleash/unleash/issues/4467))
+
+
+### Meta
+
+- Add CODEOWNERS and set thomas as docs owner ([#4418](https://github.com/Unleash/unleash/issues/4418))
+
+
+### Openapi
+
+- Add new tags for API operations. ([#4432](https://github.com/Unleash/unleash/issues/4432))
+
+- Stabilize playground + feature types endpoints ([#4433](https://github.com/Unleash/unleash/issues/4433))
+
+
 ## [5.3.5] - 2023-08-15
 
 ### Bug Fixes

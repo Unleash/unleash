@@ -53,6 +53,9 @@ package-lock.json
 # Ignore frontend build
 frontend/build
 
+# Ignore orval apis
+frontend/src/openapi/apis
+
 # Generated docs
 website/docs/reference/api/**/sidebar.js
 website/docs/reference/api/**/**.info.mdx

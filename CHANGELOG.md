@@ -2,6 +2,143 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.16.4] - 2022-10-21
+
+### Bug Fixes
+
+- Respect environment if set on context ([#2206](https://github.com/Unleash/unleash/issues/2206))
+
+
+## [4.16.3] - 2022-10-18
+
+### Bug Fixes
+
+- Should only require CREATE_ADDON when creating addon ([#2204](https://github.com/Unleash/unleash/issues/2204))
+
+
+## [4.16.2] - 2022-10-17
+
+### Bug Fixes
+
+- Filter empty metrics before we collect last seen toggles. ([#2172](https://github.com/Unleash/unleash/issues/2172))
+
+- CORS options path ([#2165](https://github.com/Unleash/unleash/issues/2165))
+
+
+## [4.16.1] - 2022-10-06
+
+### Bug Fixes
+
+- Equality check on feature strategy ([#2145](https://github.com/Unleash/unleash/issues/2145))
+
+
+## [4.16.0] - 2022-10-03
+
+### Bug Fixes
+
+- Add env and project labels to feature updated metrics. ([#2043](https://github.com/Unleash/unleash/issues/2043))
+
+- Do not call store function in constructor
+
+- Update SDK matrix
+
+- S/Never logged/Never/g in frontend ([#2075](https://github.com/Unleash/unleash/issues/2075))
+
+- Deletes all sessions for user on logout ([#2071](https://github.com/Unleash/unleash/issues/2071))
+
+- Revert breaking change for incoming token creation reqs ([#2084](https://github.com/Unleash/unleash/issues/2084))
+
+- Make unit test target work ([#2082](https://github.com/Unleash/unleash/issues/2082))
+
+- Client registration events are on eventStore ([#2093](https://github.com/Unleash/unleash/issues/2093))
+
+- Support coverage reports on external PRs ([#2087](https://github.com/Unleash/unleash/issues/2087))
+
+- Update UI labeling: custom constraint -> (strategy) constraint ([#2101](https://github.com/Unleash/unleash/issues/2101))
+
+- Typo in strategy-constraints.md ([#2115](https://github.com/Unleash/unleash/issues/2115))
+
+- Add appName to http response time metrics ([#2117](https://github.com/Unleash/unleash/issues/2117))
+
+- Url encode application name in links ([#2121](https://github.com/Unleash/unleash/issues/2121))
+
+- Updated develper guide to force UTC timezone for test db
+
+- Update coverage
+
+
+### Docs
+
+- Update API access for new token type ([#1958](https://github.com/Unleash/unleash/issues/1958))
+
+- Update docusaurus deploy command to generate openapi docs
+
+- Fix typo: Unlash -> Unleash
+
+
+### Documentation
+
+- Update link for symfony sdk ([#2048](https://github.com/Unleash/unleash/issues/2048))
+
+- Test broken links in website ([#1912](https://github.com/Unleash/unleash/issues/1912))
+
+- Update images using latest UI screenshots ([#1992](https://github.com/Unleash/unleash/issues/1992))
+
+- Fix broken link to how-to-create-API token guide ([#2073](https://github.com/Unleash/unleash/issues/2073))
+
+- Move user groups section to after permissions section ([#2081](https://github.com/Unleash/unleash/issues/2081))
+
+- Fix broken link to front-end API tokens ([#2094](https://github.com/Unleash/unleash/issues/2094))
+
+
+### Features
+
+- Add method for migrating proxies without environment validation ([#2056](https://github.com/Unleash/unleash/issues/2056))
+
+- Update to pull_request_target ([#2059](https://github.com/Unleash/unleash/issues/2059))
+
+- Open-Source Strategy Constraints ([#2112](https://github.com/Unleash/unleash/issues/2112))
+
+- New profile page and PATs front-end ([#2109](https://github.com/Unleash/unleash/issues/2109))
+
+
+### Fix
+
+- Prevent password reset email flooding ([#2076](https://github.com/Unleash/unleash/issues/2076))
+
+
+### Miscellaneous Tasks
+
+- Add generated doc cleaning script ([#2077](https://github.com/Unleash/unleash/issues/2077))
+
+- Improve validation testing ([#2058](https://github.com/Unleash/unleash/issues/2058))
+
+
+## [4.15.5] - 2022-10-03
+
+### Bug Fixes
+
+- Correct path for login
+
+- Add env and project labels to feature updated metrics. ([#2043](https://github.com/Unleash/unleash/issues/2043))
+
+
+## [4.15.4] - 2022-09-19
+
+### Bug Fixes
+
+- Update snapshot to new version
+
+- Updated snapshot to not include api version
+
+
+## [4.15.2] - 2022-09-12
+
+### Features
+
+- Add method for migrating proxies without environment validation ([#2056](https://github.com/Unleash/unleash/issues/2056))
+
+
 ## [4.14.5] - 2022-08-18
 
 ### Miscellaneous Tasks

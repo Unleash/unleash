@@ -179,6 +179,8 @@ const feature = ({ name, enabled }: { name: string; enabled: boolean }) =>
         lastSeenAt: null,
         type: 'release',
         archived: false,
+        dependencies: [],
+        children: [],
     });
 
 const otherRequests = (feature: string) => {

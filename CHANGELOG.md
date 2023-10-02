@@ -2,6 +2,439 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.2.9] - 2023-07-25
+
+### Bug Fixes
+
+- Client metrics name validation ([#4339](https://github.com/Unleash/unleash/issues/4339))
+
+
+## [5.2.8] - 2023-07-12
+
+### Miscellaneous Tasks
+
+- Prepare 5.2 patch ([#4224](https://github.com/Unleash/unleash/issues/4224))
+
+
+## [5.2.7] - 2023-07-07
+
+### Bug Fixes
+
+- Disable on invalid constraints
+
+
+## [5.2.6] - 2023-07-07
+
+### Bug Fixes
+
+- Bulk tags will work now with project permissions ([#4177](https://github.com/Unleash/unleash/issues/4177))
+
+
+## [5.2.5] - 2023-07-06
+
+### Bug Fixes
+
+- Project tokens can now be created with the correct permissions ([#4165](https://github.com/Unleash/unleash/issues/4165))
+
+
+### Miscellaneous Tasks
+
+- Remove sync to enterprise from release branches ([#4112](https://github.com/Unleash/unleash/issues/4112))
+
+
+## [5.2.4] - 2023-07-06
+
+### Bug Fixes
+
+- Update yarn.lock ([#4160](https://github.com/Unleash/unleash/issues/4160))
+
+
+## [5.2.3] - 2023-07-06
+
+### Bug Fixes
+
+- Bump and pin semver to 7.5.3
+
+
+## [5.2.2] - 2023-06-29
+
+### Bug Fixes
+
+- Project 404 ([#4114](https://github.com/Unleash/unleash/issues/4114))
+
+- Default strategy groupId failure ([#4120](https://github.com/Unleash/unleash/issues/4120))
+
+
+## [5.2.0] - 2023-06-28
+
+### Bug Fixes
+
+- Misc UI fixes mostly responsiveness related ([#3868](https://github.com/Unleash/unleash/issues/3868))
+
+- Use correct event type for maxRevisionId ([#3870](https://github.com/Unleash/unleash/issues/3870))
+
+- Reject unauthorized client requests ([#3881](https://github.com/Unleash/unleash/issues/3881))
+
+- Remove consecutive slashes ([#3882](https://github.com/Unleash/unleash/issues/3882))
+
+- Update dependency pg to v8.11.0 ([#3867](https://github.com/Unleash/unleash/issues/3867))
+
+- Update dependency openapi-types to v12.1.1 ([#3885](https://github.com/Unleash/unleash/issues/3885))
+
+- Update dependency pg-connection-string to v2.6.0 ([#3886](https://github.com/Unleash/unleash/issues/3886))
+
+- Update dependency prom-client to v14.2.0 ([#3887](https://github.com/Unleash/unleash/issues/3887))
+
+- Update dependency semver to v7.5.1 ([#3888](https://github.com/Unleash/unleash/issues/3888))
+
+- Update dependency unleash-proxy-client to v2.5.0 ([#3889](https://github.com/Unleash/unleash/issues/3889))
+
+- Author and email should be for PRs ([#3899](https://github.com/Unleash/unleash/issues/3899))
+
+- Remove repository which is no longer needed ([#3900](https://github.com/Unleash/unleash/issues/3900))
+
+- Remove unneseccary constraint validation request ([#3914](https://github.com/Unleash/unleash/issues/3914))
+
+- Propagate http-errors as they are ([#3922](https://github.com/Unleash/unleash/issues/3922))
+
+- Only show simple tag type if there are no tag types in the server ([#3919](https://github.com/Unleash/unleash/issues/3919))
+
+- Update dependency nodemailer to v6.9.3 ([#3934](https://github.com/Unleash/unleash/issues/3934))
+
+- Fix variant metrics ([#3947](https://github.com/Unleash/unleash/issues/3947))
+
+- Update dependency unleash-client to v3.21.0 ([#3948](https://github.com/Unleash/unleash/issues/3948))
+
+- Add createdAt in projects API response ([#3929](https://github.com/Unleash/unleash/issues/3929))
+
+- Allow empty appName as it may come in the url ([#3953](https://github.com/Unleash/unleash/issues/3953))
+
+- Update dependency json-schema-to-ts to v2.9.1 ([#3945](https://github.com/Unleash/unleash/issues/3945))
+
+- Feature not found in project yields 404 ([#3958](https://github.com/Unleash/unleash/issues/3958))
+
+- Fix sort order for environments ([#3992](https://github.com/Unleash/unleash/issues/3992))
+
+- Table imports ([#3982](https://github.com/Unleash/unleash/issues/3982))
+
+- Show environment reorder handle ([#3990](https://github.com/Unleash/unleash/issues/3990))
+
+- Column initial state for project features ([#3983](https://github.com/Unleash/unleash/issues/3983))
+
+- Add trial expired warning for enterprise ([#3997](https://github.com/Unleash/unleash/issues/3997))
+
+- Can review CR with skip change request ([#3998](https://github.com/Unleash/unleash/issues/3998))
+
+- Demo to use new query param ([#4000](https://github.com/Unleash/unleash/issues/4000))
+
+- Usage of default strategy ([#3995](https://github.com/Unleash/unleash/issues/3995))
+
+- Filter out usage for export ([#4006](https://github.com/Unleash/unleash/issues/4006))
+
+- Specific actions for enterprise trial messages ([#4001](https://github.com/Unleash/unleash/issues/4001))
+
+- Playground link ([#4008](https://github.com/Unleash/unleash/issues/4008))
+
+- Reject API admin tokens when importing features ([#4016](https://github.com/Unleash/unleash/issues/4016))
+
+- Infinite playground rendering ([#4031](https://github.com/Unleash/unleash/issues/4031))
+
+- Creating groups should work without users ([#4033](https://github.com/Unleash/unleash/issues/4033))
+
+- Consider ADMIN in API tokens fetch permissions ([#4032](https://github.com/Unleash/unleash/issues/4032))
+
+- Default segments should only be selected when using default stra… ([#4040](https://github.com/Unleash/unleash/issues/4040))
+
+- Multi env select should always have an environment selected ([#4061](https://github.com/Unleash/unleash/issues/4061))
+
+- Disallow empty list of envs and invalid env names in advanced playground ([#4060](https://github.com/Unleash/unleash/issues/4060))
+
+- Autocomplete bug when changing context field ([#4064](https://github.com/Unleash/unleash/issues/4064))
+
+- Add admin guard to groups ([#4069](https://github.com/Unleash/unleash/issues/4069))
+
+- Fetching user root roles include custom ones ([#4068](https://github.com/Unleash/unleash/issues/4068))
+
+- Update roles permission guard ([#4070](https://github.com/Unleash/unleash/issues/4070))
+
+- Remove playground results flip ([#4076](https://github.com/Unleash/unleash/issues/4076))
+
+- Add strategy bug when strategySplittedButton flag is on ([#4071](https://github.com/Unleash/unleash/issues/4071))
+
+- Set max height for add/replace button ([#4085](https://github.com/Unleash/unleash/issues/4085))
+
+- Update dependency semver to v7.5.2 ([#4087](https://github.com/Unleash/unleash/issues/4087))
+
+- Add timestamp to feature toggle metrics ([#4094](https://github.com/Unleash/unleash/issues/4094))
+
+- Break toggle description niceley ([#4093](https://github.com/Unleash/unleash/issues/4093))
+
+- Max revision query order ([#4096](https://github.com/Unleash/unleash/issues/4096))
+
+- Allow roles to be selected when adding user to project ([#4102](https://github.com/Unleash/unleash/issues/4102))
+
+
+### Docs
+
+- Update stickiness docs ([#3928](https://github.com/Unleash/unleash/issues/3928))
+
+
+### Documentation
+
+- ADR: Separation of Request and Response schemas ([#3869](https://github.com/Unleash/unleash/issues/3869))
+
+- Health check endpoint ([#3959](https://github.com/Unleash/unleash/issues/3959))
+
+- Instance admin  ([#3961](https://github.com/Unleash/unleash/issues/3961))
+
+- How to synchronize unleash instances ([#3977](https://github.com/Unleash/unleash/issues/3977))
+
+- OpenAPI Client tag ([#3979](https://github.com/Unleash/unleash/issues/3979))
+
+- Mark 'yes' and `no` as required, add more details to variants ([#3984](https://github.com/Unleash/unleash/issues/3984))
+
+- Angular unleash proxy client ([#3897](https://github.com/Unleash/unleash/issues/3897))
+
+- Encourage feedback for sync ([#4003](https://github.com/Unleash/unleash/issues/4003))
+
+- Document how and why we collect data when using Unleash ([#4020](https://github.com/Unleash/unleash/issues/4020))
+
+- Add note about how to handle more than 150 groups in Azure SSO ([#4044](https://github.com/Unleash/unleash/issues/4044))
+
+- Add reference to Haskell SDK ([#3752](https://github.com/Unleash/unleash/issues/3752))
+
+
+### Features
+
+- Add usage of segment in list ([#3853](https://github.com/Unleash/unleash/issues/3853))
+
+- Segment usage ui test ([#3872](https://github.com/Unleash/unleash/issues/3872))
+
+- Disable notifications flag ([#3874](https://github.com/Unleash/unleash/issues/3874))
+
+- Autocomplete off on login password ([#3901](https://github.com/Unleash/unleash/issues/3901))
+
+- Change own password confirmation ([#3894](https://github.com/Unleash/unleash/issues/3894))
+
+- Usage on context fields in list ([#3906](https://github.com/Unleash/unleash/issues/3906))
+
+- Display strategy title and type ([#3908](https://github.com/Unleash/unleash/issues/3908))
+
+- Generate object combinations ([#3920](https://github.com/Unleash/unleash/issues/3920))
+
+- Context field usage backend ([#3921](https://github.com/Unleash/unleash/issues/3921))
+
+- Context field usage frontend ([#3938](https://github.com/Unleash/unleash/issues/3938))
+
+- Walking skeleton of the advanced playground ([#3949](https://github.com/Unleash/unleash/issues/3949))
+
+- Context/segment usage plausible ([#3956](https://github.com/Unleash/unleash/issues/3956))
+
+- Draft branch playground evaluation ([#3967](https://github.com/Unleash/unleash/issues/3967))
+
+- Add instance stats to version check ([#3835](https://github.com/Unleash/unleash/issues/3835))
+
+- Update predefined strategies tooltip ([#3964](https://github.com/Unleash/unleash/issues/3964))
+
+- Split strategies table into two with new design ([#3969](https://github.com/Unleash/unleash/issues/3969))
+
+- Advanced playground openapi ([#3972](https://github.com/Unleash/unleash/issues/3972))
+
+- Custom root roles ([#3975](https://github.com/Unleash/unleash/issues/3975))
+
+- Playground environment table ([#3985](https://github.com/Unleash/unleash/issues/3985))
+
+- Add max order to environments ([#3988](https://github.com/Unleash/unleash/issues/3988))
+
+- Advanced playground table ([#3978](https://github.com/Unleash/unleash/issues/3978))
+
+- Strategy tooltip grouping and default ([#3986](https://github.com/Unleash/unleash/issues/3986))
+
+- Virtualized table with parent ref ([#3993](https://github.com/Unleash/unleash/issues/3993))
+
+- Add support for turning telemetry off with environment variable ([#3987](https://github.com/Unleash/unleash/issues/3987))
+
+- Roles unification ([#3999](https://github.com/Unleash/unleash/issues/3999))
+
+- Playground environment diff table ([#4002](https://github.com/Unleash/unleash/issues/4002))
+
+- Change CR strategy title and name behaviour ([#4004](https://github.com/Unleash/unleash/issues/4004))
+
+- Implement better roles sub-tabs ([#4009](https://github.com/Unleash/unleash/issues/4009))
+
+- Environment diff ([#4007](https://github.com/Unleash/unleash/issues/4007))
+
+- Store playground settings in local storage ([#4012](https://github.com/Unleash/unleash/issues/4012))
+
+- Separate api token roles ([#4019](https://github.com/Unleash/unleash/issues/4019))
+
+- Query complexity validation ([#4017](https://github.com/Unleash/unleash/issues/4017))
+
+- Enable oas by default ([#4021](https://github.com/Unleash/unleash/issues/4021))
+
+- Use new role components in project access ([#4018](https://github.com/Unleash/unleash/issues/4018))
+
+- Initial scroll trigger ([#4036](https://github.com/Unleash/unleash/issues/4036))
+
+- Configurable playground limit ([#4047](https://github.com/Unleash/unleash/issues/4047))
+
+- Add "edit" link to playground strategies ([#4027](https://github.com/Unleash/unleash/issues/4027))
+
+- Advanced playground multi value context fields ([#4053](https://github.com/Unleash/unleash/issues/4053))
+
+- Ui tweaks for playground ([#4058](https://github.com/Unleash/unleash/issues/4058))
+
+- Plausible for new strategy flow ([#4057](https://github.com/Unleash/unleash/issues/4057))
+
+- Execution plan diff table ([#4065](https://github.com/Unleash/unleash/issues/4065))
+
+- Link to strategy edit screens from playground strategy results ([#4063](https://github.com/Unleash/unleash/issues/4063))
+
+- Count number of combinations from playground ([#4077](https://github.com/Unleash/unleash/issues/4077))
+
+- Expose kapi as part of docs ([#3996](https://github.com/Unleash/unleash/issues/3996))
+
+- Upgrade AdminAlert to PermissionGuard ([#4074](https://github.com/Unleash/unleash/issues/4074))
+
+
+### Fix
+
+- Laggy toggles ([#3873](https://github.com/Unleash/unleash/issues/3873))
+
+
+### Miscellaneous Tasks
+
+- Name and email convention ([#3871](https://github.com/Unleash/unleash/issues/3871))
+
+- Simplify workflows ([#3902](https://github.com/Unleash/unleash/issues/3902))
+
+- Remove unnecessary build ([#3910](https://github.com/Unleash/unleash/issues/3910))
+
+- Lower log-level for unexpected errors ([#3837](https://github.com/Unleash/unleash/issues/3837))
+
+- Improve joi errors ([#3836](https://github.com/Unleash/unleash/issues/3836))
+
+- Clarify error logs ([#3915](https://github.com/Unleash/unleash/issues/3915))
+
+- Avoid building frontend twice ([#3918](https://github.com/Unleash/unleash/issues/3918))
+
+- Optimize docker build oss ([#3951](https://github.com/Unleash/unleash/issues/3951))
+
+- Rename version to reflect next candidate ([#3944](https://github.com/Unleash/unleash/issues/3944))
+
+- Set unleash version to be either the enterprise version or OSS ([#3974](https://github.com/Unleash/unleash/issues/3974))
+
+- Upgrade orval types ([#3981](https://github.com/Unleash/unleash/issues/3981))
+
+- Add advanced playground table test ([#4005](https://github.com/Unleash/unleash/issues/4005))
+
+- Remove variant metrics flag ([#4042](https://github.com/Unleash/unleash/issues/4042))
+
+- Update orval models ([#4062](https://github.com/Unleash/unleash/issues/4062))
+
+- Document default strategy ([#4010](https://github.com/Unleash/unleash/issues/4010))
+
+- Remove unused values to stop linter complaining ([#4078](https://github.com/Unleash/unleash/issues/4078))
+
+- Filter out deprecated permissions ([#4083](https://github.com/Unleash/unleash/issues/4083))
+
+- Remove strategyImprovements flag ([#4043](https://github.com/Unleash/unleash/issues/4043))
+
+
+### Refactor
+
+- Playground in feature oriented architecture ([#3942](https://github.com/Unleash/unleash/issues/3942))
+
+- Read project ids in memory ([#3965](https://github.com/Unleash/unleash/issues/3965))
+
+- Extract playground steps ([#3966](https://github.com/Unleash/unleash/issues/3966))
+
+- Address custom root roles PR comments ([#3994](https://github.com/Unleash/unleash/issues/3994))
+
+- Misc cleanups ([#4022](https://github.com/Unleash/unleash/issues/4022))
+
+- Token permissions, drop admin-like permissions ([#4050](https://github.com/Unleash/unleash/issues/4050))
+
+
+### Testing
+
+- Advanced playground ([#3968](https://github.com/Unleash/unleash/issues/3968))
+
+- Meta schema rules should not check description on ref ([#3980](https://github.com/Unleash/unleash/issues/3980))
+
+- Playground env table display ([#3989](https://github.com/Unleash/unleash/issues/3989))
+
+- Advanced playground error ([#4023](https://github.com/Unleash/unleash/issues/4023))
+
+
+### Security
+
+- Reject multiple successive slashes in path ([#3880](https://github.com/Unleash/unleash/issues/3880))
+
+
+### Task
+
+- Make keepalive configurable via an environment variable ([#4015](https://github.com/Unleash/unleash/issues/4015))
+
+
+## [5.1.9] - 2023-06-16
+
+### Bug Fixes
+
+- Add createdAt in projects API response ([#3929](https://github.com/Unleash/unleash/issues/3929))
+
+- Can review CR with skip change request ([#3998](https://github.com/Unleash/unleash/issues/3998))
+
+
+## [5.1.8] - 2023-06-12
+
+### Bug Fixes
+
+- Fix variant metrics ([#3947](https://github.com/Unleash/unleash/issues/3947)) ([#3950](https://github.com/Unleash/unleash/issues/3950))
+
+
+## [5.1.6] - 2023-06-07
+
+### Miscellaneous Tasks
+
+- Clarify error logs ([#3915](https://github.com/Unleash/unleash/issues/3915))
+
+
+## [5.1.5] - 2023-05-27
+
+### Bug Fixes
+
+- Remove consecutive slashes ([#3882](https://github.com/Unleash/unleash/issues/3882))
+
+
+## [5.1.4] - 2023-05-27
+
+### Bug Fixes
+
+- Reject unauthorized client requests ([#3881](https://github.com/Unleash/unleash/issues/3881))
+
+
+## [5.1.3] - 2023-05-27
+
+### Security
+
+- Reject multiple successive slashes in path ([#3880](https://github.com/Unleash/unleash/issues/3880))
+
+
+## [5.1.2] - 2023-05-26
+
+### Fix
+
+- Laggy toggles ([#3873](https://github.com/Unleash/unleash/issues/3873))
+
+
+## [5.1.1] - 2023-05-26
+
+### Bug Fixes
+
+- Use correct event type for maxRevisionId ([#3870](https://github.com/Unleash/unleash/issues/3870))
+
+
 ## [5.1.0] - 2023-05-25
 
 ### Bug Fixes

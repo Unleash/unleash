@@ -6,12 +6,12 @@ import { FeatureTypeSchema } from 'openapi';
 
 export const formatExpiredAt = (
     feature: IFeatureToggleListItem,
-    featureTypes: FeatureTypeSchema[]
+    featureTypes: FeatureTypeSchema[],
 ): string | undefined => {
     const { type, createdAt } = feature;
 
     const featureType = featureTypes.find(
-        featureType => featureType.name === type
+        (featureType) => featureType.name === type,
     );
 
     if (

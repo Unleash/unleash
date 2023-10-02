@@ -8,12 +8,12 @@ export type ReportingStatus = 'potentially-stale' | 'healthy';
 
 export const formatStatus = (
     feature: IFeatureToggleListItem,
-    featureTypes: FeatureTypeSchema[]
+    featureTypes: FeatureTypeSchema[],
 ): ReportingStatus => {
     const { type, createdAt } = feature;
 
     const featureType = featureTypes.find(
-        featureType => featureType.name === type
+        (featureType) => featureType.name === type,
     );
     const date = parseISO(createdAt);
     const now = new Date();

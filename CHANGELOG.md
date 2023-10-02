@@ -2,6 +2,144 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.12.6] - 2022-06-14
+
+### Bug Fixes
+
+- Update `multer` ([#1649](https://github.com/Unleash/unleash/issues/1649))
+
+
+### Task
+
+- Update frontend to 4.12.4
+
+
+## [4.12.5] - 2022-06-01
+
+### Miscellaneous Tasks
+
+- Update frontend
+
+
+## [4.12.4] - 2022-06-01
+
+### Miscellaneous Tasks
+
+- Update unleash-frontend
+
+
+## [4.12.3] - 2022-05-31
+
+### Bug Fixes
+
+- Update dependency unleash-frontend to v4.12.1
+
+
+## [4.12.2] - 2022-05-31
+
+### Bug Fixes
+
+- Flag for anonymising user search
+
+
+## [4.12.1] - 2022-05-30
+
+### Bug Fixes
+
+- Add flag to annomise event log
+
+
+## [4.12.0] - 2022-05-27
+
+### Bug Fixes
+
+- Require equal environments when moving toggles ([#1595](https://github.com/Unleash/unleash/issues/1595))
+
+- The replaceGroupId field should be optional ([#1608](https://github.com/Unleash/unleash/issues/1608))
+
+- Include jest coverage files (POC)
+
+- Specify coverage files to use for jest pr action (poc)
+
+- Only specify base-cov-file for jest action (poc)
+
+- Add debug step
+
+- Remove parametersSchema maxLength requirement ([#1616](https://github.com/Unleash/unleash/issues/1616))
+
+- More debug
+
+- More debugigng to jest coverage action (POC)
+
+- Do not ignore coverage/report.json
+
+- Failing test
+
+- Auto-push coverage
+
+- Coverage build for main should be a seperate workflow
+
+- Coverage action
+
+- Add gh creds to coverage action
+
+- Coverage action need username
+
+- Switch gh token for coverage action
+
+- Inline coverage action script commands
+
+- Coverage action
+
+- Do not produce report.json in coverage action for now
+
+- Update dependency unleash-frontend to v4.11.0 ([#1597](https://github.com/Unleash/unleash/issues/1597))
+
+- Project environments order ([#1599](https://github.com/Unleash/unleash/issues/1599))
+
+- Update dependency unleash-frontend to v4.11.2
+
+- Upgrade multer to v1.4.4
+
+- Allow project roles to be changed when the relevant user has a root role ([#1632](https://github.com/Unleash/unleash/issues/1632))
+
+
+### Documentation
+
+- Add "how to run for development" to CONTRIBUTING.md ([#1600](https://github.com/Unleash/unleash/issues/1600))
+
+- Switch all slack links to slack.unleash.run ([#1613](https://github.com/Unleash/unleash/issues/1613))
+
+- Update import to use named export instead of default ([#1609](https://github.com/Unleash/unleash/issues/1609))
+
+- Use named export instead of default ([#1614](https://github.com/Unleash/unleash/issues/1614))
+
+- Use named export instead of default ([#1615](https://github.com/Unleash/unleash/issues/1615))
+
+
+### Miscellaneous Tasks
+
+- Fix coverage badge
+
+- Update coverage
+
+- Update coverage reports
+
+- Test
+
+
+### Refactor
+
+- Add regression test for long parameter values ([#1617](https://github.com/Unleash/unleash/issues/1617))
+
+- Improve OpenAPI refs ([#1620](https://github.com/Unleash/unleash/issues/1620))
+
+
+### Meta
+
+- Add external PRs to project board
+
+
 ## [4.11.2] - 2022-05-23
 
 ### Miscellaneous Tasks

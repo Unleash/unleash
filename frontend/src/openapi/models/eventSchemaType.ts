@@ -86,6 +86,7 @@ export const EventSchemaType = {
     'segment-deleted': 'segment-deleted',
     'group-created': 'group-created',
     'group-updated': 'group-updated',
+    'group-deleted': 'group-deleted',
     'setting-created': 'setting-created',
     'setting-updated': 'setting-updated',
     'setting-deleted': 'setting-deleted',
@@ -120,4 +121,7 @@ export const EventSchemaType = {
     'service-account-deleted': 'service-account-deleted',
     'service-account-updated': 'service-account-updated',
     'feature-potentially-stale-on': 'feature-potentially-stale-on',
+    'feature-dependency-added': 'feature-dependency-added',
+    'feature-dependency-removed': 'feature-dependency-removed',
+    'feature-dependencies-removed': 'feature-dependencies-removed',
 } as const;

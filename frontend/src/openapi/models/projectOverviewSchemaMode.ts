@@ -14,4 +14,5 @@ export type ProjectOverviewSchemaMode =
 export const ProjectOverviewSchemaMode = {
     open: 'open',
     protected: 'protected',
+    private: 'private',
 } as const;

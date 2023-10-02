@@ -119,7 +119,7 @@ const FeatureOverviewEnvironmentMetrics = ({
                 </StyledInfoParagraph>
             </StyledInfo>
             <StyledPercentageCircle data-loading>
-                <PercentageCircle percentage={percentage} size="3rem" />
+                <PercentageCircle percentage={percentage} size='3rem' />
             </StyledPercentageCircle>
         </StyledContainer>
     );

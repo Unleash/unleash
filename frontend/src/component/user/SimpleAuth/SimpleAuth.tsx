@@ -21,7 +21,7 @@ const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
     const navigate = useNavigate();
     const { setToastApiError } = useToast();
 
-    const handleSubmit: FormEventHandler<HTMLFormElement> = async evt => {
+    const handleSubmit: FormEventHandler<HTMLFormElement> = async (evt) => {
         evt.preventDefault();
 
         try {
@@ -33,7 +33,7 @@ const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
         }
     };
 
-    const handleChange: ChangeEventHandler<HTMLInputElement> = e => {
+    const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
         const value = e.target.value;
         setEmail(value);
     };
@@ -46,9 +46,9 @@ const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
                     This instance of Unleash is not set up with a secure
                     authentication provider. You can read more about{' '}
                     <a
-                        href="https://github.com/Unleash/unleash/blob/master/docs/securing-unleash.md"
-                        target="_blank"
-                        rel="noreferrer"
+                        href='https://github.com/Unleash/unleash/blob/master/docs/securing-unleash.md'
+                        target='_blank'
+                        rel='noreferrer'
                     >
                         securing Unleash on GitHub
                     </a>
@@ -57,13 +57,13 @@ const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
                     value={email}
                     onChange={handleChange}
                     inputProps={{ 'data-testid': 'email-input-field' }}
-                    size="small"
-                    variant="outlined"
-                    label="Email"
-                    name="email"
-                    id="email"
+                    size='small'
+                    variant='outlined'
+                    label='Email'
+                    name='email'
+                    id='email'
                     required
-                    type="email"
+                    type='email'
                     data-testid={LOGIN_EMAIL_ID}
                     autoFocus
                 />
@@ -71,9 +71,9 @@ const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
 
                 <div>
                     <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
+                        type='submit'
+                        variant='contained'
+                        color='primary'
                         className={styles.button}
                         data-testid={LOGIN_BUTTON}
                     >

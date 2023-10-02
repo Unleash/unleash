@@ -96,7 +96,7 @@ export const ValidationStage: FC<{
     const { setToastData } = useToast();
     const { trackEvent } = usePlausibleTracker();
     const [validationResult, setValidationResult] = useState<IValidationSchema>(
-        { errors: [], warnings: [], permissions: [] }
+        { errors: [], warnings: [], permissions: [] },
     );
     const [validJSON, setValidJSON] = useState(true);
 
@@ -120,7 +120,7 @@ export const ValidationStage: FC<{
     useEffect(() => {
         validateImport({ environment, project, data: JSON.parse(payload) })
             .then(trackValidation)
-            .catch(error => {
+            .catch((error) => {
                 setValidJSON(false);
                 setToastData({
                     type: 'error',
@@ -155,11 +155,11 @@ export const ValidationStage: FC<{
                             permissions that you need to be granted before
                             importing this configuration
                         </ErrorHeader>
-                        {validationResult.permissions.map(error => (
+                        {validationResult.permissions.map((error) => (
                             <Box key={error.message} sx={{ p: 2 }}>
                                 <ErrorMessage>{error.message}</ErrorMessage>
                                 <StyledItems>
-                                    {error.affectedItems.map(item => (
+                                    {error.affectedItems.map((item) => (
                                         <StyledItem key={item}>
                                             {item}
                                         </StyledItem>
@@ -178,11 +178,11 @@ export const ValidationStage: FC<{
                             <strong>Conflict!</strong> There are some errors
                             that need to be fixed before the import.
                         </ErrorHeader>
-                        {validationResult.errors.map(error => (
+                        {validationResult.errors.map((error) => (
                             <Box key={error.message} sx={{ p: 2 }}>
                                 <ErrorMessage>{error.message}</ErrorMessage>
                                 <StyledItems>
-                                    {error.affectedItems.map(item => (
+                                    {error.affectedItems.map((item) => (
                                         <StyledItem key={item}>
                                             {item}
                                         </StyledItem>
@@ -201,13 +201,13 @@ export const ValidationStage: FC<{
                             <strong>Warning!</strong> It is recommended to
                             verify the following information before importing.
                         </WarningHeader>
-                        {validationResult.warnings.map(warning => (
+                        {validationResult.warnings.map((warning) => (
                             <Box key={warning.message} sx={{ p: 2 }}>
                                 <WarningMessage>
                                     {warning.message}
                                 </WarningMessage>
                                 <StyledItems>
-                                    {warning.affectedItems.map(item => (
+                                    {warning.affectedItems.map((item) => (
                                         <StyledItem key={item}>
                                             {item}
                                         </StyledItem>
@@ -224,8 +224,8 @@ export const ValidationStage: FC<{
                         position: 'static',
                         mr: 'auto',
                     }}
-                    variant="outlined"
-                    type="submit"
+                    variant='outlined'
+                    type='submit'
                     onClick={onBack}
                 >
                     Back
@@ -234,8 +234,8 @@ export const ValidationStage: FC<{
                     permission={CREATE_FEATURE}
                     projectId={project}
                     sx={{ position: 'static' }}
-                    variant="contained"
-                    type="submit"
+                    variant='contained'
+                    type='submit'
                     onClick={onSubmit}
                     data-testid={IMPORT_CONFIGURATION_BUTTON}
                     disabled={
@@ -248,8 +248,8 @@ export const ValidationStage: FC<{
                 </PermissionButton>
                 <Button
                     sx={{ position: 'static', ml: 2 }}
-                    variant="outlined"
-                    type="submit"
+                    variant='outlined'
+                    type='submit'
                     onClick={onClose}
                 >
                     Cancel import

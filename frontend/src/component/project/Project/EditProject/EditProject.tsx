@@ -66,7 +66,7 @@ const EditProject = () => {
         String(project.featureLimit),
         project?.featureNaming?.pattern || '',
         project?.featureNaming?.example || '',
-        project?.featureNaming?.description || ''
+        project?.featureNaming?.description || '',
     );
 
     const formatApiCode = () => {
@@ -110,7 +110,7 @@ const EditProject = () => {
     };
 
     const accessDeniedAlert = !hasAccess(UPDATE_PROJECT, projectId) && (
-        <Alert severity="error" sx={{ mb: 4 }}>
+        <Alert severity='error' sx={{ mb: 4 }}>
             You do not have the required permissions to edit this project.
         </Alert>
     );
@@ -118,10 +118,10 @@ const EditProject = () => {
     return (
         <FormTemplate
             loading={loading}
-            title="Edit project"
-            description="Projects allows you to group feature toggles together in the management UI."
-            documentationLink="https://docs.getunleash.io/reference/projects"
-            documentationLinkLabel="Projects documentation"
+            title='Edit project'
+            description='Projects allows you to group feature toggles together in the management UI.'
+            documentationLink='https://docs.getunleash.io/reference/projects'
+            documentationLinkLabel='Projects documentation'
             formatApiCode={formatApiCode}
         >
             {accessDeniedAlert}
@@ -146,7 +146,7 @@ const EditProject = () => {
                 featureLimit={''}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}
-                mode="Edit"
+                mode='Edit'
                 clearErrors={clearErrors}
                 validateProjectId={validateProjectId}
             >

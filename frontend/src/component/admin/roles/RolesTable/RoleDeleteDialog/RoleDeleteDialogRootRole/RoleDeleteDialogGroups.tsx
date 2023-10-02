@@ -56,7 +56,7 @@ export const RoleDeleteDialogGroups = ({
                     maxWidth: 150,
                 },
             ] as Column<IGroup>[],
-        []
+        [],
     );
 
     const { headerGroups, rows, prepareRow } = useTable(
@@ -71,7 +71,7 @@ export const RoleDeleteDialogGroups = ({
             disableMultiSort: true,
         },
         useSortBy,
-        useFlexLayout
+        useFlexLayout,
     );
 
     return (

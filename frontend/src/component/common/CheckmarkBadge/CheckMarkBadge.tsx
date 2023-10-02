@@ -35,7 +35,7 @@ const CheckMarkBadge = ({ type, className }: ICheckMarkBadgeProps) => {
     return (
         <StyledBatch className={className}>
             {type === 'error' ? (
-                <StyledClose titleAccess="Error" />
+                <StyledClose titleAccess='Error' />
             ) : (
                 <StyledCheck />
             )}

@@ -13,7 +13,7 @@ export interface IUseProfileOutput {
 export const useProfile = (): IUseProfileOutput => {
     const { data, error, mutate } = useSWR(
         formatApiPath('api/admin/user/profile'),
-        fetcher
+        fetcher,
     );
 
     return {
@@ -27,5 +27,5 @@ export const useProfile = (): IUseProfileOutput => {
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Profile'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

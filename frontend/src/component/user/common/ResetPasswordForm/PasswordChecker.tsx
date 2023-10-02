@@ -82,7 +82,7 @@ const StyledError = styled(Alert)(({ theme }) => ({
 }));
 
 const StyledStatusBar = styled('div', {
-    shouldForwardProp: prop => prop !== 'error',
+    shouldForwardProp: (prop) => prop !== 'error',
 })<{ error: boolean }>(({ theme, error }) => ({
     width: '50px',
     borderRadius: theme.shape.borderRadius,
@@ -196,7 +196,7 @@ const PasswordChecker = ({
 
     return (
         <>
-            <StyledTitle variant="body2" data-loading>
+            <StyledTitle variant='body2' data-loading>
                 Please set a strong password
                 <HelpIcon tooltip={PASSWORD_FORMAT_MESSAGE} />
             </StyledTitle>
@@ -207,22 +207,22 @@ const PasswordChecker = ({
             >
                 <StyledHeaderContainer>
                     <StyledCheckContainer>
-                        <Typography variant="body2" data-loading>
+                        <Typography variant='body2' data-loading>
                             Length
                         </Typography>
                     </StyledCheckContainer>
                     <StyledCheckContainer>
-                        <Typography variant="body2" data-loading>
+                        <Typography variant='body2' data-loading>
                             Casing
                         </Typography>
                     </StyledCheckContainer>
                     <StyledCheckContainer>
-                        <Typography variant="body2" data-loading>
+                        <Typography variant='body2' data-loading>
                             Number
                         </Typography>
                     </StyledCheckContainer>
                     <StyledCheckContainer>
-                        <Typography variant="body2" data-loading>
+                        <Typography variant='body2' data-loading>
                             Symbol
                         </Typography>
                     </StyledCheckContainer>
@@ -245,7 +245,7 @@ const PasswordChecker = ({
                 <ConditionallyRender
                     condition={repeatingCharError}
                     show={
-                        <StyledError severity="error">
+                        <StyledError severity='error'>
                             You may not repeat three characters in a row.
                         </StyledError>
                     }

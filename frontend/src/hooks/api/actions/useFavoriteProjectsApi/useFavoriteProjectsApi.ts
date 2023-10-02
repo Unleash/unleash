@@ -17,7 +17,7 @@ export const useFavoriteProjectsApi = () => {
             const req = createRequest(
                 path,
                 { method: 'POST' },
-                'addFavoriteProject'
+                'addFavoriteProject',
             );
 
             try {
@@ -36,7 +36,7 @@ export const useFavoriteProjectsApi = () => {
                 setToastApiError(formatUnknownError(error));
             }
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     const unfavorite = useCallback(
@@ -45,7 +45,7 @@ export const useFavoriteProjectsApi = () => {
             const req = createRequest(
                 path,
                 { method: 'DELETE' },
-                'removeFavoriteProject'
+                'removeFavoriteProject',
             );
 
             try {
@@ -64,7 +64,7 @@ export const useFavoriteProjectsApi = () => {
                 setToastApiError(formatUnknownError(error));
             }
         },
-        [createRequest, makeRequest]
+        [createRequest, makeRequest],
     );
 
     return {

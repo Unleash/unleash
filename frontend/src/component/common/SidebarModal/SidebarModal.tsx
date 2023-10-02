@@ -63,7 +63,7 @@ export const BaseModal: FC<ISidebarModalProps> = ({
     );
 };
 
-export const SidebarModal: FC<ISidebarModalProps> = props => {
+export const SidebarModal: FC<ISidebarModalProps> = (props) => {
     return (
         <BaseModal {...props}>
             <FixedWidthContentWrapper>
@@ -73,11 +73,11 @@ export const SidebarModal: FC<ISidebarModalProps> = props => {
     );
 };
 
-export const DynamicSidebarModal: FC<ISidebarModalProps> = props => {
+export const DynamicSidebarModal: FC<ISidebarModalProps> = (props) => {
     return (
         <BaseModal {...props}>
             <ModalContentWrapper>
-                <Tooltip title="Close" arrow describeChild>
+                <Tooltip title='Close' arrow describeChild>
                     <StyledIconButton onClick={props.onClose}>
                         <CloseIcon />
                     </StyledIconButton>

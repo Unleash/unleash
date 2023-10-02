@@ -6,7 +6,7 @@ import { IEnvironment } from 'interfaces/environments';
 import { ensureArray } from '@server/util/ensureArray';
 
 export const resolveProjects = (
-    projects: string[] | string
+    projects: string[] | string,
 ): string[] | '*' => {
     if (
         !projects ||
@@ -20,13 +20,13 @@ export const resolveProjects = (
 };
 
 export const resolveEnvironments = (
-    envrironments: string[] | string
+    envrironments: string[] | string,
 ): string[] => {
     return ensureArray(envrironments);
 };
 
 export const resolveDefaultEnvironment = (
-    environmentOptions: IEnvironment[]
+    environmentOptions: IEnvironment[],
 ) => {
     const options = getEnvironmentOptions(environmentOptions);
     if (options.length > 0) {
@@ -47,7 +47,7 @@ export const resolveResultsWidth = (
     results:
         | PlaygroundResponseSchema
         | AdvancedPlaygroundResponseSchema
-        | undefined
+        | undefined,
 ) => {
     if (matches) {
         return '100%';
@@ -61,14 +61,14 @@ export const resolveResultsWidth = (
 };
 
 export const isStringOrStringArray = (
-    value: unknown
+    value: unknown,
 ): value is string | string[] => {
     if (typeof value === 'string') {
         return true;
     }
 
     if (Array.isArray(value)) {
-        return value.every(item => typeof item === 'string');
+        return value.every((item) => typeof item === 'string');
     }
 
     return false;
@@ -93,7 +93,7 @@ export type NormalizedContextProperties = Omit<
 };
 
 export const normalizeCustomContextProperties = (
-    input: InputContextProperties
+    input: InputContextProperties,
 ): NormalizedContextProperties => {
     const standardProps = new Set([
         'appName',

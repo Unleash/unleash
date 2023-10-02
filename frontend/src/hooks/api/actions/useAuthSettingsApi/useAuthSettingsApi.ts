@@ -7,7 +7,7 @@ export interface ISimpleAuthSettings {
 
 export const handleBadRequest = async (
     setErrors?: Dispatch<SetStateAction<{}>>,
-    res?: Response
+    res?: Response,
 ) => {
     if (!setErrors) return;
     if (res) {
@@ -32,11 +32,7 @@ const useAuthSettingsApi = <T>(id: string) => {
             body: JSON.stringify(settings),
         });
 
-        try {
-            await makeRequest(req.caller, req.id);
-        } catch (e) {
-            throw e;
-        }
+        await makeRequest(req.caller, req.id);
     };
 
     return { updateSettings, errors, loading };

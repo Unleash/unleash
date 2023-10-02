@@ -26,12 +26,12 @@ export const FeatureStaleCell: VFC<IFeatureStaleCellProps> = ({ value }) => {
             <ConditionallyRender
                 condition={Boolean(value)}
                 show={
-                    <Typography component="span" sx={staleStatus} data-loading>
+                    <Typography component='span' sx={staleStatus} data-loading>
                         Stale
                     </Typography>
                 }
                 elseShow={
-                    <Typography component="span" sx={activeStatus} data-loading>
+                    <Typography component='span' sx={activeStatus} data-loading>
                         Active
                     </Typography>
                 }

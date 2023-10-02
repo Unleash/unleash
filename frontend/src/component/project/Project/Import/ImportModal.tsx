@@ -73,7 +73,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     };
 
     return (
-        <SidebarModal open={open} onClose={close} label="Import toggles">
+        <SidebarModal open={open} onClose={close} label='Import toggles'>
             <ModalContentContainer>
                 <TimelineContainer>
                     <TimelineHeader>Process</TimelineHeader>

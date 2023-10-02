@@ -116,10 +116,10 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     const { segmentValuesLimit } = useSegmentLimits();
 
     const overSegmentValuesLimit: boolean = Boolean(
-        segmentValuesLimit && segmentValuesCount > segmentValuesLimit
+        segmentValuesLimit && segmentValuesCount > segmentValuesLimit,
     );
 
-    const autocompleteOptions = context.map(c => ({
+    const autocompleteOptions = context.map((c) => ({
         value: c.name,
         label: c.name,
     }));
@@ -143,7 +143,7 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                         Use a predefined context field:
                     </StyledInputDescription>
                     <AutocompleteBox
-                        label="Select a context"
+                        label='Select a context'
                         options={autocompleteOptions}
                         onChange={onChange}
                     />
@@ -153,7 +153,7 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                         ...or add a new context field:
                     </StyledInputDescription>
                     <SidebarModal
-                        label="Create new context"
+                        label='Create new context'
                         onClose={() => setOpen(false)}
                         open={open}
                     >
@@ -165,8 +165,8 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                     </SidebarModal>
                     <PermissionButton
                         permission={CREATE_CONTEXT_FIELD}
-                        variant="outlined"
-                        color="primary"
+                        variant='outlined'
+                        color='primary'
                         startIcon={<Add />}
                         onClick={() => setOpen(true)}
                     >
@@ -206,14 +206,14 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
             </StyledForm>
             <StyledButtonContainer>
                 <StyledBackButton
-                    type="button"
+                    type='button'
                     onClick={() => setCurrentStep(1)}
                 >
                     Back
                 </StyledBackButton>
                 {children}
                 <StyledCancelButton
-                    type="button"
+                    type='button'
                     onClick={() => {
                         navigate(GO_BACK);
                     }}

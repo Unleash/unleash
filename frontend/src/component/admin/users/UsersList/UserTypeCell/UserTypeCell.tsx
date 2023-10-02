@@ -20,11 +20,11 @@ export const UserTypeCell = ({ value }: IUserTypeCellProps) => {
             <ConditionallyRender
                 condition={value}
                 show={
-                    <Tooltip title="Paid user" arrow>
+                    <Tooltip title='Paid user' arrow>
                         <StyledMonetizationOn />
                     </Tooltip>
                 }
-                elseShow="Included"
+                elseShow='Included'
             />
         </TextCell>
     );

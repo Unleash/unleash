@@ -12,7 +12,7 @@ interface IUseAuthPermissionsOutput {
 
 const getPermissions = (
     auth: IUseAuthEndpointOutput,
-    uiConfig: IUiConfig
+    uiConfig: IUiConfig,
 ): IPermission[] | undefined => {
     let permissions =
         auth.data && 'permissions' in auth.data
@@ -20,7 +20,7 @@ const getPermissions = (
             : undefined;
     if (permissions && uiConfig?.maintenanceMode) {
         permissions = permissions.filter(
-            permission => permission.permission === 'ADMIN'
+            (permission) => permission.permission === 'ADMIN',
         );
     }
     return permissions;

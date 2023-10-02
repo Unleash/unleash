@@ -34,7 +34,7 @@ interface IFeatureToggleSwitchProps {
         projectId: string,
         feature: string,
         env: string,
-        state: boolean
+        state: boolean,
     ) => void;
 }
 
@@ -63,17 +63,17 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     const { feature } = useFeature(projectId, featureId);
     const enableProdGuard = useFeatureStrategyProdGuard(
         feature,
-        environmentName
+        environmentName,
     );
     const [showProdGuard, setShowProdGuard] = useState(false);
 
     const disabledStrategiesCount =
         feature?.environments
-            .find(env => env.name === environmentName)
-            ?.strategies.filter(strategy => strategy.disabled).length ?? 0;
+            .find((env) => env.name === environmentName)
+            ?.strategies.filter((strategy) => strategy.disabled).length ?? 0;
 
     const handleToggleEnvironmentOn = async (
-        shouldActivateDisabled = false
+        shouldActivateDisabled = false,
     ) => {
         try {
             setIsChecked(!isChecked);
@@ -81,7 +81,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                 projectId,
                 feature.name,
                 environmentName,
-                shouldActivateDisabled
+                shouldActivateDisabled,
             );
             setToastData({
                 type: 'success',
@@ -108,7 +108,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             await toggleFeatureEnvironmentOff(
                 projectId,
                 feature.name,
-                environmentName
+                environmentName,
             );
             setToastData({
                 type: 'success',
@@ -132,7 +132,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                     feature.name,
                     environmentName,
                     !isChecked,
-                    false
+                    false,
                 );
             }
             return;
@@ -167,7 +167,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                 feature.name,
                 environmentName,
                 !isChecked,
-                true
+                true,
             );
         } else {
             await handleToggleEnvironmentOn(true);
@@ -181,7 +181,7 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
                 feature.name,
                 environmentName,
                 !isChecked,
-                false
+                false,
             );
         } else {
             await handleToggleEnvironmentOn();
@@ -191,12 +191,14 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
 
     const featureHasOnlyDisabledStrategies = () => {
         const featureEnvironment = feature?.environments?.find(
-            env => env.name === environmentName
+            (env) => env.name === environmentName,
         );
         return (
             featureEnvironment?.strategies &&
             featureEnvironment?.strategies?.length > 0 &&
-            featureEnvironment?.strategies?.every(strategy => strategy.disabled)
+            featureEnvironment?.strategies?.every(
+                (strategy) => strategy.disabled,
+            )
         );
     };
 

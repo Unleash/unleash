@@ -67,7 +67,7 @@ const StandaloneLayout: FC<IStandaloneLayout> = ({
     children,
     BannerComponent,
 }) => {
-    let banner = <StandaloneBanner title="Unleash" />;
+    let banner = <StandaloneBanner title='Unleash' />;
 
     if (BannerComponent) {
         banner = BannerComponent;

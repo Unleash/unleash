@@ -34,7 +34,7 @@ test('should show the count of projects and features used in', async () => {
     render(
         <UIProviderContainer>
             <SegmentTable />
-        </UIProviderContainer>
+        </UIProviderContainer>,
     );
 
     await screen.findByText('2 feature toggles');

@@ -49,7 +49,7 @@ const StyledFormInput = styled(FormControl)(({ theme }) => ({
 }));
 
 const StyledMenuItem = styled(MenuItem, {
-    shouldForwardProp: prop => prop !== 'separator',
+    shouldForwardProp: (prop) => prop !== 'separator',
 })<{ separator: boolean }>(({ theme, separator }) =>
     separator
         ? {
@@ -67,7 +67,7 @@ const StyledMenuItem = styled(MenuItem, {
                   borderTopColor: theme.palette.divider,
               },
           }
-        : {}
+        : {},
 );
 
 const StyledOptionContainer = styled('div')(({ theme }) => ({
@@ -97,12 +97,12 @@ export const ConstraintOperatorSelect = ({
     };
 
     return (
-        <StyledFormInput variant="outlined" size="small" fullWidth>
-            <InputLabel htmlFor="operator-select">Operator</InputLabel>
+        <StyledFormInput variant='outlined' size='small' fullWidth>
+            <InputLabel htmlFor='operator-select'>Operator</InputLabel>
             <Select
-                id="operator-select"
-                name="operator"
-                label="Operator"
+                id='operator-select'
+                name='operator'
+                label='Operator'
                 value={value}
                 open={open}
                 onOpen={() => setOpen(true)}
@@ -110,7 +110,7 @@ export const ConstraintOperatorSelect = ({
                 onChange={onSelectChange}
                 renderValue={renderValue}
             >
-                {options.map(operator => (
+                {options.map((operator) => (
                     <StyledMenuItem
                         key={operator}
                         value={operator}
@@ -134,7 +134,7 @@ const needSeparatorAbove = (options: Operator[], option: Operator): boolean => {
         return false;
     }
 
-    return operatorGroups.some(group => {
+    return operatorGroups.some((group) => {
         return group[0] === option;
     });
 };

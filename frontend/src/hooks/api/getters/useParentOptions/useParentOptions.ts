@@ -5,10 +5,10 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 export const useParentOptions = (
     project: string,
     childFeatureId: string,
-    options: SWRConfiguration = {}
+    options: SWRConfiguration = {},
 ) => {
     const path = formatApiPath(
-        `/api/admin/projects/${project}/features/${childFeatureId}/parents`
+        `/api/admin/projects/${project}/features/${childFeatureId}/parents`,
     );
     const { data, error, mutate } = useSWR(path, fetcher, options);
 

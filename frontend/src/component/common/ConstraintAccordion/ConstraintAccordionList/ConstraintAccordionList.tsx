@@ -70,7 +70,7 @@ export const ConstraintAccordionList = forwardRef<
 >(
     (
         { constraints, setConstraints, showCreateButton, showLabel = true },
-        ref
+        ref,
     ) => {
         const state = useWeakMap<
             IConstraint,
@@ -83,7 +83,7 @@ export const ConstraintAccordionList = forwardRef<
             ((contextName: string) => {
                 const constraint = createEmptyConstraint(contextName);
                 state.set(constraint, { editing: true, new: true });
-                setConstraints(prev => [...prev, constraint]);
+                setConstraints((prev) => [...prev, constraint]);
             });
 
         useImperativeHandle(ref, () => ({
@@ -108,9 +108,9 @@ export const ConstraintAccordionList = forwardRef<
                 const constraint = constraints[index];
                 state.set(constraint, {});
                 setConstraints(
-                    produce(draft => {
+                    produce((draft) => {
                         draft.splice(index, 1);
-                    })
+                    }),
                 );
             });
 
@@ -119,9 +119,9 @@ export const ConstraintAccordionList = forwardRef<
             ((index: number, constraint: IConstraint) => {
                 state.set(constraint, {});
                 setConstraints(
-                    produce(draft => {
+                    produce((draft) => {
                         draft[index] = constraint;
-                    })
+                    }),
                 );
             });
 
@@ -151,14 +151,14 @@ export const ConstraintAccordionList = forwardRef<
                     <Fragment key={objectId(constraint)}>
                         <ConditionallyRender
                             condition={index > 0}
-                            show={<StrategySeparator text="AND" />}
+                            show={<StrategySeparator text='AND' />}
                         />
                         <ConstraintAccordion
                             constraint={constraint}
-                            onEdit={onEdit && onEdit.bind(null, constraint)}
+                            onEdit={onEdit?.bind(null, constraint)}
                             onCancel={onCancel.bind(null, index)}
-                            onDelete={onRemove && onRemove.bind(null, index)}
-                            onSave={onSave && onSave.bind(null, index)}
+                            onDelete={onRemove?.bind(null, index)}
+                            onSave={onSave?.bind(null, index)}
                             editing={Boolean(state.get(constraint)?.editing)}
                             compact
                         />
@@ -171,26 +171,26 @@ export const ConstraintAccordionList = forwardRef<
                             <StyledAddCustomLabel>
                                 <p>Add any number of constraints</p>
                                 <StyledHelpWrapper
-                                    title="View constraints documentation"
+                                    title='View constraints documentation'
                                     arrow
                                 >
                                     <a
                                         href={
                                             'https://docs.getunleash.io/reference/strategy-constraints'
                                         }
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                        target='_blank'
+                                        rel='noopener noreferrer'
                                     >
                                         <StyledHelp />
                                     </a>
                                 </StyledHelpWrapper>
                             </StyledAddCustomLabel>
                             <Button
-                                type="button"
+                                type='button'
                                 onClick={onAdd}
-                                variant="outlined"
-                                color="primary"
-                                data-testid="ADD_CONSTRAINT_BUTTON"
+                                variant='outlined'
+                                color='primary'
+                                data-testid='ADD_CONSTRAINT_BUTTON'
                             >
                                 Add constraint
                             </Button>
@@ -199,5 +199,5 @@ export const ConstraintAccordionList = forwardRef<
                 />
             </StyledContainer>
         );
-    }
+    },
 );

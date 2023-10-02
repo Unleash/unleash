@@ -14,14 +14,14 @@ import {
 // the data. In particular, the lastSeenAt field may often change.
 export const useFeatureImmutable = (
     projectId: string,
-    featureId: string
+    featureId: string,
 ): IUseFeatureOutput => {
     const { refetchFeature } = useFeature(projectId, featureId);
     const path = formatFeatureApiPath(projectId, featureId);
 
     const { data, error, mutate } = useSWRImmutable<IFeatureResponse>(
         ['useFeatureImmutable', path],
-        () => featureFetcher(path)
+        () => featureFetcher(path),
     );
 
     const refetch = useCallback(async () => {

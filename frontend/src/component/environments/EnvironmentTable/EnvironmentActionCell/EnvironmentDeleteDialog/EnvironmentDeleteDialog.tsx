@@ -35,17 +35,17 @@ export const EnvironmentDeleteDialog = ({
 
     return (
         <Dialogue
-            title="Delete environment?"
+            title='Delete environment?'
             open={open}
-            primaryButtonText="Delete environment"
+            primaryButtonText='Delete environment'
             disabledPrimaryButton={environment.name !== confirmName}
-            secondaryButtonText="Close"
+            secondaryButtonText='Close'
             onClick={onConfirm}
             onClose={() => {
                 setOpen(false);
             }}
         >
-            <Alert severity="error">
+            <Alert severity='error'>
                 <strong>
                     Danger! This action is not reversible. Please proceed with
                     caution.
@@ -65,9 +65,9 @@ export const EnvironmentDeleteDialog = ({
                 <strong>{environment.name}</strong>
             </StyledLabel>
             <StyledInput
-                label="Environment name"
+                label='Environment name'
                 value={confirmName}
-                onChange={e => setConfirmName(e.target.value)}
+                onChange={(e) => setConfirmName(e.target.value)}
             />
         </Dialogue>
     );

@@ -12,14 +12,14 @@ export const ChangeRequestApprovals: FC<ChangeRequestApprovalProps> = ({
     approvals = [],
 }) => (
     <>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant='body1' color='text.secondary'>
             <ConditionallyRender
                 condition={approvals?.length > 0}
                 show={'Approved by'}
                 elseShow={'No approvals yet'}
             />
         </Typography>
-        {approvals.map(approver => (
+        {approvals.map((approver) => (
             <ChangeRequestApprover
                 key={approver.createdBy.username}
                 name={approver.createdBy.username || 'Unknown user'}

@@ -15,7 +15,7 @@ interface IUseEnvironmentsOutput {
 export const useEnvironments = (): IUseEnvironmentsOutput => {
     const { data, error, mutate } = useSWR<IEnvironment[]>(
         formatApiPath(`api/admin/environments`),
-        fetcher
+        fetcher,
     );
 
     const environments = useMemo(() => {
@@ -30,7 +30,7 @@ export const useEnvironments = (): IUseEnvironmentsOutput => {
         async (environments: IEnvironment[]) => {
             await mutate(environments, false);
         },
-        [mutate]
+        [mutate],
     );
 
     return {
@@ -45,7 +45,7 @@ export const useEnvironments = (): IUseEnvironmentsOutput => {
 const fetcher = async (path: string): Promise<IEnvironment[]> => {
     const res: IEnvironmentResponse = await fetch(path)
         .then(handleErrorResponses('Environments'))
-        .then(res => res.json());
+        .then((res) => res.json());
 
     return res.environments.sort((a, b) => {
         return a.sortOrder - b.sortOrder;

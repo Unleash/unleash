@@ -31,7 +31,7 @@ export const EnvironmentNameCell = ({
 
     return (
         <TextCell
-            sx={theme => ({
+            sx={(theme) => ({
                 [theme.breakpoints.up('sm')]: {
                     minWidth: '350px',
                 },
@@ -40,13 +40,13 @@ export const EnvironmentNameCell = ({
             <Highlighter search={searchQuery}>{environment.name}</Highlighter>
             <ConditionallyRender
                 condition={environment.protected}
-                show={<StyledBadge color="success">Predefined</StyledBadge>}
+                show={<StyledBadge color='success'>Predefined</StyledBadge>}
             />
             <ConditionallyRender
                 condition={!environment.enabled}
                 show={
                     <HtmlTooltip
-                        maxWidth="270px"
+                        maxWidth='270px'
                         title={
                             <>
                                 <StyledTooltipTitle>
@@ -62,7 +62,7 @@ export const EnvironmentNameCell = ({
                         describeChild
                         arrow
                     >
-                        <StyledBadge color="neutral">Deprecated</StyledBadge>
+                        <StyledBadge color='neutral'>Deprecated</StyledBadge>
                     </HtmlTooltip>
                 }
             />

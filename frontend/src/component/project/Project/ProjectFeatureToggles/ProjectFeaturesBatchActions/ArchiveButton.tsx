@@ -20,9 +20,7 @@ const DEFAULT_USAGE_THRESHOLD_DAYS = 7;
 const isFeatureInUse = (feature?: FeatureSchema): boolean => {
     const aWeekAgo = addDays(new Date(), -DEFAULT_USAGE_THRESHOLD_DAYS);
     return !!(
-        feature &&
-        feature.lastSeenAt &&
-        isBefore(new Date(feature.lastSeenAt), aWeekAgo)
+        feature?.lastSeenAt && isBefore(new Date(feature.lastSeenAt), aWeekAgo)
     );
 };
 
@@ -37,8 +35,8 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
     const { trackEvent } = usePlausibleTracker();
 
     const featuresWithUsage = useMemo(() => {
-        return featureIds.filter(name => {
-            const feature = features.find(f => f.name === name);
+        return featureIds.filter((name) => {
+            const feature = features.find((f) => f.name === name);
             return isFeatureInUse(feature);
         });
     }, [JSON.stringify(features), featureIds]);
@@ -60,8 +58,8 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
                 {({ hasAccess }) => (
                     <Button
                         disabled={!hasAccess || isDialogOpen}
-                        variant="outlined"
-                        size="small"
+                        variant='outlined'
+                        size='small'
                         onClick={() => setIsDialogOpen(true)}
                     >
                         Archive

@@ -54,7 +54,7 @@ const TooltipContainer: FC<{
     return (
         <StyledContainer sx={sx}>
             <TooltipResolver
-                variant="custom"
+                variant='custom'
                 titleComponent={tooltip}
                 arrow
                 describeChild
@@ -82,7 +82,7 @@ export const FeatureEnvironmentSeen = ({
                 featureLastSeen && (
                     <TimeAgo
                         date={featureLastSeen}
-                        title=""
+                        title=''
                         live={false}
                         formatter={(value: number, unit: string) => {
                             const [color, textColor] = getColor(unit);
@@ -107,7 +107,7 @@ export const FeatureEnvironmentSeen = ({
             elseShow={
                 <TooltipContainer
                     sx={sx}
-                    tooltip="No usage reported from connected applications"
+                    tooltip='No usage reported from connected applications'
                 >
                     <UsageLine />
                 </TooltipContainer>

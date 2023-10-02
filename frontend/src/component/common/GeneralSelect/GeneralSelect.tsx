@@ -52,8 +52,8 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
 
     return (
         <FormControl
-            variant="outlined"
-            size="small"
+            variant='outlined'
+            size='small'
             classes={classes}
             fullWidth={fullWidth}
         >
@@ -69,7 +69,7 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
                 IconComponent={KeyboardArrowDownOutlined}
                 {...rest}
             >
-                {options.map(option => (
+                {options.map((option) => (
                     <MenuItem
                         sx={option.sx}
                         key={option.key}

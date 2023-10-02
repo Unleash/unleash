@@ -31,7 +31,7 @@ const defaultSort: SortingRule<string> = { id: 'created_at' };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'LoginHistoryTable:v1',
-    defaultSort
+    defaultSort,
 );
 
 const AUTH_TYPE_LABEL: { [key: string]: string } = {
@@ -113,13 +113,13 @@ export const LoginHistoryTable = () => {
                 searchable: true,
             },
         ],
-        []
+        [],
     );
 
     const { data, getSearchText, getSearchContext } = useSearch(
         columns,
         searchValue,
-        events
+        events,
     );
 
     const {
@@ -143,7 +143,7 @@ export const LoginHistoryTable = () => {
             },
         },
         useSortBy,
-        useFlexLayout
+        useFlexLayout,
     );
 
     useConditionallyHiddenColumns(
@@ -158,7 +158,7 @@ export const LoginHistoryTable = () => {
             },
         ],
         setHiddenColumns,
-        columns
+        columns,
     );
 
     useEffect(() => {
@@ -208,7 +208,7 @@ export const LoginHistoryTable = () => {
                                             show={<PageHeader.Divider />}
                                         />
                                         <Tooltip
-                                            title="Download login history"
+                                            title='Download login history'
                                             arrow
                                         >
                                             <IconButton onClick={downloadCSV}>

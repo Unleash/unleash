@@ -3,7 +3,7 @@ import { validateFeatureNamingExample } from './ProjectForm';
 describe('validateFeatureNaming', () => {
     test.each(['+', 'valid regex$'])(
         `if the featureNamingPatternError prop is present, it's always valid: %s`,
-        pattern => {
+        (pattern) => {
             const result = validateFeatureNamingExample({
                 pattern,
                 example: 'aohutnasoehutns',
@@ -11,7 +11,7 @@ describe('validateFeatureNaming', () => {
             });
 
             expect(result.state).toBe('valid');
-        }
+        },
     );
     test(`if the pattern is empty, the example is always valid`, () => {
         const result = validateFeatureNamingExample({
@@ -45,7 +45,7 @@ describe('validateFeatureNaming', () => {
             });
 
             expect(result.state).toBe(state);
-        }
+        },
     );
 
     test('the pattern gets an implicit leading ^ and trailing $ added', () => {

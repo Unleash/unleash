@@ -46,21 +46,21 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     const { strategies } = useStrategies();
     const { uiConfig } = useUiConfig();
     const { segments } = useSegments();
-    const strategySegments = segments?.filter(segment => {
+    const strategySegments = segments?.filter((segment) => {
         return strategy.segments?.includes(segment.id);
     });
 
-    const definition = strategies.find(strategyDefinition => {
+    const definition = strategies.find((strategyDefinition) => {
         return strategyDefinition.name === strategy.name;
     });
 
     const parametersList = useMemo(() => {
         if (!parameters || definition?.editable) return null;
 
-        return Object.keys(parameters).map(key => {
+        return Object.keys(parameters).map((key) => {
             switch (key) {
                 case 'rollout':
-                case 'Rollout':
+                case 'Rollout': {
                     const percentage = parseParameterNumber(parameters[key]);
 
                     return (
@@ -70,11 +70,11 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                             <Box sx={{ mr: 2 }}>
                                 <PercentageCircle
                                     percentage={percentage}
-                                    size="2rem"
+                                    size='2rem'
                                 />
                             </Box>
                             <div>
-                                <Badge color="success">{percentage}%</Badge> of
+                                <Badge color='success'>{percentage}%</Badge> of
                                 your base{' '}
                                 {constraints.length > 0
                                     ? 'who match constraints'
@@ -83,21 +83,25 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                             </div>
                         </StyledValueContainer>
                     );
+                }
                 case 'userIds':
-                case 'UserIds':
+                case 'UserIds': {
                     const users = parseParameterStrings(parameters[key]);
                     return (
-                        <ConstraintItem key={key} value={users} text="user" />
+                        <ConstraintItem key={key} value={users} text='user' />
                     );
+                }
                 case 'hostNames':
-                case 'HostNames':
+                case 'HostNames': {
                     const hosts = parseParameterStrings(parameters[key]);
                     return (
                         <ConstraintItem key={key} value={hosts} text={'host'} />
                     );
-                case 'IPs':
+                }
+                case 'IPs': {
                     const IPs = parseParameterStrings(parameters[key]);
                     return <ConstraintItem key={key} value={IPs} text={'IP'} />;
+                }
                 case 'stickiness':
                 case 'groupId':
                     return null;
@@ -113,17 +117,17 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
             <StyledValueSeparator>{' is set to '}</StyledValueSeparator>
         );
 
-        return definition?.parameters.map(param => {
+        return definition?.parameters.map((param) => {
             const { type, name } = { ...param };
             if (!type || !name || parameters[name] === undefined) {
                 return null;
             }
             const nameItem = (
-                <StringTruncator maxLength={15} maxWidth="150" text={name} />
+                <StringTruncator maxLength={15} maxWidth='150' text={name} />
             );
 
             switch (param?.type) {
-                case 'list':
+                case 'list': {
                     const values = parseParameterStrings(parameters[name]);
 
                     return values.length > 0 ? (
@@ -137,7 +141,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                         key={item}
                                         label={
                                             <StringTruncator
-                                                maxWidth="300"
+                                                maxWidth='300'
                                                 text={item}
                                                 maxLength={50}
                                             />
@@ -148,8 +152,9 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                             </StyledValueSeparator>
                         </StyledValueContainer>
                     ) : null;
+                }
 
-                case 'percentage':
+                case 'percentage': {
                     const percentage = parseParameterNumber(parameters[name]);
                     return parameters[name] !== '' ? (
                         <StyledValueContainer
@@ -158,16 +163,17 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                             <Box sx={{ mr: 2 }}>
                                 <PercentageCircle
                                     percentage={percentage}
-                                    size="2rem"
+                                    size='2rem'
                                 />
                             </Box>
                             <div>
                                 {nameItem}
                                 {isSetTo}
-                                <Badge color="success">{percentage}%</Badge>
+                                <Badge color='success'>{percentage}%</Badge>
                             </div>
                         </StyledValueContainer>
                     ) : null;
+                }
 
                 case 'boolean':
                     return parameters[name] === 'true' ||
@@ -175,7 +181,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                         <StyledValueContainer>
                             <StringTruncator
                                 maxLength={15}
-                                maxWidth="150"
+                                maxWidth='150'
                                 text={name}
                             />
                             {isSetTo}
@@ -191,7 +197,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                         </StyledValueContainer>
                     ) : null;
 
-                case 'string':
+                case 'string': {
                     const value = parseParameterString(parameters[name]);
                     return typeof parameters[name] !== 'undefined' ? (
                         <StyledValueContainer>
@@ -207,7 +213,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                     <>
                                         {isSetTo}
                                         <StringTruncator
-                                            maxWidth="300"
+                                            maxWidth='300'
                                             text={value}
                                             maxLength={50}
                                         />
@@ -216,20 +222,22 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                             />
                         </StyledValueContainer>
                     ) : null;
+                }
 
-                case 'number':
+                case 'number': {
                     const number = parseParameterNumber(parameters[name]);
                     return parameters[name] !== '' && number !== undefined ? (
                         <StyledValueContainer>
                             {nameItem}
                             {isSetTo}
                             <StringTruncator
-                                maxWidth="300"
+                                maxWidth='300'
                                 text={String(number)}
                                 maxLength={50}
                             />
                         </StyledValueContainer>
                     ) : null;
+                }
                 case 'default':
                     return null;
             }
@@ -255,7 +263,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
         strategy.name === 'default' && (
             <>
                 <StyledValueContainer sx={{ width: '100%' }}>
-                    The standard strategy is <Badge color="success">ON</Badge>{' '}
+                    The standard strategy is <Badge color='success'>ON</Badge>{' '}
                     for all users.
                 </StyledValueContainer>
             </>
@@ -270,10 +278,11 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
             show={
                 <>
                     {listItems.map((item, index) => (
+                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                         <Fragment key={index}>
                             <ConditionallyRender
                                 condition={index > 0}
-                                show={<StrategySeparator text="AND" />}
+                                show={<StrategySeparator text='AND' />}
                             />
                             {item}
                         </Fragment>

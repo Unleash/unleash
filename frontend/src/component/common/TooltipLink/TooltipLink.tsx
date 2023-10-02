@@ -3,7 +3,7 @@ import { Link, LinkProps, styled } from '@mui/material';
 import { HtmlTooltip, IHtmlTooltipProps } from '../HtmlTooltip/HtmlTooltip';
 
 const StyledLink = styled(Link, {
-    shouldForwardProp: prop => prop !== 'highlighted',
+    shouldForwardProp: (prop) => prop !== 'highlighted',
 })<{ highlighted?: boolean }>(({ theme, highlighted }) => ({
     backgroundColor: highlighted ? theme.palette.highlight : 'transparent',
     color: theme.palette.text.primary,

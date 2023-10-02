@@ -40,8 +40,8 @@ export const FeatureTypesList = () => {
                         <IconCell
                             icon={
                                 <IconComponent
-                                    data-loading="true"
-                                    color="action"
+                                    data-loading='true'
+                                    color='action'
                                 />
                             }
                         />
@@ -54,11 +54,7 @@ export const FeatureTypesList = () => {
                 Header: 'Name',
                 accessor: 'name',
                 width: '90%',
-                Cell: ({
-                    row: {
-                        original: { name, description },
-                    },
-                }: any) => {
+                Cell: ({ row: { original: { name, description } } }: any) => {
                     return (
                         <LinkCell
                             data-loading
@@ -89,14 +85,14 @@ export const FeatureTypesList = () => {
             {
                 Header: 'Actions',
                 Cell: ({ row: { original: featureType } }: any) => (
-                    <Box sx={theme => ({ padding: theme.spacing(0.5, 0) })}>
+                    <Box sx={(theme) => ({ padding: theme.spacing(0.5, 0) })}>
                         <ActionCell>
                             <PermissionIconButton
                                 disabled={!featureType.id}
-                                data-loading="true"
+                                data-loading='true'
                                 onClick={() =>
                                     navigate(
-                                        `/feature-toggle-type/edit/${featureType.id}`
+                                        `/feature-toggle-type/edit/${featureType.id}`,
                                     )
                                 }
                                 permission={ADMIN}
@@ -112,7 +108,7 @@ export const FeatureTypesList = () => {
                 disableSortBy: true,
             },
         ],
-        [navigate]
+        [navigate],
     );
 
     const data = useMemo(
@@ -125,7 +121,7 @@ export const FeatureTypesList = () => {
                       lifetimeDays: 1,
                   })
                 : featureTypes,
-        [loading, featureTypes]
+        [loading, featureTypes],
     );
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -144,7 +140,7 @@ export const FeatureTypesList = () => {
                     ],
                 },
             },
-            useSortBy
+            useSortBy,
         );
 
     return (
@@ -153,8 +149,8 @@ export const FeatureTypesList = () => {
             header={
                 <PageHeader>
                     <Typography
-                        component="h2"
-                        sx={theme => ({
+                        component='h2'
+                        sx={(theme) => ({
                             fontSize: theme.fontSizes.mainHeader,
                         })}
                     >
@@ -166,11 +162,11 @@ export const FeatureTypesList = () => {
             <Table {...getTableProps()}>
                 <SortableTableHeader headerGroups={headerGroups} />
                 <TableBody {...getTableBodyProps()}>
-                    {rows.map(row => {
+                    {rows.map((row) => {
                         prepareRow(row);
                         return (
                             <TableRow hover {...row.getRowProps()}>
-                                {row.cells.map(cell => (
+                                {row.cells.map((cell) => (
                                     <TableCell {...cell.getCellProps()}>
                                         {cell.render('Cell')}
                                     </TableCell>
@@ -182,10 +178,10 @@ export const FeatureTypesList = () => {
             </Table>
             <Routes>
                 <Route
-                    path="edit/:featureTypeId"
+                    path='edit/:featureTypeId'
                     element={
                         <SidebarModal
-                            label="Edit feature toggle type"
+                            label='Edit feature toggle type'
                             onClose={() => navigate(basePath)}
                             open
                         >

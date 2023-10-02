@@ -9,6 +9,7 @@ interface IErrorProps {
     error: Error;
 }
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 export const Error: VFC<IErrorProps> = ({ error }) => {
     const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
@@ -29,25 +30,25 @@ export const Error: VFC<IErrorProps> = ({ error }) => {
         <Box sx={{ backgroundColor: 'neutral.light', height: '100%', p: 4 }}>
             <Dialogue
                 open={true}
-                title="Something went wrong"
-                primaryButtonText="Go back"
+                title='Something went wrong'
+                primaryButtonText='Go back'
                 onClick={() => {
                     navigate('/');
                     window?.location?.reload();
                 }}
-                secondaryButtonText="Reload this page"
+                secondaryButtonText='Reload this page'
                 onClose={() => {
                     window?.location?.reload();
                 }}
-                maxWidth="xl"
+                maxWidth='xl'
             >
-                <Box component="pre" sx={{ color: 'error.main' }}>
+                <Box component='pre' sx={{ color: 'error.main' }}>
                     {error.message}
                 </Box>
                 <ConditionallyRender
                     condition={Boolean(error.stack)}
                     show={
-                        <Box component="pre" sx={{ color: 'error.main' }}>
+                        <Box component='pre' sx={{ color: 'error.main' }}>
                             {error.stack}
                         </Box>
                     }

@@ -23,7 +23,7 @@ const CorsPage = () => {
     }
 
     return (
-        <PageContent header={<PageHeader title="CORS origins" />}>
+        <PageContent header={<PageHeader title='CORS origins' />}>
             <Box sx={{ display: 'grid', gap: 4 }}>
                 <CorsHelpAlert />
                 <CorsForm frontendApiOrigins={uiConfig.frontendApiOrigins} />

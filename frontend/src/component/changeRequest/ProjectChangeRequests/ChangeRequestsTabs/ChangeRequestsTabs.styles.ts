@@ -1,6 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles()(theme => ({
+export const useStyles = makeStyles()((theme) => ({
     header: {
         padding: theme.spacing(0, 4),
     },

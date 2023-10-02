@@ -24,9 +24,9 @@ export const IntegrationHowToSection: VFC<IIntegrationHowToSectionProps> = ({
     return (
         <StyledHowDoesItWorkSection>
             <Typography
-                variant="h4"
-                component="h3"
-                sx={theme => ({
+                variant='h4'
+                component='h3'
+                sx={(theme) => ({
                     display: 'flex',
                     alignItems: 'center',
                     marginBottom: theme.spacing(1),

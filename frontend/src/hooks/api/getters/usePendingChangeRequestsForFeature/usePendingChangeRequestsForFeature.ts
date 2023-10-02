@@ -6,19 +6,19 @@ import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('ChangeRequest'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };
 
 export const usePendingChangeRequestsForFeature = (
     project: string,
-    featureName: string
+    featureName: string,
 ) => {
     const { data, error, mutate } = useEnterpriseSWR<IChangeRequest[]>(
         [],
         formatApiPath(
-            `api/admin/projects/${project}/change-requests/pending/${featureName}`
+            `api/admin/projects/${project}/change-requests/pending/${featureName}`,
         ),
-        fetcher
+        fetcher,
     );
 
     return {

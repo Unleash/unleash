@@ -30,10 +30,10 @@ test('should render disable dialog in regular mode', async () => {
     render(<DisableEnableStrategyDialog {...defaultProps} />);
 
     expect(
-        screen.queryByText('Change requests are enabled for this environment.')
+        screen.queryByText('Change requests are enabled for this environment.'),
     ).not.toBeInTheDocument();
     expect(
-        screen.getByText('Are you sure you want to disable this strategy?')
+        screen.getByText('Are you sure you want to disable this strategy?'),
     ).toBeInTheDocument();
 });
 
@@ -49,7 +49,7 @@ test('should render enable dialog in regular mode', async () => {
     render(<DisableEnableStrategyDialog {...props} />);
 
     expect(
-        screen.queryByText('Change requests are enabled for this environment.')
+        screen.queryByText('Change requests are enabled for this environment.'),
     ).not.toBeInTheDocument();
     expect(screen.getByText('Enable strategy')).toBeInTheDocument();
 });

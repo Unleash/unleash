@@ -17,7 +17,7 @@ export const useSegmentsApi = () => {
 
     const updateSegment = async (
         segmentId: number,
-        segment: ISegmentPayload
+        segment: ISegmentPayload,
     ) => {
         const req = createRequest(formatSegmentPath(segmentId), {
             method: 'PUT',

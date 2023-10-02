@@ -8,9 +8,9 @@ interface IConditionallyHiddenColumns {
 export const useConditionallyHiddenColumns = (
     conditionallyHiddenColumns: IConditionallyHiddenColumns[],
     setHiddenColumns: (
-        columns: string[] | ((columns: string[]) => string[])
+        columns: string[] | ((columns: string[]) => string[]),
     ) => void,
-    columnsDefinition: unknown[]
+    columnsDefinition: unknown[],
 ) => {
     useEffect(() => {
         const columnsToHide = conditionallyHiddenColumns
@@ -19,13 +19,13 @@ export const useConditionallyHiddenColumns = (
 
         const columnsToShow = conditionallyHiddenColumns
             .flatMap(({ columns }) => columns)
-            .filter(column => !columnsToHide.includes(column));
+            .filter((column) => !columnsToHide.includes(column));
 
-        setHiddenColumns(columns => [
+        setHiddenColumns((columns) => [
             ...new Set(
                 [...columns, ...columnsToHide].filter(
-                    column => !columnsToShow.includes(column)
-                )
+                    (column) => !columnsToShow.includes(column),
+                ),
             ),
         ]);
     }, [

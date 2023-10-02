@@ -46,7 +46,7 @@ export const Mermaid = ({ children, ...props }: IMermaidProps) => {
     const mermaidRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        mermaid.render('mermaid', children, svgCode => {
+        mermaid.render('mermaid', children, (svgCode) => {
             if (mermaidRef.current) {
                 mermaidRef.current.innerHTML = svgCode;
             }

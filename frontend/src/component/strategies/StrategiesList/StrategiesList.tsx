@@ -66,13 +66,13 @@ const Subtitle: FC<{
             tooltip={
                 <>
                     <Typography
-                        variant="body2"
-                        component="p"
-                        sx={theme => ({ marginBottom: theme.spacing(1) })}
+                        variant='body2'
+                        component='p'
+                        sx={(theme) => ({ marginBottom: theme.spacing(1) })}
                     >
                         {description}
                     </Typography>
-                    <Link href={link} target="_blank" variant="body2">
+                    <Link href={link} target='_blank' variant='body2'>
                         Read more in the documentation
                     </Link>
                 </>
@@ -83,7 +83,7 @@ const Subtitle: FC<{
 
 const CustomStrategyTitle: FC = () => (
     <Box
-        sx={theme => ({
+        sx={(theme) => ({
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -92,9 +92,9 @@ const CustomStrategyTitle: FC = () => (
         })}
     >
         <Subtitle
-            title="Custom strategies"
-            description="Custom activation strategies let you define your own activation strategies to use with Unleash."
-            link="https://docs.getunleash.io/reference/custom-activation-strategies"
+            title='Custom strategies'
+            description='Custom activation strategies let you define your own activation strategies to use with Unleash.'
+            link='https://docs.getunleash.io/reference/custom-activation-strategies'
         />
         <AddStrategyButton />
     </Box>
@@ -103,9 +103,9 @@ const CustomStrategyTitle: FC = () => (
 const PredefinedStrategyTitle = () => (
     <Box>
         <Subtitle
-            title="Predefined strategies"
-            description="Activation strategies let you enable a feature only for a specified audience. Different strategies use different parameters. Predefined strategies are bundled with Unleash."
-            link="https://docs.getunleash.io/reference/activation-strategies"
+            title='Predefined strategies'
+            description='Activation strategies let you enable a feature only for a specified audience. Different strategies use different parameters. Predefined strategies are bundled with Unleash.'
+            link='https://docs.getunleash.io/reference/activation-strategies'
         />
     </Box>
 );
@@ -117,7 +117,7 @@ export const StrategiesList = () => {
             show: false,
             title: '',
             onConfirm: () => {},
-        }
+        },
     );
 
     const { strategies, refetchStrategies, loading } = useStrategies();
@@ -144,12 +144,12 @@ export const StrategiesList = () => {
                 description,
                 editable,
                 deprecated,
-            })
+            }),
         );
         return {
             all,
-            predefined: all.filter(strategy => !strategy.editable),
-            custom: all.filter(strategy => strategy.editable),
+            predefined: all.filter((strategy) => !strategy.editable),
+            custom: all.filter((strategy) => strategy.editable),
         };
     }, [strategies, loading]);
 
@@ -199,7 +199,7 @@ export const StrategiesList = () => {
             refetchStrategies,
             setToastApiError,
             setToastData,
-        ]
+        ],
     );
 
     const onDeleteStrategy = useCallback(
@@ -222,14 +222,14 @@ export const StrategiesList = () => {
                 },
             });
         },
-        [removeStrategy, refetchStrategies, setToastApiError, setToastData]
+        [removeStrategy, refetchStrategies, setToastApiError, setToastData],
     );
 
     const onEditStrategy = useCallback(
         (strategy: IStrategy) => {
             navigate(`/strategies/${strategy.name}/edit`);
         },
-        [navigate]
+        [navigate],
     );
 
     const columns = useMemo(
@@ -246,7 +246,7 @@ export const StrategiesList = () => {
                             alignItems: 'center',
                         }}
                     >
-                        <Extension color="disabled" />
+                        <Extension color='disabled' />
                     </Box>
                 ),
             },
@@ -256,9 +256,7 @@ export const StrategiesList = () => {
                 accessor: (row: any) => formatStrategyName(row.name),
                 width: '90%',
                 Cell: ({
-                    row: {
-                        original: { name, description, deprecated },
-                    },
+                    row: { original: { name, description, deprecated } },
                 }: any) => {
                     return (
                         <LinkCell
@@ -270,7 +268,7 @@ export const StrategiesList = () => {
                             <ConditionallyRender
                                 condition={deprecated}
                                 show={() => (
-                                    <StyledBadge color="disabled">
+                                    <StyledBadge color='disabled'>
                                         Disabled
                                     </StyledBadge>
                                 )}
@@ -323,7 +321,7 @@ export const StrategiesList = () => {
                 sortType: 'number',
             },
         ],
-        [onToggle, onEditStrategy, onDeleteStrategy]
+        [onToggle, onEditStrategy, onDeleteStrategy],
     );
 
     const initialState = useMemo(
@@ -331,7 +329,7 @@ export const StrategiesList = () => {
             sortBy: [{ id: 'Name', desc: false }],
             hiddenColumns: ['description', 'sortOrder'],
         }),
-        []
+        [],
     );
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -344,7 +342,7 @@ export const StrategiesList = () => {
                 autoResetSortBy: false,
                 disableSortRemove: true,
             },
-            useSortBy
+            useSortBy,
         );
 
     const {
@@ -362,7 +360,7 @@ export const StrategiesList = () => {
             autoResetSortBy: false,
             disableSortRemove: true,
         },
-        useSortBy
+        useSortBy,
     );
 
     const onDialogConfirm = () => {
@@ -387,11 +385,11 @@ export const StrategiesList = () => {
                     <Table {...getTableProps()}>
                         <SortableTableHeader headerGroups={headerGroups} />
                         <TableBody {...getTableBodyProps()}>
-                            {rows.map(row => {
+                            {rows.map((row) => {
                                 prepareRow(row);
                                 return (
                                     <TableRow hover {...row.getRowProps()}>
-                                        {row.cells.map(cell => (
+                                        {row.cells.map((cell) => (
                                             <TableCell {...cell.getCellProps()}>
                                                 {cell.render('Cell')}
                                             </TableCell>
@@ -437,11 +435,11 @@ export const StrategiesList = () => {
                             headerGroups={customHeaderGroups}
                         />
                         <TableBody {...customGetTableBodyProps()}>
-                            {customRows.map(row => {
+                            {customRows.map((row) => {
                                 customPrepareRow(row);
                                 return (
                                     <TableRow hover {...row.getRowProps()}>
-                                        {row.cells.map(cell => (
+                                        {row.cells.map((cell) => (
                                             <TableCell {...cell.getCellProps()}>
                                                 {cell.render('Cell')}
                                             </TableCell>

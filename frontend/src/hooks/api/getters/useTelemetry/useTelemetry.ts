@@ -18,7 +18,7 @@ export interface ITelemetrySettingsResponse {
 export const useTelemetry = (): ITelemetrySettingsResponse => {
     const { data, error, mutate } = useSWR(
         formatApiPath(`api/admin/telemetry/settings`),
-        fetcher
+        fetcher,
     );
 
     return useMemo(
@@ -28,12 +28,12 @@ export const useTelemetry = (): ITelemetrySettingsResponse => {
             refetchGroup: () => mutate(),
             error,
         }),
-        [data, error, mutate]
+        [data, error, mutate],
     );
 };
 
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('Telemetry Settings'))
-        .then(res => res.json());
+        .then((res) => res.json());
 };

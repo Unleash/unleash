@@ -20,8 +20,8 @@ export const FeatureTypeCell: VFC<IFeatureTypeProps> = ({ value }) => {
     const IconComponent = getFeatureTypeIcons(value);
 
     const typeName = featureTypes
-        .filter(type => type.id === value)
-        .map(type => type.name);
+        .filter((type) => type.id === value)
+        .map((type) => type.name);
 
     const title = `This is a "${typeName || value}" toggle`;
 

@@ -14,8 +14,8 @@ export const AuthenticationCustomComponent: VFC<
         <CardActions style={{ textAlign: 'center' }}>
             <a href={authDetails.path} style={{ width: '100%' }}>
                 <Button
-                    variant="contained"
-                    color="primary"
+                    variant='contained'
+                    color='primary'
                     style={{ width: '150px', margin: '0 auto' }}
                 >
                     Sign In

@@ -54,7 +54,7 @@ export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
                               : '...'
                       }`}
             </StyledHeader>
-            {filters.map(filter => (
+            {filters.map((filter) => (
                 <StyledFilterHint key={filter.name}>
                     {filter.header}:{' '}
                     <ConditionallyRender
@@ -63,7 +63,7 @@ export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
                             <StyledCode
                                 tabIndex={0}
                                 onKeyDown={onEnter(() =>
-                                    onClick(firstFilterOption(filter))
+                                    onClick(firstFilterOption(filter)),
                                 )}
                                 onClick={() =>
                                     onClick(firstFilterOption(filter))
@@ -81,7 +81,7 @@ export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
                                 <StyledCode
                                     tabIndex={0}
                                     onKeyDown={onEnter(() =>
-                                        onClick(secondFilterOption(filter))
+                                        onClick(secondFilterOption(filter)),
                                     )}
                                     onClick={() => {
                                         onClick(secondFilterOption(filter));

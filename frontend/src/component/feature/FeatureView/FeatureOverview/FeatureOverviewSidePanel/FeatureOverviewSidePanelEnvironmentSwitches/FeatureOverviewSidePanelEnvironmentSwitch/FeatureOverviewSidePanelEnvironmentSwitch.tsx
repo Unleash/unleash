@@ -49,7 +49,7 @@ export const FeatureOverviewSidePanelEnvironmentSwitch = ({
             {' '}
             <span data-loading>{enabled ? 'enabled' : 'disabled'} in</span>
             &nbsp;
-            <StringTruncator text={name} maxWidth="120" maxLength={15} />
+            <StringTruncator text={name} maxWidth='120' maxLength={15} />
         </>
     );
 

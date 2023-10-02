@@ -14,13 +14,13 @@ const useFeatureStrategyApi = () => {
         projectId: string,
         featureId: string,
         environmentId: string,
-        payload: IFeatureStrategyPayload
+        payload: IFeatureStrategyPayload,
     ): Promise<IFeatureStrategy> => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies`;
         const req = createRequest(
             path,
             { method: 'POST', body: JSON.stringify(payload) },
-            'addStrategyToFeature'
+            'addStrategyToFeature',
         );
         return (await makeRequest(req.caller, req.id)).json();
     };
@@ -29,13 +29,13 @@ const useFeatureStrategyApi = () => {
         projectId: string,
         featureId: string,
         environmentId: string,
-        strategyId: string
+        strategyId: string,
     ): Promise<void> => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
         const req = createRequest(
             path,
             { method: 'DELETE' },
-            'deleteStrategyFromFeature'
+            'deleteStrategyFromFeature',
         );
         await makeRequest(req.caller, req.id);
     };
@@ -45,13 +45,13 @@ const useFeatureStrategyApi = () => {
         featureId: string,
         environmentId: string,
         strategyId: string,
-        payload: IFeatureStrategyPayload
+        payload: IFeatureStrategyPayload,
     ): Promise<void> => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
         const req = createRequest(
             path,
             { method: 'PUT', body: JSON.stringify(payload) },
-            'updateStrategyOnFeature'
+            'updateStrategyOnFeature',
         );
         await makeRequest(req.caller, req.id);
     };
@@ -60,13 +60,13 @@ const useFeatureStrategyApi = () => {
         projectId: string,
         featureId: string,
         environmentId: string,
-        payload: IFeatureStrategySortOrder[]
+        payload: IFeatureStrategySortOrder[],
     ): Promise<void> => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/set-sort-order`;
         const req = createRequest(
             path,
             { method: 'POST', body: JSON.stringify(payload) },
-            'setStrategiesSortOrderOnFeature'
+            'setStrategiesSortOrderOnFeature',
         );
         await makeRequest(req.caller, req.id);
     };
@@ -76,7 +76,7 @@ const useFeatureStrategyApi = () => {
         featureId: string,
         environmentId: string,
         strategyId: string,
-        disabled: boolean
+        disabled: boolean,
     ): Promise<void> => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
         const req = createRequest(
@@ -91,7 +91,7 @@ const useFeatureStrategyApi = () => {
                     },
                 ]),
             },
-            'setStrategyDisabledState'
+            'setStrategyDisabledState',
         );
         await makeRequest(req.caller, req.id);
     };

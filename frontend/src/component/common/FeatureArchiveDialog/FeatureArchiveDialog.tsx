@@ -36,12 +36,12 @@ const UsageWarning = ({
         return (
             <Alert
                 severity={'warning'}
-                sx={{ m: theme => theme.spacing(2, 0) }}
+                sx={{ m: (theme) => theme.spacing(2, 0) }}
             >
                 <Typography
                     fontWeight={'bold'}
                     variant={'body2'}
-                    display="inline"
+                    display='inline'
                 >
                     {`${ids.length} feature toggles `}
                 </Typography>
@@ -50,7 +50,7 @@ const UsageWarning = ({
                     toggles they will not be available to Client SDKs:
                 </span>
                 <ul>
-                    {ids?.map(id => (
+                    {ids?.map((id) => (
                         <li key={id}>
                             {<Link to={formatPath(id)}>{id}</Link>}
                         </li>
@@ -113,11 +113,11 @@ const useArchiveAction = ({
         await addChange(
             projectId,
             environment,
-            featureIds.map(feature => ({
+            featureIds.map((feature) => ({
                 action: 'archiveFeature',
                 feature: feature,
                 payload: undefined,
-            }))
+            })),
         );
         refetchChangeRequests();
         setToastData({
@@ -203,7 +203,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
             open={isOpen}
             onClose={onClose}
             primaryButtonText={buttonText}
-            secondaryButtonText="Cancel"
+            secondaryButtonText='Cancel'
             title={dialogTitle}
         >
             <ConditionallyRender
@@ -219,7 +219,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             condition={Boolean(
                                 uiConfig.flags.lastSeenByEnvironment &&
                                     featuresWithUsage &&
-                                    featuresWithUsage?.length > 0
+                                    featuresWithUsage?.length > 0,
                             )}
                             show={
                                 <UsageWarning
@@ -232,7 +232,7 @@ export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
                             condition={featureIds?.length <= 5}
                             show={
                                 <ul>
-                                    {featureIds?.map(id => (
+                                    {featureIds?.map((id) => (
                                         <li key={id}>{id}</li>
                                     ))}
                                 </ul>

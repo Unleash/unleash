@@ -25,7 +25,7 @@ export const MessageBannerDialog = ({
         <Dialogue
             title={title}
             open={open}
-            secondaryButtonText="Close"
+            secondaryButtonText='Close'
             onClose={() => {
                 setOpen(false);
             }}

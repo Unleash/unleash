@@ -57,7 +57,7 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
         ),
         name === 'default' && (
             <StyledBoxSummary sx={{ width: '100%' }}>
-                The standard strategy is <Badge color="success">ON</Badge> for
+                The standard strategy is <Badge color='success'>ON</Badge> for
                 all users.
             </StyledBoxSummary>
         ),
@@ -66,10 +66,11 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     return (
         <StyledStrategyExecutionWrapper>
             {items.map((item, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 <Fragment key={index}>
                     <ConditionallyRender
                         condition={index > 0}
-                        show={<StrategySeparator text="AND" />}
+                        show={<StrategySeparator text='AND' />}
                     />
                     {item}
                 </Fragment>

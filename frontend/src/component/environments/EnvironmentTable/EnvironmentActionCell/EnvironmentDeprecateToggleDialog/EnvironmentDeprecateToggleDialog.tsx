@@ -26,7 +26,7 @@ export const EnvironmentDeprecateToggleDialog = ({
             title={`${actionName} environment?`}
             open={open}
             primaryButtonText={actionName}
-            secondaryButtonText="Close"
+            secondaryButtonText='Close'
             onClick={onConfirm}
             onClose={() => {
                 setOpen(false);
@@ -35,7 +35,7 @@ export const EnvironmentDeprecateToggleDialog = ({
             <ConditionallyRender
                 condition={enabled}
                 show={
-                    <Alert severity="info">
+                    <Alert severity='info'>
                         Deprecating an environment will mark it as deprecated.
                         Deprecated environments are set as not visible by
                         default for new projects. Project owners are still able
@@ -45,7 +45,7 @@ export const EnvironmentDeprecateToggleDialog = ({
                     </Alert>
                 }
                 elseShow={
-                    <Alert severity="info">
+                    <Alert severity='info'>
                         Undeprecating an environment will no longer mark it as
                         deprecated. An undeprecated environment will be set as
                         visible by default for new projects.

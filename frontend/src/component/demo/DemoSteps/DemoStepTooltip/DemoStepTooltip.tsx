@@ -104,7 +104,7 @@ export const DemoStepTooltip = ({
                     transitionDuration={0}
                     hideBackdrop
                 >
-                    <StyledCloseButton aria-label="close" onClick={onClose}>
+                    <StyledCloseButton aria-label='close' onClick={onClose}>
                         <CloseIcon />
                     </StyledCloseButton>
                     <StyledTooltipTitle>
@@ -112,7 +112,7 @@ export const DemoStepTooltip = ({
                             condition={Boolean(step.title)}
                             show={step.title}
                             elseShow={
-                                <Typography fontWeight="bold">
+                                <Typography fontWeight='bold'>
                                     {topics[topic].title}
                                 </Typography>
                             }
@@ -125,7 +125,7 @@ export const DemoStepTooltip = ({
                                 condition={topic > 0 || stepIndex > 0}
                                 show={
                                     <Button
-                                        variant="outlined"
+                                        variant='outlined'
                                         onClick={() => onBack(step)}
                                     >
                                         Back
@@ -139,9 +139,9 @@ export const DemoStepTooltip = ({
                                 show={
                                     <Button
                                         onClick={() => onNext(stepIndex)}
-                                        variant="contained"
+                                        variant='contained'
                                         sx={{ alignSelf: 'flex-end' }}
-                                        data-testid="DEMO_NEXT_BUTTON"
+                                        data-testid='DEMO_NEXT_BUTTON'
                                     >
                                         {nextLabel}
                                     </Button>
@@ -156,7 +156,7 @@ export const DemoStepTooltip = ({
 
     return (
         <StyledTooltip {...tooltipProps}>
-            <StyledCloseButton aria-label="close" onClick={onClose}>
+            <StyledCloseButton aria-label='close' onClick={onClose}>
                 <CloseIcon />
             </StyledCloseButton>
             <StyledTooltipTitle>
@@ -164,7 +164,7 @@ export const DemoStepTooltip = ({
                     condition={Boolean(step.title)}
                     show={step.title}
                     elseShow={
-                        <Typography fontWeight="bold">
+                        <Typography fontWeight='bold'>
                             {topics[topic].title}
                         </Typography>
                     }
@@ -177,7 +177,7 @@ export const DemoStepTooltip = ({
                         condition={topic > 0 || stepIndex > 0}
                         show={
                             <Button
-                                variant="outlined"
+                                variant='outlined'
                                 onClick={() => onBack(step)}
                             >
                                 Back
@@ -191,9 +191,9 @@ export const DemoStepTooltip = ({
                         show={
                             <Button
                                 onClick={() => onNext(stepIndex)}
-                                variant="contained"
+                                variant='contained'
                                 sx={{ alignSelf: 'flex-end' }}
-                                data-testid="DEMO_NEXT_BUTTON"
+                                data-testid='DEMO_NEXT_BUTTON'
                             >
                                 {nextLabel}
                             </Button>

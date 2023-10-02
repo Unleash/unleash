@@ -34,10 +34,10 @@ export const SegmentDeleteConfirm = ({
     const formId = 'delete-segment-confirmation-form';
     return (
         <Dialogue
-            title="Are you sure you want to delete this segment?"
+            title='Are you sure you want to delete this segment?'
             open={open}
-            primaryButtonText="Delete segment"
-            secondaryButtonText="Cancel"
+            primaryButtonText='Delete segment'
+            secondaryButtonText='Cancel'
             onClick={() => {
                 onRemove();
                 setConfirmName('');
@@ -56,7 +56,7 @@ export const SegmentDeleteConfirm = ({
                     autoFocus
                     onChange={handleChange}
                     value={confirmName}
-                    label="Segment name"
+                    label='Segment name'
                     data-testid={SEGMENT_DIALOG_NAME_ID}
                 />
             </form>

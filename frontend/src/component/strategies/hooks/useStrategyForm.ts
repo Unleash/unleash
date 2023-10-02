@@ -5,7 +5,7 @@ import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 export const useStrategyForm = (
     initialStrategyName: string = '',
     initialStrategyDesc: string = '',
-    initialParams: IStrategyParameter[] = []
+    initialParams: IStrategyParameter[] = [],
 ) => {
     const [strategyName, setStrategyName] = useState(initialStrategyName);
     const [strategyDesc, setStrategyDesc] = useState(initialStrategyDesc);
@@ -38,11 +38,11 @@ export const useStrategyForm = (
 
     const validateStrategyName = () => {
         if (strategyName.length === 0) {
-            setErrors(prev => ({ ...prev, name: 'Name can not be empty.' }));
+            setErrors((prev) => ({ ...prev, name: 'Name can not be empty.' }));
             return false;
         }
-        if (strategies.some(strategy => strategy.name === strategyName)) {
-            setErrors(prev => ({
+        if (strategies.some((strategy) => strategy.name === strategyName)) {
+            setErrors((prev) => ({
                 ...prev,
                 name: 'A strategy name with that name already exist',
             }));
@@ -58,7 +58,7 @@ export const useStrategyForm = (
             // eslint-disable-next-line
             params.forEach((p, index) => {
                 if (p.name.length === 0) {
-                    setErrors(prev => ({
+                    setErrors((prev) => ({
                         ...prev,
                         [`paramName${index}`]: 'Name can not be empty',
                     }));

@@ -27,7 +27,7 @@ describe('segments', () => {
         cy.get("[data-testid='SEGMENT_NAME_ID']").type(segmentName);
         cy.get("[data-testid='SEGMENT_NEXT_BTN_ID']").should('be.disabled');
         cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
-            'Segment name already exists'
+            'Segment name already exists',
         );
     });
 

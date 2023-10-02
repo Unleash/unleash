@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.17.3] - 2022-11-23
+
+### Bug Fixes
+
+- Broken UI after import ([#2447](https://github.com/Unleash/unleash/issues/2447))
+
+
+## [4.17.1] - 2022-11-08
+
+### Bug Fixes
+
+- Merge order for UI config
+
+
+## [4.17.0] - 2022-11-04
+
+### Bug Fixes
+
+- Clone environment creating token everytime ([#2335](https://github.com/Unleash/unleash/issues/2335))
+
+
 ## [4.16.4] - 2022-10-21
 
 ### Bug Fixes

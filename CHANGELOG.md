@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.21.3] - 2023-06-06
+
+### Bug Fixes
+
+- Remove consecutive slashes
+
+
+## [4.21.2] - 2023-03-29
+
+### Bug Fixes
+
+- Hide project stats behind flag and backport to 4.21 ([#3419](https://github.com/Unleash/unleash/issues/3419))
+
+
+## [4.21.1] - 2023-03-22
+
+### Bug Fixes
+
+- Properly escaping app names ([#3368](https://github.com/Unleash/unleash/issues/3368))
+
+
+## [4.21.0] - 2023-02-22
+
+### Documentation
+
+- Mention env var options for auth config ([#3169](https://github.com/Unleash/unleash/issues/3169))
+
+
 ## [4.20.6] - 2023-06-06
 
 ### Bug Fixes

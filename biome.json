@@ -73,9 +73,7 @@
       "src/migrations/*.json",
       "src/test/examples/*.json",
       "website/**/*.js",
-      "coverage",
-      ".eslintrc",
-      ".eslintignore"
+      "coverage"
     ],
     "indentSize": 4
   },

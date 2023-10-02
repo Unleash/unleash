@@ -34,7 +34,7 @@ footer = """
 """
 # postprocessors
 postprocessors = [
-  # { pattern = '<REPO>', replace = "https://github.com/orhun/git-cliff" }, # replace repository URL
+  { pattern = '<REPO>', replace = "https://github.com/Unleash/unleash" }, # replace repository URL
 ]
 [git]
 # parse the commits based on https://www.conventionalcommits.org
@@ -45,7 +45,7 @@ filter_unconventional = true
 split_commits = false
 # regex for preprocessing the commit messages
 commit_preprocessors = [
-  # { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](<REPO>/issues/${2}))"}, # replace issue numbers
+  { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](<REPO>/issues/${2}))"}, # replace issue numbers
 ]
 # regex for parsing and grouping commits
 commit_parsers = [

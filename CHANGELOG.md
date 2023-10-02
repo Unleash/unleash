@@ -2,6 +2,150 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.7.5] - 2022-04-21
+
+### Bug Fixes
+
+- Add release script
+- Cleanup migrations after the 3.13.0 bug
+
+## [4.7.4] - 2022-03-30
+
+### Features
+
+- Move front end to v4.7.3
+
+## [4.7.3] - 2022-03-02
+
+### Bug Fixes
+
+- Configure user endpoint when AuthType is NONE ([#1403](https://github.com/Unleash/unleash/issues/1403))
+
+## [4.7.2] - 2022-02-10
+
+### Bug Fixes
+
+- Upgrade unleash-frontend to v4.7.2
+
+## [4.7.1] - 2022-02-09
+
+### Bug Fixes
+
+- Update dependency unleash-frontend to v4.7.1
+- Typo ([#1346](https://github.com/Unleash/unleash/issues/1346))
+
+### Documentation
+
+- Use `some-secret` instead of `some-public-key`
+- Fix delete call for deleting feature toggles
+- Hide 'back-to-main-menu' entry in narrow menu
+- Add docs for impression data ([#1328](https://github.com/Unleash/unleash/issues/1328))
+- Change API how-tos label from "API" to "API how-tos"
+- Add "sendEmail" field to user-admin.md ([#1329](https://github.com/Unleash/unleash/issues/1329))
+- Update compatibility matrix
+- Fix contrast issues with dark theme link color.
+- Move light-specific theme changes to 'light-theme' css
+- Dark mode fix contrast in sidebar and with vid comp
+- Use a purple color for primary theme color
+- Remove 'documentation' link in na bar.
+- Fix issues with transparent pngs; add borders, centering
+- Use ifm variable for border width.
+
+### Miscellaneous Tasks
+
+- Fix broken link to community sdks section
+- Remove trailing full stop.
+
+## [4.7.0] - 2022-02-03
+
+### Bug Fixes
+
+- Update dependency knex to v1.0.2
+- Jest-coverage-report-action disable annotations
+
+### Miscellaneous Tasks
+
+- Update frontend
+
+## [4.6.8] - 2022-04-21
+
+### Bug Fixes
+
+- Add release script
+- Cleanup migrations after the 3.13.0 bug
+
+## [4.6.7] - 2022-03-30
+
+### Features
+
+- Upgrade frontend to v4.6.5
+
+## [4.6.6] - 2022-03-02
+
+### Bug Fixes
+
+- Configure user endpoint when AuthType is NONE (#1403)
+
+## [4.6.5] - 2022-02-01
+
+### Miscellaneous Tasks
+
+- Update frontend
+
+## [4.6.4] - 2022-02-01
+
+### Bug Fixes
+
+- Rbac should pick up projectId from path if available
+- Upgrade unleash-frontend to v4.6.3
+
+## [4.6.3] - 2022-02-01
+
+### Bug Fixes
+
+- Update dependency unleash-frontend to v4.6.2
+
+### Documentation
+
+- Fix link to addons page
+- Fix link to getting started page
+- Link directly to the markdown file
+- Link directly to the markdown file
+- Fix markdown file name
+
+## [4.6.1] - 2022-01-31
+
+### Bug Fixes
+
+- Set migration for feedbacK (#1315)
+
+## [4.6.0] - 2022-01-31
+
+### Bug Fixes
+
+- Convert simple-password-provider.test.js to ts
+- GoogleAnalytics for docusaurus to new format (#1306)
+- Pin dependency @docusaurus/plugin-google-analytics to 2.0.0-beta.15 (#1307)
+- Readme.md
+- Remove test subcat from sidebar
+- Welcome-email should not include password-link when disabled (#1302)
+- Update dependency unleash-frontend to v4.6.0
+- Update dependency @svgr/webpack to v6.2.1
+- Metric counters should use bigint (#1313)
+- Upgrade unleash-frontend to v4.6.1
+
+### Documentation
+
+- Remove role 'alert' from availability notice.
+- Update how-to for cprs with new video element.
+- Finish v1 of the video content element.
+- Remove redundant video heading and commented-out content.
+- Remove container query polyfill
+
+### Miscellaneous Tasks
+
+- Make docs sidebar hover and active color same unleash grey.
+
 ## [4.5.3] - 2022-04-21
 
 ### Bug Fixes

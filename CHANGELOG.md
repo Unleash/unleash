@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.22.9] - 2023-06-06
+
+### Bug Fixes
+
+- Remove consecutive slashes
+
+
+## [4.22.8] - 2023-04-26
+
+### Bug Fixes
+
+- Migration failure when sessionId exists ([#3624](https://github.com/Unleash/unleash/issues/3624))
+
+
+## [4.22.7] - 2023-04-25
+
+### Miscellaneous Tasks
+
+- Patch 4.22.7 ([#3618](https://github.com/Unleash/unleash/issues/3618))
+
+
+## [4.22.6] - 2023-04-25
+
+### Miscellaneous Tasks
+
+- Patch 4.22.6 ([#3603](https://github.com/Unleash/unleash/issues/3603))
+
+
+## [4.22.3] - 2023-04-06
+
+### Bug Fixes
+
+- Stickiness ([#3471](https://github.com/Unleash/unleash/issues/3471))
+
+
+## [4.22.1] - 2023-04-05
+
+### Bug Fixes
+
+- Concurrency issue when running multiple requests ([#3442](https://github.com/Unleash/unleash/issues/3442))
+
+
+### Features
+
+- Add PAT kill switch ([#3454](https://github.com/Unleash/unleash/issues/3454))
+
+
 ## [4.21.3] - 2023-06-06
 
 ### Bug Fixes

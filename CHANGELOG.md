@@ -2,6 +2,129 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.5.3] - 2022-04-21
+
+### Bug Fixes
+
+- Add release script
+- Cleanup migrations after the 3.13.0 bug
+
+## [4.5.2] - 2022-03-31
+
+### Features
+
+- Upgrade front end to 4.4.2
+
+## [4.5.1] - 2022-01-06
+
+### Bug Fixes
+
+- Pin dependency @docusaurus/remark-plugin-npm2yarn to 2.0.0-beta.14 (#1224)
+- Expose ApiUser out of Unleash
+- Update dependency helmet to v5 (#1215)
+- Correct format for API tokens
+- Downgrade faker to 5.5.3
+- Update dependency unleash-frontend to v4.4.1
+- Should not remove variants when updating feature toggle metadata (#1234)
+- Update yarn.lock
+
+### Documentation
+
+- Add steps for running the proxy in node with custom strats.
+- Indent code block properly.
+- Highlight `customStrategies` option.
+- Fix comparison operator from `>` to `<`
+- Pluralize SDK -> SDKs
+- Add `npm2yarn` annotation to all npm commands
+- Remove spacing, change 'node' -> Node.js
+- Minor language improvements
+- Add description of `open-source` authentication type.
+- Add difference between `initApiTokens` and env var option.
+- Add information on using env vars for startup imports.
+- Change wording slightly.
+
+### Features
+
+- Add init api tokens option (#1181)
+- Add support for cdnPrefix for static assets (#1191)
+
+## [4.4.8] - 2022-03-31
+
+### Features
+
+- Move frontend to v4.4.2
+- Move frontend to 4.4.2
+
+## [4.4.7] - 2022-02-23
+
+### Bug Fixes
+
+- Cleanup data from v3.13.0-bug
+- Connect admin user with admin role
+
+## [4.4.6] - 2022-02-22
+
+### Bug Fixes
+
+- Adding missing project column to roles
+
+## [4.4.5] - 2022-01-03
+
+### Bug Fixes
+
+- Adds feature-variant-updated event. (#1189)
+- Adjust feature-variant-updated event
+- Update dependency knex to v0.95.15
+- Fix broken link to how-to guide.
+- Align code and highlight indentation.
+- Realign indentation of code and comments
+- Update updateUser code to reject empty emails (#1210)
+
+### Documentation
+
+- Gradual rollout: custom stickiness -> point to SDK table
+- Update doc; add how-to make custom context fields.
+- Add custom stickiness header.
+- Add note about custom stickiness being in beta.
+- Fix quickstart image not being displayed.
+- Add custom stickiness section to context docs.
+- Add img of legal values' effect on the UI.
+- Reference the SDK compat table in stickiness docs
+- Rough draft of how to create custom context fields.
+- Full draft for how to create custom context fields.
+- Add note to context docs re: creating and updating.
+- Spilt strat constraints into ref and how-to.
+- Add note about creating standard context fields.
+- Update strat constraints with SDK info.
+- Add link to how-to guide for strat constraints.
+- Update how-to doc title for strat constraints.
+- Update availability notes for custom context fields.
+- Adjust heading levels, add ideas.
+- Separate reference and how-to
+- Add note about unimplemented strats.
+- Semi-scaffold how-to section
+- Start filling in how-to for custom strats
+- Add steps for custom strats with proxy.
+- Add note to proxy docs about custom strats.
+- Describe using custom strats when proxy is not docker.
+- Mention required params
+- Update param type overview
+- Update docker commands to start containers in detached mode
+- Fix list numbers
+
+### Miscellaneous Tasks
+
+- Remove unnecessary escape sequences.
+- Format table
+- Correct compatibility matrix for server SDKs
+
+## [4.4.4] - 2021-12-17
+
+### Bug Fixes
+
+- Adds feature-variant-updated event. (#1189)
+- Adjust feature-variant-updated event
+
 ## [4.4.1] - 2021-12-15
 
 ### Bug Fixes

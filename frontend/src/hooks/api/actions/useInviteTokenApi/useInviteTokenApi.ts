@@ -20,7 +20,7 @@ export const useInviteTokenApi = () => {
                 body: JSON.stringify(request),
             });
 
-            return await makeRequest(req.caller, req.id);
+            return makeRequest(req.caller, req.id);
         },
         [createRequest, makeRequest],
     );
@@ -37,7 +37,7 @@ export const useInviteTokenApi = () => {
                 }),
             });
 
-            return await makeRequest(req.caller, req.id);
+            return makeRequest(req.caller, req.id);
         },
         [createRequest, makeRequest],
     );
@@ -49,7 +49,7 @@ export const useInviteTokenApi = () => {
                 body: JSON.stringify(value),
             });
 
-            return await makeRequest(req.caller, req.id);
+            return makeRequest(req.caller, req.id);
         },
         [createRequest, makeRequest],
     );

@@ -25,7 +25,7 @@ export const useServiceAccountsApi = () => {
         );
 
         const response = await makeRequest(req.caller, req.id);
-        return await response.json();
+        return response.json();
     };
 
     const removeServiceAccount = async (serviceAccountId: number) => {

@@ -41,7 +41,6 @@ const CreateProject = () => {
         validateProjectId,
         validateName,
         setProjectStickiness,
-        setFeatureLimit,
         projectStickiness,
         errors,
     } = useProjectForm();

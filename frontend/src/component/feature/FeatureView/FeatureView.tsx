@@ -35,6 +35,7 @@ import { ReactComponent as ChildLinkIcon } from 'assets/icons/link-child.svg';
 import { ReactComponent as ParentLinkIcon } from 'assets/icons/link-parent.svg';
 import { TooltipLink } from '../../common/TooltipLink/TooltipLink';
 import { ChildrenTooltip } from './FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/ChildrenTooltip';
+import { useUiFlag } from '../../../hooks/useUiFlag';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -126,6 +127,7 @@ export const FeatureView = () => {
     const { refetch: projectRefetch } = useProject(projectId);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
+    const dependentFeatures = useUiFlag('dependentFeatures');
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -206,7 +208,10 @@ export const FeatureView = () => {
                                 />
                             </StyledToggleInfoContainer>
                             <ConditionallyRender
-                                condition={feature.dependencies.length > 0}
+                                condition={
+                                    dependentFeatures &&
+                                    feature.dependencies.length > 0
+                                }
                                 show={
                                     <StyledDependency>
                                         <StyleChildLinkIcon />{' '}
@@ -221,7 +226,10 @@ export const FeatureView = () => {
                                 }
                             />
                             <ConditionallyRender
-                                condition={feature.children.length > 0}
+                                condition={
+                                    dependentFeatures &&
+                                    feature.children.length > 0
+                                }
                                 show={
                                     <StyledDependency>
                                         <StyledParentLinkIcon />{' '}

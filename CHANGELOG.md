@@ -2,6 +2,93 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.14.5] - 2022-08-18
+
+### Miscellaneous Tasks
+
+- Update frontend version
+
+
+## [4.14.4] - 2022-08-16
+
+### Bug Fixes
+
+- Default to an empty array in mapFeaturesForBootstrap
+
+
+### Miscellaneous Tasks
+
+- Update frontend
+
+
+## [4.14.3] - 2022-08-15
+
+### Bug Fixes
+
+- Check variants before mapping
+
+
+### Miscellaneous Tasks
+
+- Update unleash-frontend
+
+
+## [4.14.2] - 2022-08-08
+
+### Features
+
+- Add new standard errors ([#1890](https://github.com/Unleash/unleash/issues/1890))
+
+- Change log level for OpenAPI to debug ([#1895](https://github.com/Unleash/unleash/issues/1895))
+
+- Change log level for OpenAPI to debug ([#1895](https://github.com/Unleash/unleash/issues/1895))
+
+
+## [4.14.1] - 2022-08-05
+
+### Bug Fixes
+
+- Update docusaurus monorepo to v2.0.1 ([#1871](https://github.com/Unleash/unleash/issues/1871))
+
+- Add missing client variant schema fields ([#1880](https://github.com/Unleash/unleash/issues/1880))
+
+- Update dependency unleash-frontend to v4.14.3 ([#1888](https://github.com/Unleash/unleash/issues/1888))
+
+- Add missing client variant schema fields ([#1880](https://github.com/Unleash/unleash/issues/1880))
+
+
+### Docs
+
+- Fix formatting of docusaurus admonitions
+
+
+### Features
+
+- Return detailed information on feature toggle evaluation ([#1839](https://github.com/Unleash/unleash/issues/1839))
+
+
+## [4.14.0] - 2022-07-28
+
+### Bug Fixes
+
+- Make additionalProperties true ([#1861](https://github.com/Unleash/unleash/issues/1861))
+
+- Update dependency unleash-proxy-client to v2.0.3 ([#1841](https://github.com/Unleash/unleash/issues/1841))
+
+- Fix broken OpenAPI spec ([#1846](https://github.com/Unleash/unleash/issues/1846))
+
+- Remove unneeded ts-expect-error now that types in knex are in sync ([#1866](https://github.com/Unleash/unleash/issues/1866))
+
+- Update dependency json-schema-to-ts to v2.5.5 ([#1865](https://github.com/Unleash/unleash/issues/1865))
+
+- SortOrder updates needs to be async
+
+
+### Task
+
+- Bump unleash-frontend to 4.14.1
+
+
 ## [4.13.1] - 2022-07-14
 
 ### Bug Fixes

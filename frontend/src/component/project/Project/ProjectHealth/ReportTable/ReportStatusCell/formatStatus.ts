@@ -9,7 +9,7 @@ export type ReportingStatus = 'potentially-stale' | 'healthy';
 export const formatStatus = (
     feature: IFeatureToggleListItem,
     featureTypes: FeatureTypeSchema[]
-): string => {
+): ReportingStatus => {
     const { type, createdAt } = feature;
 
     const featureType = featureTypes.find(

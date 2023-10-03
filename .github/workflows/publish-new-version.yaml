@@ -42,7 +42,8 @@ jobs:
           echo PREV=$(git describe --tags ${PREV_COMMIT}) >> $GITHUB_ENV
       - if: ${{ !endsWith(github.event.inputs.version, '0') }}
         run: echo PREV=$(git describe --abbrev=0) >> $GITHUB_ENV
-      - name: Generate changelog
+      - name: Generate changelog if not pre-release
+        if: ${{ !contains(github.event.inputs.version, '-') }}
         env:
           PREV: ${{ env.PREV }}
         run: |

@@ -46,7 +46,8 @@
       "src/migrations/*.js",
       "src/test/examples/*.json",
       "website/**/*.js",
-      "coverage"
+      "coverage",
+      "CHANGELOG.md"
     ]
   },
   "organizeImports": {

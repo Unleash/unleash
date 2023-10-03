@@ -18,7 +18,7 @@ const setupApi = () => {
     });
 };
 
-test('Delete dependency', async () => {
+test('Cannot change project for feature with dependencies', async () => {
     let closed = false;
     setupApi();
     render(

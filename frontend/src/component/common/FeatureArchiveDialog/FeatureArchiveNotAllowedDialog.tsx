@@ -25,9 +25,7 @@ export const FeatureArchiveNotAllowedDialog: FC<
             primaryButtonText='OK'
             onClick={onClose}
         >
-            <p>
-                The following features depend on your feature:
-            </p>
+            <p>The following features depend on your feature:</p>
             <ul>
                 {features.map((feature) => (
                     <li key={feature}>

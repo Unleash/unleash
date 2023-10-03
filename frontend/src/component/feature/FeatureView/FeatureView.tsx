@@ -28,12 +28,8 @@ import { ManageTagsDialog } from './FeatureOverview/ManageTagsDialog/ManageTagsD
 import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureStatusChip';
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import {
-    FeatureArchiveDialog,
-} from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
-import {
-    FeatureArchiveNotAllowedDialog,
-} from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
+import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 import { ReactComponent as ChildLinkIcon } from 'assets/icons/link-child.svg';

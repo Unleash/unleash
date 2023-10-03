@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
-import { trim } from 'component/common/util';
-import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import Select from 'component/common/select';
-import { ProjectMode } from '../hooks/useProjectForm';
-import { Box, InputAdornment, styled, TextField } from '@mui/material';
-import { CollaborationModeTooltip } from './CollaborationModeTooltip';
-import Input from 'component/common/Input/Input';
-import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
-import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useUiFlag } from 'hooks/useUiFlag';
+import React, { useEffect } from "react";
+import { trim } from "component/common/util";
+import { StickinessSelect } from "component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect";
+import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
+import Select from "component/common/select";
+import { ProjectMode } from "../hooks/useProjectEnterpriseSettingsForm";
+import { Box, InputAdornment, styled, TextField } from "@mui/material";
+import { CollaborationModeTooltip } from "../ProjectEnterpriseSettingsForm/CollaborationModeTooltip";
+import Input from "component/common/Input/Input";
+import { FeatureTogglesLimitTooltip } from "./FeatureTogglesLimitTooltip";
+import { FeatureFlagNamingTooltip } from "../ProjectEnterpriseSettingsForm/FeatureFlagNamingTooltip";
+import useUiConfig from "hooks/api/getters/useUiConfig/useUiConfig";
+import { usePlausibleTracker } from "hooks/usePlausibleTracker";
+import { useUiFlag } from "hooks/useUiFlag";
 
 interface IProjectForm {
     projectId: string;
@@ -35,27 +35,27 @@ interface IProjectForm {
     setFeatureLimit: React.Dispatch<React.SetStateAction<string>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
-    mode: 'Create' | 'Edit';
+    mode: "Create" | "Edit";
     clearErrors: () => void;
     validateProjectId: () => void;
 }
 
-const PROJECT_STICKINESS_SELECT = 'PROJECT_STICKINESS_SELECT';
-const PROJECT_ID_INPUT = 'PROJECT_ID_INPUT';
-const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
-const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
+const PROJECT_STICKINESS_SELECT = "PROJECT_STICKINESS_SELECT";
+const PROJECT_ID_INPUT = "PROJECT_ID_INPUT";
+const PROJECT_NAME_INPUT = "PROJECT_NAME_INPUT";
+const PROJECT_DESCRIPTION_INPUT = "PROJECT_DESCRIPTION_INPUT";
 
-const StyledForm = styled('form')(({ theme }) => ({
-    height: '100%',
+const StyledForm = styled("form")(({ theme }) => ({
+    height: "100%",
     paddingBottom: theme.spacing(4),
 }));
 
-const StyledDescription = styled('p')(({ theme }) => ({
+const StyledDescription = styled("p")(({ theme }) => ({
     marginBottom: theme.spacing(1),
     marginRight: theme.spacing(1),
 }));
 
-const StyledSubtitle = styled('div')(({ theme }) => ({
+const StyledSubtitle = styled("div")(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallerBody,
     lineHeight: 1.25,
@@ -63,47 +63,47 @@ const StyledSubtitle = styled('div')(({ theme }) => ({
 }));
 
 const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
+    width: "100%",
     marginBottom: theme.spacing(2),
     paddingRight: theme.spacing(1),
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: '100%',
+    width: "100%",
     marginBottom: theme.spacing(2),
 }));
 
-const StyledFieldset = styled('fieldset')(() => ({
+const StyledFieldset = styled("fieldset")(() => ({
     padding: 0,
-    border: 'none',
+    border: "none",
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
     marginBottom: theme.spacing(2),
-    minWidth: '200px',
+    minWidth: "200px",
 }));
 
-const StyledButtonContainer = styled('div')(() => ({
-    marginTop: 'auto',
-    display: 'flex',
-    justifyContent: 'flex-end',
+const StyledButtonContainer = styled("div")(() => ({
+    marginTop: "auto",
+    display: "flex",
+    justifyContent: "flex-end",
 }));
 
-const StyledInputContainer = styled('div')(() => ({
-    display: 'flex',
-    alignItems: 'center',
+const StyledInputContainer = styled("div")(() => ({
+    display: "flex",
+    alignItems: "center",
 }));
 
-const StyledFlagNamingContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+const StyledFlagNamingContainer = styled("div")(({ theme }) => ({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
     gap: theme.spacing(1),
-    '& > *': { width: '100%' },
+    "& > *": { width: "100%" },
 }));
 
-const StyledPatternNamingExplanation = styled('div')(({ theme }) => ({
-    'p + p': { marginTop: theme.spacing(1) },
+const StyledPatternNamingExplanation = styled("div")(({ theme }) => ({
+    "p + p": { marginTop: theme.spacing(1) },
 }));
 
 export const validateFeatureNamingExample = ({
@@ -114,36 +114,36 @@ export const validateFeatureNamingExample = ({
     pattern: string;
     example: string;
     featureNamingPatternError: string | undefined;
-}): { state: 'valid' } | { state: 'invalid'; reason: string } => {
+}): { state: "valid" } | { state: "invalid"; reason: string } => {
     if (featureNamingPatternError || !example || !pattern) {
-        return { state: 'valid' };
+        return { state: "valid" };
     } else if (example && pattern) {
         const regex = new RegExp(`^${pattern}$`);
         const matches = regex.test(example);
         if (!matches) {
-            return { state: 'invalid', reason: 'Example does not match regex' };
+            return { state: "invalid", reason: "Example does not match regex" };
         } else {
-            return { state: 'valid' };
+            return { state: "valid" };
         }
     }
-    return { state: 'valid' };
+    return { state: "valid" };
 };
 
 const useFeatureNamePatternTracking = () => {
-    const [previousPattern, setPreviousPattern] = React.useState<string>('');
+    const [previousPattern, setPreviousPattern] = React.useState<string>("");
     const { trackEvent } = usePlausibleTracker();
-    const eventName = 'feature-naming-pattern' as const;
+    const eventName = "feature-naming-pattern" as const;
 
-    const trackPattern = (pattern: string = '') => {
+    const trackPattern = (pattern: string = "") => {
         if (pattern === previousPattern) {
             // do nothing; they've probably updated something else in the
             // project.
-        } else if (pattern === '' && previousPattern !== '') {
-            trackEvent(eventName, { props: { action: 'removed' } });
-        } else if (pattern !== '' && previousPattern === '') {
-            trackEvent(eventName, { props: { action: 'added' } });
-        } else if (pattern !== '' && previousPattern !== '') {
-            trackEvent(eventName, { props: { action: 'edited' } });
+        } else if (pattern === "" && previousPattern !== "") {
+            trackEvent(eventName, { props: { action: "removed" } });
+        } else if (pattern !== "" && previousPattern === "") {
+            trackEvent(eventName, { props: { action: "added" } });
+        } else if (pattern !== "" && previousPattern !== "") {
+            trackEvent(eventName, { props: { action: "edited" } });
         }
     };
 
@@ -183,21 +183,21 @@ const ProjectForm: React.FC<IProjectForm> = ({
     const { setPreviousPattern, trackPattern } =
         useFeatureNamePatternTracking();
 
-    const privateProjects = useUiFlag('privateProjects');
+    const privateProjects = useUiFlag("privateProjects");
 
     const projectModeOptions = privateProjects
         ? [
-              { key: 'open', label: 'open' },
-              { key: 'protected', label: 'protected' },
-              { key: 'private', label: 'private' },
+              { key: "open", label: "open" },
+              { key: "protected", label: "protected" },
+              { key: "private", label: "private" },
           ]
         : [
-              { key: 'open', label: 'open' },
-              { key: 'protected', label: 'protected' },
+              { key: "open", label: "open" },
+              { key: "protected", label: "protected" },
           ];
 
     useEffect(() => {
-        setPreviousPattern(featureNamingPattern || '');
+        setPreviousPattern(featureNamingPattern || "");
     }, [projectId]);
 
     const updateNamingExampleError = ({
@@ -214,10 +214,10 @@ const ProjectForm: React.FC<IProjectForm> = ({
         });
 
         switch (validationResult.state) {
-            case 'invalid':
+            case "invalid":
                 errors.namingExample = validationResult.reason;
                 break;
-            case 'valid':
+            case "valid":
                 delete errors.namingExample;
                 break;
         }
@@ -225,40 +225,40 @@ const ProjectForm: React.FC<IProjectForm> = ({
 
     const onSetFeatureNamingPattern = (regex: string) => {
         const disallowedStrings = [
-            ' ',
-            '\\t',
-            '\\s',
-            '\\n',
-            '\\r',
-            '\\f',
-            '\\v',
+            " ",
+            "\\t",
+            "\\s",
+            "\\n",
+            "\\r",
+            "\\f",
+            "\\v",
         ];
         if (
             disallowedStrings.some((blockedString) =>
-                regex.includes(blockedString),
+                regex.includes(blockedString)
             )
         ) {
             errors.featureNamingPattern =
-                'Whitespace is not allowed in the expression';
+                "Whitespace is not allowed in the expression";
         } else {
             try {
                 new RegExp(regex);
                 delete errors.featureNamingPattern;
             } catch (e) {
-                errors.featureNamingPattern = 'Invalid regular expression';
+                errors.featureNamingPattern = "Invalid regular expression";
             }
         }
         setFeatureNamingPattern?.(regex);
         updateNamingExampleError({
             pattern: regex,
-            example: featureNamingExample || '',
+            example: featureNamingExample || "",
         });
     };
 
     const onSetFeatureNamingExample = (example: string) => {
         setFeatureNamingExample?.(example);
         updateNamingExampleError({
-            pattern: featureNamingPattern || '',
+            pattern: featureNamingPattern || "",
             example,
         });
     };
@@ -276,14 +276,14 @@ const ProjectForm: React.FC<IProjectForm> = ({
         >
             <StyledDescription>What is your project Id?</StyledDescription>
             <StyledInput
-                label='Project Id'
+                label="Project Id"
                 value={projectId}
                 onChange={(e) => setProjectId(trim(e.target.value))}
                 error={Boolean(errors.id)}
                 errorText={errors.id}
                 onFocus={() => clearErrors()}
                 onBlur={validateProjectId}
-                disabled={mode === 'Edit'}
+                disabled={mode === "Edit"}
                 data-testid={PROJECT_ID_INPUT}
                 autoFocus
                 required
@@ -291,7 +291,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
 
             <StyledDescription>What is your project name?</StyledDescription>
             <StyledInput
-                label='Project name'
+                label="Project name"
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
                 error={Boolean(errors.name)}
@@ -307,8 +307,8 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 What is your project description?
             </StyledDescription>
             <StyledTextField
-                label='Project description'
-                variant='outlined'
+                label="Project description"
+                variant="outlined"
                 multiline
                 maxRows={4}
                 value={projectDesc}
@@ -324,7 +324,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             What is the default stickiness for the project?
                         </StyledDescription>
                         <StickinessSelect
-                            label='Stickiness'
+                            label="Stickiness"
                             value={projectStickiness}
                             data-testid={PROJECT_STICKINESS_SELECT}
                             onChange={(e) =>
@@ -338,8 +338,8 @@ const ProjectForm: React.FC<IProjectForm> = ({
             <>
                 <Box
                     sx={{
-                        display: 'flex',
-                        alignItems: 'center',
+                        display: "flex",
+                        alignItems: "center",
                         marginBottom: 1,
                         gap: 1,
                     }}
@@ -348,10 +348,10 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     <CollaborationModeTooltip />
                 </Box>
                 <StyledSelect
-                    id='project-mode'
+                    id="project-mode"
                     value={projectMode}
-                    label='Project collaboration mode'
-                    name='Project collaboration mode'
+                    label="Project collaboration mode"
+                    name="Project collaboration mode"
                     onChange={(e) => {
                         setProjectMode?.(e.target.value as ProjectMode);
                     }}
@@ -361,8 +361,8 @@ const ProjectForm: React.FC<IProjectForm> = ({
             <>
                 <Box
                     sx={{
-                        display: 'flex',
-                        alignItems: 'center',
+                        display: "flex",
+                        alignItems: "center",
                         marginBottom: 1,
                         gap: 1,
                     }}
@@ -375,9 +375,9 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 </StyledSubtitle>
                 <StyledInputContainer>
                     <StyledInput
-                        label={'Limit'}
-                        name='value'
-                        type={'number'}
+                        label={"Limit"}
+                        name="value"
+                        type={"number"}
                         value={featureLimit}
                         onChange={(e) => setFeatureLimit(e.target.value)}
                     />
@@ -399,8 +399,8 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     <StyledFieldset>
                         <Box
                             sx={{
-                                display: 'flex',
-                                alignItems: 'center',
+                                display: "flex",
+                                alignItems: "center",
                                 marginBottom: 1,
                                 gap: 1,
                             }}
@@ -409,19 +409,19 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             <FeatureFlagNamingTooltip />
                         </Box>
                         <StyledSubtitle>
-                            <StyledPatternNamingExplanation id='pattern-naming-description'>
+                            <StyledPatternNamingExplanation id="pattern-naming-description">
                                 <p>
-                                    Define a{' '}
+                                    Define a{" "}
                                     <a
                                         href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet`}
-                                        target='_blank'
-                                        rel='noreferrer'
+                                        target="_blank"
+                                        rel="noreferrer"
                                     >
                                         JavaScript RegEx
-                                    </a>{' '}
+                                    </a>{" "}
                                     used to enforce feature flag names within
                                     this project. The regex will be surrounded
-                                    by a leading <code>^</code> and a trailing{' '}
+                                    by a leading <code>^</code> and a trailing{" "}
                                     <code>$</code>.
                                 </p>
                                 <p>
@@ -432,24 +432,24 @@ const ProjectForm: React.FC<IProjectForm> = ({
                         </StyledSubtitle>
                         <StyledFlagNamingContainer>
                             <StyledInput
-                                label={'Naming Pattern'}
-                                name='feature flag naming pattern'
-                                aria-describedby='pattern-naming-description'
-                                placeholder='[A-Za-z]+.[A-Za-z]+.[A-Za-z0-9-]+'
+                                label={"Naming Pattern"}
+                                name="feature flag naming pattern"
+                                aria-describedby="pattern-naming-description"
+                                placeholder="[A-Za-z]+.[A-Za-z]+.[A-Za-z0-9-]+"
                                 InputProps={{
                                     startAdornment: (
-                                        <InputAdornment position='start'>
+                                        <InputAdornment position="start">
                                             ^
                                         </InputAdornment>
                                     ),
                                     endAdornment: (
-                                        <InputAdornment position='end'>
+                                        <InputAdornment position="end">
                                             $
                                         </InputAdornment>
                                     ),
                                 }}
-                                type={'text'}
-                                value={featureNamingPattern || ''}
+                                type={"text"}
+                                value={featureNamingPattern || ""}
                                 error={Boolean(errors.featureNamingPattern)}
                                 errorText={errors.featureNamingPattern}
                                 onChange={(e) =>
@@ -457,7 +457,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 }
                             />
                             <StyledSubtitle>
-                                <p id='pattern-additional-description'>
+                                <p id="pattern-additional-description">
                                     The example and description will be shown to
                                     users when they create a new feature flag in
                                     this project.
@@ -465,12 +465,12 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             </StyledSubtitle>
 
                             <StyledInput
-                                label={'Naming Example'}
-                                name='feature flag naming example'
-                                type={'text'}
-                                aria-describedby='pattern-additional-description'
-                                value={featureNamingExample || ''}
-                                placeholder='dx.feature1.1-135'
+                                label={"Naming Example"}
+                                name="feature flag naming example"
+                                type={"text"}
+                                aria-describedby="pattern-additional-description"
+                                value={featureNamingExample || ""}
+                                placeholder="dx.feature1.1-135"
                                 error={Boolean(errors.namingExample)}
                                 errorText={errors.namingExample}
                                 onChange={(e) =>
@@ -478,19 +478,19 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 }
                             />
                             <StyledTextField
-                                label={'Naming pattern description'}
-                                name='feature flag naming description'
-                                type={'text'}
-                                aria-describedby='pattern-additional-description'
+                                label={"Naming pattern description"}
+                                name="feature flag naming description"
+                                type={"text"}
+                                aria-describedby="pattern-additional-description"
                                 placeholder={`<project>.<featureName>.<ticket>
 
 The flag name should contain the project name, the feature name, and the ticket number, each separated by a dot.`}
                                 multiline
                                 minRows={5}
-                                value={featureNamingDescription || ''}
+                                value={featureNamingDescription || ""}
                                 onChange={(e) =>
                                     onSetFeatureNamingDescription(
-                                        e.target.value,
+                                        e.target.value
                                     )
                                 }
                             />

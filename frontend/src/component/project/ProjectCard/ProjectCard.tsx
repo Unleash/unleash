@@ -77,7 +77,7 @@ export const ProjectCard = ({
                     <FavoriteIconButton
                         onClick={onFavorite}
                         isFavorite={isFavorite}
-                        size='medium'
+                        size="medium"
                         sx={{ ml: -1 }}
                     />
                     <StyledH2Title>{name}</StyledH2Title>
@@ -98,11 +98,11 @@ export const ProjectCard = ({
                 </PermissionIconButton>
 
                 <Menu
-                    id='project-card-menu'
+                    id="project-card-menu"
                     open={Boolean(anchorEl)}
                     anchorEl={anchorEl}
                     style={{ top: 0, left: -100 }}
-                    onClick={(event) => {
+                    onClick={event => {
                         event.preventDefault();
                     }}
                     onClose={(event: SyntheticEvent) => {
@@ -111,7 +111,7 @@ export const ProjectCard = ({
                     }}
                 >
                     <MenuItem
-                        onClick={(e) => {
+                        onClick={e => {
                             e.preventDefault();
                             navigate(getProjectEditPath(id));
                         }}
@@ -153,7 +153,7 @@ export const ProjectCard = ({
             <DeleteProjectDialogue
                 project={id}
                 open={showDelDialog}
-                onClose={(e) => {
+                onClose={e => {
                     e.preventDefault();
                     setAnchorEl(null);
                     setShowDelDialog(false);

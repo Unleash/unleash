@@ -45,7 +45,7 @@ export const PlaygroundConnectionFieldset: VFC<
     ];
 
     const environmentOptions = [
-        ...availableEnvironments.map((name) => ({
+        ...availableEnvironments.map(name => ({
             label: name,
             id: name,
         })),
@@ -54,7 +54,7 @@ export const PlaygroundConnectionFieldset: VFC<
     const onProjectsChange: ComponentProps<typeof Autocomplete>['onChange'] = (
         event,
         value,
-        reason,
+        reason
     ) => {
         const newProjects = value as IOption | IOption[];
         if (reason === 'clear' || newProjects === null) {
@@ -99,14 +99,14 @@ export const PlaygroundConnectionFieldset: VFC<
         projects.length === 0 || (projects.length === 1 && projects[0] === '*');
 
     const envValue = environmentOptions.filter(({ id }) =>
-        environments.includes(id),
+        environments.includes(id)
     );
 
     return (
         <Box sx={{ pb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Typography
-                    variant='body2'
+                    variant="body2"
                     color={theme.palette.text.primary}
                     sx={{ ml: 1 }}
                 >
@@ -117,40 +117,40 @@ export const PlaygroundConnectionFieldset: VFC<
                 <Autocomplete
                     disablePortal
                     limitTags={3}
-                    id='environment'
+                    id="environment"
                     multiple={true}
                     options={environmentOptions}
                     sx={{ flex: 1 }}
-                    renderInput={(params) => (
-                        <TextField {...params} label='Environments' />
+                    renderInput={params => (
+                        <TextField {...params} label="Environments" />
                     )}
                     renderOption={renderOption}
                     getOptionLabel={({ label }) => label}
                     disableCloseOnSelect={false}
-                    size='small'
+                    size="small"
                     value={envValue}
                     onChange={onEnvironmentsChange}
                     data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
                 />
                 <Autocomplete
                     disablePortal
-                    id='projects'
+                    id="projects"
                     limitTags={3}
                     multiple={!isAllProjects}
                     options={projectsOptions}
                     sx={{ flex: 1 }}
-                    renderInput={(params) => (
-                        <TextField {...params} label='Projects' />
+                    renderInput={params => (
+                        <TextField {...params} label="Projects" />
                     )}
                     renderOption={renderOption}
                     getOptionLabel={({ label }) => label}
                     disableCloseOnSelect
-                    size='small'
+                    size="small"
                     value={
                         isAllProjects
                             ? allOption
                             : projectsOptions.filter(({ id }) =>
-                                  projects.includes(id),
+                                  projects.includes(id)
                               )
                     }
                     onChange={onProjectsChange}

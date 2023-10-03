@@ -10,7 +10,7 @@ test('renders children when there is no search term', () => {
 
 test('highlights the search term', () => {
     const { container } = render(
-        <Highlighter search='Test'>Test Text</Highlighter>,
+        <Highlighter search="Test">Test Text</Highlighter>
     );
 
     expect(container.innerHTML).toContain('<mark>Test</mark>');
@@ -18,7 +18,7 @@ test('highlights the search term', () => {
 
 test('does not highlight when search term is not present in children', () => {
     const { container } = render(
-        <Highlighter search='Hello'>Test Text</Highlighter>,
+        <Highlighter search="Hello">Test Text</Highlighter>
     );
 
     expect(container.innerHTML).not.toContain('<mark>');
@@ -26,7 +26,7 @@ test('does not highlight when search term is not present in children', () => {
 
 test('is case insensitive by default', () => {
     const { container } = render(
-        <Highlighter search='test'>Test Text</Highlighter>,
+        <Highlighter search="test">Test Text</Highlighter>
     );
 
     expect(container.innerHTML).toContain('<mark>Test</mark>');
@@ -34,9 +34,9 @@ test('is case insensitive by default', () => {
 
 test('respects case sensitivity when specified', () => {
     const { container } = render(
-        <Highlighter search='test' caseSensitive={true}>
+        <Highlighter search="test" caseSensitive={true}>
             Test Text
-        </Highlighter>,
+        </Highlighter>
     );
 
     expect(container.innerHTML).not.toContain('<mark>');

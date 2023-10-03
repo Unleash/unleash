@@ -9,7 +9,7 @@ const LOCAL_TESTING = false;
 
 export const PlausibleProvider: FC = ({ children }) => {
     const [context, setContext] = useState<ReturnType<typeof Plausible> | null>(
-        null,
+        null
     );
 
     const getUIFlags = () => {
@@ -17,7 +17,7 @@ export const PlausibleProvider: FC = ({ children }) => {
             const uiFlagsStr =
                 (
                     document.querySelector(
-                        'meta[name="uiFlags"]',
+                        'meta[name="uiFlags"]'
                     ) as HTMLMetaElement
                 )?.content || '{}';
             return JSON.parse(decodeURI(uiFlagsStr));

@@ -11,7 +11,7 @@ interface IConstraintItemProps {
 }
 
 const StyledDivContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'showReason',
+    shouldForwardProp: prop => prop !== 'showReason',
 })<{ showReason?: boolean }>(({ theme, showReason }) => ({
     width: '100%',
     padding: theme.spacing(2, 3),
@@ -55,7 +55,7 @@ export const PlaygroundParameterItem = ({
 
     return (
         <StyledDivContainer showReason={showReason}>
-            <Typography variant='subtitle1' color={theme.palette[color].main}>
+            <Typography variant="subtitle1" color={theme.palette[color].main}>
                 {`${input}`}
             </Typography>
             <StyledDivColumn>
@@ -63,7 +63,7 @@ export const PlaygroundParameterItem = ({
                     condition={Boolean(showReason)}
                     show={
                         <Typography
-                            variant='subtitle1'
+                            variant="subtitle1"
                             color={theme.palette.error.main}
                         >
                             {reason}
@@ -85,7 +85,7 @@ export const PlaygroundParameterItem = ({
                                     key={v}
                                     label={
                                         <StringTruncator
-                                            maxWidth='300'
+                                            maxWidth="300"
                                             text={v.toString()}
                                             maxLength={50}
                                         />

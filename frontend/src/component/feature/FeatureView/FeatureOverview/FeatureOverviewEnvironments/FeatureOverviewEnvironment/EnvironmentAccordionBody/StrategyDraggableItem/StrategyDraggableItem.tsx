@@ -18,11 +18,11 @@ interface IStrategyDraggableItemProps {
     isDragging?: boolean;
     onDragStartRef: (
         ref: RefObject<HTMLDivElement>,
-        index: number,
+        index: number
     ) => DragEventHandler<HTMLButtonElement>;
     onDragOver: (
         ref: RefObject<HTMLDivElement>,
-        index: number,
+        index: number
     ) => DragEventHandler<HTMLDivElement>;
     onDragEnd: () => void;
 }
@@ -43,7 +43,7 @@ export const StrategyDraggableItem = ({
         projectId,
         featureId,
         environmentName,
-        strategy.id,
+        strategy.id
     );
 
     return (
@@ -55,7 +55,7 @@ export const StrategyDraggableItem = ({
         >
             <ConditionallyRender
                 condition={index > 0}
-                show={<StrategySeparator text='OR' />}
+                show={<StrategySeparator text="OR" />}
             />
 
             <StrategyItem
@@ -87,11 +87,11 @@ const ChangeRequestStatusBadge = ({
         <Box sx={{ mr: 1.5 }}>
             <ConditionallyRender
                 condition={change?.action === 'updateStrategy'}
-                show={<Badge color='warning'>Modified in draft</Badge>}
+                show={<Badge color="warning">Modified in draft</Badge>}
             />
             <ConditionallyRender
                 condition={change?.action === 'deleteStrategy'}
-                show={<Badge color='error'>Deleted in draft</Badge>}
+                show={<Badge color="error">Deleted in draft</Badge>}
             />
         </Box>
     );

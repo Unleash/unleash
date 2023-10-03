@@ -27,7 +27,7 @@ const DividerText = ({ text, ...rest }: IDividerTextProps) => {
     return (
         <StyledContainer {...rest}>
             <StyledSpan />
-            <StyleTypography variant='body2'>{text}</StyleTypography>
+            <StyleTypography variant="body2">{text}</StyleTypography>
             <StyledSpan />
         </StyledContainer>
     );

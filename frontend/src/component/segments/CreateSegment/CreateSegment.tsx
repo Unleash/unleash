@@ -50,11 +50,13 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
     const segmentValuesCount = useSegmentValuesCount(constraints);
 
     const overSegmentValuesLimit: boolean = Boolean(
-        segmentValuesLimit && segmentValuesCount > segmentValuesLimit,
+        segmentValuesLimit && segmentValuesCount > segmentValuesLimit
     );
 
     const formatApiCode = () => {
-        return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/segments' \\
+        return `curl --location --request POST '${
+            uiConfig.unleashUrl
+        }/api/admin/segments' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getSegmentPayload(), undefined, 2)}'`;
@@ -90,10 +92,10 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
         <FormTemplate
             loading={loading}
             modal={modal}
-            title='Create segment'
+            title="Create segment"
             description={segmentsFormDescription}
             documentationLink={segmentsDocsLink}
-            documentationLinkLabel='Segments documentation'
+            documentationLinkLabel="Segments documentation"
             formatApiCode={formatApiCode}
         >
             <SegmentForm
@@ -108,10 +110,10 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
                 setConstraints={setConstraints}
                 errors={errors}
                 clearErrors={clearErrors}
-                mode='create'
+                mode="create"
             >
                 <CreateButton
-                    name='segment'
+                    name="segment"
                     permission={CREATE_SEGMENT}
                     disabled={!hasValidConstraints || overSegmentValuesLimit}
                     data-testid={SEGMENT_CREATE_BTN_ID}

@@ -7,9 +7,9 @@ describe('ProjectsList', () => {
     it('should prioritize new "projects" array over deprecated "project"', async () => {
         render(
             <ProjectsList
-                project='project'
+                project="project"
                 projects={['project1', 'project2']}
-            />,
+            />
         );
 
         const links = await screen.findAllByRole('link');
@@ -21,7 +21,7 @@ describe('ProjectsList', () => {
     });
 
     it('should render correctly with single "project"', async () => {
-        render(<ProjectsList project='project' />);
+        render(<ProjectsList project="project" />);
 
         const links = await screen.findAllByRole('link');
         expect(links).toHaveLength(1);

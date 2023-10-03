@@ -32,30 +32,30 @@ export const VirtualizedTable = <T extends object>({
     const theme = useTheme();
     const rowHeight = useMemo(
         () => rowHeightOverride || theme.shape.tableRowHeight,
-        [rowHeightOverride, theme.shape.tableRowHeight],
+        [rowHeightOverride, theme.shape.tableRowHeight]
     );
 
     const [firstRenderedIndex, lastRenderedIndex] = useVirtualizedRange(
         rowHeight,
         40,
         5,
-        parentRef?.current,
+        parentRef?.current
     );
 
     const tableHeight = useMemo(
         () => rowHeight * rows.length + theme.shape.tableRowHeightCompact,
-        [rowHeight, rows.length, theme.shape.tableRowHeightCompact],
+        [rowHeight, rows.length, theme.shape.tableRowHeightCompact]
     );
 
     return (
         <Table
-            role='table'
+            role="table"
             rowHeight={rowHeight}
             style={{ height: tableHeight }}
         >
             <SortableTableHeader headerGroups={headerGroups} flex />
             <TableBody
-                role='rowgroup'
+                role="rowgroup"
                 sx={{
                     '& tr': {
                         position: 'absolute',
@@ -97,7 +97,7 @@ export const VirtualizedTable = <T extends object>({
                             })}
                             key={row.id}
                         >
-                            {row.cells.map((cell) => (
+                            {row.cells.map(cell => (
                                 <TableCell
                                     {...cell.getCellProps({
                                         style: {

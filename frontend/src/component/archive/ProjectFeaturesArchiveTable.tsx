@@ -18,12 +18,12 @@ export const ProjectFeaturesArchiveTable: VFC<IProjectFeaturesTable> = ({
 
     const { value, setValue } = createLocalStorage(
         `${projectId}:ProjectFeaturesArchiveTable`,
-        defaultSort,
+        defaultSort
     );
 
     return (
         <ArchiveTable
-            title='Project archive'
+            title="Project archive"
             archivedFeatures={archivedFeatures || []}
             loading={loading}
             storedParams={value}

@@ -23,5 +23,5 @@ const createInitialValue = (): IEventSettings => {
 
 const useGlobalState = createPersistentGlobalStateHook<IEventSettings>(
     `${basePath}:useEventSettings:v1`,
-    createInitialValue(),
+    createInitialValue()
 );

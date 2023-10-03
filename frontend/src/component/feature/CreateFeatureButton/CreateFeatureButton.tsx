@@ -38,7 +38,7 @@ export const CreateFeatureButton = ({
                     projectId={createFeature.projectId}
                     component={Link}
                     to={createFeature.path}
-                    size='large'
+                    size="large"
                     tooltipProps={{
                         title: 'Create feature toggle',
                     }}
@@ -53,8 +53,8 @@ export const CreateFeatureButton = ({
                     }}
                     permission={CREATE_FEATURE}
                     projectId={createFeature.projectId}
-                    color='primary'
-                    variant='contained'
+                    color="primary"
+                    variant="contained"
                     data-testid={NAVIGATE_TO_CREATE_FEATURE}
                     className={classnames({ skeleton: loading })}
                 >

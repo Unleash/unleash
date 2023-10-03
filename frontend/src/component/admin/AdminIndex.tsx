@@ -10,42 +10,35 @@ import { useAdminRoutes } from './useAdminRoutes';
 export const AdminIndex: VFC = () => {
     const adminRoutes = useAdminRoutes();
 
-    const routeGroups = adminRoutes.reduce(
-        (acc, route) => {
-            const group = route.group || 'other';
+    const routeGroups = adminRoutes.reduce((acc, route) => {
+        const group = route.group || 'other';
 
-            const index = acc.findIndex((item) => item.name === group);
-            if (index === -1) {
-                acc.push({
-                    name: group,
-                    description: adminGroups[group] || 'Other',
-                    items: [route],
-                });
-
-                return acc;
-            }
-
-            acc[index].items.push(route);
+        const index = acc.findIndex(item => item.name === group);
+        if (index === -1) {
+            acc.push({
+                name: group,
+                description: adminGroups[group] || 'Other',
+                items: [route],
+            });
 
             return acc;
-        },
-        [] as Array<{
-            name: string;
-            description: string;
-            items: INavigationMenuItem[];
-        }>,
-    );
+        }
+
+        acc[index].items.push(route);
+
+        return acc;
+    }, [] as Array<{ name: string; description: string; items: INavigationMenuItem[] }>);
 
     return (
-        <PageContent header={<PageHeader title='Manage Unleash' />}>
-            {routeGroups.map((group) => (
+        <PageContent header={<PageHeader title="Manage Unleash" />}>
+            {routeGroups.map(group => (
                 <Box
                     key={group.name}
-                    sx={(theme) => ({ marginBottom: theme.spacing(2) })}
+                    sx={theme => ({ marginBottom: theme.spacing(2) })}
                 >
-                    <Typography variant='h2'>{group.description}</Typography>
+                    <Typography variant="h2">{group.description}</Typography>
                     <ul>
-                        {group.items.map((route) => (
+                        {group.items.map(route => (
                             <li key={route.path}>
                                 <Link component={RouterLink} to={route.path}>
                                     {route.title}

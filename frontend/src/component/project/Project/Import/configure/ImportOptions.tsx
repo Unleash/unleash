@@ -37,7 +37,7 @@ export const ImportOptions: FC<IImportOptionsProps> = ({
             key: environment,
             label: environment,
             title: environment,
-        }),
+        })
     );
 
     useEffect(() => {

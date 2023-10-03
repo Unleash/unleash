@@ -53,7 +53,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
         segment?.name,
         segment?.description,
         segment?.project,
-        segment?.constraints,
+        segment?.constraints
     );
 
     const hasValidConstraints = useConstraintsValidation(constraints);
@@ -61,7 +61,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
     const { segmentValuesLimit } = useSegmentLimits();
 
     const overSegmentValuesLimit: boolean = Boolean(
-        segmentValuesLimit && segmentValuesCount > segmentValuesLimit,
+        segmentValuesLimit && segmentValuesCount > segmentValuesLimit
     );
 
     const formatApiCode = () => {
@@ -114,10 +114,10 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
         <FormTemplate
             loading={loading}
             modal={modal}
-            title='Edit segment'
+            title="Edit segment"
             description={segmentsFormDescription}
             documentationLink={segmentsDocsLink}
-            documentationLinkLabel='Segments documentation'
+            documentationLinkLabel="Segments documentation"
             formatApiCode={formatApiCode}
         >
             <SegmentForm
@@ -132,7 +132,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
                 setConstraints={setConstraints}
                 errors={errors}
                 clearErrors={clearErrors}
-                mode='edit'
+                mode="edit"
             >
                 <UpdateButton
                     permission={UPDATE_SEGMENT}

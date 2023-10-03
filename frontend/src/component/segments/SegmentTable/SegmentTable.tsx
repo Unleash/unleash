@@ -82,7 +82,7 @@ export const SegmentTable = () => {
             },
         },
         useGlobalFilter,
-        useSortBy,
+        useSortBy
     );
 
     useConditionallyHiddenColumns(
@@ -97,7 +97,7 @@ export const SegmentTable = () => {
             },
         ],
         setHiddenColumns,
-        columns,
+        columns
     );
 
     return (
@@ -129,19 +129,19 @@ export const SegmentTable = () => {
                 elseShow={() => (
                     <>
                         <SearchHighlightProvider value={globalFilter}>
-                            <Table {...getTableProps()} rowHeight='standard'>
+                            <Table {...getTableProps()} rowHeight="standard">
                                 <SortableTableHeader
                                     headerGroups={headerGroups as any}
                                 />
                                 <TableBody {...getTableBodyProps()}>
-                                    {rows.map((row) => {
+                                    {rows.map(row => {
                                         prepareRow(row);
                                         return (
                                             <TableRow
                                                 hover
                                                 {...row.getRowProps()}
                                             >
-                                                {row.cells.map((cell) => (
+                                                {row.cells.map(cell => (
                                                     <TableCell
                                                         {...cell.getCellProps()}
                                                     >
@@ -178,13 +178,17 @@ const getColumns = () => [
         width: '1%',
         disableGlobalFilter: true,
         disableSortBy: true,
-        Cell: () => <IconCell icon={<DonutLarge color='disabled' />} />,
+        Cell: () => <IconCell icon={<DonutLarge color="disabled" />} />,
     },
     {
         Header: 'Name',
         accessor: 'name',
         width: '60%',
-        Cell: ({ row: { original: { name, description, id } } }: any) => (
+        Cell: ({
+            row: {
+                original: { name, description, id },
+            },
+        }: any) => (
             <LinkCell
                 title={name}
                 to={`/segments/edit/${id}`}

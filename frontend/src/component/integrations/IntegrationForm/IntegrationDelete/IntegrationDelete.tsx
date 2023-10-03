@@ -52,11 +52,11 @@ export const IntegrationDelete: VFC<IIntegrationDeleteProps> = ({ id }) => {
             </StyledHelpText>
             <StyledContainer>
                 <PermissionButton
-                    type='button'
-                    variant='outlined'
-                    color='error'
+                    type="button"
+                    variant="outlined"
+                    color="error"
                     permission={DELETE_ADDON}
-                    onClick={(e) => {
+                    onClick={e => {
                         e.preventDefault();
                         setIsOpen(true);
                     }}
@@ -68,7 +68,7 @@ export const IntegrationDelete: VFC<IIntegrationDeleteProps> = ({ id }) => {
                 open={isOpen}
                 onClick={onSubmit}
                 onClose={() => setIsOpen(false)}
-                title='Confirm deletion'
+                title="Confirm deletion"
             >
                 <div>Are you sure you want to delete this Integration?</div>
             </Dialogue>

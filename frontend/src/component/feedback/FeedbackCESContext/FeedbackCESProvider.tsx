@@ -30,13 +30,13 @@ export const FeedbackCESProvider = ({ children }: IFeedbackProviderProps) => {
 
     // Set a new feedback state iff the path is unseen and CES is enabled.
     const showFeedbackCES: ShowFeedbackCES = useCallback(
-        (value) => {
-            setState((prev) => {
+        value => {
+            setState(prev => {
                 const next = value instanceof Function ? value(prev) : value;
                 return !enabled || !next || isSeen(next) ? undefined : next;
             });
         },
-        [enabled, isSeen],
+        [enabled, isSeen]
     );
 
     const hideFeedbackCES = useCallback(() => {
@@ -48,7 +48,7 @@ export const FeedbackCESProvider = ({ children }: IFeedbackProviderProps) => {
             showFeedbackCES: showFeedbackCES,
             hideFeedbackCES: hideFeedbackCES,
         }),
-        [showFeedbackCES, hideFeedbackCES],
+        [showFeedbackCES, hideFeedbackCES]
     );
 
     return (

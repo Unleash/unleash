@@ -7,7 +7,7 @@ import { paginate } from 'utils/paginate';
 const usePagination = <T>(
     data: T[],
     limit: number,
-    filterFunc?: (item: T) => boolean,
+    filterFunc?: (item: T) => boolean
 ) => {
     const [paginatedData, setPaginatedData] = useState<T[][]>([[]]);
     const [pageIndex, setPageIndex] = useState(0);
@@ -27,13 +27,13 @@ const usePagination = <T>(
 
     const nextPage = () => {
         if (pageIndex < paginatedData.length - 1) {
-            setPageIndex((prev) => prev + 1);
+            setPageIndex(prev => prev + 1);
         }
     };
 
     const prevPage = () => {
         if (pageIndex > 0) {
-            setPageIndex((prev) => prev - 1);
+            setPageIndex(prev => prev - 1);
         }
     };
 

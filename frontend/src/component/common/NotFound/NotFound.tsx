@@ -54,14 +54,14 @@ const NotFound: FC = ({ children }) => {
             <div>
                 <StyledLogo />
                 <StyledContent>
-                    <Typography variant='h1' style={{ fontSize: '2rem' }}>
+                    <Typography variant="h1" style={{ fontSize: '2rem' }}>
                         Ooops. That's a page we haven't toggled on yet.
                     </Typography>
                 </StyledContent>
                 <StyledButtonContainer>
                     <Button
-                        variant='contained'
-                        color='primary'
+                        variant="contained"
+                        color="primary"
                         onClick={onClickBack}
                     >
                         Go back

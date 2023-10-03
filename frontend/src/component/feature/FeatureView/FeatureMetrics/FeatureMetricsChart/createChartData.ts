@@ -13,13 +13,13 @@ export interface IPoint {
 export const createChartData = (
     theme: Theme,
     metrics: IFeatureMetricsRaw[],
-    locationSettings: ILocationSettings,
+    locationSettings: ILocationSettings
 ): ChartData<'line', IPoint[], string> => {
     const requestsSeries = {
         label: 'Total requests',
         borderColor: theme.palette.primary.main,
         backgroundColor: theme.palette.primary.main,
-        data: createChartPoints(metrics, locationSettings, (m) => m.yes + m.no),
+        data: createChartPoints(metrics, locationSettings, m => m.yes + m.no),
         elements: {
             point: {
                 radius: 6,
@@ -35,7 +35,7 @@ export const createChartData = (
         label: 'Exposed',
         borderColor: theme.palette.success.main,
         backgroundColor: theme.palette.success.main,
-        data: createChartPoints(metrics, locationSettings, (m) => m.yes),
+        data: createChartPoints(metrics, locationSettings, m => m.yes),
         elements: {
             point: {
                 radius: 6,
@@ -48,7 +48,7 @@ export const createChartData = (
         label: 'Not exposed',
         borderColor: theme.palette.error.main,
         backgroundColor: theme.palette.error.main,
-        data: createChartPoints(metrics, locationSettings, (m) => m.no),
+        data: createChartPoints(metrics, locationSettings, m => m.no),
         elements: {
             point: {
                 radius: 6,
@@ -66,9 +66,9 @@ export const createChartData = (
 const createChartPoints = (
     metrics: IFeatureMetricsRaw[],
     locationSettings: ILocationSettings,
-    y: (m: IFeatureMetricsRaw) => number,
+    y: (m: IFeatureMetricsRaw) => number
 ): IPoint[] => {
-    return metrics.map((metric) => ({
+    return metrics.map(metric => ({
         x: metric.timestamp,
         y: y(metric),
         variants: metric.variants,

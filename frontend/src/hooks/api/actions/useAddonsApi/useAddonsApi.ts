@@ -25,7 +25,7 @@ const useAddonsApi = () => {
             method: 'DELETE',
         });
 
-        return makeRequest(req.caller, req.id);
+        return await makeRequest(req.caller, req.id);
     };
 
     const updateAddon = useCallback(
@@ -38,7 +38,7 @@ const useAddonsApi = () => {
 
             return makeRequest(req.caller, req.id);
         },
-        [createRequest, makeRequest],
+        [createRequest, makeRequest]
     );
 
     return {

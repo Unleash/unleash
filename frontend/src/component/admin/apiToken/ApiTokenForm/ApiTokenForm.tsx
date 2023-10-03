@@ -26,9 +26,9 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
             <ConditionallyRender
                 condition={isUnleashCloud}
                 show={
-                    <Alert severity='info' sx={{ mb: 4 }}>
+                    <Alert severity="info" sx={{ mb: 4 }}>
                         Please be aware of our{' '}
-                        <Link href='https://www.getunleash.io/fair-use-policy'>
+                        <Link href="https://www.getunleash.io/fair-use-policy">
                             fair use policy
                         </Link>
                         .

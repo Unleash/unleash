@@ -15,14 +15,14 @@ interface IUseApplicationsOutput {
 }
 
 const useApplications = (
-    options: SWRConfiguration = {},
+    options: SWRConfiguration = {}
 ): IUseApplicationsOutput => {
     const fetcher = async () => {
         return fetch(path, {
             method: 'GET',
         })
             .then(handleErrorResponses('Applications data'))
-            .then((res) => res.json());
+            .then(res => res.json());
     };
 
     const APPLICATIONS_CACHE_KEY = 'api/admin/metrics/applications';

@@ -39,12 +39,12 @@ const StyledGroupFormUsersSelect = styled('div')(({ theme }) => ({
 const renderOption = (
     props: React.HTMLAttributes<HTMLLIElement>,
     option: IProjectBase,
-    selected: boolean,
+    selected: boolean
 ) => (
     <li {...props}>
         <Checkbox
-            icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
-            checkedIcon={<CheckBoxIcon fontSize='small' />}
+            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+            checkedIcon={<CheckBoxIcon fontSize="small" />}
             style={{ marginRight: 8 }}
             checked={selected}
         />
@@ -87,7 +87,7 @@ export const EnvironmentProjectSelect = ({
         })) as IProjectBase[];
 
     const selectedProjects = projectOptions.filter(({ id }) =>
-        projects.includes(id),
+        projects.includes(id)
     );
 
     const isAllSelected =
@@ -118,7 +118,7 @@ export const EnvironmentProjectSelect = ({
     return (
         <StyledGroupFormUsersSelect>
             <Autocomplete
-                size='small'
+                size="small"
                 multiple
                 limitTags={1}
                 openOnFocus
@@ -142,17 +142,17 @@ export const EnvironmentProjectSelect = ({
                     options.filter(
                         ({ name, description }) =>
                             caseInsensitiveSearch(inputValue, name) ||
-                            caseInsensitiveSearch(inputValue, description),
+                            caseInsensitiveSearch(inputValue, description)
                     )
                 }
                 isOptionEqualToValue={(option, value) => option.id === value.id}
-                getOptionLabel={(option) =>
+                getOptionLabel={option =>
                     option.name || option.description || ''
                 }
-                renderInput={(params) => (
-                    <TextField {...params} label='Projects' />
+                renderInput={params => (
+                    <TextField {...params} label="Projects" />
                 )}
-                renderTags={(value) => renderTags(value)}
+                renderTags={value => renderTags(value)}
                 groupBy={() => 'Select/Deselect all'}
                 renderGroup={renderGroup}
             />

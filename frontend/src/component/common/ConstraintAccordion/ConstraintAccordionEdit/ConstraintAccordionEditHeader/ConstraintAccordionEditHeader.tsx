@@ -105,7 +105,7 @@ export const ConstraintAccordionEditHeader = ({
     const { uiConfig } = useUiConfig();
 
     const caseInsensitiveInOperators = Boolean(
-        uiConfig.flags.caseInsensitiveInOperators,
+        uiConfig.flags.caseInsensitiveInOperators
     );
 
     /* We need a special case to handle the currenTime context field. Since
@@ -118,7 +118,7 @@ export const ConstraintAccordionEditHeader = ({
             contextName === CURRENT_TIME_CONTEXT_FIELD &&
             !oneOf(dateOperators, operator)
         ) {
-            setLocalConstraint((prev) => ({
+            setLocalConstraint(prev => ({
                 ...prev,
                 operator: DATE_AFTER,
                 value: new Date().toISOString(),
@@ -150,7 +150,7 @@ export const ConstraintAccordionEditHeader = ({
         return null;
     }
 
-    const constraintNameOptions = context.map((context) => {
+    const constraintNameOptions = context.map(context => {
         return { key: context.name, label: context.name };
     });
 
@@ -165,7 +165,7 @@ export const ConstraintAccordionEditHeader = ({
         }
 
         if (oneOf(dateOperators, operator)) {
-            setLocalConstraint((prev) => ({
+            setLocalConstraint(prev => ({
                 ...prev,
                 operator: operator,
                 value: new Date().toISOString(),
@@ -181,9 +181,9 @@ export const ConstraintAccordionEditHeader = ({
             <StyledSelectContainer>
                 <div>
                     <StyledGeneralSelect
-                        id='context-field-select'
-                        name='contextName'
-                        label='Context Field'
+                        id="context-field-select"
+                        name="contextName"
+                        label="Context Field"
                         autoFocus
                         options={constraintNameOptions}
                         value={contextName || ''}

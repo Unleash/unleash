@@ -30,7 +30,7 @@ export const FeatureStrategyEnabled: FC<IFeatureStrategyEnabledProps> = ({
             condition={isFeatureEnabledInEnvironment(feature, environmentId)}
             show={children}
             elseShow={
-                <Alert severity='warning'>
+                <Alert severity="warning">
                     This feature toggle is currently disabled in the{' '}
                     <strong>{environmentId}</strong> environment. Any changes
                     made here will not take effect until the toggle has been
@@ -43,9 +43,9 @@ export const FeatureStrategyEnabled: FC<IFeatureStrategyEnabledProps> = ({
 
 const isFeatureEnabledInEnvironment = (
     feature: IFeatureToggle,
-    environmentId: string,
+    environmentId: string
 ): boolean => {
-    const environment = feature.environments.find((environment) => {
+    const environment = feature.environments.find(environment => {
         return environment.name === environmentId;
     });
 

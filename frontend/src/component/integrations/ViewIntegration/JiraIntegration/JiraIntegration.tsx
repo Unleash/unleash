@@ -51,19 +51,19 @@ export const JiraIntegration = () => {
             title={`${displayName}`}
             description={description || ''}
             documentationLink={documentationUrl}
-            documentationLinkLabel='Jira documentation'
+            documentationLinkLabel="Jira documentation"
         >
             <StyledContainer>
                 <IntegrationHowToSection provider={JIRA_INFO} />
                 <StyledGrayContainer>
                     <StyledLink
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        href='https://marketplace.atlassian.com/apps/1231447/unleash-enterprise-for-jira'
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://marketplace.atlassian.com/apps/1231447/unleash-enterprise-for-jira"
                     >
                         View plugin on Atlassian marketplace{' '}
                         <LaunchIcon
-                            fontSize='inherit'
+                            fontSize="inherit"
                             sx={{
                                 verticalAlign: 'middle',
                                 marginBottom: '2px',

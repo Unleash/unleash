@@ -16,7 +16,7 @@ import { PlaygroundEnvironmentTable } from '../../PlaygroundEnvironmentTable/Pla
 
 const StyledContainer = styled(
     'div',
-    {},
+    {}
 )(({ theme }) => ({
     flexGrow: 0,
     ...flexRow,
@@ -47,10 +47,8 @@ export const AdvancedPlaygroundEnvironmentCell = ({
 
     const open = Boolean(anchor);
 
-    const enabled = (value || []).filter((evaluation) => evaluation.isEnabled);
-    const disabled = (value || []).filter(
-        (evaluation) => !evaluation.isEnabled,
-    );
+    const enabled = (value || []).filter(evaluation => evaluation.isEnabled);
+    const disabled = (value || []).filter(evaluation => !evaluation.isEnabled);
 
     return (
         <StyledContainer>
@@ -97,7 +95,7 @@ export const AdvancedPlaygroundEnvironmentCell = ({
                         horizontal: -320,
                     }}
                 >
-                    <Typography variant='subtitle2' sx={{ mb: 3 }}>
+                    <Typography variant="subtitle2" sx={{ mb: 3 }}>
                         {value[0].environment}
                     </Typography>
                     <PlaygroundEnvironmentTable features={value} />

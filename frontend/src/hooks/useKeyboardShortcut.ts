@@ -11,7 +11,7 @@ export const useKeyboardShortcut = (
         modifiers?: Array<'ctrl' | 'alt' | 'shift'>;
         preventDefault?: boolean;
     },
-    callback: () => void,
+    callback: () => void
 ) => {
     const isAppleDevice = useIsAppleDevice();
     useEffect(() => {
@@ -53,14 +53,14 @@ export const useKeyboardShortcut = (
     const formattedModifiers = useMemo(
         () =>
             modifiers.map(
-                (modifier) =>
+                modifier =>
                     ({
                         ctrl: isAppleDevice ? '⌘' : 'Ctrl',
                         alt: 'Alt',
                         shift: 'Shift',
-                    })[modifier],
+                    }[modifier])
             ),
-        [isAppleDevice, modifiers],
+        [isAppleDevice, modifiers]
     );
 
     const hotkeyDescription = useMemo(
@@ -69,7 +69,7 @@ export const useKeyboardShortcut = (
                 ...formattedModifiers,
                 `${key[0].toUpperCase()}${key.slice(1)}`,
             ].join('+'),
-        [formattedModifiers, key],
+        [formattedModifiers, key]
     );
 
     return hotkeyDescription;

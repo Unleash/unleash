@@ -56,12 +56,12 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
     const [showInfoBox, setShowInfoBox] = useState(false);
     const [environmentName, setEnvironmentName] = useState('');
     const someEnabledEnvironmentHasVariants = feature.environments.some(
-        (environment) => environment.enabled && environment.variants?.length,
+        environment => environment.enabled && environment.variants?.length
     );
     return (
-        <StyledContainer data-testid='feature-toggle-status'>
+        <StyledContainer data-testid="feature-toggle-status">
             {header}
-            {feature.environments.map((environment) => {
+            {feature.environments.map(environment => {
                 const strategiesLabel =
                     environment.strategies.length === 1
                         ? '1 strategy'
@@ -72,11 +72,11 @@ export const FeatureOverviewSidePanelEnvironmentSwitches = ({
                 const variantsLink = variants.length > 0 && (
                     <>
                         <StyledSeparator />
-                        <Tooltip title='View variants' arrow describeChild>
+                        <Tooltip title="View variants" arrow describeChild>
                             <StyledLink
                                 component={RouterLink}
                                 to={`/projects/${feature.project}/features/${feature.name}/variants`}
-                                underline='hover'
+                                underline="hover"
                             >
                                 {variants.length === 1
                                     ? '1 variant'

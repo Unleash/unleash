@@ -5,7 +5,7 @@ import {
 
 export const validateParameterValue = (
     definition: Pick<IStrategyParameter, 'type' | 'required'>,
-    value: IFeatureStrategyParameters[string],
+    value: IFeatureStrategyParameters[string]
 ): string | undefined => {
     const { type, required } = definition;
 

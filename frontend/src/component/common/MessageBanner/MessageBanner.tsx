@@ -9,7 +9,7 @@ import ReactMarkdown from 'react-markdown';
 import { useVariant } from 'hooks/useVariant';
 
 const StyledBar = styled('aside', {
-    shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'sticky',
+    shouldForwardProp: prop => prop !== 'variant' && prop !== 'sticky',
 })<{ variant: BannerVariant; sticky?: boolean }>(
     ({ theme, variant, sticky }) => ({
         position: sticky ? 'sticky' : 'relative',
@@ -28,11 +28,11 @@ const StyledBar = styled('aside', {
             top: 0,
             zIndex: theme.zIndex.sticky,
         }),
-    }),
+    })
 );
 
 const StyledIcon = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'variant',
+    shouldForwardProp: prop => prop !== 'variant',
 })<{ variant: BannerVariant }>(({ theme, variant }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -65,7 +65,7 @@ export const MessageBanner = () => {
     const [open, setOpen] = useState(false);
 
     const messageBanner = useVariant<IMessageFlag>(
-        uiConfig.flags.messageBanner,
+        uiConfig.flags.messageBanner
     );
 
     if (!messageBanner) return null;
@@ -179,7 +179,7 @@ const BannerButton = ({
         );
 
     return (
-        <Link href={link} target='_blank' rel='noreferrer' onClick={trackEvent}>
+        <Link href={link} target="_blank" rel="noreferrer" onClick={trackEvent}>
             {children}
         </Link>
     );

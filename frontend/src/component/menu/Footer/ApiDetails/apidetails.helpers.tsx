@@ -23,7 +23,7 @@ export const formatCurrentVersion = (uiConfig: IPartialUiConfig): string => {
 };
 
 export const formatUpdateNotification = (
-    uiConfig: IPartialUiConfig,
+    uiConfig: IPartialUiConfig
 ): string | undefined => {
     const latest = uiConfig.versionInfo?.latest;
     const isLatest = uiConfig.versionInfo?.isLatest;

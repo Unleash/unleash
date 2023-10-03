@@ -40,11 +40,11 @@ export const BillingInformation: FC<IBillingInformationProps> = ({
     return (
         <Grid item xs={12} md={5}>
             <StyledInfoBox>
-                <StyledTitle variant='body1'>Billing information</StyledTitle>
+                <StyledTitle variant="body1">Billing information</StyledTitle>
                 <ConditionallyRender
                     condition={inactive}
                     show={
-                        <StyledAlert severity='warning'>
+                        <StyledAlert severity="warning">
                             In order to <strong>Upgrade trial</strong> you need
                             to provide us your billing information.
                         </StyledAlert>
@@ -58,7 +58,7 @@ export const BillingInformation: FC<IBillingInformationProps> = ({
                 </StyledInfoLabel>
                 <StyledDivider />
                 <StyledInfoLabel>
-                    <a href='mailto:elise@getunleash.ai?subject=PRO plan clarifications'>
+                    <a href="mailto:elise@getunleash.ai?subject=PRO plan clarifications">
                         Get in touch with us
                     </a>{' '}
                     for any clarification

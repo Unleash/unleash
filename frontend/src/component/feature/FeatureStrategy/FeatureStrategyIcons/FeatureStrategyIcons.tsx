@@ -39,14 +39,14 @@ export const FeatureStrategyIcons = ({
 
     if (strategies.length > THRESHOLD + 1) {
         return (
-            <StyledList aria-label='Feature strategies'>
-                {strategies.slice(0, THRESHOLD).map((strategy) => (
+            <StyledList aria-label="Feature strategies">
+                {strategies.slice(0, THRESHOLD).map(strategy => (
                     <StyledListItem key={strategy.id}>
                         <FeatureStrategyIcon strategy={strategy} />
                     </StyledListItem>
                 ))}
                 <TooltipLink
-                    tooltip={strategies.slice(THRESHOLD).map((strategy) => (
+                    tooltip={strategies.slice(THRESHOLD).map(strategy => (
                         <StyledListItem key={strategy.id}>
                             <StyledItem>
                                 <FeatureStrategyIcon strategy={strategy} />{' '}
@@ -65,8 +65,8 @@ export const FeatureStrategyIcons = ({
     }
 
     return (
-        <StyledList aria-label='Feature strategies'>
-            {strategies.map((strategy) => (
+        <StyledList aria-label="Feature strategies">
+            {strategies.map(strategy => (
                 <StyledListItem key={strategy.id}>
                     <FeatureStrategyIcon strategy={strategy} />
                 </StyledListItem>

@@ -1,0 +1,14 @@
+{
+    "env": {},
+    "extends": [],
+    "parser": "",
+    "plugins": [],
+    "rules": {},
+    "settings": {},
+    "parserOptions": {},
+    "overrides": [
+        {
+            "files": "*.js"
+        }
+    ]
+}

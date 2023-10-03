@@ -21,7 +21,7 @@ const useTags = (type: string, options: SWRConfiguration = {}) => {
         { tags: [] },
         KEY,
         fetcher,
-        options,
+        options
     );
     const [loading, setLoading] = useState(!error && !data);
 

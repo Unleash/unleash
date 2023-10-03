@@ -46,27 +46,27 @@ export const InstanceStats: VFC = () => {
     if (stats?.versionEnterprise) {
         rows.push(
             { title: 'SAML enabled', value: stats?.SAMLenabled ? 'Yes' : 'No' },
-            { title: 'OIDC enabled', value: stats?.OIDCenabled ? 'Yes' : 'No' },
+            { title: 'OIDC enabled', value: stats?.OIDCenabled ? 'Yes' : 'No' }
         );
     }
 
     return (
-        <PageContent header={<PageHeader title='Instance Statistics' />}>
+        <PageContent header={<PageHeader title="Instance Statistics" />}>
             <Box sx={{ display: 'grid', gap: 4 }}>
-                <Table aria-label='Instance statistics'>
+                <Table aria-label="Instance statistics">
                     <TableHead>
                         <TableRow>
                             <TableCell>Field</TableCell>
-                            <TableCell align='right'>Value</TableCell>
+                            <TableCell align="right">Value</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
+                        {rows.map(row => (
                             <TableRow key={row.title}>
-                                <TableCell component='th' scope='row'>
+                                <TableCell component="th" scope="row">
                                     <Box
-                                        component='span'
-                                        sx={(theme) => ({
+                                        component="span"
+                                        sx={theme => ({
                                             marginLeft: row.offset
                                                 ? theme.spacing(2)
                                                 : 0,
@@ -75,7 +75,7 @@ export const InstanceStats: VFC = () => {
                                         {row.title}
                                     </Box>
                                 </TableCell>
-                                <TableCell align='right'>{row.value}</TableCell>
+                                <TableCell align="right">{row.value}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -83,13 +83,13 @@ export const InstanceStats: VFC = () => {
                 <span style={{ textAlign: 'center' }}>
                     <Button
                         startIcon={<Download />}
-                        aria-label='Download instance statistics'
-                        color='primary'
-                        variant='contained'
-                        target='_blank'
-                        rel='noreferrer'
+                        aria-label="Download instance statistics"
+                        color="primary"
+                        variant="contained"
+                        target="_blank"
+                        rel="noreferrer"
                         href={formatApiPath(
-                            '/api/admin/instance-admin/statistics/csv',
+                            '/api/admin/instance-admin/statistics/csv'
                         )}
                     >
                         Download

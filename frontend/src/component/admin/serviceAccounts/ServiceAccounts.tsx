@@ -17,7 +17,7 @@ export const ServiceAccounts = () => {
                         <ServiceAccountsTable />
                     </PermissionGuard>
                 }
-                elseShow={<PremiumFeature feature='service-accounts' page />}
+                elseShow={<PremiumFeature feature="service-accounts" page />}
             />
         </div>
     );

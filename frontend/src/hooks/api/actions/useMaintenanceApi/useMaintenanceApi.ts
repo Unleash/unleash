@@ -15,8 +15,11 @@ export const useMaintenanceApi = () => {
             method: 'POST',
             body: JSON.stringify(payload),
         });
-
-        await makeRequest(req.caller, req.id);
+        try {
+            await makeRequest(req.caller, req.id);
+        } catch (e) {
+            throw e;
+        }
     };
     return {
         toggleMaintenance,

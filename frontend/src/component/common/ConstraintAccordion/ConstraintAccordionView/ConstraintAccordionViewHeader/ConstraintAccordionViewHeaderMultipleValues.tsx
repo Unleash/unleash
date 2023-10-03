@@ -59,7 +59,7 @@ export const ConstraintAccordionViewHeaderMultipleValues = ({
     const [expandable, setExpandable] = useState(false);
 
     const text = useMemo(() => {
-        return constraint?.values?.map((value) => value).join(', ');
+        return constraint?.values?.map(value => value).join(', ');
     }, [constraint]);
 
     useEffect(() => {

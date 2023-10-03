@@ -1,5 +1,5 @@
 export const paginate = (data: any[], limit: number) => {
-    const result = [];
+    let result = [];
     let currentIdx = 0;
 
     if (data.length <= currentIdx) {

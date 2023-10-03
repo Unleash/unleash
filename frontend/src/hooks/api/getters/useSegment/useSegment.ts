@@ -30,5 +30,5 @@ export const useSegment = (id: number): IUseSegmentOutput => {
 const fetchSegment = (path: string) => {
     return fetch(path, { method: 'GET' })
         .then(handleErrorResponses('Segment'))
-        .then((res) => res.json());
+        .then(res => res.json());
 };

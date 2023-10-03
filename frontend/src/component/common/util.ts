@@ -41,7 +41,7 @@ export const mapRouteLink = (route: INavigationMenuItem) => ({
 });
 
 export const trim = (value: string): string => {
-    if (value?.trim) {
+    if (value && value.trim) {
         return value.trim();
     } else {
         return value;
@@ -50,7 +50,7 @@ export const trim = (value: string): string => {
 
 export const parseDateValue = (value: string) => {
     const date = new Date(value);
-    return `${format(date, 'yyyy-MM-dd')}T${format(date, 'HH:mm')}`;
+    return format(date, 'yyyy-MM-dd') + 'T' + format(date, 'HH:mm');
 };
 
 export const parseValidDate = (value: string): Date | undefined => {
@@ -81,7 +81,7 @@ export function updateWeight(variants: IFeatureVariant[], totalWeight: number) {
                 variableVariantCount,
             };
         },
-        { remainingPercentage: totalWeight, variableVariantCount: 0 },
+        { remainingPercentage: totalWeight, variableVariantCount: 0 }
     );
 
     const { remainingPercentage, variableVariantCount } = variantMetadata;
@@ -95,10 +95,10 @@ export function updateWeight(variants: IFeatureVariant[], totalWeight: number) {
     }
 
     const percentage = parseInt(
-        String(remainingPercentage / variableVariantCount),
+        String(remainingPercentage / variableVariantCount)
     );
 
-    return variants.map((variant) => {
+    return variants.map(variant => {
         if (variant.weightType !== weightTypes.FIX) {
             variant.weight = percentage;
         }
@@ -108,7 +108,7 @@ export function updateWeight(variants: IFeatureVariant[], totalWeight: number) {
 
 export function updateWeightEdit(
     variants: IFeatureVariantEdit[],
-    totalWeight: number,
+    totalWeight: number
 ) {
     if (variants.length === 0) {
         return [];
@@ -126,13 +126,13 @@ export function updateWeightEdit(
                 variableVariantCount,
             };
         },
-        { remainingPercentage: totalWeight, variableVariantCount: 0 },
+        { remainingPercentage: totalWeight, variableVariantCount: 0 }
     );
 
     const getPercentage = () =>
         Math.round(remainingPercentage / variableVariantCount);
 
-    return variants.map((variant) => {
+    return variants.map(variant => {
         if (variant.weightType !== weightTypes.FIX) {
             const percentage = getPercentage(); // round "as we go" - clean best effort approach
             remainingPercentage -= percentage;

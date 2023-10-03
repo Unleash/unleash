@@ -65,7 +65,7 @@ export const FeatureOverviewSidePanelTags = ({
             await deleteTagFromFeature(
                 feature.name,
                 selectedTag.type,
-                selectedTag.value,
+                selectedTag.value
             );
             refetch();
             setToastData({
@@ -82,13 +82,13 @@ export const FeatureOverviewSidePanelTags = ({
         <StyledContainer>
             {header}
             <StyledTagContainer>
-                {tags.map((tag) => {
+                {tags.map(tag => {
                     const tagLabel = `${tag.type}:${tag.value}`;
                     return (
                         <StyledChip
                             key={tagLabel}
                             label={tagLabel}
-                            deleteIcon={<Cancel titleAccess='Remove' />}
+                            deleteIcon={<Cancel titleAccess="Remove" />}
                             onDelete={
                                 canUpdateTags
                                     ? () => {
@@ -111,7 +111,7 @@ export const FeatureOverviewSidePanelTags = ({
                         />
                         <StyledButton
                             data-loading
-                            variant='outlined'
+                            variant="outlined"
                             startIcon={<Add />}
                             onClick={() => setOpenTagDialog(true)}
                         >
@@ -123,8 +123,8 @@ export const FeatureOverviewSidePanelTags = ({
             <ManageTagsDialog open={openTagDialog} setOpen={setOpenTagDialog} />
             <Dialogue
                 open={showDelDialog}
-                primaryButtonText='Delete tag'
-                secondaryButtonText='Cancel'
+                primaryButtonText="Delete tag"
+                secondaryButtonText="Cancel"
                 onClose={() => {
                     setShowDelDialog(false);
                     setSelectedTag(undefined);
@@ -134,7 +134,7 @@ export const FeatureOverviewSidePanelTags = ({
                     handleDelete();
                     setSelectedTag(undefined);
                 }}
-                title='Delete tag?'
+                title="Delete tag?"
             >
                 You are about to delete tag:{' '}
                 <strong>

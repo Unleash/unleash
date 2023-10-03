@@ -2,7 +2,7 @@ export const ACCESS_DENIED_TEXT = 'Access denied';
 
 export const formatAccessText = (
     hasAccess: boolean,
-    hasAccessText?: string,
+    hasAccessText?: string
 ): string | undefined => {
     if (hasAccess) {
         return hasAccessText;

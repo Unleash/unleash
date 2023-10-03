@@ -38,10 +38,10 @@ interface IApiTokenTableProps {
     rows: Row<object>[];
     prepareRow: (row: Row<object>) => void;
     getTableProps: (
-        propGetter?: TablePropGetter<object> | undefined,
+        propGetter?: TablePropGetter<object> | undefined
     ) => TableProps;
     getTableBodyProps: (
-        propGetter?: TableBodyPropGetter<object> | undefined,
+        propGetter?: TableBodyPropGetter<object> | undefined
     ) => TableBodyProps;
     headerGroups: HeaderGroup<object>[];
     globalFilter: any;
@@ -72,7 +72,7 @@ export const ApiTokenTable = ({
             },
         ],
         setHiddenColumns,
-        columns,
+        columns
     );
 
     return (
@@ -92,11 +92,11 @@ export const ApiTokenTable = ({
                             headerGroups={headerGroups as any}
                         />
                         <TableBody {...getTableBodyProps()}>
-                            {rows.map((row) => {
+                            {rows.map(row => {
                                 prepareRow(row);
                                 return (
                                     <TableRow hover {...row.getRowProps()}>
-                                        {row.cells.map((cell) => (
+                                        {row.cells.map(cell => (
                                             <TableCell {...cell.getCellProps()}>
                                                 {cell.render('Cell')}
                                             </TableCell>
@@ -125,9 +125,9 @@ export const ApiTokenTable = ({
                                 <span>
                                     {'No tokens available. Read '}
                                     <Link
-                                        href='https://docs.getunleash.io/how-to/api'
-                                        target='_blank'
-                                        rel='noreferrer'
+                                        href="https://docs.getunleash.io/how-to/api"
+                                        target="_blank"
+                                        rel="noreferrer"
                                     >
                                         API How-to guides
                                     </Link>{' '}

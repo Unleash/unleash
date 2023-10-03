@@ -8,17 +8,17 @@ import {
 // order of the parameters in the strategy definition.
 export const sortStrategyParameters = (
     parameters: IFeatureStrategyParameters,
-    strategyDefinition: IStrategy,
+    strategyDefinition: IStrategy
 ): Partial<IFeatureStrategy> => {
     const sortedParameterNames = strategyDefinition.parameters.map(
-        (parameter) => parameter.name,
+        parameter => parameter.name
     );
 
     return Object.fromEntries(
         Object.entries(parameters).sort(
             (a, b) =>
                 sortedParameterNames.indexOf(a[0]) -
-                sortedParameterNames.indexOf(b[0]),
-        ),
+                sortedParameterNames.indexOf(b[0])
+        )
     );
 };

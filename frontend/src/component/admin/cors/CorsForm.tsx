@@ -57,10 +57,10 @@ export const CorsForm = ({ frontendApiOrigins }: ICorsFormProps) => {
                     aria-describedby={helpTextId}
                     placeholder={textareaDomainsPlaceholder}
                     value={value}
-                    onChange={(event) => setValue(event.target.value)}
+                    onChange={event => setValue(event.target.value)}
                     multiline
                     rows={12}
-                    variant='outlined'
+                    variant="outlined"
                     fullWidth
                     InputProps={{
                         style: { fontFamily: 'monospace', fontSize: '0.8em' },
@@ -75,7 +75,7 @@ export const CorsForm = ({ frontendApiOrigins }: ICorsFormProps) => {
 export const parseInputValue = (value: string): string[] => {
     return value
         .split(/[,\n\s]+/) // Split by commas/newlines/spaces.
-        .map((value) => value.replace(/\/$/, '')) // Remove trailing slashes.
+        .map(value => value.replace(/\/$/, '')) // Remove trailing slashes.
         .filter(Boolean); // Remove empty values from (e.g.) double newlines.
 };
 

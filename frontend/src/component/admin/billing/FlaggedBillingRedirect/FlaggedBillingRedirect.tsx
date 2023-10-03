@@ -13,7 +13,7 @@ const FlaggedBillingRedirect = () => {
         return <InvoiceAdminPage />;
     }
 
-    return <Navigate to='/admin/billing' replace />;
+    return <Navigate to="/admin/billing" replace />;
 };
 
 export default FlaggedBillingRedirect;

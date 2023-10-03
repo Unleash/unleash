@@ -30,7 +30,7 @@ export const fetcher = async <T>({
                 ...headers,
             },
             ...(data ? { body: JSON.stringify(data) } : {}),
-        },
+        }
     );
 
     return response.json();

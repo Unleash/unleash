@@ -35,7 +35,7 @@ export const VariantInformation: VFC<IVariantInformationProps> = ({
 }) => {
     const theme = useTheme();
     const data = useMemo(() => {
-        return variants.map((variant) => {
+        return variants.map(variant => {
             return {
                 name: variant.name,
                 weight: `${calculateVariantWeight(variant.weight)}%`,
@@ -48,7 +48,7 @@ export const VariantInformation: VFC<IVariantInformationProps> = ({
         () => ({
             sortBy: [{ id: 'name', desc: false }],
         }),
-        [],
+        []
     );
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -63,32 +63,32 @@ export const VariantInformation: VFC<IVariantInformationProps> = ({
                 disableSortRemove: true,
             },
             useGlobalFilter,
-            useSortBy,
+            useSortBy
         );
 
     return (
         <StyledBox>
-            <StyledTypography variant='subtitle2'>
+            <StyledTypography variant="subtitle2">
                 Variant Information
             </StyledTypography>
 
-            <StyledTypography variant='body2'>
+            <StyledTypography variant="body2">
                 The following table shows the variants defined on this feature
                 toggle and the variant result based on your context
                 configuration.
             </StyledTypography>
 
-            <StyledTypography variant='body2'>
+            <StyledTypography variant="body2">
                 If you include "userId" or "sessionId" in your context, the
                 variant will be the same every time because unleash uses these
                 properties to ensure that the user receives the same experience.
             </StyledTypography>
 
-            <Table {...getTableProps()} rowHeight='dense'>
+            <Table {...getTableProps()} rowHeight="dense">
                 <SortableTableHeader headerGroups={headerGroups as any} />
                 <TableBody {...getTableBodyProps()}>
                     {rows.map((row: any) => {
-                        const styles = {} as { [key: string]: string };
+                        let styles = {} as { [key: string]: string };
 
                         if (!row.original.selected) {
                             styles.color = theme.palette.text.secondary;
@@ -117,7 +117,11 @@ export const VariantInformation: VFC<IVariantInformationProps> = ({
 const COLUMNS = [
     {
         id: 'Icon',
-        Cell: ({ row: { original: { selected } } }: any) => (
+        Cell: ({
+            row: {
+                original: { selected },
+            },
+        }: any) => (
             <>
                 <ConditionallyRender
                     condition={selected}
@@ -132,9 +136,11 @@ const COLUMNS = [
         Header: 'Name',
         accessor: 'name',
         searchable: true,
-        Cell: ({ row: { original: { name } } }: any) => (
-            <TextCell>{name}</TextCell>
-        ),
+        Cell: ({
+            row: {
+                original: { name },
+            },
+        }: any) => <TextCell>{name}</TextCell>,
         maxWidth: 175,
         width: 175,
     },
@@ -144,8 +150,10 @@ const COLUMNS = [
         sortType: 'alphanumeric',
         searchable: true,
         maxWidth: 75,
-        Cell: ({ row: { original: { weight } } }: any) => (
-            <TextCell>{weight}</TextCell>
-        ),
+        Cell: ({
+            row: {
+                original: { weight },
+            },
+        }: any) => <TextCell>{weight}</TextCell>,
     },
 ];

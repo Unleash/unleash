@@ -36,20 +36,20 @@ export const RoleDeleteDialogRootRole = ({
 
     const roleUsers = users.filter(({ rootRole }) => rootRole === role?.id);
     const roleServiceAccounts = serviceAccounts.filter(
-        ({ rootRole }) => rootRole === role?.id,
+        ({ rootRole }) => rootRole === role?.id
     );
     const roleGroups = groups?.filter(({ rootRole }) => rootRole === role?.id);
 
     const entitiesWithRole = Boolean(
-        roleUsers.length || roleServiceAccounts.length || roleGroups?.length,
+        roleUsers.length || roleServiceAccounts.length || roleGroups?.length
     );
 
     return (
         <Dialogue
-            title='Delete root role?'
+            title="Delete root role?"
             open={open}
-            primaryButtonText='Delete role'
-            secondaryButtonText='Cancel'
+            primaryButtonText="Delete role"
+            secondaryButtonText="Cancel"
             disabledPrimaryButton={entitiesWithRole}
             onClick={() => onConfirm(role!)}
             onClose={() => {
@@ -60,7 +60,7 @@ export const RoleDeleteDialogRootRole = ({
                 condition={entitiesWithRole}
                 show={
                     <>
-                        <Alert severity='error'>
+                        <Alert severity="error">
                             You are not allowed to delete a role that is
                             currently in use. Please change the role of the
                             following entities first:

@@ -91,7 +91,7 @@ export const Notifications = () => {
     const [showUnread, setShowUnread] = useState(false);
 
     const onNotificationClick = async (
-        notification: NotificationsSchemaItem,
+        notification: NotificationsSchemaItem
     ) => {
         if (notification.link) {
             navigate(notification.link);
@@ -121,7 +121,7 @@ export const Notifications = () => {
             if (notifications && notifications.length > 0) {
                 await markAsRead({
                     notifications: notifications.map(
-                        (notification) => notification.id,
+                        notification => notification.id
                     ),
                 });
                 refetchNotifications();
@@ -139,16 +139,16 @@ export const Notifications = () => {
     };
 
     const unreadNotifications = notifications?.filter(
-        (notification) => notification.readAt === null,
+        notification => notification.readAt === null
     );
 
     const hasUnreadNotifications = Boolean(
-        unreadNotifications && unreadNotifications.length > 0,
+        unreadNotifications && unreadNotifications.length > 0
     );
 
     const filterUnread = (notification: NotificationsSchemaItem) => {
         if (showUnread) {
-            return !notification.readAt;
+            return !Boolean(notification.readAt);
         }
 
         return true;
@@ -156,7 +156,7 @@ export const Notifications = () => {
 
     const notificationComponents = notifications
         ?.filter(filterUnread)
-        .map((notification) => (
+        .map(notification => (
             <Notification
                 notification={notification}
                 key={notification.id}
@@ -165,14 +165,14 @@ export const Notifications = () => {
         ));
 
     const shouldShowFeedback = Boolean(
-        notifications && notifications.length > 0 && !showUnread,
+        notifications && notifications.length > 0 && !showUnread
     );
 
     return (
         <StyledPrimaryContainerBox>
             <StyledIconButton
                 onClick={() => setShowNotifications(!showNotifications)}
-                data-testid='NOTIFICATIONS_BUTTON'
+                data-testid="NOTIFICATIONS_BUTTON"
                 disableFocusRipple
             >
                 <ConditionallyRender
@@ -189,9 +189,9 @@ export const Notifications = () => {
                         onClickAway={() => setShowNotifications(false)}
                     >
                         <StyledPaper
-                            className='dropdown-outline'
+                            className="dropdown-outline"
                             onKeyDown={onKeyDown}
-                            data-testid='NOTIFICATIONS_MODAL'
+                            data-testid="NOTIFICATIONS_MODAL"
                         >
                             <NotificationsHeader>
                                 <StyledHeaderBox>
@@ -209,7 +209,7 @@ export const Notifications = () => {
                             <ConditionallyRender
                                 condition={hasUnreadNotifications}
                                 show={
-                                    <StyledInnerContainerBox data-testid='UNREAD_NOTIFICATIONS'>
+                                    <StyledInnerContainerBox data-testid="UNREAD_NOTIFICATIONS">
                                         <Button onClick={onMarkAllAsRead}>
                                             <StyledTypography>
                                                 Mark all as read (
@@ -239,9 +239,9 @@ export const Notifications = () => {
                                 show={
                                     <>
                                         <Feedback
-                                            eventName='notifications'
-                                            id='useful'
-                                            localStorageKey='NotificationsUsefulPrompt'
+                                            eventName="notifications"
+                                            id="useful"
+                                            localStorageKey="NotificationsUsefulPrompt"
                                         />
                                         <br />
                                     </>

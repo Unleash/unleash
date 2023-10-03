@@ -47,7 +47,7 @@ export const NewUser = () => {
                 navigate('/login?invited=true');
             } else {
                 setToastApiError(
-                    "Couldn't create user. Check if your invite link is valid.",
+                    "Couldn't create user. Check if your invite link is valid."
                 );
             }
         } catch (error) {
@@ -102,7 +102,7 @@ export const NewUser = () => {
                 condition={passwordResetData?.createdBy}
                 show={
                     <Typography
-                        variant='body1'
+                        variant="body1"
                         data-loading
                         sx={{ textAlign: 'center', mb: 2 }}
                     >
@@ -111,9 +111,9 @@ export const NewUser = () => {
                     </Typography>
                 }
             />
-            <Typography color='text.secondary'>
+            <Typography color="text.secondary">
                 We suggest using{' '}
-                <Typography component='strong' fontWeight='bold'>
+                <Typography component="strong" fontWeight="bold">
                     the email you use for work
                 </Typography>
                 .
@@ -132,7 +132,7 @@ export const NewUser = () => {
                 }
                 show={
                     <DividerText
-                        text='or sign-up with an email address'
+                        text="or sign-up with an email address"
                         data-loading
                     />
                 }
@@ -146,7 +146,7 @@ export const NewUser = () => {
                             show={() => (
                                 <Typography
                                     data-loading
-                                    variant='body1'
+                                    variant="body1"
                                     sx={{ my: 1 }}
                                 >
                                     Your username is
@@ -155,21 +155,21 @@ export const NewUser = () => {
                         />
                         <TextField
                             data-loading
-                            type='email'
+                            type="email"
                             value={
                                 isValidToken
                                     ? passwordResetData?.email || ''
                                     : email
                             }
-                            id='email'
-                            label='Email'
-                            variant='outlined'
-                            size='small'
+                            id="email"
+                            label="Email"
+                            variant="outlined"
+                            size="small"
                             sx={{ my: 1 }}
                             disabled={isValidToken}
                             fullWidth
                             required
-                            onChange={(e) => {
+                            onChange={e => {
                                 if (isValidToken) {
                                     return;
                                 }
@@ -182,20 +182,20 @@ export const NewUser = () => {
                                 <TextField
                                     data-loading
                                     value={name}
-                                    id='username'
-                                    label='Full name'
-                                    variant='outlined'
-                                    size='small'
+                                    id="username"
+                                    label="Full name"
+                                    variant="outlined"
+                                    size="small"
                                     sx={{ my: 1 }}
                                     fullWidth
                                     required
-                                    onChange={(e) => {
+                                    onChange={e => {
                                         setName(e.target.value);
                                     }}
                                 />
                             )}
                         />
-                        <Typography variant='body1' data-loading sx={{ mt: 2 }}>
+                        <Typography variant="body1" data-loading sx={{ mt: 2 }}>
                             Set a password for your account.
                         </Typography>
                         <ConditionallyRender

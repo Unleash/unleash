@@ -80,7 +80,7 @@ const ForgottenPassword = () => {
                 <ConditionallyRender
                     condition={attempted}
                     show={
-                        <Alert severity='success' data-loading>
+                        <Alert severity="success" data-loading>
                             <AlertTitle>Attempted to send email</AlertTitle>
                             We've attempted to send a reset password email to:
                             <StyledStrong>{attemptedEmail}</StyledStrong>
@@ -92,27 +92,27 @@ const ForgottenPassword = () => {
                     }
                 />
                 <StyledForm onSubmit={onClick}>
-                    <StyledTypography variant='body1' data-loading>
+                    <StyledTypography variant="body1" data-loading>
                         Please provide your email address. If it exists in the
                         system we'll send a new reset link.
                     </StyledTypography>
                     <TextField
-                        variant='outlined'
-                        size='small'
-                        placeholder='email'
-                        type='email'
+                        variant="outlined"
+                        size="small"
+                        placeholder="email"
+                        type="email"
                         data-loading
                         data-testid={FORGOTTEN_PASSWORD_FIELD}
                         value={email}
-                        onChange={(e) => {
+                        onChange={e => {
                             setEmail(e.target.value);
                         }}
                     />
                     <StyledButton
-                        variant='contained'
-                        type='submit'
+                        variant="contained"
+                        type="submit"
                         data-loading
-                        color='primary'
+                        color="primary"
                         disabled={loading}
                     >
                         <ConditionallyRender
@@ -121,15 +121,15 @@ const ForgottenPassword = () => {
                             elseShow={<span>Try again</span>}
                         />
                     </StyledButton>
-                    <DividerText text='Or log in' />
+                    <DividerText text="Or log in" />
                     <Button
-                        type='submit'
+                        type="submit"
                         data-loading
-                        variant='outlined'
+                        variant="outlined"
                         disabled={loading}
                         component={Link}
-                        to='/login'
-                        sx={(theme) => ({
+                        to="/login"
+                        sx={theme => ({
                             width: '150px',
                             margin: theme.spacing(2, 'auto'),
                         })}

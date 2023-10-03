@@ -19,7 +19,7 @@ import { LinkField } from '../LinkField/LinkField';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
-type ICreateInviteLinkProps = {};
+interface ICreateInviteLinkProps {}
 
 const expiryOptions = [
     {
@@ -40,19 +40,23 @@ const useFormatApiCode = (isUpdating: boolean, expiry: string) => {
     const { uiConfig } = useUiConfig();
 
     if (isUpdating) {
-        return () => `curl --location --request PUT '${uiConfig.unleashUrl}/api/admin/invite-link/tokens/default' \\
+        return () => `curl --location --request PUT '${
+            uiConfig.unleashUrl
+        }/api/admin/invite-link/tokens/default' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify({ expiresAt: expiry }, undefined, 2)}'`;
     }
 
-    return () => `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/invite-link/tokens' \\
+    return () => `curl --location --request POST '${
+        uiConfig.unleashUrl
+    }/api/admin/invite-link/tokens' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(
         { name: 'default', expiresAt: expiry },
         undefined,
-        2,
+        2
     )}'`;
 };
 
@@ -64,16 +68,14 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
     const { trackEvent } = usePlausibleTracker();
     const [expiry, setExpiry] = useState(expiryOptions[0].key);
     const [showDisableDialog, setDisableDialogue] = useState(false);
-    const defaultToken = data?.tokens?.find(
-        (token) => token.name === 'default',
-    );
+    const defaultToken = data?.tokens?.find(token => token.name === 'default');
     const isUpdating = Boolean(defaultToken);
     const formatApiCode = useFormatApiCode(isUpdating, expiry);
     const [isSending, setIsSending] = useState(false);
     const { setToastApiError } = useToast();
     const { createToken, updateToken } = useInviteTokenApi();
 
-    const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    const onSubmit: FormEventHandler<HTMLFormElement> = async e => {
         e.preventDefault();
         setIsSending(true);
 
@@ -134,20 +136,20 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
         <FormTemplate
             loading={loading || isSending}
             title={isUpdating ? 'Update invite link' : 'Create invite link'}
-            description='When you send an invite link to someone, they will be able to create an account and get access to Unleash. This new user will only have read access, until you change their assigned role.'
-            documentationLink='https://docs.getunleash.io/reference/public-signup'
-            documentationLinkLabel='Invite link documentation'
+            description="When you send an invite link to someone, they will be able to create an account and get access to Unleash. This new user will only have read access, until you change their assigned role."
+            documentationLink="https://docs.getunleash.io/reference/public-signup"
+            documentationLinkLabel="Invite link documentation"
             formatApiCode={formatApiCode}
         >
             <Box
-                component='form'
+                component="form"
                 onSubmit={onSubmit}
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
                     flexGrow: 1,
                 }}
-                data-testid='create-invite-link-form'
+                data-testid="create-invite-link-form"
             >
                 <Box sx={{ maxWidth: '400px' }}>
                     <Box sx={{ mb: 2 }}>
@@ -155,8 +157,8 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                             Expiration period for the invite link
                         </Typography>
                         <GeneralSelect
-                            label='Link will expire in'
-                            name='type'
+                            label="Link will expire in"
+                            name="type"
                             options={expiryOptions}
                             value={expiry}
                             onChange={setExpiry}
@@ -169,16 +171,16 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                     <Box
                         sx={{
                             p: 2,
-                            borderRadius: (theme) =>
+                            borderRadius: theme =>
                                 `${theme.shape.borderRadiusMedium}px`,
-                            backgroundColor: (theme) =>
+                            backgroundColor: theme =>
                                 theme.palette.background.elevation2,
                         }}
                     >
-                        <Typography variant='body2' fontWeight='bold'>
+                        <Typography variant="body2" fontWeight="bold">
                             Viewer
                         </Typography>
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography variant="body2" color="text.secondary">
                             Users with this role can only read root resources in
                             Unleash. The viewer can be added to specific
                             projects as project member. Viewers may not view API
@@ -194,7 +196,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                     }}
                 >
                     <PermissionButton
-                        type='submit'
+                        type="submit"
                         permission={ADMIN}
                         disabled={isSending}
                     >
@@ -208,7 +210,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                             <Button
                                 sx={{ ml: 2 }}
                                 onClick={onDisableClick}
-                                color='error'
+                                color="error"
                             >
                                 Delete link
                             </Button>
@@ -227,15 +229,15 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
             <Dialogue
                 open={Boolean(inviteLink)}
                 onClick={closeConfirm}
-                primaryButtonText='Close'
-                title='Invite link created'
+                primaryButtonText="Close"
+                title="Invite link created"
             >
                 <Box>
-                    <Typography variant='body1' sx={{ mb: 2 }}>
+                    <Typography variant="body1" sx={{ mb: 2 }}>
                         Using this link, new team members can now sign-up to
                         Unleash.
                     </Typography>
-                    <Typography variant='body1'>
+                    <Typography variant="body1">
                         Please provide them with the following link to get
                         started. This will allow them to set up their password
                         and get started with their Unleash account.
@@ -247,7 +249,7 @@ export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
                 open={showDisableDialog}
                 onClose={() => setDisableDialogue(false)}
                 onClick={onDisableConfirmed}
-                title='Are you sure you want to delete your invite link?'
+                title="Are you sure you want to delete your invite link?"
             />
         </FormTemplate>
     );

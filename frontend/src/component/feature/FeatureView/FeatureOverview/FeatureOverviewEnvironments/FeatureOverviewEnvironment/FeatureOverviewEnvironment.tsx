@@ -28,7 +28,7 @@ interface IFeatureOverviewEnvironmentProps {
 }
 
 const StyledFeatureOverviewEnvironment = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'enabled',
+    shouldForwardProp: prop => prop !== 'enabled',
 })<{ enabled: boolean }>(({ theme, enabled }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     marginBottom: theme.spacing(2),
@@ -51,7 +51,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails, {
-    shouldForwardProp: (prop) => prop !== 'enabled',
+    shouldForwardProp: prop => prop !== 'enabled',
 })<{ enabled: boolean }>(({ theme }) => ({
     padding: theme.spacing(3),
     background: theme.palette.envAccordion.expanded,
@@ -69,11 +69,11 @@ const StyledEnvironmentAccordionBody = styled(EnvironmentAccordionBody)(
         width: '100%',
         position: 'relative',
         paddingBottom: theme.spacing(2),
-    }),
+    })
 );
 
 const StyledHeader = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'enabled',
+    shouldForwardProp: prop => prop !== 'enabled',
 })<{ enabled: boolean }>(({ theme, enabled }) => ({
     display: 'flex',
     justifyContent: 'center',
@@ -126,15 +126,17 @@ const FeatureOverviewEnvironment = ({
 
     const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
     const environmentMetric = featureMetrics.find(
-        (featureMetric) => featureMetric.environment === env.name,
+        featureMetric => featureMetric.environment === env.name
     );
     const featureEnvironment = feature?.environments.find(
-        (featureEnvironment) => featureEnvironment.name === env.name,
+        featureEnvironment => featureEnvironment.name === env.name
     );
 
     return (
         <ConditionallyRender
-            condition={!new Set(globalStore.hiddenEnvironments).has(env.name)}
+            condition={
+                !Boolean(new Set(globalStore.hiddenEnvironments).has(env.name))
+            }
             show={
                 <StyledFeatureOverviewEnvironment enabled={env.enabled}>
                     <StyledAccordion
@@ -145,7 +147,7 @@ const FeatureOverviewEnvironment = ({
                         }`}
                     >
                         <StyledAccordionSummary
-                            expandIcon={<ExpandMore titleAccess='Toggle' />}
+                            expandIcon={<ExpandMore titleAccess="Toggle" />}
                         >
                             <StyledHeader data-loading enabled={env.enabled}>
                                 <StyledHeaderTitle>
@@ -155,7 +157,7 @@ const FeatureOverviewEnvironment = ({
                                     <div>
                                         <StyledStringTruncator
                                             text={env.name}
-                                            maxWidth='100'
+                                            maxWidth="100"
                                             maxLength={15}
                                         />
                                     </div>
@@ -163,7 +165,7 @@ const FeatureOverviewEnvironment = ({
                                         condition={!env.enabled}
                                         show={
                                             <Badge
-                                                color='neutral'
+                                                color="neutral"
                                                 sx={{ ml: 1 }}
                                             >
                                                 Disabled
@@ -173,12 +175,12 @@ const FeatureOverviewEnvironment = ({
                                 </StyledHeaderTitle>
                                 <StyledButtonContainer>
                                     <FeatureStrategyMenu
-                                        label='Add strategy'
+                                        label="Add strategy"
                                         projectId={projectId}
                                         featureId={featureId}
                                         environmentId={env.name}
-                                        variant='outlined'
-                                        size='small'
+                                        variant="outlined"
+                                        size="small"
                                     />
                                     <FeatureStrategyIcons
                                         strategies={
@@ -200,7 +202,7 @@ const FeatureOverviewEnvironment = ({
                                 isDisabled={!env.enabled}
                                 otherEnvironments={feature?.environments
                                     .map(({ name }) => name)
-                                    .filter((name) => name !== env.name)}
+                                    .filter(name => name !== env.name)}
                             />
                             <ConditionallyRender
                                 condition={
@@ -217,7 +219,7 @@ const FeatureOverviewEnvironment = ({
                                             }}
                                         >
                                             <FeatureStrategyMenu
-                                                label='Add strategy'
+                                                label="Add strategy"
                                                 projectId={projectId}
                                                 featureId={featureId}
                                                 environmentId={env.name}

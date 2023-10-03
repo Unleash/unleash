@@ -21,7 +21,7 @@ export const EditSegmentButton = ({ segment }: IEditSegmentButtonProps) => {
             onClick={() => {
                 if (projectId) {
                     navigate(
-                        `/projects/${projectId}/settings/segments/edit/${segment.id}`,
+                        `/projects/${projectId}/settings/segments/edit/${segment.id}`
                     );
                 } else {
                     navigate(`/segments/edit/${segment.id}`);

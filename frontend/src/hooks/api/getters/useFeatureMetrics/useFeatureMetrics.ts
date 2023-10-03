@@ -12,11 +12,11 @@ const emptyMetrics: IFeatureMetrics = {
 const useFeatureMetrics = (
     projectId: string,
     featureId: string,
-    options: SWRConfiguration = {},
+    options: SWRConfiguration = {}
 ) => {
     const fetcher = async () => {
         const path = formatApiPath(
-            `api/admin/client-metrics/features/${featureId}`,
+            `api/admin/client-metrics/features/${featureId}`
         );
         const res = await fetch(path, {
             method: 'GET',
@@ -34,7 +34,7 @@ const useFeatureMetrics = (
         fetcher,
         {
             ...options,
-        },
+        }
     );
 
     const [loading, setLoading] = useState(!error && !data);

@@ -7,7 +7,7 @@ export const sdkFlatContextSchema = {
     description: 'The Unleash context with flattened properties',
     type: 'object',
     required: ['appName'],
-    additionalProperties: true,
+    additionalProperties: { type: 'string' },
     properties: standardProperties,
     components: {},
 } as const;

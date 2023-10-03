@@ -49,7 +49,7 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
     routes,
 }) => {
     const renderLinks = () => {
-        return links.map((link) => {
+        return links.map(link => {
             let icon = null;
             if (link.value === 'GitHub') {
                 icon = <GitHubIcon className={styles.navigationIcon} />;
@@ -60,8 +60,8 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
             return (
                 <a
                     href={link.href}
-                    rel='noopener noreferrer'
-                    target='_blank'
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className={styles.iconLink}
                     key={link.value}
                 >
@@ -76,31 +76,31 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
         <Drawer
             className={styles.drawer}
             open={open}
-            anchor='left'
+            anchor="left"
             onClose={toggleDrawer}
             style={{ zIndex: theme.zIndex.snackbar + 1 }}
         >
-            <nav id='header-drawer' className={styles.drawerContainer}>
+            <nav id="header-drawer" className={styles.drawerContainer}>
                 <StyledDrawerHeader>
                     <Link
-                        to='/'
+                        to="/"
                         className={styles.drawerTitle}
-                        aria-label='Home'
+                        aria-label="Home"
                         onClick={() => toggleDrawer()}
                     >
                         <ThemeMode
                             darkmode={
-                                <UnleashLogoWhite aria-label='Unleash logo' />
+                                <UnleashLogoWhite aria-label="Unleash logo" />
                             }
                             lightmode={
-                                <UnleashLogo aria-label='Unleash logo' />
+                                <UnleashLogo aria-label="Unleash logo" />
                             }
                         />
                     </Link>
                 </StyledDrawerHeader>
                 <Divider />
                 <List className={styles.drawerList}>
-                    {routes.mobileRoutes.map((item) => (
+                    {routes.mobileRoutes.map(item => (
                         <NavigationLink
                             handleClose={() => toggleDrawer()}
                             path={item.path}
@@ -112,7 +112,7 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
                 <Divider />
 
                 <List className={styles.drawerList}>
-                    {routes.adminRoutes.map((item) => (
+                    {routes.adminRoutes.map(item => (
                         <NavigationLink
                             handleClose={() => toggleDrawer()}
                             path={item.path}

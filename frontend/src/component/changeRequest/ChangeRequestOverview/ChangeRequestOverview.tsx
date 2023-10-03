@@ -74,7 +74,7 @@ export const ChangeRequestOverview: FC = () => {
     const id = useRequiredPathParam('id');
     const { data: changeRequest, refetchChangeRequest } = useChangeRequest(
         projectId,
-        id,
+        id
     );
     const { changeState, addComment, loading } = useChangeRequestApi();
     const { refetch: refetchChangeRequestOpen } =
@@ -88,7 +88,7 @@ export const ChangeRequestOverview: FC = () => {
     }
 
     const allowChangeRequestActions = isChangeRequestConfiguredForReview(
-        changeRequest.environment,
+        changeRequest.environment
     );
 
     const onApplyChanges = async () => {
@@ -187,7 +187,7 @@ export const ChangeRequestOverview: FC = () => {
         !isAdmin;
 
     const hasApprovedAlready = changeRequest.approvals.some(
-        (approval) => approval.createdBy.id === user?.id,
+        approval => approval.createdBy.id === user?.id
     );
 
     const countOfChanges = changesCount(changeRequest);
@@ -207,7 +207,7 @@ export const ChangeRequestOverview: FC = () => {
                             changeRequest={changeRequest}
                             onRefetch={refetchChangeRequest}
                         />
-                        {changeRequest.comments?.map((comment) => (
+                        {changeRequest.comments?.map(comment => (
                             <ChangeRequestComment
                                 key={comment.id}
                                 comment={comment}
@@ -219,7 +219,7 @@ export const ChangeRequestOverview: FC = () => {
                             onTypeComment={setCommentText}
                         >
                             <Button
-                                variant='outlined'
+                                variant="outlined"
                                 onClick={onAddComment}
                                 disabled={
                                     !allowChangeRequestActions ||
@@ -234,10 +234,10 @@ export const ChangeRequestOverview: FC = () => {
                             condition={isSelfReview}
                             show={
                                 <Alert
-                                    sx={(theme) => ({
+                                    sx={theme => ({
                                         marginTop: theme.spacing(1.5),
                                     })}
-                                    severity='info'
+                                    severity="info"
                                 >
                                     You can not approve your own change request
                                 </Alert>
@@ -268,7 +268,7 @@ export const ChangeRequestOverview: FC = () => {
                                 condition={changeRequest.state === 'Approved'}
                                 show={
                                     <PermissionButton
-                                        variant='contained'
+                                        variant="contained"
                                         onClick={onApplyChanges}
                                         projectId={projectId}
                                         permission={APPLY_CHANGE_REQUEST}
@@ -295,10 +295,10 @@ export const ChangeRequestOverview: FC = () => {
                                 show={
                                     <Button
                                         sx={{
-                                            marginLeft: (theme) =>
+                                            marginLeft: theme =>
                                                 theme.spacing(2),
                                         }}
-                                        variant='outlined'
+                                        variant="outlined"
                                         onClick={onCancel}
                                     >
                                         Cancel changes
@@ -312,14 +312,14 @@ export const ChangeRequestOverview: FC = () => {
                     open={showCancelDialog}
                     onClick={onCancelChanges}
                     onClose={onCancelAbort}
-                    title='Cancel change request'
+                    title="Cancel change request"
                 >
                     <Typography sx={{ marginBottom: 2 }}>
                         You are about to cancel this change request
                     </Typography>
                     <Typography
-                        variant='body2'
-                        sx={(theme) => ({ color: theme.palette.neutral.dark })}
+                        variant="body2"
+                        sx={theme => ({ color: theme.palette.neutral.dark })}
                     >
                         The change request will be moved to closed, and it can't
                         be applied anymore. Once cancelled, the change request

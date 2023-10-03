@@ -40,7 +40,7 @@ export const FeatureResultInfoPopoverCell = ({
                 onClose={() => setOpen(false)}
                 anchorEl={ref.current}
                 PaperProps={{
-                    sx: (theme) => ({
+                    sx: theme => ({
                         display: 'flex',
                         flexDirection: 'column',
                         padding: theme.spacing(6),

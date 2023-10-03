@@ -17,8 +17,8 @@ export const ProjectAccessEditGroup = () => {
     }
 
     const group = access.rows.find(
-        (row) =>
-            row.entity.id === Number(groupId) && row.type === ENTITY_TYPE.GROUP,
+        row =>
+            row.entity.id === Number(groupId) && row.type === ENTITY_TYPE.GROUP
     );
 
     return (

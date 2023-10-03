@@ -11,7 +11,7 @@ export const useHiddenEnvironments = () => {
     >(new Set(globalStore.hiddenEnvironments));
 
     const setHiddenEnvironments = (environment: string) => {
-        setGlobalStore((params) => {
+        setGlobalStore(params => {
             const hiddenEnvironments = new Set(params.hiddenEnvironments);
             if (hiddenEnvironments.has(environment)) {
                 hiddenEnvironments.delete(environment);

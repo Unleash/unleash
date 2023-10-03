@@ -50,13 +50,13 @@ export const RemoveGroupUser: FC<IRemoveGroupUserProps> = ({
     return (
         <Dialogue
             open={open && Boolean(user)}
-            primaryButtonText='Remove user'
-            secondaryButtonText='Cancel'
+            primaryButtonText="Remove user"
+            secondaryButtonText="Cancel"
             onClick={onRemoveClick}
             onClose={() => {
                 setOpen(false);
             }}
-            title='Remove user from group?'
+            title="Remove user from group?"
         >
             <Typography>
                 Do you really want to remove <strong>{userName}</strong> from{' '}

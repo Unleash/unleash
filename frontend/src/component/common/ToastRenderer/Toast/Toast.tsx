@@ -41,7 +41,6 @@ const Toast = ({ title, text, type, confetti }: IToast) => {
 
             return (
                 <div
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                     key={index}
                     style={style}
                     className={classnames(styles.starting, styles.anim)}
@@ -80,11 +79,11 @@ const Toast = ({ title, text, type, confetti }: IToast) => {
                                 />
                             </div>
                         </div>
-                        <Tooltip title='Close' arrow>
+                        <Tooltip title="Close" arrow>
                             <IconButton
                                 onClick={hide}
                                 className={styles.buttonStyle}
-                                size='large'
+                                size="large"
                             >
                                 <Close />
                             </IconButton>

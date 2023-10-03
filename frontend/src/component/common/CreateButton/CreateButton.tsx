@@ -8,7 +8,7 @@ interface ICreateButtonProps extends IPermissionButtonProps {
 
 export const CreateButton = ({ name, ...rest }: ICreateButtonProps) => {
     return (
-        <PermissionButton type='submit' {...rest}>
+        <PermissionButton type="submit" {...rest}>
             Create {name}
         </PermissionButton>
     );

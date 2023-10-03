@@ -52,7 +52,7 @@ export const EnvironmentTable = () => {
                 }
             }
         },
-        [changeSortOrder, environments, mutateEnvironments, setToastApiError],
+        [changeSortOrder, environments, mutateEnvironments, setToastApiError]
     );
 
     const {
@@ -69,7 +69,7 @@ export const EnvironmentTable = () => {
             data: environments,
             disableSortBy: true,
         },
-        useGlobalFilter,
+        useGlobalFilter
     );
 
     const headerSearch = (
@@ -83,23 +83,23 @@ export const EnvironmentTable = () => {
             <CreateEnvironmentButton />
         </>
     );
-    const count = rows.length;
+    let count = rows.length;
     const header = (
         <PageHeader title={`Environments (${count})`} actions={headerActions} />
     );
 
     return (
         <PageContent header={header}>
-            <StyledAlert severity='info'>
+            <StyledAlert severity="info">
                 This is the order of environments that you have today in each
                 feature toggle. Rearranging them here will change also the order
                 inside each feature toggle.
             </StyledAlert>
             <SearchHighlightProvider value={globalFilter}>
-                <Table {...getTableProps()} rowHeight='compact'>
+                <Table {...getTableProps()} rowHeight="compact">
                     <SortableTableHeader headerGroups={headerGroups as any} />
                     <TableBody {...getTableBodyProps()}>
-                        {rows.map((row) => {
+                        {rows.map(row => {
                             prepareRow(row);
                             return (
                                 <EnvironmentRow

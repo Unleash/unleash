@@ -111,9 +111,9 @@ export const StrategyParameter = ({
                         Parameters let you provide arguments to your strategy
                         that it can access for evaluation. Read more in the{' '}
                         <Link
-                            href='https://docs.getunleash.io/reference/custom-activation-strategies#parameter-types'
-                            target='_blank'
-                            rel='noreferrer'
+                            href="https://docs.getunleash.io/reference/custom-activation-strategies#parameter-types"
+                            target="_blank"
+                            rel="noreferrer"
                         >
                             parameter types documentation
                         </Link>
@@ -125,25 +125,25 @@ export const StrategyParameter = ({
                 <StyledNameInput
                     autoFocus
                     label={`Parameter name ${index + 1}*`}
-                    onChange={(e) => set({ name: e.target.value })}
+                    onChange={e => set({ name: e.target.value })}
                     value={input.name}
                     error={Boolean(errors?.[`paramName${index}`])}
                     errorText={errors?.[`paramName${index}`]}
                 />
-                <Tooltip title='Remove parameter' arrow>
+                <Tooltip title="Remove parameter" arrow>
                     <IconButton
                         onClick={() => {
                             setParams(params.filter((e, i) => i !== index));
                         }}
-                        size='large'
+                        size="large"
                     >
                         <Delete />
                     </IconButton>
                 </Tooltip>
             </StyledNameContainer>
             <StyledGeneralSelect
-                label='Type*'
-                name='type'
+                label="Type*"
+                name="type"
                 options={paramTypesOptions}
                 value={input.type}
                 onChange={onTypeChange}
@@ -163,7 +163,7 @@ export const StrategyParameter = ({
                         onChange={() => set({ required: !input.required })}
                     />
                 }
-                label='Required'
+                label="Required"
             />
         </StyledParamsContainer>
     );

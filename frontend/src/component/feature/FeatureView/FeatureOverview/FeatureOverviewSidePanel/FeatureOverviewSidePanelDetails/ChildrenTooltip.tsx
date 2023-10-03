@@ -9,7 +9,7 @@ export const ChildrenTooltip: FC<{
     <TooltipLink
         tooltip={
             <>
-                {childFeatures.map((child) => (
+                {childFeatures.map(child => (
                     <StyledLink to={`/projects/${project}/features/${child}`}>
                         <div>{child}</div>
                     </StyledLink>

@@ -38,10 +38,10 @@ interface INetworkApp {
 }
 
 const asNetworkAppData = (
-    result: RequestsPerSecondSchemaDataResultItem & { label: string },
+    result: RequestsPerSecondSchemaDataResultItem & { label: string }
 ) => {
     const values = (result.values || []) as ResultValue[];
-    const data = values.filter((value) => isRecent(value));
+    const data = values.filter(value => isRecent(value));
     const reqs = data.length ? parseFloat(data[data.length - 1][1]) : 0;
     return {
         label: result.label,
@@ -54,7 +54,7 @@ const summingReqsByLabelAndType = (
     acc: {
         [group: string]: INetworkApp;
     },
-    current: INetworkApp,
+    current: INetworkApp
 ) => {
     const groupBy = current.label + current.type;
     acc[groupBy] = {
@@ -67,18 +67,18 @@ const summingReqsByLabelAndType = (
 const toGraphData = (metrics?: RequestsPerSecondSchema) => {
     const results =
         metrics?.data?.result
-            ?.map((result) => ({
+            ?.map(result => ({
                 ...result,
                 label: unknownify(result.metric?.appName),
             }))
-            .filter((result) => result.label !== 'unknown') || [];
+            .filter(result => result.label !== 'unknown') || [];
     const aggregated = results
         .map(asNetworkAppData)
         .reduce(summingReqsByLabelAndType, {});
     return (
         Object.values(aggregated)
-            .map((app) => ({ ...app, reqs: app.reqs.toFixed(2) }))
-            .filter((app) => app.reqs !== '0.00') ?? []
+            .map(app => ({ ...app, reqs: app.reqs.toFixed(2) }))
+            .filter(app => app.reqs !== '0.00') ?? []
     );
 };
 
@@ -95,15 +95,15 @@ export const NetworkOverview = () => {
         subgraph _[ ]
         direction BT
             Unleash(<img src='${formatAssetPath(
-                themeMode === 'dark' ? logoWhiteIcon : logoIcon,
+                themeMode === 'dark' ? logoWhiteIcon : logoIcon
             )}' width='72' height='72' class='unleash-logo'/><br/>Unleash)
             ${apps
                 .map(
                     ({ label, reqs, type }, i) =>
                         `app-${i}("${label.replaceAll(
                             '"',
-                            '&quot;',
-                        )}") -- ${reqs} req/s<br>${type} --> Unleash`,
+                            '&quot;'
+                        )}") -- ${reqs} req/s<br>${type} --> Unleash`
                 )
                 .join('\n')}
         end
@@ -112,7 +112,7 @@ export const NetworkOverview = () => {
     return (
         <ConditionallyRender
             condition={apps.length === 0}
-            show={<Alert severity='warning'>No data available.</Alert>}
+            show={<Alert severity="warning">No data available.</Alert>}
             elseShow={<StyledMermaid>{graph}</StyledMermaid>}
         />
     );

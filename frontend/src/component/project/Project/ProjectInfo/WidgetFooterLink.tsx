@@ -12,10 +12,10 @@ export const WidgetFooterLink: FC<IWidgetFooterLinkProps> = ({
 }) => {
     return (
         <Typography
-            variant='body2'
-            textAlign='center'
+            variant="body2"
+            textAlign="center"
             sx={{
-                paddingTop: (theme) => theme.spacing(2.5),
+                paddingTop: theme => theme.spacing(2.5),
                 marginTop: 'auto',
                 justifySelf: 'flex-end',
             }}

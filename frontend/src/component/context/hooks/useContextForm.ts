@@ -7,7 +7,7 @@ export const useContextForm = (
     initialContextName = '',
     initialContextDesc = '',
     initialLegalValues = [] as ILegalValue[],
-    initialStickiness = false,
+    initialStickiness = false
 ) => {
     const [contextName, setContextName] = useState(initialContextName);
     const [contextDesc, setContextDesc] = useState(initialContextDesc);
@@ -44,21 +44,21 @@ export const useContextForm = (
 
     const validateContext = async () => {
         if (contextName.length === 0) {
-            setErrors((prev) => ({ ...prev, name: 'Name can not be empty.' }));
+            setErrors(prev => ({ ...prev, name: 'Name can not be empty.' }));
             return false;
         }
         try {
             await validateContextName(contextName);
             return true;
         } catch (error: unknown) {
-            setErrors((prev) => ({ ...prev, name: formatUnknownError(error) }));
+            setErrors(prev => ({ ...prev, name: formatUnknownError(error) }));
             return false;
         }
     };
 
     const clearErrors = (key?: string) => {
         if (key) {
-            setErrors((prev) => ({ ...prev, [key]: undefined }));
+            setErrors(prev => ({ ...prev, [key]: undefined }));
         } else {
             setErrors({});
         }

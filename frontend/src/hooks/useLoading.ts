@@ -8,7 +8,7 @@ const useLoading = (loading: boolean, selector = '[data-loading=true]') => {
         if (ref.current) {
             const elements = ref.current.querySelectorAll(selector);
 
-            elements.forEach((element) => {
+            elements.forEach(element => {
                 if (loading) {
                     element.classList.add('skeleton');
                 } else {

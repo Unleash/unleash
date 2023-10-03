@@ -3,7 +3,7 @@ import { formatApiPath } from 'utils/formatPath';
 
 export const useSegmentValidation = (
     name: string,
-    initialName: string,
+    initialName: string
 ): string | undefined => {
     const [error, setError] = useState<string>();
     const nameHasChanged = name !== initialName;
@@ -29,7 +29,7 @@ const fetchNewNameValidation = (name: string): Promise<Response> =>
     });
 
 const parseValidationResponse = async (
-    res: Response,
+    res: Response
 ): Promise<string | undefined> => {
     if (res.ok) {
         return;

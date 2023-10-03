@@ -16,11 +16,11 @@ export const testServerRoute = (
     path: string,
     json: object,
     method: 'get' | 'post' | 'put' | 'delete' = 'get',
-    status: number = 200,
+    status: number = 200
 ) => {
     server.use(
         rest[method](path, (req, res, ctx) => {
             return res(ctx.status(status), ctx.json(json));
-        }),
+        })
     );
 };

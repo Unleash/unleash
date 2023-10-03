@@ -44,7 +44,7 @@ export const ChangeRequestTitleCell = ({
                         component={RouterLink}
                         underline={'hover'}
                         to={path}
-                        sx={(theme) => ({
+                        sx={theme => ({
                             paddingTop: theme.spacing(0.2),
                             marginRight: theme.spacing(1),
                             '&:hover': {

@@ -126,8 +126,8 @@ export const ProjectAccessAssign = ({
                     edit ||
                     !accesses.some(
                         ({ entity: { id }, type }) =>
-                            group.id === id && type === ENTITY_TYPE.GROUP,
-                    ),
+                            group.id === id && type === ENTITY_TYPE.GROUP
+                    )
             )
             .map((group: IGroup) => ({
                 id: group.id,
@@ -140,8 +140,8 @@ export const ProjectAccessAssign = ({
                     edit ||
                     !accesses.some(
                         ({ entity: { id }, type }) =>
-                            user.id === id && type === ENTITY_TYPE.USER,
-                    ),
+                            user.id === id && type === ENTITY_TYPE.USER
+                    )
             )
             .sort((a: IUser, b: IUser) => {
                 const aName = a.name || a.username || '';
@@ -160,8 +160,8 @@ export const ProjectAccessAssign = ({
                     !accesses.some(
                         ({ entity: { id }, type }) =>
                             serviceAccount.id === id &&
-                            type === ENTITY_TYPE.SERVICE_ACCOUNT,
-                    ),
+                            type === ENTITY_TYPE.SERVICE_ACCOUNT
+                    )
             )
             .sort((a: IServiceAccount, b: IServiceAccount) => {
                 const aName = a.name || a.username || '';
@@ -179,11 +179,11 @@ export const ProjectAccessAssign = ({
         () =>
             options.filter(
                 ({ id, type }) =>
-                    id === selected?.entity.id && type === selected?.type,
-            ),
+                    id === selected?.entity.id && type === selected?.type
+            )
     );
     const [selectedRoles, setRoles] = useState<IRole[]>(
-        roles.filter(({ id }) => selected?.entity?.roles?.includes(id)),
+        roles.filter(({ id }) => selected?.entity?.roles?.includes(id))
     );
 
     const payload = {
@@ -195,7 +195,7 @@ export const ProjectAccessAssign = ({
             ?.filter(
                 ({ type }) =>
                     type === ENTITY_TYPE.USER ||
-                    type === ENTITY_TYPE.SERVICE_ACCOUNT,
+                    type === ENTITY_TYPE.SERVICE_ACCOUNT
             )
             .map(({ id }) => id),
     };
@@ -214,13 +214,13 @@ export const ProjectAccessAssign = ({
                 await setUserRoles(
                     projectId,
                     selectedRoles.map(({ id }) => id),
-                    selected.entity.id,
+                    selected.entity.id
                 );
             } else if (selected?.type === ENTITY_TYPE.GROUP) {
                 await setGroupRoles(
                     projectId,
                     selectedRoles.map(({ id }) => id),
-                    selected.entity.id,
+                    selected.entity.id
                 );
             }
             refetchProjectAccess();
@@ -267,7 +267,7 @@ export const ProjectAccessAssign = ({
     const renderOption = (
         props: React.HTMLAttributes<HTMLLIElement>,
         option: IAccessOption,
-        selected: boolean,
+        selected: boolean
     ) => {
         let optionGroup;
         let optionUser;
@@ -281,8 +281,8 @@ export const ProjectAccessAssign = ({
                 <span>
                     <li {...props}>
                         <Checkbox
-                            icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
-                            checkedIcon={<CheckBoxIcon fontSize='small' />}
+                            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                            checkedIcon={<CheckBoxIcon fontSize="small" />}
                             style={{ marginRight: 8 }}
                             checked={selected}
                         />
@@ -331,9 +331,9 @@ export const ProjectAccessAssign = ({
                 loading={loading}
                 modal
                 title={`${!edit ? 'Assign' : 'Edit'} ${entityType} access`}
-                description='Custom project roles allow you to fine-tune access rights and permissions within your projects.'
-                documentationLink='https://docs.getunleash.io/how-to/how-to-create-and-assign-custom-project-roles'
-                documentationLinkLabel='Project access documentation'
+                description="Custom project roles allow you to fine-tune access rights and permissions within your projects."
+                documentationLink="https://docs.getunleash.io/how-to/how-to-create-and-assign-custom-project-roles"
+                documentationLinkLabel="Project access documentation"
                 formatApiCode={formatApiCode}
             >
                 <StyledForm onSubmit={handleSubmit}>
@@ -346,14 +346,14 @@ export const ProjectAccessAssign = ({
                         <StyledAutocompleteWrapper>
                             <Autocomplete
                                 data-testid={PA_USERS_GROUPS_ID}
-                                size='small'
+                                size="small"
                                 multiple
                                 openOnFocus
                                 limitTags={10}
                                 disableCloseOnSelect
                                 disabled={edit}
                                 value={selectedOptions}
-                                getOptionDisabled={(option) => {
+                                getOptionDisabled={option => {
                                     if (option.type === ENTITY_TYPE.GROUP) {
                                         const optionGroup =
                                             option.entity as IGroup;
@@ -373,7 +373,7 @@ export const ProjectAccessAssign = ({
                                     setSelectedOptions(newValue);
                                 }}
                                 options={options}
-                                groupBy={(option) => option.type}
+                                groupBy={option => option.type}
                                 renderOption={(props, option, { selected }) =>
                                     renderOption(props, option, selected)
                                 }
@@ -407,21 +407,21 @@ export const ProjectAccessAssign = ({
                                             return (
                                                 caseInsensitiveSearch(
                                                     inputValue,
-                                                    optionUser.email,
+                                                    optionUser.email
                                                 ) ||
                                                 caseInsensitiveSearch(
                                                     inputValue,
-                                                    optionUser.name,
+                                                    optionUser.name
                                                 ) ||
                                                 caseInsensitiveSearch(
                                                     inputValue,
-                                                    optionUser.username,
+                                                    optionUser.username
                                                 )
                                             );
                                         }
                                         return caseInsensitiveSearch(
                                             inputValue,
-                                            option.entity.name,
+                                            option.entity.name
                                         );
                                     })
                                 }
@@ -429,7 +429,7 @@ export const ProjectAccessAssign = ({
                                     option.type === value.type &&
                                     option.entity.id === value.entity.id
                                 }
-                                renderInput={(params) => (
+                                renderInput={params => (
                                     <TextField
                                         {...params}
                                         label={capitalize(entityType)}
@@ -443,7 +443,7 @@ export const ProjectAccessAssign = ({
                         <StyledAutocompleteWrapper>
                             <ConditionallyRender
                                 condition={Boolean(
-                                    uiConfig.flags.multipleRoles,
+                                    uiConfig.flags.multipleRoles
                                 )}
                                 show={() => (
                                     <MultipleRoleSelect
@@ -458,7 +458,7 @@ export const ProjectAccessAssign = ({
                                         data-testid={PA_ROLE_ID}
                                         roles={roles}
                                         value={selectedRoles[0]}
-                                        setValue={(role) =>
+                                        setValue={role =>
                                             setRoles(role ? [role] : [])
                                         }
                                     />
@@ -470,9 +470,9 @@ export const ProjectAccessAssign = ({
                     <StyledButtonContainer>
                         <Button
                             data-testid={PA_ASSIGN_CREATE_ID}
-                            type='submit'
-                            variant='contained'
-                            color='primary'
+                            type="submit"
+                            variant="contained"
+                            color="primary"
                             disabled={!isValid}
                         >
                             {edit ? 'Save' : `Assign ${entityType}`}

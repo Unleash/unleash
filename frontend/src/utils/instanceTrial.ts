@@ -5,7 +5,7 @@ import differenceInDays from 'date-fns/differenceInDays';
 const TRIAL_EXPIRES_SOON_DAYS_THRESHOLD = 10;
 
 export const isTrialInstance = (
-    instanceStatus: IInstanceStatus | undefined,
+    instanceStatus: IInstanceStatus | undefined
 ): boolean => {
     return (
         instanceStatus?.state === InstanceState.TRIAL ||
@@ -15,7 +15,7 @@ export const isTrialInstance = (
 };
 
 export const trialHasExpired = (
-    instanceStatus: IInstanceStatus | undefined,
+    instanceStatus: IInstanceStatus | undefined
 ): boolean => {
     if (
         instanceStatus?.state === InstanceState.EXPIRED ||
@@ -35,7 +35,7 @@ export const trialHasExpired = (
 };
 
 export const trialExpiresSoon = (
-    instanceStatus: IInstanceStatus | undefined,
+    instanceStatus: IInstanceStatus | undefined
 ) => {
     if (
         !instanceStatus ||
@@ -52,11 +52,11 @@ export const trialExpiresSoon = (
 };
 
 export const canExtendTrial = (
-    instanceStatus: IInstanceStatus | undefined,
+    instanceStatus: IInstanceStatus | undefined
 ): boolean => {
     return Boolean(
         instanceStatus &&
             instanceStatus.state === InstanceState.EXPIRED &&
-            !instanceStatus.trialExtended,
+            !instanceStatus.trialExtended
     );
 };

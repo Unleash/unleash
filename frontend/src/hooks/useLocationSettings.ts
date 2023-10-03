@@ -25,5 +25,5 @@ const createInitialValue = (): ILocationSettings => {
 
 const useGlobalState = createPersistentGlobalStateHook<ILocationSettings>(
     `${basePath}:useLocationSettings:v1`,
-    createInitialValue(),
+    createInitialValue()
 );

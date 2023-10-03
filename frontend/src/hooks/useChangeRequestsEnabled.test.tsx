@@ -31,7 +31,7 @@ testServerRoute(
             environment,
             changeRequestEnabled: true,
         },
-    ],
+    ]
 );
 testServerRoute(server, '/api/admin/ui-config', {
     versionInfo: {
@@ -51,7 +51,7 @@ test('SKIP_CHANGE_REQUEST disables change request mode', async () => {
             ]}
         >
             <TestComponent />
-        </AccessProviderMock>,
+        </AccessProviderMock>
     );
 
     const result = await screen.findByText('change request');
@@ -68,7 +68,7 @@ test('SKIP_CHANGE_REQUEST disables change request mode', async () => {
             ]}
         >
             <TestComponent />
-        </AccessProviderMock>,
+        </AccessProviderMock>
     );
 
     const regularModeElement = await screen.findByText('regular mode');

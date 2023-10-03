@@ -117,17 +117,17 @@ export const Project = () => {
             new: false,
         },
     ]
-        .filter((tab) => {
+        .filter(tab => {
             if (tab.flag) {
                 return uiConfig.flags[tab.flag];
             }
             return true;
         })
-        .filter((tab) => !(isOss() && tab.isEnterprise));
+        .filter(tab => !(isOss() && tab.isEnterprise));
 
     const activeTab = [...tabs]
         .reverse()
-        .find((tab) => pathname.startsWith(tab.path));
+        .find(tab => pathname.startsWith(tab.path));
 
     useEffect(() => {
         const created = params.get('created');
@@ -145,8 +145,8 @@ export const Project = () => {
 
     if (error?.status === 404) {
         return (
-            <Paper sx={(theme) => ({ padding: theme.spacing(2, 4, 4) })}>
-                <Typography variant='h1'>404 Not Found</Typography>
+            <Paper sx={theme => ({ padding: theme.spacing(2, 4, 4) })}>
+                <Typography variant="h1">404 Not Found</Typography>
                 <Typography>
                     Project <strong>{projectId}</strong> does not exist.
                 </Typography>
@@ -165,7 +165,7 @@ export const Project = () => {
 
     const enterpriseIcon = (
         <Box
-            sx={(theme) => ({
+            sx={theme => ({
                 marginLeft: theme.spacing(1),
                 display: 'flex',
             })}
@@ -193,7 +193,7 @@ export const Project = () => {
                         <StyledDiv>
                             <ConditionallyRender
                                 condition={Boolean(
-                                    uiConfig?.flags?.featuresExportImport,
+                                    uiConfig?.flags?.featuresExportImport
                                 )}
                                 show={
                                     <PermissionIconButton
@@ -216,12 +216,12 @@ export const Project = () => {
                 <StyledTabContainer>
                     <Tabs
                         value={activeTab?.path}
-                        indicatorColor='primary'
-                        textColor='primary'
-                        variant='scrollable'
+                        indicatorColor="primary"
+                        textColor="primary"
+                        variant="scrollable"
                         allowScrollButtonsMobile
                     >
-                        {tabs.map((tab) => {
+                        {tabs.map(tab => {
                             return (
                                 <StyledTab
                                     key={tab.title}
@@ -237,7 +237,7 @@ export const Project = () => {
                                             <ConditionallyRender
                                                 condition={tab.new}
                                                 show={
-                                                    <StyledBadge color='success'>
+                                                    <StyledBadge color="success">
                                                         New
                                                     </StyledBadge>
                                                 }
@@ -265,9 +265,9 @@ export const Project = () => {
                 }}
             />
             <Routes>
-                <Route path='health' element={<ProjectHealth />} />
+                <Route path="health" element={<ProjectHealth />} />
                 <Route
-                    path='access/*'
+                    path="access/*"
                     element={
                         <Navigate
                             replace
@@ -275,20 +275,20 @@ export const Project = () => {
                         />
                     }
                 />
-                <Route path='environments' element={<ProjectEnvironment />} />
-                <Route path='archive' element={<ProjectFeaturesArchive />} />
-                <Route path='logs' element={<ProjectLog />} />
+                <Route path="environments" element={<ProjectEnvironment />} />
+                <Route path="archive" element={<ProjectFeaturesArchive />} />
+                <Route path="logs" element={<ProjectLog />} />
                 <Route
-                    path='change-requests'
+                    path="change-requests"
                     element={<ProjectChangeRequests />}
                 />
                 <Route
-                    path='change-requests/:id'
+                    path="change-requests/:id"
                     element={<ChangeRequestOverview />}
                 />
-                <Route path='settings/*' element={<ProjectSettings />} />
-                <Route path='metrics' element={<ProjectDoraMetrics />} />
-                <Route path='*' element={<ProjectOverview />} />
+                <Route path="settings/*" element={<ProjectSettings />} />
+                <Route path="metrics" element={<ProjectDoraMetrics />} />
+                <Route path="*" element={<ProjectOverview />} />
             </Routes>
             <ImportModal
                 open={modalOpen}

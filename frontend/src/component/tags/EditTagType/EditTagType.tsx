@@ -61,10 +61,10 @@ const EditTagType = () => {
     return (
         <FormTemplate
             loading={loading}
-            title='Edit tag type'
-            description='Tag types allow you to group tags together in the management UI'
-            documentationLink='https://docs.getunleash.io/'
-            documentationLinkLabel='Tags documentation'
+            title="Edit tag type"
+            description="Tag types allow you to group tags together in the management UI"
+            documentationLink="https://docs.getunleash.io/"
+            documentationLinkLabel="Tags documentation"
             formatApiCode={formatApiCode}
         >
             <TagForm
@@ -75,7 +75,7 @@ const EditTagType = () => {
                 setTagName={setTagName}
                 tagDesc={tagDesc}
                 setTagDesc={setTagDesc}
-                mode='Edit'
+                mode="Edit"
                 clearErrors={clearErrors}
             >
                 <UpdateButton permission={UPDATE_TAG_TYPE} />

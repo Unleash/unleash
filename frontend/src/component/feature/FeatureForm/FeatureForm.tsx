@@ -125,11 +125,11 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     const featureNamingPatternEnabled = useUiFlag('featureNamingPattern');
 
     const renderToggleDescription = () => {
-        return featureTypes.find((toggle) => toggle.id === type)?.description;
+        return featureTypes.find(toggle => toggle.id === type)?.description;
     };
 
     const displayFeatureNamingInfo = Boolean(
-        featureNamingPatternEnabled && featureNaming?.pattern,
+        featureNamingPatternEnabled && featureNaming?.pattern
     );
 
     React.useEffect(() => {
@@ -153,18 +153,18 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
             <StyledInput
                 autoFocus
                 disabled={mode === 'Edit'}
-                label='Name'
+                label="Name"
                 aria-details={
                     displayFeatureNamingInfo
                         ? 'feature-naming-pattern-info'
                         : undefined
                 }
-                id='feature-toggle-name'
+                id="feature-toggle-name"
                 error={Boolean(errors.name)}
                 errorText={errors.name}
                 onFocus={() => clearErrors()}
                 value={name}
-                onChange={(e) => setName(trim(e.target.value))}
+                onChange={e => setName(trim(e.target.value))}
                 data-testid={CF_NAME_ID}
                 onBlur={validateToggleName}
             />
@@ -176,7 +176,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 value={type}
                 onChange={setType}
                 label={'Toggle type'}
-                id='feature-type-select'
+                id="feature-type-select"
                 editable
                 data-testid={CF_TYPE_ID}
                 IconComponent={KeyboardArrowDownOutlined}
@@ -194,17 +194,14 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
             />
             <FeatureProjectSelect
                 value={project}
-                onChange={(projectId) => {
+                onChange={projectId => {
                     setProject(projectId);
                     navigate(`/projects/${projectId}/create-toggle`, {
                         replace: true,
                     });
                 }}
                 enabled={editable}
-                filter={projectFilterGenerator(
-                    permissions || [],
-                    CREATE_FEATURE,
-                )}
+                filter={projectFilterGenerator(permissions, CREATE_FEATURE)}
                 IconComponent={KeyboardArrowDownOutlined}
                 sx={styledSelectInput}
             />
@@ -215,18 +212,18 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
             <StyledInput
                 multiline
                 rows={4}
-                label='Description'
-                placeholder='A short description of the feature toggle'
+                label="Description"
+                placeholder="A short description of the feature toggle"
                 value={description}
                 data-testid={CF_DESC_ID}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={e => setDescription(e.target.value)}
             />
             <StyledFormControl>
                 <Typography
-                    variant='subtitle1'
+                    variant="subtitle1"
                     sx={styledTypography}
                     data-loading
-                    component='h2'
+                    component="h2"
                 >
                     Impression Data
                 </Typography>
@@ -235,27 +232,27 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     client SDKs will emit events you can listen for every time
                     this toggle gets triggered. Learn more in{' '}
                     <Link
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        href='https://docs.getunleash.io/advanced/impression_data'
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://docs.getunleash.io/advanced/impression_data"
                     >
                         the impression data documentation
                     </Link>
                 </p>
                 <StyledRow>
                     <FormControlLabel
-                        labelPlacement='start'
+                        labelPlacement="start"
                         style={{ marginLeft: 0 }}
                         control={
                             <Switch
-                                name='impressionData'
+                                name="impressionData"
                                 onChange={() =>
                                     setImpressionData(!impressionData)
                                 }
                                 checked={impressionData}
                             />
                         }
-                        label='Enable impression data'
+                        label="Enable impression data"
                     />
                 </StyledRow>
             </StyledFormControl>

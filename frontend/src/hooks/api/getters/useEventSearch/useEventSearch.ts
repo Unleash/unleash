@@ -26,7 +26,7 @@ interface IEventSearch {
 export const useEventSearch = (
     project?: string,
     feature?: string,
-    query?: string,
+    query?: string
 ): IUseEventSearchOutput => {
     const [events, setEvents] = useState<IEvent[]>();
     const [totalEvents, setTotalEvents] = useState<number>(0);
@@ -34,7 +34,7 @@ export const useEventSearch = (
 
     const search: IEventSearch = useMemo(
         () => ({ project, feature, query, limit: 50 }),
-        [project, feature, query],
+        [project, feature, query]
     );
 
     const { data, error, isValidating } = useSWR<{
@@ -52,7 +52,7 @@ export const useEventSearch = (
     // Append results to the page when more data has been fetched.
     useEffect(() => {
         if (data) {
-            setEvents((prev) => [
+            setEvents(prev => [
                 ...(prev?.slice(0, offset) || []),
                 ...data.events,
             ]);
@@ -85,5 +85,5 @@ const searchEvents = (path: string, search: IEventSearch) => {
         body: JSON.stringify(search),
     })
         .then(handleErrorResponses('Event history'))
-        .then((res) => res.json());
+        .then(res => res.json());
 };

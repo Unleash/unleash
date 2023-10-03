@@ -41,8 +41,8 @@
       "website/translated_docs",
       "website",
       "setupJest.js",
+      "frontend",
       "dist",
-      "build",
       "src/migrations/*.js",
       "src/test/examples/*.json",
       "website/**/*.js",
@@ -67,13 +67,16 @@
       "website/translated_docs",
       "website",
       "setupJest.js",
+      "frontend",
       "dist",
-      "build",
       "src/migrations/*.js",
       "src/migrations/*.json",
       "src/test/examples/*.json",
       "website/**/*.js",
-      "coverage"
+      "coverage",
+      ".eslintrc",
+      ".eslintignore",
+      "package.json"
     ],
     "indentSize": 4
   },

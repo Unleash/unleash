@@ -41,7 +41,7 @@ const RootPermissionIconButton = (props: IButtonProps | ILinkProps) => {
     const access = useHasRootAccess(
         props.permission,
         props.projectId,
-        props.environmentId,
+        props.environmentId
     );
 
     return <BasePermissionIconButton {...props} access={access} />;
@@ -51,12 +51,12 @@ const ProjectEnvironmentPermissionIconButton = (
     props: (IButtonProps | ILinkProps) & {
         environmentId: string;
         projectId: string;
-    },
+    }
 ) => {
     const access = useHasProjectEnvironmentAccess(
         props.permission,
         props.projectId,
-        props.environmentId,
+        props.environmentId
     );
 
     return <BasePermissionIconButton {...props} access={access} />;
@@ -79,14 +79,14 @@ const BasePermissionIconButton = ({
             {...tooltipProps}
             title={formatAccessText(access, tooltipProps?.title)}
             arrow
-            onClick={(e) => e.preventDefault()}
+            onClick={e => e.preventDefault()}
         >
             <div id={id}>
                 <IconButton
                     {...rest}
                     disabled={!access || disabled}
                     aria-labelledby={id}
-                    size='large'
+                    size="large"
                 >
                     {children}
                 </IconButton>

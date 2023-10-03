@@ -31,10 +31,10 @@ export const FeatureStrategyType = ({
 
     const updateParameter = (name: string, value: string) => {
         setStrategy(
-            produce((draft) => {
+            produce(draft => {
                 draft.parameters = draft.parameters ?? {};
                 draft.parameters[name] = value;
-            }),
+            })
         );
         validateParameter(name, value);
     };

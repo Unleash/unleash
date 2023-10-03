@@ -63,14 +63,18 @@ export const EnvironmentVariantsTable = ({
                     value
                         ?.map(
                             ({ contextName, values }) =>
-                                `${contextName}:${values.join()}`,
+                                `${contextName}:${values.join()}`
                         )
                         .join('\n') || '',
             },
             {
                 Header: 'Weight',
                 accessor: 'weight',
-                Cell: ({ row: { original: { name, weight } } }: any) => {
+                Cell: ({
+                    row: {
+                        original: { name, weight },
+                    },
+                }: any) => {
                     return (
                         <TextCell data-testid={`VARIANT_WEIGHT_${name}`}>
                             {calculateVariantWeight(weight)} %
@@ -87,14 +91,14 @@ export const EnvironmentVariantsTable = ({
                 sortType: 'alphanumeric',
             },
         ],
-        [projectId, variants],
+        [projectId, variants]
     );
 
     const initialState = useMemo(
         () => ({
             sortBy: [{ id: 'name', desc: false }],
         }),
-        [],
+        []
     );
 
     const { data, getSearchText } = useSearch(columns, searchValue, variants);
@@ -117,7 +121,7 @@ export const EnvironmentVariantsTable = ({
             disableSortRemove: true,
             disableMultiSort: true,
         },
-        useSortBy,
+        useSortBy
     );
 
     useConditionallyHiddenColumns(
@@ -132,7 +136,7 @@ export const EnvironmentVariantsTable = ({
             },
         ],
         setHiddenColumns,
-        columns,
+        columns
     );
 
     return (
@@ -141,11 +145,11 @@ export const EnvironmentVariantsTable = ({
                 <Table {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups as any} />
                     <TableBody {...getTableBodyProps()}>
-                        {rows.map((row) => {
+                        {rows.map(row => {
                             prepareRow(row);
                             return (
                                 <TableRow hover {...row.getRowProps()}>
-                                    {row.cells.map((cell) => (
+                                    {row.cells.map(cell => (
                                         <TableCell {...cell.getCellProps()}>
                                             {cell.render('Cell')}
                                         </TableCell>

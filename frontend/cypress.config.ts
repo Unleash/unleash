@@ -15,7 +15,7 @@ export default defineConfig({
                 vitePreprocessor({
                     configFile: path.resolve(__dirname, './vite.config.ts'),
                     mode: 'development',
-                }),
+                })
             );
             on('task', {
                 log(message) {

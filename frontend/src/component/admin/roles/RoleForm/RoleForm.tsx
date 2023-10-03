@@ -73,15 +73,15 @@ export const RoleForm = ({
         ? getCategorizedProjectPermissions(
               flattenProjectPermissions(
                   permissions.project,
-                  permissions.environments,
-              ),
+                  permissions.environments
+              )
           )
         : getCategorizedRootPermissions(permissions.root);
 
     const onPermissionChange = (permission: IPermission) => {
         const newCheckedPermissions = togglePermission(
             checkedPermissions,
-            permission,
+            permission
         );
         setCheckedPermissions(newCheckedPermissions);
     };
@@ -89,7 +89,7 @@ export const RoleForm = ({
     const onCheckAll = (permissions: IPermission[]) => {
         const newCheckedPermissions = toggleAllPermissions(
             checkedPermissions,
-            permissions,
+            permissions
         );
 
         setCheckedPermissions(newCheckedPermissions);
@@ -102,22 +102,22 @@ export const RoleForm = ({
             </StyledInputDescription>
             <StyledInput
                 autoFocus
-                label='Role name'
+                label="Role name"
                 error={Boolean(errors.name)}
                 errorText={errors.name}
                 value={name}
-                onChange={(e) => onSetName(e.target.value)}
-                autoComplete='off'
+                onChange={e => onSetName(e.target.value)}
+                autoComplete="off"
                 required
             />
             <StyledInputDescription>
                 What is your new role description?
             </StyledInputDescription>
             <StyledInput
-                label='Role description'
+                label="Role description"
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                autoComplete='off'
+                onChange={e => setDescription(e.target.value)}
+                autoComplete="off"
                 required
             />
             <StyledInputDescription>
@@ -130,11 +130,11 @@ export const RoleForm = ({
                     context={label.toLowerCase()}
                     Icon={
                         type === PROJECT_PERMISSION_TYPE ? (
-                            <TopicIcon color='disabled' sx={{ mr: 1 }} />
+                            <TopicIcon color="disabled" sx={{ mr: 1 }} />
                         ) : type === ENVIRONMENT_PERMISSION_TYPE ? (
-                            <CloudCircleIcon color='disabled' sx={{ mr: 1 }} />
+                            <CloudCircleIcon color="disabled" sx={{ mr: 1 }} />
                         ) : (
-                            <UserIcon color='disabled' sx={{ mr: 1 }} />
+                            <UserIcon color="disabled" sx={{ mr: 1 }} />
                         )
                     }
                     permissions={permissions}

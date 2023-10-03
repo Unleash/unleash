@@ -39,12 +39,12 @@ export const MultipleRoleSelect = ({
     const renderRoleOption = (
         props: React.HTMLAttributes<HTMLLIElement>,
         option: IRole,
-        state: AutocompleteRenderOptionState,
+        state: AutocompleteRenderOptionState
     ) => (
         <li {...props}>
             <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
-                checkedIcon={<CheckBoxIcon fontSize='small' />}
+                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                checkedIcon={<CheckBoxIcon fontSize="small" />}
                 style={{ marginRight: 8 }}
                 checked={state.selected}
             />
@@ -61,14 +61,14 @@ export const MultipleRoleSelect = ({
                 multiple
                 disableCloseOnSelect
                 openOnFocus
-                size='small'
+                size="small"
                 value={value}
                 onChange={(_, roles) => setValue(roles)}
                 options={roles}
                 renderOption={renderRoleOption}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                    <TextField {...params} label='Role' required={required} />
+                getOptionLabel={option => option.name}
+                renderInput={params => (
+                    <TextField {...params} label="Role" required={required} />
                 )}
                 {...rest}
             />

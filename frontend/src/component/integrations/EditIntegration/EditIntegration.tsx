@@ -11,10 +11,10 @@ export const EditIntegration = () => {
 
     const editMode = true;
     const addon = addons.find(
-        (addon: AddonSchema) => addon.id === Number(addonId),
+        (addon: AddonSchema) => addon.id === Number(addonId)
     ) || { ...cloneDeep(DEFAULT_DATA) };
     const provider = addon
-        ? providers.find((provider) => provider.name === addon.provider)
+        ? providers.find(provider => provider.name === addon.provider)
         : undefined;
 
     return (

@@ -62,7 +62,7 @@ export const ContextFormChip = ({
                 />
             </div>
             <StyledButton onClick={onRemove}>
-                <Cancel titleAccess='Remove' />
+                <Cancel titleAccess="Remove" />
             </StyledButton>
         </StyledContainer>
     );

@@ -6,14 +6,14 @@ import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('ChangeRequest'))
-        .then((res) => res.json());
+        .then(res => res.json());
 };
 
 export const useProjectChangeRequests = (project: string) => {
     const { data, error, mutate } = useEnterpriseSWR(
         [],
         formatApiPath(`api/admin/projects/${project}/change-requests`),
-        fetcher,
+        fetcher
     );
 
     return useMemo(
@@ -23,6 +23,6 @@ export const useProjectChangeRequests = (project: string) => {
             refetch: mutate,
             error,
         }),
-        [data, error, mutate],
+        [data, error, mutate]
     );
 };

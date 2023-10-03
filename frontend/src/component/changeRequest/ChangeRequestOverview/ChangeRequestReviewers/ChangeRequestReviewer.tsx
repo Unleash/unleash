@@ -41,7 +41,7 @@ export const ChangeRequestApprover: FC<IChangeRequestReviewerProps> = ({
     return (
         <StyledBox>
             <StyledAvatar src={imageUrl} />
-            <ReviewerName variant='body1'>{name}</ReviewerName>
+            <ReviewerName variant="body1">{name}</ReviewerName>
             <StyledSuccessIcon />
         </StyledBox>
     );
@@ -54,7 +54,7 @@ export const ChangeRequestRejector: FC<IChangeRequestReviewerProps> = ({
     return (
         <StyledBox>
             <StyledAvatar src={imageUrl} />
-            <ReviewerName variant='body1'>{name}</ReviewerName>
+            <ReviewerName variant="body1">{name}</ReviewerName>
             <StyledErrorIcon />
         </StyledBox>
     );

@@ -71,11 +71,11 @@ export const FeatureStrategyMenu = ({
         featureId,
         environmentId,
         'flexibleRollout',
-        true,
+        true
     );
 
     return (
-        <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
+        <StyledStrategyMenu onClick={event => event.stopPropagation()}>
             <PermissionButton
                 permission={CREATE_FEATURE_STRATEGY}
                 projectId={projectId}
@@ -95,16 +95,14 @@ export const FeatureStrategyMenu = ({
                 environmentId={environmentId}
                 onClick={openMoreStrategies}
                 aria-labelledby={popoverId}
-                variant='outlined'
+                variant="outlined"
                 size={size}
                 hideLockIcon
                 tooltipProps={{
                     title: 'More strategies',
                 }}
             >
-                <MoreVert
-                    sx={(theme) => ({ margin: theme.spacing(0.25, 0) })}
-                />
+                <MoreVert sx={theme => ({ margin: theme.spacing(0.25, 0) })} />
             </StyledAdditionalMenuButton>
             <Popover
                 id={popoverId}
@@ -113,7 +111,7 @@ export const FeatureStrategyMenu = ({
                 onClose={onClose}
                 onClick={onClose}
                 PaperProps={{
-                    sx: (theme) => ({
+                    sx: theme => ({
                         paddingBottom: theme.spacing(1),
                     }),
                 }}

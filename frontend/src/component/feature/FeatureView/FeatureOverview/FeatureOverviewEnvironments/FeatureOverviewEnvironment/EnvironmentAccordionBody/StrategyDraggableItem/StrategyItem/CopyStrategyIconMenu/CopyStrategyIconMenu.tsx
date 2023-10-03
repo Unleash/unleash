@@ -46,7 +46,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
     const { refetchFeature } = useFeature(projectId, featureId);
     const { refetchFeature: refetchFeatureImmutable } = useFeatureImmutable(
         projectId,
-        featureId,
+        featureId
     );
     const onClose = () => {
         setAnchorEl(null);
@@ -73,7 +73,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                     id,
                     ...strategyCopy,
                 },
-                environmentId,
+                environmentId
             );
             return;
         }
@@ -83,7 +83,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                 projectId,
                 featureId,
                 targetEnvironment,
-                strategy,
+                strategy
             );
             refetchFeature();
             refetchFeatureImmutable();
@@ -98,8 +98,8 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         onClose();
     };
 
-    const enabled = environments.some((environment) =>
-        checkAccess(CREATE_FEATURE_STRATEGY, environment),
+    const enabled = environments.some(environment =>
+        checkAccess(CREATE_FEATURE_STRATEGY, environment)
     );
 
     return (
@@ -125,10 +125,10 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
             >
                 <div>
                     <IconButton
-                        size='large'
+                        size="large"
                         id={`copy-strategy-icon-menu-${strategy.id}`}
                         aria-controls={open ? 'basic-menu' : undefined}
-                        aria-haspopup='true'
+                        aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
                         onClick={(event: MouseEvent<HTMLButtonElement>) => {
                             setAnchorEl(event.currentTarget);
@@ -141,7 +141,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                 </div>
             </Tooltip>
             <Menu
-                id='basic-menu'
+                id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
                 onClose={onClose}
@@ -149,10 +149,10 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                     'aria-labelledby': `copy-strategy-icon-menu-${strategy.id}`,
                 }}
             >
-                {environments.map((environment) => {
+                {environments.map(environment => {
                     const access = checkAccess(
                         CREATE_FEATURE_STRATEGY,
-                        environment,
+                        environment
                     );
 
                     return (
@@ -173,7 +173,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                                         condition={!access}
                                         show={
                                             <ListItemIcon>
-                                                <Lock fontSize='small' />
+                                                <Lock fontSize="small" />
                                             </ListItemIcon>
                                         }
                                     />

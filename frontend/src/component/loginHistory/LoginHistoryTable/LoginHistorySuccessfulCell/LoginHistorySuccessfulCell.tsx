@@ -18,29 +18,30 @@ interface ILoginHistorySuccessfulCellProps {
     value: boolean;
 }
 
-export const LoginHistorySuccessfulCell: VFC<ILoginHistorySuccessfulCellProps> =
-    ({ row, value }) => {
-        const { searchQuery } = useSearchHighlightContext();
+export const LoginHistorySuccessfulCell: VFC<
+    ILoginHistorySuccessfulCellProps
+> = ({ row, value }) => {
+    const { searchQuery } = useSearchHighlightContext();
 
-        if (value)
-            return (
-                <StyledBox>
-                    <Badge color='success'>True</Badge>
-                </StyledBox>
-            );
-
+    if (value)
         return (
             <StyledBox>
-                <HtmlTooltip
-                    arrow
-                    title={
-                        <Highlighter search={searchQuery}>
-                            {row.original.failure_reason}
-                        </Highlighter>
-                    }
-                >
-                    <Badge color='error'>False</Badge>
-                </HtmlTooltip>
+                <Badge color="success">True</Badge>
             </StyledBox>
         );
-    };
+
+    return (
+        <StyledBox>
+            <HtmlTooltip
+                arrow
+                title={
+                    <Highlighter search={searchQuery}>
+                        {row.original.failure_reason}
+                    </Highlighter>
+                }
+            >
+                <Badge color="error">False</Badge>
+            </HtmlTooltip>
+        </StyledBox>
+    );
+};

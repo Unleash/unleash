@@ -15,11 +15,11 @@ interface IUseProjectEnvironmentsOutput {
 }
 
 export const useProjectEnvironments = (
-    projectId: string,
+    projectId: string
 ): IUseProjectEnvironmentsOutput => {
     const { data, error, mutate } = useSWR<IProjectEnvironment[]>(
         formatApiPath(`api/admin/environments/project/${projectId}`),
-        fetcher,
+        fetcher
     );
 
     const environments = useMemo(() => {
@@ -41,7 +41,7 @@ export const useProjectEnvironments = (
 const fetcher = async (path: string): Promise<IProjectEnvironment[]> => {
     const res: IEnvironmentResponse = await fetch(path)
         .then(handleErrorResponses('Environments'))
-        .then((res) => res.json());
+        .then(res => res.json());
 
     return res.environments.sort((a, b) => {
         return a.sortOrder - b.sortOrder;

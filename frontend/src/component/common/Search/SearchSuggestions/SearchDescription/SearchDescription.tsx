@@ -29,7 +29,7 @@ export const SearchDescription: VFC<ISearchDescriptionProps> = ({
     const searchContext = getSearchContext();
     const getSearchText = getSearchTextGenerator(searchContext.columns);
     const searchText = getSearchText(searchContext.searchValue);
-    const searchFilters = filters.filter((filter) => filter.values.length > 0);
+    const searchFilters = filters.filter(filter => filter.values.length > 0);
 
     return (
         <>
@@ -52,7 +52,7 @@ export const SearchDescription: VFC<ISearchDescriptionProps> = ({
                 show={
                     <>
                         <StyledHeader>Filtering by:</StyledHeader>
-                        {searchFilters.map((filter) => (
+                        {searchFilters.map(filter => (
                             <p key={filter.name}>
                                 <StyledCode>
                                     {filter.values.join(',')}

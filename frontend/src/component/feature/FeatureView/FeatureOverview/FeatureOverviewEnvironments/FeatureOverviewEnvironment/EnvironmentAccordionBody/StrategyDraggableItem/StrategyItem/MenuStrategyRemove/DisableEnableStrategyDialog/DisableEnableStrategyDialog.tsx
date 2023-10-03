@@ -59,7 +59,7 @@ export const DisableEnableStrategyDialog = ({
                     ? 'Add to draft'
                     : `${disabled ? 'Enable' : 'Disable'} strategy`
             }
-            secondaryButtonText='Cancel'
+            secondaryButtonText="Cancel"
             onClick={onClick}
             onClose={() => onClose()}
         >
@@ -71,7 +71,7 @@ export const DisableEnableStrategyDialog = ({
                     />
                 }
                 elseShow={
-                    <Alert severity='error'>
+                    <Alert severity="error">
                         {disabled ? 'Enabling' : 'Disabling'} the strategy will
                         change which users receive access to the feature.
                     </Alert>

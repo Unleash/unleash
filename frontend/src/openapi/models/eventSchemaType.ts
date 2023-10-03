@@ -121,7 +121,4 @@ export const EventSchemaType = {
     'service-account-deleted': 'service-account-deleted',
     'service-account-updated': 'service-account-updated',
     'feature-potentially-stale-on': 'feature-potentially-stale-on',
-    'feature-dependency-added': 'feature-dependency-added',
-    'feature-dependency-removed': 'feature-dependency-removed',
-    'feature-dependencies-removed': 'feature-dependencies-removed',
 } as const;

@@ -12,7 +12,7 @@ const useInvoices = (options: SWRConfiguration = {}) => {
             method: 'GET',
         })
             .then(handleErrorResponses('Invoices'))
-            .then((res) => res.json());
+            .then(res => res.json());
     };
 
     const { data, error } = useSWR(KEY, fetcher, options);

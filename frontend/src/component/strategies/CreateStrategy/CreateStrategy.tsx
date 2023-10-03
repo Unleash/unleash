@@ -57,7 +57,9 @@ export const CreateStrategy = () => {
     };
 
     const formatApiCode = () => {
-        return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/strategies' \\
+        return `curl --location --request POST '${
+            uiConfig.unleashUrl
+        }/api/admin/strategies' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getStrategyPayload(), undefined, 2)}'`;
@@ -70,11 +72,11 @@ export const CreateStrategy = () => {
     return (
         <FormTemplate
             loading={loading}
-            title='Create strategy type'
+            title="Create strategy type"
             description="The strategy type and the parameters will be selectable when adding an activation strategy to a toggle in the environments.
             The parameter defines the type of activation strategy. E.g. you can create a type 'Teams' and add a parameter 'List'. Then it's easy to add team names to the activation strategy"
-            documentationLink='https://docs.getunleash.io/reference/custom-activation-strategies'
-            documentationLinkLabel='Custom strategies documentation'
+            documentationLink="https://docs.getunleash.io/reference/custom-activation-strategies"
+            documentationLinkLabel="Custom strategies documentation"
             formatApiCode={formatApiCode}
         >
             <CustomStrategyInfo alert />
@@ -89,11 +91,11 @@ export const CreateStrategy = () => {
                 setStrategyDesc={setStrategyDesc}
                 params={params}
                 setParams={setParams}
-                mode='Create'
+                mode="Create"
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >
-                <CreateButton name='strategy' permission={CREATE_STRATEGY}>
+                <CreateButton name="strategy" permission={CREATE_STRATEGY}>
                     Create strategy
                 </CreateButton>
             </StrategyForm>

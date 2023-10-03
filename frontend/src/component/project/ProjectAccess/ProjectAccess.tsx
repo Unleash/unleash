@@ -21,18 +21,18 @@ export const ProjectAccess = () => {
     if (isOss()) {
         return (
             <PageContent
-                header={<PageHeader title='Access' />}
+                header={<PageHeader title="Access" />}
                 sx={{ justifyContent: 'center' }}
             >
-                <PremiumFeature feature='access' />
+                <PremiumFeature feature="access" />
             </PageContent>
         );
     }
 
     if (!hasAccess(UPDATE_PROJECT, projectId)) {
         return (
-            <PageContent header={<PageHeader title='Access' />}>
-                <Alert severity='error'>
+            <PageContent header={<PageHeader title="Access" />}>
+                <Alert severity="error">
                     You need project owner permissions to access this section.
                 </Alert>
             </PageContent>

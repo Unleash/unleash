@@ -39,12 +39,12 @@ export const FavoriteIconHeader: VFC<IFavoriteIconHeaderProps> = ({
                     padding: 1.25,
                 }}
                 onClick={onToggle}
-                size='small'
+                size="small"
             >
                 <ConditionallyRender
                     condition={internalState}
-                    show={<StarIcon fontSize='small' />}
-                    elseShow={<StarBorderIcon fontSize='small' />}
+                    show={<StarIcon fontSize="small" />}
+                    elseShow={<StarBorderIcon fontSize="small" />}
                 />
             </IconButton>
         </TooltipResolver>

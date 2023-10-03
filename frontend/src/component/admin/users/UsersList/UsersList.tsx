@@ -157,8 +157,8 @@ const UsersList = () => {
                 Cell: ({ row: { original: user } }: any) => (
                     <TimeAgoCell
                         value={user.seenAt}
-                        emptyText='Never'
-                        title={(date) => `Last login: ${date}`}
+                        emptyText="Never"
+                        title={date => `Last login: ${date}`}
                     />
                 ),
                 sortType: 'date',
@@ -203,7 +203,7 @@ const UsersList = () => {
                 searchable: true,
             },
         ],
-        [roles, navigate, isBillingUsers],
+        [roles, navigate, isBillingUsers]
     );
 
     const initialState = useMemo(() => {
@@ -218,7 +218,7 @@ const UsersList = () => {
     const { data, getSearchText } = useSearch(
         columns,
         searchValue,
-        isBillingUsers ? planUsers : users,
+        isBillingUsers ? planUsers : users
     );
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
@@ -236,7 +236,7 @@ const UsersList = () => {
             },
         },
         useSortBy,
-        useFlexLayout,
+        useFlexLayout
     );
 
     useConditionallyHiddenColumns(
@@ -255,7 +255,7 @@ const UsersList = () => {
             },
         ],
         setHiddenColumns,
-        columns,
+        columns
     );
 
     return (
@@ -280,7 +280,7 @@ const UsersList = () => {
                                 show={() => (
                                     <>
                                         <Tooltip
-                                            title='Exports user access information'
+                                            title="Exports user access information"
                                             arrow
                                             describeChild
                                         >
@@ -292,8 +292,8 @@ const UsersList = () => {
                                 )}
                             />
                             <Button
-                                variant='contained'
-                                color='primary'
+                                variant="contained"
+                                color="primary"
                                 onClick={() => navigate('/admin/create-user')}
                             >
                                 Add new user

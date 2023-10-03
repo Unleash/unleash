@@ -22,7 +22,7 @@ import useProject from 'hooks/api/getters/useProject/useProject';
 
 export const useDefaultStrategy = (
     projectId: string,
-    environmentId: string,
+    environmentId: string
 ) => {
     const { project, refetch } = useProject(projectId);
 
@@ -37,7 +37,7 @@ export const useDefaultStrategy = (
     };
 
     const strategy = project.environments.find(
-        (env) => env.environment === environmentId,
+        env => env.environment === environmentId
     )?.defaultStrategy;
 
     return { defaultStrategyFallback, strategy, refetch };
@@ -79,9 +79,7 @@ const EditDefaultStrategy = () => {
             const temp: ISegment[] = [];
             for (const segmentId of strategy?.segments) {
                 temp.push(
-                    ...allSegments.filter(
-                        (segment) => segment.id === segmentId,
-                    ),
+                    ...allSegments.filter(segment => segment.id === segmentId)
                 );
             }
             setSegments(temp);
@@ -91,7 +89,7 @@ const EditDefaultStrategy = () => {
     const payload = createStrategyPayload(defaultStrategy as any, segments);
 
     const onDefaultStrategyEdit = async (
-        payload: CreateFeatureStrategySchema,
+        payload: CreateFeatureStrategySchema
     ) => {
         await updateDefaultStrategy(projectId, environmentId, payload);
 
@@ -139,7 +137,7 @@ const EditDefaultStrategy = () => {
                     environmentId,
                     payload,
                     strategyDefinition,
-                    unleashUrl,
+                    unleashUrl
                 )
             }
         >
@@ -162,14 +160,14 @@ const EditDefaultStrategy = () => {
 
 export const createStrategyPayload = (
     strategy: CreateFeatureStrategySchema,
-    segments: ISegment[],
+    segments: ISegment[]
 ): CreateFeatureStrategySchema => ({
     name: strategy.name,
     title: strategy.title,
     constraints: strategy.constraints ?? [],
     parameters: strategy.parameters ?? {},
     variants: strategy.variants ?? [],
-    segments: segments.map((segment) => segment.id),
+    segments: segments.map(segment => segment.id),
     disabled: strategy.disabled ?? false,
 });
 
@@ -178,7 +176,7 @@ export const formatUpdateStrategyApiCode = (
     environmentId: string,
     strategy: CreateFeatureStrategySchema,
     strategyDefinition: IStrategy,
-    unleashUrl?: string,
+    unleashUrl?: string
 ): string => {
     if (!unleashUrl) {
         return '';
@@ -190,7 +188,7 @@ export const formatUpdateStrategyApiCode = (
         ...strategy,
         parameters: sortStrategyParameters(
             strategy.parameters ?? {},
-            strategyDefinition,
+            strategyDefinition
         ),
     };
 

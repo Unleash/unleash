@@ -2,7 +2,7 @@ import { styled, TableCell } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
 
 export const StyledTableCell = styled(TableCell, {
-    shouldForwardProp: (prop) =>
+    shouldForwardProp: prop =>
         prop !== 'isFlex' && prop !== 'isSortable' && prop !== 'isFlexGrow',
 })<{
     isFlex?: boolean;
@@ -35,7 +35,7 @@ export const StyledTableCell = styled(TableCell, {
 }));
 
 export const StyledButton = styled('button', {
-    shouldForwardProp: (prop) => prop !== 'isSorted',
+    shouldForwardProp: prop => prop !== 'isSorted',
 })<{ isSorted?: boolean }>(({ theme, isSorted }) => ({
     ...focusable(theme),
     all: 'unset',

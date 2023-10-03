@@ -44,7 +44,7 @@ const StyledSingleChangeBox = styled(Box, {
             ($hasConflict || $isAfterWarning) && !$isInConflictFeature
                 ? theme.palette.warning.border
                 : theme.palette.divider,
-    }),
+    })
 );
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
@@ -77,14 +77,14 @@ export const FeatureChange: FC<{
             <ConditionallyRender
                 condition={Boolean(change.conflict) && !feature.conflict}
                 show={
-                    <StyledAlert severity='warning'>
+                    <StyledAlert severity="warning">
                         <strong>Conflict!</strong> This change can’t be applied.{' '}
                         {change.conflict}.
                     </StyledAlert>
                 }
             />
 
-            <Box sx={(theme) => ({ padding: theme.spacing(3) })}>
+            <Box sx={theme => ({ padding: theme.spacing(3) })}>
                 {change.action === 'updateEnabled' && (
                     <ToggleStatusChange
                         enabled={change.payload.enabled}

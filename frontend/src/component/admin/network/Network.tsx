@@ -29,9 +29,9 @@ export const Network = () => {
                 header={
                     <Tabs
                         value={pathname}
-                        indicatorColor='primary'
-                        textColor='primary'
-                        variant='scrollable'
+                        indicatorColor="primary"
+                        textColor="primary"
+                        variant="scrollable"
                         allowScrollButtonsMobile
                     >
                         {tabs.map(({ label, path }) => (
@@ -50,8 +50,8 @@ export const Network = () => {
                 }
             >
                 <Routes>
-                    <Route path='traffic' element={<NetworkTraffic />} />
-                    <Route path='*' element={<NetworkOverview />} />
+                    <Route path="traffic" element={<NetworkTraffic />} />
+                    <Route path="*" element={<NetworkOverview />} />
                 </Routes>
             </PageContent>
         </div>

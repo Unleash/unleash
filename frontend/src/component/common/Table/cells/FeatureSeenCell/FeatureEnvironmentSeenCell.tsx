@@ -9,7 +9,7 @@ interface IFeatureSeenCellProps {
 export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
     feature,
 }) => {
-    const environments = feature.environments
+    const environments = Boolean(feature.environments)
         ? Object.values(feature.environments)
         : [];
 

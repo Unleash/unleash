@@ -27,7 +27,7 @@ export class ForbiddenError extends Error {
         super(
             body.details?.length
                 ? body.details[0].message
-                : 'You cannot perform this action',
+                : 'You cannot perform this action'
         );
         this.name = 'ForbiddenError';
         this.statusCode = statusCode;

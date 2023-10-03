@@ -54,10 +54,10 @@ const FeatureOverview = () => {
             </StyledMainContent>
             <Routes>
                 <Route
-                    path='strategies/create'
+                    path="strategies/create"
                     element={
                         <SidebarModal
-                            label='Create feature strategy'
+                            label="Create feature strategy"
                             onClose={onSidebarClose}
                             open
                         >
@@ -66,10 +66,10 @@ const FeatureOverview = () => {
                     }
                 />
                 <Route
-                    path='strategies/edit'
+                    path="strategies/edit"
                     element={
                         <SidebarModal
-                            label='Edit feature strategy'
+                            label="Edit feature strategy"
                             onClose={onSidebarClose}
                             open
                         >

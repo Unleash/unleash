@@ -9,7 +9,7 @@ interface ITextCellProps {
 }
 
 const StyledWrapper = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'lineClamp',
+    shouldForwardProp: prop => prop !== 'lineClamp',
 })<{ lineClamp?: number }>(({ theme, lineClamp }) => ({
     padding: theme.spacing(1, 2),
     display: '-webkit-box',
@@ -30,7 +30,7 @@ export const TextCell: FC<ITextCellProps> = ({
     'data-testid': testid,
 }) => (
     <StyledWrapper lineClamp={lineClamp} sx={sx}>
-        <span data-loading='true' data-testid={testid}>
+        <span data-loading="true" data-testid={testid}>
             {children ?? value}
         </span>
     </StyledWrapper>

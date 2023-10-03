@@ -29,21 +29,21 @@ export const ManageTags: VFC<IManageTagsProps> = ({ projectId, data }) => {
                 (acc, tag) => [
                     ...acc,
                     ...(acc.some(
-                        (x) => x.type === tag.type && x.value === tag.value,
+                        x => x.type === tag.type && x.value === tag.value
                     )
                         ? []
                         : [tag]),
                 ],
-                [],
+                []
             );
 
         const tagsNotPresentInEveryFeature = uniqueTags.filter(
-            (tag) =>
+            tag =>
                 !data.every(({ tags }) =>
                     tags?.some(
-                        (x) => x.type === tag.type && x.value === tag.value,
-                    ),
-                ),
+                        x => x.type === tag.type && x.value === tag.value
+                    )
+                )
         );
 
         return [uniqueTags, tagsNotPresentInEveryFeature];
@@ -95,8 +95,8 @@ export const ManageTags: VFC<IManageTagsProps> = ({ projectId, data }) => {
                 {({ hasAccess }) => (
                     <Button
                         disabled={!hasAccess || isOpen}
-                        variant='outlined'
-                        size='small'
+                        variant="outlined"
+                        size="small"
                         onClick={() => setIsOpen(true)}
                     >
                         Tags

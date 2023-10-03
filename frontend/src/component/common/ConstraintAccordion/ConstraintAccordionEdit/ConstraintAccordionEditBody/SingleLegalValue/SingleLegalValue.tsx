@@ -43,7 +43,7 @@ export const SingleLegalValue = ({
 
     const illegalValues = getIllegalValues(
         [constraintValue],
-        deletedLegalValues,
+        deletedLegalValues
     );
 
     return (
@@ -52,8 +52,8 @@ export const SingleLegalValue = ({
                 condition={Boolean(illegalValues && illegalValues.length > 0)}
                 show={
                     <Alert
-                        severity='warning'
-                        sx={(theme) => ({ marginTop: theme.spacing(1) })}
+                        severity="warning"
+                        sx={theme => ({ marginTop: theme.spacing(1) })}
                     >
                         {' '}
                         This constraint is using legal values that have been
@@ -79,17 +79,17 @@ export const SingleLegalValue = ({
             <ConditionallyRender
                 condition={Boolean(legalValues.length)}
                 show={
-                    <FormControl component='fieldset'>
+                    <FormControl component="fieldset">
                         <RadioGroup
-                            aria-label='selected-value'
-                            name='selected'
+                            aria-label="selected-value"
+                            name="selected"
                             value={value}
-                            onChange={(e) => {
+                            onChange={e => {
                                 setError('');
                                 setValue(e.target.value);
                             }}
                         >
-                            {filteredValues.map((match) => (
+                            {filteredValues.map(match => (
                                 <LegalValueLabel
                                     key={match.value}
                                     legal={match}

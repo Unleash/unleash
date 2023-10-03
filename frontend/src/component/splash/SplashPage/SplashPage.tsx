@@ -33,7 +33,7 @@ export const SplashPage = () => {
         case 'operators':
             return <SplashPageOperators />;
         default:
-            return <Navigate to='/' replace />;
+            return <Navigate to="/" replace />;
     }
 };
 

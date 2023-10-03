@@ -27,7 +27,7 @@ export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
 }) => {
     return (
         <Box
-            component='form'
+            component="form"
             onSubmit={onSubmit}
             sx={{
                 display: 'flex',
@@ -42,7 +42,7 @@ export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
                 setEnvironments={setEnvironments}
                 setProjects={setProjects}
                 availableEnvironments={availableEnvironments.map(
-                    ({ name }) => name,
+                    ({ name }) => name
                 )}
             />
 
@@ -57,9 +57,9 @@ export const PlaygroundForm: VFC<IPlaygroundFormProps> = ({
                 }}
             >
                 <Button
-                    variant='contained'
-                    size='large'
-                    type='submit'
+                    variant="contained"
+                    size="large"
+                    type="submit"
                     sx={{ marginLeft: 'auto' }}
                 >
                     Try configuration

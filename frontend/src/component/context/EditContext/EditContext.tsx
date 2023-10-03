@@ -42,7 +42,7 @@ export const EditContext = () => {
         context?.name,
         context?.description,
         context?.legalValues,
-        context?.stickiness,
+        context?.stickiness
     );
 
     const formatApiCode = () => {
@@ -78,11 +78,11 @@ export const EditContext = () => {
     return (
         <FormTemplate
             loading={loading}
-            title='Edit context'
-            description='Context fields are a basic building block used in Unleash to control roll-out.
-            They can be used together with strategy constraints as part of the activation strategy evaluation.'
-            documentationLink='https://docs.getunleash.io/reference/unleash-context#custom-context-fields'
-            documentationLinkLabel='Context fields documentation'
+            title="Edit context"
+            description="Context fields are a basic building block used in Unleash to control roll-out.
+            They can be used together with strategy constraints as part of the activation strategy evaluation."
+            documentationLink="https://docs.getunleash.io/reference/unleash-context#custom-context-fields"
+            documentationLinkLabel="Context fields documentation"
             formatApiCode={formatApiCode}
         >
             <ContextForm
@@ -97,7 +97,7 @@ export const EditContext = () => {
                 setLegalValues={setLegalValues}
                 stickiness={stickiness}
                 setStickiness={setStickiness}
-                mode='Edit'
+                mode="Edit"
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >

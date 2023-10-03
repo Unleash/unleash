@@ -75,22 +75,22 @@ export const EdgeIntegration = () => {
             title={`${displayName}`}
             description={description || ''}
             documentationLink={documentationUrl}
-            documentationLinkLabel='Unleash Edge documentation'
+            documentationLinkLabel="Unleash Edge documentation"
         >
             <StyledContainer>
                 <IntegrationHowToSection
                     provider={EDGE_INFO}
-                    title='Why would you need Edge?'
+                    title="Why would you need Edge?"
                 />
                 <StyledGrayContainer>
                     <StyledLink
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        href='https://github.com/Unleash/unleash-edge#readme'
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://github.com/Unleash/unleash-edge#readme"
                     >
                         View Unleash Edge on GitHub{' '}
                         <LaunchIcon
-                            fontSize='inherit'
+                            fontSize="inherit"
                             sx={{
                                 verticalAlign: 'middle',
                                 marginBottom: '2px',
@@ -99,35 +99,35 @@ export const EdgeIntegration = () => {
                     </StyledLink>
                 </StyledGrayContainer>
                 <Divider
-                    sx={(theme) => ({
+                    sx={theme => ({
                         marginTop: theme.spacing(2),
                         marginBottom: theme.spacing(2),
                     })}
                 />
                 <iframe
-                    src='https://www.youtube-nocookie.com/embed/6uIdF-yByWs?si=rPzsFCM_2IheaTUo'
-                    title='YouTube video player'
-                    frameBorder='0'
-                    allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+                    src="https://www.youtube-nocookie.com/embed/6uIdF-yByWs?si=rPzsFCM_2IheaTUo"
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                     style={{
                         width: '100%',
                         aspectRatio: '16/9',
                     }}
-                />
+                ></iframe>
                 <StyledDescription>
                     <section>
-                        <StyledDescriptionHeader variant='h3'>
+                        <StyledDescriptionHeader variant="h3">
                             Modes
                         </StyledDescriptionHeader>
-                        <Typography variant='body1'>
+                        <Typography variant="body1">
                             Edge currently supports 2 different modes:{' '}
                             <ul>
                                 <li>
                                     <a
-                                        href='https://docs.getunleash.io/reference/unleash-edge#edge'
-                                        target='_blank'
-                                        rel='noopener noreferrer'
+                                        href="https://docs.getunleash.io/reference/unleash-edge#edge"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                     >
                                         Edge
                                     </a>{' '}
@@ -138,9 +138,9 @@ export const EdgeIntegration = () => {
                                 </li>
                                 <li>
                                     <a
-                                        href='https://docs.getunleash.io/reference/unleash-edge#offline'
-                                        target='_blank'
-                                        rel='noopener noreferrer'
+                                        href="https://docs.getunleash.io/reference/unleash-edge#offline"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                     >
                                         Offline
                                     </a>{' '}
@@ -151,10 +151,10 @@ export const EdgeIntegration = () => {
                         </Typography>
                     </section>
                     <section>
-                        <StyledDescriptionHeader variant='h3'>
+                        <StyledDescriptionHeader variant="h3">
                             Edge
                         </StyledDescriptionHeader>
-                        <Typography variant='body1'>
+                        <Typography variant="body1">
                             Edge mode is the "standard" mode for Unleash Edge
                             and the one you should default to in most cases. It
                             connects to an upstream node, such as your Unleash
@@ -162,7 +162,7 @@ export const EdgeIntegration = () => {
                             feature toggles.
                         </Typography>
                         <StyledFigure>
-                            <img src={formatAssetPath(edgeMode)} alt='test' />
+                            <img src={formatAssetPath(edgeMode)} alt="test" />
                             <StyledFigcaption>Edge mode</StyledFigcaption>
                         </StyledFigure>
                         <Typography>
@@ -177,7 +177,7 @@ export const EdgeIntegration = () => {
                         <StyledFigure>
                             <img
                                 src={formatAssetPath(edgeChaining)}
-                                alt='test'
+                                alt="test"
                             />
                             <StyledFigcaption>
                                 Edge daisy chaining
@@ -185,7 +185,7 @@ export const EdgeIntegration = () => {
                         </StyledFigure>
                     </section>
                     <section>
-                        <StyledDescriptionHeader variant='h3'>
+                        <StyledDescriptionHeader variant="h3">
                             Offline
                         </StyledDescriptionHeader>
                         <Typography>
@@ -197,7 +197,7 @@ export const EdgeIntegration = () => {
                         <StyledFigure>
                             <img
                                 src={formatAssetPath(offlineMode)}
-                                alt='test'
+                                alt="test"
                             />
                             <StyledFigcaption>Edge offline</StyledFigcaption>
                         </StyledFigure>

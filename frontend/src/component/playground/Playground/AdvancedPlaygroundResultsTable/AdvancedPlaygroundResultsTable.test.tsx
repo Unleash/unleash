@@ -103,7 +103,7 @@ test('should render advanced playground table', async () => {
                     },
                 }}
             />
-        </UIProviderContainer>,
+        </UIProviderContainer>
     );
 
     expect(screen.getByText('Infinite')).toBeInTheDocument();

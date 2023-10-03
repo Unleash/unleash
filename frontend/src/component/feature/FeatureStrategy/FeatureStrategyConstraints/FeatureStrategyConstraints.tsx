@@ -27,7 +27,7 @@ export const FeatureStrategyConstraints = ({
     }, [strategy]);
 
     const setConstraints = (value: React.SetStateAction<IConstraint[]>) => {
-        setStrategy((prev) => ({
+        setStrategy(prev => ({
             ...prev,
             constraints: value instanceof Function ? value(constraints) : value,
         }));
@@ -36,13 +36,13 @@ export const FeatureStrategyConstraints = ({
     const showCreateButton = useHasProjectEnvironmentAccess(
         CREATE_FEATURE_STRATEGY,
         projectId,
-        environmentId,
+        environmentId
     );
 
     const allowEditAndDelete = useHasProjectEnvironmentAccess(
         UPDATE_FEATURE_STRATEGY,
         projectId,
-        environmentId,
+        environmentId
     );
 
     return (

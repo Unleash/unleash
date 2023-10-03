@@ -16,7 +16,7 @@ export const render = (
     }: { route?: string; permissions?: IPermission[] } & Omit<
         RenderOptions,
         'queries'
-    > = {},
+    > = {}
 ) => {
     window.history.pushState({}, 'Test page', route);
 

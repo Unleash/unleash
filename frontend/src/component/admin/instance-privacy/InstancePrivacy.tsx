@@ -109,7 +109,7 @@ export const InstancePrivacy = () => {
             : 'When you enable feature usage collection you must also enable version info collection';
 
     return (
-        <PageContent header={<PageHeader title='Instance Privacy' />}>
+        <PageContent header={<PageHeader title="Instance Privacy" />}>
             <StyledBox>
                 <InstancePrivacySection
                     title={versionCollectionDetails.title}

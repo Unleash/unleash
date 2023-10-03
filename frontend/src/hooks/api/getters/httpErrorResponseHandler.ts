@@ -5,7 +5,7 @@ const handleErrorResponses = (target: string) => async (res: Response) => {
         throw new ResponseError(
             target,
             res.status,
-            await parseErrorResponse(res),
+            await parseErrorResponse(res)
         );
     }
 

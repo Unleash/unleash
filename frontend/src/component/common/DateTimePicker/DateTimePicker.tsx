@@ -21,7 +21,7 @@ export const formatDate = (value: string) => {
 
 export const formatDateTime = (value: string) => {
     const date = new Date(value);
-    return `${format(date, 'yyyy-MM-dd')}T${format(date, 'HH:mm')}`;
+    return format(date, 'yyyy-MM-dd') + 'T' + format(date, 'HH:mm');
 };
 
 export const DateTimePicker = ({
@@ -41,18 +41,18 @@ export const DateTimePicker = ({
     return (
         <TextField
             type={inputType}
-            size='small'
-            variant='outlined'
+            size="small"
+            variant="outlined"
             label={label}
             error={error}
             helperText={errorText}
             value={getDate(value.toISOString())}
-            onChange={(e) => {
+            onChange={e => {
                 const parsedDate = parseValidDate(e.target.value);
                 onChange(parsedDate ?? value);
             }}
             FormHelperTextProps={{
-                'data-testid': INPUT_ERROR_TEXT,
+                ['data-testid']: INPUT_ERROR_TEXT,
             }}
             inputProps={{
                 min: min ? getDate(min.toISOString()) : min,

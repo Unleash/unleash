@@ -20,7 +20,7 @@ export const AccessProviderMock = ({
             isAdmin: checkAdmin(permissions),
             hasAccess: hasAccess.bind(null, permissions),
         }),
-        [permissions],
+        [permissions]
     );
 
     return (

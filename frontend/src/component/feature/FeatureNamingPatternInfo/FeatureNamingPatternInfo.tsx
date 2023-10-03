@@ -34,7 +34,7 @@ export const FeatureNamingPatternInfo: React.FC<Props> = ({
     return (
         <StyledFlagNamingInfo>
             <p>This project has feature flag naming patterns enabled.</p>
-            <dl id='feature-naming-pattern-info'>
+            <dl id="feature-naming-pattern-info">
                 <dt>Pattern</dt>
                 <dd>
                     <code>^{featureNaming.pattern}$</code>

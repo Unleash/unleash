@@ -25,7 +25,7 @@ export const ContextActionsCell: VFC<IContextActionsCellProps> = ({
                 permission={UPDATE_CONTEXT_FIELD}
                 onClick={() => navigate(`/context/edit/${name}`)}
                 data-loading
-                aria-label='edit'
+                aria-label="edit"
                 tooltipProps={{
                     title: 'Edit context field',
                 }}
@@ -36,7 +36,7 @@ export const ContextActionsCell: VFC<IContextActionsCellProps> = ({
                 permission={DELETE_CONTEXT_FIELD}
                 onClick={onDelete}
                 data-loading
-                aria-label='delete'
+                aria-label="delete"
                 tooltipProps={{
                     title: 'Delete context field',
                 }}

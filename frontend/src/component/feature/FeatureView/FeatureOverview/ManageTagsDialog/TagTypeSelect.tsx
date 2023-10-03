@@ -31,12 +31,12 @@ export const TagTypeSelect = ({
         <Autocomplete
             disablePortal
             disabled={disabled}
-            id='tag-type-select'
-            sx={{ marginTop: (theme) => theme.spacing(2), width: 500 }}
+            id="tag-type-select"
+            sx={{ marginTop: theme => theme.spacing(2), width: 500 }}
             options={options}
             disableClearable
             value={value}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={option => option.name}
             renderOption={(props, option) => (
                 <ListItem
                     {...props}
@@ -45,14 +45,14 @@ export const TagTypeSelect = ({
                         gap: theme.spacing(0.5),
                     }}
                 >
-                    <Typography variant='body1'>{option.name}</Typography>
-                    <Typography variant='caption'>
+                    <Typography variant="body1">{option.name}</Typography>
+                    <Typography variant="caption">
                         {option.description}
                     </Typography>
                 </ListItem>
             )}
-            renderInput={(params) => (
-                <TextField {...params} label='Tag type' value={value} />
+            renderInput={params => (
+                <TextField {...params} label="Tag type" value={value} />
             )}
             onChange={onChange}
             ListboxProps={{ style: { maxHeight: 200, overflow: 'auto' } }}

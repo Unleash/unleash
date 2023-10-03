@@ -34,7 +34,7 @@ export const ExportDialog = ({
     const { setToastApiError } = useToast();
 
     const getOptions = () =>
-        environments.map((env) => ({
+        environments.map(env => ({
             key: env,
             label: env,
         }));
@@ -61,7 +61,7 @@ export const ExportDialog = ({
     const onClick = async () => {
         try {
             const payload = {
-                features: data.map((feature) => feature.name),
+                features: data.map(feature => feature.name),
                 environment: selected,
             };
             const res = await createExport(payload);
@@ -77,11 +77,11 @@ export const ExportDialog = ({
     return (
         <Dialogue
             open={showExportDialog}
-            title='Export feature toggle configuration'
+            title="Export feature toggle configuration"
             onClose={onClose}
             onClick={onClick}
-            primaryButtonText='Export selection'
-            secondaryButtonText='Cancel'
+            primaryButtonText="Export selection"
+            secondaryButtonText="Cancel"
         >
             <Box ref={ref}>
                 The current search filter will be used to export feature

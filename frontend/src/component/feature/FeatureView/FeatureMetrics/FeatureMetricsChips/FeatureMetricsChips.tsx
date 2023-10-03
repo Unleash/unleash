@@ -58,7 +58,7 @@ export const FeatureMetricsChips = ({
         <div>
             <StyledTitle>{title}</StyledTitle>
             <StyledList>
-                {sortedValues.map((val) => (
+                {sortedValues.map(val => (
                     <StyledItem key={val}>
                         <Chip
                             label={val}

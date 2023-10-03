@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 export const TablePlaceholder: FC = ({ children }) => (
     <Box
         sx={{
-            border: (theme) => `2px dashed ${theme.palette.divider}`,
+            border: theme => `2px dashed ${theme.palette.divider}`,
             p: 8,
             textAlign: 'center',
             display: 'flex',

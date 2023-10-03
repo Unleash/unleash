@@ -18,7 +18,7 @@ export const ApiDetails = (props: IApiDetailsProps): ReactElement => {
     const updateNotification = formatUpdateNotification(props.uiConfig);
 
     return (
-        <section title='API details'>
+        <section title="API details">
             <FooterTitle>
                 {currentVersion}{' '}
                 <ConditionallyRender

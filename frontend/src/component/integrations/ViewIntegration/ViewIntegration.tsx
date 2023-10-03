@@ -4,7 +4,7 @@ import NotFound from 'component/common/NotFound/NotFound';
 import { JiraIntegration } from './JiraIntegration/JiraIntegration';
 import { EdgeIntegration } from './EdgeIntegration/EdgeIntegration';
 
-type IViewIntegrationProps = {};
+interface IViewIntegrationProps {}
 
 export const ViewIntegration: VFC<IViewIntegrationProps> = () => {
     const { providerId } = useParams<{ providerId: string }>();

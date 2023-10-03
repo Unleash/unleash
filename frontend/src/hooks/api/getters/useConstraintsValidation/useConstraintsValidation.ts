@@ -11,7 +11,7 @@ const isValid = (constraint: IConstraint) => {
 };
 
 export const useConstraintsValidation = (
-    constraints?: IConstraint[],
+    constraints?: IConstraint[]
 ): boolean => {
     // An empty list of constraints is valid. An undefined list is not.
     // A non-empty list has to be checked by calling the backend.
@@ -24,7 +24,7 @@ export const useConstraintsValidation = (
             return;
         }
 
-        const invalidConstraints = constraints.find((item) => !isValid(item));
+        const invalidConstraints = constraints.find(item => !isValid(item));
         if (invalidConstraints) {
             setValid(false);
             return;
@@ -32,7 +32,7 @@ export const useConstraintsValidation = (
 
         const validationRequests = constraints
             .filter(isValid)
-            .map((constraint) => {
+            .map(constraint => {
                 return validateConstraint(constraint);
             });
 

@@ -19,7 +19,7 @@ const StyledTimeline = styled(Timeline)(() => ({
 }));
 
 const StyledTimelineConnector = styled(TimelineConnector, {
-    shouldForwardProp: (prop) => prop !== 'active',
+    shouldForwardProp: prop => prop !== 'active',
 })<{ active: boolean }>(({ theme, active }) => ({
     width: '1px',
     backgroundColor: active
@@ -28,7 +28,7 @@ const StyledTimelineConnector = styled(TimelineConnector, {
 }));
 
 const StyledTimelineDot = styled(TimelineDot, {
-    shouldForwardProp: (prop) => prop !== 'active',
+    shouldForwardProp: prop => prop !== 'active',
 })<{ active: boolean }>(({ theme, active }) => ({
     color: active
         ? theme.palette.background.sidebar
@@ -49,7 +49,7 @@ const StyledTimelineDot = styled(TimelineDot, {
 }));
 
 const StyledTimelineContent = styled(TimelineContent, {
-    shouldForwardProp: (prop) => prop !== 'active',
+    shouldForwardProp: prop => prop !== 'active',
 })<{ active: boolean }>(({ theme, active }) => ({
     padding: theme.spacing(2, 2, 6, 2),
     color: active
@@ -58,7 +58,7 @@ const StyledTimelineContent = styled(TimelineContent, {
 }));
 
 const TimelineItemTitle = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'active',
+    shouldForwardProp: prop => prop !== 'active',
 })<{ active: boolean }>(({ theme, active }) => ({
     fontWeight: active ? theme.fontWeight.bold : 'normal',
     fontSize: theme.fontSizes.bodySize,
@@ -76,7 +76,7 @@ export const ImportTimeline: FC<{
             <TimelineItem>
                 <TimelineSeparator>
                     <StyledTimelineDot
-                        variant='outlined'
+                        variant="outlined"
                         active={stage === 'configure'}
                     >
                         1
@@ -96,7 +96,7 @@ export const ImportTimeline: FC<{
             <TimelineItem>
                 <TimelineSeparator>
                     <StyledTimelineDot
-                        variant='outlined'
+                        variant="outlined"
                         active={stage === 'validate'}
                     >
                         2
@@ -115,7 +115,7 @@ export const ImportTimeline: FC<{
             <TimelineItem>
                 <TimelineSeparator>
                     <StyledTimelineDot
-                        variant='outlined'
+                        variant="outlined"
                         active={stage === 'import'}
                     >
                         3

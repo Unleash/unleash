@@ -56,7 +56,7 @@ test('should render variants', async () => {
                     environment: 'development',
                 },
             ],
-        },
+        }
     );
 
     // static form info

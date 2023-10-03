@@ -65,7 +65,7 @@ export const ProjectDoraFeedback = () => {
     const { trackEvent } = usePlausibleTracker();
     const { value, setValue } = createLocalStorage(
         `project:metrics:plausible`,
-        { sent: false },
+        { sent: false }
     );
     const [metrics, setMetrics] = useState(value);
 
@@ -81,7 +81,7 @@ export const ProjectDoraFeedback = () => {
                 },
             });
 
-            if (!metrics.sent) {
+            if (!Boolean(metrics.sent)) {
                 setMetrics({ sent: true });
             }
         } catch (e) {
@@ -94,12 +94,12 @@ export const ProjectDoraFeedback = () => {
     const emailBody = `Hello Unleash,\n\nI just saw the new metrics page you are experimenting with in Unleash. I'd like to be involved in user tests and give my feedback on this feature.\n\nRegards,\n`;
 
     const mailtoURL = `mailto:${recipientEmail}?subject=${encodeURIComponent(
-        emailSubject,
+        emailSubject
     )}&body=${encodeURIComponent(emailBody)}`;
 
     return (
         <StyledOuterContainer>
-            <StyledHeader variant='h1'>
+            <StyledHeader variant="h1">
                 We are trying something experimental!
             </StyledHeader>
             <Typography>
@@ -118,9 +118,9 @@ export const ProjectDoraFeedback = () => {
                 teams. It measures four different metrics. You can read Google's
                 blog post about{' '}
                 <a
-                    href='https://cloud.google.com/blog/products/devops-sre/using-the-four-keys-to-measure-your-devops-performance'
-                    target='_blank'
-                    rel='noopener noreferrer'
+                    href="https://cloud.google.com/blog/products/devops-sre/using-the-four-keys-to-measure-your-devops-performance"
+                    target="_blank"
+                    rel="noopener noreferrer"
                 >
                     DORA metrics
                 </a>{' '}
@@ -135,15 +135,15 @@ export const ProjectDoraFeedback = () => {
                         <Typography>Is this useful to you?</Typography>
                         <StyledBtnContainer>
                             <StyledBtn
-                                variant='contained'
-                                color='primary'
+                                variant="contained"
+                                color="primary"
                                 onClick={() => onBtnClick('useful')}
                             >
                                 Yes, I like the direction
                             </StyledBtn>
                             <Button
-                                variant='outlined'
-                                color='primary'
+                                variant="outlined"
+                                color="primary"
                                 onClick={() => onBtnClick('not useful')}
                             >
                                 No, I don't see value in this
@@ -152,9 +152,7 @@ export const ProjectDoraFeedback = () => {
                     </StyledBtnContainer>
                 }
                 elseShow={
-                    <Typography
-                        sx={(theme) => ({ marginTop: theme.spacing(3) })}
-                    >
+                    <Typography sx={theme => ({ marginTop: theme.spacing(3) })}>
                         Thank you for the feedback. Feel free to check out the
                         sketches and leave comments, or get in touch with our UX
                         team if you'd like to be involved in usertests and the
@@ -170,9 +168,9 @@ export const ProjectDoraFeedback = () => {
                         <PermMedia />
                     </StyledIconWrapper>
                     <StyledLink
-                        href='https://app.mural.co/t/unleash2757/m/unleash2757/1694006366166/fae4aa4f796de214bdb3ae2d5ce9de934b68fdfb?sender=u777a1f5633477c329eae3448'
-                        target='_blank'
-                        rel='noopener noreferer'
+                        href="https://app.mural.co/t/unleash2757/m/unleash2757/1694006366166/fae4aa4f796de214bdb3ae2d5ce9de934b68fdfb?sender=u777a1f5633477c329eae3448"
+                        target="_blank"
+                        rel="noopener noreferer"
                     >
                         View sketches
                     </StyledLink>

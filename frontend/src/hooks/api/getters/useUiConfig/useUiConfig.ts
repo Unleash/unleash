@@ -20,7 +20,7 @@ const useUiConfig = (): IUseUIConfigOutput => {
     const { data, error, mutate } = useSWR<IUiConfig>(path, fetcher);
 
     const isOss = useCallback(() => {
-        return !data?.versionInfo?.current?.enterprise;
+        return !Boolean(data?.versionInfo?.current?.enterprise);
     }, [data]);
 
     const isPro = useCallback(() => {
@@ -56,7 +56,7 @@ const useUiConfig = (): IUseUIConfigOutput => {
 const fetcher = (path: string) => {
     return fetch(path)
         .then(handleErrorResponses('configuration'))
-        .then((res) => res.json());
+        .then(res => res.json());
 };
 
 export default useUiConfig;

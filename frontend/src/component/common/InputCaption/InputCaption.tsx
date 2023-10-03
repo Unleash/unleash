@@ -11,7 +11,7 @@ export const InputCaption = ({ text }: IInputCaptionProps) => {
 
     return (
         <Box
-            sx={(theme) => ({
+            sx={theme => ({
                 color: theme.palette.text.secondary,
                 fontSize: theme.fontSizes.smallerBody,
                 marginTop: theme.spacing(1),

@@ -70,9 +70,9 @@ const StrategyInputList = ({
             const newValues = value
                 .split(/,\s*/)
                 // @ts-expect-error
-                .filter((a) => !list.includes(a));
+                .filter(a => !list.includes(a));
             if (newValues.length > 0) {
-                const newList = list.concat(newValues).filter((a) => a);
+                const newList = list.concat(newValues).filter(a => a);
                 setConfig(name, newList.join(','));
             }
             setInput('');
@@ -84,17 +84,17 @@ const StrategyInputList = ({
         list[index] = null;
         setConfig(
             name,
-            list.length === 1 ? '' : list.filter(Boolean).join(','),
+            list.length === 1 ? '' : list.filter(Boolean).join(',')
         );
     };
 
-    const onChange: TextFieldProps['onChange'] = (event) => {
+    const onChange: TextFieldProps['onChange'] = event => {
         setInput(event.currentTarget.value);
     };
 
     return (
         <Container>
-            <Typography variant='subtitle2' component='h2'>
+            <Typography variant="subtitle2" component="h2">
                 List of {name}
             </Typography>
             <ConditionallyRender
@@ -106,7 +106,7 @@ const StrategyInputList = ({
                                 key={index + entryValue}
                                 label={
                                     <StringTruncator
-                                        maxWidth='300'
+                                        maxWidth="300"
                                         text={entryValue}
                                         maxLength={50}
                                     />
@@ -114,7 +114,7 @@ const StrategyInputList = ({
                                 onDelete={
                                     disabled ? undefined : () => onClose(index)
                                 }
-                                title='Remove value'
+                                title="Remove value"
                             />
                         ))}
                     </ChipsList>
@@ -128,12 +128,12 @@ const StrategyInputList = ({
                             error={Boolean(errors.getFormError(name))}
                             helperText={errors.getFormError(name)}
                             name={`input_field`}
-                            variant='outlined'
-                            label='Add items'
-                            id='input-add-items'
+                            variant="outlined"
+                            label="Add items"
+                            id="input-add-items"
                             value={input}
-                            size='small'
-                            placeholder=''
+                            size="small"
+                            placeholder=""
                             onBlur={onBlur}
                             onChange={onChange}
                             // @ts-expect-error
@@ -144,8 +144,8 @@ const StrategyInputList = ({
                         <Button
                             onClick={setValue}
                             data-testid={ADD_TO_STRATEGY_INPUT_LIST}
-                            variant='outlined'
-                            color='secondary'
+                            variant="outlined"
+                            color="secondary"
                             startIcon={<Add />}
                         >
                             Add

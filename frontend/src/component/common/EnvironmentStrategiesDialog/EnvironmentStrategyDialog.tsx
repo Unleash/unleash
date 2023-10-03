@@ -30,7 +30,7 @@ const EnvironmentStrategyDialog = ({
         projectId,
         featureId,
         environmentName,
-        'default',
+        'default'
     );
 
     const onClick = () => {
@@ -41,13 +41,13 @@ const EnvironmentStrategyDialog = ({
     return (
         <Dialogue
             open={open}
-            maxWidth='sm'
+            maxWidth="sm"
             onClose={() => onClose()}
-            title='You need to add a strategy to your toggle'
-            primaryButtonText='Take me directly to add strategy'
+            title="You need to add a strategy to your toggle"
+            primaryButtonText="Take me directly to add strategy"
             permissionButton={
                 <PermissionButton
-                    type='button'
+                    type="button"
                     permission={CREATE_FEATURE_STRATEGY}
                     projectId={projectId}
                     environmentId={environmentName}
@@ -56,7 +56,7 @@ const EnvironmentStrategyDialog = ({
                     Take me directly to add strategy
                 </PermissionButton>
             }
-            secondaryButtonText='Cancel'
+            secondaryButtonText="Cancel"
         >
             <StyledParagraph>
                 Before you can enable the toggle in the environment, you need to

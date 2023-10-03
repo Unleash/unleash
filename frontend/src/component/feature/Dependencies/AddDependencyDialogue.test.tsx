@@ -18,20 +18,20 @@ const setupApi = () => {
         server,
         '/api/admin/projects/default/features/child/dependencies',
         {},
-        'delete',
+        'delete'
     );
 
     testServerRoute(
         server,
         '/api/admin/projects/default/features/child/dependencies',
         {},
-        'post',
+        'post'
     );
 
     testServerRoute(
         server,
         '/api/admin/projects/default/features/child/parents',
-        ['parentA', 'parentB'],
+        ['parentA', 'parentB']
     );
 };
 
@@ -41,14 +41,14 @@ test('Delete dependency', async () => {
     render(
         <UIProviderContainer>
             <AddDependencyDialogue
-                project='default'
-                featureId='child'
+                project="default"
+                featureId="child"
                 showDependencyDialogue={true}
                 onClose={() => {
                     closed = true;
                 }}
             />
-        </UIProviderContainer>,
+        </UIProviderContainer>
     );
 
     const removeDependency = await screen.findByText('Remove');
@@ -70,14 +70,14 @@ test('Add dependency', async () => {
     render(
         <UIProviderContainer>
             <AddDependencyDialogue
-                project='default'
-                featureId='child'
+                project="default"
+                featureId="child"
                 showDependencyDialogue={true}
                 onClose={() => {
                     closed = true;
                 }}
             />
-        </UIProviderContainer>,
+        </UIProviderContainer>
     );
 
     const removeDependency = await screen.findByText('Remove');

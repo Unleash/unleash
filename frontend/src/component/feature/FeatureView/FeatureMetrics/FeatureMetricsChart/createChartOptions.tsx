@@ -8,7 +8,7 @@ import { IPoint } from './createChartData';
 
 const formatVariantEntry = (
     variant: [string, number],
-    totalExposure: number,
+    totalExposure: number
 ) => {
     if (totalExposure === 0) return '';
     const [key, value] = variant;
@@ -20,7 +20,7 @@ export const createChartOptions = (
     theme: Theme,
     metrics: IFeatureMetricsRaw[],
     hoursBack: number,
-    locationSettings: ILocationSettings,
+    locationSettings: ILocationSettings
 ): ChartOptions<'line'> => {
     return {
         locale: locationSettings.locale,
@@ -48,10 +48,10 @@ export const createChartOptions = (
                     return aIndex - bIndex;
                 },
                 callbacks: {
-                    label: (item) => {
+                    label: item => {
                         return `${item.formattedValue} - ${item.dataset.label}`;
                     },
-                    afterLabel: (item) => {
+                    afterLabel: item => {
                         const data = item.dataset.data[
                             item.dataIndex
                         ] as unknown as IPoint;
@@ -64,13 +64,13 @@ export const createChartOptions = (
                         }
                         const { disabled, ...actualVariants } = data.variants;
                         return Object.entries(actualVariants)
-                            .map((entry) => formatVariantEntry(entry, data.y))
+                            .map(entry => formatVariantEntry(entry, data.y))
                             .join('\n');
                     },
-                    title: (items) =>
+                    title: items =>
                         `Time: ${formatDateHM(
                             items[0].parsed.x,
-                            locationSettings.locale,
+                            locationSettings.locale
                         )}`,
                 },
             },

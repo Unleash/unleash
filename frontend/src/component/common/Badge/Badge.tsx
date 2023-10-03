@@ -55,7 +55,7 @@ const StyledBadge = styled('div')<IBadgeProps>(
                   color: theme.palette[color].contrastText,
                   border: `1px solid ${theme.palette[color].border}`,
               }),
-    }),
+    })
 );
 
 const StyledBadgeIcon = styled('div')<IBadgeIconProps>(
@@ -68,7 +68,7 @@ const StyledBadgeIcon = styled('div')<IBadgeIconProps>(
         margin: iconRight
             ? theme.spacing(0, 0, 0, 0.5)
             : theme.spacing(0, 0.5, 0, 0),
-    }),
+    })
 );
 
 const BadgeIcon = (color: Color, icon: ReactElement, iconRight = false) => (
@@ -97,7 +97,7 @@ export const Badge: FC<IBadgeProps> = forwardRef(
             children,
             ...props
         }: IBadgeProps,
-        ref: ForwardedRef<HTMLDivElement>,
+        ref: ForwardedRef<HTMLDivElement>
     ) => (
         <StyledBadge
             as={as}
@@ -110,7 +110,7 @@ export const Badge: FC<IBadgeProps> = forwardRef(
             ref={ref}
         >
             <ConditionallyRender
-                condition={Boolean(icon) && !iconRight}
+                condition={Boolean(icon) && !Boolean(iconRight)}
                 show={BadgeIcon(color, icon!)}
             />
             {children}
@@ -119,5 +119,5 @@ export const Badge: FC<IBadgeProps> = forwardRef(
                 show={BadgeIcon(color, icon!, true)}
             />
         </StyledBadge>
-    ),
+    )
 );

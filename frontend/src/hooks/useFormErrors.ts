@@ -20,34 +20,34 @@ export const useFormErrors = (): IFormErrors => {
 
     const getFormError = useCallback(
         (field: string): string | undefined => errors[field],
-        [errors],
+        [errors]
     );
 
     const setFormError = useCallback(
         (field: string, message: string): void => {
             setErrors(
-                produce((draft) => {
+                produce(draft => {
                     draft[field] = message;
-                }),
+                })
             );
         },
-        [setErrors],
+        [setErrors]
     );
 
     const removeFormError = useCallback(
         (field: string): void => {
             setErrors(
-                produce((draft) => {
+                produce(draft => {
                     delete draft[field];
-                }),
+                })
             );
         },
-        [setErrors],
+        [setErrors]
     );
 
     const hasFormErrors = useCallback(
         (): boolean => Object.values(errors).some(Boolean),
-        [errors],
+        [errors]
     );
 
     return {

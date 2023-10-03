@@ -12,7 +12,7 @@ const setupHappyPathForChangeRequest = () => {
         server,
         '/api/admin/projects/projectId/environments/development/change-requests',
         {},
-        'post',
+        'post'
     );
     testServerRoute(
         server,
@@ -24,7 +24,7 @@ const setupHappyPathForChangeRequest = () => {
                 requiredApprovals: 1,
                 changeRequestEnabled: true,
             },
-        ],
+        ]
     );
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: {
@@ -47,7 +47,7 @@ test('Add single archive feature change to change request', async () => {
                 onConfirm={onConfirm}
                 featuresWithUsage={[]}
             />
-        </UIProviderContainer>,
+        </UIProviderContainer>
     );
 
     expect(screen.getByText('Archive feature toggle')).toBeInTheDocument();
@@ -75,7 +75,7 @@ test('Add multiple archive feature changes to change request', async () => {
                 onConfirm={onConfirm}
                 featuresWithUsage={[]}
             />
-        </UIProviderContainer>,
+        </UIProviderContainer>
     );
 
     await screen.findByText('Archive feature toggles');
@@ -104,7 +104,7 @@ test('Skip change request', async () => {
                 featuresWithUsage={[]}
             />
         </UIProviderContainer>,
-        { permissions: [{ permission: 'SKIP_CHANGE_REQUEST' }] },
+        { permissions: [{ permission: 'SKIP_CHANGE_REQUEST' }] }
     );
 
     await screen.findByText('Archive feature toggles');

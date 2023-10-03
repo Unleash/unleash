@@ -19,22 +19,28 @@ export const useGroupApi = () => {
             method: 'POST',
             body: JSON.stringify(payload),
         });
-
-        const response = await makeRequest(req.caller, req.id);
-        return response.json();
+        try {
+            const response = await makeRequest(req.caller, req.id);
+            return await response.json();
+        } catch (e) {
+            throw e;
+        }
     };
 
     const updateGroup = async (
         groupId: number,
-        payload: ICreateGroupPayload,
+        payload: ICreateGroupPayload
     ) => {
         const path = `api/admin/groups/${groupId}`;
         const req = createRequest(path, {
             method: 'PUT',
             body: JSON.stringify(payload),
         });
-
-        await makeRequest(req.caller, req.id);
+        try {
+            await makeRequest(req.caller, req.id);
+        } catch (e) {
+            throw e;
+        }
     };
 
     const removeGroup = async (groupId: number) => {
@@ -42,8 +48,11 @@ export const useGroupApi = () => {
         const req = createRequest(path, {
             method: 'DELETE',
         });
-
-        await makeRequest(req.caller, req.id);
+        try {
+            await makeRequest(req.caller, req.id);
+        } catch (e) {
+            throw e;
+        }
     };
 
     return {

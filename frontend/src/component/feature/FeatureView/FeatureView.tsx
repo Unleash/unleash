@@ -136,7 +136,7 @@ export const FeatureView = () => {
 
     const { feature, loading, error, status } = useFeature(
         projectId,
-        featureId,
+        featureId
     );
 
     const navigate = useNavigate();
@@ -165,8 +165,7 @@ export const FeatureView = () => {
         },
     ];
 
-    const activeTab =
-        tabData.find((tab) => tab.path === pathname) ?? tabData[0];
+    const activeTab = tabData.find(tab => tab.path === pathname) ?? tabData[0];
 
     const onFavorite = async () => {
         if (feature?.favorite) {
@@ -296,10 +295,10 @@ export const FeatureView = () => {
                 <StyledTabContainer>
                     <Tabs
                         value={activeTab.path}
-                        indicatorColor='primary'
-                        textColor='primary'
+                        indicatorColor="primary"
+                        textColor="primary"
                     >
-                        {tabData.map((tab) => (
+                        {tabData.map(tab => (
                             <StyledTabButton
                                 key={tab.title}
                                 label={tab.title}
@@ -312,14 +311,14 @@ export const FeatureView = () => {
                 </StyledTabContainer>
             </StyledHeader>
             <Routes>
-                <Route path='metrics' element={<FeatureMetrics />} />
-                <Route path='logs' element={<FeatureLog />} />
+                <Route path="metrics" element={<FeatureMetrics />} />
+                <Route path="logs" element={<FeatureLog />} />
                 <Route
-                    path='variants'
+                    path="variants"
                     element={<FeatureEnvironmentVariants />}
                 />
-                <Route path='settings' element={<FeatureSettings />} />
-                <Route path='*' element={<FeatureOverview />} />
+                <Route path="settings" element={<FeatureSettings />} />
+                <Route path="*" element={<FeatureOverview />} />
             </Routes>
             <FeatureArchiveDialog
                 isOpen={showDelDialog}

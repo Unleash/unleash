@@ -25,7 +25,7 @@ const StyledHeader = styled('div')({
 });
 
 const StyledCloudCircle = styled(CloudCircle, {
-    shouldForwardProp: (prop) => prop !== 'deprecated',
+    shouldForwardProp: prop => prop !== 'deprecated',
 })<{ deprecated?: boolean }>(({ theme, deprecated }) => ({
     color: deprecated
         ? theme.palette.neutral.border
@@ -33,7 +33,7 @@ const StyledCloudCircle = styled(CloudCircle, {
 }));
 
 const StyledName = styled('span', {
-    shouldForwardProp: (prop) => prop !== 'deprecated',
+    shouldForwardProp: prop => prop !== 'deprecated',
 })<{ deprecated?: boolean }>(({ theme, deprecated }) => ({
     color: deprecated
         ? theme.palette.text.secondary
@@ -108,9 +108,9 @@ export const EnvironmentVariantsCard = ({
                                         ensure consistent traffic allocation
                                         across variants.{' '}
                                         <Link
-                                            href='https://docs.getunleash.io/reference/feature-toggle-variants'
-                                            target='_blank'
-                                            rel='noreferrer'
+                                            href="https://docs.getunleash.io/reference/feature-toggle-variants"
+                                            target="_blank"
+                                            rel="noreferrer"
                                         >
                                             Read more
                                         </Link>

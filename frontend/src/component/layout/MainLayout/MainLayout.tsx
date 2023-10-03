@@ -79,7 +79,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         const { uiConfig } = useUiConfig();
         const projectId = useOptionalPathParam('projectId');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
-            projectId || '',
+            projectId || ''
         );
 
         return (
@@ -94,7 +94,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 <ConditionallyRender
                                     condition={Boolean(
                                         projectId &&
-                                            isChangeRequestConfiguredInAnyEnv(),
+                                            isChangeRequestConfiguredInAnyEnv()
                                     )}
                                     show={
                                         <DraftBanner
@@ -114,13 +114,13 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                         <StyledImg
                                             style={{ opacity: 0.06 }}
                                             src={formatAssetPath(textureImage)}
-                                            alt=''
+                                            alt=""
                                         />
                                     }
                                     lightmode={
                                         <StyledImg
                                             src={formatAssetPath(textureImage)}
-                                            alt=''
+                                            alt=""
                                         />
                                     }
                                 />
@@ -131,5 +131,5 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                 </Demo>
             </>
         );
-    },
+    }
 );

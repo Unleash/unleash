@@ -78,11 +78,11 @@ export const IntegrationIcon = ({ name }: IIntegrationIconProps) => (
             <StyledAvatar
                 src={formatAssetPath(integrations[name].icon)}
                 alt={`${capitalizeFirst(integrations[name].title)} icon`}
-                variant='rounded'
+                variant="rounded"
             />
         )}
         elseShow={() => (
-            <StyledAvatar variant='rounded'>
+            <StyledAvatar variant="rounded">
                 <DeviceHub />
             </StyledAvatar>
         )}

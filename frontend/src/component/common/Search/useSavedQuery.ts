@@ -7,7 +7,7 @@ export const useSavedQuery = (id?: string) => {
         `Search:${id || 'default'}:v1`,
         {
             query: '',
-        },
+        }
     );
     const [savedQuery, setSavedQuery] = useState(value.query);
 

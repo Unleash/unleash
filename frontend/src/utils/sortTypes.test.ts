@@ -32,7 +32,7 @@ const data = [
         bool: true,
         value: '49585',
     },
-].map((d) => ({ values: d })) as unknown as Row<{
+].map(d => ({ values: d })) as unknown as Row<{
     id: number;
     age: number;
     bool: boolean;
@@ -42,18 +42,18 @@ test('sortTypes', () => {
     expect(
         data
             .sort((a, b) => sortTypes.boolean(a, b, 'bool'))
-            .map(({ values: { id } }) => id),
+            .map(({ values: { id } }) => id)
     ).toEqual([2, 4, 1, 3, 5]);
 
     expect(
         data
             .sort((a, b) => sortTypes.alphanumeric(a, b, 'age'))
-            .map(({ values: { age } }) => age),
+            .map(({ values: { age } }) => age)
     ).toEqual([18, 25, 32, 35, 42]);
 
     expect(
         data
             .sort((a, b) => sortTypes.numericZeroLast(a, b, 'value'))
-            .map(({ values: { value } }) => value),
+            .map(({ values: { value } }) => value)
     ).toEqual([3455, 3456, '49585', 9999999, 0]);
 });

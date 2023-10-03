@@ -13,7 +13,7 @@ interface IUseProjectDoraMetricsOutput {
 
 export const useProjectDoraMetrics = (
     projectId: string,
-    options: SWRConfiguration = {},
+    options: SWRConfiguration = {}
 ): IUseProjectDoraMetricsOutput => {
     const KEY = `api/admin/projects/${projectId}/dora`;
     const path = formatApiPath(KEY);
@@ -23,7 +23,7 @@ export const useProjectDoraMetrics = (
             method: 'GET',
         })
             .then(handleErrorResponses('Dora metrics'))
-            .then((res) => res.json());
+            .then(res => res.json());
     };
 
     const { data, error } = useSWR(KEY, fetcher, options);

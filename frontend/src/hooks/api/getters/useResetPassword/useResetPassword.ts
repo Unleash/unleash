@@ -9,7 +9,7 @@ const getFetcher = (token: string) => () => {
     // Don't use handleErrorResponses here, because we need to read the error.
     return fetch(path, {
         method: 'GET',
-    }).then((res) => res.json());
+    }).then(res => res.json());
 };
 
 export const INVALID_TOKEN_ERROR = 'InvalidTokenError';

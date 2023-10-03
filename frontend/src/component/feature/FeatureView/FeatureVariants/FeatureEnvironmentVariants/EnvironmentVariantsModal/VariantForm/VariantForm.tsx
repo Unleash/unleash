@@ -42,7 +42,7 @@ const StyledDecoration = styled('div')<{ color?: string }>(
         height: '100%',
         background: color || 'transparent',
         width: theme.spacing(1),
-    }),
+    })
 );
 
 const StyledDeleteButtonTooltip = styled(Tooltip)(({ theme }) => ({
@@ -184,14 +184,14 @@ export const VariantForm = ({
 }: IVariantFormProps) => {
     const [name, setName] = useState(variant.name);
     const [customPercentage, setCustomPercentage] = useState(
-        variant.weightType === WeightType.FIX,
+        variant.weightType === WeightType.FIX
     );
     const [percentage, setPercentage] = useState(String(variant.weight / 10));
     const [payload, setPayload] = useState<IPayload>(
-        variant.payload || EMPTY_PAYLOAD,
+        variant.payload || EMPTY_PAYLOAD
     );
     const [overrides, overridesDispatch] = useOverrides(
-        'overrides' in variant ? variant.overrides || [] : [],
+        'overrides' in variant ? variant.overrides || [] : []
     );
 
     const { context } = useUnleashContext();
@@ -203,18 +203,18 @@ export const VariantForm = ({
     useEffect(() => {
         if (
             variantTypeNumber &&
-            !payloadOptions.some((option) => option.key === 'number')
+            !payloadOptions.some(option => option.key === 'number')
         ) {
             payloadOptions.push({ key: 'number', label: 'number' });
         }
     }, [variantTypeNumber]);
 
     const clearError = (field: ErrorField) => {
-        setErrors((errors) => ({ ...errors, [field]: undefined }));
+        setErrors(errors => ({ ...errors, [field]: undefined }));
     };
 
     const setError = (field: ErrorField, error: string) => {
-        setErrors((errors) => ({ ...errors, [field]: error }));
+        setErrors(errors => ({ ...errors, [field]: error }));
     };
 
     useEffect(() => {
@@ -228,18 +228,18 @@ export const VariantForm = ({
     const customPercentageVisible =
         variants.filter(
             ({ id, weightType }) =>
-                id !== variant.id && weightType === WeightType.VARIABLE,
+                id !== variant.id && weightType === WeightType.VARIABLE
         ).length > 0;
 
     const isProtectedVariant = (variant: IFeatureVariantEdit): boolean => {
         const isVariable = variant.weightType === WeightType.VARIABLE;
 
-        const atLeastOneFixedVariant = variants.some((variant) => {
+        const atLeastOneFixedVariant = variants.some(variant => {
             return variant.weightType === WeightType.FIX;
         });
 
         const hasOnlyOneVariableVariant =
-            variants.filter((variant) => {
+            variants.filter(variant => {
                 return variant.weightType === WeightType.VARIABLE;
             }).length === 1;
 
@@ -253,7 +253,7 @@ export const VariantForm = ({
         if (!isNameUnique(name, variant.id)) {
             setError(
                 ErrorField.NAME,
-                'A variant with that name already exists for this environment.',
+                'A variant with that name already exists for this environment.'
             );
         }
         setName(name.trim());
@@ -269,7 +269,7 @@ export const VariantForm = ({
         if (!isValidPayload(payload)) {
             setError(
                 ErrorField.PAYLOAD,
-                payload.type === 'json' ? 'Invalid json' : 'Invalid number',
+                payload.type === 'json' ? 'Invalid json' : 'Invalid number'
             );
         }
     };
@@ -286,7 +286,7 @@ export const VariantForm = ({
     const isNameNotEmpty = (name: string) => Boolean(name.length);
     const isNameUnique = (name: string, id: string) =>
         editing ||
-        !variants.some((variant) => variant.name === name && variant.id !== id);
+        !variants.some(variant => variant.name === name && variant.id !== id);
     const isValidPercentage = (percentage: string) => {
         if (!customPercentage) return true;
         if (percentage === '') return false;
@@ -326,12 +326,12 @@ export const VariantForm = ({
                 !error,
         };
         if (!disableOverrides) {
-            newVariant.overrides = overrides
-                .map((o) => ({
+            newVariant['overrides'] = overrides
+                .map(o => ({
                     contextName: o.contextName,
                     values: o.values,
                 }))
-                .filter((o) => o.values && o.values.length > 0);
+                .filter(o => o.values && o.values.length > 0);
         }
         updateVariant(newVariant);
     }, [name, customPercentage, percentage, payload, overrides]);
@@ -343,7 +343,7 @@ export const VariantForm = ({
     }, [variant.weight]);
 
     return (
-        <StyledVariantForm data-testid='VARIANT'>
+        <StyledVariantForm data-testid="VARIANT">
             <StyledDecoration color={decorationColor} />
             <StyledDeleteButtonTooltip
                 arrow
@@ -371,12 +371,12 @@ export const VariantForm = ({
                     </StyledSubLabel>
                     <StyledInput
                         id={`variant-name-input-${variant.id}`}
-                        data-testid='VARIANT_NAME_INPUT'
-                        label='Variant name'
+                        data-testid="VARIANT_NAME_INPUT"
+                        label="Variant name"
                         error={Boolean(errors.name)}
                         errorText={errors.name}
                         value={name}
-                        onChange={(e) => onSetName(e.target.value)}
+                        onChange={e => onSetName(e.target.value)}
                         disabled={editing}
                         required
                     />
@@ -386,36 +386,34 @@ export const VariantForm = ({
                     show={
                         <StyledPercentageContainer>
                             <StyledFormControlLabel
-                                label='Custom percentage'
+                                label="Custom percentage"
                                 control={
                                     <Switch
-                                        data-testid='VARIANT_WEIGHT_CHECK'
+                                        data-testid="VARIANT_WEIGHT_CHECK"
                                         checked={customPercentage}
-                                        onChange={(e) =>
+                                        onChange={e =>
                                             setCustomPercentage(
-                                                e.target.checked,
+                                                e.target.checked
                                             )
                                         }
                                     />
                                 }
                             />
                             <StyledWeightInput
-                                data-testid='VARIANT_WEIGHT_INPUT'
-                                type='number'
-                                label='Variant weight'
+                                data-testid="VARIANT_WEIGHT_INPUT"
+                                type="number"
+                                label="Variant weight"
                                 error={Boolean(errors.percentage)}
                                 errorText={errors.percentage}
                                 value={percentage}
-                                onChange={(e) =>
-                                    onSetPercentage(e.target.value)
-                                }
+                                onChange={e => onSetPercentage(e.target.value)}
                                 required={customPercentage}
                                 disabled={!customPercentage}
                                 aria-valuemin={0}
                                 aria-valuemax={100}
                                 InputProps={{
                                     endAdornment: (
-                                        <InputAdornment position='end'>
+                                        <InputAdornment position="end">
                                             %
                                         </InputAdornment>
                                     ),
@@ -427,18 +425,18 @@ export const VariantForm = ({
             </StyledTopRow>
             <StyledMarginLabel>
                 Payload
-                <HelpIcon tooltip='Passed along with the the variant object.' />
+                <HelpIcon tooltip="Passed along with the the variant object." />
             </StyledMarginLabel>
             <StyledRow>
                 <StyledSelectMenu
-                    id='variant-payload-type'
-                    name='type'
-                    label='Type'
+                    id="variant-payload-type"
+                    name="type"
+                    label="Type"
                     value={payload.type}
                     options={payloadOptions}
-                    onChange={(e) => {
+                    onChange={e => {
                         clearError(ErrorField.PAYLOAD);
-                        setPayload((payload) => ({
+                        setPayload(payload => ({
                             ...payload,
                             type: e.target.value,
                         }));
@@ -451,8 +449,8 @@ export const VariantForm = ({
                             <Suspense fallback={null}>
                                 <LazyReactJSONEditor
                                     content={{ text: payload.value }}
-                                    onChange={(content) =>
-                                        setPayload((payload) => {
+                                    onChange={content =>
+                                        setPayload(payload => {
                                             return {
                                                 ...payload,
                                                 value:
@@ -468,9 +466,9 @@ export const VariantForm = ({
                         }
                         elseShow={
                             <StyledInput
-                                id='variant-payload-value'
-                                name='variant-payload-value'
-                                label='Value'
+                                id="variant-payload-value"
+                                name="variant-payload-value"
+                                label="Value"
                                 multiline={payload.type !== 'string'}
                                 rows={
                                     payload.type === 'string' ||
@@ -479,9 +477,9 @@ export const VariantForm = ({
                                         : 4
                                 }
                                 value={payload.value}
-                                onChange={(e) => {
+                                onChange={e => {
                                     clearError(ErrorField.PAYLOAD);
-                                    setPayload((payload) => ({
+                                    setPayload(payload => ({
                                         ...payload,
                                         value: e.target.value,
                                     }));
@@ -499,7 +497,7 @@ export const VariantForm = ({
                 <>
                     <StyledMarginLabel>
                         Overrides
-                        <HelpIcon tooltip='Here you can specify which users should get this variant.' />
+                        <HelpIcon tooltip="Here you can specify which users should get this variant." />
                     </StyledMarginLabel>
                     <OverrideConfig
                         overrides={overrides}
@@ -508,9 +506,9 @@ export const VariantForm = ({
                     <div>
                         <StyledAddOverrideButton
                             onClick={onAddOverride}
-                            variant='text'
-                            color='primary'
-                            data-testid='VARIANT_ADD_OVERRIDE_BUTTON'
+                            variant="text"
+                            color="primary"
+                            data-testid="VARIANT_ADD_OVERRIDE_BUTTON"
                         >
                             Add override
                         </StyledAddOverrideButton>

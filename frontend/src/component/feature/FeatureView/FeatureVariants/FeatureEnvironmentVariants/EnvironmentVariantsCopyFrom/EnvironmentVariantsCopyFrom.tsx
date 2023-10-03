@@ -17,7 +17,7 @@ interface IEnvironmentVariantsCopyFromProps {
     environmentId: string;
     onCopyVariantsFrom: (
         fromEnvironment: IFeatureEnvironment,
-        toEnvironment: IFeatureEnvironment,
+        toEnvironment: IFeatureEnvironment
     ) => void;
     otherEnvsWithVariants: IFeatureEnvironment[];
 }
@@ -44,14 +44,14 @@ export const EnvironmentVariantsCopyFrom = ({
             show={
                 <>
                     <PermissionButton
-                        onClick={(e) => {
+                        onClick={e => {
                             setCopyFromAnchorEl(e.currentTarget);
                         }}
                         id={`copy-from-menu-${environment.name}`}
                         aria-controls={copyFromOpen ? 'basic-menu' : undefined}
-                        aria-haspopup='true'
+                        aria-haspopup="true"
                         aria-expanded={copyFromOpen ? 'true' : undefined}
-                        variant='outlined'
+                        variant="outlined"
                         permission={permission}
                         projectId={projectId}
                         environmentId={environmentId}
@@ -66,13 +66,13 @@ export const EnvironmentVariantsCopyFrom = ({
                             'aria-labelledby': `copy-from-menu-${environment.name}`,
                         }}
                     >
-                        {otherEnvsWithVariants.map((otherEnvironment) => (
+                        {otherEnvsWithVariants.map(otherEnvironment => (
                             <MenuItem
                                 key={otherEnvironment.name}
                                 onClick={() =>
                                     onCopyVariantsFrom(
                                         otherEnvironment,
-                                        environment,
+                                        environment
                                     )
                                 }
                             >

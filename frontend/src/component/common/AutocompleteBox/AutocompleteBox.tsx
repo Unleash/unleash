@@ -57,7 +57,7 @@ export const AutocompleteBox = ({
     const { classes: styles } = useStyles();
 
     const renderInput = (params: AutocompleteRenderInputParams) => {
-        return <TextField {...params} variant='outlined' label={label} />;
+        return <TextField {...params} variant="outlined" label={label} />;
     };
 
     return (
@@ -69,12 +69,12 @@ export const AutocompleteBox = ({
                 classes={{ inputRoot: styles.inputRoot }}
                 options={options}
                 value={value}
-                popupIcon={<ArrowDropDown titleAccess='Toggle' />}
+                popupIcon={<ArrowDropDown titleAccess="Toggle" />}
                 onChange={(event, value) => onChange(value || [])}
                 renderInput={renderInput}
-                getOptionLabel={(value) => value.label}
+                getOptionLabel={value => value.label}
                 disabled={disabled}
-                size='small'
+                size="small"
                 multiple
             />
         </StyledContainer>

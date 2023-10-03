@@ -4,7 +4,7 @@ import useAPI from '../useApi/useApi';
 type PasswordLogin = (
     path: string,
     username: string,
-    password: string,
+    password: string
 ) => Promise<Response>;
 
 type EmailLogin = (path: string, email: string) => Promise<Response>;

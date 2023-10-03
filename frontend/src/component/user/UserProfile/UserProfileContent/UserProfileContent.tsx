@@ -87,14 +87,14 @@ export const UserProfileContent = ({
     <ConditionallyRender
         condition={showProfile}
         show={
-            <StyledPaper className='dropdown-outline' id={id}>
+            <StyledPaper className="dropdown-outline" id={id}>
                 <StyledProfileInfo>
                     <StyledUserAvatar user={profile} />
                     <div>
                         <Typography>
                             {profile.name || profile.username}
                         </Typography>
-                        <StyledSubtitle variant='body2'>
+                        <StyledSubtitle variant="body2">
                             {profile.email}
                         </StyledSubtitle>
                     </div>
@@ -102,8 +102,8 @@ export const UserProfileContent = ({
 
                 <StyledLink
                     component={RouterLink}
-                    to='/profile'
-                    underline='hover'
+                    to="/profile"
+                    underline="hover"
                     onClick={() => setShowProfile(false)}
                 >
                     View profile settings
@@ -112,22 +112,22 @@ export const UserProfileContent = ({
                 <StyledDivider />
 
                 <StyledLinkPrivacy
-                    component='a'
-                    href='https://www.getunleash.io/privacy-policy'
-                    underline='hover'
-                    rel='noopener noreferrer'
-                    target='_blank'
+                    component="a"
+                    href="https://www.getunleash.io/privacy-policy"
+                    underline="hover"
+                    rel="noopener noreferrer"
+                    target="_blank"
                 >
                     Privacy Policy <OpenInNew />
                 </StyledLinkPrivacy>
 
                 <StyledDivider />
 
-                <form method='POST' action={`${basePath}/logout`}>
+                <form method="POST" action={`${basePath}/logout`}>
                     <StyledLogoutButton
-                        type='submit'
-                        variant='outlined'
-                        color='primary'
+                        type="submit"
+                        variant="outlined"
+                        color="primary"
                     >
                         Log out
                     </StyledLogoutButton>

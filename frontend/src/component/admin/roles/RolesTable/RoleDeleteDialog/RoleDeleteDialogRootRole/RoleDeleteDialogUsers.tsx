@@ -52,15 +52,15 @@ export const RoleDeleteDialogUsers = ({
                     Cell: ({ row: { original: user } }: any) => (
                         <TimeAgoCell
                             value={user.seenAt}
-                            emptyText='Never'
-                            title={(date) => `Last login: ${date}`}
+                            emptyText="Never"
+                            title={date => `Last login: ${date}`}
                         />
                     ),
                     sortType: 'date',
                     maxWidth: 150,
                 },
             ] as Column<IUser>[],
-        [],
+        []
     );
 
     const { headerGroups, rows, prepareRow } = useTable(
@@ -75,7 +75,7 @@ export const RoleDeleteDialogUsers = ({
             disableMultiSort: true,
         },
         useSortBy,
-        useFlexLayout,
+        useFlexLayout
     );
 
     return (

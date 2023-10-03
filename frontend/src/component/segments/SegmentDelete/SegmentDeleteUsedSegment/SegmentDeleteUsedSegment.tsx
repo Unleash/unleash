@@ -33,7 +33,7 @@ export const SegmentDeleteUsedSegment = ({
         <Dialogue
             title="You can't delete a segment that's currently in use"
             open={open}
-            primaryButtonText='OK'
+            primaryButtonText="OK"
             onClick={onClose}
         >
             <p>
@@ -41,17 +41,17 @@ export const SegmentDeleteUsedSegment = ({
                 <strong>{segment.name}</strong> segment for their strategies:
             </p>
             <StyledUl>
-                {strategies?.map((strategy) => (
+                {strategies?.map(strategy => (
                     <li key={strategy.id}>
                         <StyledLink
                             to={formatEditStrategyPath(
                                 strategy.projectId!,
                                 strategy.featureName!,
                                 strategy.environment!,
-                                strategy.id,
+                                strategy.id
                             )}
-                            target='_blank'
-                            rel='noopener noreferrer'
+                            target="_blank"
+                            rel="noopener noreferrer"
                         >
                             {strategy.featureName!}{' '}
                             {formatStrategyNameParens(strategy)}

@@ -46,7 +46,7 @@ const ToggleTypesRow = ({ type, Icon, count }: IToggleTypeRowProps) => {
 
     return (
         <StyledParagraphGridRow data-loading>
-            <Icon fontSize='small' data-loading />
+            <Icon fontSize="small" data-loading />
             <div>{getTitleText(type)}</div>
             <StyledTypeCount>{count}</StyledTypeCount>
         </StyledParagraphGridRow>
@@ -56,20 +56,19 @@ const ToggleTypesRow = ({ type, Icon, count }: IToggleTypeRowProps) => {
 export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
     const featureTypeStats = useMemo(() => {
         const release =
-            features?.filter((feature) => feature.type === 'release').length ||
-            0;
+            features?.filter(feature => feature.type === 'release').length || 0;
         const experiment =
-            features?.filter((feature) => feature.type === 'experiment')
-                .length || 0;
+            features?.filter(feature => feature.type === 'experiment').length ||
+            0;
         const operational =
-            features?.filter((feature) => feature.type === 'operational')
+            features?.filter(feature => feature.type === 'operational')
                 .length || 0;
         const kill =
-            features?.filter((feature) => feature.type === 'kill-switch')
+            features?.filter(feature => feature.type === 'kill-switch')
                 .length || 0;
         const permission =
-            features?.filter((feature) => feature.type === 'permission')
-                .length || 0;
+            features?.filter(feature => feature.type === 'permission').length ||
+            0;
 
         return {
             release,
@@ -82,10 +81,10 @@ export const ToggleTypesWidget = ({ features }: IToggleTypesWidgetProps) => {
 
     return (
         <StyledProjectInfoWidgetContainer
-            sx={{ padding: (theme) => theme.spacing(3) }}
+            sx={{ padding: theme => theme.spacing(3) }}
         >
             <StyledWidgetTitle>Toggle types used</StyledWidgetTitle>
-            {Object.keys(featureTypeStats).map((type) => (
+            {Object.keys(featureTypeStats).map(type => (
                 <ToggleTypesRow
                     type={type}
                     key={type}

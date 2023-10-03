@@ -20,7 +20,7 @@ export const CreateIntegration = () => {
 
     const editMode = false;
     const provider = providers.find(
-        (providerItem: any) => providerItem.name === providerId,
+        (providerItem: any) => providerItem.name === providerId
     );
 
     const defaultAddon = {

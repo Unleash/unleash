@@ -63,7 +63,9 @@ export const CreateUnleashContext = ({
     };
 
     const formatApiCode = () => {
-        return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/context' \\
+        return `curl --location --request POST '${
+            uiConfig.unleashUrl
+        }/api/admin/context' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getContextPayload(), undefined, 2)}'`;
@@ -72,11 +74,11 @@ export const CreateUnleashContext = ({
     return (
         <FormTemplate
             loading={loading}
-            title='Create context'
-            description='Context fields are a basic building block used in Unleash to control roll-out.
-            They can be used together with strategy constraints as part of the activation strategy evaluation.'
-            documentationLink='https://docs.getunleash.io/reference/unleash-context#custom-context-fields'
-            documentationLinkLabel='Context fields documentation'
+            title="Create context"
+            description="Context fields are a basic building block used in Unleash to control roll-out.
+            They can be used together with strategy constraints as part of the activation strategy evaluation."
+            documentationLink="https://docs.getunleash.io/reference/unleash-context#custom-context-fields"
+            documentationLinkLabel="Context fields documentation"
             formatApiCode={formatApiCode}
             modal={modal}
         >
@@ -92,13 +94,13 @@ export const CreateUnleashContext = ({
                 setLegalValues={setLegalValues}
                 stickiness={stickiness}
                 setStickiness={setStickiness}
-                mode='Create'
+                mode="Create"
                 validateContext={validateContext}
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >
                 <CreateButton
-                    name='context'
+                    name="context"
                     permission={CREATE_CONTEXT_FIELD}
                 />
             </ContextForm>

@@ -49,14 +49,14 @@ export const BulkDisableDialog = ({
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
     const alreadyDisabledCount = data.filter(
-        (feature) =>
+        feature =>
             feature.environments?.find(
-                (environment) => selected === environment.name,
-            )?.enabled === false,
+                environment => selected === environment.name
+            )?.enabled === false
     ).length;
 
     const getOptions = () =>
-        environments.map((env) => ({
+        environments.map(env => ({
             key: env,
             label: env,
         }));
@@ -67,11 +67,11 @@ export const BulkDisableDialog = ({
                 await addChange(
                     projectId,
                     selected,
-                    data.map((feature) => ({
+                    data.map(feature => ({
                         action: 'updateEnabled',
                         feature: feature.name,
                         payload: { enabled: false },
-                    })),
+                    }))
                 );
                 refetchChangeRequests();
                 setToastData({
@@ -82,8 +82,8 @@ export const BulkDisableDialog = ({
             } else {
                 await bulkToggleFeaturesEnvironmentOff(
                     projectId,
-                    data.map((feature) => feature.name),
-                    selected,
+                    data.map(feature => feature.name),
+                    selected
                 );
                 refetchProject();
                 setToastData({
@@ -106,11 +106,11 @@ export const BulkDisableDialog = ({
     return (
         <Dialogue
             open={showExportDialog}
-            title='Disable feature toggles'
+            title="Disable feature toggles"
             onClose={onClose}
             onClick={onClick}
             primaryButtonText={buttonText}
-            secondaryButtonText='Cancel'
+            secondaryButtonText="Cancel"
         >
             <Box>
                 You have selected <b>{data.length}</b> feature toggles to
@@ -128,7 +128,7 @@ export const BulkDisableDialog = ({
                 <ConditionallyRender
                     condition={isChangeRequestConfigured(selected)}
                     show={
-                        <SpacedAlert severity='warning'>
+                        <SpacedAlert severity="warning">
                             Change requests are enabled for this environment.
                         </SpacedAlert>
                     }
@@ -136,7 +136,7 @@ export const BulkDisableDialog = ({
                 <ConditionallyRender
                     condition={alreadyDisabledCount > 0}
                     show={
-                        <SpacedAlert severity='info'>
+                        <SpacedAlert severity="info">
                             {alreadyDisabledCount} feature{' '}
                             {alreadyDisabledCount > 1
                                 ? 'toggles are '

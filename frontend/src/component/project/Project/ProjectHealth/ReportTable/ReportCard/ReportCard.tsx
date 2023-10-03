@@ -154,7 +154,7 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                     <li>
                         <ConditionallyRender
                             condition={Boolean(
-                                healthReport.potentiallyStaleCount,
+                                healthReport.potentiallyStaleCount
                             )}
                             show={renderPotentiallyStaleToggles}
                         />

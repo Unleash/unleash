@@ -17,7 +17,7 @@ test('InstanceStatusBar should be hidden by default', async () => {
     render(<InstanceStatusBar instanceStatus={UNKNOWN_INSTANCE_STATUS} />);
 
     expect(
-        screen.queryByTestId(INSTANCE_STATUS_BAR_ID),
+        screen.queryByTestId(INSTANCE_STATUS_BAR_ID)
     ).not.toBeInTheDocument();
 });
 
@@ -28,11 +28,11 @@ test('InstanceStatusBar should be hidden when state is active', async () => {
                 plan: InstancePlan.PRO,
                 state: InstanceState.ACTIVE,
             }}
-        />,
+        />
     );
 
     expect(
-        screen.queryByTestId(INSTANCE_STATUS_BAR_ID),
+        screen.queryByTestId(INSTANCE_STATUS_BAR_ID)
     ).not.toBeInTheDocument();
 });
 
@@ -44,7 +44,7 @@ test('InstanceStatusBar should warn when the trial is far from expired', async (
                 state: InstanceState.TRIAL,
                 trialExpiry: addDays(new Date(), 15).toISOString(),
             }}
-        />,
+        />
     );
 
     expect(screen.getByTestId(INSTANCE_STATUS_BAR_ID)).toBeInTheDocument();
@@ -59,7 +59,7 @@ test('InstanceStatusBar should warn when the trial is about to expire', async ()
                 state: InstanceState.TRIAL,
                 trialExpiry: addDays(new Date(), 5).toISOString(),
             }}
-        />,
+        />
     );
 
     expect(screen.getByTestId(INSTANCE_STATUS_BAR_ID)).toBeInTheDocument();
@@ -74,7 +74,7 @@ test('InstanceStatusBar should warn when trialExpiry has passed', async () => {
                 state: InstanceState.TRIAL,
                 trialExpiry: subDays(new Date(), 1).toISOString(),
             }}
-        />,
+        />
     );
 
     expect(screen.getByTestId(INSTANCE_STATUS_BAR_ID)).toBeInTheDocument();
@@ -88,7 +88,7 @@ test('InstanceStatusBar should warn when the trial has expired', async () => {
                 plan: InstancePlan.PRO,
                 state: InstanceState.EXPIRED,
             }}
-        />,
+        />
     );
 
     expect(screen.getByTestId(INSTANCE_STATUS_BAR_ID)).toBeInTheDocument();
@@ -102,7 +102,7 @@ test('InstanceStatusBar should warn when the trial has expired for enterprise', 
                 plan: InstancePlan.ENTERPRISE,
                 state: InstanceState.EXPIRED,
             }}
-        />,
+        />
     );
 
     expect(screen.getByTestId(INSTANCE_STATUS_BAR_ID)).toBeInTheDocument();
@@ -116,7 +116,7 @@ test('InstanceStatusBar should warn when the trial has churned', async () => {
                 plan: InstancePlan.PRO,
                 state: InstanceState.CHURNED,
             }}
-        />,
+        />
     );
 
     expect(screen.getByTestId(INSTANCE_STATUS_BAR_ID)).toBeInTheDocument();

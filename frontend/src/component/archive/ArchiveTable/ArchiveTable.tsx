@@ -47,7 +47,7 @@ export interface IFeaturesArchiveTableProps {
     setStoredParams: (
         newValue:
             | SortingRule<string>
-            | ((prev: SortingRule<string>) => SortingRule<string>),
+            | ((prev: SortingRule<string>) => SortingRule<string>)
     ) => SortingRule<string>;
     projectId?: string;
 }
@@ -72,12 +72,12 @@ export const ArchiveTable = ({
     const { reviveFeature } = useFeatureArchiveApi();
 
     const [searchValue, setSearchValue] = useState(
-        searchParams.get('search') || '',
+        searchParams.get('search') || ''
     );
 
     const { uiConfig } = useUiConfig();
     const showEnvironmentLastSeen = Boolean(
-        uiConfig.flags.lastSeenByEnvironment,
+        uiConfig.flags.lastSeenByEnvironment
     );
 
     const onRevive = useCallback(
@@ -94,7 +94,7 @@ export const ArchiveTable = ({
                 setToastApiError(formatUnknownError(e));
             }
         },
-        [refetch, reviveFeature, setToastApiError, setToastData],
+        [refetch, reviveFeature, setToastApiError, setToastData]
     );
 
     const columns = useMemo(
@@ -208,7 +208,7 @@ export const ArchiveTable = ({
             },
         ],
         //eslint-disable-next-line
-        [projectId, showEnvironmentLastSeen],
+        [projectId, showEnvironmentLastSeen]
     );
 
     const {
@@ -219,7 +219,7 @@ export const ArchiveTable = ({
 
     const data = useMemo(
         () => (loading ? featuresPlaceholder : searchedData),
-        [searchedData, loading],
+        [searchedData, loading]
     );
 
     const [initialState] = useState(() => ({
@@ -258,7 +258,7 @@ export const ArchiveTable = ({
         },
         useFlexLayout,
         useSortBy,
-        useRowSelect,
+        useRowSelect
     );
 
     useConditionallyHiddenColumns(
@@ -273,7 +273,7 @@ export const ArchiveTable = ({
             },
         ],
         setHiddenColumns,
-        columns,
+        columns
     );
 
     useEffect(() => {

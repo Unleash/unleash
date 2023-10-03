@@ -14,30 +14,31 @@ interface IServiceAccountsActionsCellProps {
     onDelete: (event: React.SyntheticEvent) => void;
 }
 
-export const ServiceAccountsActionsCell: VFC<IServiceAccountsActionsCellProps> =
-    ({ onEdit, onDelete }) => {
-        return (
-            <StyledBox>
-                <PermissionIconButton
-                    data-loading
-                    onClick={onEdit}
-                    permission={ADMIN}
-                    tooltipProps={{
-                        title: 'Edit service account',
-                    }}
-                >
-                    <Edit />
-                </PermissionIconButton>
-                <PermissionIconButton
-                    data-loading
-                    onClick={onDelete}
-                    permission={ADMIN}
-                    tooltipProps={{
-                        title: 'Remove service account',
-                    }}
-                >
-                    <Delete />
-                </PermissionIconButton>
-            </StyledBox>
-        );
-    };
+export const ServiceAccountsActionsCell: VFC<
+    IServiceAccountsActionsCellProps
+> = ({ onEdit, onDelete }) => {
+    return (
+        <StyledBox>
+            <PermissionIconButton
+                data-loading
+                onClick={onEdit}
+                permission={ADMIN}
+                tooltipProps={{
+                    title: 'Edit service account',
+                }}
+            >
+                <Edit />
+            </PermissionIconButton>
+            <PermissionIconButton
+                data-loading
+                onClick={onDelete}
+                permission={ADMIN}
+                tooltipProps={{
+                    title: 'Remove service account',
+                }}
+            >
+                <Delete />
+            </PermissionIconButton>
+        </StyledBox>
+    );
+};

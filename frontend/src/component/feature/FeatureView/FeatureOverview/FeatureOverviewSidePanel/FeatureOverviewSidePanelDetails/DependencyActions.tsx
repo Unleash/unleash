@@ -38,14 +38,14 @@ export const DependencyActions: FC<{
 
     return (
         <span>
-            <Tooltip title='Dependency actions' arrow describeChild>
+            <Tooltip title="Dependency actions" arrow describeChild>
                 <IconButton
                     id={id}
                     aria-controls={open ? menuId : undefined}
-                    aria-haspopup='true'
+                    aria-haspopup="true"
                     aria-expanded={open ? 'true' : undefined}
                     onClick={openActions}
-                    type='button'
+                    type="button"
                 >
                     <MoreVert />
                 </IconButton>
@@ -79,7 +79,7 @@ export const DependencyActions: FC<{
                                     <Edit />
                                 </ListItemIcon>
                                 <ListItemText>
-                                    <Typography variant='body2'>
+                                    <Typography variant="body2">
                                         Edit
                                     </Typography>
                                 </ListItemText>
@@ -100,7 +100,7 @@ export const DependencyActions: FC<{
                                     <Delete />
                                 </ListItemIcon>
                                 <ListItemText>
-                                    <Typography variant='body2'>
+                                    <Typography variant="body2">
                                         Delete
                                     </Typography>
                                 </ListItemText>

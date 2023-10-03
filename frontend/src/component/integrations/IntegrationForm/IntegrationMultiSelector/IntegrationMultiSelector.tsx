@@ -51,12 +51,12 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
             {...params}
             error={Boolean(error)}
             helperText={error || note}
-            variant='outlined'
+            variant="outlined"
             label={
                 <>
                     {capitalize(`${entityName}s`)}
                     {required ? (
-                        <Typography component='span'>*</Typography>
+                        <Typography component="span">*</Typography>
                     ) : null}
                 </>
             }
@@ -69,13 +69,13 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
     const renderOption = (
         props: object,
         option: IAutocompleteBoxOption,
-        { selected }: AutocompleteRenderOptionState,
+        { selected }: AutocompleteRenderOptionState
     ) => {
         return (
             <li {...props}>
                 <StyledCheckbox
-                    icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
-                    checkedIcon={<CheckBoxIcon fontSize='small' />}
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
                     checked={selected}
                 />
                 {option.label}
@@ -88,7 +88,7 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
             <StyledTitle>{capitalize(`${entityName}s`)}</StyledTitle>
             <StyledHelpText>{description}</StyledHelpText>
             <Autocomplete
-                size='small'
+                size="small"
                 multiple
                 limitTags={2}
                 options={options}
@@ -98,8 +98,8 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
                 PaperComponent={CustomPaper}
                 renderOption={renderOption}
                 renderInput={renderInput}
-                value={options.filter((option) =>
-                    selectedItems.includes(option.value),
+                value={options.filter(option =>
+                    selectedItems.includes(option.value)
                 )}
                 onChange={(_, input) => {
                     const state = input.map(({ value }) => value);

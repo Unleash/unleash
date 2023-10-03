@@ -31,7 +31,7 @@ export const FeatureOverviewSidePanelDetails = ({
     const dependentFeatures = useUiFlag('dependentFeatures');
 
     const showLastSeenByEnvironment = Boolean(
-        uiConfig.flags.lastSeenByEnvironment,
+        uiConfig.flags.lastSeenByEnvironment
     );
 
     return (
@@ -43,7 +43,7 @@ export const FeatureOverviewSidePanelDetails = ({
                     <span>
                         {formatDateYMD(
                             parseISO(feature.createdAt),
-                            locationSettings.locale,
+                            locationSettings.locale
                         )}
                     </span>
                 </StyledDetail>

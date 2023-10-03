@@ -58,7 +58,7 @@ const ResetPassword = () => {
                         show={<InvalidToken />}
                         elseShow={
                             <>
-                                <StyledTypography variant='h2' data-loading>
+                                <StyledTypography variant="h2" data-loading>
                                     Reset password
                                 </StyledTypography>
 

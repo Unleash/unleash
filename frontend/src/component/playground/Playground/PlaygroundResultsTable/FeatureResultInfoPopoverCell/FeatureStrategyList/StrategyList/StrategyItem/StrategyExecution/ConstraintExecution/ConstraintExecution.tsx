@@ -31,7 +31,7 @@ export const ConstraintExecution: VFC<IConstraintExecutionProps> = ({
                 <Fragment key={objectId(constraint)}>
                     <ConditionallyRender
                         condition={index > 0}
-                        show={<StrategySeparator text='AND' />}
+                        show={<StrategySeparator text="AND" />}
                     />
                     <ConstraintAccordionView
                         constraint={constraint}

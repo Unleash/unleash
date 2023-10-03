@@ -36,11 +36,14 @@ export const ReviewButton: FC<{
     const anchorRef = React.useRef<HTMLButtonElement>(null);
 
     const onToggle = () => {
-        setOpen((prevOpen) => !prevOpen);
+        setOpen(prevOpen => !prevOpen);
     };
 
     const onClose = (event: Event) => {
-        if (anchorRef.current?.contains(event.target as HTMLElement)) {
+        if (
+            anchorRef.current &&
+            anchorRef.current.contains(event.target as HTMLElement)
+        ) {
             return;
         }
 
@@ -53,14 +56,14 @@ export const ReviewButton: FC<{
     return (
         <React.Fragment>
             <PermissionButton
-                variant='contained'
+                variant="contained"
                 disabled={
                     disabled || (data?.createdBy.id === user?.id && !isAdmin)
                 }
                 aria-controls={open ? 'review-options-menu' : undefined}
                 aria-expanded={open ? 'true' : undefined}
-                aria-label='review changes'
-                aria-haspopup='menu'
+                aria-label="review changes"
+                aria-haspopup="menu"
                 onClick={onToggle}
                 ref={anchorRef}
                 endIcon={<ArrowDropDownIcon />}
@@ -91,15 +94,15 @@ export const ReviewButton: FC<{
                                     : 'center bottom',
                         }}
                     >
-                        <Paper className='dropdown-outline'>
+                        <Paper className="dropdown-outline">
                             <ClickAwayListener onClickAway={onClose}>
                                 <MenuList
-                                    id='review-options-menu'
+                                    id="review-options-menu"
                                     autoFocusItem
                                 >
                                     <MenuItem onClick={onApprove}>
                                         <ListItemIcon>
-                                            <CheckBox fontSize='small' />
+                                            <CheckBox fontSize="small" />
                                         </ListItemIcon>
                                         <ListItemText>
                                             Approve changes
@@ -107,7 +110,7 @@ export const ReviewButton: FC<{
                                     </MenuItem>
                                     <MenuItem onClick={onReject}>
                                         <ListItemIcon>
-                                            <Clear fontSize='small' />
+                                            <Clear fontSize="small" />
                                         </ListItemIcon>
                                         <ListItemText>
                                             Reject changes

@@ -56,13 +56,13 @@ export const ConfigurationTabs: FC<{
     >
         <Tabs value={activeTab}>
             <Tab
-                label='Upload file'
-                value='file'
+                label="Upload file"
+                value="file"
                 onClick={() => setActiveTab('file')}
             />
             <Tab
-                label='Code editor'
-                value='code'
+                label="Code editor"
+                value="code"
                 data-testid={CODE_EDITOR_TAB}
                 onClick={() => setActiveTab('code')}
             />
@@ -84,7 +84,7 @@ export const ImportArea: FC<{
             condition={activeTab === 'file'}
             show={
                 <StyledFileDropZone
-                    onSuccess={(data) => {
+                    onSuccess={data => {
                         setImportPayload(data);
                         setActiveTab('code');
                         setToastData({
@@ -92,7 +92,7 @@ export const ImportArea: FC<{
                             title: 'File uploaded',
                         });
                     }}
-                    onError={(error) => {
+                    onError={error => {
                         setImportPayload('');
                         setToastData({
                             type: 'error',
@@ -105,7 +105,7 @@ export const ImportArea: FC<{
                         sx={{ width: 80, height: 80 }}
                         active={dragActive}
                     >
-                        <ArrowUpward fontSize='large' />
+                        <ArrowUpward fontSize="large" />
                     </PulsingAvatar>
                     <DropMessage>
                         {dragActive
@@ -115,15 +115,15 @@ export const ImportArea: FC<{
                     <SelectFileMessage>
                         or select a file from your device
                     </SelectFileMessage>
-                    <Button variant='outlined'>Select file</Button>
+                    <Button variant="outlined">Select file</Button>
                     <MaxSizeMessage>JSON format: max 500 kB</MaxSizeMessage>
                 </StyledFileDropZone>
             }
             elseShow={
                 <StyledTextField
-                    label='Exported toggles'
-                    variant='outlined'
-                    onChange={(event) => setImportPayload(event.target.value)}
+                    label="Exported toggles"
+                    variant="outlined"
+                    onChange={event => setImportPayload(event.target.value)}
                     value={importPayload}
                     data-testid={CODE_TEXT_FIELD}
                     multiline
@@ -143,8 +143,8 @@ export const Actions: FC<{
     <ActionsContainer>
         <Button
             sx={{ position: 'static' }}
-            variant='contained'
-            type='submit'
+            variant="contained"
+            type="submit"
             onClick={onSubmit}
             data-testid={VALIDATE_BUTTON}
             disabled={disabled}
@@ -153,8 +153,8 @@ export const Actions: FC<{
         </Button>
         <Button
             sx={{ position: 'static', ml: 2 }}
-            variant='outlined'
-            type='submit'
+            variant="outlined"
+            type="submit"
             onClick={onClose}
         >
             Cancel import

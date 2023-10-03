@@ -8,7 +8,7 @@ export const LoginHistory = () => {
     const { isEnterprise } = useUiConfig();
 
     if (!isEnterprise()) {
-        return <PremiumFeature feature='login-history' page />;
+        return <PremiumFeature feature="login-history" page />;
     }
 
     return (

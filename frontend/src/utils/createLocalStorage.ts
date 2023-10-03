@@ -3,7 +3,7 @@ import { getLocalStorageItem, setLocalStorageItem } from './storage';
 
 export const createLocalStorage = <T extends object>(
     key: string,
-    initialValue: T,
+    initialValue: T
 ) => {
     const internalKey = `${basePath}:${key}:localStorage:v2`;
     const value = (() => {

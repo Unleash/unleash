@@ -114,7 +114,6 @@ const EventDiff = ({
     }
 
     return (
-        // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
         <pre style={{ overflowX: 'auto', overflowY: 'hidden' }} tabIndex={0}>
             <code>{changes.length === 0 ? '(no changes)' : changes}</code>
         </pre>

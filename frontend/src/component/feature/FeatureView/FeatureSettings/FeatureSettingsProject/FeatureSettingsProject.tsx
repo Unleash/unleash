@@ -26,7 +26,7 @@ const FeatureSettingsProject = () => {
     const navigate = useNavigate();
     const { changeRequests } = usePendingChangeRequestsForFeature(
         projectId,
-        featureId,
+        featureId
     );
 
     const onConfirm = async () => {
@@ -38,7 +38,7 @@ const FeatureSettingsProject = () => {
                 setShowConfirmDialog(false);
                 navigate(
                     `/projects/${project}/features/${featureId}/settings`,
-                    { replace: true },
+                    { replace: true }
                 );
             }
         } catch (error: unknown) {
@@ -48,8 +48,8 @@ const FeatureSettingsProject = () => {
 
     const targetProjectIds = useMemo(() => {
         return projects
-            .map((project) => project.id)
-            .filter((projectId) => hasAccess(MOVE_FEATURE_TOGGLE, projectId));
+            .map(project => project.id)
+            .filter(projectId => hasAccess(MOVE_FEATURE_TOGGLE, projectId));
     }, [projects, hasAccess]);
 
     if (targetProjectIds.length === 0) {
@@ -61,8 +61,8 @@ const FeatureSettingsProject = () => {
             <FeatureProjectSelect
                 value={project}
                 onChange={setProject}
-                label='Project'
-                filter={(projectId) => targetProjectIds.includes(projectId)}
+                label="Project"
+                filter={projectId => targetProjectIds.includes(projectId)}
                 enabled
             />
             <PermissionButton

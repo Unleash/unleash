@@ -42,13 +42,13 @@ export const RemoveGroup: FC<IRemoveGroupProps> = ({
     return (
         <Dialogue
             open={open}
-            primaryButtonText='Delete group'
-            secondaryButtonText='Cancel'
+            primaryButtonText="Delete group"
+            secondaryButtonText="Cancel"
             onClick={onRemoveClick}
             onClose={() => {
                 setOpen(false);
             }}
-            title='Delete group?'
+            title="Delete group?"
         >
             <Typography>
                 Do you really want to delete <strong>{group.name}</strong>?

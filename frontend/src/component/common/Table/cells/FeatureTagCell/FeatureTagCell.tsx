@@ -32,7 +32,7 @@ export const FeatureTagCell: VFC<IFeatureTagCellProps> = ({ row, value }) => {
                 }
                 tooltip={
                     <>
-                        {row.original.tags?.map((tag) => (
+                        {row.original.tags?.map(tag => (
                             <StyledTag key={tag.type + tag.value}>
                                 <Highlighter search={searchQuery}>
                                     {`${tag.type}:${tag.value}`}

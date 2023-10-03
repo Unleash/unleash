@@ -87,8 +87,8 @@ const columns = [
         Cell: ({ row: { original: user } }: any) => (
             <TimeAgoCell
                 value={user.seenAt}
-                emptyText='Never'
-                title={(date) => `Last login: ${date}`}
+                emptyText="Never"
+                title={date => `Last login: ${date}`}
             />
         ),
         sortType: 'date',
@@ -146,7 +146,7 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
     const { data, getSearchText, getSearchContext } = useSearch(
         columns,
         searchValue,
-        group?.users ?? [],
+        group?.users ?? []
     );
 
     const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
@@ -161,7 +161,7 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
             disableMultiSort: true,
         },
         useSortBy,
-        useFlexLayout,
+        useFlexLayout
     );
 
     useConditionallyHiddenColumns(
@@ -172,7 +172,7 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
             },
         ],
         setHiddenColumns,
-        columns,
+        columns
     );
 
     return (

@@ -30,7 +30,7 @@ export const GroupCardAvatars = ({ users }: IGroupCardAvatarsProps) => {
             users
                 .sort((a, b) => b?.joinedAt!.getTime() - a?.joinedAt!.getTime())
                 .slice(0, 9),
-        [users],
+        [users]
     );
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -48,11 +48,11 @@ export const GroupCardAvatars = ({ users }: IGroupCardAvatarsProps) => {
 
     return (
         <StyledAvatars>
-            {shownUsers.map((user) => (
+            {shownUsers.map(user => (
                 <StyledAvatar
                     key={user.id}
                     user={user}
-                    onMouseEnter={(event) => {
+                    onMouseEnter={event => {
                         onPopoverOpen(event);
                         setPopupUser(user);
                     }}

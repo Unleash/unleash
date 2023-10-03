@@ -128,12 +128,12 @@ export const GroupForm: FC<IGroupForm> = ({
                 </StyledInputDescription>
                 <StyledInput
                     autoFocus
-                    label='Name'
-                    id='group-name'
+                    label="Name"
+                    id="group-name"
                     error={Boolean(errors.name)}
                     errorText={errors.name}
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={e => setName(e.target.value)}
                     data-testid={UG_NAME_ID}
                     required
                 />
@@ -143,10 +143,10 @@ export const GroupForm: FC<IGroupForm> = ({
                 <StyledInput
                     multiline
                     rows={4}
-                    label='Description'
-                    placeholder='A short description of the group'
+                    label="Description"
+                    placeholder="A short description of the group"
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={e => setDescription(e.target.value)}
                     data-testid={UG_DESC_ID}
                 />
                 <ConditionallyRender
@@ -157,7 +157,7 @@ export const GroupForm: FC<IGroupForm> = ({
                                 Is this group associated with SSO groups?
                             </StyledInputDescription>
                             <StyledItemList
-                                label='SSO group ID / name'
+                                label="SSO group ID / name"
                                 value={mappingsSSO}
                                 onChange={setMappingsSSO}
                             />
@@ -168,7 +168,7 @@ export const GroupForm: FC<IGroupForm> = ({
                             <Box sx={{ display: 'flex' }}>
                                 You can enable SSO groups synchronization if
                                 needed
-                                <HelpIcon tooltip='SSO groups synchronization allows SSO groups to be mapped to Unleash groups, so that user group membership is properly synchronized.' />
+                                <HelpIcon tooltip="SSO groups synchronization allows SSO groups to be mapped to Unleash groups, so that user group membership is properly synchronized." />
                             </Box>
                             <Link data-loading to={`/admin/auth`}>
                                 <span data-loading>View SSO configuration</span>
@@ -179,15 +179,15 @@ export const GroupForm: FC<IGroupForm> = ({
                 <StyledInputDescription>
                     <Box sx={{ display: 'flex' }}>
                         Do you want to associate a root role with this group?
-                        <HelpIcon tooltip='When you associate a root role with this group, users in this group will automatically inherit the role globally.' />
+                        <HelpIcon tooltip="When you associate a root role with this group, users in this group will automatically inherit the role globally." />
                     </Box>
                 </StyledInputDescription>
                 <StyledAutocompleteWrapper>
                     <RoleSelect
-                        data-testid='GROUP_ROOT_ROLE'
+                        data-testid="GROUP_ROOT_ROLE"
                         roles={roles}
                         value={roleIdToRole(rootRole)}
-                        setValue={(role) => setRootRole(role?.id || null)}
+                        setValue={role => setRootRole(role?.id || null)}
                     />
                 </StyledAutocompleteWrapper>
                 <ConditionallyRender

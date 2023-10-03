@@ -5,5 +5,5 @@ const { version } = module.exports;
 
 module.exports = {
     publicFolder: path.join(__dirname, 'build'),
-    version,
+    version
 };

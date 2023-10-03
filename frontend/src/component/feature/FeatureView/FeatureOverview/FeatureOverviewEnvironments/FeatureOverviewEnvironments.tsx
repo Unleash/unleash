@@ -13,7 +13,7 @@ const FeatureOverviewEnvironments = () => {
 
     return (
         <>
-            {environments?.map((env) => (
+            {environments?.map(env => (
                 <FeatureOverviewEnvironment env={env} key={env.name} />
             ))}
         </>

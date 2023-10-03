@@ -62,8 +62,8 @@ export const FeedbackCES = ({ state }: IFeedbackCESProps) => {
             <StyledOverlay>
                 <StyledModal>
                     <StyledClose>
-                        <IconButton onClick={hideFeedbackCES} size='large'>
-                            <StyledCloseIcon titleAccess='Close' />
+                        <IconButton onClick={hideFeedbackCES} size="large">
+                            <StyledCloseIcon titleAccess="Close" />
                         </IconButton>
                     </StyledClose>
                     {modalContent}

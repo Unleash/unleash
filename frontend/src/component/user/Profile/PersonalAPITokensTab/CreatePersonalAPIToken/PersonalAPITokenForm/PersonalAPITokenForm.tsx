@@ -28,7 +28,7 @@ const StyledExpirationPicker = styled('div')<{ custom?: boolean }>(
             flexDirection: 'column',
             alignItems: 'flex-start',
         },
-    }),
+    })
 );
 
 const StyledSelectMenu = styled(SelectMenu)(({ theme }) => ({
@@ -88,7 +88,7 @@ export const expirationOptions = [
 export const calculateExpirationDate = (expiration: ExpirationOption) => {
     const expiresAt = new Date();
     const expirationOption = expirationOptions.find(
-        ({ key }) => key === expiration,
+        ({ key }) => key === expiration
     );
     if (expiration === ExpirationOption.NEVER) {
         expiresAt.setFullYear(expiresAt.getFullYear() + 1000);
@@ -138,11 +138,11 @@ export const PersonalAPITokenForm = ({
     const { locationSettings } = useLocationSettings();
 
     const clearError = (field: ErrorField) => {
-        setErrors((errors) => ({ ...errors, [field]: undefined }));
+        setErrors(errors => ({ ...errors, [field]: undefined }));
     };
 
     const setError = (field: ErrorField, error: string) => {
-        setErrors((errors) => ({ ...errors, [field]: error }));
+        setErrors(errors => ({ ...errors, [field]: error }));
     };
 
     useEffect(() => {
@@ -155,7 +155,7 @@ export const PersonalAPITokenForm = ({
         if (isDescriptionUnique && !isDescriptionUnique(description)) {
             setError(
                 ErrorField.DESCRIPTION,
-                'A token with that description already exists.',
+                'A token with that description already exists.'
             );
         }
         setDescription(description);
@@ -173,11 +173,11 @@ export const PersonalAPITokenForm = ({
             </StyledInputDescription>
             <StyledInput
                 autoFocus
-                label='Description'
+                label="Description"
                 error={Boolean(errors.description)}
                 errorText={errors.description}
                 value={description}
-                onChange={(e) => onSetDescription(e.target.value)}
+                onChange={e => onSetDescription(e.target.value)}
                 required
             />
             <StyledInputDescription>
@@ -185,11 +185,11 @@ export const PersonalAPITokenForm = ({
             </StyledInputDescription>
             <StyledExpirationPicker custom={customExpiration}>
                 <StyledSelectMenu
-                    name='expiration'
-                    id='expiration'
-                    label='Token will expire in'
+                    name="expiration"
+                    id="expiration"
+                    label="Token will expire in"
                     value={expiration}
-                    onChange={(e) =>
+                    onChange={e =>
                         setExpiration(e.target.value as ExpirationOption)
                     }
                     options={expirationOptions}
@@ -198,14 +198,14 @@ export const PersonalAPITokenForm = ({
                     condition={customExpiration}
                     show={() => (
                         <StyledDateTimePicker
-                            label='Date'
+                            label="Date"
                             value={expiresAt}
-                            onChange={(date) => {
+                            onChange={date => {
                                 clearError(ErrorField.EXPIRES_AT);
                                 if (date < new Date()) {
                                     setError(
                                         ErrorField.EXPIRES_AT,
-                                        'Invalid date, must be in the future',
+                                        'Invalid date, must be in the future'
                                     );
                                 }
                                 setExpiresAt(date);
@@ -220,18 +220,18 @@ export const PersonalAPITokenForm = ({
                         <ConditionallyRender
                             condition={neverExpires}
                             show={
-                                <Typography variant='body2'>
+                                <Typography variant="body2">
                                     The token will <strong>never</strong>{' '}
                                     expire!
                                 </Typography>
                             }
                             elseShow={() => (
-                                <Typography variant='body2'>
+                                <Typography variant="body2">
                                     Token will expire on{' '}
                                     <strong>
                                         {formatDateYMD(
                                             expiresAt!,
-                                            locationSettings.locale,
+                                            locationSettings.locale
                                         )}
                                     </strong>
                                 </Typography>
@@ -243,7 +243,7 @@ export const PersonalAPITokenForm = ({
             <ConditionallyRender
                 condition={neverExpires}
                 show={
-                    <StyledAlert severity='warning'>
+                    <StyledAlert severity="warning">
                         We strongly recommend that you set an expiration date
                         for your token to help keep your information secure.
                     </StyledAlert>

@@ -66,7 +66,7 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
             enter: fadeInTopEnter,
             leave: fadeInTopLeave,
         }),
-        [theme, isSmallScreen],
+        [theme, isSmallScreen]
     );
 
     const onConfirm = async () => {
@@ -107,7 +107,7 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
             leave={animations.leave}
         >
             <Box
-                className='dropdown-outline'
+                className="dropdown-outline"
                 sx={{
                     borderRadius: `${theme.shape.borderRadiusLarge}px`,
                     backgroundColor: theme.palette.background.paper,
@@ -125,15 +125,15 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                         position: 'relative',
                     }}
                 >
-                    <Tooltip title='Close' arrow>
+                    <Tooltip title="Close" arrow>
                         <IconButton
-                            sx={(theme) => ({
+                            sx={theme => ({
                                 position: 'absolute',
                                 right: theme.spacing(-4),
                                 top: theme.spacing(-4),
                             })}
                             onClick={() => setShowFeedback(false)}
-                            size='large'
+                            size="large"
                         >
                             <CloseIcon />
                         </IconButton>
@@ -178,7 +178,7 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                             condition={answeredNotNow}
                             show={
                                 <Button
-                                    variant='outlined'
+                                    variant="outlined"
                                     onClick={onDontShowAgain}
                                 >
                                     Don't show again
@@ -187,15 +187,15 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                             elseShow={
                                 <>
                                     <Button
-                                        variant='contained'
-                                        color='primary'
+                                        variant="contained"
+                                        color="primary"
                                         onClick={onConfirm}
                                     >
                                         Yes, no problem
                                     </Button>
                                     <Button
                                         sx={{
-                                            marginLeft: (theme) =>
+                                            marginLeft: theme =>
                                                 theme.spacing(2),
                                         }}
                                         onClick={() => setAnsweredNotNow(true)}

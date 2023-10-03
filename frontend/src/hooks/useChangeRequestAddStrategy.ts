@@ -13,7 +13,7 @@ export type ChangeRequestStrategyAction =
 export const useChangeRequestAddStrategy = (
     project: string,
     featureName: string,
-    action: ChangeRequestStrategyAction,
+    action: ChangeRequestStrategyAction
 ) => {
     const { setToastData, setToastApiError } = useToast();
     const { addChange } = useChangeRequestApi();
@@ -33,7 +33,7 @@ export const useChangeRequestAddStrategy = (
         (
             environment: string,
             strategy: IFeatureStrategyPayload,
-            fromEnvironment?: string,
+            fromEnvironment?: string
         ) => {
             setChangeRequestDialogDetails({
                 featureName,
@@ -43,14 +43,14 @@ export const useChangeRequestAddStrategy = (
                 isOpen: true,
             });
         },
-        [],
+        []
     );
 
     const onChangeRequestAddStrategies = useCallback(
         (
             environment: string,
             strategies: IFeatureStrategyPayload[],
-            fromEnvironment: string,
+            fromEnvironment: string
         ) => {
             setChangeRequestDialogDetails({
                 featureName,
@@ -60,7 +60,7 @@ export const useChangeRequestAddStrategy = (
                 isOpen: true,
             });
         },
-        [],
+        []
     );
 
     const onChangeRequestAddStrategyClose = useCallback(() => {
@@ -89,7 +89,7 @@ export const useChangeRequestAddStrategy = (
     const onChangeRequestAddStrategiesConfirm = useCallback(async () => {
         try {
             await Promise.all(
-                changeRequestDialogDetails.strategies!.map((strategy) => {
+                changeRequestDialogDetails.strategies!.map(strategy => {
                     return addChange(
                         project,
                         changeRequestDialogDetails.environment!,
@@ -97,9 +97,9 @@ export const useChangeRequestAddStrategy = (
                             feature: changeRequestDialogDetails.featureName!,
                             action: action,
                             payload: strategy,
-                        },
+                        }
                     );
-                }),
+                })
             );
             refetch();
             setChangeRequestDialogDetails({ isOpen: false });

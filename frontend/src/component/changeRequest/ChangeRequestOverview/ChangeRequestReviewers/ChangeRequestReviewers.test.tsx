@@ -21,7 +21,7 @@ test('Show approvers', async () => {
                     },
                 ],
             }}
-        />,
+        />
     );
 
     expect(screen.getByText('Approved by')).toBeInTheDocument();
@@ -55,7 +55,7 @@ test('Show rejectors', async () => {
                     },
                 ],
             }}
-        />,
+        />
     );
 
     expect(screen.getByText('Rejected by')).toBeInTheDocument();

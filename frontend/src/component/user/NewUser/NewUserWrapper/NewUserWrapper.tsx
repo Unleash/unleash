@@ -32,14 +32,13 @@ export const NewUserWrapper: FC<INewUserWrapperProps> = ({
                         condition={Boolean(title)}
                         show={
                             <Typography
-                                component='h2'
+                                component="h2"
                                 sx={{
-                                    fontSize: (theme) =>
+                                    fontSize: theme =>
                                         theme.fontSizes.mainHeader,
                                     marginBottom: 2,
                                     textAlign: 'center',
-                                    fontWeight: (theme) =>
-                                        theme.fontWeight.bold,
+                                    fontWeight: theme => theme.fontWeight.bold,
                                 }}
                             >
                                 {title}

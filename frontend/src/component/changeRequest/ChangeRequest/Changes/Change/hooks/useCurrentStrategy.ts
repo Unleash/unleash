@@ -12,14 +12,14 @@ export const useCurrentStrategy = (
         | IChangeRequestDeleteStrategy,
     project: string,
     feature: string,
-    environmentName: string,
+    environmentName: string
 ) => {
     const currentFeature = useFeature(project, feature);
     const currentStrategy = currentFeature.feature?.environments
-        .find((environment) => environment.name === environmentName)
+        .find(environment => environment.name === environmentName)
         ?.strategies.find(
-            (strategy) =>
-                'id' in change.payload && strategy.id === change.payload.id,
+            strategy =>
+                'id' in change.payload && strategy.id === change.payload.id
         );
     return currentStrategy;
 };

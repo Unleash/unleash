@@ -16,7 +16,7 @@ interface IProjectEnvironmentProps {
 }
 
 const StyledProjectEnvironmentOverview = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'enabled',
+    shouldForwardProp: prop => prop !== 'enabled',
 })<{ enabled: boolean }>(({ theme, enabled }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     marginBottom: theme.spacing(2),
@@ -40,7 +40,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails, {
-    shouldForwardProp: (prop) => prop !== 'enabled',
+    shouldForwardProp: prop => prop !== 'enabled',
 })<{ enabled: boolean }>(({ theme }) => ({
     padding: theme.spacing(3),
     background: theme.palette.envAccordion.expanded,
@@ -66,7 +66,7 @@ const StyledAccordionBodyInnerContainer = styled('div')(({ theme }) => ({
 }));
 
 const StyledHeader = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'enabled',
+    shouldForwardProp: prop => prop !== 'enabled',
 })<{ enabled: boolean }>(({ theme, enabled }) => ({
     display: 'flex',
     justifyContent: 'center',
@@ -107,7 +107,7 @@ const ProjectEnvironment = ({ environment }: IProjectEnvironmentProps) => {
         <StyledProjectEnvironmentOverview enabled={false}>
             <StyledAccordion
                 expanded={true}
-                onChange={(e) => e.stopPropagation()}
+                onChange={e => e.stopPropagation()}
                 data-testid={`${PROJECT_ENVIRONMENT_ACCORDION}_${name}`}
                 className={`environment-accordion ${
                     enabled ? '' : 'accordion-disabled'
@@ -124,7 +124,7 @@ const ProjectEnvironment = ({ environment }: IProjectEnvironmentProps) => {
                             <div>
                                 <StyledStringTruncator
                                     text={name}
-                                    maxWidth='100'
+                                    maxWidth="100"
                                     maxLength={15}
                                 />
                             </div>

@@ -37,7 +37,7 @@ const StyledSpan = styled('span')(({ theme }) => ({
 }));
 
 const StyledFiberManualRecord = styled(FiberManualRecord, {
-    shouldForwardProp: (prop) => prop !== 'filled',
+    shouldForwardProp: prop => prop !== 'filled',
 })<{ filled: boolean }>(({ theme, filled }) => ({
     fill: theme.palette.primary.main,
     transition: 'opacity 0.4s ease',
@@ -60,7 +60,7 @@ export const SegmentFormStepList: React.FC<ISegmentFormStepListProps> = ({
                 <StyledSpan>
                     Step {current} of {total}
                 </StyledSpan>
-                {steps.map((step) => (
+                {steps.map(step => (
                     <StyledFiberManualRecord
                         key={step}
                         filled={step === current}

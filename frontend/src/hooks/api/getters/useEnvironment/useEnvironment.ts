@@ -13,7 +13,7 @@ const useEnvironment = (id: string, options: SWRConfiguration = {}) => {
             method: 'GET',
         })
             .then(handleErrorResponses('Environment data'))
-            .then((res) => res.json());
+            .then(res => res.json());
     };
 
     const FEATURE_CACHE_KEY = `api/admin/environments/${id}`;

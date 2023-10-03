@@ -19,26 +19,26 @@ const InvalidToken: VFC = () => {
             className={classnames(
                 themeStyles.contentSpacingY,
                 themeStyles.flexColumn,
-                themeStyles.itemsCenter,
+                themeStyles.itemsCenter
             )}
         >
-            <Typography variant='h2' className={themeStyles.title}>
+            <Typography variant="h2" className={themeStyles.title}>
                 Invalid token
             </Typography>
             <ConditionallyRender
                 condition={passwordDisabled}
                 show={
                     <>
-                        <Typography variant='subtitle1'>
+                        <Typography variant="subtitle1">
                             Your instance does not support password
                             authentication. Use correct work email to access
                             your account.
                         </Typography>
                         <Button
-                            variant='contained'
-                            color='primary'
+                            variant="contained"
+                            color="primary"
                             component={Link}
-                            to='/login'
+                            to="/login"
                         >
                             Login
                         </Button>
@@ -48,7 +48,7 @@ const InvalidToken: VFC = () => {
                     <ConditionallyRender
                         condition={Boolean(secret)}
                         show={
-                            <Typography variant='subtitle1'>
+                            <Typography variant="subtitle1">
                                 Provided invite link is invalid or expired.
                                 Please request a new URL in order to create your
                                 account.
@@ -56,17 +56,17 @@ const InvalidToken: VFC = () => {
                         }
                         elseShow={
                             <>
-                                <Typography variant='subtitle1'>
+                                <Typography variant="subtitle1">
                                     Your token has either been used to reset
                                     your password, or it has expired. Please
                                     request a new reset password URL in order to
                                     reset your password.
                                 </Typography>
                                 <Button
-                                    variant='contained'
-                                    color='primary'
+                                    variant="contained"
+                                    color="primary"
                                     component={Link}
-                                    to='/forgotten-password'
+                                    to="/forgotten-password"
                                     data-testid={INVALID_TOKEN_BUTTON}
                                 >
                                     Reset password

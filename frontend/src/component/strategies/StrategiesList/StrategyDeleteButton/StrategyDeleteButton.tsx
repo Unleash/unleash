@@ -31,9 +31,9 @@ export const StrategyDeleteButton: VFC<IStrategyDeleteButtonProps> = ({
                 </PermissionIconButton>
             }
             elseShow={
-                <Tooltip title='You cannot delete a built-in strategy' arrow>
+                <Tooltip title="You cannot delete a built-in strategy" arrow>
                     <div id={id}>
-                        <IconButton disabled size='large'>
+                        <IconButton disabled size="large">
                             <Delete aria-labelledby={id} />
                         </IconButton>
                     </div>

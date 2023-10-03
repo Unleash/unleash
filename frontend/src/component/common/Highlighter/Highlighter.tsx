@@ -31,14 +31,11 @@ export const Highlighter: VFC<IHighlighterProps> = ({
 
     const parts = children.split(regex);
 
-    const matches = Array.from(children.matchAll(regex)).map(
-        (match) => match[0],
-    );
+    const matches = Array.from(children.matchAll(regex)).map(match => match[0]);
 
     const highlightedText = parts.flatMap((part, index) => {
         return index < matches.length
-            ? // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              [part, <mark key={index}>{matches[index]}</mark>]
+            ? [part, <mark key={index}>{matches[index]}</mark>]
             : [part];
     });
 

@@ -38,7 +38,7 @@ export const HelpIcon = ({
     if (htmlTooltip) {
         return (
             <HtmlTooltip title={tooltip} placement={placement} arrow>
-                <StyledContainer tabIndex={0} aria-label='Help'>
+                <StyledContainer tabIndex={0} aria-label="Help">
                     {children ?? <HelpOutline />}
                 </StyledContainer>
             </HtmlTooltip>
@@ -47,7 +47,7 @@ export const HelpIcon = ({
 
     return (
         <Tooltip title={tooltip} placement={placement} arrow>
-            <StyledContainer tabIndex={0} aria-label='Help'>
+            <StyledContainer tabIndex={0} aria-label="Help">
                 {children ?? <HelpOutline />}
             </StyledContainer>
         </Tooltip>

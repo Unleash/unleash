@@ -11,8 +11,8 @@ export const GridRow: FC<{ sx?: SxProps<Theme> }> = ({ sx, children }) => {
         <StyledGrid
             container
             item
-            justifyContent='space-between'
-            alignItems='center'
+            justifyContent="space-between"
+            alignItems="center"
             sx={sx}
         >
             {children}

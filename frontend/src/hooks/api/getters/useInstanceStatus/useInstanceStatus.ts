@@ -20,7 +20,7 @@ export const useInstanceStatus = (): IUseInstanceStatusOutput => {
 
     const { data, refetch, loading, error } = useApiGetter(
         ['useInstanceStatus', UNLEASH_CLOUD],
-        () => fetchInstanceStatus(UNLEASH_CLOUD),
+        () => fetchInstanceStatus(UNLEASH_CLOUD)
     );
 
     const billingPlans = [
@@ -44,7 +44,7 @@ export const useInstanceStatus = (): IUseInstanceStatusOutput => {
 };
 
 const fetchInstanceStatus = async (
-    UNLEASH_CLOUD?: boolean,
+    UNLEASH_CLOUD?: boolean
 ): Promise<IInstanceStatus> => {
     if (!UNLEASH_CLOUD) {
         return UNKNOWN_INSTANCE_STATUS;

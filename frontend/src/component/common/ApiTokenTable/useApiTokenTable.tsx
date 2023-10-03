@@ -11,7 +11,7 @@ import { Key } from '@mui/icons-material';
 
 export const useApiTokenTable = (
     tokens: IApiToken[],
-    getActionCell: (props: any) => JSX.Element,
+    getActionCell: (props: any) => JSX.Element
 ) => {
     const initialState = useMemo(() => ({ sortBy: [{ id: 'createdAt' }] }), []);
 
@@ -20,7 +20,7 @@ export const useApiTokenTable = (
             {
                 id: 'Icon',
                 width: '1%',
-                Cell: () => <IconCell icon={<Key color='disabled' />} />,
+                Cell: () => <IconCell icon={<Key color="disabled" />} />,
                 disableSortBy: true,
                 disableGlobalFilter: true,
             },
@@ -106,7 +106,7 @@ export const useApiTokenTable = (
             disableSortRemove: true,
         },
         useGlobalFilter,
-        useSortBy,
+        useSortBy
     );
 
     return {

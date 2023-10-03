@@ -39,10 +39,10 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
         <Dialogue
             open={isOpen}
             primaryButtonText={primaryButtonText}
-            secondaryButtonText='Cancel'
+            secondaryButtonText="Cancel"
             onClick={onConfirm}
             onClose={onClose}
-            title='Request changes'
+            title="Request changes"
             fullWidth
         >
             <ConditionallyRender
@@ -52,7 +52,7 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
             <ConditionallyRender
                 condition={Boolean(showBanner)}
                 show={
-                    <Alert severity='info' sx={{ mb: 2 }}>
+                    <Alert severity="info" sx={{ mb: 2 }}>
                         Change requests feature is enabled for {environment}.
                         Your changes need to be approved before they will be
                         live. All the changes you do now will be added into a
@@ -61,7 +61,7 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
                 }
             />
 
-            <Typography variant='body2' color='text.secondary'>
+            <Typography variant="body2" color="text.secondary">
                 Your suggestion:
             </Typography>
             {messageComponent}

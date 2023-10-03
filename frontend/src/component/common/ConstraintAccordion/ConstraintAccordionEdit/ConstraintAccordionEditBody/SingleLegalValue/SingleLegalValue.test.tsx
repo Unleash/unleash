@@ -14,14 +14,14 @@ test('should show alert when you have illegal legal values', async () => {
             constraintValue={fixedValue}
             value={localValue}
             setValue={() => {}}
-            type='number'
+            type="number"
             legalValues={contextDefinitionValues}
             error={''}
             setError={() => {}}
-        />,
+        />
     );
 
     await screen.findByText(
-        'This constraint is using legal values that have been deleted as a valid option. Please select a new value from the remaining predefined legal values. The constraint will be updated with the new value when you save the strategy.',
+        'This constraint is using legal values that have been deleted as a valid option. Please select a new value from the remaining predefined legal values. The constraint will be updated with the new value when you save the strategy.'
     );
 });

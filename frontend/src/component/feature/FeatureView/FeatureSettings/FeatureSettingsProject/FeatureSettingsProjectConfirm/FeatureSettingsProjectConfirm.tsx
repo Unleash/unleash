@@ -49,8 +49,8 @@ const FeatureSettingsProjectConfirm = ({
         isChangeRequestConfiguredInAnyEnv();
     const hasSameEnvironments: boolean = useMemo(() => {
         return arraysHaveSameItems(
-            feature.environments.map((env) => env.name),
-            project.environments.map((projectEnv) => projectEnv.environment),
+            feature.environments.map(env => env.name),
+            project.environments.map(projectEnv => projectEnv.environment)
         );
     }, [feature, project]);
 
@@ -70,12 +70,12 @@ const FeatureSettingsProjectConfirm = ({
                     open={open}
                     onClose={onClose}
                     onClick={onClick}
-                    title='Confirm change project'
-                    primaryButtonText='Change project'
-                    secondaryButtonText='Cancel'
+                    title="Confirm change project"
+                    primaryButtonText="Change project"
+                    secondaryButtonText="Cancel"
                 >
                     <StyledContainer>
-                        <StyledAlert severity='success'>
+                        <StyledAlert severity="success">
                             This feature toggle is compatible with the new
                             project.
                         </StyledAlert>
@@ -90,11 +90,11 @@ const FeatureSettingsProjectConfirm = ({
                 <Dialogue
                     open={open}
                     onClick={onClose}
-                    title='Confirm change project'
-                    primaryButtonText='Close'
+                    title="Confirm change project"
+                    primaryButtonText="Close"
                 >
                     <StyledContainer>
-                        <StyledAlert severity='warning'>
+                        <StyledAlert severity="warning">
                             Cannot proceed with the move
                         </StyledAlert>
 
@@ -119,22 +119,20 @@ const FeatureSettingsProjectConfirm = ({
                                         following change requests:
                                     </p>
                                     <StyledList>
-                                        {changeRequests?.map(
-                                            (changeRequest) => {
-                                                return (
-                                                    <ListItem
-                                                        key={changeRequest.id}
+                                        {changeRequests?.map(changeRequest => {
+                                            return (
+                                                <ListItem
+                                                    key={changeRequest.id}
+                                                >
+                                                    <Link
+                                                        to={`/projects/${currentProjectId}/change-requests/${changeRequest.id}`}
                                                     >
-                                                        <Link
-                                                            to={`/projects/${currentProjectId}/change-requests/${changeRequest.id}`}
-                                                        >
-                                                            View change request{' '}
-                                                            {changeRequest.id}
-                                                        </Link>
-                                                    </ListItem>
-                                                );
-                                            },
-                                        )}
+                                                        View change request{' '}
+                                                        {changeRequest.id}
+                                                    </Link>
+                                                </ListItem>
+                                            );
+                                        })}
                                     </StyledList>
                                 </>
                             }

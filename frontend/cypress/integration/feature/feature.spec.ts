@@ -28,14 +28,14 @@ describe('feature', () => {
     it('gives an error if a toggle exists with the same name', () => {
         cy.createFeature_UI(featureToggleName, false);
         cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
-            'A toggle with that name already exists',
+            'A toggle with that name already exists'
         );
     });
 
     it('gives an error if a toggle name is url unsafe', () => {
         cy.createFeature_UI('featureToggleUnsafe####$#//', false);
         cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
-            `"name" must be URL friendly`,
+            `"name" must be URL friendly`
         );
     });
 
@@ -44,7 +44,7 @@ describe('feature', () => {
             featureToggleName,
         }).then(() => {
             cy.updateFlexibleRolloutStrategy_UI(featureToggleName).then(() =>
-                cy.deleteFeatureStrategy_UI(featureToggleName),
+                cy.deleteFeatureStrategy_UI(featureToggleName)
             );
         });
     });
@@ -71,7 +71,7 @@ describe('feature', () => {
         cy.intercept(
             'PATCH',
             `/api/admin/projects/default/features/${featureToggleName}/environments/development/variants`,
-            (req) => {
+            req => {
                 expect(req.body[0].op).to.equal('replace');
                 expect(req.body[0].path).to.equal('/1/weightType');
                 expect(req.body[0].value).to.equal('fix');
@@ -81,13 +81,13 @@ describe('feature', () => {
                 expect(req.body[2].op).to.equal('replace');
                 expect(req.body[2].path).to.equal('/0/weight');
                 expect(req.body[2].value).to.equal(850);
-            },
+            }
         ).as('variantUpdate');
 
         cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         cy.get(`[data-testid=VARIANT_WEIGHT_${variant2}]`).should(
             'have.text',
-            '15 %',
+            '15 %'
         );
     });
 

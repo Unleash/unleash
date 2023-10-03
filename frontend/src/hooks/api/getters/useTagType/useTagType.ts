@@ -10,7 +10,7 @@ const useTagType = (name: string, options: SWRConfiguration = {}) => {
             method: 'GET',
         })
             .then(handleErrorResponses('Tag data'))
-            .then((res) => res.json());
+            .then(res => res.json());
     };
 
     const FEATURE_CACHE_KEY = `api/admin/tag-types/${name}`;

@@ -144,7 +144,7 @@ export const RoleModal = ({
                         ? '#custom-root-roles'
                         : '#custom-project-roles'
                 }`}
-                documentationLinkLabel='Roles documentation'
+                documentationLinkLabel="Roles documentation"
                 formatApiCode={formatApiCode}
             >
                 <StyledForm onSubmit={onSubmit}>
@@ -160,9 +160,9 @@ export const RoleModal = ({
                     />
                     <StyledButtonContainer>
                         <Button
-                            type='submit'
-                            variant='contained'
-                            color='primary'
+                            type="submit"
+                            variant="contained"
+                            color="primary"
                             disabled={!isValid}
                         >
                             {editing ? 'Save' : 'Add'} role

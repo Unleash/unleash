@@ -4,8 +4,8 @@ import { FC } from 'react';
 const Paragraph: FC = ({ children }) => (
     <Typography
         component={'span'}
-        variant='body2'
-        sx={(theme) => ({
+        variant="body2"
+        sx={theme => ({
             marginBottom: theme.spacing(2),
         })}
     >
@@ -48,8 +48,8 @@ export const CustomStrategyInfo: FC<{ alert?: boolean }> = ({ alert }) => {
     if (alert) {
         return (
             <Alert
-                severity='info'
-                sx={(theme) => ({
+                severity="info"
+                sx={theme => ({
                     marginBottom: theme.spacing(3),
                 })}
             >
@@ -60,7 +60,7 @@ export const CustomStrategyInfo: FC<{ alert?: boolean }> = ({ alert }) => {
 
     return (
         <Box
-            sx={(theme) => ({
+            sx={theme => ({
                 maxWidth: '720px',
                 padding: theme.spacing(4, 2),
                 margin: '0 auto',

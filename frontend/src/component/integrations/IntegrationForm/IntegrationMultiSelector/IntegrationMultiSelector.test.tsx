@@ -52,7 +52,7 @@ describe('AddonMultiSelector', () => {
                     { label: 'Charlie', value: 'charlie' },
                     { label: 'Alpaca', value: 'alpaca' },
                 ]}
-            />,
+            />
         );
         const input = await screen.findByLabelText('Projects');
         await user.type(input, 'alp');

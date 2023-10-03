@@ -25,12 +25,12 @@ export const TogglesLinkList = ({ toggles }: ITogglesLinkListProps) => (
                         <ConditionallyRender
                             condition={Boolean(enabled)}
                             show={
-                                <Tooltip title='Enabled' arrow>
+                                <Tooltip title="Enabled" arrow>
                                     <PlayArrow aria-hidden={false} />
                                 </Tooltip>
                             }
                             elseShow={
-                                <Tooltip title='Disabled' arrow>
+                                <Tooltip title="Disabled" arrow>
                                     <Pause aria-hidden={false} />
                                 </Tooltip>
                             }

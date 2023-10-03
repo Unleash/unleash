@@ -40,7 +40,7 @@ const EditFeature = () => {
         feature?.type,
         feature?.project,
         feature?.description,
-        feature?.impressionData,
+        feature?.impressionData
     );
 
     const createPatch = () => {
@@ -81,11 +81,11 @@ const EditFeature = () => {
     return (
         <FormTemplate
             loading={loading}
-            title='Edit Feature toggle'
-            description='Feature toggles support different use cases, each with their own specific needs such as simple static routing or more complex routing.
-            The feature toggle is disabled when created and you decide when to enable'
-            documentationLink='https://docs.getunleash.io/reference/feature-toggle-types'
-            documentationLinkLabel='Feature toggle types documentation'
+            title="Edit Feature toggle"
+            description="Feature toggles support different use cases, each with their own specific needs such as simple static routing or more complex routing.
+            The feature toggle is disabled when created and you decide when to enable"
+            documentationLink="https://docs.getunleash.io/reference/feature-toggle-types"
+            documentationLinkLabel="Feature toggle types documentation"
             formatApiCode={formatApiCode}
         >
             <FeatureForm
@@ -102,7 +102,7 @@ const EditFeature = () => {
                 handleCancel={handleCancel}
                 impressionData={impressionData}
                 setImpressionData={setImpressionData}
-                mode='Edit'
+                mode="Edit"
                 clearErrors={clearErrors}
             >
                 <UpdateButton permission={UPDATE_FEATURE} projectId={project} />

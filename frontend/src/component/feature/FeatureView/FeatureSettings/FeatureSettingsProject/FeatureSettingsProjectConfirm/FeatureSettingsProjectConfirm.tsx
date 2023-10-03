@@ -109,9 +109,15 @@ const FeatureSettingsProjectConfirm = ({
                             condition={hasDependencies}
                             show={
                                 <p>
-                                    <span>The feature toggle must not have any
-                                        dependencies.</span> <br />
-                                    <span>Please remove feature dependencies first.</span>
+                                    <span>
+                                        The feature toggle must not have any
+                                        dependencies.
+                                    </span>{' '}
+                                    <br />
+                                    <span>
+                                        Please remove feature dependencies
+                                        first.
+                                    </span>
                                 </p>
                             }
                         />

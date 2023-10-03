@@ -1713,6 +1713,13 @@ class FeatureToggleService {
                 `Changing project not allowed. Project ${newProject} has change requests enabled.`,
             );
         }
+        if (
+            await this.dependentFeaturesReadModel.hasDependencies(featureName)
+        ) {
+            throw new ForbiddenError(
+                'Changing project not allowed. Feature has dependencies.',
+            );
+        }
         const feature = await this.featureToggleStore.get(featureName);
         const oldProject = feature.project;
         feature.project = newProject;

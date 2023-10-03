@@ -58,10 +58,13 @@ const FeatureSettingsProjectConfirm = ({
         ? changeRequests.length > 0
         : false;
 
+    const hasDependencies = feature.dependencies.length > 0 || feature.children.length > 0;
+
     return (
         <ConditionallyRender
             condition={
                 hasSameEnvironments &&
+                !hasDependencies &&
                 !hasPendingChangeRequests &&
                 !targetProjectHasChangeRequestsEnabled
             }
@@ -98,6 +101,15 @@ const FeatureSettingsProjectConfirm = ({
                             Cannot proceed with the move
                         </StyledAlert>
 
+                        <ConditionallyRender
+                            condition={hasDependencies}
+                            show={
+                                <p>
+                                    The feature toggle must not have any dependencies. <br/>
+                                    Please remove feature dependencies first.
+                                </p>
+                            }
+                        />
                         <ConditionallyRender
                             condition={!hasSameEnvironments}
                             show={

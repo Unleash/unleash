@@ -27,6 +27,7 @@ import supertest from 'supertest';
 import { randomId } from '../../../../../lib/util/random-id';
 import { DEFAULT_PROJECT } from '../../../../../lib/types';
 import { FeatureStrategySchema, SetStrategySortOrderSchema } from 'lib/openapi';
+import { ForbiddenError } from '../../../../../lib/error';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -239,6 +240,36 @@ test('should list dependencies and children', async () => {
         children: [child],
         dependencies: [],
     });
+});
+
+test('should not allow to change project with dependencies', async () => {
+    const parent = uuidv4();
+    const child = uuidv4();
+    await app.createFeature(parent, 'default');
+    await app.createFeature(child, 'default');
+    await app.addDependency(child, parent);
+    const user = new ApiUser({
+        tokenName: 'project-changer',
+        permissions: ['ADMIN'],
+        project: '*',
+        type: ApiTokenType.ADMIN,
+        environment: '*',
+        secret: 'a',
+    });
+
+    await expect(async () =>
+        app.services.projectService.changeProject(
+            'default',
+            child,
+            // @ts-ignore
+            user,
+            'default',
+        ),
+    ).rejects.toThrow(
+        new ForbiddenError(
+            'Changing project not allowed. Feature has dependencies.',
+        ),
+    );
 });
 
 test('Can get features for project', async () => {

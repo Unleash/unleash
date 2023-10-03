@@ -49,4 +49,13 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
 
         return rows.map((item) => item.name);
     }
+
+    async hasDependencies(feature: string): Promise<boolean> {
+        const parents = await this.db('dependent_features')
+            .where('parent', feature)
+            .orWhere('child', feature)
+            .limit(1);
+
+        return parents.length > 0;
+    }
 }

@@ -1,20 +1,20 @@
-import { Box, styled, Typography } from '@mui/material';
-import { FC } from 'react';
-import { HelpIcon } from '../../../common/HelpIcon/HelpIcon';
-import { useUiFlag } from '../../../../hooks/useUiFlag';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { Box, styled, Typography } from "@mui/material";
+import { FC } from "react";
+import { HelpIcon } from "component/common/HelpIcon/HelpIcon";
+import { useUiFlag } from "hooks/useUiFlag";
+import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
-    display: ' inline',
+    display: " inline",
 }));
 const StyledDescription = styled(Typography)(({ theme }) => ({
-    display: ' inline',
+    display: " inline",
     color: theme.palette.text.secondary,
 }));
 
 export const CollaborationModeTooltip: FC = () => {
-    const privateProjects = useUiFlag('privateProjects');
+    const privateProjects = useUiFlag("privateProjects");
     return (
         <HelpIcon
             htmlTooltip

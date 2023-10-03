@@ -1,28 +1,28 @@
-import React from 'react';
-import useUiConfig from 'component/../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from 'component/../hooks/useToast';
-import { useRequiredPathParam } from 'component/../hooks/useRequiredPathParam';
-import useProjectEnterpriseSettingsForm from '../../../hooks/useProjectEnterpriseSettingsForm';
-import useProject from 'component/../hooks/api/getters/useProject/useProject';
-import useProjectApi from 'component/../hooks/api/actions/useProjectApi/useProjectApi';
-import { formatUnknownError } from 'component/../utils/formatUnknownError';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import ProjectEnterpriseSettingsForm from '../../../ProjectEnterpriseSettingsForm/ProjectEnterpriseSettingsForm';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
-import { IProject } from 'component/../interfaces/project';
-import { styled } from '@mui/material';
+import React from "react";
+import useUiConfig from "hooks/api/getters/useUiConfig/useUiConfig";
+import useToast from "hooks/useToast";
+import { useRequiredPathParam } from "hooks/useRequiredPathParam";
+import useProjectEnterpriseSettingsForm from "../../../hooks/useProjectEnterpriseSettingsForm";
+import useProject from "hooks/api/getters/useProject/useProject";
+import useProjectApi from "hooks/api/actions/useProjectApi/useProjectApi";
+import { formatUnknownError } from "utils/formatUnknownError";
+import FormTemplate from "component/common/FormTemplate/FormTemplate";
+import ProjectEnterpriseSettingsForm from "../../../ProjectEnterpriseSettingsForm/ProjectEnterpriseSettingsForm";
+import PermissionButton from "component/common/PermissionButton/PermissionButton";
+import { UPDATE_PROJECT } from "component/providers/AccessProvider/permissions";
+import { IProject } from "component/../interfaces/project";
+import { styled } from "@mui/material";
 
-const StyledContainer = styled('div')(({ theme }) => ({
-    minHeight: '80vh',
+const StyledContainer = styled("div")(({ theme }) => ({
+    minHeight: "80vh",
     borderRadius: theme.spacing(2),
     border: `1px solid ${theme.palette.divider}`,
-    width: '100%',
-    display: 'flex',
-    margin: '0 auto',
-    overflow: 'hidden',
+    width: "100%",
+    display: "flex",
+    margin: "0 auto",
+    overflow: "hidden",
     [theme.breakpoints.down(1100)]: {
-        flexDirection: 'column',
+        flexDirection: "column",
         minHeight: 0,
     },
 }));
@@ -30,13 +30,13 @@ const StyledContainer = styled('div')(({ theme }) => ({
 interface IUpdateEnterpriseSettings {
     project: IProject;
 }
-const EDIT_PROJECT_SETTINGS_BTN = 'EDIT_PROJECT_SETTINGS_BTN';
+const EDIT_PROJECT_SETTINGS_BTN = "EDIT_PROJECT_SETTINGS_BTN";
 export const UpdateEnterpriseSettings = ({
     project,
 }: IUpdateEnterpriseSettings) => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
-    const id = useRequiredPathParam('projectId');
+    const id = useRequiredPathParam("projectId");
 
     const {
         projectMode,
@@ -76,8 +76,8 @@ export const UpdateEnterpriseSettings = ({
             await editProjectSettings(id, payload);
             refetch();
             setToastData({
-                title: 'Project information updated',
-                type: 'success',
+                title: "Project information updated",
+                type: "success",
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

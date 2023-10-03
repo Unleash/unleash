@@ -1,33 +1,33 @@
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import ProjectForm from '../../../ProjectForm/ProjectForm';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
-import React from 'react';
+import FormTemplate from "component/common/FormTemplate/FormTemplate";
+import ProjectForm from "../../../ProjectForm/ProjectForm";
+import PermissionButton from "component/common/PermissionButton/PermissionButton";
+import { UPDATE_PROJECT } from "component/providers/AccessProvider/permissions";
+import React from "react";
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
-} from '../../../hooks/useProjectForm';
-import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import useToast from 'hooks/useToast';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { IProject } from 'interfaces/project';
-import useProject from 'hooks/api/getters/useProject/useProject';
-import { useRequiredPathParam } from '../../../../../../hooks/useRequiredPathParam';
-import { styled } from '@mui/material';
+} from "../../../hooks/useProjectForm";
+import { useDefaultProjectSettings } from "hooks/useDefaultProjectSettings";
+import { formatUnknownError } from "utils/formatUnknownError";
+import useToast from "hooks/useToast";
+import { usePlausibleTracker } from "hooks/usePlausibleTracker";
+import useProjectApi from "hooks/api/actions/useProjectApi/useProjectApi";
+import useUiConfig from "hooks/api/getters/useUiConfig/useUiConfig";
+import { IProject } from "interfaces/project";
+import useProject from "hooks/api/getters/useProject/useProject";
+import { useRequiredPathParam } from "hooks/useRequiredPathParam";
+import { styled } from "@mui/material";
 
-const StyledContainer = styled('div')<{ isPro: boolean }>(
+const StyledContainer = styled("div")<{ isPro: boolean }>(
     ({ theme, isPro }) => ({
-        minHeight: '80vh',
+        minHeight: "80vh",
         borderRadius: theme.spacing(2),
-        border: isPro ? '0' : `1px solid ${theme.palette.divider}`,
-        width: '100%',
-        display: 'flex',
-        margin: '0 auto',
-        overflow: 'hidden',
+        border: isPro ? "0" : `1px solid ${theme.palette.divider}`,
+        width: "100%",
+        display: "flex",
+        margin: "0 auto",
+        overflow: "hidden",
         [theme.breakpoints.down(1100)]: {
-            flexDirection: 'column',
+            flexDirection: "column",
             minHeight: 0,
         },
     })
@@ -36,9 +36,9 @@ const StyledContainer = styled('div')<{ isPro: boolean }>(
 interface IUpdateProject {
     project: IProject;
 }
-const EDIT_PROJECT_BTN = 'EDIT_PROJECT_BTN';
+const EDIT_PROJECT_BTN = "EDIT_PROJECT_BTN";
 export const UpdateProject = ({ project }: IUpdateProject) => {
-    const id = useRequiredPathParam('projectId');
+    const id = useRequiredPathParam("projectId");
     const { uiConfig, isPro } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const { defaultStickiness } = useDefaultProjectSettings(id);
@@ -89,11 +89,11 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
                 await editProject(id, payload);
                 refetch();
                 setToastData({
-                    title: 'Project information updated',
-                    type: 'success',
+                    title: "Project information updated",
+                    type: "success",
                 });
                 if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
-                    trackEvent('project_stickiness_set');
+                    trackEvent("project_stickiness_set");
                 }
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));

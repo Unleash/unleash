@@ -1,28 +1,25 @@
-import { UPDATE_PROJECT } from '../../../../../providers/AccessProvider/permissions';
-import useProject from '../../../../../../hooks/api/getters/useProject/useProject';
-import useUiConfig from '../../../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { useRequiredPathParam } from '../../../../../../hooks/useRequiredPathParam';
-import React, { useContext } from 'react';
-import AccessContext from '../../../../../../contexts/AccessContext';
-import { Alert, styled } from '@mui/material';
-import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
-import { PageHeader } from '../../../../../common/PageHeader/PageHeader';
-import { PageContent } from '../../../../../common/PageContent/PageContent';
-import { DeleteProject } from '../DeleteProject';
-import { UpdateEnterpriseSettings } from './UpdateEnterpriseSettings';
-import { UpdateProject } from './UpdateProject';
-import { DeleteProjectForm } from './DeleteProjectForm';
+import { UPDATE_PROJECT } from "component/providers/AccessProvider/permissions";
+import useProject from "hooks/api/getters/useProject/useProject";
+import useUiConfig from "hooks/api/getters/useUiConfig/useUiConfig";
+import { useRequiredPathParam } from "hooks/useRequiredPathParam";
+import React, { useContext } from "react";
+import AccessContext from "contexts/AccessContext";
+import { Alert, styled } from "@mui/material";
+import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
+import { UpdateEnterpriseSettings } from "./UpdateEnterpriseSettings";
+import { UpdateProject } from "./UpdateProject";
+import { DeleteProjectForm } from "./DeleteProjectForm";
 
-const StyledFormContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
+const StyledFormContainer = styled("div")(({ theme }) => ({
+    display: "flex",
+    flexDirection: "column",
     gap: theme.spacing(2),
 }));
 
 const EditProject = () => {
     const { isEnterprise } = useUiConfig();
     const { hasAccess } = useContext(AccessContext);
-    const id = useRequiredPathParam('projectId');
+    const id = useRequiredPathParam("projectId");
     const { project } = useProject(id);
 
     const accessDeniedAlert = !hasAccess(UPDATE_PROJECT, id) && (

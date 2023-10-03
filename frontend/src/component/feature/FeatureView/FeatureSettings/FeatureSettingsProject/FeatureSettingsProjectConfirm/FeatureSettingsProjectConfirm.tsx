@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -40,6 +41,7 @@ const FeatureSettingsProjectConfirm = ({
     feature,
     changeRequests,
 }: IFeatureSettingsProjectConfirm) => {
+    const dependentFeatures = useUiFlag('dependentFeatures');
     const currentProjectId = useRequiredPathParam('projectId');
     const { project } = useProject(projectId);
 
@@ -58,7 +60,9 @@ const FeatureSettingsProjectConfirm = ({
         ? changeRequests.length > 0
         : false;
 
-    const hasDependencies = feature.dependencies.length > 0 || feature.children.length > 0;
+    const hasDependencies =
+        dependentFeatures &&
+        (feature.dependencies.length > 0 || feature.children.length > 0);
 
     return (
         <ConditionallyRender
@@ -105,8 +109,9 @@ const FeatureSettingsProjectConfirm = ({
                             condition={hasDependencies}
                             show={
                                 <p>
-                                    The feature toggle must not have any dependencies. <br/>
-                                    Please remove feature dependencies first.
+                                    <span>The feature toggle must not have any
+                                        dependencies.</span> <br />
+                                    <span>Please remove feature dependencies first.</span>
                                 </p>
                             }
                         />

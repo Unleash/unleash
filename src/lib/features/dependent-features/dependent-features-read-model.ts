@@ -9,13 +9,13 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
         this.db = db;
     }
 
-    async getChildren(parent: string): Promise<string[]> {
-        const rows = await this.db('dependent_features').where(
+    async getChildren(parents: string[]): Promise<string[]> {
+        const rows = await this.db('dependent_features').whereIn(
             'parent',
-            parent,
+            parents,
         );
 
-        return rows.map((row) => row.child);
+        return [...new Set(rows.map((row) => row.child))];
     }
 
     async getParents(child: string): Promise<IDependency[]> {

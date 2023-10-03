@@ -8,7 +8,7 @@ import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesA
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ChildrenTooltip } from './ChildrenTooltip';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_DEPENDENCY } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_DEPENDENCY } from 'component/providers/AccessProvider/permissions';
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 
 export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
@@ -33,7 +33,7 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                         <StyledDetail>
                             <StyledLabel>Dependency:</StyledLabel>
                             <PermissionButton
-                                permission={UPDATE_DEPENDENCY}
+                                permission={UPDATE_FEATURE_DEPENDENCY}
                                 projectId={feature.project}
                                 variant='text'
                                 onClick={() => {
@@ -59,7 +59,7 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                             </StyledLink>
                         </StyledDetail>
                         <ConditionallyRender
-                            condition={checkAccess(UPDATE_DEPENDENCY)}
+                            condition={checkAccess(UPDATE_FEATURE_DEPENDENCY)}
                             show={
                                 <DependencyActions
                                     feature={feature.name}

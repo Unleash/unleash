@@ -40,7 +40,7 @@ test('show dependency dialogue', async () => {
         />,
         {
             permissions: [
-                { permission: 'UPDATE_DEPENDENCY', project: 'default' },
+                { permission: 'UPDATE_FEATURE_DEPENDENCY', project: 'default' },
             ],
         },
     );
@@ -107,7 +107,7 @@ test('delete dependency', async () => {
         />,
         {
             permissions: [
-                { permission: 'UPDATE_DEPENDENCY', project: 'default' },
+                { permission: 'UPDATE_FEATURE_DEPENDENCY', project: 'default' },
             ],
         },
     );
@@ -139,7 +139,7 @@ test('edit dependency', async () => {
         />,
         {
             permissions: [
-                { permission: 'UPDATE_DEPENDENCY', project: 'default' },
+                { permission: 'UPDATE_FEATURE_DEPENDENCY', project: 'default' },
             ],
         },
     );

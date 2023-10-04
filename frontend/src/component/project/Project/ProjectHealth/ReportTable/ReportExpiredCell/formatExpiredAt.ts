@@ -1,14 +1,23 @@
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
-import { PERMISSION, KILLSWITCH } from 'constants/featureToggleTypes';
-import { getDiffInDays, expired, toggleExpiryByTypeMap } from '../utils';
-import { subDays, parseISO } from 'date-fns';
+import { KILLSWITCH, PERMISSION } from 'constants/featureToggleTypes';
+import { expired, getDiffInDays } from '../utils';
+import { parseISO, subDays } from 'date-fns';
+import { FeatureTypeSchema } from 'openapi';
 
 export const formatExpiredAt = (
-    feature: IFeatureToggleListItem
+    feature: IFeatureToggleListItem,
+    featureTypes: FeatureTypeSchema[],
 ): string | undefined => {
     const { type, createdAt } = feature;
 
-    if (type === KILLSWITCH || type === PERMISSION) {
+    const featureType = featureTypes.find(
+        (featureType) => featureType.name === type,
+    );
+
+    if (
+        featureType &&
+        (featureType.name === KILLSWITCH || featureType.name === PERMISSION)
+    ) {
         return;
     }
 
@@ -16,8 +25,8 @@ export const formatExpiredAt = (
     const now = new Date();
     const diff = getDiffInDays(date, now);
 
-    if (expired(diff, type)) {
-        const result = diff - toggleExpiryByTypeMap[type];
+    if (featureType && expired(diff, featureType)) {
+        const result = diff - (featureType?.lifetimeDays?.valueOf() || 0);
         return subDays(now, result).toISOString();
     }
 

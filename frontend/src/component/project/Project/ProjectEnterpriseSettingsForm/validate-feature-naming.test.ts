@@ -1,4 +1,4 @@
-import { validateFeatureNamingExample } from './ProjectForm';
+import { validateFeatureNamingExample } from './ProjectEnterpriseSettingsForm';
 
 describe('validateFeatureNaming', () => {
     test.each(['+', 'valid regex$'])(

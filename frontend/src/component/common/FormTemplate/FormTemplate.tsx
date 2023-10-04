@@ -1,5 +1,5 @@
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import Codebox from '../Codebox/Codebox';
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import Codebox from "../Codebox/Codebox";
 import {
     Collapse,
     IconButton,
@@ -7,16 +7,16 @@ import {
     Tooltip,
     Divider,
     styled,
-} from '@mui/material';
-import { FileCopy, Info } from '@mui/icons-material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import Loader from '../Loader/Loader';
-import copy from 'copy-to-clipboard';
-import useToast from 'hooks/useToast';
-import React, { ReactNode, useState } from 'react';
-import { ReactComponent as MobileGuidanceBG } from 'assets/img/mobileGuidanceBg.svg';
-import { formTemplateSidebarWidth } from './FormTemplate.styles';
-import { relative } from 'themes/themeStyles';
+} from "@mui/material";
+import { FileCopy, Info } from "@mui/icons-material";
+import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
+import Loader from "../Loader/Loader";
+import copy from "copy-to-clipboard";
+import useToast from "hooks/useToast";
+import React, { ReactNode, useState } from "react";
+import { ReactComponent as MobileGuidanceBG } from "assets/img/mobileGuidanceBg.svg";
+import { formTemplateSidebarWidth } from "./FormTemplate.styles";
+import { relative } from "themes/themeStyles";
 
 interface ICreateProps {
     title?: ReactNode;
@@ -26,61 +26,74 @@ interface ICreateProps {
     loading?: boolean;
     modal?: boolean;
     disablePadding?: boolean;
+    compactPadding?: boolean;
+    showDescription?: boolean;
+    showLink?: boolean;
     formatApiCode?: () => string;
     footer?: ReactNode;
+    compact?: boolean;
 }
 
-const StyledContainer = styled('section', {
-    shouldForwardProp: (prop) => prop !== 'modal',
-})<{ modal?: boolean }>(({ theme, modal }) => ({
-    minHeight: modal ? '100vh' : '80vh',
+const StyledContainer = styled("section", {
+    shouldForwardProp: (prop) =>
+        !["modal", "compact"].includes(prop.toString()),
+})<{ modal?: boolean; compact?: boolean }>(({ theme, modal, compact }) => ({
+    minHeight: modal ? "100vh" : compact ? 0 : "80vh",
     borderRadius: modal ? 0 : theme.spacing(2),
-    width: '100%',
-    display: 'flex',
-    margin: '0 auto',
-    overflow: modal ? 'unset' : 'hidden',
+    width: "100%",
+    display: "flex",
+    margin: "0 auto",
+    overflow: modal ? "unset" : "hidden",
     [theme.breakpoints.down(1100)]: {
-        flexDirection: 'column',
+        flexDirection: "column",
         minHeight: 0,
     },
 }));
 
-const StyledRelativeDiv = styled('div')(({ theme }) => relative);
+const StyledRelativeDiv = styled("div")(({ theme }) => relative);
 
-const StyledMain = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
+const StyledMain = styled("div")(({ theme }) => ({
+    display: "flex",
+    flexDirection: "column",
     flexGrow: 1,
     flexShrink: 1,
-    width: '100%',
+    width: "100%",
     [theme.breakpoints.down(1100)]: {
-        width: '100%',
+        width: "100%",
     },
 }));
 
-const StyledFormContent = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'disablePadding',
-})<{ disablePadding?: boolean }>(({ theme, disablePadding }) => ({
-    backgroundColor: theme.palette.background.paper,
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    padding: disablePadding ? 0 : theme.spacing(6),
-    [theme.breakpoints.down('lg')]: {
-        padding: disablePadding ? 0 : theme.spacing(4),
+const StyledFormContent = styled("div", {
+    shouldForwardProp: (prop) => {
+        return !["disablePadding", "compactPadding"].includes(prop.toString());
     },
-    [theme.breakpoints.down(1100)]: {
-        width: '100%',
-    },
-    [theme.breakpoints.down(500)]: {
-        padding: disablePadding ? 0 : theme.spacing(4, 2),
-    },
-}));
+})<{ disablePadding?: boolean; compactPadding?: boolean }>(
+    ({ theme, disablePadding, compactPadding }) => ({
+        backgroundColor: theme.palette.background.paper,
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        padding: disablePadding
+            ? 0
+            : compactPadding
+            ? theme.spacing(4)
+            : theme.spacing(6),
+        [theme.breakpoints.down("lg")]: {
+            padding: disablePadding ? 0 : theme.spacing(4),
+        },
+        [theme.breakpoints.down(1100)]: {
+            width: "100%",
+        },
+        [theme.breakpoints.down(500)]: {
+            padding: disablePadding ? 0 : theme.spacing(4, 2),
+        },
+    })
+);
 
-const StyledFooter = styled('div')(({ theme }) => ({
+const StyledFooter = styled("div")(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(4, 6),
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down("lg")]: {
         padding: theme.spacing(4),
     },
     [theme.breakpoints.down(500)]: {
@@ -88,9 +101,9 @@ const StyledFooter = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledTitle = styled('h1')(({ theme }) => ({
+const StyledTitle = styled("h1")(({ theme }) => ({
     marginBottom: theme.fontSizes.mainHeader,
-    fontWeight: 'normal',
+    fontWeight: "normal",
 }));
 
 const StyledSidebarDivider = styled(Divider)(({ theme }) => ({
@@ -98,12 +111,12 @@ const StyledSidebarDivider = styled(Divider)(({ theme }) => ({
     marginBottom: theme.spacing(0.5),
 }));
 
-const StyledSubtitle = styled('h2')(({ theme }) => ({
+const StyledSubtitle = styled("h2")(({ theme }) => ({
     color: theme.palette.common.white,
     marginBottom: theme.spacing(2),
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
     fontWeight: theme.fontWeight.bold,
     fontSize: theme.fontSizes.bodySize,
 }));
@@ -112,20 +125,20 @@ const StyledIcon = styled(FileCopy)(({ theme }) => ({
     fill: theme.palette.primary.contrastText,
 }));
 
-const StyledMobileGuidanceContainer = styled('div')(() => ({
+const StyledMobileGuidanceContainer = styled("div")(() => ({
     zIndex: 1,
-    position: 'absolute',
+    position: "absolute",
     right: -3,
     top: -3,
 }));
 
 const StyledMobileGuidanceBackground = styled(MobileGuidanceBG)(() => ({
-    width: '75px',
-    height: '75px',
+    width: "75px",
+    height: "75px",
 }));
 
 const StyledMobileGuidanceButton = styled(IconButton)(() => ({
-    position: 'absolute',
+    position: "absolute",
     zIndex: 400,
     right: 0,
 }));
@@ -134,31 +147,31 @@ const StyledInfoIcon = styled(Info)(({ theme }) => ({
     fill: theme.palette.primary.contrastText,
 }));
 
-const StyledSidebar = styled('aside')(({ theme }) => ({
+const StyledSidebar = styled("aside")(({ theme }) => ({
     backgroundColor: theme.palette.background.sidebar,
     padding: theme.spacing(4),
     flexGrow: 0,
     flexShrink: 0,
     width: formTemplateSidebarWidth,
     [theme.breakpoints.down(1100)]: {
-        width: '100%',
-        color: 'red',
+        width: "100%",
+        color: "red",
     },
     [theme.breakpoints.down(500)]: {
         padding: theme.spacing(4, 2),
     },
 }));
 
-const StyledDescription = styled('p')(({ theme }) => ({
+const StyledDescription = styled("p")(({ theme }) => ({
     color: theme.palette.common.white,
     zIndex: 1,
-    position: 'relative',
+    position: "relative",
 }));
 
-const StyledLinkContainer = styled('div')(({ theme }) => ({
+const StyledLinkContainer = styled("div")(({ theme }) => ({
     margin: theme.spacing(3, 0),
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
 }));
 
 const StyledLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
@@ -166,11 +179,11 @@ const StyledLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
 }));
 
-const StyledDocumentationLink = styled('a')(({ theme }) => ({
+const StyledDocumentationLink = styled("a")(({ theme }) => ({
     color: theme.palette.primary.contrastText,
-    display: 'block',
-    '&:hover': {
-        textDecoration: 'none',
+    display: "block",
+    "&:hover": {
+        textDecoration: "none",
     },
 }));
 
@@ -184,7 +197,11 @@ const FormTemplate: React.FC<ICreateProps> = ({
     modal,
     formatApiCode,
     disablePadding,
+    compactPadding = false,
+    showDescription = true,
+    showLink = true,
     footer,
+    compact,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
@@ -192,45 +209,48 @@ const FormTemplate: React.FC<ICreateProps> = ({
         if (formatApiCode !== undefined) {
             if (copy(formatApiCode())) {
                 setToastData({
-                    title: 'Successfully copied the command',
-                    text: 'The command should now be automatically copied to your clipboard',
+                    title: "Successfully copied the command",
+                    text: "The command should now be automatically copied to your clipboard",
                     autoHideDuration: 6000,
-                    type: 'success',
+                    type: "success",
                     show: true,
                 });
             } else {
                 setToastData({
-                    title: 'Could not copy the command',
-                    text: 'Sorry, but we could not copy the command.',
+                    title: "Could not copy the command",
+                    text: "Sorry, but we could not copy the command.",
                     autoHideDuration: 6000,
-                    type: 'error',
+                    type: "error",
                     show: true,
                 });
             }
         }
     };
 
-    const renderApiInfo = (apiDisabled: boolean) => {
+    const renderApiInfo = (apiDisabled: boolean, dividerDisabled = false) => {
         if (!apiDisabled) {
             return (
                 <>
-                    <StyledSidebarDivider />
+                    <ConditionallyRender
+                        condition={!dividerDisabled}
+                        show={<StyledSidebarDivider />}
+                    />
                     <StyledSubtitle>
-                        API Command{' '}
-                        <Tooltip title='Copy command' arrow>
-                            <IconButton onClick={copyCommand} size='large'>
+                        API Command{" "}
+                        <Tooltip title="Copy command" arrow>
+                            <IconButton onClick={copyCommand} size="large">
                                 <StyledIcon />
                             </IconButton>
                         </Tooltip>
                     </StyledSubtitle>
-                    <Codebox text={formatApiCode!()} />{' '}
+                    <Codebox text={formatApiCode!()} />{" "}
                 </>
             );
         }
     };
 
     return (
-        <StyledContainer modal={modal}>
+        <StyledContainer modal={modal} compact={compact}>
             <ConditionallyRender
                 condition={smallScreen}
                 show={
@@ -244,7 +264,10 @@ const FormTemplate: React.FC<ICreateProps> = ({
                 }
             />
             <StyledMain>
-                <StyledFormContent disablePadding={disablePadding}>
+                <StyledFormContent
+                    disablePadding={disablePadding}
+                    compactPadding={compactPadding}
+                >
                     <ConditionallyRender
                         condition={loading || false}
                         show={<Loader />}
@@ -276,8 +299,13 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         description={description}
                         documentationLink={documentationLink}
                         documentationLinkLabel={documentationLinkLabel}
+                        showDescription={showDescription}
+                        showLink={showLink}
                     >
-                        {renderApiInfo(formatApiCode === undefined)}
+                        {renderApiInfo(
+                            formatApiCode === undefined,
+                            !(showDescription || showLink)
+                        )}
                     </Guidance>
                 }
             />
@@ -303,10 +331,10 @@ const MobileGuidance = ({
             <StyledMobileGuidanceContainer>
                 <StyledMobileGuidanceBackground />
             </StyledMobileGuidanceContainer>
-            <Tooltip title='Toggle help' arrow>
+            <Tooltip title="Toggle help" arrow>
                 <StyledMobileGuidanceButton
                     onClick={() => setOpen((prev) => !prev)}
-                    size='large'
+                    size="large"
                 >
                     <StyledInfoIcon />
                 </StyledMobileGuidanceButton>
@@ -326,28 +354,40 @@ interface IGuidanceProps {
     description: string;
     documentationLink: string;
     documentationLinkLabel?: string;
+    showDescription?: boolean;
+    showLink?: boolean;
 }
 
 const Guidance: React.FC<IGuidanceProps> = ({
     description,
     children,
     documentationLink,
-    documentationLinkLabel = 'Learn more',
+    documentationLinkLabel = "Learn more",
+    showDescription = true,
+    showLink = true,
 }) => {
     return (
         <StyledSidebar>
-            <StyledDescription>{description}</StyledDescription>
+            <ConditionallyRender
+                condition={showDescription}
+                show={<StyledDescription>{description}</StyledDescription>}
+            />
 
-            <StyledLinkContainer>
-                <StyledLinkIcon />
-                <StyledDocumentationLink
-                    href={documentationLink}
-                    rel='noopener noreferrer'
-                    target='_blank'
-                >
-                    {documentationLinkLabel}
-                </StyledDocumentationLink>
-            </StyledLinkContainer>
+            <ConditionallyRender
+                condition={showLink}
+                show={
+                    <StyledLinkContainer>
+                        <StyledLinkIcon />
+                        <StyledDocumentationLink
+                            href={documentationLink}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                        >
+                            {documentationLinkLabel}
+                        </StyledDocumentationLink>
+                    </StyledLinkContainer>
+                }
+            />
 
             {children}
         </StyledSidebar>

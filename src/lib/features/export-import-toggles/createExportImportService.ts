@@ -43,6 +43,7 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
+import { DbServiceFactory } from 'lib/db/transaction';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -127,9 +128,9 @@ export const createFakeExportImportTogglesService = (
     return exportImportService;
 };
 
-export const unboundExportImportTogglesService = (
+export const deferredExportImportTogglesService = (
     config: IUnleashConfig,
-): ((db: Db) => ExportImportService) => {
+): DbServiceFactory<ExportImportService> => {
     return (db: Db) => {
         const { eventBus, getLogger, flagResolver } = config;
         const importTogglesStore = new ImportTogglesStore(db);
@@ -242,6 +243,6 @@ export const createExportImportTogglesService = (
     db: Db,
     config: IUnleashConfig,
 ): ExportImportService => {
-    const unboundService = unboundExportImportTogglesService(config);
+    const unboundService = deferredExportImportTogglesService(config);
     return unboundService(db);
 };

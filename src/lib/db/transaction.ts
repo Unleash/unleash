@@ -21,6 +21,7 @@ export const createKnexTransactionStarter = (
     return transaction;
 };
 
+export type DbServiceFactory<S> = (db: Knex) => S;
 export type WithTransactional<S> = S & {
     transactional: <R>(fn: (service: S) => R) => Promise<R>;
 };

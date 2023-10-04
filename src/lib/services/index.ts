@@ -50,7 +50,7 @@ import { Knex } from 'knex';
 import {
     createExportImportTogglesService,
     createFakeExportImportTogglesService,
-    unboundExportImportTogglesService,
+    deferredExportImportTogglesService,
 } from '../features/export-import-toggles/createExportImportService';
 import { Db } from '../db/db';
 import { withFakeTransactional, withTransactional } from '../db/transaction';
@@ -280,7 +280,7 @@ export const createServices = (
         ? createExportImportTogglesService(db, config)
         : createFakeExportImportTogglesService(config);
     const exportImportServiceV2 = db
-        ? withTransactional(unboundExportImportTogglesService(config), db)
+        ? withTransactional(deferredExportImportTogglesService(config), db)
         : withFakeTransactional(createFakeExportImportTogglesService(config));
     const transactionalExportImportService = (txDb: Knex.Transaction) =>
         createExportImportTogglesService(txDb, config);

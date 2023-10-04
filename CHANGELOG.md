@@ -1,5 +1,19 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+## [5.5.4] - 2023-10-04
+
+### Bug Fixes
+
+- Update potentially-stale status dynamically (#4905) (#4920)
+
+### Miscellaneous Tasks
+
+- Automate changelog generation on release branch (#4914)
+
+# Changelog
+
 # 4.2.0
 
 - ix: add default sort order for built in envs (#1076)

@@ -158,9 +158,10 @@ class ExportImportController extends Controller {
         const dto = req.body;
         const { user } = req;
 
-        const newTransactional =
-            this.config.flagResolver.isEnabled('newTransactional');
-        const validation = newTransactional
+        const useTransactionalDecorator = this.config.flagResolver.isEnabled(
+            'transactionalDecorator',
+        );
+        const validation = useTransactionalDecorator
             ? await this.exportImportServiceV2.transactional((service) =>
                   service.validate(dto, user),
               )
@@ -191,10 +192,11 @@ class ExportImportController extends Controller {
 
         const dto = req.body;
 
-        const newTransactional =
-            this.config.flagResolver.isEnabled('newTransactional');
+        const useTransactionalDecorator = this.config.flagResolver.isEnabled(
+            'transactionalDecorator',
+        );
 
-        if (newTransactional) {
+        if (useTransactionalDecorator) {
             await this.exportImportServiceV2.transactional((service) =>
                 service.import(dto, user),
             );

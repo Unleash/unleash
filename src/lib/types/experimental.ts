@@ -32,7 +32,7 @@ export type IFlagKey =
     | 'dependentFeatures'
     | 'datadogJsonTemplate'
     | 'disableMetrics'
-    | 'newTransactional';
+    | 'transactionalDecorator';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -148,8 +148,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
         false,
     ),
-    newTransactional: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_TRANSACTIONAL,
+    transactionalDecorator: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_TRANSACTIONAL_DECORATOR,
         false,
     ),
 };

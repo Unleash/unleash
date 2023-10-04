@@ -4,7 +4,7 @@ import getLogger from '../../../test/fixtures/no-logger';
 
 import createStores from '../../../test/fixtures/store';
 import EventEmitter from 'events';
-import { LastSeenService } from './last-seen-service';
+import { LastSeenService } from './last-seen/last-seen-service';
 import { IUnleashConfig } from 'lib/types';
 
 function initClientMetrics(flagEnabled = true) {
@@ -23,7 +23,7 @@ function initClientMetrics(flagEnabled = true) {
         },
     } as unknown as IUnleashConfig;
 
-    const lastSeenService = new LastSeenService(stores, config);
+    const lastSeenService = new LastSeenService(stores.lastSeenStore, config);
     lastSeenService.updateLastSeen = jest.fn();
 
     const service = new ClientMetricsServiceV2(stores, config, lastSeenService);

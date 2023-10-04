@@ -65,6 +65,7 @@ import { ProjectDoraMetricsSchema } from 'lib/openapi';
 import { checkFeatureNamingData } from '../features/feature-naming-pattern/feature-naming-validation';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import EventService from './event-service';
+import { ILastSeenReadModel } from './client-metrics/last-seen/types/last-seen-read-model-type';
 
 const getCreatedBy = (user: IUser) => user.email || user.username || 'unknown';
 
@@ -118,6 +119,8 @@ export default class ProjectService {
 
     private projectStatsStore: IProjectStatsStore;
 
+    private lastSeenReadModel: ILastSeenReadModel;
+
     private flagResolver: IFlagResolver;
 
     private isEnterprise: boolean;
@@ -150,6 +153,7 @@ export default class ProjectService {
         favoriteService: FavoritesService,
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
+        lastSeenReadModel: ILastSeenReadModel,
     ) {
         this.projectStore = projectStore;
         this.environmentStore = environmentStore;
@@ -165,6 +169,7 @@ export default class ProjectService {
         this.groupService = groupService;
         this.eventService = eventService;
         this.projectStatsStore = projectStatsStore;
+        this.lastSeenReadModel = lastSeenReadModel;
         this.logger = config.getLogger('services/project-service.js');
         this.flagResolver = config.flagResolver;
         this.isEnterprise = config.isEnterprise;
@@ -1070,6 +1075,12 @@ export default class ProjectService {
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
         ]);
+
+        //const featureNames = features.map((feature) => feature.name);
+        // const lastSeenAtPerEnvironment =
+        //     await this.lastSeenReadModel.getForFeature(featureNames);
+        // Get
+        // console.log(features);
 
         return {
             stats: projectStats,

@@ -35,6 +35,7 @@ import { IProjectStatsStore } from './stores/project-stats-store-type';
 import { IImportTogglesStore } from '../features/export-import-toggles/import-toggles-store-type';
 import { IPrivateProjectStore } from '../features/private-project/privateProjectStoreType';
 import { IDependentFeaturesStore } from '../features/dependent-features/dependent-features-store-type';
+import { ILastSeenStore } from '../services/client-metrics/last-seen/types/last-seen-store-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -74,6 +75,7 @@ export interface IUnleashStores {
     importTogglesStore: IImportTogglesStore;
     privateProjectStore: IPrivateProjectStore;
     dependentFeaturesStore: IDependentFeaturesStore;
+    lastSeenStore: ILastSeenStore;
 }
 
 export {
@@ -113,4 +115,5 @@ export {
     IImportTogglesStore,
     IPrivateProjectStore,
     IDependentFeaturesStore,
+    ILastSeenStore,
 };

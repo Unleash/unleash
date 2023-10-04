@@ -2,7 +2,7 @@ import createStores from '../../../test/fixtures/store';
 import EventEmitter from 'events';
 import getLogger from '../../../test/fixtures/no-logger';
 import { IUnleashConfig } from '../../types';
-import { LastSeenService } from './last-seen-service';
+import { LastSeenService } from './last-seen/last-seen-service';
 
 function initLastSeenService(flagEnabled = true) {
     const stores = createStores();
@@ -20,7 +20,7 @@ function initLastSeenService(flagEnabled = true) {
         },
     } as unknown as IUnleashConfig;
 
-    const lastSeenService = new LastSeenService(stores, config);
+    const lastSeenService = new LastSeenService(stores.lastSeenStore, config);
 
     return { lastSeenService, featureToggleStore: stores.featureToggleStore };
 }

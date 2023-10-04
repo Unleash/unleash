@@ -85,6 +85,7 @@ const createStores: () => IUnleashStores = () => {
         importTogglesStore: {} as IImportTogglesStore,
         privateProjectStore: {} as IPrivateProjectStore,
         dependentFeaturesStore: new FakeDependentFeaturesStore(),
+        lastSeenStore: { setLastSeen: async () => {} },
     };
 };
 

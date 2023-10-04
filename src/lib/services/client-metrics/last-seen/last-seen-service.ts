@@ -1,9 +1,8 @@
 import { secondsToMilliseconds } from 'date-fns';
-import { Logger } from '../../logger';
-import { IUnleashConfig } from '../../server-impl';
-import { IUnleashStores } from '../../types';
-import { IClientMetricsEnv } from '../../types/stores/client-metrics-store-v2';
-import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
+import { Logger } from '../../../logger';
+import { IUnleashConfig } from '../../../server-impl';
+import { IClientMetricsEnv } from '../../../types/stores/client-metrics-store-v2';
+import { ILastSeenStore } from './types/last-seen-store-type';
 
 export type LastSeenInput = {
     featureName: string;
@@ -17,14 +16,14 @@ export class LastSeenService {
 
     private logger: Logger;
 
-    private featureToggleStore: IFeatureToggleStore;
+    private lastSeenStore: ILastSeenStore;
 
     constructor(
-        { featureToggleStore }: Pick<IUnleashStores, 'featureToggleStore'>,
+        lastSeenStore: ILastSeenStore,
         config: IUnleashConfig,
         lastSeenInterval = secondsToMilliseconds(30),
     ) {
-        this.featureToggleStore = featureToggleStore;
+        this.lastSeenStore = lastSeenStore;
         this.logger = config.getLogger(
             '/services/client-metrics/last-seen-service.ts',
         );
@@ -42,7 +41,7 @@ export class LastSeenService {
             this.logger.debug(
                 `Updating last seen for ${lastSeenToggles.length} toggles`,
             );
-            await this.featureToggleStore.setLastSeen(lastSeenToggles);
+            await this.lastSeenStore.setLastSeen(lastSeenToggles);
         }
         return count;
     }

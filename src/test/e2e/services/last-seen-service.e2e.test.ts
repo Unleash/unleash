@@ -1,7 +1,7 @@
 import { createTestConfig } from '../../config/test-config';
 import dbInit from '../helpers/database-init';
 import { IUnleashStores } from '../../../lib/types/stores';
-import { LastSeenService } from '../../../lib/services/client-metrics/last-seen-service';
+import { LastSeenService } from '../../../lib/services/client-metrics/last-seen/last-seen-service';
 import { IClientMetricsEnv } from '../../../lib/types/stores/client-metrics-store-v2';
 
 let stores: IUnleashStores;
@@ -21,7 +21,7 @@ afterAll(async () => {
 });
 
 test('Should update last seen for known toggles', async () => {
-    const service = new LastSeenService(stores, config);
+    const service = new LastSeenService(stores.lastSeenStore, config);
     const time = Date.now() - 100;
     await stores.featureToggleStore.create('default', { name: 'ta1' });
 
@@ -56,7 +56,7 @@ test('Should update last seen for known toggles', async () => {
 
 test('Should not update last seen toggles with 0 metrics', async () => {
     // jest.useFakeTimers();
-    const service = new LastSeenService(stores, config, 30);
+    const service = new LastSeenService(stores.lastSeenStore, config, 30);
     const time = Date.now();
     await stores.featureToggleStore.create('default', { name: 'tb1' });
     await stores.featureToggleStore.create('default', { name: 'tb2' });
@@ -96,7 +96,7 @@ test('Should not update last seen toggles with 0 metrics', async () => {
 
 test('Should not update anything for 0 toggles', async () => {
     // jest.useFakeTimers();
-    const service = new LastSeenService(stores, config, 30);
+    const service = new LastSeenService(stores.lastSeenStore, config, 30);
     const time = Date.now();
     await stores.featureToggleStore.create('default', { name: 'tb1' });
     await stores.featureToggleStore.create('default', { name: 'tb2' });

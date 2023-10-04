@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.5.5] - 2023-10-04
+
+### Bug Fixes
+
+- ReportTable not updating status dynamically (#4923)
+
 ## [5.5.4] - 2023-10-04
 
 ### Bug Fixes

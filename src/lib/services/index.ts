@@ -50,8 +50,10 @@ import { Knex } from 'knex';
 import {
     createExportImportTogglesService,
     createFakeExportImportTogglesService,
+    unboundExportImportTogglesService,
 } from '../features/export-import-toggles/createExportImportService';
 import { Db } from '../db/db';
+import { withFakeTransactional, withTransactional } from '../db/transaction';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
@@ -274,10 +276,12 @@ export const createServices = (
         projectService,
     );
 
-    // TODO: this is a temporary seam to enable packaging by feature
     const exportImportService = db
         ? createExportImportTogglesService(db, config)
         : createFakeExportImportTogglesService(config);
+    const exportImportServiceV2 = db
+        ? withTransactional(unboundExportImportTogglesService(config), db)
+        : withFakeTransactional(createFakeExportImportTogglesService(config));
     const transactionalExportImportService = (txDb: Knex.Transaction) =>
         createExportImportTogglesService(txDb, config);
     const transactionalFeatureToggleService = (txDb: Knex.Transaction) =>
@@ -380,6 +384,7 @@ export const createServices = (
         maintenanceService,
         exportImportService,
         transactionalExportImportService,
+        exportImportServiceV2,
         schedulerService,
         configurationRevisionService,
         transactionalFeatureToggleService,

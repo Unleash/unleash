@@ -31,7 +31,8 @@ export type IFlagKey =
     | 'privateProjects'
     | 'dependentFeatures'
     | 'datadogJsonTemplate'
-    | 'disableMetrics';
+    | 'disableMetrics'
+    | 'newTransactional';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -145,6 +146,10 @@ const flags: IFlags = {
     ),
     disableMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
+        false,
+    ),
+    newTransactional: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_TRANSACTIONAL,
         false,
     ),
 };

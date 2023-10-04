@@ -45,6 +45,7 @@ import ConfigurationRevisionService from '../features/feature-toggle/configurati
 import EventAnnouncerService from 'lib/services/event-announcer-service';
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
+import { WithTransactional } from 'lib/db/transaction';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -88,10 +89,13 @@ export interface IUnleashServices {
     instanceStatsService: InstanceStatsService;
     favoritesService: FavoritesService;
     maintenanceService: MaintenanceService;
+    /** @deprecated prefer exportImportServiceV2, we're doing a gradual rollout */
     exportImportService: ExportImportService;
+    exportImportServiceV2: WithTransactional<ExportImportService>;
     configurationRevisionService: ConfigurationRevisionService;
     schedulerService: SchedulerService;
     eventAnnouncerService: EventAnnouncerService;
+    /** @deprecated prefer exportImportServiceV2, we're doing a gradual rollout */
     transactionalExportImportService: (
         db: Knex.Transaction,
     ) => ExportImportService;

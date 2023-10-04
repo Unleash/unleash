@@ -6,20 +6,13 @@ import { ApiTokenType, IApiToken } from '../../../lib/types/models/api-token';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
 import { addDays, subDays } from 'date-fns';
 import ProjectService from '../../../lib/services/project-service';
-import FeatureToggleService from '../../../lib/services/feature-toggle-service';
-import { AccessService } from '../../../lib/services/access-service';
-import { SegmentService } from '../../../lib/services/segment-service';
-import { GroupService } from '../../../lib/services/group-service';
-import { EventService, FavoritesService } from '../../../lib/services';
-import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
-import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
-import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
+import { EventService } from '../../../lib/services';
+import { createProjectService } from '../../../lib/features';
 
 let db;
 let stores;
 let apiTokenService: ApiTokenService;
 let projectService: ProjectService;
-let favoritesService: FavoritesService;
 
 beforeAll(async () => {
     const config = createTestConfig({
@@ -28,35 +21,6 @@ beforeAll(async () => {
     db = await dbInit('api_token_service_serial', getLogger);
     stores = db.stores;
     const eventService = new EventService(stores, config);
-    const groupService = new GroupService(stores, config, eventService);
-    const accessService = new AccessService(stores, config, groupService);
-    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db.rawDatabase,
-        accessService,
-    );
-    const privateProjectChecker = createPrivateProjectChecker(
-        db.rawDatabase,
-        config,
-    );
-    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
-        db.rawDatabase,
-    );
-    const featureToggleService = new FeatureToggleService(
-        stores,
-        config,
-        new SegmentService(
-            stores,
-            changeRequestAccessReadModel,
-            config,
-            eventService,
-            privateProjectChecker,
-        ),
-        accessService,
-        eventService,
-        changeRequestAccessReadModel,
-        privateProjectChecker,
-        dependentFeaturesReadModel,
-    );
     const project = {
         id: 'test-project',
         name: 'Test Project',
@@ -68,17 +32,7 @@ beforeAll(async () => {
         name: 'Some Name',
         email: 'test@getunleash.io',
     });
-    favoritesService = new FavoritesService(stores, config, eventService);
-    projectService = new ProjectService(
-        stores,
-        config,
-        accessService,
-        featureToggleService,
-        groupService,
-        favoritesService,
-        eventService,
-        privateProjectChecker,
-    );
+    projectService = createProjectService(db.rawDatabase, config);
 
     await projectService.createProject(project, user);
 

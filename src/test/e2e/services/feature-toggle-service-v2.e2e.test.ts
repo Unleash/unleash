@@ -26,6 +26,11 @@ import { ISegmentService } from '../../../lib/segments/segment-service-interface
 import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
 import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
 import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
+import {
+    createAccessService,
+    createFeatureToggleService,
+    createSegmentService,
+} from '../../../lib/features';
 
 let stores: IUnleashStores;
 let db;
@@ -54,38 +59,10 @@ beforeAll(async () => {
     );
     unleashConfig = config;
     stores = db.stores;
-    const eventService = new EventService(stores, config);
-    const groupService = new GroupService(stores, config, eventService);
-    const accessService = new AccessService(stores, config, groupService);
-    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db.rawDatabase,
-        accessService,
-    );
-    const privateProjectChecker = createPrivateProjectChecker(
-        db.rawDatabase,
-        config,
-    );
-    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
-        db.rawDatabase,
-    );
-    segmentService = new SegmentService(
-        stores,
-        changeRequestAccessReadModel,
-        config,
-        eventService,
-        privateProjectChecker,
-    );
 
-    service = new FeatureToggleService(
-        stores,
-        config,
-        segmentService,
-        accessService,
-        eventService,
-        changeRequestAccessReadModel,
-        privateProjectChecker,
-        dependentFeaturesReadModel,
-    );
+    segmentService = createSegmentService(db.rawDatabase, config);
+
+    service = createFeatureToggleService(db.rawDatabase, config);
 });
 
 afterAll(async () => {
@@ -462,40 +439,14 @@ test('If change requests are enabled, cannot change variants without going via C
         { name: featureName },
         'test-user',
     );
-    const eventService = new EventService(stores, unleashConfig);
-    const groupService = new GroupService(stores, unleashConfig, eventService);
-    const accessService = new AccessService(
-        stores,
-        unleashConfig,
-        groupService,
-    );
-    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db.rawDatabase,
-        accessService,
-    );
-    const privateProjectChecker = createPrivateProjectChecker(
-        db.rawDatabase,
-        unleashConfig,
-    );
-    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
-        db.rawDatabase,
-    );
+
     // Force all feature flags on to make sure we have Change requests on
-    const customFeatureService = new FeatureToggleService(
-        stores,
-        {
-            ...unleashConfig,
-            flagResolver: {
-                isEnabled: () => true,
-            },
+    const customFeatureService = createFeatureToggleService(db.rawDatabase, {
+        ...unleashConfig,
+        flagResolver: {
+            isEnabled: () => true,
         },
-        segmentService,
-        accessService,
-        eventService,
-        changeRequestAccessReadModel,
-        privateProjectChecker,
-        dependentFeaturesReadModel,
-    );
+    });
 
     const newVariant: IVariant = {
         name: 'cr-enabled',
@@ -556,40 +507,14 @@ test('If CRs are protected for any environment in the project stops bulk update 
         project.id,
         disabledEnv.name,
     );
-    const eventService = new EventService(stores, unleashConfig);
-    const groupService = new GroupService(stores, unleashConfig, eventService);
-    const accessService = new AccessService(
-        stores,
-        unleashConfig,
-        groupService,
-    );
-    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db.rawDatabase,
-        accessService,
-    );
-    const privateProjectChecker = createPrivateProjectChecker(
-        db.rawDatabase,
-        unleashConfig,
-    );
-    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
-        db.rawDatabase,
-    );
+
     // Force all feature flags on to make sure we have Change requests on
-    const customFeatureService = new FeatureToggleService(
-        stores,
-        {
-            ...unleashConfig,
-            flagResolver: {
-                isEnabled: () => true,
-            },
+    const customFeatureService = createFeatureToggleService(db.rawDatabase, {
+        ...unleashConfig,
+        flagResolver: {
+            isEnabled: () => true,
         },
-        segmentService,
-        accessService,
-        eventService,
-        changeRequestAccessReadModel,
-        privateProjectChecker,
-        dependentFeaturesReadModel,
-    );
+    });
 
     const toggle = await service.createFeatureToggle(
         project.id,

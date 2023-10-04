@@ -13,25 +13,19 @@ import {
     IUnleashStores,
     IUserAccessOverview,
 } from '../../../lib/types';
-import FeatureToggleService from '../../../lib/services/feature-toggle-service';
-import ProjectService from '../../../lib/services/project-service';
 import { createTestConfig } from '../../config/test-config';
 import { DEFAULT_PROJECT } from '../../../lib/types/project';
 import { ALL_PROJECTS } from '../../../lib/util/constants';
-import { SegmentService } from '../../../lib/services/segment-service';
-import { GroupService } from '../../../lib/services/group-service';
-import { EventService, FavoritesService } from '../../../lib/services';
-import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
-import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
-import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
+import {
+    createAccessService,
+    createFeatureToggleService,
+    createProjectService,
+} from '../../../lib/features';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let accessService: AccessService;
-let eventService: EventService;
-let groupService: GroupService;
 let featureToggleService;
-let favoritesService;
 let projectService;
 let editorUser;
 let editorRole;
@@ -238,51 +232,14 @@ beforeAll(async () => {
         // @ts-ignore
         experimental: { environments: { enabled: true } },
     });
-    eventService = new EventService(stores, config);
-    groupService = new GroupService(stores, { getLogger }, eventService);
-    accessService = new AccessService(stores, config, groupService);
+    accessService = createAccessService(db.rawDatabase, config);
     const roles = await accessService.getRootRoles();
     editorRole = roles.find((r) => r.name === RoleName.EDITOR);
     adminRole = roles.find((r) => r.name === RoleName.ADMIN);
     readRole = roles.find((r) => r.name === RoleName.VIEWER);
-    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db.rawDatabase,
-        accessService,
-    );
-    const privateProjectChecker = createPrivateProjectChecker(
-        db.rawDatabase,
-        config,
-    );
-    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
-        db.rawDatabase,
-    );
-    featureToggleService = new FeatureToggleService(
-        stores,
-        config,
-        new SegmentService(
-            stores,
-            changeRequestAccessReadModel,
-            config,
-            eventService,
-            privateProjectChecker,
-        ),
-        accessService,
-        eventService,
-        changeRequestAccessReadModel,
-        privateProjectChecker,
-        dependentFeaturesReadModel,
-    );
-    favoritesService = new FavoritesService(stores, config, eventService);
-    projectService = new ProjectService(
-        stores,
-        config,
-        accessService,
-        featureToggleService,
-        groupService,
-        favoritesService,
-        eventService,
-        privateProjectChecker,
-    );
+
+    featureToggleService = createFeatureToggleService(db.rawDatabase, config);
+    projectService = createProjectService(db.rawDatabase, config);
 
     editorUser = await createUser(editorRole.id);
 

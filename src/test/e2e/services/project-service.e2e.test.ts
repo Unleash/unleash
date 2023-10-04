@@ -9,25 +9,23 @@ import { RoleName } from '../../../lib/types/model';
 import { randomId } from '../../../lib/util/random-id';
 import EnvironmentService from '../../../lib/services/environment-service';
 import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
-import { SegmentService } from '../../../lib/services/segment-service';
-import { GroupService } from '../../../lib/services/group-service';
-import { EventService, FavoritesService } from '../../../lib/services';
+import { EventService } from '../../../lib/services';
 import { FeatureEnvironmentEvent } from '../../../lib/types/events';
 import { addDays, subDays } from 'date-fns';
-import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
-import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
-import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
+import {
+    createAccessService,
+    createFeatureToggleService,
+    createProjectService,
+} from '../../../lib/features';
 
 let stores;
 let db: ITestDb;
 
 let projectService: ProjectService;
-let groupService: GroupService;
 let accessService: AccessService;
 let eventService: EventService;
 let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
-let favoritesService: FavoritesService;
 let user;
 
 const isProjectUser = async (
@@ -55,48 +53,12 @@ beforeAll(async () => {
         },
     });
     eventService = new EventService(stores, config);
-    groupService = new GroupService(stores, config, eventService);
-    accessService = new AccessService(stores, config, groupService);
-    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db.rawDatabase,
-        accessService,
-    );
-    const privateProjectChecker = createPrivateProjectChecker(
-        db.rawDatabase,
-        config,
-    );
-    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
-        db.rawDatabase,
-    );
-    featureToggleService = new FeatureToggleService(
-        stores,
-        config,
-        new SegmentService(
-            stores,
-            changeRequestAccessReadModel,
-            config,
-            eventService,
-            privateProjectChecker,
-        ),
-        accessService,
-        eventService,
-        changeRequestAccessReadModel,
-        privateProjectChecker,
-        dependentFeaturesReadModel,
-    );
+    accessService = createAccessService(db.rawDatabase, config);
 
-    favoritesService = new FavoritesService(stores, config, eventService);
+    featureToggleService = createFeatureToggleService(db.rawDatabase, config);
+
     environmentService = new EnvironmentService(stores, config);
-    projectService = new ProjectService(
-        stores,
-        config,
-        accessService,
-        featureToggleService,
-        groupService,
-        favoritesService,
-        eventService,
-        privateProjectChecker,
-    );
+    projectService = createProjectService(db.rawDatabase, config);
 });
 
 afterAll(async () => {

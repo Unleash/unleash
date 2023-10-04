@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { styled, Tab, Tabs, useMediaQuery, Box, Card } from '@mui/material';
+import { styled, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { Archive, FileCopy, Label, WatchLater } from '@mui/icons-material';
 import {
     Link,
@@ -29,13 +29,13 @@ import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureSta
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 import { ReactComponent as ChildLinkIcon } from 'assets/icons/link-child.svg';
 import { ReactComponent as ParentLinkIcon } from 'assets/icons/link-parent.svg';
-import { TooltipLink } from '../../common/TooltipLink/TooltipLink';
 import { ChildrenTooltip } from './FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/ChildrenTooltip';
-import { useUiFlag } from '../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -321,16 +321,30 @@ export const FeatureView = () => {
                 <Route path='settings' element={<FeatureSettings />} />
                 <Route path='*' element={<FeatureOverview />} />
             </Routes>
-            <FeatureArchiveDialog
-                isOpen={showDelDialog}
-                onConfirm={() => {
-                    projectRefetch();
-                    navigate(`/projects/${projectId}`);
-                }}
-                onClose={() => setShowDelDialog(false)}
-                projectId={projectId}
-                featureIds={[featureId]}
+            <ConditionallyRender
+                condition={feature.children.length > 0}
+                show={
+                    <FeatureArchiveNotAllowedDialog
+                        features={feature.children}
+                        project={projectId}
+                        isOpen={showDelDialog}
+                        onClose={() => setShowDelDialog(false)}
+                    />
+                }
+                elseShow={
+                    <FeatureArchiveDialog
+                        isOpen={showDelDialog}
+                        onConfirm={() => {
+                            projectRefetch();
+                            navigate(`/projects/${projectId}`);
+                        }}
+                        onClose={() => setShowDelDialog(false)}
+                        projectId={projectId}
+                        featureIds={[featureId]}
+                    />
+                }
             />
+
             <FeatureStaleDialog
                 isStale={feature.stale}
                 isOpen={openStaleDialog}

@@ -272,6 +272,29 @@ test('should not allow to change project with dependencies', async () => {
     );
 });
 
+test('Should not allow to archive/delete feature with children', async () => {
+    const parent = uuidv4();
+    const child = uuidv4();
+    await app.createFeature(parent, 'default');
+    await app.createFeature(child, 'default');
+    await app.addDependency(child, parent);
+
+    const { body: archiveBody } = await app.request
+        .delete(`/api/admin/projects/default/features/${parent}`)
+        .expect(403);
+    const { body: deleteBody } = await app.request
+        .post(`/api/admin/projects/default/delete`)
+        .set('Content-Type', 'application/json')
+        .send({ features: [parent] })
+        .expect(403);
+    expect(archiveBody.message).toBe(
+        'You can not archive/delete this feature since other features depend on it.',
+    );
+    expect(deleteBody.message).toBe(
+        'You can not archive/delete this feature since other features depend on it.',
+    );
+});
+
 test('Can get features for project', async () => {
     await app.request
         .post('/api/admin/projects/default/features')

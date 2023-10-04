@@ -251,6 +251,22 @@ class FeatureToggleService {
         }
     }
 
+    async validateNoChildren(featureNames: string[]): Promise<void> {
+        if (this.flagResolver.isEnabled('dependentFeatures')) {
+            if (featureNames.length === 0) return;
+            const children = await this.dependentFeaturesReadModel.getChildren(
+                featureNames,
+            );
+            if (children.length > 0) {
+                throw new InvalidOperationError(
+                    featureNames.length > 1
+                        ? `You can not archive/delete those features since other features depend on them.`
+                        : `You can not archive/delete this feature since other features depend on it.`,
+                );
+            }
+        }
+    }
+
     validateUpdatedProperties(
         { featureName, projectId }: IFeatureContext,
         existingStrategy: IFeatureStrategy,
@@ -925,7 +941,7 @@ class FeatureToggleService {
         if (this.flagResolver.isEnabled('dependentFeatures')) {
             [dependencies, children] = await Promise.all([
                 this.dependentFeaturesReadModel.getParents(featureName),
-                this.dependentFeaturesReadModel.getChildren(featureName),
+                this.dependentFeaturesReadModel.getChildren([featureName]),
             ]);
         }
 
@@ -1424,6 +1440,8 @@ class FeatureToggleService {
             });
         }
 
+        await this.validateNoChildren([featureName]);
+
         await this.featureToggleStore.archive(featureName);
 
         await this.eventService.storeEvent(
@@ -1441,6 +1459,7 @@ class FeatureToggleService {
         projectId: string,
     ): Promise<void> {
         await this.validateFeaturesContext(featureNames, projectId);
+        await this.validateNoChildren(featureNames);
 
         const features = await this.featureToggleStore.getAllByNames(
             featureNames,
@@ -1741,6 +1760,7 @@ class FeatureToggleService {
 
     // TODO: add project id.
     async deleteFeature(featureName: string, createdBy: string): Promise<void> {
+        await this.validateNoChildren([featureName]);
         const toggle = await this.featureToggleStore.get(featureName);
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
         await this.featureToggleStore.delete(featureName);
@@ -1762,6 +1782,7 @@ class FeatureToggleService {
         createdBy: string,
     ): Promise<void> {
         await this.validateFeaturesContext(featureNames, projectId);
+        await this.validateNoChildren(featureNames);
 
         const features = await this.featureToggleStore.getAllByNames(
             featureNames,

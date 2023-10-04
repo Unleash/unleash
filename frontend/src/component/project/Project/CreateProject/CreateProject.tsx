@@ -30,25 +30,17 @@ const CreateProject = () => {
     const {
         projectId,
         projectName,
-        projectMode,
         projectDesc,
-        featureLimit,
-        featureNamingPattern,
-        featureNamingExample,
-        featureNamingDescription,
-        setFeatureNamingExample,
-        setFeatureNamingPattern,
-        setFeatureNamingDescription,
+        projectMode,
+        setProjectMode,
         setProjectId,
         setProjectName,
         setProjectDesc,
-        getProjectPayload,
+        getCreateProjectPayload,
         clearErrors,
         validateProjectId,
         validateName,
         setProjectStickiness,
-        setFeatureLimit,
-        setProjectMode,
         projectStickiness,
         errors,
     } = useProjectForm();
@@ -62,7 +54,7 @@ const CreateProject = () => {
         const validId = await validateProjectId();
 
         if (validName && validId) {
-            const payload = getProjectPayload();
+            const payload = getCreateProjectPayload();
             try {
                 await createProject(payload);
                 refetchUser();
@@ -77,6 +69,9 @@ const CreateProject = () => {
                 if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
                     trackEvent('project_stickiness_set');
                 }
+                trackEvent('project-mode', {
+                    props: { mode: projectMode, action: 'added' },
+                });
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -87,7 +82,7 @@ const CreateProject = () => {
         return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/projects' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
---data-raw '${JSON.stringify(getProjectPayload(), undefined, 2)}'`;
+--data-raw '${JSON.stringify(getCreateProjectPayload(), undefined, 2)}'`;
     };
 
     const handleCancel = () => {
@@ -109,18 +104,10 @@ const CreateProject = () => {
                 projectId={projectId}
                 setProjectId={setProjectId}
                 projectName={projectName}
-                projectMode={projectMode}
                 projectStickiness={projectStickiness}
-                featureLimit={featureLimit}
-                featureNamingExample={featureNamingExample}
-                featureNamingPattern={featureNamingPattern}
-                setFeatureNamingPattern={setFeatureNamingPattern}
-                featureNamingDescription={featureNamingDescription}
-                setFeatureNamingDescription={setFeatureNamingDescription}
-                setFeatureNamingExample={setFeatureNamingExample}
-                setProjectStickiness={setProjectStickiness}
-                setFeatureLimit={setFeatureLimit}
+                projectMode={projectMode}
                 setProjectMode={setProjectMode}
+                setProjectStickiness={setProjectStickiness}
                 setProjectName={setProjectName}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}

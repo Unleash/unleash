@@ -1,41 +1,29 @@
 import { useEffect, useState } from 'react';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ProjectMode } from './useProjectEnterpriseSettingsForm';
 
-export type ProjectMode = 'open' | 'protected' | 'private';
 export const DEFAULT_PROJECT_STICKINESS = 'default';
 const useProjectForm = (
     initialProjectId = '',
     initialProjectName = '',
     initialProjectDesc = '',
     initialProjectStickiness = DEFAULT_PROJECT_STICKINESS,
-    initialProjectMode: ProjectMode = 'open',
     initialFeatureLimit = '',
-    initialFeatureNamingPattern = '',
-    initialFeatureNamingExample = '',
-    initialFeatureNamingDescription = '',
+    initialProjectMode: ProjectMode = 'open',
 ) => {
+    const { isEnterprise } = useUiConfig();
     const [projectId, setProjectId] = useState(initialProjectId);
-
+    const [projectMode, setProjectMode] =
+        useState<ProjectMode>(initialProjectMode);
     const [projectName, setProjectName] = useState(initialProjectName);
     const [projectDesc, setProjectDesc] = useState(initialProjectDesc);
     const [projectStickiness, setProjectStickiness] = useState<string>(
         initialProjectStickiness,
     );
-    const [projectMode, setProjectMode] =
-        useState<ProjectMode>(initialProjectMode);
     const [featureLimit, setFeatureLimit] =
         useState<string>(initialFeatureLimit);
-    const [featureNamingPattern, setFeatureNamingPattern] = useState(
-        initialFeatureNamingPattern,
-    );
-    const [featureNamingExample, setFeatureNamingExample] = useState(
-        initialFeatureNamingExample,
-    );
-
-    const [featureNamingDescription, setFeatureNamingDescription] = useState(
-        initialFeatureNamingDescription,
-    );
 
     const [errors, setErrors] = useState({});
 
@@ -54,42 +42,41 @@ const useProjectForm = (
     }, [initialProjectDesc]);
 
     useEffect(() => {
-        setProjectMode(initialProjectMode);
-    }, [initialProjectMode]);
-
-    useEffect(() => {
         setFeatureLimit(initialFeatureLimit);
     }, [initialFeatureLimit]);
-
-    useEffect(() => {
-        setFeatureNamingPattern(initialFeatureNamingPattern);
-    }, [initialFeatureNamingPattern]);
-
-    useEffect(() => {
-        setFeatureNamingExample(initialFeatureNamingExample);
-    }, [initialFeatureNamingExample]);
-
-    useEffect(() => {
-        setFeatureNamingDescription(initialFeatureNamingDescription);
-    }, [initialFeatureNamingDescription]);
 
     useEffect(() => {
         setProjectStickiness(initialProjectStickiness);
     }, [initialProjectStickiness]);
 
-    const getProjectPayload = () => {
+    useEffect(() => {
+        setProjectMode(initialProjectMode);
+    }, [initialProjectMode]);
+
+    const getCreateProjectPayload = () => {
+        return isEnterprise()
+            ? {
+                  id: projectId,
+                  name: projectName,
+                  description: projectDesc,
+                  defaultStickiness: projectStickiness,
+                  mode: projectMode,
+              }
+            : {
+                  id: projectId,
+                  name: projectName,
+                  description: projectDesc,
+                  defaultStickiness: projectStickiness,
+              };
+    };
+
+    const getEditProjectPayload = () => {
         return {
             id: projectId,
             name: projectName,
             description: projectDesc,
             defaultStickiness: projectStickiness,
             featureLimit: getFeatureLimitAsNumber(),
-            mode: projectMode,
-            featureNaming: {
-                pattern: featureNamingPattern,
-                example: featureNamingExample,
-                description: featureNamingDescription,
-            },
         };
     };
 
@@ -106,7 +93,7 @@ const useProjectForm = (
             return false;
         }
         try {
-            await validateId(getProjectPayload().id);
+            await validateId(getCreateProjectPayload().id);
             return true;
         } catch (error: unknown) {
             setErrors((prev) => ({ ...prev, id: formatUnknownError(error) }));
@@ -131,22 +118,17 @@ const useProjectForm = (
         projectId,
         projectName,
         projectDesc,
-        projectStickiness,
         projectMode,
+        projectStickiness,
         featureLimit,
-        featureNamingPattern,
-        featureNamingExample,
-        featureNamingDescription,
-        setFeatureNamingPattern,
-        setFeatureNamingExample,
-        setFeatureNamingDescription,
         setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectStickiness,
-        setProjectMode,
         setFeatureLimit,
-        getProjectPayload,
+        setProjectMode,
+        getCreateProjectPayload,
+        getEditProjectPayload,
         validateName,
         validateProjectId,
         clearErrors,

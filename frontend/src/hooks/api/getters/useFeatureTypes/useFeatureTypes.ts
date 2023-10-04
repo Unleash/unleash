@@ -1,8 +1,8 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import { IFeatureType } from 'interfaces/featureTypes';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { FeatureTypeSchema } from '../../../../openapi';
 
 const useFeatureTypes = (options: SWRConfiguration = {}) => {
     const fetcher = async () => {
@@ -27,7 +27,7 @@ const useFeatureTypes = (options: SWRConfiguration = {}) => {
     }, [data, error]);
 
     return {
-        featureTypes: (data?.types as IFeatureType[]) || [],
+        featureTypes: (data?.types as FeatureTypeSchema[]) || [],
         error,
         loading,
         refetch,

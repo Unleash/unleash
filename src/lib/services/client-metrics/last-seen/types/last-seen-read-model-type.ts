@@ -1,5 +1,5 @@
+import { IFeatureLastSeenResults } from '../last-seen-read-model';
+
 export interface ILastSeenReadModel {
-    getForFeature(
-        features: string[],
-    ): Promise<{ lastSeen: Date; environment: string }[]>;
+    getForFeature(features: string[]): Promise<IFeatureLastSeenResults>;
 }

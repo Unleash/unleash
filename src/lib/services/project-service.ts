@@ -1076,11 +1076,39 @@ export default class ProjectService {
             this.projectStatsStore.getProjectStats(projectId),
         ]);
 
-        //const featureNames = features.map((feature) => feature.name);
-        // const lastSeenAtPerEnvironment =
-        //     await this.lastSeenReadModel.getForFeature(featureNames);
+        const featureNames = features.map((feature) => feature.name);
+        const lastSeenAtPerEnvironment =
+            await this.lastSeenReadModel.getForFeature(featureNames);
         // Get
-        // console.log(features);
+
+        const mappedFeatures = features.map((feature) => {
+            if (!feature.environments) {
+                console.warn('Feature without environments:', feature);
+                return feature;
+            }
+
+            feature.environments = feature.environments.map((environment) => {
+                if (
+                    !lastSeenAtPerEnvironment[feature.name] ||
+                    !lastSeenAtPerEnvironment[feature.name][environment.name]
+                ) {
+                    console.warn(
+                        'No last seen data for environment:',
+                        environment,
+                    );
+                    return environment;
+                }
+
+                environment.lastSeenAt = new Date(
+                    lastSeenAtPerEnvironment[feature.name][
+                        environment.name
+                    ].lastSeen,
+                );
+                return environment;
+            });
+
+            return feature;
+        });
 
         return {
             stats: projectStats,
@@ -1095,7 +1123,7 @@ export default class ProjectService {
             updatedAt: project.updatedAt,
             createdAt: project.createdAt,
             environments,
-            features,
+            features: mappedFeatures,
             members,
             version: 1,
         };

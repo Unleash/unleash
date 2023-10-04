@@ -3,6 +3,13 @@ import { ILastSeenReadModel } from './types/last-seen-read-model-type';
 
 const TABLE = 'last_seen_at_metrics';
 
+export interface IFeatureLastSeenResults {
+    [featureName: string]: {
+        [environment: string]: {
+            lastSeen: string;
+        };
+    };
+}
 export class LastSeenAtReadModel implements ILastSeenReadModel {
     private db: Db;
 
@@ -10,13 +17,25 @@ export class LastSeenAtReadModel implements ILastSeenReadModel {
         this.db = db;
     }
 
-    async getForFeature(
-        features: string[],
-    ): Promise<{ lastSeen: Date; environment: string }[]> {
+    async getForFeature(features: string[]): Promise<IFeatureLastSeenResults> {
         const rows = await this.db(TABLE).whereIn('feature_name', features);
 
-        console.log(rows);
+        const result = rows.reduce((acc, curr) => {
+            if (!acc[curr.feature_name]) {
+                acc[curr.feature_name] = {};
 
-        return [{ lastSeen: new Date(), environment: 'string' }];
+                acc[curr.feature_name][curr.environment] = {
+                    lastSeen: curr.last_seen_at,
+                };
+            } else {
+                acc[curr.feature_name][curr.environment] = {
+                    lastSeen: curr.last_seen_at,
+                };
+            }
+
+            return acc;
+        }, {});
+
+        return result;
     }
 }

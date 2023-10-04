@@ -105,6 +105,7 @@ exports[`should create default config 1`] = `
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
       "strictSchemaValidation": false,
+      "transactionalDecorator": false,
       "variantTypeNumber": false,
     },
   },
@@ -144,6 +145,7 @@ exports[`should create default config 1`] = `
       "proPlanAutoCharge": false,
       "responseTimeWithAppNameKillSwitch": false,
       "strictSchemaValidation": false,
+      "transactionalDecorator": false,
       "variantTypeNumber": false,
     },
     "externalResolver": {

@@ -99,6 +99,7 @@ import { checkFeatureFlagNamesAgainstPattern } from '../features/feature-naming-
 import { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
 import { IDependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model-type';
 import EventService from './event-service';
+import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
 
 interface IFeatureContext {
     featureName: string;
@@ -162,6 +163,8 @@ class FeatureToggleService {
 
     private dependentFeaturesReadModel: IDependentFeaturesReadModel;
 
+    private dependentFeaturesService: DependentFeaturesService;
+
     constructor(
         {
             featureStrategiesStore,
@@ -193,6 +196,7 @@ class FeatureToggleService {
         changeRequestAccessReadModel: IChangeRequestAccessReadModel,
         privateProjectChecker: IPrivateProjectChecker,
         dependentFeaturesReadModel: IDependentFeaturesReadModel,
+        dependentFeaturesService: DependentFeaturesService,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -210,6 +214,7 @@ class FeatureToggleService {
         this.changeRequestAccessReadModel = changeRequestAccessReadModel;
         this.privateProjectChecker = privateProjectChecker;
         this.dependentFeaturesReadModel = dependentFeaturesReadModel;
+        this.dependentFeaturesService = dependentFeaturesService;
     }
 
     async validateFeaturesContext(
@@ -1255,7 +1260,17 @@ class FeatureToggleService {
             }),
         );
 
-        await Promise.all([...strategyTasks, ...variantTasks]);
+        const cloneDependencies =
+            this.dependentFeaturesService.cloneDependencies(
+                { featureName, newFeatureName, projectId },
+                userName,
+            );
+
+        await Promise.all([
+            ...strategyTasks,
+            ...variantTasks,
+            cloneDependencies,
+        ]);
         return created;
     }
 

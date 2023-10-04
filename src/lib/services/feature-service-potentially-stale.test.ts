@@ -13,6 +13,7 @@ import { IPrivateProjectChecker } from '../features/private-project/privateProje
 import { IDependentFeaturesReadModel } from '../features/dependent-features/dependent-features-read-model-type';
 import EventService from './event-service';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
+import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
 
 test('Should only store events for potentially stale on', async () => {
     expect.assertions(2);
@@ -64,6 +65,7 @@ test('Should only store events for potentially stale on', async () => {
         {} as IChangeRequestAccessReadModel,
         {} as IPrivateProjectChecker,
         {} as IDependentFeaturesReadModel,
+        {} as DependentFeaturesService,
     );
 
     await featureToggleService.updatePotentiallyStaleFeatures();

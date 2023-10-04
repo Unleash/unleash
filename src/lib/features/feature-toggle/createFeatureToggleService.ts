@@ -48,6 +48,10 @@ import { DependentFeaturesReadModel } from '../dependent-features/dependent-feat
 import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
 import FeatureTagStore from '../../db/feature-tag-store';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
+import {
+    createDependentFeaturesService,
+    createFakeDependentFeaturesService,
+} from '../dependent-features/createDependentFeaturesService';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -115,6 +119,8 @@ export const createFeatureToggleService = (
 
     const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
 
+    const dependentFeaturesService = createDependentFeaturesService(db, config);
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -133,6 +139,7 @@ export const createFeatureToggleService = (
         changeRequestAccessReadModel,
         privateProjectChecker,
         dependentFeaturesReadModel,
+        dependentFeaturesService,
     );
     return featureToggleService;
 };
@@ -173,6 +180,7 @@ export const createFakeFeatureToggleService = (
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
     const fakePrivateProjectChecker = createFakePrivateProjectChecker();
     const dependentFeaturesReadModel = new FakeDependentFeaturesReadModel();
+    const dependentFeaturesService = createFakeDependentFeaturesService(config);
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -191,6 +199,7 @@ export const createFakeFeatureToggleService = (
         changeRequestAccessReadModel,
         fakePrivateProjectChecker,
         dependentFeaturesReadModel,
+        dependentFeaturesService,
     );
     return featureToggleService;
 };

@@ -233,6 +233,13 @@ export const createServices = (
         config,
         privateProjectChecker,
     );
+
+    const dependentFeaturesService = db
+        ? createDependentFeaturesService(db, config)
+        : createFakeDependentFeaturesService(config);
+    const transactionalDependentFeaturesService = (txDb: Knex.Transaction) =>
+        createDependentFeaturesService(txDb, config);
+
     const featureToggleServiceV2 = new FeatureToggleService(
         stores,
         config,
@@ -242,6 +249,7 @@ export const createServices = (
         changeRequestAccessReadModel,
         privateProjectChecker,
         dependentFeaturesReadModel,
+        dependentFeaturesService,
     );
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(
@@ -326,12 +334,6 @@ export const createServices = (
     );
 
     const eventAnnouncerService = new EventAnnouncerService(stores, config);
-
-    const dependentFeaturesService = db
-        ? createDependentFeaturesService(db, config)
-        : createFakeDependentFeaturesService(config);
-    const transactionalDependentFeaturesService = (txDb: Knex.Transaction) =>
-        createDependentFeaturesService(txDb, config);
 
     return {
         accessService,

@@ -22,6 +22,32 @@ export class DependentFeaturesService {
         this.eventService = eventService;
     }
 
+    async cloneDependencies(
+        {
+            featureName,
+            newFeatureName,
+            projectId,
+        }: { featureName: string; newFeatureName: string; projectId: string },
+        user: string,
+    ) {
+        const parents = await this.dependentFeaturesReadModel.getParents(
+            featureName,
+        );
+        await Promise.all(
+            parents.map((parent) =>
+                this.upsertFeatureDependency(
+                    { child: newFeatureName, projectId },
+                    {
+                        feature: parent.feature,
+                        enabled: parent.enabled,
+                        variants: parent.variants,
+                    },
+                    user,
+                ),
+            ),
+        );
+    }
+
     async upsertFeatureDependency(
         { child, projectId }: { child: string; projectId: string },
         dependentFeature: CreateDependentFeatureSchema,

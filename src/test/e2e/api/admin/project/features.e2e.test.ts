@@ -295,6 +295,29 @@ test('Should not allow to archive/delete feature with children', async () => {
     );
 });
 
+test('should clone feature with parent dependencies', async () => {
+    const parent = uuidv4();
+    const child = uuidv4();
+    const childClone = uuidv4();
+    await app.createFeature(parent, 'default');
+    await app.createFeature(child, 'default');
+    await app.addDependency(child, parent);
+
+    await app.request
+        .post(`/api/admin/projects/default/features/${child}/clone`)
+        .send({ name: childClone, replaceGroupId: false })
+        .expect(201);
+
+    const { body: clonedFeature } = await app.getProjectFeatures(
+        'default',
+        child,
+    );
+    expect(clonedFeature).toMatchObject({
+        children: [],
+        dependencies: [{ feature: parent, enabled: true, variants: [] }],
+    });
+});
+
 test('Can get features for project', async () => {
     await app.request
         .post('/api/admin/projects/default/features')

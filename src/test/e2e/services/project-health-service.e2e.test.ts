@@ -1,28 +1,21 @@
 import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
-import FeatureToggleService from '../../../lib/services/feature-toggle-service';
-import { AccessService } from '../../../lib/services/access-service';
-import ProjectService from '../../../lib/services/project-service';
 import ProjectHealthService from '../../../lib/services/project-health-service';
 import { createTestConfig } from '../../config/test-config';
 import { IUnleashStores } from '../../../lib/types';
 import { IUser } from '../../../lib/server-impl';
-import { SegmentService } from '../../../lib/services/segment-service';
-import { GroupService } from '../../../lib/services/group-service';
-import { EventService, FavoritesService } from '../../../lib/services';
-import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
-import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
-import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
+import { EventService } from '../../../lib/services';
+import {
+    createFeatureToggleService,
+    createProjectService,
+} from '../../../lib/features';
 
 let stores: IUnleashStores;
 let db: ITestDb;
 let projectService;
-let groupService;
-let accessService;
 let eventService: EventService;
 let projectHealthService;
 let featureToggleService;
-let favoritesService;
 let user: IUser;
 
 beforeAll(async () => {
@@ -34,47 +27,10 @@ beforeAll(async () => {
         email: 'test@getunleash.io',
     });
     eventService = new EventService(stores, config);
-    groupService = new GroupService(stores, config, eventService);
-    accessService = new AccessService(stores, config, groupService);
-    const changeRequestAccessReadModel = new ChangeRequestAccessReadModel(
-        db.rawDatabase,
-        accessService,
-    );
-    const privateProjectChecker = createPrivateProjectChecker(
-        db.rawDatabase,
-        config,
-    );
-    const dependentFeaturesReadModel = new DependentFeaturesReadModel(
-        db.rawDatabase,
-    );
-    featureToggleService = new FeatureToggleService(
-        stores,
-        config,
-        new SegmentService(
-            stores,
-            changeRequestAccessReadModel,
-            config,
-            eventService,
-            privateProjectChecker,
-        ),
-        accessService,
-        eventService,
-        changeRequestAccessReadModel,
-        privateProjectChecker,
-        dependentFeaturesReadModel,
-    );
-    favoritesService = new FavoritesService(stores, config, eventService);
 
-    projectService = new ProjectService(
-        stores,
-        config,
-        accessService,
-        featureToggleService,
-        groupService,
-        favoritesService,
-        eventService,
-        privateProjectChecker,
-    );
+    featureToggleService = createFeatureToggleService(db.rawDatabase, config);
+
+    projectService = createProjectService(db.rawDatabase, config);
     projectHealthService = new ProjectHealthService(
         stores,
         config,

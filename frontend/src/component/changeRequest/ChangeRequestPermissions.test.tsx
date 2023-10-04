@@ -1,57 +1,57 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter, Routes, Route } from "react-router-dom";
-import { FeatureView } from "../feature/FeatureView/FeatureView";
-import { ThemeProvider } from "themes/ThemeProvider";
-import { AccessProvider } from "../providers/AccessProvider/AccessProvider";
-import { AnnouncerProvider } from "../common/Announcer/AnnouncerProvider/AnnouncerProvider";
-import { testServerRoute, testServerSetup } from "../../utils/testServer";
-import { UIProviderContainer } from "../providers/UIProvider/UIProviderContainer";
-import { FC } from "react";
-import { IPermission } from "../../interfaces/user";
-import { SWRConfig } from "swr";
-import { ProjectMode } from "../project/Project/hooks/useProjectEnterpriseSettingsForm";
+import { render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { FeatureView } from '../feature/FeatureView/FeatureView';
+import { ThemeProvider } from 'themes/ThemeProvider';
+import { AccessProvider } from '../providers/AccessProvider/AccessProvider';
+import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider';
+import { testServerRoute, testServerSetup } from '../../utils/testServer';
+import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
+import { FC } from 'react';
+import { IPermission } from '../../interfaces/user';
+import { SWRConfig } from 'swr';
+import { ProjectMode } from '../project/Project/hooks/useProjectEnterpriseSettingsForm';
 
 const server = testServerSetup();
 
 const projectWithCollaborationMode = (mode: ProjectMode) =>
-    testServerRoute(server, "/api/admin/projects/default", { mode });
+    testServerRoute(server, '/api/admin/projects/default', { mode });
 
 const changeRequestsEnabledIn = (
-    env: "development" | "production" | "custom"
+    env: 'development' | 'production' | 'custom',
 ) =>
     testServerRoute(
         server,
-        "/api/admin/projects/default/change-requests/config",
+        '/api/admin/projects/default/change-requests/config',
         [
             {
-                environment: "development",
-                type: "development",
+                environment: 'development',
+                type: 'development',
                 requiredApprovals: null,
-                changeRequestEnabled: env === "development",
+                changeRequestEnabled: env === 'development',
             },
             {
-                environment: "production",
-                type: "production",
+                environment: 'production',
+                type: 'production',
                 requiredApprovals: 1,
-                changeRequestEnabled: env === "production",
+                changeRequestEnabled: env === 'production',
             },
             {
-                environment: "custom",
-                type: "production",
+                environment: 'custom',
+                type: 'production',
                 requiredApprovals: null,
-                changeRequestEnabled: env === "custom",
+                changeRequestEnabled: env === 'custom',
             },
-        ]
+        ],
     );
 
 const uiConfigForEnterprise = () =>
-    testServerRoute(server, "/api/admin/ui-config", {
-        environment: "Open Source",
+    testServerRoute(server, '/api/admin/ui-config', {
+        environment: 'Open Source',
         flags: {
             changeRequests: true,
         },
         versionInfo: {
-            current: { oss: "4.18.0-beta.5", enterprise: "4.17.0-beta.1" },
+            current: { oss: '4.18.0-beta.5', enterprise: '4.17.0-beta.1' },
         },
         disablePasswordAuth: false,
     });
@@ -59,12 +59,12 @@ const uiConfigForEnterprise = () =>
 const setupOtherRoutes = (feature: string) => {
     testServerRoute(
         server,
-        "api/admin/projects/default/change-requests/pending",
-        []
+        'api/admin/projects/default/change-requests/pending',
+        [],
     );
     testServerRoute(server, `api/admin/client-metrics/features/${feature}`, {
         version: 1,
-        maturity: "stable",
+        maturity: 'stable',
         featureName: feature,
         lastHourUsage: [],
         seenApplications: [],
@@ -86,25 +86,25 @@ const setupOtherRoutes = (feature: string) => {
         version: 1,
         strategies: [
             {
-                displayName: "Standard",
-                name: "default",
+                displayName: 'Standard',
+                name: 'default',
                 editable: false,
                 description:
-                    "The standard strategy is strictly on / off for your entire userbase.",
+                    'The standard strategy is strictly on / off for your entire userbase.',
                 parameters: [],
                 deprecated: false,
             },
             {
-                displayName: "UserIDs",
-                name: "userWithId",
+                displayName: 'UserIDs',
+                name: 'userWithId',
                 editable: false,
                 description:
-                    "Enable the feature for a specific set of userIds.",
+                    'Enable the feature for a specific set of userIds.',
                 parameters: [
                     {
-                        name: "userIds",
-                        type: "list",
-                        description: "",
+                        name: 'userIds',
+                        type: 'list',
+                        description: '',
                         required: false,
                     },
                 ],
@@ -115,17 +115,17 @@ const setupOtherRoutes = (feature: string) => {
 };
 
 const userHasPermissions = (permissions: Array<IPermission>) => {
-    testServerRoute(server, "api/admin/user", {
+    testServerRoute(server, 'api/admin/user', {
         user: {
             isAPI: false,
             id: 2,
-            name: "Test",
-            email: "test@getunleash.ai",
+            name: 'Test',
+            email: 'test@getunleash.ai',
             imageUrl:
-                "https://gravatar.com/avatar/e55646b526ff342ff8b43721f0cbdd8e?size=42&default=retro",
-            seenAt: "2022-11-29T08:21:52.581Z",
+                'https://gravatar.com/avatar/e55646b526ff342ff8b43721f0cbdd8e?size=42&default=retro',
+            seenAt: '2022-11-29T08:21:52.581Z',
             loginAttempts: 0,
-            createdAt: "2022-11-21T10:10:33.074Z",
+            createdAt: '2022-11-21T10:10:33.074Z',
         },
         permissions,
         feedback: [],
@@ -136,21 +136,21 @@ const userIsMemberOfProjects = (projects: string[]) => {
     userHasPermissions(
         projects.map((project) => ({
             project,
-            environment: "irrelevant",
-            permission: "irrelevant",
-        }))
+            environment: 'irrelevant',
+            permission: 'irrelevant',
+        })),
     );
 };
 
 const featureEnvironments = (
     feature: string,
-    environments: Array<{ name: string; strategies: Array<string> }>
+    environments: Array<{ name: string; strategies: Array<string> }>,
 ) => {
     testServerRoute(server, `/api/admin/projects/default/features/${feature}`, {
         environments: environments.map((env) => ({
             name: env.name,
             enabled: false,
-            type: "production",
+            type: 'production',
             sortOrder: 1,
             strategies: env.strategies.map((strategy) => ({
                 name: strategy,
@@ -162,13 +162,13 @@ const featureEnvironments = (
         })),
         name: feature,
         impressionData: false,
-        description: "",
-        project: "default",
+        description: '',
+        project: 'default',
         stale: false,
         variants: [],
-        createdAt: "2022-11-14T08:16:33.338Z",
+        createdAt: '2022-11-14T08:16:33.338Z',
         lastSeenAt: null,
-        type: "release",
+        type: 'release',
         archived: false,
         children: [],
         dependencies: [],
@@ -199,7 +199,7 @@ const UnleashUiSetup: FC<{ path: string; pathTemplate: string }> = ({
 
 const strategiesAreDisplayed = async (
     firstStrategy: string,
-    secondStrategy: string
+    secondStrategy: string,
 ) => {
     await screen.findByText(firstStrategy);
     await screen.findByText(secondStrategy);
@@ -213,10 +213,10 @@ const getDeleteButtons = async () => {
         removeMenus.map(async (menu) => {
             menu.click();
             const removeButton = screen.getAllByTestId(
-                "STRATEGY_FORM_REMOVE_ID"
+                'STRATEGY_FORM_REMOVE_ID',
             );
             deleteButtons.push(...removeButton);
-        })
+        }),
     );
     return deleteButtons;
 };
@@ -229,12 +229,12 @@ const deleteButtonsActiveInChangeRequestEnv = async () => {
     await waitFor(() => {
         // production
         const productionStrategyDeleteButton = deleteButtons[1];
-        expect(productionStrategyDeleteButton).not.toHaveClass("Mui-disabled");
+        expect(productionStrategyDeleteButton).not.toHaveClass('Mui-disabled');
     });
     await waitFor(() => {
         // custom env
         const customEnvStrategyDeleteButton = deleteButtons[2];
-        expect(customEnvStrategyDeleteButton).toHaveClass("Mui-disabled");
+        expect(customEnvStrategyDeleteButton).toHaveClass('Mui-disabled');
     });
 };
 
@@ -246,17 +246,17 @@ const deleteButtonsInactiveInChangeRequestEnv = async () => {
     await waitFor(() => {
         // production
         const productionStrategyDeleteButton = deleteButtons[1];
-        expect(productionStrategyDeleteButton).toHaveClass("Mui-disabled");
+        expect(productionStrategyDeleteButton).toHaveClass('Mui-disabled');
     });
     await waitFor(() => {
         // custom env
         const customEnvStrategyDeleteButton = deleteButtons[2];
-        expect(customEnvStrategyDeleteButton).toHaveClass("Mui-disabled");
+        expect(customEnvStrategyDeleteButton).toHaveClass('Mui-disabled');
     });
 };
 
 const copyButtonsActiveInOtherEnv = async () => {
-    const copyButtons = screen.getAllByTestId("STRATEGY_FORM_COPY_ID");
+    const copyButtons = screen.getAllByTestId('STRATEGY_FORM_COPY_ID');
     expect(copyButtons.length).toBe(2);
 
     // production
@@ -274,92 +274,92 @@ const openEnvironments = async (envNames: string[]) => {
     }
 };
 
-test("open mode + non-project member can perform basic change request actions", async () => {
-    const project = "default";
-    const featureName = "test";
+test('open mode + non-project member can perform basic change request actions', async () => {
+    const project = 'default';
+    const featureName = 'test';
     featureEnvironments(featureName, [
-        { name: "development", strategies: [] },
-        { name: "production", strategies: ["userWithId"] },
-        { name: "custom", strategies: ["default"] },
+        { name: 'development', strategies: [] },
+        { name: 'production', strategies: ['userWithId'] },
+        { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([]);
-    changeRequestsEnabledIn("production");
-    projectWithCollaborationMode("open");
+    changeRequestsEnabledIn('production');
+    projectWithCollaborationMode('open');
     uiConfigForEnterprise();
     setupOtherRoutes(featureName);
 
     render(
         <UnleashUiSetup
-            pathTemplate="/projects/:projectId/features/:featureId/*"
+            pathTemplate='/projects/:projectId/features/:featureId/*'
             path={`/projects/${project}/features/${featureName}`}
         >
             <FeatureView />
-        </UnleashUiSetup>
+        </UnleashUiSetup>,
     );
 
-    await openEnvironments(["development", "production", "custom"]);
+    await openEnvironments(['development', 'production', 'custom']);
 
-    await strategiesAreDisplayed("UserIDs", "Standard");
+    await strategiesAreDisplayed('UserIDs', 'Standard');
     await deleteButtonsActiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
 });
 
-test("protected mode + project member can perform basic change request actions", async () => {
-    const project = "default";
-    const featureName = "test";
+test('protected mode + project member can perform basic change request actions', async () => {
+    const project = 'default';
+    const featureName = 'test';
     featureEnvironments(featureName, [
-        { name: "development", strategies: [] },
-        { name: "production", strategies: ["userWithId"] },
-        { name: "custom", strategies: ["default"] },
+        { name: 'development', strategies: [] },
+        { name: 'production', strategies: ['userWithId'] },
+        { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([project]);
-    changeRequestsEnabledIn("production");
-    projectWithCollaborationMode("protected");
+    changeRequestsEnabledIn('production');
+    projectWithCollaborationMode('protected');
     uiConfigForEnterprise();
     setupOtherRoutes(featureName);
 
     render(
         <UnleashUiSetup
-            pathTemplate="/projects/:projectId/features/:featureId/*"
+            pathTemplate='/projects/:projectId/features/:featureId/*'
             path={`/projects/${project}/features/${featureName}`}
         >
             <FeatureView />
-        </UnleashUiSetup>
+        </UnleashUiSetup>,
     );
 
-    await openEnvironments(["development", "production", "custom"]);
+    await openEnvironments(['development', 'production', 'custom']);
 
-    await strategiesAreDisplayed("UserIDs", "Standard");
+    await strategiesAreDisplayed('UserIDs', 'Standard');
     await deleteButtonsActiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
 });
 
-test("protected mode + non-project member cannot perform basic change request actions", async () => {
-    const project = "default";
-    const featureName = "test";
+test('protected mode + non-project member cannot perform basic change request actions', async () => {
+    const project = 'default';
+    const featureName = 'test';
     featureEnvironments(featureName, [
-        { name: "development", strategies: [] },
-        { name: "production", strategies: ["userWithId"] },
-        { name: "custom", strategies: ["default"] },
+        { name: 'development', strategies: [] },
+        { name: 'production', strategies: ['userWithId'] },
+        { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([]);
-    changeRequestsEnabledIn("production");
-    projectWithCollaborationMode("protected");
+    changeRequestsEnabledIn('production');
+    projectWithCollaborationMode('protected');
     uiConfigForEnterprise();
     setupOtherRoutes(featureName);
 
     render(
         <UnleashUiSetup
-            pathTemplate="/projects/:projectId/features/:featureId/*"
+            pathTemplate='/projects/:projectId/features/:featureId/*'
             path={`/projects/${project}/features/${featureName}`}
         >
             <FeatureView />
-        </UnleashUiSetup>
+        </UnleashUiSetup>,
     );
 
-    await openEnvironments(["development", "production", "custom"]);
+    await openEnvironments(['development', 'production', 'custom']);
 
-    await strategiesAreDisplayed("UserIDs", "Standard");
+    await strategiesAreDisplayed('UserIDs', 'Standard');
     await deleteButtonsInactiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
 });

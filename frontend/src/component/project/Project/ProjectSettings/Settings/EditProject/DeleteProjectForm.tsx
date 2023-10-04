@@ -1,15 +1,15 @@
-import React from "react";
-import { DeleteProject } from "../DeleteProject";
-import FormTemplate from "component/common/FormTemplate/FormTemplate";
-import { useRequiredPathParam } from "hooks/useRequiredPathParam";
-import useProjectApi from "hooks/api/actions/useProjectApi/useProjectApi";
-import useUiConfig from "hooks/api/getters/useUiConfig/useUiConfig";
+import React from 'react';
+import { DeleteProject } from '../DeleteProject';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IDeleteProjectForm {
     featureCount: number;
 }
 export const DeleteProjectForm = ({ featureCount }: IDeleteProjectForm) => {
-    const id = useRequiredPathParam("projectId");
+    const id = useRequiredPathParam('projectId');
     const { uiConfig } = useUiConfig();
     const { loading } = useProjectApi();
     const formatProjectDeleteApiCode = () => {
@@ -20,10 +20,10 @@ export const DeleteProjectForm = ({ featureCount }: IDeleteProjectForm) => {
     return (
         <FormTemplate
             loading={loading}
-            title="Delete Project"
-            description=""
-            documentationLink="https://docs.getunleash.io/reference/projects"
-            documentationLinkLabel="Projects documentation"
+            title='Delete Project'
+            description=''
+            documentationLink='https://docs.getunleash.io/reference/projects'
+            documentationLinkLabel='Projects documentation'
             formatApiCode={formatProjectDeleteApiCode}
             compact
             compactPadding

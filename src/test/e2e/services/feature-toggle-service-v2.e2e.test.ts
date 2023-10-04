@@ -2,12 +2,6 @@ import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { createTestConfig } from '../../config/test-config';
 import dbInit from '../helpers/database-init';
 import { DEFAULT_ENV } from '../../../lib/util';
-import {
-    AccessService,
-    EventService,
-    GroupService,
-    SegmentService,
-} from '../../../lib/services';
 import { FeatureStrategySchema } from '../../../lib/openapi';
 import User from '../../../lib/types/user';
 import {
@@ -23,11 +17,7 @@ import {
     PermissionError,
 } from '../../../lib/error';
 import { ISegmentService } from '../../../lib/segments/segment-service-interface';
-import { ChangeRequestAccessReadModel } from '../../../lib/features/change-request-access-service/sql-change-request-access-read-model';
-import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker';
-import { DependentFeaturesReadModel } from '../../../lib/features/dependent-features/dependent-features-read-model';
 import {
-    createAccessService,
     createFeatureToggleService,
     createSegmentService,
 } from '../../../lib/features';

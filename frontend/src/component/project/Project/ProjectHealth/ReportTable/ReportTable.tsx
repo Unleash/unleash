@@ -60,7 +60,6 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
     const { featureTypes } = useFeatureTypes();
 
     const data: IReportTableRow[] = useMemo<IReportTableRow[]>(() => {
-        console.log(featureTypes);
         return features.map(report => ({
             project: projectId,
             name: report.name,
@@ -144,7 +143,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
                 maxWidth: 120,
             },
         ],
-        [showEnvironmentLastSeen, JSON.stringify(data)]
+        [showEnvironmentLastSeen]
     );
 
     const {

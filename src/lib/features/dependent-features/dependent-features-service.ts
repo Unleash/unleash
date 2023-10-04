@@ -55,9 +55,9 @@ export class DependentFeaturesService {
     ): Promise<void> {
         const { enabled, feature: parent, variants } = dependentFeature;
 
-        const children = await this.dependentFeaturesReadModel.getChildren(
+        const children = await this.dependentFeaturesReadModel.getChildren([
             child,
-        );
+        ]);
         if (children.length > 0) {
             throw new InvalidOperationError(
                 'Transitive dependency detected. Cannot add a dependency to the feature that other features depend on.',

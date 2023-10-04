@@ -84,7 +84,7 @@ export const AddDependencyDialogue = ({
             secondaryButtonText='Cancel'
         >
             <Box>
-                You feature will be evaluated only when the selected parent
+                Your feature will be evaluated only when the selected parent
                 feature is enabled in the same environment.
                 <br />
                 <br />

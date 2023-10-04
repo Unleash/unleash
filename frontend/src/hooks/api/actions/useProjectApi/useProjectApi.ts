@@ -1,14 +1,11 @@
-import type { BatchStaleSchema, CreateFeatureStrategySchema } from 'openapi';
+import type {
+    BatchStaleSchema,
+    CreateFeatureStrategySchema,
+    CreateProjectSchema,
+    UpdateProjectSchema,
+    UpdateProjectEnterpriseSettingsSchema,
+} from 'openapi';
 import useAPI from '../useApi/useApi';
-import { ProjectMode } from 'component/project/Project/hooks/useProjectForm';
-
-interface ICreatePayload {
-    id: string;
-    name: string;
-    description: string;
-    mode: ProjectMode;
-    defaultStickiness: string;
-}
 
 interface IAccessPayload {
     roles: number[];
@@ -21,41 +18,63 @@ const useProjectApi = () => {
         propagateErrors: true,
     });
 
-    const createProject = async (payload: ICreatePayload) => {
+    const createProject = async (payload: CreateProjectSchema) => {
         const path = `api/admin/projects`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify(payload),
         });
 
-        return makeRequest(req.caller, req.id);
+        const res = await makeRequest(req.caller, req.id);
+
+        return res;
     };
 
-    const validateId = async (id: ICreatePayload['id']) => {
+    const validateId = async (id: CreateProjectSchema['id']) => {
         const path = `api/admin/projects/validate`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify({ id }),
         });
+        const res = await makeRequest(req.caller, req.id);
 
-        return makeRequest(req.caller, req.id);
+        return res;
     };
 
-    const editProject = async (id: string, payload: ICreatePayload) => {
+    const editProject = async (id: string, payload: UpdateProjectSchema) => {
         const path = `api/admin/projects/${id}`;
         const req = createRequest(path, {
             method: 'PUT',
             body: JSON.stringify(payload),
         });
 
-        return makeRequest(req.caller, req.id);
+        const res = await makeRequest(req.caller, req.id);
+
+        return res;
+    };
+
+    const editProjectSettings = async (
+        id: string,
+        payload: UpdateProjectEnterpriseSettingsSchema,
+    ) => {
+        const path = `api/admin/projects/${id}/settings`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify(payload),
+        });
+
+        const res = await makeRequest(req.caller, req.id);
+
+        return res;
     };
 
     const deleteProject = async (projectId: string) => {
         const path = `api/admin/projects/${projectId}`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        return makeRequest(req.caller, req.id);
+        const res = await makeRequest(req.caller, req.id);
+
+        return res;
     };
 
     const addEnvironmentToProject = async (
@@ -68,7 +87,9 @@ const useProjectApi = () => {
             body: JSON.stringify({ environment }),
         });
 
-        return makeRequest(req.caller, req.id);
+        const res = await makeRequest(req.caller, req.id);
+
+        return res;
     };
 
     const removeEnvironmentFromProject = async (
@@ -78,7 +99,9 @@ const useProjectApi = () => {
         const path = `api/admin/projects/${projectId}/environments/${environment}`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        return makeRequest(req.caller, req.id);
+        const res = await makeRequest(req.caller, req.id);
+
+        return res;
     };
 
     const addAccessToProject = async (
@@ -91,21 +114,21 @@ const useProjectApi = () => {
             body: JSON.stringify(payload),
         });
 
-        return makeRequest(req.caller, req.id);
+        return await makeRequest(req.caller, req.id);
     };
 
     const removeUserAccess = async (projectId: string, userId: number) => {
         const path = `api/admin/projects/${projectId}/users/${userId}/roles`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        return makeRequest(req.caller, req.id);
+        return await makeRequest(req.caller, req.id);
     };
 
     const removeGroupAccess = async (projectId: string, groupId: number) => {
         const path = `api/admin/projects/${projectId}/groups/${groupId}/roles`;
         const req = createRequest(path, { method: 'DELETE' });
 
-        return makeRequest(req.caller, req.id);
+        return await makeRequest(req.caller, req.id);
     };
 
     const setUserRoles = (
@@ -212,6 +235,7 @@ const useProjectApi = () => {
         createProject,
         validateId,
         editProject,
+        editProjectSettings,
         deleteProject,
         addEnvironmentToProject,
         removeEnvironmentFromProject,

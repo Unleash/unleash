@@ -6,10 +6,10 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
-    display: ' inline',
+    display: 'inline',
 }));
 const StyledDescription = styled(Typography)(({ theme }) => ({
-    display: ' inline',
+    display: 'inline',
     color: theme.palette.text.secondary,
 }));
 

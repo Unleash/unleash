@@ -8,8 +8,8 @@ import { testServerRoute, testServerSetup } from '../../utils/testServer';
 import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
 import { FC } from 'react';
 import { IPermission } from '../../interfaces/user';
-import { ProjectMode } from '../project/Project/hooks/useProjectForm';
 import { SWRConfig } from 'swr';
+import { ProjectMode } from '../project/Project/hooks/useProjectEnterpriseSettingsForm';
 
 const server = testServerSetup();
 

@@ -15,4 +15,8 @@ export class FakeDependentFeaturesReadModel
     getParentOptions(): Promise<string[]> {
         return Promise.resolve([]);
     }
+
+    hasDependencies(): Promise<boolean> {
+        return Promise.resolve(false);
+    }
 }

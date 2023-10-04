@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { IChangeRequest } from 'component/changeRequest/changeRequest.types';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -40,6 +41,7 @@ const FeatureSettingsProjectConfirm = ({
     feature,
     changeRequests,
 }: IFeatureSettingsProjectConfirm) => {
+    const dependentFeatures = useUiFlag('dependentFeatures');
     const currentProjectId = useRequiredPathParam('projectId');
     const { project } = useProject(projectId);
 
@@ -58,10 +60,15 @@ const FeatureSettingsProjectConfirm = ({
         ? changeRequests.length > 0
         : false;
 
+    const hasDependencies =
+        dependentFeatures &&
+        (feature.dependencies.length > 0 || feature.children.length > 0);
+
     return (
         <ConditionallyRender
             condition={
                 hasSameEnvironments &&
+                !hasDependencies &&
                 !hasPendingChangeRequests &&
                 !targetProjectHasChangeRequestsEnabled
             }
@@ -98,6 +105,22 @@ const FeatureSettingsProjectConfirm = ({
                             Cannot proceed with the move
                         </StyledAlert>
 
+                        <ConditionallyRender
+                            condition={hasDependencies}
+                            show={
+                                <p>
+                                    <span>
+                                        The feature toggle must not have any
+                                        dependencies.
+                                    </span>{' '}
+                                    <br />
+                                    <span>
+                                        Please remove feature dependencies
+                                        first.
+                                    </span>
+                                </p>
+                            }
+                        />
                         <ConditionallyRender
                             condition={!hasSameEnvironments}
                             show={

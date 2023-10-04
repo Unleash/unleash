@@ -176,8 +176,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             value={projectStickiness}
                             data-testid={PROJECT_STICKINESS_SELECT}
                             onChange={(e) =>
-                                setProjectStickiness &&
-                                setProjectStickiness(e.target.value)
+                                setProjectStickiness?.(e.target.value)
                             }
                             editable
                         />
@@ -253,7 +252,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 setProjectMode?.(e.target.value as ProjectMode);
                             }}
                             options={projectModeOptions}
-                        ></StyledSelect>
+                        />
                     </>
                 }
             />

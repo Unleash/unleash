@@ -9,7 +9,7 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
     display: "inline",
 }));
 const StyledDescription = styled(Typography)(({ theme }) => ({
-    display: " inline",
+    display: "inline",
     color: theme.palette.text.secondary,
 }));
 

@@ -1260,17 +1260,22 @@ class FeatureToggleService {
             }),
         );
 
-        const cloneDependencies =
-            this.dependentFeaturesService.cloneDependencies(
-                { featureName, newFeatureName, projectId },
-                userName,
-            );
+        if (this.flagResolver.isEnabled('dependentFeatures')) {
+            const cloneDependencies =
+                this.dependentFeaturesService.cloneDependencies(
+                    { featureName, newFeatureName, projectId },
+                    userName,
+                );
 
-        await Promise.all([
-            ...strategyTasks,
-            ...variantTasks,
-            cloneDependencies,
-        ]);
+            await Promise.all([
+                ...strategyTasks,
+                ...variantTasks,
+                cloneDependencies,
+            ]);
+        } else {
+            await Promise.all([...strategyTasks, ...variantTasks]);
+        }
+
         return created;
     }
 

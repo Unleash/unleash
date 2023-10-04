@@ -13,12 +13,11 @@ export const formatStatus = (
     const { type, createdAt } = feature;
 
     const featureType = featureTypes.find(
-        featureType => featureType.name === type
+        featureType => featureType.id === type
     );
     const date = parseISO(createdAt);
     const now = new Date();
     const diff = getDiffInDays(date, now);
-
     if (
         featureType &&
         expired(diff, featureType) &&

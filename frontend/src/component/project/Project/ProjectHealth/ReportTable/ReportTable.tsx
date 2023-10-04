@@ -59,21 +59,20 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
     );
     const { featureTypes } = useFeatureTypes();
 
-    const data: IReportTableRow[] = useMemo<IReportTableRow[]>(
-        () =>
-            features.map(report => ({
-                project: projectId,
-                name: report.name,
-                type: report.type,
-                stale: report.stale,
-                environments: report.environments,
-                status: formatStatus(report, featureTypes),
-                lastSeenAt: report.lastSeenAt,
-                createdAt: report.createdAt,
-                expiredAt: formatExpiredAt(report, featureTypes),
-            })),
-        [projectId, features]
-    );
+    const data: IReportTableRow[] = useMemo<IReportTableRow[]>(() => {
+        console.log(featureTypes);
+        return features.map(report => ({
+            project: projectId,
+            name: report.name,
+            type: report.type,
+            stale: report.stale,
+            environments: report.environments,
+            status: formatStatus(report, featureTypes),
+            lastSeenAt: report.lastSeenAt,
+            createdAt: report.createdAt,
+            expiredAt: formatExpiredAt(report, featureTypes),
+        }));
+    }, [projectId, features, featureTypes]);
 
     const initialState = useMemo(
         () => ({
@@ -145,7 +144,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
                 maxWidth: 120,
             },
         ],
-        [showEnvironmentLastSeen]
+        [showEnvironmentLastSeen, JSON.stringify(data)]
     );
 
     const {

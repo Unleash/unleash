@@ -140,7 +140,13 @@ class ExportImportController extends Controller {
         this.verifyExportImportEnabled();
         const query = req.body;
         const userName = extractUsername(req);
-        const data = await this.exportImportServiceV2.export(query, userName);
+
+        const useTransactionalDecorator = this.config.flagResolver.isEnabled(
+            'transactionalDecorator',
+        );
+        const data = useTransactionalDecorator
+            ? await this.exportImportServiceV2.export(query, userName)
+            : await this.exportImportService.export(query, userName);
 
         this.openApiService.respondWithValidation(
             200,

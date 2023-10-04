@@ -1,15 +1,15 @@
-import React from "react";
-import { trim } from "component/common/util";
-import { StickinessSelect } from "component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect";
-import { ConditionallyRender } from "component/common/ConditionallyRender/ConditionallyRender";
-import { Box, styled, TextField } from "@mui/material";
-import Input from "component/common/Input/Input";
-import { FeatureTogglesLimitTooltip } from "./FeatureTogglesLimitTooltip";
-import { ProjectMode } from "../hooks/useProjectEnterpriseSettingsForm";
-import useUiConfig from "hooks/api/getters/useUiConfig/useUiConfig";
-import { CollaborationModeTooltip } from "../ProjectEnterpriseSettingsForm/CollaborationModeTooltip";
-import Select from "component/common/select";
-import { useUiFlag } from "hooks/useUiFlag";
+import React from 'react';
+import { trim } from 'component/common/util';
+import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Box, styled, TextField } from '@mui/material';
+import Input from 'component/common/Input/Input';
+import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
+import { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { CollaborationModeTooltip } from '../ProjectEnterpriseSettingsForm/CollaborationModeTooltip';
+import Select from 'component/common/select';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IProjectForm {
     projectId: string;
@@ -27,32 +27,32 @@ interface IProjectForm {
     setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
-    mode: "Create" | "Edit";
+    mode: 'Create' | 'Edit';
     clearErrors: () => void;
     validateProjectId: () => void;
 }
 
-const PROJECT_STICKINESS_SELECT = "PROJECT_STICKINESS_SELECT";
-const PROJECT_ID_INPUT = "PROJECT_ID_INPUT";
-const PROJECT_NAME_INPUT = "PROJECT_NAME_INPUT";
-const PROJECT_DESCRIPTION_INPUT = "PROJECT_DESCRIPTION_INPUT";
+const PROJECT_STICKINESS_SELECT = 'PROJECT_STICKINESS_SELECT';
+const PROJECT_ID_INPUT = 'PROJECT_ID_INPUT';
+const PROJECT_NAME_INPUT = 'PROJECT_NAME_INPUT';
+const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
 
-const StyledForm = styled("form")(({ theme }) => ({
-    height: "100%",
+const StyledForm = styled('form')(({ theme }) => ({
+    height: '100%',
     paddingBottom: theme.spacing(1),
 }));
 
-const StyledDescription = styled("p")(({ theme }) => ({
+const StyledDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1),
     marginRight: theme.spacing(1),
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
     marginBottom: theme.spacing(2),
-    minWidth: "200px",
+    minWidth: '200px',
 }));
 
-const StyledSubtitle = styled("div")(({ theme }) => ({
+const StyledSubtitle = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallerBody,
     lineHeight: 1.25,
@@ -60,25 +60,25 @@ const StyledSubtitle = styled("div")(({ theme }) => ({
 }));
 
 const StyledInput = styled(Input)(({ theme }) => ({
-    width: "100%",
+    width: '100%',
     marginBottom: theme.spacing(2),
     paddingRight: theme.spacing(1),
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: "100%",
+    width: '100%',
     marginBottom: theme.spacing(2),
 }));
 
-const StyledButtonContainer = styled("div")(() => ({
-    marginTop: "auto",
-    display: "flex",
-    justifyContent: "flex-end",
+const StyledButtonContainer = styled('div')(() => ({
+    marginTop: 'auto',
+    display: 'flex',
+    justifyContent: 'flex-end',
 }));
 
-const StyledInputContainer = styled("div")(() => ({
-    display: "flex",
-    alignItems: "center",
+const StyledInputContainer = styled('div')(() => ({
+    display: 'flex',
+    alignItems: 'center',
 }));
 
 const ProjectForm: React.FC<IProjectForm> = ({
@@ -103,17 +103,17 @@ const ProjectForm: React.FC<IProjectForm> = ({
     clearErrors,
 }) => {
     const { isEnterprise } = useUiConfig();
-    const privateProjects = useUiFlag("privateProjects");
+    const privateProjects = useUiFlag('privateProjects');
 
     const projectModeOptions = privateProjects
         ? [
-              { key: "open", label: "open" },
-              { key: "protected", label: "protected" },
-              { key: "private", label: "private" },
+              { key: 'open', label: 'open' },
+              { key: 'protected', label: 'protected' },
+              { key: 'private', label: 'private' },
           ]
         : [
-              { key: "open", label: "open" },
-              { key: "protected", label: "protected" },
+              { key: 'open', label: 'open' },
+              { key: 'protected', label: 'protected' },
           ];
 
     return (
@@ -124,14 +124,14 @@ const ProjectForm: React.FC<IProjectForm> = ({
         >
             <StyledDescription>What is your project Id?</StyledDescription>
             <StyledInput
-                label="Project Id"
+                label='Project Id'
                 value={projectId}
                 onChange={(e) => setProjectId(trim(e.target.value))}
                 error={Boolean(errors.id)}
                 errorText={errors.id}
                 onFocus={() => clearErrors()}
                 onBlur={validateProjectId}
-                disabled={mode === "Edit"}
+                disabled={mode === 'Edit'}
                 data-testid={PROJECT_ID_INPUT}
                 autoFocus
                 required
@@ -139,7 +139,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
 
             <StyledDescription>What is your project name?</StyledDescription>
             <StyledInput
-                label="Project name"
+                label='Project name'
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
                 error={Boolean(errors.name)}
@@ -155,8 +155,8 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 What is your project description?
             </StyledDescription>
             <StyledTextField
-                label="Project description"
-                variant="outlined"
+                label='Project description'
+                variant='outlined'
                 multiline
                 maxRows={4}
                 value={projectDesc}
@@ -172,7 +172,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             What is the default stickiness for the project?
                         </StyledDescription>
                         <StickinessSelect
-                            label="Stickiness"
+                            label='Stickiness'
                             value={projectStickiness}
                             data-testid={PROJECT_STICKINESS_SELECT}
                             onChange={(e) =>
@@ -184,13 +184,13 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 }
             />
             <ConditionallyRender
-                condition={mode === "Edit" && Boolean(setFeatureLimit)}
+                condition={mode === 'Edit' && Boolean(setFeatureLimit)}
                 show={
                     <>
                         <Box
                             sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center',
                                 marginBottom: 1,
                                 gap: 1,
                             }}
@@ -204,9 +204,9 @@ const ProjectForm: React.FC<IProjectForm> = ({
                         <StyledInputContainer>
                             {featureLimit && setFeatureLimit && (
                                 <StyledInput
-                                    label={"Limit"}
-                                    name="value"
-                                    type={"number"}
+                                    label={'Limit'}
+                                    name='value'
+                                    type={'number'}
                                     value={featureLimit}
                                     onChange={(e) =>
                                         setFeatureLimit(e.target.value)
@@ -229,13 +229,13 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 }
             />
             <ConditionallyRender
-                condition={mode === "Create" && isEnterprise()}
+                condition={mode === 'Create' && isEnterprise()}
                 show={
                     <>
                         <Box
                             sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                display: 'flex',
+                                alignItems: 'center',
                                 marginBottom: 1,
                                 gap: 1,
                             }}
@@ -244,10 +244,10 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             <CollaborationModeTooltip />
                         </Box>
                         <StyledSelect
-                            id="project-mode"
+                            id='project-mode'
                             value={projectMode}
-                            label="Project collaboration mode"
-                            name="Project collaboration mode"
+                            label='Project collaboration mode'
+                            name='Project collaboration mode'
                             onChange={(e) => {
                                 setProjectMode?.(e.target.value as ProjectMode);
                             }}

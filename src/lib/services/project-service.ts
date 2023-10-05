@@ -1086,8 +1086,6 @@ export default class ProjectService {
             const lastSeenAtPerEnvironment =
                 await this.lastSeenReadModel.getForFeature(featureNames);
 
-            console.log(decoratedFeatures, lastSeenAtPerEnvironment);
-
             decoratedFeatures = mapper.mapToFeatures(
                 decoratedFeatures,
                 lastSeenAtPerEnvironment,

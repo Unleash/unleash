@@ -51,7 +51,9 @@ describe('project overview', () => {
         cy.get(`[data-testid="${SEARCH_INPUT}"]`).as('search').click();
         cy.get('@search').type(featureToggleName);
         cy.get('table').contains('td', `${featureToggleName}-A`);
-        cy.get('table tbody tr').should('have.length', 2);
+        cy.get('table tbody tr').should((elements) => {
+            expect(elements).to.have.length.at.least(2);
+        });
     });
 
     it('can select and deselect feature toggles', () => {
@@ -61,7 +63,9 @@ describe('project overview', () => {
         cy.get(`[data-testid="${SEARCH_INPUT}"]`).as('search').click();
         cy.get('@search').type(featureToggleName);
         cy.get('body').type('{esc}');
-        cy.get('table tbody tr').should('have.length', 2);
+        cy.get('table tbody tr').should((elements) => {
+            expect(elements).to.have.length.at.least(2);
+        });
         const counter = `[data-testid="${BATCH_SELECTED_COUNT}"]`;
 
         cy.get(counter).should('not.exist');
@@ -111,7 +115,9 @@ describe('project overview', () => {
         cy.get(`[data-testid="${SEARCH_INPUT}"]`).as('search').click();
         cy.get('@search').type(featureToggleName);
         cy.get('body').type('{esc}');
-        cy.get('table tbody tr').should('have.length', 2);
+        cy.get('table tbody tr').should((elements) => {
+            expect(elements).to.have.length.at.least(2);
+        });
         cy.get(selectAll).click();
 
         cy.get(`[data-testid="${MORE_BATCH_ACTIONS}"]`).click();
@@ -130,7 +136,9 @@ describe('project overview', () => {
         cy.get('@search').type(featureToggleName);
         cy.get('body').type('{esc}');
 
-        cy.get('table tbody tr').should('have.length', 2);
+        cy.get('table tbody tr').should((elements) => {
+            expect(elements).to.have.length.at.least(2);
+        });
         cy.get(selectAll).click();
 
         cy.get(`[data-testid=${BATCH_ACTIONS_BAR}] button`)

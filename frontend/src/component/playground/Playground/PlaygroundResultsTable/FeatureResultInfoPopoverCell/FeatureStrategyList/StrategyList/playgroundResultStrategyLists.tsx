@@ -73,12 +73,12 @@ interface IWrappedPlaygroundResultStrategyListProps {
 
 const resolveHintText = (feature: PlaygroundFeatureSchema) => {
     if (
-        feature.hasUnsatisfiedParent &&
+        feature.hasUnsatisfiedDependency &&
         !feature.isEnabledInCurrentEnvironment
     ) {
         return 'If environment was enabled and parent dependencies were satisfied';
     }
-    if (feature.hasUnsatisfiedParent) {
+    if (feature.hasUnsatisfiedDependency) {
         return 'If parent dependencies were satisfied';
     }
     if (!feature.isEnabledInCurrentEnvironment) {

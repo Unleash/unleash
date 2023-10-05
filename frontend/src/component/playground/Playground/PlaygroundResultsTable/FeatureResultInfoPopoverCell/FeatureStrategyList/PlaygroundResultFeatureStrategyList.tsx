@@ -28,7 +28,7 @@ export const PlaygroundResultFeatureStrategyList = ({
             />
             <ConditionallyRender
                 condition={
-                    (feature.hasUnsatisfiedParent ||
+                    (feature.hasUnsatisfiedDependency ||
                         !feature.isEnabledInCurrentEnvironment) &&
                     Boolean(feature?.strategies?.data)
                 }

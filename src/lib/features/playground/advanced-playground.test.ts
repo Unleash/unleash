@@ -118,14 +118,14 @@ test('advanced playground evaluation with parent dependency', async () => {
     const child = result.features[0].environments.default[0];
     const parent = result.features[1].environments.default[0];
     // child is disabled because of the parent
-    expect(child.hasUnsatisfiedParent).toBe(true);
+    expect(child.hasUnsatisfiedDependency).toBe(true);
     expect(child.isEnabled).toBe(false);
     expect(child.isEnabledInCurrentEnvironment).toBe(true);
     expect(child.variant).toEqual({
         name: 'disabled',
         enabled: false,
     });
-    expect(parent.hasUnsatisfiedParent).toBe(false);
+    expect(parent.hasUnsatisfiedDependency).toBe(false);
     expect(parent.isEnabled).toBe(false);
 });
 
@@ -162,7 +162,7 @@ test('advanced playground evaluation happy path', async () => {
                         {
                             isEnabled: true,
                             isEnabledInCurrentEnvironment: true,
-                            hasUnsatisfiedParent: false,
+                            hasUnsatisfiedDependency: false,
                             strategies: {
                                 result: true,
                                 data: [
@@ -196,7 +196,7 @@ test('advanced playground evaluation happy path', async () => {
                         {
                             isEnabled: true,
                             isEnabledInCurrentEnvironment: true,
-                            hasUnsatisfiedParent: false,
+                            hasUnsatisfiedDependency: false,
                             strategies: {
                                 result: true,
                                 data: [
@@ -230,7 +230,7 @@ test('advanced playground evaluation happy path', async () => {
                         {
                             isEnabled: true,
                             isEnabledInCurrentEnvironment: true,
-                            hasUnsatisfiedParent: false,
+                            hasUnsatisfiedDependency: false,
                             strategies: {
                                 result: true,
                                 data: [
@@ -264,7 +264,7 @@ test('advanced playground evaluation happy path', async () => {
                         {
                             isEnabled: true,
                             isEnabledInCurrentEnvironment: true,
-                            hasUnsatisfiedParent: false,
+                            hasUnsatisfiedDependency: false,
                             strategies: {
                                 result: true,
                                 data: [

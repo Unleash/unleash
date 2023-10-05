@@ -61,7 +61,7 @@ export const FeatureDetails = ({
             ];
 
         if (
-            feature.hasUnsatisfiedParent &&
+            feature.hasUnsatisfiedDependency &&
             !feature.isEnabledInCurrentEnvironment
         ) {
             return [
@@ -92,7 +92,7 @@ export const FeatureDetails = ({
                 theme.palette.warning.main,
             ];
 
-        if (feature.hasUnsatisfiedParent) {
+        if (feature.hasUnsatisfiedDependency) {
             return [
                 `This feature toggle is False in ${input?.environment} because `,
                 'parent dependency is not satisfied',

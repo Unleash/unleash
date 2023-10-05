@@ -27,7 +27,7 @@ export type FeatureStrategiesEvaluationResult = {
     variant?: Variant;
     variants?: VariantDefinition[];
     strategies: EvaluatedPlaygroundStrategy[];
-    hasUnsatisfiedParent?: boolean;
+    hasUnsatisfiedDependency?: boolean;
 };
 
 export default class UnleashClient {
@@ -114,7 +114,10 @@ export default class UnleashClient {
         );
         const result = this.isFeatureEnabled(feature, context, fallback);
 
-        return { ...result, hasUnsatisfiedParent: !parentDependencySatisfied };
+        return {
+            ...result,
+            hasUnsatisfiedDependency: !parentDependencySatisfied,
+        };
     }
 
     isFeatureEnabled(

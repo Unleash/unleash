@@ -195,6 +195,10 @@ const defaultAuthentication: IAuthOption = {
     type: authTypeFromString(process.env.AUTH_TYPE),
     customAuthHandler: defaultCustomAuthDenyAll,
     createAdminUser: true,
+    initialAdminUser: {
+        username: process.env.UNLEASH_DEFAULT_ADMIN_USERNAME ?? 'admin',
+        password: process.env.UNLEASH_DEFAULT_ADMIN_PASSWORD ?? 'unleash4all',
+    },
     initApiTokens: [],
 };
 

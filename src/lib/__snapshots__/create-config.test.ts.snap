@@ -19,6 +19,10 @@ exports[`should create default config 1`] = `
     "customAuthHandler": [Function],
     "enableApiToken": true,
     "initApiTokens": [],
+    "initialAdminUser": {
+      "password": "unleash4all",
+      "username": "admin",
+    },
     "type": "open-source",
   },
   "clientFeatureCaching": {

@@ -10,7 +10,9 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('advanced_playground', getLogger);
+    db = await dbInit('advanced_playground', getLogger, {
+        experimental: { flags: { dependentFeatures: true } },
+    });
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -20,6 +22,7 @@ beforeAll(async () => {
                     strictSchemaValidation: true,
                     strategyVariant: true,
                     privateProjects: true,
+                    dependentFeatures: true,
                 },
             },
         },
@@ -67,6 +70,7 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
+    await db.stores.dependentFeaturesStore.deleteAll();
     await db.stores.featureToggleStore.deleteAll();
 });
 
@@ -93,6 +97,41 @@ test('advanced playground evaluation with no toggles', async () => {
         },
         features: [],
     });
+});
+
+test('advanced playground evaluation with parent dependency', async () => {
+    await createFeatureToggle('test-parent');
+    await createFeatureToggle('test-child');
+    await enableToggle('test-child');
+    await app.addDependency('test-child', 'test-parent');
+
+    const { body: result } = await app.request
+        .post('/api/admin/playground/advanced')
+        .send({
+            environments: ['default'],
+            projects: ['default'],
+            context: { appName: 'test' },
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    // child is disabled because of the parent
+    expect(
+        result.features[0].environments.default[0].hasUnsatisfiedParent,
+    ).toBe(true);
+    expect(result.features[0].environments.default[0].isEnabled).toBe(false);
+    expect(
+        result.features[0].environments.default[0]
+            .isEnabledInCurrentEnvironment,
+    ).toBe(true);
+    expect(result.features[0].environments.default[0].variant).toEqual({
+        name: 'disabled',
+        enabled: false,
+    });
+    expect(
+        result.features[1].environments.default[0].hasUnsatisfiedParent,
+    ).toBe(false);
+    expect(result.features[1].environments.default[0].isEnabled).toBe(false);
 });
 
 test('advanced playground evaluation happy path', async () => {

@@ -199,15 +199,16 @@ export class PlaygroundService {
                     const strategyEvaluationResult: FeatureStrategiesEvaluationResult =
                         client.isEnabled(feature.name, clientContext);
 
-                    const isEnabled =
-                        strategyEvaluationResult.result === true &&
-                        feature.enabled;
                     const hasUnsatisfiedParent = Boolean(
                         strategyEvaluationResult.hasUnsatisfiedParent,
                     );
+                    const isEnabled =
+                        strategyEvaluationResult.result === true &&
+                        feature.enabled &&
+                        !hasUnsatisfiedParent;
 
                     return {
-                        isEnabled: hasUnsatisfiedParent ? false : isEnabled,
+                        isEnabled,
                         isEnabledInCurrentEnvironment: feature.enabled,
                         hasUnsatisfiedParent,
                         strategies: {

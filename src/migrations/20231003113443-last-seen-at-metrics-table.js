@@ -9,7 +9,6 @@ exports.up = function (db, callback) {
       last_seen_at TIMESTAMP WITH TIME ZONE NOT NULL,
       PRIMARY KEY (feature_name, environment)
       FOREIGN KEY (environment) REFERENCES environments(name) ON DELETE CASCADE
-      FOREIGN KEY (feature_name) REFERENCES features(feature_name) ON DELETE CASCADE
     );
 
       CREATE INDEX idx_feature_name

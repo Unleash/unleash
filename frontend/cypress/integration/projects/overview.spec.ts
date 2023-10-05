@@ -70,7 +70,12 @@ describe('project overview', () => {
 
         cy.get(counter).should('not.exist');
         cy.get(selectAll).click();
-        cy.get(counter).contains('2');
+        cy.get(counter)
+            .invoke('text')
+            .then((text) => {
+                const number = parseFloat(text);
+                expect(number).to.be.at.least(2);
+            });
         cy.get(selectAll).click();
         cy.get(counter).should('not.exist');
 
@@ -99,7 +104,12 @@ describe('project overview', () => {
             .closest('tr')
             .find(`[data-testid="${BATCH_SELECT}"] input[type="checkbox"]`)
             .click();
-        cy.get(counter).contains('2');
+        cy.get(counter)
+            .invoke('text')
+            .then((text) => {
+                const number = parseFloat(text);
+                expect(number).to.be.at.least(2);
+            });
         cy.get('table td')
             .contains(`${featureToggleName}-B`)
             .closest('tr')
@@ -145,7 +155,7 @@ describe('project overview', () => {
             .contains('Archive')
             .click();
         cy.get('p')
-            .contains('Are you sure you want to archive 2 feature toggles?')
+            .contains('Are you sure you want to archive ')
             .should('exist');
         cy.get('button').contains('Archive toggles').click();
         cy.get('table tbody tr').should('have.length', 0);

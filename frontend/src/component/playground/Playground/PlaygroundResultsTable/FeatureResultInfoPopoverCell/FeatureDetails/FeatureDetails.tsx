@@ -60,6 +60,17 @@ export const FeatureDetails = ({
                 theme.palette.success.main,
             ];
 
+        if (
+            feature.hasUnsatisfiedDependency &&
+            !feature.isEnabledInCurrentEnvironment
+        ) {
+            return [
+                `This feature toggle is False in ${input?.environment} because `,
+                'parent dependency is not satisfied and the environment is disabled',
+                theme.palette.error.main,
+            ];
+        }
+
         if (!feature.isEnabledInCurrentEnvironment)
             return [
                 `This feature toggle is False in ${input?.environment} because `,
@@ -80,6 +91,14 @@ export const FeatureDetails = ({
                 'not all strategies could be fully evaluated',
                 theme.palette.warning.main,
             ];
+
+        if (feature.hasUnsatisfiedDependency) {
+            return [
+                `This feature toggle is False in ${input?.environment} because `,
+                'parent dependency is not satisfied',
+                theme.palette.error.main,
+            ];
+        }
 
         return [
             `This feature toggle is False in ${input?.environment} because `,

@@ -42,6 +42,7 @@ export const mapFeaturesForClient = (
                 operator: constraint.operator as unknown as Operator,
             })),
         })),
+        dependencies: feature.dependencies,
     }));
 
 export const mapSegmentsForClient = (segments: ISegment[]): Segment[] =>

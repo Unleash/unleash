@@ -23,7 +23,7 @@ jobs:
         node-version: [18.x]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Trigger sync
         uses: actions/github-script@v6
         env:

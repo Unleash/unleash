@@ -21,7 +21,13 @@ afterAll(async () => {
 });
 
 test('Should update last seen for known toggles', async () => {
-    const service = new LastSeenService(stores.lastSeenStore, config);
+    const service = new LastSeenService(
+        {
+            lastSeenStore: stores.lastSeenStore,
+            featureToggleStore: stores.featureToggleStore,
+        },
+        config,
+    );
     const time = Date.now() - 100;
     await stores.featureToggleStore.create('default', { name: 'ta1' });
 
@@ -56,7 +62,14 @@ test('Should update last seen for known toggles', async () => {
 
 test('Should not update last seen toggles with 0 metrics', async () => {
     // jest.useFakeTimers();
-    const service = new LastSeenService(stores.lastSeenStore, config, 30);
+    const service = new LastSeenService(
+        {
+            lastSeenStore: stores.lastSeenStore,
+            featureToggleStore: stores.featureToggleStore,
+        },
+        config,
+        30,
+    );
     const time = Date.now();
     await stores.featureToggleStore.create('default', { name: 'tb1' });
     await stores.featureToggleStore.create('default', { name: 'tb2' });
@@ -96,7 +109,14 @@ test('Should not update last seen toggles with 0 metrics', async () => {
 
 test('Should not update anything for 0 toggles', async () => {
     // jest.useFakeTimers();
-    const service = new LastSeenService(stores.lastSeenStore, config, 30);
+    const service = new LastSeenService(
+        {
+            lastSeenStore: stores.lastSeenStore,
+            featureToggleStore: stores.featureToggleStore,
+        },
+        config,
+        30,
+    );
     const time = Date.now();
     await stores.featureToggleStore.create('default', { name: 'tb1' });
     await stores.featureToggleStore.create('default', { name: 'tb2' });

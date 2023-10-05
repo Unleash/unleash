@@ -1104,6 +1104,7 @@ export default class ProjectService {
                         environment.name
                     ].lastSeen,
                 );
+
                 return environment;
             });
 

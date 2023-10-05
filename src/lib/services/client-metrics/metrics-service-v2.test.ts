@@ -23,7 +23,13 @@ function initClientMetrics(flagEnabled = true) {
         },
     } as unknown as IUnleashConfig;
 
-    const lastSeenService = new LastSeenService(stores.lastSeenStore, config);
+    const lastSeenService = new LastSeenService(
+        {
+            lastSeenStore: stores.lastSeenStore,
+            featureToggleStore: stores.featureToggleStore,
+        },
+        config,
+    );
     lastSeenService.updateLastSeen = jest.fn();
 
     const service = new ClientMetricsServiceV2(stores, config, lastSeenService);

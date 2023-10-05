@@ -1487,10 +1487,15 @@
   resolved "https://registry.yarnpkg.com/@types/memoizee/-/memoizee-0.4.9.tgz#03671fa7919811d076685d61ee77861f478476e7"
   integrity sha512-438FHDRBM/16XqW3WpPRLbu93e0/EfinGJS55MfliP7P4iQlTsPCmhA1R4iwSojZX+9I+gk5XeBS39VcrTrCMg==
 
-"@types/mime@*", "@types/mime@3.0.1":
+"@types/mime@*":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-3.0.1.tgz#5f8f2bca0a5863cb69bc0b0acd88c96cb1d4ae10"
   integrity sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==
+
+"@types/mime@3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@types/mime/-/mime-3.0.2.tgz#c1ae807f13d308ee7511a5b81c74f327028e66e8"
+  integrity sha512-Wj+fqpTLtTbG7c0tH47dkahefpLKEbB+xAZuLq7b4/IDHPl/n6VoXcyUQ2bypFlbSwvCr0y+bD4euTTqTJsPxQ==
 
 "@types/minimist@^1.2.2":
   version "1.2.2"

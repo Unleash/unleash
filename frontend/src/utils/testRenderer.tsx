@@ -6,6 +6,7 @@ import { ThemeProvider } from 'themes/ThemeProvider';
 import { IPermission } from 'interfaces/user';
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { AccessProviderMock } from 'component/providers/AccessProvider/AccessProviderMock';
+import { UIProviderContainer } from '../component/providers/UIProvider/UIProviderContainer';
 
 export const render = (
     ui: JSX.Element,
@@ -21,15 +22,17 @@ export const render = (
     window.history.pushState({}, 'Test page', route);
 
     const Wrapper: FC = ({ children }) => (
-        <SWRConfig value={{ provider: () => new Map() }}>
-            <AccessProviderMock permissions={permissions}>
-                <ThemeProvider>
-                    <AnnouncerProvider>
-                        <BrowserRouter>{children}</BrowserRouter>
-                    </AnnouncerProvider>
-                </ThemeProvider>
-            </AccessProviderMock>
-        </SWRConfig>
+        <UIProviderContainer>
+            <SWRConfig value={{ provider: () => new Map() }}>
+                <AccessProviderMock permissions={permissions}>
+                    <ThemeProvider>
+                        <AnnouncerProvider>
+                            <BrowserRouter>{children}</BrowserRouter>
+                        </AnnouncerProvider>
+                    </ThemeProvider>
+                </AccessProviderMock>
+            </SWRConfig>
+        </UIProviderContainer>
     );
 
     return rtlRender(ui, {

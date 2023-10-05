@@ -28,12 +28,13 @@ export const PlaygroundResultFeatureStrategyList = ({
             />
             <ConditionallyRender
                 condition={
-                    !feature.isEnabledInCurrentEnvironment &&
+                    (feature.hasUnsatisfiedParent ||
+                        !feature.isEnabledInCurrentEnvironment) &&
                     Boolean(feature?.strategies?.data)
                 }
                 show={
                     <WrappedPlaygroundResultStrategyList
-                        strategies={feature?.strategies}
+                        feature={feature}
                         input={input}
                     />
                 }

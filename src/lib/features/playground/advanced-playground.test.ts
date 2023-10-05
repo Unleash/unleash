@@ -128,6 +128,7 @@ test('advanced playground evaluation happy path', async () => {
                         {
                             isEnabled: true,
                             isEnabledInCurrentEnvironment: true,
+                            hasUnsatisfiedParent: false,
                             strategies: {
                                 result: true,
                                 data: [
@@ -161,6 +162,7 @@ test('advanced playground evaluation happy path', async () => {
                         {
                             isEnabled: true,
                             isEnabledInCurrentEnvironment: true,
+                            hasUnsatisfiedParent: false,
                             strategies: {
                                 result: true,
                                 data: [
@@ -194,6 +196,7 @@ test('advanced playground evaluation happy path', async () => {
                         {
                             isEnabled: true,
                             isEnabledInCurrentEnvironment: true,
+                            hasUnsatisfiedParent: false,
                             strategies: {
                                 result: true,
                                 data: [
@@ -227,6 +230,7 @@ test('advanced playground evaluation happy path', async () => {
                         {
                             isEnabled: true,
                             isEnabledInCurrentEnvironment: true,
+                            hasUnsatisfiedParent: false,
                             strategies: {
                                 result: true,
                                 data: [

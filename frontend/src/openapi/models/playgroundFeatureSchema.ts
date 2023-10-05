@@ -19,6 +19,7 @@ export interface PlaygroundFeatureSchema {
     strategies: PlaygroundFeatureSchemaStrategies;
     /** Whether the feature is active and would be evaluated in the provided environment in a normal SDK context. */
     isEnabledInCurrentEnvironment: boolean;
+    hasUnsatisfiedParent: boolean;
     /** Whether this feature is enabled or not in the current environment.
                           If a feature can't be fully evaluated (that is, `strategies.result` is `unknown`),
                           this will be `false` to align with how client SDKs treat unresolved feature states. */

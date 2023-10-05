@@ -21,6 +21,7 @@ import { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/a
 import { validateQueryComplexity } from './validateQueryComplexity';
 import { playgroundStrategyEvaluation } from 'lib/openapi';
 import { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
+import { getDefaultVariant } from './feature-evaluator/variant';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -201,20 +202,26 @@ export class PlaygroundService {
                     const isEnabled =
                         strategyEvaluationResult.result === true &&
                         feature.enabled;
+                    const hasUnsatisfiedParent = Boolean(
+                        strategyEvaluationResult.hasUnsatisfiedParent,
+                    );
 
                     return {
-                        isEnabled,
+                        isEnabled: hasUnsatisfiedParent ? false : isEnabled,
                         isEnabledInCurrentEnvironment: feature.enabled,
+                        hasUnsatisfiedParent,
                         strategies: {
                             result: strategyEvaluationResult.result,
                             data: strategyEvaluationResult.strategies,
                         },
                         projectId: featureProject[feature.name],
-                        variant: client.forceGetVariant(
-                            feature.name,
-                            strategyEvaluationResult,
-                            clientContext,
-                        ),
+                        variant: isEnabled
+                            ? client.forceGetVariant(
+                                  feature.name,
+                                  strategyEvaluationResult,
+                                  clientContext,
+                              )
+                            : getDefaultVariant(),
                         name: feature.name,
                         environment,
                         context,

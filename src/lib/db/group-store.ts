@@ -330,7 +330,7 @@ export default class GroupStore implements IGroupStore {
                     })
                     .orWhereRaw('jsonb_array_length(mappings_sso) = 0'),
             )
-            .where('gu.user_id', userId);
+            .where({ 'gu.user_id': userId, 'gu.created_by': 'SSO' });
 
         return rows.map(rowToGroupUser);
     }

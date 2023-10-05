@@ -115,23 +115,18 @@ test('advanced playground evaluation with parent dependency', async () => {
         .set('Content-Type', 'application/json')
         .expect(200);
 
+    const child = result.features[0].environments.default[0];
+    const parent = result.features[1].environments.default[0];
     // child is disabled because of the parent
-    expect(
-        result.features[0].environments.default[0].hasUnsatisfiedParent,
-    ).toBe(true);
-    expect(result.features[0].environments.default[0].isEnabled).toBe(false);
-    expect(
-        result.features[0].environments.default[0]
-            .isEnabledInCurrentEnvironment,
-    ).toBe(true);
-    expect(result.features[0].environments.default[0].variant).toEqual({
+    expect(child.hasUnsatisfiedParent).toBe(true);
+    expect(child.isEnabled).toBe(false);
+    expect(child.isEnabledInCurrentEnvironment).toBe(true);
+    expect(child.variant).toEqual({
         name: 'disabled',
         enabled: false,
     });
-    expect(
-        result.features[1].environments.default[0].hasUnsatisfiedParent,
-    ).toBe(false);
-    expect(result.features[1].environments.default[0].isEnabled).toBe(false);
+    expect(parent.hasUnsatisfiedParent).toBe(false);
+    expect(parent.isEnabled).toBe(false);
 });
 
 test('advanced playground evaluation happy path', async () => {

@@ -1482,10 +1482,10 @@
     "@types/retry" "*"
     "@types/ssri" "*"
 
-"@types/memoizee@0.4.8":
-  version "0.4.8"
-  resolved "https://registry.yarnpkg.com/@types/memoizee/-/memoizee-0.4.8.tgz#04adc0c266a0f5d72db0556fdda2ba17dad9b519"
-  integrity sha512-qDpXKGgwKywnQt/64fH1O0LiPA++QGIYeykEUiZ51HymKVRLnUSGcRuF60IfpPeeXiuRwiR/W4y7S5VzbrgLCA==
+"@types/memoizee@0.4.9":
+  version "0.4.9"
+  resolved "https://registry.yarnpkg.com/@types/memoizee/-/memoizee-0.4.9.tgz#03671fa7919811d076685d61ee77861f478476e7"
+  integrity sha512-438FHDRBM/16XqW3WpPRLbu93e0/EfinGJS55MfliP7P4iQlTsPCmhA1R4iwSojZX+9I+gk5XeBS39VcrTrCMg==
 
 "@types/mime@*", "@types/mime@3.0.1":
   version "3.0.1"

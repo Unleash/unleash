@@ -264,7 +264,6 @@ export const FeatureEnvironmentVariants = () => {
                 </PageHeader>
             }
         >
-            <VariantInfoAlert mode='feature' />
             <StrategyVariantsPreferredAlert />
             {environments.map((environment) => {
                 const otherEnvsWithVariants = environments.filter(

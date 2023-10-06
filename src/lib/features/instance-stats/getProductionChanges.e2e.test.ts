@@ -118,7 +118,7 @@ test('an event with no environment should not be counted', async () => {
 
 test('five events per day should be counted correctly', async () => {
     for (let i = 0; i < 100; i++) {
-        for (let j; j < 5; j++) {
+        for (let j: number = 0; j < 5; j++) {
             await db.rawDatabase.table('events').insert(mockRawEventDaysAgo(i));
         }
     }

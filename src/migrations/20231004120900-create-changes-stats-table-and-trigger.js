@@ -9,7 +9,10 @@ exports.up = function(db, cb) {
 
     CREATE FUNCTION unleash_update_stat_environment_changes_counter() RETURNS trigger AS $unleash_update_changes_counter$
         BEGIN
-            INSERT INTO stat_environment_updates(day, environment, updates) SELECT DATE_TRUNC('Day', NEW.created_at), COALESCE(NEW.environment, 'unknown'), 1 ON CONFLICT (day, environment) DO UPDATE SET updates = EXCLUDED.updates + 1;
+            IF NEW.environment IS NOT NULL THEN
+                INSERT INTO stat_environment_updates(day, environment, updates) SELECT DATE_TRUNC('Day', NEW.created_at), NEW.environment, 1 ON CONFLICT (day, environment) DO UPDATE SET updates = EXCLUDED.updates + 1;
+            END IF;
+
             return null;
         END;
     $unleash_update_changes_counter$ LANGUAGE plpgsql;

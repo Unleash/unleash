@@ -12,19 +12,22 @@ export const createGetProductionChanges =
         const productionChanges = await db
             .select({
                 last_month: db.raw(
-                    "SUM(DISTINCT CASE WHEN day > NOW() - INTERVAL '1 month' THEN updates END)",
+                    "SUM(CASE WHEN day > NOW() - INTERVAL '1 month' THEN updates END)",
                 ),
                 last_two_months: db.raw(
-                    "SUM(DISTINCT CASE WHEN day > NOW() - INTERVAL '2 months' THEN updates END)",
+                    "SUM(CASE WHEN day > NOW() - INTERVAL '60 days' THEN updates END)",
                 ),
                 last_quarter: db.raw(
-                    "SUM(DISTINCT CASE WHEN day > NOW() - INTERVAL '3 months' THEN updates END)",
+                    "SUM(CASE WHEN day > NOW() - INTERVAL '90 days' THEN updates END)",
                 ),
             })
             .from('stat_environment_updates');
         return {
             last30: parseInt(productionChanges?.[0]?.last_month || '0', 10),
-            last60: parseInt(productionChanges?.[0]?.last_month || '0', 10),
-            last90: parseInt(productionChanges?.[0]?.last_month || '0', 10),
+            last60: parseInt(
+                productionChanges?.[0]?.last_two_months || '0',
+                10,
+            ),
+            last90: parseInt(productionChanges?.[0]?.last_quarter || '0', 10),
         };
     };

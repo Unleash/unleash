@@ -23,10 +23,21 @@ const mockRawEventDaysAgo = (
     days: number,
     environment: string = 'production',
 ) => {
+    const date = subDays(new Date(), days);
+    return {
+        type: 'FEATURE_UPDATED',
+        created_at: date,
+        created_by: 'testrunner',
+        environment,
+        feature_name: 'test.feature',
+        announced: true,
+    };
+};
+
+const noEnvironmentEvent = (days: number) => {
     return {
         type: 'FEATURE_UPDATED',
         created_by: 'testrunner',
-        environment,
         feature_name: 'test.feature',
         announced: true,
     };
@@ -38,7 +49,7 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-    await db.rawDatabase('stat_environment_updates').delete();
+    await db.rawDatabase('stat_environment_updates').truncate();
 });
 
 afterAll(async () => {
@@ -85,11 +96,36 @@ test('should handle intervals of activity', async () => {
 });
 
 test('an event being saved should add a count to the table', async () => {
-    await db.rawDatabase('events').insert(mockRawEventDaysAgo(70));
+    await db.rawDatabase
+        .table('events')
+        .insert(mockRawEventDaysAgo(70))
+        .returning('id');
 
-    expect(getProductionChanges()).resolves.toEqual({
+    await expect(getProductionChanges()).resolves.toEqual({
         last30: 0,
         last60: 0,
         last90: 1,
+    });
+});
+
+test('an event with no environment should not be counted', async () => {
+    await db.rawDatabase('events').insert(noEnvironmentEvent(30));
+    await expect(getProductionChanges()).resolves.toEqual({
+        last30: 0,
+        last60: 0,
+        last90: 0,
+    });
+});
+
+test('five events per day should be counted correctly', async () => {
+    for (let i = 0; i < 100; i++) {
+        for (let j; j < 5; j++) {
+            await db.rawDatabase.table('events').insert(mockRawEventDaysAgo(i));
+        }
+    }
+    await expect(getProductionChanges()).resolves.toEqual({
+        last30: 150,
+        last60: 300,
+        last90: 450,
     });
 });

@@ -10,7 +10,7 @@ exports.up = function(db, cb) {
     CREATE FUNCTION unleash_update_stat_environment_changes_counter() RETURNS trigger AS $unleash_update_changes_counter$
         BEGIN
             IF NEW.environment IS NOT NULL THEN
-                INSERT INTO stat_environment_updates(day, environment, updates) SELECT DATE_TRUNC('Day', NEW.created_at), NEW.environment, 1 ON CONFLICT (day, environment) DO UPDATE SET updates = EXCLUDED.updates + 1;
+                INSERT INTO stat_environment_updates(day, environment, updates) SELECT DATE_TRUNC('Day', NEW.created_at), NEW.environment, 1 ON CONFLICT (day, environment) DO UPDATE SET updates = stat_environment_updates.updates + 1;
             END IF;
 
             return null;

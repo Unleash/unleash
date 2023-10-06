@@ -12,6 +12,7 @@ import {
 } from '../types/models/api-token';
 import { ALL_PROJECTS } from '../util/constants';
 import { Db } from './db';
+import { inTransaction } from './transaction';
 
 const TABLE = 'api_tokens';
 const API_LINK_TABLE = 'api_token_project';
@@ -139,7 +140,7 @@ export class ApiTokenStore implements IApiTokenStore {
     }
 
     async insert(newToken: IApiTokenCreate): Promise<IApiToken> {
-        const response = await this.db.transaction(async (tx) => {
+        const response = await inTransaction(this.db, async (tx) => {
             const [row] = await tx<ITokenInsert>(TABLE).insert(
                 toRow(newToken),
                 ['created_at'],

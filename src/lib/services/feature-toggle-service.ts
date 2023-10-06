@@ -704,6 +704,7 @@ class FeatureToggleService {
             projectId,
             updates.segments,
         );
+        const existingSegments = await this.segmentService.getByStrategy(id);
 
         if (existingStrategy.id === id) {
             if (updates.constraints && updates.constraints.length > 0) {
@@ -738,7 +739,7 @@ class FeatureToggleService {
             const data = this.featureStrategyToPublic(strategy, segments);
             const preData = this.featureStrategyToPublic(
                 existingStrategy,
-                segments,
+                existingSegments,
             );
             await this.eventService.storeEvent(
                 new FeatureStrategyUpdateEvent({
@@ -775,6 +776,9 @@ class FeatureToggleService {
 
         if (existingStrategy.id === id) {
             existingStrategy.parameters[name] = String(value);
+            const existingSegments = await this.segmentService.getByStrategy(
+                id,
+            );
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,
                 existingStrategy,
@@ -785,7 +789,7 @@ class FeatureToggleService {
             const data = this.featureStrategyToPublic(strategy, segments);
             const preData = this.featureStrategyToPublic(
                 existingStrategy,
-                segments,
+                existingSegments,
             );
             await this.eventService.storeEvent(
                 new FeatureStrategyUpdateEvent({

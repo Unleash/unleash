@@ -18,7 +18,7 @@ exports.up = function(db, cb) {
     $unleash_update_changes_counter$ LANGUAGE plpgsql;
 
     CREATE TRIGGER unleash_update_stat_environment_changes
-    BEFORE INSERT ON events
+    AFTER INSERT ON events
     FOR EACH ROW EXECUTE FUNCTION unleash_update_stat_environment_changes_counter();
   `, cb);
 };

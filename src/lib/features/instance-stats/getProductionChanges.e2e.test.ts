@@ -1,4 +1,3 @@
-import { createGetActiveUsers, type GetActiveUsers } from './getActiveUsers';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import {

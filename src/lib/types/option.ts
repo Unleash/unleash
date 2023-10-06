@@ -148,14 +148,12 @@ export interface IUIConfig {
     environment?: string;
     slogan?: string;
     name?: string;
-    links?: [
-        {
-            value: string;
-            icon?: string;
-            href: string;
-            title: string;
-        },
-    ];
+    links?: {
+        value: string;
+        icon?: string;
+        href: string;
+        title: string;
+    }[];
     flags?: IFlags;
 }
 

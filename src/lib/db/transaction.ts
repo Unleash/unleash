@@ -27,7 +27,7 @@ export type WithTransactional<S> = S & {
 };
 
 /**
- * @deprecated this is a temporal solution to deal with transactions at the store level.
+ * @deprecated this is a temporary solution to deal with transactions at the store level.
  * Ideally, we should handle transactions at the service level (each service method should be transactional).
  * The controller should define the transactional scope as follows:
  * https://github.com/Unleash/unleash/blob/cb034976b93abc799df774858d716a49f645d669/src/lib/features/export-import-toggles/export-import-controller.ts#L206-L208

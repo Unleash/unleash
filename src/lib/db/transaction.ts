@@ -26,6 +26,22 @@ export type WithTransactional<S> = S & {
     transactional: <R>(fn: (service: S) => R) => Promise<R>;
 };
 
+/**
+ * This function makes sure that `fn` is executed in a transaction.
+ * If the db is already in a transaction, it will execute `fn` in that transactional scope.
+ *
+ * https://github.com/knex/knex/blob/bbbe4d4637b3838e4a297a457460cd2c76a700d5/lib/knex-builder/make-knex.js#L143C5-L144C88
+ */
+export async function inTransaction<R>(
+    db: Knex,
+    fn: (db: Knex) => R,
+): Promise<R> {
+    if (db.isTransaction) {
+        return fn(db);
+    }
+    return db.transaction(async (tx) => fn(tx));
+}
+
 export function withTransactional<S>(
     serviceFactory: (db: Knex) => S,
     db: Knex,
@@ -33,6 +49,7 @@ export function withTransactional<S>(
     const service = serviceFactory(db) as WithTransactional<S>;
 
     service.transactional = async <R>(fn: (service: S) => R) =>
+        // Maybe: inTransaction(db, async () => {
         db.transaction(async (trx: Knex.Transaction) => {
             const transactionalService = serviceFactory(trx);
             return fn(transactionalService);

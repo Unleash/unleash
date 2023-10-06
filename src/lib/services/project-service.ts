@@ -230,7 +230,9 @@ export default class ProjectService {
         user: IUser,
     ): Promise<IProject> {
         const validatedData = await projectSchema.validateAsync(newProject);
+        console.log('validatedData', validatedData);
         const data = this.removeModeForNonEnterprise(validatedData);
+        console.log('without enterprise', data);
         await this.validateUniqueId(data.id);
 
         await this.projectStore.create(data);

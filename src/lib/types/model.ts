@@ -473,6 +473,14 @@ export interface IFeatureStrategySegment {
     segmentId: number;
 }
 
+export type AccessConfiguration = {
+    roles: {
+        id: number;
+        users: number[];
+        groups: number[];
+    }[];
+};
+
 export interface IUserAccessOverview {
     userId: number;
     createdAt?: Date;

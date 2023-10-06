@@ -12,7 +12,11 @@ import {
     IUserRole,
     IUserWithProjectRoles,
 } from '../types/stores/access-store';
-import { IPermission, IUserAccessOverview } from '../types/model';
+import {
+    AccessConfiguration,
+    IPermission,
+    IUserAccessOverview,
+} from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import {
     ENVIRONMENT_PERMISSION_TYPE,
@@ -25,6 +29,7 @@ import {
     NamePermissionRef,
     PermissionRef,
 } from 'lib/services/access-service';
+import { inTransaction } from './transaction';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -574,7 +579,7 @@ export class AccessStore implements IAccessStore {
             };
         });
 
-        await this.db.transaction(async (tx) => {
+        await inTransaction(this.db, async (tx) => {
             if (userRows.length > 0) {
                 await tx(T.ROLE_USER)
                     .insert(userRows)
@@ -590,6 +595,82 @@ export class AccessStore implements IAccessStore {
         });
     }
 
+    async setProjectAccess(
+        projectId: string,
+        access: AccessConfiguration,
+        updatedBy: string,
+    ) {
+        const roles = access.roles.map(({ id }) => id);
+        const validatedProjectRoleIds = await this.db(T.ROLES)
+            .select('id')
+            .whereIn('id', roles)
+            .whereIn('type', PROJECT_ROLE_TYPES)
+            .pluck('id');
+
+        const userRows = validatedProjectRoleIds.flatMap((role: number) =>
+            access.roles[role].users.map((user) => {
+                return {
+                    user_id: user,
+                    project: projectId,
+                    role_id: role,
+                };
+            }),
+        );
+
+        const groupRows = validatedProjectRoleIds.flatMap((role: number) =>
+            access.roles[role].groups.map((group) => {
+                return {
+                    group_id: group,
+                    project: projectId,
+                    role_id: role,
+                    created_by: updatedBy, // Do we need this? why don't we have it under user?
+                };
+            }),
+        );
+
+        await inTransaction(this.db, async (tx) => {
+            await tx(T.GROUP_ROLE).delete().where('project', projectId);
+            await tx(T.ROLE_USER).delete().where('project', projectId);
+
+            await this.insertGroupRows(tx, groupRows);
+            await this.insertUserRows(tx, userRows);
+        });
+    }
+
+    async insertGroupRows(
+        tx: Db,
+        rows: {
+            group_id: number;
+            project: string;
+            role_id: number;
+            createdBy?: string;
+        }[],
+    ): Promise<void> {
+        if (rows.length > 0) {
+            await tx(T.GROUP_ROLE)
+                .insert(rows)
+                .onConflict(['project', 'role_id', 'group_id'])
+                .merge();
+        }
+    }
+
+    async insertUserRows(
+        tx: Db,
+        rows: { user_id: number; project: string; role_id: number }[],
+    ): Promise<void> {
+        if (rows.length > 0) {
+            await tx(T.ROLE_USER)
+                .insert(rows)
+                .onConflict(['project', 'role_id', 'user_id'])
+                .merge();
+        }
+    }
+
+    /**
+     * @param projectId from the request url
+     * @param roles: [key: number]: { groups: number[], users: number[] }
+     * @param createdBy from the request header
+     */
     async addAccessToProject(
         roles: number[],
         groups: number[],
@@ -620,19 +701,9 @@ export class AccessStore implements IAccessStore {
             })),
         );
 
-        await this.db.transaction(async (tx) => {
-            if (groupRows.length > 0) {
-                await tx(T.GROUP_ROLE)
-                    .insert(groupRows)
-                    .onConflict(['project', 'role_id', 'group_id'])
-                    .merge();
-            }
-            if (userRows.length > 0) {
-                await tx(T.ROLE_USER)
-                    .insert(userRows)
-                    .onConflict(['project', 'role_id', 'user_id'])
-                    .merge();
-            }
+        await inTransaction(this.db, async (tx) => {
+            await this.insertGroupRows(tx, groupRows);
+            await this.insertUserRows(tx, userRows);
         });
     }
 
@@ -656,19 +727,14 @@ export class AccessStore implements IAccessStore {
                 role_id: role,
             }));
 
-        await this.db.transaction(async (tx) => {
+        await inTransaction(this.db, async (tx) => {
             await tx(T.ROLE_USER)
                 .where('project', projectId)
                 .andWhere('user_id', userId)
                 .whereIn('role_id', projectRoleIds)
                 .delete();
 
-            if (userRows.length > 0) {
-                await tx(T.ROLE_USER)
-                    .insert(userRows)
-                    .onConflict(['project', 'role_id', 'user_id'])
-                    .ignore();
-            }
+            await this.insertUserRows(tx, userRows);
         });
     }
 
@@ -707,18 +773,13 @@ export class AccessStore implements IAccessStore {
                 created_by: createdBy,
             }));
 
-        await this.db.transaction(async (tx) => {
+        await inTransaction(this.db, async (tx) => {
             await tx(T.GROUP_ROLE)
                 .where('project', projectId)
                 .andWhere('group_id', groupId)
                 .whereIn('role_id', projectRoleIds)
                 .delete();
-            if (groupRows.length > 0) {
-                await tx(T.GROUP_ROLE)
-                    .insert(groupRows)
-                    .onConflict(['project', 'role_id', 'group_id'])
-                    .ignore();
-            }
+            await this.insertGroupRows(tx, groupRows);
         });
     }
 

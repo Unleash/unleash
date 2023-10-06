@@ -1,7 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { PlaygroundEnvironmentDiffTable } from './PlaygroundEnvironmentDiffTable';
-import { UIProviderContainer } from '../../../providers/UIProvider/UIProviderContainer';
 
 const irrelevantDetails = {
     strategies: {
@@ -23,38 +22,36 @@ const irrelevantDetails = {
 
 test('should render environment diff table', async () => {
     render(
-        <UIProviderContainer>
-            <PlaygroundEnvironmentDiffTable
-                features={{
-                    development: [
-                        {
-                            name: 'featureA',
-                            isEnabled: true,
-                            environment: 'development',
-                            context: {
-                                channel: 'web',
-                                client: 'clientA',
-                                appName: 'myapp',
-                            },
-                            ...irrelevantDetails,
+        <PlaygroundEnvironmentDiffTable
+            features={{
+                development: [
+                    {
+                        name: 'featureA',
+                        isEnabled: true,
+                        environment: 'development',
+                        context: {
+                            channel: 'web',
+                            client: 'clientA',
+                            appName: 'myapp',
                         },
-                    ],
-                    production: [
-                        {
-                            name: 'featureA',
-                            isEnabled: false,
-                            environment: 'production',
-                            context: {
-                                channel: 'web',
-                                client: 'clientA',
-                                appName: 'myapp',
-                            },
-                            ...irrelevantDetails,
+                        ...irrelevantDetails,
+                    },
+                ],
+                production: [
+                    {
+                        name: 'featureA',
+                        isEnabled: false,
+                        environment: 'production',
+                        context: {
+                            channel: 'web',
+                            client: 'clientA',
+                            appName: 'myapp',
                         },
-                    ],
-                }}
-            />
-        </UIProviderContainer>,
+                        ...irrelevantDetails,
+                    },
+                ],
+            }}
+        />,
     );
 
     expect(screen.getByText('web')).toBeInTheDocument();

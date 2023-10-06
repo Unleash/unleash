@@ -28,9 +28,8 @@ export class LastSeenMapper {
                 }
 
                 environment.lastSeenAt = new Date(
-                    lastSeenAtPerEnvironment[feature.name][
-                        environment.name
-                    ].lastSeen,
+                    lastSeenAtPerEnvironment[feature.name][environment.name]
+                        .lastSeen,
                 );
                 return environment;
             });

@@ -1,26 +1,26 @@
-import dbInit, { ITestDb } from "../helpers/database-init";
-import getLogger from "../../fixtures/no-logger";
+import dbInit, { ITestDb } from '../helpers/database-init';
+import getLogger from '../../fixtures/no-logger';
 
 import {
     AccessService,
     PermissionRef,
-} from "../../../lib/services/access-service";
+} from '../../../lib/services/access-service';
 
-import * as permissions from "../../../lib/types/permissions";
-import { RoleName } from "../../../lib/types/model";
+import * as permissions from '../../../lib/types/permissions';
+import { RoleName } from '../../../lib/types/model';
 import {
     ICreateGroupUserModel,
     IUnleashStores,
     IUserAccessOverview,
-} from "../../../lib/types";
-import { createTestConfig } from "../../config/test-config";
-import { DEFAULT_PROJECT } from "../../../lib/types/project";
-import { ALL_PROJECTS } from "../../../lib/util/constants";
+} from '../../../lib/types';
+import { createTestConfig } from '../../config/test-config';
+import { DEFAULT_PROJECT } from '../../../lib/types/project';
+import { ALL_PROJECTS } from '../../../lib/util/constants';
 import {
     createAccessService,
     createFeatureToggleService,
     createProjectService,
-} from "../../../lib/features";
+} from '../../../lib/features';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -44,7 +44,7 @@ const createUser = async (role?: number) => {
         await accessService.addUserToRole(
             user.id,
             role,
-            role === readRole.id ? ALL_PROJECTS : DEFAULT_PROJECT
+            role === readRole.id ? ALL_PROJECTS : DEFAULT_PROJECT,
         );
     return user;
 };
@@ -62,7 +62,7 @@ const createGroup = async ({
         name: `Group ${groupIndex}`,
         rootRole: role,
     });
-    if (users) await groupStore.addUsersToGroup(group.id, users, "Admin");
+    if (users) await groupStore.addUsersToGroup(group.id, users, 'Admin');
     return group;
 };
 
@@ -76,9 +76,9 @@ const createRole = async (rolePermissions: PermissionRef[]) => {
 };
 
 const hasCommonProjectAccess = async (user, projectName, condition) => {
-    const defaultEnv = "default";
-    const developmentEnv = "development";
-    const productionEnv = "production";
+    const defaultEnv = 'default';
+    const developmentEnv = 'development';
+    const productionEnv = 'production';
 
     const {
         CREATE_FEATURE,
@@ -91,116 +91,116 @@ const hasCommonProjectAccess = async (user, projectName, condition) => {
         UPDATE_FEATURE_VARIANTS,
     } = permissions;
     expect(
-        await accessService.hasPermission(user, CREATE_FEATURE, projectName)
+        await accessService.hasPermission(user, CREATE_FEATURE, projectName),
     ).toBe(condition);
     expect(
-        await accessService.hasPermission(user, UPDATE_FEATURE, projectName)
+        await accessService.hasPermission(user, UPDATE_FEATURE, projectName),
     ).toBe(condition);
     expect(
-        await accessService.hasPermission(user, DELETE_FEATURE, projectName)
+        await accessService.hasPermission(user, DELETE_FEATURE, projectName),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             UPDATE_FEATURE_VARIANTS,
-            projectName
-        )
+            projectName,
+        ),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             CREATE_FEATURE_STRATEGY,
             projectName,
-            defaultEnv
-        )
+            defaultEnv,
+        ),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             UPDATE_FEATURE_STRATEGY,
             projectName,
-            defaultEnv
-        )
+            defaultEnv,
+        ),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             DELETE_FEATURE_STRATEGY,
             projectName,
-            defaultEnv
-        )
+            defaultEnv,
+        ),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             UPDATE_FEATURE_ENVIRONMENT,
             projectName,
-            defaultEnv
-        )
+            defaultEnv,
+        ),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             CREATE_FEATURE_STRATEGY,
             projectName,
-            developmentEnv
-        )
+            developmentEnv,
+        ),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             UPDATE_FEATURE_STRATEGY,
             projectName,
-            developmentEnv
-        )
+            developmentEnv,
+        ),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             DELETE_FEATURE_STRATEGY,
             projectName,
-            developmentEnv
-        )
+            developmentEnv,
+        ),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             UPDATE_FEATURE_ENVIRONMENT,
             projectName,
-            developmentEnv
-        )
+            developmentEnv,
+        ),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             CREATE_FEATURE_STRATEGY,
             projectName,
-            productionEnv
-        )
+            productionEnv,
+        ),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             UPDATE_FEATURE_STRATEGY,
             projectName,
-            productionEnv
-        )
+            productionEnv,
+        ),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             DELETE_FEATURE_STRATEGY,
             projectName,
-            productionEnv
-        )
+            productionEnv,
+        ),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             UPDATE_FEATURE_ENVIRONMENT,
             projectName,
-            productionEnv
-        )
+            productionEnv,
+        ),
     ).toBe(condition);
 };
 
@@ -208,23 +208,23 @@ const hasFullProjectAccess = async (user, projectName: string, condition) => {
     const { DELETE_PROJECT, UPDATE_PROJECT, MOVE_FEATURE_TOGGLE } = permissions;
 
     expect(
-        await accessService.hasPermission(user, DELETE_PROJECT, projectName)
+        await accessService.hasPermission(user, DELETE_PROJECT, projectName),
     ).toBe(condition);
     expect(
-        await accessService.hasPermission(user, UPDATE_PROJECT, projectName)
+        await accessService.hasPermission(user, UPDATE_PROJECT, projectName),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(
             user,
             MOVE_FEATURE_TOGGLE,
-            projectName
-        )
+            projectName,
+        ),
     );
     await hasCommonProjectAccess(user, projectName, condition);
 };
 
 beforeAll(async () => {
-    db = await dbInit("access_service_serial", getLogger);
+    db = await dbInit('access_service_serial', getLogger);
     stores = db.stores;
     // projectStore = stores.projectStore;
     const config = createTestConfig({
@@ -246,20 +246,20 @@ beforeAll(async () => {
     const testAdmin = await createUser(adminRole.id);
     await projectService.createProject(
         {
-            id: "some-project",
-            name: "Some project",
-            description: "Used in the test",
+            id: 'some-project',
+            name: 'Some project',
+            description: 'Used in the test',
         },
-        testAdmin
+        testAdmin,
     );
 
     await projectService.createProject(
         {
-            id: "unusedprojectname",
-            name: "Another project not used",
-            description: "Also used in the test",
+            id: 'unusedprojectname',
+            name: 'Another project not used',
+            description: 'Also used in the test',
         },
-        testAdmin
+        testAdmin,
     );
 });
 
@@ -267,7 +267,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test("should have access to admin addons", async () => {
+test('should have access to admin addons', async () => {
     const { CREATE_ADDON, UPDATE_ADDON, DELETE_ADDON } = permissions;
     const user = editorUser;
     expect(await accessService.hasPermission(user, CREATE_ADDON)).toBe(true);
@@ -275,7 +275,7 @@ test("should have access to admin addons", async () => {
     expect(await accessService.hasPermission(user, DELETE_ADDON)).toBe(true);
 });
 
-test("should have access to admin strategies", async () => {
+test('should have access to admin strategies', async () => {
     const { CREATE_STRATEGY, UPDATE_STRATEGY, DELETE_STRATEGY } = permissions;
     const user = editorUser;
     expect(await accessService.hasPermission(user, CREATE_STRATEGY)).toBe(true);
@@ -283,77 +283,77 @@ test("should have access to admin strategies", async () => {
     expect(await accessService.hasPermission(user, DELETE_STRATEGY)).toBe(true);
 });
 
-test("should have access to admin contexts", async () => {
+test('should have access to admin contexts', async () => {
     const { CREATE_CONTEXT_FIELD, UPDATE_CONTEXT_FIELD, DELETE_CONTEXT_FIELD } =
         permissions;
     const user = editorUser;
     expect(await accessService.hasPermission(user, CREATE_CONTEXT_FIELD)).toBe(
-        true
+        true,
     );
     expect(await accessService.hasPermission(user, UPDATE_CONTEXT_FIELD)).toBe(
-        true
+        true,
     );
     expect(await accessService.hasPermission(user, DELETE_CONTEXT_FIELD)).toBe(
-        true
+        true,
     );
 });
 
-test("should have access to create projects", async () => {
+test('should have access to create projects', async () => {
     const { CREATE_PROJECT } = permissions;
     const user = editorUser;
     expect(await accessService.hasPermission(user, CREATE_PROJECT)).toBe(true);
 });
 
-test("should have access to update applications", async () => {
+test('should have access to update applications', async () => {
     const { UPDATE_APPLICATION } = permissions;
     const user = editorUser;
     expect(await accessService.hasPermission(user, UPDATE_APPLICATION)).toBe(
-        true
+        true,
     );
 });
 
-test("should not have admin permission", async () => {
+test('should not have admin permission', async () => {
     const { ADMIN } = permissions;
     const user = editorUser;
     expect(await accessService.hasPermission(user, ADMIN)).toBe(false);
 });
 
-test("should have project admin to default project as editor", async () => {
-    const projectName = "default";
+test('should have project admin to default project as editor', async () => {
+    const projectName = 'default';
 
     const user = editorUser;
     await hasFullProjectAccess(user, projectName, true);
 });
 
-test("should not have project admin to other projects as editor", async () => {
-    const projectName = "unusedprojectname";
+test('should not have project admin to other projects as editor', async () => {
+    const projectName = 'unusedprojectname';
     const user = editorUser;
     await hasFullProjectAccess(user, projectName, false);
 });
 
-test("cannot add CREATE_FEATURE without defining project", async () => {
+test('cannot add CREATE_FEATURE without defining project', async () => {
     await expect(async () => {
         await accessService.addPermissionToRole(
             editorRole.id,
-            permissions.CREATE_FEATURE
+            permissions.CREATE_FEATURE,
         );
     }).rejects.toThrow(
-        new Error("ProjectId cannot be empty for permission=CREATE_FEATURE")
+        new Error('ProjectId cannot be empty for permission=CREATE_FEATURE'),
     );
 });
 
-test("cannot remove CREATE_FEATURE without defining project", async () => {
+test('cannot remove CREATE_FEATURE without defining project', async () => {
     await expect(async () => {
         await accessService.removePermissionFromRole(
             editorRole.id,
-            permissions.CREATE_FEATURE
+            permissions.CREATE_FEATURE,
         );
     }).rejects.toThrow(
-        new Error("ProjectId cannot be empty for permission=CREATE_FEATURE")
+        new Error('ProjectId cannot be empty for permission=CREATE_FEATURE'),
     );
 });
 
-test("should remove CREATE_FEATURE on default environment", async () => {
+test('should remove CREATE_FEATURE on default environment', async () => {
     const { CREATE_FEATURE } = permissions;
     const user = editorUser;
     const editRole = await accessService.getRoleByName(RoleName.EDITOR);
@@ -361,7 +361,7 @@ test("should remove CREATE_FEATURE on default environment", async () => {
     await accessService.addPermissionToRole(
         editRole.id,
         permissions.CREATE_FEATURE,
-        "*"
+        '*',
     );
 
     // TODO: to validate the remove works, we should make sure that we had permission before removing it
@@ -373,15 +373,15 @@ test("should remove CREATE_FEATURE on default environment", async () => {
     await accessService.removePermissionFromRole(
         editRole.id,
         permissions.CREATE_FEATURE,
-        "*"
+        '*',
     );
 
     expect(
-        await accessService.hasPermission(user, CREATE_FEATURE, "some-project")
+        await accessService.hasPermission(user, CREATE_FEATURE, 'some-project'),
     ).toBe(false);
 });
 
-test("admin should be admin", async () => {
+test('admin should be admin', async () => {
     const {
         DELETE_PROJECT,
         UPDATE_PROJECT,
@@ -392,40 +392,40 @@ test("admin should be admin", async () => {
     } = permissions;
     const user = await createUser(adminRole.id);
     expect(
-        await accessService.hasPermission(user, DELETE_PROJECT, "default")
+        await accessService.hasPermission(user, DELETE_PROJECT, 'default'),
     ).toBe(true);
     expect(
-        await accessService.hasPermission(user, UPDATE_PROJECT, "default")
+        await accessService.hasPermission(user, UPDATE_PROJECT, 'default'),
     ).toBe(true);
     expect(
-        await accessService.hasPermission(user, CREATE_FEATURE, "default")
+        await accessService.hasPermission(user, CREATE_FEATURE, 'default'),
     ).toBe(true);
     expect(
-        await accessService.hasPermission(user, UPDATE_FEATURE, "default")
+        await accessService.hasPermission(user, UPDATE_FEATURE, 'default'),
     ).toBe(true);
     expect(
-        await accessService.hasPermission(user, DELETE_FEATURE, "default")
+        await accessService.hasPermission(user, DELETE_FEATURE, 'default'),
     ).toBe(true);
     expect(await accessService.hasPermission(user, ADMIN)).toBe(true);
 });
 
-test("should create default roles to project", async () => {
-    const project = "some-project";
+test('should create default roles to project', async () => {
+    const project = 'some-project';
     const user = editorUser;
     await accessService.createDefaultProjectRoles(user, project);
     await hasFullProjectAccess(user, project, true);
 });
 
-test("should require name when create default roles to project", async () => {
+test('should require name when create default roles to project', async () => {
     await expect(async () => {
         // @ts-ignore
         await accessService.createDefaultProjectRoles(editorUser);
-    }).rejects.toThrow(new Error("ProjectId cannot be empty"));
+    }).rejects.toThrow(new Error('ProjectId cannot be empty'));
 });
 
-test("should grant user access to project", async () => {
+test('should grant user access to project', async () => {
     const { DELETE_PROJECT, UPDATE_PROJECT } = permissions;
-    const project = "another-project";
+    const project = 'another-project';
     const user = editorUser;
     const sUser = await createUser(readRole.id);
     await accessService.createDefaultProjectRoles(user, project);
@@ -438,15 +438,15 @@ test("should grant user access to project", async () => {
 
     // Should not be able to admin the project itself.
     expect(
-        await accessService.hasPermission(sUser, UPDATE_PROJECT, project)
+        await accessService.hasPermission(sUser, UPDATE_PROJECT, project),
     ).toBe(false);
     expect(
-        await accessService.hasPermission(sUser, DELETE_PROJECT, project)
+        await accessService.hasPermission(sUser, DELETE_PROJECT, project),
     ).toBe(false);
 });
 
-test("should not get access if not specifying project", async () => {
-    const project = "another-project-2";
+test('should not get access if not specifying project', async () => {
+    const project = 'another-project-2';
     const user = editorUser;
     const sUser = await createUser(readRole.id);
     await accessService.createDefaultProjectRoles(user, project);
@@ -459,51 +459,51 @@ test("should not get access if not specifying project", async () => {
     await hasCommonProjectAccess(sUser, undefined, false);
 });
 
-test("should remove user from role", async () => {
+test('should remove user from role', async () => {
     const { userStore } = stores;
     const user = await userStore.insert({
-        name: "Some User",
-        email: "random123@getunleash.io",
+        name: 'Some User',
+        email: 'random123@getunleash.io',
     });
 
-    await accessService.addUserToRole(user.id, editorRole.id, "default");
+    await accessService.addUserToRole(user.id, editorRole.id, 'default');
 
     // check user has one role
     const userRoles = await accessService.getRolesForUser(user.id);
     expect(userRoles.length).toBe(1);
     expect(userRoles[0].name).toBe(RoleName.EDITOR);
 
-    await accessService.removeUserFromRole(user.id, editorRole.id, "default");
+    await accessService.removeUserFromRole(user.id, editorRole.id, 'default');
     const userRolesAfterRemove = await accessService.getRolesForUser(user.id);
     expect(userRolesAfterRemove.length).toBe(0);
 });
 
-test("should return role with users", async () => {
+test('should return role with users', async () => {
     const { userStore } = stores;
     const user = await userStore.insert({
-        name: "Some User",
-        email: "random2223@getunleash.io",
+        name: 'Some User',
+        email: 'random2223@getunleash.io',
     });
 
-    await accessService.addUserToRole(user.id, editorRole.id, "default");
+    await accessService.addUserToRole(user.id, editorRole.id, 'default');
 
     const roleWithUsers = await accessService.getRoleData(editorRole.id);
     expect(roleWithUsers.role.name).toBe(RoleName.EDITOR);
     expect(roleWithUsers.users.length >= 2).toBe(true);
     expect(roleWithUsers.users.find((u) => u.id === user.id)).toBeTruthy();
     expect(
-        roleWithUsers.users.find((u) => u.email === user.email)
+        roleWithUsers.users.find((u) => u.email === user.email),
     ).toBeTruthy();
 });
 
-test("should return role with permissions and users", async () => {
+test('should return role with permissions and users', async () => {
     const { userStore } = stores;
     const user = await userStore.insert({
-        name: "Some User",
-        email: "random2244@getunleash.io",
+        name: 'Some User',
+        email: 'random2244@getunleash.io',
     });
 
-    await accessService.addUserToRole(user.id, editorRole.id, "default");
+    await accessService.addUserToRole(user.id, editorRole.id, 'default');
 
     const roleWithPermission = await accessService.getRoleData(editorRole.id);
 
@@ -511,19 +511,19 @@ test("should return role with permissions and users", async () => {
     expect(roleWithPermission.permissions.length > 2).toBe(true);
     expect(
         roleWithPermission.permissions.find(
-            (p) => p.name === permissions.CREATE_PROJECT
-        )
+            (p) => p.name === permissions.CREATE_PROJECT,
+        ),
     ).toBeTruthy();
     //This assert requires other tests to have run in this pack before length > 2 resolves to true
     // I've set this to be > 1, which allows us to run the test alone and should still satisfy the logic requirement
     expect(roleWithPermission.users.length > 1).toBe(true);
 });
 
-test("should set root role for user", async () => {
+test('should set root role for user', async () => {
     const { userStore } = stores;
     const user = await userStore.insert({
-        name: "Some User",
-        email: "random2255@getunleash.io",
+        name: 'Some User',
+        email: 'random2255@getunleash.io',
     });
 
     await accessService.setUserRootRole(user.id, editorRole.id);
@@ -535,11 +535,11 @@ test("should set root role for user", async () => {
     expect(roles.length).toBe(1);
 });
 
-test("should switch root role for user", async () => {
+test('should switch root role for user', async () => {
     const { userStore } = stores;
     const user = await userStore.insert({
-        name: "Some User",
-        email: "random22Read@getunleash.io",
+        name: 'Some User',
+        email: 'random22Read@getunleash.io',
     });
 
     await accessService.setUserRootRole(user.id, editorRole.id);
@@ -551,24 +551,24 @@ test("should switch root role for user", async () => {
     expect(roles[0].name).toBe(RoleName.VIEWER);
 });
 
-test("should switch project roles on when multiple roles are present for same user", async () => {
+test('should switch project roles on when multiple roles are present for same user', async () => {
     const { userStore, roleStore, accessStore } = stores;
 
     const userOne = await userStore.insert({
-        name: "Some User With Expected Roles",
-        email: "random42Read@getunleash.io",
+        name: 'Some User With Expected Roles',
+        email: 'random42Read@getunleash.io',
     });
 
     const customRole = await roleStore.create({
-        name: "Some Arbitrary Role",
-        roleType: "custom",
-        description: "This does nothing",
+        name: 'Some Arbitrary Role',
+        roleType: 'custom',
+        description: 'This does nothing',
     });
 
     const targetRole = await roleStore.create({
-        name: "Another Arbitrary Role",
-        roleType: "custom",
-        description: "This does nothing",
+        name: 'Another Arbitrary Role',
+        roleType: 'custom',
+        description: 'This does nothing',
     });
 
     await accessService.setUserRootRole(userOne.id, editorRole.id);
@@ -577,16 +577,16 @@ test("should switch project roles on when multiple roles are present for same us
     await accessService.updateUserProjectRole(
         userOne.id,
         targetRole.id,
-        DEFAULT_PROJECT
+        DEFAULT_PROJECT,
     );
 });
 
-test("should not crash if user does not have permission", async () => {
+test('should not crash if user does not have permission', async () => {
     const { userStore } = stores;
 
     const user = await userStore.insert({
-        name: "Some User",
-        email: "random55Read@getunleash.io",
+        name: 'Some User',
+        email: 'random55Read@getunleash.io',
     });
 
     await accessService.setUserRootRole(user.id, readRole.id);
@@ -594,7 +594,7 @@ test("should not crash if user does not have permission", async () => {
     const { UPDATE_CONTEXT_FIELD } = permissions;
     const hasAccess = await accessService.hasPermission(
         user,
-        UPDATE_CONTEXT_FIELD
+        UPDATE_CONTEXT_FIELD,
     );
 
     expect(hasAccess).toBe(false);
@@ -604,31 +604,31 @@ test('should support permission with "ALL" environment requirement', async () =>
     const { userStore, roleStore, accessStore } = stores;
 
     const user = await userStore.insert({
-        name: "Some User",
-        email: "randomEnv1@getunleash.io",
+        name: 'Some User',
+        email: 'randomEnv1@getunleash.io',
     });
 
     await accessService.setUserRootRole(user.id, readRole.id);
 
     const customRole = await roleStore.create({
-        name: "Power user",
-        roleType: "custom",
-        description: "Grants access to modify all environments",
+        name: 'Power user',
+        roleType: 'custom',
+        description: 'Grants access to modify all environments',
     });
 
     const { CREATE_FEATURE_STRATEGY } = permissions;
     await accessStore.addPermissionsToRole(
         customRole.id,
         [{ name: CREATE_FEATURE_STRATEGY }],
-        "production"
+        'production',
     );
     await accessStore.addUserToRole(user.id, customRole.id, ALL_PROJECTS);
 
     const hasAccess = await accessService.hasPermission(
         user,
         CREATE_FEATURE_STRATEGY,
-        "default",
-        "production"
+        'default',
+        'production',
     );
 
     expect(hasAccess).toBe(true);
@@ -636,100 +636,100 @@ test('should support permission with "ALL" environment requirement', async () =>
     const hasNotAccess = await accessService.hasPermission(
         user,
         CREATE_FEATURE_STRATEGY,
-        "default",
-        "development"
+        'default',
+        'development',
     );
     expect(hasNotAccess).toBe(false);
 });
 
-test("Should have access to create a strategy in an environment", async () => {
+test('Should have access to create a strategy in an environment', async () => {
     const { CREATE_FEATURE_STRATEGY } = permissions;
     const user = editorUser;
     expect(
         await accessService.hasPermission(
             user,
             CREATE_FEATURE_STRATEGY,
-            "default",
-            "development"
-        )
+            'default',
+            'development',
+        ),
     ).toBe(true);
 });
 
-test("Should be denied access to create a strategy in an environment the user does not have access to", async () => {
+test('Should be denied access to create a strategy in an environment the user does not have access to', async () => {
     const { CREATE_FEATURE_STRATEGY } = permissions;
     const user = editorUser;
     expect(
         await accessService.hasPermission(
             user,
             CREATE_FEATURE_STRATEGY,
-            "default",
-            "noaccess"
-        )
+            'default',
+            'noaccess',
+        ),
     ).toBe(false);
 });
 
-test("Should have access to edit a strategy in an environment", async () => {
+test('Should have access to edit a strategy in an environment', async () => {
     const { UPDATE_FEATURE_STRATEGY } = permissions;
     const user = editorUser;
     expect(
         await accessService.hasPermission(
             user,
             UPDATE_FEATURE_STRATEGY,
-            "default",
-            "development"
-        )
+            'default',
+            'development',
+        ),
     ).toBe(true);
 });
 
-test("Should have access to delete a strategy in an environment", async () => {
+test('Should have access to delete a strategy in an environment', async () => {
     const { DELETE_FEATURE_STRATEGY } = permissions;
     const user = editorUser;
     expect(
         await accessService.hasPermission(
             user,
             DELETE_FEATURE_STRATEGY,
-            "default",
-            "development"
-        )
+            'default',
+            'development',
+        ),
     ).toBe(true);
 });
 
-test("Should be denied access to delete a strategy in an environment the user does not have access to", async () => {
+test('Should be denied access to delete a strategy in an environment the user does not have access to', async () => {
     const { DELETE_FEATURE_STRATEGY } = permissions;
     const user = editorUser;
     expect(
         await accessService.hasPermission(
             user,
             DELETE_FEATURE_STRATEGY,
-            "default",
-            "noaccess"
-        )
+            'default',
+            'noaccess',
+        ),
     ).toBe(false);
 });
 
-test("Should be denied access to delete a role that is in use", async () => {
+test('Should be denied access to delete a role that is in use', async () => {
     const user = editorUser;
 
     const project = {
-        id: "projectToUseRole",
-        name: "New project",
-        description: "Blah",
+        id: 'projectToUseRole',
+        name: 'New project',
+        description: 'Blah',
     };
     await projectService.createProject(project, user.id);
 
     const projectMember = await stores.userStore.insert({
-        name: "CustomProjectMember",
-        email: "custom@getunleash.io",
+        name: 'CustomProjectMember',
+        email: 'custom@getunleash.io',
     });
 
     const customRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 8,
-            name: "DELETE_FEATURE",
+            name: 'DELETE_FEATURE',
         },
     ]);
 
@@ -739,34 +739,34 @@ test("Should be denied access to delete a role that is in use", async () => {
         await accessService.deleteRole(customRole.id);
     } catch (e) {
         expect(e.toString()).toBe(
-            "RoleInUseError: Role is in use by users(1) or groups(0). You cannot delete a role that is in use without first removing the role from the users and groups."
+            'RoleInUseError: Role is in use by users(1) or groups(0). You cannot delete a role that is in use without first removing the role from the users and groups.',
         );
     }
 });
 
-test("Should be denied move feature toggle to project where the user does not have access", async () => {
+test('Should be denied move feature toggle to project where the user does not have access', async () => {
     const user = editorUser;
     const editorUser2 = await createUser(editorRole.id);
 
     const projectOrigin = {
-        id: "projectOrigin",
-        name: "New project",
-        description: "Blah",
+        id: 'projectOrigin',
+        name: 'New project',
+        description: 'Blah',
     };
     const projectDest = {
-        id: "projectDest",
-        name: "New project",
-        description: "Blah",
+        id: 'projectDest',
+        name: 'New project',
+        description: 'Blah',
     };
     await projectService.createProject(projectOrigin, user.id);
     await projectService.createProject(projectDest, editorUser2.id);
 
-    const featureToggle = { name: "moveableToggle" };
+    const featureToggle = { name: 'moveableToggle' };
 
     await featureToggleService.createFeatureToggle(
         projectOrigin.id,
         featureToggle,
-        user.username
+        user.username,
     );
 
     try {
@@ -774,69 +774,69 @@ test("Should be denied move feature toggle to project where the user does not ha
             projectDest.id,
             featureToggle.name,
             user,
-            projectOrigin.id
+            projectOrigin.id,
         );
     } catch (e) {
-        expect(e.name).toContain("Permission");
-        expect(e.message.includes("permission")).toBeTruthy();
+        expect(e.name).toContain('Permission');
+        expect(e.message.includes('permission')).toBeTruthy();
         expect(
-            e.message.includes(permissions.MOVE_FEATURE_TOGGLE)
+            e.message.includes(permissions.MOVE_FEATURE_TOGGLE),
         ).toBeTruthy();
     }
 });
 
-test("Should be allowed move feature toggle to project when the user has access", async () => {
+test('Should be allowed move feature toggle to project when the user has access', async () => {
     const user = editorUser;
 
     const projectOrigin = {
-        id: "projectOrigin1",
-        name: "New project",
-        description: "Blah",
+        id: 'projectOrigin1',
+        name: 'New project',
+        description: 'Blah',
     };
     const projectDest = {
-        id: "projectDest2",
-        name: "New project",
-        description: "Blah",
+        id: 'projectDest2',
+        name: 'New project',
+        description: 'Blah',
     };
     await projectService.createProject(projectOrigin, user);
     await projectService.createProject(projectDest, user);
 
-    const featureToggle = { name: "moveableToggle2" };
+    const featureToggle = { name: 'moveableToggle2' };
 
     await featureToggleService.createFeatureToggle(
         projectOrigin.id,
         featureToggle,
-        user.username
+        user.username,
     );
 
     await projectService.changeProject(
         projectDest.id,
         featureToggle.name,
         user,
-        projectOrigin.id
+        projectOrigin.id,
     );
 });
 
-test("Should not be allowed to edit a root role", async () => {
+test('Should not be allowed to edit a root role', async () => {
     expect.assertions(1);
 
     const editRole = await accessService.getRoleByName(RoleName.EDITOR);
     const roleUpdate = {
         id: editRole.id,
-        name: "NoLongerTheEditor",
-        description: "",
+        name: 'NoLongerTheEditor',
+        description: '',
     };
 
     try {
         await accessService.updateRole(roleUpdate);
     } catch (e) {
         expect(e.toString()).toBe(
-            "InvalidOperationError: You cannot change built in roles."
+            'InvalidOperationError: You cannot change built in roles.',
         );
     }
 });
 
-test("Should not be allowed to delete a root role", async () => {
+test('Should not be allowed to delete a root role', async () => {
     expect.assertions(1);
 
     const editRole = await accessService.getRoleByName(RoleName.EDITOR);
@@ -845,31 +845,31 @@ test("Should not be allowed to delete a root role", async () => {
         await accessService.deleteRole(editRole.id);
     } catch (e) {
         expect(e.toString()).toBe(
-            "InvalidOperationError: You cannot change built in roles."
+            'InvalidOperationError: You cannot change built in roles.',
         );
     }
 });
 
-test("Should not be allowed to edit a project role", async () => {
+test('Should not be allowed to edit a project role', async () => {
     expect.assertions(1);
 
     const ownerRole = await accessService.getRoleByName(RoleName.OWNER);
     const roleUpdate = {
         id: ownerRole.id,
-        name: "NoLongerTheEditor",
-        description: "",
+        name: 'NoLongerTheEditor',
+        description: '',
     };
 
     try {
         await accessService.updateRole(roleUpdate);
     } catch (e) {
         expect(e.toString()).toBe(
-            "InvalidOperationError: You cannot change built in roles."
+            'InvalidOperationError: You cannot change built in roles.',
         );
     }
 });
 
-test("Should not be allowed to delete a project role", async () => {
+test('Should not be allowed to delete a project role', async () => {
     expect.assertions(1);
 
     const ownerRole = await accessService.getRoleByName(RoleName.OWNER);
@@ -878,15 +878,15 @@ test("Should not be allowed to delete a project role", async () => {
         await accessService.deleteRole(ownerRole.id);
     } catch (e) {
         expect(e.toString()).toBe(
-            "InvalidOperationError: You cannot change built in roles."
+            'InvalidOperationError: You cannot change built in roles.',
         );
     }
 });
 
-test("Should be allowed move feature toggle to project when given access through group", async () => {
+test('Should be allowed move feature toggle to project when given access through group', async () => {
     const project = {
-        id: "yet-another-project1",
-        name: "yet-another-project1",
+        id: 'yet-another-project1',
+        name: 'yet-another-project1',
     };
 
     const viewerUser = await createUser(readRole.id);
@@ -904,17 +904,17 @@ test("Should be allowed move feature toggle to project when given access through
     await accessService.addGroupToRole(
         groupWithProjectAccess.id!,
         projectRole.id,
-        "SomeAdminUser",
-        project.id
+        'SomeAdminUser',
+        project.id,
     );
 
     await hasCommonProjectAccess(viewerUser, project.id, true);
 });
 
-test("Should not lose user role access when given permissions from a group", async () => {
+test('Should not lose user role access when given permissions from a group', async () => {
     const project = {
-        id: "yet-another-project-lose",
-        name: "yet-another-project-lose",
+        id: 'yet-another-project-lose',
+        name: 'yet-another-project-lose',
     };
     const user = editorUser;
 
@@ -929,23 +929,23 @@ test("Should not lose user role access when given permissions from a group", asy
     await accessService.addGroupToRole(
         groupWithNoAccess.id!,
         viewerRole.id,
-        "SomeAdminUser",
-        project.id
+        'SomeAdminUser',
+        project.id,
     );
 
     await hasFullProjectAccess(user, project.id, true);
 });
 
-test("Should allow user to take multiple group roles and have expected permissions on each project", async () => {
+test('Should allow user to take multiple group roles and have expected permissions on each project', async () => {
     const projectForCreate = {
-        id: "project-that-should-have-create-toggle-permission",
-        name: "project-that-should-have-create-toggle-permission",
-        description: "Blah",
+        id: 'project-that-should-have-create-toggle-permission',
+        name: 'project-that-should-have-create-toggle-permission',
+        description: 'Blah',
     };
     const projectForDelete = {
-        id: "project-that-should-have-delete-toggle-permission",
-        name: "project-that-should-have-delete-toggle-permission",
-        description: "Blah",
+        id: 'project-that-should-have-delete-toggle-permission',
+        name: 'project-that-should-have-delete-toggle-permission',
+        description: 'Blah',
     };
 
     const viewerUser = await createUser(readRole.id);
@@ -964,63 +964,63 @@ test("Should allow user to take multiple group roles and have expected permissio
     const createFeatureRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
     ]);
 
     const deleteFeatureRole = await createRole([
         {
             id: 8,
-            name: "DELETE_FEATURE",
+            name: 'DELETE_FEATURE',
         },
     ]);
 
     await accessService.addGroupToRole(
         groupWithCreateAccess.id!,
         deleteFeatureRole.id,
-        "SomeAdminUser",
-        projectForDelete.id
+        'SomeAdminUser',
+        projectForDelete.id,
     );
 
     await accessService.addGroupToRole(
         groupWithDeleteAccess.id!,
         createFeatureRole.id,
-        "SomeAdminUser",
-        projectForCreate.id
+        'SomeAdminUser',
+        projectForCreate.id,
     );
 
     expect(
         await accessService.hasPermission(
             viewerUser,
             permissions.CREATE_FEATURE,
-            projectForCreate.id
-        )
+            projectForCreate.id,
+        ),
     ).toBe(true);
     expect(
         await accessService.hasPermission(
             viewerUser,
             permissions.DELETE_FEATURE,
-            projectForCreate.id
-        )
+            projectForCreate.id,
+        ),
     ).toBe(false);
 
     expect(
         await accessService.hasPermission(
             viewerUser,
             permissions.CREATE_FEATURE,
-            projectForDelete.id
-        )
+            projectForDelete.id,
+        ),
     ).toBe(false);
     expect(
         await accessService.hasPermission(
             viewerUser,
             permissions.DELETE_FEATURE,
-            projectForDelete.id
-        )
+            projectForDelete.id,
+        ),
     ).toBe(true);
 });
 
-test("Should allow user to take on root role through a group that has a root role defined", async () => {
+test('Should allow user to take on root role through a group that has a root role defined', async () => {
     const viewerUser = await createUser(readRole.id);
 
     await createGroup({
@@ -1029,11 +1029,11 @@ test("Should allow user to take on root role through a group that has a root rol
     });
 
     expect(
-        await accessService.hasPermission(viewerUser, permissions.ADMIN)
+        await accessService.hasPermission(viewerUser, permissions.ADMIN),
     ).toBe(true);
 });
 
-test("Should not elevate permissions for a user that is not present in a root role group", async () => {
+test('Should not elevate permissions for a user that is not present in a root role group', async () => {
     const viewerUser = await createUser(readRole.id);
 
     const viewerUserNotInGroup = await createUser(readRole.id);
@@ -1044,18 +1044,18 @@ test("Should not elevate permissions for a user that is not present in a root ro
     });
 
     expect(
-        await accessService.hasPermission(viewerUser, permissions.ADMIN)
+        await accessService.hasPermission(viewerUser, permissions.ADMIN),
     ).toBe(true);
 
     expect(
         await accessService.hasPermission(
             viewerUserNotInGroup,
-            permissions.ADMIN
-        )
+            permissions.ADMIN,
+        ),
     ).toBe(false);
 });
 
-test("Should not reduce permissions for an admin user that enters an editor group", async () => {
+test('Should not reduce permissions for an admin user that enters an editor group', async () => {
     const adminUser = await createUser(adminRole.id);
 
     await createGroup({
@@ -1064,18 +1064,18 @@ test("Should not reduce permissions for an admin user that enters an editor grou
     });
 
     expect(
-        await accessService.hasPermission(adminUser, permissions.ADMIN)
+        await accessService.hasPermission(adminUser, permissions.ADMIN),
     ).toBe(true);
 });
 
-test("Should not change permissions for a user in a group without a root role", async () => {
+test('Should not change permissions for a user in a group without a root role', async () => {
     const groupStore = stores.groupStore;
 
     const viewerUser = await createUser(readRole.id);
 
     const groupWithoutRootRole = await groupStore.create({
-        name: "GroupWithNoRootRole",
-        description: "",
+        name: 'GroupWithNoRootRole',
+        description: '',
     });
 
     const preAddedToGroupPermissions =
@@ -1084,7 +1084,7 @@ test("Should not change permissions for a user in a group without a root role", 
     await groupStore.addUsersToGroup(
         groupWithoutRootRole.id!,
         [{ user: viewerUser }],
-        "Admin"
+        'Admin',
     );
 
     const postAddedToGroupPermissions =
@@ -1092,11 +1092,11 @@ test("Should not change permissions for a user in a group without a root role", 
 
     expect(
         JSON.stringify(preAddedToGroupPermissions) ===
-            JSON.stringify(postAddedToGroupPermissions)
+            JSON.stringify(postAddedToGroupPermissions),
     ).toBe(true);
 });
 
-test("Should add permissions to user when a group is given a root role after the user has been added to the group", async () => {
+test('Should add permissions to user when a group is given a root role after the user has been added to the group', async () => {
     const groupStore = stores.groupStore;
 
     const viewerUser = await createUser(readRole.id);
@@ -1106,23 +1106,23 @@ test("Should add permissions to user when a group is given a root role after the
     });
 
     expect(
-        await accessService.hasPermission(viewerUser, permissions.ADMIN)
+        await accessService.hasPermission(viewerUser, permissions.ADMIN),
     ).toBe(false);
 
     await groupStore.update({
         id: groupWithoutRootRole.id!,
-        name: "GroupWithNoRootRole",
+        name: 'GroupWithNoRootRole',
         rootRole: adminRole.id,
         users: [{ user: viewerUser }],
     });
 
     expect(
-        await accessService.hasPermission(viewerUser, permissions.ADMIN)
+        await accessService.hasPermission(viewerUser, permissions.ADMIN),
     ).toBe(true);
 });
 
-test("Should give full project access to the default project to user in a group with an editor root role", async () => {
-    const projectName = "default";
+test('Should give full project access to the default project to user in a group with an editor root role', async () => {
+    const projectName = 'default';
 
     const viewerUser = await createUser(readRole.id);
 
@@ -1134,29 +1134,29 @@ test("Should give full project access to the default project to user in a group 
     await hasFullProjectAccess(viewerUser, projectName, true);
 });
 
-test("if user has two roles user has union of permissions from the two roles", async () => {
-    const projectName = "default";
+test('if user has two roles user has union of permissions from the two roles', async () => {
+    const projectName = 'default';
 
     const emptyUser = await createUser();
 
     const firstRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 8,
-            name: "DELETE_FEATURE",
+            name: 'DELETE_FEATURE',
         },
     ]);
     const secondRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 13,
-            name: "UPDATE_PROJECT",
+            name: 'UPDATE_PROJECT',
         },
     ]);
 
@@ -1166,38 +1166,38 @@ test("if user has two roles user has union of permissions from the two roles", a
     ]);
 
     const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
     const permissionNameSet = new Set(
-        assignedPermissions.map((p) => p.permission)
+        assignedPermissions.map((p) => p.permission),
     );
 
     expect(permissionNameSet.size).toBe(3);
 });
 
-test("calling set for user overwrites existing roles", async () => {
-    const projectName = "default";
+test('calling set for user overwrites existing roles', async () => {
+    const projectName = 'default';
 
     const emptyUser = await createUser();
 
     const firstRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 8,
-            name: "DELETE_FEATURE",
+            name: 'DELETE_FEATURE',
         },
     ]);
     const secondRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 13,
-            name: "UPDATE_PROJECT",
+            name: 'UPDATE_PROJECT',
         },
     ]);
 
@@ -1207,10 +1207,10 @@ test("calling set for user overwrites existing roles", async () => {
     ]);
 
     const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
     const permissionNameSet = new Set(
-        assignedPermissions.map((p) => p.permission)
+        assignedPermissions.map((p) => p.permission),
     );
 
     expect(permissionNameSet.size).toBe(3);
@@ -1220,22 +1220,22 @@ test("calling set for user overwrites existing roles", async () => {
     ]);
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(newAssignedPermissions.length).toBe(2);
     expect(newAssignedPermissions).toContainEqual({
         project: projectName,
-        permission: "CREATE_FEATURE",
+        permission: 'CREATE_FEATURE',
     });
     expect(newAssignedPermissions).toContainEqual({
         project: projectName,
-        permission: "DELETE_FEATURE",
+        permission: 'DELETE_FEATURE',
     });
 });
 
-test("if group has two roles user has union of permissions from the two roles", async () => {
-    const projectName = "default";
+test('if group has two roles user has union of permissions from the two roles', async () => {
+    const projectName = 'default';
 
     const emptyUser = await createUser();
 
@@ -1246,21 +1246,21 @@ test("if group has two roles user has union of permissions from the two roles", 
     const firstRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 8,
-            name: "DELETE_FEATURE",
+            name: 'DELETE_FEATURE',
         },
     ]);
     const secondRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 13,
-            name: "UPDATE_PROJECT",
+            name: 'UPDATE_PROJECT',
         },
     ]);
 
@@ -1268,21 +1268,21 @@ test("if group has two roles user has union of permissions from the two roles", 
         projectName,
         emptyGroup.id,
         [firstRole.id, secondRole.id],
-        "testusr"
+        'testusr',
     );
 
     const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
     const permissionNameSet = new Set(
-        assignedPermissions.map((p) => p.permission)
+        assignedPermissions.map((p) => p.permission),
     );
 
     expect(permissionNameSet.size).toBe(3);
 });
 
-test("calling set for group overwrites existing roles", async () => {
-    const projectName = "default";
+test('calling set for group overwrites existing roles', async () => {
+    const projectName = 'default';
 
     const emptyUser = await createUser();
 
@@ -1293,21 +1293,21 @@ test("calling set for group overwrites existing roles", async () => {
     const firstRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 8,
-            name: "DELETE_FEATURE",
+            name: 'DELETE_FEATURE',
         },
     ]);
     const secondRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 13,
-            name: "UPDATE_PROJECT",
+            name: 'UPDATE_PROJECT',
         },
     ]);
 
@@ -1315,14 +1315,14 @@ test("calling set for group overwrites existing roles", async () => {
         projectName,
         emptyGroup.id,
         [firstRole.id, secondRole.id],
-        "testusr"
+        'testusr',
     );
 
     const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
     const permissionNameSet = new Set(
-        assignedPermissions.map((p) => p.permission)
+        assignedPermissions.map((p) => p.permission),
     );
 
     expect(permissionNameSet.size).toBe(3);
@@ -1331,26 +1331,26 @@ test("calling set for group overwrites existing roles", async () => {
         projectName,
         emptyGroup.id,
         [firstRole.id],
-        "testusr"
+        'testusr',
     );
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(newAssignedPermissions.length).toBe(2);
     expect(newAssignedPermissions).toContainEqual({
         project: projectName,
-        permission: "CREATE_FEATURE",
+        permission: 'CREATE_FEATURE',
     });
     expect(newAssignedPermissions).toContainEqual({
         project: projectName,
-        permission: "DELETE_FEATURE",
+        permission: 'DELETE_FEATURE',
     });
 });
 
-test("group with root role can be assigned a project specific role", async () => {
-    const projectName = "default";
+test('group with root role can be assigned a project specific role', async () => {
+    const projectName = 'default';
 
     const emptyUser = await createUser();
 
@@ -1362,7 +1362,7 @@ test("group with root role can be assigned a project specific role", async () =>
     const firstRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
     ]);
 
@@ -1370,21 +1370,21 @@ test("group with root role can be assigned a project specific role", async () =>
         projectName,
         emptyGroup.id,
         [firstRole.id],
-        "testusr"
+        'testusr',
     );
 
     const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(assignedPermissions).toContainEqual({
         project: projectName,
-        permission: "CREATE_FEATURE",
+        permission: 'CREATE_FEATURE',
     });
 });
 
-test("calling add access with invalid project role ids should not assign those roles", async () => {
-    const projectName = "default";
+test('calling add access with invalid project role ids should not assign those roles', async () => {
+    const projectName = 'default';
     const emptyUser = await createUser();
 
     const adminRootRole = await accessService.getRoleByName(RoleName.ADMIN);
@@ -1394,18 +1394,18 @@ test("calling add access with invalid project role ids should not assign those r
         [],
         [emptyUser.id],
         projectName,
-        "some-admin-user"
+        'some-admin-user',
     );
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(newAssignedPermissions.length).toBe(0);
 });
 
-test("calling set roles for user with invalid project role ids should not assign those roles", async () => {
-    const projectName = "default";
+test('calling set roles for user with invalid project role ids should not assign those roles', async () => {
+    const projectName = 'default';
     const emptyUser = await createUser();
 
     const adminRootRole = await accessService.getRoleByName(RoleName.ADMIN);
@@ -1416,20 +1416,20 @@ test("calling set roles for user with invalid project role ids should not assign
     ]);
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(newAssignedPermissions.length).toBe(0);
 });
 
-test("calling set roles for user with empty role array removes all roles", async () => {
-    const projectName = "default";
+test('calling set roles for user with empty role array removes all roles', async () => {
+    const projectName = 'default';
     const emptyUser = await createUser();
 
     const role = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
     ]);
 
@@ -1438,7 +1438,7 @@ test("calling set roles for user with empty role array removes all roles", async
     ]);
 
     const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(assignedPermissions.length).toBe(1);
@@ -1446,24 +1446,24 @@ test("calling set roles for user with empty role array removes all roles", async
     await accessService.setProjectRolesForUser(projectName, emptyUser.id, []);
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(newAssignedPermissions.length).toBe(0);
 });
 
-test("calling set roles for user with empty role array should not remove root roles", async () => {
-    const projectName = "default";
+test('calling set roles for user with empty role array should not remove root roles', async () => {
+    const projectName = 'default';
     const adminUser = await createUser(adminRole.id);
 
     const firstRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 8,
-            name: "DELETE_FEATURE",
+            name: 'DELETE_FEATURE',
         },
     ]);
 
@@ -1472,7 +1472,7 @@ test("calling set roles for user with empty role array should not remove root ro
     ]);
 
     const assignedPermissions = await accessService.getPermissionsForUser(
-        adminUser
+        adminUser,
     );
 
     expect(assignedPermissions.length).toBe(3);
@@ -1480,32 +1480,32 @@ test("calling set roles for user with empty role array should not remove root ro
     await accessService.setProjectRolesForUser(projectName, adminUser.id, []);
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
-        adminUser
+        adminUser,
     );
 
     expect(newAssignedPermissions.length).toBe(1);
     expect(newAssignedPermissions[0].permission).toBe(permissions.ADMIN);
 });
 
-test("remove user access should remove all project roles", async () => {
-    const projectName = "default";
+test('remove user access should remove all project roles', async () => {
+    const projectName = 'default';
     const emptyUser = await createUser();
 
     const firstRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 8,
-            name: "DELETE_FEATURE",
+            name: 'DELETE_FEATURE',
         },
     ]);
 
     const secondRole = await createRole([
         {
             id: 13,
-            name: "UPDATE_PROJECT",
+            name: 'UPDATE_PROJECT',
         },
     ]);
 
@@ -1515,7 +1515,7 @@ test("remove user access should remove all project roles", async () => {
     ]);
 
     const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(assignedPermissions.length).toBe(3);
@@ -1523,31 +1523,31 @@ test("remove user access should remove all project roles", async () => {
     await accessService.removeUserAccess(projectName, emptyUser.id);
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(newAssignedPermissions.length).toBe(0);
 });
 
-test("remove user access should remove all project roles, while leaving root roles untouched", async () => {
-    const projectName = "default";
+test('remove user access should remove all project roles, while leaving root roles untouched', async () => {
+    const projectName = 'default';
     const adminUser = await createUser(adminRole.id);
 
     const firstRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 8,
-            name: "DELETE_FEATURE",
+            name: 'DELETE_FEATURE',
         },
     ]);
 
     const secondRole = await createRole([
         {
             id: 13,
-            name: "UPDATE_PROJECT",
+            name: 'UPDATE_PROJECT',
         },
     ]);
 
@@ -1557,7 +1557,7 @@ test("remove user access should remove all project roles, while leaving root rol
     ]);
 
     const assignedPermissions = await accessService.getPermissionsForUser(
-        adminUser
+        adminUser,
     );
 
     expect(assignedPermissions.length).toBe(4);
@@ -1565,15 +1565,15 @@ test("remove user access should remove all project roles, while leaving root rol
     await accessService.removeUserAccess(projectName, adminUser.id);
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
-        adminUser
+        adminUser,
     );
 
     expect(newAssignedPermissions.length).toBe(1);
     expect(newAssignedPermissions[0].permission).toBe(permissions.ADMIN);
 });
 
-test("calling set roles for group with invalid project role ids should not assign those roles", async () => {
-    const projectName = "default";
+test('calling set roles for group with invalid project role ids should not assign those roles', async () => {
+    const projectName = 'default';
 
     const emptyUser = await createUser();
     const emptyGroup = await createGroup({
@@ -1586,18 +1586,18 @@ test("calling set roles for group with invalid project role ids should not assig
         projectName,
         emptyGroup.id,
         [adminRootRole.id, 9999],
-        "admin"
+        'admin',
     );
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(newAssignedPermissions.length).toBe(0);
 });
 
-test("calling set roles for group with empty role array removes all roles", async () => {
-    const projectName = "default";
+test('calling set roles for group with empty role array removes all roles', async () => {
+    const projectName = 'default';
 
     const emptyUser = await createUser();
     const emptyGroup = await createGroup({
@@ -1607,7 +1607,7 @@ test("calling set roles for group with empty role array removes all roles", asyn
     const role = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
     ]);
 
@@ -1615,11 +1615,11 @@ test("calling set roles for group with empty role array removes all roles", asyn
         projectName,
         emptyGroup.id,
         [role.id],
-        "admin"
+        'admin',
     );
 
     const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(assignedPermissions.length).toBe(1);
@@ -1628,18 +1628,18 @@ test("calling set roles for group with empty role array removes all roles", asyn
         projectName,
         emptyGroup.id,
         [],
-        "admin"
+        'admin',
     );
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(newAssignedPermissions.length).toBe(0);
 });
 
-test("calling set roles for group with empty role array should not remove root roles", async () => {
-    const projectName = "default";
+test('calling set roles for group with empty role array should not remove root roles', async () => {
+    const projectName = 'default';
 
     const adminUser = await createUser(adminRole.id);
     const group = await createGroup({
@@ -1649,11 +1649,11 @@ test("calling set roles for group with empty role array should not remove root r
     const role = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 8,
-            name: "DELETE_FEATURE",
+            name: 'DELETE_FEATURE',
         },
     ]);
 
@@ -1661,11 +1661,11 @@ test("calling set roles for group with empty role array should not remove root r
         projectName,
         group.id,
         [role.id],
-        "admin"
+        'admin',
     );
 
     const assignedPermissions = await accessService.getPermissionsForUser(
-        adminUser
+        adminUser,
     );
 
     expect(assignedPermissions.length).toBe(3);
@@ -1674,19 +1674,19 @@ test("calling set roles for group with empty role array should not remove root r
         projectName,
         group.id,
         [],
-        "admin"
+        'admin',
     );
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
-        adminUser
+        adminUser,
     );
 
     expect(newAssignedPermissions.length).toBe(1);
     expect(newAssignedPermissions[0].permission).toBe(permissions.ADMIN);
 });
 
-test("remove group access should remove all project roles", async () => {
-    const projectName = "default";
+test('remove group access should remove all project roles', async () => {
+    const projectName = 'default';
     const emptyUser = await createUser();
     const group = await createGroup({
         users: [{ user: emptyUser }],
@@ -1695,18 +1695,18 @@ test("remove group access should remove all project roles", async () => {
     const firstRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 8,
-            name: "DELETE_FEATURE",
+            name: 'DELETE_FEATURE',
         },
     ]);
 
     const secondRole = await createRole([
         {
             id: 13,
-            name: "UPDATE_PROJECT",
+            name: 'UPDATE_PROJECT',
         },
     ]);
 
@@ -1714,11 +1714,11 @@ test("remove group access should remove all project roles", async () => {
         projectName,
         group.id,
         [firstRole.id, secondRole.id],
-        "admin"
+        'admin',
     );
 
     const assignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(assignedPermissions.length).toBe(3);
@@ -1726,14 +1726,14 @@ test("remove group access should remove all project roles", async () => {
     await accessService.removeGroupAccess(projectName, group.id);
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
-        emptyUser
+        emptyUser,
     );
 
     expect(newAssignedPermissions.length).toBe(0);
 });
 
-test("remove group access should remove all project roles, while leaving root roles untouched", async () => {
-    const projectName = "default";
+test('remove group access should remove all project roles, while leaving root roles untouched', async () => {
+    const projectName = 'default';
     const adminUser = await createUser(adminRole.id);
     const group = await createGroup({
         users: [{ user: adminUser }],
@@ -1742,18 +1742,18 @@ test("remove group access should remove all project roles, while leaving root ro
     const firstRole = await createRole([
         {
             id: 2,
-            name: "CREATE_FEATURE",
+            name: 'CREATE_FEATURE',
         },
         {
             id: 8,
-            name: "DELETE_FEATURE",
+            name: 'DELETE_FEATURE',
         },
     ]);
 
     const secondRole = await createRole([
         {
             id: 13,
-            name: "UPDATE_PROJECT",
+            name: 'UPDATE_PROJECT',
         },
     ]);
 
@@ -1761,11 +1761,11 @@ test("remove group access should remove all project roles, while leaving root ro
         projectName,
         group.id,
         [firstRole.id, secondRole.id],
-        "admin"
+        'admin',
     );
 
     const assignedPermissions = await accessService.getPermissionsForUser(
-        adminUser
+        adminUser,
     );
 
     expect(assignedPermissions.length).toBe(4);
@@ -1773,19 +1773,19 @@ test("remove group access should remove all project roles, while leaving root ro
     await accessService.removeGroupAccess(projectName, group.id);
 
     const newAssignedPermissions = await accessService.getPermissionsForUser(
-        adminUser
+        adminUser,
     );
 
     expect(newAssignedPermissions.length).toBe(1);
     expect(newAssignedPermissions[0].permission).toBe(permissions.ADMIN);
 });
 
-test("access overview should have admin access and default project for admin user", async () => {
-    const email = "a-person@places.com";
+test('access overview should have admin access and default project for admin user', async () => {
+    const email = 'a-person@places.com';
 
     const { userStore } = stores;
     const user = await userStore.insert({
-        name: "Some User",
+        name: 'Some User',
         email,
     });
 
@@ -1794,28 +1794,28 @@ test("access overview should have admin access and default project for admin use
     const accessOverView: IUserAccessOverview[] =
         await accessService.getUserAccessOverview();
     const userAccess = accessOverView.find(
-        (overviewRow) => overviewRow.userId === user.id
+        (overviewRow) => overviewRow.userId === user.id,
     )!;
 
     expect(userAccess.userId).toBe(user.id);
 
-    expect(userAccess.rootRole).toBe("Admin");
-    expect(userAccess.accessibleProjects).toStrictEqual(["default"]);
+    expect(userAccess.rootRole).toBe('Admin');
+    expect(userAccess.accessibleProjects).toStrictEqual(['default']);
 });
 
-test("access overview should have group access for groups that they are in", async () => {
-    const email = "a-nother-person@places.com";
+test('access overview should have group access for groups that they are in', async () => {
+    const email = 'a-nother-person@places.com';
 
     const { userStore } = stores;
     const user = await userStore.insert({
-        name: "Some Other User",
+        name: 'Some Other User',
         email,
     });
 
     await accessService.setUserRootRole(user.id, adminRole.id);
 
     const group = await stores.groupStore.create({
-        name: "Test Group",
+        name: 'Test Group',
     });
 
     await stores.groupStore.addUsersToGroup(
@@ -1827,33 +1827,33 @@ test("access overview should have group access for groups that they are in", asy
                 },
             },
         ],
-        "Admin"
+        'Admin',
     );
 
     const someGroupRole = await createRole([
         {
             id: 13,
-            name: "UPDATE_PROJECT",
+            name: 'UPDATE_PROJECT',
         },
     ]);
 
     await accessService.addGroupToRole(
         group.id,
         someGroupRole.id,
-        "creator",
-        "default"
+        'creator',
+        'default',
     );
 
     const accessOverView: IUserAccessOverview[] =
         await accessService.getUserAccessOverview();
     const userAccess = accessOverView.find(
-        (overviewRow) => overviewRow.userId === user.id
+        (overviewRow) => overviewRow.userId === user.id,
     )!;
 
     expect(userAccess.userId).toBe(user.id);
 
-    expect(userAccess.rootRole).toBe("Admin");
-    expect(userAccess.groups).toStrictEqual(["Test Group"]);
+    expect(userAccess.rootRole).toBe('Admin');
+    expect(userAccess.groups).toStrictEqual(['Test Group']);
 
-    expect(userAccess.groupProjects).toStrictEqual(["default"]);
+    expect(userAccess.groupProjects).toStrictEqual(['default']);
 });

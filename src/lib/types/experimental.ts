@@ -1,39 +1,39 @@
-import { Variant, PayloadType } from "unleash-client";
-import { parseEnvVarBoolean } from "../util";
-import { getDefaultVariant } from "unleash-client/lib/variant";
+import { Variant, PayloadType } from 'unleash-client';
+import { parseEnvVarBoolean } from '../util';
+import { getDefaultVariant } from 'unleash-client/lib/variant';
 
 export type IFlagKey =
-    | "anonymiseEventLog"
-    | "embedProxy"
-    | "embedProxyFrontend"
-    | "responseTimeWithAppNameKillSwitch"
-    | "maintenanceMode"
-    | "messageBanner"
-    | "featuresExportImport"
-    | "caseInsensitiveInOperators"
-    | "strictSchemaValidation"
-    | "proPlanAutoCharge"
-    | "personalAccessTokensKillSwitch"
-    | "migrationLock"
-    | "demo"
-    | "googleAuthEnabled"
-    | "disableBulkToggle"
-    | "disableNotifications"
-    | "advancedPlayground"
-    | "filterInvalidClientMetrics"
-    | "lastSeenByEnvironment"
-    | "customRootRolesKillSwitch"
-    | "multipleRoles"
-    | "featureNamingPattern"
-    | "doraMetrics"
-    | "variantTypeNumber"
-    | "accessOverview"
-    | "privateProjects"
-    | "dependentFeatures"
-    | "datadogJsonTemplate"
-    | "disableMetrics"
-    | "transactionalDecorator"
-    | "useLastSeenRefactor";
+    | 'anonymiseEventLog'
+    | 'embedProxy'
+    | 'embedProxyFrontend'
+    | 'responseTimeWithAppNameKillSwitch'
+    | 'maintenanceMode'
+    | 'messageBanner'
+    | 'featuresExportImport'
+    | 'caseInsensitiveInOperators'
+    | 'strictSchemaValidation'
+    | 'proPlanAutoCharge'
+    | 'personalAccessTokensKillSwitch'
+    | 'migrationLock'
+    | 'demo'
+    | 'googleAuthEnabled'
+    | 'disableBulkToggle'
+    | 'disableNotifications'
+    | 'advancedPlayground'
+    | 'filterInvalidClientMetrics'
+    | 'lastSeenByEnvironment'
+    | 'customRootRolesKillSwitch'
+    | 'multipleRoles'
+    | 'featureNamingPattern'
+    | 'doraMetrics'
+    | 'variantTypeNumber'
+    | 'accessOverview'
+    | 'privateProjects'
+    | 'dependentFeatures'
+    | 'datadogJsonTemplate'
+    | 'disableMetrics'
+    | 'transactionalDecorator'
+    | 'useLastSeenRefactor';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -41,121 +41,121 @@ const flags: IFlags = {
     anonymiseEventLog: false,
     embedProxy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
-        true
+        true,
     ),
     embedProxyFrontend: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
-        true
+        true,
     ),
     responseTimeWithAppNameKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH,
-        false
+        false,
     ),
     maintenanceMode: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE_MODE,
-        false
+        false,
     ),
     messageBanner: {
-        name: "message-banner",
+        name: 'message-banner',
         enabled: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER,
-            false
+            false,
         ),
         payload: {
             type: PayloadType.JSON,
             value:
-                process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER_PAYLOAD ?? "",
+                process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER_PAYLOAD ?? '',
         },
     },
     featuresExportImport: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURES_EXPORT_IMPORT,
-        true
+        true,
     ),
     caseInsensitiveInOperators: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CASE_INSENSITIVE_IN_OPERATORS,
-        false
+        false,
     ),
     strictSchemaValidation: parseEnvVarBoolean(
         process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
-        false
+        false,
     ),
     proPlanAutoCharge: parseEnvVarBoolean(
         process.env.UNLEASH_PRO_PLAN_AUTO_CHARGE,
-        false
+        false,
     ),
     personalAccessTokensKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_PAT_KILL_SWITCH,
-        false
+        false,
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, true),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
     googleAuthEnabled: parseEnvVarBoolean(
         process.env.GOOGLE_AUTH_ENABLED,
-        false
+        false,
     ),
     disableBulkToggle: parseEnvVarBoolean(
         process.env.DISABLE_BULK_TOGGLE,
-        false
+        false,
     ),
     disableNotifications: parseEnvVarBoolean(
         process.env.DISABLE_NOTIFICATIONS,
-        false
+        false,
     ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
         process.env.FILTER_INVALID_CLIENT_METRICS,
-        false
+        false,
     ),
     lastSeenByEnvironment: parseEnvVarBoolean(
         process.env.LAST_SEEN_BY_ENVIRONMENT,
-        false
+        false,
     ),
     customRootRolesKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CUSTOM_ROOT_ROLES_KILL_SWITCH,
-        false
+        false,
     ),
     multipleRoles: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MULTIPLE_ROLES,
-        false
+        false,
     ),
     featureNamingPattern: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_NAMING_PATTERN,
-        false
+        false,
     ),
     doraMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DORA_METRICS,
-        false
+        false,
     ),
     dependentFeatures: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DEPENDENT_FEATURES,
-        false
+        false,
     ),
     variantTypeNumber: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_VARIANT_TYPE_NUMBER,
-        false
+        false,
     ),
     privateProjects: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECTS,
-        false
+        false,
     ),
     accessOverview: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW,
-        false
+        false,
     ),
     datadogJsonTemplate: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DATADOG_JSON_TEMPLATE,
-        false
+        false,
     ),
     disableMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
-        false
+        false,
     ),
     transactionalDecorator: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_TRANSACTIONAL_DECORATOR,
-        false
+        false,
     ),
     useLastSeenRefactor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_USE_LAST_SEEN_REFACTOR,
-        false
+        false,
     ),
 };
 

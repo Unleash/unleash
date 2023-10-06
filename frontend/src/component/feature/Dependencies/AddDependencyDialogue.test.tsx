@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { AddDependencyDialogue } from './AddDependencyDialogue';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { UIProviderContainer } from '../../providers/UIProvider/UIProviderContainer';
 
 const server = testServerSetup();
 
@@ -39,16 +38,14 @@ test('Delete dependency', async () => {
     let closed = false;
     setupApi();
     render(
-        <UIProviderContainer>
-            <AddDependencyDialogue
-                project='default'
-                featureId='child'
-                showDependencyDialogue={true}
-                onClose={() => {
-                    closed = true;
-                }}
-            />
-        </UIProviderContainer>,
+        <AddDependencyDialogue
+            project='default'
+            featureId='child'
+            showDependencyDialogue={true}
+            onClose={() => {
+                closed = true;
+            }}
+        />,
     );
 
     const removeDependency = await screen.findByText('Remove');
@@ -68,16 +65,14 @@ test('Add dependency', async () => {
     let closed = false;
     setupApi();
     render(
-        <UIProviderContainer>
-            <AddDependencyDialogue
-                project='default'
-                featureId='child'
-                showDependencyDialogue={true}
-                onClose={() => {
-                    closed = true;
-                }}
-            />
-        </UIProviderContainer>,
+        <AddDependencyDialogue
+            project='default'
+            featureId='child'
+            showDependencyDialogue={true}
+            onClose={() => {
+                closed = true;
+            }}
+        />,
     );
 
     const removeDependency = await screen.findByText('Remove');

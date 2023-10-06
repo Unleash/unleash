@@ -1,41 +1,38 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { PlaygroundEnvironmentTable } from './PlaygroundEnvironmentTable';
-import { UIProviderContainer } from '../../../providers/UIProvider/UIProviderContainer';
 
 test('should render environment table', async () => {
     render(
-        <UIProviderContainer>
-            <PlaygroundEnvironmentTable
-                features={[
-                    {
-                        name: 'featureA',
-                        strategies: {
-                            data: [],
-                            result: false,
-                        },
-                        isEnabled: false,
-                        isEnabledInCurrentEnvironment: false,
-                        variants: [],
-                        projectId: 'projectA',
-                        variant: {
-                            name: 'variantName',
-                            enabled: true,
-                            payload: {
-                                type: 'string',
-                                value: 'variantValue',
-                            },
-                        },
-                        environment: 'dev',
-                        context: {
-                            channel: 'web',
-                            client: 'clientA',
-                            appName: 'myapp',
+        <PlaygroundEnvironmentTable
+            features={[
+                {
+                    name: 'featureA',
+                    strategies: {
+                        data: [],
+                        result: false,
+                    },
+                    isEnabled: false,
+                    isEnabledInCurrentEnvironment: false,
+                    variants: [],
+                    projectId: 'projectA',
+                    variant: {
+                        name: 'variantName',
+                        enabled: true,
+                        payload: {
+                            type: 'string',
+                            value: 'variantValue',
                         },
                     },
-                ]}
-            />
-        </UIProviderContainer>,
+                    environment: 'dev',
+                    context: {
+                        channel: 'web',
+                        client: 'clientA',
+                        appName: 'myapp',
+                    },
+                },
+            ]}
+        />,
     );
 
     expect(screen.getByText('web')).toBeInTheDocument();

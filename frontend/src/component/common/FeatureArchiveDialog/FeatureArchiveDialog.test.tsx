@@ -4,7 +4,6 @@ import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FeatureArchiveDialog } from './FeatureArchiveDialog';
-import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 
 const server = testServerSetup();
 const setupHappyPathForChangeRequest = () => {
@@ -38,16 +37,14 @@ test('Add single archive feature change to change request', async () => {
     const onConfirm = vi.fn();
     setupHappyPathForChangeRequest();
     render(
-        <UIProviderContainer>
-            <FeatureArchiveDialog
-                featureIds={['featureA']}
-                projectId={'projectId'}
-                isOpen={true}
-                onClose={onClose}
-                onConfirm={onConfirm}
-                featuresWithUsage={[]}
-            />
-        </UIProviderContainer>,
+        <FeatureArchiveDialog
+            featureIds={['featureA']}
+            projectId={'projectId'}
+            isOpen={true}
+            onClose={onClose}
+            onConfirm={onConfirm}
+            featuresWithUsage={[]}
+        />,
     );
 
     expect(screen.getByText('Archive feature toggle')).toBeInTheDocument();
@@ -66,16 +63,14 @@ test('Add multiple archive feature changes to change request', async () => {
     const onConfirm = vi.fn();
     setupHappyPathForChangeRequest();
     render(
-        <UIProviderContainer>
-            <FeatureArchiveDialog
-                featureIds={['featureA', 'featureB']}
-                projectId={'projectId'}
-                isOpen={true}
-                onClose={onClose}
-                onConfirm={onConfirm}
-                featuresWithUsage={[]}
-            />
-        </UIProviderContainer>,
+        <FeatureArchiveDialog
+            featureIds={['featureA', 'featureB']}
+            projectId={'projectId'}
+            isOpen={true}
+            onClose={onClose}
+            onConfirm={onConfirm}
+            featuresWithUsage={[]}
+        />,
     );
 
     await screen.findByText('Archive feature toggles');
@@ -94,16 +89,14 @@ test('Skip change request', async () => {
     const onConfirm = vi.fn();
     setupHappyPathForChangeRequest();
     render(
-        <UIProviderContainer>
-            <FeatureArchiveDialog
-                featureIds={['featureA', 'featureB']}
-                projectId={'projectId'}
-                isOpen={true}
-                onClose={onClose}
-                onConfirm={onConfirm}
-                featuresWithUsage={[]}
-            />
-        </UIProviderContainer>,
+        <FeatureArchiveDialog
+            featureIds={['featureA', 'featureB']}
+            projectId={'projectId'}
+            isOpen={true}
+            onClose={onClose}
+            onConfirm={onConfirm}
+            featuresWithUsage={[]}
+        />,
         { permissions: [{ permission: 'SKIP_CHANGE_REQUEST' }] },
     );
 

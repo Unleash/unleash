@@ -69,7 +69,7 @@ test('Should create new user', async () => {
     expect(storedUser.username).toBe('test');
 });
 
-test('Should create default user', async () => {
+test('Should create default user - with defaults', async () => {
     const userStore = new UserStoreMock();
     const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
@@ -102,10 +102,102 @@ test('Should create default user', async () => {
         settingService,
     });
 
-    await service.initAdminUser();
+    await service.initAdminUser({});
 
     const user = await service.loginUser('admin', 'unleash4all');
     expect(user.username).toBe('admin');
+});
+
+test('Should create default user - with provided username and password', async () => {
+    const userStore = new UserStoreMock();
+    const eventStore = new EventStoreMock();
+    const accessService = new AccessServiceMock();
+    const resetTokenStore = new FakeResetTokenStore();
+    const resetTokenService = new ResetTokenService(
+        { resetTokenStore },
+        config,
+    );
+    const emailService = new EmailService(config.email, config.getLogger);
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
+    const settingService = new SettingService(
+        {
+            settingStore: new FakeSettingStore(),
+        },
+        config,
+        eventService,
+    );
+
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+        eventService,
+        sessionService,
+        settingService,
+    });
+
+    await service.initAdminUser({
+        initialAdminUser: {
+            username: 'admin',
+            password: 'unleash4all!',
+        },
+    });
+
+    const user = await service.loginUser('admin', 'unleash4all!');
+    expect(user.username).toBe('admin');
+});
+
+test('Should not create default user - with `createAdminUser` === false', async () => {
+    const userStore = new UserStoreMock();
+    const eventStore = new EventStoreMock();
+    const accessService = new AccessServiceMock();
+    const resetTokenStore = new FakeResetTokenStore();
+    const resetTokenService = new ResetTokenService(
+        { resetTokenStore },
+        config,
+    );
+    const emailService = new EmailService(config.email, config.getLogger);
+    const sessionStore = new FakeSessionStore();
+    const sessionService = new SessionService({ sessionStore }, config);
+    const eventService = new EventService(
+        { eventStore, featureTagStore: new FakeFeatureTagStore() },
+        config,
+    );
+    const settingService = new SettingService(
+        {
+            settingStore: new FakeSettingStore(),
+        },
+        config,
+        eventService,
+    );
+
+    const service = new UserService({ userStore }, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+        eventService,
+        sessionService,
+        settingService,
+    });
+
+    await service.initAdminUser({
+        createAdminUser: false,
+        initialAdminUser: {
+            username: 'admin',
+            password: 'unleash4all!',
+        },
+    });
+
+    await expect(
+        service.loginUser('admin', 'unleash4all!'),
+    ).rejects.toThrowError(
+        'The combination of password and username you provided is invalid',
+    );
 });
 
 test('Should be a valid password', async () => {

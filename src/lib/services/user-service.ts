@@ -12,7 +12,7 @@ import InvalidTokenError from '../error/invalid-token-error';
 import NotFoundError from '../error/notfound-error';
 import OwaspValidationError from '../error/owasp-validation-error';
 import { EmailService } from './email-service';
-import { IUnleashConfig } from '../types/option';
+import { IAuthOption, IUnleashConfig } from '../types/option';
 import SessionService from './session-service';
 import { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
@@ -104,8 +104,14 @@ class UserService {
         this.emailService = services.emailService;
         this.sessionService = services.sessionService;
         this.settingService = services.settingService;
-        if (authentication?.createAdminUser) {
-            process.nextTick(() => this.initAdminUser());
+
+        if (authentication.createAdminUser !== false) {
+            process.nextTick(() =>
+                this.initAdminUser({
+                    createAdminUser: authentication.createAdminUser,
+                    initialAdminUser: authentication.initialAdminUser,
+                }),
+            );
         }
 
         this.baseUriPath = server.baseUriPath || '';
@@ -122,27 +128,47 @@ class UserService {
         }
     }
 
-    async initAdminUser(): Promise<void> {
+    async initAdminUser(
+        initialAdminUserConfig: Pick<
+            IAuthOption,
+            'createAdminUser' | 'initialAdminUser'
+        >,
+    ): Promise<void> {
+        let username: string;
+        let password: string;
+
+        if (
+            initialAdminUserConfig.createAdminUser !== false &&
+            initialAdminUserConfig.initialAdminUser
+        ) {
+            username = initialAdminUserConfig.initialAdminUser.username;
+            password = initialAdminUserConfig.initialAdminUser.password;
+        } else {
+            username = 'admin';
+            password = 'unleash4all';
+        }
+
         const userCount = await this.store.count();
 
-        if (userCount === 0) {
+        if (userCount === 0 && username && password) {
             // create default admin user
             try {
-                const pwd = 'unleash4all';
                 this.logger.info(
-                    `Creating default user "admin" with password "${pwd}"`,
+                    `Creating default user '${username}' with password '${password}'`,
                 );
                 const user = await this.store.insert({
-                    username: 'admin',
+                    username,
                 });
-                const passwordHash = await bcrypt.hash(pwd, saltRounds);
+                const passwordHash = await bcrypt.hash(password, saltRounds);
                 await this.store.setPasswordHash(user.id, passwordHash);
                 await this.accessService.setUserRootRole(
                     user.id,
                     RoleName.ADMIN,
                 );
             } catch (e) {
-                this.logger.error('Unable to create default user "admin"');
+                this.logger.error(
+                    `Unable to create default user '${username}'`,
+                );
             }
         }
     }
@@ -344,7 +370,7 @@ class UserService {
                 user = await this.store.update(user.id, { name, email });
             }
         } catch (e) {
-            // User does not exists. Create if "autoCreate" is enabled
+            // User does not exists. Create if 'autoCreate' is enabled
             if (autoCreate) {
                 user = await this.createUser({
                     email,

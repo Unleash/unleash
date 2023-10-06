@@ -1,8 +1,7 @@
-import { render } from '../../../../utils/testRenderer';
+import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import React from 'react';
 import { testServerRoute, testServerSetup } from '../../../../utils/testServer';
-import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 import ContextList from './ContextList';
 
 const server = testServerSetup();
@@ -25,11 +24,7 @@ const setupRoutes = () => {
 test('should show the count of projects and features used in', async () => {
     setupRoutes();
 
-    render(
-        <UIProviderContainer>
-            <ContextList />
-        </UIProviderContainer>,
-    );
+    render(<ContextList />);
 
     await screen.findByText('2 feature toggles');
     await screen.findByText('3 projects');

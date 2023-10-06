@@ -24,9 +24,7 @@ const setupRoutes = () => {
 test('should show the count of projects and features used in', async () => {
     setupRoutes();
 
-    render(
-        <ContextList />,
-    );
+    render(<ContextList />);
 
     await screen.findByText('2 feature toggles');
     await screen.findByText('3 projects');

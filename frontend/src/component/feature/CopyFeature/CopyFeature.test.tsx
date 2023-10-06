@@ -9,7 +9,7 @@ import { testServerRoute, testServerSetup } from "utils/testServer";
 const server = testServerSetup();
 
 const setupServerRoutes = (changeRequestsEnabled = true) => {
-    testServerRoute(server, 'api/admin/ui-config', {
+    testServerRoute(server, '/api/admin/ui-config', {
         environment: 'Open Source',
         flags: {
             changeRequests: true,
@@ -22,7 +22,7 @@ const setupServerRoutes = (changeRequestsEnabled = true) => {
 
     testServerRoute(
         server,
-        'api/admin/projects/default/change-requests/config',
+        '/api/admin/projects/default/change-requests/config',
         [
             {
                 environment: 'development',
@@ -39,7 +39,7 @@ const setupServerRoutes = (changeRequestsEnabled = true) => {
         ],
     );
 
-    testServerRoute(server, 'api/admin/projects/default/features/someFeature', { name: 'someFeature'})
+    testServerRoute(server, '/api/admin/projects/default/features/someFeature', { name: 'someFeature'})
 
 }
 test('should render an alert when change request is enabled in any env when copying feature', async () => {
@@ -56,9 +56,7 @@ test('should render an alert when change request is enabled in any env when copy
         }
     )
 
-    const alert = screen.queryByText('Copy functionality is disabled for this project because change request is enabled for at least one environment in this project.');
-    expect(alert).toBeInTheDocument();
-
+     await screen.findByText('Copy functionality is disabled for this project because change request is enabled for at least one environment in this project.');
 })
 
 test('should not render an alert when change request is disabled when copying feature', async () => {

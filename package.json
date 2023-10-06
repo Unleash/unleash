@@ -172,7 +172,7 @@
     "@types/pg": "8.10.3",
     "@types/semver": "7.5.3",
     "@types/stoppable": "1.1.1",
-    "@types/supertest": "2.0.12",
+    "@types/supertest": "2.0.13",
     "@types/type-is": "1.6.4",
     "@types/uuid": "9.0.4",
     "concurrently": "^8.0.1",

@@ -104,7 +104,7 @@ export interface IUnleashOptions {
     versionCheck?: Partial<IVersionOption>;
     telemetry?: boolean;
     authentication?: Partial<IAuthOption>;
-    ui?: object;
+    ui?: IUIConfig;
     frontendApi?: IFrontendApi;
     import?: Partial<IImportOption>;
     experimental?: Partial<IExperimentalOptions>;

@@ -32,15 +32,6 @@ export default class LastSeenStore implements ILastSeenStore {
             });
     }
 
-    async exists(name: string): Promise<boolean> {
-        const result = await this.db.raw(
-            'SELECT EXISTS (SELECT 1 FROM features WHERE name = ?) AS present',
-            [name],
-        );
-        const { present } = result.rows[0];
-        return present;
-    }
-
     async setLastSeen(data: LastSeenInput[]): Promise<void> {
         const now = new Date();
 
@@ -55,17 +46,15 @@ export default class LastSeenStore implements ILastSeenStore {
 
             const batchSize = 1000;
 
-            await this.db.transaction(async (trx) => {
-                for (let i = 0; i < inserts.length; i += batchSize) {
-                    const batch = inserts.slice(i, i + batchSize);
-                    // Knex optimizes multi row insert when given an array:
-                    // https://knexjs.org/guide/query-builder.html#insert
-                    await trx(TABLE)
-                        .insert(batch)
-                        .onConflict(['feature_name', 'environment'])
-                        .merge();
-                }
-            });
+            for (let i = 0; i < inserts.length; i += batchSize) {
+                const batch = inserts.slice(i, i + batchSize);
+                // Knex optimizes multi row insert when given an array:
+                // https://knexjs.org/guide/query-builder.html#insert
+                await this.db(TABLE)
+                    .insert(batch)
+                    .onConflict(['feature_name', 'environment'])
+                    .merge();
+            }
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);
         }

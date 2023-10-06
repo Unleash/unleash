@@ -7,7 +7,7 @@ exports.up = function (db, callback) {
       feature_name VARCHAR(255),
       environment VARCHAR(100),
       last_seen_at TIMESTAMP WITH TIME ZONE NOT NULL,
-      PRIMARY KEY (feature_name, environment)
+      PRIMARY KEY (feature_name, environment),
       FOREIGN KEY (environment) REFERENCES environments(name) ON DELETE CASCADE
     );
 

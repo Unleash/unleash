@@ -57,7 +57,11 @@ export interface IAuthOption {
     enableApiToken: boolean;
     type: IAuthType;
     customAuthHandler?: Function;
-    createAdminUser: boolean;
+    createAdminUser?: boolean;
+    initialAdminUser?: {
+        username: string;
+        password: string;
+    };
     initApiTokens: ILegacyApiTokenCreate[];
 }
 

@@ -18,5 +18,9 @@ exports.up = function (db, callback) {
 };
 
 exports.down = function (db, callback) {
-    callback();
+      db.runSql(
+        `DROP TABLE last_seen_at_metrics;
+      `,
+        callback(),
+    );
 };
